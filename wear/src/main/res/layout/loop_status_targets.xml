@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/loop_status_card_background"
+    android:padding="10dp">
+
+    <!-- Card Title -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <View
+            android:layout_width="3dp"
+            android:layout_height="16dp"
+            android:background="@color/iob" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/loop_status_targets"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="@color/iob" />
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
+
+    <!-- Temp Target -->
+    <LinearLayout
+        android:id="@+id/temp_target_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/temp_target_background"
+        android:padding="8dp"
+        android:layout_marginBottom="6dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/loop_status_temp_target"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/tempTargetActive" />
+
+            <TextView
+                android:id="@+id/temp_target_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="@color/tempTargetActive"
+                android:text="5.0" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/temp_target_duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textSize="11sp"
+            android:textColor="@color/white_50percent"
+            android:text="30 min (14:30)" />
+
+    </LinearLayout>
+
+    <!-- Default Range -->
+    <LinearLayout
+        android:id="@+id/default_range_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/loop_status_target_range"
+            android:textSize="11sp"
+            android:textColor="@color/white_70percent" />
+
+        <TextView
+            android:id="@+id/default_range_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:text="4.0 - 7.0" />
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="4dp" />
+
+    <!-- Default Target -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/loop_status_target"
+            android:textSize="11sp"
+            android:textColor="@color/white_70percent" />
+
+        <TextView
+            android:id="@+id/default_target_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:text="5.5" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r7_description"><![CDATA[Số lượng: <b>%1$d%%</b>\nThời gian: <b>%2$s giờ</b>]]></string>
+    <string name="alert_w31_description"><![CDATA[Lượng trong ống: <b>%1$s U</b>]]></string>
+    <string name="alert_w32_description">Thay Pin.</string>
+    <string name="alert_w33_description">Đặt ngày và giờ.</string>
+    <string name="alert_w34_description">Liên hệ bộ phận hỗ trợ Accu-Chek.</string>
+    <string name="alert_w36_description"><![CDATA[Số lượng: <b>%1$d%%</b><br/>Thời gian: <b>%2$s h</b>]]></string>
+    <string name="alert_w38_description"><![CDATA[Đã lập trình: <b>%1$s U</b><br/>Đã tiêm: <b>%2$s U</b>]]></string>
+    <string name="alert_m20_description">Chèn ống insulin.</string>
+    <string name="alert_m21_description">Thay ống insulin.</string>
+    <string name="alert_m22_description">Thay Pin.</string>
+    <string name="alert_m23_description">Kiểm tra trạng thái bơm.</string>
+    <string name="alert_m24_description">Thay bộ dây truyền.</string>
+    <string name="alert_m25_description">Liên hệ bộ phận hỗ trợ Accu-Chek.</string>
+    <string name="alert_m26_description">Thay ống insulin.</string>
+    <string name="alert_m27_description">Tải lại dữ liệu.</string>
+    <string name="alert_m28_description">Kiểm tra trạng thái bơm.</string>
+    <string name="alert_m29_description">Cài đặt loại pin.</string>
+    <string name="alert_m30_description">Cài đặt loại ống insulin.</string>
+    <string name="alert_e6_description">Thay Pin và ống Insulin.</string>
+    <string name="alert_e10_description">Thay ống insulin.</string>
+    <string name="alert_e13_description">Thay đổi ngôn ngữ.</string>
+</resources>

@@ -40,7 +40,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         timerUtil.scheduleReminder(10, text.value.takeIf { it.isNotBlank() }
             ?: rh.gs(config.appName))
-        callback.result(instantiator.providePumpEnactResult().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+        callback.result(pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
     }
 
     override fun toJSON(): String {

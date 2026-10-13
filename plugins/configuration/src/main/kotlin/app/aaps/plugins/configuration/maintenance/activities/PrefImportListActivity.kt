@@ -42,6 +42,11 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
         binding.recyclerview.adapter = RecyclerViewAdapter(fileListProvider.listPreferenceFiles())
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.recyclerview.adapter = null
+    }
+
     inner class RecyclerViewAdapter internal constructor(private var prefFileList: List<PrefsFile>) : RecyclerView.Adapter<RecyclerViewAdapter.PrefFileViewHolder>() {
 
         inner class PrefFileViewHolder(val maintenanceImportListItemBinding: MaintenanceImportListItemBinding) : RecyclerView.ViewHolder(maintenanceImportListItemBinding.root) {

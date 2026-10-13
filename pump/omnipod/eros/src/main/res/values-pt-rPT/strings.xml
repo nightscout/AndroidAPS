@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">Integração da bomba para Omnipod Eros (o modelo mais antigo). Requer um dispositivo RileyLink com pelo menos firmware versão 2.0.</string>
+    <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Mostrar botão de Pulse Log no menu de Gestão do Pod</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Mostrar botão de Estatísticas do RileyLink no menu de Gestão do Pod</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Activar o registo de mudança da bateria em Acções</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Som activado para notificações incertas da DBT</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Som activado para notificações SMB incerto</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Som activado para notificações de bolús incerto</string>
+    <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_title">Histórico do Pod</string>
+    <string name="omnipod_eros_history_item_description">Descrição</string>
+    <string name="omnipod_eros_history_item_source">Fonte</string>
+    <string name="omnipod_eros_history_item_date">Data</string>
+    <string name="omnipod_eros_history_type">Tipo:</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, HC=%2$.1f g</string>
+    <string name="omnipod_eros_history_tbr_value">Rácio: %1$.2f U, duração: %2$d minutes</string>
+    <!-- Omnipod Eros - Short Status -->
+    <string name="omnipod_eros_short_status_riley_link_battery">RLBat: %1$d</string>
+    <!-- Omnipod Eros - Error -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">Endereço RileyLink inválido.</string>
+    <string name="omnipod_eros_error_crc_mismatch">Falha na comunicação: mensagem de falha de verificação de integridade</string>
+    <string name="omnipod_eros_error_invalid_packet_type">Falha na comunicação: recebeu um pacote inválido do Pod</string>
+    <string name="omnipod_eros_error_invalid_progress_state">Falha na comunicação: o Pod está em um estado errado</string>
+    <string name="omnipod_eros_error_invalid_response">Falha na comunicação: recebeu uma resposta inválida do Pod</string>
+    <string name="omnipod_eros_error_invalid_message_sequence_number">Falha na comunicação: recebeu uma mensagem com número de sequência inválido do Pod</string>
+    <string name="omnipod_eros_error_invalid_message_address">Falha na comunicação: recebeu uma mensagem com um endereço inválido do Pod</string>
+    <string name="omnipod_eros_error_message_decoding_failed">Falha na comunicação: falha ao descodificar a mensagem do Pod</string>
+    <string name="omnipod_eros_error_nonce_resync_failed">Falha na comunicação: nonce resync falhou</string>
+    <string name="omnipod_eros_error_nonce_out_of_sync">Falha na comunicação: nonce fora de sincronização</string>
+    <string name="omnipod_eros_error_not_enough_data">Falha na comunicação: não há dados suficientes recebidos do Pod</string>
+    <string name="omnipod_eros_error_pod_fault">Foi detectada uma falha no Pod (%1$03d %2$s). Desactive seu Pod e active um novo</string>
+    <string name="omnipod_eros_error_pod_returned_error_response">Falha na comunicação: o Pod devolveu uma resposta de erro</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Sem resposta do RileyLink</string>
+    <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink interrompido</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Sem resposta do Pod</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Falha na configuração do perfil basal. A administração pode estar suspensa! Por favor, actualize manualmente o estado do Pod no separador Omnipod e retome a administração, se necessário.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">A configuração do perfil basal pode ter falhado. A administração pode estar suspensa! Por favor, actualize manualmente o estado do Pod no separador Omnipod e retome a administração, se necessário.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Falha na configuração do perfil basal. A administração está suspensa! Por favor, retome manualmente a administração a partir do separador Omnipod.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">O cancelamento de basal temporária pode ter falhado. Por favor, actualize manualmente o estado do Pod no separador Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Falha ao configurar basal temporária. Se uma basal temporária foi executada anteriormente, ela pode ter sido cancelada. Por favor, actualize manualmente o estado do Pod no separador Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Configuração de basal temporária pode ter feito falhar a basal. Se uma basal temporária foi executada anteriormente, ela foi cancelada. Por favor, actualize manualmente o estado do Pod no separador Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_validation">A duração da DBT deve ser maior que zero e um múltiplo de %1$s minutos.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Configuração da hora pode ter falhado. A administração pode estar suspensa! Por favor, actualize manualmente o estado do Pod no separador Omnipod e retome a administração, se necessário.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Configuração da Hora falhou. A administração está suspensa! Por favor, retome manualmente a administração no separador do Omnipod.</string>
+    <string name="omnipod_eros_error_failed_to_read_pulse_log">Falha ao ler o Pulse Log</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Falha ao alterar automaticamente a hora no Pod. Deve sincronizar manualmente a hora no separador do Omnipod.</string>
+    <string name="omnipod_eros_error_operation_not_possible_no_configuration">A operação não é possível.\n\nPrecisa configurar o Omnipod primeiro, antes de pode usar esta operação.</string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain">Não é possível verificar se o bólus foi bem sucedido. Por favor, verifique manualmente se o Pod está administrar bólus ouvindo os cliques. &lt;b&gt;Se tem certeza de que o bólus não foi bem sucedido, deve apagar manualmente a entrada de bólus dos Tratamentos, mesmo se clicar em \'Cancelar Bólus\' agora! &lt;b&gt;&lt;/b&gt;</string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Não é possível verificar se o bólus SMB (%1$.2f U) foi bem sucedido. <b>Se tiver certeza de que o Bólus não foi bem sucedido, deve excluir manualmente a entrada SMB a partir de Tratamentos.</b></string>
+    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Uma basal temporária está sendo executada no Pod, mas a AAPS não está ciente desta basal temporária. Por favor, cancele a sua basal temporária manualmente.</string>
+    <!-- Omnipod Eros - Pod Management -->
+    <string name="omnipod_eros_pod_management_button_riley_link_stats">Estatísticas do RileyLink</string>
+    <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">À espera de ligação RileyLink…</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Redefinir configuração RileyLink</string>
+    <string name="omnipod_eros_pod_management_button_read_pulse_log">Ler Pulse Log</string>
+    <string name="omnipod_eros_pod_management_button_reading_pulse_log">A Ler Pulse Log…</string>
+    <string name="omnipod_eros_pod_management_pulse_log_value">Pulse Log (copiado para a área de transferência)</string>
+    <!-- Omnipod Eros - Pod Activation Wizard -->
+    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">A tentar emparelhar com o novo Pod e purgá-lo.\n\nQuando o processo de inicialização for concluído com sucesso, pode pressionar <b>Seguinte</b>.\n\n<b>Nota:</b> por favor, posicione o RileyLink na posição vertical e coloque o Pod a alguns centímetros de distância dele.</string>
+</resources>

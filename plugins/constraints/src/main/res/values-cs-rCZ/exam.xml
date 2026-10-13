@@ -63,7 +63,7 @@
     <string name="basaltest_hint1">https://wiki.aaps.app/cs/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="prerequisites_label">Požadavky</string>
     <string name="prerequisites_what">Co je nezbytné pro nastavení a používání AAPS?</string>
-    <string name="prerequisites_computer">Počítač s nainstalovanou a konfigurovanou aplikací Android Studio.</string>
+    <string name="prerequisites_build">Způsob, jak si vytvořit AAPS. Buď přes webový prohlížeč, nebo počítač s nainstalovanou aplikací Android Studio.</string>
     <string name="prerequisites_pump">Kompatibilní inzulínová pumpa, pokud plánujete spuštění uzavřené smyčky.</string>
     <string name="prerequisites_nightscout">Nightscout pro záznam všech dat a kontrolu nastavení.</string>
     <string name="prerequisites_beanandroiddeveloper">Zkušenosti s programováním nebo úpravou kódu.</string>
@@ -97,7 +97,7 @@
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid ® /Novolog ®</string>
     <string name="insulin_humalog">Humalog®</string>
-    <string name="insulin_actrapid">Actrapid ®/Humilin R ®/\"běžný\" lidský inzulín.</string>
+    <string name="insulin_actrapid">Actrapid ®/Humulin R ®/„krátkodobě působící“ humánní inzulín.</string>
     <string name="insulin_hint1">https://wiki.aaps.app/cs/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
     <string name="sensitivity_label">Pluginy Citlivost</string>
     <string name="sensitivity_adjust">Pluginy citlivosti umožňují AAPS přizpůsobit se dočasným nebo krátkodobým změnám v citlivosti inzulinu (například hormonální změny nebo problémy s absorpcí na infúzním místě).</string>

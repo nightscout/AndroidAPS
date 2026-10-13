@@ -64,9 +64,6 @@
     <string name="insulinlackwarning">Advarsel: lavt insulinnivå</string>
     <string name="needbatteryreplace">Bytte av batteri er nødvendig</string>
     <string name="needinsullinreplace">Påfyll av insulin er nødvendig</string>
-    <string name="pumpversion">pump_versjon</string>
-    <string name="apsIncarnationNo">aps_incarnation_no</string>
-    <string name="pumpserialno">pump_serial_no</string>
     <string name="diaconn_g8_loginsulinchange_title">Logg reservoar bytte</string>
     <string name="diaconn_g8_loginsulinchange_summary">Legg til \"Insulinbytte\" i Helseportal når den oppdages i historikken</string>
     <string name="diaconn_g8_logcanulachange_title">Logg bytte av kanyle</string>

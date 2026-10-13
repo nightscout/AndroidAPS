@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Pompadaki Maks Bolus (Ü)</string>
     <string name="medtronic_pump_max_basal">Pompadaki Maks Bazal (Ü/s)</string>
     <string name="medtronic_pump_encoding">Medtronic Kodlama</string>
-    <string name="medtronic_pump_frequency_us_ca">ABD &amp; Kanada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Dünya geneli (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Yazılım 4b6b Kodlama</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Donanım 4b6b Kodlama</string>
     <string name="medtronic_custom_action_wake_and_tune">Uyan ve Ayarla</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bolus Bloğunu Temizle</string>
     <string name="medtronic_custom_action_reset_rileylink">RileyLink Yapılandırmasını Sıfırla</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Lityum (Genişletilmiş görünüm)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Genişletilmiş görünüm)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Genişletilmiş görünüm)</string>
-    <string name="medtronic_bolus_debugging">Bolus/Tedavilerde Hata Ayıklama</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink Pili</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">önce</string>
     <string name="medtronic_notification_check_time_date">Pompa saati güncellemesi gerekli</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">Aç</string>
-    <string name="common_off">Kapa</string>
     <string name="pump_time_updated">Pompa zamanı güncellendi</string>
     <string name="set_neutral_temps_title">Sık kullanılan Geçici Bazalları ayarla</string>
     <string name="set_neutral_temps_summary">Etkinleştirilirse, her saatin sonunda geçici bazali iptal eder. Bu yöntem, bazı pompaların saatte bip sesini/titremesini durdurmaya yardımcı olabilir.</string>

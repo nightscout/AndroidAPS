@@ -14,8 +14,8 @@
     <string name="operating_mode">運行模式</string>
     <string name="description_pump_insight_local">Accu-Chek Insight 幫浦整合</string>
     <string name="not_inserted">未植入</string>
-    <string name="tdd_bolus">TDD 注射</string>
-    <string name="tdd_basal">TDD 基礎率</string>
+    <string name="tdd_bolus">每日總劑量注射</string>
+    <string name="tdd_basal">每日總劑量基礎率</string>
     <string name="tbr_formatter">%1$d%% 持續 %2$d / %3$d 分鐘</string>
     <string name="multiwave_bolus">多波段胰島素注射</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U 持續 %3$d 分鐘</string>
@@ -36,13 +36,6 @@
     <string name="timeout_during_handshake">交握過程中逾時 - 重置藍牙</string>
     <string name="pump_stopped">幫浦停止</string>
     <string name="pump_started">幫浦啟動</string>
-    <string name="short_status_last_connected">上次連線：%1$d 分鐘前</string>
-    <string name="short_status_tbr">臨時基礎率：%1$d%% 持續 %2$d / %3$d 分鐘</string>
-    <string name="short_status_extended">延長：%1$.2f / %2$.2f U 持續 %3$d 分鐘</string>
-    <string name="short_status_multiwave">多波：%1$.2f / %2$.2f U 持續 %3$d 分鐘</string>
-    <string name="short_status_tdd">TDD：%1$.2f</string>
-    <string name="short_status_reservoir">儲存：%1$.2f U</string>
-    <string name="short_status_battery">電池：%1$d%%</string>
     <string name="release_software_version">釋出軟體版本</string>
     <string name="ui_processor_software_version">UI 處理器軟體版本</string>
     <string name="pc_processor_software_version">PC 處理器軟體版本</string>

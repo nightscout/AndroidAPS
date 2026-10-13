@@ -5,7 +5,6 @@
     <string name="error">Fejl</string>
     <string name="profile_set_ok">Basal profil i pumpen er opdateret</string>
     <string name="invalid_input">Ugyldigt input</string>
-    <string name="bolus_delivering">Afgiver %1$.2f IE</string>
     <string name="constraint_applied">Begrænsning anvendt!</string>
     <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
     <string name="tt_label">Midlertidig Mål</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f E/t</string>
     <string name="pump_not_initialized_profile_not_set">Pumpe ikke initialiseret, profil ikke angivet!</string>
     <string name="failed_update_basal_profile">Opdatering af basal profil mislykkedes</string>
-    <string name="bolus_delivered_successfully">Bolus %1$.2fE leveret succesfuldt</string>
     <string name="no_valid_basal_rate">Ingen gyldig basal rate læst fra pumpen</string>
     <string name="limiting_iob">Begrænser IOB til %1$.1f IE på grund af %2$s</string>
     <string name="loop_disabled">LOOP DEAKTIVERET AF BEGRÆNSNINGER</string>
@@ -89,7 +87,6 @@
     <string name="loopisdisabled">Loop er deaktiveret</string>
     <string name="alarm">Alarm</string>
     <string name="disableloop">Deaktivér loop</string>
-    <string name="enableloop">Aktiver loop</string>
     <string name="resumeloop">Genoptag loop</string>
     <string name="suspendloop">Suspendér Loop</string>
     <string name="duration_min_label">Varighed [min]</string>
@@ -103,7 +100,6 @@
     <string name="name_short">Navn:</string>
     <string name="time">Tid</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="loading">Indlæser …</string>
     <string name="notes_label">Bemærkninger</string>
     <string name="remove_button">Fjern</string>
     <string name="add_new">Tilføj ny</string>
@@ -164,7 +160,6 @@
     <string name="canceling_tbr_failed">Annullering af midlertidig basal mislykkedes</string>
     <string name="canceling_eb_failed">Annullering af forlænget bolus mislykkedes</string>
     <string name="virtualpump_uploadstatus_title">Upload pumpestatus til NS eller Tidepool</string>
-    <string name="suspendloop_label">Deaktiveret/Suspendéret Loop</string>
     <string name="iob_label">Insulin om bord (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Forkert kodeord</string>
@@ -281,7 +276,6 @@
     <string name="uel_lgs_loop_mode">LGS LOOP MODUS</string>
     <string name="uel_open_loop_mode">ÅBEN LOOP MODUS</string>
     <string name="uel_loop_disabled">LOOP DEAKTIVERET</string>
-    <string name="uel_loop_enabled">LOOP AKTIVERET</string>
     <string name="uel_reconnect">GENFORBIND</string>
     <string name="uel_disconnect">AFBRYD</string>
     <string name="uel_resume">FORTSÆT</string>
@@ -554,4 +548,5 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f IE</string>
     <string name="format_insulin_units">%1$.2f IE</string>
+    <!--    Playback-->
 </resources>

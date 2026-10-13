@@ -2,13 +2,12 @@ package app.aaps.implementation.stats
 
 import android.content.Context
 import android.graphics.Typeface
-import android.util.LongSparseArray
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import androidx.core.util.size
+import androidx.collection.LongSparseArray
 import app.aaps.core.data.aps.AverageTDD
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TDD
@@ -49,18 +48,24 @@ class TddCalculatorImpl @Inject constructor(
             .plusDays(days)
             .toInstant().toEpochMilli()
 
+        aapsLogger.debug(LTag.APS, "Calculating TotalDailyDose from ${dateUtil.dateString(startTime)} to ${dateUtil.dateString(endTime)}")
+
         val result = LongSparseArray<TDD>()
         // Try to load cached values
         while (startTime < endTime) {
-            persistenceLayer.getCalculatedTotalDailyDose(startTime)?.let { result.put(startTime, it) } ?: break
-            //startTime += stepSize
-            startTime = MidnightTime.calc(startTime + T.hours(27).msecs()) // be sure we find correct midnight
+            aapsLogger.debug(LTag.APS, "Looking for cached TotalDailyDose for ${dateUtil.dateString(startTime)}")
+            persistenceLayer.getCalculatedTotalDailyDose(startTime)?.let {
+                result.put(startTime, it)
+                aapsLogger.debug(LTag.APS, "Loaded cached TotalDailyDose for ${dateUtil.dateString(it.timestamp)} $it")
+            } ?: break
+            startTime = MidnightTime.calc(startTime + T.hours(27).msecs()) // be sure we find correct midnight during DST change
         }
 
         if (endTime > startTime) {
             var midnight = startTime
             while (midnight < endTime) {
                 val tdd = calculateInterval(midnight, midnight + T.hours(24).msecs(), allowMissingData = false)
+                aapsLogger.debug(LTag.APS, "Calculated TotalDailyDose for ${dateUtil.dateString(midnight)} $tdd")
                 if (tdd != null) result.put(midnight, tdd)
                 midnight = MidnightTime.calc(midnight + T.hours(27).msecs()) // be sure we find correct midnight
             }
@@ -69,11 +74,12 @@ class TddCalculatorImpl @Inject constructor(
             val tdd = result.valueAt(i)
             if (tdd.ids.pumpType != PumpType.CACHE) {
                 tdd.ids.pumpType = PumpType.CACHE
-                aapsLogger.debug(LTag.CORE, "Storing TDD ${tdd.timestamp}")
-                persistenceLayer.insertTotalDailyDose(tdd)
+                persistenceLayer.insertOrUpdateCachedTotalDailyDose(tdd).subscribe()
+            } else {
+                aapsLogger.debug(LTag.APS, "Skipping storing TotalDailyDose for ${dateUtil.dateString(tdd.timestamp)}")
             }
         }
-        if (result.size.toLong() == days || allowMissingDays) return result
+        if (result.size().toLong() == days || allowMissingDays) return result
         return null
     }
 

@@ -1,8 +1,8 @@
 package app.aaps.core.interfaces.stats
 
 import android.content.Context
-import android.util.LongSparseArray
 import android.widget.TableLayout
+import androidx.collection.LongSparseArray
 
 interface TirCalculator {
 

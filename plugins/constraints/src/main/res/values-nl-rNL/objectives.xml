@@ -16,11 +16,12 @@
     <string name="objectives_maxbasal">Actie uitvoeren om aanbeveling uit te voeren</string>
     <string name="objectives_maxbasal_learned">Ga zorgvuldig om met de veiligheidsfuncties en pas de veiligheidsparameters aan indien nodig.</string>
     <string name="objectives_maxiobzero_objective">Starten met de Closed Loop met bescherming tegen lage Bg</string>
-    <string name="objectives_maxiobzero_gate">In closed loop draaien met een max. IOB = 0 gedurende enkele dagen met een beperkt aantal lage BG</string>
+    <string name="objectives_maxiobzero_gate">Closed loop uitvoeren in Lage Glucose Suspend modus (d. w. z. max IOB = 0 wordt automatisch ingesteld) gedurende enkele dagen zonder te veel LGS-gebeurtenissen.</string>
     <string name="objectives_maxiobzero_learned">MaxIOB instellen op 0 is om te voorkomen dat u een hypo krijgt en zal niet meer insuline dan de basaal instelling toevoegen (behalve in een situatie met negatieve IOB)</string>
     <string name="objectives_maxiob_objective">Inregelen van de closed loop, verhoog de max IOB boven 0 en laat geleidelijk het streef BG dalen</string>
     <string name="objectives_maxiob_gate">Test enkele dagen als ook minstens 1 nacht zonder een laag BG alarm voordat je jouw streef BG verlaagt</string>
-    <string name="objectives_maxiob_learned">Pas MaxIOB aan naarmate een kind ouder wordt. Laat het systeem niet meer insuline geven dan wat door te eten gecompenseerd kan worden = een erg hoge waarde is niet verstandig.</string>
+    <string name="objectives_maxiob_learned">Pas MaxIOB aan naarmate een kind ouder wordt. Laat het systeem niet meer insuline geven dan wat door te eten gecompenseerd kan worden = een erg hoge waarde is niet verstandig. In de eenvoudige modus wordt Max IOB automatisch berekend</string>
+    <string name="maxiobset">Maximale IOB correct ingesteld (niet nodig in eenvoudige modus)</string>
     <string name="objectives_autosens_objective">Pas het basaal en de ratios aan indien nodig, activeer hierna de auto-sens optie</string>
     <string name="objectives_autosens_gate">Gedurende 1 week succesvol overdag loopen met regelmatige invoer van koolhydraten</string>
     <string name="objectives_autosens_learned">Als het resultaat van autosens zich niet rond de 100% beweegt dan is je profiel waarschijnlijk niet juist.</string>

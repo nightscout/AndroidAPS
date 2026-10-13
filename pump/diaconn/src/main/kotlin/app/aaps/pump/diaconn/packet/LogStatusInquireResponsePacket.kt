@@ -1,21 +1,18 @@
 package app.aaps.pump.diaconn.packet
 
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.diaconn.DiaconnG8Pump
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 /**
  * LogStatusInquireResponsePacket
  */
-@Suppress("SpellCheckingInspection")
 open class LogStatusInquireResponsePacket(
     injector: HasAndroidInjector
 ) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
-
-    var result = 0
 
     init {
         msgType = 0x96.toByte()
@@ -31,7 +28,7 @@ open class LogStatusInquireResponsePacket(
         } else failed = false
 
         val bufferData = prefixDecode(data)
-        result = getByteToInt(bufferData)
+        val result = getByteToInt(bufferData)
         if (!isSuccInquireResponseResult(result)) {
             failed = true
             return

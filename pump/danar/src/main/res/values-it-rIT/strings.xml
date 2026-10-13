@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="unsupported_action_in_pump">Azione non supportata nel micro. Usa solo l\'interfaccia di AndroidAPS!</string>
+    <string name="waiting_1_minute">In attesa di %1$d/%2$d sec prima del nuovo tentativo di connessione</string>
 </resources>

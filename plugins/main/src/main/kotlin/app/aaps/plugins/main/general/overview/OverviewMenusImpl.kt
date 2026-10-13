@@ -1,7 +1,7 @@
 package app.aaps.plugins.main.general.overview
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
@@ -20,6 +20,7 @@ import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.graphics.drawable.toDrawable
 import androidx.gridlayout.widget.GridLayout
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
@@ -29,9 +30,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventScale
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.main.R
+import app.aaps.plugins.main.general.overview.keys.OverviewStringKey
 import com.google.gson.Gson
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -40,7 +42,6 @@ import javax.inject.Singleton
 class OverviewMenusImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
-    private val sp: SP,
     private val preferences: Preferences,
     private val rxBus: RxBus,
     private val config: Config,
@@ -54,7 +55,8 @@ class OverviewMenusImpl @Inject constructor(
         val primary: Boolean,
         val secondary: Boolean,
         @StringRes val shortnameId: Int,
-        val enabledByDefault: Boolean = false
+        val enabledByDefault: Boolean = false,
+        var visibility: () -> Boolean = { true }
     ) {
 
         PRE(R.string.overview_show_predictions, app.aaps.core.ui.R.attr.predictionColor, app.aaps.core.ui.R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.prediction_shortname, enabledByDefault = true),
@@ -71,6 +73,18 @@ class OverviewMenusImpl @Inject constructor(
         DEVSLOPE(R.string.overview_show_deviation_slope, app.aaps.core.ui.R.attr.devSlopePosColor, app.aaps.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.devslope_shortname),
         HR(R.string.overview_show_heartRate, app.aaps.core.ui.R.attr.heartRateColor, app.aaps.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.heartRate_shortname),
         STEPS(R.string.overview_show_steps, app.aaps.core.ui.R.attr.stepsColor, app.aaps.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.steps_shortname),
+    }
+
+    init {
+        CharTypeData.PRE.visibility = {
+            when {
+                config.APS        -> loop.lastRun?.request?.hasPredictions == true
+                config.AAPSCLIENT -> true
+                else              -> false
+            }
+        }
+        CharTypeData.DEVSLOPE.visibility = { config.isDev() }
+        CharTypeData.VAR_SENS.visibility = { preferences.get(BooleanKey.ApsUseDynamicSensitivity) || (preferences.get(BooleanKey.ApsUseAutoIsfWeights) && config.isDev()) }
     }
 
     companion object {
@@ -113,14 +127,14 @@ class OverviewMenusImpl @Inject constructor(
     @Synchronized
     private fun storeGraphConfig() {
         val sts = Gson().toJson(_setting)
-        sp.putString(R.string.key_graph_config, sts)
+        preferences.put(OverviewStringKey.GraphConfig, sts)
         aapsLogger.debug(sts)
     }
 
     @Synchronized
     override fun loadGraphConfig() {
         assert(CharTypeData.entries.size == OverviewMenus.CharType.entries.size)
-        val sts = sp.getString(R.string.key_graph_config, "")
+        val sts = preferences.get(OverviewStringKey.GraphConfig)
         if (sts.isNotEmpty()) {
             _setting = Gson().fromJson(sts, Array<Array<Boolean>>::class.java).toMutableList()
             // reset when new CharType added
@@ -133,6 +147,7 @@ class OverviewMenusImpl @Inject constructor(
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun setupChartMenu(chartButton: ImageButton, scaleButton: Button) {
         chartButton.setColorFilter(rh.gac(chartButton.context, app.aaps.core.ui.R.attr.defaultTextColor))
         scaleButton.setCompoundDrawablesWithIntrinsicBounds(
@@ -143,13 +158,8 @@ class OverviewMenusImpl @Inject constructor(
         )
         chartButton.setOnClickListener { v: View ->
             var itemRow = 0
-            val predictionsAvailable: Boolean = when {
-                config.APS        -> loop.lastRun?.request?.hasPredictions == true
-                config.AAPSCLIENT -> true
-                else              -> false
-            }
             val popup = PopupWindow(v.context)
-            popup.setBackgroundDrawable(ColorDrawable(rh.gac(chartButton.context, app.aaps.core.ui.R.attr.popupWindowBackground)))
+            popup.setBackgroundDrawable(rh.gac(chartButton.context, app.aaps.core.ui.R.attr.popupWindowBackground).toDrawable())
             val scrollView = ScrollView(v.context)                        // required to be able to scroll menu on low res screen
             val horizontalScrollView = HorizontalScrollView(v.context)    // Workaround because I was not able to manage first column width for long labels
             horizontalScrollView.addView(scrollView)
@@ -160,17 +170,15 @@ class OverviewMenusImpl @Inject constructor(
             scrollView.addView(layout)
             layout.columnCount = MAX_GRAPHS
 
-            // instert primary items
+            // insert primary items
             CharTypeData.entries.forEach { m ->
-                var insert = true
-                if (m == CharTypeData.PRE) insert = predictionsAvailable
-                if (insert && m.primary) {
+                if (m.visibility.invoke() && m.primary) {
                     createCustomMenuItemView(v.context, m, itemRow, layout, true)
                     itemRow++
                 }
             }
 
-            // insert hearder row
+            // insert header row
             var layoutParamsLabel = GridLayout.LayoutParams(GridLayout.spec(itemRow, 1), GridLayout.spec(0, 1))
             val textView = TextView(v.context).also {
                 it.text = " ${rh.gs(R.string.graph_menu_divider_header)}"
@@ -189,11 +197,9 @@ class OverviewMenusImpl @Inject constructor(
             }
             itemRow++
 
-            // instert secondary items
+            // insert secondary items
             CharTypeData.entries.forEach { m ->
-                var insert = true
-                if (m == CharTypeData.DEVSLOPE) insert = config.isDev()
-                if (insert && m.secondary) {
+                if (m.visibility.invoke() && m.secondary) {
                     createCustomMenuItemView(v.context, m, itemRow, layout, false)
                     itemRow++
                 }

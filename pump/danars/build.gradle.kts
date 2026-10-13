@@ -9,11 +9,6 @@ plugins {
 
 android {
     namespace = "app.aaps.pump.danars"
-    ndkVersion = Versions.ndkVersion
-
-    sourceSets.getByName("main") {
-        jniLibs.srcDirs("src/main/jniLibs")
-    }
 }
 
 dependencies {

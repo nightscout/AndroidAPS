@@ -28,6 +28,54 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingStart="0dp"
+                android:paddingEnd="5dp"
+                android:text="@string/pump_suspended"
+                android:textAlignment="viewEnd"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:gravity="center_horizontal"
+                android:paddingStart="2dp"
+                android:paddingEnd="2dp"
+                android:text=":"
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/pump_suspended"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start|center_vertical"
+                android:paddingStart="5dp"
+                android:paddingEnd="0dp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="5dp"
+            android:background="?android:attr/dividerHorizontal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:paddingStart="0dp"
                 android:paddingEnd="5dp"
                 android:text="@string/base_basal_rate_label"
@@ -398,7 +446,10 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
-
     </LinearLayout>
 
+
+
+
 </ScrollView>
+

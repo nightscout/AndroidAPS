@@ -1,33 +1,21 @@
 package app.aaps.pump.danars.comm
 
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.pump.danars.DanaRSTestBase
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.anyDouble
-import org.mockito.Mockito.anyInt
-import org.mockito.Mockito.`when`
+import org.mockito.ArgumentMatchers.anyDouble
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.kotlin.whenever
 
 class DanaRSPacketNotifyDeliveryCompleteTest : DanaRSTestBase() {
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is DanaRSPacketNotifyDeliveryComplete) {
-                it.aapsLogger = aapsLogger
-                it.rxBus = rxBus
-                it.rh = rh
-                it.danaPump = danaPump
-            }
-        }
-    }
+    @Test
+    fun runTest() {
+        whenever(rh.gs(anyInt(), anyDouble())).thenReturn("SomeString")
 
-    @Test fun runTest() {
-        `when`(rh.gs(anyInt(), anyDouble())).thenReturn("SomeString")
-
-        danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true, 0)
-        val packet = DanaRSPacketNotifyDeliveryComplete(packetInjector)
+        danaPump.bolusingDetailedBolusInfo = DetailedBolusInfo()
+        val packet = DanaRSPacketNotifyDeliveryComplete(aapsLogger, rh, rxBus, danaPump)
         // test params
         Assertions.assertEquals(0, packet.getRequestParams().size)
         // test message decoding

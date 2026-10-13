@@ -78,9 +78,8 @@
     <string name="deltalabel">KŞ farkı</string>
     <string name="deltalabel_u">KŞ farkı [%1$s]</string>
     <string name="currentlocation">Mevcut konum</string>
+    <string name="choose_from_map">Haritadan seç</string>
     <string name="location">Konum</string>
-    <string name="latitude_short">Enlem:</string>
-    <string name="longitude_short">Boylam:</string>
     <string name="glucose_u">Glukoz [%1$s]:</string>
     <string name="target_u">Hedef [%1$s]:</string>
     <string name="lastboluslabel">Son bolus önce</string>
@@ -141,4 +140,5 @@
     <string name="triggerStepsCountLabel">Adım Sayacı</string>
     <string name="triggerStepsCountDesc">Her %1$s dakikadaki %2$s %3$.0f Adım sayısı</string>
     <string name="triggerStepsCountDropdownLabel">Ölçüm Süresi</string>
+    <!--    SMB mode-->
 </resources>

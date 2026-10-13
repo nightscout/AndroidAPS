@@ -18,7 +18,7 @@ import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.objects.extensions.asSettingsExport
 import app.aaps.core.utils.JsonHelper
@@ -90,8 +90,7 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
                     notification = NotificationUserMessage(exportResultMessage, Notification.URGENT) // URGENT -> e.g. color RED
                     announceAlert = true
                 }
-            }
-            else {
+            } else {
                 // No password or was expired and needs re-entering by user
                 exportResultComment = app.aaps.core.ui.R.string.export_expired
                 exportResultMessage = rh.gs(app.aaps.core.ui.R.string.export_result_message_expired)
@@ -101,8 +100,7 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
                 exportPasswordDataStore.clearPasswordDataStore(context)
                 announceAlert = true
             }
-        }
-        else {
+        } else {
             // Not enabled, do nothing and notify user
             exportResultComment = app.aaps.core.ui.R.string.export_disabled
             exportResultMessage = rh.gs(app.aaps.core.ui.R.string.export_result_message_disabled)
@@ -116,7 +114,7 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
         val error = "${text.value}: $exportResultMessage"
         aapsLogger.debug(LTag.AUTOMATION, "Insert therapy EXPORT_SETTINGS event, error=:${error}, doAlsoAnnouncement=$announceAlert")
         disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-            therapyEvent = TE.asSettingsExport(error=error),
+            therapyEvent = TE.asSettingsExport(error = error),
             timestamp = dateUtil.now(),
             action = app.aaps.core.data.ue.Action.EXPORT_SETTINGS, // Signal export was done to automation!
             source = Sources.Automation,
@@ -124,13 +122,12 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
             listValues = listOf()
         ).subscribe()
 
-        if (announceAlert && preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS)
-        {
+        if (announceAlert && preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS) {
             // Do additional event type announcement for aapsClient alerting
             val alert = "${rh.gs(app.aaps.core.ui.R.string.export_alert)}(${text.value}): $exportResultMessage"
             aapsLogger.debug(LTag.AUTOMATION, "Insert therapy ALERT/ANNOUNCEMENT event, error=:${alert}")
             disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-                therapyEvent = TE.asAnnouncement(error=alert),
+                therapyEvent = TE.asAnnouncement(error = alert),
                 timestamp = dateUtil.now(),
                 action = app.aaps.core.data.ue.Action.EXPORT_SETTINGS,
                 source = Sources.Automation,
@@ -140,7 +137,7 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
         }
 
         rxBus.send(EventRefreshOverview("ActionSettingsExport"))
-        callback.result(instantiator.providePumpEnactResult().success(true).comment(exportResultComment)).run()
+        callback.result(pumpEnactResultProvider.get().success(true).comment(exportResultComment)).run()
     }
 
     override fun toJSON(): String {

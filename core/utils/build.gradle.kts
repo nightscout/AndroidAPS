@@ -1,3 +1,5 @@
+import kotlin.math.min
+
 plugins {
     alias(libs.plugins.android.library)
     id("kotlin-android")
@@ -10,6 +12,9 @@ plugins {
 
 android {
     namespace = "app.aaps.core.utils"
+    defaultConfig {
+        minSdk = min(Versions.minSdk, Versions.wearMinSdk)
+    }
 }
 
 dependencies {

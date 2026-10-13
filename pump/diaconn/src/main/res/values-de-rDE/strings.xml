@@ -64,9 +64,6 @@
     <string name="insulinlackwarning">Warnung Insulinmangel</string>
     <string name="needbatteryreplace">Batteriewechsel erforderlich</string>
     <string name="needinsullinreplace">Neues Insulin erforderlich</string>
-    <string name="pumpversion">pump_version</string>
-    <string name="apsIncarnationNo">aps_incarnation_no</string>
-    <string name="pumpserialno">pump_serial_no</string>
     <string name="diaconn_g8_loginsulinchange_title">Reservoirwechsel aufzeichnen</string>
     <string name="diaconn_g8_loginsulinchange_summary">Reservoirwechsel im Careportal hinzufügen, falls dies in der Historie gefunden wird.</string>
     <string name="diaconn_g8_logcanulachange_title">Kanülenwechsel protokollieren</string>

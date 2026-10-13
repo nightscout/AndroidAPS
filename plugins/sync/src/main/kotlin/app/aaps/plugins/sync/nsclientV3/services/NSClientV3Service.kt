@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.os.PowerManager
+import androidx.annotation.OpenForTesting
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -13,25 +14,25 @@ import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.*
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.mapper.toNSDeviceStatus
 import app.aaps.core.nssdk.mapper.toNSFood
 import app.aaps.core.nssdk.mapper.toNSSgvV3
 import app.aaps.core.nssdk.mapper.toNSTreatment
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.NSAlarmObject
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import app.aaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import dagger.android.DaggerService
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.socket.client.Ack
 import io.socket.client.IO
@@ -45,11 +46,9 @@ import javax.inject.Inject
 @Suppress("SpellCheckingInspection")
 class NSClientV3Service : DaggerService() {
 
-    @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
@@ -89,11 +88,12 @@ class NSClientV3Service : DaggerService() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int = START_STICKY
 
-    internal var storageSocket: Socket? = null
-    private var alarmSocket: Socket? = null
+    var storageSocket: Socket? = null
+    var alarmSocket: Socket? = null
     internal var wsConnected = false
 
-    private fun shutdownWebsockets() {
+    @OpenForTesting
+    fun shutdownWebsockets() {
         storageSocket?.on(Socket.EVENT_CONNECT, onConnectStorage)
         storageSocket?.on(Socket.EVENT_DISCONNECT, onDisconnectStorage)
         storageSocket?.on("create", onDataCreateUpdate)
@@ -113,13 +113,13 @@ class NSClientV3Service : DaggerService() {
     }
 
     @Suppress("SameParameterValue")
-    private fun initializeWebSockets(reason: String) {
+    fun initializeWebSockets(reason: String) {
         if (preferences.get(StringKey.NsClientUrl).isEmpty()) return
         val urlStorage = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/storage"
         val urlAlarm = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/alarm"
         if (!nsClientV3Plugin.isAllowed) {
             rxBus.send(EventNSClientNewLog("● WS", nsClientV3Plugin.blockingReason))
-        } else if (sp.getBoolean(R.string.key_ns_paused, false)) {
+        } else if (preferences.get(NsclientBooleanKey.NsPaused)) {
             rxBus.send(EventNSClientNewLog("● WS", "paused"))
         } else {
             try {
@@ -219,8 +219,14 @@ class NSClientV3Service : DaggerService() {
         val docString = response.getString("doc")
         rxBus.send(EventNSClientNewLog("◄ WS CREATE/UPDATE", "$collection <i>$docString</i>"))
         val srvModified = docJson.getLong("srvModified")
-        nsClientV3Plugin.lastLoadedSrvModified.set(collection, srvModified)
-        nsClientV3Plugin.storeLastLoadedSrvModified()
+        // Don't advance the high-water-mark until the initial catch-up load chain
+        // has finished after a (re)connect. Otherwise the Load*Worker chain would
+        // query "modifiedSince (just-bumped pointer)" and skip exactly the offline
+        // window we need to backfill.
+        if (nsClientV3Plugin.initialLoadFinished) {
+            nsClientV3Plugin.lastLoadedSrvModified.set(collection, srvModified)
+            nsClientV3Plugin.storeLastLoadedSrvModified()
+        }
         when (collection) {
             "devicestatus" -> docString.toNSDeviceStatus().let { nsDeviceStatusHandler.handleNewData(arrayOf(it)) }
             "entries"      -> docString.toNSSgvV3()?.let {
@@ -233,7 +239,7 @@ class NSClientV3Service : DaggerService() {
 
             "treatments"   -> docString.toNSTreatment()?.let {
                 nsIncomingDataProcessor.processTreatments(listOf(it), doFullSync = false)
-                storeDataForDb.storeTreatmentsToDb()
+                storeDataForDb.storeTreatmentsToDb(fullSync = false)
             }
 
             "foods"        -> docString.toNSFood()?.let {
@@ -300,7 +306,7 @@ class NSClientV3Service : DaggerService() {
         rxBus.send(EventNSClientNewLog("◄ ALARM", data.optString("message")))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
         if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
-            val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + data.optString("level"), 0L)
+            val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, data.optString("level"))
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
                 uiInteraction.addNotificationWithAction(NSAlarmObject(data))
         }
@@ -311,7 +317,7 @@ class NSClientV3Service : DaggerService() {
         rxBus.send(EventNSClientNewLog("◄ URGENT ALARM", data.optString("message")))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
         if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
-            val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + data.optString("level"), 0L)
+            val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, data.optString("level"))
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
                 uiInteraction.addNotificationWithAction(NSAlarmObject(data))
         }
@@ -335,7 +341,7 @@ class NSClientV3Service : DaggerService() {
     }
 
     fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
-        alarmSocket?.emit("ack", originalAlarm.level(), originalAlarm.group(), silenceTimeInMilliseconds)
-        rxBus.send(EventNSClientNewLog("► ALARMACK ", "${originalAlarm.level()} ${originalAlarm.group()} $silenceTimeInMilliseconds"))
+        alarmSocket?.emit("ack", originalAlarm.level, originalAlarm.group, silenceTimeInMilliseconds)
+        rxBus.send(EventNSClientNewLog("► ALARMACK ", "${originalAlarm.level} ${originalAlarm.group} $silenceTimeInMilliseconds"))
     }
 }

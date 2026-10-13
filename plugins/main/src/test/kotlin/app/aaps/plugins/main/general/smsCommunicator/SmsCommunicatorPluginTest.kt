@@ -1,23 +1,23 @@
 package app.aaps.plugins.main.general.smsCommunicator
 
-import android.content.SharedPreferences
 import android.telephony.SmsManager
-import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GV
-import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
+import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileSource
+import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.smsCommunicator.Sms
@@ -29,13 +29,6 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.fromGv
-import app.aaps.core.validators.preferences.AdaptiveDoublePreference
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveIntentPreference
-import app.aaps.core.validators.preferences.AdaptiveStringPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
-import app.aaps.core.validators.preferences.AdaptiveUnitPreference
-import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.plugins.aps.loop.LoopPlugin
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePassword
@@ -45,13 +38,19 @@ import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyBoolean
+import org.mockito.ArgumentMatchers.anyDouble
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.Mockito.anyLong
-import org.mockito.Mockito.`when`
 import org.mockito.invocation.InvocationOnMock
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.whenever
+import javax.inject.Provider
 
 @Suppress("SpellCheckingInspection")
 class SmsCommunicatorPluginTest : TestBaseWithProfile() {
@@ -67,52 +66,10 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var dateUtilMocked: DateUtil
     @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var smsManager: SmsManager
-    @Mock lateinit var sharedPrefs: SharedPreferences
-
-    init {
-        addInjector {
-            if (it is AdaptiveDoublePreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-            }
-            if (it is AdaptiveIntPreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-                it.config = config
-            }
-            if (it is AdaptiveUnitPreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-            }
-            if (it is AdaptiveIntentPreference) {
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-            }
-            if (it is AdaptiveStringPreference) {
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-            }
-            if (it is AdaptiveSwitchPreference) {
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-                it.config = config
-            }
-            if (it is AuthRequest) {
-                it.aapsLogger = aapsLogger
-                it.smsCommunicator = smsCommunicatorPlugin
-                it.rh = rh
-                it.otp = otp
-                it.dateUtil = dateUtil
-                it.commandQueue = commandQueue
-            }
-        }
-    }
+    @Mock lateinit var configBuilder: ConfigBuilder
+    @Mock lateinit var pumpStatusProvider: PumpStatusProvider
 
     private lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
-    private var hasBeenRun = false
     private val modeClosed = "Closed Loop"
     private val modeOpen = "Open Loop"
     private val modeLgs = "Low Glucose Suspend"
@@ -123,162 +80,167 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         val bgList: MutableList<GV> = ArrayList()
         bgList.add(reading)
 
-        `when`(iobCobCalculator.getCobInfo("SMS COB")).thenReturn(CobInfo(0, 10.0, 2.0))
-        `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
-        `when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue.fromGv(reading))
+        whenever(iobCobCalculator.getCobInfo("SMS COB")).thenReturn(CobInfo(0, 10.0, 2.0))
+        whenever(iobCobCalculator.ads).thenReturn(autosensDataStore)
+        whenever(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue.fromGv(reading))
 
-        `when`(preferences.get(StringKey.SmsAllowedNumbers)).thenReturn("1234;5678")
+        whenever(preferences.get(StringKey.SmsAllowedNumbers)).thenReturn("1234;5678")
 
-        `when`(
-            persistenceLayer.insertAndCancelCurrentTemporaryTarget(anyObject(), anyObject(), anyObject(), anyObject(), anyObject())
+        whenever(
+            persistenceLayer.insertAndCancelCurrentTemporaryTarget(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
         ).thenReturn(Single.just(PersistenceLayer.TransactionResult<TT>().apply {
         }))
-        val glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculator, dateUtilMocked, decimalFormatter)
 
+        val authRequestProvider = Provider { AuthRequest(aapsLogger, smsCommunicatorPlugin, rh, otp, dateUtil, commandQueue) }
         smsCommunicatorPlugin = SmsCommunicatorPlugin(
-            injector, aapsLogger, rh, smsManager, aapsSchedulers, preferences, constraintChecker, rxBus, profileFunction, profileUtil, fabricPrivacy, activePlugin, commandQueue,
+            aapsLogger, rh, smsManager, aapsSchedulers, preferences, constraintChecker, rxBus, profileFunction, profileUtil, fabricPrivacy, activePlugin, commandQueue,
             loop, iobCobCalculator, xDripBroadcast,
             otp, config, dateUtilMocked, uel,
-            glucoseStatusProvider, persistenceLayer, decimalFormatter
+            smbGlucoseStatusProvider, persistenceLayer, decimalFormatter, configBuilder, authRequestProvider, pumpStatusProvider
         )
-        smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
-        Mockito.doAnswer { invocation: InvocationOnMock ->
-            val callback = invocation.getArgument<Callback>(1)
-            callback.result = instantiator.providePumpEnactResult().success(true)
-            callback.run()
-            null
-        }.`when`(commandQueue).cancelTempBasal(ArgumentMatchers.anyBoolean(), ArgumentMatchers.any(Callback::class.java))
-        Mockito.doAnswer { invocation: InvocationOnMock ->
-            val callback = invocation.getArgument<Callback>(0)
-            callback.result = instantiator.providePumpEnactResult().success(true)
-            callback.run()
-            null
-        }.`when`(commandQueue).cancelExtended(ArgumentMatchers.any(Callback::class.java))
-        Mockito.doAnswer { invocation: InvocationOnMock ->
-            val callback = invocation.getArgument<Callback>(1)
-            callback.result = instantiator.providePumpEnactResult().success(true)
-            callback.run()
-            null
-        }.`when`(commandQueue).readStatus(ArgumentMatchers.anyString(), ArgumentMatchers.any(Callback::class.java))
-        Mockito.doAnswer { invocation: InvocationOnMock ->
-            val callback = invocation.getArgument<Callback>(1)
-            callback.result = instantiator.providePumpEnactResult().success(true).bolusDelivered(1.0)
-            callback.run()
-            null
-        }.`when`(commandQueue).bolus(anyObject(), ArgumentMatchers.any(Callback::class.java))
-        Mockito.doAnswer { invocation: InvocationOnMock ->
-            val callback = invocation.getArgument<Callback>(5)
-            callback.result = instantiator.providePumpEnactResult().success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1))
-            callback.run()
-            null
-        }.`when`(commandQueue)
-            .tempBasalPercent(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), anyObject(), ArgumentMatchers.any(Callback::class.java))
-        Mockito.doAnswer { invocation: InvocationOnMock ->
-            val callback = invocation.getArgument<Callback>(5)
-            callback.result = instantiator.providePumpEnactResult().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
-            callback.run()
-            null
-        }.`when`(commandQueue)
-            .tempBasalAbsolute(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), anyObject(), ArgumentMatchers.any(Callback::class.java))
-        Mockito.doAnswer { invocation: InvocationOnMock ->
+        smsCommunicatorPlugin.setPluginEnabledBlocking(PluginType.GENERAL, true)
+        doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(2)
-            callback.result = instantiator.providePumpEnactResult().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            callback.result = pumpEnactResultProvider.get().success(true)
             callback.run()
             null
-        }.`when`(commandQueue).extendedBolus(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.any(Callback::class.java))
+        }.whenever(commandQueue).cancelTempBasal(anyBoolean(), anyBoolean(), any(Callback::class.java))
+        doAnswer { invocation: InvocationOnMock ->
+            val callback = invocation.getArgument<Callback>(0)
+            callback.result = pumpEnactResultProvider.get().success(true)
+            callback.run()
+            null
+        }.whenever(commandQueue).cancelExtended(any(Callback::class.java))
+        doAnswer { invocation: InvocationOnMock ->
+            val callback = invocation.getArgument<Callback>(1)
+            callback.result = pumpEnactResultProvider.get().success(true)
+            callback.run()
+            null
+        }.whenever(commandQueue).readStatus(anyString(), any(Callback::class.java))
+        doAnswer { invocation: InvocationOnMock ->
+            val callback = invocation.getArgument<Callback>(1)
+            callback.result = pumpEnactResultProvider.get().success(true).bolusDelivered(1.0)
+            callback.run()
+            null
+        }.whenever(commandQueue).bolus(anyOrNull(), any(Callback::class.java))
+        doAnswer { invocation: InvocationOnMock ->
+            val callback = invocation.getArgument<Callback>(5)
+            callback.result = pumpEnactResultProvider.get().success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            callback.run()
+            null
+        }.whenever(commandQueue)
+            .tempBasalPercent(anyInt(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull(), any(Callback::class.java))
+        doAnswer { invocation: InvocationOnMock ->
+            val callback = invocation.getArgument<Callback>(5)
+            callback.result = pumpEnactResultProvider.get().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            callback.run()
+            null
+        }.whenever(commandQueue)
+            .tempBasalAbsolute(anyDouble(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull(), any(Callback::class.java))
+        doAnswer { invocation: InvocationOnMock ->
+            val callback = invocation.getArgument<Callback>(2)
+            callback.result = pumpEnactResultProvider.get().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            callback.run()
+            null
+        }.whenever(commandQueue).extendedBolus(anyDouble(), anyInt(), any(Callback::class.java))
 
-        `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(0))
-        `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(0))
+        whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(0))
+        whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(0))
 
-        `when`(activePlugin.activeProfileSource).thenReturn(profileSource)
+        whenever(activePlugin.activeProfileSource).thenReturn(profileSource)
+        whenever(profileFunction.getProfile()).thenReturn(validProfile)
+        whenever(pumpStatusProvider.shortStatus(anyBoolean())).thenReturn(testPumpPlugin.pumpSpecificShortStatus(true))
+        whenever(otp.name()).thenReturn("User")
+        whenever(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.OK)
 
-
-        `when`(otp.name()).thenReturn("User")
-        `when`(otp.checkOTP(ArgumentMatchers.anyString())).thenReturn(OneTimePasswordValidationResult.OK)
-
-        `when`(rh.gs(R.string.smscommunicator_remote_command_not_allowed)).thenReturn("Remote command is not allowed")
-        `when`(rh.gs(R.string.sms_wrong_code)).thenReturn("Wrong code. Command cancelled.")
-        `when`(rh.gs(R.string.sms_iob)).thenReturn("IOB:")
-        `when`(rh.gs(R.string.sms_last_bg)).thenReturn("Last BG:")
-        `when`(rh.gs(R.string.sms_min_ago)).thenReturn("%1\$dmin ago")
-        `when`(rh.gs(R.string.smscommunicator_remote_command_not_allowed)).thenReturn("Remote command is not allowed")
-        `when`(rh.gs(R.string.smscommunicator_stops_ns_with_code)).thenReturn("To disable the SMS Remote Service reply with code %1\$s.\\n\\nKeep in mind that you\\'ll able to reactivate it directly from the AAPS master smartphone only.")
-        `when`(rh.gs(R.string.smscommunicator_meal_bolus_reply_with_code)).thenReturn("To deliver meal bolus %1$.2fU reply with code %2\$s.")
-        `when`(rh.gs(R.string.smscommunicator_temptarget_with_code)).thenReturn("To set the Temp Target %1\$s reply with code %2\$s")
-        `when`(rh.gs(R.string.smscommunicator_temptarget_cancel)).thenReturn("To cancel Temp Target reply with code %1\$s")
-        `when`(rh.gs(R.string.smscommunicator_stopped_sms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.")
-        `when`(rh.gs(R.string.smscommunicator_tt_set)).thenReturn("Target %1\$s for %2\$d minutes set successfully")
-        `when`(rh.gs(R.string.smscommunicator_tt_canceled)).thenReturn("Temp Target canceled successfully")
-        `when`(rh.gs(R.string.sms_loop_suspended_for)).thenReturn("Suspended (%1\$d m)")
-        `when`(rh.gs(app.aaps.core.ui.R.string.loopisdisabled)).thenReturn("Loop is disabled")
-        `when`(rh.gs(R.string.smscommunicator_loop_is_enabled)).thenReturn("Loop is enabled")
-        `when`(rh.gs(R.string.wrong_format)).thenReturn("Wrong format")
-        `when`(rh.gs(eq(R.string.sms_wrong_tbr_duration), ArgumentMatchers.any())).thenAnswer { i: InvocationOnMock ->
+        whenever(rh.gs(R.string.smscommunicator_remote_command_not_allowed)).thenReturn("Remote command is not allowed")
+        whenever(rh.gs(R.string.sms_wrong_code)).thenReturn("Wrong code. Command cancelled.")
+        whenever(rh.gs(eq(R.string.smscommunicator_restart_reply_with_code), any())).thenAnswer { i: InvocationOnMock ->
+            "To restart AAPS reply with code ${i.arguments[1]}"
+        }
+        whenever(rh.gs(R.string.smscommunicator_restarting)).thenReturn("AAPS is restarting")
+        whenever(rh.gsNotLocalised(R.string.smscommunicator_restarting)).thenReturn("AAPS is restarting")
+        whenever(rh.gs(R.string.sms_iob)).thenReturn("IOB:")
+        whenever(rh.gs(R.string.sms_last_bg)).thenReturn("Last BG:")
+        whenever(rh.gs(R.string.sms_min_ago)).thenReturn("%1\$dmin ago")
+        whenever(rh.gs(R.string.smscommunicator_remote_command_not_allowed)).thenReturn("Remote command is not allowed")
+        whenever(rh.gs(R.string.smscommunicator_remote_command_not_possible)).thenReturn("Remote command is not possible")
+        whenever(rh.gs(R.string.smscommunicator_stops_ns_with_code)).thenReturn("To disable the SMS Remote Service reply with code %1\$s.\\n\\nKeep in mind that you\\'ll able to reactivate it directly from the AAPS master smartphone only.")
+        whenever(rh.gs(R.string.smscommunicator_meal_bolus_reply_with_code)).thenReturn("To deliver meal bolus %1$.2fU reply with code %2\$s.")
+        whenever(rh.gs(R.string.smscommunicator_temptarget_with_code)).thenReturn("To set the Temp Target %1\$s reply with code %2\$s")
+        whenever(rh.gs(R.string.smscommunicator_temptarget_cancel)).thenReturn("To cancel Temp Target reply with code %1\$s")
+        whenever(rh.gs(R.string.smscommunicator_stopped_sms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.")
+        whenever(rh.gs(R.string.smscommunicator_tt_set)).thenReturn("Target %1\$s for %2\$d minutes set successfully")
+        whenever(rh.gs(R.string.smscommunicator_tt_canceled)).thenReturn("Temp Target canceled successfully")
+        whenever(rh.gs(R.string.sms_loop_suspended_for)).thenReturn("Suspended (%1\$d m)")
+        whenever(rh.gs(app.aaps.core.ui.R.string.loopisdisabled)).thenReturn("Loop is disabled")
+        whenever(rh.gs(R.string.smscommunicator_loop_is_enabled)).thenReturn("Loop is enabled")
+        whenever(rh.gs(R.string.wrong_format)).thenReturn("Wrong format")
+        whenever(rh.gs(eq(R.string.sms_wrong_tbr_duration), any())).thenAnswer { i: InvocationOnMock ->
             "TBR duration must be a multiple of " + i.arguments[1] + " minutes and greater than " +
                 "0."
         }
-        `when`(rh.gs(R.string.smscommunicator_loop_has_been_disabled)).thenReturn("Loop has been disabled")
-        `when`(rh.gs(R.string.smscommunicator_loop_has_been_enabled)).thenReturn("Loop has been enabled")
-        `when`(rh.gs(R.string.smscommunicator_tempbasal_canceled)).thenReturn("Temp basal canceled")
-        `when`(rh.gs(R.string.smscommunicator_loop_resumed)).thenReturn("Loop resumed")
-        `when`(rh.gs(R.string.smscommunicator_wrong_duration)).thenReturn("Wrong duration")
-        `when`(rh.gs(R.string.smscommunicator_suspend_reply_with_code)).thenReturn("To suspend loop for %1\$d minutes reply with code %2\$s")
-        `when`(rh.gs(R.string.smscommunicator_loop_suspended)).thenReturn("Loop suspended")
-        `when`(rh.gs(R.string.smscommunicator_unknown_command)).thenReturn("Unknown command or wrong reply")
-        `when`(rh.gs(app.aaps.core.ui.R.string.notconfigured)).thenReturn("Not configured")
-        `when`(rh.gs(R.string.smscommunicator_profile_reply_with_code)).thenReturn("To switch profile to %1\$s %2\$d%% reply with code %3\$s")
-        `when`(rh.gs(R.string.sms_profile_switch_created)).thenReturn("Profile switch created")
-        `when`(rh.gs(R.string.smscommunicator_basal_stop_reply_with_code)).thenReturn("To stop temp basal reply with code %1\$s")
-        `when`(rh.gs(R.string.smscommunicator_basal_pct_reply_with_code)).thenReturn("To start basal %1\$d%% for %2\$d min reply with code %3\$s")
-        `when`(rh.gs(R.string.smscommunicator_tempbasal_set_percent)).thenReturn("Temp basal %1\$d%% for %2\$d min started successfully")
-        `when`(rh.gs(R.string.smscommunicator_basal_reply_with_code)).thenReturn("To start basal %1$.2fU/h for %2\$d min reply with code %3\$s")
-        `when`(rh.gs(R.string.smscommunicator_tempbasal_set)).thenReturn("Temp basal %1$.2fU/h for %2\$d min started successfully")
-        `when`(rh.gs(R.string.smscommunicator_extended_stop_reply_with_code)).thenReturn("To stop extended bolus reply with code %1\$s")
-        `when`(rh.gs(R.string.smscommunicator_extended_canceled)).thenReturn("Extended bolus canceled")
-        `when`(rh.gs(R.string.smscommunicator_extended_reply_with_code)).thenReturn("To start extended bolus %1$.2fU for %2\$d min reply with code %3\$s")
-        `when`(rh.gs(R.string.smscommunicator_extended_set)).thenReturn("Extended bolus %1$.2fU for %2\$d min started successfully")
-        `when`(rh.gs(R.string.smscommunicator_bolus_reply_with_code)).thenReturn("To deliver bolus %1$.2fU reply with code %2\$s")
-        `when`(rh.gs(R.string.smscommunicator_bolus_delivered)).thenReturn("Bolus %1$.2fU delivered successfully")
-        `when`(rh.gs(R.string.smscommunicator_remote_bolus_not_allowed)).thenReturn("Remote bolus not available. Try again later.")
-        `when`(rh.gs(R.string.smscommunicator_calibration_reply_with_code)).thenReturn("To send calibration %1$.2f reply with code %2\$s")
-        `when`(rh.gs(R.string.smscommunicator_calibration_sent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip.")
-        `when`(rh.gs(R.string.smscommunicator_carbs_reply_with_code)).thenReturn("To enter %1\$dg at %2\$s reply with code %3\$s")
-        `when`(rh.gs(R.string.smscommunicator_carbs_set)).thenReturn("Carbs %1\$dg entered successfully")
-        `when`(rh.gs(app.aaps.core.ui.R.string.noprofile)).thenReturn("No profile loaded from NS yet")
-        `when`(rh.gs(app.aaps.core.ui.R.string.pumpsuspended)).thenReturn("Pump suspended")
-        `when`(rh.gs(R.string.sms_delta)).thenReturn("Delta:")
-        `when`(rh.gs(R.string.sms_bolus)).thenReturn("Bolus:")
-        `when`(rh.gs(R.string.sms_basal)).thenReturn("Basal:")
-        `when`(rh.gs(app.aaps.core.ui.R.string.cob)).thenReturn("COB")
-        `when`(rh.gs(R.string.smscommunicator_meal_bolus_delivered)).thenReturn("Meal Bolus %1\$.2fU delivered successfully")
-        `when`(rh.gs(R.string.smscommunicator_meal_bolus_delivered_tt)).thenReturn("Target %1\$s for %2\$d minutes")
-        `when`(rh.gs(R.string.sms_actual_bg)).thenReturn("BG:")
-        `when`(rh.gs(R.string.sms_last_bg)).thenReturn("Last BG:")
-        `when`(rh.gs(R.string.smscommunicator_loop_disable_reply_with_code)).thenReturn("To disable loop reply with code %1\$s")
-        `when`(rh.gs(R.string.smscommunicator_loop_enable_reply_with_code)).thenReturn("To enable loop reply with code %1\$s")
-        `when`(rh.gs(R.string.smscommunicator_loop_resume_reply_with_code)).thenReturn("To resume loop reply with code %1\$s")
-        `when`(rh.gs(R.string.smscommunicator_pump_disconnect_with_code)).thenReturn("To disconnect pump for %1d minutes reply with code %2\$s")
-        `when`(rh.gs(R.string.smscommunicator_pump_connect_with_code)).thenReturn("To connect pump reply with code %1\$s")
-        `when`(rh.gs(R.string.smscommunicator_reconnect)).thenReturn("Pump reconnected")
-        `when`(rh.gs(R.string.smscommunicator_pump_connect_fail)).thenReturn("Connection to pump failed")
-        `when`(rh.gs(R.string.smscommunicator_pump_disconnected)).thenReturn("Pump disconnected")
-        `when`(rh.gs(R.string.smscommunicator_code_from_authenticator_for)).thenReturn("from Authenticator app for: %1\$s followed by PIN")
-        `when`(rh.gs(app.aaps.core.ui.R.string.patient_name_default)).thenReturn("User")
-        `when`(rh.gs(app.aaps.core.ui.R.string.invalid_profile)).thenReturn("Invalid profile !!!")
-        `when`(rh.gs(app.aaps.core.ui.R.string.sms)).thenReturn("SMS")
-        `when`(rh.gsNotLocalised(app.aaps.core.ui.R.string.loopsuspended)).thenReturn("Loop suspended")
-        `when`(rh.gsNotLocalised(R.string.smscommunicator_stopped_sms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.")
-        `when`(rh.gsNotLocalised(R.string.sms_profile_switch_created)).thenReturn("Profile switch created")
-        `when`(rh.gsNotLocalised(R.string.smscommunicator_tempbasal_canceled)).thenReturn("Temp basal canceled")
-        `when`(rh.gsNotLocalised(R.string.smscommunicator_calibration_sent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip+.")
-        `when`(rh.gsNotLocalised(R.string.smscommunicator_tt_canceled)).thenReturn("Temp Target canceled successfully")
-        `when`(rh.gs(app.aaps.core.ui.R.string.closedloop)).thenReturn(modeClosed)
-        `when`(rh.gs(app.aaps.core.ui.R.string.openloop)).thenReturn(modeOpen)
-        `when`(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)).thenReturn(modeLgs)
-        `when`(rh.gs(app.aaps.core.ui.R.string.unknown)).thenReturn(modeUnknown)
-        `when`(rh.gs(R.string.smscommunicator_set_closed_loop_reply_with_code)).thenReturn("In order to switch Loop mode to Closed loop reply with code %1\$s")
-        `when`(rh.gs(R.string.smscommunicator_current_loop_mode)).thenReturn("Current loop mode: %1\$s")
-        `when`(rh.gs(R.string.smscommunicator_set_lgs_reply_with_code)).thenReturn("In order to switch Loop mode to LGS (Low Glucose Suspend) reply with code %1\$s")
+        whenever(rh.gs(R.string.smscommunicator_loop_has_been_disabled)).thenReturn("Loop has been disabled")
+        whenever(rh.gs(R.string.smscommunicator_tempbasal_canceled)).thenReturn("Temp basal canceled")
+        whenever(rh.gs(R.string.smscommunicator_loop_resumed)).thenReturn("Loop resumed")
+        whenever(rh.gs(R.string.smscommunicator_wrong_duration)).thenReturn("Wrong duration")
+        whenever(rh.gs(R.string.smscommunicator_suspend_reply_with_code)).thenReturn("To suspend loop for %1\$d minutes reply with code %2\$s")
+        whenever(rh.gs(R.string.smscommunicator_loop_suspended)).thenReturn("Loop suspended")
+        whenever(rh.gs(R.string.smscommunicator_unknown_command)).thenReturn("Unknown command or wrong reply")
+        whenever(rh.gs(app.aaps.core.ui.R.string.notconfigured)).thenReturn("Not configured")
+        whenever(rh.gs(R.string.smscommunicator_profile_reply_with_code)).thenReturn("To switch profile to %1\$s %2\$d%% reply with code %3\$s")
+        whenever(rh.gs(R.string.sms_profile_switch_created)).thenReturn("Profile switch created")
+        whenever(rh.gs(R.string.smscommunicator_basal_stop_reply_with_code)).thenReturn("To stop temp basal reply with code %1\$s")
+        whenever(rh.gs(R.string.smscommunicator_basal_pct_reply_with_code)).thenReturn("To start basal %1\$d%% for %2\$d min reply with code %3\$s")
+        whenever(rh.gs(R.string.smscommunicator_tempbasal_set_percent)).thenReturn("Temp basal %1\$d%% for %2\$d min started successfully")
+        whenever(rh.gs(R.string.smscommunicator_basal_reply_with_code)).thenReturn("To start basal %1$.2fU/h for %2\$d min reply with code %3\$s")
+        whenever(rh.gs(R.string.smscommunicator_tempbasal_set)).thenReturn("Temp basal %1$.2fU/h for %2\$d min started successfully")
+        whenever(rh.gs(R.string.smscommunicator_extended_stop_reply_with_code)).thenReturn("To stop extended bolus reply with code %1\$s")
+        whenever(rh.gs(R.string.smscommunicator_extended_canceled)).thenReturn("Extended bolus canceled")
+        whenever(rh.gs(R.string.smscommunicator_extended_reply_with_code)).thenReturn("To start extended bolus %1$.2fU for %2\$d min reply with code %3\$s")
+        whenever(rh.gs(R.string.smscommunicator_extended_set)).thenReturn("Extended bolus %1$.2fU for %2\$d min started successfully")
+        whenever(rh.gs(R.string.smscommunicator_bolus_reply_with_code)).thenReturn("To deliver bolus %1$.2fU reply with code %2\$s")
+        whenever(rh.gs(R.string.smscommunicator_bolus_delivered)).thenReturn("Bolus %1$.2fU delivered successfully")
+        whenever(rh.gs(R.string.smscommunicator_remote_bolus_not_allowed)).thenReturn("Remote bolus not available. Try again later.")
+        whenever(rh.gs(R.string.smscommunicator_calibration_reply_with_code)).thenReturn("To send calibration %1$.2f reply with code %2\$s")
+        whenever(rh.gs(R.string.smscommunicator_calibration_sent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip.")
+        whenever(rh.gs(R.string.smscommunicator_carbs_reply_with_code)).thenReturn("To enter %1\$dg at %2\$s reply with code %3\$s")
+        whenever(rh.gs(R.string.smscommunicator_carbs_set)).thenReturn("Carbs %1\$dg entered successfully")
+        whenever(rh.gs(app.aaps.core.ui.R.string.noprofile)).thenReturn("No profile loaded from NS yet")
+        whenever(rh.gs(app.aaps.core.ui.R.string.pumpsuspended)).thenReturn("Pump suspended")
+        whenever(rh.gs(app.aaps.core.interfaces.R.string.connected)).thenReturn("Connected")
+        whenever(rh.gs(R.string.sms_delta)).thenReturn("Delta:")
+        whenever(rh.gs(R.string.sms_bolus)).thenReturn("Bolus:")
+        whenever(rh.gs(R.string.sms_basal)).thenReturn("Basal:")
+        whenever(rh.gs(app.aaps.core.ui.R.string.cob)).thenReturn("COB")
+        whenever(rh.gs(R.string.smscommunicator_meal_bolus_delivered)).thenReturn("Meal Bolus %1\$.2fU delivered successfully")
+        whenever(rh.gs(R.string.smscommunicator_meal_bolus_delivered_tt)).thenReturn("Target %1\$s for %2\$d minutes")
+        whenever(rh.gs(R.string.sms_actual_bg)).thenReturn("BG:")
+        whenever(rh.gs(R.string.sms_last_bg)).thenReturn("Last BG:")
+        whenever(rh.gs(R.string.smscommunicator_loop_disable_reply_with_code)).thenReturn("To disable loop reply with code %1\$s")
+        whenever(rh.gs(R.string.smscommunicator_loop_resume_reply_with_code)).thenReturn("To resume loop reply with code %1\$s")
+        whenever(rh.gs(R.string.smscommunicator_pump_disconnect_with_code)).thenReturn("To disconnect pump for %1d minutes reply with code %2\$s")
+        whenever(rh.gs(R.string.smscommunicator_pump_connect_with_code)).thenReturn("To connect pump reply with code %1\$s")
+        whenever(rh.gs(R.string.smscommunicator_reconnect)).thenReturn("Pump reconnected")
+        whenever(rh.gs(R.string.smscommunicator_pump_connect_fail)).thenReturn("Connection to pump failed")
+        whenever(rh.gs(R.string.smscommunicator_pump_disconnected)).thenReturn("Pump disconnected")
+        whenever(rh.gs(R.string.smscommunicator_code_from_authenticator_for)).thenReturn("from Authenticator app for: %1\$s followed by PIN")
+        whenever(rh.gs(app.aaps.core.ui.R.string.patient_name_default)).thenReturn("User")
+        whenever(rh.gs(app.aaps.core.ui.R.string.invalid_profile)).thenReturn("Invalid profile !!!")
+        whenever(rh.gs(app.aaps.core.ui.R.string.sms)).thenReturn("SMS")
+        whenever(rh.gsNotLocalised(app.aaps.core.ui.R.string.loopsuspended)).thenReturn("Loop suspended")
+        whenever(rh.gsNotLocalised(R.string.smscommunicator_stopped_sms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.")
+        whenever(rh.gsNotLocalised(R.string.sms_profile_switch_created)).thenReturn("Profile switch created")
+        whenever(rh.gsNotLocalised(R.string.smscommunicator_tempbasal_canceled)).thenReturn("Temp basal canceled")
+        whenever(rh.gsNotLocalised(R.string.smscommunicator_calibration_sent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip+.")
+        whenever(rh.gsNotLocalised(R.string.smscommunicator_tt_canceled)).thenReturn("Temp Target canceled successfully")
+        whenever(rh.gs(app.aaps.core.ui.R.string.closedloop)).thenReturn(modeClosed)
+        whenever(rh.gs(app.aaps.core.ui.R.string.openloop)).thenReturn(modeOpen)
+        whenever(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)).thenReturn(modeLgs)
+        whenever(rh.gs(app.aaps.core.ui.R.string.unknown)).thenReturn(modeUnknown)
+        whenever(rh.gs(R.string.smscommunicator_set_closed_loop_reply_with_code)).thenReturn("In order to switch Loop mode to Closed loop reply with code %1\$s")
+        whenever(rh.gs(R.string.smscommunicator_current_loop_mode)).thenReturn("Current loop mode: %1\$s")
+        whenever(rh.gs(R.string.smscommunicator_set_lgs_reply_with_code)).thenReturn("In order to switch Loop mode to LGS (Low Glucose Suspend) reply with code %1\$s")
     }
 
     @Test
@@ -294,7 +256,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.isCommand("BOLUS", "")).isTrue()
         smsCommunicatorPlugin.messageToConfirm = null
         assertThat(smsCommunicatorPlugin.isCommand("BLB", "")).isFalse()
-        smsCommunicatorPlugin.messageToConfirm = AuthRequest(injector, Sms("1234", "ddd"), "RequestText", "ccode", object : SmsAction(false) {
+        smsCommunicatorPlugin.messageToConfirm = AuthRequest(aapsLogger, smsCommunicatorPlugin, rh, otp, dateUtil, commandQueue).with(Sms("1234", "ddd"), "RequestText", "ccode", object : SmsAction(false) {
             override fun run() {}
         })
         assertThat(smsCommunicatorPlugin.isCommand("BLB", "1234")).isTrue()
@@ -332,17 +294,17 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).contains("COB: 10(2)g")
 
         // LOOP : test remote control disabled
-        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(sms.ignored).isFalse()
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP STATUS")
         assertThat(smsCommunicatorPlugin.messages[1].text).contains("Remote command is not allowed")
-        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
 
         //LOOP STATUS : disabled
-        `when`(loop.isEnabled()).thenReturn(false)
+        whenever(loop.runningMode).thenReturn(RM.Mode.DISABLED_LOOP)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
@@ -350,9 +312,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is disabled")
 
         //LOOP STATUS : suspended
-        `when`(loop.minutesToEndOfSuspend()).thenReturn(10)
-        `when`(loop.isEnabled()).thenReturn(true)
-        `when`(loop.isSuspended).thenReturn(true)
+        whenever(loop.minutesToEndOfSuspend()).thenReturn(10)
+        whenever(loop.runningMode).thenReturn(RM.Mode.SUSPENDED_BY_USER)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
@@ -360,9 +321,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Suspended (10 m)")
 
         //LOOP STATUS : enabled - APS mode - Closed
-        `when`(loop.isEnabled()).thenReturn(true)
-        `when`(loop.isSuspended).thenReturn(false)
-        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.CLOSED.name)
+        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
@@ -371,7 +330,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is enabled - $modeClosed")
 
         //LOOP STATUS : enabled - APS mode - Open
-        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.OPEN.name)
+        whenever(loop.runningMode).thenReturn(RM.Mode.OPEN_LOOP)
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.processSms(sms)
         assertThat(sms.ignored).isFalse()
@@ -379,95 +338,38 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is enabled - $modeOpen")
 
         //LOOP STATUS : enabled - APS mode - LGS
-        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.LGS.name)
+        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP_LGS)
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.processSms(sms)
         assertThat(sms.ignored).isFalse()
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP STATUS")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is enabled - $modeLgs")
 
-        //LOOP STATUS : enabled - APS mode - unknown
-        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn("some wrong value")
-        smsCommunicatorPlugin.messages = ArrayList()
-        smsCommunicatorPlugin.processSms(sms)
-        assertThat(sms.ignored).isFalse()
-        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP STATUS")
-        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is enabled - $modeUnknown")
-
         //LOOP : wrong format
-        `when`(loop.isEnabled()).thenReturn(true)
+        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.RESUME))
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(sms.ignored).isFalse()
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-
-        //LOOP DISABLE : already disabled
-        `when`(loop.isEnabled()).thenReturn(false)
-        smsCommunicatorPlugin.messages = ArrayList()
-        sms = Sms("1234", "LOOP DISABLE")
-        smsCommunicatorPlugin.processSms(sms)
-        assertThat(sms.ignored).isFalse()
-        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP DISABLE")
-        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is disabled")
-
-        //LOOP DISABLE : from enabled
-        hasBeenRun = false
-        `when`(loop.isEnabled()).thenReturn(true)
-        // PowerMockito.doAnswer(Answer {
-        //     hasBeenRun = true
-        //     null
-        // } as Answer<*>).`when`(loop).setPluginEnabled(PluginType.LOOP, false)
-        smsCommunicatorPlugin.messages = ArrayList()
-        sms = Sms("1234", "LOOP DISABLE")
-        smsCommunicatorPlugin.processSms(sms)
-        assertThat(sms.ignored).isFalse()
-        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP DISABLE")
-        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To disable loop reply with code ")
-        var passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
-        smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
-        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Loop has been disabled Temp basal canceled")
-        //assertThat(hasBeenRun).isTrue()
-
-        //LOOP ENABLE : already enabled
-        `when`(loop.isEnabled()).thenReturn(true)
-        smsCommunicatorPlugin.messages = ArrayList()
-        sms = Sms("1234", "LOOP ENABLE")
-        smsCommunicatorPlugin.processSms(sms)
-        assertThat(sms.ignored).isFalse()
-        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP ENABLE")
-        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is enabled")
-
-        //LOOP ENABLE : from disabled
-        hasBeenRun = false
-        `when`(loop.isEnabled()).thenReturn(false)
-        // PowerMockito.doAnswer(Answer {
-        //     hasBeenRun = true
-        //     null
-        // } as Answer<*>).`when`(loop).setPluginEnabled(PluginType.LOOP, true)
-        smsCommunicatorPlugin.messages = ArrayList()
-        sms = Sms("1234", "LOOP ENABLE")
-        smsCommunicatorPlugin.processSms(sms)
-        assertThat(sms.ignored).isFalse()
-        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP ENABLE")
-        assertThat(smsCommunicatorPlugin.messages[1].text.contains("To enable loop reply with code ")).isTrue()
-        passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
-        smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
-        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Loop has been enabled")
-        //assertThat(hasBeenRun).isTrue()
-
-        //LOOP RESUME : already enabled
-        `when`(persistenceLayer.cancelCurrentOfflineEvent(anyLong(), anyObject(), anyObject(), anyObject(), anyObject())).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
+        whenever(persistenceLayer.cancelCurrentRunningMode(anyLong(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP RESUME")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(sms.ignored).isFalse()
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP RESUME")
         assertThat(smsCommunicatorPlugin.messages[1].text.contains("To resume loop reply with code ")).isTrue()
-        passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
+        // not allowed state
+        whenever(loop.allowedNextModes()).thenReturn(emptyList())
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", "LOOP RESUME")
+        smsCommunicatorPlugin.processSms(sms)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP RESUME")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains(rh.gs(R.string.smscommunicator_remote_command_not_possible))
+
+        //LOOP RESUME : already enabled
+        var passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Loop resumed")
@@ -489,9 +391,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong duration")
 
         //LOOP SUSPEND 100 : suspend for 100 min + correct answer
-        `when`(
-            persistenceLayer.insertAndCancelCurrentOfflineEvent(anyObject(), anyObject(), anyObject(), anyObject(), anyObject())
-        ).thenReturn(Single.just(PersistenceLayer.TransactionResult<OE>().apply { }))
+        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.SUSPENDED_BY_USER))
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP SUSPEND 100")
         smsCommunicatorPlugin.processSms(sms)
@@ -513,15 +413,23 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         // ignore from other number
         smsCommunicatorPlugin.processSms(Sms("5678", passCode))
-        `when`(otp.checkOTP(ArgumentMatchers.anyString())).thenReturn(OneTimePasswordValidationResult.ERROR_WRONG_OTP)
+        whenever(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.ERROR_WRONG_OTP)
         smsCommunicatorPlugin.processSms(Sms("1234", "XXXX"))
-        `when`(otp.checkOTP(ArgumentMatchers.anyString())).thenReturn(OneTimePasswordValidationResult.OK)
+        whenever(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.OK)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("XXXX")
         assertThat(smsCommunicatorPlugin.messages[4].text).isEqualTo("Wrong code. Command cancelled.")
         //then correct code should not work
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[5].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages).hasSize(6) // processed as common message
+
+        // not allowed state
+        whenever(loop.allowedNextModes()).thenReturn(emptyList())
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", "LOOP SUSPEND 200")
+        smsCommunicatorPlugin.processSms(sms)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP SUSPEND 200")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains(rh.gs(R.string.smscommunicator_remote_command_not_possible))
 
         //LOOP BLABLA
         smsCommunicatorPlugin.messages = ArrayList()
@@ -534,8 +442,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         //LOOP CLOSED
         var smsCommand = "LOOP CLOSED"
         val replyClosed = "In order to switch Loop mode to Closed loop reply with code "
-        `when`(loop.isEnabled()).thenReturn(true)
-        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.CLOSED.name)
+        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP))
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", smsCommand)
         smsCommunicatorPlugin.processSms(sms)
@@ -546,11 +453,18 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Current loop mode: $modeClosed")
+        // not allowed state
+        whenever(loop.allowedNextModes()).thenReturn(emptyList())
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", smsCommand)
+        smsCommunicatorPlugin.processSms(sms)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo(smsCommand)
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains(rh.gs(R.string.smscommunicator_remote_command_not_possible))
 
         //LOOP LGS
         smsCommand = "LOOP LGS"
         val replyLgs = "In order to switch Loop mode to LGS (Low Glucose Suspend) reply with code "
-        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.LGS.name)
+        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.CLOSED_LOOP_LGS))
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", smsCommand)
         smsCommunicatorPlugin.processSms(sms)
@@ -561,10 +475,16 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Current loop mode: $modeLgs")
+        // not allowed state
+        whenever(loop.allowedNextModes()).thenReturn(emptyList())
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", smsCommand)
+        smsCommunicatorPlugin.processSms(sms)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo(smsCommand)
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains(rh.gs(R.string.smscommunicator_remote_command_not_possible))
 
         //AAPSCLIENT RESTART
-        `when`(loop.isEnabled()).thenReturn(true)
-        `when`(loop.isSuspended).thenReturn(false)
+        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "AAPSCLIENT RESTART")
         smsCommunicatorPlugin.processSms(sms)
@@ -573,8 +493,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).contains("AAPSCLIENT RESTART")
 
         //AAPSCLIENT BLA BLA
-        `when`(loop.isEnabled()).thenReturn(true)
-        `when`(loop.isSuspended).thenReturn(false)
+        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "AAPSCLIENT BLA BLA")
         smsCommunicatorPlugin.processSms(sms)
@@ -583,8 +502,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //AAPSCLIENT BLABLA
-        `when`(loop.isEnabled()).thenReturn(true)
-        `when`(loop.isSuspended).thenReturn(false)
+        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP_LGS)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "AAPSCLIENT BLABLA")
         smsCommunicatorPlugin.processSms(sms)
@@ -616,8 +534,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //PUMP CONNECT
-        `when`(persistenceLayer.cancelCurrentOfflineEvent(anyLong(), anyObject(), anyObject(), anyObject(), anyObject())).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
-        `when`(loop.isEnabled()).thenReturn(true)
+        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.RESUME))
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PUMP CONNECT")
         smsCommunicatorPlugin.processSms(sms)
@@ -645,7 +562,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong duration")
 
         //PUMP DISCONNECT 30
-        `when`(profileFunction.getProfile()).thenReturn(validProfile)
+        whenever(profileFunction.getProfile()).thenReturn(validProfile)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PUMP DISCONNECT 30")
         smsCommunicatorPlugin.processSms(sms)
@@ -668,6 +585,30 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Pump disconnected")
+
+        //RESTART - requires confirmation
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", "RESTART")
+        smsCommunicatorPlugin.processSms(sms)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("RESTART")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To restart AAPS reply with code")
+        passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
+        smsCommunicatorPlugin.processSms(Sms("1234", passCode))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("AAPS is restarting")
+
+        //RESTART - wrong code
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", "RESTART")
+        smsCommunicatorPlugin.processSms(sms)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("RESTART")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To restart AAPS reply with code")
+        whenever(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.ERROR_WRONG_OTP)
+        smsCommunicatorPlugin.processSms(Sms("1234", "WRONG_CODE"))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo("WRONG_CODE")
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Wrong code. Command cancelled.")
+        whenever(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.OK)
 
         //HELP
         smsCommunicatorPlugin.messages = ArrayList()
@@ -722,7 +663,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[3].text).contains("set successfully")
 
         //TARGET STOP/CANCEL
-        `when`(persistenceLayer.cancelCurrentTemporaryTargetIfAny(anyLong(), anyObject(), anyObject(), anyObject(), anyObject())).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
+        whenever(persistenceLayer.cancelCurrentTemporaryTargetIfAny(anyLong(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "TARGET STOP")
         smsCommunicatorPlugin.processSms(sms)
@@ -737,12 +678,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Test fun processProfileTest() {
 
         //PROFILE
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         var sms = Sms("1234", "PROFILE")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PROFILE")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
-        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
 
         //PROFILE
         smsCommunicatorPlugin.messages = ArrayList()
@@ -758,8 +700,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PROFILE LIST")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Not configured")
 
-        `when`(profileSource.profile).thenReturn(getValidProfileStore())
-        `when`(profileFunction.getProfileName()).thenReturn(TESTPROFILENAME)
+        whenever(profileSource.profile).thenReturn(getValidProfileStore())
+        whenever(profileFunction.getProfileName()).thenReturn(TESTPROFILENAME)
 
         //PROFILE STATUS
         smsCommunicatorPlugin.messages = ArrayList()
@@ -804,18 +746,18 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).contains("To switch profile to someProfile 100% reply with code")
 
         //PROFILE 1 90(OK)
-        `when`(
+        whenever(
             profileFunction.createProfileSwitch(
-                anyObject(),
-                Mockito.anyString(),
-                Mockito.anyInt(),
-                Mockito.anyInt(),
-                Mockito.anyInt(),
+                anyOrNull(),
+                anyString(),
+                anyInt(),
+                anyInt(),
+                anyInt(),
                 anyLong(),
-                anyObject(),
-                anyObject(),
-                anyObject(),
-                anyObject()
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull()
             )
         ).thenReturn(true)
         smsCommunicatorPlugin.messages = ArrayList()
@@ -832,12 +774,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Test fun processBasalTest() {
 
         //BASAL
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         var sms = Sms("1234", "BASAL")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
-        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
 
         //BASAL
         smsCommunicatorPlugin.messages = ArrayList()
@@ -857,7 +800,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).contains("Temp basal canceled")
 
-        `when`(profileFunction.getProfile()).thenReturn(validProfile)
+        whenever(profileFunction.getProfile()).thenReturn(validProfile)
         //BASAL a%
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL a%")
@@ -878,7 +821,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL 20% 20")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("TBR duration must be a multiple of 30 minutes and greater than 0.")
-        `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(ConstraintObject(20, aapsLogger))
+        whenever(constraintChecker.applyBasalPercentConstraints(anyOrNull(), anyOrNull())).thenReturn(ConstraintObject(20, aapsLogger))
 
         //BASAL 20% 30
         smsCommunicatorPlugin.messages = ArrayList()
@@ -904,7 +847,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL 1 0")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("TBR duration must be a multiple of 30 minutes and greater than 0.")
-        `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(ConstraintObject(1.0, aapsLogger))
+        whenever(constraintChecker.applyBasalConstraints(anyOrNull(), anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
 
         //BASAL 1 20
         smsCommunicatorPlugin.messages = ArrayList()
@@ -912,7 +855,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL 1 20")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("TBR duration must be a multiple of 30 minutes and greater than 0.")
-        `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(ConstraintObject(1.0, aapsLogger))
+        whenever(constraintChecker.applyBasalConstraints(anyOrNull(), anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
 
         //BASAL 1 30
         smsCommunicatorPlugin.messages = ArrayList()
@@ -929,12 +872,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Test fun processExtendedTest() {
 
         //EXTENDED
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         var sms = Sms("1234", "EXTENDED")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("EXTENDED")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
-        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
 
         //EXTENDED
         smsCommunicatorPlugin.messages = ArrayList()
@@ -960,7 +904,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("EXTENDED a%")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-        `when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.0, aapsLogger))
+        whenever(constraintChecker.applyExtendedBolusConstraints(anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
 
         //EXTENDED 1 0
         smsCommunicatorPlugin.messages = ArrayList()
@@ -984,12 +928,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Test fun processBolusTest() {
 
         //BOLUS
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         var sms = Sms("1234", "BOLUS")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
-        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
 
         //BOLUS
         smsCommunicatorPlugin.messages = ArrayList()
@@ -997,19 +942,20 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.0, aapsLogger))
-        `when`(dateUtilMocked.now()).thenReturn(1000L)
-        `when`(preferences.get(IntKey.SmsRemoteBolusDistance)).thenReturn(15)
+        whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
+        whenever(dateUtilMocked.now()).thenReturn(1000L)
+        whenever(preferences.get(IntKey.SmsRemoteBolusDistance)).thenReturn(15)
         //BOLUS 1
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 1")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS 1")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote bolus not available. Try again later.")
-        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, aapsLogger))
-        `when`(dateUtilMocked.now()).thenReturn(Constants.remoteBolusMinDistance + 1002L)
+        whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(ConstraintObject(0.0, aapsLogger))
+        whenever(dateUtilMocked.now()).thenReturn(Constants.remoteBolusMinDistance + 1002L)
 
         //BOLUS 0
+        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 0")
         smsCommunicatorPlugin.processSms(sms)
@@ -1022,8 +968,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS a")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-        `when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.0, aapsLogger))
-        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.0, aapsLogger))
+        whenever(constraintChecker.applyExtendedBolusConstraints(anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
+        whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
 
         //BOLUS 1
         smsCommunicatorPlugin.messages = ArrayList()
@@ -1038,7 +984,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         //BOLUS 1 (Suspended pump)
         smsCommunicatorPlugin.lastRemoteBolusTime = 0
-        testPumpPlugin.pumpSuspended = true
+        whenever(loop.runningMode).thenReturn(RM.Mode.SUSPENDED_BY_PUMP)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 1")
         smsCommunicatorPlugin.processSms(sms)
@@ -1053,9 +999,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS 1 a")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
-        `when`(profileFunction.getProfile()).thenReturn(validProfile)
-        `when`(preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)).thenReturn(5.0)
-        `when`(preferences.get(IntKey.OverviewEatingSoonDuration)).thenReturn(45)
+        whenever(profileFunction.getProfile()).thenReturn(validProfile)
+        whenever(preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)).thenReturn(5.0)
+        whenever(preferences.get(IntKey.OverviewEatingSoonDuration)).thenReturn(45)
         //BOLUS 1 MEAL
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 1 MEAL")
@@ -1071,12 +1017,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Test fun processCalTest() {
 
         //CAL
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         var sms = Sms("1234", "CAL")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CAL")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
-        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
 
         //CAL
         smsCommunicatorPlugin.messages = ArrayList()
@@ -1091,7 +1038,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CAL 0")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-        `when`(xDripBroadcast.sendCalibration(ArgumentMatchers.anyDouble())).thenReturn(true)
+        whenever(xDripBroadcast.sendCalibration(anyDouble())).thenReturn(true)
         //CAL 1
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CAL 1")
@@ -1105,16 +1052,16 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     }
 
     @Test fun processCarbsTest() {
-        `when`(dateUtilMocked.now()).thenReturn(1000000L)
-        `when`(dateUtilMocked.timeString(anyLong())).thenReturn("03:01AM")
-        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
+        whenever(dateUtilMocked.now()).thenReturn(1000000L)
+        whenever(dateUtilMocked.timeString(anyLong())).thenReturn("03:01AM")
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
         //CAL
         smsCommunicatorPlugin.messages = ArrayList()
         var sms = Sms("1234", "CARBS")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
-        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
 
         //CARBS
         smsCommunicatorPlugin.messages = ArrayList()
@@ -1122,7 +1069,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-        `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(ConstraintObject(0, aapsLogger))
+        whenever(constraintChecker.applyCarbsConstraints(anyOrNull())).thenReturn(ConstraintObject(0, aapsLogger))
 
         //CARBS 0
         smsCommunicatorPlugin.messages = ArrayList()
@@ -1130,7 +1077,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS 0")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-        `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(ConstraintObject(1, aapsLogger))
+        whenever(constraintChecker.applyCarbsConstraints(anyOrNull())).thenReturn(ConstraintObject(1, aapsLogger))
 
         //CARBS 1
         smsCommunicatorPlugin.messages = ArrayList()
@@ -1158,7 +1105,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).contains("Wrong format")
 
         //CARBS 1 12:01
-        `when`(dateUtilMocked.timeString(anyLong())).thenReturn("12:01PM")
+        whenever(dateUtilMocked.timeString(anyLong())).thenReturn("12:01PM")
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CARBS 1 12:01")
         smsCommunicatorPlugin.processSms(sms)
@@ -1170,7 +1117,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[3].text).startsWith("Carbs 1g entered successfully")
 
         //CARBS 1 3:01AM
-        `when`(dateUtilMocked.timeString(anyLong())).thenReturn("03:01AM")
+        whenever(dateUtilMocked.timeString(anyLong())).thenReturn("03:01AM")
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CARBS 1 3:01AM")
         smsCommunicatorPlugin.processSms(sms)

@@ -16,11 +16,12 @@
     <string name="objectives_maxbasal">Öneriyi yerine getirmek için eylem gerçekleştirin</string>
     <string name="objectives_maxbasal_learned">Güvenlik özelliklerine dikkat edin ve gerektiğinde güvenlik parametrelerini ayarlayın.</string>
     <string name="objectives_maxiobzero_objective">Kapalı Döngü, (LGS) Düşük Glikoz Duraklatma modunda başlatılıyor</string>
-    <string name="objectives_maxiobzero_gate">Kapalı Döngüyü, maks IOB = 0 olacak şekilde çok sayıda LGS (düşük KŞ) olmadan birkaç gün boyunca deneyin</string>
+    <string name="objectives_maxiobzero_gate">Çok fazla düşük glikoz olayı olmadan birkaç gün boyunca Düşük Glikoz Askıya Alma Modunda (yani maksimum IOB = 0 otomatik olarak ayarlanır) döngüde çalıştırın.</string>
     <string name="objectives_maxiobzero_learned">MaksAİNS\'i sıfıra ayarlamak, sizi hipodan korur ve bazal oranın üzerine daha fazla insülin eklemez (negatif AİNS durumu hariç)</string>
     <string name="objectives_maxiob_objective">Kapalı Döngü\'de ince ayarlar, maks (IOB) Aktif İnsülini 0\'ın üzerine yükseltme ve yavaş yavaş KŞ hedeflerini aşağıya çekme</string>
     <string name="objectives_maxiob_gate">KŞ hedefini azaltmadan önce birkaç gün ve en az bir gece düşük KŞ (Hipo) alarmı olmadan deneyin</string>
-    <string name="objectives_maxiob_learned">Bir çocuk büyüdükçe MaksAİNS\'i güncelleyin. Sistemin size yiyecekleri karşılayabildiğinden daha fazla insülin vermesine izin vermeyin = gerçekten yüksek değer kötü bir fikirdir.</string>
+    <string name="objectives_maxiob_learned">Çocuk büyüdükçe MaksAINS\' i güncelleyin. Sistemin size karbonhidrat hesabından daha fazla insülin vermesine izin vermeyin = yüksek değer gerçekten kötü bir fikirdir. Maks AINS basit modda otomatik olarak hesaplanır</string>
+    <string name="maxiobset">Maksimum AINS düzgün bir şekilde ayarlandı (Basit modda gerekli değildir)</string>
     <string name="objectives_autosens_objective">Gerekirse, bazal ve oranları ayarlayın ve sonra auto-sens\'i (otoduyarlılık) etkinleştirin</string>
     <string name="objectives_autosens_gate">Bir hafta boyunca düzenli karbonhidrat girdileri yaparak gün boyunca Kapalı Döngüyü çalıştırın</string>
     <string name="objectives_autosens_learned">Otoduyarlılık sonucunuz %100 civarında salınmıyorsa muhtemelen profiliniz yanlıştır.</string>

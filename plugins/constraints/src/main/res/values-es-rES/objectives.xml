@@ -16,11 +16,13 @@
     <string name="objectives_maxbasal">Realizar la acción para cumplir la recomendación</string>
     <string name="objectives_maxbasal_learned">Tenga cuidado con las características de seguridad y ajuste los parámetros de seguridad cuando sea necesario.</string>
     <string name="objectives_maxiobzero_objective">Iniciando el bucle cerrado con suspensión con baja glucosa</string>
-    <string name="objectives_maxiobzero_gate">Ejecutar en bucle cerrado con max IOB=0 durante unos días sin demasiados valores bajos de glucosa</string>
+    <string name="objectives_maxiobzero_gate">Ejecutar en Laco cerrado en modo LGS - Suspensión de glucosa baja (ej. se establece automáticamente max IOB = 0) para unos días sin demasiados eventos LGS.</string>
     <string name="objectives_maxiobzero_learned">Establecer MaxIOB a cero evita la hipo y no añadirá más insulina por encima de la tasa basal (excepto en situaciones con IOB negativo)</string>
     <string name="objectives_maxiob_objective">Ajuste del bucle cerrado, aumentando máximo IOB por encima de 0 y bajando gradualmente objetivos BG</string>
     <string name="objectives_maxiob_gate">Usar unos cuantos días, y al menos una noche sin alarmas de glucosa baja, antes de bajar valor de glucosa</string>
-    <string name="objectives_maxiob_learned">Actualice MaxIOB a medida que el niño crezca. No permita que el sistema le dé más insulina de la que puede cubrir con la comida = un valor realmente alto es una mala idea.</string>
+    <string name="objectives_maxiob_learned">Actualica MaxIOB a medida que el niño/a crezca. No permita que el sistema le de más insulina de la que puede cubrir con la comida = un valor realmente alto es una mala idea. Max IOB es calculado 
+ automáticamente en el modo simple</string>
+    <string name="maxiobset">Máximo IOB configurado correctamente (no es necesario en modo simple)</string>
     <string name="objectives_autosens_objective">Ajustar las basales y ratios, si es necesario, y luego activar auto-sens</string>
     <string name="objectives_autosens_gate">Una semana con éxito en bucle cerrado durante el día con entrada regular de carbohidratos</string>
     <string name="objectives_autosens_learned">Si el resultado de tu autosens no oscila en torno al 100% es probable que tu perfil esté equivocado.</string>

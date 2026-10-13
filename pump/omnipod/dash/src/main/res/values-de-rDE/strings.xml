@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Pumpen-Integration für Omnipod Dash (das neue, bluetooth-fähige Modell mit blauer Nadelkappe).</string>
+    <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">Pod Historie</string>
+    <string name="omnipod_dash_history_item_description">Beschreibung</string>
+    <string name="omnipod_dash_history_item_amount">Menge</string>
+    <string name="omnipod_dash_history_item_source">Quelle</string>
+    <string name="omnipod_dash_history_item_date">Datum</string>
+    <string name="omnipod_dash_history_type">Typ:</string>
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_status">Bluetooth-Status</string>
+    <string name="omnipod_dash_overview_bluetooth_address">Bluetooth-Adresse</string>
+    <string name="omnipod_dash_overview_bluetooth_connection_quality">Verbindungsqualität</string>
+    <string name="omnipod_dash_overview_delivery_status">Abgabe Status</string>
+    <!-- Omnipod Dash - Pod Activation Wizard -->
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Befülle den neuen Pod mit ausreichend Insulin für 3 Tage.\n\nAchte auch zwei Pieptöne vom Pod während des Füllens. Diese zeigen an, dass der Pod mit der Mindestmenge von 80 IE befüllt wurde. Leere die Spritze komplett, auch wenn Du die beiden Pieptöne gehört hast.\n\nKlicke <b>Weiter</b> nachdem Du den Pod befüllt hast.\n\n<b>Hinweis:</b> Entferne den Nadelschutz des Pods noch nicht.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Versuche Verbindung mit dem neuen Pod herzustellen und ihn zu befüllen.\n\nNachdem der Initalisierungsprozess erfolgreich beendet wurde, kannst Du auf <b>Weiter</b> klicken.</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Ton bei unterbrochener Abgabe aktiviert</string>
+    <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Verbindung mit Pod fehlgeschlagen</string>
+    <string name="omnipod_dash_found_too_many_pods">Zu viele Pods für die Aktivierung gefunden</string>
+    <string name="omnipod_dash_scan_failed">Konnte keinen verfügbaren Pod für die Aktivierung finden</string>
+    <string name="omnipod_dash_generic_error">Allgemeiner Fehler: %1$s</string>
+    <string name="omnipod_dash_failed_to_send">Fehler beim Senden des Befehls</string>
+    <string name="omnipod_dash_command_not_sent">Befehl nicht gesendet</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">Befehl nicht vom Pod empfangen</string>
+    <string name="omnipod_dash_unknown">Unbekannter Status für den Befehl</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d Minuten</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f IE</string>
+    <string name="omnipod_common_alert_delivery_suspended">Insulinabgabe ist unterbrochen</string>
+    <string name="omnipod_common_history_total_delivered">Gesamt geliefert: %1$.2f E</string>
+    <string name="omnipod_dash_connection_lost">Verbindung zum Pod verloren</string>
+    <string name="omnipod_dash_bolus_already_in_progress">Ein weiterer Bolus wird abgegeben</string>
+    <string name="omnipod_dash_not_enough_insulin">Nicht genug Insulin im Reservoir übrig</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Unbestätigtes Kommando</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Vom Nutzer angefragt</string>
+    <string name="profile_set_ok">Profil erfolgreich gesetzt</string>
+    <string name="suspend_delivery_is_unconfirmed">Das Abbrechen der Insulinabgabe ist nicht bestätigt! Bitte aktualisiere den Pod-Status manuell auf dem DASH Tab und setze die Insulinabgabe bei Bedarf fort.</string>
+    <string name="insulin_delivery_suspended">Insulinabgabe ist unterbrochen</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Die Zeitzone auf dem Pod unterscheidet sich von der Zeitzone auf dem Telefon. Die Basalrate ist falsch. Wechsele das Profi, um dies zu beheben</string>
+    <string name="failed_to_set_the_new_basal_profile">Fehler beim Festlegen des neuen Basal-Profils. Abgabe unterbrochen</string>
+    <string name="setting_basal_profile_might_have_failed">Basalprofil konnte evtl. nicht gesetzt werden. Insulinabgabe wird evtl. unterbrochen. Bitte aktualisiere den Pod Status manuell im DASH Tab und starte die inabgabe falls notwendig neu.</string>
+    <string name="bolus_delivery_status_uncertain">Bolus Lieferstatus unklar. Aktualisiere den Pod Status, um ihn zu kontrollieren.</string>
+    <string name="temp_basal_out_of_sync">Temporärer Basalstatus nicht wie erwartet! Wenn ein Temp Basal zuvor ausgeführt wurde, wurde er abgebrochen. Bitte überprüfe die Insulin- und Pod-Historie</string>
+    <string name="checking_delivery_status">Abgabestatus wird überprüft</string>
+    <string name="setting_temp_basal_might_have_basal_failed">TBR konnte evtl. nicht gesetzt werden. Falls zuvor eine andere TBR aktiv war, wurde diese abgebrochen. Aktualisiere bitte manuell den Pod Status im DASH Tab.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Ob das Abbrechen der TBR erfolgreich war, ist unklar</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Unbestätigter Insulinabgabe fortsetzen Befehl. Bitte Pod Status aktualisieren</string>
+    <string name="cancelling_temp_basal_might_have_failed">Das Abbrechen der TBR war ggf. fehlerhaft. Falls zuvor eine andere TBR aktiv war, wurde diese evtl. abgebrochen. Aktualisiere bitte manuell den Pod Status im DASH Tab.</string>
+</resources>

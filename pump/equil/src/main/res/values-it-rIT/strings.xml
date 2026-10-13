@@ -3,14 +3,13 @@
     <string name="equil_pump_description">Pompa Patch Equil 5.3 o più recente </string>
     <!--  start  -->
     <string name="equil_basal_speed">Basale originale</string>
-    <string name="equil_bolus_delivered">%1$.3f U / %2$.3f U erogate</string>
     <string name="equil_btn_cancel">Annulla</string>
     <string name="equil_btn_need">Bisogno</string>
     <string name="equil_btn_skip">Salta</string>
     <string name="equil_date_device">Ultima connessione</string>
     <string name="equil_dressing">Cambia Serbatoio</string>
     <string name="equil_dressing_onkey_msg">Spostare automaticamente lo stantuffo verso il fondo del serbatoio. Si fermerà automaticamente al raggiungimento del fondo. Fare clic su \'Ferma\' per interrompere se necessario.</string>
-    <string name="equil_finish">Completato</string>
+    <string name="equil_finish">Fine</string>
     <string name="equil_next">Successivo</string>
     <string name="equil_hint_dressing">Questa operazione interromperà l’infusione di insulina e causerà il ritiro dello stantuffo della pompa verso il fondo!</string>
     <string name="equil_history">Storico</string>
@@ -91,7 +90,6 @@
     <string name="equil_command_connect_no_response">Nessuna risposta dal micro</string>
     <string name="equil_command__unknown">Stato sconosciuto per il comando</string>
     <string name="equil_install">Apporre il micro sul corpo</string>
-    <string name="equil_settings">Impostazioni</string>
     <string name="equil_settings_alarm_battery">Allarme batteria bassa</string>
     <string name="equil_settings_alarm_insulin">Allarme livello basso insulina</string>
     <string name="equil_init_insulin_error">L\'inizializzazione del serbatoio non è completa</string>
@@ -122,11 +120,6 @@
     <string name="equil_history_item16">Batteria esaurita!</string>
     <string name="equil_history_item17">Reset Power-on</string>
     <string name="equil_history_item18">Infusione Anomala Fermata</string>
-    <string name="equil_common_short_status_last_connection">Ultima conn: %1$d min fa</string>
-    <string name="equil_common_short_status_last_bolus">Ultimo bolo: %1$s @ %2$s</string>
-    <string name="equil_common_short_status_temp_basal">Temp: %1$s</string>
-    <string name="equil_common_short_status_extended_bolus">Esteso: %1$s</string>
-    <string name="equil_common_short_status_reservoir">Serbatoio: %1$sU</string>
     <string name="equil_common_overview_button_suspend_delivery">Sospendi</string>
     <string name="equil_common_overview_button_resume_delivery">Riprendi erogazione</string>
     <string name="equil_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d min)</string>
@@ -157,6 +150,7 @@ Regola password: deve contenere 4 caratteri, scelti tra ABCDEF0123456789.</strin
     <string name="equil_set_pair_password">Imposta Password Di Accoppiamento</string>
     <string name="equil_hint1">Dopo aver installato la pompa sulla piastra di base, selezionare se eliminare l’aria dall’ago.</string>
     <string name="equil_unbind">Disaccoppia dispositivo</string>
+    <string name="equil_device_unpaired">Dispositivo disaccoppiato</string>
     <string name="equil_assemble">Si prega di assemblare il micro, riempire il serbatoio e caricaere la batteria</string>
     <string name="equil_devices_number">Inserisci Il Nuovo ID Del Micro</string>
     <string name="equil_insert">Si prega di caricare il serbatoio fino a quando non vi è una goccia di insulina sulla punta dell’ago</string>
@@ -166,7 +160,7 @@ Regola password: deve contenere 4 caratteri, scelti tra ABCDEF0123456789.</strin
     <string name="equil_hint_dressing2">Si prega di rimuovere il micro dalla base</string>
     <string name="equil_unpair">Disattivare il vecchio micro %1$s?</string>
     <string name="equil_pump_updated">Micro aggiornato</string>
-    <string name="equil_maxbolus_tips">Bolo massimo consentito dal micro [%1$sU]</string>
     <string name="equil_replace_reservoir">Il serbatoio è vuoto. Sostituire il serbatoio</string>
     <string name="error_mustbe6hexadidits">Deve essere 6 caratteri tra ABCDEF0123456789</string>
+    <string name="equil_removed_anyway">Comando disaccoppiamento non riuscito. Il micro verrà comunque rimosso. La password impostata durante l\'accoppiamento non verrà rimossa dal micro.</string>
 </resources>

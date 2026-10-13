@@ -19,7 +19,6 @@
     <string name="dana_model">%1$s\nדגם: %2$02X\nפרוטוקול: %3$02X\nקוד: %4$02X</string>
     <string name="processinghistory">מעבד אירוע</string>
     <string name="danar_enableextendedbolus">אפשר בזאלי ממושך במשאבה</string>
-    <string name="overview_bolusprogress_delivered">הוזרק</string>
     <string name="overview_bolusprogress_stoped">נעצר</string>
     <string name="unsupportedfirmware">קושחת משאבה לא נתמכת</string>
     <string name="pumperror">תקלת משאבה</string>

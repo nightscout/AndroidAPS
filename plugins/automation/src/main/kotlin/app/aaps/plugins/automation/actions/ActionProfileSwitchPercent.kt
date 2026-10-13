@@ -51,10 +51,10 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
                 )
             )
         ) {
-            callback.result(instantiator.providePumpEnactResult().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+            callback.result(pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
         } else {
             aapsLogger.error(LTag.AUTOMATION, "Final profile not valid")
-            callback.result(instantiator.providePumpEnactResult().success(false).comment(app.aaps.core.ui.R.string.ok)).run()
+            callback.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.ok)).run()
         }
     }
 

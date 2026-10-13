@@ -10,7 +10,6 @@
     <string name="project_member_id">Project Member ID: %1$s</string>
     <string name="only_upload_if_connected_to_wifi">Only upload if connected to WiFi</string>
     <string name="only_upload_if_charging">Only upload if charging</string>
-    <string name="key_open_humans_settings" translatable="false">open_humans</string>
     <string name="open_humans_uploading">Uploading to Open Humans…</string>
     <string name="open_humans_notifications">Open Humans Notifications</string>
     <string name="uploading_to_open_humans">AAPS is uploading to Open Humans. This may take a while.</string>

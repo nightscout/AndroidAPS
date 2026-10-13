@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_cellular">Usar conexão móvel</string>
     <string name="ns_wifi">Utilizar conexão Wi-Fi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
@@ -19,10 +19,8 @@
     <string name="unsupported_ns_version">Versão não suportada do Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">Erro de funcionamento do NSCliente. Pondere reiniciar o NS e NSCliente.</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT não tem permissão de escrita. Senha da API errada?</string>
-    <string name="ns_client">NSCliente</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Reiniciar</string>
     <string name="ns_client_url_title">Nightscout URL</string>
@@ -38,19 +36,12 @@
     <string name="ns_receive_profile_store">Receber perfil armazenado</string>
     <string name="ns_receive_profile_store_summary">Sincronizar perfis vindo do editor de perfis do NS</string>
     <string name="ns_receive_temp_target">Receber alvos temporários</string>
-    <string name="ns_receive_temp_target_summary">Aceitar alvos temporários inseridos através do NS ou NSClient</string>
     <string name="ns_receive_profile_switch">Receber trocas de perfil</string>
-    <string name="ns_receive_profile_switch_summary">Aceitar trocas de perfil inseridas através de NS ou NSClient</string>
-    <string name="ns_receive_offline_event">Receber eventos APS offline</string>
-    <string name="ns_receive_offline_event_summary">Aceitar eventos APS offline inseridos através de NS ou NSClient</string>
     <string name="ns_receive_tbr_eb">Receber taxa basal temporária (TBT) e bolus estendido (e-bolus ou BE)</string>
     <string name="ns_receive_tbr_eb_summary">Aceitar taxa basal temporária (TBT) e bolus estendido (BE) informados por outra instância</string>
     <string name="ns_receive_insulin">Receber insulina</string>
-    <string name="ns_receive_insulin_summary">Aceitar insulina inserida através de NS ou NSClient (não é administrada, apenas serve para o cálculo da IA)</string>
     <string name="ns_receive_carbs">Receber carboidratos</string>
-    <string name="ns_receive_carbs_summary">Aceitar carboidratos inseridos através de NS ou NSClient</string>
     <string name="ns_receive_therapy_events">Receber eventos de terapia</string>
-    <string name="ns_receive_therapy_events_summary">Aceitar eventos de terapia (cânula, insulina, troca de bateria etc) inseridos através de NS ou NSClient</string>
     <string name="ns_receive_cgm">Receber dados recentes e dados antigos do CGM</string>
     <string name="ns_receive_cgm_summary">Aceitar dados de CGM do NS</string>
     <string name="ns_sync_slow">Desacelerar os envios de dados</string>
@@ -64,17 +55,10 @@
     <string name="ns_use_ws_title">Conectar a websockets</string>
     <string name="ns_use_ws_summary">Habilitar significa: atualizações mais rápidas, recebimento de alarmes e anúncios e maior consumo de bateria, semelhante à versão 1. Todos os outros carregadores para o NS devem usar o protocolo v3.</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Nome de utilizador no Tidepool, normalmente seu endereço de e-mail</string>
-    <string name="title_tidepool_username">Nome de Utilizador</string>
-    <string name="summary_tidepool_password">Palavra-passe da conta Tidepool</string>
-    <string name="title_tidepool_password">Palavra-passe</string>
-    <string name="title_tidepool_test_login">Teste de Conta Tidepool</string>
-    <string name="summary_tidepool_dev_servers">Se activado, envio será para https://int-app.tidepool.org em vez do habitual https://app.tidepool.org/</string>
     <string name="title_tidepool_dev_servers">Usar servidores de integração (teste)</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Enviar dados para Tidepool</string>
-    <string name="remove_all">Remover todos</string>
     <string name="upload_now">Enviar agora</string>
     <string name="not_connected">Não conectado</string>
     <string name="read_only">Somente leitura</string>
@@ -104,14 +88,9 @@
     <string name="wizard_result">Calculadora:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize seu atalho</string>
     <string name="quick_wizard_message">Assistente rápido: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
-    <string name="wear_action_tempt_cancel_message">Cancelando Alvos temporários em execução?</string>
     <string name="wear_action_tempt_unit_error">Unidades diferentes usadas no relógio e telefone!</string>
-    <string name="wear_action_tempt_zero_message">Desligar alvo temporário - cancelando Alvos temporários atuais?</string>
     <string name="wear_action_tempt_min_bg_error">Glicemia mínima fora do alvo!</string>
     <string name="wear_action_tempt_max_bg_error">Glicemia maxima fora da meta!</string>
-    <string name="wear_action_tempt_manual_range_message">Alvo temporário:\nMin: %1$s\nMax: %2$s\nDuração: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Alvo temporário:\nTarget: %1$s\nDuration: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Tempo no alvo:\nMotivo: %1$s\nAlvo: %2$s\nDuração: %3$s</string>
     <string name="no_success">não foi bem sucedido - por favor, verifique o telefone</string>
     <string name="wear_settings">Definições Wear</string>
     <string name="wearcontrol_title">Controles do Relógio</string>
@@ -139,7 +118,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nenhum perfil ativo definido!</string>
-    <string name="profile_message">Perfil:\n\nFuso: %1$d\nPorcentagem: %2$d%%\"</string>
     <string name="target_only_aps_mode">Alvos só se aplicam no modo APS!</string>
     <string name="no_history">Nenhum dado no histórico!</string>
     <string name="temp_target">Alvos Temporários</string>

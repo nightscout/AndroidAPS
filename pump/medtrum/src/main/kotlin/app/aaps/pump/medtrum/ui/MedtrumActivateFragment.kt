@@ -37,15 +37,16 @@ class MedtrumActivateFragment : MedtrumBaseFragment<FragmentMedtrumActivateBindi
                         MedtrumViewModel.SetupStep.PRIMED    -> Unit // Nothing to do here, previous state
                         MedtrumViewModel.SetupStep.ACTIVATED -> moveStep(PatchStep.ACTIVATE_COMPLETE)
 
-                        MedtrumViewModel.SetupStep.ERROR     -> {
-                            updateSetupStep(MedtrumViewModel.SetupStep.PRIMED) // Reset setup step
-                            binding.textActivatingPump.text = rh.gs(R.string.activating_error)
-                            binding.btnPositive.visibility = View.VISIBLE
-                        }
-
                         else                                 -> {
-                            ToastUtils.errorToast(requireContext(), "Unexpected state: $it")
                             aapsLogger.error(LTag.PUMP, "Unexpected state: $it")
+                            OKDialog.show(
+                                requireActivity(),
+                                rh.gs(app.aaps.core.ui.R.string.error),
+                                rh.gs(R.string.unexpected_state, it.toString()),
+                                runOnDismiss = true
+                            ) {
+                                viewModel?.moveStep(PatchStep.CANCEL)
+                            }
                         }
                     }
                 }

@@ -11,12 +11,12 @@
     <string name="absorption_settings_title">Absorberingsinnstillinger</string>
     <string name="absorption_max_time_title">Maks absorberingstid for måltid [t]</string>
     <string name="absorption_max_time_summary">Tid i timer hvor det forventes at alle karbohydrater fra måltid vil være absorbert</string>
-    <string name="openapsama_autosens_period">Intervall for autosens [t]</string>
+    <string name="openapsama_autosens_period">Intervall for Autosens [t]</string>
     <string name="openapsama_autosens_period_summary">Antall timer med historiske data for beregning av sensitivitet (absorpsjonstid for KH er ekskludert)</string>
-    <string name="openapsama_autosens_max_summary">Standardverdi: 1.2\nDette er en multiplikatorbegrensning for autosens (og snart autotune) som begrenser at autosens ikke kan øke med mer enn 20%%, som dermed begrenser hvor mye autosens kan justere opp dine basaler, hvor mye ISF kan reduseres og hvor lavt BS målverdi kan settes.</string>
-    <string name="openapsama_autosens_min_summary">Standardverdi: 0.7\nDette er en multiplikatorbegrensning for autosens-sikkerhet. Den begrenser autosens til å redusere basalverdier, og øke isulinssensitivitet (ISF) og BS mål med ikke mer enn enn 30%.</string>
-    <string name="openapsama_autosens_max">Maks autosens ratio</string>
-    <string name="openapsama_autosens_min">Minimum autosens ratio</string>
+    <string name="openapsama_autosens_max_summary">Standardverdi: 1.2\nDette er en multiplikatorbegrensning for Autosens (og snart Autotune) som begrenser at Autosens ikke kan øke med mer enn 20%%, som dermed begrenser hvor mye Autosens kan justere opp dine basaler, hvor mye ISF kan reduseres og hvor lavt BS-målverdi kan settes.</string>
+    <string name="openapsama_autosens_min_summary">Standardverdi: 0.7\nDette er en multiplikatorbegrensning for Autosens-sikkerhet. Den begrenser Autosens til å redusere basalverdier, og øke isulinssensitivitet (ISF) og BS-mål med ikke mer enn enn 30%.</string>
+    <string name="openapsama_autosens_max">Maksimum Autosens-ratio</string>
+    <string name="openapsama_autosens_min">Minimum Autosens-ratio</string>
     <string name="openapsama_min_5m_carb_impact_summary">Standardverdi: 3.0 (AMA) eller 8.0 (SMB). Dette er en innstilling for standard karboabsorpsjonsvirkning per 5 minutter. Standard forventet er 3mg/dl/5min. Dette påvirker hvor raskt COB avtar, og hvor mye karboabsorpsjon antas ved beregning av fremtidig forventet BS, når BS faller mer enn forventet, eller når det ikke stiger så mye som forventet.</string>
     <string name="absorption_cutoff_title">Maks absorpsjonstid for måltid [t]</string>
     <string name="absorption_cutoff_summary">Etter denne tiden forventes det at måltidet er absorbert. Eventuelle gjenværende karbo vil tas ut av beregninger.</string>

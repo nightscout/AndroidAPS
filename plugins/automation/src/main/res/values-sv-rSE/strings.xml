@@ -77,8 +77,6 @@
     <string name="deltalabel_u">BG-förändring [%1$s]</string>
     <string name="currentlocation">Nuvarande plats</string>
     <string name="location">Plats</string>
-    <string name="latitude_short">Lat:</string>
-    <string name="longitude_short">Lon:</string>
     <string name="glucose_u">BG [%1$s]:</string>
     <string name="target_u">Mål [%1$s]:</string>
     <string name="lastboluslabel">Senaste bolus</string>
@@ -121,4 +119,5 @@
     <string name="autotune_run_with_error">Fel under senaste körning av Autotune</string>
     <string name="autotune_run_cancelled">En annan Autotune-körning upptäcktes, körning avbruten</string>
     <!--    Steps count-->
+    <!--    SMB mode-->
 </resources>

@@ -12,6 +12,8 @@ interface Config {
     val PUMPDRIVERS: Boolean
     val FLAVOR: String
     val VERSION_NAME: String
+    val HEAD: String
+    val COMMITTED: Boolean
     val BUILD_VERSION: String
     val REMOTE: String
     val BUILD_TYPE: String
@@ -31,4 +33,11 @@ interface Config {
     fun showUserActionsOnWatchOnly(): Boolean
     fun ignoreNightscoutV3Errors(): Boolean
     fun doNotSendSmsOnProfileChange(): Boolean
+    fun enableAutotune(): Boolean
+    fun enableOmnipodDriftCompensation(): Boolean
+
+    /**
+     * Disable LeakCanary (memory leaks detection). By default it's enabled in DEBUG builds.
+     */
+    fun disableLeakCanary(): Boolean
 }

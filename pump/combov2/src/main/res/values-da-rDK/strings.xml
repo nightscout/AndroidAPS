@@ -103,15 +103,7 @@ Hvis der ikke oprettes forbindelse efter mere end omkring 5 minutter:\n\n
     <string name="combov2_unpair_pump_summary">Frakobl AndroidAPS og Android med en pt. parret Accu-Chek Combo-pumpe</string>
     <string name="combov2_unknown_tbr_detected">Ukendt TBR blev fundet og stoppet; procent: %1$d%%; resterende varighed: %2$s</string>
     <string name="combov2_connection_error">Forbindelsesfejl: %1$s</string>
-    <string name="combov2_short_status_last_connection">Seneste forb: %1$d min siden</string>
     <string name="combov2_short_status_alert">Alarm %s</string>
-    <string name="combov2_short_status_last_bolus">Sidste bolus: %1$s @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Midl: %s</string>
-    <string name="combov2_short_status_reservoir">Reservoir: %dIE</string>
-    <string name="combov2_short_status_battery_state_empty">tom</string>
-    <string name="combov2_short_status_battery_state_low">lav</string>
-    <string name="combov2_short_status_battery_state_full">fuld</string>
-    <string name="combov2_short_status_battery_state">Batt.: %s</string>
     <string name="combov2_automatic_reservoir_entry">Detektér automatisk og indtast automatisk ændring af insulinreservoirændringer</string>
     <string name="combov2_automatic_battery_entry">Detektér automatisk og indtast automatisk ændring af batteriskift</string>
     <string name="combov2_timezone_changed">Tidszone ændret</string>

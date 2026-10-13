@@ -104,15 +104,7 @@ Schaltflächen gleichzeitig, um das Paar abzubrechen)\n
     <string name="combov2_unpair_pump_summary">Trenne AndroidAPS und Android von der aktuell verbundenen Accu-Chek Combo Pumpe</string>
     <string name="combov2_unknown_tbr_detected">Unbekannte TBR wurde erkannt und gestoppt; Prozentsatz: %1$d%%; verbleibende Dauer: %2$s</string>
     <string name="combov2_connection_error">Verbindungsfehler :%1$</string>
-    <string name="combov2_short_status_last_connection">Letzte Verb.: vor %1$d min</string>
     <string name="combov2_short_status_alert">Alarm: %s</string>
-    <string name="combov2_short_status_last_bolus">Letzter Bolus: %1$s @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Temp: %s</string>
-    <string name="combov2_short_status_reservoir">Reserv: %dU</string>
-    <string name="combov2_short_status_battery_state_empty">leer</string>
-    <string name="combov2_short_status_battery_state_low">niedrig</string>
-    <string name="combov2_short_status_battery_state_full">voll</string>
-    <string name="combov2_short_status_battery_state">Batterie: %s</string>
     <string name="combov2_automatic_reservoir_entry">Insulinreservoirwechsel automatisch erkennen und eingeben</string>
     <string name="combov2_automatic_battery_entry">Akkuwechsel automatisch erkennen und eingeben</string>
     <string name="combov2_timezone_changed">Zeitzone geändert</string>

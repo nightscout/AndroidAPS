@@ -6,18 +6,15 @@ import app.aaps.plugins.automation.AutomationFragment
 import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
-import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
 import app.aaps.plugins.automation.actions.ActionDummy
-import app.aaps.plugins.automation.actions.ActionLoopDisable
-import app.aaps.plugins.automation.actions.ActionLoopEnable
-import app.aaps.plugins.automation.actions.ActionLoopResume
-import app.aaps.plugins.automation.actions.ActionLoopSuspend
 import app.aaps.plugins.automation.actions.ActionNotification
 import app.aaps.plugins.automation.actions.ActionProfileSwitch
 import app.aaps.plugins.automation.actions.ActionProfileSwitchPercent
 import app.aaps.plugins.automation.actions.ActionRunAutotune
+import app.aaps.plugins.automation.actions.ActionSMBChange
 import app.aaps.plugins.automation.actions.ActionSendSMS
+import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
@@ -83,7 +80,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerBolusAgoInjector(): TriggerBolusAgo
     @ContributesAndroidInjector abstract fun triggerSensorAgeInjector(): TriggerSensorAge
     @ContributesAndroidInjector abstract fun triggerPadChangeInjector(): TriggerPodChange
-    @ContributesAndroidInjector abstract fun triggerCanulaAgeInjector(): TriggerCannulaAge
+    @ContributesAndroidInjector abstract fun triggerCannulaAgeInjector(): TriggerCannulaAge
     @ContributesAndroidInjector abstract fun triggerInsulinAgeInjector(): TriggerInsulinAge
     @ContributesAndroidInjector abstract fun triggerReservoirLevelInjector(): TriggerReservoirLevel
     @ContributesAndroidInjector abstract fun triggerPumpBatteryAgeInjector(): TriggerPumpBatteryAge
@@ -107,11 +104,8 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerStepsCountInjector(): TriggerStepsCount
 
     @ContributesAndroidInjector abstract fun actionInjector(): Action
+    @ContributesAndroidInjector abstract fun actionSMBChangeInjector(): ActionSMBChange
     @ContributesAndroidInjector abstract fun actionStopProcessingInjector(): ActionStopProcessing
-    @ContributesAndroidInjector abstract fun actionLoopDisableInjector(): ActionLoopDisable
-    @ContributesAndroidInjector abstract fun actionLoopEnableInjector(): ActionLoopEnable
-    @ContributesAndroidInjector abstract fun actionLoopResumeInjector(): ActionLoopResume
-    @ContributesAndroidInjector abstract fun actionLoopSuspendInjector(): ActionLoopSuspend
     @ContributesAndroidInjector abstract fun actionNotificationInjector(): ActionNotification
     @ContributesAndroidInjector abstract fun actionAlarmInjector(): ActionAlarm
     @ContributesAndroidInjector abstract fun actionSettingsExportInjector(): ActionSettingsExport

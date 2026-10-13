@@ -13,6 +13,7 @@ enum class Sources {
     TempBasalDialog,
     CalibrationDialog,
     FillDialog,
+    SiteRotationDialog,
     BgCheck,
     SensorInsert,
     BatteryChange,
@@ -36,6 +37,10 @@ enum class Sources {
     Glunovo,
     Intelligo,
     Xdrip,
+    Ottai,              //From Ottai Plugin
+    SyaiTag,
+    SiBionic,
+    Sino,
     LocalProfile,       //From LocalProfile plugin
     Loop,               //From Loop plugin
     Maintenance,        //From Maintenance plugin
@@ -68,13 +73,11 @@ enum class Sources {
     Food,               //From Food plugin
     ConfigBuilder,      //From ConfigBuilder Plugin
     Overview,           //From OverViewPlugin
-    Ottai,              //From Ottai Plugin
     Stats,              //From Stat Activity
     Aaps,               // MainApp
     BgFragment,
     Garmin,
     Database,           // for PersistenceLayer
-    Unknown,             //if necessary
-    SyaiTag
+    Unknown             //if necessary
     ;
 }

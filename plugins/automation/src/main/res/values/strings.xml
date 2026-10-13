@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="key_google_apis_android" translatable="false">AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM</string>
+
     <string name="automation_short">Auto</string>
     <string name="automation">Automation</string>
     <string name="automation_description">User defined automation tasks</string>
@@ -78,9 +80,8 @@
     <string name="deltalabel">BG difference</string>
     <string name="deltalabel_u">BG difference [%1$s]</string>
     <string name="currentlocation">Current Location</string>
+    <string name="choose_from_map">Choose from map</string>
     <string name="location">Location</string>
-    <string name="latitude_short">Lat:</string>
-    <string name="longitude_short">Lon:</string>
     <string name="glucose_u">Glucose [%1$s]:</string>
     <string name="target_u">Target [%1$s]:</string>
     <string name="lastboluslabel">Last bolus ago</string>
@@ -140,10 +141,16 @@
     <string name="autotune_run_with_error">Error during last Autotune run</string>
     <string name="autotune_run_cancelled">Another run of Autotune is detected, run cancelled</string>
 
-
     <!--    Steps count-->
     <string name="triggerStepsCountLabel">Steps Count</string>
     <string name="triggerStepsCountDesc">Steps count per %1$s minutes %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Measurement Duration</string>
+
+    <!--    SMB mode-->
+    <string name="changeSmbState">Enable/disable SMB</string>
+    <string name="changeSmbTo">Change SMB to %1$s</string>
+    <string name="newSmbMode">New SMB mode:</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
 
 </resources>

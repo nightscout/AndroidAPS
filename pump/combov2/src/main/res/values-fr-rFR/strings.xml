@@ -94,15 +94,7 @@
     <string name="combov2_unpair_pump_summary">Dissocier AndroidAPS et Android de la pompe Accu-Chek Combo actuelle</string>
     <string name="combov2_unknown_tbr_detected">Un DBT inconnu a été détecté et arrêté, pourcentage: %1$d%%, durée restante: %2$s</string>
     <string name="combov2_connection_error">Erreur de connexion: %1$s</string>
-    <string name="combov2_short_status_last_connection">Dernière connexion : il y a %1$d min</string>
     <string name="combov2_short_status_alert">Alerte: %s</string>
-    <string name="combov2_short_status_last_bolus">Dernier bolus: %1$sU @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Temps : %s</string>
-    <string name="combov2_short_status_reservoir">Réserve : %dU</string>
-    <string name="combov2_short_status_battery_state_empty">vide</string>
-    <string name="combov2_short_status_battery_state_low">basse</string>
-    <string name="combov2_short_status_battery_state_full">plein</string>
-    <string name="combov2_short_status_battery_state">Pile: %s</string>
     <string name="combov2_automatic_reservoir_entry">Détection et enregistrement automatique du changement du réservoir</string>
     <string name="combov2_automatic_battery_entry">Détection et enregistrement automatique du changement de pile</string>
     <string name="combov2_timezone_changed">Fuseau horaire modifié</string>

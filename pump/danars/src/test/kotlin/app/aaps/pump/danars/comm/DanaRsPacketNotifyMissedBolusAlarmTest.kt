@@ -1,23 +1,14 @@
 package app.aaps.pump.danars.comm
 
 import app.aaps.pump.danars.DanaRSTestBase
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class DanaRsPacketNotifyMissedBolusAlarmTest : DanaRSTestBase() {
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is DanaRSPacketNotifyMissedBolusAlarm) {
-                it.aapsLogger = aapsLogger
-            }
-        }
-    }
-
-    @Test fun runTest() {
-        val packet = DanaRSPacketNotifyMissedBolusAlarm(packetInjector)
+    @Test
+    fun runTest() {
+        val packet = DanaRSPacketNotifyMissedBolusAlarm(aapsLogger)
         // test params
         Assertions.assertEquals(0, packet.getRequestParams().size)
         // test message decoding

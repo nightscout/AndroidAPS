@@ -56,7 +56,7 @@ class PlusMinusEditText @JvmOverloads constructor(
     private var value: Double
     private var mChangeCounter = 0
     private var mLastChange: Long = 0
-    private val mHandler: Handler
+    private val handler: Handler
     private var mUpdater: ScheduledExecutorService? = null
 
     private inner class UpdateCounterTask(private val mInc: Boolean, private val step: Double) : Runnable {
@@ -78,7 +78,7 @@ class PlusMinusEditText @JvmOverloads constructor(
             } else {
                 msg.what = MSG_DEC
             }
-            mHandler.sendMessage(msg)
+            handler.sendMessage(msg)
         }
     }
 
@@ -114,8 +114,7 @@ class PlusMinusEditText @JvmOverloads constructor(
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             (binding.root.context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager).defaultVibrator
         } else {
-            @Suppress("DEPRECATION")
-            binding.root.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            binding.root.context.getSystemService(Vibrator::class.java)
         }
 
         vibrator.vibrate(VibrationEffect.createOneShot(10, VibrationEffect.DEFAULT_AMPLITUDE))
@@ -131,7 +130,7 @@ class PlusMinusEditText @JvmOverloads constructor(
         }
 
         mUpdater = Executors.newSingleThreadScheduledExecutor()
-        mUpdater?.scheduleAtFixedRate(
+        mUpdater?.scheduleWithFixedDelay(
             UpdateCounterTask(inc, step), 200, 200,
             TimeUnit.MILLISECONDS
         )
@@ -230,7 +229,7 @@ class PlusMinusEditText @JvmOverloads constructor(
         binding.plusButton3?.text = "+${format.format(stepValues[2]).replaceFirst("^0+(?!$)".toRegex(), "")}"
 
         value = initValue
-        mHandler = object : Handler(Looper.getMainLooper()) {
+        handler = object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message) {
                 val multiplier = msg.data.getInt(MULTIPLIER)
                 val step = msg.data.getDouble(STEP)
@@ -252,6 +251,15 @@ class PlusMinusEditText @JvmOverloads constructor(
 
         editText.showSoftInputOnFocus = false
         editText.setTextIsSelectable(false)
+
+        // Prevent editText clicks from propagating to ViewPager
+        editText.isClickable = true
+        editText.isFocusable = false
+        editText.setOnClickListener {
+            // Consume the click event without doing anything
+            // This prevents the ViewPager from receiving the touch event
+        }
+
         binding.minButton.setOnTouchListener(this)
         binding.minButton.setOnKeyListener(this)
         binding.minButton.setOnClickListener(this)

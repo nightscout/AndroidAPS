@@ -1,32 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory
+        android:title="@string/tile_settings"
+        android:key="header" />
+
     <ListPreference
         android:defaultValue="activity"
         android:entries="@array/tile_tempt_names"
         android:entryValues="@array/tile_tempt_values"
         android:key="tile_tempt_1"
-        android:title="@string/tile_tempt_1" />
+        android:title="@string/tile_tempt_1"
+        android:summary="%s" />
 
     <ListPreference
         android:defaultValue="eating_soon"
         android:entries="@array/tile_tempt_names"
         android:entryValues="@array/tile_tempt_values"
         android:key="tile_tempt_2"
-        android:title="@string/tile_tempt_2" />
+        android:title="@string/tile_tempt_2"
+        android:summary="%s" />
 
     <ListPreference
         android:defaultValue="hypo"
         android:entries="@array/tile_tempt_names"
         android:entryValues="@array/tile_tempt_values"
         android:key="tile_tempt_3"
-        android:title="@string/tile_tempt_3" />
+        android:title="@string/tile_tempt_3"
+        android:summary="%s" />
 
     <ListPreference
         android:defaultValue="manual"
         android:entries="@array/tile_tempt_names"
         android:entryValues="@array/tile_tempt_values"
         android:key="tile_tempt_4"
-        android:title="@string/tile_tempt_4" />
+        android:title="@string/tile_tempt_4"
+        android:summary="%s" />
 
 </PreferenceScreen>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">Pumpe-integration til Omnipod Eros (Den model med gennemsigtig nålehætte). Kræver en RileyLink-enhed med mindst firmware-version 2.0.</string>
+    <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Vis Puls Log knap i Pod indstillingsmenu</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Vis Rileylink statistik knap i Pod indstillingsmenu</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktiver logning af batteriskift i menuen Handlinger</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Lyd for usikre TBR-meddelelser aktiveret</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Lyd for usikre SMB notifikationer aktiveret</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Lyd for usikre bolus notifikationer aktiveret</string>
+    <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_title">Pod Historik</string>
+    <string name="omnipod_eros_history_item_description">Beskrivelse</string>
+    <string name="omnipod_eros_history_item_source">Kilde</string>
+    <string name="omnipod_eros_history_item_date">Dato</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f IE</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f IE, CH=%2$.1f g</string>
+    <string name="omnipod_eros_history_tbr_value">Rate: %1$.2f IE, varighed: %2$d minutter</string>
+    <!-- Omnipod Eros - Short Status -->
+    <!-- Omnipod Eros - Error -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">RileyLink adresse ugyldig.</string>
+    <string name="omnipod_eros_error_crc_mismatch">Kommunikation mislykkedes: Bekræftelse af meddelelsesintegritet mislykkedes</string>
+    <string name="omnipod_eros_error_invalid_packet_type">Kommunikation mislykkedes: modtaget en ugyldig pakke fra Pod</string>
+    <string name="omnipod_eros_error_invalid_progress_state">Kommunikation mislykkedes: Pod er i en forkert tilstand</string>
+    <string name="omnipod_eros_error_invalid_response">Kommunikation mislykkedes: modtaget et ugyldigt svar fra Pod</string>
+    <string name="omnipod_eros_error_invalid_message_sequence_number">Kommunikation mislykkedes: modtaget en besked med et ugyldigt sekvensnummer fra Pod</string>
+    <string name="omnipod_eros_error_invalid_message_address">Kommunikation mislykkedes: modtaget en besked med en ugyldig adresse fra Pod</string>
+    <string name="omnipod_eros_error_message_decoding_failed">Kommunikation mislykkedes: Kunne ikke afkode meddelelsen fra Pod</string>
+    <string name="omnipod_eros_error_nonce_resync_failed">Kommunikation mislykkedes: \'nonce\' gensynkronisering mislykkedes</string>
+    <string name="omnipod_eros_error_nonce_out_of_sync">Kommunikation mislykkedes: \'nonce\' ude af synkronisering</string>
+    <string name="omnipod_eros_error_not_enough_data">Kommunikation mislykkedes: Ikke nok data modtaget fra Pod</string>
+    <string name="omnipod_eros_error_pod_fault">En Pod fejl (%1$03d %2$s) er blevet fundet. Deaktivér venligst din Pod og aktivér en ny</string>
+    <string name="omnipod_eros_error_pod_returned_error_response">Kommunikation mislykkedes: Pod returnerede et fejlsvar</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Intet svar fra RileyLink</string>
+    <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink afbrudt</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Intet svar fra pod</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Indstilling af basal profil mislykkedes. Afgivelse kan være suspenderet! Opdater venligst Pod status manuelt fra Omnipod fanen og genoptag leveringen hvis nødvendigt.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Indstilling af basal profil mislykkedes måske. Afgivelse kan være suspenderet! Opdater venligst Pod status manuelt fra Omnipod fanen og genoptag leveringen hvis nødvendigt.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Indstilling af basal profil mislykkedes. Levering er suspenderet! Genoptag manuelt levering fra Omnipod fanen.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Annullering af midlertidig basal kan være mislykkedes. Opdater venligst Pod status manuelt fra Omnipod fanen.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Indstilling af midlertidig basal mislykkedes. Hvis en midlertidig basal tidligere var kørt, kan den være blevet annulleret. Opdater venligst Pod status manuelt fra Omnipod fanen.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Indstilling af midlertidig basal mislykkedes måske. Hvis en midlertidig basal tidligere var kørt, kan den være blevet annulleret. Opdater venligst Pod status manuelt fra Omnipod fanen.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_validation">TBR-varigheden skal være større end nul og et multiplum af %1$s minutter.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Indstilling af tiden mislykkedes måske. Afgivelse kan være suspenderet! Opdater venligst Pod status manuelt fra Omnipod fanen og genoptag leveringen hvis nødvendigt.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Indstilling af tiden mislykkedes. Levering er suspenderet! Genoptag manuelt levering fra Omnipod fanen.</string>
+    <string name="omnipod_eros_error_failed_to_read_pulse_log">Kunne ikke læse Puls- loggen</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Kunne ikke automatisk ændre tiden på Pod. Du bør manuelt synkronisere tiden i Omnipod fanen.</string>
+    <string name="omnipod_eros_error_operation_not_possible_no_configuration">Handlingen er ikke mulig.\n\nDu skal først konfigurere Omnipod, før du kan bruge denne operation.</string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain">Kan ikke verificere om bolus lykkedes. Kontroller venligst manuelt, at din Pod afgiver bolus ved at lytte efter klik. <b>Hvis du er sikker på, at bolus ikke lykkedes, bør du manuelt slette bolus posten fra behandlinger, selvom du klikker på \'Annuller bolus\' nu!</b></string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Kan ikke verificere, om SMB bolus (%1$.2f IE) lykkedes. <b>Hvis du er sikker på, at Bolus ikke lykkedes, bør du manuelt slette SMB-posten fra behandlinger.</b></string>
+    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">En midlertidig basal kører på Pod, men AAPS er uvidende om denne midlertidige basal. Annuller venligst din midlertidige basal manuelt.</string>
+    <!-- Omnipod Eros - Pod Management -->
+    <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink Status</string>
+    <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">Venter på RileyLink forbindelse…</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Nulstil RileyLink Konfiguration</string>
+    <string name="omnipod_eros_pod_management_button_read_pulse_log">Læs Pulslog</string>
+    <string name="omnipod_eros_pod_management_button_reading_pulse_log">Læser pulslog…</string>
+    <string name="omnipod_eros_pod_management_pulse_log">Puls Log</string>
+    <string name="omnipod_eros_pod_management_pulse_log_value">Pulslog (kopieret til udklipsholder)</string>
+    <!-- Omnipod Eros - Pod Activation Wizard -->
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Fyld en ny Pod med nok insulin til 3 dage.\n\nLyt efter to bip fra Pod under påfyldning. De angiver, at minimumsmængden på 80IE er blevet tilført. Sørg for at tømme fyldningssprøjten fuldstændigt, selv efter at have hørt de to bip.\n\nEfter fyldning af Pod, tryk venligst på <b>Næste</b>.\n\n<b>Bemærk:</b> fjern ikke Pod\'s kanylehætte på nuværende tidspunkt.\n<b>Bemærk:</b> placer venligst RileyLink i opretstående position og placer Pod ca. 10cm fra den.</string>
+    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Forsøger at parre med den nye Pod og prime den.\n\nNår initialiseringsprocessen er gennemført, kan du trykke på <b>Næste</b>.\n\n<b>Bemærk:</b> placer venligst RileyLink i opretstående position og placer Pod ca. 10cm fra den.</string>
+</resources>

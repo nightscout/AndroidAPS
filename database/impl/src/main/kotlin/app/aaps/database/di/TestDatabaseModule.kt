@@ -23,8 +23,7 @@ open class TestDatabaseModule {
                     createCustomIndexes(db)
                 }
             })
-            .fallbackToDestructiveMigration()
-            .fallbackToDestructiveMigrationOnDowngrade()
+            .fallbackToDestructiveMigration(false)
             .build()
 
     private fun createCustomIndexes(database: SupportSQLiteDatabase) {
@@ -32,6 +31,6 @@ open class TestDatabaseModule {
         database.execSQL("CREATE INDEX IF NOT EXISTS `index_extendedBoluses_end` ON `extendedBoluses` (`timestamp` + `duration`)")
         database.execSQL("CREATE INDEX IF NOT EXISTS `index_temporaryTargets_end` ON `temporaryTargets` (`timestamp` + `duration`)")
         database.execSQL("CREATE INDEX IF NOT EXISTS `index_carbs_end` ON `carbs` (`timestamp` + `duration`)")
-        database.execSQL("CREATE INDEX IF NOT EXISTS `index_offlineEvents_end` ON `offlineEvents` (`timestamp` + `duration`)")
+        database.execSQL("CREATE INDEX IF NOT EXISTS `index_runningModes_end` ON `runningModes` (`timestamp` + `duration`)")
     }
 }

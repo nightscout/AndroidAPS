@@ -3,15 +3,13 @@ package app.aaps.pump.equil.manager.command
 import android.util.Log
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.pump.equil.EquilConst.Prefs.EQUIL_DEVICES
-import app.aaps.pump.equil.EquilConst.Prefs.EQUIL_PASSWORD
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.database.EquilHistoryRecord
+import app.aaps.pump.equil.keys.EquilStringKey
 import app.aaps.pump.equil.manager.AESUtil
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.EquilResponse
 import app.aaps.pump.equil.manager.Utils
-import java.lang.Exception
 import java.nio.ByteBuffer
 import java.security.MessageDigest
 
@@ -20,9 +18,9 @@ class CmdPair(
     var address: String,
     private var password: String,
     aapsLogger: AAPSLogger,
-    sp: SP,
+    preferences: Preferences,
     equilManager: EquilManager
-) : BaseCmd(System.currentTimeMillis(), aapsLogger, sp, equilManager) {
+) : BaseCmd(System.currentTimeMillis(), aapsLogger, preferences, equilManager) {
 
     var sn: String?
 
@@ -122,15 +120,15 @@ class CmdPair(
         aapsLogger.debug(LTag.PUMPCOMM, "decrypted====$pwd2")
         if (ERROR_PWD == pwd1 && ERROR_PWD == pwd2) {
             synchronized(this) {
-                cmdStatus = true
+                cmdSuccess = true
                 enacted = false
                 (this as Object).notifyAll()
             }
             return null
         }
 
-        sp.putString(EQUIL_PASSWORD, pwd2)
-        sp.putString(EQUIL_DEVICES, pwd1)
+        preferences.put(EquilStringKey.Password, pwd2)
+        preferences.put(EquilStringKey.Device, pwd1)
         runPwd = pwd2
         val data1 = Utils.hexStringToBytes(pwd1)
         val data = Utils.concat(data1, keyBytes)
@@ -141,7 +139,7 @@ class CmdPair(
 
     override fun decodeConfirm(): EquilResponse? {
         synchronized(this) {
-            cmdStatus = true
+            cmdSuccess = true
             (this as Object).notifyAll()
         }
         return null

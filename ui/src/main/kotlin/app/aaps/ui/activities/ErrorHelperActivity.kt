@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.ui.alertDialogs.ErrorDialog
@@ -46,5 +46,10 @@ class ErrorHelperActivity : TranslatedDaggerAppCompatActivity() {
                 note = intent.getStringExtra(AlarmSoundService.STATUS) ?: "",
                 listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
             ).subscribe()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
     }
 }

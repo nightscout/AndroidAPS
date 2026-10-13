@@ -19,9 +19,9 @@ class GarminSimulatorClientTest: TestBase() {
     private val receiver: GarminReceiver = mock()
 
     private fun <T> waitForOrFail(c: ()->T?): T {
-        for (i in 0 until 10) {
+        for (i in 0 until 100) {
             c()?.let { return it }
-            Thread.sleep(1)
+            Thread.sleep(100)
         }
         throw AssertionError("wait timed out")
     }

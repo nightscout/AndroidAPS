@@ -8,7 +8,7 @@ import app.aaps.pump.virtual.VirtualPumpPlugin
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 import java.util.Optional
 
@@ -26,27 +26,27 @@ class TriggerPodChangeTest : TriggerTestBase() {
             TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now + T.mins(1).msecs(), type = TE.Type.SETTINGS_EXPORT)
         val t = TriggerPodChange(injector)
 
-        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)).thenReturn(cannulaChangeEvent)
-        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SETTINGS_EXPORT)).thenReturn(settingsExportEventIsBefore)
+        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)).thenReturn(cannulaChangeEvent)
+        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SETTINGS_EXPORT)).thenReturn(settingsExportEventIsBefore)
         assertThat(t.shouldRun()).isTrue()
-        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)).thenReturn(cannulaChangeEvent)
-        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SETTINGS_EXPORT)).thenReturn(settingsExportEventIsAfter)
+        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)).thenReturn(cannulaChangeEvent)
+        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SETTINGS_EXPORT)).thenReturn(settingsExportEventIsAfter)
         assertThat(t.shouldRun()).isFalse()
     }
 
     @Test fun shouldRunNotAvailable() {
         val t = TriggerPodChange(injector)
         // No cannula change and no export events
-        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)).thenReturn(null)
-        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SETTINGS_EXPORT)).thenReturn(null)
+        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)).thenReturn(null)
+        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SETTINGS_EXPORT)).thenReturn(null)
         assertThat(t.shouldRun()).isFalse()
 
         // No cannula change events
-        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)).thenReturn(null)
+        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)).thenReturn(null)
         assertThat(t.shouldRun()).isFalse()
 
         // No settings export events
-        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SETTINGS_EXPORT)).thenReturn(null)
+        whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SETTINGS_EXPORT)).thenReturn(null)
         assertThat(t.shouldRun()).isFalse()
     }
 
@@ -66,10 +66,10 @@ class TriggerPodChangeTest : TriggerTestBase() {
 
     @Test fun iconTest() {
         val t = TriggerPodChange(injector)
-        `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
+        whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         val pumpDescription = PumpDescription()
         pumpDescription.isPatchPump = false
-        `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
+        whenever(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         assertThat(t.icon()).isEqualTo(Optional.of(app.aaps.core.objects.R.drawable.ic_cp_age_cannula))
         pumpDescription.isPatchPump = true
         assertThat(t.icon()).isEqualTo(Optional.of(app.aaps.core.objects.R.drawable.ic_patch_pump_outline))

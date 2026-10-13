@@ -17,7 +17,6 @@ abstract class LoggingWorker(context: Context, workerParams: WorkerParameters, p
     @Inject lateinit var fabricPrivacy: FabricPrivacy
 
     init {
-        @Suppress("LeakingThis")
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
     }
 

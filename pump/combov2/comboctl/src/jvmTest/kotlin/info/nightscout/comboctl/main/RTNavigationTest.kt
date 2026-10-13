@@ -1,5 +1,6 @@
 package info.nightscout.comboctl.main
 
+import app.aaps.shared.tests.TestBase
 import info.nightscout.comboctl.base.LogLevel
 import info.nightscout.comboctl.base.Logger
 import info.nightscout.comboctl.base.NullDisplayFrame
@@ -31,7 +32,7 @@ import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class RTNavigationTest {
+class RTNavigationTest : TestBase() {
     /* RTNavigationContext implementation for testing out RTNavigation functionality.
      * This simulates the activity of a Combo in RT mode by using a defined list
      * of ParsedScreen instances. This context runs a coroutine that keeps emitting
@@ -503,7 +504,7 @@ class RTNavigationTest {
             listOf(
                 ParsedScreen.MainScreen(
                     MainScreenContent.Normal(
-                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        currentTime = LocalDateTime(year = 2020, month = 10, day = 4, hour = 0, minute = 0),
                         activeBasalProfileNumber = 1,
                         currentBasalRateFactor = 300,
                         batteryState = BatteryState.FULL_BATTERY
@@ -528,7 +529,7 @@ class RTNavigationTest {
             listOf(
                 ParsedScreen.MainScreen(
                     MainScreenContent.Normal(
-                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        currentTime = LocalDateTime(year = 2020, month = 10, day = 4, hour = 0, minute = 0),
                         activeBasalProfileNumber = 1,
                         currentBasalRateFactor = 300,
                         batteryState = BatteryState.FULL_BATTERY
@@ -564,7 +565,7 @@ class RTNavigationTest {
             listOf(
                 ParsedScreen.MainScreen(
                     MainScreenContent.Normal(
-                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        currentTime = LocalDateTime(year = 2020, month = 10, day = 4, hour = 0, minute = 0),
                         activeBasalProfileNumber = 1,
                         currentBasalRateFactor = 300,
                         batteryState = BatteryState.FULL_BATTERY
@@ -586,7 +587,7 @@ class RTNavigationTest {
             listOf(
                 ParsedScreen.MainScreen(
                     MainScreenContent.Normal(
-                        currentTime = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 1, hour = 23, minute = 11),
+                        currentTime = LocalDateTime(year = 0, month = 1, day = 1, hour = 23, minute = 11),
                         activeBasalProfileNumber = 1,
                         currentBasalRateFactor = 800,
                         batteryState = BatteryState.FULL_BATTERY
@@ -602,8 +603,8 @@ class RTNavigationTest {
                 ParsedScreen.BasalRate1ProgrammingMenuScreen,
                 ParsedScreen.BasalRateTotalScreen(1840, 1),
                 ParsedScreen.BasalRateFactorSettingScreen(
-                    LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0),
-                    LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 1, hour = 1, minute = 0),
+                    LocalDateTime(year = 0, month = 1, day = 1, hour = 0, minute = 0),
+                    LocalDateTime(year = 0, month = 1, day = 1, hour = 1, minute = 0),
                     1000,
                     1
                 )
@@ -658,7 +659,7 @@ class RTNavigationTest {
             listOf(
                 ParsedScreen.MainScreen(
                     MainScreenContent.Tbr(
-                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        currentTime = LocalDateTime(year = 2020, month = 10, day = 4, hour = 0, minute = 0),
                         remainingTbrDurationInMinutes = 28,
                         tbrPercentage = 110,
                         activeBasalProfileNumber = 1,
@@ -668,7 +669,7 @@ class RTNavigationTest {
                 ),
                 ParsedScreen.MainScreen(
                     MainScreenContent.Tbr(
-                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        currentTime = LocalDateTime(year = 2020, month = 10, day = 4, hour = 0, minute = 0),
                         remainingTbrDurationInMinutes = 27,
                         tbrPercentage = 110,
                         activeBasalProfileNumber = 1,
@@ -704,7 +705,7 @@ class RTNavigationTest {
             listOf(
                 ParsedScreen.MainScreen(
                     MainScreenContent.Normal(
-                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        currentTime = LocalDateTime(year = 2020, month = 10, day = 4, hour = 0, minute = 0),
                         activeBasalProfileNumber = 1,
                         currentBasalRateFactor = 300,
                         batteryState = BatteryState.FULL_BATTERY
@@ -742,7 +743,7 @@ class RTNavigationTest {
             listOf(
                 ParsedScreen.MainScreen(
                     MainScreenContent.Normal(
-                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        currentTime = LocalDateTime(year = 2020, month = 10, day = 4, hour = 0, minute = 0),
                         activeBasalProfileNumber = 1,
                         currentBasalRateFactor = 300,
                         batteryState = BatteryState.FULL_BATTERY
@@ -777,7 +778,7 @@ class RTNavigationTest {
             listOf(
                 ParsedScreen.MainScreen(
                     MainScreenContent.Normal(
-                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        currentTime = LocalDateTime(year = 2020, month = 10, day = 4, hour = 0, minute = 0),
                         activeBasalProfileNumber = 1,
                         currentBasalRateFactor = 300,
                         batteryState = BatteryState.FULL_BATTERY
@@ -803,7 +804,7 @@ class RTNavigationTest {
                 }
             }
             assertIs<AlertScreenContent.Warning>(e.alertScreenContent)
-            assertEquals(6, (e.alertScreenContent as AlertScreenContent.Warning).code)
+            assertEquals(6, e.alertScreenContent.code)
             // Simulate a short RT button press that would be used after the exception
             // was thrown to dismiss the W6 warning. This also checks that the long
             // button press has been finished correctly; if not, this call may fail
@@ -823,7 +824,7 @@ class RTNavigationTest {
             listOf(
                 ParsedScreen.MainScreen(
                     MainScreenContent.Normal(
-                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        currentTime = LocalDateTime(year = 2020, month = 10, day = 4, hour = 0, minute = 0),
                         activeBasalProfileNumber = 1,
                         currentBasalRateFactor = 300,
                         batteryState = BatteryState.FULL_BATTERY
@@ -954,7 +955,7 @@ class RTNavigationTest {
             }
         }
         assertIs<AlertScreenContent.Warning>(e.alertScreenContent)
-        assertEquals(6, (e.alertScreenContent as AlertScreenContent.Warning).code)
+        assertEquals(6, e.alertScreenContent.code)
     }
 
     @Test

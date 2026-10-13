@@ -20,7 +20,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventDanaRSyncStatus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -32,6 +31,7 @@ import app.aaps.pump.dana.database.DanaHistoryRecord
 import app.aaps.pump.dana.database.DanaHistoryRecordDao
 import app.aaps.pump.dana.databinding.DanarHistoryActivityBinding
 import app.aaps.pump.dana.databinding.DanarHistoryItemBinding
+import app.aaps.pump.dana.events.EventDanaRSyncStatus
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -241,6 +241,14 @@ class DanaHistoryActivity : TranslatedDaggerAppCompatActivity() {
 
             val binding = DanarHistoryItemBinding.bind(itemView)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.reload.setOnClickListener(null)
+        binding.typeList.setAdapter(null)
+        binding.typeList.onItemClickListener = null
+        binding.recyclerview.adapter = null
     }
 
     private fun swapAdapter(type: Byte) {

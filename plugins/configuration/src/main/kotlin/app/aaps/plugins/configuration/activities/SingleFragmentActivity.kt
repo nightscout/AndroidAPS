@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.core.view.MenuProvider
+import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -19,8 +21,10 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var overview: Overview
 
     private var plugin: PluginBase? = null
+    private var singleFragmentMenuProvider: MenuProvider? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +41,9 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
             ).commit()
         }
 
+        overview.setVersionView(findViewById<TextView>(R.id.version))
         // Add menu items without overriding methods in the Activity
-        addMenuProvider(object : MenuProvider {
+        singleFragmentMenuProvider = object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 if ((plugin?.preferencesId ?: return) == PluginDescription.PREFERENCE_NONE) return
                 if ((preferences.simpleMode && plugin?.pluginDescription?.preferencesVisibleInSimpleMode != true)) return
@@ -64,6 +69,12 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
 
                     else                        -> false
                 }
-        })
+        }
+        singleFragmentMenuProvider?.let { addMenuProvider(it) }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        singleFragmentMenuProvider?.let { removeMenuProvider(it) }
     }
 }

@@ -5,7 +5,6 @@
     <string name="error">Error</string>
     <string name="profile_set_ok">Perfil de basal actualitzat a la bomba</string>
     <string name="invalid_input">Dades no vàlides</string>
-    <string name="bolus_delivering">Lliurant %1$.2f U</string>
     <string name="constraint_applied">Restricció aplicada!</string>
     <string name="tempbasals_iobtotal_label_string">IOB total:</string>
     <string name="tt_label">OT</string>
@@ -78,7 +77,6 @@
     <string name="loopisdisabled">Llaç desactivat</string>
     <string name="alarm">Alarma</string>
     <string name="disableloop">Desactivar llaç</string>
-    <string name="enableloop">Activar llaç</string>
     <string name="resumeloop">Reprendre llaç</string>
     <string name="suspendloop">Aturar el llaç</string>
     <string name="duration_min_label">Durada [min]</string>
@@ -92,7 +90,6 @@
     <string name="name_short">Nom:</string>
     <string name="time">Hora</string>
     <string name="ns_wifi_ssids">SSID WiFi</string>
-    <string name="loading">Carregant…</string>
     <string name="notes_label">Notes</string>
     <string name="remove_button">Eliminar</string>
     <string name="wrong_pump_data">Dades procedents d\'una altra bomba. Canvieu el driver de la bomba per restablir el seu estat.</string>
@@ -135,7 +132,6 @@
     <string name="dia">DIA (Durada de l\'Acció de la Insulina)</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="suspendloop_label">Llaç desactivat/aturat</string>
     <string name="iob_label">Insulina \"a bord\" (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Contrasenya incorrecta</string>
@@ -240,7 +236,6 @@
     <string name="uel_lgs_loop_mode">MODE LLAÇ LGS</string>
     <string name="uel_open_loop_mode">MODE LLAÇ OBERT</string>
     <string name="uel_loop_disabled">LLAÇ DESACTIVAT</string>
-    <string name="uel_loop_enabled">LLAÇ ACTIVAT</string>
     <string name="uel_reconnect">RECONNECTAR</string>
     <string name="uel_disconnect">DESCONNECTAR</string>
     <string name="uel_resume">REPRENDRE</string>
@@ -449,4 +444,5 @@
     <string name="saturday_short">Ds</string>
     <string name="sunday_short">Dg</string>
     <!--    DecimalFormatterImpl -->
+    <!--    Playback-->
 </resources>

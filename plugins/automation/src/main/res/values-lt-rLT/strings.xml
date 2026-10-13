@@ -79,8 +79,6 @@
     <string name="deltalabel_u">Glikemijos skirtumas [%1$s]</string>
     <string name="currentlocation">Dabartinė vieta</string>
     <string name="location">Vieta</string>
-    <string name="latitude_short">Platuma:</string>
-    <string name="longitude_short">Ilguma:</string>
     <string name="glucose_u">Glikemija [%1$s]:</string>
     <string name="target_u">Tikslas [%1$s]:</string>
     <string name="lastboluslabel">Paskutinis bolusas</string>
@@ -141,4 +139,5 @@
     <string name="triggerStepsCountLabel">Žingsniai</string>
     <string name="triggerStepsCountDesc">Žingsnių skaičius per %1$s min %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Trukmė</string>
+    <!--    SMB mode-->
 </resources>

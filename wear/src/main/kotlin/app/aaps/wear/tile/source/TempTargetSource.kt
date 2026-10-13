@@ -58,7 +58,7 @@ class TempTargetSource @Inject constructor(context: Context, sp: SP, aapsLogger:
             ),
             StaticAction(
                 settingName = "cancel",
-                buttonText = resources.getString(android.support.wearable.R.string.generic_cancel),
+                buttonText = resources.getString(R.string.temp_target_cancel),
                 iconRes = R.drawable.ic_target_cancel,
                 activityClass = BackgroundActionActivity::class.java.name,
                 message = message,

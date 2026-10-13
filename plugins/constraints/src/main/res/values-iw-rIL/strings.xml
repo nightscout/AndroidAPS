@@ -8,13 +8,9 @@
     <!-- Storage constraint -->
     <string name="disk_full">יש לפנות לפחות %1$d מ\"ב מנפח האחסון של מכשירכם! הלולאה מושבתת!</string>
     <!-- Version Checker -->
-    <string name="old_version">גרסה ישנה</string>
-    <string name="very_old_version">גרסה ישנה מאוד</string>
     <string name="application_expired">תוקף האפליקציה פג</string>
-    <string name="new_version_warning">בדיקה לגרסא חדשה של המערכת לא בוצעה מזה לפחות %1$d ימים! שנמוך למצב \'השהיה עקב ערך סוכר נמוך\' תתבצע לאחר %2$d ימים והלולאה תושבת אחרי %3$d ימים. חברו את המכשיר לרשת האינטרנט!</string>
     <string name="running_invalid_version">זיהינו שאתם משתמשים בגרסה שאינה בתוקף. הלולאה מושבתת!</string>
     <string name="versionavailable">גרסה %1$s זמינה</string>
-    <string name="version_expire">תוקפה של גרסה %1$s תפוג ב-%2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">משתמש בנתונים מחושבים מחדש</string>
@@ -26,7 +22,6 @@
     <string name="limitingextendedbolus">מגביל בולוס ממושך ל-%1$.1f יח\' בגלל %2$s</string>
     <string name="limitingcarbs">הגבלת פחמימות ל-%1$d גר\' בגלל %2$s</string>
     <string name="pumpisnottempbasalcapable">המשאבה אינה מסוגלת לבצע בזאלי זמני</string>
-    <string name="closedmodedisabledinpreferences">מצב לולאה סגור מושבת בהעדפות</string>
     <string name="closed_loop_disabled_on_dev_branch">זוהי גרסת פיתוח. לולאה סגורה אינה מורשת.</string>
     <string name="closed_loop_disabled_with_eb">הלולאה הסגורה מופסקת עקב מתן בולוס ממושך</string>
     <string name="smbalwaysdisabled">SMB תמידי ו-SMB לאחר פחמימות מושבתים כיוון שמקור ערכי הסוכר הפעיל אינו תומך בסינון נתונים מתקדם</string>
@@ -38,7 +33,6 @@
     <string name="completed_well_done">הושלם, כל הכבוד!</string>
     <string name="not_completed_yet">עוד לא הושלם</string>
     <string name="time_elapsed">זמן שחלף</string>
-    <string name="maxiobset">ערך IOB מקסימלי הוגדר כראוי</string>
     <string name="hasbgdata">ערכי סוכר זמינים מהמקור הנבחר</string>
     <string name="synchaswritepermission">לשירות הסנכרון יש הרשאת כתיבה</string>
     <string name="loopenabled">הלולאה פעילה</string>

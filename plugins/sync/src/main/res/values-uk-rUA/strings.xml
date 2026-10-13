@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_alarm_options">Параметри сповіщень</string>
     <string name="ns_alarms">Створювати сповіщення з тривог NS</string>
     <string name="ns_announcements">Створювати сповіщення з оголошень NS</string>

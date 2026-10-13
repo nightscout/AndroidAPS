@@ -1,3 +1,5 @@
+import kotlin.math.min
+
 plugins {
     alias(libs.plugins.android.library)
     id("kotlin-android")
@@ -7,7 +9,7 @@ plugins {
 android {
     namespace = "app.aaps.core.ui"
     defaultConfig {
-        minSdk = Versions.wearMinSdk
+        minSdk = min(Versions.minSdk, Versions.wearMinSdk)
     }
 }
 
@@ -22,4 +24,5 @@ dependencies {
 
     api(libs.com.google.dagger.android)
     api(libs.com.google.dagger.android.support)
+    implementation(project(":core:interfaces"))
 }

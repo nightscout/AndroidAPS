@@ -3,9 +3,12 @@ package app.aaps.plugins.sync.nsclient.extensions
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.utils.JsonHelper
 import org.json.JSONObject
+import kotlin.math.min
 
 fun CA.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
@@ -27,8 +30,8 @@ fun CA.Companion.fromJson(jsonObject: JSONObject): CA? {
         JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
             ?: JsonHelper.safeGetLongAllowNull(jsonObject, "date", null)
             ?: return null
-    val duration = JsonHelper.safeGetLong(jsonObject, "duration")
-    val amount = JsonHelper.safeGetDoubleAllowNull(jsonObject, "carbs") ?: return null
+    val duration = min(JsonHelper.safeGetLong(jsonObject, "duration"), T.hours(HardLimits.MAX_CARBS_DURATION_HOURS).msecs())
+    val amount = JsonHelper.safeGetDoubleAllowNull(jsonObject, "carbs")?.let { min(it, HardLimits.MAX_CARBS.toDouble()) } ?: return null
     val notes = JsonHelper.safeGetStringAllowNull(jsonObject, "notes", null)
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
     val id = JsonHelper.safeGetStringAllowNull(jsonObject, "identifier", null)

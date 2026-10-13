@@ -17,7 +17,6 @@
     <string name="dana_model">%1$s\nModel: %2$02X\nProtocol: %3$02X\nCodi: %4$02X</string>
     <string name="processinghistory">Processant event</string>
     <string name="danar_enableextendedbolus">Activar bolus estesos a la bomba</string>
-    <string name="overview_bolusprogress_delivered">Lliurat</string>
     <string name="overview_bolusprogress_stoped">Aturat</string>
     <string name="unsupportedfirmware">Firmware de bomba no compatible</string>
     <string name="pumperror">Error bomba</string>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/loop_status_card_background"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/loop_mode_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="CLOSED LOOP" />
+
+    <TextView
+        android:id="@+id/aps_name_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:textSize="11sp"
+        android:textColor="@color/white_50percent"
+        android:text="OpenAPS SMB" />
+
+</LinearLayout>

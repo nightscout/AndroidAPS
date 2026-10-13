@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairBolus
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairBolusCalculatorResult
@@ -17,14 +16,13 @@ import app.aaps.core.interfaces.sync.DataSyncSelector.PairEffectiveProfileSwitch
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairExtendedBolus
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairFood
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairGlucoseValue
-import app.aaps.core.interfaces.sync.DataSyncSelector.PairOfflineEvent
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairProfileStore
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairProfileSwitch
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairTemporaryBasal
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairTemporaryTarget
 import app.aaps.core.interfaces.sync.DataSyncSelector.PairTherapyEvent
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.receivers.DataWorkerStorage
@@ -40,7 +38,6 @@ class NSClientAddAckWorker(
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var storeDataForDb: StoreDataForDb
 
@@ -170,13 +167,13 @@ class NSClientAddAckWorker(
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked ProfileStore " + ack.id))
             }
 
-            is PairOfflineEvent                  -> {
+            is DataSyncSelector.PairRunningMode -> {
                 val pair = ack.originalObject
                 pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
-                storeDataForDb.addToNsIdOfflineEvents(pair.value)
+                storeDataForDb.addToNsIdRunningModes(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked OfflineEvent " + pair.value.ids.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked RunningMode " + pair.value.ids.nightscoutId))
             }
 
         }

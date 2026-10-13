@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
-    <string name="key_autotune_last_run" translatable="false">key_autotune_last_run</string>
-
     <string name="dynisf_adjust_sensitivity">Enable TDD based sensitivity ratio for basal and glucose target modification</string>
     <string name="dynisf_adjust_sensitivity_summary">Uses the last 24h TDD/7D TDD to calculate sensitivity ratio used for increasing or decreasing basal rate, and also adjust glucose target if these options are enabled, in the same way Autosens does. It is recommended to start with this option turned off</string>
     <string name="dyn_isf_adjust_title" formatted="false">DynamicISF Adjustment Factor %</string>
@@ -106,8 +104,6 @@
     <string name="insulin_peak">Peak</string>
 
     <!--    Loop -->
-    <string name="key_smb_enable_carbs_suggestions_threshold" translatable="false">smb_enable_carbs_suggestions_threshold</string>
-
     <string name="run_now">Run now</string>
     <string name="smb_frequency_exceeded">A bolus was delivered within the last 3 minutes, skipping SMB</string>
     <string name="pump_not_initialized">Pump not initialized!</string>

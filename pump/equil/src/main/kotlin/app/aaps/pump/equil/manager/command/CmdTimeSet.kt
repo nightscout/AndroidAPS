@@ -1,7 +1,7 @@
 package app.aaps.pump.equil.manager.command
 
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.Utils
@@ -9,9 +9,9 @@ import java.util.Calendar
 
 class CmdTimeSet(
     aapsLogger: AAPSLogger,
-    sp: SP,
+    preferences: Preferences,
     equilManager: EquilManager
-) : BaseSetting(System.currentTimeMillis(), aapsLogger, sp, equilManager) {
+) : BaseSetting(System.currentTimeMillis(), aapsLogger, preferences, equilManager) {
 
     init {
         port = "0505"
@@ -51,7 +51,7 @@ class CmdTimeSet(
 
     override fun decodeConfirmData(data: ByteArray) {
         synchronized(this) {
-            cmdStatus = true
+            cmdSuccess = true
             (this as Object).notify()
         }
     }

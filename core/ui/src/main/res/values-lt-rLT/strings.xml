@@ -5,7 +5,6 @@
     <string name="error">Klaida</string>
     <string name="profile_set_ok">Bazės profilis pompoje atnaujintas</string>
     <string name="invalid_input">Neteisingai įvesti duomenys</string>
-    <string name="bolus_delivering">Leidžiama %1$.2f vv</string>
     <string name="constraint_applied">Taikomas ribojimas!</string>
     <string name="tempbasals_iobtotal_label_string">Visas AIO:</string>
     <string name="tt_label">LT</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f vv/val</string>
     <string name="pump_not_initialized_profile_not_set">Pompa neprijungta, profilis nepasirinktas!</string>
     <string name="failed_update_basal_profile">Nepavyko atnaujinti bazės profilio</string>
-    <string name="bolus_delivered_successfully">%1$.2f v bolusas sėkmingai suleistas</string>
     <string name="no_valid_basal_rate">Bazė iš pompos nenuskaityta</string>
     <string name="limiting_iob">Ribojamas AIO iki %1$.1f v dėl %2$s</string>
     <string name="loop_disabled">CIKLAS NEAKTYVUS DĖL APRIBOJIMŲ</string>
@@ -91,7 +89,6 @@
     <string name="alarm">Aliarmas</string>
     <string name="exportsettings">Eksportuoti nustatymus</string>
     <string name="disableloop">Išjungti Ciklą</string>
-    <string name="enableloop">Įjungti Ciklą</string>
     <string name="resumeloop">Atnaujinti ciklą</string>
     <string name="suspendloop">Sustabdyti ciklą</string>
     <string name="duration_min_label">Trukmė [min]</string>
@@ -105,7 +102,6 @@
     <string name="name_short">Vardas:</string>
     <string name="time">Laikas</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="loading">Kraunama …</string>
     <string name="notes_label">Pastabos</string>
     <string name="remove_button">Pašalinti</string>
     <string name="add_new">Pridėti naują</string>
@@ -167,7 +163,6 @@
     <string name="canceling_tbr_failed">Laikinos bazės atšaukti nepavyko</string>
     <string name="canceling_eb_failed">Ištęsto boluso atšaukti nepavyko</string>
     <string name="virtualpump_uploadstatus_title">Pompos statusas perduodamas į NS arba Tidepool</string>
-    <string name="suspendloop_label">Ciklas išjungtas/sustabdytas</string>
     <string name="iob_label">Aktyvus insulinas organizme (AIO)</string>
     <string name="loopstatus_targets">TIKSLAI:</string>
     <string name="loopstatus_OAPS_result">OAPS REZULTATAS:</string>
@@ -297,7 +292,6 @@
     <string name="uel_lgs_loop_mode">STABDYMAS PRIE ŽEMO</string>
     <string name="uel_open_loop_mode">ATVIRO CIKLO REŽIMAS</string>
     <string name="uel_loop_disabled">CIKLAS IŠJUNGTAS</string>
-    <string name="uel_loop_enabled">CIKLAS ĮJUNGTAS</string>
     <string name="uel_reconnect">VĖL PRISIJUNGTI</string>
     <string name="uel_disconnect">ATSIJUNGTI</string>
     <string name="uel_resume">ATNAUJINTI</string>
@@ -602,4 +596,5 @@
     <string name="rate_percent_duration">Dydis: %1$.2f vv/val. (%2$.2f%%) Trukmė: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Dydis</b>: %1$.2f%% (%2$.2f vv/val.)<br><b>Trukmė</b>: %3$d min<br>]]></string>
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Dydis</b>: %1$.2f vv/val. (%2$.2f%%) <br><b>Trukmė</b>: %3$d min<br>]]></string>
+    <!--    Playback-->
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_cellular">Mobil veri kullan</string>
     <string name="ns_wifi">Wi-Fi bağlantısı kullan</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
@@ -21,16 +21,12 @@
     <string name="unsupported_ns_version">Nightscout\'un desteklenmeyen sürümü</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">NSClient arızası. NS ve NSClient yeniden başlatmayı düşünün.</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT yazma izni yok. Yanlış API Anahtarı?</string>
     <string name="ns_client_v3_short_name">NSv3</string>
-    <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Yeniden başlat</string>
-    <string name="ns_client_title">NSClientV1</string>
-    <string name="ns_client_v3_title">NSClientV3</string>
     <string name="ns_client_url_title">Nightscout URL</string>
     <string name="ns_client_url_dialog_message">Nightscout URL\'nizi girin (örn: https://sitenizinadı.platformunuzunadı.com)</string>
     <string name="ns_client_secret_title">Nightscout API parolası</string>
@@ -49,19 +45,12 @@
     <string name="ns_receive_profile_store">Profil deposunu al</string>
     <string name="ns_receive_profile_store_summary">NS profil düzenleyicisinden profilleri senkronize edin</string>
     <string name="ns_receive_temp_target">Geçici hedefleri al</string>
-    <string name="ns_receive_temp_target_summary">NS veya NSClient aracılığıyla girilen geçici hedefleri kabul edin</string>
     <string name="ns_receive_profile_switch">Profil değişimlerini al</string>
-    <string name="ns_receive_profile_switch_summary">NS veya NSClient aracılığıyla girilen profil değişimlerini kabul edin</string>
-    <string name="ns_receive_offline_event">APS çevrimdışı olaylarını alın</string>
-    <string name="ns_receive_offline_event_summary">NS veya NSClient aracılığıyla girilen APS çevrimdışı olaylarını kabul edin</string>
     <string name="ns_receive_tbr_eb">GBO ve EB (Yayma Bolus) alın</string>
     <string name="ns_receive_tbr_eb_summary">Başka bir örnek üzerinden girilen GBO ve EB (Yayma Bolusu) kabul edin</string>
     <string name="ns_receive_insulin">İnsülinleri alın</string>
-    <string name="ns_receive_insulin_summary">NS veya NSClient aracılığıyla girilen insülini kabul edin (iletilmez, yalnızca AİNS\'e göre hesaplanır)</string>
     <string name="ns_receive_carbs">Karbonhidratları alın</string>
-    <string name="ns_receive_carbs_summary">NS veya NSClient aracılığıyla girilen karbonhidratları kabul edin</string>
     <string name="ns_receive_therapy_events">Terapi etkinlikleri alın</string>
-    <string name="ns_receive_therapy_events_summary">NS veya NSClient aracılığıyla girilen tedavi olaylarını (kanül, insülin, pil değişimi vb.) kabul edin</string>
     <string name="ns_receive_cgm">SGİ (CGM) verilerini alma/doldurma</string>
     <string name="ns_receive_cgm_summary">NS\'tan SGİ (CGM) verilerini kabul edin</string>
     <string name="ns_sync_slow">Yüklemeleri yavaşlat</string>
@@ -75,17 +64,10 @@
     <string name="ns_use_ws_title">Websockets\'e bağlanın</string>
     <string name="ns_use_ws_summary">Etkinleştirme şu anlama gelir: daha hızlı güncelleme, alarm ve duyuru alma ve v1 \'deki gibi daha yüksek pil tüketimi. NS\'ye diğer tüm yükleyiciler v3 protokolünü kullanmalıdır.</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Tidepool oturum açma kullanıcı adınız, normalde e-posta adresiniz</string>
-    <string name="title_tidepool_username">Kullanıcı adınınız</string>
-    <string name="summary_tidepool_password">Tidepool şifreniz</string>
-    <string name="title_tidepool_password">Giriş Parolası</string>
-    <string name="title_tidepool_test_login">Tidepool girişini test et</string>
-    <string name="summary_tidepool_dev_servers">Etkinleştirilirse, yüklemeler https://app.tidepool.org/ yerine https://int-app.tidepool.org adresine gider</string>
     <string name="title_tidepool_dev_servers">Entegrasyon (test) sunucularını kullanın</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Tidepool\'a veri yükler</string>
-    <string name="remove_all">Tümünü kaldır</string>
     <string name="upload_now">Şimdi yükle</string>
     <string name="not_connected">Bağlantı yok</string>
     <string name="read_only">Salt okunur</string>
@@ -124,14 +106,15 @@
     <string name="quick_wizard_not_available">Seçili hızlı asistan artık mevcut değil, lütfen kutucuğu yenileyin</string>
     <string name="quick_wizard_message">Hızlı Asistan: %1$s\nİnsülin: %2$.2fU\nKarb: %3$dg</string>
     <string name="user_action_not_available">Seçili Kullanıcı Eylemi %1$s artık mevcut değil, lütfen kutucuğu yenileyin</string>
-    <string name="wear_action_tempt_cancel_message">Çalışan Geçici-Hedefler iptal edilsin mi?</string>
+    <string name="wear_action_tempt_cancel_message">Çalışan Geçici-Hedef iptal edilsin mi?</string>
     <string name="wear_action_tempt_unit_error">Saatte ve telefonda farklı birimler kullanılıyor!</string>
-    <string name="wear_action_tempt_zero_message">Sıfır-Geçici-Hedef - Çalışan Geçici-Hedefler iptal edilsin mi?</string>
+    <string name="wear_action_tempt_zero_message">Sıfır-Geçici-Hedef - Çalışan Geçici-Hedef iptal edilsin mi?</string>
     <string name="wear_action_tempt_min_bg_error">Min-KŞ aralık dışında!</string>
     <string name="wear_action_tempt_max_bg_error">Maks-KŞ aralık dışında!</string>
-    <string name="wear_action_tempt_manual_range_message">Geçici Hedef:\nMin: %1$s\nMaks: %2$s\nSüre: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Geçici Hedef:\nHedef: %1$s\nSüre: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Geçici Hedef:\nNeden: %1$s\nHedef: %2$s\nSüre: %3$s</string>
+    <string name="wear_action_tempt_range_error">Geçersiz aralık: Düşük hedef (%1$s), Yüksek hedeften (%2$s) büyük olamaz</string>
+    <string name="wear_action_tempt_manual_range_message">Geçici Hedef:\n\nMin: %1$s\nMaks: %2$s\nSüre: %3$d dk</string>
+    <string name="wear_action_tempt_manual_message">GeçiciHedef\n\nHedef: %1$s\nSüre: %2$d dk</string>
+    <string name="wear_action_tempt_preset_message">GeçiciHedef\n\nSebep: %1$s\nHedef: %2$s\nSüre: %3$d dk</string>
     <string name="no_success">başarısız - lütfen telefonu kontrol edin</string>
     <string name="wear_settings">Wear ayarları</string>
     <string name="wearcontrol_title">Saat tarafından kontrol</string>
@@ -162,7 +145,7 @@
     <string name="grams_short">gr</string>
     <string name="hour_short">sa</string>
     <string name="no_active_profile">Etkin profil ayarlanmadı!</string>
-    <string name="profile_message">Profil:\n\nZaman Kayması: %1$d\nYüzde: %2$d%%\"</string>
+    <string name="profile_message">Profil: %1$s\nKayma: %2$d h\nYüzde: %3$d%%\nSüre: %4$d min</string>
     <string name="target_only_aps_mode">Hedefler yalnızca APS modunda uygulanır!</string>
     <string name="no_history">Geçmiş verisi yok!</string>
     <string name="temp_target">Geçici Hedef</string>
@@ -183,4 +166,23 @@
     <string name="today">Bugün</string>
     <string name="weighted">ağırlıklı</string>
     <string name="full_xdrip_sync_comment">Tam senkronizasyon? Biraz zaman alabilir ve tamamlanana kadar xDrip+\'ta yeni verileri göremezsiniz.</string>
+    <string name="wear_action_loop_state_no_nsclient">AAPSClient bu eylemi desteklemiyor</string>
+    <string name="wear_action_loop_state_requires_duration">Bu eylemin süreye ihtiyacı var..</string>
+    <string name="wear_action_loop_state_pump_suspended">Pompa durduruldu!</string>
+    <string name="wear_action_loop_state_profile_invalid">Profil geçersiz!</string>
+    <string name="wear_action_loop_state_unauthorized">Lütfen tekrar deneyin.</string>
+    <string name="wear_action_loop_state_invalid">Geçersiz döngü durumu talep edildi</string>
+    <string name="wear_action_loop_state_title">DÖNGÜ DURUMU</string>
+    <string name="wear_action_loop_state_changed_with_duration">%1$s\nSüre: %2$d dk</string>
+    <string name="wear_action_loop_state_now_closed">Kapalı</string>
+    <string name="wear_action_loop_state_now_lgs">LGS</string>
+    <string name="wear_action_loop_state_now_open">Açık</string>
+    <string name="wear_action_loop_state_now_suspended">Askıya Alındı</string>
+    <string name="wear_action_loop_state_now_resumed">Devam ediyor</string>
+    <string name="wear_action_loop_state_now_disabled">Devre dışı</string>
+    <string name="wear_action_loop_state_now_superbolus">Süperbolus</string>
+    <string name="wear_action_loop_state_now_invalid">Geçersiz</string>
+    <string name="wear_action_loop_state_now_pump_disconnected">Pompa bağlantısı kesildi</string>
+    <string name="garmin_request_key">Anahtar talebi</string>
+    <string name="garmin_request_key_summary">Garmin cihazı ile AAPS arasındaki HTTP iletişimini güvence altına almak için isteğe bağlı anahtar.</string>
 </resources>

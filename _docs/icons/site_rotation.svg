@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+	 height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+<g id="site_x5F_rotation">
+	<rect x="0" display="none" width="24" height="24"/>
+	<path fill="#67DFE8" d="M7.803,4.948L6.819,3.295c-2.96,1.769-4.955,4.994-4.962,8.685H0.294l2.525,4.373l2.525-4.373H3.783
+		C3.79,8.991,5.406,6.38,7.803,4.948z"/>
+	<path fill="#67DFE8" d="M21.18,7.641l-2.525,4.373h1.561c-0.005,2.991-1.621,5.604-4.02,7.038l0.984,1.653
+		c2.962-1.77,4.957-4.998,4.962-8.691h1.563L21.18,7.641z"/>
+	<path fill="#67DFE8" d="M11.979,20.217c-2.988-0.007-5.599-1.623-7.032-4.02l-1.653,0.984c1.769,2.96,4.994,4.955,8.685,4.962
+		v1.563l4.373-2.525l-4.373-2.525V20.217z"/>
+	<path fill="#66DEE7" d="M12.014,1.857V0.294L7.641,2.819l4.373,2.525V3.783c2.991,0.005,5.604,1.621,7.038,4.02l1.653-0.984
+		C18.935,3.857,15.707,1.862,12.014,1.857z"/>
+</g>
+</svg>

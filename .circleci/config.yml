@@ -1,4 +1,4 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine. 
+ # Use the latest 2.1 version of CircleCI pipeline process engine. 
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
@@ -17,25 +17,65 @@ jobs:
       - checkout
 
       - run:
+          name: Run compileFullDebugAndroidTestSources
+          command: |
+            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+            export ANDROID_HOME=/usr/lib/android-sdk
+            env
+            ./gradlew \
+            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
+            -Dkotlin.daemon.jvm.options="-Xmx2g" \
+            -Dkotlin.compiler.execution.strategy="in-process" \
+            -Dorg.gradle.daemon=true \
+            compileFullDebugAndroidTestSources
+
+      - run:
           name: Create avd
           command: |
-            echo "no" | /opt/android-sdk/cmdline-tools/latest/bin/avdmanager --verbose create avd -n citest -k "system-images;android-30;google_apis_playstore;x86" --force
+            echo "no" | /usr/lib/android-sdk/cmdline-tools/13.0/bin/avdmanager --verbose create avd -n citest -k "system-images;android-31;google_apis_playstore;x86_64" --force
 
       - run:
           name: Launch emulator
           command: |
-            export ANDROID_SDK_ROOT=/opt/android-sdk
-            export ANDROID_HOME=/opt/android-sdk
+            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+            export ANDROID_HOME=/usr/lib/android-sdk
             emulator -avd citest -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           background: true
 
       - run:
+          name: Wait for emulator boot
+          command: |
+            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+            export ANDROID_HOME=/usr/lib/android-sdk
+            # Boot gate: the emulator above is launched in the background, so without this the test task
+            # can start before the device is online and fail with the misleading
+            # "com.android.builder.testing.api.DeviceException: No online devices found".
+            # Block until adb sees the device AND the system has fully booted, with a hard timeout so a
+            # stuck emulator fails loudly HERE (clear message) instead of later.
+            adb wait-for-device
+            timeout 420 bash -c 'until [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d "\r")" = "1" ]; do sleep 2; done'
+            adb shell getprop sys.boot_completed
+            # Settle, dismiss keyguard and disable animations so ComposeMainActivity launches cleanly:
+            # a heavy UI launch on an unsettled emulator can ANR system_server and drop the device offline
+            # mid-run (the failure mode this hardening targets).
+            adb shell input keyevent 82 || true
+            adb shell settings put global window_animation_scale 0 || true
+            adb shell settings put global transition_animation_scale 0 || true
+            adb shell settings put global animator_duration_scale 0 || true
+            adb devices
+
+      - run:
           name: Run connectedFullDebugAndroidTest
           command: |
-            export ANDROID_SDK_ROOT=/opt/android-sdk
-            export ANDROID_HOME=/opt/android-sdk
+            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+            export ANDROID_HOME=/usr/lib/android-sdk
             env
-            ./gradlew -Dorg.gradle.jvmargs=-Xmx6g connectedFullDebugAndroidTest
+            ./gradlew \
+            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
+            -Dkotlin.daemon.jvm.options="-Xmx2g" \
+            -Dkotlin.compiler.execution.strategy="in-process" \
+            -Dorg.gradle.daemon=true \
+            connectedFullDebugAndroidTest
           
       - run:
           name: Kill emulators
@@ -46,15 +86,21 @@ jobs:
       - run:
           name: Run testFullDebugUnitTest
           command: |
-            export ANDROID_SDK_ROOT=/opt/android-sdk
-            export ANDROID_HOME=/opt/android-sdk
-            ./gradlew -Dorg.gradle.jvmargs=-Xmx6g testFullDebugUnitTest
+            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+            export ANDROID_HOME=/usr/lib/android-sdk
+            ./gradlew \
+            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
+            -Dkotlin.daemon.jvm.options="-Xmx2g" \
+            -Dkotlin.compiler.execution.strategy="in-process" \
+            -Dorg.gradle.workers.max=22 \
+            -Dorg.gradle.daemon=true \
+            testFullDebugUnitTest
 
       - run:
           run: Run jacocoAllDebugReport
           command: |
-            export ANDROID_SDK_ROOT=/opt/android-sdk
-            export ANDROID_HOME=/opt/android-sdk
+            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+            export ANDROID_HOME=/usr/lib/android-sdk
             ./gradlew --stacktrace jacocoAllDebugReport
 
       - run:
@@ -72,6 +118,12 @@ jobs:
 
       - codecov/upload:
           file: './build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml'
+
+      - run:
+          name: Kill java processes
+          command: |
+            killall java
+          when: always
 
 workflows:
   # Below is the definition of your workflow.

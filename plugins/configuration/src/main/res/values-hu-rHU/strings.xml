@@ -13,6 +13,7 @@
     <string name="patient_name">Beteg neve</string>
     <string name="profile">Profil</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink állapot:</string>
+    <!-- Provider-agnostic cloud export/import strings -->
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_profile">Profil</string>
@@ -36,4 +37,9 @@
     <string name="metadata_label_encryption">Fájltitkosítás</string>
     <string name="metadata_format_new">Új titkosított formátom</string>
     <string name="metadata_format_other">Ismeretlen export formátum</string>
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

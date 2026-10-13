@@ -77,8 +77,6 @@
     <string name="deltalabel_u">BG 差异 [%1$s]</string>
     <string name="currentlocation">当前位置</string>
     <string name="location">所在位置</string>
-    <string name="latitude_short">纬度：</string>
-    <string name="longitude_short">经度：</string>
     <string name="glucose_u">血糖值 %1$s]:</string>
     <string name="target_u">目标 [%1$s]:</string>
     <string name="lastboluslabel">上次大剂量</string>
@@ -115,4 +113,5 @@
     <string name="autotune_run_with_error">上次 Autotune 运行期间出错</string>
     <string name="autotune_run_cancelled">检测到另一次自动调试运行，本次运行已取消</string>
     <!--    Steps count-->
+    <!--    SMB mode-->
 </resources>

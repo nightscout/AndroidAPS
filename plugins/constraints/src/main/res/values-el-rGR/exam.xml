@@ -54,7 +54,6 @@
     <string name="basaltest_fixed">Μόλις ρυθμιστούν και επικυρωθούν, οι τιμές αυτές δεν θα πρέπει να μεταβάλλονται με την πάροδο του χρόνου.</string>
     <string name="prerequisites_label">Προϋποθέσεις</string>
     <string name="prerequisites_what">Τι είναι ουσιώδες για τη ρύθμιση και τη χρήση του AAPS;</string>
-    <string name="prerequisites_computer">Ένας υπολογιστής με εγκατεστημένο και ρυθμισμένο το Android Studio.</string>
     <string name="prerequisites_pump">Μια συμβατή αντλία ινσουλίνης αν σκοπεύετε να τρέξετε ένα κλειστό κύκλωμα.</string>
     <string name="prerequisites_nightscout">Nightscout, για να κρατήσετε ένα αρχείο καταγραφής όλων των δεδομένων και την αναθεώρηση των ρυθμίσεων.</string>
     <string name="prerequisites_beanandroiddeveloper">Εμπειρία στον προγραμματισμό ή την επεξεργασία κώδικα.</string>
@@ -81,7 +80,6 @@
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
-    <string name="insulin_actrapid">Actrapid®/Humalin R®/\"regular\" ανθρώπινη ινσουλίνη.</string>
     <string name="sensitivity_label">Πρόσθετα Ευαισθησίας</string>
     <string name="sensitivity_adjust">Τα πρόσθετα ευαισθησίας επιτρέπουν την προσαρμογή του AAPS σε προσωρινές ή βραχύβιες αλλαγές στην ευαισθησία στην ινσουλίνη (για παράδειγμα ορμονικές αλλαγές ή ζητήματα απορρόφησης στο σημείο έγχυσης).</string>
     <string name="sensitivity_edit">Τα πρόσθετα ευαισθησίας προτείνουν στο χρήστη αλλαγές στον βασικό ρυθμό, τις αναλογίες I:C και ISF και μπορούν να χρησιμοποιηθούν στην επεξεργασία του προφίλ σας.</string>

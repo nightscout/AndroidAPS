@@ -1,5 +1,6 @@
 package info.nightscout.comboctl.main
 
+import app.aaps.shared.tests.TestBase
 import info.nightscout.comboctl.base.DisplayFrame
 import info.nightscout.comboctl.base.LogLevel
 import info.nightscout.comboctl.base.Logger
@@ -10,10 +11,10 @@ import info.nightscout.comboctl.parser.AlertScreenException
 import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.MainScreenContent
 import info.nightscout.comboctl.parser.ParsedScreen
+import info.nightscout.comboctl.parser.TbrPercentageAndDurationScreens
 import info.nightscout.comboctl.parser.testFrameMainScreenWithTimeSeparator
 import info.nightscout.comboctl.parser.testFrameMainScreenWithoutTimeSeparator
 import info.nightscout.comboctl.parser.testFrameStandardBolusMenuScreen
-import info.nightscout.comboctl.parser.TbrPercentageAndDurationScreens
 import info.nightscout.comboctl.parser.testFrameTemporaryBasalRateNoPercentageScreen
 import info.nightscout.comboctl.parser.testFrameTemporaryBasalRatePercentage110Screen
 import info.nightscout.comboctl.parser.testFrameW6CancelTbrWarningScreen
@@ -32,8 +33,9 @@ import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-class ParsedDisplayFrameStreamTest {
+class ParsedDisplayFrameStreamTest : TestBase() {
     companion object {
+
         @BeforeAll
         @JvmStatic
         fun commonInit() {

@@ -28,6 +28,7 @@
     <string name="fw_version_label">FW versjon</string>
     <string name="patch_no_label">Patch nr</string>
     <string name="patch_expiry_label">Patch utløper</string>
+    <string name="patch_activation_time_label">Aktivering</string>
     <string name="refresh_label">Oppdater</string>
     <string name="reset_alarms_label">Nullstill alarmer</string>
     <string name="change_patch_label">Bytte Patch</string>

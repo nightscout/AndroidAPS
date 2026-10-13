@@ -5,7 +5,7 @@ import app.aaps.plugins.automation.R
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerTimeTest : TriggerTestBase() {
@@ -15,7 +15,7 @@ class TriggerTimeTest : TriggerTestBase() {
 
     @Test
     fun shouldRunTest() {
-        Mockito.`when`(rh.gs(R.string.atspecifiedtime)).thenReturn("At %1\$s")
+        whenever(rh.gs(R.string.atspecifiedtime)).thenReturn("At %1\$s")
 
         // scheduled 1 min before
         var t: TriggerTime = TriggerTime(injector).runAt(now - T.mins(1).msecs())
@@ -56,7 +56,7 @@ class TriggerTimeTest : TriggerTestBase() {
 
     @Test
     fun friendlyDescriptionTest() {
-        Mockito.`when`(rh.gs(R.string.atspecifiedtime)).thenReturn("At %1\$s")
+        whenever(rh.gs(R.string.atspecifiedtime)).thenReturn("At %1\$s")
         assertThat(TriggerTime(injector).friendlyDescription()).startsWith("At ")
     }
 

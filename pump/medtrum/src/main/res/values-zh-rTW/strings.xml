@@ -28,6 +28,7 @@
     <string name="fw_version_label">韌體版本</string>
     <string name="patch_no_label">貼片編號</string>
     <string name="patch_expiry_label">貼片到期</string>
+    <string name="patch_activation_time_label">註冊</string>
     <string name="refresh_label">重新整理</string>
     <string name="reset_alarms_label">重設警報</string>
     <string name="change_patch_label">更換貼片</string>

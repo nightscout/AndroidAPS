@@ -1,7 +1,7 @@
 package app.aaps.pump.dana.keys
 
-import app.aaps.core.keys.BooleanPreferenceKey
-import app.aaps.core.keys.IntPreferenceKey
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.IntPreferenceKey
 
 enum class DanaIntKey(
     override val key: String,
@@ -16,9 +16,10 @@ enum class DanaIntKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
-    DanaRPassword("danar_password", 0),
-    DanaBolusSpeed("danars_bolusspeed", 0),
+    Password("danar_password", 0),
+    BolusSpeed("danars_bolusspeed", 0),
 }

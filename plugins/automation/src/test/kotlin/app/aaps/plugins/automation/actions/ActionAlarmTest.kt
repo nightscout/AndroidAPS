@@ -9,8 +9,8 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 class ActionAlarmTest : TestBaseWithProfile() {
@@ -27,15 +27,15 @@ class ActionAlarmTest : TestBaseWithProfile() {
                 it.timerUtil = timerUtil
                 it.dateUtil = dateUtil
                 it.config = config
-                it.instantiator = instantiator
+                it.pumpEnactResultProvider = pumpEnactResultProvider
             }
         }
     }
 
     @BeforeEach
     fun setup() {
-        `when`(rh.gs(app.aaps.core.ui.R.string.alarm)).thenReturn("Alarm")
-        `when`(rh.gs(ArgumentMatchers.eq(R.string.alarm_message), any())).thenReturn("Alarm: %s")
+        whenever(rh.gs(app.aaps.core.ui.R.string.alarm)).thenReturn("Alarm")
+        whenever(rh.gs(ArgumentMatchers.eq(R.string.alarm_message), any())).thenReturn("Alarm: %s")
         timerUtil = TimerUtil(context)
         sut = ActionAlarm(injector)
     }

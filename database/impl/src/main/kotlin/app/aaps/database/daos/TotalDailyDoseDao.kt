@@ -27,7 +27,10 @@ internal interface TotalDailyDoseDao : TraceableDao<TotalDailyDose> {
     fun findByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): TotalDailyDose?
 
     @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE unlikely(timestamp = :timestamp) AND likely(pumpType = :pumpType) AND likely(pumpSerial = :pumpSerial) AND likely(referenceId IS NULL)")
-    fun findByPumpTimestamp(timestamp: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): TotalDailyDose?
+    fun findByPumpTimestamp(timestamp: Long, pumpType: InterfaceIDs.PumpType?, pumpSerial: String?): TotalDailyDose?
+
+    @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE unlikely(timestamp = :timestamp) AND likely(pumpType = :pumpType) AND likely(referenceId IS NULL) ORDER BY id DESC")
+    fun findByPumpTimestamp(timestamp: Long, pumpType: InterfaceIDs.PumpType?): TotalDailyDose?
 
     @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE unlikely(timestamp = :timestamp) AND likely(pumpType = :pumpType) AND likely(referenceId IS NULL)")
     fun findByTimestamp(timestamp: Long, pumpType: InterfaceIDs.PumpType): Maybe<TotalDailyDose>

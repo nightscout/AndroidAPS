@@ -1,5 +1,6 @@
 package info.nightscout.comboctl.base
 
+import app.aaps.shared.tests.TestBase
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -85,7 +86,8 @@ val originalRtDisplayFrameRows = listOf(
     )
 )
 
-class DisplayFrameTest {
+class DisplayFrameTest : TestBase() {
+
     @Test
     fun checkPixelAddressing() {
         // Construct a simple display frame with 2 pixels set and the rest
@@ -103,7 +105,7 @@ class DisplayFrameTest {
                 when (Pair(x, y)) {
                     Pair(1, 0) -> assertEquals(true, displayFrame.getPixelAt(x, y))
                     Pair(0, 1) -> assertEquals(true, displayFrame.getPixelAt(x, y))
-                    else -> assertEquals(false, displayFrame.getPixelAt(x, y))
+                    else       -> assertEquals(false, displayFrame.getPixelAt(x, y))
                 }
             }
         }

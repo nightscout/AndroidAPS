@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Макс. болюс на помпе (ед)</string>
     <string name="medtronic_pump_max_basal">Макс. базал на помпе (ед/ч)</string>
     <string name="medtronic_pump_encoding">Кодировка Medtronic</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Глобальн (868 Мгц)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Программное 4b6b кодирование</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Аппаратное кодирование 4b6b</string>
     <string name="medtronic_custom_action_wake_and_tune">Пробуждение и настройка</string>
     <string name="medtronic_custom_action_clear_bolus_block">Очистить блок болюса</string>
     <string name="medtronic_custom_action_reset_rileylink">Сбросить конфигурацию RileyLink</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Литиевая (Подробный вид)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Подробный вид)</string>
     <string name="medtronic_pump_battery_nimh">Никель-металлогидридная (подробно)</string>
-    <string name="medtronic_bolus_debugging">Отладка Болюс/Назначения</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Батарея RileyLink</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">тому назад</string>
     <string name="medtronic_notification_check_time_date">Необходимо обновить часы помпы</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">Вкл.</string>
-    <string name="common_off">Выкл.</string>
     <string name="pump_time_updated">Время на помпе обновлено</string>
     <string name="set_neutral_temps_title">Установить нейтральные временные базалы</string>
     <string name="set_neutral_temps_summary">Если эта опция включена, то она отменяет временный базал до конца каждого часа. Такой метод помогает прекратить почасовую вибрацию некоторых помп.</string>

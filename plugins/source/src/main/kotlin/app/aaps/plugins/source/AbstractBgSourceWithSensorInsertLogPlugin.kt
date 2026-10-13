@@ -24,10 +24,10 @@ abstract class AbstractBgSourceWithSensorInsertLogPlugin(
         parent.addPreference(category)
         category.apply {
             key = "bg_source_with_sensor_upload_settings"
-            title = rh.gs(R.string.bgsource_upload)
+            title = rh.gs(R.string.bgsource_settings)
             initialExpandedChildrenCount = 0
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.BgSourceUploadToNs, title = app.aaps.core.ui.R.string.do_ns_upload_title))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.BgSourceCreateSensorChange, summary = R.string.dexcom_log_ns_sensor_change_summary, title = R.string.dexcom_log_ns_sensor_change_title))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.BgSourceCreateSensorChange, summary = R.string.bgsource_log_sensor_change_summary, title = R.string.bgsource_log_sensor_change_title))
         }
     }
 }

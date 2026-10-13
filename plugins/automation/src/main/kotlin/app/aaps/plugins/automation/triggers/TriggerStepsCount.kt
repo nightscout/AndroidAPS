@@ -1,7 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
 import android.widget.LinearLayout
-import androidx.annotation.VisibleForTesting
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
@@ -40,7 +39,7 @@ class TriggerStepsCount(injector: HasAndroidInjector) : Trigger(injector) {
             return false
         }
 
-        var lastStepsCount: Int? = when (measurementDuration.value) {
+        val lastStepsCount: Int? = when (measurementDuration.value) {
             "5" -> lastSC.steps5min
             "10" -> lastSC.steps10min
             "15" -> lastSC.steps15min

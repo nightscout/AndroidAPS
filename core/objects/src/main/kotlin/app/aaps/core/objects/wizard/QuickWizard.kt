@@ -1,30 +1,31 @@
 package app.aaps.core.objects.wizard
 
-import app.aaps.core.interfaces.sharedPreferences.SP
-import dagger.android.HasAndroidInjector
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Singleton
 class QuickWizard @Inject constructor(
-    private val sp: SP,
-    private val injector: HasAndroidInjector
+    private val preferences: Preferences,
+    private val quickWizardEntryProvider: Provider<QuickWizardEntry>
 ) {
 
     private var storage = JSONArray()
 
     init {
-        setData(JSONArray(sp.getString(app.aaps.core.utils.R.string.key_quickwizard, "[]")))
+        setData(JSONArray(preferences.get(StringNonKey.QuickWizard)))
         setGuidsForOldEntries()
     }
 
     private fun setGuidsForOldEntries() {
         // for migration purposes; guid is a new required property
         for (i in 0 until storage.length()) {
-            val entry = QuickWizardEntry(injector).from(storage.get(i) as JSONObject, i)
+            val entry = quickWizardEntryProvider.get().from(storage.get(i) as JSONObject, i)
             if (entry.guid() == "") {
                 val guid = UUID.randomUUID().toString()
                 entry.storage.put("guid", guid)
@@ -34,7 +35,7 @@ class QuickWizard @Inject constructor(
 
     fun getActive(): QuickWizardEntry? {
         for (i in 0 until storage.length()) {
-            val entry = QuickWizardEntry(injector).from(storage.get(i) as JSONObject, i)
+            val entry = quickWizardEntryProvider.get().from(storage.get(i) as JSONObject, i)
             if (entry.isActive()) return entry
         }
         return null
@@ -45,13 +46,13 @@ class QuickWizard @Inject constructor(
     }
 
     fun save() {
-        sp.putString(app.aaps.core.utils.R.string.key_quickwizard, storage.toString())
+        preferences.put(StringNonKey.QuickWizard, storage.toString())
     }
 
     fun size(): Int = storage.length()
 
     operator fun get(position: Int): QuickWizardEntry =
-        QuickWizardEntry(injector).from(storage.get(position) as JSONObject, position)
+        quickWizardEntryProvider.get().from(storage.get(position) as JSONObject, position)
 
     fun list(): ArrayList<QuickWizardEntry> =
         ArrayList<QuickWizardEntry>().also {
@@ -60,7 +61,7 @@ class QuickWizard @Inject constructor(
 
     fun get(guid: String): QuickWizardEntry? {
         for (i in 0 until storage.length()) {
-            val entry = QuickWizardEntry(injector).from(storage.get(i) as JSONObject, i)
+            val entry = quickWizardEntryProvider.get().from(storage.get(i) as JSONObject, i)
             if (entry.guid() == guid) {
                 return entry
             }
@@ -76,6 +77,7 @@ class QuickWizard @Inject constructor(
         save()
     }
 
+    @Suppress("unused")
     fun removePos(pos: Int, jsonObj: JSONObject?, jsonArr: JSONArray) {
         for (i in jsonArr.length() downTo pos + 1) {
             jsonArr.put(i, jsonArr[i - 1])
@@ -91,7 +93,7 @@ class QuickWizard @Inject constructor(
     }
 
     fun newEmptyItem(): QuickWizardEntry {
-        return QuickWizardEntry(injector)
+        return quickWizardEntryProvider.get()
     }
 
     fun addOrUpdate(newItem: QuickWizardEntry) {

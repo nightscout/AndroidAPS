@@ -28,6 +28,7 @@
     <string name="fw_version_label">FW versie</string>
     <string name="patch_no_label">Patch nr</string>
     <string name="patch_expiry_label">Patch verloopt</string>
+    <string name="patch_activation_time_label">Activatie</string>
     <string name="refresh_label">Vernieuwen</string>
     <string name="reset_alarms_label">Reset alarmen</string>
     <string name="change_patch_label">Patch verwisselen</string>

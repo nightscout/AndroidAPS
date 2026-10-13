@@ -1,7 +1,8 @@
 package app.aaps.pump.equil.manager.command
 
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.AESUtil
 import app.aaps.pump.equil.manager.EquilManager
@@ -11,11 +12,12 @@ import app.aaps.pump.equil.manager.Utils
 class CmdStepSet(
     var sendConfig: Boolean, var step: Int,
     aapsLogger: AAPSLogger,
-    sp: SP,
+    preferences: Preferences,
     equilManager: EquilManager
-) : BaseSetting(System.currentTimeMillis(), aapsLogger, sp, equilManager) {
+) : BaseSetting(System.currentTimeMillis(), aapsLogger, preferences, equilManager) {
 
     override fun getFirstData(): ByteArray {
+        aapsLogger.debug(LTag.PUMPCOMM, "CmdStepSet: Sending pin movement command, step=$step, sendConfig=$sendConfig")
         val indexByte = Utils.intToBytes(pumpReqIndex)
         val data2 = byteArrayOf(0x01, 0x07)
         val data3 = Utils.intToBytes(step)
@@ -36,8 +38,9 @@ class CmdStepSet(
     override fun decodeConfirmData(data: ByteArray) {
 //        byte[] byteData = Crc.hexStringToBytes(data);
 //        int status = byteData[6] & 0xff;
+        aapsLogger.debug(LTag.PUMPCOMM, "CmdStepSet: Pin movement command completed successfully, step=$step")
         synchronized(this) {
-            cmdStatus = true
+            cmdSuccess = true
             (this as Object).notify()
         }
     }

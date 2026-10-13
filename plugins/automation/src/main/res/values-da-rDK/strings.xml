@@ -77,8 +77,6 @@
     <string name="deltalabel_u">BS difference [%1$s]</string>
     <string name="currentlocation">Nuværende placering</string>
     <string name="location">Lokation</string>
-    <string name="latitude_short">Br.gr:</string>
-    <string name="longitude_short">Læ.gr:</string>
     <string name="glucose_u">Glukose [%1$s]:</string>
     <string name="target_u">Mål [%1$s]:</string>
     <string name="lastboluslabel">Sidste bolus</string>
@@ -121,4 +119,5 @@
     <string name="autotune_run_with_error">Fejl under sidste Autotune kørsel</string>
     <string name="autotune_run_cancelled">Autotune kører allerede, annulleret</string>
     <!--    Steps count-->
+    <!--    SMB mode-->
 </resources>

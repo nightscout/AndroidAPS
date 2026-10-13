@@ -50,7 +50,6 @@
     <string name="smscommunicator_tt_canceled">Geçici Hedef başarıyla iptal edildi</string>
     <string name="smscommunicator_remote_commands_allowed">SMS ile uzaktan komutlara izin ver</string>
     <string name="smscommunicator_loop_has_been_disabled">Döngü devre dışı bırakıldı</string>
-    <string name="smscommunicator_loop_has_been_enabled">Döngü etkinleştirildi</string>
     <string name="smscommunicator_loop_is_enabled">Döngü etkin</string>
     <string name="smscommunicator_pump_connect_with_code">Pompaya bağlanmak için %1$s koduyla yanıt verin</string>
     <string name="smscommunicator_pump_connect_fail">Pompa bağlantısı başarısız</string>
@@ -66,7 +65,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">%2$d dk boyunca %1$d%% bazal başlatmak için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_suspend_reply_with_code">Döngüyü %1$d dakika askıya almak için %2$s koduyla yanıtlayın</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Döngüye devam etmek için %1$s koduyla yanıtlayın</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">Döngüyü etkinleştirmek için %1$s koduyla yanıtlayın</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Döngüyü iptal etmek için %1$s koduyla yanıtlayın</string>
     <string name="smscommunicator_tempbasal_set">Geçici bazal %1$.2fÜ/s %2$d dakika için başarıyla başlatıldı</string>
     <string name="smscommunicator_extended_set">%1$.2fÜ yayma bolus %2$d dakika boyunca başarıyla başlatıldı</string>
@@ -130,7 +128,6 @@
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">YP</string>
-    <string name="description_profile_local">Çevrimdışı kullanılabilen bir profil tanımlayın.</string>
     <string name="a11y_add_new_to_list">listeye yeni ekle</string>
     <string name="do_you_want_switch_profile">Profili değiştirmek ve mevcut profilde yapılan değişiklikleri gözardı etmek istiyor musunuz?</string>
     <string name="save_or_reset_changes_first">Önce mevcut değişiklikleri kaydedin veya sıfırlayın</string>

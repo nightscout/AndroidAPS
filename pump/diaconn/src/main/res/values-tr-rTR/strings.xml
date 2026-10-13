@@ -64,9 +64,6 @@
     <string name="insulinlackwarning">İnsülin Eksikliği Uyarısı</string>
     <string name="needbatteryreplace">Pil değişimi gerekli</string>
     <string name="needinsullinreplace">İnsülin değişimi gerekli</string>
-    <string name="pumpversion">pompa_versiyonu</string>
-    <string name="apsIncarnationNo">aps_enkarnasyon_no</string>
-    <string name="pumpserialno">pompa_seri_no</string>
     <string name="diaconn_g8_loginsulinchange_title">Rezervuar değişikliği günlüğe kaydet</string>
     <string name="diaconn_g8_loginsulinchange_summary">Geçmişte tespit edildiğinde careportal\'a \"İnsülin Değişimi\" olayı ekleyin</string>
     <string name="diaconn_g8_logcanulachange_title">Kanül değişikliğini günlüğe kaydetme</string>

@@ -90,7 +90,6 @@
     <string name="menu_default">Numatytasis</string>
     <string name="menu_menu">Meniu</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Trukmė</string>
     <string name="action_tempt_confirmation">Laikino tikslo užklausa</string>
     <string name="action_quick_wizard_confirmation">Greitojo vedlio užklausa</string>
     <string name="action_user_action_confirmation">Reikalingas vartotojo veiksmas</string>
@@ -100,13 +99,8 @@
     <string name="action_fill_confirmation">Pildymo užklausa</string>
     <string name="action_ecarb_confirmation">AV užklausa</string>
     <string name="action_profile_switch_confirmation">Profilio keitimo užklausa</string>
-    <string name="action_target" comment="In temp target menu, single target value">Tikslas</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Žemas</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Aukštas</string>
     <string name="action_carbs">AV</string>
     <string name="action_ecarbs">iAV</string>
-    <string name="action_percentage">Procentai</string>
-    <string name="action_start_min">Pradėti [min]</string>
     <string name="action_duration_h">Trukmė [h]</string>
     <string name="action_insulin">Insulinas</string>
     <string name="action_preset_1">Ruošinys 1</string>
@@ -114,7 +108,6 @@
     <string name="action_preset_3">Ruošinys 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Užpildymo kiekis</string>
     <string name="action_confirm">PATVIRTINTI</string>
-    <string name="action_timeshift">laiko postūmis</string>
     <string name="bolus_progress">Leidžiamas bolusas</string>
     <string name="press_to_cancel">paspauskite atšaukimui</string>
     <string name="cancel_bolus">ATŠAUKTI BOLUSĄ</string>
@@ -148,20 +141,15 @@
     <string name="color_name_black">juoda</string>
     <string name="color_name_multicolor">daug spalvų</string>
     <string name="pref_simplify_ui">Supaprastinta sąsaja</string>
-    <string name="pref_simplify_ui_sum">Rodyti tik laiką ir KG</string>
     <string name="pref_vibrate_hourly">Vibruoti kas valandą</string>
     <string name="pref_show_weeknumber">Rodyti savaitės numerį</string>
     <string name="pref_include_external">Įtraukti išorines peržiūras į šabloną</string>
     <string name="pref_switch_external">Įjungti išorinius duomenis ciferblate</string>
     <string name="custom_pref_show_seconds">Rodyti sekundes</string>
-    <string name="digitalstyle_pref_your_style">Jūsų stilius:</string>
     <string name="digitalstyle_style_none">jokio stiliaus</string>
     <string name="digitalstyle_style_minimal">minimalus stilius</string>
     <string name="digitalstyle_style_shape">formos stilius</string>
     <string name="digitalstyle_style_full">pilnas stilius</string>
-    <string name="digitalstyle_pref_your_color">Jūsų spalva:</string>
-    <string name="digitalstyle_pref_your_color_saturation">Jūsų spalvų sodrumas:</string>
-    <string name="digitalstyle_pref_your_color_opacity">Jūsų spalvų nepermatomumas:</string>
     <string name="bolus_progress_channel_name">AAPS leidžiamas bolusas</string>
     <string name="bolus_progress_silent_channel_name">Nutildyti AAPS boluso suleidimą</string>
     <string name="bolus_progress_channel_description">Boluso leidimas ir atšaukimas</string>

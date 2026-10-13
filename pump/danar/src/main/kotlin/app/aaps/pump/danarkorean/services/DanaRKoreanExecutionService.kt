@@ -1,6 +1,5 @@
 package app.aaps.pump.danarkorean.services
 
-import android.annotation.SuppressLint
 import android.os.Binder
 import android.os.SystemClock
 import app.aaps.core.data.configuration.Constants
@@ -12,19 +11,17 @@ import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.events.EventDanaRNewStatus
 import app.aaps.pump.danar.DanaRPlugin
-import app.aaps.pump.danar.SerialIOThread
 import app.aaps.pump.danar.comm.MsgBolusStart
-import app.aaps.pump.danar.comm.MsgSetCarbsEntry
 import app.aaps.pump.danar.comm.MsgSetExtendedBolusStart
 import app.aaps.pump.danar.comm.MsgSetExtendedBolusStop
 import app.aaps.pump.danar.comm.MsgSetSingleBasalProfile
@@ -46,7 +43,6 @@ import app.aaps.pump.danarkorean.comm.MessageHashTableRKorean
 import app.aaps.pump.danarkorean.comm.MsgCheckValueK
 import app.aaps.pump.danarkorean.comm.MsgSettingBasal_k
 import app.aaps.pump.danarkorean.comm.MsgStatusBasic_k
-import java.io.IOException
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -58,37 +54,12 @@ class DanaRKoreanExecutionService : AbstractDanaRExecutionService() {
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var messageHashTableRKorean: MessageHashTableRKorean
     @Inject lateinit var profileFunction: ProfileFunction
+
+    override fun messageHashTable() = messageHashTableRKorean
+
     override fun onCreate() {
         super.onCreate()
         mBinder = LocalBinder()
-    }
-
-    @SuppressLint("MissingPermission") override fun connect() {
-        if (isConnecting) return
-        Thread(Runnable {
-            mHandshakeInProgress = false
-            isConnecting = true
-            getBTSocketForSelectedPump()
-            if (mRfcommSocket == null || mBTDevice == null) {
-                isConnecting = false
-                return@Runnable  // Device not found
-            }
-            try {
-                mRfcommSocket?.connect()
-            } catch (e: IOException) {
-                //log.error("Unhandled exception", e);
-                if (e.message?.contains("socket closed") == true) {
-                    aapsLogger.error("Unhandled exception", e)
-                }
-            }
-            if (isConnected) {
-                mSerialIOThread?.disconnect("Recreate SerialIOThread")
-                mSerialIOThread = SerialIOThread(aapsLogger, mRfcommSocket!!, messageHashTableRKorean, danaPump)
-                mHandshakeInProgress = true
-                rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.HANDSHAKING, 0))
-            }
-            isConnecting = false
-        }).start()
     }
 
     override fun getPumpStatus() {
@@ -220,39 +191,35 @@ class DanaRKoreanExecutionService : AbstractDanaRExecutionService() {
         return null
     }
 
-    override fun bolus(amount: Double, carbs: Int, carbTimeStamp: Long, t: EventOverviewBolusProgress.Treatment): Boolean {
+    override fun bolus(detailedBolusInfo: DetailedBolusInfo): Boolean {
         if (!isConnected) return false
         if (BolusProgressData.stopPressed) return false
-        danaPump.bolusingTreatment = t
+        danaPump.bolusingDetailedBolusInfo = detailedBolusInfo
         danaPump.bolusDone = false
-        val start = MsgBolusStart(injector, amount)
+        val start = MsgBolusStart(injector, detailedBolusInfo.insulin)
         danaPump.bolusStopped = false
         danaPump.bolusStopForced = false
-        if (carbs > 0) {
-            mSerialIOThread?.sendMessage(MsgSetCarbsEntry(injector, carbTimeStamp, carbs))
-        }
-        if (amount > 0) {
-            danaPump.bolusingTreatment = t
-            danaPump.bolusAmountToBeDelivered = amount
+        var connectionBroken = false
+        if (detailedBolusInfo.insulin > 0) {
+            danaPump.bolusingDetailedBolusInfo = detailedBolusInfo
             if (!danaPump.bolusStopped) {
                 mSerialIOThread?.sendMessage(start)
             } else {
-                t.insulin = 0.0
+                BolusProgressData.delivered = 0.0
                 return false
             }
-            while (!danaPump.bolusStopped && !start.failed) {
+            while (!danaPump.bolusStopped && !start.failed && !connectionBroken) {
                 SystemClock.sleep(100)
                 if (System.currentTimeMillis() - danaPump.bolusProgressLastTimeStamp > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
-                    danaPump.bolusStopped = true
-                    danaPump.bolusStopForced = true
+                    connectionBroken = true
                     aapsLogger.debug(LTag.PUMP, "Communication stopped")
                 }
             }
             SystemClock.sleep(300)
-            danaPump.bolusingTreatment = null
+            danaPump.bolusingDetailedBolusInfo = null
             commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.bolus_ok), null)
         }
-        return !start.failed
+        return !start.failed && !connectionBroken
     }
 
     override fun highTempBasal(percent: Int, durationInMinutes: Int): Boolean = false

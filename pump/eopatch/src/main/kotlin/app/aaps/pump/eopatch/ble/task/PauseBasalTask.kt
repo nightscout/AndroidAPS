@@ -21,7 +21,6 @@ import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.functions.Function3
 import io.reactivex.rxjava3.functions.Predicate
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.util.ArrayList
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -56,7 +55,7 @@ class PauseBasalTask @Inject constructor(
     fun pause(pauseDurationHour: Float, pausedTimestamp: Long, alarmCode: AlarmCode?): Single<PatchBooleanResponse> {
         val patchState = pm.patchState
 
-        if (patchState.isNormalBasalPaused) return Single.just<PatchBooleanResponse>(PatchBooleanResponse(true))
+        if (patchState.isNormalBasalPaused) return Single.just(PatchBooleanResponse(true))
 
         enqueue(TaskFunc.UPDATE_CONNECTION)
 
@@ -80,7 +79,7 @@ class PauseBasalTask @Inject constructor(
 
         if (pumpSync.expectedPumpState().temporaryBasal != null) {
             uel.log(Action.CANCEL_TEMP_BASAL, Sources.EOPatch2, "", ArrayList<ValueWithUnit>())
-            commandQueue.cancelTempBasal(true, object : Callback() {
+            commandQueue.cancelTempBasal(true, callback = object : Callback() {
                 override fun run() {
                     basalCheckSubject.onNext(true)
                 }
@@ -100,7 +99,7 @@ class PauseBasalTask @Inject constructor(
     }
 
     private fun getSuspendedTime(pausedTimestamp: Long): Single<Long> {
-        return Single.just<Long>(pausedTimestamp)
+        return Single.just(pausedTimestamp)
     }
 
     private fun pauseBasal(pauseDurationHour: Float, alarmCode: AlarmCode?): Single<PatchBooleanResponse> {
@@ -113,7 +112,7 @@ class PauseBasalTask @Inject constructor(
         // 정지 알람 발생 시 basal pause 커맨드 전달하지 않음 - 주입 정지 이력만 생성
         onBasalPaused(pauseDurationHour, alarmCode)
 
-        return Single.just<PatchBooleanResponse>(PatchBooleanResponse(true))
+        return Single.just(PatchBooleanResponse(true))
     }
 
     private fun onBasalPaused(pauseDurationHour: Float, alarmCode: AlarmCode?) {

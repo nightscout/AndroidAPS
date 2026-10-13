@@ -5,7 +5,6 @@
     <string name="error">Грешка</string>
     <string name="profile_set_ok">Профила на помпата е обновен</string>
     <string name="invalid_input">Грешни входящи данни</string>
-    <string name="bolus_delivering">Доставяне %1$.2f U</string>
     <string name="constraint_applied">Приложено ограничение!</string>
     <string name="tempbasals_iobtotal_label_string">Общо IOB:</string>
     <string name="tt_label">Вр.цел</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f Е/ч</string>
     <string name="pump_not_initialized_profile_not_set">Помпата не е инициализирана, профила не е зададен!</string>
     <string name="failed_update_basal_profile">Неуспешно обновяване на базалния профил</string>
-    <string name="bolus_delivered_successfully">Болус %1$.2f Е доставен успешно</string>
     <string name="no_valid_basal_rate">Няма валиден базал в помпата</string>
     <string name="limiting_iob">Ограничаване на IOB до %1$.1f Е поради %2$s</string>
     <string name="loop_disabled">LOOP Е СПРЯН ОТ ОГРАНИЧЕНИЯТА</string>
@@ -89,7 +87,6 @@
     <string name="loopisdisabled">APS е изключен</string>
     <string name="alarm">Аларма</string>
     <string name="disableloop">Изключи Loop</string>
-    <string name="enableloop">Включи Loop</string>
     <string name="resumeloop">Възстанови loop</string>
     <string name="suspendloop">Изключи APS</string>
     <string name="duration_min_label">Продължителност [мин.]</string>
@@ -103,7 +100,6 @@
     <string name="name_short">Име:</string>
     <string name="time">Време</string>
     <string name="ns_wifi_ssids">WiFi име</string>
-    <string name="loading">Зареждане…</string>
     <string name="notes_label">Бележки</string>
     <string name="remove_button">Изтрий</string>
     <string name="add_new">Добави нов</string>
@@ -164,7 +160,6 @@
     <string name="canceling_tbr_failed">Отмяната на временния базал е неуспешна</string>
     <string name="canceling_eb_failed">Неуспешно спиране на удължен болус</string>
     <string name="virtualpump_uploadstatus_title">Качване на статуса на помпата в NS или Tidepool</string>
-    <string name="suspendloop_label">Изключен/забранен цикъл</string>
     <string name="iob_label">Активен Инсулин (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Грешна парола</string>
@@ -281,7 +276,6 @@
     <string name="uel_lgs_loop_mode">РЕЖИМ LGS ЦИКЪЛ</string>
     <string name="uel_open_loop_mode">РЕЖИМ ОТВОРЕН ЦИКЪЛ</string>
     <string name="uel_loop_disabled">ЦИКЪЛ ИЗКЛЮЧЕН</string>
-    <string name="uel_loop_enabled">ЦИКЪЛ ВКЛЮЧЕН</string>
     <string name="uel_reconnect">СВЪРЗВАНЕ ОТНОВО</string>
     <string name="uel_disconnect">Разкачане</string>
     <string name="uel_resume">ПРОДЪЛЖИ</string>
@@ -552,4 +546,5 @@
     <string name="sunday_short">Н</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units">%1$.2fЕ</string>
+    <!--    Playback-->
 </resources>

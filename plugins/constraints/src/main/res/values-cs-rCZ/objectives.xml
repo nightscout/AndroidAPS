@@ -16,11 +16,12 @@
     <string name="objectives_maxbasal">Proveďte akci pro splnění doporučení</string>
     <string name="objectives_maxbasal_learned">Dejte pozor na bezpečnostní nastavení a v případě potřeby upravte bezpečnostní parametry.</string>
     <string name="objectives_maxiobzero_objective">Spustit uzavřenou smyčku pouze se zastavováním při nízké glykémii</string>
-    <string name="objectives_maxiobzero_gate">Spustit uzavřenou smyčku s max IOB = 0 na několik dní s minimem nutných korekcí na nízkou glykémii</string>
+    <string name="objectives_maxiobzero_gate">Spusťte uzavřenou smyčku v režimu pozastavení při nízké glykémii (LGS) (tj. max. IOB = 0 je nastaveno automaticky) na několik dní, aniž by smyčka musela příliš často zasahovat při událostech s nízkou glykémií.</string>
     <string name="objectives_maxiobzero_learned">Nastavení MaxIOB na nulu vám zabraňuje v hypoglykémii a nepřidá více inzulínu nad bazální dávkou (kromě situace se záporným IOB)</string>
     <string name="objectives_maxiob_objective">Zapnout uzavřenou smyčku, zvyšovat max IOB nad 0 a snižovat cílovou glykémii</string>
     <string name="objectives_maxiob_gate">Provozovat smyčku několik dní s alespoň jednou nocí bez alarmů na nízkou glykémii</string>
-    <string name="objectives_maxiob_learned">Aktualizujte MaxIOB, jak roste dítě. Nedovolte, aby vám systém dával více inzulínu, než můžete pokrýt jídlem = opravdu vysoká hodnota je špatný nápad.</string>
+    <string name="objectives_maxiob_learned">Aktualizujte MaxIOB podle toho, jak dítě roste. Nedovolte, aby systém podal více inzulínu, než kolik dokážete pokrýt jídlem = opravdu vysoká hodnota je špatný nápad. Maximální IOB se v jednoduchém režimu počítá automaticky.</string>
+    <string name="maxiobset">Maximální IOB nastaven správně (není nutné v jednoduchém režimu)</string>
     <string name="objectives_autosens_objective">Upravit bazály a poměry, bude-li to potřeba, a povolit automatickou detekci citlivosti na inzulín</string>
     <string name="objectives_autosens_gate">Jeden týden úspěšného používání s běžným příjmem sacharidů</string>
     <string name="objectives_autosens_learned">Pokud váš výsledek autosens neosciluje kolem 100%, nastavení Vašeho profilu pravděpodobně špatné.</string>

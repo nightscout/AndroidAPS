@@ -1,0 +1,3467 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 31,
+    "identityHash": "646bb0b4f948ae4a7fb732fb5e92e26a",
+    "entities": [
+      {
+        "tableName": "apsResults",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `algorithm` TEXT NOT NULL, `glucoseStatusJson` TEXT, `currentTempJson` TEXT, `iobDataJson` TEXT, `profileJson` TEXT, `autosensDataJson` TEXT, `mealDataJson` TEXT, `resultJson` TEXT NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `apsResults`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "algorithm",
+            "columnName": "algorithm",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "glucoseStatusJson",
+            "columnName": "glucoseStatusJson",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currentTempJson",
+            "columnName": "currentTempJson",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "iobDataJson",
+            "columnName": "iobDataJson",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "profileJson",
+            "columnName": "profileJson",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "autosensDataJson",
+            "columnName": "autosensDataJson",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "mealDataJson",
+            "columnName": "mealDataJson",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "resultJson",
+            "columnName": "resultJson",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_apsResults_referenceId",
+            "unique": false,
+            "columnNames": [
+              "referenceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_apsResults_referenceId` ON `${TABLE_NAME}` (`referenceId`)"
+          },
+          {
+            "name": "index_apsResults_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_apsResults_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "apsResults",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "referenceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "boluses",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `amount` REAL NOT NULL, `type` TEXT NOT NULL, `notes` TEXT, `isBasalInsulin` INTEGER NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, `insulinLabel` TEXT, `insulinEndTime` INTEGER, `peak` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `boluses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "isBasalInsulin",
+            "columnName": "isBasalInsulin",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "insulinConfiguration.insulinLabel",
+            "columnName": "insulinLabel",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "insulinConfiguration.insulinEndTime",
+            "columnName": "insulinEndTime",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "insulinConfiguration.peak",
+            "columnName": "peak",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_boluses_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_boluses_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_boluses_isValid",
+            "unique": false,
+            "columnNames": [
+              "isValid"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_boluses_isValid` ON `${TABLE_NAME}` (`isValid`)"
+          },
+          {
+            "name": "index_boluses_temporaryId",
+            "unique": false,
+            "columnNames": [
+              "temporaryId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_boluses_temporaryId` ON `${TABLE_NAME}` (`temporaryId`)"
+          },
+          {
+            "name": "index_boluses_pumpId",
+            "unique": false,
+            "columnNames": [
+              "pumpId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_boluses_pumpId` ON `${TABLE_NAME}` (`pumpId`)"
+          },
+          {
+            "name": "index_boluses_pumpSerial",
+            "unique": false,
+            "columnNames": [
+              "pumpSerial"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_boluses_pumpSerial` ON `${TABLE_NAME}` (`pumpSerial`)"
+          },
+          {
+            "name": "index_boluses_pumpType",
+            "unique": false,
+            "columnNames": [
+              "pumpType"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_boluses_pumpType` ON `${TABLE_NAME}` (`pumpType`)"
+          },
+          {
+            "name": "index_boluses_referenceId",
+            "unique": false,
+            "columnNames": [
+              "referenceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_boluses_referenceId` ON `${TABLE_NAME}` (`referenceId`)"
+          },
+          {
+            "name": "index_boluses_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_boluses_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "boluses",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "referenceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "bolusCalculatorResults",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `targetBGLow` REAL NOT NULL, `targetBGHigh` REAL NOT NULL, `isf` REAL NOT NULL, `ic` REAL NOT NULL, `bolusIOB` REAL NOT NULL, `wasBolusIOBUsed` INTEGER NOT NULL, `basalIOB` REAL NOT NULL, `wasBasalIOBUsed` INTEGER NOT NULL, `glucoseValue` REAL NOT NULL, `wasGlucoseUsed` INTEGER NOT NULL, `glucoseDifference` REAL NOT NULL, `glucoseInsulin` REAL NOT NULL, `glucoseTrend` REAL NOT NULL, `wasTrendUsed` INTEGER NOT NULL, `trendInsulin` REAL NOT NULL, `cob` REAL NOT NULL, `wasCOBUsed` INTEGER NOT NULL, `cobInsulin` REAL NOT NULL, `carbs` REAL NOT NULL, `wereCarbsUsed` INTEGER NOT NULL, `carbsInsulin` REAL NOT NULL, `otherCorrection` REAL NOT NULL, `wasSuperbolusUsed` INTEGER NOT NULL, `superbolusInsulin` REAL NOT NULL, `wasTempTargetUsed` INTEGER NOT NULL, `totalInsulin` REAL NOT NULL, `percentageCorrection` INTEGER NOT NULL, `profileName` TEXT NOT NULL, `note` TEXT NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `bolusCalculatorResults`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "targetBGLow",
+            "columnName": "targetBGLow",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "targetBGHigh",
+            "columnName": "targetBGHigh",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isf",
+            "columnName": "isf",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ic",
+            "columnName": "ic",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bolusIOB",
+            "columnName": "bolusIOB",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wasBolusIOBUsed",
+            "columnName": "wasBolusIOBUsed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "basalIOB",
+            "columnName": "basalIOB",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wasBasalIOBUsed",
+            "columnName": "wasBasalIOBUsed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "glucoseValue",
+            "columnName": "glucoseValue",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wasGlucoseUsed",
+            "columnName": "wasGlucoseUsed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "glucoseDifference",
+            "columnName": "glucoseDifference",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "glucoseInsulin",
+            "columnName": "glucoseInsulin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "glucoseTrend",
+            "columnName": "glucoseTrend",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wasTrendUsed",
+            "columnName": "wasTrendUsed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "trendInsulin",
+            "columnName": "trendInsulin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cob",
+            "columnName": "cob",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wasCOBUsed",
+            "columnName": "wasCOBUsed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cobInsulin",
+            "columnName": "cobInsulin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "carbs",
+            "columnName": "carbs",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wereCarbsUsed",
+            "columnName": "wereCarbsUsed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "carbsInsulin",
+            "columnName": "carbsInsulin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "otherCorrection",
+            "columnName": "otherCorrection",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wasSuperbolusUsed",
+            "columnName": "wasSuperbolusUsed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "superbolusInsulin",
+            "columnName": "superbolusInsulin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wasTempTargetUsed",
+            "columnName": "wasTempTargetUsed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalInsulin",
+            "columnName": "totalInsulin",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "percentageCorrection",
+            "columnName": "percentageCorrection",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "profileName",
+            "columnName": "profileName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_bolusCalculatorResults_referenceId",
+            "unique": false,
+            "columnNames": [
+              "referenceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_bolusCalculatorResults_referenceId` ON `${TABLE_NAME}` (`referenceId`)"
+          },
+          {
+            "name": "index_bolusCalculatorResults_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_bolusCalculatorResults_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          },
+          {
+            "name": "index_bolusCalculatorResults_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_bolusCalculatorResults_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_bolusCalculatorResults_isValid",
+            "unique": false,
+            "columnNames": [
+              "isValid"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_bolusCalculatorResults_isValid` ON `${TABLE_NAME}` (`isValid`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "bolusCalculatorResults",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "referenceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "carbs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `duration` INTEGER NOT NULL, `amount` REAL NOT NULL, `notes` TEXT, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `carbs`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_carbs_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_carbs_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_carbs_isValid",
+            "unique": false,
+            "columnNames": [
+              "isValid"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_carbs_isValid` ON `${TABLE_NAME}` (`isValid`)"
+          },
+          {
+            "name": "index_carbs_nightscoutId",
+            "unique": false,
+            "columnNames": [
+              "nightscoutId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_carbs_nightscoutId` ON `${TABLE_NAME}` (`nightscoutId`)"
+          },
+          {
+            "name": "index_carbs_referenceId",
+            "unique": false,
+            "columnNames": [
+              "referenceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_carbs_referenceId` ON `${TABLE_NAME}` (`referenceId`)"
+          },
+          {
+            "name": "index_carbs_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_carbs_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "carbs",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "referenceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "effectiveProfileSwitches",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `basalBlocks` TEXT NOT NULL, `isfBlocks` TEXT NOT NULL, `icBlocks` TEXT NOT NULL, `targetBlocks` TEXT NOT NULL, `glucoseUnit` TEXT NOT NULL, `originalProfileName` TEXT NOT NULL, `originalCustomizedName` TEXT NOT NULL, `originalTimeshift` INTEGER NOT NULL, `originalPercentage` INTEGER NOT NULL, `originalDuration` INTEGER NOT NULL, `originalEnd` INTEGER NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, `insulinLabel` TEXT NOT NULL, `insulinEndTime` INTEGER NOT NULL, `peak` INTEGER NOT NULL, FOREIGN KEY(`referenceId`) REFERENCES `effectiveProfileSwitches`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "basalBlocks",
+            "columnName": "basalBlocks",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isfBlocks",
+            "columnName": "isfBlocks",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "icBlocks",
+            "columnName": "icBlocks",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "targetBlocks",
+            "columnName": "targetBlocks",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "glucoseUnit",
+            "columnName": "glucoseUnit",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "originalProfileName",
+            "columnName": "originalProfileName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "originalCustomizedName",
+            "columnName": "originalCustomizedName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "originalTimeshift",
+            "columnName": "originalTimeshift",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "originalPercentage",
+            "columnName": "originalPercentage",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "originalDuration",
+            "columnName": "originalDuration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "originalEnd",
+            "columnName": "originalEnd",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "insulinConfiguration.insulinLabel",
+            "columnName": "insulinLabel",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "insulinConfiguration.insulinEndTime",
+            "columnName": "insulinEndTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "insulinConfiguration.peak",
+            "columnName": "peak",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_effectiveProfileSwitches_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_effectiveProfileSwitches_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_effectiveProfileSwitches_referenceId",
+            "unique": false,
+            "columnNames": [
+              "referenceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_effectiveProfileSwitches_referenceId` ON `${TABLE_NAME}` (`referenceId`)"
+          },
+          {
+            "name": "index_effectiveProfileSwitches_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_effectiveProfileSwitches_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          },
+          {
+            "name": "index_effectiveProfileSwitches_isValid",
+            "unique": false,
+            "columnNames": [
+              "isValid"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_effectiveProfileSwitches_isValid` ON `${TABLE_NAME}` (`isValid`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "effectiveProfileSwitches",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "referenceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "extendedBoluses",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `duration` INTEGER NOT NULL, `amount` REAL NOT NULL, `isEmulatingTempBasal` INTEGER NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `extendedBoluses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isEmulatingTempBasal",
+            "columnName": "isEmulatingTempBasal",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_extendedBoluses_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_extendedBoluses_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_extendedBoluses_isValid",
+            "unique": false,
+            "columnNames": [
+              "isValid"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_extendedBoluses_isValid` ON `${TABLE_NAME}` (`isValid`)"
+          },
+          {
+            "name": "index_extendedBoluses_endId",
+            "unique": false,
+            "columnNames": [
+              "endId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_extendedBoluses_endId` ON `${TABLE_NAME}` (`endId`)"
+          },
+          {
+            "name": "index_extendedBoluses_pumpSerial",
+            "unique": false,
+            "columnNames": [
+              "pumpSerial"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_extendedBoluses_pumpSerial` ON `${TABLE_NAME}` (`pumpSerial`)"
+          },
+          {
+            "name": "index_extendedBoluses_pumpId",
+            "unique": false,
+            "columnNames": [
+              "pumpId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_extendedBoluses_pumpId` ON `${TABLE_NAME}` (`pumpId`)"
+          },
+          {
+            "name": "index_extendedBoluses_pumpType",
+            "unique": false,
+            "columnNames": [
+              "pumpType"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_extendedBoluses_pumpType` ON `${TABLE_NAME}` (`pumpType`)"
+          },
+          {
+            "name": "index_extendedBoluses_referenceId",
+            "unique": false,
+            "columnNames": [
+              "referenceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_extendedBoluses_referenceId` ON `${TABLE_NAME}` (`referenceId`)"
+          },
+          {
+            "name": "index_extendedBoluses_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_extendedBoluses_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "extendedBoluses",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "referenceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "glucoseValues",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `raw` REAL, `value` REAL NOT NULL, `trendArrow` TEXT NOT NULL, `noise` REAL, `sourceSensor` TEXT NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `glucoseValues`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "raw",
+            "columnName": "raw",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "trendArrow",
+            "columnName": "trendArrow",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "noise",
+            "columnName": "noise",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "sourceSensor",
+            "columnName": "sourceSensor",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_glucoseValues_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_glucoseValues_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_glucoseValues_nightscoutId",
+            "unique": false,
+            "columnNames": [
+              "nightscoutId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_glucoseValues_nightscoutId` ON `${TABLE_NAME}` (`nightscoutId`)"
+          },
+          {
+            "name": "index_glucoseValues_sourceSensor",
+            "unique": false,
+            "columnNames": [
+              "sourceSensor"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_glucoseValues_sourceSensor` ON `${TABLE_NAME}` (`sourceSensor`)"
+          },
+          {
+            "name": "index_glucoseValues_referenceId",
+            "unique": false,
+            "columnNames": [
+              "referenceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_glucoseValues_referenceId` ON `${TABLE_NAME}` (`referenceId`)"
+          },
+          {
+            "name": "index_glucoseValues_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_glucoseValues_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "glucoseValues",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "referenceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "profileSwitches",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `basalBlocks` TEXT NOT NULL, `isfBlocks` TEXT NOT NULL, `icBlocks` TEXT NOT NULL, `targetBlocks` TEXT NOT NULL, `glucoseUnit` TEXT NOT NULL, `profileName` TEXT NOT NULL, `timeshift` INTEGER NOT NULL, `percentage` INTEGER NOT NULL, `duration` INTEGER NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, `insulinLabel` TEXT NOT NULL, `insulinEndTime` INTEGER NOT NULL, `peak` INTEGER NOT NULL, FOREIGN KEY(`referenceId`) REFERENCES `profileSwitches`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "basalBlocks",
+            "columnName": "basalBlocks",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isfBlocks",
+            "columnName": "isfBlocks",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "icBlocks",
+            "columnName": "icBlocks",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "targetBlocks",
+            "columnName": "targetBlocks",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "glucoseUnit",
+            "columnName": "glucoseUnit",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "profileName",
+            "columnName": "profileName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timeshift",
+            "columnName": "timeshift",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "percentage",
+            "columnName": "percentage",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "insulinConfiguration.insulinLabel",
+            "columnName": "insulinLabel",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "insulinConfiguration.insulinEndTime",
+            "columnName": "insulinEndTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "insulinConfiguration.peak",
+            "columnName": "peak",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_profileSwitches_referenceId",
+            "unique": false,
+            "columnNames": [
+              "referenceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_profileSwitches_referenceId` ON `${TABLE_NAME}` (`referenceId`)"
+          },
+          {
+            "name": "index_profileSwitches_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_profileSwitches_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          },
+          {
+            "name": "index_profileSwitches_isValid",
+            "unique": false,
+            "columnNames": [
+              "isValid"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_profileSwitches_isValid` ON `${TABLE_NAME}` (`isValid`)"
+          },
+          {
+            "name": "index_profileSwitches_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_profileSwitches_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_profileSwitches_nightscoutId",
+            "unique": false,
+            "columnNames": [
+              "nightscoutId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_profileSwitches_nightscoutId` ON `${TABLE_NAME}` (`nightscoutId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "profileSwitches",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "referenceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "temporaryBasals",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `type` TEXT NOT NULL, `isAbsolute` INTEGER NOT NULL, `rate` REAL NOT NULL, `duration` INTEGER NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `temporaryBasals`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isAbsolute",
+            "columnName": "isAbsolute",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rate",
+            "columnName": "rate",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_temporaryBasals_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_temporaryBasals_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_temporaryBasals_isValid",
+            "unique": false,
+            "columnNames": [
+              "isValid"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_temporaryBasals_isValid` ON `${TABLE_NAME}` (`isValid`)"
+          },
+          {
+            "name": "index_temporaryBasals_nightscoutId",
+            "unique": false,
+            "columnNames": [
+              "nightscoutId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_temporaryBasals_nightscoutId` ON `${TABLE_NAME}` (`nightscoutId`)"
+          },
+          {
+            "name": "index_temporaryBasals_pumpType",
+            "unique": false,
+            "columnNames": [
+              "pumpType"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_temporaryBasals_pumpType` ON `${TABLE_NAME}` (`pumpType`)"
+          },
+          {
+            "name": "index_temporaryBasals_endId",
+            "unique": false,
+            "columnNames": [
+              "endId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_temporaryBasals_endId` ON `${TABLE_NAME}` (`endId`)"
+          },
+          {
+            "name": "index_temporaryBasals_pumpSerial",
+            "unique": false,
+            "columnNames": [
+              "pumpSerial"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_temporaryBasals_pumpSerial` ON `${TABLE_NAME}` (`pumpSerial`)"
+          },
+          {
+            "name": "index_temporaryBasals_temporaryId",
+            "unique": false,
+            "columnNames": [
+              "temporaryId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_temporaryBasals_temporaryId` ON `${TABLE_NAME}` (`temporaryId`)"
+          },
+          {
+            "name": "index_temporaryBasals_referenceId",
+            "unique": false,
+            "columnNames": [
+              "referenceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_temporaryBasals_referenceId` ON `${TABLE_NAME}` (`referenceId`)"
+          },
+          {
+            "name": "index_temporaryBasals_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_temporaryBasals_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "temporaryBasals",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "referenceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "temporaryTargets",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `reason` TEXT NOT NULL, `highTarget` REAL NOT NULL, `lowTarget` REAL NOT NULL, `duration` INTEGER NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `temporaryTargets`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reason",
+            "columnName": "reason",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "highTarget",
+            "columnName": "highTarget",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lowTarget",
+            "columnName": "lowTarget",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_temporaryTargets_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_temporaryTargets_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_temporaryTargets_isValid",
+            "unique": false,
+            "columnNames": [
+              "isValid"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_temporaryTargets_isValid` ON `${TABLE_NAME}` (`isValid`)"
+          },
+          {
+            "name": "index_temporaryTargets_nightscoutId",
+            "unique": false,
+            "columnNames": [
+              "nightscoutId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_temporaryTargets_nightscoutId` ON `${TABLE_NAME}` (`nightscoutId`)"
+          },
+          {
+            "name": "index_temporaryTargets_referenceId",
+            "unique": false,
+            "columnNames": [
+              "referenceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_temporaryTargets_referenceId` ON `${TABLE_NAME}` (`referenceId`)"
+          },
+          {
+            "name": "index_temporaryTargets_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_temporaryTargets_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "temporaryTargets",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "referenceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "therapyEvents",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `duration` INTEGER NOT NULL, `type` TEXT NOT NULL, `note` TEXT, `enteredBy` TEXT, `glucose` REAL, `glucoseType` TEXT, `glucoseUnit` TEXT NOT NULL, `location` TEXT, `arrow` TEXT, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `therapyEvents`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "enteredBy",
+            "columnName": "enteredBy",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "glucose",
+            "columnName": "glucose",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "glucoseType",
+            "columnName": "glucoseType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "glucoseUnit",
+            "columnName": "glucoseUnit",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "location",
+            "columnName": "location",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "arrow",
+            "columnName": "arrow",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_therapyEvents_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_therapyEvents_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_therapyEvents_type",
+            "unique": false,
+            "columnNames": [
+              "type"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_therapyEvents_type` ON `${TABLE_NAME}` (`type`)"
+          },
+          {
+            "name": "index_therapyEvents_nightscoutId",
+            "unique": false,
+            "columnNames": [
+              "nightscoutId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_therapyEvents_nightscoutId` ON `${TABLE_NAME}` (`nightscoutId`)"
+          },
+          {
+            "name": "index_therapyEvents_isValid",
+            "unique": false,
+            "columnNames": [
+              "isValid"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_therapyEvents_isValid` ON `${TABLE_NAME}` (`isValid`)"
+          },
+          {
+            "name": "index_therapyEvents_referenceId",
+            "unique": false,
+            "columnNames": [
+              "referenceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_therapyEvents_referenceId` ON `${TABLE_NAME}` (`referenceId`)"
+          },
+          {
+            "name": "index_therapyEvents_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_therapyEvents_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "therapyEvents",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "referenceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "totalDailyDoses",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `basalAmount` REAL NOT NULL, `bolusAmount` REAL NOT NULL, `totalAmount` REAL NOT NULL, `carbs` REAL NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `totalDailyDoses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "basalAmount",
+            "columnName": "basalAmount",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bolusAmount",
+            "columnName": "bolusAmount",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalAmount",
+            "columnName": "totalAmount",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "carbs",
+            "columnName": "carbs",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_totalDailyDoses_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_totalDailyDoses_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_totalDailyDoses_pumpId",
+            "unique": false,
+            "columnNames": [
+              "pumpId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_totalDailyDoses_pumpId` ON `${TABLE_NAME}` (`pumpId`)"
+          },
+          {
+            "name": "index_totalDailyDoses_pumpType",
+            "unique": false,
+            "columnNames": [
+              "pumpType"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_totalDailyDoses_pumpType` ON `${TABLE_NAME}` (`pumpType`)"
+          },
+          {
+            "name": "index_totalDailyDoses_pumpSerial",
+            "unique": false,
+            "columnNames": [
+              "pumpSerial"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_totalDailyDoses_pumpSerial` ON `${TABLE_NAME}` (`pumpSerial`)"
+          },
+          {
+            "name": "index_totalDailyDoses_isValid",
+            "unique": false,
+            "columnNames": [
+              "isValid"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_totalDailyDoses_isValid` ON `${TABLE_NAME}` (`isValid`)"
+          },
+          {
+            "name": "index_totalDailyDoses_referenceId",
+            "unique": false,
+            "columnNames": [
+              "referenceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_totalDailyDoses_referenceId` ON `${TABLE_NAME}` (`referenceId`)"
+          },
+          {
+            "name": "index_totalDailyDoses_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_totalDailyDoses_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "totalDailyDoses",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "referenceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "preferenceChanges",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `key` TEXT NOT NULL, `value` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "key",
+            "columnName": "key",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "versionChanges",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `versionCode` INTEGER NOT NULL, `versionName` TEXT NOT NULL, `gitRemote` TEXT, `commitHash` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "versionCode",
+            "columnName": "versionCode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "versionName",
+            "columnName": "versionName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gitRemote",
+            "columnName": "gitRemote",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "commitHash",
+            "columnName": "commitHash",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "userEntry",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `action` TEXT NOT NULL, `source` TEXT NOT NULL, `note` TEXT NOT NULL, `values` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "action",
+            "columnName": "action",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "values",
+            "columnName": "values",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_userEntry_source",
+            "unique": false,
+            "columnNames": [
+              "source"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_userEntry_source` ON `${TABLE_NAME}` (`source`)"
+          },
+          {
+            "name": "index_userEntry_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_userEntry_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ]
+      },
+      {
+        "tableName": "foods",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `name` TEXT NOT NULL, `category` TEXT, `subCategory` TEXT, `portion` REAL NOT NULL, `carbs` INTEGER NOT NULL, `fat` INTEGER, `protein` INTEGER, `energy` INTEGER, `unit` TEXT NOT NULL, `gi` INTEGER, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `foods`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "category",
+            "columnName": "category",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "subCategory",
+            "columnName": "subCategory",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "portion",
+            "columnName": "portion",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "carbs",
+            "columnName": "carbs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fat",
+            "columnName": "fat",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "protein",
+            "columnName": "protein",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "energy",
+            "columnName": "energy",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "unit",
+            "columnName": "unit",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gi",
+            "columnName": "gi",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_foods_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_foods_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_foods_nightscoutId",
+            "unique": false,
+            "columnNames": [
+              "nightscoutId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_foods_nightscoutId` ON `${TABLE_NAME}` (`nightscoutId`)"
+          },
+          {
+            "name": "index_foods_referenceId",
+            "unique": false,
+            "columnNames": [
+              "referenceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_foods_referenceId` ON `${TABLE_NAME}` (`referenceId`)"
+          },
+          {
+            "name": "index_foods_isValid",
+            "unique": false,
+            "columnNames": [
+              "isValid"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_foods_isValid` ON `${TABLE_NAME}` (`isValid`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "foods",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "referenceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "deviceStatus",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `device` TEXT, `pump` TEXT, `enacted` TEXT, `suggested` TEXT, `iob` TEXT, `uploaderBattery` INTEGER NOT NULL, `isCharging` INTEGER, `configuration` TEXT, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "device",
+            "columnName": "device",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "pump",
+            "columnName": "pump",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "enacted",
+            "columnName": "enacted",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "suggested",
+            "columnName": "suggested",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "iob",
+            "columnName": "iob",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "uploaderBattery",
+            "columnName": "uploaderBattery",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCharging",
+            "columnName": "isCharging",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "configuration",
+            "columnName": "configuration",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_deviceStatus_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_deviceStatus_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_deviceStatus_nightscoutId",
+            "unique": false,
+            "columnNames": [
+              "nightscoutId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_deviceStatus_nightscoutId` ON `${TABLE_NAME}` (`nightscoutId`)"
+          },
+          {
+            "name": "index_deviceStatus_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_deviceStatus_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ]
+      },
+      {
+        "tableName": "runningModes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `mode` TEXT NOT NULL, `duration` INTEGER NOT NULL, `autoForced` INTEGER NOT NULL, `reasons` TEXT, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `runningModes`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mode",
+            "columnName": "mode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "autoForced",
+            "columnName": "autoForced",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reasons",
+            "columnName": "reasons",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_runningModes_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_runningModes_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_runningModes_nightscoutId",
+            "unique": false,
+            "columnNames": [
+              "nightscoutId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_runningModes_nightscoutId` ON `${TABLE_NAME}` (`nightscoutId`)"
+          },
+          {
+            "name": "index_runningModes_referenceId",
+            "unique": false,
+            "columnNames": [
+              "referenceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_runningModes_referenceId` ON `${TABLE_NAME}` (`referenceId`)"
+          },
+          {
+            "name": "index_runningModes_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_runningModes_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "runningModes",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "referenceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "heartRate",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `duration` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, `beatsPerMinute` REAL NOT NULL, `device` TEXT NOT NULL, `utcOffset` INTEGER NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "beatsPerMinute",
+            "columnName": "beatsPerMinute",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "device",
+            "columnName": "device",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_heartRate_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_heartRate_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_heartRate_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_heartRate_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ]
+      },
+      {
+        "tableName": "stepsCount",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `duration` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, `steps5min` INTEGER NOT NULL, `steps10min` INTEGER NOT NULL, `steps15min` INTEGER NOT NULL, `steps30min` INTEGER NOT NULL, `steps60min` INTEGER NOT NULL, `steps180min` INTEGER NOT NULL, `device` TEXT NOT NULL, `utcOffset` INTEGER NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "steps5min",
+            "columnName": "steps5min",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "steps10min",
+            "columnName": "steps10min",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "steps15min",
+            "columnName": "steps15min",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "steps30min",
+            "columnName": "steps30min",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "steps60min",
+            "columnName": "steps60min",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "steps180min",
+            "columnName": "steps180min",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "device",
+            "columnName": "device",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenceId",
+            "columnName": "referenceId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
+            "columnName": "nightscoutSystemId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.nightscoutId",
+            "columnName": "nightscoutId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpType",
+            "columnName": "pumpType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.temporaryId",
+            "columnName": "temporaryId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.pumpId",
+            "columnName": "pumpId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.startId",
+            "columnName": "startId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interfaceIDs_backing.endId",
+            "columnName": "endId",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_stepsCount_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stepsCount_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_stepsCount_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stepsCount_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '646bb0b4f948ae4a7fb732fb5e92e26a')"
+    ]
+  }
+}

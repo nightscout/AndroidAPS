@@ -43,7 +43,6 @@
     <string name="basaltest_weekly">每周至少一次。</string>
     <string name="basaltest_fixed">一旦设置和验证，这些值不应随着时间而变化。</string>
     <string name="prerequisites_label">先决条件</string>
-    <string name="prerequisites_computer">一台安装和配置了Android Studio软件的计算机。</string>
     <string name="prerequisites_pump">一个兼容的胰岛素泵，如果您计划运行闭合模式。</string>
     <string name="prerequisites_nightscout">Nightscout, 以保存所有数据的日志和检查设置。</string>
     <string name="prerequisites_beanandroiddeveloper">编程或编辑代码方面的经验。</string>
@@ -62,7 +61,6 @@
     <string name="insulin_fiasp">Fiasp®速效门冬胰岛素(超速效)</string>
     <string name="insulin_novorapid">诺和锐®/门冬胰岛素®</string>
     <string name="insulin_humalog">优泌乐®赖脯胰岛素</string>
-    <string name="insulin_actrapid">诺和灵®/优泌林 R®/\"常规\"人胰岛素</string>
     <string name="sensitivity_label">敏感度插件</string>
     <string name="wrongcarbs_label">碳水化合物输入错误</string>
     <string name="wrongcarbs_whattodo">如果您输入了不正确的碳水化合物，该怎么办?</string>

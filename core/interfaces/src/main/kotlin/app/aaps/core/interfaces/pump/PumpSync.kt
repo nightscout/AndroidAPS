@@ -368,15 +368,16 @@ interface PumpSync {
      *      endPumpId is stored to running record
      * If db record doesn't exist data is ignored and false returned
      *
-     * see [app.aaps.database.impl.transactions.SyncPumpCancelTemporaryBasalIfAnyTransaction]
+     * see [app.aaps.database.transactions.SyncPumpCancelTemporaryBasalIfAnyTransaction]
      *
      * @param timestamp     timestamp of event from pump history
      * @param endPumpId     pump id of ending event from history
      * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
      * @param pumpSerial    pump serial number
+     * @param ignorePumpIds if true data is not checked for valid pump
      * @return true if running record is found and ended by changing duration
      **/
-    fun syncStopTemporaryBasalWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
+    fun syncStopTemporaryBasalWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String, ignorePumpIds: Boolean = false): Boolean
 
     /**
      * Create temporary basal with temporary id

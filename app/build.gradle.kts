@@ -1,4 +1,4 @@
-import java.io.ByteArrayOutputStream
+import org.gradle.kotlin.dsl.debugImplementation
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -19,35 +19,29 @@ repositories {
 }
 
 fun generateGitBuild(): String {
-    val stringBuilder: StringBuilder = StringBuilder()
     try {
-        val stdout = ByteArrayOutputStream()
-        exec {
-            commandLine("git", "describe", "--always")
-            standardOutput = stdout
-        }
-        val commitObject = stdout.toString().trim()
-        stringBuilder.append(commitObject)
-    } catch (ignored: Exception) {
-        stringBuilder.append("NoGitSystemAvailable")
+        val processBuilder = ProcessBuilder("git", "describe", "--always")
+        val output = File.createTempFile("git-build", "")
+        processBuilder.redirectOutput(output)
+        val process = processBuilder.start()
+        process.waitFor()
+        return output.readText().trim()
+    } catch (_: Exception) {
+        return "NoGitSystemAvailable"
     }
-    return stringBuilder.toString()
 }
 
 fun generateGitRemote(): String {
-    val stringBuilder: StringBuilder = StringBuilder()
     try {
-        val stdout = ByteArrayOutputStream()
-        exec {
-            commandLine("git", "remote", "get-url", "origin")
-            standardOutput = stdout
-        }
-        val commitObject: String = stdout.toString().trim()
-        stringBuilder.append(commitObject)
-    } catch (ignored: Exception) {
-        stringBuilder.append("NoGitSystemAvailable")
+        val processBuilder = ProcessBuilder("git", "remote", "get-url", "origin")
+        val output = File.createTempFile("git-remote", "")
+        processBuilder.redirectOutput(output)
+        val process = processBuilder.start()
+        process.waitFor()
+        return output.readText().trim()
+    } catch (_: Exception) {
+        return "NoGitSystemAvailable"
     }
-    return stringBuilder.toString()
 }
 
 fun generateDate(): String {
@@ -60,45 +54,36 @@ fun generateDate(): String {
 fun isMaster(): Boolean = !Versions.appVersion.contains("-")
 
 fun gitAvailable(): Boolean {
-    val stringBuilder: StringBuilder = StringBuilder()
     try {
-        val stdout = ByteArrayOutputStream()
-        exec {
-            commandLine("git", "--version")
-            standardOutput = stdout
-        }
-        val commitObject = stdout.toString().trim()
-        stringBuilder.append(commitObject)
-    } catch (ignored: Exception) {
-        return false // NoGitSystemAvailable
+        val processBuilder = ProcessBuilder("git", "--version")
+        val output = File.createTempFile("git-version", "")
+        processBuilder.redirectOutput(output)
+        val process = processBuilder.start()
+        process.waitFor()
+        return output.readText().isNotEmpty()
+    } catch (_: Exception) {
+        return false
     }
-    return stringBuilder.toString().isNotEmpty()
-
 }
 
 fun allCommitted(): Boolean {
-    val stringBuilder: StringBuilder = StringBuilder()
     try {
-        val stdout = ByteArrayOutputStream()
-        exec {
-            commandLine("git", "status", "-s")
-            standardOutput = stdout
-        }
-        // ignore all changes done in .idea/codeStyles
-        val cleanedList: String = stdout.toString().replace(Regex("""(?m)^\s*(M|A|D|\?\?)\s*.*?\.idea\/codeStyles\/.*?\s*$"""), "")
+        val processBuilder = ProcessBuilder("git", "status", "-s")
+        val output = File.createTempFile("git-comited", "")
+        processBuilder.redirectOutput(output)
+        val process = processBuilder.start()
+        process.waitFor()
+        return output.readText().replace(Regex("""(?m)^\s*(M|A|D|\?\?)\s*.*?\.idea\/codeStyles\/.*?\s*$"""), "")
             // ignore all files added to project dir but not staged/known to GIT
-            .replace(Regex("""(?m)^\s*(\?\?)\s*.*?\s*$"""), "")
-        stringBuilder.append(cleanedList.trim())
-    } catch (ignored: Exception) {
-        return false // NoGitSystemAvailable
+            .replace(Regex("""(?m)^\s*(\?\?)\s*.*?\s*$"""), "").trim().isEmpty()
+    } catch (_: Exception) {
+        return false
     }
-    return stringBuilder.toString().isEmpty()
 }
 
 android {
 
     namespace = "app.aaps"
-    ndkVersion = Versions.ndkVersion
 
     defaultConfig {
         minSdk = Versions.minSdk
@@ -205,10 +190,10 @@ dependencies {
     implementation(project(":pump:equil"))
     implementation(project(":pump:insight"))
     implementation(project(":pump:medtronic"))
-    implementation(project(":pump:pump-common"))
-    implementation(project(":pump:omnipod-common"))
-    implementation(project(":pump:omnipod-eros"))
-    implementation(project(":pump:omnipod-dash"))
+    implementation(project(":pump:common"))
+    implementation(project(":pump:omnipod:common"))
+    implementation(project(":pump:omnipod:eros"))
+    implementation(project(":pump:omnipod:dash"))
     implementation(project(":pump:rileylink"))
     implementation(project(":pump:virtual"))
     implementation(project(":workflow"))
@@ -217,6 +202,8 @@ dependencies {
     androidTestImplementation(project(":shared:tests"))
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.org.skyscreamer.jsonassert)
+
+    debugImplementation(libs.com.squareup.leakcanary.android)
 
 
     kspAndroidTest(libs.com.google.dagger.android.processor)
@@ -229,6 +216,8 @@ dependencies {
 
     // MainApp
     api(libs.com.uber.rxdogtag2.rxdogtag)
+    // Remote config
+    api(libs.com.google.firebase.config)
 }
 
 println("-------------------")
@@ -236,7 +225,7 @@ println("isMaster: ${isMaster()}")
 println("gitAvailable: ${gitAvailable()}")
 println("allCommitted: ${allCommitted()}")
 println("-------------------")
-if (isMaster() && !gitAvailable()) {
+if (!gitAvailable()) {
     throw GradleException("GIT system is not available. On Windows try to run Android Studio as an Administrator. Check if GIT is installed and Studio have permissions to use it")
 }
 if (isMaster() && !allCommitted()) {

@@ -103,15 +103,7 @@ Se non viene stabilita alcuna connessione dopo più di ~5 minuti:\n\n
     <string name="combov2_unpair_pump_summary">Disassocia AndroidAPS e Android dal micro Accu-Chek Combo attualmente associato</string>
     <string name="combov2_unknown_tbr_detected">Un TBR sconosciuto è stato rilevato e fermato; percentuale: %1$d%%; durata rimanente: %2$s</string>
     <string name="combov2_connection_error">Errore connessione: %1$s</string>
-    <string name="combov2_short_status_last_connection">Ultima conn.: %1$d min fa</string>
     <string name="combov2_short_status_alert">Avviso: %s</string>
-    <string name="combov2_short_status_last_bolus">UltimoBolo: %1$sU @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Temp: %s</string>
-    <string name="combov2_short_status_reservoir">Serb: %dU</string>
-    <string name="combov2_short_status_battery_state_empty">vuoto</string>
-    <string name="combov2_short_status_battery_state_low">basso</string>
-    <string name="combov2_short_status_battery_state_full">pieno</string>
-    <string name="combov2_short_status_battery_state">Batt: %s</string>
     <string name="combov2_automatic_reservoir_entry">Rileva e inserisci automaticamente il cambio serbatoio di insulina</string>
     <string name="combov2_automatic_battery_entry">Rileva e inserisci automaticamente il cambio batteria</string>
     <string name="combov2_timezone_changed">Fuso orario cambiato</string>

@@ -71,7 +71,7 @@
         android:entries="@array/watchface_simplify_ui_name"
         android:entryValues="@array/watchface_simplify_ui_values"
         android:key="@string/key_simplify_ui"
-        android:summary="@string/pref_simplify_ui_sum"
-        android:title="@string/pref_simplify_ui" />
+        android:title="@string/pref_simplify_ui"
+        android:summary="%s" />
 
 </PreferenceScreen>

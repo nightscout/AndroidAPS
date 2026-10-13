@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package app.aaps.wear.watchfaces
 
 import android.annotation.SuppressLint
@@ -7,10 +5,8 @@ import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Point
 import android.graphics.RectF
 import android.os.PowerManager
-import android.support.wearable.watchface.WatchFaceStyle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -27,37 +23,52 @@ import app.aaps.core.interfaces.rx.weardata.EventData.ActionResendData
 import app.aaps.core.interfaces.rx.weardata.EventData.SingleBg
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
-import app.aaps.wear.data.RawDisplayData
 import app.aaps.wear.interaction.menus.MainMenuActivity
-import app.aaps.wear.interaction.utils.Persistence
+import app.aaps.wear.watchfaces.utils.WatchFace
+import app.aaps.wear.watchfaces.utils.WatchFaceTime
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
-import com.ustwo.clockwise.common.WatchFaceTime
-import com.ustwo.clockwise.wearable.WatchFace
 import dagger.android.AndroidInjection
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import java.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.max
 
+@SuppressLint("Deprecated")
 class CircleWatchface : WatchFace() {
 
     @Inject lateinit var rxBus: RxBus
-
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
-    @Inject lateinit var persistence: Persistence
+    @Inject lateinit var complicationDataRepository: app.aaps.wear.data.ComplicationDataRepository
 
     private var disposable = CompositeDisposable()
+    private val watchfaceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
-    private val rawData = RawDisplayData()
+    // DataStore as single source of truth - using EventData models directly
+    private var complicationData: app.aaps.wear.data.ComplicationData = app.aaps.wear.data.ComplicationData()
 
-    private val singleBg get() = rawData.singleBg
-    private val status get() = rawData.status
-    private val graphData get() = rawData.graphData
+    private val singleBg
+        get() = arrayOf(
+            complicationData.bgData,
+            complicationData.bgData1,
+            complicationData.bgData2
+        )
+    private val status
+        get() = arrayOf(
+            complicationData.statusData,
+            complicationData.statusData1,
+            complicationData.statusData2
+        )
+    private val graphData get() = complicationData.graphData
 
     companion object {
 
@@ -79,15 +90,17 @@ class CircleWatchface : WatchFace() {
     private lateinit var rect: RectF
     private lateinit var rectDelete: RectF
     private var overlapping = false
-    private var displaySize = Point()
+    private var displayWidth = 0
+    private var displayHeight = 0
     private var bgDataList = ArrayList<SingleBg>()
     private var specW = 0
     private var specH = 0
     private var myLayout: View? = null
     private var mSgv: TextView? = null
     private var sgvTapTime: Long = 0
+    private var lastMenuOpenTime: Long = 0
 
-    @SuppressLint("InflateParams")
+
     override fun onCreate() {
         AndroidInjection.inject(this)
         super.onCreate()
@@ -96,48 +109,61 @@ class CircleWatchface : WatchFace() {
         val powerManager = getSystemService(POWER_SERVICE) as PowerManager
         val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:CircleWatchface")
         wakeLock.acquire(30000)
-        val display = (getSystemService(WINDOW_SERVICE) as WindowManager).defaultDisplay
-        display.getSize(displaySize)
-        specW = View.MeasureSpec.makeMeasureSpec(displaySize.x, View.MeasureSpec.EXACTLY)
-        specH = View.MeasureSpec.makeMeasureSpec(displaySize.y, View.MeasureSpec.EXACTLY)
+        val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+        val bounds = windowManager.currentWindowMetrics.bounds
+        displayWidth = bounds.width()
+        displayHeight = bounds.height()
+        specW = View.MeasureSpec.makeMeasureSpec(displayWidth, View.MeasureSpec.EXACTLY)
+        specH = View.MeasureSpec.makeMeasureSpec(displayHeight, View.MeasureSpec.EXACTLY)
 
-        //register Message Receiver
-        val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        myLayout = inflater.inflate(R.layout.activity_circle, null)
-        prepareLayout()
-        prepareDrawTime()
-        disposable += rxBus
-            .toObservable(EventData.Status::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe {
-                // this event is received as last batch of data
-                aapsLogger.debug(LTag.WEAR, "Status received")
-                rawData.updateFromPersistence(persistence)
-                addToWatchSet()
-                prepareLayout()
-                prepareDrawTime()
-                invalidate()
+        // Layout inflation deferred to first onDraw to avoid deadlock in headless engine creation
+        // prepareDrawTime() also deferred as it depends on display size setup
+
+        // Observe DataStore for automatic updates
+        watchfaceScope.launch {
+            complicationDataRepository.complicationData.collect { data ->
+                complicationData = data
+                if (myLayout != null) {  // Only update if layout initialized
+                    addToWatchSet()
+                    prepareLayout()
+                    prepareDrawTime()
+                    invalidate()
+                }
             }
+        }
+
         disposable += rxBus
             .toObservable(EventData.Preferences::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe {
-                prepareDrawTime()
-                prepareLayout()
-                invalidate()
+                if (myLayout != null) {  // Only update if layout initialized
+                    prepareDrawTime()
+                    prepareLayout()
+                    invalidate()
+                }
             }
-        rawData.updateFromPersistence(persistence)
+
         rxBus.send(EventWearToMobile(ActionResendData("CircleWatchFace::onCreate")))
         wakeLock.release()
     }
 
     override fun onDestroy() {
         disposable.clear()
+        watchfaceScope.cancel()
         super.onDestroy()
     }
 
     @Synchronized
     override fun onDraw(canvas: Canvas) {
+        // Lazy initialization of layout on first render (called on main thread)
+        // This avoids deadlock during headless engine creation on background thread
+        if (myLayout == null) {
+            val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            myLayout = inflater.inflate(R.layout.activity_circle, null)
+            prepareLayout()
+            prepareDrawTime()
+        }
+
         aapsLogger.debug(LTag.WEAR, "start onDraw")
         canvas.drawColor(backgroundColor)
         drawTime(canvas)
@@ -267,8 +293,8 @@ class CircleWatchface : WatchFace() {
         removePaint.strokeWidth = CIRCLE_WIDTH
         removePaint.isAntiAlias = true
         removePaint.color = backgroundColor
-        rect = RectF(PADDING, PADDING, displaySize.x - PADDING, displaySize.y - PADDING)
-        rectDelete = RectF(PADDING - CIRCLE_WIDTH / 2, PADDING - CIRCLE_WIDTH / 2, displaySize.x - PADDING + CIRCLE_WIDTH / 2, displaySize.y - PADDING + CIRCLE_WIDTH / 2)
+        rect = RectF(PADDING, PADDING, displayWidth - PADDING, displayHeight - PADDING)
+        rectDelete = RectF(PADDING - CIRCLE_WIDTH / 2, PADDING - CIRCLE_WIDTH / 2, displayWidth - PADDING + CIRCLE_WIDTH / 2, displayHeight - PADDING + CIRCLE_WIDTH / 2)
         overlapping = ALWAYS_HIGHLIGHT_SMALL || areOverlapping(angleSMALL, angleSMALL + SMALL_HAND_WIDTH + NEAR, angleBig, angleBig + BIG_HAND_WIDTH + NEAR)
         aapsLogger.debug(LTag.WEAR, "end prepareDrawTime")
     }
@@ -278,7 +304,7 @@ class CircleWatchface : WatchFace() {
     }
 
     override fun onTimeChanged(oldTime: WatchFaceTime, newTime: WatchFaceTime) {
-        if (oldTime.hasMinuteChanged(newTime)) {
+        if (oldTime.hasMinuteChanged(newTime) && myLayout != null) {
             val powerManager = getSystemService(POWER_SERVICE) as PowerManager
             val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:CircleWatchface_onTimeChanged")
             wakeLock.acquire(30000)
@@ -352,7 +378,7 @@ class CircleWatchface : WatchFace() {
         val paint = Paint()
         paint.color = color
         val rectTemp =
-            RectF(PADDING + offset - CIRCLE_WIDTH / 2, PADDING + offset - CIRCLE_WIDTH / 2, displaySize.x - PADDING - offset + CIRCLE_WIDTH / 2, displaySize.y - PADDING - offset + CIRCLE_WIDTH / 2)
+            RectF(PADDING + offset - CIRCLE_WIDTH / 2, PADDING + offset - CIRCLE_WIDTH / 2, displayWidth - PADDING - offset + CIRCLE_WIDTH / 2, displayHeight - PADDING - offset + CIRCLE_WIDTH / 2)
         canvas.drawArc(rectTemp, 270f, size, true, paint)
     }
 
@@ -360,7 +386,7 @@ class CircleWatchface : WatchFace() {
         val paint = Paint()
         paint.color = color
         val rectTemp =
-            RectF(PADDING + offset - CIRCLE_WIDTH / 2, PADDING + offset - CIRCLE_WIDTH / 2, displaySize.x - PADDING - offset + CIRCLE_WIDTH / 2, displaySize.y - PADDING - offset + CIRCLE_WIDTH / 2)
+            RectF(PADDING + offset - CIRCLE_WIDTH / 2, PADDING + offset - CIRCLE_WIDTH / 2, displayWidth - PADDING - offset + CIRCLE_WIDTH / 2, displayHeight - PADDING - offset + CIRCLE_WIDTH / 2)
         canvas.drawArc(rectTemp, start + 270, size, true, paint)
     }
 
@@ -371,7 +397,7 @@ class CircleWatchface : WatchFace() {
         paint.color = color
         val offset = 9f
         val rectTemp =
-            RectF(PADDING + offset - CIRCLE_WIDTH / 2, PADDING + offset - CIRCLE_WIDTH / 2, displaySize.x - PADDING - offset + CIRCLE_WIDTH / 2, displaySize.y - PADDING - offset + CIRCLE_WIDTH / 2)
+            RectF(PADDING + offset - CIRCLE_WIDTH / 2, PADDING + offset - CIRCLE_WIDTH / 2, displayWidth - PADDING - offset + CIRCLE_WIDTH / 2, displayHeight - PADDING - offset + CIRCLE_WIDTH / 2)
         canvas.drawArc(rectTemp, convertedBg, 2f, true, paint)
     }
 
@@ -389,7 +415,7 @@ class CircleWatchface : WatchFace() {
         if (sp.getBoolean(R.string.key_dark, true)) {
             color = Color.DKGRAY
         }
-        val offsetMultiplier = (displaySize.x / 2f - PADDING) / 12f
+        val offsetMultiplier = (displayWidth / 2f - PADDING) / 12f
         val offset = max(1.0, ceil((System.currentTimeMillis() - entry.timeStamp) / (1000 * 60 * 5.0))).toFloat()
         val size: Double = bgToAngle(entry.sgv.toFloat()).toDouble()
         addArch(canvas, offset * offsetMultiplier + 10, color, size.toFloat())
@@ -413,7 +439,7 @@ class CircleWatchface : WatchFace() {
             indicatorColor = lowColor
             barColor = darken(lowColor)
         }
-        val offsetMultiplier = (displaySize.x / 2f - PADDING) / 12f
+        val offsetMultiplier = (displayWidth / 2f - PADDING) / 12f
         val offset = max(1.0, ceil((System.currentTimeMillis() - entry.timeStamp) / (1000 * 60 * 5.0))).toFloat()
         val size: Double = bgToAngle(entry.sgv.toFloat()).toDouble()
         addArch(canvas, offset * offsetMultiplier + 11, barColor, size.toFloat() - 2) // Dark Color Bar
@@ -423,20 +449,26 @@ class CircleWatchface : WatchFace() {
     }
 
     override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
+        // Only respond to actual taps (tapType=2), ignore touch-down (tapType=0) and other events
+        if (tapType != 2) {
+            return
+        }
+
         mSgv?.let { mSgv ->
-            val extra = (mSgv.right - mSgv.left) / 2
-            if (tapType == TAP_TYPE_TAP && x + extra >= mSgv.left && x - extra <= mSgv.right && y >= mSgv.top && y <= mSgv.bottom) {
-                if (eventTime - sgvTapTime < 800) {
-                    val intent = Intent(this, MainMenuActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
+            if (x >= mSgv.left && x <= mSgv.right && y >= mSgv.top && y <= mSgv.bottom) {
+                if (eventTime - sgvTapTime < 800 && sgvTapTime != 0L) {
+                    if (eventTime - lastMenuOpenTime > 2000) {
+                        lastMenuOpenTime = eventTime
+                        val intent = Intent(this, MainMenuActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        }
+                        startActivity(intent)
+                    }
+                    sgvTapTime = 0
+                } else {
+                    sgvTapTime = eventTime
                 }
-                sgvTapTime = eventTime
             }
         }
-    }
-
-    override fun getWatchFaceStyle(): WatchFaceStyle {
-        return WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build()
     }
 }

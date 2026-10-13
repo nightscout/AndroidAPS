@@ -407,7 +407,7 @@ open class Parser(val returnsValue: Boolean = true) {
         // when using the FirstSuccessParser, since that one tries multiple
         // parsers until one succeds. Restoring the currentIndex is essential
         // to give all those parsers the chance to parse the same tokens.
-        var originalIndex = parseContext.currentIndex
+        val originalIndex = parseContext.currentIndex
         val result = parseImpl(parseContext)
         if (!result.isSuccess)
             parseContext.currentIndex = originalIndex
@@ -746,7 +746,7 @@ class DateParser : Parser() {
             year = regexGroups[5]!!.value.toInt(radix = 10) + 2000 // Combo years always start at the year 2000
         }
 
-        return ParseResult.Value(LocalDate(year = year, monthNumber = month, dayOfMonth = day))
+        return ParseResult.Value(LocalDate(year = year, month = month, day = day))
     }
 }
 

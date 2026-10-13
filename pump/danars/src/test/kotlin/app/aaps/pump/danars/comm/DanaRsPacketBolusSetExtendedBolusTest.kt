@@ -1,23 +1,14 @@
 package app.aaps.pump.danars.comm
 
 import app.aaps.pump.danars.DanaRSTestBase
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class DanaRsPacketBolusSetExtendedBolusTest : DanaRSTestBase() {
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is DanaRSPacketBolusSetExtendedBolus) {
-                it.aapsLogger = aapsLogger
-            }
-        }
-    }
-
-    @Test fun runTest() {
-        val packet = DanaRSPacketBolusSetExtendedBolus(packetInjector, 1.0, 1)
+    @Test
+    fun runTest() {
+        val packet = DanaRSPacketBolusSetExtendedBolus(aapsLogger).with(1.0, 1)
         // test params
         val testParams = packet.getRequestParams()
         Assertions.assertEquals(100.toByte(), testParams[0])

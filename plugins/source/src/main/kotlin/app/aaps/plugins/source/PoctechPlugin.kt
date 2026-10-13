@@ -17,9 +17,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.JsonHelper.safeGetString
-import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException
@@ -29,7 +29,8 @@ import javax.inject.Singleton
 @Singleton
 class PoctechPlugin @Inject constructor(
     rh: ResourceHelper,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    preferences: Preferences
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -39,7 +40,8 @@ class PoctechPlugin @Inject constructor(
         .pluginName(R.string.poctech)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_poctech),
-    aapsLogger, rh
+    ownPreferences = emptyList(),
+    aapsLogger, rh, preferences
 ), BgSource {
 
     // cannot be inner class because of needed injection
@@ -48,7 +50,6 @@ class PoctechPlugin @Inject constructor(
         params: WorkerParameters
     ) : LoggingWorker(context, params, Dispatchers.IO) {
 
-        @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var poctechPlugin: PoctechPlugin
         @Inject lateinit var persistenceLayer: PersistenceLayer
 
@@ -60,7 +61,7 @@ class PoctechPlugin @Inject constructor(
             aapsLogger.debug(LTag.BGSOURCE, "Received Poctech Data $inputData")
             try {
                 val glucoseValues = mutableListOf<GV>()
-                val jsonArray = JSONArray(inputData.getString("data"))
+                val jsonArray = JSONArray(inputData.getString("data") ?: return Result.failure(workDataOf("Error" to "missing data")))
                 aapsLogger.debug(LTag.BGSOURCE, "Received Poctech Data size:" + jsonArray.length())
                 for (i in 0 until jsonArray.length()) {
                     val json = jsonArray.getJSONObject(i)
@@ -68,7 +69,7 @@ class PoctechPlugin @Inject constructor(
                         timestamp = json.getLong("date"),
                         value = if (safeGetString(json, "units", GlucoseUnit.MGDL.asText) == "mmol/L") json.getDouble("current") * Constants.MMOLL_TO_MGDL
                         else json.getDouble("current"),
-                        raw = json.getDouble("raw"),
+                        raw = null,
                         noise = null,
                         trendArrow = TrendArrow.fromString(json.getString("direction")),
                         sourceSensor = SourceSensor.POCTECH_NATIVE

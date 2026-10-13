@@ -111,6 +111,88 @@ fun TE.MeterType.toDb(): TherapyEvent.MeterType = when (this) {
     TE.MeterType.MANUAL -> TherapyEvent.MeterType.MANUAL
 }
 
+fun TherapyEvent.Location.fromDb(): TE.Location = when (this) {
+    TherapyEvent.Location.FRONT_RIGHT_UPPER_CHEST   -> TE.Location.FRONT_RIGHT_UPPER_CHEST
+    TherapyEvent.Location.FRONT_LEFT_UPPER_CHEST    -> TE.Location.FRONT_LEFT_UPPER_CHEST
+    TherapyEvent.Location.SIDE_RIGHT_UPPER_ARM      -> TE.Location.SIDE_RIGHT_UPPER_ARM
+    TherapyEvent.Location.SIDE_LEFT_UPPER_ARM       -> TE.Location.SIDE_LEFT_UPPER_ARM
+    TherapyEvent.Location.BACK_RIGHT_UPPER_ARM      -> TE.Location.BACK_RIGHT_UPPER_ARM
+    TherapyEvent.Location.BACK_LEFT_UPPER_ARM       -> TE.Location.BACK_LEFT_UPPER_ARM
+    TherapyEvent.Location.SIDE_RIGHT_UPPER_ABDOMEN  -> TE.Location.SIDE_RIGHT_UPPER_ABDOMEN
+    TherapyEvent.Location.SIDE_LEFT_UPPER_ABDOMEN   -> TE.Location.SIDE_LEFT_UPPER_ABDOMEN
+    TherapyEvent.Location.SIDE_RIGHT_LOWER_ABDOMEN  -> TE.Location.SIDE_RIGHT_LOWER_ABDOMEN
+    TherapyEvent.Location.SIDE_LEFT_LOWER_ABDOMEN   -> TE.Location.SIDE_LEFT_LOWER_ABDOMEN
+    TherapyEvent.Location.FRONT_RIGHT_UPPER_ABDOMEN -> TE.Location.FRONT_RIGHT_UPPER_ABDOMEN
+    TherapyEvent.Location.FRONT_LEFT_UPPER_ABDOMEN  -> TE.Location.FRONT_LEFT_UPPER_ABDOMEN
+    TherapyEvent.Location.FRONT_RIGHT_LOWER_ABDOMEN -> TE.Location.FRONT_RIGHT_LOWER_ABDOMEN
+    TherapyEvent.Location.FRONT_LEFT_LOWER_ABDOMEN  -> TE.Location.FRONT_LEFT_LOWER_ABDOMEN
+    TherapyEvent.Location.BACK_RIGHT_BUTTOCK        -> TE.Location.BACK_RIGHT_BUTTOCK
+    TherapyEvent.Location.BACK_LEFT_BUTTOCK         -> TE.Location.BACK_LEFT_BUTTOCK
+    TherapyEvent.Location.FRONT_RIGHT_UPPER_THIGH   -> TE.Location.FRONT_RIGHT_UPPER_THIGH
+    TherapyEvent.Location.FRONT_LEFT_UPPER_THIGH    -> TE.Location.FRONT_LEFT_UPPER_THIGH
+    TherapyEvent.Location.FRONT_RIGHT_LOWER_THIGH   -> TE.Location.FRONT_RIGHT_LOWER_THIGH
+    TherapyEvent.Location.FRONT_LEFT_LOWER_THIGH    -> TE.Location.FRONT_LEFT_LOWER_THIGH
+    TherapyEvent.Location.SIDE_RIGHT_UPPER_THIGH    -> TE.Location.SIDE_RIGHT_UPPER_THIGH
+    TherapyEvent.Location.SIDE_LEFT_UPPER_THIGH     -> TE.Location.SIDE_LEFT_UPPER_THIGH
+    TherapyEvent.Location.SIDE_RIGHT_LOWER_THIGH    -> TE.Location.SIDE_RIGHT_LOWER_THIGH
+    TherapyEvent.Location.SIDE_LEFT_LOWER_THIGH     -> TE.Location.SIDE_LEFT_LOWER_THIGH
+    TherapyEvent.Location.NONE                      -> TE.Location.NONE
+}
+
+fun TE.Location.toDb(): TherapyEvent.Location = when (this) {
+    TE.Location.FRONT_RIGHT_UPPER_CHEST   -> TherapyEvent.Location.FRONT_RIGHT_UPPER_CHEST
+    TE.Location.FRONT_LEFT_UPPER_CHEST    -> TherapyEvent.Location.FRONT_LEFT_UPPER_CHEST
+    TE.Location.SIDE_RIGHT_UPPER_ARM      -> TherapyEvent.Location.SIDE_RIGHT_UPPER_ARM
+    TE.Location.SIDE_LEFT_UPPER_ARM       -> TherapyEvent.Location.SIDE_LEFT_UPPER_ARM
+    TE.Location.BACK_RIGHT_UPPER_ARM      -> TherapyEvent.Location.BACK_RIGHT_UPPER_ARM
+    TE.Location.BACK_LEFT_UPPER_ARM       -> TherapyEvent.Location.BACK_LEFT_UPPER_ARM
+    TE.Location.SIDE_RIGHT_UPPER_ABDOMEN  -> TherapyEvent.Location.SIDE_RIGHT_UPPER_ABDOMEN
+    TE.Location.SIDE_LEFT_UPPER_ABDOMEN   -> TherapyEvent.Location.SIDE_LEFT_UPPER_ABDOMEN
+    TE.Location.SIDE_RIGHT_LOWER_ABDOMEN  -> TherapyEvent.Location.SIDE_RIGHT_LOWER_ABDOMEN
+    TE.Location.SIDE_LEFT_LOWER_ABDOMEN   -> TherapyEvent.Location.SIDE_LEFT_LOWER_ABDOMEN
+    TE.Location.FRONT_RIGHT_UPPER_ABDOMEN -> TherapyEvent.Location.FRONT_RIGHT_UPPER_ABDOMEN
+    TE.Location.FRONT_LEFT_UPPER_ABDOMEN  -> TherapyEvent.Location.FRONT_LEFT_UPPER_ABDOMEN
+    TE.Location.FRONT_RIGHT_LOWER_ABDOMEN -> TherapyEvent.Location.FRONT_RIGHT_LOWER_ABDOMEN
+    TE.Location.FRONT_LEFT_LOWER_ABDOMEN  -> TherapyEvent.Location.FRONT_LEFT_LOWER_ABDOMEN
+    TE.Location.BACK_RIGHT_BUTTOCK        -> TherapyEvent.Location.BACK_RIGHT_BUTTOCK
+    TE.Location.BACK_LEFT_BUTTOCK         -> TherapyEvent.Location.BACK_LEFT_BUTTOCK
+    TE.Location.FRONT_RIGHT_UPPER_THIGH   -> TherapyEvent.Location.FRONT_RIGHT_UPPER_THIGH
+    TE.Location.FRONT_LEFT_UPPER_THIGH    -> TherapyEvent.Location.FRONT_LEFT_UPPER_THIGH
+    TE.Location.FRONT_RIGHT_LOWER_THIGH   -> TherapyEvent.Location.FRONT_RIGHT_LOWER_THIGH
+    TE.Location.FRONT_LEFT_LOWER_THIGH    -> TherapyEvent.Location.FRONT_LEFT_LOWER_THIGH
+    TE.Location.SIDE_RIGHT_UPPER_THIGH    -> TherapyEvent.Location.SIDE_RIGHT_UPPER_THIGH
+    TE.Location.SIDE_LEFT_UPPER_THIGH     -> TherapyEvent.Location.SIDE_LEFT_UPPER_THIGH
+    TE.Location.SIDE_RIGHT_LOWER_THIGH    -> TherapyEvent.Location.SIDE_RIGHT_LOWER_THIGH
+    TE.Location.SIDE_LEFT_LOWER_THIGH     -> TherapyEvent.Location.SIDE_LEFT_LOWER_THIGH
+    TE.Location.NONE                      -> TherapyEvent.Location.NONE
+}
+
+fun TherapyEvent.Arrow.fromDb(): TE.Arrow = when (this) {
+    TherapyEvent.Arrow.UP         -> TE.Arrow.UP
+    TherapyEvent.Arrow.UP_RIGHT   -> TE.Arrow.UP_RIGHT
+    TherapyEvent.Arrow.RIGHT      -> TE.Arrow.RIGHT
+    TherapyEvent.Arrow.DOWN_RIGHT -> TE.Arrow.DOWN_RIGHT
+    TherapyEvent.Arrow.DOWN       -> TE.Arrow.DOWN
+    TherapyEvent.Arrow.DOWN_LEFT  -> TE.Arrow.DOWN_LEFT
+    TherapyEvent.Arrow.LEFT       -> TE.Arrow.LEFT
+    TherapyEvent.Arrow.UP_LEFT    -> TE.Arrow.UP_LEFT
+    TherapyEvent.Arrow.CENTER     -> TE.Arrow.CENTER
+    TherapyEvent.Arrow.NONE       -> TE.Arrow.NONE
+}
+
+fun TE.Arrow.toDb(): TherapyEvent.Arrow = when (this) {
+    TE.Arrow.UP         -> TherapyEvent.Arrow.UP
+    TE.Arrow.UP_RIGHT   -> TherapyEvent.Arrow.UP_RIGHT
+    TE.Arrow.RIGHT      -> TherapyEvent.Arrow.RIGHT
+    TE.Arrow.DOWN_RIGHT -> TherapyEvent.Arrow.DOWN_RIGHT
+    TE.Arrow.DOWN       -> TherapyEvent.Arrow.DOWN
+    TE.Arrow.DOWN_LEFT  -> TherapyEvent.Arrow.DOWN_LEFT
+    TE.Arrow.LEFT       -> TherapyEvent.Arrow.LEFT
+    TE.Arrow.UP_LEFT    -> TherapyEvent.Arrow.UP_LEFT
+    TE.Arrow.CENTER     -> TherapyEvent.Arrow.CENTER
+    TE.Arrow.NONE       -> TherapyEvent.Arrow.NONE
+}
+
 fun TherapyEvent.fromDb(): TE = TE(
     id = this.id,
     version = this.version,
@@ -126,7 +208,9 @@ fun TherapyEvent.fromDb(): TE = TE(
     enteredBy = this.enteredBy,
     glucose = this.glucose,
     glucoseType = this.glucoseType?.fromDb(),
-    glucoseUnit = this.glucoseUnit.fromDb()
+    glucoseUnit = this.glucoseUnit.fromDb(),
+    location = this.location?.fromDb(),
+    arrow = this.arrow?.fromDb()
 )
 
 fun TE.toDb(): TherapyEvent = TherapyEvent(
@@ -144,5 +228,7 @@ fun TE.toDb(): TherapyEvent = TherapyEvent(
     enteredBy = this.enteredBy,
     glucose = this.glucose,
     glucoseType = this.glucoseType?.toDb(),
-    glucoseUnit = this.glucoseUnit.toDb()
+    glucoseUnit = this.glucoseUnit.toDb(),
+    location = this.location?.toDb(),
+    arrow = this.arrow?.toDb()
 )

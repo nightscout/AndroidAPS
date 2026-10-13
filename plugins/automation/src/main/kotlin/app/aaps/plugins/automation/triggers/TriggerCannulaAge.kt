@@ -40,7 +40,7 @@ class TriggerCannulaAge(injector: HasAndroidInjector) : Trigger(injector) {
         val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)
         val currentAgeHours = therapyEvent?.timestamp?.let { timestamp ->
             (dateUtil.now() - timestamp) / (60 * 60 * 1000.0)
-        }?.toDouble() ?: 0.0
+        } ?: 0.0
         if (therapyEvent == null && comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true

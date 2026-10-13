@@ -19,8 +19,8 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.automation.events.EventLocationChange
 import com.google.android.gms.location.LocationServices
@@ -102,8 +102,8 @@ class LocationService : DaggerService() {
 
         // Get last location once until we get regular update
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.getFusedLocationProviderClient(this).lastLocation.addOnSuccessListener {
-                lastLocationDataContainer.lastLocation = it
+            LocationServices.getFusedLocationProviderClient(this).lastLocation.addOnSuccessListener { location ->
+                lastLocationDataContainer.lastLocation = location
                 initializeLocationManager()
 
                 try {

@@ -25,7 +25,6 @@ import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.Sync
@@ -34,8 +33,8 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
@@ -50,6 +49,7 @@ import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import app.aaps.plugins.sync.nsclient.data.AlarmAck
 import app.aaps.plugins.sync.nsclient.extensions.toJson
 import app.aaps.plugins.sync.nsclient.services.NSClientService
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -63,7 +63,6 @@ class NSClientPlugin @Inject constructor(
     rh: ResourceHelper,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
-    private val sp: SP,
     private val preferences: Preferences,
     private val receiverDelegate: ReceiverDelegate,
     private val dataSyncSelectorV1: DataSyncSelectorV1,
@@ -160,8 +159,8 @@ class NSClientPlugin @Inject constructor(
     }
 
     override fun pause(newState: Boolean) {
-        sp.putBoolean(R.string.key_ns_paused, newState)
-        rxBus.send(EventPreferenceChange(rh.gs(R.string.key_ns_paused)))
+        preferences.put(NsclientBooleanKey.NsPaused, newState)
+        rxBus.send(EventPreferenceChange(NsclientBooleanKey.NsPaused.key))
     }
 
     override val address: String get() = nsClientService?.nsURL ?: ""
@@ -174,8 +173,8 @@ class NSClientPlugin @Inject constructor(
         }
         nsClientService?.sendAlarmAck(
             AlarmAck().also { ack ->
-                ack.level = originalAlarm.level()
-                ack.group = originalAlarm.group()
+                ack.level = originalAlarm.level
+                ack.group = originalAlarm.group
                 ack.silenceTime = silenceTimeInMilliseconds
             })
     }
@@ -206,7 +205,7 @@ class NSClientPlugin @Inject constructor(
             is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(true, profile, dateUtil)
             is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(true, dateUtil, decimalFormatter)
             is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toJson(true, dateUtil)
-            is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairRunningMode -> dataPair.value.toJson(true, dateUtil)
             is DataSyncSelector.PairProfileStore           -> dataPair.value
             else                                           -> null
         }?.let { data ->
@@ -228,7 +227,7 @@ class NSClientPlugin @Inject constructor(
             is DataSyncSelector.PairExtendedBolus          -> dataPair.value.ids.nightscoutId
             is DataSyncSelector.PairProfileSwitch          -> dataPair.value.ids.nightscoutId
             is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.ids.nightscoutId
-            is DataSyncSelector.PairOfflineEvent           -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairRunningMode            -> dataPair.value.ids.nightscoutId
             else                                           -> error("Unsupported data type")
         }
         when (dataPair) {
@@ -243,7 +242,7 @@ class NSClientPlugin @Inject constructor(
             is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(false, profile, dateUtil)
             is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(false, dateUtil, decimalFormatter)
             is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toJson(false, dateUtil)
-            is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairRunningMode            -> dataPair.value.toJson(false, dateUtil)
             else                                           -> null
         }?.let { data ->
             nsClientService?.dbUpdate(collection, id, data, dataPair, progress)
@@ -283,7 +282,7 @@ class NSClientPlugin @Inject constructor(
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptInsulin, summary = R.string.ns_receive_insulin_summary, title = R.string.ns_receive_insulin))
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptCarbs, summary = R.string.ns_receive_carbs_summary, title = R.string.ns_receive_carbs))
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptTherapyEvent, summary = R.string.ns_receive_therapy_events_summary, title = R.string.ns_receive_therapy_events))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptOfflineEvent, summary = R.string.ns_receive_offline_event_summary, title = R.string.ns_receive_offline_event))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptRunningMode, summary = R.string.ns_receive_running_mode_summary, title = R.string.ns_receive_running_mode))
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptTbrEb, summary = R.string.ns_receive_tbr_eb_summary, title = R.string.ns_receive_tbr_eb))
             })
             addPreference(preferenceManager.createPreferenceScreen(context).apply {

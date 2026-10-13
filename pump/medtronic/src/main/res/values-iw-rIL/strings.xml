@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">מקסימום בולוס במשאבה (יח\')</string>
     <string name="medtronic_pump_max_basal">מקסימום בזאלי במשאבה (יח\' לשעה)</string>
     <string name="medtronic_pump_encoding">קידוד מדטרוניק</string>
-    <string name="medtronic_pump_frequency_us_ca">ארצות הברית &amp; קנדה (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">ברחבי העולם (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">קידוד תוכנה 4B6b</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">קידוד חומרה 4B6b</string>
     <string name="medtronic_custom_action_wake_and_tune">התעוררות וכוונון</string>
     <string name="medtronic_custom_action_clear_bolus_block">ביטול חסימת בולוס</string>
     <string name="medtronic_custom_action_reset_rileylink">איפוס תצורת ריילילינק</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">ליתיום (תצוגה מורחבת)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (תצוגה מורחבת)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (תצוגה מורחבת)</string>
-    <string name="medtronic_bolus_debugging">איתור באגים בבולוס או טיפולים</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">סוללת ריילילינק</string>
     <!-- MDT Errors -->
@@ -39,8 +34,8 @@
     <string name="medtronic_error_pump_basal_profiles_not_enabled">הגדרת פרופילי הבזאלי/תבניות אינה מאופשרת במשאבה. הפעילו אותם בגוף המשאבה.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">פרופיל הבזאלי שהוגדר על המשאבה שגוי (חייב להיות סטנדרטי).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">סוג הבזאלי הזמני שהוגדר במשאבה שגוי (חייב להיות מוחלט).</string>
-    <string name="medtronic_error_pump_wrong_max_bolus_set">בולוס מרבי המוגדר במשאבה אינו נכון (חייב להיות %1$.2f).</string>
-    <string name="medtronic_error_pump_wrong_max_basal_set">בזאלי מרבי המוגדר במשאבה אינו נכון (חייב להיות %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">הבולוס מרבי המוגדר במשאבה אינו נכון (חייב להיות %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">המינון הבזאלי המרבי המוגדר במשאבה אינו נכון (חייב להיות %1$.2f).</string>
     <string name="medtronic_error_operation_not_possible_no_configuration">הפעולה אינה אפשרית.\n\n יש להגדיר קודם את המשאבה על מנת לבצע פעולה זו.</string>
     <string name="medtronic_error_pump_24h_time_change_requested">התבקש שינוי זמן העולה על 24 שעות.</string>
     <!-- MDT History -->
@@ -84,8 +79,6 @@
     <string name="ago">לפני</string>
     <string name="medtronic_notification_check_time_date">דרוש עדכון שעון המשאבה</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">מופעל</string>
-    <string name="common_off">כבוי</string>
     <string name="pump_time_updated">שעון המשאבה עודכן</string>
     <string name="set_neutral_temps_title">הגדרת מינון בזאלי ניטרלי</string>
     <string name="set_neutral_temps_summary">אם תופעל, היא תבטל בזאלי זמני לפני תום כל שעה. שיטה זו יכולה לעזור לבטל ציפצופים ורטט רבים בחלק מהמשאבות.</string>

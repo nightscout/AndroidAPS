@@ -24,6 +24,7 @@ dependencies {
 
     testImplementation(project(":shared:tests"))
 
+    api(libs.androidx.core)
     ksp(libs.com.google.dagger.compiler)
     ksp(libs.com.google.dagger.android.processor)
 }

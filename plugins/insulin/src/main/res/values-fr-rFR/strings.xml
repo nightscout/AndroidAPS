@@ -10,8 +10,8 @@
     <string name="insulin_oref_peak">Délai du pic de la courbe IA</string>
     <string name="insulin_peak_time">Délai du pic [min]</string>
     <string name="free_peak_oref">Profil d\'insuline ajustable Oref</string>
-    <string name="rapid_acting_oref">Insuline à Action Rapide Oref </string>
-    <string name="ultra_rapid_oref">Insuline Ultra Rapide Oref</string>
+    <string name="rapid_acting_oref">Insuline Rapide</string>
+    <string name="ultra_rapid_oref">Insuline Ultra Rapide</string>
     <string name="dia_too_short">Durée d’Action pour %1$f trop courte - utiliser %2$f à la place !</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>

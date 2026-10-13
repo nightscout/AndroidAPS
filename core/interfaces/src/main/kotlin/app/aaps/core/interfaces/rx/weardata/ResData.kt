@@ -1,9 +1,7 @@
 package app.aaps.core.interfaces.rx.weardata
 
-import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
 
-@OptIn(InternalSerializationApi::class)
 @Serializable
 data class ResData(val value: ByteArray, val format: ResFormat)
 

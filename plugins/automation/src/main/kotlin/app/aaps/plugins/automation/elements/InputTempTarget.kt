@@ -18,11 +18,6 @@ class InputTempTarget(profileFunction: ProfileFunction) : Element {
         value = if (units == GlucoseUnit.MMOL) 6.0 else 110.0
     }
 
-    constructor(profileFunction: ProfileFunction, inputTempTarget: InputTempTarget) : this(profileFunction) {
-        value = inputTempTarget.value
-        units = inputTempTarget.units
-    }
-
     override fun addToLayout(root: LinearLayout) {
         val minValue: Double
         val maxValue: Double

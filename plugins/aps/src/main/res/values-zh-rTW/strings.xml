@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
-    <string name="dynisf_adjust_sensitivity">啟用基於TDD的靈敏度比率，用於調整基礎率和血糖目標</string>
-    <string name="dynisf_adjust_sensitivity_summary">使用最近24小時TDD/7天TDD計算靈敏度比率，用於增加或減少基礎率，並在啟用這些選項時調整血糖目標，與Autosens的方式相同。建議從關閉此選項開始</string>
+    <string name="dynisf_adjust_sensitivity">啟用基於每日總劑量的敏感度比率，用於調整基礎率和血糖目標</string>
+    <string name="dynisf_adjust_sensitivity_summary">使用最近24小時劑量/7天劑量計算敏感度比率，用於增加或減少基礎率，並在啟用這些選項時調整血糖目標，與Autosens的方式相同。建議從關閉此選項開始</string>
     <string name="dyn_isf_adjust_title" formatted="false">動態ISF調整係數%</string>
     <string name="dyn_isf_adjust_summary" formatted="false">動態ISF的調整係數。設置超過100％以進行更積極的矯正劑量，設置低於100％以進行較不積極的矯正。</string>
     <string name="high_temptarget_raises_sensitivity_title">高臨時目標提高敏感度</string>
-    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[對於臨時目標>= 100，提高靈敏度]]></string>
-    <string name="low_temptarget_lowers_sensitivity_title">低臨時目標降低靈敏度</string>
-    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[對於臨時目標< 100，降低靈敏度]]></string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[對於臨時目標>= 100，提高敏感度]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">低臨時目標降低敏感度</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[對於臨時目標< 100，降低敏感度]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">動態ISF</string>
     <string name="openaps_auto_isf">自動ISF</string>
@@ -16,10 +16,10 @@
     <string name="resistance_lowers_target_title">阻力降低目標</string>
     <string name="resistance_lowers_target_summary">當偵測到阻力時，降低目標血糖</string>
     <string name="sensitivity_raises_target_title">敏感度提高目標</string>
-    <string name="sensitivity_raises_target_summary">當偵測到靈敏度時，提高目標血糖</string>
+    <string name="sensitivity_raises_target_summary">當偵測到敏感度時，提高目標血糖</string>
     <string name="openapsma_disabled">外掛已停用</string>
     <string name="openapsma_no_glucose_data">無血糖資料可用</string>
-    <string name="openaps_no_as_data">無自動靈敏度資料可用</string>
+    <string name="openaps_no_as_data">無自動敏感度資料可用</string>
     <string name="dynisf_shortname">DYNISF</string>
     <string name="autoisf_shortname">自動ISF</string>
     <string name="executing">正在執行</string>
@@ -41,15 +41,15 @@
     <string name="openapsma_meal_data_label">餐飲資料</string>
     <string name="openapsma_request_label">請求</string>
     <string name="constraints">約束條件</string>
-    <string name="openapsma_autosensdata_label">自動靈敏度資料</string>
+    <string name="openapsma_autosensdata_label">自動敏感度資料</string>
     <string name="openapsma_script_debug_data_label">腳本除錯</string>
-    <string name="openapsama_use_autosens">使用自動靈敏度功能</string>
+    <string name="openapsama_use_autosens">使用自動敏感度功能</string>
     <string name="openapsma_max_basal_title">臨時基礎率可以設置的最大U/h</string>
     <string name="openapsma_max_basal_summary">在OpenAPS上下文中，這個值稱為最大基礎率</string>
     <string name="openapsma_max_iob_title">OpenAPS可以提供的最大基礎IOB [U]</string>
     <string name="openapsma_max_iob_summary">在OpenAPS上下文中，這個值稱為最大IOB\n這是APS一次可以提供的最大胰島素量 [U]。</string>
-    <string name="openapsama_autosens_adjust_targets_summary">預設值：true\n這用於允許自動靈敏度調整血糖目標，除了ISF和基礎率之外。</string>
-    <string name="openapsama_autosens_adjust_targets">自動靈敏度也調整目標</string>
+    <string name="openapsama_autosens_adjust_targets_summary">預設值：true\n這用於允許自動敏感度調整血糖目標，除了ISF和基礎率之外。</string>
+    <string name="openapsama_autosens_adjust_targets">自動敏感度也調整目標</string>
     <string name="openapsama_min_5m_carb_impact_summary">預設值：3.0（AMA）或8.0（SMB）。這是一個預設每5分鐘碳水化合物吸收影響的設置。預設值是每5分鐘3mg/dl。這會影響碳水化合物的衰減速度，以及在血糖下降超過預期或上升不如預期時，計算未來預測血糖的碳水化合物吸收量。</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">預設值：3 這是一個關鍵的OpenAPS安全上限。這會將您的基礎率限制為您最大基礎率的3倍（在這個情況中）。您可能不需要更改此值，但您應該了解所討論的“3倍最大日基礎率；4倍目前基礎率”的安全上限。</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">預設值：4 這是關鍵OpenAPS安全上限的另一半，“3倍最大日基礎率；4倍目前基礎率”的另一半。這意味著無論您的幫浦設置的最大基礎率是多少，您的基礎率都不能高於此數字的目前基礎率的4倍。這是為了防止在理解算法如何工作之前設置過高的最大基礎率而進入危險區域。預設值是4倍；大多數人不需要調整此值，反而更可能需要調整其他設置，如果他們覺得“達到”這個安全上限。</string>
@@ -87,9 +87,9 @@
     <string name="max_daily_basal_multiplier">最大每日基礎乘數</string>
     <string name="smb_disabled_in_preferences">偏好設定中已停用SMB</string>
     <string name="uam_disabled_in_preferences">偏好設定中已停用UAM</string>
-    <string name="autosens_disabled_in_preferences">偏好設定中已停用自動靈敏度</string>
-    <string name="use_dynamic_sensitivity_title">啟用動態靈敏度</string>
-    <string name="use_dynamic_sensitivity_summary">調整算法使用動態靈敏度，而不是設定檔中的 ISF 值</string>
+    <string name="autosens_disabled_in_preferences">偏好設定中已停用自動敏感度</string>
+    <string name="use_dynamic_sensitivity_title">啟用動態敏感度</string>
+    <string name="use_dynamic_sensitivity_summary">調整算法使用動態敏感度，而不是設定檔中的 ISF 值</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">限制IOB到 %1$.1f U，因為 %2$s</string>
     <string name="maxvalueinpreferences">偏好設定中的最大值</string>
@@ -121,7 +121,7 @@
     <string name="loop_smb_set_by_pump_label">幫浦設置的SMB</string>
     <string name="loop_open_mode_min_change">最小請求變更 [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">開環模式將彈出新變更請求，僅當變更超過此值的百分比。預設值為20%</string>
-    <string name="fallback_smb_no_tdd">總每日劑量（TDD）資料不足，回退到使用 SMB 模式。</string>
+    <string name="fallback_smb_no_tdd">每日總劑量資料不足，回退到使用 SMB 模式。</string>
     <string name="fallback_to_isf_no_tdd">回退使用設定檔敏感度(ISF)。資料不足，原因：%1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">幫助調整檔案（ISF、碳水化合物比率和基礎率）</string>

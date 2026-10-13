@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_objectives_request_code" translatable="false">objectives_request_code</string>
-
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verify</string>
     <string name="nth_objective">%1$d. Objective</string>
@@ -18,11 +16,12 @@
     <string name="objectives_maxbasal">Perform action to fulfill recommendation</string>
     <string name="objectives_maxbasal_learned">Take care about safety features and adjust safety parameters when necessary.</string>
     <string name="objectives_maxiobzero_objective">Starting to close the loop with Low Glucose Suspend</string>
-    <string name="objectives_maxiobzero_gate">Run in closed loop with max IOB = 0 for a few days without too many LGS events. In simple mode this value is calculated according to recommendation in wiki and it\'s not necessary to set it.</string>
+    <string name="objectives_maxiobzero_gate">Run in closed loop in Low Glucose Suspend Mode (ie. max IOB = 0 is set automatically) for a few days without too many LGS events.</string>
     <string name="objectives_maxiobzero_learned">Setting MaxIOB to zero prevents you from hypo and will not add more insulin above basal rate (except situation with negative IOB)</string>
     <string name="objectives_maxiob_objective">Tuning the closed loop, raising max IOB above 0 and gradually lowering BG targets</string>
     <string name="objectives_maxiob_gate">Run for a few days, and at least one night with no low BG alarms, before dropping BG</string>
-    <string name="objectives_maxiob_learned">Update MaxIOB as a child grows. Do not allow to the system give you more insulin than you can cover by food = really high value is a bad idea.</string>
+    <string name="objectives_maxiob_learned">Update MaxIOB as a child grows. Do not allow the system to give you more insulin than you can cover by food = really high value is a bad idea. Max IOB is calculated automatically in simple mode</string>
+    <string name="maxiobset">Maximal IOB set properly (Not necessary in simple mode)</string>
     <string name="objectives_autosens_objective">Adjust basals and ratios if needed, and then enable auto-sens</string>
     <string name="objectives_autosens_gate">1 week successful daytime looping with regular carb entry. In simple mode autosens is enabled by default.</string>
     <string name="objectives_autosens_learned">If your autosens result is not oscillating around 100% your profile probably wrong.</string>

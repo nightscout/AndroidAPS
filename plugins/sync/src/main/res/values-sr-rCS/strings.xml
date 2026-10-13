@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="unsupported_ns_version">Nepodržana verzija Nightscout-a</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_alarm_options">Opcije alarma</string>
     <string name="ns_alarms">Kreirajte obaveštenja od NS alarma</string>
     <string name="ns_announcements">Kreirajte obaveštenja od NS najava</string>
@@ -22,9 +22,7 @@
     <string name="wizard_result">Kalk. čarobnjak:\nInsulin: %1$.2fU\nUH: %2$dg</string>
     <string name="quick_wizard_not_available">Izabrani brzi čarobnjak više nije dostupan, molimo osvežite svoju pločicu</string>
     <string name="quick_wizard_message">Brzi čarobnjak: %1$s\nInsulin: %2$.2fU\nUH: %3$dg</string>
-    <string name="wear_action_tempt_cancel_message">Otkazivanje pokrenutih privremenih ciljeva?</string>
     <string name="wear_action_tempt_unit_error">Različite jedinice se koriste na satu i telefonu!</string>
-    <string name="wear_action_tempt_zero_message">Nulti privremeni cilj - otkazivanje pokrenutih privremenih ciljeva?</string>
     <string name="wear_action_tempt_min_bg_error">Minimalni ŠUK izvan opsega!</string>
     <string name="wear_action_tempt_max_bg_error">MaksimalnI ŠUK izvan opsega!</string>
     <string name="units_short">J</string>

@@ -15,11 +15,9 @@
     <string name="objectives_maxbasal_gate">이 경험을 토대로, 최대 Basal을 결정하고 이를 펌프와 설정에 입력합니다</string>
     <string name="objectives_maxbasal_learned">안전 기능에 주의하고, 필요한 경우 안전 매개 변수를 조정할 수 있습니다.</string>
     <string name="objectives_maxiobzero_objective">Closed Loop를 시작하고 저혈당인슐린 중지 기능(LGS)을 사용해 봅니다</string>
-    <string name="objectives_maxiobzero_gate">최대 IOB = 0 인 상태로 Closed Loop를 몇일동안 실행하되 저혈당 인슐린일시중지(LGS)가 많이 발생하지 않도록 합니다</string>
     <string name="objectives_maxiobzero_learned">MaxIOB를 0으로 설정하면 저혈압이 방지되며, basal양 이상으로 인슐린을 더 추가하지 않습니다 (음성 IOB가 있는 경우 제외)</string>
     <string name="objectives_maxiob_objective">Closed Loop를 조정하여 최대 IOB를 0 이상으로 올려서 서서히 혈당 목표치를 낮추어 봅니다</string>
     <string name="objectives_maxiob_gate">혈당을 낮추기 전에 몇일간 사용해보되 최소한 하루는 저혈당 알람이 발생하지 않도록 해봅니다</string>
-    <string name="objectives_maxiob_learned">어린이가 성장함에 따라 MaxIOB를 업데이트합니다. 시스템이 음식으로 충당할 수 있는 것보다 더 많은 인슐린을 제공하도록 허옹하지 마십시오. =정말 높은 값은 좋지 않은 생각입니다.</string>
     <string name="objectives_autosens_objective">필요하면 Basal과 비율을 조절하고, auto-sens를 활성화합니다</string>
     <string name="objectives_autosens_gate">섭취한 탄수화물양을 입력하고 1주일동안 낮시간대에 loop를 성공적으로 사용하여 봅니다</string>
     <string name="objectives_autosens_learned">만약 autosens 결과가 100%로 진동하지 않으면 프로파일이 잘못되었을 수 있습니다.</string>

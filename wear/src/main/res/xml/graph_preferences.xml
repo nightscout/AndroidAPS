@@ -77,7 +77,7 @@
         android:entries="@array/chart_timeframe"
         android:entryValues="@array/chart_timeframe_values"
         android:key="@string/key_chart_time_frame"
-        android:summary="Chart Timeframe"
-        android:title="@string/pref_chart_timeframe" />
+        android:title="@string/pref_chart_timeframe"
+        android:summary="%s" />
 
 </PreferenceScreen>

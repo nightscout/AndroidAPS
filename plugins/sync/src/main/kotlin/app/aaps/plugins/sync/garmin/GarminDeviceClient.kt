@@ -130,6 +130,7 @@ class GarminDeviceClient(
 
     override fun isDisposed() = state == State.DISPOSED
     override fun dispose() {
+        executor.shutdown()
         broadcastReceiver.forEach { context.unregisterReceiver(it) }
         broadcastReceiver.clear()
         registeredActions.clear()

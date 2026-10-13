@@ -26,9 +26,6 @@
     <string name="combov2_driver_state_label">Driver state</string>
     <string name="combov2_current_activity_label">Current activity</string>
     <string name="bluetooth_address">Bluetooth address</string>
-    <string name="key_combov2_settings" translatable="false">combov2_settings</string>
-    <string name="key_combov2_pair_with_pump" translatable="false">combov2_pair_with_pump</string>
-    <string name="key_combov2_unpair_pump" translatable="false">combov2_unpair_pump</string>
     <string name="combov2_start_pairing">Start pairing</string>
     <string name="combov2_pairing_in_progress">Combo pairing in progress</string>
     <string name="combov2_pairing_start_steps">Steps to perform pairing with your Combo:\n\n
@@ -77,9 +74,7 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_updating_pump_datetime_cmddesc">Updating pump datetime</string>
     <string name="combov2_updating_pump_status_cmddesc">Updating pump status</string>
     <string name="combov2_pairing_pin_failure">PIN did not work. Check if there was a typo. If this keeps happening, cancel and retry pairing.</string>
-    <string name="key_combov2_discovery_duration" translatable="false">combov2_bt_discovery_duration</string>
     <string name="combov2_discovery_duration">Discovery duration (in seconds)</string>
-    <string name="key_combov2_verbose_logging" translatable="false">combov2_verbose_logging</string>
     <string name="combov2_verbose_logging">Enable verbose Combo logging</string>
     <string name="combov2_getting_basal_profile">Getting basal profile; %1$d factor(s) read</string>
     <string name="combov2_setting_basal_profile">Setting basal profile; %1$d factor(s) written</string>
@@ -116,17 +111,8 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_unpair_pump_summary">Unpair AndroidAPS and Android from the currently paired Accu-Chek Combo pump</string>
     <string name="combov2_unknown_tbr_detected">Unknown TBR was detected and stopped; percentage: %1$d%%; remaining duration: %2$s</string>
     <string name="combov2_connection_error">Connection error: %1$s</string>
-    <string name="combov2_short_status_last_connection">LastConn: %1$d min ago</string>
     <string name="combov2_short_status_alert">Alert: %s</string>
-    <string name="combov2_short_status_last_bolus">LastBolus: %1$sU @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Temp: %s</string>
-    <string name="combov2_short_status_reservoir">Reserv: %dU</string>
-    <string name="combov2_short_status_battery_state_empty">empty</string>
-    <string name="combov2_short_status_battery_state_low">low</string>
-    <string name="combov2_short_status_battery_state_full">full</string>
-    <string name="combov2_short_status_battery_state">Batt: %s</string>
-    <string name="key_combov2_automatic_reservoir_entry" translatable="false">combov2_automatic_reservoir_entry</string>
-    <string name="key_combov2_automatic_battery_entry" translatable="false">combov2_automatic_battery_entry</string>
+
     <string name="combov2_automatic_reservoir_entry">Autodetect and automatically enter insulin reservoir change</string>
     <string name="combov2_automatic_battery_entry">Autodetect and automatically enter battery change</string>
     <string name="combov2_timezone_changed">Timezone changed</string>

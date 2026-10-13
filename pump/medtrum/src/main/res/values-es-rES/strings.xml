@@ -5,7 +5,7 @@
     <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Integración de bombas de insulina Medtrum Nano y Medtrum 300U</string>
     <string name="medtrum_pump_setting">Ajustes de la bomba Medtrum</string>
-    <string name="pump_error">Error de bomba: %1$s !! </string>
+    <string name="pump_error">Error de bomba: ¡¡ %1$s !! </string>
     <string name="pump_warning">Advertencia de la bomba: %1$s</string>
     <string name="pump_is_suspended">Bomba suspendida</string>
     <string name="pump_is_suspended_hour_max">Bomba suspendida por superarse el máximo de insulina por hora</string>
@@ -26,8 +26,9 @@
     <string name="current_basal_rate"> %.2f U/h</string>
     <string name="pump_type_label">Tipo de bomba</string>
     <string name="fw_version_label">Versión de firmware</string>
-    <string name="patch_no_label">Parche sin etiqueta</string>
+    <string name="patch_no_label">Parche n°</string>
     <string name="patch_expiry_label">El parche expira</string>
+    <string name="patch_activation_time_label">Activación</string>
     <string name="refresh_label">Actualizar</string>
     <string name="reset_alarms_label">Restablecer alarmas</string>
     <string name="change_patch_label">Cambiar parche</string>
@@ -49,7 +50,7 @@
     <string name="alarm_expired">Expirado</string>
     <string name="alarm_reservoir_empty">Reservorio vacío</string>
     <string name="alarm_patch_fault">Fallo del parche</string>
-    <string name="alarm_base_fault">Fallo de base</string>
+    <string name="alarm_base_fault">Fallo de la base</string>
     <string name="alarm_battery_out">Batería agotada</string>
     <string name="alarm_no_calibration">Sin calibración</string>
     <string name="pump_time_update_failed">Error al actualizar la zona horaria de la bomba, posponer zumbido y actualizar manualmente.</string>
@@ -77,7 +78,7 @@
     <string name="patch_begin_activation">No hay ningún parche activo. Presiona <b>Siguiente</b> para iniciar el proceso de activación.</string>
     <string name="patch_not_active_note">¡La base de la bomba no debe conectarse al parche hasta el siguiente paso!</string>
     <string name="connect_pump_base">Conecta la base de la bomba a un nuevo parche, elimina el aire residual y rellena con insulina. Después pulsa <b>Siguiente</b>.</string>
-    <string name="note_min_70_units">Nota: Se necesitan un mínimo de 70 unidades para la actvación.</string>
+    <string name="note_min_70_units">Nota: Se necesitan un mínimo de 70 unidades para la activación.</string>
     <string name="reservoir_text_and_level">Reservorio: %.2f U</string>
     <string name="do_not_attach_to_body">No pegues todavía el parche al cuerpo.</string>
     <string name="half_press_needle">Pulsa el botón de la aguja hasta la mitad. A continuación, pulsa <b>Siguiente</b> para iniciar el purgado.</string>
@@ -114,13 +115,13 @@
     <string name="alarm_setting_summary">Selecciona los ajustes de la alarma de la bomba que prefieras.</string>
     <string name="pump_warning_notification_title">Notificación sobre advertencia de la bomba</string>
     <string name="pump_warning_notification_summary">Mostrar notificación en advertencias de la bomba no críticas: batería baja, reserva baja (20 unidades) y próxima a caducar. Se recomienda dejarlo habilitado cuando las alarmas de la bomba estén configuradas en silencio.</string>
-    <string name="pump_warning_expiry_hour_title">Aviso de expiración de la bomba [hours]</string>
+    <string name="pump_warning_expiry_hour_title">Aviso de expiración de la bomba [horas]</string>
     <string name="pump_warning_expiry_hour_summary">Mostrar notificación a la hora especificada tras la activación.</string>
     <string name="patch_expiration_title">Caducidad del parche</string>
     <string name="patch_expiration_summary">Cuando está activado, el parche caducará a los 3 días, con un periodo de gracia de 8 horas adicionales</string>
-    <string name="hourly_max_insulin_title">Insulina máxima por hora [Units]</string>
+    <string name="hourly_max_insulin_title">Insulina máxima por hora [Unidades]</string>
     <string name="hourly_max_insulin_summary">Especificar las unidades máximas de insulina permitidas por hora. Si se supera, la bomba se suspenderá.</string>
-    <string name="daily_max_insulin_title">Insulina máxima diaria [Units]</string>
+    <string name="daily_max_insulin_title">Insulina máxima diaria [Unidades]</string>
     <string name="daily_max_insulin_summary">Especificar las unidades máximas de insulina permitidas por día. Si se superan, la bomba se suspenderá.</string>
     <string name="scan_on_connection_error_title">Escanear por error de conexión</string>
     <string name="scan_on_connection_error_summary">ADVERTENCIA: Habilitar sólo si tienes problemas de conexión. Si se habilita, el controlador escanea la bomba de nuevo antes de intentar reconectarse con la bomba. Asegúrate de tener permiso de ubicación establecido en \"Permitir siempre\" </string>

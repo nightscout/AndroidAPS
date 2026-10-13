@@ -76,6 +76,8 @@ class ProfileHelperActivity : TranslatedDaggerAppCompatActivity() {
 
     private lateinit var binding: ActivityProfilehelperBinding
     private val disposable = CompositeDisposable()
+    private var weightTextWatcher: TextWatcher? = null
+    private var tddTextWatcher: TextWatcher? = null
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -142,7 +144,7 @@ class ProfileHelperActivity : TranslatedDaggerAppCompatActivity() {
             val profile = if (typeSelected[tabSelected] == ProfileType.MOTOL_DEFAULT) defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
             else defaultProfileDPV.profile(age, tdd, pct / 100.0, profileFunction.getUnits())
             profile?.let {
-                OKDialog.showConfirmation(this, rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch), rh.gs(app.aaps.core.ui.R.string.copytolocalprofile), Runnable {
+                OKDialog.showConfirmation(this, rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch), rh.gs(app.aaps.core.ui.R.string.copytolocalprofile), {
                     activePlugin.activeProfileSource.addProfile(
                         activePlugin.activeProfileSource.copyFrom(
                             it, "DefaultProfile " +
@@ -156,20 +158,22 @@ class ProfileHelperActivity : TranslatedDaggerAppCompatActivity() {
         }
 
         binding.age.setParams(0.0, 1.0, 18.0, 1.0, DecimalFormat("0"), false, null)
-        binding.weight.setParams(0.0, 0.0, 150.0, 1.0, DecimalFormat("0"), false, null, object : TextWatcher {
+        weightTextWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 binding.tddRow.visibility = (binding.weight.value == 0.0).toVisibility()
             }
-        })
-        binding.tdd.setParams(0.0, 0.0, 200.0, 1.0, DecimalFormat("0"), false, null, object : TextWatcher {
+        }
+        binding.weight.setParams(0.0, 0.0, 150.0, 1.0, DecimalFormat("0"), false, null, weightTextWatcher)
+        tddTextWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 binding.weightRow.visibility = (binding.tdd.value == 0.0).toVisibility()
             }
-        })
+        }
+        binding.tdd.setParams(0.0, 0.0, 200.0, 1.0, DecimalFormat("0"), false, null, tddTextWatcher)
 
         binding.basalPctFromTdd.setParams(32.0, 32.0, 37.0, 1.0, DecimalFormat("0"), false, null)
 
@@ -261,7 +265,7 @@ class ProfileHelperActivity : TranslatedDaggerAppCompatActivity() {
                 ProfileType.AVAILABLE_PROFILE -> activePlugin.activeProfileSource.profile?.getSpecificProfile(profileList[profileUsed[tab]].toString())
                 ProfileType.PROFILE_SWITCH    -> ProfileSealed.EPS(value = profileSwitch[profileSwitchUsed[tab]], activePlugin = null).convertToNonCustomizedProfile(dateUtil)
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
 
@@ -322,5 +326,15 @@ class ProfileHelperActivity : TranslatedDaggerAppCompatActivity() {
     override fun onPause() {
         super.onPause()
         disposable.clear()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.tabLayout.clearOnTabSelectedListeners()
+        binding.profileType.onItemClickListener = null
+        binding.availableProfileList.onItemClickListener = null
+        binding.profileswitchList.onItemClickListener = null
+        binding.copyToLocalProfile.setOnClickListener(null)
+        binding.compareProfiles.setOnClickListener(null)
     }
 }

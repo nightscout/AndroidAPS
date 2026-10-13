@@ -29,7 +29,10 @@ dependencies {
     testImplementation(project(":pump:danar"))
     testImplementation(project(":pump:danars"))
     testImplementation(project(":pump:virtual"))
+    testImplementation(project(":shared:impl"))
     testImplementation(project(":shared:tests"))
+
+    api(libs.kotlinx.datetime)
 
     // Phone checker
     api(libs.com.scottyab.rootbeer.lib)

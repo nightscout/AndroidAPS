@@ -19,7 +19,6 @@
     <string name="dana_model">%1$s\nModel: %2$02X\nProtokół: %3$02X\nKod: %4$02X</string>
     <string name="processinghistory">Przetwarzanie zdarzenia</string>
     <string name="danar_enableextendedbolus">Uaktywnij bolusy przedłużone w pompie</string>
-    <string name="overview_bolusprogress_delivered">Dostarczone</string>
     <string name="overview_bolusprogress_stoped">Zatrzymane</string>
     <string name="unsupportedfirmware">Nieobsługiwane oprogramowanie pompy</string>
     <string name="pumperror">Błąd pompy</string>

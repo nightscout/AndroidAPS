@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -10,6 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
+            app:srcCompat="@drawable/ic_bluetooth_white_48dp" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -38,13 +45,14 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_gravity="center"
-        android:layout_marginStart="16dp" />
+        android:layout_marginBottom="20dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_cancel"
-        style="@style/ButtonSmallFontStyle"
-        android:layout_width="match_parent"
+        style="@style/OkCancelButton.Text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginBottom="15dp"
         android:text="@string/equil_stop" />
 </LinearLayout>

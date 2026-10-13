@@ -78,9 +78,8 @@
     <string name="deltalabel">BS forskjell</string>
     <string name="deltalabel_u">BS forskjell [%1$s]</string>
     <string name="currentlocation">Gjeldende plassering</string>
+    <string name="choose_from_map">Velg fra kartet</string>
     <string name="location">Plassering</string>
-    <string name="latitude_short">Lat:</string>
-    <string name="longitude_short">Long:</string>
     <string name="glucose_u">Glukose [%1$s]:</string>
     <string name="target_u">Mål [%1$s]:</string>
     <string name="lastboluslabel">Siste bolus</string>
@@ -141,4 +140,10 @@
     <string name="triggerStepsCountLabel">Antall skritt</string>
     <string name="triggerStepsCountDesc">Antall skritt per %1$s minutter %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Varighet for måling</string>
+    <!--    SMB mode-->
+    <string name="changeSmbState">Aktiver/deaktiver SMB</string>
+    <string name="changeSmbTo">Endre SMB til %1$s</string>
+    <string name="newSmbMode">Ny SMB-modus:</string>
+    <string name="on">PÅ</string>
+    <string name="off">AV</string>
 </resources>

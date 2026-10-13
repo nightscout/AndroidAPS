@@ -36,13 +36,6 @@
     <string name="timeout_during_handshake">Тайм-аут сопряжения - сбросьте bluetooth</string>
     <string name="pump_stopped">Помпа остановлена</string>
     <string name="pump_started">Помпа запущена</string>
-    <string name="short_status_last_connected">Недавнее соединение: %1$d мин. назад</string>
-    <string name="short_status_tbr">Врем базал (TBR): %1$d%% на %2$d / %3$d мин</string>
-    <string name="short_status_extended">Пролонгированный: %1$.2f / %2$.2f ед. на %3$d мин</string>
-    <string name="short_status_multiwave">Пролонгированный: %1$.2f / %2$.2f U за %3$d мин</string>
-    <string name="short_status_tdd">Суммарный инсулин TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Резерв.: %1$.2f ед</string>
-    <string name="short_status_battery">Батарея: %1$d%%</string>
     <string name="release_software_version">Версия ПО</string>
     <string name="ui_processor_software_version">Версия процессора UI</string>
     <string name="pc_processor_software_version">Версия процессора ПК</string>

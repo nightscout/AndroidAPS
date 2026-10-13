@@ -28,7 +28,8 @@ class SyncNsExtendedBolusTransaction(private val extendedBoluses: List<ExtendedB
                         database.extendedBolusDao.updateExistingEntry(current)
                         result.invalidated.add(current)
                     }
-                    if (current.duration != extendedBolus.duration && nsClientMode) {
+                    // Allow update duration to shorter only
+                    if (current.duration != extendedBolus.duration && nsClientMode && extendedBolus.duration < current.duration) {
                         current.duration = extendedBolus.duration
                         current.amount = extendedBolus.amount
                         database.extendedBolusDao.updateExistingEntry(current)
@@ -38,6 +39,26 @@ class SyncNsExtendedBolusTransaction(private val extendedBoluses: List<ExtendedB
                 }
 
                 // not known nsId
+                // Check by pumpId + pumpType + pumpSerial (primary deduplication - prevents NS duplicate _id records)
+                val existingByPumpId = if (extendedBolus.interfaceIDs.pumpId != null && extendedBolus.interfaceIDs.pumpType != null && extendedBolus.interfaceIDs.pumpSerial != null) {
+                    database.extendedBolusDao.findByPumpIds(extendedBolus.interfaceIDs.pumpId!!, extendedBolus.interfaceIDs.pumpType!!, extendedBolus.interfaceIDs.pumpSerial!!)
+                } else {
+                    null
+                }
+
+                if (existingByPumpId != null) {
+                    // Same pump extended bolus exists, just update/add the new nsId
+                    if (existingByPumpId.interfaceIDs.nightscoutId == null) {
+                        existingByPumpId.interfaceIDs.nightscoutId = extendedBolus.interfaceIDs.nightscoutId
+                        existingByPumpId.isValid = extendedBolus.isValid
+                        database.extendedBolusDao.updateExistingEntry(existingByPumpId)
+                        result.updatedNsId.add(existingByPumpId)
+                    }
+                    // If existing already has a different nsId, this is a duplicate NS record - ignore it
+                    continue
+                }
+
+                // Fallback: check by active extended bolus at timestamp
                 val running = database.extendedBolusDao.getExtendedBolusActiveAt(extendedBolus.timestamp).blockingGet()
                 if (running != null && abs(running.timestamp - extendedBolus.timestamp) < 1000) { // allow missing milliseconds
                     // the same record, update nsId only

@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.PowerManager
 import android.os.SystemClock
+import androidx.annotation.VisibleForTesting
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
@@ -28,7 +29,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.isRunningTest
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
@@ -63,7 +64,8 @@ class RandomBgPlugin @Inject constructor(
     aapsLogger, rh
 ), BgSource {
 
-    private var handler: Handler? = null
+    @VisibleForTesting
+    var handler: Handler? = null
     private var refreshLoop: Runnable
     private var wakeLock: PowerManager.WakeLock? = null
     private var interval = 5L // minutes
@@ -102,13 +104,14 @@ class RandomBgPlugin @Inject constructor(
         cal[Calendar.MINUTE] -= cal[Calendar.MINUTE] % interval.toInt()
         handler?.postAtTime(refreshLoop, SystemClock.uptimeMillis() + cal.timeInMillis + T.mins(interval).msecs() + 1000 - System.currentTimeMillis())
         disposable.clear()
-        wakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS:RandomBgPlugin")
+        wakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager?)?.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS:RandomBgPlugin")
         wakeLock?.acquire()
     }
 
     override fun onStop() {
         super.onStop()
-        handler?.removeCallbacks(refreshLoop)
+        handler?.removeCallbacksAndMessages(null)
+        handler?.looper?.quit()
         handler = null
         if (wakeLock?.isHeld == true) wakeLock?.release()
     }
@@ -118,7 +121,8 @@ class RandomBgPlugin @Inject constructor(
     }
 
     @SuppressLint("CheckResult")
-    private fun handleNewData() {
+    @VisibleForTesting
+    fun handleNewData() {
         if (!isEnabled()) return
 
         val cal = GregorianCalendar()

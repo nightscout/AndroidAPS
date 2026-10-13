@@ -4,5 +4,30 @@
     <string name="nav_exit">Izađi</string>
     <string name="delta">Delta</string>
     <string name="save">Sačuvaj</string>
+    <string name="wear">Sat</string>
+    <string name="nav_about">O programu</string>
+    <string name="sensitivity_warning">Kada uključite funkciju Autosens, obavezno unesite SVE ugljene hidrate koje pojedete. U suprotnom će odstupanja u unosu ugljenih hidrata biti pogrešno shvaćena kao promena osetljivosti!</string>
+    <string name="invalid">NEVAŽEĆE</string>
+    <string name="gradually_increase_notification_volume">Postepeno povećavajte jačinu zvuka za upozorenja i obaveštenja</string>
+    <string name="localalertsettings_title">Lokalna upozorenja</string>
+    <string name="enable_missed_bg_readings_alert">Upozorenje ako nema podataka o nivou glukoze u krvi</string>
+    <string name="enable_pump_unreachable_alert">Upozorenje ako pumpa nije dostupna</string>
+    <string name="pump_unreachable_threshold">Prag nedostupnosti pumpe [min]</string>
+    <string name="enable_carbs_req_alert">Upozorenje ako su potrebni ugljeni hidrati</string>
+    <string name="open_navigation">Otvori navigaciju</string>
+    <string name="close_navigation">Zatvori navigaciju</string>
+    <string name="remove_items">Ukloni stavke</string>
+    <string name="sort_items">Sortiraj stavke</string>
+    <string name="unitsnosemicolon">Jedinice</string>
+    <string name="authorizationfailed">Ovlašćenje nije uspelo</string>
+    <string name="cannula">Kanila</string>
+    <string name="identification_not_set">Identifikacija nije podešena u razvojnom režimu</string>
     <!-- WEAR OS-->
+    <string name="remove_selected_items">Ukloni izabrane stavke</string>
+    <string name="count_selected">%1$d izabrano</string>
+    <string name="sort_label">Sortiraj</string>
+    <string name="search">Pretraži</string>
+    <string name="simple_mode">Jednostavan režim</string>
+    <string name="select">Izaberi</string>
+    <string name="set">Postavi</string>
 </resources>

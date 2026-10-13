@@ -1,6 +1,7 @@
 package app.aaps.plugins.constraints.objectives
 
 import android.os.SystemClock
+import app.aaps.core.interfaces.local.LocaleDependentSetting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.DateUtil
 import java.net.DatagramPacket
@@ -27,7 +28,8 @@ import javax.inject.Singleton
 @Singleton
 class SntpClient @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val localeDependentSetting: LocaleDependentSetting
 ) {
 
     companion object {
@@ -89,7 +91,7 @@ class SntpClient @Inject constructor(
 
     fun doNtpTime(callback: Callback) {
         aapsLogger.debug("Time detection started")
-        callback.success = requestTime("time.google.com", 5000)
+        callback.success = requestTime(localeDependentSetting.ntpServer, 5000)
         callback.time = ntpTime + SystemClock.elapsedRealtime() - ntpTimeReference
         aapsLogger.debug("Time detection ended: " + callback.success + " " + dateUtil.dateAndTimeString(ntpTime))
         callback.run()

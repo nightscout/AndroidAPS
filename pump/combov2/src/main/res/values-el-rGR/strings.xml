@@ -104,15 +104,7 @@
     <string name="combov2_unpair_pump_summary">Αποσύζευξη του AndroidAPS και του Android από την τρέχουσα συζευγμένη αντλία Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Άγνωστο TBR ανιχνεύθηκε και διακόπηκε: ποσοστό: %1$d%%; εναπομένουσα διάρκεια: %2$s</string>
     <string name="combov2_connection_error">Σφάλμα σύνδεσης: %1$s</string>
-    <string name="combov2_short_status_last_connection">Τελευταία Σύνδεση: %1$d λεπτά πριν</string>
     <string name="combov2_short_status_alert">Ειδοποίηση: %s</string>
-    <string name="combov2_short_status_last_bolus">Τελευταίο Bolus: %1$sU @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Προσωρινός Ρυθμός: %s</string>
-    <string name="combov2_short_status_reservoir">Δεξαμενή: %dU</string>
-    <string name="combov2_short_status_battery_state_empty">κενή</string>
-    <string name="combov2_short_status_battery_state_low">χαμηλό</string>
-    <string name="combov2_short_status_battery_state_full">πλήρης</string>
-    <string name="combov2_short_status_battery_state">Μπαταρία.:%s</string>
     <string name="combov2_automatic_reservoir_entry">Αυτόματη ανίχνευση και αυτόματη εισαγωγή αλλαγής δεξαμενής ινσουλίνης</string>
     <string name="combov2_automatic_battery_entry">Αυτόματη ανίχνευση και αυτόματη εισαγωγή αλλαγής μπαταρίας</string>
     <string name="combov2_timezone_changed">Η ζώνη ώρας άλλαξε</string>

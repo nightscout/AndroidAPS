@@ -22,7 +22,6 @@
     <string name="smscommunicator_tt_canceled">Privremeni cilj uspješno je otkazan</string>
     <string name="smscommunicator_remote_commands_allowed">Dozvoli daljinske komande putem SMS-a</string>
     <string name="smscommunicator_loop_has_been_disabled">Petlja je onemogućena</string>
-    <string name="smscommunicator_loop_has_been_enabled">Petlja je omogućena</string>
     <string name="smscommunicator_loop_is_enabled">Petlja je omogućena</string>
     <string name="smscommunicator_pump_connect_with_code">Za povezivanje pumpe, odgovori sa kodom %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Povezivanje sa pumpom nije uspelo</string>
@@ -38,7 +37,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">Za početak bazala %1$d%% za %2$d min, odgovori sa kodom %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">Za obustavljanje petlje na %1$d minuta, odgovori sa kodom %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Za nastavak petlje odgovori sa kodom %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">Za omogućavanje petlje odgovori sa kodom %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Za onemogućavanje petlje odgovori sa kodom %1$s</string>
     <string name="sms_actual_bg">GUK:</string>
     <string name="sms_delta">Delta:</string>
@@ -52,7 +50,6 @@
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
     <string name="localprofile">Profil</string>
-    <string name="description_profile_local">Definiši profil koji je dostupan bez internet veze.</string>
     <!-- Actions -->
     <string name="description_actions">Neke tipke za brzi pristup uobičajenim funkcijama</string>
     <string name="tempbasal_button">Privremeni Basal</string>

@@ -2,7 +2,7 @@ package app.aaps.plugins.aps.openAPSAMA
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import androidx.core.net.toUri
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
+import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
@@ -38,8 +39,7 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntentKey
-import app.aaps.core.keys.Preferences
-import app.aaps.core.objects.aps.DetermineBasalResult
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.getPassedDurationToTimeInMinutes
@@ -53,16 +53,16 @@ import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
-import dagger.android.HasAndroidInjector
+import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import org.json.JSONObject
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 import kotlin.math.floor
 import kotlin.math.min
 
 @Singleton
 class OpenAPSAMAPlugin @Inject constructor(
-    private val injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintsChecker: ConstraintsChecker,
@@ -77,8 +77,9 @@ class OpenAPSAMAPlugin @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val preferences: Preferences,
-    private val determineBasalAMA: DetermineBasalAMA
-
+    private val determineBasalAMA: DetermineBasalAMA,
+    private val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB,
+    private val apsResultProvider: Provider<APSResult>
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -96,7 +97,7 @@ class OpenAPSAMAPlugin @Inject constructor(
     // last values
     override var lastAPSRun: Long = 0
     override val algorithm = APSResult.Algorithm.AMA
-    override var lastAPSResult: DetermineBasalResult? = null
+    override var lastAPSResult: APSResult? = null
 
     override fun specialEnableCondition(): Boolean {
         return try {
@@ -248,7 +249,7 @@ class OpenAPSAMAPlugin @Inject constructor(
             meal_data = mealData,
             currentTime = now
         ).also {
-            val determineBasalResult = DetermineBasalResult(injector, it)
+            val determineBasalResult = apsResultProvider.get().with(it)
             // Preserve input data
             determineBasalResult.inputConstraints = inputConstraints
             determineBasalResult.autosensResult = autosensResult
@@ -264,6 +265,8 @@ class OpenAPSAMAPlugin @Inject constructor(
         }
         rxBus.send(EventOpenAPSUpdateGui())
     }
+
+    override fun getGlucoseStatusData(allowOldData: Boolean): GlucoseStatus? = glucoseStatusCalculatorSMB.getGlucoseStatusData(allowOldData)
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         if (isEnabled()) {
@@ -328,7 +331,7 @@ class OpenAPSAMAPlugin @Inject constructor(
                     AdaptiveIntentPreference(
                         ctx = context,
                         intentKey = IntentKey.ApsLinkToDocs,
-                        intent = Intent().apply { action = Intent.ACTION_VIEW; data = Uri.parse(rh.gs(R.string.openapsama_link_to_preference_json_doc)) },
+                        intent = Intent().apply { action = Intent.ACTION_VIEW; data = rh.gs(R.string.openapsama_link_to_preference_json_doc).toUri() },
                         summary = R.string.openapsama_link_to_preference_json_doc_txt
                     )
                 )

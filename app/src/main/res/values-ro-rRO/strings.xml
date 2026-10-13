@@ -6,12 +6,12 @@
     <string name="save">Salvează</string>
     <string name="wear">Ceas</string>
     <string name="nav_about">Despre</string>
-    <string name="sensitivity_warning">Trebuie introduși toți carbo la pornirea Autosens. În caz contrar, acțiunea carbo va fi percepută ca schimbare a sensibilității!</string>
+    <string name="sensitivity_warning">Trebuie introduși toți carbohidrații după pornirea Autosens. În caz contrar, deviațiile cauzate de carbohidrați vor fi percepute ca schimbări ale sensibilității!</string>
     <string name="invalid">INVALID</string>
-    <string name="gradually_increase_notification_volume">Creşterea treptată a volumului pentru alerte şi notificări</string>
+    <string name="gradually_increase_notification_volume">Creșterea treptată a volumului pentru alerte și notificări</string>
     <string name="localalertsettings_title">Alerte locale</string>
-    <string name="enable_missed_bg_readings_alert">Alarmează dacă nu se primesc glicemii</string>
-    <string name="enable_pump_unreachable_alert">Se alertează dacă pompa este indisponibilă</string>
+    <string name="enable_missed_bg_readings_alert">Alertează dacă nu se primesc glicemii</string>
+    <string name="enable_pump_unreachable_alert">Alertează dacă pompa este indisponibilă</string>
     <string name="pump_unreachable_threshold">Prag pompă indisponibilă [min]</string>
     <string name="enable_carbs_req_alert">Alertează dacă sunt necesari carbohidrați</string>
     <string name="open_navigation">Afișare navigație</string>
@@ -27,4 +27,7 @@
     <string name="count_selected">%1$d selectat(e)</string>
     <string name="sort_label">Sortează</string>
     <string name="search">Caută</string>
+    <string name="simple_mode">Mod simplu</string>
+    <string name="select">Selectează</string>
+    <string name="set">Setează</string>
 </resources>

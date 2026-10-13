@@ -1,7 +1,6 @@
 package app.aaps.core.validators
 
 import android.content.Context
-import android.text.TextWatcher
 import app.aaps.core.validators.validators.Validator
 
 /**
@@ -18,11 +17,6 @@ interface EditTextValidator {
     @Throws(IllegalArgumentException::class)
     fun addValidator(theValidator: Validator)
 
-    /**
-     * This should be used with { #addTextChangedListener(TextWatcher)}. It
-     * fixes the non-hiding error popup behaviour.
-     */
-    fun getTextWatcher(): TextWatcher?
     fun isEmptyAllowed(): Boolean
 
     /**

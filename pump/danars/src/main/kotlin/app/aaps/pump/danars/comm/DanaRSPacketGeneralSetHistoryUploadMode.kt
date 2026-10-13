@@ -1,18 +1,22 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.encryption.BleEncryption
+import app.aaps.pump.danars.encryption.BleEncryption
+import javax.inject.Inject
 
-class DanaRSPacketGeneralSetHistoryUploadMode(
-    injector: HasAndroidInjector,
+class DanaRSPacketGeneralSetHistoryUploadMode @Inject constructor(
+    private val aapsLogger: AAPSLogger
+) : DanaRSPacket() {
+
     private var mode: Int = 0
-) : DanaRSPacket(injector) {
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_REVIEW__SET_HISTORY_UPLOAD_MODE
         aapsLogger.debug(LTag.PUMPCOMM, "New message: mode: $mode")
     }
+
+    fun with(mode: Int) = this.also { this.mode = mode }
 
     override fun getRequestParams(): ByteArray {
         val request = ByteArray(1)

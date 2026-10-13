@@ -3,21 +3,16 @@ package app.aaps.core.ui.dialogs
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
-import android.os.Handler
-import android.os.Looper
 import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.DrawableRes
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import app.aaps.core.ui.R
+import app.aaps.core.ui.extensions.runOnUiThread
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 object TwoMessagesAlertDialog {
-
-    private fun runOnUiThread(theRunnable: Runnable?) = theRunnable?.let {
-        Handler(Looper.getMainLooper()).post(it)
-    }
 
     @SuppressLint("InflateParams")
     fun showAlert(context: Context, title: String, message: String, secondMessage: String, ok: (() -> Unit)?, cancel: (() -> Unit)? = null, @DrawableRes icon: Int? = null) {

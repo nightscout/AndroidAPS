@@ -11,8 +11,6 @@
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
-    <string name="latitude_short">Szélesség:</string>
-    <string name="longitude_short">Hosszúság:</string>
     <string name="triggercoblabel">COB</string>
     <string name="every">Minden</string>
     <string name="never">Soha</string>
@@ -24,4 +22,5 @@
     <!--    Reminders-->
     <!--    Autotune-->
     <!--    Steps count-->
+    <!--    SMB mode-->
 </resources>

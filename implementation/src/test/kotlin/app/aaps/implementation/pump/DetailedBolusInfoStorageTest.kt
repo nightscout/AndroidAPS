@@ -2,18 +2,18 @@ package app.aaps.implementation.pump
 
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.implementation.R
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.kotlin.whenever
 
 class DetailedBolusInfoStorageTest : TestBase() {
 
-    @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
     @Mock lateinit var rh: ResourceHelper
 
     private val info1 = DetailedBolusInfo()
@@ -33,8 +33,8 @@ class DetailedBolusInfoStorageTest : TestBase() {
 
     @BeforeEach
     fun prepare() {
-        Mockito.`when`(sp.getString(rh.gs(R.string.key_bolus_storage), "")).thenReturn("")
-        detailedBolusInfoStorage = DetailedBolusInfoStorageImpl(aapsLogger, sp, rh)
+        whenever(preferences.get(StringNonKey.BolusInfoStorage)).thenReturn("")
+        detailedBolusInfoStorage = DetailedBolusInfoStorageImpl(aapsLogger, preferences, rh)
     }
 
     private fun setUp() {

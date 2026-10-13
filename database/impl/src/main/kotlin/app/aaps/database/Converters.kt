@@ -4,7 +4,7 @@ import androidx.room.TypeConverter
 import app.aaps.database.entities.APSResult
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.entities.OfflineEvent
+import app.aaps.database.entities.RunningMode
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
@@ -83,6 +83,18 @@ class Converters {
 
     @TypeConverter
     fun toTherapyEventType(therapyEventType: String?) = therapyEventType?.let { TherapyEvent.Type.valueOf(it) }
+
+    @TypeConverter
+    fun fromTherapyEventLocation(therapyEventLocation: TherapyEvent.Location?) = therapyEventLocation?.name
+
+    @TypeConverter
+    fun toTherapyEventLocation(therapyEventLocation: String?): TherapyEvent.Location? = therapyEventLocation?.let { TherapyEvent.Location.valueOf(it) }
+
+    @TypeConverter
+    fun fromTherapyEventArrow(therapyEventArrow: TherapyEvent.Arrow?) = therapyEventArrow?.name
+
+    @TypeConverter
+    fun toTherapyEventArrow(therapyEventArrow: String?): TherapyEvent.Arrow? = therapyEventArrow?.let { TherapyEvent.Arrow.valueOf(it) }
 
     @TypeConverter
     fun fromGlucoseType(meterType: TherapyEvent.MeterType?) = meterType?.name
@@ -166,8 +178,8 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromOfflineEventReason(reason: OfflineEvent.Reason?) = reason?.name
+    fun fromRunningModeMode(mode: RunningMode.Mode?) = mode?.name
 
     @TypeConverter
-    fun toOfflineEventReason(reason: String?) = reason?.let { OfflineEvent.Reason.valueOf(it) }
+    fun toRunningModeMode(mode: String?) = mode?.let { RunningMode.Mode.valueOf(it) }
 }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="unsupported_action_in_pump">Kommando støttes ikke i pumpen. Bruk kun AndroidAPS brukergrensesnittet!</string>
+    <string name="waiting_1_minute">Venter %1$d/%2$d sek før nytt tilkoblingsforsøk</string>
 </resources>

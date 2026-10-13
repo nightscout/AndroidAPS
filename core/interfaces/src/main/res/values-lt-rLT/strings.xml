@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pompos valdik. pakeistas.</string>
     <!--    DateUtil-->
-    <string name="minago">prieš %1$d min.</string>
     <string name="minago_long">Prieš %1$d min.</string>
-    <string name="hoursago">Prieš %1$.1f val.</string>
     <string name="days_ago">Prieš %1$s d.</string>
     <string name="days_ago_round">Prieš %1$.0f d.</string>
     <string name="in_days">Po %1$.0f d.</string>

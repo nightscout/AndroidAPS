@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Макс болус в помпата (Е)</string>
     <string name="medtronic_pump_max_basal">Максимален базал в помпата (Е/ч)</string>
     <string name="medtronic_pump_encoding">Медтроник коодиране</string>
-    <string name="medtronic_pump_frequency_us_ca">САЩ &amp; Канада (916 Mhz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Останалата част от света (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Софтуерно 4b6b кодиране</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Хардуерно 4b6b кодиране</string>
     <string name="medtronic_custom_action_wake_and_tune">Събуди и настрой</string>
     <string name="medtronic_custom_action_clear_bolus_block">Изчисти Bolus Block</string>
     <string name="medtronic_custom_action_reset_rileylink">Изчисти RileyLink конфигурацията</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Литиева</string>
     <string name="medtronic_pump_battery_nizn">NiZn батерия</string>
     <string name="medtronic_pump_battery_nimh">NiMH (батерия)</string>
-    <string name="medtronic_bolus_debugging">Болус/Корекция подробно</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Батерия на RileyLink</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">преди</string>
     <string name="medtronic_notification_check_time_date">Необходимо е сверяване на часа в помпата</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">Вкл</string>
-    <string name="common_off">Изкл</string>
     <string name="pump_time_updated">Актуализирано време на помпата</string>
     <string name="set_neutral_temps_title">Прилагане на неутрални временни базали</string>
     <string name="set_neutral_temps_summary">Ако е вкл, то ще анулира временен базал на всеки час. Това може да помогне за спиране на  звук/вибрация от някой помпи на всеки час.</string>

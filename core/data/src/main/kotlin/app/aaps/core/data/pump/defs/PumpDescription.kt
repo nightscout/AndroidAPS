@@ -34,7 +34,7 @@ class PumpDescription {
     var isPatchPump = false
     var maxResorvoirReading = 50
     var useHardwareLink = false
-
+    var extendedBolusMinAmount = 0.0
     fun resetSettings() {
         isBolusCapable = true
         bolusStep = 0.1
@@ -64,6 +64,7 @@ class PumpDescription {
         needsManualTDDLoad = true
         hasCustomUnreachableAlertCheck = false
         useHardwareLink = false
+        extendedBolusMinAmount = extendedBolusStep
     }
 
     companion object {

@@ -11,4 +11,5 @@
     <string name="in_range">在范围内</string>
     <string name="above" comment="above &quot;in range&quot;">上方</string>
     <string name="hba1c">糖化血红蛋白: </string>
+    <!--    PumpStatusGenerator-->
 </resources>

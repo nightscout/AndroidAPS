@@ -20,10 +20,10 @@ import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_FILENAME
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_NAME
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_VERSION
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataMap
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.configuration.R
@@ -37,7 +37,6 @@ import javax.inject.Inject
 class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var fileListProvider: FileListProvider
     @Inject lateinit var rxBus: RxBus
@@ -61,6 +60,11 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
         binding.recyclerview.adapter = RecyclerViewAdapter(fileListProvider.listCustomWatchfaceFiles().sortedBy { it.cwfData.metadata[CWF_NAME] })
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.recyclerview.adapter = null
+    }
+
     inner class RecyclerViewAdapter internal constructor(private var customWatchfaceFileList: List<CwfFile>) : RecyclerView.Adapter<RecyclerViewAdapter.CwfFileViewHolder>() {
 
         inner class CwfFileViewHolder(val customWatchfaceImportListItemBinding: CustomWatchfaceImportListItemBinding) : RecyclerView.ViewHolder(customWatchfaceImportListItemBinding.root) {
@@ -70,9 +74,9 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
                     root.isClickable = true
                     customWatchfaceImportListItemBinding.root.setOnClickListener {
                         val customWatchfaceFile = filelistName.tag as CwfFile
-                        sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, customWatchfaceFile.cwfData.metadata[CWF_NAME] ?: "")
-                        sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, customWatchfaceFile.cwfData.metadata[CWF_AUTHOR_VERSION] ?: "")
-                        sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_filename, customWatchfaceFile.cwfData.metadata[CWF_FILENAME] ?: "")
+                        preferences.put(StringNonKey.WearCwfWatchfaceName, customWatchfaceFile.cwfData.metadata[CWF_NAME] ?: "")
+                        preferences.put(StringNonKey.WearCwfAuthorVersion, customWatchfaceFile.cwfData.metadata[CWF_AUTHOR_VERSION] ?: "")
+                        preferences.put(StringNonKey.WearCwfFileName, customWatchfaceFile.cwfData.metadata[CWF_FILENAME] ?: "")
 
                         val i = Intent()
                         setResult(RESULT_OK, i)

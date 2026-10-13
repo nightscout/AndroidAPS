@@ -77,6 +77,7 @@
     <!--    Loop     -->
     <color name="loopDisconnected">#939393</color>
     <color name="loopClosed">#00C03E</color>
+    <color name="loopLgs">#800080</color>
     <color name="loopSuspended">#F6CE22</color>
     <color name="loopOpened">#4983D7</color>
     <color name="loopDisabled">#FF1313</color>

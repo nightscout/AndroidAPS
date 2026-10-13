@@ -5,7 +5,7 @@ import app.aaps.plugins.automation.triggers.TriggerTestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.whenever
 
 class InputBgTest : TriggerTestBase() {
 
@@ -22,6 +22,6 @@ class InputBgTest : TriggerTestBase() {
 
     @BeforeEach
     fun prepare() {
-        `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
+        whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
     }
 }

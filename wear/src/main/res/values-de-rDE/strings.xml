@@ -83,7 +83,6 @@
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Menü</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">Dauer</string>
     <string name="action_tempt_confirmation">Temp Target angefordert</string>
     <string name="action_quick_wizard_confirmation">Quick Wizard angefordert</string>
     <string name="action_treatment_confirmation">Behandlung angefordert</string>
@@ -92,13 +91,8 @@
     <string name="action_fill_confirmation">Füllen angefordert</string>
     <string name="action_ecarb_confirmation">KH angefordert</string>
     <string name="action_profile_switch_confirmation">Profilwechsel angefordert</string>
-    <string name="action_target" comment="In temp target menu, single target value">Ziel</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Niedrig</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Hoch</string>
     <string name="action_carbs">Kohlenhydrate</string>
     <string name="action_ecarbs">eCarbs</string>
-    <string name="action_percentage">Prozentsatz</string>
-    <string name="action_start_min">Start [min]</string>
     <string name="action_duration_h">Dauer [h]</string>
     <string name="action_insulin">Insulin</string>
     <string name="action_preset_1">Voreinstellung 1</string>
@@ -106,7 +100,6 @@
     <string name="action_preset_3">Voreinstellung 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Freie Menge</string>
     <string name="action_confirm">BESTÄTIGEN</string>
-    <string name="action_timeshift">Zeitverschiebung</string>
     <string name="bolus_progress">Bolusabgabe läuft </string>
     <string name="press_to_cancel">Zum Abbrechen drücken</string>
     <string name="cancel_bolus">Bolus löschen </string>
@@ -140,18 +133,13 @@
     <string name="color_name_black">schwarz</string>
     <string name="color_name_multicolor">mehrfarbig</string>
     <string name="pref_simplify_ui">Benutzeroberfläche vereinfachen</string>
-    <string name="pref_simplify_ui_sum">Nur Uhrzeit und BZ anzeigen</string>
     <string name="pref_vibrate_hourly">stündlich vibrieren</string>
     <string name="pref_show_weeknumber">Kalenderwoche anzeigen</string>
     <string name="custom_pref_show_seconds">Sekunden anzeigen</string>
-    <string name="digitalstyle_pref_your_style">Ihr Stil:</string>
     <string name="digitalstyle_style_none">ohne Stil</string>
     <string name="digitalstyle_style_minimal">minimalistisches Stil</string>
     <string name="digitalstyle_style_shape">schattierter Stil</string>
     <string name="digitalstyle_style_full">vollständiger Stil</string>
-    <string name="digitalstyle_pref_your_color">Ihre Farbe:</string>
-    <string name="digitalstyle_pref_your_color_saturation">Ihre Farbsättigung:</string>
-    <string name="digitalstyle_pref_your_color_opacity">Deine Farbtransparenz:</string>
     <string name="bolus_progress_channel_name">AAPS Bolus Fortschritt</string>
     <string name="bolus_progress_silent_channel_name">AAPS Bolus-Fortschritt stumm</string>
     <string name="bolus_progress_channel_description">Bolus-Fortschritt und Abbruch</string>

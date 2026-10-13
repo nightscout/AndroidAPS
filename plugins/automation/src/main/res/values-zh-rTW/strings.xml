@@ -72,15 +72,14 @@
     <string name="btdevicecompared">藍牙連線到設備 %1$s %2$s</string>
     <string name="btdevice">連線到藍牙設備</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
-    <string name="autosenscompared">自動靈敏度 %1$s %2$s %%</string>
-    <string name="autosenslabel">自動靈敏度 %</string>
+    <string name="autosenscompared">自動敏感度 %1$s %2$s %%</string>
+    <string name="autosenslabel">自動敏感度 %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">血糖差異</string>
     <string name="deltalabel_u">血糖差異 [%1$s]</string>
     <string name="currentlocation">目前位置</string>
+    <string name="choose_from_map">從地圖中選擇</string>
     <string name="location">位置</string>
-    <string name="latitude_short">緯度：</string>
-    <string name="longitude_short">經度：</string>
     <string name="glucose_u">血糖 [%1$s]：</string>
     <string name="target_u">目標 [%1$s]：</string>
     <string name="lastboluslabel">最後一次注射時間前</string>
@@ -141,4 +140,10 @@
     <string name="triggerStepsCountLabel">步數統計</string>
     <string name="triggerStepsCountDesc">每 %1$s 分鐘的步數統計 %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">測量持續時間</string>
+    <!--    SMB mode-->
+    <string name="changeSmbState">啟用/停用 SMB</string>
+    <string name="changeSmbTo">更改 SMB 為 %1$s</string>
+    <string name="newSmbMode">新 SMB 模式：</string>
+    <string name="on">開</string>
+    <string name="off">關</string>
 </resources>

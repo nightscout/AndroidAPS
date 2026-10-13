@@ -1,47 +1,65 @@
-@file:Suppress("DEPRECATION")
-
 package app.aaps.wear.complications
 
 import android.app.PendingIntent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Icon
-import android.support.wearable.complications.ComplicationData
-import android.util.DisplayMetrics
 import android.view.WindowManager
+import androidx.core.graphics.scale
+import androidx.wear.watchface.complications.data.ComplicationData
+import androidx.wear.watchface.complications.data.ComplicationType
+import androidx.wear.watchface.complications.data.PhotoImageComplicationData
+import androidx.wear.watchface.complications.data.PlainComplicationText
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.wear.data.RawDisplayData
 import java.io.IOException
 
-/*
- * Created by dlvoy on 2019-11-12
+/**
+ * Wallpaper Complication (Abstract Base)
+ *
+ * Provides wallpaper image complications scaled to watch screen size
+ * Subclasses specify the wallpaper asset file to display
+ * Type: LARGE_IMAGE
+ *
  */
-abstract class WallpaperComplication : BaseComplicationProviderService() {
+abstract class WallpaperComplication : ModernBaseComplicationProviderService() {
 
     abstract val wallpaperAssetsFileName: String
-    override fun buildComplicationData(dataType: Int, raw: RawDisplayData, complicationPendingIntent: PendingIntent): ComplicationData? {
-        var complicationData: ComplicationData? = null
-        if (dataType == ComplicationData.TYPE_LARGE_IMAGE) {
-            val metrics = DisplayMetrics()
-            val windowManager = applicationContext.getSystemService(WINDOW_SERVICE) as WindowManager
-            windowManager.defaultDisplay.getMetrics(metrics)
-            val width = metrics.widthPixels
-            val height = metrics.heightPixels
-            val builder = ComplicationData.Builder(ComplicationData.TYPE_LARGE_IMAGE)
-            val assetManager = assets
-            try {
-                assetManager.open(wallpaperAssetsFileName).use { iStr ->
-                    val bitmap = BitmapFactory.decodeStream(iStr)
-                    val scaled = Bitmap.createScaledBitmap(bitmap, width, height, true)
-                    builder.setLargeImage(Icon.createWithBitmap(scaled))
+
+    override fun buildComplicationData(
+        type: ComplicationType,
+        data: app.aaps.wear.data.ComplicationData,
+        complicationPendingIntent: PendingIntent
+    ): ComplicationData? {
+        return when (type) {
+            ComplicationType.PHOTO_IMAGE      -> {
+                val windowManager = applicationContext.getSystemService(WINDOW_SERVICE) as WindowManager
+                val bounds = windowManager.currentWindowMetrics.bounds
+                val width = bounds.width()
+                val height = bounds.height()
+                val assetManager = assets
+                var photoIcon: Icon? = null
+                try {
+                    assetManager.open(wallpaperAssetsFileName).use { iStr ->
+                        val bitmap = BitmapFactory.decodeStream(iStr)
+                        val scaled = bitmap.scale(width, height)
+                        photoIcon = Icon.createWithBitmap(scaled)
+                    }
+                } catch (e: IOException) {
+                    aapsLogger.error(LTag.WEAR, "Cannot read wallpaper asset: " + e.message, e)
                 }
-            } catch (e: IOException) {
-                aapsLogger.error(LTag.WEAR, "Cannot read wallpaper asset: " + e.message, e)
+                photoIcon?.let {
+                    PhotoImageComplicationData.Builder(
+                        photoImage = it,
+                        contentDescription = PlainComplicationText.Builder(text = "Wallpaper").build()
+                    ).build()
+                }
             }
-            complicationData = builder.build()
-        } else {
-            aapsLogger.warn(LTag.WEAR, "Unexpected complication type $dataType")
+
+            else                              -> {
+                aapsLogger.warn(LTag.WEAR, "Unexpected complication type $type")
+                null
+            }
         }
-        return complicationData
     }
+
+    override fun getComplicationAction(): ComplicationAction = ComplicationAction.NONE
 }

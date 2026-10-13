@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">Pumpen-Integration für Omnipod Eros (älteres Modell mit transparenter Nadelkappe). Benötigt ein RileyLink-Gerät mit mindestens Firmware-Version 2.0.</string>
+    <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Button \'Pulse Log\' im Menü Pod Mgmt. anzeigen</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Button \'RileyLink Status\' im Menü Pod Mgmt. anzeigen</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktiviere die Protokollierung des Akkuwechsels im Aktionen-Tab/Menü</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Ton für unsichere TBR-Benachrichtigungen aktiviert</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Ton für unsichere SMB-Benachrichtigungen aktiviert</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Ton für unsichere Bolus-Benachrichtigungen aktiviert</string>
+    <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_title">Pod Historie</string>
+    <string name="omnipod_eros_history_item_description">Beschreibung</string>
+    <string name="omnipod_eros_history_item_source">Quelle</string>
+    <string name="omnipod_eros_history_item_date">Datum</string>
+    <string name="omnipod_eros_history_type">Typ:</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f IE</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f IE, KH=%2$.1fg</string>
+    <string name="omnipod_eros_history_tbr_value">Rate: %1$.2f IE, Dauer: %2$d min.</string>
+    <!-- Omnipod Eros - Short Status -->
+    <!-- Omnipod Eros - Error -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">RileyLink Adresse ungültig.</string>
+    <string name="omnipod_eros_error_crc_mismatch">Kommunikation fehlgeschlagen: Die Überprüfung der Nachrichtenintegrität ist fehlgeschlagen</string>
+    <string name="omnipod_eros_error_invalid_packet_type">Kommunikation fehlgeschlagen: Es wurde ein ungültiges Paket vom Pod empfangen.</string>
+    <string name="omnipod_eros_error_invalid_progress_state">Kommunikation fehlgeschlagen: Der Pod befindet sich in einem falschen Zustand.</string>
+    <string name="omnipod_eros_error_invalid_response">Kommunikation fehlgeschlagen: Es wurde eine ungültige Antwort vom Pod empfangen.</string>
+    <string name="omnipod_eros_error_invalid_message_sequence_number">Kommunikation fehlgeschlagen: Ungültige Zeichenfolge vom Pod empfangen.</string>
+    <string name="omnipod_eros_error_invalid_message_address">Kommunikation fehlgeschlagen: Ungültige Adresse vom Pod empfangen.</string>
+    <string name="omnipod_eros_error_message_decoding_failed">Kommunikation fehlgeschlagen: Nachricht vom Pod konnte nicht decodiert werden.</string>
+    <string name="omnipod_eros_error_nonce_resync_failed">Kommunikation fehlgeschlagen: Nonce resync fehlgeschlagen.</string>
+    <string name="omnipod_eros_error_nonce_out_of_sync">Kommunikation fehlgeschlagen: Nonce nicht synchronisiert.</string>
+    <string name="omnipod_eros_error_not_enough_data">Kommunikation fehlgeschlagen: Nicht genügend Daten vom Pod empfangen.</string>
+    <string name="omnipod_eros_error_pod_fault">Ein Pod-Fehler (%1$03d %2$s) wurde festgestellt. Bitte deaktiviere den Pod und aktiviere einen neuen.</string>
+    <string name="omnipod_eros_error_pod_returned_error_response">Kommunikation fehlgeschlagen: Fehlerhafte Antwort vom Pod.</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Keine Antwort vom RileyLink</string>
+    <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink unterbrochen</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Keine Rückmeldung vom Pod</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Basalprofil konnte nicht eingestellt werden. Insulinabgabe wird evtl. unterbrochen. Aktualisiere den Pod Status bitte manuell im Omnipod Tab und starte die Abgabe falls notwendig neu. </string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Basalprofil konnte evtl. nicht eingestellt werden. Insulinabgabe wird evtl. unterbrochen. Aktualisiere den Pod Status bitte manuell im Omnipod Tab und starte die Abgabe falls notwendig neu. </string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Basalprofil konnte nicht eingestellt werden. Insulinabgabe wurde unterbrochen. Bitte starte die Abgabe manuell im Omnipod Tab neu. </string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Abbruch der temporären Basalrate evtl. fehlgeschlagen. Aktualisiere den Pod Status manuell im Omnipod Tab.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">TBR konnte nicht gesetzt werden. Falls zuvor eine andere TBR aktiv war, wurde diese evtl. abgebrochen. Aktualisiere bitte manuell den Pod Status im Omnipod Tab.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">TBR konnte evtl. nicht gesetzt werden. Falls zuvor eine andere TBR aktiv war, wurde diese abgebrochen. Aktualisiere bitte manuell den Pod Status im Omnipod Tab.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_validation">TBR Dauer muss größer null und ein Vielfaches von %1$s Minuten sein.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Zeit konnte evtl. nicht eingestellt werden. Insulinabgabe wird evtl. unterbrochen. Aktualisiere den Pod Status bitte manuell im Omnipod Tab und starte die Abgabe falls notwendig neu. </string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Zeit konnte nicht eingestellt werden. Insulinabgabe wurde unterbrochen. Bitte starte die Abgabe manuell im Omnipod Tab neu. </string>
+    <string name="omnipod_eros_error_failed_to_read_pulse_log">Fehler beim Lesen des Pulse-Log</string>
+    <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Zeit auf den Pod konnte nicht geändert werden. Synchronisiere die Zeit manuell im Omnipod tab.</string>
+    <string name="omnipod_eros_error_operation_not_possible_no_configuration">Aktion ist nicht möglich.\n\n Du musst zuerst den Omnipod konfigurieren, bevor Du diese Operation verwenden kannst.</string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain">Bolusabgabe kann nicht verifiziert werden. Prüfe manuell, ob der Pod Insulin abgibt, indem Du auf Klickgeräusche achtest. <b>Wenn Du sicher bist, dass der Bolus nicht abgegeben wurde, musst Du ihn manuell aus den Behandlungen löschen. Dies gilt auch, wenn Du jetzt \'Bolus abbrechen\' klickst!</b></string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">SMB-Abgabe (%1$.2f IE) kann nicht verifiziert werden. <b>Wenn Du sicher bist, dass der SMB nicht abgegeben wurde, musst Du ihn manuell aus den Behandlungen löschen.</b></string>
+    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Auf dem Pod läuft eine temp. Basalrate, aber AAPS kennt diese nicht. Brich die TBR bitte manuell ab.</string>
+    <!-- Omnipod Eros - Pod Management -->
+    <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink Status</string>
+    <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">Warte auf Verbindung mit RileyLink…</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">RileyLink-Konfiguration zurücksetzen</string>
+    <string name="omnipod_eros_pod_management_button_read_pulse_log">Pulse-Log lesen</string>
+    <string name="omnipod_eros_pod_management_button_reading_pulse_log">Lese Puls-Log...</string>
+    <string name="omnipod_eros_pod_management_pulse_log_value">Pulse Log (in Zwischenablage kopiert)</string>
+    <!-- Omnipod Eros - Pod Activation Wizard -->
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Befülle den neuen Pod mit ausreichend Insulin für 3 Tage.\n\nAchte auch zwei Pieptöne vom Pod während des Füllens. Diese zeigen an, dass der Pod mit der Mindestmenge von 80 IE befüllt wurde. Leere die Spritze komplett, auch wenn Du die beiden Pieptöne gehört hast.\n\nKlicke <b>Weiter</b> nachdem Du den Pod befüllt hast.\n\n<b>Hinweis:</b> Entferne den Nadelschutz des Pods noch nicht.\n<b>Hinweis:</b> Bringe den RileyLink in eine aufrechte Position und platziere den Pod einige Zentimeter entfernt davon.</string>
+    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Versuche, Dich mit dem neuen Pod zu verbinden und ihn zu befüllen.\n\nWenn der Initialisierungsprozess erfolgreich abgeschlossen ist, kannst Du <b>Weiter</b> drücken.\n\n<b>Hinweis:</b> Bringe den RileyLink bitte in eine aufrechte Position und platziere den Pod einige Zentimeter entfernt davon.</string>
+</resources>

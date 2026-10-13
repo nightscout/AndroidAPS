@@ -6,24 +6,21 @@ plugins {
     id("kotlin-android")
 }
 
-// Convetion plugin should be used here to use libs.versions.toml
-// I was not successfull to implement it
 dependencies {
     testImplementation(kotlin("test"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
-    testImplementation("org.json:json:20230618")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.15.2")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
-    testImplementation("joda-time:joda-time:2.13.0")
-    testImplementation("com.google.truth:truth:1.1.5")
-    testImplementation("org.skyscreamer:jsonassert:1.5.3")
+    testImplementationFromCatalog("org-junit-jupiter")
+    testImplementationFromCatalog("org-junit-jupiter-api")
+    testImplementationFromCatalog("org-mockito-junit-jupiter")
+    testImplementationFromCatalog("org-mockito-kotlin")
+    testImplementationFromCatalog("joda-time")
+    testImplementationFromCatalog("com-google-truth")
+    testImplementationFromCatalog("org-skyscreamer-jsonassert")
 
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.2.1")
-    androidTestImplementation("androidx.test:rules:1.6.1")
-    androidTestImplementation("com.google.truth:truth:1.1.5")
-    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
+    androidTestImplementationFromCatalog("androidx-espresso-core")
+    androidTestImplementationFromCatalog("androidx-test-ext")
+    androidTestImplementationFromCatalog("androidx-test-rules")
+    androidTestImplementationFromCatalog("com-google-truth")
+    androidTestImplementationFromCatalog("androidx-uiautomator")
 }
 
 tasks.withType<Test> {
@@ -42,8 +39,8 @@ tasks.withType<Test> {
 }
 
 tasks.withType<Test>().configureEach {
+    failOnNoDiscoveredTests = false
     maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
-    forkEvery = 20
 }
 
 android {

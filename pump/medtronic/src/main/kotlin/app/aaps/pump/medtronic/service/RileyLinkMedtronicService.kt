@@ -11,14 +11,19 @@ import app.aaps.pump.common.hw.rileylink.RileyLinkConst
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringKey
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringPreferenceKey
+import app.aaps.pump.common.hw.rileylink.keys.RileylinkBooleanPreferenceKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkService
 import app.aaps.pump.medtronic.MedtronicPumpPlugin
 import app.aaps.pump.medtronic.R
 import app.aaps.pump.medtronic.comm.MedtronicCommunicationManager
 import app.aaps.pump.medtronic.comm.ui.MedtronicUIComm
+import app.aaps.pump.medtronic.defs.BatteryType
 import app.aaps.pump.medtronic.defs.MedtronicDeviceType
 import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
-import app.aaps.pump.medtronic.util.MedtronicConst
+import app.aaps.pump.medtronic.keys.MedtronicIntPreferenceKey
+import app.aaps.pump.medtronic.keys.MedtronicStringPreferenceKey
 import app.aaps.pump.medtronic.util.MedtronicUtil
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,7 +42,6 @@ class RileyLinkMedtronicService : RileyLinkService() {
 
     private val mBinder: IBinder = LocalBinder()
     private var serialChanged = false
-    private lateinit var frequencies: Array<String>
     private var rileyLinkAddress: String? = null
     private var rileyLinkAddressChanged = false
     private var encodingType: RileyLinkEncodingType? = null
@@ -65,18 +69,12 @@ class RileyLinkMedtronicService : RileyLinkService() {
      * If you have customized RileyLinkServiceData you need to override this
      */
     override fun initRileyLinkServiceData() {
-        frequencies = arrayOf(
-            rh.gs(R.string.key_medtronic_pump_frequency_us_ca),
-            rh.gs(R.string.key_medtronic_pump_frequency_worldwide)
-        )
-        // frequencies[0] = rh.gs(R.string.key_medtronic_pump_frequency_us_ca)
-        // frequencies[1] = rh.gs(R.string.key_medtronic_pump_frequency_worldwide)
         rileyLinkServiceData.targetDevice = RileyLinkTargetDevice.MedtronicPump
-        setPumpIDString(sp.getString(MedtronicConst.Prefs.PumpSerial, "000000"))
+        setPumpIDString(preferences.get(MedtronicStringPreferenceKey.Serial))
 
         // get most recently used RileyLink address and name
-        rileyLinkServiceData.rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "")
-        rileyLinkServiceData.rileyLinkName = sp.getString(RileyLinkConst.Prefs.RileyLinkName, "")
+        rileyLinkServiceData.rileyLinkAddress = preferences.get(RileyLinkStringPreferenceKey.MacAddress)
+        rileyLinkServiceData.rileyLinkName = preferences.get(RileyLinkStringKey.Name)
         rfSpy.startReader()
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly constructed")
     }
@@ -126,30 +124,24 @@ class RileyLinkMedtronicService : RileyLinkService() {
 
     /* private functions */ // PumpInterface - REMOVE
     val isInitialized: Boolean
-        get() = rileyLinkServiceData.rileyLinkServiceState.isReady
+        get() = rileyLinkServiceData.rileyLinkServiceState.isReady()
 
     override fun verifyConfiguration(forceRileyLinkAddressRenewal: Boolean): Boolean {
         return try {
             val regexSN = "[0-9]{6}"
             val regexMac = "([\\da-fA-F]{1,2}(?::|$)){6}"
             medtronicPumpStatus.errorDescription = "-"
-            val serialNr = sp.getStringOrNull(MedtronicConst.Prefs.PumpSerial, null)
-            if (serialNr == null) {
-                medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_serial_not_set)
+            val serialNr = preferences.get(MedtronicStringPreferenceKey.Serial)
+            if (!serialNr.matches(regexSN.toRegex())) {
+                medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_serial_invalid)
                 return false
-            } else {
-                if (!serialNr.matches(regexSN.toRegex())) {
-                    medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_serial_invalid)
-                    return false
-                } else {
-                    if (serialNr != medtronicPumpStatus.serialNumber) {
-                        medtronicPumpStatus.serialNumber = serialNr
-                        serialChanged = true
-                    }
-                }
             }
-            val pumpTypePref = sp.getStringOrNull(MedtronicConst.Prefs.PumpType, null)
-            if (pumpTypePref == null) {
+            if (serialNr != medtronicPumpStatus.serialNumber) {
+                medtronicPumpStatus.serialNumber = serialNr
+                serialChanged = true
+            }
+            val pumpTypePref = preferences.get(MedtronicStringPreferenceKey.PumpType)
+            if (pumpTypePref.isEmpty()) {
                 medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_pump_type_not_set)
                 return false
             } else {
@@ -165,26 +157,9 @@ class RileyLinkMedtronicService : RileyLinkService() {
                     if (pumpTypePart.startsWith("7")) medtronicPumpStatus.reservoirFullUnits = 300 else medtronicPumpStatus.reservoirFullUnits = 176
                 }
             }
-            val pumpFrequency = sp.getStringOrNull(MedtronicConst.Prefs.PumpFrequency, null)
-            if (pumpFrequency == null) {
-                medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_pump_frequency_not_set)
-                return false
-            } else {
-                if (pumpFrequency != frequencies[0] && pumpFrequency != frequencies[1]) {
-                    medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_pump_frequency_invalid)
-                    return false
-                } else {
-                    medtronicPumpStatus.pumpFrequency = pumpFrequency
-                    val isFrequencyUS = pumpFrequency == frequencies[0]
-                    val newTargetFrequency = if (isFrequencyUS) //
-                        RileyLinkTargetFrequency.MedtronicUS else RileyLinkTargetFrequency.MedtronicWorldWide
-                    if (rileyLinkServiceData.rileyLinkTargetFrequency != newTargetFrequency) {
-                        rileyLinkServiceData.rileyLinkTargetFrequency = newTargetFrequency
-                    }
-                }
-            }
-            val rileyLinkAddress = sp.getStringOrNull(RileyLinkConst.Prefs.RileyLinkAddress, null)
-            if (rileyLinkAddress == null) {
+            rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.getByKey(preferences.get(MedtronicStringPreferenceKey.PumpFrequency))
+            val rileyLinkAddress = preferences.get(RileyLinkStringPreferenceKey.MacAddress)
+            if (rileyLinkAddress.isEmpty()) {
                 aapsLogger.debug(LTag.PUMP, "RileyLink address invalid: null")
                 medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_rileylink_address_invalid)
                 return false
@@ -192,6 +167,7 @@ class RileyLinkMedtronicService : RileyLinkService() {
                 if (!rileyLinkAddress.matches(regexMac.toRegex())) {
                     medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_rileylink_address_invalid)
                     aapsLogger.debug(LTag.PUMP, "RileyLink address invalid: %s", rileyLinkAddress)
+                    return false
                 } else {
                     if (rileyLinkAddress != this.rileyLinkAddress) {
                         this.rileyLinkAddress = rileyLinkAddress
@@ -199,38 +175,32 @@ class RileyLinkMedtronicService : RileyLinkService() {
                     }
                 }
             }
-            val maxBolusLcl = checkParameterValue(MedtronicConst.Prefs.MaxBolus, "25.0", 25.0)
+            val maxBolusLcl = preferences.get(MedtronicIntPreferenceKey.MaxBolus).toDouble()
             if (medtronicPumpStatus.maxBolus == null || medtronicPumpStatus.maxBolus != maxBolusLcl) {
                 medtronicPumpStatus.maxBolus = maxBolusLcl
 
                 //LOG.debug("Max Bolus from AAPS settings is " + maxBolus);
             }
-            val maxBasalLcl = checkParameterValue(MedtronicConst.Prefs.MaxBasal, "35.0", 35.0)
+            val maxBasalLcl = preferences.get(MedtronicIntPreferenceKey.MaxBasal).toDouble()
             if (medtronicPumpStatus.maxBasal == null || medtronicPumpStatus.maxBasal != maxBasalLcl) {
                 medtronicPumpStatus.maxBasal = maxBasalLcl
 
                 //LOG.debug("Max Basal from AAPS settings is " + maxBasal);
             }
-            val encodingTypeStr = sp.getStringOrNull(MedtronicConst.Prefs.Encoding, null)
-                ?: return false
-            val newEncodingType = RileyLinkEncodingType.getByDescription(encodingTypeStr, rh)
+            val encodingTypeStr = preferences.get(RileyLinkStringPreferenceKey.Encoding)
+            val newEncodingType = RileyLinkEncodingType.getByKey(encodingTypeStr)
             if (encodingType == null) {
                 encodingType = newEncodingType
             } else if (encodingType != newEncodingType) {
                 encodingType = newEncodingType
                 encodingChanged = true
             }
-            val batteryTypeStr = sp.getStringOrNull(MedtronicConst.Prefs.BatteryType, null)
-                ?: return false
-            val batteryType = medtronicPumpStatus.getBatteryTypeByDescription(batteryTypeStr)
-            if (medtronicPumpStatus.batteryType != batteryType) {
-                medtronicPumpStatus.batteryType = batteryType
-            }
+            medtronicPumpStatus.batteryType = BatteryType.getByKey(preferences.get(MedtronicStringPreferenceKey.BatteryType))
 
             //String bolusDebugEnabled = sp.getStringOrNull(MedtronicConst.Prefs.BolusDebugEnabled, null);
             //boolean bolusDebug = bolusDebugEnabled != null && bolusDebugEnabled.equals(rh.gs(R.string.common_on));
             //MedtronicHistoryData.doubleBolusDebug = bolusDebug;
-            rileyLinkServiceData.showBatteryLevel = sp.getBoolean(RileyLinkConst.Prefs.ShowBatteryLevel, false)
+            rileyLinkServiceData.showBatteryLevel = preferences.get(RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel)
             reconfigureService(forceRileyLinkAddressRenewal)
             true
         } catch (ex: Exception) {
@@ -247,11 +217,11 @@ class RileyLinkMedtronicService : RileyLinkService() {
                 serialChanged = false
             }
             if (rileyLinkAddressChanged || forceRileyLinkAddressRenewal) {
-                rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this)
+                rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet)
                 rileyLinkAddressChanged = false
             }
             if (encodingChanged) {
-                changeRileyLinkEncoding(encodingType)
+                changeRileyLinkEncoding(encodingType!!)
                 encodingChanged = false
             }
         }
@@ -262,22 +232,6 @@ class RileyLinkMedtronicService : RileyLinkService() {
         // targetFrequencyChanged = false;
         // }
         return !rileyLinkAddressChanged && !serialChanged && !encodingChanged // && !targetFrequencyChanged);
-    }
-
-    private fun checkParameterValue(key: Int, defaultValue: String, defaultValueDouble: Double): Double {
-        var valueDouble: Double
-        val value = sp.getString(key, defaultValue)
-        valueDouble = try {
-            value.toDouble()
-        } catch (ex: Exception) {
-            aapsLogger.error("Error parsing setting: %s, value found %s", key, value)
-            defaultValueDouble
-        }
-        if (valueDouble > defaultValueDouble) {
-            sp.putString(key, defaultValue)
-            valueDouble = defaultValueDouble
-        }
-        return valueDouble
     }
 
     fun setNotInPreInit(): Boolean {

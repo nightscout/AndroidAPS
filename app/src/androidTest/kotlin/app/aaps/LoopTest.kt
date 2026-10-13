@@ -1,11 +1,13 @@
 package app.aaps
 
+import android.annotation.SuppressLint
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.GrantPermissionRule
 import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
-import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
@@ -14,7 +16,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
@@ -74,7 +75,19 @@ class LoopTest @Inject constructor() {
     @Test
     fun loopTest() {
         // Prepare
-        repository.clearDatabases()
+        persistenceLayer.clearDatabases()
+        @SuppressLint("CheckResult")
+        persistenceLayer.insertOrUpdateRunningMode(
+            runningMode = RM(
+                timestamp = dateUtil.now(),
+                mode = RM.Mode.CLOSED_LOOP,
+                autoForced = false,
+                duration = 0
+            ),
+            action = Action.CLOSED_LOOP_MODE,
+            source = Sources.Aaps,
+            listValues = listOf(ValueWithUnit.SimpleString("Migration"))
+        ).blockingGet()
         rxHelper.listen(EventEffectiveProfileSwitchChanged::class.java)
         rxHelper.listen(EventLoopSetLastRunGui::class.java)
         rxHelper.listen(EventResetOpenAPSGui::class.java)
@@ -83,9 +96,8 @@ class LoopTest @Inject constructor() {
         rxHelper.listen(EventNewHistoryData::class.java)
         rxHelper.listen(EventAutosensCalculationFinished::class.java)
         rxHelper.listen(EventAPSCalculationFinished::class.java)
-        (loop as PluginBase).setPluginEnabled(PluginType.LOOP, true)
+        objectivesPlugin.onStart()
 
-        persistenceLayer.clearDatabases()
 
         // Enable event logging
         l.findByName(LTag.EVENTS.name).enabled = true

@@ -1,23 +1,20 @@
 package app.aaps.pump.equil.ui
 
-import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.data.RunMode
@@ -32,13 +29,10 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
-// IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
 class EquilUnPairDetachActivity : TranslatedDaggerAppCompatActivity() {
 
-    @Inject lateinit var sp: SP
-    @Inject lateinit var blePreCheck: BlePreCheck
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var context: Context
+    @Inject lateinit var preferences: Preferences
+
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var commandQueue: CommandQueue
@@ -70,39 +64,27 @@ class EquilUnPairDetachActivity : TranslatedDaggerAppCompatActivity() {
             .load(R.drawable.equil_animation_wizard_detach)
             .into(binding.imv)
         binding.btnNext.setOnClickListener {
-            // startActivity(Intent(context, EquilPairInsertActivity::class.java))
-            showUnPairConfig()
+            OKDialog.showConfirmation(
+                this, rh.gs(app.aaps.core.ui.R.string.confirmation), rh.gs(R.string.equil_hint_dressing),
+                ok = {
+                    showLoading()
+                    commandQueue.customCommand(CmdInsulinChange(aapsLogger, preferences, equilManager), object : Callback() {
+                        override fun run() {
+                            if (!result.success) ToastUtils.errorToast(this@EquilUnPairDetachActivity, rh.gs(R.string.equil_error))
+                            equilManager.setRunMode(RunMode.STOP)
+                            equilPumpPlugin.resetData()
+                            equilManager.setActivationProgress(ActivationProgress.CANNULA_CHANGE)
+                            dismissLoading()
+                            startActivity(Intent(this@EquilUnPairDetachActivity, EquilUnPairActivity::class.java))
+                        }
+                    })
+                })
         }
     }
 
-    private fun showUnPairConfig() {
-
-        val alertDialog = AlertDialog.Builder(this)
-            .setTitle(rh.gs(R.string.equil_title_tips))
-            .setMessage(rh.gs(R.string.equil_hint_dressing))
-            .setPositiveButton(rh.gs(app.aaps.core.ui.R.string.ok)) { _: DialogInterface, _: Int ->
-                changeInsulin()
-            }
-            .setNegativeButton(rh.gs(app.aaps.core.ui.R.string.cancel)) { dialog: DialogInterface, _: Int ->
-                dialog.dismiss()
-            }
-            .create()
-        alertDialog.show()
-
-    }
-
-    private fun changeInsulin() {
-        showLoading()
-        commandQueue.customCommand(CmdInsulinChange(aapsLogger, sp, equilManager), object : Callback() {
-            override fun run() {
-                if (!result.success) equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
-                equilManager.setRunMode(RunMode.STOP)
-                equilPumpPlugin.resetData()
-                equilManager.setActivationProgress(ActivationProgress.CANNULA_CHANGE)
-                dismissLoading()
-                startActivity(Intent(context, EquilUnPairActivity::class.java))
-            }
-        })
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
     }
 
     private fun showLoading() {

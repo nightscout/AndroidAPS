@@ -7,27 +7,31 @@
         android:entries="@array/digitalstyle_styles_name"
         android:entryValues="@array/digitalstyle_styles_values"
         android:key="@string/key_digital_style_frame_style"
-        android:title="@string/digitalstyle_pref_your_style" />
+        android:title="@string/digitalstyle_pref_your_style"
+        android:summary="%s" />
 
     <ListPreference
         android:defaultValue="red"
         android:entries="@array/digitalstyle_color_name"
         android:entryValues="@array/digitalstyle_color_values"
         android:key="@string/key_digital_style_frame_color"
-        android:title="@string/digitalstyle_pref_your_color" />
+        android:title="@string/digitalstyle_pref_your_color"
+        android:summary="%s" />
     <ListPreference
         android:defaultValue="700"
         android:entries="@array/digitalstyle_color_saturation"
         android:entryValues="@array/digitalstyle_color_saturation"
         android:key="@string/key_digital_style_frame_color_saturation"
-        android:title="@string/digitalstyle_pref_your_color_saturation" />
+        android:title="@string/digitalstyle_pref_your_color_saturation"
+        android:summary="%s" />
 
     <ListPreference
         android:defaultValue="1"
         android:entries="@array/digitalstyle_color_opacity_name"
         android:entryValues="@array/digitalstyle_color_opacity_value"
         android:key="@string/key_digital_style_frame_color_opacity"
-        android:title="@string/digitalstyle_pref_your_color_opacity" />
+        android:title="@string/digitalstyle_pref_your_color_opacity"
+        android:summary="%s" />
 
     <CheckBoxPreference
         android:defaultValue="true"
@@ -52,7 +56,7 @@
         android:entries="@array/watchface_simplify_ui_name"
         android:entryValues="@array/watchface_simplify_ui_values"
         android:key="@string/key_simplify_ui"
-        android:summary="@string/pref_simplify_ui_sum"
-        android:title="@string/pref_simplify_ui" />
+        android:title="@string/pref_simplify_ui"
+        android:summary="%s" />
 
 </PreferenceScreen>

@@ -1,8 +1,6 @@
 package app.aaps.wear
 
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -17,7 +15,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import javax.inject.Inject
 
-class WearApp : DaggerApplication(), OnSharedPreferenceChangeListener {
+class WearApp : DaggerApplication() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
@@ -30,7 +28,12 @@ class WearApp : DaggerApplication(), OnSharedPreferenceChangeListener {
         super.onCreate()
         exceptionHandlerWear.register()
         aapsLogger.debug(LTag.WEAR, "onCreate")
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener { _, key ->
+            key ?: return@registerOnSharedPreferenceChangeListener
+            // We trigger update on Complications
+            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
+            rxBus.send(EventWearPreferenceChange(key))
+        }
         startForegroundService(Intent(this, DataLayerListenerServiceWear::class.java))
     }
 
@@ -39,11 +42,4 @@ class WearApp : DaggerApplication(), OnSharedPreferenceChangeListener {
             .builder()
             .application(this)
             .build()
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        key ?: return
-        // We trigger update on Complications
-        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
-        rxBus.send(EventWearPreferenceChange(key))
-    }
 }

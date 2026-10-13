@@ -9,10 +9,6 @@
     <string name="menu_bolus">Bolus</string>
     <string name="menu_carb">UH</string>
     <string name="menu_settings">Postavke</string>
-    <string name="action_duration">Trajanje</string>
-    <string name="action_target" comment="In temp target menu, single target value">Cilj</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">Nisko</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">Visoko</string>
     <string name="action_carbs">UH</string>
     <string name="action_insulin">Inzulin</string>
     <string name="status_pump">Pumpa</string>

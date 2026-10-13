@@ -83,7 +83,6 @@
     <string name="menu_default">기본</string>
     <string name="menu_menu">메뉴</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">기간</string>
     <string name="action_tempt_confirmation">임시 목표 요청됨</string>
     <string name="action_quick_wizard_confirmation">Quick Wizard 요청됨</string>
     <string name="action_treatment_confirmation">처치 요청됨</string>
@@ -92,13 +91,8 @@
     <string name="action_fill_confirmation">채우기 요청됨</string>
     <string name="action_ecarb_confirmation">탄수화물 요청됨</string>
     <string name="action_profile_switch_confirmation">프로파일 변경 요청됨</string>
-    <string name="action_target" comment="In temp target menu, single target value">목표:</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">저혈당</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">고혈당</string>
     <string name="action_carbs">탄수화물</string>
     <string name="action_ecarbs">eCarbs</string>
-    <string name="action_percentage">퍼센트</string>
-    <string name="action_start_min">시작 [min]</string>
     <string name="action_duration_h">기간 [h]</string>
     <string name="action_insulin">인슐린</string>
     <string name="action_preset_1">프리셋 1</string>
@@ -106,7 +100,6 @@
     <string name="action_preset_3">프리셋 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">양 제한없음</string>
     <string name="action_confirm">확인</string>
-    <string name="action_timeshift">시간이동</string>
     <string name="bolus_progress">Bolus 주입 중</string>
     <string name="press_to_cancel">눌러서 취소하기</string>
     <string name="cancel_bolus">BOLUS 취소</string>
@@ -140,18 +133,13 @@
     <string name="color_name_black">검정</string>
     <string name="color_name_multicolor">다양한 색상</string>
     <string name="pref_simplify_ui">UI 단순화</string>
-    <string name="pref_simplify_ui_sum">시간과 BG만 보여주기</string>
     <string name="pref_vibrate_hourly">시간마다 진동</string>
     <string name="pref_show_weeknumber">몇 번째 주인지 표시</string>
     <string name="custom_pref_show_seconds">초 표시하기</string>
-    <string name="digitalstyle_pref_your_style">사용자 형식:</string>
     <string name="digitalstyle_style_none">형식 없음</string>
     <string name="digitalstyle_style_minimal">단순한 형태</string>
     <string name="digitalstyle_style_shape">모양</string>
     <string name="digitalstyle_style_full">완전한 형식</string>
-    <string name="digitalstyle_pref_your_color">사용자 색상:</string>
-    <string name="digitalstyle_pref_your_color_saturation">사용자 색상 선명도:</string>
-    <string name="digitalstyle_pref_your_color_opacity">사용자 색상 불투명도:</string>
     <string name="bolus_progress_channel_name">AAPS Bolus 주입 중</string>
     <string name="bolus_progress_silent_channel_name">AAPS Bolus 주입 무음화</string>
     <string name="bolus_progress_channel_description">Bolus 진행과 취소</string>

@@ -40,7 +40,7 @@ class TriggerInsulinAge(injector: HasAndroidInjector) : Trigger(injector) {
         val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.INSULIN_CHANGE)
         val currentAgeHours = therapyEvent?.timestamp?.let { timestamp ->
             (dateUtil.now() - timestamp) / (60 * 60 * 1000.0)
-        }?.toDouble() ?: 0.0
+        } ?: 0.0
         val isPatchPump = activePlugin.activePump.pumpDescription.isPatchPump
         if (isPatchPump) {
             aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution: " + friendlyDescription())

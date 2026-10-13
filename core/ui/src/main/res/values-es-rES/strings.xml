@@ -5,7 +5,6 @@
     <string name="error">Error</string>
     <string name="profile_set_ok">Perfil basal actualizado en la bomba</string>
     <string name="invalid_input">Datos inválidos</string>
-    <string name="bolus_delivering">Entregando %1$.2f U</string>
     <string name="constraint_applied">¡Restricción aplicada!</string>
     <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
     <string name="tt_label">OT</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Bomba no inicializada, ¡perfil no establecido!</string>
     <string name="failed_update_basal_profile">Error al actualizar el perfil basal</string>
-    <string name="bolus_delivered_successfully">Bolo %1$.2fU entregado correctamente</string>
     <string name="no_valid_basal_rate">Tasa basal no válida leída en la bomba</string>
     <string name="limiting_iob">Limitando IOB a %1$.1f U debido a %2$s</string>
     <string name="loop_disabled">LAZO DESACTIVADO POR RESTRICCIONES</string>
@@ -91,7 +89,7 @@
     <string name="alarm">Alarma</string>
     <string name="exportsettings">Exportar ajustes</string>
     <string name="disableloop">Desactivar lazo</string>
-    <string name="enableloop">Activar lazo</string>
+    <string name="disabled_loop">Lazo deshabilitado</string>
     <string name="resumeloop">Reanudar el lazo</string>
     <string name="suspendloop">Suspender lazo</string>
     <string name="duration_min_label">Duración [min]</string>
@@ -105,7 +103,7 @@
     <string name="name_short">Nombre:</string>
     <string name="time">Tiempo</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="loading">Cargando …</string>
+    <string name="loading">Cargando…</string>
     <string name="notes_label">Notas</string>
     <string name="remove_button">Eliminar</string>
     <string name="add_new">Añadir nuevo</string>
@@ -119,8 +117,10 @@
     <string name="duration_label">Duración</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Bomba parada</string>
+    <string name="pump_running">Bomba funcionando</string>
     <string name="notconfigured">Sin configurar</string>
     <string name="loopsuspended">Lazo suspendido</string>
+    <string name="loop_suspended_by_dst">Lazo suspendido por DST (Horario de verano)</string>
     <string name="trend_arrow">Flecha de tendencia</string>
     <string name="a11y_autosens_label">Auto sens</string>
     <string name="required">req</string>
@@ -155,19 +155,23 @@
     <string name="treatments_wizard_basaliob_label">IOB de Basal</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="login">Inicio de sesión</string>
+    <string name="logout">Cerrar sesión</string>
     <string name="prime_fill">Cebar/Llenar</string>
+    <string name="site_rotation">Rotación del sitio</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="stoptemptarget">Detener objetivo temporal</string>
     <string name="closedloop">Lazo cerrado</string>
     <string name="openloop">Lazo abierto</string>
     <string name="lowglucosesuspend">Suspensión por glucosa baja (LGS)</string>
+    <string name="pump_disconnected">Bomba desconectada</string>
+    <string name="pump_suspended">Bomba suspendida</string>
+    <string name="mode_reverted">Modo revertido</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Error cancelando la basal temporal</string>
     <string name="canceling_eb_failed">Error cancelando el bolo extendido</string>
     <string name="virtualpump_uploadstatus_title">Subir estado de la bomba a NS o Tidepool</string>
-    <string name="suspendloop_label">Desactiva/suspende el lazo</string>
     <string name="iob_label">Insulina a bordo (IOB)</string>
     <string name="loopstatus_targets">OBJETIVOS:</string>
     <string name="loopstatus_OAPS_result">RESULTADO OAPS:</string>
@@ -220,6 +224,8 @@
     <string name="careportal_exercise_message">Ejercicio : %1$s</string>
     <string name="careportal_pump_site_change">Cambio de cánula</string>
     <string name="cgm_sensor_insert">Inserción de sensor</string>
+    <string name="careportal_pump_site_management">Sitios de la Bomba</string>
+    <string name="careportal_cgm_site_management">Sitios del MCG</string>
     <string name="careportal_cgmsensorstart">Inicio de Sensor</string>
     <string name="careportal_cgm_sensor_stop">Detener sensor MCG</string>
     <string name="careportal_dad_alert">D.A.D Alerta</string>
@@ -235,6 +241,7 @@
     <string name="careportal_openapsoffline">OpenAPS sin conexión</string>
     <string name="pump_battery_change">Cambio batería bomba</string>
     <string name="temporary_target">Objetivo temporal</string>
+    <string name="running_mode">Modo en ejecución</string>
     <string name="careportal_temporarytargetvalue">Valor objetivo temporal</string>
     <string name="careportal_temporarytargetcancel">Cancelar Objetivo temporal</string>
     <string name="boluswizard">Asistente de bolo</string>
@@ -252,6 +259,39 @@
     <string name="loop">Lazo</string>
     <string name="ns">NS</string>
     <string name="record">Registro</string>
+    <string name="location_front_right_upper_chest">Cadera derecha</string>
+    <string name="location_front_left_upper_chest">Cadera izquierda</string>
+    <string name="location_side_right_upper_arm">Brazo superior derecho, exterior</string>
+    <string name="location_side_left_upper_arm">Brazo superior izquierdo, exterior</string>
+    <string name="location_back_right_upper_arm">Brazo derecho superior, trasero</string>
+    <string name="location_back_left_upper_arm">Brazo izquierdo superior, trasero</string>
+    <string name="location_side_right_upper_abdomen">Abdomen superior derecha, exterior</string>
+    <string name="location_side_left_upper_abdomen">Abdomen superior izquierda, exterior</string>
+    <string name="location_side_right_lower_abdomen">Abdomen derecho inferior, exterior</string>
+    <string name="location_side_left_lower_abdomen">Abdomen izquierdo inferior, exterior</string>
+    <string name="location_front_right_upper_abdomen">Abdomen superior derecho, frente</string>
+    <string name="location_front_left_upper_abdomen">Abdomen superior izquierdo, frente</string>
+    <string name="location_front_right_lower_abdomen">Abdomen derecho inferior, frente</string>
+    <string name="location_front_left_lower_abdomen">Abdomen izquierdo inferior, frente</string>
+    <string name="location_back_right_buttock">Glúteo derecho</string>
+    <string name="location_back_left_buttock">Glúteo izquierdo</string>
+    <string name="location_side_right_upper_thigh">Muslo superior derecho, exterior</string>
+    <string name="location_side_left_upper_thigh">Muslo superior izquierdo, exterior</string>
+    <string name="location_side_right_lower_thigh">Muslo inferior derecho, exterior</string>
+    <string name="location_side_left_lower_thigh">Muslo inferior izquierdo, exterior</string>
+    <string name="location_front_right_upper_thigh">Muslo superior derecho, frente</string>
+    <string name="location_front_left_upper_thigh">Muslo superior izquierdo, frente</string>
+    <string name="location_front_right_lower_thigh">Muslo inferior derecho, frente</string>
+    <string name="location_front_left_lower_thigh">Muslo inferior izquierdo, frente</string>
+    <string name="arrow_up">Arriba</string>
+    <string name="arrow_up_right">Arriba a la derecha</string>
+    <string name="arrow_right">Derecha</string>
+    <string name="arrow_down_right">Abajo a la derecha</string>
+    <string name="arrow_down">Abajo</string>
+    <string name="arrow_down_left">Abajo a la izquierda</string>
+    <string name="arrow_left">Izquierda</string>
+    <string name="arrow_up_left">Arriba a la izquierda</string>
+    <string name="arrow_center">Centro</string>
     <!--    Command-->
     <string name="connectiontimedout">Tiempo de conexión agotado</string>
     <!--    PumpEnactResult-->
@@ -297,7 +337,8 @@
     <string name="uel_lgs_loop_mode">MODO LAZO LGS</string>
     <string name="uel_open_loop_mode">MODO LAZO ABIERTO</string>
     <string name="uel_loop_disabled">LAZO DESACTIVADO</string>
-    <string name="uel_loop_enabled">LAZO ACTIVADO</string>
+    <string name="uel_loop_resumed">LAZO REANUDADO</string>
+    <string name="uel_pump_running">BOMBA FUNCIONANDO</string>
     <string name="uel_reconnect">RECONECTAR</string>
     <string name="uel_disconnect">DESCONECTAR</string>
     <string name="uel_resume">REANUDAR</string>
@@ -310,7 +351,9 @@
     <string name="uel_cancel_extended_bolus">CANCELAR BOLO EXTENDIDO</string>
     <string name="uel_cancel_tt">CANCELAR OBJETIVO TEMPORAL</string>
     <string name="uel_careportal">PORTAL DE CUIDADOS</string>
+    <string name="uel_sensor_location">UBICACIÓN DEL SENSOR</string>
     <string name="uel_site_change">CAMBIAR SITIO</string>
+    <string name="uel_site_location">UBICACIÓN DEL SITIO</string>
     <string name="uel_reservoir_change">CAMBIAR RESERVORIO</string>
     <string name="uel_calibration">CALIBRACIÓN</string>
     <string name="uel_prime_bolus">BOLO DE CEBADO</string>
@@ -373,6 +416,9 @@
     <string name="uel_loop_change">LAZO CAMBIADO</string>
     <string name="uel_loop_removed">LAZO ELIMINADO</string>
     <string name="uel_other">OTROS</string>
+    <string name="uel_running_mode">MODO DE EJECUCIÓN</string>
+    <string name="uel_running_mode_removed">MODO DE EJECUCIÓN ELIMINADO</string>
+    <string name="uel_running_mode_updarted">MODO DE EJECUCIÓN ACTUALIZADO</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Perfil de objetivo bajo</string>
     <string name="profile_high_target">Perfil de objetivo alto</string>
@@ -596,4 +642,6 @@
     <string name="rate_percent_duration">Ratio: %1$.2f U/h (%2$.2f%%) Duración: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Ratio</b>: %1$.2f%% (%2$.2f U/h)<br><b>Duración</b>: %3$d min<br>]]></string>
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Ratio</b>: %1$.2f U/h (%2$.2f%%) <br><b>Duración</b>: %3$d min<br>]]></string>
+    <!--    Playback-->
+    <string name="audio_playback_attribution">"Reproducir audio de AAPS"</string>
 </resources>

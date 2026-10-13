@@ -1,12 +1,14 @@
 package info.nightscout.comboctl.base
 
+import app.aaps.shared.tests.TestBase
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertSame
 
-class GraphTest {
+class GraphTest : TestBase() {
+
     @Test
     fun checkGraphConstruction() {
         // Check basic graph construction. Create 4 nodes, with values 1 through 4.

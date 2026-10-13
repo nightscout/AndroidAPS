@@ -1,6 +1,5 @@
 package app.aaps.core.interfaces.aps
 
-import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -16,7 +15,6 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
-@OptIn(InternalSerializationApi::class)
 @Serializable
 data class RT(
     var algorithm: APSResult.Algorithm = APSResult.Algorithm.UNKNOWN,

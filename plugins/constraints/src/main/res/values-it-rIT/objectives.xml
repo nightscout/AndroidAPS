@@ -16,11 +16,12 @@
     <string name="objectives_maxbasal">Eseguire azioni per soddisfare le raccomandazioni</string>
     <string name="objectives_maxbasal_learned">Presta attenzione alle funzionalità di sicurezza e regola i parametri di sicurezza quando necessario.</string>
     <string name="objectives_maxiobzero_objective">Avvio della chiusura del loop con Low Glucose Suspend</string>
-    <string name="objectives_maxiobzero_gate">Esegui l\'applicazione in loop chiuso con max IOB = 0 per pochi giorni senza troppi eventi LGS</string>
+    <string name="objectives_maxiobzero_gate">Eseguire in ciclo chiuso in modalità sospensione a basso tenore di glucosio (es. max IOB = 0 è impostato automaticamente) per alcuni giorni senza troppi eventi LGS.</string>
     <string name="objectives_maxiobzero_learned">Impostare MaxIOB a zero previene l\'ipoglicemia e non aggiungerà più insulina al di sopra della velocità basale (eccetto in caso di IOB negativo)</string>
     <string name="objectives_maxiob_objective">Regolazione del loop chiuso, aumentando max IOB al di sopra di 0 e abbassando gradualmente i target glicemici</string>
     <string name="objectives_maxiob_gate">Esegui l\'applicazione per alcuni giorni e almeno una notte senza allarmi di glicemia bassa, prima di abbassare il target glicemico</string>
-    <string name="objectives_maxiob_learned">Aggiorna MaxIOB in base alla crescita del bambino. Non permettere al sistema di dare più insulina di quanto si può coprire con il cibo è una cattiva idea quanto impostare un valore davvero alto.</string>
+    <string name="objectives_maxiob_learned">Aggiorna MaxIOB in base alla crescita del bambino. Non permettere al sistema di dare più insulina di quanto si può coprire con il cibo = impostare un valore molto alto è una cattiva idea. MaxIOB è calcolato automaticamente nella modalità semplice</string>
+    <string name="maxiobset">IOB massimo impostato correttamente (Non necessario in modalità semplice)</string>
     <string name="objectives_autosens_objective">Adatta basali e rapporti se necessario, quindi attiva auto-sens</string>
     <string name="objectives_autosens_gate">1 settimana di looping diurno con inserimento regolare dei carboidrati, eseguito con successo</string>
     <string name="objectives_autosens_learned">Se il risultato di autosens non è oscillante intorno al 100% il tuo profilo probabilmente è errato.</string>
@@ -28,6 +29,7 @@
     <string name="objectives_smb_gate">È necessario leggere il wiki e aumentare maxIOB affinché le azioni di SMB funzionino adeguatamente! Un buon inizio è maxIOB = media bolo posto + 3 x max basale giornaliera</string>
     <string name="objectives_smb_learned">Usare SMB è il tuo obiettivo. L\'algoritmo Oref1 è stato progettato per aiutarti anche con i tuoi boli. Non dovresti erogare un bolo completo per il tuo cibo, ma solo una parte di esso e lasciare che AAPS ti dia il resto se necessario. In questo modo hai più spazio di azione per i carboidrati mal calcolati. Lo sapevi che puoi impostare una percentuale del risultato del calcolatore per ridurre la dimensione del bolo?</string>
     <string name="objectives_auto_objective">Abilitazione automazione</string>
+    <string name="objectives_auto_gate">Leggi la documentazione su come funzionano le automazioni. Configura le tue prime semplici regole. Invece di eseguire un\'azione, consenti ad AAPS di visualizzare solo una notifica. Quando sei sicuro che l\'automazione viene attivata al momento giusto, sostituisci la notifica con un\'azione reale. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">L\'automazione può essere un buon \"servitore\" ma anche un cattivo \"padrone\". Non abusarne. Non cercare di sostituire l\'algoritmo di base. Verifica lo stato dell\'automazione con un messaggio prima dell\'uso.</string>
     <string name="objectives_bgavailableinns">BG disponibile in NS o Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Stato micro disponibile in NS o Tidepool</string>
@@ -74,6 +76,10 @@
     <string name="unfinshed_button">Prossimo N.C.</string>
     <string name="requestcode">Codice richiesta: %1$s</string>
     <string name="objectives_hint">(segna tutte le risposte corrette)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Non connesso a internet</string>
     <string name="failedretrievetime">Impossibile recuperare l\'ora</string>
     <string name="requirementnotmet">Requisiti obiettivo non soddisfatti</string>

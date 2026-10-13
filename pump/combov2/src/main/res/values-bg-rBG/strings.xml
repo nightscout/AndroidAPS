@@ -103,15 +103,7 @@
     <string name="combov2_unpair_pump_summary">Раздвоете AndroidAPS и Android със свързаната в момента помпа Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Неизвестен Временен базал беше открит и спрян; процент: %1$d%%; оставаща продължителност: %2$s</string>
     <string name="combov2_connection_error">Грешка при свързване: %1$s</string>
-    <string name="combov2_short_status_last_connection">Последно свързване: преди %1$d минути</string>
     <string name="combov2_short_status_alert">Предупреждение: %s</string>
-    <string name="combov2_short_status_last_bolus">ПоследенБолус: %1$sЕ @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Врем базал: %s</string>
-    <string name="combov2_short_status_reservoir">Рез.: %dU</string>
-    <string name="combov2_short_status_battery_state_empty">празен</string>
-    <string name="combov2_short_status_battery_state_low">ниска</string>
-    <string name="combov2_short_status_battery_state_full">пълна</string>
-    <string name="combov2_short_status_battery_state">Бат: %s</string>
     <string name="combov2_automatic_reservoir_entry">Автоматично откриване и въвеждане на промяна на резервоар</string>
     <string name="combov2_automatic_battery_entry">Автоматично откриване и въвеждане на промяна на батерията</string>
     <string name="combov2_timezone_changed">Часовата зона е променена</string>

@@ -31,11 +31,6 @@
     <string name="timeout_during_handshake">En timeout inträffade under parningsprocessen. Starta om bluetooth och försök igen</string>
     <string name="pump_stopped">Pump stoppad</string>
     <string name="pump_started">Pump startad</string>
-    <string name="short_status_last_connected">Senast anslutning: %1$d min sedan</string>
-    <string name="short_status_tbr">TBR: %1$d%% i %2$d / %3$d min</string>
-    <string name="short_status_extended">Förl: %1$.2f / %2$.2f U i %3$d min</string>
-    <string name="short_status_multiwave">Kombi: %1$.2f / %2$.2f U i %3$d min</string>
-    <string name="short_status_reservoir">Res: %1$.2fU</string>
     <string name="release_software_version">Mjukvaruversion Release</string>
     <string name="ui_processor_software_version">UI-processorversion</string>
     <string name="pc_processor_software_version">Mjukvaruversion PC processor</string>

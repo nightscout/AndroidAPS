@@ -33,6 +33,7 @@
       <w>carbs</w>
       <w>carbsreq</w>
       <w>careportal</w>
+      <w>cctl</w>
       <w>cellnovo</w>
       <w>chek</w>
       <w>clearalarm</w>
@@ -65,6 +66,7 @@
       <w>eveningoutpost</w>
       <w>eversense</w>
       <w>extendedbolus</w>
+      <w>fanqies</w>
       <w>fiasp</w>
       <w>fileprovider</w>
       <w>firebase</w>
@@ -115,6 +117,7 @@
       <w>openhumans</w>
       <w>oref</w>
       <w>otpauth</w>
+      <w>ottai</w>
       <w>passcode</w>
       <w>pbage</w>
       <w>pcfg</w>
@@ -141,6 +144,8 @@
       <w>setupwizard</w>
       <w>sgvs</w>
       <w>shortgramm</w>
+      <w>sibionic</w>
+      <w>sino</w>
       <w>sitechange</w>
       <w>skippable</w>
       <w>smscommunicator</w>
@@ -152,6 +157,7 @@
       <w>statuslight</w>
       <w>statuslights</w>
       <w>superbolus</w>
+      <w>syai</w>
       <w>targethigh</w>
       <w>targetlow</w>
       <w>tbrs</w>
@@ -163,6 +169,7 @@
       <w>tidepool</w>
       <w>timeshift</w>
       <w>tirs</w>
+      <w>tomatofn</w>
       <w>totp</w>
       <w>tunedays</w>
       <w>uart</w>

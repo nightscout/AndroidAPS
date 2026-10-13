@@ -49,7 +49,6 @@
     <string name="smscommunicator_tt_canceled">Temporäres Ziel wurde erfolgreich abgebrochen</string>
     <string name="smscommunicator_remote_commands_allowed">Erlaube Fernsteuerung per SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">Loop wurde deaktiviert.</string>
-    <string name="smscommunicator_loop_has_been_enabled">Lopp wurde aktiviert.</string>
     <string name="smscommunicator_loop_is_enabled">Loop ist aktiviert.</string>
     <string name="smscommunicator_pump_connect_with_code">Um die Pumpe zu verbinden, antworte mit dem Code %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Verbindung zur Pumpe fehlgeschlagen</string>
@@ -65,7 +64,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">Um die Basalrate von %1$d%% für %2$d Minuten zu setzen, antworte mit dem Code %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">Um das Loopen für %1$d Minuten zu pausieren, antworte mit dem Code %2$s.</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Um den Loop fortzusetzen, antworte mit dem Code %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">Um den Loop zu aktivieren, antworte mit dem Code %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Um den Loop zu deaktivieren, antworte mit dem Code %1$s</string>
     <string name="smscommunicator_tempbasal_set">TBR mit %1$.2f IE/h für %2$d min wurde erfolgreich gestartet.</string>
     <string name="smscommunicator_extended_set">Der erweiterte Bolus %1$.2f IE/h für %2$d Minuten wurde erfolgreich gestartet</string>
@@ -129,7 +127,6 @@
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">Definiere ein Profil, was auch offline verfügbar ist.</string>
     <string name="a11y_add_new_to_list">neu zur Liste hinzufügen</string>
     <string name="do_you_want_switch_profile">Willst Du das Profil wechseln und die Änderungen am aktuellen Profil verwerfen?</string>
     <string name="save_or_reset_changes_first">Speichere oder verwerfe die aktuellen Änderungen zuerst</string>

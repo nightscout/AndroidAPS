@@ -1,20 +1,29 @@
 package app.aaps.plugins.configuration.setupwizard.elements
 
 import android.widget.LinearLayout
-import androidx.fragment.app.Fragment
-import app.aaps.plugins.configuration.setupwizard.SWDefinition
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.extensions.scanForActivity
+import javax.inject.Inject
 
-class SWFragment(injector: HasAndroidInjector, private var definition: SWDefinition) : SWItem(injector, Type.FRAGMENT) {
+class SWFragment @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
-    lateinit var fragment: Fragment
+    lateinit var fragmentName: String
 
-    fun add(fragment: Fragment): SWFragment {
-        this.fragment = fragment
+    fun with(fragmentName: String): SWFragment {
+        this.fragmentName = fragmentName
         return this
     }
 
     override fun generateDialog(layout: LinearLayout) {
-        definition.activity.supportFragmentManager.beginTransaction().add(layout.id, fragment, fragment.tag).commit()
+        val activity = layout.context.scanForActivity() ?: error("Activity not found")
+        val fragment = activity.supportFragmentManager.fragmentFactory.instantiate(
+            ClassLoader.getSystemClassLoader(),
+            fragmentName
+        )
+        activity.supportFragmentManager.beginTransaction().add(layout.id, fragment, fragment.tag).commit()
     }
 }

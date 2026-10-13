@@ -15,20 +15,20 @@ object LocaleHelper {
         else PreferenceManager.getDefaultSharedPreferences(context).getString("language", "default")
             ?: "default"
     // injection not possible because of use in attachBaseContext
-    //SP.getString(R.string.key_language, Locale.getDefault().language)
+    //preferences.get(R.string.key_language, Locale.getDefault().language)
 
     fun currentLocale(context: Context): Locale {
         val language = selectedLanguage(context)
         if (language == "default") return Locale.getDefault()
 
-        var locale = Locale(language)
-        if (language.contains("_")) {
+        return if (language.contains("_")) {
             // language with country like pt_BR defined in arrays.xml
             val lang = language.substring(0, 2)
             val country = language.substring(3, 5)
-            locale = Locale(lang, country)
+            Locale.Builder().setLanguage(lang).setRegion(country).build()
+        } else {
+            Locale.Builder().setLanguage(language).build()
         }
-        return locale
     }
 
     fun update(context: Context) {
@@ -43,7 +43,7 @@ object LocaleHelper {
         // no action for system default language
         if (selectedLanguage(ctx) == "default") return ctx
 
-        val configuration = Configuration()
+        val configuration = Configuration(ctx.resources.configuration)
         val newLocale = currentLocale(ctx)
         configuration.setLocale(newLocale)
         val localeList = LocaleList(newLocale)

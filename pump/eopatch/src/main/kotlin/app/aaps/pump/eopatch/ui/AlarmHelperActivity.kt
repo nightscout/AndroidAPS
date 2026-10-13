@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.ui.R
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.pump.eopatch.alarm.AlarmCode
@@ -17,7 +16,6 @@ import javax.inject.Inject
 
 class AlarmHelperActivity : TranslatedDaggerAppCompatActivity() {
 
-    @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 
@@ -46,22 +44,14 @@ class AlarmHelperActivity : TranslatedDaggerAppCompatActivity() {
             rxBus
                 .toObservable(EventProgressDialog::class.java)
                 .observeOn(aapsSchedulers.main)
-                .subscribe({
-                               if (it.show) {
-                                   showProgressDialog(it.resId)
-                               } else {
-                                   dismissProgressDialog()
-                               }
-                           }, { })
+                .subscribe({ if (it.show) showProgressDialog(it.resId) else dismissProgressDialog() }, { })
         )
 
         disposable.add(
             rxBus
                 .toObservable(EventDialog::class.java)
                 .observeOn(aapsSchedulers.main)
-                .subscribe({
-                               if (it.show) it.dialog.show(supportFragmentManager, "")
-                           }, { })
+                .subscribe({ if (it.show) it.dialog.show(supportFragmentManager, "") }, { })
         )
     }
 

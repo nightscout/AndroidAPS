@@ -57,7 +57,6 @@ gumbe u isto vrijeme za poništavanje uparivanja)\n
     <string name="combov2_checking_pump">Provjera pumpe</string>
     <string name="combov2_ready">Spremno</string>
     <string name="combov2_suspended">Suspendiran</string>
-    <string name="combov2_short_status_battery_state_low">nisko</string>
     <string name="combov2_timezone_changed">Vremenska zona promijenjena</string>
     <string name="combov2_datetime_changed">Datum i/ili vrijeme promijenjeni</string>
     <string name="combov2_dst_started">Počelo je ljetno računanje vremena (DST)</string>

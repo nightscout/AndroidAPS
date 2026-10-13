@@ -42,6 +42,7 @@ interface SkinInterface {
             asLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
 
             if (isTablet) {
+                timeLayout.visibility = View.VISIBLE
                 binding.infoLayout.apply {
                     val texts = listOf(bg, iob, cob, baseBasal, extendedBolus, sensitivity)
                     for (v in texts) v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.5f)
@@ -61,6 +62,7 @@ interface SkinInterface {
 
                 binding.infoLayout.deltaLarge.visibility = View.VISIBLE
             } else {
+                timeLayout.visibility = View.GONE
                 binding.infoLayout.deltaLarge.visibility = View.GONE
             }
         }

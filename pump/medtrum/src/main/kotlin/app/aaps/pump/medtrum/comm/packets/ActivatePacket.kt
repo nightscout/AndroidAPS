@@ -2,7 +2,6 @@ package app.aaps.pump.medtrum.comm.packets
 
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.stats.TddCalculator
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.comm.enums.CommandType.ACTIVATE
@@ -11,6 +10,7 @@ import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import kotlin.math.round
 
@@ -19,6 +19,7 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
     @Inject lateinit var medtrumPump: MedtrumPump
     @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var pumpSync: PumpSync
+    @Inject lateinit var medtrumTimeUtil: MedtrumTimeUtil
 
     companion object {
 
@@ -82,8 +83,6 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
     override fun handleResponse(data: ByteArray): Boolean {
         val success = super.handleResponse(data)
         if (success) {
-            val medtrumTimeUtil = MedtrumTimeUtil()
-
             val patchId = data.copyOfRange(RESP_PATCH_ID_START, RESP_PATCH_ID_END).toLong()
             val time = medtrumTimeUtil.convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_TIME_START, RESP_TIME_END).toLong())
             val basalType = enumValues<BasalType>()[data.copyOfRange(RESP_BASAL_TYPE_START, RESP_BASAL_TYPE_END).toInt()]

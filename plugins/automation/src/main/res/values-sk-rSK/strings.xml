@@ -78,9 +78,8 @@
     <string name="deltalabel">Rozdiel glykémie</string>
     <string name="deltalabel_u">Rozdiel glykémie [%1$s]</string>
     <string name="currentlocation">Súčasná poloha</string>
+    <string name="choose_from_map">Vybrať z mapy</string>
     <string name="location">Poloha</string>
-    <string name="latitude_short">Lat:</string>
-    <string name="longitude_short">Lon:</string>
     <string name="glucose_u">Glykémia [%1$s]:</string>
     <string name="target_u">Cieľ [%1$s]:</string>
     <string name="lastboluslabel">Od posledného bolusu</string>
@@ -103,7 +102,7 @@
     <string name="triggerReservoirLevelDesc">Stav zásobníka %1$s %2$.0f</string>
     <string name="triggerPumpBatteryLevelLabel">Vek batérie v pumpe</string>
     <string name="triggerPumpBatteryLevelDesc">Úroveň nabitia batérie v pumpe %1$s %2$.0f</string>
-    <string name="iob_u">IOB [JI]:</string>
+    <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Vzdial. [m]:</string>
     <string name="recurringTime">Čas zotavovania</string>
     <string name="every">Každých</string>
@@ -141,4 +140,10 @@
     <string name="triggerStepsCountLabel">Počet krokov</string>
     <string name="triggerStepsCountDesc">Počet krokov za %1$s minút %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Trvanie merania</string>
+    <!--    SMB mode-->
+    <string name="changeSmbState">Povoliť/zakázať SMB</string>
+    <string name="changeSmbTo">Zmeniť SMB na %1$s</string>
+    <string name="newSmbMode">Nový režim SMB:</string>
+    <string name="on">ZAP</string>
+    <string name="off">VYP</string>
 </resources>

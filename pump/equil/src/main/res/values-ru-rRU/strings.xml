@@ -3,14 +3,13 @@
     <string name="equil_pump_description">Помпа Equil Patch 5.3 или новее </string>
     <!--  start  -->
     <string name="equil_basal_speed">Базовая скорость базала</string>
-    <string name="equil_bolus_delivered">Введено %1$.3f ед / %2$.3f ед</string>
     <string name="equil_btn_cancel">Отмена</string>
     <string name="equil_btn_need">Нужно</string>
     <string name="equil_btn_skip">Пропустить</string>
     <string name="equil_date_device">Прошлое соединение</string>
     <string name="equil_dressing">Замена резервуара</string>
     <string name="equil_dressing_onkey_msg">Плунжер автоматически перемещается в нижнюю часть резервуара. По достижении нижней части он остановится автоматически. Нажмите \'Остановить\', чтобы прервать при необходимости.</string>
-    <string name="equil_finish">Завершено</string>
+    <string name="equil_finish">Готово</string>
     <string name="equil_next">Далее</string>
     <string name="equil_hint_dressing">Эта операция прекратит инфузию инсулина и переместит плунжер помпы на дно!</string>
     <string name="equil_history">Журнал</string>
@@ -91,7 +90,6 @@
     <string name="equil_command_connect_no_response">Нет ответа от помпы</string>
     <string name="equil_command__unknown">Неизвестный статус команды</string>
     <string name="equil_install">Имплантировать помпу в тело</string>
-    <string name="equil_settings">Настройки</string>
     <string name="equil_settings_alarm_battery">Оповещение о низком заряде батареи</string>
     <string name="equil_settings_alarm_insulin">Оповещение о низком запасе инсулина</string>
     <string name="equil_init_insulin_error">Инициализация резервуара не завершена</string>
@@ -122,11 +120,6 @@
     <string name="equil_history_item16">Батарея разряжена!</string>
     <string name="equil_history_item17">Сброс при включении</string>
     <string name="equil_history_item18">Аномалия инфузии остановлена</string>
-    <string name="equil_common_short_status_last_connection">Предыдущее соединение: %1$d мин. назад</string>
-    <string name="equil_common_short_status_last_bolus">Предыдущий болюс: %1$s @ %2$s</string>
-    <string name="equil_common_short_status_temp_basal">Временный базал %1$s</string>
-    <string name="equil_common_short_status_extended_bolus">Пролонгированный: %1$s</string>
-    <string name="equil_common_short_status_reservoir">Резервуар: %1$sед</string>
     <string name="equil_common_overview_button_suspend_delivery">Останов</string>
     <string name="equil_common_overview_button_resume_delivery">Возобновить ввод</string>
     <string name="equil_common_overview_temp_basal_value">%1$.2fед/ч @%2$s (%3$d/%4$d мин)</string>
@@ -163,6 +156,7 @@
     <string name="equil_set_pair_password">Установите пароль сопряжения</string>
     <string name="equil_hint1">После установки помпы на платформу выберите, следует ли выдуть воздух из иглы.</string>
     <string name="equil_unbind">Разъединить устройство</string>
+    <string name="equil_device_unpaired">Устройство разъединено</string>
     <string name="equil_assemble">Соберите помпу, резервуар и заряженную батарею</string>
     <string name="equil_devices_number">Введите идентификационный номер новой помпы</string>
     <string name="equil_insert">Выполните заполнение до появления капли инсулина на кончике иглы</string>
@@ -172,7 +166,7 @@
     <string name="equil_hint_dressing2">Отсоедините помпу от платформы</string>
     <string name="equil_unpair">Деактивировать старую помпу %1$s?</string>
     <string name="equil_pump_updated">Помпа обновлена</string>
-    <string name="equil_maxbolus_tips">Максимально допустимый болюс в помпе [%1$s ед]</string>
     <string name="equil_replace_reservoir">Резервуар пуст. Замените резервуар</string>
     <string name="error_mustbe6hexadidits">Должно быть 6 символов: из этих: ABCDEF0123456789</string>
+    <string name="equil_removed_anyway">Ошибка при выполнении команды Разъединить. Помпа будет удалена в любом случае. Пароль, установленный при сопряжении, не удаляется из помпы.</string>
 </resources>

@@ -35,7 +35,6 @@
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Zmień profil</string>
     <string name="exitwizard">Pomiń Kreatora konfiguracji</string>
-    <string name="setupwizard_loop_description">Naciśnij przycisk poniżej, by umożliwić AAPS sugerowanie/wprowadzenie zmian insuliny bazowej</string>
     <string name="setupwizard_sensitivity_description">Wtyczka wrażliwości używana jest w celu określenia wrażliwości i kalkulacji COB. Więcej informacji na:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Wybierz jeden z dostępnych algorytmów. Ułożone są one od najstarszych do najnowszych. Nowszy algorytm jest zazwyczaj bardziej wydajny i agresywny. Jeśli jesteś nowym użytkownikiem, lepiej zacznij od zaawansowanego asystenta posiłku AMA, a nie od najnowszego algorytmu. Zapoznaj się koniecznie z dokumentacją OpenAPS przed wybraniem odpowiedniego algorytmu i jego konfiguracją.</string>
@@ -49,9 +48,9 @@
     <string name="unattended_settings_export">Automatyczny Eksport Ustawień</string>
     <string name="unattended_settings_export_summary">Włączenie tej opcji spowoduje, że twoje hasło zostanie bezpieczne zapisane na telefonie</string>
     <string name="identification">Identyfikator (email, nick na FB lub Discordzie itp.)</string>
+    <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">Żądanie</string>
     <string name="apsmode_title">Tryb APS</string>
-    <string name="setupwizard_preferred_aps_mode">Preferowany tryb APS</string>
     <string name="error_asking_for_permissions">Wystąpił błąd podczas żądania uprawnień</string>
     <string name="alert_dialog_permission_battery_optimization_failed">To urządzenie nie obsługuje białej listy optymalizacji baterii - mogą wystąpić problemy z wydajnością.</string>
     <!--    ConfigBuilder-->
@@ -81,6 +80,8 @@
     <string name="allow_hardware_pump_text">Uwaga: Jeśli aktywujesz połączenie z pompą inną niż wirtualna, AAPS skopiuje ustawienia bazy do profilu pompy, zastępując istniejące ustawienia w niej zapisane. Upewnij się, że ustawienia bazy w AAPS są poprawne. Jeśli nie jesteś pewien lub nie chcesz nadpisywać podstawowych ustawień pompy, naciśnij przycisk anuluj i połącz ponownie w innym czasie.</string>
     <string name="a11y_open_settings">otwórz ustawienia</string>
     <string name="nsclient_version_does_not_match">Wersja AAPSClient nie jest zgodna z wersją AAPS. Proszę zaktualizować.</string>
+    <string name="expand_category">Rozwiń kategorię</string>
+    <string name="collapse_category">Zwiń kategorię</string>
     <!--ImportExport-->
     <string name="nav_preferences">Ustawienia</string>
     <string name="password_preferences_encrypt_prompt">Zostaniesz poproszony o hasło główne, które będzie użyte do szyfrowania wyeksportowanych ustawień.</string>
@@ -166,4 +167,9 @@
     <string name="metadata_format_other">Nieznany format eksportu</string>
     <string name="reset_aps_results">Zresetuj wyniki APS</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Błąd dostępu do systemu plików. Wybierz prawidłowo katalog AAPS.</string>
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
 </resources>

@@ -23,13 +23,6 @@ class InputLocationMode(private val rh: ResourceHelper) : Element {
                 GOING_OUT -> R.string.location_going_out
             }
 
-        fun fromString(wanted: String): Mode {
-            for (c in Mode.entries) {
-                if (c.toString() === wanted) return c
-            }
-            throw IllegalStateException("Invalid parameter")
-        }
-
         companion object {
 
             fun labels(rh: ResourceHelper): List<String> {

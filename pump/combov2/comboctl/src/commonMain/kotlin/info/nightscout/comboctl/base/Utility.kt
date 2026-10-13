@@ -1,18 +1,19 @@
 package info.nightscout.comboctl.base
 
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.atTime
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 // Utility function for cases when only the time and no date is known.
 // monthNumber and dayOfMonth are set to 1 instead of 0 since 0 is
 // outside of the valid range of these fields.
 internal fun timeWithoutDate(hour: Int = 0, minute: Int = 0, second: Int = 0) =
     LocalDateTime(
-        year = 0, monthNumber = 1, dayOfMonth = 1,
+        year = 0, month = 1, day = 1,
         hour = hour, minute = minute, second = second, nanosecond = 0
     )
 
@@ -33,9 +34,9 @@ internal fun LocalDate.withFixedYearFrom(reference: LocalDate): LocalDate {
     // would produce a future date though (since 2024-12-29 > 2024-01-02). Therefore,
     // if we see that the newly constructed local date is in the future relative to
     // the reference date, we subtract 1 from the year.
-    val date = LocalDate(year = reference.year, month = this.month, dayOfMonth = this.dayOfMonth)
+    val date = LocalDate(year = reference.year, month = this.month, day = this.day)
     return if (date > reference) {
-        LocalDate(year = reference.year - 1, month = this.month, dayOfMonth = this.dayOfMonth)
+        LocalDate(year = reference.year - 1, month = this.month, day = this.day)
     } else
         date
 }
@@ -280,4 +281,5 @@ internal fun Long.toStringWithDecimal(numDecimals: Int): String {
  * to be used for calculating intervals and to add timestamps to events
  * such as when log lines are produced.
  */
+@OptIn(ExperimentalTime::class)
 internal fun getElapsedTimeInMs(): Long = Clock.System.now().toEpochMilliseconds()

@@ -2,21 +2,20 @@ package app.aaps.pump.equil.manager.command
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.manager.AESUtil
 import app.aaps.pump.equil.manager.EquilCmdModel
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.EquilResponse
 import app.aaps.pump.equil.manager.Utils
-import java.lang.Exception
 import java.nio.ByteBuffer
 
 abstract class BaseSetting(
     createTime: Long,
     aapsLogger: AAPSLogger,
-    sp: SP,
+    preferences: Preferences,
     equilManager: EquilManager
-) : BaseCmd(createTime, aapsLogger, sp, equilManager) {
+) : BaseCmd(createTime, aapsLogger, preferences, equilManager) {
 
     fun getReqData(): ByteArray {
         val indexByte = Utils.intToBytes(pumpReqIndex)
@@ -38,7 +37,7 @@ abstract class BaseSetting(
             return responseCmd(equilCmdModel, DEFAULT_PORT + "0000")
         } catch (_: Exception) {
             synchronized(this) {
-                cmdStatus = false
+                cmdSuccess = false
             }
         }
         return null
@@ -116,7 +115,7 @@ abstract class BaseSetting(
         } catch (e: Exception) {
             aapsLogger.debug(LTag.PUMPCOMM, "getNextEquilResponse===" + e.message)
             synchronized(this) {
-                cmdStatus = false
+                cmdSuccess = false
             }
         }
         return null

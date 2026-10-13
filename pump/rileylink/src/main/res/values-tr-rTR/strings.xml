@@ -9,7 +9,10 @@
     <string name="pump_status_timeout_comm">İletişimde zaman aşımı</string>
     <string name="pump_status_pump_unreachable">Pompa\'ya ulaşılamıyor</string>
     <string name="pump_status_invalid_config">Geçersiz yapılandırma</string>
-    <!-- RL keys -->
+    <string name="medtronic_pump_encoding_4b6b_local">Yazılım 4b6b Kodlama</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Donanım 4b6b Kodlama</string>
+    <string name="medtronic_pump_frequency_us_ca">ABD &amp; Kanada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Dünya geneli (868 Mhz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Tarama</string>
     <string name="riley_link_ble_config_scan_stop">Dur</string>

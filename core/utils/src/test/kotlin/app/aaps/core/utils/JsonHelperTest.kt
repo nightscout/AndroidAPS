@@ -76,4 +76,18 @@ class JsonHelperTest {
         assertThat(JsonHelper.safeGetBoolean(json, "notexisting")).isFalse()
         assertThat(JsonHelper.safeGetBoolean(json, "b")).isTrue()
     }
+
+    @Test
+    fun mergeTest() {
+        val json1 = JSONObject().also {
+            it.put("a", 1)
+            it.put("b", 2)
+        }
+        val json2 = JSONObject().also {
+            it.put("b", 3)
+        }
+        val merged = JsonHelper.merge(json1, json2)
+        assertThat(merged.getInt("a")).isEqualTo(1)
+        assertThat(merged.getInt("b")).isEqualTo(3)
+    }
 }

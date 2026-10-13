@@ -5,17 +5,13 @@ import android.graphics.Color
 import android.util.AttributeSet
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.time.T
+import app.aaps.core.graph.data.GraphViewWithCleanup
 import app.aaps.core.interfaces.insulin.Insulin
-import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlin.math.floor
 
-class ActivityGraph : GraphView {
-
-    constructor(context: Context) : super(context)
-
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+class ActivityGraph @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : GraphViewWithCleanup(context, attrs, defStyle) {
 
     fun show(insulin: Insulin, diaSample: Double? = null) {
         removeAllSeries()

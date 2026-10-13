@@ -1,5 +1,6 @@
 package info.nightscout.comboctl.parser
 
+import app.aaps.shared.tests.TestBase
 import info.nightscout.comboctl.base.DisplayFrame
 import info.nightscout.comboctl.base.timeWithoutDate
 import kotlinx.datetime.LocalDate
@@ -9,8 +10,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.fail
 
-class ParserTest {
+class ParserTest : TestBase() {
     class TestContext(displayFrame: DisplayFrame, tokenOffset: Int, skipTitleString: Boolean = false, parseTopLeftTime: Boolean = false) {
+
         val tokens = findTokens(displayFrame)
         val parseContext = ParseContext(tokens, tokenOffset)
 
@@ -82,7 +84,7 @@ class ParserTest {
         val testContext = TestContext(testUSDateFormatScreen, 20)
         val result = DateParser().parse(testContext.parseContext)
         assertEquals(ParseResult.Value::class, result::class)
-        assertEquals(LocalDate(year = 2011, monthNumber = 2, dayOfMonth = 3), (result as ParseResult.Value<*>).value as LocalDate)
+        assertEquals(LocalDate(year = 2011, month = 2, day = 3), (result as ParseResult.Value<*>).value as LocalDate)
     }
 
     @Test
@@ -90,7 +92,7 @@ class ParserTest {
         val testContext = TestContext(testEUDateFormatScreen, 20)
         val result = DateParser().parse(testContext.parseContext)
         assertEquals(ParseResult.Value::class, result::class)
-        assertEquals(LocalDate(year = 2011, monthNumber = 2, dayOfMonth = 3), (result as ParseResult.Value<*>).value as LocalDate)
+        assertEquals(LocalDate(year = 2011, month = 2, day = 3), (result as ParseResult.Value<*>).value as LocalDate)
     }
 
     @Test
@@ -348,8 +350,8 @@ class ParserTest {
             MainScreenContent.Stopped(
                 currentDateTime = LocalDateTime(
                     year = 0,
-                    monthNumber = 4,
-                    dayOfMonth = 21,
+                    month = 4,
+                    day = 21,
                     hour = testContext.parseContext.topLeftTime!!.hour,
                     minute = testContext.parseContext.topLeftTime!!.minute,
                     second = 0
@@ -371,8 +373,8 @@ class ParserTest {
             MainScreenContent.Stopped(
                 currentDateTime = LocalDateTime(
                     year = 0,
-                    monthNumber = 4,
-                    dayOfMonth = 21,
+                    month = 4,
+                    day = 21,
                     hour = testContext.parseContext.topLeftTime!!.hour,
                     minute = testContext.parseContext.topLeftTime!!.minute,
                     second = 0
@@ -394,8 +396,8 @@ class ParserTest {
             MainScreenContent.Stopped(
                 currentDateTime = LocalDateTime(
                     year = 0,
-                    monthNumber = 2,
-                    dayOfMonth = 1,
+                    month = 2,
+                    day = 1,
                     hour = testContext.parseContext.topLeftTime!!.hour,
                     minute = testContext.parseContext.topLeftTime!!.minute,
                     second = 0
@@ -435,8 +437,8 @@ class ParserTest {
             MainScreenContent.Stopped(
                 currentDateTime = LocalDateTime(
                     year = 0,
-                    monthNumber = 1,
-                    dayOfMonth = 1,
+                    month = 1,
+                    day = 1,
                     hour = testContext.parseContext.topLeftTime!!.hour,
                     minute = testContext.parseContext.topLeftTime!!.minute,
                     second = 0
@@ -998,7 +1000,7 @@ class ParserTest {
                 testMyDataBolusDataEnglishScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 8, hour = 9, minute = 57, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 1, day = 8, hour = 9, minute = 57, second = 0),
                     bolusAmount = 1000, bolusType = MyDataBolusType.STANDARD, durationInMinutes = null
                 )
             ),
@@ -1006,14 +1008,14 @@ class ParserTest {
                 testMyDataErrorDataEnglishScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 28, hour = 11, minute = 0, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 1, day = 28, hour = 11, minute = 0, second = 0),
                     alert = AlertScreenContent.Warning(6, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsEnglishScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 30, monthNumber = 1),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 30, month = 1),
                     totalDailyAmount = 26900
                 )
             ),
@@ -1021,7 +1023,7 @@ class ParserTest {
                 testMyDataTbrDataEnglishScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 28, hour = 11, minute = 0, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 1, day = 28, hour = 11, minute = 0, second = 0),
                     percentage = 110, durationInMinutes = 0
                 )
             ),
@@ -1029,7 +1031,7 @@ class ParserTest {
                 testMyDataBolusDataSpanishScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 8, hour = 9, minute = 57, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 1, day = 8, hour = 9, minute = 57, second = 0),
                     bolusAmount = 1000, bolusType = MyDataBolusType.STANDARD, durationInMinutes = null
                 )
             ),
@@ -1037,14 +1039,14 @@ class ParserTest {
                 testMyDataErrorDataSpanishScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 28, hour = 11, minute = 0, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 1, day = 28, hour = 11, minute = 0, second = 0),
                     alert = AlertScreenContent.Warning(6, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsSpanishScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 30, monthNumber = 1),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 30, month = 1),
                     totalDailyAmount = 26900
                 )
             ),
@@ -1052,7 +1054,7 @@ class ParserTest {
                 testMyDataTbrDataSpanishScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 28, hour = 11, minute = 0, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 1, day = 28, hour = 11, minute = 0, second = 0),
                     percentage = 110, durationInMinutes = 0
                 )
             ),
@@ -1060,7 +1062,7 @@ class ParserTest {
                 testMyDataBolusDataFrenchScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 10, hour = 15, minute = 21, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 10, hour = 15, minute = 21, second = 0),
                     bolusAmount = 4000, bolusType = MyDataBolusType.EXTENDED, durationInMinutes = 5
                 )
             ),
@@ -1068,14 +1070,14 @@ class ParserTest {
                 testMyDataErrorDataFrenchScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     alert = AlertScreenContent.Warning(7, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsFrenchScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 12, monthNumber = 5),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 12, month = 5),
                     totalDailyAmount = 7600
                 )
             ),
@@ -1083,7 +1085,7 @@ class ParserTest {
                 testMyDataTbrDataFrenchScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     percentage = 110, durationInMinutes = 60
                 )
             ),
@@ -1091,7 +1093,7 @@ class ParserTest {
                 testMyDataBolusDataItalianScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1099,14 +1101,14 @@ class ParserTest {
                 testMyDataErrorDataItalianScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     alert = AlertScreenContent.Warning(7, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsItalianScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 12, monthNumber = 5),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 12, month = 5),
                     totalDailyAmount = 11200
                 )
             ),
@@ -1114,7 +1116,7 @@ class ParserTest {
                 testMyDataTbrDataItalianScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     percentage = 110, durationInMinutes = 60
                 )
             ),
@@ -1122,7 +1124,7 @@ class ParserTest {
                 testMyDataBolusDataRussianScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1130,14 +1132,14 @@ class ParserTest {
                 testMyDataErrorDataRussianScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     alert = AlertScreenContent.Warning(7, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsRussianScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 12, monthNumber = 5),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 12, month = 5),
                     totalDailyAmount = 12900
                 )
             ),
@@ -1145,7 +1147,7 @@ class ParserTest {
                 testMyDataTbrDataRussianScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     percentage = 110, durationInMinutes = 60
                 )
             ),
@@ -1153,7 +1155,7 @@ class ParserTest {
                 testMyDataBolusDataTurkishScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1161,14 +1163,14 @@ class ParserTest {
                 testMyDataErrorDataTurkishScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     alert = AlertScreenContent.Warning(7, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsTurkishScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 12, monthNumber = 5),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 12, month = 5),
                     totalDailyAmount = 12900
                 )
             ),
@@ -1176,7 +1178,7 @@ class ParserTest {
                 testMyDataTbrDataTurkishScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     percentage = 110, durationInMinutes = 60
                 )
             ),
@@ -1184,7 +1186,7 @@ class ParserTest {
                 testMyDataBolusDataPolishScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1192,14 +1194,14 @@ class ParserTest {
                 testMyDataErrorDataPolishScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     alert = AlertScreenContent.Warning(7, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsPolishScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 12, monthNumber = 5),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 12, month = 5),
                     totalDailyAmount = 12900
                 )
             ),
@@ -1207,7 +1209,7 @@ class ParserTest {
                 testMyDataTbrDataPolishScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     percentage = 110, durationInMinutes = 60
                 )
             ),
@@ -1215,7 +1217,7 @@ class ParserTest {
                 testMyDataBolusDataCzechScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1223,14 +1225,14 @@ class ParserTest {
                 testMyDataErrorDataCzechScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     alert = AlertScreenContent.Warning(7, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsCzechScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 12, monthNumber = 5),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 12, month = 5),
                     totalDailyAmount = 13900
                 )
             ),
@@ -1238,7 +1240,7 @@ class ParserTest {
                 testMyDataTbrDataCzechScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     percentage = 110, durationInMinutes = 60
                 )
             ),
@@ -1246,7 +1248,7 @@ class ParserTest {
                 testMyDataBolusDataHungarianScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1254,14 +1256,14 @@ class ParserTest {
                 testMyDataErrorDataHungarianScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     alert = AlertScreenContent.Warning(7, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsHungarianScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 12, monthNumber = 5),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 12, month = 5),
                     totalDailyAmount = 13900
                 )
             ),
@@ -1269,7 +1271,7 @@ class ParserTest {
                 testMyDataTbrDataHungarianScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     percentage = 110, durationInMinutes = 60
                 )
             ),
@@ -1277,7 +1279,7 @@ class ParserTest {
                 testMyDataBolusDataSlovakScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1285,14 +1287,14 @@ class ParserTest {
                 testMyDataErrorDataSlovakScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     alert = AlertScreenContent.Warning(7, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsSlovakScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 12, monthNumber = 5),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 12, month = 5),
                     totalDailyAmount = 13900
                 )
             ),
@@ -1300,7 +1302,7 @@ class ParserTest {
                 testMyDataTbrDataSlovakScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     percentage = 110, durationInMinutes = 60
                 )
             ),
@@ -1308,7 +1310,7 @@ class ParserTest {
                 testMyDataBolusDataRomanianScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1316,14 +1318,14 @@ class ParserTest {
                 testMyDataErrorDataRomanianScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     alert = AlertScreenContent.Warning(7, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsRomanianScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 12, monthNumber = 5),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 12, month = 5),
                     totalDailyAmount = 13900
                 )
             ),
@@ -1331,7 +1333,7 @@ class ParserTest {
                 testMyDataTbrDataRomanianScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 11, hour = 21, minute = 56, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 11, hour = 21, minute = 56, second = 0),
                     percentage = 110, durationInMinutes = 60
                 )
             ),
@@ -1339,7 +1341,7 @@ class ParserTest {
                 testMyDataBolusDataCroatianScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1347,14 +1349,14 @@ class ParserTest {
                 testMyDataErrorDataCroatianScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 2, dayOfMonth = 1, hour = 1, minute = 6, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 2, day = 1, hour = 1, minute = 6, second = 0),
                     alert = AlertScreenContent.Warning(1, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsCroatianScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 10, monthNumber = 2),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 10, month = 2),
                     totalDailyAmount = 5800
                 )
             ),
@@ -1362,7 +1364,7 @@ class ParserTest {
                 testMyDataTbrDataCroatianScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 6, dayOfMonth = 11, hour = 17, minute = 25, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 6, day = 11, hour = 17, minute = 25, second = 0),
                     percentage = 240, durationInMinutes = 60
                 )
             ),
@@ -1370,7 +1372,7 @@ class ParserTest {
                 testMyDataBolusDataDutchScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1378,14 +1380,14 @@ class ParserTest {
                 testMyDataErrorDataDutchScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 2, dayOfMonth = 1, hour = 1, minute = 6, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 2, day = 1, hour = 1, minute = 6, second = 0),
                     alert = AlertScreenContent.Warning(1, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsDutchScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 10, monthNumber = 2),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 10, month = 2),
                     totalDailyAmount = 5800
                 )
             ),
@@ -1393,7 +1395,7 @@ class ParserTest {
                 testMyDataTbrDataDutchScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 6, dayOfMonth = 11, hour = 17, minute = 25, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 6, day = 11, hour = 17, minute = 25, second = 0),
                     percentage = 240, durationInMinutes = 60
                 )
             ),
@@ -1401,7 +1403,7 @@ class ParserTest {
                 testMyDataBolusDataGreekScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1409,14 +1411,14 @@ class ParserTest {
                 testMyDataErrorDataGreekScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 2, dayOfMonth = 1, hour = 1, minute = 6, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 2, day = 1, hour = 1, minute = 6, second = 0),
                     alert = AlertScreenContent.Warning(1, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsGreekScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 10, monthNumber = 2),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 10, month = 2),
                     totalDailyAmount = 5800
                 )
             ),
@@ -1424,7 +1426,7 @@ class ParserTest {
                 testMyDataTbrDataGreekScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 6, dayOfMonth = 11, hour = 17, minute = 25, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 6, day = 11, hour = 17, minute = 25, second = 0),
                     percentage = 240, durationInMinutes = 60
                 )
             ),
@@ -1432,7 +1434,7 @@ class ParserTest {
                 testMyDataBolusDataFinnishScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1440,14 +1442,14 @@ class ParserTest {
                 testMyDataErrorDataFinnishScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 2, dayOfMonth = 1, hour = 1, minute = 6, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 2, day = 1, hour = 1, minute = 6, second = 0),
                     alert = AlertScreenContent.Warning(1, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsFinnishScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 10, monthNumber = 2),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 10, month = 2),
                     totalDailyAmount = 5900
                 )
             ),
@@ -1455,7 +1457,7 @@ class ParserTest {
                 testMyDataTbrDataFinnishScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 6, dayOfMonth = 11, hour = 17, minute = 25, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 6, day = 11, hour = 17, minute = 25, second = 0),
                     percentage = 240, durationInMinutes = 60
                 )
             ),
@@ -1463,7 +1465,7 @@ class ParserTest {
                 testMyDataBolusDataNorwegianScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1471,14 +1473,14 @@ class ParserTest {
                 testMyDataErrorDataNorwegianScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 2, dayOfMonth = 1, hour = 1, minute = 6, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 2, day = 1, hour = 1, minute = 6, second = 0),
                     alert = AlertScreenContent.Warning(1, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsNorwegianScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 10, monthNumber = 2),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 10, month = 2),
                     totalDailyAmount = 5900
                 )
             ),
@@ -1486,7 +1488,7 @@ class ParserTest {
                 testMyDataTbrDataNorwegianScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 6, dayOfMonth = 11, hour = 17, minute = 25, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 6, day = 11, hour = 17, minute = 25, second = 0),
                     percentage = 240, durationInMinutes = 60
                 )
             ),
@@ -1494,7 +1496,7 @@ class ParserTest {
                 testMyDataBolusDataPortugueseScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1502,14 +1504,14 @@ class ParserTest {
                 testMyDataErrorDataPortugueseScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 2, dayOfMonth = 1, hour = 1, minute = 6, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 2, day = 1, hour = 1, minute = 6, second = 0),
                     alert = AlertScreenContent.Warning(1, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsPortugueseScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 10, monthNumber = 2),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 10, month = 2),
                     totalDailyAmount = 5900
                 )
             ),
@@ -1517,7 +1519,7 @@ class ParserTest {
                 testMyDataTbrDataPortugueseScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 6, dayOfMonth = 11, hour = 17, minute = 25, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 6, day = 11, hour = 17, minute = 25, second = 0),
                     percentage = 240, durationInMinutes = 60
                 )
             ),
@@ -1525,7 +1527,7 @@ class ParserTest {
                 testMyDataBolusDataSwedishScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1533,14 +1535,14 @@ class ParserTest {
                 testMyDataErrorDataSwedishScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 2, dayOfMonth = 1, hour = 1, minute = 6, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 2, day = 1, hour = 1, minute = 6, second = 0),
                     alert = AlertScreenContent.Warning(1, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsSwedishScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 10, monthNumber = 2),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 10, month = 2),
                     totalDailyAmount = 5900
                 )
             ),
@@ -1548,7 +1550,7 @@ class ParserTest {
                 testMyDataTbrDataSwedishScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 6, dayOfMonth = 11, hour = 17, minute = 25, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 6, day = 11, hour = 17, minute = 25, second = 0),
                     percentage = 240, durationInMinutes = 60
                 )
             ),
@@ -1556,7 +1558,7 @@ class ParserTest {
                 testMyDataBolusDataDanishScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 5, dayOfMonth = 12, hour = 16, minute = 30, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 5, day = 12, hour = 16, minute = 30, second = 0),
                     bolusAmount = 2700, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 13
                 )
             ),
@@ -1564,14 +1566,14 @@ class ParserTest {
                 testMyDataErrorDataDanishScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 2, dayOfMonth = 1, hour = 1, minute = 6, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 2, day = 1, hour = 1, minute = 6, second = 0),
                     alert = AlertScreenContent.Warning(1, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsDanishScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 10, monthNumber = 2),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 10, month = 2),
                     totalDailyAmount = 5900
                 )
             ),
@@ -1579,7 +1581,7 @@ class ParserTest {
                 testMyDataTbrDataDanishScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 6, dayOfMonth = 11, hour = 17, minute = 25, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 6, day = 11, hour = 17, minute = 25, second = 0),
                     percentage = 240, durationInMinutes = 60
                 )
             ),
@@ -1587,7 +1589,7 @@ class ParserTest {
                 testMyDataBolusDataGermanScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 8, hour = 9, minute = 57, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 1, day = 8, hour = 9, minute = 57, second = 0),
                     bolusAmount = 1000, bolusType = MyDataBolusType.STANDARD, durationInMinutes = null
                 )
             ),
@@ -1595,14 +1597,14 @@ class ParserTest {
                 testMyDataErrorDataGermanScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 28, hour = 11, minute = 0, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 1, day = 28, hour = 11, minute = 0, second = 0),
                     alert = AlertScreenContent.Warning(6, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsGermanScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 30, monthNumber = 1),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 30, month = 1),
                     totalDailyAmount = 26900
                 )
             ),
@@ -1610,7 +1612,7 @@ class ParserTest {
                 testMyDataTbrDataGermanScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 28, hour = 11, minute = 0, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 1, day = 28, hour = 11, minute = 0, second = 0),
                     percentage = 110, durationInMinutes = 0
                 )
             ),
@@ -1618,7 +1620,7 @@ class ParserTest {
                 testMyDataBolusDataSlovenianScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 1, hour = 23, minute = 21, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 1, day = 1, hour = 23, minute = 21, second = 0),
                     bolusAmount = 3200, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 43
                 )
             ),
@@ -1626,14 +1628,14 @@ class ParserTest {
                 testMyDataErrorDataSlovenianScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 3, dayOfMonth = 8, hour = 17, minute = 31, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 3, day = 8, hour = 17, minute = 31, second = 0),
                     alert = AlertScreenContent.Warning(6, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsSlovenianScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 8, monthNumber = 3),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 8, month = 3),
                     totalDailyAmount = 32100
                 )
             ),
@@ -1641,7 +1643,7 @@ class ParserTest {
                 testMyDataTbrDataSlovenianScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 3, dayOfMonth = 8, hour = 17, minute = 31, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 3, day = 8, hour = 17, minute = 31, second = 0),
                     percentage = 110, durationInMinutes = 1
                 )
             ),
@@ -1649,7 +1651,7 @@ class ParserTest {
                 testMyDataBolusDataLithuanianScreen,
                 ParsedScreen.MyDataBolusDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 1, hour = 23, minute = 21, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 1, day = 1, hour = 23, minute = 21, second = 0),
                     bolusAmount = 3200, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 43
                 )
             ),
@@ -1657,14 +1659,14 @@ class ParserTest {
                 testMyDataErrorDataLithuanianScreen,
                 ParsedScreen.MyDataErrorDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 3, dayOfMonth = 8, hour = 20, minute = 6, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 3, day = 8, hour = 20, minute = 6, second = 0),
                     alert = AlertScreenContent.Warning(6, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
                 )
             ),
             Pair(
                 testMyDataDailyTotalsLithuanianScreen,
                 ParsedScreen.MyDataDailyTotalsScreen(
-                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 8, monthNumber = 3),
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, day = 8, month = 3),
                     totalDailyAmount = 33600
                 )
             ),
@@ -1672,7 +1674,7 @@ class ParserTest {
                 testMyDataTbrDataLithuanianScreen,
                 ParsedScreen.MyDataTbrDataScreen(
                     index = 1, totalNumEntries = 30,
-                    timestamp = LocalDateTime(year = 0, monthNumber = 3, dayOfMonth = 8, hour = 20, minute = 6, second = 0),
+                    timestamp = LocalDateTime(year = 0, month = 3, day = 8, hour = 20, minute = 6, second = 0),
                     percentage = 110, durationInMinutes = 1
                 )
             ),
@@ -1686,11 +1688,12 @@ class ParserTest {
             assertNotNull(titleId)
 
             val result: ParseResult = when (titleId) {
-                TitleID.BOLUS_DATA -> MyDataBolusDataScreenParser().parse(testContext.parseContext)
-                TitleID.ERROR_DATA -> MyDataErrorDataScreenParser().parse(testContext.parseContext)
+                TitleID.BOLUS_DATA   -> MyDataBolusDataScreenParser().parse(testContext.parseContext)
+                TitleID.ERROR_DATA   -> MyDataErrorDataScreenParser().parse(testContext.parseContext)
                 TitleID.DAILY_TOTALS -> MyDataDailyTotalsScreenParser().parse(testContext.parseContext)
-                TitleID.TBR_DATA -> MyDataTbrDataScreenParser().parse(testContext.parseContext)
-                else -> {
+                TitleID.TBR_DATA     -> MyDataTbrDataScreenParser().parse(testContext.parseContext)
+
+                else                 -> {
                     fail("Unknown title string \"$titleString\"")
                 }
             }
@@ -1891,6 +1894,7 @@ class ParserTest {
             assertEquals(testScreen.second, alertScreen.content)
         }
     }
+
     @Test
     fun checkToplevelScreenParsing() {
         val testScreens = listOf(

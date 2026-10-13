@@ -27,4 +27,7 @@
     <string name="count_selected">%1$d избрано</string>
     <string name="sort_label">Сортиране</string>
     <string name="search">Търсене</string>
+    <string name="simple_mode">Опростен режим</string>
+    <string name="select">Избери</string>
+    <string name="set">Приложи</string>
 </resources>

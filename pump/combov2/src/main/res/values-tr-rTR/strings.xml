@@ -104,15 +104,7 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_unpair_pump_summary">Şu anda eşleştirilmiş olan Accu-Chek Combo pompasından AndroidAPS ve Android\'in eşlemesini kaldırın</string>
     <string name="combov2_unknown_tbr_detected">Bilinmeyen GBO tespit edildi ve durduruldu; yüzde: %1$d%%; kalan süre: %2$s</string>
     <string name="combov2_connection_error">Bağlantı Hatası: %1$s</string>
-    <string name="combov2_short_status_last_connection">Son bağl: %1$d dak. önce</string>
     <string name="combov2_short_status_alert">Alarm: %s</string>
-    <string name="combov2_short_status_last_bolus">SonBolus: %1$sÜ @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Geçici: %s</string>
-    <string name="combov2_short_status_reservoir">Rezerv: %dÜ</string>
-    <string name="combov2_short_status_battery_state_empty">boş</string>
-    <string name="combov2_short_status_battery_state_low">düşük</string>
-    <string name="combov2_short_status_battery_state_full">dolu</string>
-    <string name="combov2_short_status_battery_state">Pil: %s</string>
     <string name="combov2_automatic_reservoir_entry">İnsülin rezervuar değişikliğini otomatik olarak algıla ve otomatik olarak gir</string>
     <string name="combov2_automatic_battery_entry">Pil değişimini otomatik olarak algıla ve otomatik olarak gir</string>
     <string name="combov2_timezone_changed">Zaman dilimi değiştirildi</string>

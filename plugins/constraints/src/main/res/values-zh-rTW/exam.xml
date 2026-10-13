@@ -63,7 +63,7 @@
     <string name="basaltest_hint1">https://wiki.aaps.app/zh-tw/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="prerequisites_label">前置條件</string>
     <string name="prerequisites_what">設置和使用AAPS的必要條件是什麼？</string>
-    <string name="prerequisites_computer">一台安裝並配置了Android Studio的電腦。</string>
+    <string name="prerequisites_build">建立 AAPS 的方法。可以透過瀏覽器，或是在安裝了 Android Studio 的電腦上進行。</string>
     <string name="prerequisites_pump">如果計劃運行閉環，則需要一個相容的胰島素幫浦。</string>
     <string name="prerequisites_nightscout">Nightscout，用於紀錄所有資料並檢查設定。</string>
     <string name="prerequisites_beanandroiddeveloper">有編程或編輯代碼的經驗。</string>
@@ -97,7 +97,7 @@
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
-    <string name="insulin_actrapid">Actrapid®/Humalin R®/「常規型」人胰島素。</string>
+    <string name="insulin_actrapid">Actrapid®/Humulin R®/\"regular\"  人類胰島素</string>
     <string name="insulin_hint1">https://wiki.aaps.app/zh-tw/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
     <string name="sensitivity_label">敏感性外掛</string>
     <string name="sensitivity_adjust">敏感性外掛允許AAPS調整因臨時或短期的胰島素敏感性變化（例如荷爾蒙變化或注射部位的吸收問題）。</string>

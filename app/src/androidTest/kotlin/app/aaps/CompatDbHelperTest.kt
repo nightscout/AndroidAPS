@@ -7,7 +7,7 @@ import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.FD
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.IDs
-import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
@@ -31,8 +31,8 @@ import app.aaps.core.interfaces.rx.events.EventExtendedBolusChange
 import app.aaps.core.interfaces.rx.events.EventFoodDatabaseChanged
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventNewHistoryData
-import app.aaps.core.interfaces.rx.events.EventOfflineChange
 import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventRunningModeChange
 import app.aaps.core.interfaces.rx.events.EventTempBasalChange
 import app.aaps.core.interfaces.rx.events.EventTempTargetChange
 import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
@@ -44,12 +44,12 @@ import app.aaps.di.TestApplication
 import app.aaps.helpers.RxHelper
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import com.google.common.truth.Truth.assertThat
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import javax.inject.Inject
+import javax.inject.Provider
 
 class CompatDbHelperTest @Inject constructor() {
 
@@ -58,7 +58,7 @@ class CompatDbHelperTest @Inject constructor() {
     @Inject lateinit var rxHelper: RxHelper
     @Inject lateinit var l: L
     @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var injector: HasAndroidInjector
+    @Inject lateinit var bolusWizardProvider: Provider<BolusWizard>
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
@@ -96,7 +96,7 @@ class CompatDbHelperTest @Inject constructor() {
         rxHelper.listen(EventTempTargetChange::class.java)
         rxHelper.listen(EventTherapyEventChange::class.java)
         rxHelper.listen(EventFoodDatabaseChanged::class.java)
-        rxHelper.listen(EventOfflineChange::class.java)
+        rxHelper.listen(EventRunningModeChange::class.java)
         rxHelper.listen(EventDeviceStatusChange::class.java)
 
         // Enable event logging
@@ -175,7 +175,7 @@ class CompatDbHelperTest @Inject constructor() {
         //BCR
         rxHelper.resetState(EventTreatmentChange::class.java)
         rxHelper.resetState(EventNewHistoryData::class.java)
-        val bcr = BolusWizard(injector).doCalc(
+        val bcr = bolusWizardProvider.get().doCalc(
             profile = profileFunction.getProfile() ?: error("No profile"),
             profileName = profileFunction.getProfileName(),
             tempTarget = null,
@@ -266,16 +266,16 @@ class CompatDbHelperTest @Inject constructor() {
         // EventFoodDatabaseChanged should be triggered
         assertThat(rxHelper.waitFor(EventFoodDatabaseChanged::class.java, comment = "step13").first).isTrue()
 
-        // OE
-        rxHelper.resetState(EventOfflineChange::class.java)
-        val oe = OE(
+        // RM
+        rxHelper.resetState(EventRunningModeChange::class.java)
+        val rm = RM(
             timestamp = dateUtil.now(),
-            reason = OE.Reason.OTHER,
+            mode = RM.Mode.DISCONNECTED_PUMP,
             duration = T.hours(1).msecs()
         )
-        persistenceLayer.insertAndCancelCurrentOfflineEvent(oe, Action.DISCONNECT, Sources.Aaps, null, listOf()).blockingGet()
+        persistenceLayer.insertOrUpdateRunningMode(rm, Action.DISCONNECT, Sources.Aaps, null, listOf()).blockingGet()
         // EventOfflineChange should be triggered
-        assertThat(rxHelper.waitFor(EventOfflineChange::class.java, comment = "step13").first).isTrue()
+        assertThat(rxHelper.waitFor(EventRunningModeChange::class.java, comment = "step13").first).isTrue()
 
         // DS
         rxHelper.resetState(EventDeviceStatusChange::class.java)

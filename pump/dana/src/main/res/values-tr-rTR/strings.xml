@@ -19,7 +19,6 @@
     <string name="dana_model">%1$s\nModel: %2$02X\nProtokol: %3$02X\nKod: %4$02X</string>
     <string name="processinghistory">Etkinlik işleniyor</string>
     <string name="danar_enableextendedbolus">Pompada yayma bolusları etkinleştir</string>
-    <string name="overview_bolusprogress_delivered">İletildi</string>
     <string name="overview_bolusprogress_stoped">Durdu</string>
     <string name="unsupportedfirmware">Desteklenmeyen pompa yazılımı</string>
     <string name="pumperror">Pompa hatası</string>

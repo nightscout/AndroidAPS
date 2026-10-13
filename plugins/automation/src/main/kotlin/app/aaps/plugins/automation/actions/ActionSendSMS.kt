@@ -24,7 +24,7 @@ class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
 
     override fun doAction(callback: Callback) {
         val result = smsCommunicator.sendNotificationToAllNumbers(text.value)
-        callback.result(instantiator.providePumpEnactResult().success(result).comment(if (result) app.aaps.core.ui.R.string.ok else app.aaps.core.ui.R.string.error)).run()
+        callback.result(pumpEnactResultProvider.get().success(result).comment(if (result) app.aaps.core.ui.R.string.ok else app.aaps.core.ui.R.string.error)).run()
     }
 
     override fun isValid(): Boolean = text.value.isNotEmpty()

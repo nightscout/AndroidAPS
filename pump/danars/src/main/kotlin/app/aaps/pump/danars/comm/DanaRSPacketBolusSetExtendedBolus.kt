@@ -1,18 +1,25 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.encryption.BleEncryption
+import app.aaps.pump.danars.encryption.BleEncryption
+import javax.inject.Inject
 
-class DanaRSPacketBolusSetExtendedBolus(
-    injector: HasAndroidInjector,
-    private var extendedAmount: Double = 0.0,
+class DanaRSPacketBolusSetExtendedBolus @Inject constructor(
+    private val aapsLogger: AAPSLogger
+) : DanaRSPacket() {
+
+    private var extendedAmount: Double = 0.0
     private var extendedBolusDurationInHalfHours: Int = 0
-) : DanaRSPacket(injector) {
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_EXTENDED_BOLUS
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus start : $extendedAmount U half-hours: $extendedBolusDurationInHalfHours")
+    }
+
+    fun with(extendedAmount: Double, extendedBolusDurationInHalfHours: Int) = this.also {
+        this.extendedAmount = extendedAmount
+        this.extendedBolusDurationInHalfHours = extendedBolusDurationInHalfHours
     }
 
     override fun getRequestParams(): ByteArray {

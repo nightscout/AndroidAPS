@@ -18,6 +18,10 @@
             android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".maintenance.activities.CloudPrefImportListActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".maintenance.activities.CustomWatchfaceImportListActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />

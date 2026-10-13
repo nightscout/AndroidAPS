@@ -63,7 +63,6 @@
     <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="prerequisites_label">Önkoşullar</string>
     <string name="prerequisites_what">AAPS\'yi kurmak ve kullanmak için gerekenler nelerdir?</string>
-    <string name="prerequisites_computer">Android Studio\'nun kurulu ve yapılandırılmış olduğu bir bilgisayar.</string>
     <string name="prerequisites_pump">Kapalı devre çalıştırmayı planlıyorsanız uyumlu bir insülin pompası.</string>
     <string name="prerequisites_nightscout">Tüm verilerin kaydını tutmak ve ayarları gözden geçirmek için Nightscout sitesi</string>
     <string name="prerequisites_beanandroiddeveloper">Programlama veya kod düzenleme konusunda deneyim.</string>
@@ -97,7 +96,6 @@
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
-    <string name="insulin_actrapid">Actrapid®/Humulin R®/ insan insülini.</string>
     <string name="insulin_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
     <string name="sensitivity_label">Duyarlılık Eklentileri</string>
     <string name="sensitivity_adjust">Duyarlılık eklentileri, AAPS\'nin insülin duyarlılığındaki geçici veya kısa süreli değişiklikleri (örneğin hormonal değişiklikler veya infüzyon bölgesinde emilim sorunları) ayarlamasına olanak tanır.</string>

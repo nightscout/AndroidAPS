@@ -5,7 +5,6 @@
     <string name="error">错误</string>
     <string name="profile_set_ok">泵基础率配置文件更新了</string>
     <string name="invalid_input">无效的输入数据</string>
-    <string name="bolus_delivering">正在输注 %1$.2f U</string>
     <string name="constraint_applied">应用约束!</string>
     <string name="tempbasals_iobtotal_label_string">总 IOB:</string>
     <string name="tt_label">临时目标</string>
@@ -82,7 +81,6 @@
     <string name="loopisdisabled">闭环被禁用</string>
     <string name="alarm">报警</string>
     <string name="disableloop">禁用闭环</string>
-    <string name="enableloop">启用闭环</string>
     <string name="resumeloop">恢复闭环</string>
     <string name="suspendloop">暂停闭环</string>
     <string name="duration_min_label">持续时间 [min]</string>
@@ -96,7 +94,6 @@
     <string name="name_short">名称:</string>
     <string name="time">时间</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="loading">正在加载…</string>
     <string name="notes_label">备注</string>
     <string name="remove_button">删除</string>
     <string name="addnew_above">在顶部新增</string>
@@ -152,7 +149,6 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="suspendloop_label">禁用/暂停闭环</string>
     <string name="iob_label">活性胰岛素(IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">密码错误</string>
@@ -259,7 +255,6 @@
     <string name="uel_lgs_loop_mode">低血糖模式</string>
     <string name="uel_open_loop_mode">开环模式</string>
     <string name="uel_loop_disabled">闭环禁用</string>
-    <string name="uel_loop_enabled">闭环启用</string>
     <string name="uel_reconnect">重新连接</string>
     <string name="uel_disconnect">断开连接</string>
     <string name="uel_resume">恢复</string>
@@ -502,4 +497,5 @@
     <string name="saturday_short">周六</string>
     <string name="sunday_short">周日</string>
     <!--    DecimalFormatterImpl -->
+    <!--    Playback-->
 </resources>

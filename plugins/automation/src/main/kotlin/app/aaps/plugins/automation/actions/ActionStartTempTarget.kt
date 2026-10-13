@@ -56,15 +56,15 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
             temporaryTarget = tt(), action = app.aaps.core.data.ue.Action.TT,
             source = Sources.Automation,
             note = title,
-            listValues = listOf(
+            listValues = listOfNotNull(
                 ValueWithUnit.TETTReason(TT.Reason.AUTOMATION),
                 ValueWithUnit.Mgdl(tt().lowTarget),
                 ValueWithUnit.Mgdl(tt().highTarget).takeIf { tt().lowTarget != tt().highTarget },
                 ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt())
-            ).filterNotNull()
+            )
         ).subscribe(
-            { callback.result(instantiator.providePumpEnactResult().success(true).comment(app.aaps.core.ui.R.string.ok)).run() },
-            { callback.result(instantiator.providePumpEnactResult().success(false).comment(app.aaps.core.ui.R.string.error)).run() }
+            { callback.result(pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)).run() },
+            { callback.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.error)).run() }
         )
     }
 

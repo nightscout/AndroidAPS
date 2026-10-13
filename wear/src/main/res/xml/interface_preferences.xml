@@ -7,8 +7,8 @@
         android:entries="@array/input_design"
         android:entryValues="@array/input_design_values"
         android:key="@string/key_input_design"
-        android:summary="Input Design"
-        android:title="@string/pref_input_design" />
+        android:title="@string/pref_input_design"
+        android:summary="%s" />
 
     <CheckBoxPreference
         android:defaultValue="true"

@@ -4,38 +4,24 @@ import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.plugins.configuration.configBuilder.events.EventConfigBuilderUpdateGui
-import app.aaps.plugins.configuration.setupwizard.SWDefinition
-import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.extensions.scanForActivity
 import java.security.InvalidParameterException
 import javax.inject.Inject
 
-class SWPlugin(injector: HasAndroidInjector, private val definition: SWDefinition) : SWItem(injector, Type.PLUGIN) {
+class SWPlugin @Inject constructor(
+    aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck,
+    private val activePlugin: ActivePlugin,
+    private val configBuilder: ConfigBuilder
+) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var configBuilder: ConfigBuilder
-    @Inject lateinit var uiInteraction: UiInteraction
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
-
-    private val disposable = CompositeDisposable()
-    private val pluginViewHolders = ArrayList<ConfigBuilder.PluginViewHolderInterface>()
     private var pType: PluginType? = null
     @StringRes private var pluginDescription = 0
-
-    // TODO: Adrian how to clear disposable in this case?
-    init {
-        disposable += rxBus
-            .toObservable(EventConfigBuilderUpdateGui::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ for (pluginViewHolder in pluginViewHolders) pluginViewHolder.update() }, fabricPrivacy::logException)
-    }
 
     fun option(pType: PluginType, @StringRes pluginDescription: Int): SWPlugin {
         this.pType = pType
@@ -45,13 +31,14 @@ class SWPlugin(injector: HasAndroidInjector, private val definition: SWDefinitio
 
     override fun generateDialog(layout: LinearLayout) {
         val pType = this.pType ?: throw InvalidParameterException()
+        val activity = layout.context.scanForActivity() ?: error("Activity not found")
         configBuilder.createViewsForPlugins(
             title = null,
             description = pluginDescription,
             pluginType = pType,
             plugins = activePlugin.getSpecificPluginsVisibleInList(pType),
-            pluginViewHolders = pluginViewHolders,
-            activity = definition.activity,
+            pluginViewHolders = null,
+            activity = activity,
             parent = layout,
             showExpanded = true
         )

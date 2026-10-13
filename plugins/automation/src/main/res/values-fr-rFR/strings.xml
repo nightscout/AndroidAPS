@@ -78,9 +78,8 @@
     <string name="deltalabel">Delta de glycémies</string>
     <string name="deltalabel_u">Delta Glyc. [%1$s]</string>
     <string name="currentlocation">Localisation actuelle</string>
+    <string name="choose_from_map">Choisir à partir de carte</string>
     <string name="location">Localisation</string>
-    <string name="latitude_short">Lat :</string>
-    <string name="longitude_short">Long :</string>
     <string name="glucose_u">Glycémie [%1$s] :</string>
     <string name="target_u">Cible [%1$s]:</string>
     <string name="lastboluslabel">Lors du dernier Bolus</string>
@@ -141,4 +140,10 @@
     <string name="triggerStepsCountLabel">Compteur de pas</string>
     <string name="triggerStepsCountDesc">Nombre de pas par %1$s minutes %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Durée de la mesure</string>
+    <!--    SMB mode-->
+    <string name="changeSmbState">Activer/désactiver SMB</string>
+    <string name="changeSmbTo">Changer SMB en %1$s</string>
+    <string name="newSmbMode">Nouveau mode SMB :</string>
+    <string name="on">ACTIVÉ</string>
+    <string name="off">DÉSACTIVÉ</string>
 </resources>

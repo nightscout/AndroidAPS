@@ -71,14 +71,14 @@ files:
     translation: /pump/medtrum/src/main/res/values-%android_code%/arrays.xml
   - source: /pump/medtrum/src/main/res/values/strings.xml
     translation: /pump/medtrum/src/main/res/values-%android_code%/strings.xml
-  - source: /pump/omnipod-common/src/main/res/values/strings.xml
-    translation: /pump/omnipod-common/src/main/res/values-%android_code%/strings.xml
-  - source: /pump/omnipod-dash/src/main/res/values/strings.xml
-    translation: /pump/omnipod-dash/src/main/res/values-%android_code%/strings.xml
-  - source: /pump/omnipod-eros/src/main/res/values/strings.xml
-    translation: /pump/omnipod-eros/src/main/res/values-%android_code%/strings.xml
-  - source: /pump/pump-common/src/main/res/values/strings.xml
-    translation: /pump/pump-common/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/omnipod/common/src/main/res/values/strings.xml
+    translation: /pump/omnipod/common/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/omnipod/dash/src/main/res/values/strings.xml
+    translation: /pump/omnipod/dash/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/omnipod/eros/src/main/res/values/strings.xml
+    translation: /pump/omnipod/eros/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/common/src/main/res/values/strings.xml
+    translation: /pump/common/src/main/res/values-%android_code%/strings.xml
   - source: /pump/rileylink/src/main/res/values/strings.xml
     translation: /pump/rileylink/src/main/res/values-%android_code%/strings.xml
   - source: /pump/virtual/src/main/res/values/strings.xml

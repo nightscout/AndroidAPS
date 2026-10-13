@@ -21,7 +21,7 @@ class SyncPumpTotalDailyDoseTransaction(
         }
         // search by timestamp
         if (current == null) {
-            current = database.totalDailyDoseDao.findByPumpTimestamp(tdd.timestamp, tdd.interfaceIDs.pumpType!!, tdd.interfaceIDs.pumpSerial!!)
+            current = database.totalDailyDoseDao.findByPumpTimestamp(tdd.timestamp, tdd.interfaceIDs.pumpType, tdd.interfaceIDs.pumpSerial)
         }
         if (current == null) {
             database.totalDailyDoseDao.insertNewEntry(tdd)

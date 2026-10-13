@@ -34,13 +34,6 @@
     <string name="timeout_during_handshake">Таймаут при сдвояването - рестартирайте bluetooth</string>
     <string name="pump_stopped">Помпата е спряна</string>
     <string name="pump_started">Помпата е стартирана</string>
-    <string name="short_status_last_connected">Последно свързване: преди %1$d минути </string>
-    <string name="short_status_tbr">TBR: %1$d%% за %2$d / %3$d мин</string>
-    <string name="short_status_extended">Удължен: %1$.2f / %2$.2f Е за %3$d мин</string>
-    <string name="short_status_multiwave">Двувълнов: %1$.2f / %2$.2f Е за %3$d мин</string>
-    <string name="short_status_tdd">ТДД: %1$.2f</string>
-    <string name="short_status_reservoir">Рез.: %1$.2f E</string>
-    <string name="short_status_battery">Бат.: %1$d%%</string>
     <string name="release_software_version">Софтуер версия</string>
     <string name="ui_processor_software_version">UI процесор софтуер версия</string>
     <string name="pc_processor_software_version">PC процесор софтуер версия</string>

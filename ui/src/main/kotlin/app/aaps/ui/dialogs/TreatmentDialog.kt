@@ -34,7 +34,6 @@ import app.aaps.core.utils.HtmlHelper
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogTreatmentBinding
 import com.google.common.base.Joiner
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
@@ -55,7 +54,6 @@ class TreatmentDialog : DialogFragmentWithDate() {
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var decimalFormatter: DecimalFormatter
-    @Inject lateinit var injector: HasAndroidInjector
 
     private var queryingProtection = false
     private var _binding: DialogTreatmentBinding? = null

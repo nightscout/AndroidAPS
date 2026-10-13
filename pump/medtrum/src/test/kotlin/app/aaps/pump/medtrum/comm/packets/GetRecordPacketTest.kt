@@ -5,16 +5,21 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.pump.medtrum.MedtrumTestBase
+import app.aaps.pump.medtrum.util.MedtrumTimeUtil
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import app.aaps.pump.medtrum.MedtrumTestBase
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.Mockito.mock
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 class GetRecordPacketTest : MedtrumTestBase() {
+
+    val medtrumTimeUtil = MedtrumTimeUtil()
 
     /** Test packet specific behavior */
 
@@ -28,6 +33,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
                 it.pumpSync = pumpSync
                 it.detailedBolusInfoStorage = detailedBolusInfoStorage
                 it.dateUtil = dateUtil
+                it.medtrumTimeUtil = medtrumTimeUtil
             }
         }
     }
@@ -80,18 +86,18 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val amount = 1.1
 
         // Mocks
-        val detailedBolusInfo: DetailedBolusInfo = mock(DetailedBolusInfo::class.java)
+        val detailedBolusInfo: DetailedBolusInfo = mock()
         detailedBolusInfo.timestamp = timestamp // Wierd way to mock but this is a @JvmField
-        Mockito.`when`(detailedBolusInfo.bolusType).thenReturn(bolusType)
+        whenever(detailedBolusInfo.bolusType).thenReturn(bolusType)
 
-        Mockito.`when`(detailedBolusInfoStorage.findDetailedBolusInfo(timestamp, amount)).thenReturn(detailedBolusInfo)
+        whenever(detailedBolusInfoStorage.findDetailedBolusInfo(timestamp, amount)).thenReturn(detailedBolusInfo)
 
         // Call
         val packet = GetRecordPacket(packetInjector, 0)
         val result = packet.handleResponse(data)
 
         // Expected values
-        Mockito.verify(pumpSync).syncBolusWithTempId(
+        verify(pumpSync).syncBolusWithTempId(
             timestamp = timestamp,
             amount = amount,
             temporaryId = timestamp,
@@ -114,14 +120,14 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val amount = 1.1
 
         // Mocks
-        Mockito.`when`(detailedBolusInfoStorage.findDetailedBolusInfo(timestamp, amount)).thenReturn(null)
+        whenever(detailedBolusInfoStorage.findDetailedBolusInfo(timestamp, amount)).thenReturn(null)
 
         // Call
         val packet = GetRecordPacket(packetInjector, 0)
         val result = packet.handleResponse(data)
 
         // Expected values
-        Mockito.verify(pumpSync).syncBolusWithPumpId(
+        verify(pumpSync).syncBolusWithPumpId(
             timestamp = timestamp,
             amount = amount,
             type = null,
@@ -148,7 +154,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        Mockito.verify(pumpSync).syncExtendedBolusWithPumpId(
+        verify(pumpSync).syncExtendedBolusWithPumpId(
             timestamp = timestamp,
             amount = amount,
             duration = duration,
@@ -171,14 +177,14 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val duration = T.mins(30).msecs()
 
         // Mocks
-        Mockito.`when`(detailedBolusInfoStorage.findDetailedBolusInfo(timestamp, amountDirect)).thenReturn(null)
+        whenever(detailedBolusInfoStorage.findDetailedBolusInfo(timestamp, amountDirect)).thenReturn(null)
 
         // Call
         val packet = GetRecordPacket(packetInjector, 0)
         val result = packet.handleResponse(data)
 
         // Expected values
-        Mockito.verify(pumpSync).syncBolusWithPumpId(
+        verify(pumpSync).syncBolusWithPumpId(
             timestamp = timestamp,
             amount = amountDirect,
             type = null,
@@ -186,7 +192,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
             pumpType = medtrumPump.pumpType(),
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
-        Mockito.verify(pumpSync).syncExtendedBolusWithPumpId(
+        verify(pumpSync).syncExtendedBolusWithPumpId(
             timestamp = timestamp,
             amount = amountExtended,
             duration = duration,
@@ -213,7 +219,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        Mockito.verify(pumpSync).syncTemporaryBasalWithPumpId(
+        verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = startTime,
             rate = rate,
             duration = duration,
@@ -241,7 +247,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        Mockito.verify(pumpSync).syncTemporaryBasalWithPumpId(
+        verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = startTime,
             rate = rate,
             duration = duration,
@@ -269,7 +275,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        Mockito.verify(pumpSync).syncTemporaryBasalWithPumpId(
+        verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = startTime,
             rate = rate,
             duration = duration,
@@ -289,7 +295,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val endTime = 1689505417000
 
         // Mocks
-        Mockito.`when`(pumpSync.expectedPumpState()).thenReturn(
+        whenever(pumpSync.expectedPumpState()).thenReturn(
             PumpSync.PumpState(
                 temporaryBasal = null,
                 extendedBolus = null,
@@ -305,7 +311,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
 
         // Just check the pumpSync here, rest of the behavoir of medtrumPump is tested in MedtrumPumpTest
         // Expected values
-        Mockito.verify(pumpSync).syncTemporaryBasalWithPumpId(
+        verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = endTime,
             rate = 0.0,
             duration = T.mins(4800L).msecs(),
@@ -325,7 +331,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val endTime = 1689613740000
 
         // Mocks
-        Mockito.`when`(pumpSync.expectedPumpState()).thenReturn(
+        whenever(pumpSync.expectedPumpState()).thenReturn(
             PumpSync.PumpState(
                 temporaryBasal = null,
                 extendedBolus = null,
@@ -341,7 +347,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
 
         // Just check the pumpSync here, rest of the behavoir of medtrumPump is tested in MedtrumPumpTest
         // Expected values
-        Mockito.verify(pumpSync).syncTemporaryBasalWithPumpId(
+        verify(pumpSync).syncTemporaryBasalWithPumpId(
             timestamp = endTime,
             rate = 0.0,
             duration = T.mins(4800L).msecs(),
@@ -361,11 +367,11 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val endTime = 1689505417000
 
         // Mocks
-        val expectedTemporaryBasal: PumpSync.PumpState.TemporaryBasal = mock(PumpSync.PumpState.TemporaryBasal::class.java)
-        Mockito.`when`(expectedTemporaryBasal.timestamp).thenReturn(endTime + T.mins(1).msecs()) // Existing temp basal is newer
-        Mockito.`when`(expectedTemporaryBasal.duration).thenReturn(endTime + T.mins(30).msecs()) // Normal TBR
+        val expectedTemporaryBasal: PumpSync.PumpState.TemporaryBasal = mock()
+        whenever(expectedTemporaryBasal.timestamp).thenReturn(endTime + T.mins(1).msecs()) // Existing temp basal is newer
+        whenever(expectedTemporaryBasal.duration).thenReturn(endTime + T.mins(30).msecs()) // Normal TBR
 
-        Mockito.`when`(pumpSync.expectedPumpState()).thenReturn(
+        whenever(pumpSync.expectedPumpState()).thenReturn(
             PumpSync.PumpState(
                 temporaryBasal = expectedTemporaryBasal,
                 extendedBolus = null,
@@ -381,7 +387,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
 
         // Just check the pumpSync here, rest of the behavoir of medtrumPump is tested in MedtrumPumpTest
         // Expected values
-        Mockito.verify(pumpSync, Mockito.never()).syncTemporaryBasalWithPumpId(
+        verify(pumpSync, never()).syncTemporaryBasalWithPumpId(
             timestamp = endTime,
             rate = 0.0,
             duration = T.mins(4800L).msecs(),
@@ -412,7 +418,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        Mockito.verify(pumpSync).createOrUpdateTotalDailyDose(
+        verify(pumpSync).createOrUpdateTotalDailyDose(
             timestamp = timestamp,
             bolusAmount = bolusTdd,
             basalAmount = basalTdd,

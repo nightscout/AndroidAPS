@@ -12,7 +12,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import dagger.android.DaggerService
 import javax.inject.Inject
 import kotlin.math.ln
@@ -74,7 +74,10 @@ class AlarmSoundService : DaggerService() {
         player?.let { if (it.isPlaying) it.stop() }
 
         if (intent?.hasExtra(SOUND_ID) == true) resourceId = intent.getIntExtra(SOUND_ID, app.aaps.core.ui.R.raw.error)
-        player = MediaPlayer()
+        val audioAttributionContext = createAttributionContext("aapsAudio")
+        player =
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) MediaPlayer(audioAttributionContext)
+            else MediaPlayer()
         try {
             val afd = rh.openRawResourceFd(resourceId) ?: return START_NOT_STICKY
             player?.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)

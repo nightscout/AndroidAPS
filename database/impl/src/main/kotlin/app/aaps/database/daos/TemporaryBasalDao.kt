@@ -45,6 +45,9 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     fun findByPumpTempIds(temporaryId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): TemporaryBasal?
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
+    fun getTemporaryBasalActiveAtLegacy(timestamp: Long): TemporaryBasal?
+
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     fun getTemporaryBasalActiveAt(timestamp: Long): Maybe<TemporaryBasal>
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE unlikely(timestamp <= :to) AND unlikely((timestamp + duration) > :from) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC")

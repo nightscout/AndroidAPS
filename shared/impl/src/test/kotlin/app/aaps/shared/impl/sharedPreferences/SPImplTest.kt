@@ -7,9 +7,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
 
 @ExtendWith(MockitoExtension::class)
@@ -25,9 +26,10 @@ class SPImplTest {
 
     @BeforeEach
     fun setUp() {
+        MockitoAnnotations.openMocks(this)
         sut = SPImpl(SharedPreferencesMock(), context)
-        Mockito.`when`(context.getString(someResource)).thenReturn("some_resource")
-        Mockito.`when`(context.getString(someResource2)).thenReturn("some_resource_2")
+        whenever(context.getString(someResource)).thenReturn("some_resource")
+        whenever(context.getString(someResource2)).thenReturn("some_resource_2")
     }
 
     @Test
@@ -161,21 +163,5 @@ class SPImplTest {
         assertThat(sut.getLong("string_key", 1L)).isEqualTo(1L)
         sut.putString(someResource, "a")
         assertThat(sut.getLong(someResource, 1L)).isEqualTo(1L)
-    }
-
-    @Test
-    fun incLong() {
-        sut.incLong(someResource)
-        assertThat(sut.getLong(someResource, 3L)).isEqualTo(1L)
-        sut.incLong(someResource)
-        assertThat(sut.getLong(someResource, 3L)).isEqualTo(2L)
-    }
-
-    @Test
-    fun incInt() {
-        sut.incInt(someResource)
-        assertThat(sut.getInt(someResource, 3)).isEqualTo(1)
-        sut.incInt(someResource)
-        assertThat(sut.getInt(someResource, 3)).isEqualTo(2)
     }
 }

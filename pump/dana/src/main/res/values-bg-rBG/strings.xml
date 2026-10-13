@@ -19,7 +19,6 @@
     <string name="dana_model">%1$s\nМодел: %2$02X\nПротокол: %3$02X\nКод: %4$02X</string>
     <string name="processinghistory">Обработва се събитие</string>
     <string name="danar_enableextendedbolus">Разрешете удължените болуси в настройките на помпата</string>
-    <string name="overview_bolusprogress_delivered">Доставен</string>
     <string name="overview_bolusprogress_stoped">Спрян</string>
     <string name="unsupportedfirmware">Неподдържан фърмуер на помпата</string>
     <string name="pumperror">Грешка в промпата</string>

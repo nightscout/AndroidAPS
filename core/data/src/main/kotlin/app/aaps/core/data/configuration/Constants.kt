@@ -10,13 +10,16 @@ object Constants {
     const val defaultDIA = 5.0
     const val notificationID = 556677
 
+    // OpenAPS algorithm
+    const val NORMAL_TARGET_MGDL = 99 // 5.5 mmol/l = 99.1 mg/dL; use 99 to ensure consistent behavior across mg/dL and mmol/l units
+
     // SMS COMMUNICATOR
     const val remoteBolusMinDistance = 15 * 60 * 1000L
 
     // Circadian Percentage Profile
     const val CPP_MIN_PERCENTAGE = 30
     const val CPP_MAX_PERCENTAGE = 250
-    const val CPP_MIN_TIMESHIFT = -6
+    const val CPP_MIN_TIMESHIFT = -23
     const val CPP_MAX_TIMESHIFT = 23
     const val MAX_PROFILE_SWITCH_DURATION = (7 * 24 * 60).toDouble()// [min] ~ 7 days
 

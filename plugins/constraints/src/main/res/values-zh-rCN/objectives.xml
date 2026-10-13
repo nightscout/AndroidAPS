@@ -12,7 +12,6 @@
     <string name="objectives_maxbasal_objective">了解你的开环，包括它的临时基础率建议</string>
     <string name="objectives_maxbasal_gate">基于使用开环的经验，决定基础率的最大值，在胰岛素泵和AAPS的参数选项上设置它</string>
     <string name="objectives_maxiobzero_objective">从低血糖维持模式(用于测算基础率) 开始闭环功能</string>
-    <string name="objectives_maxiobzero_gate">设置最大活性胰岛素IOB=0，在闭环的低血糖维持模式下运行几天，确保没有太多的低血糖事件</string>
     <string name="objectives_maxiob_objective">优化闭环，逐渐增加活性胰岛素IOB的最大值，并逐渐降低血糖的目标值</string>
     <string name="objectives_maxiob_gate">运行几天，至少一个晚上没有低血糖报警，然后才可以继续调低血糖的目标值</string>
     <string name="objectives_autosens_objective">必要时调整胰岛素基础率和比率，然后再启用auto-sens胰岛素敏感系数自动调整功能</string>

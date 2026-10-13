@@ -78,9 +78,8 @@
     <string name="deltalabel">Rozdíl glykémie</string>
     <string name="deltalabel_u">Rozdíl glykémie [%1$s]</string>
     <string name="currentlocation">Současná poloha</string>
+    <string name="choose_from_map">Vybrat z mapy</string>
     <string name="location">Poloha</string>
-    <string name="latitude_short">Zem. šířka:</string>
-    <string name="longitude_short">Zem. délka:</string>
     <string name="glucose_u">Glykémie [%1$s]:</string>
     <string name="target_u">Cíl [%1$s]:</string>
     <string name="lastboluslabel">Poslední bolus</string>
@@ -141,4 +140,10 @@
     <string name="triggerStepsCountLabel">Počet kroků</string>
     <string name="triggerStepsCountDesc">Počet kroků za %1$s minut %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Délka měření</string>
+    <!--    SMB mode-->
+    <string name="changeSmbState">Povolit/zakázat SMB</string>
+    <string name="changeSmbTo">Změnit SMB na %1$s</string>
+    <string name="newSmbMode">Nový režim SMB:</string>
+    <string name="on">ZAP</string>
+    <string name="off">VYP</string>
 </resources>

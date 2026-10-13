@@ -78,9 +78,8 @@
     <string name="deltalabel">Differenza BG</string>
     <string name="deltalabel_u">Differenza BG [%1$s]</string>
     <string name="currentlocation">Posizione corrente</string>
+    <string name="choose_from_map">Scegli dalla mappa</string>
     <string name="location">Posizione</string>
-    <string name="latitude_short">Lat:</string>
-    <string name="longitude_short">Lon:</string>
     <string name="glucose_u">Glicemia [%1$s]:</string>
     <string name="target_u">Target [%1$s]:</string>
     <string name="lastboluslabel">Ultimo bolo</string>
@@ -141,4 +140,10 @@
     <string name="triggerStepsCountLabel">Conteggio Passi</string>
     <string name="triggerStepsCountDesc">Conteggio passi per %1$s minuti %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Durata Della Misurazione</string>
+    <!--    SMB mode-->
+    <string name="changeSmbState">Attiva/disattiva SMB</string>
+    <string name="changeSmbTo">Modifica SMB in %1$s</string>
+    <string name="newSmbMode">Nuova modalità SMB:</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
 </resources>

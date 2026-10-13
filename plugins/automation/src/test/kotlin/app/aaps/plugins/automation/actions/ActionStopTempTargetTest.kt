@@ -8,9 +8,10 @@ import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
-import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 class ActionStopTempTargetTest : ActionsTestBase() {
@@ -19,7 +20,7 @@ class ActionStopTempTargetTest : ActionsTestBase() {
 
     @BeforeEach
     fun setup() {
-        `when`(rh.gs(app.aaps.core.ui.R.string.stoptemptarget)).thenReturn("Stop temp target")
+        whenever(rh.gs(app.aaps.core.ui.R.string.stoptemptarget)).thenReturn("Stop temp target")
 
         sut = ActionStopTempTarget(injector)
     }
@@ -44,7 +45,7 @@ class ActionStopTempTargetTest : ActionsTestBase() {
             // add(TemporaryTarget(id = 0, version = 0, dateCreated = 0, isValid = false, referenceId = null, interfaceIDs_backing = null, timestamp = 0, utcOffset = 0, reason =, highTarget = 0.0, lowTarget = 0.0, duration = 0))
             // insert all updated TTs
         }
-        `when`(persistenceLayer.cancelCurrentTemporaryTargetIfAny(any(), any(), any(), any(), any()))
+        whenever(persistenceLayer.cancelCurrentTemporaryTargetIfAny(any(), any(), any(), any(), any()))
             .thenReturn(Single.just(PersistenceLayer.TransactionResult<TT>().apply {
                 inserted.addAll(inserted)
                 updated.addAll(updated)
@@ -55,7 +56,7 @@ class ActionStopTempTargetTest : ActionsTestBase() {
                 assertThat(result.success).isTrue()
             }
         })
-        Mockito.verify(persistenceLayer, Mockito.times(1)).cancelCurrentTemporaryTargetIfAny(any(), any(), any(), any(), any())
+        verify(persistenceLayer, times(1)).cancelCurrentTemporaryTargetIfAny(any(), any(), any(), any(), any())
     }
 
     @Test fun hasDialogTest() {

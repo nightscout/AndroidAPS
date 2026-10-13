@@ -12,7 +12,6 @@
     <string name="objectives_maxbasal_objective">Entendre el vostre llaç obert, recomanacions de basals temporals incloses</string>
     <string name="objectives_maxbasal_gate">D\'acord amb aquesta experiència, decidiu quina hauria de ser la basal màxima i configureu-la a la bomba i la configuració</string>
     <string name="objectives_maxiobzero_objective">Començant a tancar el llaç amb LGS (Suspensió per glucèmia baixa)</string>
-    <string name="objectives_maxiobzero_gate">Funcionar en mode llaç tancat amb IOB max = 0 uns quants dies, sense gaires esdeveniments LGS (Suspensió per glucèmia baixa)</string>
     <string name="objectives_maxiob_objective">Ajustant el llaç tancat, augmentant la IOB màxima per sobre de 0 i baixant gradualment els objectius de glucèmia</string>
     <string name="objectives_maxiob_gate">Funcionar uns quants dies, i al menys una nit sense cap alarma per baixa glucèmia, abans de baixar el valor de glucèmia</string>
     <string name="objectives_autosens_objective">Ajustar basals i ràtios si cal, i després activar auto-sens</string>

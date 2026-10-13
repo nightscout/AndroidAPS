@@ -3,22 +3,17 @@ package app.aaps.core.ui.dialogs
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
-import android.os.Handler
-import android.os.Looper
 import android.os.SystemClock
 import android.text.Spanned
 import androidx.fragment.app.FragmentActivity
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import app.aaps.core.ui.R
+import app.aaps.core.ui.extensions.runOnUiThread
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 object OKDialog {
 
-    private fun runOnUiThread(theRunnable: Runnable?) = theRunnable?.let {
-        Handler(Looper.getMainLooper()).post(it)
-    }
-
     @SuppressLint("InflateParams")
-    fun show(context: Context, title: String, message: String, runnable: Runnable? = null) {
+    fun show(context: Context, title: String, message: String, runOnDismiss: Boolean = false, runnable: Runnable? = null) {
         var okClicked = false
         var notEmptyTitle = title
         if (notEmptyTitle.isEmpty()) notEmptyTitle = context.getString(R.string.message)
@@ -35,12 +30,17 @@ object OKDialog {
                     runOnUiThread(runnable)
                 }
             }
+            .setOnDismissListener {
+                if (runOnDismiss) {
+                    runOnUiThread(runnable)
+                }
+            }
             .show()
             .setCanceledOnTouchOutside(false)
     }
 
     @SuppressLint("InflateParams")
-    fun show(context: Context, title: String, message: Spanned, runnable: Runnable? = null) {
+    fun show(context: Context, title: String, message: Spanned, runOnDismiss: Boolean = false, runnable: Runnable? = null) {
         var okClicked = false
         var notEmptyTitle = title
         if (notEmptyTitle.isEmpty()) notEmptyTitle = context.getString(R.string.message)
@@ -57,12 +57,17 @@ object OKDialog {
                     runOnUiThread(runnable)
                 }
             }
+            .setOnDismissListener {
+                if (runOnDismiss) {
+                    runOnUiThread(runnable)
+                }
+            }
             .show()
             .setCanceledOnTouchOutside(false)
     }
 
     @SuppressLint("InflateParams")
-    fun show(activity: FragmentActivity, title: String, message: Spanned, runnable: Runnable? = null) {
+    fun show(activity: FragmentActivity, title: String, message: Spanned, runOnDismiss: Boolean = false, runnable: Runnable? = null) {
         var okClicked = false
         var notEmptyTitle = title
         if (notEmptyTitle.isEmpty()) notEmptyTitle = activity.getString(R.string.message)
@@ -77,6 +82,11 @@ object OKDialog {
                     dialog.dismiss()
                     SystemClock.sleep(100)
                     runnable?.let { activity.runOnUiThread(it) }
+                }
+            }
+            .setOnDismissListener {
+                if (runOnDismiss) {
+                    runOnUiThread(runnable)
                 }
             }
             .show()

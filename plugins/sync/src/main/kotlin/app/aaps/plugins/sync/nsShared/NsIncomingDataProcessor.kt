@@ -13,18 +13,19 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
-import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileSource
+import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.LongNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.food.NSFood
 import app.aaps.core.nssdk.localmodel.treatment.NSBolus
@@ -47,34 +48,34 @@ import app.aaps.plugins.sync.nsclientV3.extensions.toEffectiveProfileSwitch
 import app.aaps.plugins.sync.nsclientV3.extensions.toExtendedBolus
 import app.aaps.plugins.sync.nsclientV3.extensions.toFood
 import app.aaps.plugins.sync.nsclientV3.extensions.toGV
-import app.aaps.plugins.sync.nsclientV3.extensions.toOfflineEvent
 import app.aaps.plugins.sync.nsclientV3.extensions.toProfileSwitch
+import app.aaps.plugins.sync.nsclientV3.extensions.toRunningMode
 import app.aaps.plugins.sync.nsclientV3.extensions.toTemporaryBasal
 import app.aaps.plugins.sync.nsclientV3.extensions.toTemporaryTarget
 import app.aaps.plugins.sync.nsclientV3.extensions.toTherapyEvent
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Singleton
 class NsIncomingDataProcessor @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val nsClientSource: NSClientSource,
-    private val sp: SP,
     private val preferences: Preferences,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
     private val storeDataForDb: StoreDataForDb,
     private val config: Config,
-    private val instantiator: Instantiator,
+    private val profileStoreProvider: Provider<ProfileStore>,
     private val profileSource: ProfileSource,
     private val uiInteraction: UiInteraction
 ) {
 
     private fun toGv(jsonObject: JSONObject): GV? {
-        val sgv = NSSgvObject(jsonObject)
+        val sgv = NSSgv(jsonObject)
         return GV(
             timestamp = sgv.mills ?: return null,
             value = sgv.mgdl?.toDouble() ?: return null,
@@ -91,10 +92,9 @@ class NsIncomingDataProcessor @Inject constructor(
      *
      * @return true if there was an accepted SGV
      */
-    @Suppress("SpellCheckingInspection")
     fun processSgvs(sgvs: Any, doFullSync: Boolean): Boolean {
         // Objective0
-        sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
+        preferences.put(BooleanNonKey.ObjectivesBgIsAvailableInNs, true)
 
         if (!nsClientSource.isEnabled() && !preferences.get(BooleanKey.NsClientAcceptCgmData) && !doFullSync) return false
 
@@ -201,9 +201,10 @@ class NsIncomingDataProcessor @Inject constructor(
                         if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.AAPSCLIENT || doFullSync)
                             treatment.toTherapyEvent().let { therapyEvent ->
                                 storeDataForDb.addToTherapyEvents(therapyEvent)
-                                if (therapyEvent.type ==  TE.Type.ANNOUNCEMENT &&
+                                if (therapyEvent.type == TE.Type.ANNOUNCEMENT &&
                                     preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements) &&
-                                    therapyEvent.timestamp + T.mins(60).msecs() > dateUtil.now())
+                                    therapyEvent.timestamp + T.mins(60).msecs() > dateUtil.now()
+                                )
                                     uiInteraction.addNotificationWithAction(
                                         id = Notification.NS_ANNOUNCEMENT,
                                         text = therapyEvent.note ?: "",
@@ -217,9 +218,9 @@ class NsIncomingDataProcessor @Inject constructor(
                             }
 
                     is NSOfflineEvent           ->
-                        if (preferences.get(BooleanKey.NsClientAcceptOfflineEvent) && config.isEngineeringMode() || config.AAPSCLIENT || doFullSync)
-                            treatment.toOfflineEvent().let { offlineEvent ->
-                                storeDataForDb.addToOfflineEvents(offlineEvent)
+                        if (preferences.get(BooleanKey.NsClientAcceptRunningMode) || config.AAPSCLIENT || doFullSync)
+                            treatment.toRunningMode().let { runningMode ->
+                                storeDataForDb.addToRunningModes(runningMode)
                             }
 
                     is NSExtendedBolus          ->
@@ -281,9 +282,9 @@ class NsIncomingDataProcessor @Inject constructor(
 
     fun processProfile(profileJson: JSONObject, doFullSync: Boolean) {
         if (preferences.get(BooleanKey.NsClientAcceptProfileStore) || config.AAPSCLIENT || doFullSync) {
-            val store = instantiator.provideProfileStore(profileJson)
+            val store = profileStoreProvider.get().with(profileJson)
             val createdAt = store.getStartDate()
-            val lastLocalChange = sp.getLong(app.aaps.core.utils.R.string.key_local_profile_last_change, 0)
+            val lastLocalChange = preferences.get(LongNonKey.LocalProfileLastChange)
             aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")
             if (createdAt > lastLocalChange || createdAt % 1000 == 0L) { // whole second means edited in NS
                 profileSource.loadFromStore(store)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="ns_wifi_ssids">SSID WiFi</string>
     <string name="connection_settings_title">Configuració de connexió</string>
     <string name="ns_wifi_allowed_ssids">SSID permesos (separats per punt i coma)</string>
@@ -12,10 +12,8 @@
     <string name="unsupported_ns_version">Versió no compatible de Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">Error de funcionament d\'NSClient. Considereu reiniciar NS i NSClient.</string>
-    <!-- NSClient -->
+    <!-- AAPSClient -->
     <string name="no_write_permission">L\'NSCLIENT no te permisos d\'escriptura. Secret d\'API incorrecte?</string>
-    <string name="ns_client">NSClient</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Reiniciar</string>
     <string name="ns_client_url_title">URL de Nightscout</string>
@@ -31,17 +29,10 @@
     <string name="ns_receive_profile_store">Rebre perfils</string>
     <string name="ns_receive_profile_store_summary">Sincronitzar perfils locals amb l\'editor de perfils de NS</string>
     <string name="ns_receive_temp_target">Rebre objectius temporals</string>
-    <string name="ns_receive_temp_target_summary">Acceptar objectius temporals introduïts a NS o NSClient</string>
     <string name="ns_receive_profile_switch">Rebre canvis de perfil</string>
-    <string name="ns_receive_profile_switch_summary">Acceptar canvis de perfil introduïts a NS o NSClient</string>
-    <string name="ns_receive_offline_event">Rebre events APS fora de línia</string>
-    <string name="ns_receive_offline_event_summary">Acceptar events APS fora de línia introduïts a NS o NSClient</string>
     <string name="ns_receive_insulin">Rebre insulina</string>
-    <string name="ns_receive_insulin_summary">Acceptar insulina introduïda a NS o NSClient (no es lliura, només es té en compte per calcular l\'IOB)</string>
     <string name="ns_receive_carbs">Rebre carbohidrats</string>
-    <string name="ns_receive_carbs_summary">Acceptar carbohidrats introduïts a NS o NSClient</string>
     <string name="ns_receive_therapy_events">Rebre events de teràpia</string>
-    <string name="ns_receive_therapy_events_summary">Acceptar events de teràpia (cànula, insulina, canvi de bateria, etc) introduïts a NS o NSClient</string>
     <string name="ns_receive_cgm">Rebre/emplenar dades CGM</string>
     <string name="ns_receive_cgm_summary">Acceptar dades CGM de NS</string>
     <string name="ns_sync_slow">Retardar les càrregues</string>
@@ -53,12 +44,6 @@
     <string name="ns_log_app_started_event">Enregistrar l\'inici de l\'app a NS</string>
     <string name="copy_existing_values">Copiar configuració NS (si existeix)?</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">El vostre nom d\'usuari de Tidepool, normalment és un email</string>
-    <string name="title_tidepool_username">Nom d\'usuari</string>
-    <string name="summary_tidepool_password">Clau d\'accés a Tidepool</string>
-    <string name="title_tidepool_password">Clau d\'accés</string>
-    <string name="title_tidepool_test_login">Prova d\'accés a Tidepool</string>
-    <string name="summary_tidepool_dev_servers">En cas d\'estar activat, les dades s\'enviaran a https://int-app.tidepool.org enlloc de a l\'habitual https://app.tidepool.org/</string>
     <string name="title_tidepool_dev_servers">Utilitzar servidors d\'integració (test)</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>

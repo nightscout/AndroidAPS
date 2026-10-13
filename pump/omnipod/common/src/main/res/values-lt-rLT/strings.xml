@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod - Pod Management -->
+    <string name="omnipod_common_pod_management_title">Pod valdymas</string>
+    <string name="omnipod_common_pod_management_heading_actions">Veiksmai</string>
+    <string name="omnipod_common_pod_management_heading_tools">Įrankiai</string>
+    <string name="omnipod_common_pod_management_button_activate_pod">Aktyvuoti Pod</string>
+    <string name="omnipod_common_pod_management_button_deactivate_pod">Deaktyvuoti Pod</string>
+    <string name="omnipod_common_pod_management_button_discard_pod">Išjungti Pod</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">Jei išjungsite Pod, ryšio su juo nebebus galima atkurti. Darykite tai tik tada, kai nebepavyksta užmegzti ryšio. Jei ryšys visgi yra, naudokite <b>Deaktyvuoti Pod</b> funkciją. \n\nJei norite tęsti, pašalinkite Pod nuo savo kūno!</string>
+    <string name="omnipod_common_pod_management_button_play_test_beep">Paleisti bandomąjį signalą</string>
+    <string name="omnipod_common_pod_management_button_playing_test_beep">Bandomasis signalas paleistas…</string>
+    <string name="omnipod_common_pod_management_button_pod_history">Pod istorija</string>
+    <!-- Omnipod - Error -->
+    <string name="omnipod_common_error_pod_not_attached">Nėra aktyvaus Pod</string>
+    <string name="omnipod_common_error_set_basal_failed">Nepavyko nustatyti bazės profilio.</string>
+    <string name="omnipod_common_error_bolus_did_not_succeed">Bolusas nepavyko.</string>
+    <string name="omnipod_common_error_failed_to_set_profile_empty_profile">Nepavyko nustatyti bazės: gautas tuščias profilis. Įsitikinkite, kad aktyvavote savo bazės profilį.</string>
+    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Nėra aktyvaus profilio. Įsitikinkite, kad bazės profilis aktyvuotas.</string>
+    <string name="omnipod_common_error_unsupported_custom_command">Nepalaikoma pasirinktinė komanda: %1$s</string>
+    <string name="omnipod_common_error_failed_to_refresh_status">Nepavyko atnaujinti statuso</string>
+    <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Nepavyko atnaujinti statuso paleidžiant</string>
+    <string name="omnipod_common_error_failed_to_silence_alerts">Nepavyko nutildyti perspėjimų</string>
+    <string name="omnipod_common_error_failed_to_suspend_delivery">Nepavyko sustabdyti insulino tiekimo</string>
+    <string name="omnipod_common_error_failed_to_set_time">Nepavyko nustatyti laiko</string>
+    <string name="omnipod_common_error_failed_to_resume_delivery">Nepavyko atnaujinti insulino tiekimo</string>
+    <string name="omnipod_common_error_failed_to_initialize_pod">Nepavyko inicijuoti Pod</string>
+    <string name="omnipod_common_error_failed_to_insert_cannula">Nepavyko įvesti kaniulės</string>
+    <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Pod aktyvavimo laikas baigėsi. Šis Pod nebegali būti aktyvuotas.</string>
+    <string name="omnipod_common_error_failed_to_verify_activation_progress">Nepavyko patikrinti aktyvavimo. Pabandykite pakartoti.</string>
+    <string name="omnipod_common_error_pod_suspended">Pod sustabdytas</string>
+    <string name="omnipod_common_error_failed_to_play_test_beep">Nepavyko paleisti bandomojo signalo</string>
+    <string name="omnipod_common_error_time_out_of_sync">Pod laikas nesinchronizuotas. Atnaujinkite laiką skirtuke Omnipod.</string>
+    <string name="omnipod_common_error_unexpected_exception">Įvyko netikėta klaida. Prašome pranešti! (%1$s: %2$s).</string>
+    <!-- Omnipod - Confirmation -->
+    <string name="omnipod_common_confirmation">Patvirtinimas</string>
+    <string name="omnipod_common_confirmation_expiration_alerts_updated">Pod perspėjimo konfigūracija atnaujinta.</string>
+    <string name="omnipod_common_confirmation_time_on_pod_updated">Pod laikas atnaujintas.</string>
+    <string name="omnipod_common_confirmation_suspended_delivery">Insulino tiekimas pilnai sustabdytas.</string>
+    <string name="omnipod_common_confirmation_silenced_alerts">Aktyvūs perspėjimai buvo nutildyti.</string>
+    <string name="omnipod_common_confirmation_delivery_resumed">Insulino tiekimas atnaujintas.</string>
+    <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_button_set_time">Nustatyti laiką</string>
+    <string name="omnipod_common_overview_button_suspend_delivery">Sustabdyti</string>
+    <string name="omnipod_common_overview_button_resume_delivery">Atnaujinti insulino tiekimą</string>
+    <string name="omnipod_common_overview_button_pod_management">Pod valdymas</string>
+    <string name="omnipod_common_overview_button_silence_alerts">Nutildyti</string>
+    <string name="omnipod_common_overview_pod_status">Pod statusas</string>
+    <string name="omnipod_common_overview_total_delivered">Iš viso suleista</string>
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f vv</string>
+    <string name="omnipod_common_overview_pod_unique_id">Unikalus ID</string>
+    <string name="omnipod_common_overview_lot_number">LOT numeris</string>
+    <string name="omnipod_common_overview_pod_sequence_number">Eilės Nr.</string>
+    <string name="omnipod_common_overview_pod_expiry_date">Pod naudojimo pabaiga</string>
+    <string name="omnipod_common_overview_last_connection">Paskutinis prisijungimas</string>
+    <string name="omnipod_common_overview_last_bolus">Paskutinis bolusas</string>
+    <string name="omnipod_common_overview_temp_basal_rate">Laikina bazė</string>
+    <string name="omnipod_common_overview_base_basal_rate">Pagrindinė valandinė bazė</string>
+    <string name="omnipod_common_overview_reservoir">Rezervuaras</string>
+    <string name="omnipod_common_overview_pod_active_alerts">Aktyvūs Pod perspėjimai</string>
+    <string name="omnipod_common_overview_firmware_version">Programinės įrangos versija</string>
+    <string name="omnipod_common_overview_time_on_pod">Pod laikas</string>
+    <string name="omnipod_common_overview_temp_basal_value">%1$.2fv/val @%2$s (%3$d/%4$d min)</string>
+    <string name="omnipod_common_overview_reservoir_value">liko %1$.2f v</string>
+    <string name="omnipod_common_overview_reservoir_value_over50">Liko daugiau nei 50 v</string>
+    <string name="omnipod_common_overview_errors">Klaidos</string>
+    <string name="omnipod_common_uncertain">nepatvirtinta</string>
+    <!-- Omnipod - Wizard Base -->
+    <string name="omnipod_common_wizard_button_cancel">Atšaukti</string>
+    <string name="omnipod_common_wizard_button_finish">Užbaigti</string>
+    <string name="omnipod_common_wizard_button_next">Toliau</string>
+    <string name="omnipod_common_wizard_button_retry">Kartoti</string>
+    <string name="omnipod_common_wizard_button_deactivate_pod">Deaktyvuoti Pod</string>
+    <string name="omnipod_common_wizard_button_discard_pod">Išjungti Pod</string>
+    <string name="omnipod_common_wizard_exit_confirmation_text">Jūs dar nebaigėte visų veiksmų. Ar tikrai norite išeiti?</string>
+    <string name="omnipod_common_wizard_exit_confirmation_title">Išeiti</string>
+    <!-- Omnipod - Pod Activation Wizard -->
+    <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Užpildykite Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Inicijuoti Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Prijunkite Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Paruoškite infuzijos vietą. Nuimkite adatos apsauginį dangtelį, pleistro apsaugą ir priklijuokite Pod infuzijos vietoje.\n\nJei kaniulė iššoko, paspauskite <b>Atšaukti</b> ir pakeiskite Pod.\n\nSpauskite <b>Toliau</b>, norėdami įvesti kaniulę.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Kai paspausite <b>OK</b>, kaniulė bus įvesta. Įsitikinkite, kad Pod pritvirtinote infuzijos vietoje.</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Įvesti kaniulę</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Nustatomas pradinis bazės profilis ir įvedama kaniulė.\n\nKai kaniulė bus sėkmingai įvesta, spauskite <b>Toliau</b>.</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod aktyvuotas</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Naujasis Pod yra aktyvus.\n\nJūsų bazės profilis yra suprogramuotas ir kaniulė įvesta.\n\nPatikrinkite, ar kaniulė buvo tinkamai įvesta, jei taip nėra, pakeiskite Pod.</string>
+    <!-- Omnipod - Pod Deactivation Wizard -->
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Deaktyvuoti Pod</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Spustelėkite<b>Toliau</b>, kad deaktyvuotumėte Pod.\n\n<b>Pastaba:</b> Tai sustabdys insulino tiekimą ir išjungs Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Pod deaktyvuojamas</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Pod deaktyvuojamas.\n\nKai veiksmas bus sėkmingai baigtas, spauskite <b>Toliau</b>.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod deaktyvuotas</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">Pod deaktyvuotas.\n\nNuimkite Pod nuo kūno ir jį išmeskite.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pod išjungtas</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">Pod statusas atmestas. Insulino tiekimas nesustabdytas, nes Pod nebuvo teisingai deaktyvuotas. \n\nPašalinkite Pod nuo savo kūno ir jį utilizuokite.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Jei išjungsite Pod, ryšio su juo nebebus galima užmegzti. Darykite tai tik tada, kai užmegzti ryšio nebepavyksta. Ar esate tikri, kad norite baigti naudoti Pod?</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Išjungti Pod</string>
+    <!-- Omnipod - Preferences -->
+    <string name="omnipod_common_preferences_bolus_beeps_enabled">Boluso signalai įjungti</string>
+    <string name="omnipod_common_preferences_basal_beeps_enabled">Bazės signalai įjungti</string>
+    <string name="omnipod_common_preferences_smb_beeps_enabled">SMB signalai įjungti</string>
+    <string name="omnipod_common_preferences_tbr_beeps_enabled">Laikinos bazės signalai įjungti</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Omnipod skirtuke rodyti mygtuką Sustabdyti insulino tiekimą</string>
+    <string name="omnipod_common_preferences_time_change_enabled">Vasaros laiko/Laiko juostos aptikimas įgalintas</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled">Galiojimo pabaigos priminimas</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Įjungus, pod pypsės, atėjus nustatytam laikui</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Priminimas apie galiojimo pabaigą (iki 72 val.)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Galiojimo priminimas įjungtas</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Įjungus pod pypsės, atėjus nustatytam laikui bei 1 val. prieš išsijungimą</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Priminimas apie išsijungimą (iki 80 val.)</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Įjungtas perspėjimas apie senkantį rezervuarą</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_units">Vienetų skaičius</string>
+    <string name="omnipod_common_preferences_automatically_silence_alerts">Automatiškai nutildyti Pod perspėjimus</string>
+    <string name="omnipod_common_preferences_category_other">Kiti</string>
+    <string name="omnipod_common_preferences_category_alerts">Perspėjimai</string>
+    <string name="omnipod_common_preferences_category_confirmation_beeps">Patvirtinimo signalai</string>
+    <string name="omnipod_common_preferences_category_notifications">Pranešimai</string>
+    <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Įjungtas garsas neaiškiems laikinos bazės perspėjimams</string>
+    <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Įjungtas garsas neaiškiems bolusų perspėjimams</string>
+    <!-- Omnipod - Pod Status -->
+    <string name="omnipod_common_pod_status_no_active_pod">Nėra aktyvaus Pod</string>
+    <string name="omnipod_common_pod_status_waiting_for_activation">Nustatoma (laukiama Pod aktyvavimo)</string>
+    <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Nustatoma (laukiama kaniulės įvedimo)</string>
+    <string name="omnipod_common_pod_status_running">Vykdoma</string>
+    <string name="omnipod_common_pod_status_normal">Normalus</string>
+    <string name="omnipod_common_pod_status_suspended">Sustabdyta</string>
+    <string name="omnipod_common_pod_status_pod_fault">Pod klaida</string>
+    <string name="omnipod_common_pod_status_inactive">Neaktyvus</string>
+    <string name="omnipod_common_pod_status_pod_fault_description">Pod klaida: %1$03d %2$s</string>
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_deactivate_pod">Išjungti Pod</string>
+    <string name="omnipod_common_cmd_discard_pod">Išjungti Pod</string>
+    <string name="omnipod_common_cmd_set_bolus">Nustatyti bolusą</string>
+    <string name="omnipod_common_cmd_cancel_bolus">Atšaukti bolusą</string>
+    <string name="omnipod_common_cmd_set_tbr">Nustatyti laikiną bazę</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Atšaukti laikiną bazę (vidinis valdiklis)</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Atšaukti laikiną bazę</string>
+    <string name="omnipod_common_cmd_set_basal_schedule">Nustatyti bazės tvarkaraštį</string>
+    <string name="omnipod_common_cmd_get_pod_status">Gauti Pod statusą</string>
+    <string name="omnipod_common_cmd_get_pod_info">Gauti Pod informaciją</string>
+    <string name="omnipod_common_cmd_set_time">Nustatyti laiką</string>
+    <string name="omnipod_common_cmd_configure_alerts">Konfigūruoti perspėjimus</string>
+    <string name="omnipod_common_cmd_silence_alerts">Nutildyti</string>
+    <string name="omnipod_common_cmd_suspend_delivery">Sustabdyti insulino tiekimą</string>
+    <string name="omnipod_common_cmd_resume_delivery">Atnaujinti insulino tiekimą</string>
+    <string name="omnipod_common_cmd_unknown_entry">Nežinomas įrašas</string>
+    <string name="omnipod_common_cmd_initialize_pod">Inicijuoti Pod</string>
+    <string name="omnipod_common_cmd_insert_cannula">Įvesti kaniulę</string>
+    <string name="omnipod_common_cmd_read_pulse_log">Skaityti Pulse žurnalą</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Nustatyta netikra laikina bazė, nes Pod sustabdytas</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Atšaukti netikrą laikiną bazę, kuri buvo nustatyta dėl to, kad Pod buvo sustabdytas</string>
+    <string name="omnipod_common_cmd_split_tbr">Laikina bazė padalinta dėl nežinomos klaidos atšaukiant ją</string>
+    <string name="omnipod_common_cmd_play_test_beep">Paleisti bandomąjį signalą</string>
+    <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Priminimas užbaigti susiejimą</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Priminimas užbaigti sąranką</string>
+    <string name="omnipod_common_alert_expiration">Pod naudojimo laikas greitai baigsis</string>
+    <string name="omnipod_common_alert_expiration_advisory">Pod naudojimo laikas greitai baigsis</string>
+    <string name="omnipod_common_alert_shutdown_imminent">Išjungimas yra neišvengiamas</string>
+    <string name="omnipod_common_alert_low_reservoir">Senka rezervuaras</string>
+    <string name="omnipod_common_alert_unknown_alert">Nežinomas perspėjimas</string>
+    <!-- Omnipod - Other -->
+    <string name="omnipod_common_yes">Taip</string>
+    <string name="omnipod_common_no">Ne</string>
+    <string name="omnipod_common_cancel">Atšaukti</string>
+    <string name="omnipod_common_warning">Perspėjimas</string>
+    <string name="omnipod_common_disable_suspend_alerts">IŠJUNGTI SUSTABDYMO ĮSPĖJIMUS</string>
+    <!-- Omnipod - Times -->
+    <string name="omnipod_common_moments_ago">Neseniai</string>
+    <string name="omnipod_common_less_than_a_minute_ago">Mažiau nei prieš minutę</string>
+    <string name="omnipod_common_composite_time">%1$s ir %2$s</string>
+    <string name="omnipod_common_time_ago">prieš %1$s</string>
+    <plurals name="omnipod_common_minutes">
+        <item quantity="one">%1$d min</item>
+        <item quantity="few">%1$d min</item>
+        <item quantity="many">%1$d min</item>
+        <item quantity="other">%1$d min</item>
+    </plurals>
+    <plurals name="omnipod_common_hours">
+        <item quantity="one">%1$d val</item>
+        <item quantity="few">%1$d val</item>
+        <item quantity="many">%1$d val</item>
+        <item quantity="other">%1$d val</item>
+    </plurals>
+    <plurals name="omnipod_common_days">
+        <item quantity="one">%1$d d.</item>
+        <item quantity="few">%1$d d.</item>
+        <item quantity="many">%1$d d.</item>
+        <item quantity="other">%1$d d.</item>
+    </plurals>
+    <plurals name="omnipod_common_pod_alerts">
+        <item quantity="one">Pod aliarmas: %1$s</item>
+        <item quantity="few">Pod aliarmai: %1$s</item>
+        <item quantity="many">Pod aliarmai: %1$s</item>
+        <item quantity="other">Pod aliarmai: %1$s</item>
+    </plurals>
+</resources>

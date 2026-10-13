@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
     <!-- PumpPluginBase -->
     <!--    DateUtil-->
     <string name="days_ago">Prije %1$.1f dana</string>

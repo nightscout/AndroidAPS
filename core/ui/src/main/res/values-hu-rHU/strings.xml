@@ -40,7 +40,6 @@
     <string name="name_short">Név:</string>
     <string name="time">Idő</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="loading">Betöltés…</string>
     <string name="remove_button">Eltávolít</string>
     <string name="bg_label">VC</string>
     <string name="calibration">Kalibrálás</string>
@@ -154,4 +153,5 @@
     <!-- WeekdayPicker -->
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units">%1$.2f E</string>
+    <!--    Playback-->
 </resources>

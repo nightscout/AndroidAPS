@@ -1,6 +1,5 @@
 package app.aaps.pump.danar
 
-import android.text.format.DateFormat
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -10,7 +9,6 @@ import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
-import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -32,7 +30,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round.roundTo
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.dana.DanaFragment
 import app.aaps.pump.dana.DanaPump
@@ -45,8 +43,7 @@ import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danar.services.AbstractDanaRExecutionService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import org.json.JSONException
-import org.json.JSONObject
+import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -55,22 +52,22 @@ import kotlin.math.max
  */
 abstract class AbstractDanaRPlugin protected constructor(
     protected var danaPump: DanaPump,
-    rh: ResourceHelper,
-    protected var constraintChecker: ConstraintsChecker,
     aapsLogger: AAPSLogger,
-    protected var aapsSchedulers: AapsSchedulers,
+    rh: ResourceHelper,
+    preferences: Preferences,
     commandQueue: CommandQueue,
+    protected var constraintChecker: ConstraintsChecker,
+    protected var aapsSchedulers: AapsSchedulers,
     protected var rxBus: RxBus,
     protected var activePlugin: ActivePlugin,
     protected var dateUtil: DateUtil,
     protected var pumpSync: PumpSync,
-    protected val preferences: Preferences,
     protected var uiInteraction: UiInteraction,
     protected var danaHistoryDatabase: DanaHistoryDatabase,
     protected var decimalFormatter: DecimalFormatter,
-    protected var instantiator: Instantiator
+    protected var pumpEnactResultProvider: Provider<PumpEnactResult>
 ) : PumpPluginBase(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(DanaFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_danars_128)
@@ -78,21 +75,14 @@ abstract class AbstractDanaRPlugin protected constructor(
         .shortName(app.aaps.pump.dana.R.string.danarpump_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(app.aaps.pump.dana.R.string.description_pump_dana_r),
-    aapsLogger, rh, commandQueue
+    ownPreferences = listOf(DanaStringKey::class.java, DanaIntKey::class.java, DanaBooleanKey::class.java, DanaIntentKey::class.java),
+    aapsLogger, rh, preferences, commandQueue
 ), Pump, Dana, PluginConstraints, OwnDatabasePlugin {
 
     protected var executionService: AbstractDanaRExecutionService? = null
     protected var disposable = CompositeDisposable()
     override var pumpDescription = PumpDescription()
         protected set
-
-    // Make plugin preferences available to AAPS
-    init {
-        preferences.registerPreferences(DanaStringKey::class.java)
-        preferences.registerPreferences(DanaIntKey::class.java)
-        preferences.registerPreferences(DanaBooleanKey::class.java)
-        preferences.registerPreferences(DanaIntentKey::class.java)
-    }
 
     override fun onStart() {
         super.onStart()
@@ -105,13 +95,13 @@ abstract class AbstractDanaRPlugin protected constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe { event: EventPreferenceChange ->
-                if (event.isChanged(DanaStringKey.DanaRName.key)) {
+                if (event.isChanged(DanaStringKey.RName.key)) {
                     danaPump.reset()
                     pumpSync.connectNewPump(true)
                     commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
                 }
             }
-        danaPump.serialNumber = preferences.get(DanaStringKey.DanaRName) // fill at start to allow password reset
+        danaPump.serialNumber = preferences.get(DanaStringKey.RName) // fill at start to allow password reset
     }
 
     override fun onStop() {
@@ -123,12 +113,11 @@ abstract class AbstractDanaRPlugin protected constructor(
         return danaPump.pumpSuspended
     }
 
-    override fun isBusy(): Boolean =
-        executionService?.isConnected == true || executionService?.isConnecting == true
+    override fun isBusy(): Boolean = false
 
     // Pump interface
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
-        val result = instantiator.providePumpEnactResult()
+        val result = pumpEnactResultProvider.get()
         if (executionService == null) {
             aapsLogger.error("setNewBasalProfile sExecutionService is null")
             result.comment("setNewBasalProfile sExecutionService is null")
@@ -170,16 +159,12 @@ abstract class AbstractDanaRPlugin protected constructor(
         return true
     }
 
-    override fun lastDataTime(): Long {
-        return danaPump.lastConnection
-    }
-
-    override val baseBasalRate: Double
-        get() = danaPump.currentBasal
-    override val reservoirLevel: Double
-        get() = danaPump.reservoirRemainingUnits
-    override val batteryLevel: Int
-        get() = danaPump.batteryRemaining
+    override val lastDataTime: Long get() = danaPump.lastConnection
+    override val lastBolusTime: Long? get() = danaPump.lastBolusTime
+    override val lastBolusAmount: Double? get() = danaPump.lastBolusAmount
+    override val baseBasalRate: Double get() = danaPump.currentBasal
+    override val reservoirLevel: Double get() = danaPump.reservoirRemainingUnits
+    override val batteryLevel: Int? get() = danaPump.batteryRemaining
 
     override fun stopBolusDelivering() {
         if (executionService == null) {
@@ -191,7 +176,7 @@ abstract class AbstractDanaRPlugin protected constructor(
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         var percentReq = percent
-        val result = instantiator.providePumpEnactResult()
+        val result = pumpEnactResultProvider.get()
         percentReq = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percentReq, aapsLogger), profile).value()
         if (percentReq < 0) {
             result.isTempCancel(false).enacted(false).success(false).comment(app.aaps.core.ui.R.string.invalid_input)
@@ -242,7 +227,7 @@ abstract class AbstractDanaRPlugin protected constructor(
         // needs to be rounded
         val durationInHalfHours = max(durationInMinutes / 30, 1)
         insulinReq = roundTo(insulinReq, pumpDescription.extendedBolusStep)
-        val result = instantiator.providePumpEnactResult()
+        val result = pumpEnactResultProvider.get()
         if (danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAmount - insulinReq) < pumpDescription.extendedBolusStep) {
             result.enacted(false)
                 .success(true)
@@ -271,12 +256,12 @@ abstract class AbstractDanaRPlugin protected constructor(
                 .duration(danaPump.extendedBolusRemainingMinutes)
                 .absolute(danaPump.extendedBolusAbsoluteRate)
                 .isPercent(false)
-            if (!preferences.get(DanaBooleanKey.DanaRUseExtended)) result.bolusDelivered(danaPump.extendedBolusAmount)
+            if (!preferences.get(DanaBooleanKey.UseExtended)) result.bolusDelivered(danaPump.extendedBolusAmount)
             pumpSync.syncExtendedBolusWithPumpId(
                 danaPump.extendedBolusStart,
                 danaPump.extendedBolusAmount,
                 danaPump.extendedBolusDuration,
-                preferences.get(DanaBooleanKey.DanaRUseExtended),
+                preferences.get(DanaBooleanKey.UseExtended),
                 danaPump.extendedBolusStart,
                 pumpDescription.pumpType,
                 serialNumber()
@@ -291,7 +276,7 @@ abstract class AbstractDanaRPlugin protected constructor(
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
-        val result = instantiator.providePumpEnactResult()
+        val result = pumpEnactResultProvider.get()
         if (danaPump.isExtendedInProgress) {
             executionService?.extendedBolusStop()
             if (!danaPump.isExtendedInProgress) {
@@ -336,62 +321,14 @@ abstract class AbstractDanaRPlugin protected constructor(
         pumpDescription.bolusStep = danaPump.bolusStep
     }
 
-    override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject {
-        val pump = danaPump
-        val now = System.currentTimeMillis()
-        if (pump.lastConnection + 60 * 60 * 1000L < System.currentTimeMillis()) {
-            return JSONObject()
-        }
-        val pumpJson = JSONObject()
-        val battery = JSONObject()
-        val status = JSONObject()
-        val extended = JSONObject()
-        try {
-            battery.put("percent", pump.batteryRemaining)
-            status.put("status", if (pump.pumpSuspended) "suspended" else "normal")
-            status.put("timestamp", dateUtil.toISOString(pump.lastConnection))
-            extended.put("Version", version)
-            if (pump.lastBolusTime != 0L) {
-                extended.put("LastBolus", dateUtil.dateAndTimeString(pump.lastBolusTime))
-                extended.put("LastBolusAmount", pump.lastBolusAmount)
-            }
-            val (temporaryBasal, extendedBolus) = pumpSync.expectedPumpState()
-            if (temporaryBasal != null) {
-                extended.put("TempBasalAbsoluteRate", temporaryBasal.convertedToAbsolute(now, profile))
-                extended.put("TempBasalStart", dateUtil.dateAndTimeString(temporaryBasal.timestamp))
-                extended.put("TempBasalRemaining", temporaryBasal.plannedRemainingMinutes)
-            }
-            if (extendedBolus != null) {
-                extended.put("ExtendedBolusAbsoluteRate", extendedBolus.rate)
-                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(extendedBolus.timestamp))
-                extended.put("ExtendedBolusRemaining", extendedBolus.plannedRemainingMinutes)
-            }
-            extended.put("BaseBasalRate", baseBasalRate)
-            extended.put("ActiveProfile", profileName)
-            pumpJson.put("battery", battery)
-            pumpJson.put("status", status)
-            pumpJson.put("extended", extended)
-            pumpJson.put("reservoir", pump.reservoirRemainingUnits.toInt())
-            pumpJson.put("clock", dateUtil.toISOString(dateUtil.now()))
-        } catch (e: JSONException) {
-            aapsLogger.error("Unhandled exception", e)
-        }
-        return pumpJson
-    }
-
-    override fun manufacturer(): ManufacturerType {
-        return ManufacturerType.Sooil
-    }
-
-    override fun serialNumber(): String {
-        return danaPump.serialNumber
-    }
+    override fun manufacturer(): ManufacturerType = ManufacturerType.Sooil
+    override fun serialNumber(): String = danaPump.serialNumber
 
     /**
      * DanaR interface
      */
     override fun loadHistory(type: Byte): PumpEnactResult =
-        executionService?.loadHistory(type) ?: instantiator.providePumpEnactResult()
+        executionService?.loadHistory(type) ?: pumpEnactResultProvider.get()
 
     /**
      * Constraint interface
@@ -418,32 +355,6 @@ abstract class AbstractDanaRPlugin protected constructor(
 
     override fun loadTDDs(): PumpEnactResult {
         return loadHistory(RecordTypes.RECORD_TYPE_DAILY)
-    }
-
-    // Reply for sms communicator
-    override fun shortStatus(veryShort: Boolean): String {
-        var ret = ""
-        if (danaPump.lastConnection != 0L) {
-            val agoMilliseconds = System.currentTimeMillis() - danaPump.lastConnection
-            val agoMin = (agoMilliseconds / 60.0 / 1000.0).toInt()
-            ret += "LastConn: $agoMin min ago\n"
-        }
-        if (danaPump.lastBolusTime != 0L) {
-            ret += "LastBolus: ${decimalFormatter.to2Decimal(danaPump.lastBolusAmount)}U @${DateFormat.format("HH:mm", danaPump.lastBolusTime)}\n"
-        }
-        val (temporaryBasal, extendedBolus) = pumpSync.expectedPumpState()
-        if (temporaryBasal != null) {
-            ret += "Temp: ${temporaryBasal.toStringFull(dateUtil, rh)}\n"
-        }
-        if (extendedBolus != null) {
-            ret += "Extended: ${extendedBolus.toStringFull(dateUtil, rh)}\n"
-        }
-        if (!veryShort) {
-            ret += "TDD: ${decimalFormatter.to0Decimal(danaPump.dailyTotalUnits)} / ${danaPump.maxDailyTotalUnits} U\n"
-        }
-        ret += "Reserv: ${decimalFormatter.to0Decimal(danaPump.reservoirRemainingUnits)}U\n"
-        ret += "Batt: ${danaPump.batteryRemaining}\n"
-        return ret
     }
 
     // TODO: daily total constraint

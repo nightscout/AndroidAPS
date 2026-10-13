@@ -1,36 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Keys-->
-    <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
-    <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
-    <string name="key_medtronic_settings" translatable="false">medtronic_settings</string>
-    <string name="key_insight_local_settings" translatable="false">insight_local_settings</string>
-    <string name="key_active_pump_change_timestamp" translatable="false">active_pump_change_timestamp</string>
-    <string name="key_active_pump_type" translatable="false">active_pump_type</string>
-    <string name="key_active_pump_serial_number" translatable="false">active_pump_serial_number</string>
-    <string name="key_app_expiration" translatable="false">app_expiration</string>
-    <string name="key_next_pump_disconnected_alarm" translatable="false">nextPumpDisconnectedAlarm</string>
-    <string name="key_next_missed_reading_alarm" translatable="false">nextMissedReadingsAlarm</string>
-    <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
-    <string name="key_local_profile_last_change" translatable="false">local_profile_last_change</string>
-    <string name="key_objectiveuseprofileswitch" translatable="false">ObjectivesProfileSwitchUsed</string>
-    <string name="key_objectiveusetemptarget" translatable="false">ObjectivesTempTargetUsed</string>
-    <string name="key_objectiveusedisconnect" translatable="false">ObjectivesDisconnectUsed</string>
-    <string name="key_objectiveusereconnect" translatable="false">ObjectivesReconnectUsed</string>
-    <string name="key_wear_detailediob" translatable="false">wear_detailediob</string>
-    <string name="key_wear_showbgi" translatable="false">wear_showbgi</string>
-    <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>
-    <string name="key_wear_cwf_watchface_name" translatable="false">wear_cwf_watchface_name</string>
-    <string name="key_wear_cwf_author_version" translatable="false">wear_cwf_author_version</string>
-    <string name="key_wear_cwf_filename" translatable="false">wear_cwf_filename</string>
-    <string name="key_objectives_bg_is_available_in_ns" translatable="false">ObjectivesbgIsAvailableInNS</string>
-    <string name="key_objectives_pump_status_is_available_in_ns" translatable="false">ObjectivespumpStatusIsAvailableInNS</string>
-    <string name="key_snoozed_to" translatable="false">snoozedTo</string>
-    <string name="key_objectiveuseloop" translatable="false">ObjectivesLoopUsed</string>
-    <string name="key_ObjectivesmanualEnacts" translatable="false">ObjectivesmanualEnacts</string>
-    <string name="key_objectiveuseactions" translatable="false">ObjectivesActionsUsed</string>
-    <string name="key_objectiveusescale" translatable="false">ObjectivesScaleUsed</string>
-    <string name="key_used_autosens_on_main_phone" translatable="false">used_autosens_on_main_phone</string>
 
 </resources>

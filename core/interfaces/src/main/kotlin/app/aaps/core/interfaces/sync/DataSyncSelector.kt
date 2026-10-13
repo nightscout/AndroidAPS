@@ -8,8 +8,8 @@ import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.FD
 import app.aaps.core.data.model.GV
-import app.aaps.core.data.model.OE
 import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
@@ -35,7 +35,7 @@ interface DataSyncSelector {
     data class PairExtendedBolus(override val value: EB, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairProfileSwitch(override val value: PS, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairEffectiveProfileSwitch(override val value: EPS, override val id: Long, override var confirmed: Boolean = false) : DataPair
-    data class PairOfflineEvent(override val value: OE, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairRunningMode(override val value: RM, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairProfileStore(override val value: JSONObject, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairDeviceStatus(override val value: DS, override val id: Long, override var confirmed: Boolean = false) : DataPair
 

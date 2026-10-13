@@ -11,9 +11,9 @@ import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.anyLong
-import org.mockito.Mockito.`when`
+import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 class ActionCarePortalEventTest : ActionsTestBase() {
@@ -22,11 +22,10 @@ class ActionCarePortalEventTest : ActionsTestBase() {
 
     @BeforeEach
     fun setup() {
-        `when`(sp.getString(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn("AAPS")
-        `when`(rh.gs(app.aaps.core.ui.R.string.careportal_note_message)).thenReturn("Note : %s")
-        `when`(dateUtil.now()).thenReturn(0)
-        `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
-        `when`(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(anyObject(), anyLong(), anyObject(), anyObject(), anyObject(), anyObject()))
+        whenever(rh.gs(app.aaps.core.ui.R.string.careportal_note_message)).thenReturn("Note : %s")
+        whenever(dateUtil.now()).thenReturn(0)
+        whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
+        whenever(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(anyOrNull(), anyLong(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
             .thenReturn(Single.just(PersistenceLayer.TransactionResult<TE>().apply {
             }))
         sut = ActionCarePortalEvent(injector)

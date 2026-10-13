@@ -39,6 +39,8 @@ dependencies {
     api(libs.com.eatthepath.java.otp)
     api(libs.com.github.kenglxn.qrgen.android)
 
+    api(libs.kotlinx.datetime)
+
     // Overview
     api(libs.com.google.android.flexbox)
 

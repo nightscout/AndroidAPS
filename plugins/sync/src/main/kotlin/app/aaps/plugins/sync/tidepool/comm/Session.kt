@@ -5,7 +5,6 @@ import app.aaps.plugins.sync.tidepool.messages.DatasetReplyMessage
 import okhttp3.Headers
 
 class Session(
-    val authHeader: String?,
     private val sessionTokenHeader: String,
     val service: TidepoolApiService?
 ) {

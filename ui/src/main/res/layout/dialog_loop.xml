@@ -24,20 +24,56 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ic_loop_closed" />
+                app:srcCompat="@drawable/ic_running_mode" />
 
             <TextView
+                android:id="@+id/running_mode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:text="@string/loop"
+                android:text="@string/running_mode"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
         </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/spacerReasons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp" />
+
+        <LinearLayout
+            android:id="@+id/overview_reasons_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/limitations"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/overview_reasons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/limitations"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/spacer"
@@ -81,8 +117,7 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:text="@string/closedloop"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:visibility="gone" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/overview_lgsloop"
@@ -95,8 +130,7 @@
                     android:drawableTop="@drawable/ic_loop_lgs"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:text="@string/lowglucosesuspend"
-                    android:visibility="gone" />
+                    android:text="@string/lowglucosesuspend" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/overview_openloop"
@@ -109,23 +143,7 @@
                     android:drawableTop="@drawable/ic_loop_open"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:text="@string/openloop"
-                    android:visibility="gone" />
-
-                <app.aaps.core.ui.elements.SingleClickButton
-                    android:id="@+id/overview_enable"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
-                    android:layout_weight="0.5"
-                    android:drawableTop="@drawable/ic_loop_resume"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:text="@string/enableloop"
-                    android:textSize="11sp"
-                    android:visibility="gone" />
+                    android:text="@string/openloop" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/overview_disable"
@@ -179,8 +197,7 @@
                 android:drawableTop="@drawable/ic_loop_resume"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:text="@string/resumeloop"
-                android:visibility="gone" />
+                android:text="@string/resumeloop" />
 
             <LinearLayout
                 android:id="@+id/overview_suspend_buttons"
@@ -276,8 +293,7 @@
                 android:drawableTop="@drawable/ic_loop_reconnect"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:text="@string/reconnect"
-                android:visibility="gone" />
+                android:text="@string/reconnect" />
 
             <LinearLayout
                 android:id="@+id/overview_disconnect_buttons"

@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Bolusul maxim în pompă (U)</string>
     <string name="medtronic_pump_max_basal">Bazală maximă în pompă (U/h)</string>
     <string name="medtronic_pump_encoding">Criptare Medtronic</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Globală (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Criptare software 4b6b</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Criptare hardware 4b6b</string>
     <string name="medtronic_custom_action_wake_and_tune">Pornește și sincronizează</string>
     <string name="medtronic_custom_action_clear_bolus_block">Șterge blocajul de bolus</string>
     <string name="medtronic_custom_action_reset_rileylink">Resetează configurația RileyLink</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Litiu (Afișare extinsă)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Afișare extinsă)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Afișare extinsă)</string>
-    <string name="medtronic_bolus_debugging">Depanare Bolus/Tratamente</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Baterie RileyLink</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">în trecut</string>
     <string name="medtronic_notification_check_time_date">Ceasul pompei trebuie ajustat</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">Pornit</string>
-    <string name="common_off">Oprit</string>
     <string name="pump_time_updated">Timpul din pompă a fost actualizat</string>
     <string name="set_neutral_temps_title">Setați bazale temporare neutre</string>
     <string name="set_neutral_temps_summary">Dacă este activată, va anula o bazală temporară înainte de sfârșitul fiecărei ore. Aceasta metoda poate ajuta la oprirea vibrațiilor/bipurilor orare pe anumite pompe.</string>

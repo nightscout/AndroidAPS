@@ -26,7 +26,7 @@ import javax.inject.Singleton
                 putExtra(AlarmClock.EXTRA_MESSAGE, text)
                 context.startActivity(this)
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             ToastUtils.errorToast(context, R.string.error_setting_reminder)
         }
     }

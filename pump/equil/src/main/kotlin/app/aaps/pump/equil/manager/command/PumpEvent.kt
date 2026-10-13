@@ -1,16 +1,16 @@
 package app.aaps.pump.equil.manager.command
 
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.pump.equil.R
-import java.util.ArrayList
 import java.util.Objects
 
-class PumpEvent(private var port: Int, private var type: Int, private var level: Int, var comment: String) {
+class PumpEvent(@get:VisibleForTesting var port: Int, @get:VisibleForTesting var type: Int, @get:VisibleForTesting var level: Int, var comment: String) {
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o == null || javaClass != o.javaClass) return false
-        val pumpEvent = o as PumpEvent
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+        val pumpEvent = other as PumpEvent
         return port == pumpEvent.port && type == pumpEvent.type && level == pumpEvent.level
     }
 

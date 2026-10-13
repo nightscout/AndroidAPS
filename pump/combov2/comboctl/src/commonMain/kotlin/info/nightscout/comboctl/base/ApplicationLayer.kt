@@ -1,5 +1,8 @@
 package info.nightscout.comboctl.base
 
+import info.nightscout.comboctl.base.ApplicationLayer.createCMDDeliverBolusPacket
+import info.nightscout.comboctl.base.ApplicationLayer.createCMDReadHistoryBlockPacket
+import info.nightscout.comboctl.base.ApplicationLayer.parseCMDReadHistoryBlockResponsePacket
 import kotlinx.datetime.LocalDateTime
 
 private val logger = Logger.get("ApplicationLayer")
@@ -1227,8 +1230,8 @@ object ApplicationLayer {
             second = payload[8].toPosInt(),
             minute = payload[7].toPosInt(),
             hour = payload[6].toPosInt(),
-            dayOfMonth = payload[5].toPosInt(),
-            monthNumber = payload[4].toPosInt(),
+            day = payload[5].toPosInt(),
+            month = payload[4].toPosInt(),
             year = (payload[2].toPosInt() shl 0) or (payload[3].toPosInt() shl 8)
         )
 
@@ -1363,8 +1366,8 @@ object ApplicationLayer {
                     ((payload[payloadOffset + 1].toPosInt() and 0b00001111) shl 2),
                 hour = ((payload[payloadOffset + 1].toPosInt() and 0b11110000) ushr 4) or
                     ((payload[payloadOffset + 2].toPosInt() and 0b00000001) shl 4),
-                dayOfMonth = (payload[payloadOffset + 2].toPosInt() and 0b00111110) ushr 1,
-                monthNumber = ((payload[payloadOffset + 2].toPosInt() and 0b11000000) ushr 6) or
+                day = (payload[payloadOffset + 2].toPosInt() and 0b00111110) ushr 1,
+                month = ((payload[payloadOffset + 2].toPosInt() and 0b11000000) ushr 6) or
                     ((payload[payloadOffset + 3].toPosInt() and 0b00000011) shl 2),
                 year = ((payload[payloadOffset + 3].toPosInt() and 0b11111100) ushr 2) + 2000
             )
@@ -1557,8 +1560,8 @@ object ApplicationLayer {
                             ((detailBytes[1].toPosInt() and 0b00001111) shl 2),
                         hour = ((detailBytes[1].toPosInt() and 0b11110000) ushr 4) or
                             ((detailBytes[2].toPosInt() and 0b00000001) shl 4),
-                        dayOfMonth = (detailBytes[2].toPosInt() and 0b00111110) ushr 1,
-                        monthNumber = ((detailBytes[2].toPosInt() and 0b11000000) ushr 6) or
+                        day = (detailBytes[2].toPosInt() and 0b00111110) ushr 1,
+                        month = ((detailBytes[2].toPosInt() and 0b11000000) ushr 6) or
                             ((detailBytes[3].toPosInt() and 0b00000011) shl 2),
                         year = ((detailBytes[3].toPosInt() and 0b11111100) ushr 2) + 2000
                     )

@@ -64,9 +64,6 @@
     <string name="insulinlackwarning">胰岛素药量警告</string>
     <string name="needbatteryreplace">需要更换电池</string>
     <string name="needinsullinreplace">需要更换胰岛素</string>
-    <string name="pumpversion">pump_version</string>
-    <string name="apsIncarnationNo">aps_incarnation_no</string>
-    <string name="pumpserialno">pump_serial_no</string>
     <string name="diaconn_g8_loginsulinchange_title">记录储药器更换</string>
     <string name="diaconn_g8_loginsulinchange_summary">在历史记录中检测到时，在护理中添加\"胰岛素更换\" 事件</string>
     <string name="diaconn_g8_logcanulachange_title">记录针头更换</string>

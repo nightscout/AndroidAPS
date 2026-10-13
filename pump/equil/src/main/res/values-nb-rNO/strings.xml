@@ -3,14 +3,13 @@
     <string name="equil_pump_description">Equil 5.3 eller nyere patchpumpe </string>
     <!--  start  -->
     <string name="equil_basal_speed">Grunnbasal</string>
-    <string name="equil_bolus_delivered">%1$.3f E / %2$.3f E Levert</string>
     <string name="equil_btn_cancel">Avbryt</string>
     <string name="equil_btn_need">Behov</string>
     <string name="equil_btn_skip">Hopp over</string>
     <string name="equil_date_device">Siste tilkobling</string>
     <string name="equil_dressing">Bytt reservoar</string>
     <string name="equil_dressing_onkey_msg">Beveger automatisk stempel til bunnen av reservoaret. Den stopper automatisk når bunnen nås. Klikk \"Stopp\" for å avbryte om nødvendig.</string>
-    <string name="equil_finish">Fullført</string>
+    <string name="equil_finish">Fullfør</string>
     <string name="equil_next">Neste</string>
     <string name="equil_hint_dressing">Denne operasjonen stopper insulininfusjonen og fører til at pumpestempelet trekker seg tilbake til bunnen!</string>
     <string name="equil_history">Historikk</string>
@@ -91,7 +90,6 @@
     <string name="equil_command_connect_no_response">Ingen respons fra pumpen</string>
     <string name="equil_command__unknown">Ukjent tilstand for kommandoen</string>
     <string name="equil_install">Implanter pumpen på kroppen\"</string>
-    <string name="equil_settings">Innstillinger</string>
     <string name="equil_settings_alarm_battery">Alarm for lavt batteri</string>
     <string name="equil_settings_alarm_insulin">Alarm for lavt legemiddellager</string>
     <string name="equil_init_insulin_error">Initialisering av reservoaret er ikke ferdig</string>
@@ -122,11 +120,6 @@
     <string name="equil_history_item16">Batteri tomt!</string>
     <string name="equil_history_item17">Tilbakestilling ved oppstart</string>
     <string name="equil_history_item18">Unormal infusjon stoppet</string>
-    <string name="equil_common_short_status_last_connection">Sist tilkoblet: %1$d min siden</string>
-    <string name="equil_common_short_status_last_bolus">Siste bolus: %1$s @ %2$s</string>
-    <string name="equil_common_short_status_temp_basal">Midl. basal: %1$s</string>
-    <string name="equil_common_short_status_extended_bolus">Forlenget: %1$s</string>
-    <string name="equil_common_short_status_reservoir">Reservoar: %1$sE</string>
     <string name="equil_common_overview_button_suspend_delivery">Pause</string>
     <string name="equil_common_overview_button_resume_delivery">Gjenoppta tilførselen</string>
     <string name="equil_common_overview_temp_basal_value">%1$.2fE/t @%2$s (%3$d/%4$d min)</string>
@@ -156,6 +149,7 @@
     <string name="equil_set_pair_password">Sett sammenkoblingspassord</string>
     <string name="equil_hint1">Etter at du har installert pumpen på baseplaten, velg om du vil fjerne luften fra den innlagte kanylen.</string>
     <string name="equil_unbind">Koble fra enhet</string>
+    <string name="equil_device_unpaired">Enhet frakoblet</string>
     <string name="equil_assemble">Du må montere pumpen, det fylte reservoaret og det ladede batteriet</string>
     <string name="equil_devices_number">Angi ny pumpe-ID</string>
     <string name="equil_insert">Vennligst prime reservoaret helt til det er en dråpe av insulin på tuppen av kanylen</string>
@@ -165,7 +159,7 @@
     <string name="equil_hint_dressing2">Vennligst fjern pumpen fra basen</string>
     <string name="equil_unpair">Deaktiver den gamle pumpen %1$s?</string>
     <string name="equil_pump_updated">Pumpe oppdatert</string>
-    <string name="equil_maxbolus_tips">Maksimal tillatt bolus i pumpe [%1$sE]</string>
     <string name="equil_replace_reservoir">Reservoaret er tomt. Vennligst bytt ut reservoaret</string>
     <string name="error_mustbe6hexadidits">Må være 6 tegn av ABCDEF0123456789</string>
+    <string name="equil_removed_anyway">Kommandoen for å fjerne paring mislyktes. Pumpen vil bli fjernet uansett. Passordet som ble angitt under paring, fjernes ikke fra pumpen.</string>
 </resources>

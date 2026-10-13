@@ -18,18 +18,17 @@ import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.JOB
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.PASS
+import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.UPDATE_PREDICTIONS
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.core.utils.worker.then
 import app.aaps.workflow.iob.IobCobOref1Worker
 import app.aaps.workflow.iob.IobCobOrefWorker
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CalculationWorkflowImpl @Inject constructor(
     private val context: Context,
-    private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
     private val dataWorkerStorage: DataWorkerStorage,
@@ -100,6 +99,11 @@ class CalculationWorkflowImpl @Inject constructor(
                     .build()
             )
             .then(
+                OneTimeWorkRequest.Builder(PrepareRunningModeDataWorker::class.java)
+                    .setInputData(dataWorkerStorage.storeInputData(PrepareRunningModeDataWorker.PrepareRunningModeData(overviewData)))
+                    .build()
+            )
+            .then(
                 OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
                     .setInputData(Data.Builder().putString(JOB, job).putInt(PASS, CalculationWorkflow.ProgressData.DRAW_TT.pass).build())
                     .build()
@@ -107,11 +111,11 @@ class CalculationWorkflowImpl @Inject constructor(
             .then(
                 if (activePlugin.activeSensitivity.isOref1)
                     OneTimeWorkRequest.Builder(IobCobOref1Worker::class.java)
-                        .setInputData(dataWorkerStorage.storeInputData(IobCobOref1Worker.IobCobOref1WorkerData(injector, iobCobCalculator, reason, end, job == MAIN_CALCULATION, cause)))
+                        .setInputData(dataWorkerStorage.storeInputData(IobCobOref1Worker.IobCobOref1WorkerData(iobCobCalculator, reason, end, job == MAIN_CALCULATION, cause)))
                         .build()
                 else
                     OneTimeWorkRequest.Builder(IobCobOrefWorker::class.java)
-                        .setInputData(dataWorkerStorage.storeInputData(IobCobOrefWorker.IobCobOrefWorkerData(injector, iobCobCalculator, reason, end, job == MAIN_CALCULATION, cause)))
+                        .setInputData(dataWorkerStorage.storeInputData(IobCobOrefWorker.IobCobOrefWorkerData(iobCobCalculator, reason, end, job == MAIN_CALCULATION, cause)))
                         .build()
             )
             .then(OneTimeWorkRequest.Builder(UpdateIobCobSensWorker::class.java).build())
@@ -145,6 +149,26 @@ class CalculationWorkflowImpl @Inject constructor(
             .then(
                 OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
                     .setInputData(Data.Builder().putString(JOB, job).putInt(PASS, CalculationWorkflow.ProgressData.DRAW_FINAL.pass).build())
+                    .build()
+            )
+            .enqueue()
+    }
+
+    override fun runOnReceivedPredictions(
+        overviewData: OverviewData
+    ) {
+        aapsLogger.debug(LTag.WORKER, "Starting updateReceivedPredictions worker")
+
+        WorkManager.getInstance(context)
+            .beginUniqueWork(
+                UPDATE_PREDICTIONS, ExistingWorkPolicy.REPLACE,
+                OneTimeWorkRequest.Builder(PreparePredictionsWorker::class.java)
+                    .setInputData(dataWorkerStorage.storeInputData(PreparePredictionsWorker.PreparePredictionsData(overviewData)))
+                    .build()
+            )
+            .then(
+                OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
+                    .setInputData(Data.Builder().putString(JOB, UPDATE_PREDICTIONS).putInt(PASS, CalculationWorkflow.ProgressData.DRAW_FINAL.pass).build())
                     .build()
             )
             .enqueue()

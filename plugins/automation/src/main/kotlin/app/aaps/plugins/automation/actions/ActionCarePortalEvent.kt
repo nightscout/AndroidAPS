@@ -63,10 +63,10 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
             }
         } else {
             therapyEvent.duration = T.mins(duration.value.toLong()).msecs()
-            valuesWithUnit.addAll(listOf(ValueWithUnit.Minute(duration.value).takeIf { duration.value != 0 }).filterNotNull())
+            valuesWithUnit.addAll(listOfNotNull(ValueWithUnit.Minute(duration.value).takeIf { duration.value != 0 }))
         }
         therapyEvent.note = note.value
-        valuesWithUnit.addAll(listOf(ValueWithUnit.SimpleString(note.value).takeIf { note.value.isNotBlank() }).filterNotNull())
+        valuesWithUnit.addAll(listOfNotNull(ValueWithUnit.SimpleString(note.value).takeIf { note.value.isNotBlank() }))
         disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
             therapyEvent = therapyEvent,
             action = app.aaps.core.data.ue.Action.CAREPORTAL,

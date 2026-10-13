@@ -23,7 +23,7 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -37,7 +37,6 @@ import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventNewHistoryData
-import app.aaps.core.interfaces.rx.events.EventXdripNewLog
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.sync.XDripBroadcast
@@ -47,7 +46,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntentKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toStringShort
@@ -57,8 +56,10 @@ import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.toJson
+import app.aaps.plugins.sync.xdrip.events.EventXdripNewLog
 import app.aaps.plugins.sync.xdrip.events.EventXdripUpdateGUI
 import app.aaps.plugins.sync.xdrip.extensions.toXdripJson
+import app.aaps.plugins.sync.xdrip.keys.XdripLongKey
 import app.aaps.plugins.sync.xdrip.workers.XdripDataSyncWorker
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -69,6 +70,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -76,10 +78,11 @@ import javax.inject.Singleton
 
 @Singleton
 class XdripPlugin @Inject constructor(
-    private val preferences: Preferences,
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
-    rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
@@ -89,12 +92,11 @@ class XdripPlugin @Inject constructor(
     private val rxBus: RxBus,
     private val uiInteraction: UiInteraction,
     private val dateUtil: DateUtil,
-    aapsLogger: AAPSLogger,
     private val config: Config,
     private val decimalFormatter: DecimalFormatter,
     private val glucoseStatusProvider: GlucoseStatusProvider
-) : XDripBroadcast, Sync, PluginBase(
-    PluginDescription()
+) : XDripBroadcast, Sync, PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(XdripFragment::class.java.name)
         .pluginIcon((app.aaps.core.objects.R.drawable.ic_blooddrop_48))
@@ -102,7 +104,8 @@ class XdripPlugin @Inject constructor(
         .shortName(R.string.xdrip_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_xdrip),
-    aapsLogger, rh
+    ownPreferences = listOf(XdripLongKey::class.java),
+    aapsLogger, rh, preferences
 ) {
 
     @Suppress("PrivatePropertyName")
@@ -151,12 +154,16 @@ class XdripPlugin @Inject constructor(
         disposable += rxBus.toObservable(EventAppInitialized::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ sendStatusLine() }, fabricPrivacy::logException)
+        eventWorker = Executors.newSingleThreadScheduledExecutor()
     }
 
     override fun onStop() {
         super.onStop()
+        handler?.looper?.quitSafely()
         handler?.removeCallbacksAndMessages(null)
         handler = null
+        eventWorker?.shutdown()
+        eventWorker = null
         disposable.clear()
     }
 
@@ -226,7 +233,7 @@ class XdripPlugin @Inject constructor(
         return false
     }
 
-    private val eventWorker = Executors.newSingleThreadScheduledExecutor()
+    private var eventWorker: ScheduledExecutorService? = null
     private var scheduledEventPost: ScheduledFuture<*>? = null
     private fun delayAndScheduleExecution(origin: String) {
         class PostRunnable : Runnable {
@@ -239,12 +246,12 @@ class XdripPlugin @Inject constructor(
         // cancel waiting task to prevent sending multiple posts
         scheduledEventPost?.cancel(false)
         val task: Runnable = PostRunnable()
-        scheduledEventPost = eventWorker.schedule(task, 10, TimeUnit.SECONDS)
+        scheduledEventPost = eventWorker?.schedule(task, 10, TimeUnit.SECONDS)
     }
 
     private fun buildStatusLine(profile: Profile): String {
         val status = StringBuilder()
-        if (!loop.isEnabled() && config.APS)
+        if (!loop.runningMode.isLoopRunning() && config.APS)
             status.append(rh.gs(R.string.disabled_loop)).append("\n")
 
         //Temp basal
@@ -382,7 +389,7 @@ class XdripPlugin @Inject constructor(
 
                 is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(true, dateUtil, decimalFormatter)
                 is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toJson(true, dateUtil)
-                is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(true, dateUtil)
+                is DataSyncSelector.PairRunningMode            -> dataPair.value.toJson(true, dateUtil)
                 else                                           -> null
             }?.let {
                 array.put(it)

@@ -1,22 +1,21 @@
 package app.aaps.pump.danars.comm
 
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.DanaRSTestBase
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.whenever
 
 class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
 
@@ -29,21 +28,11 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
 
     private lateinit var danaRSPlugin: DanaRSPlugin
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is DanaRSPacketNotifyDeliveryRateDisplay) {
-                it.aapsLogger = aapsLogger
-                it.rxBus = rxBus
-                it.rh = rh
-                it.danaPump = danaPump
-            }
-        }
-    }
-
-    @Test fun runTest() {
-        `when`(rh.gs(ArgumentMatchers.anyInt(), anyObject())).thenReturn("SomeString")
-        // val packet = DanaRS_Packet_Notify_Delivery_Rate_Display(1.0, Treatment(treatmentInjector))
-        val packet = DanaRSPacketNotifyDeliveryRateDisplay(packetInjector)
+    @Test
+    fun runTest() {
+        whenever(rh.gs(ArgumentMatchers.anyInt(), anyOrNull())).thenReturn("SomeString")
+        danaPump.bolusingDetailedBolusInfo = DetailedBolusInfo().apply { insulin = 1.0 }
+        val packet = DanaRSPacketNotifyDeliveryRateDisplay(aapsLogger, rh, rxBus, danaPump)
         // test params
         Assertions.assertEquals(0, packet.getRequestParams().size)
         // test message decoding
@@ -60,26 +49,9 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
     fun mock() {
         danaRSPlugin =
             DanaRSPlugin(
-                aapsLogger,
-                aapsSchedulers,
-                rxBus,
-                context,
-                rh,
-                constraintChecker,
-                profileFunction,
-                commandQueue,
-                danaPump,
-                pumpSync,
-                preferences,
-                detailedBolusInfoStorage,
-                temporaryBasalStorage,
-                fabricPrivacy,
-                dateUtil,
-                uiInteraction,
-                danaHistoryDatabase,
-                decimalFormatter,
-                instantiator
+                aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context, constraintChecker, profileFunction, danaPump, pumpSync,
+                detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil, uiInteraction, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider
             )
-        danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true, 0)
+        danaPump.bolusingDetailedBolusInfo = DetailedBolusInfo()
     }
 }

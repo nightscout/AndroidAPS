@@ -2,20 +2,17 @@ package app.aaps.core.graph
 
 import android.content.Context
 import android.util.AttributeSet
+import app.aaps.core.graph.data.GraphViewWithCleanup
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.Round
 import com.jjoe64.graphview.DefaultLabelFormatter
-import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import java.text.NumberFormat
 import kotlin.math.max
 import kotlin.math.min
 
-class BasalProfileGraph : GraphView {
-
-    constructor(context: Context?) : super(context)
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
+class BasalProfileGraph @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : GraphViewWithCleanup(context, attrs, defStyle) {
 
     fun show(profile: Profile) {
         removeAllSeries()

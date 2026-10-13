@@ -1,6 +1,8 @@
 package app.aaps.pump.danars.di
 
+import app.aaps.pump.danars.comm.DanaRSPacket
 import dagger.Module
+import dagger.Provides
 
 @Module(
     includes = [
@@ -9,4 +11,10 @@ import dagger.Module
         DanaRSServicesModule::class
     ]
 )
-open class DanaRSModule
+open class DanaRSModule {
+
+    @Provides
+    fun providesCommands(
+        @DanaRSCommModule.DanaRSCommand rsCommands: Set<@JvmSuppressWildcards DanaRSPacket>,
+    ): Set<@JvmSuppressWildcards DanaRSPacket> = rsCommands
+}

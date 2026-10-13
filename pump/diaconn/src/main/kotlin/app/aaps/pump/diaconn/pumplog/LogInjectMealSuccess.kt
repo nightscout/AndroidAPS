@@ -1,6 +1,6 @@
 package app.aaps.pump.diaconn.pumplog
 
-import okhttp3.internal.and
+import app.aaps.pump.common.utils.and
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 

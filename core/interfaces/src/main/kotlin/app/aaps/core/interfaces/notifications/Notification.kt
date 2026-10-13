@@ -104,7 +104,6 @@ open class Notification {
         const val DST_LOOP_DISABLED = 49
         const val DST_IN_24H = 50
         const val DISK_FULL = 51
-        const val OLD_VERSION = 52
         const val OVER_24H_TIME_CHANGE_REQUESTED = 54
         const val INVALID_VERSION = 55
         const val PERMISSION_SYSTEM_WINDOW = 56

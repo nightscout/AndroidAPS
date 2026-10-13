@@ -6,18 +6,15 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.graph.data.AreaGraphSeries
 import app.aaps.core.graph.data.DoubleDataPoint
+import app.aaps.core.graph.data.GraphViewWithCleanup
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.Round
 import com.jjoe64.graphview.DefaultLabelFormatter
-import com.jjoe64.graphview.GraphView
 import java.text.NumberFormat
 import kotlin.math.max
 import kotlin.math.min
 
-class TargetBgProfileGraph : GraphView {
-
-    constructor(context: Context?) : super(context)
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
+class TargetBgProfileGraph @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : GraphViewWithCleanup(context, attrs, defStyle) {
 
     private fun fromMgdlToUnits(value: Double, units: GlucoseUnit): Double =
         if (units == GlucoseUnit.MGDL) value else value * Constants.MGDL_TO_MMOLL

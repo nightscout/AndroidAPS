@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/loop_status_card_background"
+    android:padding="10dp">
+
+    <!-- Card Title -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <View
+            android:layout_width="3dp"
+            android:layout_height="16dp"
+            android:background="@color/tempBasal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/loop_status_result"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="@color/tempBasal" />
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
+
+    <!-- Last Run & Enact Section -->
+
+    <!-- Combined Last Run & Enact (when times match) -->
+    <LinearLayout
+        android:id="@+id/last_run_enact_combined_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/loop_status_last_run_enact"
+            android:textSize="11sp"
+            android:textColor="@color/white_70percent" />
+
+        <TextView
+            android:id="@+id/last_run_enact_combined_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/loopClosed"
+            android:text="14:25" />
+
+    </LinearLayout>
+
+    <!-- Last Run (separate) -->
+    <LinearLayout
+        android:id="@+id/last_run_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/loop_status_last_run"
+            android:textSize="11sp"
+            android:textColor="@color/white_70percent" />
+
+        <TextView
+            android:id="@+id/last_run_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/loopClosed"
+            android:text="14:25" />
+
+    </LinearLayout>
+
+    <!-- Last Enact (separate) -->
+    <LinearLayout
+        android:id="@+id/last_enact_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/loop_status_last_enact"
+            android:textSize="11sp"
+            android:textColor="@color/white_70percent" />
+
+        <TextView
+            android:id="@+id/last_enact_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/loopClosed"
+            android:text="14:25" />
+
+    </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/white_20percent" />
+
+    <!-- OpenAPS Result Section -->
+
+    <!-- SMB Row -->
+    <LinearLayout
+        android:id="@+id/oaps_smb_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/loop_status_smb_text"
+            android:textSize="11sp"
+            android:textColor="@color/white_70percent" />
+
+        <TextView
+            android:id="@+id/oaps_smb_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/bolus"
+            android:text="0.30 U" />
+
+    </LinearLayout>
+    <Space
+        android:id="@+id/oaps_smb_space"
+        android:layout_width="match_parent"
+        android:layout_height="2dp" />
+
+    <!-- Status Text -->
+    <TextView
+        android:id="@+id/oaps_status_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:text="No change requested" />
+
+    <Space
+        android:id="@+id/oaps_status_space"
+        android:layout_width="match_parent"
+        android:layout_height="2dp" />
+
+    <!-- Rate Row -->
+    <LinearLayout
+        android:id="@+id/oaps_rate_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/loop_status_basal_rate"
+            android:textSize="11sp"
+            android:textColor="@color/white_70percent" />
+
+        <TextView
+            android:id="@+id/oaps_rate_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:text="1.25 U/h (125%)" />
+
+    </LinearLayout>
+
+    <!-- Duration Row -->
+    <LinearLayout
+        android:id="@+id/oaps_duration_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/loop_status_duration"
+            android:textSize="11sp"
+            android:textColor="@color/white_70percent" />
+
+        <TextView
+            android:id="@+id/oaps_duration_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:text="30 min" />
+
+    </LinearLayout>
+
+    <!-- Expandable Reason Section -->
+    <LinearLayout
+        android:id="@+id/oaps_reason_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp">
+
+        <!-- Reason Header (always visible when reason exists) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical" >
+
+            <TextView
+                android:id="@+id/oaps_reason_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/loop_status_oaps_reason"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/white_70percent" />
+
+            <TextView
+                android:id="@+id/oaps_reason_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▼"
+                android:textSize="12sp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textColor="@color/white_70percent" />
+
+        </LinearLayout>
+
+        <!-- Reason Text (expandable) -->
+        <TextView
+            android:id="@+id/oaps_reason_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="11sp"
+            android:lineSpacingMultiplier="1.2"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:text="COB: 15g, IOB: 2.5U" />
+
+    </LinearLayout>
+
+</LinearLayout>

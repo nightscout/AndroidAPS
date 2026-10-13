@@ -32,32 +32,11 @@
     <string name="insight_alert_notification_channel">Insight Pump Alerts</string>
     <string name="disable_vibration">Disable vibrations on manual bolus delivery</string>
     <string name="disable_vibration_summary">For bolus and extended bolus (only available with Insight firmware 3.x)</string>
-    <string name="key_insight_disable_vibration" translatable="false">insight_disable_vibration</string>
-    <string name="key_insight_disable_vibration_auto" translatable="false">insight_disable_vibration_auto</string>
-    <string name="key_insight_enable_tbr_emulation" translatable="false">insight_enable_tbr_emulation</string>
-    <string name="key_insight_log_site_changes" translatable="false">insight_log_site_changes</string>
-    <string name="key_insight_log_tube_changes" translatable="false">insight_log_tube_changes</string>
-    <string name="key_insight_log_reservoir_changes" translatable="false">insight_log_reservoir_changes</string>
-    <string name="key_insight_log_battery_changes" translatable="false">insight_log_battery_changes</string>
-    <string name="key_insight_log_operating_mode_changes" translatable="false">insight_log_operating_mode_changes</string>
-    <string name="key_insight_log_alerts" translatable="false">insight_log_alerts</string>
-    <string name="key_insight_min_recovery_duration" translatable="false">insight_min_recovery_duration</string>
-    <string name="key_insight_max_recovery_duration" translatable="false">insight_max_recovery_duration</string>
-    <string name="key_insight_disconnect_delay" translatable="false">insight_disconnect_delay</string>
-    <string name="key_insight_last_bolus_amount" translatable="false">insight_last_bolus_amount</string>
-    <string name="key_insight_last_bolus_timestamp" translatable="false">insight_last_bolus_timestamp</string>
     <string name="disable_vibration_auto">Disable vibrations on automated bolus delivery</string>
     <string name="disable_vibration_auto_summary">For SMB and Temp Basal with TBR emulation (only available with Insight firmware 3.x)</string>
     <string name="timeout_during_handshake">Timeout during handshake - reset bluetooth</string>
     <string name="pump_stopped">Pump stopped</string>
     <string name="pump_started">Pump started</string>
-    <string name="short_status_last_connected">Last conn: %1$d min ago</string>
-    <string name="short_status_tbr">TBR: %1$d%% for %2$d / %3$d min</string>
-    <string name="short_status_extended">Extended: %1$.2f / %2$.2f U for %3$d min</string>
-    <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f U for %3$d min</string>
-    <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Reser.: %1$.2f U</string>
-    <string name="short_status_battery">Batt.: %1$d%%</string>
     <string name="release_software_version">Release software version</string>
     <string name="ui_processor_software_version">UI processor software version</string>
     <string name="pc_processor_software_version">PC processor software version</string>

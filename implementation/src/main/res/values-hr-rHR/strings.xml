@@ -12,4 +12,5 @@
     <string name="detailed_14_days">Detaljno 14 dana</string>
     <string name="day_tir">Dnevni TIR</string>
     <string name="night_tir">Noćni TIR</string>
+    <!--    PumpStatusGenerator-->
 </resources>

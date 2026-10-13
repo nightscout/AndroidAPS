@@ -1,9 +1,7 @@
 package app.aaps.pump.insight.utils
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
-import android.widget.Toast
+import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.insight.R
 import app.aaps.pump.insight.exceptions.ConnectionFailedException
 import app.aaps.pump.insight.exceptions.ConnectionLostException
@@ -28,7 +26,7 @@ object ExceptionTranslator {
     }
 
     fun makeToast(context: Context, exception: Exception) {
-        Handler(Looper.getMainLooper()).post { Toast.makeText(context, getString(context, exception), Toast.LENGTH_LONG).show() }
+        ToastUtils.longErrorToast(context, getString(context, exception))
     }
 
     init {

@@ -11,8 +11,8 @@ import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.NE
-import app.aaps.core.data.model.OE
 import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SC
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
@@ -171,9 +171,10 @@ interface PersistenceLayer {
      * Store records coming from NS to database
      *
      * @param boluses list of records
+     * @param doLog create UserEntry if true
      * @return List of inserted/updated/invalidated records
      */
-    fun syncNsBolus(boluses: List<BS>): Single<TransactionResult<BS>>
+    fun syncNsBolus(boluses: List<BS>, doLog: Boolean): Single<TransactionResult<BS>>
 
     /**
      * Update NS id' in database
@@ -305,9 +306,10 @@ interface PersistenceLayer {
      * Store records coming from NS to database
      *
      * @param carbs list of records
+     * @param doLog create UserEntry if true
      * @return List of inserted/updated/invalidated records
      */
-    fun syncNsCarbs(carbs: List<CA>): Single<TransactionResult<CA>>
+    fun syncNsCarbs(carbs: List<CA>, doLog: Boolean): Single<TransactionResult<CA>>
 
     /**
      * Update NS id' in database
@@ -521,9 +523,10 @@ interface PersistenceLayer {
      * Store records coming from NS to database
      *
      * @param effectiveProfileSwitches list of records
+     * @param doLog create UserEntry if true
      * @return List of inserted/updated/invalidated records
      */
-    fun syncNsEffectiveProfileSwitches(effectiveProfileSwitches: List<EPS>): Single<TransactionResult<EPS>>
+    fun syncNsEffectiveProfileSwitches(effectiveProfileSwitches: List<EPS>, doLog: Boolean): Single<TransactionResult<EPS>>
 
     /**
      * Update NS id' in database
@@ -624,9 +627,10 @@ interface PersistenceLayer {
      * Store records coming from NS to database
      *
      * @param profileSwitches list of records
+     * @param doLog create UserEntry if true
      * @return List of inserted/updated/invalidated records
      */
-    fun syncNsProfileSwitches(profileSwitches: List<PS>): Single<TransactionResult<PS>>
+    fun syncNsProfileSwitches(profileSwitches: List<PS>, doLog: Boolean): Single<TransactionResult<PS>>
 
     /**
      * Update NS id' in database
@@ -635,6 +639,129 @@ interface PersistenceLayer {
      * @return List of modified records
      */
     fun updateProfileSwitchesNsIds(profileSwitches: List<PS>): Single<TransactionResult<PS>>
+
+    // RM
+    /**
+     * Get running running mode at time
+     *
+     * @param timestamp time
+     * @return running running mode or default
+     */
+    fun getRunningModeActiveAt(timestamp: Long): RM
+
+    /**
+     *  Get running mode by NS id
+     *  @return running mode
+     */
+    fun getRunningModeByNSId(nsId: String): RM?
+
+    /**
+     * Get running running mode at time with duration == 0 (infinite)
+     *
+     * @param timestamp time
+     * @return running running mode or default
+     */
+    fun getPermanentRunningModeActiveAt(timestamp: Long): RM
+
+    /**
+     * Get all running modes from db
+     *
+     * @return List of running modes
+     */
+    fun getRunningModes(): List<RM>
+
+    /**
+     * Get running modes from time
+     *
+     * @param startTime from
+     * @param ascending sort order
+     * @return List of running modes
+     */
+    fun getRunningModesFromTime(startTime: Long, ascending: Boolean): Single<List<RM>>
+
+    /**
+     * Get running modes from time to time
+     *
+     * @param startTime from
+     * @param endTime from
+     * @param ascending sort order
+     * @return List of running modes
+     */
+    fun getRunningModesFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<RM>
+    /**
+     * Get running modes from time including invalidated records
+     *
+     * @param startTime from
+     * @param ascending sort order
+     * @return List of running modes
+     */
+    fun getRunningModesIncludingInvalidFromTime(startTime: Long, ascending: Boolean): Single<List<RM>>
+
+    /**
+     * Get next changed record after id
+     *
+     * @param id record id
+     * @return database record
+     */
+    fun getNextSyncElementRunningMode(id: Long): Maybe<Pair<RM, RM>>
+
+    /**
+     * Get record with highest id
+     *
+     * @return database record id
+     */
+    fun getLastRunningModeId(): Long?
+
+    /**
+     * Cancel temporary running mode if there is some running at provided timestamp
+     *
+     * @param timestamp time
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     */
+    fun cancelCurrentRunningMode(timestamp: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit> = listOf()): Single<TransactionResult<RM>>
+
+    /**
+     * Insert or update new record in database
+     *
+     * @param runningMode record
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of inserted/updated records
+     */
+    fun insertOrUpdateRunningMode(runningMode: RM, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): Single<TransactionResult<RM>>
+
+    /**
+     * Invalidate record with id
+     *
+     * @param id record id
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of changed records
+     */
+    fun invalidateRunningMode(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): Single<TransactionResult<RM>>
+
+    /**
+     * Store records coming from NS to database
+     *
+     * @param runningModes list of records
+     * @param doLog create UserEntry if true
+     * @return List of inserted/updated/invalidated records
+     */
+    fun syncNsRunningModes(runningModes: List<RM>, doLog: Boolean): Single<TransactionResult<RM>>
+
+    /**
+     * Update NS id' in database
+     *
+     * @param runningModes records containing NS id'
+     * @return List of modified records
+     */
+    fun updateRunningModesNsIds(runningModes: List<RM>): Single<TransactionResult<RM>>
 
     // TB
     /**
@@ -725,9 +852,10 @@ interface PersistenceLayer {
      * Store records coming from NS to database
      *
      * @param temporaryBasals list of records
+     * @param doLog create UserEntry if true
      * @return List of inserted/updated/invalidated records
      */
-    fun syncNsTemporaryBasals(temporaryBasals: List<TB>): Single<TransactionResult<TB>>
+    fun syncNsTemporaryBasals(temporaryBasals: List<TB>, doLog: Boolean): Single<TransactionResult<TB>>
 
     /**
      * Update NS id' in database
@@ -872,9 +1000,10 @@ interface PersistenceLayer {
      * Store records coming from NS to database
      *
      * @param extendedBoluses list of records
+     * @param doLog create UserEntry if true
      * @return List of inserted/updated/invalidated records
      */
-    fun syncNsExtendedBoluses(extendedBoluses: List<EB>): Single<TransactionResult<EB>>
+    fun syncNsExtendedBoluses(extendedBoluses: List<EB>, doLog: Boolean): Single<TransactionResult<EB>>
 
     /**
      * Update NS id' in database
@@ -953,9 +1082,10 @@ interface PersistenceLayer {
      * Store records coming from NS to database
      *
      * @param temporaryTargets list of records
+     * @param doLog create UserEntry if true
      * @return List of inserted/updated/invalidated records
      */
-    fun syncNsTemporaryTargets(temporaryTargets: List<TT>): Single<TransactionResult<TT>>
+    fun syncNsTemporaryTargets(temporaryTargets: List<TT>, doLog: Boolean): Single<TransactionResult<TT>>
 
     /**
      * Update NS id' in database
@@ -1012,6 +1142,15 @@ interface PersistenceLayer {
     ): Single<TransactionResult<TE>>
 
     /**
+     * Insert or update if exists record
+     *
+     * Create new scratch file from selection
+     * @return List of inserted/updated records
+     */
+    fun insertOrUpdateTherapyEvent(therapyEvent: TE): Single<TransactionResult<TE>>
+
+
+    /**
      * Invalidate record with id
      *
      * @param id record id
@@ -1036,9 +1175,10 @@ interface PersistenceLayer {
      * Store records coming from NS to database
      *
      * @param therapyEvents list of records
+     * @param doLog create UserEntry if true
      * @return List of inserted/updated/invalidated records
      */
-    fun syncNsTherapyEvents(therapyEvents: List<TE>): Single<TransactionResult<TE>>
+    fun syncNsTherapyEvents(therapyEvents: List<TE>, doLog: Boolean): Single<TransactionResult<TE>>
 
     /**
      * Update NS id' in database
@@ -1047,87 +1187,6 @@ interface PersistenceLayer {
      * @return List of modified records
      */
     fun updateTherapyEventsNsIds(therapyEvents: List<TE>): Single<TransactionResult<TE>>
-
-    // OE
-    fun getOfflineEventActiveAt(timestamp: Long): OE?
-
-    /**
-     *  Get offline event by NS id
-     *  @return offline event
-     */
-    fun getOfflineEventByNSId(nsId: String): OE?
-
-    /**
-     * Get offline events in time interval
-     *
-     * @param startTime from
-     * @param endTime to
-     * @param ascending sort order
-     * @return List of offline events
-     */
-    fun getOfflineEventsFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<OE>
-
-    /**
-     *  Get highest id in database
-     *  @return id
-     */
-    fun getLastOfflineEventId(): Long?
-
-    /**
-     * Get next changed record after id
-     *
-     * @param id record id
-     * @return database record
-     */
-    fun getNextSyncElementOfflineEvent(id: Long): Maybe<Pair<OE, OE>>
-
-    /**
-     * Insert offline event and cancel running if there is some at time of new record
-     *
-     * @param offlineEvent new offline event
-     * @param action Action for UserEntry logging
-     * @param source Source for UserEntry logging
-     * @param listValues Values for UserEntry logging
-     */
-    fun insertAndCancelCurrentOfflineEvent(offlineEvent: OE, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit> = listOf()): Single<TransactionResult<OE>>
-
-    /**
-     * Invalidate record with id
-     *
-     * @param id record id
-     * @param action Action for UserEntry logging
-     * @param source Source for UserEntry logging
-     * @param note Note for UserEntry logging
-     * @param listValues Values for UserEntry logging
-     * @return List of changed records
-     */
-    fun invalidateOfflineEvent(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): Single<TransactionResult<OE>>
-
-    /**
-     * Cancel offline event if there is some running at provided timestamp
-     *
-     * @param timestamp time
-     * @param action Action for UserEntry logging
-     * @param source Source for UserEntry logging
-     * @param listValues Values for UserEntry logging
-     */
-    fun cancelCurrentOfflineEvent(timestamp: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit> = listOf()): Single<TransactionResult<OE>>
-
-    /**
-     * Store records coming from NS to database
-     *
-     * @param offlineEvents list of records
-     * @return List of inserted/updated/invalidated records
-     */
-    fun syncNsOfflineEvents(offlineEvents: List<OE>): Single<TransactionResult<OE>>
-
-    /**
-     * Update NS id' in database
-     *
-     * @param offlineEvents records containing NS id'
-     * @return List of modified records
-     */
-    fun updateOfflineEventsNsIds(offlineEvents: List<OE>): Single<TransactionResult<OE>>
 
     // DS
     /**
@@ -1263,9 +1322,9 @@ interface PersistenceLayer {
     fun getCalculatedTotalDailyDose(timestamp: Long): TDD?
 
     /**
-     * Insert new record to database
+     * Insert or update record
      */
-    fun insertTotalDailyDose(totalDailyDose: TDD)
+    fun insertOrUpdateCachedTotalDailyDose(totalDailyDose: TDD): Single<TransactionResult<TDD>>
 
     /**
      * Insert or update if exists record

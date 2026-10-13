@@ -5,7 +5,6 @@
     <string name="error">Erro</string>
     <string name="profile_set_ok">Perfil Basal actualizado na bomba</string>
     <string name="invalid_input">Entrada Inválida</string>
-    <string name="bolus_delivering">A administrar %1$.2f U</string>
     <string name="constraint_applied">Restrição aplicada!</string>
     <string name="tempbasals_iobtotal_label_string">Total da IA:</string>
     <string name="tt_label">AT</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Bomba não inicializada, perfil não definido!</string>
     <string name="failed_update_basal_profile">Falha a actualizar perfil da basal</string>
-    <string name="bolus_delivered_successfully">Bólus %1$.2f U administrado com sucesso</string>
     <string name="no_valid_basal_rate">Nenhum valor de basal válido foi lido da bomba</string>
     <string name="limiting_iob">A limitar IA para %1$.1f U porque %2$s</string>
     <string name="loop_disabled">LOOP DESATIVADO POR RESTRIÇÕES</string>
@@ -89,7 +87,6 @@
     <string name="loopisdisabled">Loop está desactivado</string>
     <string name="alarm">Alarme</string>
     <string name="disableloop">Desactivar Loop</string>
-    <string name="enableloop">Activar Loop</string>
     <string name="resumeloop">Retomar loop</string>
     <string name="suspendloop">Suspender loop</string>
     <string name="duration_min_label">Duração [min]</string>
@@ -103,7 +100,6 @@
     <string name="name_short">Nome:</string>
     <string name="time">Hora</string>
     <string name="ns_wifi_ssids">SSID WiFi</string>
-    <string name="loading">A carregar …</string>
     <string name="notes_label">Notas</string>
     <string name="remove_button">Remover</string>
     <string name="add_new">Adicionar novo</string>
@@ -164,7 +160,6 @@
     <string name="canceling_tbr_failed">Não foi possível cancelar a basal temporária</string>
     <string name="canceling_eb_failed">Não foi possível cancelar o bólus prolongado</string>
     <string name="virtualpump_uploadstatus_title">Enviar o estado da bomba para NS ou Tidepool</string>
-    <string name="suspendloop_label">Loop Desactivado/Suspenso</string>
     <string name="iob_label">Insulina ativa (IA )</string>
     <!--    Protection-->
     <string name="wrongpassword">Palavra-passe incorreta</string>
@@ -281,7 +276,6 @@
     <string name="uel_lgs_loop_mode">MODO DE LOOP DE SGB</string>
     <string name="uel_open_loop_mode">MODO DE LOOP ABERTO</string>
     <string name="uel_loop_disabled">LOOP DESATIVADO</string>
-    <string name="uel_loop_enabled">LOOP ATIVADO</string>
     <string name="uel_reconnect">RECONETAR</string>
     <string name="uel_disconnect">DESCONETAR</string>
     <string name="uel_resume">RESUMO</string>
@@ -507,4 +501,5 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <!--    Playback-->
 </resources>

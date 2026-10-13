@@ -77,8 +77,6 @@
     <string name="deltalabel_u">혈당 차이 [%1$s]</string>
     <string name="currentlocation">현재 위치</string>
     <string name="location">위치</string>
-    <string name="latitude_short">위도:</string>
-    <string name="longitude_short">경도</string>
     <string name="glucose_u">혈당 [%1$s]:</string>
     <string name="target_u">목표 [%1$s]:</string>
     <string name="lastboluslabel">마지막 Bolus</string>
@@ -121,4 +119,5 @@
     <string name="autotune_run_with_error">마지막 Autotune 실행시 오류가 발생했습니다</string>
     <string name="autotune_run_cancelled">Autotune의 또 다른 실행이 감지되었습니다, 실행이 취소되었습니다</string>
     <!--    Steps count-->
+    <!--    SMB mode-->
 </resources>

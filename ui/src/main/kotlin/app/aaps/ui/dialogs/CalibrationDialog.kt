@@ -17,14 +17,12 @@ import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.ui.databinding.DialogCalibrationBinding
 import com.google.common.base.Joiner
-import dagger.android.HasAndroidInjector
 import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject
 
 class CalibrationDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var xDripBroadcast: XDripBroadcast

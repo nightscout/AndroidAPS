@@ -82,6 +82,10 @@ class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionServi
     }
 
     override fun onDestroy() {
+        binding.yes.setOnClickListener(null)
+        binding.no.setOnClickListener(null)
+        binding.exit.setOnClickListener(null)
+        binding.deviceList.adapter = null
         service?.run {
             withdrawConnectionRequest(this@InsightPairingActivity)
             unregisterStateCallback(this@InsightPairingActivity)

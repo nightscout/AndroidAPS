@@ -19,7 +19,6 @@
     <string name="dana_model">%1$s\n모델: %2$02X\n 프로토콜: %3$02X\n 코드: %4$02X</string>
     <string name="processinghistory">이벤트 처리중</string>
     <string name="danar_enableextendedbolus">펌프에서 확장Bolus를 활성화 하세요</string>
-    <string name="overview_bolusprogress_delivered">주입됨</string>
     <string name="overview_bolusprogress_stoped">정지됨</string>
     <string name="unsupportedfirmware">지원되지 않는 펌프 펌웨어</string>
     <string name="pumperror">펌프 에러</string>

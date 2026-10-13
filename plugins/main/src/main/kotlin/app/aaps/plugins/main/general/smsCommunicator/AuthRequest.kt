@@ -13,31 +13,31 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePassword
 import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePasswordValidationResult
-import dagger.android.HasAndroidInjector
-import javax.inject.Inject
+import jakarta.inject.Inject
 
-class AuthRequest(
-    injector: HasAndroidInjector,
-    var requester: Sms,
-    requestText: String,
-    var confirmCode: String,
-    val action: SmsAction
+class AuthRequest @Inject constructor(
+    private val aapsLogger: AAPSLogger,
+    private val smsCommunicator: SmsCommunicator,
+    private val rh: ResourceHelper,
+    private val otp: OneTimePassword,
+    private val dateUtil: DateUtil,
+    private val commandQueue: CommandQueue
 ) {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var smsCommunicator: SmsCommunicator
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var otp: OneTimePassword
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var commandQueue: CommandQueue
-
-    private var date = 0L
+    private var date = dateUtil.now()
     private var processed = false
+    lateinit var requester: Sms
+    lateinit var requestText: String
+    lateinit var confirmCode: String
+    lateinit var action: SmsAction
 
-    init {
-        injector.androidInjector().inject(this)
-        date = dateUtil.now()
+    fun with(requester: Sms, requestText: String, confirmCode: String, action: SmsAction): AuthRequest {
+        this.requester = requester
+        this.requestText = requestText
+        this.confirmCode = confirmCode
+        this.action = action
         smsCommunicator.sendSMS(Sms(requester.phoneNumber, requestText))
+        return this
     }
 
     private fun codeIsValid(toValidate: String): Boolean =

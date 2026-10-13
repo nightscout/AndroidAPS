@@ -24,10 +24,8 @@ class MsgError(
             8       -> errorString = rh.gs(app.aaps.pump.dana.R.string.batterydischarged)
         }
         if (errorCode < 8) { // bolus delivering stopped
-            val bolusingEvent = EventOverviewBolusProgress
             danaPump.bolusStopped = true
-            bolusingEvent.status = errorString
-            rxBus.send(bolusingEvent)
+            rxBus.send(EventOverviewBolusProgress(status = errorString, id = danaPump.bolusingDetailedBolusInfo?.id))
             // at least on Occlusion pump stops communication. Try to force reconnecting
             activePlugin.activePump.disconnect("Error from pump received")
             failed = true

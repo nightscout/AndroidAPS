@@ -4,6 +4,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
+import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -30,7 +31,7 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.utils.MidnightUtils
@@ -38,6 +39,7 @@ import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
+import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
 import org.json.JSONException
@@ -65,7 +67,8 @@ class TestOpenAPSAMAPlugin @Inject constructor(
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val preferences: Preferences,
     private val importExportPrefs: ImportExportPrefs,
-    private val config: Config
+    private val config: Config,
+    private val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -246,6 +249,8 @@ class TestOpenAPSAMAPlugin @Inject constructor(
 
         //deviceStatus.suggested = determineBasalResultAMA.json;
     }
+
+    override fun getGlucoseStatusData(allowOldData: Boolean): GlucoseStatus? = glucoseStatusCalculatorSMB.getGlucoseStatusData(allowOldData)
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         if (isEnabled()) {

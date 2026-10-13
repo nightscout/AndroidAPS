@@ -36,6 +36,7 @@
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">I alt</string>
+    <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <string name="fill_warning">Sørg for, at mængden svarer til specifikationen på dit infusionssæt!</string>
     <string name="record_pump_site_change">Registrer skift af infusionssæt</string>
@@ -123,4 +124,5 @@
     <string name="quickwizard_settings">QuickWizard Indstillinger</string>
     <string name="overview_edit_quickwizard_valid">Gyldig:</string>
     <string name="a11y_drag_and_drop_handle">træk og slip-håndtag</string>
+    <!--    Widget-->
 </resources>

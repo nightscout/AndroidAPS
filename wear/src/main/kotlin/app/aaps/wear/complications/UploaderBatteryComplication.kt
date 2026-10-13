@@ -1,33 +1,55 @@
-@file:Suppress("DEPRECATION")
-
 package app.aaps.wear.complications
 
 import android.app.PendingIntent
 import android.graphics.drawable.Icon
-import android.support.wearable.complications.ComplicationData
-import android.support.wearable.complications.ComplicationText
 import androidx.annotation.DrawableRes
+import androidx.wear.watchface.complications.data.ComplicationData
+import androidx.wear.watchface.complications.data.ComplicationType
+import androidx.wear.watchface.complications.data.MonochromaticImage
+import androidx.wear.watchface.complications.data.MonochromaticImageComplicationData
+import androidx.wear.watchface.complications.data.PlainComplicationText
+import androidx.wear.watchface.complications.data.RangedValueComplicationData
+import androidx.wear.watchface.complications.data.ShortTextComplicationData
+import androidx.wear.watchface.complications.data.SmallImage
+import androidx.wear.watchface.complications.data.SmallImageComplicationData
+import androidx.wear.watchface.complications.data.SmallImageType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
-import app.aaps.wear.data.RawDisplayData
+import dagger.android.AndroidInjection
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 
-/*
- * Created by dlvoy on 2019-11-12
+/**
+ * Uploader Battery Complication
+ *
+ * Shows phone battery level for uploader device
+ *
  */
-class UploaderBatteryComplication : BaseComplicationProviderService() {
+class UploaderBatteryComplication : ModernBaseComplicationProviderService() {
 
-    override fun buildComplicationData(dataType: Int, raw: RawDisplayData, complicationPendingIntent: PendingIntent): ComplicationData? {
-        var complicationData: ComplicationData? = null
+    // Not derived from DaggerService, do injection here
+    override fun onCreate() {
+        AndroidInjection.inject(this)
+        super.onCreate()
+    }
+
+    override fun buildComplicationData(
+        type: ComplicationType,
+        data: app.aaps.wear.data.ComplicationData,
+        complicationPendingIntent: PendingIntent
+    ): ComplicationData? {
+        aapsLogger.debug(LTag.WEAR, "UploaderBatteryComplication.buildComplicationData: type=$type")
+        val statusData = data.statusData
+
         @DrawableRes var batteryIcon = R.drawable.ic_battery_unknown
         @DrawableRes var burnInBatteryIcon = R.drawable.ic_battery_unknown_burnin
         var level = 0
         var levelStr = "???"
-        if (raw.status[0].battery.matches(Regex("^[0-9]+$"))) {
+
+        if (statusData.battery.matches(Regex("^[0-9]+$"))) {
             try {
-                level = raw.status[0].battery.toInt()
+                level = statusData.battery.toInt()
                 level = max(min(level, 100), 0)
                 levelStr = "$level%"
                 var iconNo = floor(level / 10.0).toInt()
@@ -63,46 +85,66 @@ class UploaderBatteryComplication : BaseComplicationProviderService() {
                     else -> R.drawable.ic_battery_charging_wireless_outline
                 }
             } catch (_: NumberFormatException) {
-                aapsLogger.error(LTag.WEAR, "Cannot parse battery level of: " + raw.status[0].battery)
+                aapsLogger.error(LTag.WEAR, "Cannot parse battery level of: ${statusData.battery}")
             }
         }
-        when (dataType) {
-            ComplicationData.TYPE_RANGED_VALUE -> {
-                val builder = ComplicationData.Builder(ComplicationData.TYPE_RANGED_VALUE)
-                    .setMinValue(0f)
-                    .setMaxValue(100f)
-                    .setValue(level.toFloat())
-                    .setShortText(ComplicationText.plainText(levelStr))
-                    .setIcon(Icon.createWithResource(this, batteryIcon))
-                    .setBurnInProtectionIcon(Icon.createWithResource(this, burnInBatteryIcon))
-                    .setTapAction(complicationPendingIntent)
-                complicationData = builder.build()
+
+        return when (type) {
+            ComplicationType.RANGED_VALUE        -> {
+                val builder = RangedValueComplicationData.Builder(
+                    value = level.toFloat(),
+                    min = 0f,
+                    max = 100f,
+                    contentDescription = PlainComplicationText.Builder(text = "Battery $levelStr").build()
+                )
+                    .setText(PlainComplicationText.Builder(text = levelStr).build())
+                // Try to add icon, but skip if context not initialized (e.g., during preview)
+                try {
+                    builder.setMonochromaticImage(MonochromaticImage.Builder(image = Icon.createWithResource(this, batteryIcon)).build())
+                } catch (_: Exception) {
+                    // Icon creation failed - likely preview mode, continue without icon
+                }
+                builder.setTapAction(complicationPendingIntent).build()
             }
 
-            ComplicationData.TYPE_SHORT_TEXT   -> {
-                val builder = ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
-                    .setShortText(ComplicationText.plainText(levelStr))
-                    .setIcon(Icon.createWithResource(this, batteryIcon))
-                    .setBurnInProtectionIcon(Icon.createWithResource(this, burnInBatteryIcon))
-                    .setTapAction(complicationPendingIntent)
-                complicationData = builder.build()
+            ComplicationType.SHORT_TEXT          -> {
+                val builder = ShortTextComplicationData.Builder(
+                    text = PlainComplicationText.Builder(text = levelStr).build(),
+                    contentDescription = PlainComplicationText.Builder(text = "Battery $levelStr").build()
+                )
+                // Try to add icon, but skip if context not initialized (e.g., during preview)
+                try {
+                    builder.setMonochromaticImage(MonochromaticImage.Builder(image = Icon.createWithResource(this, batteryIcon)).build())
+                } catch (_: Exception) {
+                    // Icon creation failed - likely preview mode, continue without icon
+                }
+                builder.setTapAction(complicationPendingIntent).build()
             }
 
-            ComplicationData.TYPE_ICON         -> {
-                val builder = ComplicationData.Builder(ComplicationData.TYPE_ICON)
-                    .setIcon(Icon.createWithResource(this, batteryIcon))
-                    .setBurnInProtectionIcon(Icon.createWithResource(this, burnInBatteryIcon))
+            ComplicationType.MONOCHROMATIC_IMAGE -> {
+                // New AndroidX type for simple icon-only complications
+                val builder = MonochromaticImageComplicationData.Builder(
+                    monochromaticImage = MonochromaticImage.Builder(image = Icon.createWithResource(this, burnInBatteryIcon)).build(),
+                    contentDescription = PlainComplicationText.Builder(text = "Battery $levelStr").build()
+                )
+                builder.setTapAction(complicationPendingIntent).build()
+            }
+
+            ComplicationType.SMALL_IMAGE         -> {
+                SmallImageComplicationData.Builder(
+                    smallImage = SmallImage.Builder(image = Icon.createWithResource(this, batteryIcon), type = SmallImageType.ICON).build(),
+                    contentDescription = PlainComplicationText.Builder(text = "Battery").build()
+                )
                     .setTapAction(complicationPendingIntent)
-                complicationData = builder.build()
+                    .build()
             }
 
             else                               -> {
-                aapsLogger.warn(LTag.WEAR, "Unexpected complication type $dataType")
+                aapsLogger.warn(LTag.WEAR, "Unexpected complication type $type")
+                null
             }
         }
-        return complicationData
     }
 
     override fun getProviderCanonicalName(): String = UploaderBatteryComplication::class.java.canonicalName!!
-    override fun getComplicationAction(): ComplicationAction = ComplicationAction.STATUS
 }

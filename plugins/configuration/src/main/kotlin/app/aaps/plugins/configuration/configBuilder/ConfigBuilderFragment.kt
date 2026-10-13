@@ -64,7 +64,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             .toObservable(EventConfigBuilderUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                           for (pluginViewHolder in pluginViewHolders) pluginViewHolder.update()
+                           for (pluginViewHolder in pluginViewHolders) pluginViewHolder.update(this.requireActivity())
                        }, fabricPrivacy::logException)
         updateGUI()
     }

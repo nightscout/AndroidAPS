@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    app:boxedEdges="all">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp">
+
+        <!-- Checkmark - perfectly centered -->
+        <ImageView
+            android:id="@+id/confirm_button"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_confirm"
+            app:tint="#66BB6A"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/confirm" />
+
+        <!-- Confirm label above checkmark -->
+        <TextView
+            android:id="@+id/confirm_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/confirm_button"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="14dp"
+            android:text="@string/confirm"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF" />
+
+        <!-- Insulin and carbs below checkmark -->
+        <LinearLayout
+            android:id="@+id/bottom_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/confirm_button"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="0dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/confirm_total_insulin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3.25 U"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorInsulinButton"
+                android:layout_marginBottom="1dp" />
+
+            <TextView
+                android:id="@+id/confirm_carbs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="45g carbs"
+                android:textSize="12sp"
+                android:textColor="@color/carbs" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</androidx.wear.widget.BoxInsetLayout>

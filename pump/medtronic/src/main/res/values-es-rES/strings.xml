@@ -10,10 +10,6 @@
     <string name="medtronic_pump_max_bolus">Bolo máximo en infusora (U)</string>
     <string name="medtronic_pump_max_basal">Máxima Basal en Infusora (U/h)</string>
     <string name="medtronic_pump_encoding">Codificación de Medtronic</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Canadá (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">A nivel mundial (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Codificación de software 4b6b</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Codificación de hardware 4b6b</string>
     <string name="medtronic_custom_action_wake_and_tune">Encender y ajustar</string>
     <string name="medtronic_custom_action_clear_bolus_block">Borrar el bloque de bolo</string>
     <string name="medtronic_custom_action_reset_rileylink">Restablecer configuración de RileyLink</string>
@@ -23,7 +19,6 @@
     <string name="medtronic_pump_battery_lithium">Litio (vista extendida)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (vista ampliada)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (vista extendida)</string>
-    <string name="medtronic_bolus_debugging">Bolos/Depuración de Tratamientos</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Batería RileyLink</string>
     <!-- MDT Errors -->
@@ -84,8 +79,6 @@
     <string name="ago">hace</string>
     <string name="medtronic_notification_check_time_date">Se necesita actualizar reloj de la bomba</string>
     <!-- combo_notification_check_time_date -->
-    <string name="common_on">Activado</string>
-    <string name="common_off">Desactivado</string>
     <string name="pump_time_updated">Hora del infusor actualizada</string>
     <string name="set_neutral_temps_title">Establecer basales temporales neutras</string>
     <string name="set_neutral_temps_summary">Si está activado, cancelará un basal temporal antes del final de cada hora. Este método puede ayudar a evitar que algunas bombas pitan/vibran al final de la hora.</string>

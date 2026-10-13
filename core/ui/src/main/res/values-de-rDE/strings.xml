@@ -5,7 +5,6 @@
     <string name="error">Fehler</string>
     <string name="profile_set_ok">Basal-Profil in der Pumpe aktualisiert</string>
     <string name="invalid_input">Ungültige Eingabedaten</string>
-    <string name="bolus_delivering">Gebe %1$.2f IE ab</string>
     <string name="constraint_applied">Beschränkung angewendet!</string>
     <string name="tempbasals_iobtotal_label_string">Gesamt IOB:</string>
     <string name="tt_label">TT</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f IE/h</string>
     <string name="pump_not_initialized_profile_not_set">Pumpe nicht initialisiert, Profil nicht gesetzt!</string>
     <string name="failed_update_basal_profile">Fehler beim Aktualisieren des Basalprofils</string>
-    <string name="bolus_delivered_successfully">Bolus %1$.2f IE erfolgreich abgegeben</string>
     <string name="no_valid_basal_rate">Von der Pumpe konnte keine gültige Basalrate eingelesen werden.</string>
     <string name="limiting_iob">Begrenze IOB auf %1$.1f IE wegen %2$s</string>
     <string name="loop_disabled">LOOP DEAKTIVIERT DURCH BESCHRÄNKUNGEN</string>
@@ -90,7 +88,6 @@
     <string name="loopisdisabled">Loop ist deaktiviert.</string>
     <string name="alarm">Alarm</string>
     <string name="disableloop">Loop deaktivieren</string>
-    <string name="enableloop">Loop aktivieren</string>
     <string name="resumeloop">Loop fortsetzen</string>
     <string name="suspendloop">Loop pausieren</string>
     <string name="duration_min_label">Dauer [min]</string>
@@ -104,7 +101,6 @@
     <string name="name_short">Name:</string>
     <string name="time">Zeit</string>
     <string name="ns_wifi_ssids">WLAN SSID</string>
-    <string name="loading">Lade…</string>
     <string name="notes_label">Notizen</string>
     <string name="remove_button">Löschen</string>
     <string name="add_new">Neu hinzufügen</string>
@@ -165,7 +161,6 @@
     <string name="canceling_tbr_failed">Abbruch der temporären Basalrate fehlgeschlagen</string>
     <string name="canceling_eb_failed">Der Abbruch des erweiterten Bolus ist fehlgeschlagen</string>
     <string name="virtualpump_uploadstatus_title">Status zu NS oder Tidepool hochladen</string>
-    <string name="suspendloop_label">Deaktiviere/Pausiere den Loop</string>
     <string name="iob_label">Aktives Insulin (IOB)</string>
     <string name="loopstatus_targets">ZIELE:</string>
     <string name="loopstatus_OAPS_result">OAPS ERGEBNIS:</string>
@@ -284,7 +279,6 @@
     <string name="uel_lgs_loop_mode">LGS LOOP MODE</string>
     <string name="uel_open_loop_mode">OPEN LOOP MODE</string>
     <string name="uel_loop_disabled">LOOP DEAKTIVIERT</string>
-    <string name="uel_loop_enabled">LOOP AKTIVIERT</string>
     <string name="uel_reconnect">ERNEUT VERBINDEN</string>
     <string name="uel_disconnect">VERBINDUNG TRENNEN</string>
     <string name="uel_resume">FORTFAHREN</string>
@@ -560,4 +554,5 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f IE</string>
     <string name="format_insulin_units">%1$.2f IE</string>
+    <!--    Playback-->
 </resources>

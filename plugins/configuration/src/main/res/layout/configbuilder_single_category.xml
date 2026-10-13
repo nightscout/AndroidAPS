@@ -6,28 +6,31 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/popupWindowBackground"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/category_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/colorAccent"
                 android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/category_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/colorAccent"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -38,8 +41,7 @@
             android:layout_gravity="center"
             android:layout_margin="4dp"
             android:contentDescription="@string/expand_category"
-            app:srcCompat="@drawable/ic_expand_more_24"
-            app:tint="?android:attr/colorAccent" />
+            android:background="@drawable/animated_expand" />
 
         <ImageView
             android:id="@+id/category_expand_less"
@@ -48,8 +50,7 @@
             android:layout_gravity="center"
             android:layout_margin="4dp"
             android:contentDescription="@string/collapse_category"
-            app:srcCompat="@drawable/ic_expand_less_24"
-            app:tint="?android:attr/colorAccent" />
+            app:srcCompat="@drawable/ic_expand_less_24" />
 
         <ImageView
             android:id="@+id/category_visibility"
@@ -58,8 +59,7 @@
             android:layout_gravity="center"
             android:layout_margin="4dp"
             android:importantForAccessibility="no"
-            app:srcCompat="@drawable/ic_visibility"
-            app:tint="?android:attr/colorAccent" />
+            app:srcCompat="@drawable/ic_visibility"/>
 
     </LinearLayout>
 

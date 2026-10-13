@@ -77,7 +77,7 @@ class DexcomTirImpl : DexcomTIR {
         TextView(context).apply {
             text =
                 if (count == 0) ""
-                else context.getString(R.string.hba1c) +
+                else context.getString(R.string.hba1c) + " " +
                     (10 * (mean() + 46.7) / 28.7).roundToInt() / 10.0 + "%" +
                     " (" +
                     (((mean() + 46.7) / 28.7 - 2.15) * 10.929).roundToInt() +

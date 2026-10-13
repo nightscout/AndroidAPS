@@ -30,9 +30,13 @@ sealed class ValueWithUnit {
 
     data class TherapyEventMeterType(val value: TherapyEvent.MeterType) : ValueWithUnit()
 
+    data class TherapyEventArrow(val value: TherapyEvent.Arrow) : ValueWithUnit()
+
+    data class TherapyEventLocation(val value: TherapyEvent.Location) : ValueWithUnit()
+
     data class TherapyEventTTReason(val value: TemporaryTarget.Reason) : ValueWithUnit()
 
-    data class OfflineEventReason(val value: OfflineEvent.Reason) : ValueWithUnit()
+    data class RunningModeMode(val value: RunningMode.Mode) : ValueWithUnit()
 
     fun value(): Any? {
         return when (this) {
@@ -47,10 +51,12 @@ sealed class ValueWithUnit {
             is SimpleString          -> this.value
             is TherapyEventMeterType -> this.value
             is TherapyEventTTReason  -> this.value
-            is OfflineEventReason    -> this.value
+            is RunningModeMode       -> this.value
             is TherapyEventType      -> this.value
             is Timestamp             -> this.value
             is UnitPerHour           -> this.value
+            is TherapyEventArrow     -> this.value
+            is TherapyEventLocation  -> this.value
             UNKNOWN                  -> null
         }
     }

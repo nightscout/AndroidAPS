@@ -16,11 +16,9 @@
     <string name="objectives_maxbasal">Atlikite veiksmą, kad įvykdytumėte rekomendaciją</string>
     <string name="objectives_maxbasal_learned">Būkite dėmesingi nustatydami saugumo parametrus ir derinkite juos, kai reikia.</string>
     <string name="objectives_maxiobzero_objective">Pradėkite uždaro ciklo režimą su pompos stabdymu esant žemai glikemijai</string>
-    <string name="objectives_maxiobzero_gate">Keletą dienų praleiskite uždaro ciklo režime su kuo mažiau hipoglikemijų, kai AIO = 0</string>
     <string name="objectives_maxiobzero_learned">Nustačius nulinį MaksAIO, sistema saugos Jus nuo hipoglikemijų ir nedidins nustatytos bazės (išskyrus tas situacijas, kai AIO yra minusinis)</string>
     <string name="objectives_maxiob_objective">Koreguokite savo uždarąjį ciklą po truputį didindami maks AIO ir mažindami tikslinę glikemijos reikšmę</string>
     <string name="objectives_maxiob_gate">Praleiskite keletą dienų ir bent vieną naktį be hipoglikemijos aliarmų</string>
-    <string name="objectives_maxiob_learned">Pamažu didinkite MaksAIO. Tačiau niekada nenustatykite itin didelės vertės, tik tokią, kokią realiai galite padengti maistu.</string>
     <string name="objectives_autosens_objective">Jei reikia, paderinkite valandines bazės vertes bei pagrindinius parametrus ir įgalinkite Autosens funkciją</string>
     <string name="objectives_autosens_gate">1 savaitę praleiskite sėkmingai naudodami uždarąjį ciklą dienos metu ir įvesdami visus valgomus angliavandenius</string>
     <string name="objectives_autosens_learned">Jei Jūsų autosens rezultatai nesvyruoja apie 100%, tikėtina, kad profilis turi klaidų.</string>

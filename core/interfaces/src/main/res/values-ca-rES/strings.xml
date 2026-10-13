@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
     <!-- PumpPluginBase -->
     <!--    DateUtil-->
-    <string name="minago">Fa %1$d m</string>
-    <string name="hoursago">Fa %1$.1f h</string>
     <string name="shorthour">h</string>
     <string name="days">dies</string>
     <string name="hours">hores</string>

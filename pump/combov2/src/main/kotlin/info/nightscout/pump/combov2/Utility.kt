@@ -1,7 +1,6 @@
 package info.nightscout.pump.combov2
 
 import android.content.Context
-import android.os.Build
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -74,7 +73,7 @@ internal suspend fun <T> runWithPermissionCheck(
     var permissions = permissionsToCheckFor
     while (true) {
         try {
-            if (config.PUMPDRIVERS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (config.PUMPDRIVERS) {
                 val notAllPermissionsGranted = permissions.fold(initial = false) { currentResult, permission ->
                     return@fold if (androidPermission.permissionNotGranted(context, permission)) {
                         aapsLogger.debug(LTag.PUMP, "permission $permission was not granted by the user")
@@ -95,7 +94,7 @@ internal suspend fun <T> runWithPermissionCheck(
             }
 
             return block.invoke()
-        } catch (e: RetryPermissionCheckException) {
+        } catch (_: RetryPermissionCheckException) {
             // See the above delay() call, which fulfills the exact same purpose.
             delay(1000)
         } catch (e: AndroidBluetoothPermissionException) {

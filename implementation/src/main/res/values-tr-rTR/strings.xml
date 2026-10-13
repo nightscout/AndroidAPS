@@ -16,4 +16,5 @@
     <string name="day_tir">Gündüz TIR</string>
     <string name="night_tir">Gece TIR</string>
     <string name="carbs_short" comment="max 6 characters">Karbonhidrat</string>
+    <!--    PumpStatusGenerator-->
 </resources>

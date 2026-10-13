@@ -28,7 +28,7 @@ class InputDropdownMenu(private val rh: ResourceHelper) : Element {
                 adapter = ArrayAdapter(root.context, app.aaps.core.ui.R.layout.spinner_centered, itemList).apply {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also {
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).also {
                     it.setMargins(0, rh.dpToPx(4), 0, rh.dpToPx(4))
                 }
 

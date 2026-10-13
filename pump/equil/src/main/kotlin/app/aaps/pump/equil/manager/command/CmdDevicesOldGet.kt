@@ -2,24 +2,22 @@ package app.aaps.pump.equil.manager.command
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.EquilCmdModel
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.EquilResponse
 import app.aaps.pump.equil.manager.Utils
-import java.lang.Exception
 import java.nio.ByteBuffer
-import java.util.ArrayList
 import java.util.Locale
 
 class CmdDevicesOldGet(
     var address: String,
     aapsLogger: AAPSLogger,
-    sp: SP,
+    preferences: Preferences,
     equilManager: EquilManager
-) : BaseSetting(System.currentTimeMillis(), aapsLogger, sp, equilManager) {
+) : BaseSetting(System.currentTimeMillis(), aapsLogger, preferences, equilManager) {
 
     private var firmwareVersion = 0f
 
@@ -88,7 +86,7 @@ class CmdDevicesOldGet(
                 isEnd = true
                 response = EquilResponse(createTime)
                 rspIndex = intValue
-                aapsLogger.debug(LTag.PUMPCOMM, "intValue=====" + intValue + "====" + rspIndex)
+                aapsLogger.debug(LTag.PUMPCOMM, "intValue=====$intValue====$rspIndex")
                 return list
             } catch (e: Exception) {
                 response = EquilResponse(createTime)
@@ -108,7 +106,7 @@ class CmdDevicesOldGet(
             response = EquilResponse(createTime)
             config = true
             rspIndex = intValue
-            aapsLogger.debug(LTag.PUMPCOMM, "intValue=====" + intValue + "====" + rspIndex)
+            aapsLogger.debug(LTag.PUMPCOMM, "intValue=====$intValue====$rspIndex")
             return list
         } catch (e: Exception) {
             e.printStackTrace()
@@ -123,13 +121,14 @@ class CmdDevicesOldGet(
         val data = Utils.hexStringToBytes(reqModel.ciphertext!!)
         val fv = data[12].toString() + "." + data[13]
         firmwareVersion = fv.toFloat()
+        equilManager.setFirmwareVersion(fv)
         aapsLogger.debug(
             LTag.PUMPCOMM, "CmdDevicesOldGet====" +
                 Utils.bytesToHex(data) + "========" + firmwareVersion + "===" + (firmwareVersion < EquilConst.EQUIL_SUPPORT_LEVEL)
         )
         reqModel.ciphertext = Utils.bytesToHex(getNextData())
         synchronized(this) {
-            cmdStatus = true
+            cmdSuccess = true
             (this as Object).notify()
         }
         return responseCmd(reqModel, "0000" + reqModel.code)
@@ -165,18 +164,26 @@ class CmdDevicesOldGet(
         val value = Utils.bytesToInt(data[7], data[6])
         val fv = data[18].toString() + "." + data[19]
         firmwareVersion = fv.toFloat()
+        equilManager.setFirmwareVersion(fv)
         aapsLogger.debug(
             LTag.PUMPCOMM, ("CmdDevicesOldGet====" +
                 Utils.bytesToHex(data) + "=====" + value + "===" + firmwareVersion + "===="
                 + (firmwareVersion < EquilConst.EQUIL_SUPPORT_LEVEL))
         )
         synchronized(this) {
-            cmdStatus = true
+            cmdSuccess = true
             (this as Object).notify()
         }
     }
 
-    fun isSupport(): Boolean = firmwareVersion >= EquilConst.EQUIL_SUPPORT_LEVEL
+    fun isSupport(serialNumber: String): Boolean {
+        val firstChar = serialNumber.firstOrNull()?.uppercaseChar()
+        val needsVersionCheck = setOf('0', '1', '3', 'A', 'D')
+        return when (firstChar) {
+            in needsVersionCheck -> firmwareVersion >= EquilConst.EQUIL_SUPPORT_LEVEL
+            else -> true
+        }
+    }
 
     override fun getEventType(): EquilHistoryRecord.EventType? = null
 }

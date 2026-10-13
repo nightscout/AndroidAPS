@@ -5,7 +5,7 @@
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day 胰島素幫浦整合</string>
     <string name="low_reservoir">儲液盒低警報</string>
     <string name="patch_expiration_reminders">貼片過期提醒</string>
-    <string name="patch_buzzer_reminders">貼片嗶器提醒</string>
+    <string name="patch_buzzer_reminders">貼片嗶聲提醒</string>
     <string name="eopatch_ble_status">藍牙狀態</string>
     <string name="eopatch_serial_number">序列號</string>
     <string name="eopatch_lot_number">批號</string>

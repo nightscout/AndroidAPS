@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
     <!-- PumpPluginBase -->
     <!--    DateUtil-->
-    <string name="minago">%1$d perce</string>
     <string name="minago_long">%1$d perccel ezelőtt</string>
-    <string name="hoursago">%1$.1f órája</string>
     <string name="days_ago">%1$.1f napja</string>
     <string name="days_ago_round">%1$.0f napja</string>
     <string name="in_days">%1$.0f napon belül</string>

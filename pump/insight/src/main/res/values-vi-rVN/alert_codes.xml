@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r1_code">Nhắc nhở R1</string>
+    <string name="alert_r2_code">Nhắc nhở R2</string>
+    <string name="alert_r3_code">Nhắc nhở R3</string>
+    <string name="alert_r4_code">Nhắc nhở R4</string>
+    <string name="alert_r7_code">Nhắc nhở R7</string>
+    <string name="alert_w31_code">Cảnh báo W31</string>
+    <string name="alert_w32_code">Cảnh báo W32</string>
+    <string name="alert_w33_code">Cảnh báo W33</string>
+    <string name="alert_w34_code">Cảnh báo W34</string>
+    <string name="alert_w36_code">Cảnh báo W36</string>
+    <string name="alert_w38_code">Cảnh báo W38</string>
+    <string name="alert_w39_code">Cảnh báo W39</string>
+    <string name="alert_m20_code">Bảo trì M20</string>
+    <string name="alert_m21_code">Bảo trì M21</string>
+    <string name="alert_m22_code">Bảo trì M22</string>
+    <string name="alert_m23_code">Bảo trì M23</string>
+    <string name="alert_m24_code">Bảo trì M24</string>
+    <string name="alert_m25_code">Bảo trì M25</string>
+    <string name="alert_m26_code">Bảo trì M26</string>
+    <string name="alert_m27_code">Bảo trì M27</string>
+    <string name="alert_m28_code">Bảo trì M28</string>
+    <string name="alert_m29_code">Bảo trì M29</string>
+    <string name="alert_m30_code">Bảo trì M30</string>
+    <string name="alert_e6_code">Lỗi E6</string>
+    <string name="alert_e10_code">Lỗi E10</string>
+    <string name="alert_e13_code">Lỗi E13</string>
+</resources>

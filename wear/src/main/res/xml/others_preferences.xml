@@ -17,8 +17,8 @@
         android:entries="@array/heartrate_smoothing"
         android:entryValues="@array/heartrate_smoothing_values"
         android:key="@string/key_heart_rate_smoothing"
-        android:summary="Heart Rate smoothing"
-        android:title="@string/pref_heartRateSmoothing" />
+        android:title="@string/pref_heartRateSmoothing"
+        android:summary="%s" />
 
     <CheckBoxPreference
         android:defaultValue="false"
@@ -30,7 +30,7 @@
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
-    <app.aaps.wear.interaction.utils.VersionPreference
+    <app.aaps.wear.preference.VersionPreference
         android:defaultValue="1"
         android:entries="@array/input_design"
         android:entryValues="@array/input_design_values"

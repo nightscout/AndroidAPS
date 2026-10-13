@@ -13,6 +13,7 @@ import app.aaps.ui.activities.fragments.TreatmentsBolusCarbsFragment
 import app.aaps.ui.activities.fragments.TreatmentsCareportalFragment
 import app.aaps.ui.activities.fragments.TreatmentsExtendedBolusesFragment
 import app.aaps.ui.activities.fragments.TreatmentsProfileSwitchFragment
+import app.aaps.ui.activities.fragments.TreatmentsRunningModeFragment
 import app.aaps.ui.activities.fragments.TreatmentsTempTargetFragment
 import app.aaps.ui.activities.fragments.TreatmentsTemporaryBasalsFragment
 import app.aaps.ui.activities.fragments.TreatmentsUserEntryFragment
@@ -51,6 +52,7 @@ class TreatmentsActivity : TranslatedDaggerAppCompatActivity() {
                     3    -> TreatmentsTempTargetFragment::class.java
                     4    -> TreatmentsProfileSwitchFragment::class.java
                     5    -> TreatmentsCareportalFragment::class.java
+                    6    -> TreatmentsRunningModeFragment::class.java
                     else -> TreatmentsUserEntryFragment::class.java
                 }
                 setFragment(fragment.getDeclaredConstructor().newInstance())

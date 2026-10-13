@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
-import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.configuration.Config
@@ -29,8 +28,8 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
@@ -75,8 +74,6 @@ class SafetyPlugin @Inject constructor(
     }
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        val mode = ApsMode.fromString(preferences.get(StringKey.LoopApsMode))
-        if (mode == ApsMode.OPEN) value.set(false, rh.gs(R.string.closedmodedisabledinpreferences), this)
         if (!config.isEngineeringModeOrRelease()) {
             if (value.value()) {
                 uiInteraction.addNotification(Notification.TOAST_ALARM, rh.gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL)
@@ -169,16 +166,6 @@ class SafetyPlugin @Inject constructor(
         val maxCarbs = preferences.get(IntKey.SafetyMaxCarbs)
         carbs.setIfSmaller(maxCarbs, rh.gs(R.string.limitingcarbs, maxCarbs, rh.gs(R.string.maxvalueinpreferences)), this)
         return carbs
-    }
-
-    override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
-        val apsMode = ApsMode.fromString(preferences.get(StringKey.LoopApsMode))
-        if (apsMode == ApsMode.LGS) maxIob.setIfSmaller(
-            HardLimits.MAX_IOB_LGS,
-            rh.gs(app.aaps.core.ui.R.string.limiting_iob, HardLimits.MAX_IOB_LGS, rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)),
-            this
-        )
-        return maxIob
     }
 
     override fun configuration(): JSONObject =

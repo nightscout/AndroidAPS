@@ -33,7 +33,7 @@ class ReceiverStatusStoreImpl @Inject constructor(val context: Context, val rxBu
         get() = lastChargingEvent?.isCharging == true
 
     override val batteryLevel: Int
-        get() = lastChargingEvent?.batterLevel ?: 0
+        get() = lastChargingEvent?.batteryLevel ?: 0
 
     override fun broadcastChargingState() {
         lastChargingEvent?.let { rxBus.send(it) }

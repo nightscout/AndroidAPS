@@ -8,11 +8,13 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
 
 class GlucoseValueDataPoint(
     val data: GV,
     private val profileUtil: ProfileUtil,
     private val rh: ResourceHelper,
+    dateUtil: DateUtil
 ) : DataPointWithLabelInterface {
 
     private fun valueToUnits(units: GlucoseUnit): Double =
@@ -22,7 +24,7 @@ class GlucoseValueDataPoint(
     override fun getY(): Double = valueToUnits(profileUtil.units)
 
     override fun setY(y: Double) {}
-    override val label: String = profileUtil.fromMgdlToStringInUnits(data.value)
+    override val label: String = dateUtil.timeString(data.timestamp) + " " + profileUtil.fromMgdlToStringInUnits(data.value)
     override val duration = 0L
     override val shape get() = if (isPrediction) Shape.PREDICTION else Shape.BG
     override val size = if (isPrediction) 1f else 0.6f

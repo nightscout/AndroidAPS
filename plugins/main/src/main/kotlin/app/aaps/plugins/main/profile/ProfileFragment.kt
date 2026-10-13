@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -93,7 +94,7 @@ class ProfileFragment : DaggerFragment() {
     private fun sumLabel(): String {
         val profile = profilePlugin.getEditedProfile()
         val sum = profile?.let { ProfileSealed.Pure(profile, null).baseBasalSum() } ?: 0.0
-        return " ∑" + decimalFormatter.to2Decimal(sum) + rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
+        return " ∑" + decimalFormatter.to2Decimal(sum) + " " + rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
     }
 
     private var _binding: ProfileFragmentBinding? = null
@@ -322,7 +323,7 @@ class ProfileFragment : DaggerFragment() {
         binding.units.text = rh.gs(R.string.units_colon) + " " + (if (currentProfile.mgdl) rh.gs(app.aaps.core.ui.R.string.mgdl) else rh.gs(app.aaps.core.ui.R.string.mmol))
 
         binding.profileswitch.setOnClickListener {
-            if (loop.isDisconnected) {
+            if (loop.runningMode == RM.Mode.DISCONNECTED_PUMP) {
                 activity?.let { activity -> OKDialog.show(activity, rh.gs(R.string.not_available_full), rh.gs(R.string.smscommunicator_pump_disconnected)) }
             } else {
                 uiInteraction.runProfileSwitchDialog(childFragmentManager, profilePlugin.currentProfile()?.name)

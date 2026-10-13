@@ -3,21 +3,20 @@ package app.aaps.pump.equil.manager.command
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.pump.equil.EquilConst.Prefs.EQUIL_BASAL_SET
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.driver.definition.BasalSchedule
+import app.aaps.pump.equil.keys.EquilBooleanKey
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.Utils
-import java.util.ArrayList
 
 class CmdBasalSet(
     var basalSchedule: BasalSchedule,
     var profile: Profile,
     aapsLogger: AAPSLogger,
-    sp: SP,
+    preferences: Preferences,
     equilManager: EquilManager
-) : BaseSetting(System.currentTimeMillis(), aapsLogger, sp, equilManager) {
+) : BaseSetting(System.currentTimeMillis(), aapsLogger, preferences, equilManager) {
 
     override fun getFirstData(): ByteArray {
         val indexByte = Utils.intToBytes(pumpReqIndex)
@@ -55,8 +54,8 @@ class CmdBasalSet(
 
     override fun decodeConfirmData(data: ByteArray) {
         synchronized(this) {
-            sp.putBoolean(EQUIL_BASAL_SET, true)
-            cmdStatus = true
+            preferences.put(EquilBooleanKey.BasalSet, true)
+            cmdSuccess = true
             (this as Object).notifyAll()
         }
     }

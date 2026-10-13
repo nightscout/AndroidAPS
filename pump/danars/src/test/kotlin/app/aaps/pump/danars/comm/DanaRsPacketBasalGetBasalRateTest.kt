@@ -2,26 +2,13 @@ package app.aaps.pump.danars.comm
 
 import app.aaps.pump.danars.DanaRSTestBase
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.Test
 
 class DanaRsPacketBasalGetBasalRateTest : DanaRSTestBase() {
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is DanaRSPacketBasalGetBasalRate) {
-                it.aapsLogger = aapsLogger
-                it.rxBus = rxBus
-                it.rh = rh
-                it.danaPump = danaPump
-                it.uiInteraction = uiInteraction
-            }
-        }
-    }
-
-    @Test fun runTest() {
-        val packet = DanaRSPacketBasalGetBasalRate(packetInjector)
+    @Test
+    fun runTest() {
+        val packet = DanaRSPacketBasalGetBasalRate(aapsLogger, uiInteraction, rxBus, rh, danaPump)
         // test message decoding
         // rate is 0.01
         val array = ByteArray(100)

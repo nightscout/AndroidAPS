@@ -36,13 +36,6 @@
     <string name="timeout_during_handshake">Timeout durante la connessione - riavvia il bluetooth</string>
     <string name="pump_stopped">Micro stoppato</string>
     <string name="pump_started">Micro avviato</string>
-    <string name="short_status_last_connected">Ultima conn: %1$d min fa</string>
-    <string name="short_status_tbr">TBR: %1$d%% per %2$d / %3$d min</string>
-    <string name="short_status_extended">Esteso: %1$.2f / %2$.2f U per %3$d min</string>
-    <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f U per %3$d min</string>
-    <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Serb.: %1$.2f U</string>
-    <string name="short_status_battery">Batt: %1$d%%</string>
     <string name="release_software_version">Versione Release software</string>
     <string name="ui_processor_software_version">Versione UI processor software</string>
     <string name="pc_processor_software_version">Versione PC processor software</string>

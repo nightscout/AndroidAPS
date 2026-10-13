@@ -4,9 +4,9 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
+import javax.inject.Provider
 
 class CommandSetProfile(
     injector: HasAndroidInjector,
@@ -31,7 +32,7 @@ class CommandSetProfile(
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var config: Config
     @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var instantiator: Instantiator
+    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
 
     init {
         injector.androidInjector().inject(this)
@@ -42,7 +43,7 @@ class CommandSetProfile(
     override fun execute() {
         if (commandQueue.isThisProfileSet(profile) && persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) != null) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set. profile: $profile")
-            callback?.result(instantiator.providePumpEnactResult().success(true).enacted(false))?.run()
+            callback?.result(pumpEnactResultProvider.get().success(true).enacted(false))?.run()
             return
         }
         val r = activePlugin.activePump.setNewBasalProfile(profile)
@@ -61,6 +62,6 @@ class CommandSetProfile(
     override fun log(): String = "SET PROFILE"
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(instantiator.providePumpEnactResult().success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
+        callback?.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
     }
 }

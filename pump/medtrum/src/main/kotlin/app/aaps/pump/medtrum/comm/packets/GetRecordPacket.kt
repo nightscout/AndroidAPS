@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.utils.DateUtil
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.comm.enums.BasalEndReason
 import app.aaps.pump.medtrum.comm.enums.BasalType
@@ -17,6 +16,7 @@ import app.aaps.pump.medtrum.extension.toFloat
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int) : MedtrumPacket(injector) {
@@ -26,6 +26,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
     @Inject lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var medtrumTimeUtil: MedtrumTimeUtil
 
     companion object {
 
@@ -144,7 +145,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
         val typeAndWizard = data.copyOfRange(RESP_RECORD_DATA_START, RESP_RECORD_DATA_START + 1).toInt()
         val bolusCause = data.copyOfRange(RESP_RECORD_DATA_START + 1, RESP_RECORD_DATA_START + 2).toInt()
         val unknown = data.copyOfRange(RESP_RECORD_DATA_START + 2, RESP_RECORD_DATA_START + 4).toInt()
-        val bolusStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_RECORD_DATA_START + 4, RESP_RECORD_DATA_START + 8).toLong())
+        val bolusStartTime = medtrumTimeUtil.convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_RECORD_DATA_START + 4, RESP_RECORD_DATA_START + 8).toLong())
         val bolusNormalAmount = data.copyOfRange(RESP_RECORD_DATA_START + 8, RESP_RECORD_DATA_START + 10).toInt() * 0.05
         val bolusNormalDelivered = data.copyOfRange(RESP_RECORD_DATA_START + 10, RESP_RECORD_DATA_START + 12).toInt() * 0.05
         val bolusExtendedAmount = data.copyOfRange(RESP_RECORD_DATA_START + 12, RESP_RECORD_DATA_START + 14).toInt() * 0.05
@@ -261,8 +262,6 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
     }
 
     private fun handleBasalRecord(data: ByteArray) {
-        val medtrumTimeUtil = MedtrumTimeUtil()
-
         val recordPatchId = data.copyOfRange(RESP_RECORD_PATCH_ID_START, RESP_RECORD_PATCH_ID_END).toLong()
         val recordSequence = data.copyOfRange(RESP_RECORD_SEQUENCE_START, RESP_RECORD_SEQUENCE_END).toInt()
 
@@ -353,7 +352,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
 
     private fun handleTddRecord(data: ByteArray) {
         aapsLogger.debug(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: TDD_RECORD")
-        val timestamp = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_RECORD_DATA_START, RESP_RECORD_DATA_START + 4).toLong())
+        val timestamp = medtrumTimeUtil.convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_RECORD_DATA_START, RESP_RECORD_DATA_START + 4).toLong())
         val timeZoneOffset = data.copyOfRange(RESP_RECORD_DATA_START + 4, RESP_RECORD_DATA_START + 6).toInt()
         val tddMinutes = data.copyOfRange(RESP_RECORD_DATA_START + 6, RESP_RECORD_DATA_START + 8).toInt()
         val glucoseRecordTime = data.copyOfRange(RESP_RECORD_DATA_START + 8, RESP_RECORD_DATA_START + 12).toLong()

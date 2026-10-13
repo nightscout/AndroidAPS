@@ -5,7 +5,6 @@
     <string name="error">Greška</string>
     <string name="profile_set_ok">Ažuriran bazalni profil u pumpi</string>
     <string name="invalid_input">Nevažeći ulazni podaci</string>
-    <string name="bolus_delivering">Isporuka %1$.2f U</string>
     <string name="constraint_applied">Primijenjeno ograničenje!</string>
     <string name="tempbasals_iobtotal_label_string">Ukupni aktivni inzulin:</string>
     <string name="tt_label">TT</string>
@@ -292,4 +291,5 @@
     <string name="saturday_short">Su</string>
     <string name="sunday_short">Ne</string>
     <!--    DecimalFormatterImpl -->
+    <!--    Playback-->
 </resources>

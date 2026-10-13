@@ -1,28 +1,33 @@
 package app.aaps.pump.danars.comm
 
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.dana.DanaPump
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.encryption.BleEncryption
+import app.aaps.pump.danars.encryption.BleEncryption
 import javax.inject.Inject
 
-class DanaRSPacketBolusSetStepBolusStart(
-    injector: HasAndroidInjector,
-    private var amount: Double = 0.0,
-    private var speed: Int = 0
-) : DanaRSPacket(injector) {
+class DanaRSPacketBolusSetStepBolusStart @Inject constructor(
+    private val aapsLogger: AAPSLogger,
+    private val danaPump: DanaPump,
+    private val constraintChecker: ConstraintsChecker
+) : DanaRSPacket() {
 
-    @Inject lateinit var danaPump: DanaPump
-    @Inject lateinit var constraintChecker: ConstraintsChecker
+    private var amount: Double = 0.0
+    private var speed: Int = 0
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_START
+    }
+
+    fun with(amount: Double, speed: Int) = this.also {
+        it.amount = amount
+        it.speed = speed
         // Speed 0 => 12 sec/U, 1 => 30 sec/U, 2 => 60 sec/U
         // HARDCODED LIMIT - if there is one that could be created
-        amount = constraintChecker.applyBolusConstraints(ConstraintObject(amount, aapsLogger)).value()
-        aapsLogger.debug(LTag.PUMPCOMM, "Bolus start : $amount speed: $speed")
+        it.amount = constraintChecker.applyBolusConstraints(ConstraintObject(it.amount, aapsLogger)).value()
+        aapsLogger.debug(LTag.PUMPCOMM, "Bolus start : ${it.amount} speed: $speed")
     }
 
     override fun getRequestParams(): ByteArray {

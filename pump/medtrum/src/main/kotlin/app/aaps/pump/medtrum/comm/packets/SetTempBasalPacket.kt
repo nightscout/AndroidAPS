@@ -1,7 +1,6 @@
 package app.aaps.pump.medtrum.comm.packets
 
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.comm.enums.CommandType.SET_TEMP_BASAL
@@ -9,12 +8,14 @@ import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import kotlin.math.round
 
 class SetTempBasalPacket(injector: HasAndroidInjector, private val absoluteRate: Double, private val durationInMinutes: Int) : MedtrumPacket(injector) {
 
     @Inject lateinit var medtrumPump: MedtrumPump
+    @Inject lateinit var medtrumTimeUtil: MedtrumTimeUtil
 
     companion object {
 
@@ -57,7 +58,7 @@ class SetTempBasalPacket(injector: HasAndroidInjector, private val absoluteRate:
             val basalPatchId = data.copyOfRange(RESP_BASAL_PATCH_ID_START, RESP_BASAL_PATCH_ID_END).toLong()
 
             val rawTime = data.copyOfRange(RESP_BASAL_START_TIME_START, RESP_BASAL_START_TIME_END).toLong()
-            val basalStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_BASAL_START_TIME_START, RESP_BASAL_START_TIME_END).toLong())
+            val basalStartTime = medtrumTimeUtil.convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_BASAL_START_TIME_START, RESP_BASAL_START_TIME_END).toLong())
             aapsLogger.debug(LTag.PUMPCOMM, "Basal status update: type=$basalType, rate=$basalRate, sequence=$basalSequence, patchId=$basalPatchId, startTime=$basalStartTime, rawTime=$rawTime")
 
             medtrumPump.handleBasalStatusUpdate(basalType, basalRate, basalSequence, basalPatchId, basalStartTime)

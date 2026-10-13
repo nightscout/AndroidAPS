@@ -102,14 +102,7 @@ botão ao mesmo tempo para cancelar o emparelhamento)\n
     <string name="combov2_unpair_pump_summary">Desemparelhar o AndroidAPS e o Android da bomba Accu-Chek Combo atualmente pareada</string>
     <string name="combov2_unknown_tbr_detected">TBT desconhecido foi detectada e parada; porcentagem: %1$d%%; duração restante: %2$s</string>
     <string name="combov2_connection_error">Erro de conexão: %1$s</string>
-    <string name="combov2_short_status_last_connection">Última conexão: %1$d minutos atrás</string>
     <string name="combov2_short_status_alert">Alerta: %s</string>
-    <string name="combov2_short_status_last_bolus">Último bolus: %1$s @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">AlvoTemporário: %s</string>
-    <string name="combov2_short_status_reservoir">Reservatório: %dU</string>
-    <string name="combov2_short_status_battery_state_empty">vazio</string>
-    <string name="combov2_short_status_battery_state_low">hipo</string>
-    <string name="combov2_short_status_battery_state_full">cheio</string>
     <string name="combov2_automatic_reservoir_entry">Detectar automaticamente e inserir alteração de reservatório insulina</string>
     <string name="combov2_automatic_battery_entry">Autodetectar e inserir automaticamente a mudança de bateria</string>
     <string name="combov2_timezone_changed">Fuso horário alterado</string>

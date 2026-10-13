@@ -4,13 +4,14 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.ResourceHelper
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
+import javax.inject.Provider
 
 class CommandReadStatus(
     injector: HasAndroidInjector,
@@ -23,7 +24,7 @@ class CommandReadStatus(
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var localAlertUtils: LocalAlertUtils
 
-    @Inject lateinit var instantiator: Instantiator
+    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
 
     init {
         injector.androidInjector().inject(this)
@@ -36,8 +37,8 @@ class CommandReadStatus(
         localAlertUtils.reportPumpStatusRead()
         aapsLogger.debug(LTag.PUMPQUEUE, "CommandReadStatus executed. Reason: $reason")
         val pump = activePlugin.activePump
-        val result = instantiator.providePumpEnactResult().success(false)
-        val lastConnection = pump.lastDataTime()
+        val result = pumpEnactResultProvider.get().success(false)
+        val lastConnection = pump.lastDataTime
         if (lastConnection > System.currentTimeMillis() - T.mins(1).msecs()) result.success(true)
         callback?.result(result)?.run()
     }
@@ -47,6 +48,6 @@ class CommandReadStatus(
     override fun log(): String = "READSTATUS $reason"
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(instantiator.providePumpEnactResult().success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
+        callback?.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
     }
 }

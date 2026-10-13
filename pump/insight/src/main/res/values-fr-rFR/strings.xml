@@ -36,13 +36,6 @@
     <string name="timeout_during_handshake">Expiration pendant l\'appairage - réinitialiser le Bluetooth</string>
     <string name="pump_stopped">Pompe arrêtée</string>
     <string name="pump_started">Pompe démarrée</string>
-    <string name="short_status_last_connected">Dernière conn : il y a %1$d min</string>
-    <string name="short_status_tbr">DBT : %1$d%% pour %2$d / %3$d min</string>
-    <string name="short_status_extended">Étendue : %1$.2f / %2$.2f U pour %3$d min</string>
-    <string name="short_status_multiwave">Mixte : %1$.2f / %2$.2f U pour %3$d min</string>
-    <string name="short_status_tdd">DTQ : %1$.2f</string>
-    <string name="short_status_reservoir">Réserv.: %1$.2f U</string>
-    <string name="short_status_battery">Batt.: %1$d%%</string>
     <string name="release_software_version">Version du logiciel</string>
     <string name="ui_processor_software_version">Version du logiciel de processeur UI</string>
     <string name="pc_processor_software_version">Version du logiciel du processeur PC</string>

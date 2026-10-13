@@ -6,8 +6,8 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import dagger.Reusable
 import java.util.Locale
 import javax.inject.Inject
@@ -44,8 +44,8 @@ class ProfileUtilImpl @Inject constructor(
         if (targetUnits == GlucoseUnit.MGDL) (if (valueInMgdl > 0) "+" else "") + decimalFormatter.to0Decimal(valueInMgdl)
         else (if (valueInMgdl > 0) "+" else "") + decimalFormatter.to1Decimal(valueInMgdl * GlucoseUnit.MGDL_TO_MMOLL)
 
-    override fun isMgdl(anyBg: Double) = anyBg >= 39
-    override fun isMmol(anyBg: Double) = anyBg < 39
+    override fun isMgdl(anyBg: Double) = anyBg >= 36
+    override fun isMmol(anyBg: Double) = anyBg < 36
     override fun unitsDetect(anyBg: Double) = if (isMgdl(anyBg)) GlucoseUnit.MGDL else GlucoseUnit.MMOL
 
     override fun valueInUnitsDetect(anyBg: Double, targetUnits: GlucoseUnit): Double =

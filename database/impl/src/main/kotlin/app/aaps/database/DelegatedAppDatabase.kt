@@ -10,9 +10,9 @@ import app.aaps.database.daos.ExtendedBolusDao
 import app.aaps.database.daos.FoodDao
 import app.aaps.database.daos.GlucoseValueDao
 import app.aaps.database.daos.HeartRateDao
-import app.aaps.database.daos.OfflineEventDao
 import app.aaps.database.daos.PreferenceChangeDao
 import app.aaps.database.daos.ProfileSwitchDao
+import app.aaps.database.daos.RunningModeDao
 import app.aaps.database.daos.StepsCountDao
 import app.aaps.database.daos.TemporaryBasalDao
 import app.aaps.database.daos.TemporaryTargetDao
@@ -30,9 +30,9 @@ import app.aaps.database.daos.delegated.DelegatedExtendedBolusDao
 import app.aaps.database.daos.delegated.DelegatedFoodDao
 import app.aaps.database.daos.delegated.DelegatedGlucoseValueDao
 import app.aaps.database.daos.delegated.DelegatedHeartRateDao
-import app.aaps.database.daos.delegated.DelegatedOfflineEventDao
 import app.aaps.database.daos.delegated.DelegatedPreferenceChangeDao
 import app.aaps.database.daos.delegated.DelegatedProfileSwitchDao
+import app.aaps.database.daos.delegated.DelegatedRunningModeDao
 import app.aaps.database.daos.delegated.DelegatedStepsCountDao
 import app.aaps.database.daos.delegated.DelegatedTemporaryBasalDao
 import app.aaps.database.daos.delegated.DelegatedTemporaryTargetDao
@@ -61,7 +61,7 @@ internal class DelegatedAppDatabase(val changes: MutableList<DBEntry>, val datab
     val preferenceChangeDao: PreferenceChangeDao = DelegatedPreferenceChangeDao(changes, database.preferenceChangeDao)
     val foodDao: FoodDao = DelegatedFoodDao(changes, database.foodDao)
     val deviceStatusDao: DeviceStatusDao = DelegatedDeviceStatusDao(changes, database.deviceStatusDao)
-    val offlineEventDao: OfflineEventDao = DelegatedOfflineEventDao(changes, database.offlineEventDao)
+    val runningModeDao: RunningModeDao = DelegatedRunningModeDao(changes, database.runningModeDao)
     val heartRateDao: HeartRateDao = DelegatedHeartRateDao(changes, database.heartRateDao)
     val stepsCountDao: StepsCountDao = DelegatedStepsCountDao(changes, database.stepsCountDao)
     fun clearAllTables() = database.clearAllTables()

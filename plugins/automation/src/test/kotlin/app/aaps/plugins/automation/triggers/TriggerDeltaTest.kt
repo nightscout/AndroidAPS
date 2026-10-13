@@ -11,19 +11,20 @@ import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.whenever
+import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerDeltaTest : TriggerTestBase() {
 
     @BeforeEach
     fun mock() {
         now = 1514766900000L
-        `when`(dateUtil.now()).thenReturn(now)
-        `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
+        whenever(dateUtil.now()).thenReturn(now)
+        whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
     }
 
     @Test fun shouldRunTest() {
-        `when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateValidBgData())
+        whenever(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateValidBgData())
         var t = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(73.0, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
         assertThat(t.delta.deltaType).isEqualTo(DeltaType.LONG_AVERAGE)
@@ -45,7 +46,7 @@ class TriggerDeltaTest : TriggerTestBase() {
         assertThat(t.shouldRun()).isFalse()
         t = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(-0.2, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
-        `when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(ArrayList())
+        whenever(autosensDataStore.getBucketedDataTableCopy()).thenReturn(ArrayList())
         t = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(213.0, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isFalse()
         t = TriggerDelta(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)
@@ -66,7 +67,7 @@ class TriggerDeltaTest : TriggerTestBase() {
     @Test
     fun toJSONTest() {
         val t: TriggerDelta = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(4.1, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL)
-        assertThat(t.toJSON()).isEqualTo(deltaJson)
+        JSONAssert.assertEquals(deltaJson, t.toJSON(), true)
     }
 
     @Test

@@ -4,7 +4,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.defs.PumpDeviceState
 import app.aaps.core.interfaces.rx.bus.RxBus
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.medtronic.comm.MedtronicCommunicationManager
 import app.aaps.pump.medtronic.comm.history.pump.PumpHistoryEntry
@@ -22,31 +21,23 @@ import javax.inject.Inject
 /**
  * Created by andy on 6/14/18.
  */
-class MedtronicUITask {
+class MedtronicUITask @Inject constructor(
+    private val rxBus: RxBus,
+    private val aapsLogger: AAPSLogger,
+    private val medtronicPumpStatus: MedtronicPumpStatus,
+    private val medtronicUtil: MedtronicUtil
+) {
 
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var medtronicPumpStatus: MedtronicPumpStatus
-    @Inject lateinit var medtronicUtil: MedtronicUtil
-
-    private val injector: HasAndroidInjector
-    var commandType: MedtronicCommandType
+    lateinit var commandType: MedtronicCommandType
     var result: Any? = null
     var errorDescription: String? = null
     var parameters: List<Any?>? = null
     var responseType: MedtronicUIResponseType? = null
 
-    constructor(injector: HasAndroidInjector, commandType: MedtronicCommandType) {
-        this.injector = injector
-        this.injector.androidInjector().inject(this)
-        this.commandType = commandType
-    }
-
-    constructor(injector: HasAndroidInjector, commandType: MedtronicCommandType, parameters: List<Any>?) {
-        this.injector = injector
-        this.injector.androidInjector().inject(this)
+    fun with(commandType: MedtronicCommandType, parameters: List<Any>?): MedtronicUITask {
         this.commandType = commandType
         this.parameters = parameters //as Array<Any>
+        return this
     }
 
     fun execute(communicationManager: MedtronicCommunicationManager) {
@@ -136,6 +127,7 @@ class MedtronicUITask {
         )
     }
 
+    @Suppress("unused")
     private fun getFloatFromParameters(index: Int): Float {
         return parameters!![index] as Float
     }
@@ -144,7 +136,7 @@ class MedtronicUITask {
         return parameters!![index] as Double?
     }
 
-    private fun getIntegerFromParameters(index: Int): Int {
+    private fun getIntegerFromParameters(@Suppress("SameParameterValue") index: Int): Int {
         return parameters!![index] as Int
     }
 
@@ -177,12 +169,7 @@ class MedtronicUITask {
         medtronicUtil.setCurrentCommand(null)
     }
 
-    fun hasData(): Boolean {
-        return responseType === MedtronicUIResponseType.Data
-    }
+    fun hasData(): Boolean = responseType == MedtronicUIResponseType.Data
 
-    fun getParameter(index: Int): Any? {
-        return parameters!![index]
-    }
-
+    fun getParameter(index: Int): Any? = parameters!![index]
 }

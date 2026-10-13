@@ -64,9 +64,6 @@
     <string name="insulinlackwarning">Insuline gebrek Waarschuwing</string>
     <string name="needbatteryreplace">Vervanging van de batterij is vereist</string>
     <string name="needinsullinreplace">Insuline vervanging is vereist</string>
-    <string name="pumpversion">pump_version</string>
-    <string name="apsIncarnationNo">aps_incarnation_no</string>
-    <string name="pumpserialno">pump_serial_no</string>
     <string name="diaconn_g8_loginsulinchange_title">Reservoir wissel vastleggen</string>
     <string name="diaconn_g8_loginsulinchange_summary">Zet \"Reservoir wissel\" melding in Nightscout als deze in pomp geschiedenis wordt uitgelezen</string>
     <string name="diaconn_g8_logcanulachange_title">Infuus wissel noteren</string>

@@ -5,7 +5,6 @@
     <string name="error">Chyba</string>
     <string name="profile_set_ok">Bazální profil aktualizován</string>
     <string name="invalid_input">Chybná vstupní data</string>
-    <string name="bolus_delivering">Podávání %1$.2f U</string>
     <string name="constraint_applied">Aplikováno omezení!</string>
     <string name="tempbasals_iobtotal_label_string">Celkem IOB:</string>
     <string name="tt_label">DC</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Pumpa není inicializována, profil nenastaven!</string>
     <string name="failed_update_basal_profile">Chyba při nastavení bazálního profilu</string>
-    <string name="bolus_delivered_successfully">Bolus %1$.2f U byl úspěšně aplikován</string>
     <string name="no_valid_basal_rate">Z pumpy nepřečten žádný platný bazál</string>
     <string name="limiting_iob">IOB omezeno na %1$.1f U: %2$s</string>
     <string name="loop_disabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
@@ -91,7 +89,7 @@
     <string name="alarm">Alarm</string>
     <string name="exportsettings">Export nastavení</string>
     <string name="disableloop">Zakázat smyčku</string>
-    <string name="enableloop">Povolit smyčku</string>
+    <string name="disabled_loop">Smyčka zakázána</string>
     <string name="resumeloop">Obnovit smyčku</string>
     <string name="suspendloop">Pozastavit smyčku</string>
     <string name="duration_min_label">Trvání [min]</string>
@@ -119,8 +117,10 @@
     <string name="duration_label">Trvání</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Pumpa pozastavena</string>
+    <string name="pump_running">Pumpa běží</string>
     <string name="notconfigured">Není nakonfigurováno</string>
     <string name="loopsuspended">Smyčka pozastavena</string>
+    <string name="loop_suspended_by_dst">Smyčka pozastavena kvůli změně času</string>
     <string name="trend_arrow">Šipka trendu</string>
     <string name="a11y_autosens_label">Automatická detekce senzitivity</string>
     <string name="required">pož</string>
@@ -155,19 +155,23 @@
     <string name="treatments_wizard_basaliob_label">IOB z bazálů</string>
     <string name="invalid">NEPLATNÝ</string>
     <string name="login">Přihlášení</string>
+    <string name="logout">Odhlásit</string>
     <string name="prime_fill">Plnění/doplňování</string>
+    <string name="site_rotation">Střídání míst</string>
     <string name="overview_insulin_label">Inzulín</string>
     <string name="stoptemptarget">Stop dočasného cíle</string>
     <string name="closedloop">Uzavřená smyčka</string>
     <string name="openloop">Otevřená smyčka</string>
     <string name="lowglucosesuspend">Ochrana před nízkou glykémií</string>
+    <string name="pump_disconnected">Pumpa odpojena</string>
+    <string name="pump_suspended">Pumpa pozastavena</string>
+    <string name="mode_reverted">Režim byl obnoven</string>
     <string name="dia">DIA</string>
     <string name="ic_short">I:C</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Rušení dočasného bazálu selhalo</string>
     <string name="canceling_eb_failed">Zastavení prodlouženého bolusu selhalo</string>
     <string name="virtualpump_uploadstatus_title">Nahrávat stav pumpy do NS nebo Tidepoolu</string>
-    <string name="suspendloop_label">Zakázaná/pozastavená smyčka</string>
     <string name="iob_label">Aktivní inzulín (IOB)</string>
     <string name="loopstatus_targets">CÍL:</string>
     <string name="loopstatus_OAPS_result">VÝSLEDEK OAPS:</string>
@@ -220,6 +224,8 @@
     <string name="careportal_exercise_message">Cvičení : %1$s</string>
     <string name="careportal_pump_site_change">Výměna setu</string>
     <string name="cgm_sensor_insert">Výměna senzoru</string>
+    <string name="careportal_pump_site_management">Místa aplikace setu</string>
+    <string name="careportal_cgm_site_management">Místa aplikace senzoru</string>
     <string name="careportal_cgmsensorstart">Znovu spuštění senzoru</string>
     <string name="careportal_cgm_sensor_stop">Zastavení senzoru</string>
     <string name="careportal_dad_alert">Hlášení psa</string>
@@ -235,6 +241,7 @@
     <string name="careportal_openapsoffline">OpenAPS vypnuto</string>
     <string name="pump_battery_change">Výměna baterie pumpy</string>
     <string name="temporary_target">Dočasný cíl</string>
+    <string name="running_mode">Režim smyčky</string>
     <string name="careportal_temporarytargetvalue">Hodnota dočasného cíle</string>
     <string name="careportal_temporarytargetcancel">Dočasný cíl konec</string>
     <string name="boluswizard">Bolusová kalkulačka</string>
@@ -252,6 +259,39 @@
     <string name="loop">Smyčka</string>
     <string name="ns">NS</string>
     <string name="record">Záznam</string>
+    <string name="location_front_right_upper_chest">Hruď vpravo</string>
+    <string name="location_front_left_upper_chest">Hruď vlevo</string>
+    <string name="location_side_right_upper_arm">Vnější strana pravé paže nahoře</string>
+    <string name="location_side_left_upper_arm">Vnější strana levé paže nahoře</string>
+    <string name="location_back_right_upper_arm">Zadní strana pravé paže nahoře</string>
+    <string name="location_back_left_upper_arm">Zadní strana levé paže nahoře</string>
+    <string name="location_side_right_upper_abdomen">Vnější strana břicha vpravo nahoře</string>
+    <string name="location_side_left_upper_abdomen">Vnější strana břicha vlevo nahoře</string>
+    <string name="location_side_right_lower_abdomen">Vnější strana břicha vpravo dole</string>
+    <string name="location_side_left_lower_abdomen">Vnější strana břicha vlevo dole</string>
+    <string name="location_front_right_upper_abdomen">Přední strana břicha vpravo nahoře</string>
+    <string name="location_front_left_upper_abdomen">Přední strana břicha vlevo nahoře</string>
+    <string name="location_front_right_lower_abdomen">Přední strana břicha vpravo dole</string>
+    <string name="location_front_left_lower_abdomen">Přední strana břicha vlevo dole</string>
+    <string name="location_back_right_buttock">Pravá strana hýždí</string>
+    <string name="location_back_left_buttock">Levá strana hýždí</string>
+    <string name="location_side_right_upper_thigh">Vnější strana stehna vpravo nahoře</string>
+    <string name="location_side_left_upper_thigh">Vnější strana stehna vlevo nahoře</string>
+    <string name="location_side_right_lower_thigh">Vnější strana stehna vpravo dole</string>
+    <string name="location_side_left_lower_thigh">Vnější strana stehna vlevo dole</string>
+    <string name="location_front_right_upper_thigh">Přední strana stehna vpravo nahoře</string>
+    <string name="location_front_left_upper_thigh">Přední strana stehna vlevo nahoře</string>
+    <string name="location_front_right_lower_thigh">Přední strana stehna vpravo dole</string>
+    <string name="location_front_left_lower_thigh">Přední strana stehna vlevo dole</string>
+    <string name="arrow_up">Nahoře</string>
+    <string name="arrow_up_right">Vpravo nahoře</string>
+    <string name="arrow_right">Vpravo</string>
+    <string name="arrow_down_right">Vpravo dole</string>
+    <string name="arrow_down">Dole</string>
+    <string name="arrow_down_left">Vlevo dole</string>
+    <string name="arrow_left">Vlevo</string>
+    <string name="arrow_up_left">Vlevo nahoře</string>
+    <string name="arrow_center">Uprostřed</string>
     <!--    Command-->
     <string name="connectiontimedout">Vypršel čas připojování</string>
     <!--    PumpEnactResult-->
@@ -297,7 +337,8 @@
     <string name="uel_lgs_loop_mode">REŽIM SMYČKY LGS</string>
     <string name="uel_open_loop_mode">REŽIM OTEVŘENÉ SMYČKY</string>
     <string name="uel_loop_disabled">SMYČKA VYPNUTA</string>
-    <string name="uel_loop_enabled">SMYČKA ZAPNUTA</string>
+    <string name="uel_loop_resumed">SMYČKA OBNOVENA</string>
+    <string name="uel_pump_running">PUMPA BĚŽÍ</string>
     <string name="uel_reconnect">ZNOVU PŘIPOJIT</string>
     <string name="uel_disconnect">ODPOJIT</string>
     <string name="uel_resume">OBNOVIT</string>
@@ -310,7 +351,9 @@
     <string name="uel_cancel_extended_bolus">ZRUŠIT PRODLOUŽENÝ BOLUS</string>
     <string name="uel_cancel_tt">ZRUŠIT DOČASNÝ CÍL</string>
     <string name="uel_careportal">OŠETŘENÍ</string>
+    <string name="uel_sensor_location">MÍSTO APLIKACE SENZORU</string>
     <string name="uel_site_change">VÝMĚNA SETU</string>
+    <string name="uel_site_location">MÍSTO APLIKACE SETU</string>
     <string name="uel_reservoir_change">VÝMĚNA ZÁSOBNÍKU</string>
     <string name="uel_calibration">KALIBRACE</string>
     <string name="uel_prime_bolus">PLNICÍ BOLUS</string>
@@ -373,6 +416,9 @@
     <string name="uel_loop_change">SMYČKA ZMĚNĚNA</string>
     <string name="uel_loop_removed">SMYČKA ODEBRÁNA</string>
     <string name="uel_other">JINÉ</string>
+    <string name="uel_running_mode">REŽIM SMYČKY</string>
+    <string name="uel_running_mode_removed">REŽIM SMYČKY ODSTRANĚN</string>
+    <string name="uel_running_mode_updarted">REŽIM SMYČKY AKTUALIZOVÁN</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Dolní cíl profilu</string>
     <string name="profile_high_target">Horní cíl profilu</string>
@@ -602,4 +648,6 @@
     <string name="rate_percent_duration">Hodnota: %1$.2f U/h (%2$.2f%%) Trvání: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Hodnota</b>: %1$.2f%% (%2$.2f U/h)<br><b>Trvání</b>: %3$d min<br>]]></string>
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Hodnota</b>: %1$.2f U/h (%2$.2f%%) <br><b>Trvání</b>: %3$d min<br>]]></string>
+    <!--    Playback-->
+    <string name="audio_playback_attribution">"AAPS přehrává zvuk"</string>
 </resources>

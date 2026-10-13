@@ -1,12 +1,11 @@
 package app.aaps.core.validators.preferences
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.AttributeSet
 import androidx.annotation.StringRes
 import androidx.preference.ListPreference
-import app.aaps.core.keys.IntPreferenceKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
@@ -23,7 +22,6 @@ open class AdaptiveListIntPreference(
 ) : ListPreference(ctx, attrs) {
 
     @Inject lateinit var preferences: Preferences
-    @Inject lateinit var sharedPrefs: SharedPreferences
 
     // Inflater constructor
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, intKey = null, title = null)
@@ -32,6 +30,27 @@ open class AdaptiveListIntPreference(
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
 
         intKey?.let { key = it.key }
+
+        // Migrate old Int values to String for ListPreference compatibility
+        // AdaptiveListIntPreference extends ListPreference which stores values as String,
+        // but old code may have stored IntKey values as actual Integers.
+        // This causes ClassCastException when ListPreference tries to read the value.
+        intKey?.let { prefKey ->
+            val sp = android.preference.PreferenceManager.getDefaultSharedPreferences(ctx)
+            try {
+                val oldValue = sp.getInt(prefKey.key, -1)
+                if (oldValue != -1) {
+                    // Migrate: remove Int value, write as String
+                    sp.edit()
+                        .remove(prefKey.key)
+                        .putString(prefKey.key, oldValue.toString())
+                        .apply()
+                }
+            } catch (e: ClassCastException) {
+                // Already a String, no migration needed
+            }
+        }
+
         title?.let { this.title = context.getString(it) }
         dialogMessage?.let { this.dialogMessage = context.getString(it) }
         dialogTitle?.let { this.dialogTitle = context.getString(it) }
@@ -51,11 +70,11 @@ open class AdaptiveListIntPreference(
             isVisible = false; isEnabled = false
         }
         preferenceKey.dependency?.let {
-            if (!sharedPrefs.getBoolean(it.key, false))
+            if (!preferences.get(it))
                 isVisible = false
         }
         preferenceKey.negativeDependency?.let {
-            if (sharedPrefs.getBoolean(it.key, false))
+            if (preferences.get(it))
                 isVisible = false
         }
         setDefaultValue(preferenceKey.defaultValue.toString())

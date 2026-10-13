@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Omnipod Dash 幫浦整合（新型號，支援藍牙並且有藍色針頭蓋）。</string>
+    <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">幫浦歷史紀錄</string>
+    <string name="omnipod_dash_history_item_description">描述</string>
+    <string name="omnipod_dash_history_item_amount">數量</string>
+    <string name="omnipod_dash_history_item_source">來源</string>
+    <string name="omnipod_dash_history_item_date">日期</string>
+    <string name="omnipod_dash_history_type">類型：</string>
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_status">藍牙狀態</string>
+    <string name="omnipod_dash_overview_bluetooth_address">藍牙地址</string>
+    <string name="omnipod_dash_overview_firmware_version_value">韌體版本 %1$s / 藍牙版本 %2$s</string>
+    <string name="omnipod_dash_overview_bluetooth_connection_quality">連線品質</string>
+    <string name="omnipod_dash_overview_delivery_status">輸送狀態</string>
+    <!-- Omnipod Dash - Pod Activation Wizard -->
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">請確認使用足夠的胰島素填充新的幫浦，確保可以使用三天。\n\n在填充過程中聽到幫浦發出的兩聲嗶聲，這表示已注入最少 80U 的胰島素。聽到兩聲嗶聲後，請繼續注射完針筒內的全部胰島素。\n\n填充幫浦後，請按 <b>下一步</b>。\n\n<b>注意：</b> 此時不要取下幫浦的針頭蓋。</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">嘗試與新幫浦配對並進行啟動。\n\n當初始化過程完成後，您可以按 <b>下一步</b>。</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">輸送暫停通知時啟用音效</string>
+    <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">無法連線至幫浦</string>
+    <string name="omnipod_dash_found_too_many_pods">找到太多幫浦以進行啟動</string>
+    <string name="omnipod_dash_scan_failed">無法找到可用的幫浦進行啟動</string>
+    <string name="omnipod_dash_generic_error">一般錯誤：%1$s</string>
+    <string name="omnipod_dash_failed_to_send">無法發送指令</string>
+    <string name="omnipod_dash_command_not_sent">指令未發送</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">幫浦未接收到指令</string>
+    <string name="omnipod_dash_unknown">指令狀態未知</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/h，%2$d 分鐘</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_alert_delivery_suspended">胰島素輸送已暫停</string>
+    <string name="omnipod_common_history_total_delivered">總輸送量：%1$.2f U</string>
+    <string name="omnipod_dash_connection_lost">與幫浦失去連線</string>
+    <string name="omnipod_dash_bolus_already_in_progress">另一個注射正在進行中</string>
+    <string name="omnipod_dash_not_enough_insulin">儲液槽中的胰島素不足</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">指令未確認</string>
+    <string name="requested_by_user" comment="26 characters max for translation">用戶請求</string>
+    <string name="profile_set_ok">設定檔設置成功</string>
+    <string name="suspend_delivery_is_unconfirmed">輸送暫停未確認！請手動從 Omnipod 頁面重新整理幫浦狀態，並視需要恢復輸送。</string>
+    <string name="insulin_delivery_suspended">胰島素輸送已暫停</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">幫浦上的時區與手機上的時區不同。基礎率不正確。請切換設定檔以便修復</string>
+    <string name="failed_to_set_the_new_basal_profile">設置新的基礎率設定檔失敗。輸送已暫停</string>
+    <string name="setting_basal_profile_might_have_failed">設置基礎率設定檔可能失敗。輸送可能已暫停！請手動從 Omnipod 頁面重新整理幫浦狀態，並視需要恢復輸送。</string>
+    <string name="bolus_delivery_status_uncertain">注射狀態不確定。請重新整理幫浦狀態，以確認狀態。</string>
+    <string name="temp_basal_out_of_sync">臨時基礎率狀態不如預期！如果之前有運行臨時基礎率已被取消。請檢查已輸送的胰島素和幫浦歷史紀錄
+(請確認AAPS與幫浦在可連線的距離內)</string>
+    <string name="checking_delivery_status">檢查輸送狀態</string>
+    <string name="setting_temp_basal_might_have_basal_failed">設置臨時基礎率可能失敗。如果之前有運行臨時基礎率已被取消。請手動從 Omnipod 頁面重新整理幫浦狀態。</string>
+    <string name="cancel_temp_basal_result_is_uncertain">取消臨時基礎率的結果不確定</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">恢復輸送指令未確認。請重新整理幫浦狀態</string>
+    <string name="cancelling_temp_basal_might_have_failed">取消臨時基礎率可能失敗。如果之前有運行臨時基礎率，可能已被取消。請手動從 Omnipod 頁面重新整理幫浦狀態。</string>
+</resources>

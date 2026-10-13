@@ -4,6 +4,7 @@ import android.os.StrictMode
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.utils.pump.ThreadUtil
 import java.io.BufferedOutputStream
 import java.io.ByteArrayOutputStream
 import java.io.Closeable
@@ -23,7 +24,6 @@ import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.locks.ReentrantLock
 import java.util.regex.Pattern
@@ -33,7 +33,7 @@ import kotlin.concurrent.withLock
 class HttpServer internal constructor(private var aapsLogger: AAPSLogger, val port: Int) : Closeable {
 
     private val serverThread: Thread
-    private val workerExecutor: Executor = Executors.newCachedThreadPool()
+    private val workerExecutor = Executors.newCachedThreadPool()
     private val endpoints: MutableMap<String, (SocketAddress, URI, String?) -> Pair<Int, CharSequence>> =
         ConcurrentHashMap()
     private var serverSocket: ServerSocket? = null
@@ -53,6 +53,7 @@ class HttpServer internal constructor(private var aapsLogger: AAPSLogger, val po
     }
 
     override fun close() {
+        workerExecutor.shutdown()
         try {
             serverSocket?.close()
             serverSocket = null
@@ -165,7 +166,7 @@ class HttpServer internal constructor(private var aapsLogger: AAPSLogger, val po
             val socket = serverSocket!!.accept()
             aapsLogger.info(LTag.GARMIN, "accept " + socket.remoteSocketAddress)
             workerExecutor.execute {
-                Thread.currentThread().name = "worker" + Thread.currentThread().id
+                Thread.currentThread().name = "worker" + ThreadUtil.threadId()
                 try {
                     socket.use { s ->
                         s.soTimeout = 10_000

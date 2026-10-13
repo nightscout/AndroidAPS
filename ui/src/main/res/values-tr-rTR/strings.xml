@@ -37,6 +37,7 @@
     <string name="format_cob_ic">%1$.1fg Kİ: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">Toplam</string>
+    <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <string name="fill_warning">Lütfen miktarın infüzyon setinizin özelliklerine uygun olduğundan emin olun!</string>
     <string name="record_pump_site_change">İnfüzyon seti değişimini kaydet</string>
@@ -134,6 +135,9 @@
     <string name="change_your_input">Girişinizi değiştirin!</string>
     <string name="confirm_treatment">Lütfen tedaviyi onaylayın</string>
     <string name="recalculate">Tekrar Hesapla</string>
+    <!--    Widget-->
+    <string name="use_black_color">Siyah renk kullanın</string>
+    <string name="widget_configuration">Araç yapılandırması</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>İkisi de</item>
         <item>Sadece pozitif</item>

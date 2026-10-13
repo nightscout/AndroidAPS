@@ -80,6 +80,10 @@ class MedtrumOverviewViewModel @Inject constructor(
     val patchExpiry: LiveData<String>
         get() = _patchExpiry
 
+    private val _patchAge = SingleLiveEvent<String>()
+    val patchAge: LiveData<String>
+        get() = _patchAge
+
     private val _activeBolusStatus = SingleLiveEvent<String>()
     val activeBolusStatus: LiveData<String>
         get() = _activeBolusStatus
@@ -204,6 +208,18 @@ class MedtrumOverviewViewModel @Inject constructor(
         _fwVersion.postValue(medtrumPump.swVersion)
         _patchNo.postValue(medtrumPump.patchId.toString())
 
+        // Pump age
+        if (medtrumPump.patchStartTime == 0L) {
+            _patchAge.postValue("")
+        } else {
+            val age = System.currentTimeMillis() - medtrumPump.patchStartTime
+            val agoString = dateUtil.timeAgoFullString(age, rh)
+            val ageString = dateUtil.dateAndTimeString(medtrumPump.patchStartTime) + "\n" + agoString
+
+            _patchAge.postValue(ageString)
+        }
+
+        // Pump Expiration
         if (medtrumPump.desiredPatchExpiration) {
             if (medtrumPump.patchStartTime == 0L) {
                 _patchExpiry.postValue("")

@@ -41,6 +41,7 @@ data class APSResult(
 ) : TraceableDBEntry, DBEntryWithTime {
 
     enum class Algorithm {
+        UNKNOWN,
         AMA,
         SMB,
         AUTO_ISF

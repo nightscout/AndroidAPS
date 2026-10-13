@@ -14,6 +14,7 @@ data class TB(
     var type: Type,
     var isAbsolute: Boolean,
     var rate: Double,
+    /** Duration in milliseconds */
     var duration: Long
 ) : HasIDs {
 

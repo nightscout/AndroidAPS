@@ -4,12 +4,9 @@ import android.os.Binder
 import android.os.Handler
 import android.os.HandlerThread
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -17,7 +14,6 @@ import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventMobileToWearWatchface
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.wear.WearPlugin
@@ -47,13 +43,9 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var loop: Loop
     @Inject lateinit var wearPlugin: WearPlugin
-    @Inject lateinit var sp: SP
-    @Inject lateinit var config: Config
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -100,6 +92,8 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     override fun onDestroy() {
         super.onDestroy()
         disposable.clear()
+        handler.removeCallbacksAndMessages(null)
+        handler.looper.quitSafely()
         scope.cancel()
     }
 

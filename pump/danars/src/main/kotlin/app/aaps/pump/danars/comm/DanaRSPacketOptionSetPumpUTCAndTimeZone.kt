@@ -1,22 +1,30 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.encryption.BleEncryption
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.pump.danars.encryption.BleEncryption
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import javax.inject.Inject
 
-class DanaRSPacketOptionSetPumpUTCAndTimeZone(
-    injector: HasAndroidInjector,
-    private var time: Long = 0,
+class DanaRSPacketOptionSetPumpUTCAndTimeZone @Inject constructor(
+    private val aapsLogger: AAPSLogger,
+    dateUtil: DateUtil
+) : DanaRSPacket() {
+
+    private var time: Long = 0
     private var zoneOffset: Int = 0
-) : DanaRSPacket(injector) {
-
     var error = 0
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_OPTION__SET_PUMP_UTC_AND_TIME_ZONE
         aapsLogger.debug(LTag.PUMPCOMM, "Setting UTC pump time ${dateUtil.dateAndTimeAndSecondsString(time)} ZoneOffset: $zoneOffset")
+    }
+
+    fun with(time: Long, zoneOffset: Int) = this.also {
+        this.time = time
+        this.zoneOffset = zoneOffset
     }
 
     override fun getRequestParams(): ByteArray {

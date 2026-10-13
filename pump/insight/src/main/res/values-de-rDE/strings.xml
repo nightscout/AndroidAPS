@@ -30,11 +30,6 @@
     <string name="timeout_during_handshake">Zeitüberschreitung während des Handshakes - Bluetooth zurücksetzen</string>
     <string name="pump_stopped">Pumpe gestoppt</string>
     <string name="pump_started">Pumpe gestartet</string>
-    <string name="short_status_last_connected">Letzte Verb.: vor %1$d min</string>
-    <string name="short_status_tbr">TBR: %1$d%% für %2$d / %3$d min</string>
-    <string name="short_status_extended">Verzögert: %1$.2f / %2$.2f IE für %3$d min.</string>
-    <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f IE für %3$d min.</string>
-    <string name="short_status_reservoir">Reser.: %1$.2f IE</string>
     <string name="release_software_version">Release-Softwareversion</string>
     <string name="ui_processor_software_version">UI-Prozessor-Softwareversion</string>
     <string name="pc_processor_software_version">PC-Prozessor-Softwareversion</string>

@@ -55,6 +55,12 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/running_mode"
+            android:icon="@drawable/ic_running_mode" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/user_entry"
             android:icon="@drawable/ic_user_options" />
 

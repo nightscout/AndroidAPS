@@ -5,7 +5,7 @@ import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerPumpLastConnectionTest : TriggerTestBase() {
@@ -14,8 +14,8 @@ class TriggerPumpLastConnectionTest : TriggerTestBase() {
     fun shouldRunTest() {
 //        System.currentTimeMillis() is always 0
 //        and so is every last connection time
-        assertThat(testPumpPlugin.lastDataTime()).isEqualTo(0L)
-        `when`(dateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
+        assertThat(testPumpPlugin.lastDataTime).isEqualTo(0L)
+        whenever(dateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
         var t = TriggerPumpLastConnection(injector).setValue(110).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.minutesAgo.value).isEqualTo(110)
         assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)

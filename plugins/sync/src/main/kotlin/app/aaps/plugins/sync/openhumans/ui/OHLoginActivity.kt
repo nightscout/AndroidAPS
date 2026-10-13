@@ -108,4 +108,14 @@ class OHLoginActivity : TranslatedDaggerAppCompatActivity() {
             viewModel.submitBearerToken(code)
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        findViewById<CheckBox>(R.id.accept).setOnCheckedChangeListener(null)
+        findViewById<MaterialButton>(R.id.login).setOnClickListener(null)
+        findViewById<MaterialButton>(R.id.cancel).setOnClickListener(null)
+        findViewById<MaterialButton>(R.id.proceed).setOnClickListener(null)
+        findViewById<MaterialButton>(R.id.close).setOnClickListener(null)
+        findViewById<MaterialButton>(R.id.welcome_next).setOnClickListener(null)
+    }
 }

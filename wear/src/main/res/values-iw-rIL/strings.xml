@@ -29,6 +29,7 @@
     <string name="pref_show_phone_battery">הצג את סוללת הטלפון</string>
     <string name="pref_show_rig_battery">הצג מצב סוללה משולבת</string>
     <string name="pref_show_basal_rate">הצג מינון בזאלי</string>
+    <string name="pref_show_temp_target">הצג ערך מטרה זמני</string>
     <string name="pref_show_loop_status">הצג סטטוס לולאה</string>
     <string name="pref_show_bg">הצג רמת סוכר</string>
     <string name="pref_show_direction_arrow">הצג חץ כיוון</string>
@@ -77,7 +78,6 @@
     <string name="menu_default">ברירת מחדל</string>
     <string name="menu_menu">תפריט</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration">משך</string>
     <string name="action_tempt_confirmation">התבקש ערך מטרה זמני</string>
     <string name="action_quick_wizard_confirmation">התבקש אשף מהיר</string>
     <string name="action_user_action_confirmation">נחוצה פעולת משתמש</string>
@@ -87,13 +87,8 @@
     <string name="action_fill_confirmation">התבקש מילוי</string>
     <string name="action_ecarb_confirmation">נדרשו פחמימות</string>
     <string name="action_profile_switch_confirmation">התבקשה החלפת פרופיל</string>
-    <string name="action_target" comment="In temp target menu, single target value">ערך מטרה</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">נמוך</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">גבוה</string>
     <string name="action_carbs">פחמימות</string>
     <string name="action_ecarbs">פחמימות ממושכות</string>
-    <string name="action_percentage">אחוז</string>
-    <string name="action_start_min">התחלה [min]</string>
     <string name="action_duration_h">משך [h]</string>
     <string name="action_insulin">אינסולין</string>
     <string name="action_preset_1">הגדרה מראש 1</string>
@@ -101,7 +96,6 @@
     <string name="action_preset_3">הגדרה מראש 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">כמות חופשית</string>
     <string name="action_confirm">אישור</string>
-    <string name="action_timeshift">היסט זמן</string>
     <string name="bolus_progress">התקדמות הבולוס</string>
     <string name="press_to_cancel">לחצו לביטול</string>
     <string name="cancel_bolus">ביטול בולוס</string>
@@ -135,19 +129,14 @@
     <string name="color_name_black">שחור</string>
     <string name="color_name_multicolor">צבעוני</string>
     <string name="pref_simplify_ui">פשט את הממשק</string>
-    <string name="pref_simplify_ui_sum">מציג רק את השעה ואת רמת הסוכר</string>
     <string name="pref_vibrate_hourly">רטט אחת לשעה</string>
     <string name="pref_show_weeknumber">הצג מס\' שבוע</string>
     <string name="pref_switch_external">החלף נתונים חיצוניים בפני השעון</string>
     <string name="custom_pref_show_seconds">הצג שניות</string>
-    <string name="digitalstyle_pref_your_style">הסגנון שלכם:</string>
     <string name="digitalstyle_style_none">ללא סגנון</string>
     <string name="digitalstyle_style_minimal">סגנון מינימלי</string>
     <string name="digitalstyle_style_shape">סגנון הצורה</string>
     <string name="digitalstyle_style_full">סגנון מלא</string>
-    <string name="digitalstyle_pref_your_color">הצבע שלך:</string>
-    <string name="digitalstyle_pref_your_color_saturation">רווית הצבע שלך:</string>
-    <string name="digitalstyle_pref_your_color_opacity">אטימות הצבע שלכם:</string>
     <string name="bolus_progress_channel_name">התקדמות הבולוס</string>
     <string name="bolus_progress_silent_channel_name">התקדמות בולוס שקטה</string>
     <string name="bolus_progress_channel_description">התקדמות הבולוס וביטול</string>

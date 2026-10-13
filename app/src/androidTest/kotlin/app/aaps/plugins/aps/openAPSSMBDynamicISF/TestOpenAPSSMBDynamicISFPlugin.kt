@@ -21,9 +21,10 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
+import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.aps.openAPSSMB.TestOpenAPSSMBPlugin
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
@@ -50,7 +51,8 @@ class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
     glucoseStatusProvider: GlucoseStatusProvider,
     bgQualityCheck: BgQualityCheck,
     tddCalculator: TddCalculator,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB
 ) : TestOpenAPSSMBPlugin(
     injector,
     aapsLogger,
@@ -69,7 +71,8 @@ class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
     persistenceLayer,
     glucoseStatusProvider,
     bgQualityCheck,
-    tddCalculator
+    tddCalculator,
+    glucoseStatusCalculatorSMB
 ) {
 
     init {

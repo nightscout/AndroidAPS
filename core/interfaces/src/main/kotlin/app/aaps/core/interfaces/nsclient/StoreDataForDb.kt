@@ -8,8 +8,8 @@ import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.FD
 import app.aaps.core.data.model.GV
-import app.aaps.core.data.model.OE
 import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
@@ -26,7 +26,7 @@ interface StoreDataForDb {
     fun addToExtendedBoluses(payload: EB): Boolean
     fun addToTemporaryBasals(payload: TB): Boolean
     fun addToProfileSwitches(payload: PS): Boolean
-    fun addToOfflineEvents(payload: OE): Boolean
+    fun addToRunningModes(payload: RM): Boolean
     fun addToFoods(payload: MutableList<FD>): Boolean
 
     fun addToNsIdGlucoseValues(payload: GV): Boolean
@@ -39,7 +39,7 @@ interface StoreDataForDb {
     fun addToNsIdExtendedBoluses(payload: EB): Boolean
     fun addToNsIdTemporaryBasals(payload: TB): Boolean
     fun addToNsIdProfileSwitches(payload: PS): Boolean
-    fun addToNsIdOfflineEvents(payload: OE): Boolean
+    fun addToNsIdRunningModes(payload: RM): Boolean
     fun addToNsIdDeviceStatuses(payload: DS): Boolean
     fun addToNsIdFoods(payload: FD): Boolean
 
@@ -47,7 +47,7 @@ interface StoreDataForDb {
     fun addToDeleteGlucoseValue(payload: String): Boolean
 
     fun updateDeletedGlucoseValuesInDb()
-    fun storeTreatmentsToDb()
+    fun storeTreatmentsToDb(fullSync: Boolean)
     fun updateDeletedTreatmentsInDb()
     fun storeGlucoseValuesToDb()
     fun storeFoodsToDb()

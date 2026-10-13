@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Integració de la bomba per Omnipod Dash (el nou model amb Bluetooth i agulla amb tap blau).</string>
+    <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">Historial del pod</string>
+    <string name="omnipod_dash_history_item_description">Descripció</string>
+    <string name="omnipod_dash_history_item_source">Font</string>
+    <string name="omnipod_dash_history_item_date">Data</string>
+    <string name="omnipod_dash_history_type">Tipus:</string>
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_status">Estat Bluetooth</string>
+    <string name="omnipod_dash_overview_bluetooth_address">Adreça Bluetooth</string>
+    <!-- Omnipod Dash - Pod Activation Wizard -->
+    <!-- Exceptions -->
+</resources>

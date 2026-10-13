@@ -8,13 +8,10 @@
     <!-- Storage constraint -->
     <string name="disk_full">Frigjør minst %1$d MB fra internminnet! Loop deaktivert!</string>
     <!-- Version Checker -->
-    <string name="old_version">gammel versjon</string>
-    <string name="very_old_version">veldig gammel versjon</string>
     <string name="application_expired">Applikasjon utløpt</string>
-    <string name="new_version_warning">AAPS har ikke kunnet se etter ny versjon på %1$d dager! AAPS vil gå tilbake til LGS-modus om %2$d dager, deretter vil loop bli slått av om %3$d dager. Slå på internett-tilgang slik at AAPS kan se etter ny versjon!</string>
     <string name="running_invalid_version">Vi har oppdaget at du kjører en ugyldig versjon. Loop deaktivert!</string>
     <string name="versionavailable">Versjon %1$s er tilgjengelig</string>
-    <string name="version_expire">Versjon %1$s utløper den %2$s</string>
+    <string name="version_expire">Versjon %1$s utløper den %2$s og da vil loopstatus endres til Stopp ved lavt BS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Rekalkulerte data benyttes fordi noe BS-data mangler eller at BS ankommer på et ikke-forventet tidspunkt. Vil nullstille seg etter ca 24 timer. Ingen handling kreves</string>
@@ -26,7 +23,6 @@
     <string name="limitingextendedbolus">Begrenser forlenget bolus til %1$.1f E på grunn av %2$s</string>
     <string name="limitingcarbs">Begrenser karbohydrater til %1$d g på grunn av %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpen støtter ikke midl. basaler</string>
-    <string name="closedmodedisabledinpreferences">Lukket Loop er deaktivert i innstillinger</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kjører dev-versjonen. Lukket loop ikke aktivert.</string>
     <string name="closed_loop_disabled_with_eb">Lukket loop deaktivert på grunn av forlenget bolus</string>
     <string name="smbalwaysdisabled">SMB alltid på og SMB etter karbohydrater er deaktivert fordi BS-kilden ikke støtter avansert filtrering</string>
@@ -38,7 +34,6 @@
     <string name="completed_well_done">Fullført, bra jobba!</string>
     <string name="not_completed_yet">Enda Ikke fullført</string>
     <string name="time_elapsed">Tid brukt</string>
-    <string name="maxiobset">Maks IOB er angitt riktig</string>
     <string name="hasbgdata">BS tilgjengelig fra valgt kilde</string>
     <string name="synchaswritepermission">Synkroniseringstjeneste har skriverettigheter</string>
     <string name="loopenabled">Loop er aktivert</string>

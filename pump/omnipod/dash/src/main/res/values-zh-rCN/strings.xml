@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Dash - Description -->
+    <string name="omnipod_dash_pump_description">Omnipod Dash的泵集成（支持蓝牙的新型号，带蓝色针帽）。</string>
+    <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">Pod 历史</string>
+    <string name="omnipod_dash_history_item_description">描述</string>
+    <string name="omnipod_dash_history_item_source">来源</string>
+    <string name="omnipod_dash_history_item_date">日期</string>
+    <string name="omnipod_dash_history_type">类型：</string>
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_status">蓝牙状态</string>
+    <string name="omnipod_dash_overview_bluetooth_address">蓝牙地址</string>
+    <string name="omnipod_dash_overview_firmware_version_value">固件 %1$s / 蓝牙 %2$s</string>
+    <string name="omnipod_dash_overview_bluetooth_connection_quality">信号强度</string>
+    <string name="omnipod_dash_overview_delivery_status">输注状态</string>
+    <!-- Omnipod Dash - Pod Activation Wizard -->
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">用足够维持3天的胰岛素充满一个新的Pod。\n\n在填充过程中听到Pod发出两声蜂鸣音。这表明最小80U的填充量已输注。即使在听到两声蜂鸣声后，也要确保完全清空填充注射器。\n\n在填充Pod后，请按<b>下一步</b>。\n\n<b>注意：</b>此时不要取下Pod的针盖。</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">尝试与新Pod配对并为其充盈。\n\n初始化过程成功完成后，您可以按<b>下一步</b>。</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">输注暂停时开启声音通知</string>
+    <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">无法连接到pod</string>
+    <string name="omnipod_dash_found_too_many_pods">找到太多激活的pod</string>
+    <string name="omnipod_dash_scan_failed">找不到可用的pod进行激活</string>
+    <string name="omnipod_dash_generic_error">一般错误： %1$s</string>
+    <string name="omnipod_dash_failed_to_send">发送命令失败：</string>
+    <string name="omnipod_dash_command_not_sent">命令没有发送</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">Pod 没有接收命令</string>
+    <string name="omnipod_dash_unknown">命令的未知状态</string>
+    <string name="omnipod_common_alert_delivery_suspended">胰岛素输注已暂停</string>
+    <string name="omnipod_dash_connection_lost">最后一次连接pod</string>
+    <string name="omnipod_dash_bolus_already_in_progress">另一个大剂量正在输注</string>
+    <string name="omnipod_dash_not_enough_insulin">储药器中的胰岛素不足</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">未确认命令</string>
+    <string name="requested_by_user" comment="26 characters max for translation">用户请求</string>
+</resources>

@@ -19,14 +19,27 @@ import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.*
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.rx.events.EventAppExit
+import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
+import app.aaps.core.interfaces.rx.events.EventDeviceStatusChange
+import app.aaps.core.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
+import app.aaps.core.interfaces.rx.events.EventNSClientRestart
+import app.aaps.core.interfaces.rx.events.EventNewHistoryData
+import app.aaps.core.interfaces.rx.events.EventNewNotification
+import app.aaps.core.interfaces.rx.events.EventPreferenceChange
+import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
+import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventRunningModeChange
+import app.aaps.core.interfaces.rx.events.EventTempTargetChange
+import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.core.utils.JsonHelper.safeGetStringAllowNull
@@ -46,12 +59,12 @@ import app.aaps.plugins.sync.nsclient.data.AlarmAck
 import app.aaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclient.workers.NSClientAddUpdateWorker
 import app.aaps.plugins.sync.nsclient.workers.NSClientMbgWorker
+import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import com.google.common.base.Charsets
 import com.google.common.hash.Hashing
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
 import dagger.android.DaggerService
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.socket.client.IO
@@ -66,20 +79,18 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.net.URISyntaxException
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")
 class NSClientService : DaggerService() {
 
-    @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var nsClientPlugin: NSClientPlugin
@@ -142,7 +153,7 @@ class NSClientService : DaggerService() {
             .subscribe({ event: EventPreferenceChange ->
                            if (event.isChanged(StringKey.NsClientUrl.key) ||
                                event.isChanged(StringKey.NsClientApiSecret.key) ||
-                               event.isChanged(rh.gs(R.string.key_ns_paused))
+                               event.isChanged(NsclientBooleanKey.NsPaused.key)
                            ) {
                                latestDateInReceivedData = 0
                                destroy()
@@ -197,7 +208,7 @@ class NSClientService : DaggerService() {
             .observeOn(aapsSchedulers.io)
             .subscribe({ resend("EventTherapyEventChange") }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventOfflineChange::class.java)
+            .toObservable(EventRunningModeChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ resend("EventOfflineChange") }, fabricPrivacy::logException)
         disposable += rxBus
@@ -209,6 +220,8 @@ class NSClientService : DaggerService() {
     override fun onDestroy() {
         super.onDestroy()
         disposable.clear()
+        handler.removeCallbacksAndMessages(null)
+        handler.looper.quitSafely()
         if (wakeLock?.isHeld == true) wakeLock?.release()
     }
 
@@ -255,7 +268,7 @@ class NSClientService : DaggerService() {
         if (!nsClientPlugin.isAllowed) {
             rxBus.send(EventNSClientNewLog("● NSCLIENT", nsClientPlugin.blockingReason))
             rxBus.send(EventNSClientStatus(nsClientPlugin.blockingReason))
-        } else if (sp.getBoolean(R.string.key_ns_paused, false)) {
+        } else if (preferences.get(NsclientBooleanKey.NsPaused)) {
             rxBus.send(EventNSClientNewLog("● NSCLIENT", "paused"))
             rxBus.send(EventNSClientStatus("Paused"))
         } else if (!nsEnabled) {
@@ -649,7 +662,7 @@ class NSClientService : DaggerService() {
 
     private fun handleAlarm(alarm: JSONObject) {
         if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
-            val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
+            val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, alarm.optString("level"))
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarmObject(alarm)
                 uiInteraction.addNotificationWithAction(nsAlarm)
@@ -661,7 +674,7 @@ class NSClientService : DaggerService() {
 
     private fun handleUrgentAlarm(alarm: JSONObject) {
         if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
-            val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
+            val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, alarm.optString("level"))
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarmObject(alarm)
                 uiInteraction.addNotificationWithAction(nsAlarm)

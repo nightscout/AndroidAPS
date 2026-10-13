@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.ui.dialogs.OKDialog
@@ -243,7 +244,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
                     ).subscribe()
                 }
 
-                if (duration == 10) sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusetemptarget, true)
+                if (duration == 10) preferences.put(BooleanNonKey.ObjectivesTempTargetUsed, true)
             })
         }
         return true

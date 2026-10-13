@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pompa sürücüsü değişti.</string>
     <!--    DateUtil-->
-    <string name="minago">%1$d dak önce</string>
     <string name="minago_long">%1$d dakika önce</string>
-    <string name="hoursago">%1$.1f s önce</string>
     <string name="days_ago">%1$.1f gün önce</string>
     <string name="days_ago_round">%1$.0f gün önce</string>
     <string name="in_days">%1$.0f gün içinde</string>

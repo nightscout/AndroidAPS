@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Wear OS text appearance styles - from deprecated wearable support library -->
+    <style name="TextAppearance.Wearable.Small" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <!-- Theme for preference activities using AndroidX Preferences -->
+    <style name="WearPreferenceTheme" parent="@style/Theme.AppCompat">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="alertDialogTheme">@style/Theme.AppCompat.Dialog.Alert</item>
+    </style>
+
+    <!-- Theme for bolus wizard calculator result -->
+    <style name="WearAppCompatDark" parent="Theme.AppCompat.NoActionBar">
+        <!-- Background -->
+        <item name="android:windowBackground">@android:color/black</item>
+        <!-- Text colors -->
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@color/secondary_text</item>
+        <!-- No Action bar -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- Theme for Tile Configuration Activity -->
+    <style name="TileConfigTheme" parent="Theme.AppCompat">
+        <item name="android:windowBackground">@drawable/tile_config_background</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#CCCCCC</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+    </style>
+
+    <!-- Custom preference style that allows text wrapping -->
+    <style name="PreferenceMultiline" parent="@style/Preference.Material">
+        <item name="android:layout">@layout/preference_material_multiline</item>
+    </style>
+</resources>

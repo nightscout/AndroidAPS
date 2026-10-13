@@ -6,7 +6,7 @@ import com.google.common.truth.Truth.assertThat
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerBolusAgoTest : TriggerTestBase() {
@@ -14,14 +14,14 @@ class TriggerBolusAgoTest : TriggerTestBase() {
     @Test
     fun shouldRunTest() {
         // Set last bolus time to now
-        `when`(persistenceLayer.getNewestBolusOfType(BS.Type.NORMAL)).thenReturn(
+        whenever(persistenceLayer.getNewestBolusOfType(BS.Type.NORMAL)).thenReturn(
             BS(
                 timestamp = now,
                 amount = 0.0,
                 type = BS.Type.NORMAL
             )
         )
-        `when`(dateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
+        whenever(dateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
         var t = TriggerBolusAgo(injector).setValue(110).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.minutesAgo.value).isEqualTo(110)
         assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
@@ -44,7 +44,7 @@ class TriggerBolusAgoTest : TriggerTestBase() {
         t = TriggerBolusAgo(injector).setValue(390).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
         // Set last bolus time to 0
-        `when`(persistenceLayer.getNewestBolusOfType(BS.Type.NORMAL)).thenReturn(
+        whenever(persistenceLayer.getNewestBolusOfType(BS.Type.NORMAL)).thenReturn(
             BS(
                 timestamp = 0,
                 amount = 0.0,

@@ -54,8 +54,8 @@
     <string name="patch_remove_needle_cap">Prepárate para colocar el parche</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">Retire la cinta adhesiva y luego pulse \'Siguiente\'.</string>
-    <string name="patch_remove_needle_cap_desc_2">[Caution1] Si la aguja es visible, pulse \'Descartar\'.</string>
-    <string name="patch_remove_needle_cap_desc_3">[Caution2] Si el parche está húmedo, sucio, o su cinta adhesiva está doblada, pulse \'Descartar\'.</string>
+    <string name="patch_remove_needle_cap_desc_2">[Precaución1] Si la aguja es visible, pulse \'Descartar\'.</string>
+    <string name="patch_remove_needle_cap_desc_3">[Precaución2] Si el parche está húmedo, sucio, o su cinta adhesiva está doblada, pulse \'Descartar\'.</string>
     <string name="patch_remove_protection_tape">Coloque el parche en su cuerpo</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">Limpie y seque el sitio de la aplicación, luego de colocar el parche en la piel.</string>
@@ -64,7 +64,7 @@
     <string name="patch_safety_check">Comprobaciones de seguridad…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">Tardará unos 30 segundos</string>
-    <string name="patch_safety_check_desc_2">[Caution] Para un uso seguro, no retire la palanca que ejecuta la aguja hasta que se complete la verificación de seguridad!</string>
+    <string name="patch_safety_check_desc_2">[Precaución] Para un uso seguro, no retire la palanca de accionamiento de la aguja hasta que haya finalizado la comprobación de seguridad</string>
     <string name="patch_rotate_knob">Inserción de la aguja</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">Gira la palanca de accionamiento de la aguja más de 100° para insertar la aguja y, a continuación, gírala completamente para extraerla</string>
@@ -104,14 +104,14 @@
     <string name="string_changing">Cambiando</string>
     <string name="string_in_progress">Procesando</string>
     <string name="retry">Reintentar</string>
-    <string name="string_caution_not_remove_needle_cap">[Caution] No retires el protector de la aguja ni el soporte adhesivo hasta recibir instrucciones adicionales</string>
+    <string name="string_caution_not_remove_needle_cap">[Precaución] No retires el protector de la aguja ni el soporte adhesivo hasta recibir instrucciones adicionales</string>
     <string name="string_are_you_sure_to_discard_current_patch">¿Estás seguro de descartar el parche actual?</string>
     <string name="needle_insertion_error_1">Error de inserción de la aguja</string>
     <string name="needle_insertion_error_2">Comprueba que la dirección del orificio que queda tras girar la palanca es recta y, a continuación, pulsa en \"Reintentar\".</string>
     <string name="needle_insertion_error_3">Pulsa \'Descartar\' para desactivar el parche</string>
     <string name="string_suspend_time_insulin_delivery_title">Tiempo de suspensión basal</string>
     <string name="string_resume_insulin_delivery_title">Reanudar la administración de insulina</string>
-    <string name="string_resume_insulin_delivery_message">Fin de la suspensión de insulina.\nPulsa \'Confirmar\' para reanudar la administración de insulina.\n\n[Caution]\nLa administración de insulina no se reanudará hasta que pulses \'Confirmar\'.\nSi no pulsas en \'Confirmar\', podrías desarrollar una hiperglucemia</string>
+    <string name="string_resume_insulin_delivery_message">Fin de la suspensión de insulina.\nPulsa \'Confirmar\' para reanudar la administración de insulina.\n\n[Precaución]\nLa administración de insulina no se reanudará hasta que pulses \'Confirmar\'.\nSi no pulsas en \'Confirmar\', podrías desarrollar una hiperglucemia</string>
     <string name="string_suspended_insulin_delivery_message">Se suspende la administración de insulina</string>
     <string name="string_resumed_insulin_delivery_message">Se reanuda la administración de insulina</string>
     <string name="finish">Finalizar</string>

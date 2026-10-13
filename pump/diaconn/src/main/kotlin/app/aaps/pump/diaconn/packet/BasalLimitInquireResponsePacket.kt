@@ -2,11 +2,11 @@ package app.aaps.pump.diaconn.packet
 
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
-import dagger.android.HasAndroidInjector
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.diaconn.DiaconnG8Pump
-import app.aaps.pump.diaconn.R
+import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import app.aaps.pump.diaconn.pumplog.PumpLogUtil
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 /**
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class BasalLimitInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rh: ResourceHelper
 
     init {
@@ -38,7 +38,7 @@ class BasalLimitInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8P
             return
         }
         diaconnG8Pump.maxBasalPerHours = getShortToInt(bufferData).toDouble() / 100.0  // not include tempbasal limit
-        val pumpFirmwareVersion = sp.getString(rh.gs(R.string.pumpversion), "")
+        val pumpFirmwareVersion = preferences.get(DiaconnStringNonKey.PumpVersion)
         if (pumpFirmwareVersion.isNotEmpty() && PumpLogUtil.isPumpVersionGe(pumpFirmwareVersion, 3, 0)) {
             diaconnG8Pump.maxBasal = diaconnG8Pump.maxBasalPerHours * 2.5 // include tempbasal
         } else {

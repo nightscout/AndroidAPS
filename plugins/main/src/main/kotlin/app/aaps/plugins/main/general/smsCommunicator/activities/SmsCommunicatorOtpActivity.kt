@@ -36,6 +36,7 @@ class SmsCommunicatorOtpActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var rh: ResourceHelper
 
     private lateinit var binding: SmscommunicatorActivityOtpBinding
+    private var otpTextWatcher: TextWatcher? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +49,7 @@ class SmsCommunicatorOtpActivity : TranslatedDaggerAppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
-        binding.otpVerifyEdit.addTextChangedListener(object : TextWatcher {
+        otpTextWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 val checkResult = otp.checkOTP(s.toString())
 
@@ -76,7 +77,8 @@ class SmsCommunicatorOtpActivity : TranslatedDaggerAppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 /* left blank because we only need afterTextChanged */
             }
-        })
+        }
+        binding.otpVerifyEdit.addTextChangedListener(otpTextWatcher)
 
         binding.otpReset.setOnClickListener {
             OKDialog.showConfirmation(
@@ -112,6 +114,13 @@ class SmsCommunicatorOtpActivity : TranslatedDaggerAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         updateGui()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        otpTextWatcher?.let { binding.otpVerifyEdit.removeTextChangedListener(it) }
+        binding.otpReset.setOnClickListener(null)
+        binding.otpProvisioning.setOnLongClickListener(null)
     }
 
     private fun updateGui() {

@@ -1,7 +1,7 @@
 package app.aaps.pump.equil.manager.command
 
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.Utils
@@ -11,9 +11,9 @@ class CmdExtendedBolusSet(
     var durationInMinutes: Int,
     var cancel: Boolean,
     aapsLogger: AAPSLogger,
-    sp: SP,
+    preferences: Preferences,
     equilManager: EquilManager
-) : BaseSetting(System.currentTimeMillis(), aapsLogger, sp, equilManager) {
+) : BaseSetting(System.currentTimeMillis(), aapsLogger, preferences, equilManager) {
 
     var step: Int = 0
     var pumpTime: Int = 0
@@ -49,7 +49,7 @@ class CmdExtendedBolusSet(
         // val index = data[4].toInt()
         // val status = data[6].toInt() and 0xff
         synchronized(this) {
-            cmdStatus = true
+            cmdSuccess = true
             (this as Object).notify()
         }
     }

@@ -20,6 +20,7 @@ data class NSTemporaryTarget(
     override val pumpType: String?,
     override val pumpSerial: String?,
     override var app: String? = null,
+    /** Duration in milliseconds */
     val duration: Long,
     val targetBottom: Double,
     val targetTop: Double,

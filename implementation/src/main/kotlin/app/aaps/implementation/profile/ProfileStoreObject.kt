@@ -15,9 +15,9 @@ import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
 import org.json.JSONException
 import org.json.JSONObject
+import javax.inject.Inject
 
-class ProfileStoreObject(
-    override val data: JSONObject,
+class ProfileStoreObject @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,
     private val config: Config,
@@ -26,6 +26,14 @@ class ProfileStoreObject(
     private val hardLimits: HardLimits,
     private val dateUtil: DateUtil
 ) : ProfileStore {
+
+    private lateinit var data: JSONObject
+
+    override fun with(data: JSONObject): ProfileStore = this.also {
+        this.data = data
+    }
+
+    override fun getData(): JSONObject = data
 
     private val cachedObjects = ArrayMap<String, PureProfile>()
 
@@ -44,7 +52,7 @@ class ProfileStoreObject(
         val iso = JsonHelper.safeGetString(data, "created_at") ?: JsonHelper.safeGetString(data, "startDate") ?: return 0
         return try {
             dateUtil.fromISODateString(iso)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             0
         }
     }

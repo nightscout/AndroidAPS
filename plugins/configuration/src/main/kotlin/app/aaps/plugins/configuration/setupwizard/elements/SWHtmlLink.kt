@@ -5,12 +5,18 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.StringRes
-import dagger.android.HasAndroidInjector
+import androidx.appcompat.app.AppCompatActivity
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.keys.interfaces.Preferences
+import javax.inject.Inject
 
-class SWHtmlLink(injector: HasAndroidInjector) : SWItem(injector, Type.HTML_LINK) {
+class SWHtmlLink @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
     private var textLabel: String? = null
-    private var l: TextView? = null
+    private var textId: Int = 0
     private var visibilityValidator: (() -> Boolean)? = null
 
     override fun label(@StringRes label: Int): SWHtmlLink {
@@ -30,14 +36,16 @@ class SWHtmlLink(injector: HasAndroidInjector) : SWItem(injector, Type.HTML_LINK
 
     override fun generateDialog(layout: LinearLayout) {
         val context = layout.context
-        l = TextView(context)
-        l?.id = View.generateViewId()
-        l?.autoLinkMask = Linkify.WEB_URLS
-        if (textLabel != null) l?.text = textLabel else l?.setText(label!!)
-        layout.addView(l)
+        val textView = TextView(context)
+        textView.id = View.generateViewId()
+        textId = textView.id
+        textView.autoLinkMask = Linkify.WEB_URLS
+        if (textLabel != null) textView.text = textLabel else textView.setText(label!!)
+        layout.addView(textView)
     }
 
-    override fun processVisibility() {
-        if (visibilityValidator?.invoke() == false) l?.visibility = View.GONE else l?.visibility = View.VISIBLE
+    override fun processVisibility(activity: AppCompatActivity) {
+        val textView = activity.findViewById<TextView>(textId)
+        textView?.visibility = if (visibilityValidator?.invoke() == false) View.GONE else View.VISIBLE
     }
 }

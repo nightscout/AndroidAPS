@@ -63,7 +63,6 @@
     <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="prerequisites_label">Būtinosios sąlygos</string>
     <string name="prerequisites_what">Ko reikia norint įvesti nustatymus ir pradėti naudoti AndroidAPS?</string>
-    <string name="prerequisites_computer">Kompiuterio su įdiegta ir sukonfigūruota Android Studio programa.</string>
     <string name="prerequisites_pump">Tinkamos insulino pompos, jei ketinate naudoti uždarą ciklą.</string>
     <string name="prerequisites_nightscout">Nightscout, kad galima būtų išsaugoti ir peržiūrėti visų duomenų bei nustatymų istoriją.</string>
     <string name="prerequisites_beanandroiddeveloper">Turėti programavimo ar kodo redagavimo patirties.</string>
@@ -97,7 +96,6 @@
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
-    <string name="insulin_actrapid">Actrapid®/Humulin R®/\"natūralų\" žmogaus insuliną.</string>
     <string name="insulin_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
     <string name="sensitivity_label">Jautrumo įskiepiai</string>
     <string name="sensitivity_adjust">Jautrumo įskiepiai leidžia AndroidAPS prisitaikyti prie laikinų ar trumpalaikių jautrumo insulinui pokyčių (pavyzdžiui, hormoninių pokyčių ar absorbcijos problemų infuzijos vietoje).</string>

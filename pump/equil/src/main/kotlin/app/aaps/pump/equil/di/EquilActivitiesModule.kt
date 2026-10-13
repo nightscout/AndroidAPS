@@ -5,9 +5,6 @@ import app.aaps.pump.equil.ui.EquilHistoryRecordActivity
 import app.aaps.pump.equil.ui.EquilUnPairActivity
 import app.aaps.pump.equil.ui.EquilUnPairDetachActivity
 import app.aaps.pump.equil.ui.dlg.EquilAutoDressingDlg
-import app.aaps.pump.equil.ui.dlg.EquilChangeInsulinDlg
-import app.aaps.pump.equil.ui.dlg.EquilPairConfigDlg
-import app.aaps.pump.equil.ui.dlg.EquilUnPairDlg
 import app.aaps.pump.equil.ui.dlg.LoadingDlg
 import app.aaps.pump.equil.ui.pair.EquilChangeInsulinFragment
 import app.aaps.pump.equil.ui.pair.EquilPairActivity
@@ -26,10 +23,7 @@ import dagger.android.ContributesAndroidInjector
 abstract class EquilActivitiesModule {
 
     @ContributesAndroidInjector abstract fun contributesEquilFragment(): EquilFragment
-    @ContributesAndroidInjector abstract fun contributesEquilChangeInsulinDlg(): EquilChangeInsulinDlg
     @ContributesAndroidInjector abstract fun contributesLoadingDlg(): LoadingDlg
-    @ContributesAndroidInjector abstract fun contributesEquilUnPairDlg(): EquilUnPairDlg
-    @ContributesAndroidInjector abstract fun contributesEquilPairConfigDlg(): EquilPairConfigDlg
     @ContributesAndroidInjector abstract fun contributesEquilAutoDressingDlg(): EquilAutoDressingDlg
 
     @ContributesAndroidInjector abstract fun contributesEquilUnPairDetachActivity(): EquilUnPairDetachActivity

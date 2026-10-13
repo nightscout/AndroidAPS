@@ -30,17 +30,17 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
-import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.BooleanComposedKey
+import app.aaps.core.keys.IntComposedKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.directionToIcon
 import app.aaps.core.objects.extensions.displayText
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.extensions.toVisibilityKeepSpace
 import app.aaps.ui.R
@@ -69,7 +69,7 @@ class Widget : AppWidgetProvider() {
     @Inject lateinit var processedTbrEbData: ProcessedTbrEbData
     @Inject lateinit var loop: Loop
     @Inject lateinit var config: Config
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var decimalFormatter: DecimalFormatter
     @Inject lateinit var persistenceLayer: PersistenceLayer
@@ -115,18 +115,19 @@ class Widget : AppWidgetProvider() {
 
     private fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
         val views = RemoteViews(context.packageName, R.layout.widget_layout)
-        val alpha = sp.getInt(WidgetConfigureActivity.PREF_PREFIX_KEY + appWidgetId, WidgetConfigureActivity.DEFAULT_OPACITY)
+        val alpha = preferences.get(IntComposedKey.WidgetOpacity, appWidgetId)
+        val useBlack = preferences.get(BooleanComposedKey.WidgetUseBlack, appWidgetId)
 
         // Create an Intent to launch MainActivity when clicked
         val intent = Intent(context, uiInteraction.mainActivity).also { it.action = intentAction }
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent)
-        if (config.APS)
+        if (config.APS || useBlack)
             views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0, 0, 0))
-        if (config.AAPSCLIENT1)
+        else if (config.AAPSCLIENT1)
             views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0xE8, 0xC5, 0x0C))
-        if (config.AAPSCLIENT2)
+        else if (config.AAPSCLIENT2)
             views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0x0F, 0xBB, 0xE0))
 
         handler.post {
@@ -182,7 +183,7 @@ class Widget : AppWidgetProvider() {
         if (!lastBgData.isActualBg()) views.setInt(R.id.bg, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
         else views.setInt(R.id.bg, "setPaintFlags", Paint.ANTI_ALIAS_FLAG)
 
-        views.setTextViewText(R.id.time_ago, dateUtil.minAgo(rh, lastBgData.lastBg()?.timestamp))
+        views.setTextViewText(R.id.time_ago, dateUtil.minOrSecAgo(rh, lastBgData.lastBg()?.timestamp))
         //views.setTextViewText(R.id.time_ago_short, "(" + dateUtil.minAgoShort(overviewData.lastBg?.timestamp) + ")")
     }
 
@@ -289,7 +290,7 @@ class Widget : AppWidgetProvider() {
                     when {
                         it > 100.0 -> app.aaps.core.objects.R.drawable.ic_as_above
                         it < 100.0 -> app.aaps.core.objects.R.drawable.ic_as_below
-                        else     -> app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green
+                        else       -> app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green
                     }
                 }
                     ?: app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green
@@ -301,7 +302,7 @@ class Widget : AppWidgetProvider() {
                     when {
                         it > 100.0 -> app.aaps.core.objects.R.drawable.ic_x_as_above
                         it < 100.0 -> app.aaps.core.objects.R.drawable.ic_x_as_below
-                        else     -> app.aaps.core.objects.R.drawable.ic_x_swap_vert
+                        else       -> app.aaps.core.objects.R.drawable.ic_x_swap_vert
                     }
                 }
                     ?: app.aaps.core.objects.R.drawable.ic_x_swap_vert
@@ -320,7 +321,7 @@ class Widget : AppWidgetProvider() {
         val ratioUsed = request?.autosensResult?.ratio ?: 1.0
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {
             val overViewText: ArrayList<String> = ArrayList()
-            if (ratioUsed != 1.0 && ratioUsed != lastAutosensData?.autosensResult?.ratio) overViewText.add(rh.gs(app.aaps.core.ui.R.string.algorithm_short,ratioUsed * 100))
+            if (ratioUsed != 1.0 && ratioUsed != lastAutosensData?.autosensResult?.ratio) overViewText.add(rh.gs(app.aaps.core.ui.R.string.algorithm_short, ratioUsed * 100))
             overViewText.add(
                 String.format(
                     Locale.getDefault(), "%1$.1f→%2$.1f",

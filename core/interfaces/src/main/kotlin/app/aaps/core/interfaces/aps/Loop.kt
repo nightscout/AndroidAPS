@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.aps
 
-import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -45,24 +45,27 @@ interface Loop {
     var closedLoopEnabled: Constraint<Boolean>?
 
     /**
-     * Is loop suspended?
+     * Current running mode
      */
-    val isSuspended: Boolean
+    val runningMode: RM.Mode
 
     /**
-     * Is Low Glucose Suspended mode set?
+     * Current running mode
      */
-    val isLGS: Boolean
+    val runningModeRecord: RM
 
     /**
-     * Is Superbolus running?
+     * Allowed next (following) modes according to current running mode
      */
-    val isSuperBolus: Boolean
+    fun allowedNextModes(): List<RM.Mode>
 
     /**
-     * Is pump disconnected?
+     * Handle RunningMode change
+     * @param newRM New running mode if specified
+     * @param durationInMinutes Duration for new mode in minutes
+     * @return true if change is successful
      */
-    val isDisconnected: Boolean
+    fun handleRunningModeChange(newRM: RM.Mode, action: Action, source: Sources, listValues: List<ValueWithUnit> = emptyList(), durationInMinutes: Int = 0, profile: Profile): Boolean
 
     /**
      * Timestamp of last loop run triggered by new BG
@@ -88,15 +91,6 @@ interface Loop {
      */
     fun minutesToEndOfSuspend(): Int
 
-    /**
-     * Simulate pump disconnection
-     */
-    fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OE.Reason, action: Action, source: Sources, listValues: List<ValueWithUnit> = listOf())
-
-    /**
-     * Suspend loop
-     */
-    fun suspendLoop(durationInMinutes: Int, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>)
     fun disableCarbSuggestions(durationMinutes: Int)
 
     /**
@@ -105,14 +99,4 @@ interface Loop {
      * @param reason Initiator
      */
     fun scheduleBuildAndStoreDeviceStatus(reason: String)
-
-    /**
-     * UI loop modes
-     */
-    fun entries(): Array<CharSequence>
-
-    /**
-     * loop modes
-     */
-    fun entryValues(): Array<CharSequence>
 }

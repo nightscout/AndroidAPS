@@ -67,7 +67,7 @@
     <string name="combov2_setting_tbr_cmddesc">設定 %1$d%% 的臨時基礎速率，持續 %2$d 分鐘</string>
     <string name="combov2_cancelling_tbr">取消正在進行的臨時基礎速率</string>
     <string name="combov2_delivering_bolus_cmddesc">正在注射 %1$.1f U 胰島素</string>
-    <string name="combov2_fetching_tdd_history_cmddesc">正在獲取 TDD 歷史紀錄</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">正在獲取每日總劑量歷史紀錄</string>
     <string name="combov2_updating_pump_datetime_cmddesc">正在更新幫浦日期時間</string>
     <string name="combov2_updating_pump_status_cmddesc">正在更新幫浦狀態</string>
     <string name="combov2_pairing_pin_failure">PIN 無效。檢查是否有輸入錯誤。如果此情況持續發生，請取消並重試配對。</string>
@@ -88,8 +88,8 @@
     <string name="combov2_combo_alert">Combo 警報</string>
     <string name="combov2_current_tbr">%1$d%%（剩餘 %2$d 分鐘）</string>
     <string name="combov2_current_tbr_less_than_1min">%1$d%%（剩餘不到 1 分鐘）</string>
-    <string name="combov2_load_tdds_cancelled">載入 TDD 已取消</string>
-    <string name="combov2_retrieving_tdds_failed">檢索 TDD 失敗</string>
+    <string name="combov2_load_tdds_cancelled">載入每日總劑量已取消</string>
+    <string name="combov2_retrieving_tdds_failed">檢索每日總劑量失敗</string>
     <string name="combov2_battery_low_warning">幫浦電池電量低</string>
     <string name="combov2_reservoir_low_warning">幫浦儲液器液位低</string>
     <string name="combov2_setting_tbr_succeeded">設定臨時基礎率成功</string>
@@ -103,15 +103,7 @@
     <string name="combov2_unpair_pump_summary">將 AndroidAPS 和 Android 與目前配對的 Accu-Chek Combo 幫浦取消配對</string>
     <string name="combov2_unknown_tbr_detected">偵測到未知的臨時基礎率並已停止；百分比：%1$d%%；剩餘持續時間：%2$s</string>
     <string name="combov2_connection_error">連線錯誤：%1$s</string>
-    <string name="combov2_short_status_last_connection">最後連線：%1$d 分鐘前</string>
     <string name="combov2_short_status_alert">警報：%s</string>
-    <string name="combov2_short_status_last_bolus">最後注射：%1$sU @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">臨時基礎速率：%s</string>
-    <string name="combov2_short_status_reservoir">儲液器：%dU</string>
-    <string name="combov2_short_status_battery_state_empty">空</string>
-    <string name="combov2_short_status_battery_state_low">低</string>
-    <string name="combov2_short_status_battery_state_full">滿</string>
-    <string name="combov2_short_status_battery_state">電池：%s</string>
     <string name="combov2_automatic_reservoir_entry">自動偵測並自動輸入胰島素儲液器更換</string>
     <string name="combov2_automatic_battery_entry">自動偵測並自動輸入電池更換</string>
     <string name="combov2_timezone_changed">時區已更改</string>

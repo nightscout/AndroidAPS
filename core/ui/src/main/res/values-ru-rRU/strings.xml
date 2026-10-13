@@ -5,7 +5,6 @@
     <string name="error">Ошибка</string>
     <string name="profile_set_ok">базальный профиль помпы обновлен</string>
     <string name="invalid_input">введенные данные неверны</string>
-    <string name="bolus_delivering">Подается болюс %1$.2f ед</string>
     <string name="constraint_applied">Применено ограничение!</string>
     <string name="tempbasals_iobtotal_label_string">Общий IOB:</string>
     <string name="tt_label">ВЦ</string>
@@ -14,7 +13,6 @@
     <string name="pump_base_basal_rate">%1$.2f ед/ч</string>
     <string name="pump_not_initialized_profile_not_set">помпа не инициализирована, профиль не установлен</string>
     <string name="failed_update_basal_profile">не удалось обновить базальный профиль</string>
-    <string name="bolus_delivered_successfully">Болюс %1$.2f ед. подан успешно</string>
     <string name="no_valid_basal_rate">На помпе не найдены валидные записи о базалe</string>
     <string name="limiting_iob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
     <string name="loop_disabled">ЗЦ ОТМЕНЕН ОГРАНИЧЕНИЯМИ</string>
@@ -91,7 +89,7 @@
     <string name="alarm">Оповещения об опасности</string>
     <string name="exportsettings">Настройки экспорта</string>
     <string name="disableloop">Деактивировать цикл</string>
-    <string name="enableloop">Активировать цикл</string>
+    <string name="disabled_loop">Цикл отключен</string>
     <string name="resumeloop">Возобновить цикл</string>
     <string name="suspendloop">Приостановить цикл</string>
     <string name="duration_min_label">Длительность (мин)</string>
@@ -119,8 +117,10 @@
     <string name="duration_label">Длительность действия</string>
     <string name="shortgramm">грамм</string>
     <string name="pumpsuspended">Работа помпы остановлена</string>
+    <string name="pump_running">Помпа работает</string>
     <string name="notconfigured">Не настроено</string>
     <string name="loopsuspended">ЗЦ остановлен</string>
+    <string name="loop_suspended_by_dst">Помпа остановлена при переходе времени</string>
     <string name="trend_arrow">Стрелка тренда</string>
     <string name="a11y_autosens_label">Auto sens</string>
     <string name="required">надо</string>
@@ -155,19 +155,23 @@
     <string name="treatments_wizard_basaliob_label">Базал IOB</string>
     <string name="invalid">НЕВЕРНО</string>
     <string name="login">Логин</string>
+    <string name="logout">Выход из системы</string>
     <string name="prime_fill">Прайм/заполнение</string>
+    <string name="site_rotation">Вращение места установки</string>
     <string name="overview_insulin_label">Инсулин</string>
     <string name="stoptemptarget">Остановить врем цель</string>
     <string name="closedloop">Замкнутый цикл</string>
     <string name="openloop">Открытый цикл</string>
     <string name="lowglucosesuspend">Приостановка помпы на низкой ГК</string>
+    <string name="pump_disconnected">Помпа отключена</string>
+    <string name="pump_suspended">Работа помпы приостановлена</string>
+    <string name="mode_reverted">Режим возвращен к предыдущему состоянию</string>
     <string name="dia">Время действия инсулина DIA</string>
     <string name="ic_short">IC углкоэф ГУ/инс</string>
     <string name="isf_short">ISF (чувствительность к инсулину)</string>
     <string name="canceling_tbr_failed">Отмена врем базала не состоялась</string>
     <string name="canceling_eb_failed">Сбой отмены пролонгированного болюса</string>
     <string name="virtualpump_uploadstatus_title">Передавать статус помпы в NS или Tidepool</string>
-    <string name="suspendloop_label">Отключенный/приостановленный цикл</string>
     <string name="iob_label">Активный инсулин (IOB)</string>
     <string name="loopstatus_targets">ЦЕЛИ:</string>
     <string name="loopstatus_OAPS_result">РЕЗУЛЬТАТ: OAPS:</string>
@@ -220,6 +224,8 @@
     <string name="careportal_exercise_message">Нагрузка: %1$s</string>
     <string name="careportal_pump_site_change">Смена места катетера помпы</string>
     <string name="cgm_sensor_insert">Установка сенсора мониторинга глюкозы</string>
+    <string name="careportal_pump_site_management">Места установки помпы</string>
+    <string name="careportal_cgm_site_management">Места установки сенсора НМГ</string>
     <string name="careportal_cgmsensorstart">Сарт сенсора</string>
     <string name="careportal_cgm_sensor_stop">Останов сенсора мониторинга</string>
     <string name="careportal_dad_alert">Сигнал служебной собаки</string>
@@ -235,6 +241,7 @@
     <string name="careportal_openapsoffline">OpenAPS в автономном режиме</string>
     <string name="pump_battery_change">Замена батареи помпы</string>
     <string name="temporary_target">Временная цель</string>
+    <string name="running_mode">Текущий режим</string>
     <string name="careportal_temporarytargetvalue">Временное целевое значение</string>
     <string name="careportal_temporarytargetcancel">Отмена временной цели</string>
     <string name="boluswizard">Мастер Болюса</string>
@@ -252,6 +259,39 @@
     <string name="loop">Замкнутый цикл</string>
     <string name="ns">NS</string>
     <string name="record">Запись</string>
+    <string name="location_front_right_upper_chest">Правая сторона груди</string>
+    <string name="location_front_left_upper_chest">Левая сторона груди</string>
+    <string name="location_side_right_upper_arm">Верхняя внешняя часть правого плеча</string>
+    <string name="location_side_left_upper_arm">Верхняя внешняя часть левого плеча</string>
+    <string name="location_back_right_upper_arm">Верхняя внутренняя часть правого плеча</string>
+    <string name="location_back_left_upper_arm">Верхняя внутренняя часть левого плеча</string>
+    <string name="location_side_right_upper_abdomen">Верхняя правая наружная часть живота</string>
+    <string name="location_side_left_upper_abdomen">Верхняя левая наружная часть живота</string>
+    <string name="location_side_right_lower_abdomen">Нижняя правая наружная часть живота</string>
+    <string name="location_side_left_lower_abdomen">Нижняя левая сторона живота</string>
+    <string name="location_front_right_upper_abdomen">Верхняя правая передняя часть живота</string>
+    <string name="location_front_left_upper_abdomen">Верхняя левая передняя часть живота</string>
+    <string name="location_front_right_lower_abdomen">Нижняя правая передняя часть живота</string>
+    <string name="location_front_left_lower_abdomen">Нижняя левая передняя часть живота</string>
+    <string name="location_back_right_buttock">Правая ягодица</string>
+    <string name="location_back_left_buttock">Левая ягодица</string>
+    <string name="location_side_right_upper_thigh">Верхняя часть правой наружной поверхности бедра</string>
+    <string name="location_side_left_upper_thigh">Верхняя часть левой наружной поверхности бедра</string>
+    <string name="location_side_right_lower_thigh">Нижняя часть правой внешней поверхности бедра</string>
+    <string name="location_side_left_lower_thigh">Нижняя часть левой наружной поверхности бедра</string>
+    <string name="location_front_right_upper_thigh">Верхняя часть правой передней части бедра</string>
+    <string name="location_front_left_upper_thigh">Верхняя часть левой передней части бедра</string>
+    <string name="location_front_right_lower_thigh">Нижняя часть правой передней части бедра</string>
+    <string name="location_front_left_lower_thigh">Нижняя часть левой передней части бедра</string>
+    <string name="arrow_up">Вверх</string>
+    <string name="arrow_up_right">Вверх вправо</string>
+    <string name="arrow_right">Вправо</string>
+    <string name="arrow_down_right">Вниз вправо</string>
+    <string name="arrow_down">Вниз</string>
+    <string name="arrow_down_left">Вниз влево</string>
+    <string name="arrow_left">Влево</string>
+    <string name="arrow_up_left">Вверх влево</string>
+    <string name="arrow_center">По центру</string>
     <!--    Command-->
     <string name="connectiontimedout">Истекло время ожидания соединения</string>
     <!--    PumpEnactResult-->
@@ -297,7 +337,8 @@
     <string name="uel_lgs_loop_mode">РЕЖИМ ОСТАНОВКИ НА НИЗКИХ LGS</string>
     <string name="uel_open_loop_mode">РЕЖИМ ОТКРЫТОГО ЦИКЛА</string>
     <string name="uel_loop_disabled">ЦИКЛ ВЫКЛЮЧЕН</string>
-    <string name="uel_loop_enabled">ЦИКЛ ВКЛЮЧЕН</string>
+    <string name="uel_loop_resumed">ЗЦ ВОЗОБНОВЛЕН</string>
+    <string name="uel_pump_running">ПОМПА РАБОТАЕТ</string>
     <string name="uel_reconnect">ПЕРЕПОДКЛЮЧИТЬ</string>
     <string name="uel_disconnect">ОТКЛЮЧИТЬ</string>
     <string name="uel_resume">ВОЗОБНОВИТЬ</string>
@@ -310,7 +351,9 @@
     <string name="uel_cancel_extended_bolus">ОТМЕНИТЬ ПРОЛОНГИРОВАННЫЙ БОЛЮС</string>
     <string name="uel_cancel_tt">ОТМЕНИТЬ ВРЕМЕННУЮ ЦЕЛЬ</string>
     <string name="uel_careportal">ПОРТАЛ ТЕРАПИИ</string>
+    <string name="uel_sensor_location">РАСПОЛОЖЕНИЕ СЕНСОРА</string>
     <string name="uel_site_change">СМЕНА МЕСТА КАТЕТЕРА</string>
+    <string name="uel_site_location">РАСПОЛОЖЕНИЕ МЕСТА УСТАНОВКИ</string>
     <string name="uel_reservoir_change">ЗАМЕНА РЕЗЕРВУАРА</string>
     <string name="uel_calibration">КАЛИБРОВКА</string>
     <string name="uel_prime_bolus">НАЧАТЬ БОЛЮС</string>
@@ -373,6 +416,9 @@
     <string name="uel_loop_change">КОНТУР ИЗМЕНЕН</string>
     <string name="uel_loop_removed">КОНТУР УДАЛЕН</string>
     <string name="uel_other">ДРУГОЕ</string>
+    <string name="uel_running_mode">РАБОЧИЙ РЕЖИМ</string>
+    <string name="uel_running_mode_removed">РАБОЧИЙ РЕЖИМ УДАЛЕН</string>
+    <string name="uel_running_mode_updarted">РАБОЧИЙ РЕЖИМ ОБНОВЛЕН</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Нижнее целевое значение профиля</string>
     <string name="profile_high_target">Верхнее целевое значение профиля</string>
@@ -602,4 +648,6 @@
     <string name="rate_percent_duration">Скорость: %1$.2fед/ч (%2$.2f%%) Продолжительность %3$d мин</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Скорость</b>:%1$.2f %% (%2$.2f ед/ч)<br><b> Продолжительность</b> %3$d мин<br>]]></string>
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Скорость</b>: %1$.2f ед/ч (%2$.2f%%) <br><b>Продолжительность</b>: %3$d мин<br>]]></string>
+    <!--    Playback-->
+    <string name="audio_playback_attribution">"AAPS воспроизводит аудио"</string>
 </resources>

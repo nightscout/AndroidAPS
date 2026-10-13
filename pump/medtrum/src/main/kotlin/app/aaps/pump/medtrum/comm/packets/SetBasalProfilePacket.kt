@@ -1,17 +1,18 @@
 package app.aaps.pump.medtrum.comm.packets
 
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.comm.enums.CommandType.SET_BASAL_PROFILE
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 class SetBasalProfilePacket(injector: HasAndroidInjector, private val basalProfile: ByteArray) : MedtrumPacket(injector) {
 
     @Inject lateinit var medtrumPump: MedtrumPump
+    @Inject lateinit var medtrumTimeUtil: MedtrumTimeUtil
 
     companion object {
 
@@ -41,7 +42,6 @@ class SetBasalProfilePacket(injector: HasAndroidInjector, private val basalProfi
     override fun handleResponse(data: ByteArray): Boolean {
         val success = super.handleResponse(data)
         if (success) {
-            val medtrumTimeUtil = MedtrumTimeUtil()
             val basalType = enumValues<BasalType>()[data.copyOfRange(RESP_BASAL_TYPE_START, RESP_BASAL_TYPE_END).toInt()]
             val basalValue = data.copyOfRange(RESP_BASAL_VALUE_START, RESP_BASAL_VALUE_END).toInt() * 0.05
             val basalSequence = data.copyOfRange(RESP_BASAL_SEQUENCE_START, RESP_BASAL_SEQUENCE_END).toInt()

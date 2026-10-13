@@ -17,7 +17,6 @@
     <string name="smscommunicator_meal_bolus_delivered_tt">Ciljajte %1$s na %2$d minute</string>
     <string name="smscommunicator_remote_commands_allowed">Dopusti daljinske naredbe putem SMS-a</string>
     <string name="smscommunicator_loop_has_been_disabled">Petlja je onemogućena</string>
-    <string name="smscommunicator_loop_has_been_enabled">Petlja je omogućena</string>
     <string name="smscommunicator_loop_is_enabled">Petlja je omogućena</string>
     <string name="smscommunicator_pump_connect_with_code">Za povezivanje pumpe odgovorite s kodom %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Povezivanje s pumpom nije uspjelo</string>
@@ -32,7 +31,6 @@
     <string name="smscommunicator_basal_pct_reply_with_code">Za početak bazalnog %1$d%% za %2$d min odgovorite s kodom %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">Da biste obustavili petlju na %1$d minute, odgovorite s kodom %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Za nastavak petlje odgovorite s kodom %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">Da biste omogućili petlju odgovorite s kodom %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Za onemogućavanje petlje odgovorite s kodom %1$s</string>
     <string name="smscommunicator_tempbasal_set">Temp bazal %1$.2fU/h za %2$d min uspješno je započeo</string>
     <string name="smscommunicator_extended_set">Produženi bolus %1$.2fU za %2$d min uspješno je započeo</string>
@@ -78,7 +76,6 @@
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">Definirajte profil koji je dostupan izvan mreže.</string>
     <string name="a11y_add_new_to_list">dodaj novi na popis</string>
     <string name="do_you_want_switch_profile">Želite li promijeniti profil i odbaciti promjene napravljene na trenutnom profilu?</string>
     <string name="save_or_reset_changes_first">Prvo spremite ili poništite trenutne promjene</string>

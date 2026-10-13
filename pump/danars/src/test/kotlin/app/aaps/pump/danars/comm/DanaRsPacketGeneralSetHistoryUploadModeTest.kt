@@ -1,23 +1,14 @@
 package app.aaps.pump.danars.comm
 
 import app.aaps.pump.danars.DanaRSTestBase
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class DanaRsPacketGeneralSetHistoryUploadModeTest : DanaRSTestBase() {
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is DanaRSPacketGeneralSetHistoryUploadMode) {
-                it.aapsLogger = aapsLogger
-            }
-        }
-    }
-
-    @Test fun runTest() {
-        val packet = DanaRSPacketGeneralSetHistoryUploadMode(packetInjector, 1)
+    @Test
+    fun runTest() {
+        val packet = DanaRSPacketGeneralSetHistoryUploadMode(aapsLogger).with(1)
         // test params
         Assertions.assertEquals(1.toByte(), packet.getRequestParams()[0])
         // test message decoding

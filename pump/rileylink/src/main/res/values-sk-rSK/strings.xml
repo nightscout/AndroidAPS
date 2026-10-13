@@ -9,7 +9,10 @@
     <string name="pump_status_timeout_comm">Uplynul časový limit komunikácie</string>
     <string name="pump_status_pump_unreachable">Pumpa nedostupná</string>
     <string name="pump_status_invalid_config">Neplatná konfigurácia</string>
-    <!-- RL keys -->
+    <string name="medtronic_pump_encoding_4b6b_local">Softvérové kódovanie 4b6b</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardvérové kódovanie 4b6b</string>
+    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Celosvetové (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Vyhľadávanie</string>
     <string name="riley_link_ble_config_scan_stop">Stop</string>

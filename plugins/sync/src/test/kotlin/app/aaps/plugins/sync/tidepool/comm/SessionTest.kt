@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 
 class SessionTest {
 
-    private val session = Session("", "", null)
+    private val session = Session("", null)
 
     @Test
     fun emptySession() {

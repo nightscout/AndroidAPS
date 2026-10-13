@@ -6,14 +6,14 @@ import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerRecurringTimeTest : TriggerTestBase() {
 
     @BeforeEach fun mock() {
         now = MidnightTime.calc() + T.mins(95).msecs() // 95 min from midnight
-        Mockito.`when`(dateUtil.now()).thenReturn(now)
+        whenever(dateUtil.now()).thenReturn(now)
     }
 
     @Test fun shouldRunTest() {

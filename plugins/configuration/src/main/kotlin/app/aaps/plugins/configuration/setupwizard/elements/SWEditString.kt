@@ -8,10 +8,15 @@ import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import app.aaps.core.keys.StringKey
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringPreferenceKey
+import javax.inject.Inject
 
-class SWEditString(injector: HasAndroidInjector) : SWItem(injector, Type.STRING) {
+class SWEditString @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
     private var validator: ((string: String) -> Boolean)? = null
     private var updateDelay = 0L
@@ -32,7 +37,7 @@ class SWEditString(injector: HasAndroidInjector) : SWItem(injector, Type.STRING)
         editText.id = View.generateViewId()
         editText.inputType = InputType.TYPE_CLASS_TEXT
         editText.maxLines = 1
-        editText.setText(sp.getString(preference, ""))
+        editText.setText(preferences.get(preference as StringPreferenceKey))
         layout.addView(editText)
         super.generateDialog(layout)
         editText.addTextChangedListener(object : TextWatcher {
@@ -45,8 +50,8 @@ class SWEditString(injector: HasAndroidInjector) : SWItem(injector, Type.STRING)
         })
     }
 
-    fun preference(preference: StringKey): SWEditString {
-        this.preference = preference.key
+    fun preference(preference: StringPreferenceKey): SWEditString {
+        this.preference = preference
         return this
     }
 
