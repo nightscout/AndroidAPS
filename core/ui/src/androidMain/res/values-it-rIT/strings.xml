@@ -121,6 +121,8 @@
     <string name="invalid_profile">Profilo non valido!</string>
     <string name="no_profile_set">NESSUN PROFILO IMPOSTATO</string>
     <string name="profile_switch_no_insulin">Impossibile cambiare profilo: nessuna insulina è in uso, e nessuna è stata selezionata.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Il tempo dell\'interruttore del profilo deve essere entro %1$d ore di ora.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Il target temporaneo deve iniziare entro %1$d ore da ora.</string>
     <string name="profile_switch_select_insulin_hint">Non è ancora in uso insulina. Selezionare l\'insulina che si sta utilizzando, quindi questo pulsante del profilo potrà registrarla.</string>
     <string name="insulin_activation_failed">L’insulina non è cambiata. L’insulina precedente è ancora in uso.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">L\'insulina non è stata cambiata: %1$s. La tua insulina precedente è ancora in uso.</string>
