@@ -112,6 +112,22 @@ interface ProfileFunction {
     ): PS?
 
     /**
+     * Why [createProfileSwitch] would refuse a switch to [profileName] with these values, as a sentence for the
+     * user, or null when it would accept it. It runs the same check and writes nothing, so a caller can refuse
+     * before it asks the user to confirm, and can say why when the switch failed.
+     */
+    suspend fun profileSwitchRefusal(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, iCfg: ICfg): String?
+
+    /**
+     * The same as the other [profileSwitchRefusal], for a switch that changes the active profile. [timestamp] is the
+     * one given to [createProfileSwitch]: 0 means now.
+     */
+    suspend fun profileSwitchRefusal(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long = 0L): String?
+
+    /** The same as [profileSwitchRefusal], for the switch [createProfileSwitchWithNewInsulin] would create. */
+    suspend fun insulinSwitchRefusal(iCfg: ICfg): String?
+
+    /**
      * Re-apply the currently active profile switch with a different insulin configuration.
      * Preserves the original profile name, percentage, timeshift, and remaining duration.
      *

@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.SystemClock
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -73,7 +74,9 @@ import app.aaps.pump.insight.app_layer.history.history_events.TubeFilledEvent
 import app.aaps.pump.insight.app_layer.parameter_blocks.ActiveBRProfileBlock
 import app.aaps.pump.insight.app_layer.parameter_blocks.BRProfile1Block
 import app.aaps.pump.insight.app_layer.parameter_blocks.BRProfileBlock
+import app.aaps.pump.insight.app_layer.parameter_blocks.FactoryMinBasalAmountBlock
 import app.aaps.pump.insight.app_layer.parameter_blocks.FactoryMinBolusAmountBlock
+import app.aaps.pump.insight.app_layer.parameter_blocks.MaxBasalAmountBlock
 import app.aaps.pump.insight.app_layer.parameter_blocks.MaxBolusAmountBlock
 import app.aaps.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock
 import app.aaps.pump.insight.app_layer.remote_control.CancelBolusMessage
@@ -461,14 +464,22 @@ class InsightPlugin(
         rxBus.send(EventRefreshOverview("LocalInsightPlugin::fetchStatus", false))
     }
 
-    @Throws(Exception::class) private fun fetchLimitations() {
+    @VisibleForTesting
+    @Throws(Exception::class) internal fun fetchLimitations() {
         connectionService?.let { service ->
             ParameterBlockUtil.readParameterBlock(service, Service.CONFIGURATION, MaxBolusAmountBlock::class.java)?.let {
                 maximumBolusAmount = it.amountLimitation
-                pumpDescription.basalMaximumRate = it.amountLimitation
             }
             ParameterBlockUtil.readParameterBlock(service, Service.CONFIGURATION, FactoryMinBolusAmountBlock::class.java)?.let {
                 minimumBolusAmount = it.amountLimitation
+            }
+            // The basal limits have blocks of their own. The bolus limits were used here by mistake,
+            // so a basal above the max basal of the pump passed the profile check and a basal below
+            // the min bolus failed it.
+            ParameterBlockUtil.readParameterBlock(service, Service.CONFIGURATION, MaxBasalAmountBlock::class.java)?.let {
+                pumpDescription.basalMaximumRate = it.amountLimitation
+            }
+            ParameterBlockUtil.readParameterBlock(service, Service.CONFIGURATION, FactoryMinBasalAmountBlock::class.java)?.let {
                 pumpDescription.basalMinimumRate = it.amountLimitation
             }
             limitsFetched = true

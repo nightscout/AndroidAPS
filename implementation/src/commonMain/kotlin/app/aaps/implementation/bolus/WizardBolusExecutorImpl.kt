@@ -40,11 +40,11 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.profile.ProfileSealed
@@ -245,8 +245,7 @@ class WizardBolusExecutorImpl(
         if (constraintChecker.applyCarbsConstraints(ConstraintObject(eCarbsGrams, aapsLogger)).value() != eCarbsGrams)
             return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
         val insulinAfterConstraints = wizard.insulinAfterConstraints
-        val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
-        if (abs(insulinAfterConstraints - wizard.calculatedTotalInsulin) >= minStep)
+        if (Round.isMoreThanRounding(wizard.calculatedTotalInsulin, insulinAfterConstraints, pump.bolusStepSize(insulinAfterConstraints)))
             return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
         // A correction-only QuickWizard (0 carbs) that nets to nothing → reject rather than show an empty confirm.
         if (wizard.calculatedTotalInsulin <= 0.0 && wizard.carbs <= 0)
@@ -271,7 +270,7 @@ class WizardBolusExecutorImpl(
                 carbTimeMinutes = entry.carbTime(),
                 alarm = entry.useAlarm() == QuickWizardEntry.ALWAYS && entry.carbTime() > 0,
                 maxBolus = constraintChecker.getMaxBolusAllowed().value(),
-                bolusStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints),
+                bolusStep = pump.bolusStepSize(wizard.insulinAfterConstraints),
             ),
         )
     }
@@ -309,8 +308,7 @@ class WizardBolusExecutorImpl(
             inputs.useBg, inputs.useCob, inputs.useIob, inputs.useIob, false, inputs.useTt, inputs.useTrend, inputs.alarm, inputs.notes, inputs.carbTime
         )
         val insulinAfterConstraints = wizard.insulinAfterConstraints
-        val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
-        if (abs(insulinAfterConstraints - wizard.calculatedTotalInsulin) >= minStep)
+        if (Round.isMoreThanRounding(wizard.calculatedTotalInsulin, insulinAfterConstraints, pump.bolusStepSize(insulinAfterConstraints)))
             return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
         // Nothing to deliver (e.g. BG below target + high IOB, no carbs): reject so the caller shows the standard
         // "no insulin required" instead of an empty confirmation. The guard lives here so every surface that recomputes
@@ -356,7 +354,7 @@ class WizardBolusExecutorImpl(
                 carbTimeMinutes = inputs.carbTime,
                 alarm = inputs.alarm && inputs.carbTime > 0,
                 maxBolus = constraintChecker.getMaxBolusAllowed().value(),
-                bolusStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints),
+                bolusStep = pump.bolusStepSize(wizard.insulinAfterConstraints),
             ),
         )
     }
@@ -436,6 +434,9 @@ class WizardBolusExecutorImpl(
             // user picked without saying so would be worse than asking them to fix it.
             if (ps.timestamp > 0L && (ps.timestamp - dateUtil.now()) !in Constants.PROFILE_SWITCH_TIME_OFFSET)
                 return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.profile_switch_time_too_far, T.msecs(Constants.PROFILE_SWITCH_TIME_OFFSET.last).hours().toInt()))
+            // The check the switch itself runs (the pump's basal limits, the hard limits). A switch the pump
+            // cannot take is refused here, before the user confirms, not reported as done and silently skipped.
+            profileSwitchRefusal(ps)?.let { return WizardBolusExecutor.PrepareResult.Error(it) }
         }
         // Validate a running-mode change up-front: the master re-checks the mode is still a legal transition
         // (a client/watch list may be stale — TOCTOU), and the temporary modes require a positive duration.
@@ -612,7 +613,7 @@ class WizardBolusExecutorImpl(
             // not-found target surfaces via onError → the commit reports Rejected/Failed (not a silent success).
             p.therapyEventEdits.forEach { applyTherapyEventEdit(it, source, onError) }
             // A profile switch isn't gated on a dose (a PS-only batch funnels through here with a no-op deliver(0,0)).
-            p.profileSwitch?.let { applyProfileSwitch(it, source) }
+            p.profileSwitch?.let { applyProfileSwitch(it, source, onError) }
             // A running-mode change is likewise independent of any dose (an RM-only batch no-ops the deliver(0,0)).
             p.runningMode?.let { applyRunningMode(it, source) }
             // Pump-direct manual actions (relayed from a client, or a master-local dialog) — independent of any dose.
@@ -762,11 +763,16 @@ class WizardBolusExecutorImpl(
         val pumpDescription = activePlugin.activePump.pumpDescription
         val out = mutableListOf<ConfirmationLine>()
         if (insulin > 0.0) {
-            out += ConfirmationLine(ConfirmationRole.BOLUS, rh.gs(InterfacesStrings.confirmation_line, rh.gs(InterfacesStrings.bolus), decimalFormatter.toPumpSupportedBolusWithUnits(insulin, pumpDescription.bolusStep)))
+            // A record-only dose is kept as typed (a pen can give 1.33 U), so it is shown with 2 decimals, not
+            // rounded to the step of the pump.
+            val insulinText =
+                if (recordOnly) rh.gs(InterfacesStrings.format_insulin_units, insulin)
+                else decimalFormatter.toPumpSupportedBolusWithUnits(insulin, pumpDescription.bolusStep)
+            out += ConfirmationLine(ConfirmationRole.BOLUS, rh.gs(InterfacesStrings.confirmation_line, rh.gs(InterfacesStrings.bolus), insulinText))
             if (recordOnly) {
                 out += ConfirmationLine(ConfirmationRole.WARNING, rh.gs(InterfacesStrings.bolus_recorded_only))
                 bolus.iCfg?.let { out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(CoreUiStrings.selected_insulin, it.insulinLabel)) }
-            } else if (abs(insulin - bolus.insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulin)) {
+            } else if (Round.isMoreThanRounding(bolus.insulin, insulin, activePlugin.activePump.bolusStepSize(insulin))) {
                 out += ConfirmationLine(ConfirmationRole.WARNING, rh.gs(InterfacesStrings.bolus_constraint_applied_warn, bolus.insulin, insulin))
             }
         }
@@ -840,17 +846,21 @@ class WizardBolusExecutorImpl(
      * Apply a batch ProfileSwitch via the dialog-free domain path. `profileName` non-null → switch to that named
      * profile from the master's store (a relayed/dialog switch); null → modify the currently active profile (wear / CPP).
      */
-    private suspend fun applyProfileSwitch(ps: BatchAction.ProfileSwitch, source: Sources) {
+    private suspend fun applyProfileSwitch(ps: BatchAction.ProfileSwitch, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit) {
         val psName = ps.profileName
         // The time the user picked, bounded at prepare; 0 = now. A future time is stored as is and
         // ProfileSwitchScheduler arms the start, so the switch is not applied before the user asked.
         val at = ps.timestamp.takeIf { it > 0L } ?: dateUtil.now()
-        if (psName != null) {
-            val store = profileRepository.profile.value ?: return
+        val created = if (psName != null) {
+            val store = profileRepository.profile.value ?: run {
+                onError(WizardBolusExecutor.Failure(rh.gs(CoreUiStrings.noprofile)))
+                return
+            }
             // Supplied by the caller that asked the user, else the insulin in force. prepare() refuses the
             // batch when neither exists, so null here means the batch bypassed prepare — a bug, not a user state.
             val iCfg = ps.iCfg ?: profileFunction.getRunningOrRequestedICfg() ?: run {
                 aapsLogger.error(LTag.CORE, "applyProfileSwitch: no insulin config available for '$psName' — prepare should have refused this batch")
+                onError(WizardBolusExecutor.Failure(rh.gs(CoreUiStrings.profile_switch_no_insulin)))
                 return
             }
             profileFunction.createProfileSwitch(
@@ -889,6 +899,18 @@ class WizardBolusExecutorImpl(
                 timestamp = ps.timestamp
             )
         }
+        // prepare() checked the same, but things can change before the confirmation (a new pump limit, a
+        // profile edit). Without this the caller was told the switch was done.
+        if (created == null) onError(WizardBolusExecutor.Failure(profileSwitchRefusal(ps) ?: rh.gs(CoreUiStrings.invalid_profile)))
+    }
+
+    /** Why [ProfileFunction.createProfileSwitch] would refuse [ps], or null when it would take it. */
+    private suspend fun profileSwitchRefusal(ps: BatchAction.ProfileSwitch): String? {
+        val psName = ps.profileName ?: return profileFunction.profileSwitchRefusal(ps.durationMinutes, ps.percentage, ps.timeShiftHours, ps.timestamp)
+        // prepare() refuses a missing store or insulin with its own message before this is asked.
+        val store = profileRepository.profile.value ?: return null
+        val iCfg = ps.iCfg ?: profileFunction.getRunningOrRequestedICfg() ?: return null
+        return profileFunction.profileSwitchRefusal(store, psName, ps.durationMinutes, ps.percentage, ps.timeShiftHours, iCfg)
     }
 
     /** The PS line(s) for any batch (wear / client / phone) — target profile name + percentage + optional time-shift + duration + picked time. */

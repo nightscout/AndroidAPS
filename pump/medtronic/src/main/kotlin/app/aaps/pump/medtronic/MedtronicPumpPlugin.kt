@@ -252,8 +252,7 @@ class MedtronicPumpPlugin(
 
         aapsLogger.debug(LTag.PUMP, "initPumpStatusData: $medtronicPumpStatus")
 
-        // this is only thing that can change, by being configured
-        pumpDescription.maxTempAbsolute = medtronicPumpStatus.maxBasal ?: MedtronicIntPreferenceKey.MaxBasal.defaultValue.toDouble()
+        applyMaxBasal()
 
         // set first Medtronic Pump Start
         if (preferences.getIfExists(MedtronicLongNonKey.FirstPumpUse) == null)
@@ -264,6 +263,16 @@ class MedtronicPumpPlugin(
         // preference on every call now, so there is nothing to prime and nothing that can go stale.
 
         this.displayConnectionMessages = false
+    }
+
+    /**
+     * Sets the max temp basal to the max basal the user set for this pump. The pump refuses more.
+     *
+     * Call it again each time the pump type is set: that fills the description from the type again
+     * and puts back the 35 U/h of the type.
+     */
+    fun applyMaxBasal() {
+        pumpDescription.maxTempAbsolute = medtronicPumpStatus.maxBasal ?: preferences.get(MedtronicIntPreferenceKey.MaxBasal).toDouble()
     }
 
     override fun triggerPumpConfigurationChangedEvent() {

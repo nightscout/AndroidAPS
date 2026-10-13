@@ -128,8 +128,15 @@ class DanaRSPlugin(
 
     private var scope: CoroutineScope? = null
 
-    override val pumpDescription
-        get() = PumpDescription().fillFor(danaPump.pumpType())
+    /**
+     * Built on every read, because the pump type is only known after connecting (RS, i or i2), with the
+     * bolus and basal steps the pump is set to (see [DanaPump.applyReadSteps]).
+     *
+     * The steps used to be written into this description from [getPumpStatus], but a getter hands out a
+     * new object each time, so they were lost and a bolus of 1.55 U was refused by a pump set to 0.1 U (#946).
+     */
+    override val pumpDescription: PumpDescription
+        get() = danaPump.applyReadSteps(PumpDescription().fillFor(danaPump.pumpType()))
 
     override suspend fun onStart() {
         super.onStart()
@@ -202,8 +209,6 @@ class DanaRSPlugin(
 
     override suspend fun getPumpStatus(reason: String) {
         danaRSService?.readPumpStatus()
-        pumpDescription.basalStep = danaPump.basalStep
-        pumpDescription.bolusStep = danaPump.bolusStep
     }
 
     // DanaR interface

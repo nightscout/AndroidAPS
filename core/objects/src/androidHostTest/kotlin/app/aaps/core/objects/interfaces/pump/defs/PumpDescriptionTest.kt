@@ -31,4 +31,14 @@ class PumpDescriptionTest {
         assertThat(pumpDescription.tempDurationStep15mAllowed).isEqualTo(PumpType.ACCU_CHEK_COMBO.specialBasalDurations().contains(Capability.BasalRate_Duration15minAllowed))
         assertThat(pumpDescription.tempDurationStep30mAllowed).isEqualTo(PumpType.ACCU_CHEK_COMBO.specialBasalDurations().contains(Capability.BasalRate_Duration30minAllowed))
     }
+
+    @Test fun theMaxExtendedBolusComesFromThePumpType() {
+        assertThat(PumpDescription().fillFor(PumpType.EOFLOW_EOPATCH2).extendedBolusMaxAmount).isEqualTo(25.0)
+        // A pump type without a limit of its own.
+        assertThat(PumpDescription().fillFor(PumpType.ACCU_CHEK_COMBO).extendedBolusMaxAmount).isEqualTo(Double.MAX_VALUE)
+    }
+
+    @Test fun cloneKeepsTheMaxExtendedBolus() {
+        assertThat(PumpDescription().fillFor(PumpType.EOFLOW_EOPATCH2).clone().extendedBolusMaxAmount).isEqualTo(25.0)
+    }
 }

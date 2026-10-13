@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CustomCommand
@@ -168,6 +169,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
             val bolusConstraint = ConstraintObject(0.0, aapsLogger)
             whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(bolusConstraint)
+            whenever(constraintChecker.applyPrimingConstraints(anyOrNull())).thenReturn(PumpInsulin(0.0))
             whenever(constraintChecker.applyExtendedBolusConstraints(anyOrNull())).thenReturn(bolusConstraint)
             val carbsConstraint = ConstraintObject(0, aapsLogger)
             whenever(constraintChecker.applyCarbsConstraints(anyOrNull())).thenReturn(carbsConstraint)
@@ -435,6 +437,19 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         verifyNothingPosted()
     }
     // endregion
+
+    /** A prime is in pump units, so it gets the priming constraint, not the bolus one that takes insulin units. */
+    @Test
+    fun `a prime is constrained in pump units`() = runTest {
+        whenever(constraintChecker.applyPrimingConstraints(anyOrNull())).thenReturn(PumpInsulin(2.5))
+        val prime = DetailedBolusInfo().apply { insulin = 3.0; bolusType = BS.Type.PRIMING }
+
+        backgroundScope.launch { commandQueue.bolus(prime) }
+        yield()
+
+        assertThat(prime.insulin).isEqualTo(2.5)
+        verify(constraintChecker, never()).applyBolusConstraints(any())
+    }
 
     @Test
     fun doTests() = runTest {

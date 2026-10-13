@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -114,4 +115,8 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
         Assertions.assertEquals(0.8, result.cU, 0.01)
     }
 
+    @Test
+    fun theDescriptionIsForTheDanaRv2() {
+        assertThat(danaRv2Plugin.pumpDescription.pumpType).isEqualTo(PumpType.DANA_RV2)
+    }
 }

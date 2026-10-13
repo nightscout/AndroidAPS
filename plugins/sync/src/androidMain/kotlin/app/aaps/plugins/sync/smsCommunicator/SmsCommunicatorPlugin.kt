@@ -711,7 +711,7 @@ class SmsCommunicatorPlugin(
             // The executor takes a temp basal only in the pump's own style, the same rule as for the phone's dialog,
             // so the other style is refused here, before a pass code is spent on it.
             val pumpIsPercent = pump.pumpDescription.tempBasalStyle and PumpDescription.PERCENT == PumpDescription.PERCENT
-            val durationStep = pump.model().tbrSettings()?.durationStep ?: 60
+            val durationStep = pump.pumpDescription.tempDurationStep
             var duration = 30
             if (divided.size > 2) duration = SafeParse.stringToInt(divided[2])
             val profile = profileFunction.getProfile()

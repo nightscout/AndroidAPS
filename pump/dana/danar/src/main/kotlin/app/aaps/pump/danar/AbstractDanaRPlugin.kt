@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.comment
+import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -92,8 +93,15 @@ abstract class AbstractDanaRPlugin protected constructor(
 
     protected var executionService: AbstractDanaRExecutionService? = null
     private var scope: CoroutineScope? = null
-    override var pumpDescription = PumpDescription()
-        protected set
+
+    /**
+     * Built on every read, with the bolus and basal steps the pump is set to (see [DanaPump.applyReadSteps]).
+     *
+     * The steps used to be copied in at [connect], before the pump was read, so the starting 0.1 U of
+     * [DanaPump] was used until the first status read.
+     */
+    override val pumpDescription: PumpDescription
+        get() = danaPump.applyReadSteps(PumpDescription().fillFor(model()))
 
     override suspend fun onStart() {
         super.onStart()
@@ -310,8 +318,6 @@ abstract class AbstractDanaRPlugin protected constructor(
 
     override fun connect(reason: String) {
         executionService?.connect()
-        pumpDescription.basalStep = danaPump.basalStep
-        pumpDescription.bolusStep = danaPump.bolusStep
     }
 
     override fun isConnected(): Boolean =
@@ -330,8 +336,6 @@ abstract class AbstractDanaRPlugin protected constructor(
 
     override suspend fun getPumpStatus(reason: String) {
         executionService?.getPumpStatus()
-        pumpDescription.basalStep = danaPump.basalStep
-        pumpDescription.bolusStep = danaPump.bolusStep
     }
 
     override fun manufacturer(): ManufacturerType = ManufacturerType.Sooil

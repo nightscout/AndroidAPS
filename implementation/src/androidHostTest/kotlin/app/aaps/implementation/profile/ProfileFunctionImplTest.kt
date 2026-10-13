@@ -2,17 +2,22 @@ package app.aaps.implementation.profile
 
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.TestScope
@@ -23,6 +28,8 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -211,7 +218,8 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
         whenever(persistenceLayer.getPermanentProfileSwitchActiveAt(anyLong())).thenReturn(null)
         val at = dateUtil.now() - T.hours(3).msecs()
 
-        createSut().createProfileSwitch(
+        // With text: a switch with no profile in force logs why.
+        createSutWithText().createProfileSwitch(
             durationInMinutes = 30, percentage = 80, timeShiftInHours = 0,
             action = Action.PROFILE_SWITCH, source = Sources.Automation, listValues = emptyList(), timestamp = at
         )
@@ -226,7 +234,8 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
         whenever(persistenceLayer.getPermanentProfileSwitchActiveAt(anyLong())).thenReturn(null)
 
         val before = dateUtil.now()
-        createSut().createProfileSwitch(
+        // With text: a switch with no profile in force logs why.
+        createSutWithText().createProfileSwitch(
             durationInMinutes = 30, percentage = 80, timeShiftInHours = 0,
             action = Action.PROFILE_SWITCH, source = Sources.Automation, listValues = emptyList()
         )
@@ -285,5 +294,140 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
         whenever(config.appInitialized).thenReturn(false)
 
         assertThat(createSut().getRunningOrRequestedICfg()).isEqualTo(someICfg)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // profileSwitchRefusal: the check createProfileSwitch runs, with the reason for the user
+    // ---------------------------------------------------------------------------------------------
+
+    /** With the real English text, so the reason asserted is the one the user reads. */
+    private fun TestScope.createSutWithText() = ProfileFunctionImpl(
+        aapsLogger, preferences, baseText, activePlugin, profileRepository,
+        persistenceLayer, dateUtil, config, hardLimits, notificationManager,
+        CoroutineScope(UnconfinedTestDispatcher(testScheduler))
+    )
+
+    @Test
+    fun aSwitchThePumpAndTheHardLimitsAcceptIsNotRefused() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+
+        assertThat(createSutWithText().profileSwitchRefusal(getValidProfileStore(), TESTPROFILENAME, 0, 100, 0, someICfg)).isNull()
+    }
+
+    /** The profile basal is 1 U/h: at 150 % it is 1.5 U/h, above a pump max basal of 1.2 U/h. */
+    @Test
+    fun aBasalAboveTheMaxBasalOfThePumpIsRefusedWithThePumpReason() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        testPumpPlugin.pumpDescription.basalMaximumRate = 1.2
+
+        assertThat(createSutWithText().profileSwitchRefusal(getValidProfileStore(), TESTPROFILENAME, 0, 150, 0, someICfg))
+            .isEqualTo("Basal rate is not compatible with the current pump and cannot be activated. Reduce the percentage or adjust the basal rate.")
+    }
+
+    @Test
+    fun aProfileThatIsNotInTheStoreIsRefused() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+
+        assertThat(createSutWithText().profileSwitchRefusal(getValidProfileStore(), "no such profile", 0, 100, 0, someICfg))
+            .isEqualTo(baseText.gs(CoreUiStrings.notexists))
+    }
+
+    /** The profile basal is 1 U/h: at 30 % it is 0.3 U/h, below a pump min basal of 0.5 U/h. "Reduce" would be wrong. */
+    @Test
+    fun aBasalBelowTheMinBasalOfThePumpIsRefusedWithItsOwnReason() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        testPumpPlugin.pumpDescription.basalMinimumRate = 0.5
+
+        assertThat(createSutWithText().profileSwitchRefusal(getValidProfileStore(), TESTPROFILENAME, 0, 30, 0, someICfg))
+            .isEqualTo("Basal rate is below the minimum of the current pump and cannot be activated. Raise the percentage or adjust the basal rate.")
+    }
+
+    @Test
+    fun aBasalNotOnFullHoursIsRefusedByAPumpThatTakesOnlyFullHours() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        testPumpPlugin.pumpDescription.is30minBasalRatesCapable = false
+
+        assertThat(createSutWithText().profileSwitchRefusal(storeWithAHalfHourBasal(), TESTPROFILENAME, 0, 100, 0, someICfg))
+            .isEqualTo(baseText.gs(InterfacesStrings.basalprofilenotaligned, baseText.gs(CoreUiStrings.careportal_profileswitch)))
+    }
+
+    /**
+     * The valid test profile, but its basal changes at 0:30. The profile reader refuses such a schedule, so it
+     * cannot come from a stored profile, and the store here is a mock.
+     */
+    private fun storeWithAHalfHourBasal(): ProfileStore {
+        val pure = getValidProfileStore().getSpecificProfile(TESTPROFILENAME)!!
+        pure.basalBlocks = listOf(Block(T.mins(30L).msecs(), 1.0), Block(T.mins(23L * 60 + 30).msecs(), 1.2))
+        return mock { on { getSpecificProfile(TESTPROFILENAME) } doReturn pure }
+    }
+
+    // A change of the active profile: each reason why there is nothing to change has its own sentence.
+
+    @Test
+    fun changingTheActiveProfileWithNoProfileSwitchSaysThatNoProfileIsSet() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getPermanentProfileSwitchActiveAt(anyLong())).thenReturn(null)
+
+        assertThat(createSutWithText().profileSwitchRefusal(60, 120, 0)).isEqualTo(baseText.gs(CoreUiStrings.no_profile_set))
+    }
+
+    @Test
+    fun changingTheActiveProfileWithNoProfileStoreSaysThatNoProfileIsLoaded() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getPermanentProfileSwitchActiveAt(anyLong())).thenReturn(profileSwitch.copy(profileName = TESTPROFILENAME))
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow<ProfileStore?>(null))
+
+        assertThat(createSutWithText().profileSwitchRefusal(60, 120, 0)).isEqualTo(baseText.gs(CoreUiStrings.noprofile))
+    }
+
+    @Test
+    fun changingAnActiveProfileThatIsNotInTheStoreNamesIt() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getPermanentProfileSwitchActiveAt(anyLong())).thenReturn(profileSwitch.copy(profileName = "Gone"))
+
+        assertThat(createSutWithText().profileSwitchRefusal(60, 120, 0)).isEqualTo(baseText.gs(CoreUiStrings.scene_profile_not_found, "Gone"))
+    }
+
+    // insulinSwitchRefusal: the same check, for the switch that changes only the insulin of the running profile
+
+    @Test
+    fun anInsulinSwitchWithNoRunningProfileSaysThatNoProfileIsSet() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(config.appInitialized).thenReturn(true)
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(null)
+
+        assertThat(createSutWithText().insulinSwitchRefusal(someICfg)).isEqualTo(baseText.gs(CoreUiStrings.no_profile_set))
+    }
+
+    /** The running profile is at 150 %: 1.5 U/h, above a pump max basal of 1.2 U/h. A new insulin does not change that. */
+    @Test
+    fun anInsulinSwitchThePumpCannotTakeSaysWhy() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(config.appInitialized).thenReturn(true)
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong()))
+            .thenReturn(effectiveProfileSwitch.copy(originalProfileName = TESTPROFILENAME, originalPercentage = 150))
+        testPumpPlugin.pumpDescription.basalMaximumRate = 1.2
+
+        assertThat(createSutWithText().insulinSwitchRefusal(someICfg))
+            .isEqualTo("Basal rate is not compatible with the current pump and cannot be activated. Reduce the percentage or adjust the basal rate.")
+    }
+
+    @Test
+    fun anInsulinSwitchThatFitsIsNotRefused() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(config.appInitialized).thenReturn(true)
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong()))
+            .thenReturn(effectiveProfileSwitch.copy(originalProfileName = TESTPROFILENAME, originalPercentage = 100))
+
+        assertThat(createSutWithText().insulinSwitchRefusal(someICfg)).isNull()
+    }
+
+    @Test
+    fun changingTheActiveProfileThatThePumpAcceptsIsNotRefused() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        // The fixture's insulin has a DIA of 0, which the hard limits refuse. A real one here.
+        whenever(persistenceLayer.getPermanentProfileSwitchActiveAt(anyLong())).thenReturn(profileSwitch.copy(profileName = TESTPROFILENAME, iCfg = someICfg))
+
+        assertThat(createSutWithText().profileSwitchRefusal(60, 120, 0)).isNull()
     }
 }

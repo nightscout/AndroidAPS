@@ -286,8 +286,9 @@ open class APSResultObject(protected val injector: MetroMemberInjector) : APSRes
             }
             // always report high temp
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT) {
-                val pumpLimit = pump.pumpDescription.pumpType.tbrSettings()?.maxDose ?: 0.0
-                if (percent.toDouble() == pumpLimit) {
+                // The same as DetermineBasalResult: the description, not the pump type.
+                val pumpLimit = pump.pumpDescription.maxTempPercent
+                if (percent == pumpLimit) {
                     aapsLogger.debug(LTag.APS, "TRUE: Pump limit")
                     return true
                 }
@@ -322,7 +323,7 @@ open class APSResultObject(protected val injector: MetroMemberInjector) : APSRes
             }
             // always report high temp
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-                val pumpLimit = pump.pumpDescription.pumpType.tbrSettings()?.maxDose ?: 0.0
+                val pumpLimit = pump.pumpDescription.maxTempAbsolute
                 if (rate == pumpLimit) {
                     aapsLogger.debug(LTag.APS, "TRUE: Pump limit")
                     return true

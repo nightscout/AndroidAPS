@@ -326,7 +326,7 @@ class AutotuneViewModel(
                         )
                         return@launch
                     }
-                    profileFunction.createProfileSwitch(
+                    val switched = profileFunction.createProfileSwitch(
                         profileStore = profileStore,
                         profileName = tunedP.profileName,
                         durationInMinutes = 0,
@@ -339,6 +339,15 @@ class AutotuneViewModel(
                         listValues = listOf(ValueWithUnit.SimpleString(tunedP.profileName)),
                         iCfg = iCfg
                     )
+                    // A refused switch must not look like a done one: say why.
+                    if (switched == null)
+                        rxBus.send(
+                            EventShowDialog.Ok(
+                                title = rh.gs(app.aaps.core.ui.R.string.autotune),
+                                message = profileFunction.profileSwitchRefusal(profileStore, tunedP.profileName, 0, 100, 0, iCfg)
+                                    ?: rh.gs(app.aaps.core.ui.R.string.invalid_profile)
+                            )
+                        )
                 }
             }
         }

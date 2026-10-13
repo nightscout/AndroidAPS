@@ -177,7 +177,7 @@ fun InsulinDialogScreen(
         cob = cob,
         dateString = viewModel.dateUtil.dateString(uiState.eventTime),
         timeString = viewModel.dateUtil.timeString(uiState.eventTime),
-        bolusFormat = viewModel.decimalFormatter.pumpSupportedBolusFormat(uiState.bolusStep),
+        bolusFormat = viewModel.decimalFormatter.pumpSupportedBolusFormat(uiState.displayStep),
         formatAmount = { viewModel.decimalFormatter.toPumpSupportedBolus(it, uiState.bolusStep) },
         onEatingSoonChange = viewModel::updateEatingSoonTt,
         onRecordOnlyChange = viewModel::updateRecordOnly,

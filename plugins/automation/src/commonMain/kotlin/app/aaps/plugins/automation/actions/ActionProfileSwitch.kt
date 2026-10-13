@@ -77,7 +77,11 @@ class ActionProfileSwitch(
             ),
             iCfg = iCfg
         )
-        return pumpEnactResultProvider().success(result != null).comment(CoreUiStrings.ok)
+        if (result != null) return pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
+        // Say why in the automation log, not "OK" next to a failure.
+        val reason = profileFunction.profileSwitchRefusal(profileStore, inputProfileName.value, 0, 100, 0, iCfg) ?: rh.gs(CoreUiStrings.invalid_profile)
+        aapsLogger.error(LTag.AUTOMATION, "Profile switch to ${inputProfileName.value} refused: $reason")
+        return pumpEnactResultProvider().success(false).comment(reason)
     }
 
     override fun hasDialog(): Boolean = true

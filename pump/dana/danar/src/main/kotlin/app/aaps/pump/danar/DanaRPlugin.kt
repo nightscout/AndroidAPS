@@ -20,7 +20,6 @@ import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.comment
-import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -108,10 +107,6 @@ class DanaRPlugin(
     }
 
     private var scope: CoroutineScope? = null
-
-    init {
-        pumpDescription.fillFor(PumpType.DANA_R)
-    }
 
     override suspend fun onStart() {
         val intent = Intent(context, DanaRExecutionService::class.java)

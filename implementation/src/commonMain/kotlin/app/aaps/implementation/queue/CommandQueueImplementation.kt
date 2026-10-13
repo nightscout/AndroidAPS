@@ -31,6 +31,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.Command.CommandType
@@ -546,8 +547,10 @@ class CommandQueueImplementation(
             // A replaced bolus was not delivered either. Its caller must hear that, or it saves its
             // carbs next to the carbs of the bolus that replaces it.
             removeAll(type, success = false, cancelled = true)
-            // apply constraints
-            detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
+            // apply constraints. A prime is in pump units, every other bolus in insulin units.
+            detailedBolusInfo.insulin =
+                if (detailedBolusInfo.bolusType == BS.Type.PRIMING) constraintChecker.applyPrimingConstraints(PumpInsulin(detailedBolusInfo.insulin)).cU
+                else constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
             val bolusGeneration = bolusProgressData.start(detailedBolusInfo.insulin, isSMB = detailedBolusInfo.bolusType === BS.Type.SMB, isPriming = detailedBolusInfo.bolusType == BS.Type.PRIMING)
             val command =
                 if (detailedBolusInfo.bolusType == BS.Type.SMB)

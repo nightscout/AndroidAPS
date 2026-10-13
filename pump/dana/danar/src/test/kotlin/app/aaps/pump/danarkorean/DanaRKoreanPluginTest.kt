@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpInsulin
@@ -67,6 +68,11 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
         // cU-domain limit (PumpPluginConstraints); reasons are logged, not surfaced.
         val result = danaRPlugin.applyBasalConstraints(PumpRate(Double.MAX_VALUE))
         Assertions.assertEquals(0.8, result.cU, 0.01)
+    }
+
+    @Test
+    fun theDescriptionIsForTheDanaRKorean() {
+        assertThat(danaRPlugin.pumpDescription.pumpType).isEqualTo(PumpType.DANA_R_KOREAN)
     }
 
     /** Binds a mocked service the way Android would. Its bolus() returns [connectionOk] and reports [delivered] U. */
