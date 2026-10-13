@@ -30,7 +30,7 @@
     <string name="objectives2_maintenance">Wyeksportuj ustawienia lokalnie, korzystając z menu konserwacji.</string>
     <string name="objectives2_internalstorage">Plik z ustawieniami jest zapisany w folderze \"preferences\" wewnątrz folderu AAPS, który wybrano w telefonie.</string>
     <string name="objectives2_cloud">Skopiuj plik preferencji w bezpieczne miejsce poza telefonem (np. Korzystając z dysku w chmurze, podłączając kabel do komputera, e-mail itp.)</string>
-    <string name="objectives2_easyrestore">Jeśli Twój telefon zostanie uszkodzony lub zgubiony, zastosowanie łatwe sposoby na zdalne odzyskanie ustawień bez kopii zapasowej.</string>
+    <string name="objectives2_easyrestore">Jeśli Twój telefon zostanie uszkodzony lub zgubiony, istnieją łatwe sposoby, aby zdalnie odzyskać ustawienia bez kopii zapasowej.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/en/latest/Maintenance/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_label">Szumy w odczytach z CGM</string>
@@ -59,7 +59,7 @@
     <string name="basaltest_beforeloop">Zanim zaczniesz używać pętli.</string>
     <string name="basaltest_havingregularhighlow">W przypadku częstego występowania wysokiego lub niskiego stężenia glukozy we krwi.</string>
     <string name="basaltest_weekly">Co najmniej raz w tygodniu.</string>
-    <string name="basaltest_fixed">Po ustawieniu i zweryfikowaniu wartości te nie powinny zmieniać się w czasie.</string>
+    <string name="basaltest_fixed">Po ustawieniu i zweryfikowaniu, wartości te nie powinny zmieniać się z upływem czasu.</string>
     <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="prerequisites_label">Wymagania wstępne</string>
     <string name="prerequisites_what">Co jest niezbędne do ustawienia i używania AAPS?</string>
@@ -79,7 +79,7 @@
     <string name="update_git">Aby zbudować aplikację w Android Studio, musisz mieć zainstalowany i skonfigurowany Git na swoim komputerze. Wersja budowana w przeglądarce nie wymaga Gita.</string>
     <string name="update_asap">Po pewnym czasie od premiery najnowszej wersji AAPS wcześniejsze wersje mogą zostać zdalnie ograniczone.</string>
     <string name="update_keys">Jeśli budujesz aplikację w Android Studio, powinieneś zapisać i zanotować lokalizację swojego keystore oraz używać tego samego klucza podpisu do aktualizacji, co przy poprzedniej instalacji.</string>
-    <string name="update_askfriend">Jeśli masz trudności z budową apk, możesz zainstalować apk zbudowany przez znajomego.</string>
+    <string name="update_askfriend">Jeśli masz trudności ze zbudowaniem pliku APK, możesz zainstalować APK zbudowany przez znajomego.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Rozwiązywanie problemów</string>
     <string name="troubleshooting_wheretoask">Gdzie możesz szukać pomocy odnośnie AAPS?</string>
@@ -87,7 +87,7 @@
     <string name="troubleshooting_wiki">Powinieneś przeczytać (i ponownie przeczytać) dokumentację AAPS.</string>
     <string name="troubleshooting_discord">Możesz poprosić o poradę, omówić problemy techniczne i sugerować nowe funkcjonalności na Discordzie AAPS.</string>
     <string name="troubleshooting_github">Możesz zgłaszać problemy, takie jak błędy i prośby o nowe funkcje, na GitHubie.</string>
-    <string name="troubleshooting_yourendo">Należy zwrócić się do diabetologa lub lekarza endokrynologa.</string>
+    <string name="troubleshooting_yourendo">Powinieneś zapytać w poradni diabetologicznej lub u endokrynologa.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/en/latest/GettingHelp/WhereCanIGetHelp.html</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
@@ -137,14 +137,14 @@
     <string name="iob_posiob">Pozytywne IOB utrzymujące się przez znaczny okres czasu sugeruje insulinooporność lub niezapowiedziany (niewprowadzony do AAPS) posiłek.</string>
     <string name="breadgrams_label">Wprowadzanie węglowodanów i bolusów</string>
     <string name="breadgrams_grams">Do szacowania i zapisywania spożywanych węglowodanów należy używać tylko gramów.</string>
-    <string name="breadgrams_exchange">Spożywane węglowodany mogą być rejestrowane przy użyciu odpowiednich zamiennych jednostek systemowych (np. DAFNE \"CHO\" wymienia lub europejskich \"jednostek chlebowych\").</string>
+    <string name="breadgrams_exchange">Spożyte węglowodany można rejestrować przy użyciu odpowiedniego systemu wymienników (np. wymienników DAFNE \"CHO\" lub europejskich \"jednostek chlebowych\").</string>
     <string name="breadgrams_decay">AAPS wykorzystuje model dynamiczny do szacowania \"wchłaniania / trawienia\" węglowodanów i obliczania COB.</string>
     <string name="breadgrams_calc">Jeśli poziom glukozy we krwi jest poza dopuszczalnymi wartościami (zbyt niski lub zbyt wysoki), kalkulator bolusa może być stosowany w celu dostarczenia sugestii dotyczących korekty węglowodanów lub insuliny.</string>
     <string name="breadgrams_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#bolus-wizard</string>
     <string name="breadgrams_hint2">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="extendedcarbs_label">e-carbs (e-węgle)</string>
     <string name="extendedcarbs_handling">Do czego możesz użyć e-węgli (węglowodanów wydłużonych)?</string>
-    <string name="extendedcarbs_future">W celu zaplanowania ilości węglowodanów w przyszłości, możliwych do dystrybucji w interwałach czasowych (podobnie do przedłużonego bolusa rozprowadzającego insulinę w odstępie czasowym).</string>
+    <string name="extendedcarbs_future">Aby zaplanować węglowodany w przyszłości, ewentualnie rozłożone w pewnym przedziale czasu (podobnie jak bolus przedłużony rozkłada insulinę w przedziale czasu).</string>
     <string name="extendedcarbs_free">Aby rejestrować \"darmowe\" węglowodany wysiłkowe, które chcesz ukryć przed AAPS.</string>
     <string name="extendedcarbs_fat">e-węgle / e-carbsy (dystrybuowane w przyszłości) mogą pomóc AAPS w radzeniu sobie z wysokotłuszczowym/białkowym posiłkiem.</string>
     <string name="extendedcarbs_rescue">Do rejestrowania węglowodanów ratunkowych spożytych do leczenia niskiego poziomu cukru we krwi.</string>
