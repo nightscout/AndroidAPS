@@ -752,7 +752,9 @@ class MedtronicHistoryData(
         val tbrRecords = pumpSyncStorage.getTBRs()
 
         val processList: MutableList<TempBasalProcessDTO> = createTBRProcessList(entryList)
-        val newTbrs = processList.filter { it.itemOne !== alreadySynced }
+        // The TBR that was synced before takes no entry and goes the pumpId path. Its own temp-id entry is gone, and
+        // the match by time took the entry of the next TBR and wrote this TBR into that row (#5271).
+        val tempIdEntries = matchTempIdEntries(processList.filter { it.itemOne !== alreadySynced }, tbrRecords)
 
         if (processList.isNotEmpty()) {
             for (tempBasalProcessDTO in processList) {
@@ -761,11 +763,7 @@ class MedtronicHistoryData(
                 //aapsLogger.debug(LTag.PUMP, "DD: tempBasalProcessDTO.itemOne: " + gson.toJson(tempBasalProcessDTO.itemOne))
                 //aapsLogger.debug(LTag.PUMP, "DD: tempBasalProcessDTO.itemTwo: " + (if (tempBasalProcessDTO.itemTwo == null) "null" else gson.toJson(tempBasalProcessDTO.itemTwo!!)))
 
-                // The TBR that was synced before goes the pumpId path. Its own temp-id entry is gone, and the match
-                // by time took the entry of the next TBR and wrote this TBR into that row (#5271).
-                val entryWithTempId =
-                    if (tempBasalProcessDTO.itemOne === alreadySynced) null
-                    else findTempIdEntry(tempBasalProcessDTO, newTbrs, tbrRecords)
+                val entryWithTempId = tempIdEntries[tempBasalProcessDTO]
 
                 aapsLogger.debug(LTag.PUMP, "DD: entryWithTempId: " + (entryWithTempId?.toString() ?: "null"))
 
@@ -814,7 +812,6 @@ class MedtronicHistoryData(
                         }
 
                         pumpSyncStorage.removeTemporaryBasalWithTemporaryId(entryWithTempId.temporaryId)
-                        tbrRecords.remove(entryWithTempId)
 
                         entryWithTempId.pumpId = tempBasalProcessDTO.pumpId
                         entryWithTempId.date = tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime)
@@ -1080,20 +1077,36 @@ class MedtronicHistoryData(
      * Looks at all boluses that have temporaryId and find one that is correct for us (if such entry exists)
      */
     /**
-     * The temp-id entry of [dto]: the one [findDbEntry] finds, but only when no other TBR of [newTbrs] is closer
-     * to it in time. A TBR set on the pump itself has no entry of its own, and it took the entry of a TBR that
-     * AAPS set less than 2 minutes later.
+     * Pairs the TBRs read from pump history with the temp-id entries AAPS stored when it set them. The pairs that fit
+     * best are taken first: the same rate before a different one (the pump may round the rate, so a different rate
+     * can still be the right entry), then the smaller time difference. An entry 2 minutes away or more is not taken.
+     *
+     * Looking at one TBR at a time failed in three ways. Two entries close together, or two that were both more than
+     * a minute away, gave no entry at all: the TBR got a new row and its temp-id row stayed open for the planned
+     * duration, so two basals overlapped (#1724). And a TBR set on the pump itself, which has no entry, took the
+     * entry of a TBR that AAPS set less than 2 minutes later (#5271).
      */
-    private fun findTempIdEntry(dto: TempBasalProcessDTO, newTbrs: List<TempBasalProcessDTO>, tbrRecords: MutableList<PumpDbEntryTBR>): PumpDbEntryTBR? {
-        @Suppress("UNCHECKED_CAST")
-        val entry = findDbEntry(dto.itemOne, tbrRecords as MutableList<PumpDbEntry>) as PumpDbEntryTBR? ?: return null
-        val distance = abs(localTimeOf(dto.itemOne) - entry.date)
-        val closer = newTbrs.firstOrNull { it !== dto && abs(localTimeOf(it.itemOne) - entry.date) < distance }
-        if (closer != null) {
-            aapsLogger.debug(LTag.PUMP, "DD: temp-id entry ${entry.temporaryId} belongs to the TBR at ${closer.itemOne.atechDateTime}, not to ${dto.itemOne.atechDateTime}")
-            return null
+    private fun matchTempIdEntries(tbrs: List<TempBasalProcessDTO>, entries: List<PumpDbEntryTBR>): Map<TempBasalProcessDTO, PumpDbEntryTBR> {
+        class Candidate(val tbr: TempBasalProcessDTO, val entry: PumpDbEntryTBR, val sameRate: Boolean, val timeDiff: Long)
+
+        val candidates = tbrs.flatMap { tbr ->
+            val time = localTimeOf(tbr.itemOne)
+            val rate = tbr.itemOneTbr?.insulinRate
+            entries.mapNotNull { entry ->
+                val timeDiff = abs(entry.date - time)
+                if (timeDiff >= MAX_TEMP_ID_DISTANCE) null
+                else Candidate(tbr, entry, rate != null && abs(entry.rate - rate) < SAME_RATE_TOLERANCE, timeDiff)
+            }
+        }.sortedWith(compareBy({ !it.sameRate }, { it.timeDiff }))
+
+        val matches = mutableMapOf<TempBasalProcessDTO, PumpDbEntryTBR>()
+        val usedEntries = mutableSetOf<Long>()
+        for (candidate in candidates) {
+            if (candidate.tbr in matches || candidate.entry.temporaryId in usedEntries) continue
+            matches[candidate.tbr] = candidate.entry
+            usedEntries.add(candidate.entry.temporaryId)
         }
-        return entry
+        return matches
     }
 
     /** The time of a pump history entry on the phone clock. */
@@ -1539,6 +1552,15 @@ class MedtronicHistoryData(
          */
         @Suppress("ConstPropertyName")
         const val doubleBolusDebug = false
+
+        /** A temp-id entry this far or more from a TBR in pump history is not its entry. */
+        private const val MAX_TEMP_ID_DISTANCE = 2 * 60 * 1000L
+
+        /**
+         * Rates closer than this count as the same. A rate can come back from the pump rounded to its step, but two
+         * different rates on the 0.05 U/h step of a x22 pump are still told apart.
+         */
+        private const val SAME_RATE_TOLERANCE = 0.025
     }
 
 }
