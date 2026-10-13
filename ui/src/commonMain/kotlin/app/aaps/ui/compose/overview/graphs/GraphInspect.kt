@@ -12,22 +12,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementType
@@ -60,6 +67,8 @@ import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
 import kotlin.math.abs
 import kotlin.math.roundToInt
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 
 // =========================================================================
 // Press and hold on the BG graph: a line and a dot on the reading under the finger, and a pill with
@@ -71,6 +80,9 @@ private const val INSPECT_MATCH_MS = 5 * 60_000L
 
 /** A bolus or carb entry belongs to a reading when it is within half a reading interval of it, in ms. */
 private const val INSPECT_TREATMENT_MS = 150_000L
+
+/** How long the pill stays after the finger is lifted. */
+private const val INSPECT_LINGER_MS = 2_000L
 
 /**
  * Shared state between Vico (marker, controller, listener) and the compose side (pill, touch layer).
@@ -211,6 +223,65 @@ fun Modifier.graphInspectTouch(state: GraphInspectState): Modifier = pointerInpu
             if (state.fingerDown && event.type == PointerEventType.Move) event.changes.forEach { it.consume() }
         }
     }
+}
+
+/**
+ * The compose side of press and hold: snaps the finger to a reading, gives haptic feedback, and shows
+ * the pill until [INSPECT_LINGER_MS] after the finger is lifted. The finger is followed with
+ * snapshotFlow, not effect keys, so a move recomposes only this, and only when the reading changes.
+ */
+@Composable
+fun GraphInspectOverlay(
+    inspect: GraphInspectState,
+    graphViewModel: GraphViewModel,
+    bgReadings: List<BgDataPoint>,
+    minTimestamp: Long?,
+    modifier: Modifier = Modifier
+) {
+    var inspectData by remember { mutableStateOf<InspectData?>(null) }
+    val iobGraph by graphViewModel.iobGraphFlow.collectAsStateWithLifecycle()
+    val cobGraph by graphViewModel.cobGraphFlow.collectAsStateWithLifecycle()
+    val basalGraph by graphViewModel.basalGraphFlow.collectAsStateWithLifecycle()
+    val treatmentGraph by graphViewModel.treatmentGraphFlow.collectAsStateWithLifecycle()
+    val currentBgReadings by rememberUpdatedState(bgReadings)
+    val currentMinTimestamp by rememberUpdatedState(minTimestamp)
+    val haptic = LocalHapticFeedback.current
+
+    LaunchedEffect(inspect, haptic) {
+        snapshotFlow { inspect.fingerDown to inspect.targetX }.collect { (fingerDown, x) ->
+            val min = currentMinTimestamp
+            if (!fingerDown || x == null || min == null) return@collect
+            val data = inspectDataAt(
+                timestamp = min + (x * 60_000).toLong(),
+                bgReadings = currentBgReadings,
+                iob = iobGraph.iob,
+                cob = cobGraph.cob,
+                actualBasal = basalGraph.actualBasal,
+                boluses = treatmentGraph.boluses,
+                carbs = treatmentGraph.carbs
+            )
+            if (data.timestamp != inspectData?.timestamp) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            inspect.shownX = timestampToX(data.timestamp, min)
+            inspect.dotValue = data.bg?.value
+            inspectData = data
+        }
+    }
+    LaunchedEffect(inspect, haptic) {
+        snapshotFlow { inspect.fingerDown }.collect { if (it) haptic.performHapticFeedback(HapticFeedbackType.LongPress) }
+    }
+    LaunchedEffect(inspect) {
+        snapshotFlow { inspect.fingerDown to inspectData }.collectLatest { (fingerDown, data) ->
+            if (!fingerDown && data != null) {
+                delay(INSPECT_LINGER_MS)
+                inspectData = null
+            }
+        }
+    }
+
+    val data = inspectData
+    val dotColor = data?.bg?.range?.inspectColor() ?: Color.Unspecified
+    SideEffect { inspect.dotColor = dotColor }
+    if (data != null) GraphInspectPill(data = data, modifier = modifier)
 }
 
 /** The values at one reading time, for the pill. Null values have no data near that time. */
