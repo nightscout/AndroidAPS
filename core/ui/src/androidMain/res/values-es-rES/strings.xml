@@ -127,6 +127,7 @@
     <string name="insulin_activation_failed">La insulina no se ha cambiado. Se sigue utilizando tu insulina anterior</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">No se cambió la insulina: %1$s Su insulina anterior sigue en uso</string>
     <string name="insulin_activation_unconfirmed">No se ha podido confirmar el cambio de insulina. Comprueba qué insulina está activa en tu perfil antes de administrar la dosis</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">No se ha cambiado la insulina. Su insulina anterior sigue en uso.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nTampoco se ha cambiado la insulina</string>
     <string name="active"><![CDATA[<Activo>]]></string>
     <string name="date">Fecha</string>
@@ -226,6 +227,8 @@
     <string name="logout">Cerrar sesión</string>
     <string name="prime_fill">Cebar/Llenar</string>
     <string name="prime_not_available">Esta bomba se llena y se ceba automáticamente durante la activación. El cebado o llenado desde AAPS no está disponible</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Cambio</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Rellenar</string>
     <string name="site_rotation">Rotación del sitio</string>
     <string name="edit_site">Editar</string>
     <string name="select_arrow">Seleccionar flecha</string>
@@ -682,6 +685,7 @@
     <string name="missing_profile_name">Falta el nombre del perfil</string>
     <string name="profile_not_saved_activate">Perfil no guardado. Guarde el perfil antes de activarlo</string>
     <string name="profile_basal_not_compatible_with_pump">La tasa basal no es compatible con la bomba actual y no se puede activar. Reduce el porcentaje o ajusta la tasa basal</string>
+    <string name="profile_basal_below_pump_minimum">La tasa basal está por debajo del mínimo de la bomba actual y no se puede activar. Aumente el porcentaje o ajuste la tasa basal</string>
     <string name="profile_pump_incompatible_label">Límite de la bomba</string>
     <string name="error_in_ic_values">Error en los valores de Ratio de Hidratos (IC)</string>
     <string name="error_in_isf_values">Error en los valores de Sensibilidad (ISF)</string>
