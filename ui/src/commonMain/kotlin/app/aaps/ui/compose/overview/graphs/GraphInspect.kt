@@ -1,6 +1,8 @@
 package app.aaps.ui.compose.overview.graphs
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -25,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -33,6 +36,7 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.GlucoseUnit
@@ -50,12 +54,9 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.LocalProfileUtil
-import app.aaps.core.ui.compose.icons.IcBolus
-import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.axis.Axis
 import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
@@ -83,6 +84,12 @@ private const val INSPECT_TREATMENT_MS = 150_000L
 
 /** How long the pill stays after the finger is lifted. */
 private const val INSPECT_LINGER_MS = 2_000L
+
+/** Size of the icons in the pill. */
+private val PILL_ICON_SIZE = 14.dp
+
+/** The COB icon is drawn smaller, see [GraphInspectPill]. */
+private val PILL_COB_ICON_SIZE = 12.dp
 
 /**
  * Shared state between Vico (marker, controller, listener) and the compose side (pill, touch layer).
@@ -380,16 +387,17 @@ fun GraphInspectPill(
                     PillItem(ElementType.INSULIN.icon(), stringResource(InterfacesStrings.format_insulin_units, it), ElementType.INSULIN.color())
                 }
                 shownCob(data.cob)?.let {
-                    PillItem(ElementType.COB.icon(), stringResource(InterfacesStrings.format_carbs, it), ElementType.COB.color())
+                    // The carbs icon fills more of its box than the insulin icon, so it is drawn smaller to look the same size
+                    PillItem(ElementType.COB.icon(), stringResource(InterfacesStrings.format_carbs, it), ElementType.COB.color(), iconSize = PILL_COB_ICON_SIZE)
                 }
                 data.basal?.let {
                     PillItem(ElementType.TEMP_BASAL.icon(), stringResource(CoreUiStrings.pump_base_basal_rate, it), ElementType.TEMP_BASAL.color())
                 }
+                // Treatments use the triangles of the IOB and COB graphs: SMB points up, bolus and carbs point down
                 data.boluses.forEach { bolus ->
-                    val text = if (bolus.bolusType == BolusType.SMB) stringResource(UiStrings.graph_inspect_smb, bolus.label) else bolus.label
-                    PillItem(IcBolus, text, ElementType.INSULIN.color())
+                    PillTriangleItem(pointsUp = bolus.bolusType == BolusType.SMB, text = bolus.label, color = ElementType.INSULIN.color())
                 }
-                data.carbs.forEach { carbs -> PillItem(IcCarbs, carbs.label, ElementType.CARBS.color()) }
+                data.carbs.forEach { carbs -> PillTriangleItem(pointsUp = false, text = carbs.label, color = ElementType.CARBS.color()) }
             }
         }
     }
@@ -401,9 +409,49 @@ private fun PillText(text: String, color: Color) {
 }
 
 @Composable
-private fun PillItem(icon: ImageVector, text: String, color: Color) {
+private fun PillItem(icon: ImageVector, text: String, color: Color, iconSize: Dp = PILL_ICON_SIZE) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall)) {
-        Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(14.dp))
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.size(PILL_ICON_SIZE)) {
+            Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(iconSize))
+        }
         PillText(text, color)
+    }
+}
+
+@Composable
+private fun PillTriangleItem(pointsUp: Boolean, text: String, color: Color) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall)) {
+        PillTriangle(pointsUp = pointsUp, color = color)
+        PillText(text, color)
+    }
+}
+
+/**
+ * A treatment triangle like in the IOB and COB graphs, with the same proportions as [TriangleShape]
+ * and [InvertedTriangleShape]. Those shapes only fill the top half of their box, so the triangle is
+ * drawn here, centered in the icon box.
+ */
+@Composable
+private fun PillTriangle(pointsUp: Boolean, color: Color) {
+    Canvas(modifier = Modifier.size(PILL_ICON_SIZE)) {
+        // Same as the graph shapes: base 0.6 of the width, height 0.5 of the width
+        val baseHalf = size.width * 0.3f
+        val height = size.width * 0.5f
+        val cx = size.width / 2f
+        val top = (size.height - height) / 2f
+        val bottom = top + height
+        val path = Path().apply {
+            if (pointsUp) {
+                moveTo(cx, top)
+                lineTo(cx + baseHalf, bottom)
+                lineTo(cx - baseHalf, bottom)
+            } else {
+                moveTo(cx - baseHalf, top)
+                lineTo(cx + baseHalf, top)
+                lineTo(cx, bottom)
+            }
+            close()
+        }
+        drawPath(path, color)
     }
 }

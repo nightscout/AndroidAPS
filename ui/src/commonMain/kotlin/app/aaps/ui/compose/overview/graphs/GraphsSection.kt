@@ -103,6 +103,12 @@ private val SIMPLE_MODE_CONFIG = GraphConfig(
  */
 private const val RECENT_VALUES_SPOKEN = 5
 
+/**
+ * Moves the BG graph pop-up up over the treatment belt, so it covers less of the BG graph. The belt
+ * is 48 dp high and the BG graph already starts 16 dp under it.
+ */
+private val INSPECT_PILL_OFFSET = (-32).dp
+
 /** Series types available as BG graph overlays */
 private val BG_OVERLAY_SERIES = listOf(SeriesType.ACTIVITY, SeriesType.PREDICTIONS)
 
@@ -449,6 +455,7 @@ fun GraphsSection(
                 minTimestamp = derivedTimeRange?.first,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
+                    .offset(y = INSPECT_PILL_OFFSET)
                     .padding(top = 2.dp, start = 36.dp, end = 36.dp)
             )
         }
