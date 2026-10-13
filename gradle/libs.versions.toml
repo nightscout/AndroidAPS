@@ -108,7 +108,7 @@ androidx-browser = { group = "androidx.browser", name = "browser", version = "1.
 # 1.5.0 in others, and those are different generations of the same class (the newer one is a Kotlin
 # rewrite where size is also a property), so the same code did not compile everywhere. From 1.4.0 it
 # is multiplatform, which is what keeps LongSparseArray usable from shared code.
-androidx-collection = { group = "androidx.collection", name = "collection", version = "1.6.0" }
+androidx-collection = { group = "androidx.collection", name = "collection", version = "1.7.0" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.2.2" }
 androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.19.1" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastorePreferences" }
