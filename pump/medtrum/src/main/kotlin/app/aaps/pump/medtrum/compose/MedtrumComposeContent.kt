@@ -152,9 +152,6 @@ class MedtrumComposeContent(
                             showPatchWorkflow = false
                             startPatchStep = null
                         }
-
-                        is PatchEvent.ShowError -> { /* handled by step composables */
-                        }
                     }
                 }
             }

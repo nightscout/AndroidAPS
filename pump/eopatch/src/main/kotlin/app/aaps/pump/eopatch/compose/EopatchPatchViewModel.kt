@@ -8,9 +8,7 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.labelOfInsulin
 import app.aaps.core.data.time.T
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -19,10 +17,13 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.pump.ProfileGateStepHost
+import app.aaps.core.ui.compose.pump.activateProfileFromGate
+import app.aaps.core.ui.compose.pump.switchToWizardInsulin
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.eopatch.CommonUtils
@@ -90,7 +91,8 @@ class EopatchPatchViewModel(
     private val insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction,
     private val profileRepository: ProfileRepository,
-    private val persistenceLayer: PersistenceLayer
+    private val persistenceLayer: PersistenceLayer,
+    private val rxBus: RxBus
 ) : ViewModel(), SiteLocationStepHost, ProfileGateStepHost {
 
     companion object {
@@ -361,24 +363,10 @@ class EopatchPatchViewModel(
         val store = profileRepository.profile.value ?: return
         val iCfg = insulinManager.insulins.firstOrNull() ?: return
         viewModelScope.launch {
-            val result = profileFunction.createProfileSwitch(
-                profileStore = store,
-                profileName = name,
-                durationInMinutes = 0,
-                percentage = 100,
-                timeShiftInHours = 0,
-                timestamp = System.currentTimeMillis(),
-                action = Action.PROFILE_SWITCH,
-                source = Sources.EOPatch2,
-                note = null,
-                listValues = listOf(ValueWithUnit.SimpleString(name)),
-                iCfg = iCfg
-            )
-            if (result == null) {
-                aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
-            } else {
+            // A refused switch says why and keeps the gate on screen.
+            if (activateProfileFromGate(profileFunction, rh, rxBus, store, name, iCfg, Sources.EOPatch2, System.currentTimeMillis()))
                 moveStep(PatchStep.WAKE_UP)
-            }
+            else aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
         }
     }
 
@@ -835,8 +823,11 @@ class EopatchPatchViewModel(
                 .doFinally { _isCommChecking.value = false }
                 .onErrorReturnItem(false)
                 .subscribeDefault(aapsLogger) {
-                    if (it) moveStep(PatchStep.COMPLETE)
-                    else updateSetupStep(SetupStep.ACTIVATION_FAILED)
+                    if (it) {
+                        // The insulin chosen in SELECT_INSULIN. It had no caller, so the choice was never applied.
+                        executeInsulinProfileSwitch()
+                        moveStep(PatchStep.COMPLETE)
+                    } else updateSetupStep(SetupStep.ACTIVATION_FAILED)
                 }
         )
     }
@@ -924,12 +915,13 @@ class EopatchPatchViewModel(
         _selectedInsulin.value = iCfg
     }
 
+    /** Called after activation, so the patch is running by then: a refused switch cannot stop the wizard, but it says why. */
     fun executeInsulinProfileSwitch() {
         val selected = _selectedInsulin.value ?: return
         val activeLabel = _activeInsulinLabel.value
         if (selected.insulinLabel == activeLabel) return
         viewModelScope.launch {
-            profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.EOPatch2)
+            switchToWizardInsulin(profileFunction, rh, rxBus, selected, Sources.EOPatch2)
         }
     }
 

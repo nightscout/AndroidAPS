@@ -57,7 +57,7 @@ internal class ErosOmnipodWizardViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher())
         sut = ErosOmnipodWizardViewModel(
             aapsOmnipodManager, podStateManager, commandQueue, pumpSync, insulinManager, profileFunction,
-            profileRepository, persistenceLayer, preferences, pumpEnactResultProvider, logger, aapsSchedulers
+            profileRepository, persistenceLayer, preferences, pumpEnactResultProvider, logger, aapsSchedulers, mock(), mock()
         )
     }
 
