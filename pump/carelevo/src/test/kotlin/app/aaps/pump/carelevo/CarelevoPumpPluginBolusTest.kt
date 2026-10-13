@@ -1,12 +1,16 @@
 package app.aaps.pump.carelevo
 
+import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.pump.carelevo.ble.commands.BolusCancelCommand
+import app.aaps.pump.carelevo.ble.commands.BolusCancelResponse
 import app.aaps.pump.carelevo.ble.commands.ExtendBolusCancelCommand
 import app.aaps.pump.carelevo.ble.commands.ExtendBolusCommand
 import app.aaps.pump.carelevo.ble.commands.ExtendBolusResponse
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -15,6 +19,7 @@ import org.mockito.kotlin.isA
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import java.util.Optional
+import kotlin.concurrent.thread
 
 class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
 
@@ -153,6 +158,46 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
         assertThat(result.enacted).isTrue()
         assertThat(result.bolusDelivered).isWithin(0.001).of(0.25)
         verifyBlocking(pumpSync) { syncBolusWithPumpId(any(), any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `deliverTreatment should report a pump-confirmed user stop as a partial success`() {
+        whenever(bolusProgressData.isStopPressed).thenReturn(true)
+        whenever(bolusProgressData.state).thenReturn(MutableStateFlow<BolusProgressState?>(null))
+        whenever { bleSession.runSingle(any(), isA<BolusCancelCommand>(), any()) }
+            .thenReturn(BolusCancelResponse(resultCode = 0, infusedAmount = 0.3))
+        val stopper = thread { Thread.sleep(200); plugin.stopBolusDelivering() }
+
+        val result = runBlocking {
+            plugin.deliverTreatment(DetailedBolusInfo().apply {
+                insulin = 1.0
+                carbs = 0.0
+            })
+        }
+        stopper.join()
+
+        assertThat(result.success).isTrue()
+        assertThat(result.enacted).isTrue()
+        assertThat(result.bolusDelivered).isWithin(0.001).of(0.3)
+    }
+
+    @Test
+    fun `deliverTreatment should stay a failure when the pump rejects the stop`() {
+        whenever(bolusProgressData.isStopPressed).thenReturn(true)
+        whenever { bleSession.runSingle(any(), isA<BolusCancelCommand>(), any()) }
+            .thenReturn(BolusCancelResponse(resultCode = 1, infusedAmount = 0.0))
+        val stopper = thread { Thread.sleep(200); plugin.stopBolusDelivering() }
+
+        val result = runBlocking {
+            plugin.deliverTreatment(DetailedBolusInfo().apply {
+                insulin = 1.0
+                carbs = 0.0
+            })
+        }
+        stopper.join()
+
+        assertThat(result.success).isFalse()
+        assertThat(result.bolusDelivered).isWithin(0.001).of(0.0)
     }
 
     @Test

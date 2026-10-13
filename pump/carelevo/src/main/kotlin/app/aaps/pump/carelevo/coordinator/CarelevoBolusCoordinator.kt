@@ -87,6 +87,9 @@ class CarelevoBolusCoordinator @Inject constructor(
 
     @Volatile private var isImmeBolusStop = false
 
+    // Pump-reported partial amount of a user-stopped immediate bolus, set together with [isImmeBolusStop].
+    @Volatile private var immeBolusStopInfused = 0.0
+
     // True for the WHOLE out-of-band cancel span (across retries) — the delivery worker's guard blocks
     // while this is set so it can't re-dial the primary link while the cancel's GATT is open (two-GATT status-133).
     @Volatile private var immeBolusCancelInFlight = false
@@ -133,6 +136,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         }
 
         isImmeBolusStop = false
+        immeBolusStopInfused = 0.0
         val actionId = (carelevoPatch.patchInfo.value?.getOrNull()?.bolusActionSeq ?: 0) + 1
         val normalizedActionId = if (actionId <= 0) 1 else ((actionId - 1) % 255) + 1
 
@@ -332,6 +336,14 @@ class CarelevoBolusCoordinator @Inject constructor(
                 pluginDisposable
             )
             awaitImmeBolusCancelIfStopped()
+            if (isImmeBolusStop) {
+                // A pump-confirmed user stop is a partial success, not a delivery failure: success=false
+                // makes the core raise the urgent BOLUS_DELIVERY_FAILED alarm. The cancel path already
+                // recorded the partial amount in pumpSync, so it is only reported here.
+                result.success = true
+                result.enacted = immeBolusStopInfused > 0.0
+                result.bolusDelivered = immeBolusStopInfused
+            }
             result
         } catch (e: Exception) {
             handleBolusError(e, result)
@@ -415,6 +427,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                             )
                         }
                         onStatusRefreshRequested()
+                        immeBolusStopInfused = infusedAmount
                         isImmeBolusStop = true
                         aapsLogger.info(LTag.PUMPCOMM, "newBle.cancelImmediateBolus infused=$infusedAmount")
                         return
@@ -534,7 +547,8 @@ class CarelevoBolusCoordinator @Inject constructor(
         } else {
             // User stopped mid-bolus (loop broke before the finish step). The actual partial amount is
             // recorded separately by the cancel path via syncBolusWithPumpId(infusedAmount), so don't
-            // report the full requested dose as delivered. Matches VirtualPumpPlugin's stop contract.
+            // report the full requested dose as delivered. A pump-confirmed stop is turned into a partial
+            // success by deliverTreatmentInternal once the cancel settles.
             result.success = false
             result.enacted = false
             result.bolusDelivered = 0.0
