@@ -127,6 +127,7 @@
     <string name="insulin_activation_failed">The insulin was not switched. Your previous insulin is still in use.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">The insulin was not switched: %1$s Your previous insulin is still in use.</string>
     <string name="insulin_activation_unconfirmed">The insulin switch could not be confirmed. Check which insulin is active in your profile before dosing.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">The insulin was not switched. Your previous insulin is still in use.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nThe insulin was also not switched.</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Date</string>
@@ -706,6 +707,7 @@
     <string name="missing_profile_name">Missing profile name</string>
     <string name="profile_not_saved_activate">Profile not saved. Please save the profile before activating.</string>
     <string name="profile_basal_not_compatible_with_pump">Basal rate is not compatible with the current pump and cannot be activated. Reduce the percentage or adjust the basal rate.</string>
+    <string name="profile_basal_below_pump_minimum">Basal rate is below the minimum of the current pump and cannot be activated. Raise the percentage or adjust the basal rate.</string>
     <string name="profile_pump_incompatible_label">Pump limit</string>
     <string name="error_in_ic_values">Error in IC values</string>
     <string name="error_in_isf_values">Error in ISF values</string>
