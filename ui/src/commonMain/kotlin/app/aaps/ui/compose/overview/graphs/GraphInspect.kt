@@ -48,6 +48,7 @@ import app.aaps.core.interfaces.overview.graph.BolusGraphPoint
 import app.aaps.core.interfaces.overview.graph.BolusType
 import app.aaps.core.interfaces.overview.graph.CarbsGraphPoint
 import app.aaps.core.interfaces.overview.graph.GraphDataPoint
+import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
@@ -57,6 +58,7 @@ import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.compose.overview.chips.toIcon
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.axis.Axis
 import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
@@ -262,6 +264,7 @@ fun GraphInspectOverlay(
                 iob = iobGraph.iob,
                 cob = cobGraph.cob,
                 actualBasal = basalGraph.actualBasal,
+                profileBasal = basalGraph.profileBasal,
                 boluses = treatmentGraph.boluses,
                 carbs = treatmentGraph.carbs
             )
@@ -296,6 +299,7 @@ data class InspectData(
     val iob: Double?,
     val cob: Double?,
     val basal: Double?,
+    val tbrState: TbrState,
     val boluses: List<BolusGraphPoint>,
     val carbs: List<CarbsGraphPoint>
 )
@@ -307,21 +311,32 @@ fun inspectDataAt(
     iob: List<GraphDataPoint>,
     cob: List<GraphDataPoint>,
     actualBasal: List<GraphDataPoint>,
+    profileBasal: List<GraphDataPoint>,
     boluses: List<BolusGraphPoint>,
     carbs: List<CarbsGraphPoint>
 ): InspectData {
     val bg = bgReadings.nearest(timestamp) { it.timestamp }
     val time = bg?.timestamp ?: timestamp
+    // Basal is stored at each change
+    val basal = actualBasal.lastOrNull { it.timestamp <= time }?.value
     return InspectData(
         timestamp = time,
         bg = bg,
         iob = iob.nearest(time) { it.timestamp }?.value,
         cob = cob.nearest(time) { it.timestamp }?.value,
-        // Basal is stored at each change
-        basal = actualBasal.lastOrNull { it.timestamp <= time }?.value,
+        basal = basal,
+        tbrState = tbrState(basal, profileBasal.lastOrNull { it.timestamp <= time }?.value),
         boluses = boluses.filter { it.isValid && abs(it.timestamp - time) <= INSPECT_TREATMENT_MS },
         carbs = carbs.filter { it.isValid && abs(it.timestamp - time) <= INSPECT_TREATMENT_MS }
     )
+}
+
+/** Same rule as the TBR chip in the overview. */
+internal fun tbrState(basal: Double?, profileBasal: Double?): TbrState = when {
+    basal == null || profileBasal == null -> TbrState.NONE
+    abs(basal - profileBasal) < 0.01      -> TbrState.NONE
+    basal > profileBasal                  -> TbrState.HIGH
+    else                                  -> TbrState.LOW
 }
 
 /** COB in whole grams, or null at 0 g so it is left out. */
@@ -358,7 +373,7 @@ fun GraphInspectPill(
             modifier = Modifier.padding(horizontal = AapsSpacing.large)
         ) {
             FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
+                horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium, Alignment.CenterHorizontally),
                 verticalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall),
                 modifier = Modifier.padding(vertical = AapsSpacing.small)
             ) {
@@ -374,7 +389,7 @@ fun GraphInspectPill(
                     PillItem(ElementType.COB.icon(), stringResource(InterfacesStrings.format_carbs, it), ElementType.COB.color(), iconSize = PILL_COB_ICON_SIZE)
                 }
                 data.basal?.let {
-                    PillItem(ElementType.TEMP_BASAL.icon(), stringResource(CoreUiStrings.pump_base_basal_rate, it), ElementType.TEMP_BASAL.color())
+                    PillItem(data.tbrState.toIcon(), stringResource(CoreUiStrings.pump_base_basal_rate, it), ElementType.TEMP_BASAL.color())
                 }
                 // Same triangles as the IOB and COB graphs
                 data.boluses.forEach { bolus ->

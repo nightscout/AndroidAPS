@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.overview.graph.BolusGraphPoint
 import app.aaps.core.interfaces.overview.graph.BolusType
 import app.aaps.core.interfaces.overview.graph.CarbsGraphPoint
 import app.aaps.core.interfaces.overview.graph.GraphDataPoint
+import app.aaps.core.interfaces.overview.graph.TbrState
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -29,6 +30,7 @@ class GraphInspectTest {
             iob = listOf(point(0, 1.0), point(5, 1.2), point(10, 1.4)),
             cob = listOf(point(5, 0.0)),
             actualBasal = listOf(point(-30, 0.8), point(4, 1.5), point(20, 0.0)),
+            profileBasal = listOf(point(-60, 0.8)),
             boluses = emptyList(),
             carbs = emptyList()
         )
@@ -40,6 +42,7 @@ class GraphInspectTest {
         assertThat(data.cob).isEqualTo(0.0)
         // Basal is the last change before the reading
         assertThat(data.basal).isEqualTo(1.5)
+        assertThat(data.tbrState).isEqualTo(TbrState.HIGH)
     }
 
     @Test
@@ -50,6 +53,7 @@ class GraphInspectTest {
             iob = listOf(point(30, 0.3)),
             cob = emptyList(),
             actualBasal = emptyList(),
+            profileBasal = emptyList(),
             boluses = emptyList(),
             carbs = emptyList()
         )
@@ -74,6 +78,7 @@ class GraphInspectTest {
             iob = emptyList(),
             cob = emptyList(),
             actualBasal = emptyList(),
+            profileBasal = emptyList(),
             boluses = listOf(near, far, invalid),
             carbs = listOf(carbs)
         )
@@ -106,5 +111,15 @@ class GraphInspectTest {
         state.pointerDown = false
         state.visibilityListener.onHidden(marker)
         assertThat(state.fingerDown).isFalse()
+    }
+
+    @Test
+    fun `TBR state follows the overview rule`() {
+        assertThat(tbrState(basal = 0.8, profileBasal = 0.8)).isEqualTo(TbrState.NONE)
+        assertThat(tbrState(basal = 0.805, profileBasal = 0.8)).isEqualTo(TbrState.NONE)
+        assertThat(tbrState(basal = 1.5, profileBasal = 0.8)).isEqualTo(TbrState.HIGH)
+        assertThat(tbrState(basal = 0.4, profileBasal = 0.8)).isEqualTo(TbrState.LOW)
+        assertThat(tbrState(basal = 0.0, profileBasal = 0.8)).isEqualTo(TbrState.LOW)
+        assertThat(tbrState(basal = 0.8, profileBasal = null)).isEqualTo(TbrState.NONE)
     }
 }
