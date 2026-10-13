@@ -217,9 +217,13 @@ fun TempTargetManagementScreen(
     )
 
     // The view model outlives the screen, so an uncommitted order would otherwise survive until the
-    // screen is reopened — dropping the user straight back into sort mode with a stale order.
+    // screen is reopened — dropping the user straight back into sort mode with a stale order. The
+    // same goes for the state a confirmed Activate/Cancel left behind: reload it now, out of sight.
     DisposableEffect(Unit) {
-        onDispose { viewModel.cancelReorder() }
+        onDispose {
+            viewModel.cancelReorder()
+            viewModel.onScreenClosed()
+        }
     }
 
     AapsTheme {

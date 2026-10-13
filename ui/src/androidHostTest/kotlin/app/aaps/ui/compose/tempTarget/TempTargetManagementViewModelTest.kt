@@ -5,12 +5,15 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.tempTargets.toJson
 import app.aaps.core.interfaces.tempTargets.toTTPresets
 import app.aaps.core.interfaces.utils.DateUtil
@@ -21,6 +24,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -40,6 +44,7 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -331,5 +336,93 @@ internal class TempTargetManagementViewModelTest {
         assertThat(sut.moveReorderItem(3, 4)).isFalse()
         assertThat(sut.isReorderPositionMovable(3)).isFalse()
         assertThat(sut.commitReorder()).isNull()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Closing the screen after a confirmed cancel
+    // ---------------------------------------------------------------------------------------------
+
+    /** A sut whose TT-change stream the test can drive, plus the prepare/commit stubs of a cancel. */
+    private suspend fun TestScope.givenCancelPrepared(commitResult: ActionProgress): MutableSharedFlow<List<TT>> {
+        val changes = MutableSharedFlow<List<TT>>()
+        whenever(persistenceLayer.observeChanges(TT::class)).thenReturn(changes)
+        sut = TempTargetManagementViewModel(
+            persistenceLayer, profileFunction, profileUtil, preferences, rh, dateUtil, aapsLogger,
+            rxBus, batchExecutor, config, CoroutineScope(UnconfinedTestDispatcher())
+        )
+        givenPresets()
+        whenever(batchExecutor.prepare(any(), any(), any())).thenReturn(ActionProgress.Prepared(id = 1L))
+        whenever(batchExecutor.commit(eq(1L), any(), any(), any())).thenReturn(commitResult)
+        clearInvocations(persistenceLayer)
+        return changes
+    }
+
+    /** Runs the cancel up to the confirmation dialog and presses OK on it. */
+    private suspend fun TestScope.confirmCancel(onSuccess: () -> Unit) {
+        sut.cancelActive(onSuccess)
+        advanceUntilIdle()
+        val captor = argumentCaptor<EventShowDialog.OkCancel>()
+        verify(rxBus).send(captor.capture())
+        captor.lastValue.onOk()
+        advanceUntilIdle()
+    }
+
+    @Test
+    fun `a committed cancel closes the screen without reloading the new state first`() = runTest {
+        // The commit writes the TT change that the screen observes. Reloading on it would flash the
+        // new state (card colour, cancel button) during the exit animation (reviewer on #5274).
+        val changes = givenCancelPrepared(ActionProgress.Applied)
+        var closed = false
+
+        confirmCancel { closed = true }
+        changes.emit(emptyList())
+        advanceUntilIdle()
+
+        assertThat(closed).isTrue()
+        verify(persistenceLayer, never()).getTemporaryTargetActiveAt(any())
+    }
+
+    @Test
+    fun `the skipped reload happens once the screen is gone`() = runTest {
+        // The view model is activity scoped: without this, the next visit would still show the
+        // selection from before the cancel.
+        val changes = givenCancelPrepared(ActionProgress.Applied)
+        confirmCancel {}
+        changes.emit(emptyList())
+        advanceUntilIdle()
+
+        sut.onScreenClosed()
+        advanceUntilIdle()
+        verify(persistenceLayer).getTemporaryTargetActiveAt(any())
+
+        // And the observer is live again for later changes.
+        changes.emit(emptyList())
+        advanceUntilIdle()
+        verify(persistenceLayer, times(2)).getTemporaryTargetActiveAt(any())
+    }
+
+    @Test
+    fun `leaving the screen without a commit does not reload`() = runTest {
+        // Unsaved editor values survive a plain back press, as before.
+        givenPresets()
+        clearInvocations(persistenceLayer)
+
+        sut.onScreenClosed()
+        advanceUntilIdle()
+
+        verify(persistenceLayer, never()).getTemporaryTargetActiveAt(any())
+    }
+
+    @Test
+    fun `a rejected cancel keeps the screen open and updating`() = runTest {
+        val changes = givenCancelPrepared(ActionProgress.Rejected(FailureReason.NotReachable))
+        var closed = false
+
+        confirmCancel { closed = true }
+        changes.emit(emptyList())
+        advanceUntilIdle()
+
+        assertThat(closed).isFalse()
+        verify(persistenceLayer).getTemporaryTargetActiveAt(any())
     }
 }
