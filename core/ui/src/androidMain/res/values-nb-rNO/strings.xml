@@ -505,7 +505,7 @@
     <string name="automation_management_desc">Opprett regler som automatisk utfører handlinger basert på utløsere</string>
     <string name="settingsexport">Eksporter innstillinger</string>
     <string name="custom">Egendefinert</string>
-    <string name="preset_settings">Forhåndsinnstilte innstillinger</string>
+    <string name="preset_settings">Forhåndsinnstillinger</string>
     <string name="activation">Aktivering</string>
     <string name="temp_target_management">Midlertidig mål</string>
     <string name="revert_to_defaults">Tilbakestill til standardinnstillinger</string>
