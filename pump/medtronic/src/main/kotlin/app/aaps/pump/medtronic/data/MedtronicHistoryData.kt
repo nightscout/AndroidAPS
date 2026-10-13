@@ -809,6 +809,8 @@ class MedtronicHistoryData(
 
                         entryWithTempId.pumpId = tempBasalProcessDTO.pumpId
                         entryWithTempId.date = tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime)
+                        // The length from history: with the planned one, an ended temp basal was taken as running.
+                        entryWithTempId.durationInSeconds = tempBasalProcessDTO.durationAsSeconds
 
                         if (isTBRActive(entryWithTempId)) {
                             medtronicPumpStatus.runningTBR = entryWithTempId
