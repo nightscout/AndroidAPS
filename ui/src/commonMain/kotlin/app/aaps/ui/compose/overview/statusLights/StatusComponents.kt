@@ -24,6 +24,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.statusLevelToColor
 import app.aaps.core.ui.compose.statusLevelToDescription
 import app.aaps.core.ui.compose.stringResource
@@ -80,48 +81,83 @@ private fun StatusRow(
 ) {
     val ageColor = statusLevelToColor(item.ageStatus)
     val levelColor = statusLevelToColor(item.levelStatus)
+    val showLevel = item.level != null && item.expandedLevel
+
+    // This row shows two values at once, so it speaks the worse of the two: naming both severities
+    // would be a mouthful, and the same choice is already made on the collapsed Overview chip.
+    val worstStatus = when {
+        item.ageStatus == StatusLevel.CRITICAL ||
+            (showLevel && item.levelStatus == StatusLevel.CRITICAL) -> StatusLevel.CRITICAL
+
+        item.ageStatus == StatusLevel.WARNING ||
+            (showLevel && item.levelStatus == StatusLevel.WARNING)  -> StatusLevel.WARNING
+
+        else                                                        -> StatusLevel.NORMAL
+    }
+    val severity = stringResourceOrNull(statusLevelToDescription(worstStatus))
 
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Icon
-        Icon(
-            imageVector = item.icon,
-            // Decorative: the Text right beside it already says the same word, so naming the icon
-            // too had a screen reader announce "Cannula" twice before reaching the row's value.
-            contentDescription = null,
-            modifier = Modifier.size(28.dp),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        // Label
-        Text(
-            text = item.label,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.weight(1f)
-        )
-
-        // Age with vertical progress
-        StatusValueWithProgress(
-            value = item.age,
-            valueColor = ageColor,
-            progress = item.agePercent,
-            progressColor = ageColor,
-            levelDescription = stringResourceOrNull(statusLevelToDescription(item.ageStatus))
-        )
-
-        // Level with vertical progress (if available and allowed in expanded view)
-        if (item.level != null && item.expandedLevel) {
-            StatusValueWithProgress(
-                value = item.level,
-                valueColor = levelColor,
-                progress = item.levelPercent,
-                progressColor = levelColor,
-                levelDescription = stringResourceOrNull(statusLevelToDescription(item.levelStatus))
+        // Everything that is only read is one accessibility node, so a screen reader reads
+        // "Critical, Cannula, 5d 12h, 150U" in one stop. It used to stop on the name, then the age,
+        // then the level: three swipes for a row nobody can change. The merge has to happen HERE and
+        // the value columns must carry no semantics of their own, because a merging parent does not
+        // absorb a child that is itself merging - which is also what keeps the action button below
+        // separately focusable, so it stays outside this wrapper on purpose.
+        //
+        // A merge rather than clearAndSetSemantics: clearing would drop the values out of the
+        // semantics tree altogether, leaving them unreadable to UI tests and anything else that
+        // inspects the tree. Merging keeps each Text and only changes how it is grouped. The
+        // description adds the severity, which on a merging node comes before the children instead
+        // of replacing them.
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .then(
+                    if (severity != null) Modifier.semantics(mergeDescendants = true) { contentDescription = severity }
+                    else Modifier.semantics(mergeDescendants = true) { }
+                ),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // Icon
+            Icon(
+                imageVector = item.icon,
+                // Decorative: the Text right beside it already says the same word, so naming the icon
+                // too had a screen reader announce "Cannula" twice before reaching the row's value.
+                contentDescription = null,
+                modifier = Modifier.size(28.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
+
+            // Label
+            Text(
+                text = item.label,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.weight(1f)
+            )
+
+            // Age with vertical progress
+            StatusValueWithProgress(
+                value = item.age,
+                valueColor = ageColor,
+                progress = item.agePercent,
+                progressColor = ageColor
+            )
+
+            // Level with vertical progress (if available and allowed in expanded view)
+            if (item.level != null && showLevel) {
+                StatusValueWithProgress(
+                    value = item.level,
+                    valueColor = levelColor,
+                    progress = item.levelPercent,
+                    progressColor = levelColor
+                )
+            }
         }
 
         // Action button. Name it with the row it belongs to, because the same verb appears on more
@@ -151,25 +187,15 @@ private fun StatusValueWithProgress(
     value: String,
     valueColor: Color,
     progress: Float,
-    progressColor: Color,
-    /**
-     * Spoken severity, or null when there is nothing to flag. The colour of [valueColor] used to be
-     * the only sign that a cannula was past its change day or a reservoir nearly empty.
-     */
-    levelDescription: String? = null
+    progressColor: Color
 ) {
+    // No semantics of its own: the whole row is one node built by its caller, which already names
+    // this value and says how bad it is. The severity used to be announced here, because the colour
+    // of [valueColor] was otherwise the only sign that a cannula was overdue or a reservoir nearly
+    // empty - that sentence now lives in the row description instead.
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-        // Merged so the value and its severity are one item rather than two stops, and the progress
-        // bar stops being announced separately - it shows the same thing the value already says.
-        // The description carries only the severity: on a merging node it is added before the
-        // children rather than replacing them, so this reads "Critical, 3 days".
-        modifier = if (levelDescription != null) {
-            Modifier.semantics(mergeDescendants = true) { contentDescription = levelDescription }
-        } else {
-            Modifier.semantics(mergeDescendants = true) { }
-        }
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Text(
             text = value,
