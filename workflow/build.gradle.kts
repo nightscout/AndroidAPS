@@ -44,6 +44,16 @@ kotlin {
             }
         }
 
+        // Tests of commonMain classes belong here, not in androidHostTest: that source set runs on the
+        // JVM only, so the executor that ships to iOS would be verified on Android alone. Mockito is
+        // JVM only, so tests here use hand written fakes.
+        getByName("commonTest") {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+
         // Hand written rather than taken from test-module-dependencies, because that applies
         // com.android.library and so cannot be used by a multiplatform module. Same approach as
         // :plugins:aps.

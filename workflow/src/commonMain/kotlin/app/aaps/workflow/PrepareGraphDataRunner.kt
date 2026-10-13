@@ -86,7 +86,7 @@ class PrepareGraphDataRunner(
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val scope: CoroutineScope,
     private val autosensDataProvider: () -> AutosensData
-) {
+) : CalculationPhase {
 
     /**
      * Runs one prepare phase.
@@ -94,7 +94,7 @@ class PrepareGraphDataRunner(
      * [isStopped] is asked between phases so a replaced chain gives up promptly. It is the executor's
      * flag for this run; the maths does not need to know what stopped it.
      */
-    suspend fun run(job: String, generation: Long, isStopped: () -> Boolean): WorkOutcome {
+    override suspend fun run(job: String, generation: Long, isStopped: () -> Boolean): WorkOutcome {
         val data = workflowChainData.prepareFor(job, generation)
             ?: return WorkOutcome.StaleInput
 

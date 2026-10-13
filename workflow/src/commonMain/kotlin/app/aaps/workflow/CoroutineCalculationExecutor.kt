@@ -43,8 +43,8 @@ import kotlin.time.Duration.Companion.seconds
 class CoroutineCalculationExecutor(
     private val scope: CoroutineScope,
     private val aapsLogger: AAPSLogger,
-    private val prepare: PrepareGraphDataRunner,
-    private val post: PostCalculationRunner,
+    private val prepare: CalculationPhase,
+    private val post: CalculationPhase,
     private val wakeLock: CalculationWakeLock?
 ) : CalculationExecutor {
 
