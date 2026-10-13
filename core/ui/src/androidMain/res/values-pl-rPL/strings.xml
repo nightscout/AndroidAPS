@@ -226,6 +226,8 @@
     <string name="logout">Wyloguj się</string>
     <string name="prime_fill">Rozpocznij/Wypełnij</string>
     <string name="prime_not_available">Ta pompa sama rozpoczyna i napełnia się podczas aktywacji. Rozpocznij/Wypełnij z poziomu AAPS nie jest dostępne.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Zmień</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Wypełnij</string>
     <string name="site_rotation">Zmiana miejsca</string>
     <string name="edit_site">Edytuj</string>
     <string name="select_arrow">Wybierz strzałkę</string>
