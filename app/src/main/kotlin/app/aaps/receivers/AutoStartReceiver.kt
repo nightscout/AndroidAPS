@@ -18,9 +18,16 @@ class AutoStartReceiver : MetroBroadcastReceiver() {
         processIntent(context, intent)
     }
 
+    /**
+     * Starts DummyService after a boot and after an update of AAPS.
+     *
+     * After an update nothing else would start the process until a CGM broadcast, a job or the user
+     * opens the app, and the loop does not run until then. Both broadcasts are on Android's list of
+     * moments when an app may start a foreground service from the background.
+     */
     @VisibleForTesting
     fun processIntent(context: Context, intent: Intent) {
-        if (intent.action == Intent.ACTION_BOOT_COMPLETED)
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED || intent.action == Intent.ACTION_MY_PACKAGE_REPLACED)
             dummyServiceHelper.startService(context)
     }
 }

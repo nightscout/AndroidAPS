@@ -1,5 +1,6 @@
 package app.aaps.persistentNotification
 
+import android.app.ForegroundServiceStartNotAllowedException
 import android.app.Notification
 import android.content.Intent
 import android.os.Binder
@@ -43,12 +44,7 @@ class DummyService : MetroService() {
 
     override fun onCreate() {
         super.onCreate()
-        try {
-            aapsLogger.debug("Starting DummyService with ID ${notificationHolder.notificationID} notification ${notificationHolder.notification}")
-            startForeground(notificationHolder.notificationID, notificationHolder.notification)
-        } catch (e: Exception) {
-            startForeground(4711, Notification())
-        }
+        goForeground()
         rxBus.toFlow(EventAppExit::class)
             .collectResilient(scope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) {
                 aapsLogger.debug(LTag.CORE, "EventAppExit received")
@@ -65,12 +61,26 @@ class DummyService : MetroService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
+        goForeground()
+        return START_STICKY
+    }
+
+    /**
+     * Puts this service into the foreground with the ongoing notification.
+     *
+     * When Android refuses the foreground state itself - Android 12+ does that for an app in the
+     * background without an exemption - the fallback notification would be refused the same way, and
+     * that second throw would end the app. So a refusal is only logged. `DummyServiceHelper` and
+     * `PersistentNotificationPlugin` start the service again once AAPS is on screen.
+     */
+    private fun goForeground() {
         try {
             aapsLogger.debug("Starting DummyService with ID ${notificationHolder.notificationID} notification ${notificationHolder.notification}")
             startForeground(notificationHolder.notificationID, notificationHolder.notification)
+        } catch (e: ForegroundServiceStartNotAllowedException) {
+            aapsLogger.warn(LTag.CORE, "Android does not allow DummyService into the foreground now: ${e.message}")
         } catch (e: Exception) {
             startForeground(4711, Notification())
         }
-        return START_STICKY
     }
 }
