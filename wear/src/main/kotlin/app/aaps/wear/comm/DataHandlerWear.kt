@@ -122,6 +122,9 @@ class DataHandlerWear(
     private fun setupBus() {
         onEvent<EventData.ActionPing> {
             rxBus.send(EventWearToMobile(EventData.ActionPong(System.currentTimeMillis(), Build.VERSION.SDK_INT)))
+            // The phone pings when it (re)connects, also after its app restarted and lost what the
+            // watch last told it. The syncs in between only report a changed status.
+            dataStoreScope.launch { watchFacePushHelper.reportStatus() }
         }
         onEvent<EventData.ConfirmAction> {
             // The resolving terminal (master-authored lines, or an error) arrived → dismiss the "contacting master"
@@ -191,8 +194,9 @@ class DataHandlerWear(
             dataStoreScope.launch {
                 complicationDataRepository.updateStatusData(it)
 
-                // Trigger complications AFTER DataStore write completes
-                // This ensures complications showing IOB/COB/BR update immediately
+                // The one complication refresh of a sync, AFTER the DataStore write. Status is the last
+                // data message of a resend and SingleBg is only ever sent inside one, so refreshing here
+                // covers both; refreshing on SingleBg too rebuilt all 23 complications twice per sync.
                 triggerComplicationUpdates()
             }
             LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
@@ -201,9 +205,8 @@ class DataHandlerWear(
             // Store in DataStore - supports all datasets (0, 1, 2)
             dataStoreScope.launch {
                 complicationDataRepository.updateBgData(it)
-
-                // Trigger complications AFTER DataStore write completes
-                triggerComplicationUpdates()
+                // Complications are refreshed once, on Status (see above); the graph tile draws from
+                // the BG data alone, so it refreshes here.
                 TileService.getUpdater(context).requestUpdate(BgGraphTileService::class.java)
             }
 
@@ -246,11 +249,13 @@ class DataHandlerWear(
             // The Watch Face Push face the wearer chose on the phone. Stored whatever the watch
             // can do with it, so a watch updated to Wear OS 6 later installs the chosen face on
             // its next start; swapped now when the watch can. Either way the phone is told what
-            // the watch has, which is what lets its screen show the choice only where it applies
+            // the watch has, which is what lets its screen show the choice only where it applies.
+            // These preferences come with every sync, so the reply goes out only when the status
+            // changed; the phone's ping (connect, app restart) and an install always get one.
             val faceChanged = watchFacePushHelper.selectFace(it.pushedWatchface)
             dataStoreScope.launch {
                 if (faceChanged) watchFacePushHelper.installOrUpdate()
-                else watchFacePushHelper.reportStatus()
+                else watchFacePushHelper.reportStatusIfChanged()
             }
         }
         onEvent<EventData.QuickWizard> {
