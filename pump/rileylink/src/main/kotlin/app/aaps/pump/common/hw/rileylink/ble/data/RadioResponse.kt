@@ -40,14 +40,19 @@ class RadioResponse(
     }
 
     fun isValid(): Boolean {
-        // We should check for all listening commands, but only one is actually used
-
-        if (command?.getCommandType() != RileyLinkCommandType.SendAndListen) {
+        // We should check for all listening commands, but only one is actually used.
+        // No command means a radio response too: the wake-up and the frequency scan create it without one.
+        val command = command
+        if (command != null && command.getCommandType() != RileyLinkCommandType.SendAndListen) {
             return true
         }
 
         if (!decodedOK) {
             return false
+        }
+        // Only the local 4b6b decoding splits off the CRC byte. With the other encodings there is no CRC here.
+        if (rileyLinkUtil.encoding != RileyLinkEncodingType.FourByteSixByteLocal) {
+            return true
         }
         return receivedCRC == CRC.crc8(decodedPayload)
     }
@@ -76,8 +81,11 @@ class RadioResponse(
             // for non-radio commands we just return the raw response
             // well, for non-radio commands we shouldn't even reach this point
             // but getVersion is kind of exception
-
-            if (command?.getCommandType() != RileyLinkCommandType.SendAndListen) {
+            // A response without a command is a radio response and is decoded. With
+            // "command?.type != SendAndListen" it was returned raw, so with local 4b6b encoding
+            // the Medtronic wake-up read the model from undecoded bytes and the pump stayed unreachable.
+            val command = command
+            if (command != null && command.getCommandType() != RileyLinkCommandType.SendAndListen) {
                 decodedOK = true
                 decodedPayload = encodedPayload
                 return
