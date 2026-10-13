@@ -2,6 +2,7 @@ package app.aaps.workflow
 
 import android.content.Context
 import android.os.PowerManager
+import app.aaps.core.interfaces.workflow.CalculationWakeLock
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn

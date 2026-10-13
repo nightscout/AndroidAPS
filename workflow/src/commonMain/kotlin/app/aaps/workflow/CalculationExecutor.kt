@@ -1,5 +1,6 @@
 package app.aaps.workflow
 
+import app.aaps.core.interfaces.workflow.CalculationWakeLock
 import kotlin.time.Duration
 
 /**
@@ -56,4 +57,11 @@ interface CalculationExecutor {
      * @return true when [job] is idle, false when [timeout] ran out first
      */
     suspend fun awaitIdle(job: String, timeout: Duration): Boolean
+
+    /**
+     * Keeps the device awake with the same lock a run takes, until the handle is released or [timeout]
+     * ran out. Null when the platform has no wake lock. See
+     * [app.aaps.core.interfaces.workflow.CalculationWorkflow.keepAwake] for what it is for.
+     */
+    fun keepAwake(timeout: Duration): CalculationWakeLock.Held?
 }

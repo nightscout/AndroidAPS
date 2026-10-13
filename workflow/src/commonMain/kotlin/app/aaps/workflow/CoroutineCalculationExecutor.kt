@@ -2,6 +2,7 @@ package app.aaps.workflow
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.workflow.CalculationWakeLock
 import app.aaps.core.objects.workflow.WorkOutcome
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -202,7 +203,9 @@ class CoroutineCalculationExecutor(
             WorkOutcome.Failure("$phase phase threw $e")
         }
 
-    private fun keepAwake(): CalculationWakeLock.Held? = wakeLock?.acquire(WAKE_LOCK_TIMEOUT.inWholeMilliseconds)
+    override fun keepAwake(timeout: Duration): CalculationWakeLock.Held? = wakeLock?.acquire(timeout.inWholeMilliseconds)
+
+    private fun keepAwake(): CalculationWakeLock.Held? = keepAwake(WAKE_LOCK_TIMEOUT)
 
     /**
      * Releases [awake] when every one of [jobs] has ended, however they end.

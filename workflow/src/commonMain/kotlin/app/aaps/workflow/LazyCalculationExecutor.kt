@@ -1,6 +1,7 @@
 package app.aaps.workflow
 
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.workflow.CalculationWakeLock
 import kotlinx.coroutines.CoroutineScope
 import kotlin.time.Duration
 
@@ -53,4 +54,8 @@ class LazyCalculationExecutor(
     override suspend fun waitForPrepare(job: String, reason: String) = delegate.waitForPrepare(job, reason)
 
     override suspend fun awaitIdle(job: String, timeout: Duration): Boolean = delegate.awaitIdle(job, timeout)
+
+    // Answered here, not by the delegate: a BG can ask for this before the first run, and building the
+    // delegate looks up the runners, which is what this class defers.
+    override fun keepAwake(timeout: Duration): CalculationWakeLock.Held? = wakeLock?.acquire(timeout.inWholeMilliseconds)
 }

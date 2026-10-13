@@ -1,5 +1,6 @@
 package app.aaps.workflow
 
+import app.aaps.core.interfaces.workflow.CalculationWakeLock
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
 import app.aaps.core.objects.workflow.WorkOutcome
 import app.aaps.shared.tests.TestBase

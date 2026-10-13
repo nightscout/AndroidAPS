@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.PowerManager
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.workflow.CalculationWakeLock
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject

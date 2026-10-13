@@ -1,5 +1,6 @@
 package app.aaps.plugins.main.iob.iobCobCalculator
 
+import app.aaps.core.interfaces.workflow.CalculationWakeLock
 import app.aaps.shared.tests.AAPSLoggerTest
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CompletableDeferred
@@ -52,6 +53,34 @@ class HistoryChangeSchedulerTest {
      */
     private var atEndOfWait: (suspend () -> Unit)? = null
 
+    /** Counts the wake locks the scheduler takes and gives back. Tests run on one thread. */
+    private class CountingWakeLock : CalculationWakeLock {
+
+        var acquired = 0
+        var released = 0
+        var lastTimeoutMs = 0L
+
+        override fun acquire(timeoutMs: Long): CalculationWakeLock.Held {
+            acquired++
+            lastTimeoutMs = timeoutMs
+            return object : CalculationWakeLock.Held {
+                private var done = false
+                override fun release() {
+                    if (done) return
+                    done = true
+                    released++
+                }
+            }
+        }
+
+        fun held(): Int = acquired - released
+    }
+
+    private val wakeLock = CountingWakeLock()
+
+    /** How many wake locks were held while each run was going. */
+    private val heldDuringRun = mutableListOf<Int>()
+
     private fun TestScope.scheduler(maxWait: Duration = HistoryChangeScheduler.MAX_WAIT_FOR_CALCULATION): HistoryChangeScheduler {
         scope = backgroundScope
         return HistoryChangeScheduler(
@@ -64,13 +93,15 @@ class HistoryChangeSchedulerTest {
                 idle
             },
             onRunFailed = { failures++ },
-            maxWaitForCalculation = maxWait
+            maxWaitForCalculation = maxWait,
+            keepAwake = { timeout -> wakeLock.acquire(timeout.inWholeMilliseconds) }
         ) { oldDataTimestamp, reloadBgData, triggeredByNewBG ->
             if (failingRuns > 0) {
                 failingRuns--
                 error("invalidation failed")
             }
             runs += Run(oldDataTimestamp, reloadBgData, triggeredByNewBG)
+            heldDuringRun += wakeLock.held()
             runGate?.also { runGate = null }?.await()
         }
     }
@@ -289,5 +320,62 @@ class HistoryChangeSchedulerTest {
             Run(1_000, reloadBgData = false, triggeredByNewBG = true),
             Run(5_000, reloadBgData = false, triggeredByNewBG = true)
         ).inOrder()
+    }
+
+    /**
+     * The wait before a run is a coroutine delay, which does not wake a sleeping CPU. The device must
+     * be kept awake from the change until the run has started the calculation, which then has its own.
+     */
+    @Test
+    fun `the device is kept awake from the change until the run has started`() = runTest {
+        val sut = scheduler()
+
+        sut.schedule(1_000, reloadBgData = true, triggeredByNewBG = true)
+        assertThat(wakeLock.held()).isEqualTo(1) // taken at once, before the debounce
+        assertThat(wakeLock.lastTimeoutMs).isAtLeast((HistoryChangeScheduler.DEBOUNCE + HistoryChangeScheduler.MAX_WAIT_FOR_CALCULATION).inWholeMilliseconds)
+        advanceTimeBy(HistoryChangeScheduler.DEBOUNCE - 1.seconds)
+        assertThat(wakeLock.held()).isEqualTo(1)
+
+        settle()
+        assertThat(heldDuringRun).containsExactly(1) // still held while the run starts the calculation
+        assertThat(wakeLock.held()).isEqualTo(0)
+    }
+
+    /** A replaced change gives its lock back; only the replacement holds one. */
+    @Test
+    fun `a replaced change gives its wake lock back`() = runTest {
+        val sut = scheduler()
+
+        sut.schedule(5_000, reloadBgData = false, triggeredByNewBG = true)
+        sut.schedule(1_000, reloadBgData = false, triggeredByNewBG = false) // older, so it replaces the first
+        runCurrent()
+        assertThat(wakeLock.acquired).isEqualTo(2)
+        assertThat(wakeLock.held()).isEqualTo(1)
+
+        settle()
+        assertThat(wakeLock.held()).isEqualTo(0)
+    }
+
+    /** A dropped change gives its lock back at once, it does not wait for the timeout. */
+    @Test
+    fun `a dropped change gives its wake lock back`() = runTest {
+        val sut = scheduler()
+
+        sut.schedule(1_000, reloadBgData = false, triggeredByNewBG = true)
+        sut.drop()
+        runCurrent()
+
+        assertThat(wakeLock.held()).isEqualTo(0)
+    }
+
+    /** A change for a stopped plugin is dropped, and it must not leave a lock behind. */
+    @Test
+    fun `a change for a stopped plugin holds no wake lock`() = runTest {
+        val sut = scheduler()
+        scope = null
+
+        sut.schedule(1_000, reloadBgData = false, triggeredByNewBG = true)
+
+        assertThat(wakeLock.held()).isEqualTo(0)
     }
 }

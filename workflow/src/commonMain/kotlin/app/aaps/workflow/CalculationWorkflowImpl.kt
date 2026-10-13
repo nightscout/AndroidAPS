@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
+import app.aaps.core.interfaces.workflow.CalculationWakeLock
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.UPDATE_PREDICTIONS
@@ -61,6 +62,8 @@ class CalculationWorkflowImpl(
     override suspend fun waitForCalculationFinish(job: String, reason: String) = executor.waitForPrepare(job, reason)
 
     override suspend fun awaitCalculationIdle(job: String, timeout: Duration): Boolean = executor.awaitIdle(job, timeout)
+
+    override fun keepAwake(timeout: Duration): CalculationWakeLock.Held? = executor.keepAwake(timeout)
 
     override suspend fun runCalculation(
         job: String,
