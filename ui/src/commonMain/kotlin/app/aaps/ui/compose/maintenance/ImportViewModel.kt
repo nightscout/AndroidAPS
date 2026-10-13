@@ -418,9 +418,12 @@ class ImportViewModel(
      * chose, delivering nothing, with nothing on screen to say so. The notification names what is
      * active now, because "no pump selected" is not what happened and would send them looking for
      * the wrong thing.
+     *
+     * Both pumps are the drivers themselves (`activePumpInternal`). `activePump` is the concentration
+     * wrapper, which is never a [VirtualPump], so the check could never fire.
      */
     private fun notifyIfPumpFellBackToVirtual(pumpBefore: Any) {
-        val pumpNow = activePlugin.activePump
+        val pumpNow = activePlugin.activePumpInternal
         if (pumpNow !is VirtualPump || pumpBefore is VirtualPump) return
         notificationManager.post(
             id = NotificationId.WRONG_DRIVER,
@@ -521,7 +524,7 @@ class ImportViewModel(
                         // Medtronic's serial, `UseExtended` - react by talking to the pump; inside the
                         // hold that command queues behind the apply instead of racing it.
                         // Which pump was in charge BEFORE, so the fallback below can be spotted.
-                        val pumpBefore = activePlugin.activePump
+                        val pumpBefore = activePlugin.activePumpInternal
                         config.whileReconfiguring {
                             importExportPrefs.executeImport(confirmed.prefs, confirmed.keepPumpSettings)
                             importExportPrefs.prepareImportedSettings()
