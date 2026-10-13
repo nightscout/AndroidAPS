@@ -2,8 +2,7 @@ package app.aaps.plugins.sync.tidepool.comm
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -14,7 +13,7 @@ import retrofit2.Response
 
 internal class TidepoolCallback<T>(
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBus,
+    private val tidepoolRepository: TidepoolRepository,
     private val session: Session,
     private val name: String,
     private val onSuccess: () -> Unit,
@@ -34,7 +33,7 @@ internal class TidepoolCallback<T>(
             } else {
                 val msg = name + " was not successful: " + response.code() + " " + response.message()
                 aapsLogger.debug(LTag.TIDEPOOL, msg)
-                rxBus.send(EventTidepoolStatus(msg))
+                tidepoolRepository.addLog(msg)
                 onFail()
             }
         }
@@ -44,7 +43,7 @@ internal class TidepoolCallback<T>(
         coroutineScope.launch {
             val msg = "$name Failed: $t"
             aapsLogger.debug(LTag.TIDEPOOL, msg)
-            rxBus.send(EventTidepoolStatus(msg))
+            tidepoolRepository.addLog(msg)
             onFail()
         }
     }

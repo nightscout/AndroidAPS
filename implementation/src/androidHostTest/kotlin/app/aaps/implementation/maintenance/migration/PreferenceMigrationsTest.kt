@@ -49,17 +49,6 @@ class PreferenceMigrationsTest {
 
     // ----- The renames -----
 
-    @Test fun `activity monitor counters are renamed`() = runTest {
-        val store = storeOf("Monitor_Overview_total" to 42L, "Monitor_Overview_resumed" to 7L, "Monitor_Overview_start" to 9L)
-
-        sut().migrate(store)
-
-        assertThat(store.getLong("Monitor_total_Overview", 0L)).isEqualTo(42L)
-        assertThat(store.getLong("Monitor_resumed_Overview", 0L)).isEqualTo(7L)
-        assertThat(store.getLong("Monitor_start_Overview", 0L)).isEqualTo(9L)
-        assertThat(store.contains("Monitor_Overview_total")).isFalse()
-    }
-
     @Test fun `objectives progress is renamed`() = runTest {
         val store = storeOf("Objectives_config_started" to 1L, "Objectives_config_accomplished" to 2L)
 
@@ -135,6 +124,19 @@ class PreferenceMigrationsTest {
         assertThat(store.getString("tidepool_auth_state", "")).isEqualTo("live")
     }
 
+    /** The activity monitor was removed. Its counters go in both spellings, and its card flag too. */
+    @Test fun `activity monitor counters are removed`() = runTest {
+        val store = storeOf(
+            "Monitor_Overview_total" to 42L, "Monitor_Overview_resumed" to 7L, "Monitor_Overview_start" to 9L,
+            "Monitor_total_MainActivity" to 42L, "Monitor_resumed_MainActivity" to 7L, "Monitor_start_MainActivity" to 9L,
+            "stats_activity_expanded" to true
+        )
+
+        sut().migrate(store)
+
+        assertThat(store.getAll()).isEmpty()
+    }
+
     // ----- A migration may do more than move a key -----
 
     /**
@@ -193,12 +195,12 @@ class PreferenceMigrationsTest {
     }
 
     @Test fun `a value that will not convert never becomes a substitute`() = runTest {
-        val store = storeOf("Monitor_Overview_total" to "not a number")
+        val store = storeOf("Objectives_config_started" to "not a number")
 
         sut().migrate(store)
 
-        assertThat(store.contains("Monitor_total_Overview")).isFalse()
-        assertThat(store.contains("Monitor_Overview_total")).isTrue()
+        assertThat(store.contains("Objectives_started_config")).isFalse()
+        assertThat(store.contains("Objectives_config_started")).isTrue()
     }
 
     // ----- Properties of the whole pass -----

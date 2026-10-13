@@ -26,6 +26,9 @@ fun PreferenceSheetContent(
     settingsDef: PreferenceSubScreenDef,
     modifier: Modifier = Modifier
 ) {
+    // Without it a key's own visibility rule is skipped, and the sheet showed rows the settings screen
+    // hides (insulin age and battery age thresholds on a patch pump).
+    val visibilityContext = LocalVisibilityContext.current
     ProvidePreferenceTheme {
         Column(modifier) {
             val groups = settingsDef.items.filterIsInstance<PreferenceSubScreenDef>()
@@ -38,12 +41,12 @@ fun PreferenceSheetContent(
                     icon = settingsDef.icon,
                     collapsible = false
                 ) {
-                    AdaptivePreferenceList(items = settingsDef.items)
+                    AdaptivePreferenceList(items = settingsDef.items, visibilityContext = visibilityContext)
                 }
             } else {
                 // Mixed defs: render any loose keys first (no card), then a collapsible card per group.
                 val looseKeys = settingsDef.items.filterNot { it is PreferenceSubScreenDef }
-                if (looseKeys.isNotEmpty()) AdaptivePreferenceList(items = looseKeys)
+                if (looseKeys.isNotEmpty()) AdaptivePreferenceList(items = looseKeys, visibilityContext = visibilityContext)
                 groups.forEach { group ->
                     var expanded by remember(group.key) { mutableStateOf(false) }
                     CollapsibleCardSectionContent(
@@ -52,7 +55,7 @@ fun PreferenceSheetContent(
                         onToggle = { expanded = !expanded },
                         icon = group.icon
                     ) {
-                        AdaptivePreferenceList(items = group.items)
+                        AdaptivePreferenceList(items = group.items, visibilityContext = visibilityContext)
                     }
                 }
             }

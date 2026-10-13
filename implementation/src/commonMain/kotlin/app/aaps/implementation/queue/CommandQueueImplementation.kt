@@ -530,6 +530,19 @@ class CommandQueueImplementation(
                 removeAll(CommandType.SMB_BOLUS, success = false, cancelled = true)
             }
             if (isRunning(type)) return executingNowError()
+            if (type == CommandType.BOLUS) {
+                // A waiting SMB was calculated without this bolus, and this bolus without the SMB, so giving
+                // both would treat the same BG twice. Drop the SMB: after a failed SMB the loop runs again
+                // with temp basal only.
+                removeAll(CommandType.SMB_BOLUS, success = false, cancelled = true)
+                // An SMB that is already being delivered cannot be dropped. Refuse this bolus instead of
+                // queueing it behind the SMB: both would use the one progress state, and the SMB would write
+                // into this bolus's dialog (#4546). Checked after the drop, so an SMB is either dropped above
+                // or running here. Cancelled, because no insulin was given: the user is told, without the
+                // delivery error alarm.
+                if (isRunning(CommandType.SMB_BOLUS))
+                    return pumpEnactResultProvider().success(false).enacted(false).cancelled(true).comment(ImplementationStrings.smb_being_delivered)
+            }
             // A replaced bolus was not delivered either. Its caller must hear that, or it saves its
             // carbs next to the carbs of the bolus that replaces it.
             removeAll(type, success = false, cancelled = true)

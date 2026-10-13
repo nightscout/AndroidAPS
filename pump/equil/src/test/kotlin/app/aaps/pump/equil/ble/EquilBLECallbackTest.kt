@@ -1,11 +1,18 @@
 package app.aaps.pump.equil.ble
 
 import android.bluetooth.BluetoothGatt
+import android.os.Handler
+import app.aaps.core.interfaces.pump.ble.BleAdapter
 import app.aaps.core.interfaces.pump.ble.BleGatt
 import app.aaps.core.interfaces.pump.ble.BleScanner
+import app.aaps.pump.equil.EquilConst
+import app.aaps.pump.equil.database.ResolvedResult
 import app.aaps.pump.equil.driver.definition.BluetoothConnectionState
 import app.aaps.pump.equil.manager.EquilManager
+import app.aaps.pump.equil.manager.command.CmdRunningModeGet
+import app.aaps.pump.equil.manager.command.CmdTempBasalGet
 import app.aaps.shared.tests.TestBase
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -13,6 +20,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -28,7 +38,7 @@ class EquilBLECallbackTest : TestBase() {
     @Mock private lateinit var bleTransport: EquilBleTransport
     @Mock private lateinit var gatt: BleGatt
     @Mock private lateinit var scanner: BleScanner
-    @Mock private lateinit var bleAdapter: app.aaps.core.interfaces.pump.ble.BleAdapter
+    @Mock private lateinit var bleAdapter: BleAdapter
     @Mock private lateinit var equilManager: EquilManager
 
     private lateinit var equilBLE: EquilBLE
@@ -160,6 +170,74 @@ class EquilBLECallbackTest : TestBase() {
 
         verify(gatt, never()).enableNotifications()
         verify(gatt, never()).requestConnectionPriority(any())
+    }
+
+    // --- link setup failures (#5077) ---
+
+    /** A command that waits for its answer, like EquilManager does. */
+    private fun waitingCommand(): CmdTempBasalGet {
+        val cmd = CmdTempBasalGet(aapsLogger, mock(), equilManager).apply { cmdSuccess = true }
+        equilBLE.isConnected = true
+        equilBLE.writeCmd(cmd) // link up, notifications not on yet: the command is only stored
+        return cmd
+    }
+
+    @Test
+    fun `failed service discovery fails the waiting command and closes the link`() {
+        initWithManager()
+        val cmd = waitingCommand()
+
+        equilBLE.onServicesDiscovered(false)
+
+        assertFalse(cmd.cmdSuccess)
+        assertEquals(ResolvedResult.CONNECT_ERROR, cmd.resolvedResult)
+        assertFalse(equilBLE.isConnected)
+        verify(gatt).close()
+    }
+
+    @Test
+    fun `failed notification enable fails the waiting command and closes the link`() {
+        val callback = argumentCaptor<() -> Unit>()
+        initWithManager()
+        verify(bleTransport).onDescriptorWriteFailed = callback.capture()
+        val cmd = waitingCommand()
+
+        // The transport calls this when writing the notification descriptor fails.
+        callback.firstValue.invoke()
+
+        assertFalse(cmd.cmdSuccess)
+        assertEquals(ResolvedResult.CONNECT_ERROR, cmd.resolvedResult)
+        assertFalse(equilBLE.isConnected)
+        verify(gatt).close()
+    }
+
+    // --- advertisement scan timeout (#5077) ---
+
+    @Test
+    fun `the advertisement scan for a known pump is stopped after a while`() {
+        initWithManager()
+        whenever(scanner.scannedDevices).thenReturn(MutableSharedFlow())
+        val handler = mock<Handler>()
+        equilBLE.handler = handler
+
+        // Known address: connect directly and scan only for the advertisement.
+        equilBLE.connect("test")
+
+        verify(handler).sendEmptyMessageDelayed(EquilBLE.TIME_OUT_WHAT, EquilConst.EQUIL_ADVERT_SCAN_TIME_OUT)
+    }
+
+    @Test
+    fun `a scan that has to find the pump gets no scan timeout`() {
+        initWithManager()
+        whenever(scanner.scannedDevices).thenReturn(MutableSharedFlow())
+        val handler = mock<Handler>()
+        equilBLE.handler = handler
+
+        // No link, and a command that connects by scanning: the connect timeout ends this scan.
+        equilBLE.writeCmd(CmdRunningModeGet(aapsLogger, mock(), equilManager))
+
+        verify(scanner).startScan()
+        verify(handler, never()).sendEmptyMessageDelayed(eq(EquilBLE.TIME_OUT_WHAT), any())
     }
 
     // --- onDescriptorWritten ---

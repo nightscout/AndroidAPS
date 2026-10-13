@@ -322,9 +322,8 @@ class DataHandlerWear(
     }
 
     private fun handleBolusProgress(bolusProgress: EventData.BolusProgress) {
-        val vibratePattern: LongArray
+        // The vibration comes from the channel (see createBolusProgressChannels)
         val vibrate = sp.getBoolean("vibrateOnBolus", true)
-        vibratePattern = if (vibrate) longArrayOf(0, 50, 1000) else longArrayOf(0, 1, 1000)
 
         createBolusProgressChannels()
         val cancelIntent = Intent(context, DataLayerListenerServiceWear::class.java)
@@ -341,7 +340,6 @@ class DataHandlerWear(
                 .setSubText(context.getString(R.string.press_to_cancel))
                 .setContentIntent(cancelPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setVibrate(vibratePattern)
                 .setOnlyAlertOnce(true)
                 .addAction(R.drawable.ic_cancel, context.getString(R.string.cancel_bolus), cancelPendingIntent)
         val notificationManager = NotificationManagerCompat.from(context)
@@ -382,22 +380,22 @@ class DataHandlerWear(
     }
 
     private fun handleOpenLoopRequest(command: EventData.OpenLoopRequest) {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        val name: CharSequence = "AAPS Open Loop"
-        val description = "Open Loop request notification"
-        val channel = NotificationChannel(DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP, name, NotificationManager.IMPORTANCE_HIGH)
-        channel.description = description
-        channel.enableVibration(true)
-
-        // Register the channel with the system; you can't change the importance
-        // or other notification behaviors after this
-        context.getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+        // The vibration pattern must be on the channel: a pattern set on the notification is ignored. The
+        // old channel had the default pattern, and an app cannot change an existing channel, so this one
+        // has a new id (#5217).
+        context.getSystemService(NotificationManager::class.java)
+            .deleteNotificationChannel(DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP_OLD)
+        createNotificationChannel(
+            longArrayOf(1000, 1000, 1000, 1000, 1000),
+            DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP,
+            context.getString(R.string.open_loop_channel_name),
+            context.getString(R.string.open_loop_channel_description),
+            NotificationManager.IMPORTANCE_HIGH
+        )
         var builder = NotificationCompat.Builder(context, DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP)
             .setSmallIcon(R.drawable.notif_icon)
             .setContentTitle(command.title)
             .setContentText(command.message)
-            .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
         // Creates an explicit intent for an Activity in your app

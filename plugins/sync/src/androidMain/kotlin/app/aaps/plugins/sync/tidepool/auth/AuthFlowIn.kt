@@ -4,11 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
-import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.keys.TidepoolStringNonKey
 import app.aaps.plugins.sync.tidepool.messages.AuthReplyMessage
 import dev.zacsweers.metro.Inject
@@ -33,7 +32,7 @@ class AuthFlowIn : MetroAppCompatActivity() {
     @Inject lateinit var authFlowOut: AuthFlowOut
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var tidepoolUploader: TidepoolUploader
-    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var tidepoolRepository: TidepoolRepository
 
     private var coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
@@ -94,7 +93,8 @@ class AuthFlowIn : MetroAppCompatActivity() {
                             conn.setRequestProperty("Authorization", "Bearer " + tokenResponse.accessToken)
                             conn.setInstanceFollowRedirects(false)
                             val response = BufferedReader(InputStreamReader(conn.getInputStream())).readText()
-                            aapsLogger.debug(LTag.TIDEPOOL, "UserInfo: $response")
+                            // Not the response itself: it holds the user's name and e-mail (#5206)
+                            aapsLogger.debug(LTag.TIDEPOOL, "UserInfo received")
 
                             authFlowOut.authState.performActionWithFreshTokens(authFlowOut.authService) { accessToken, idToken, authorizationException ->
                                 coroutineScope.launch {
@@ -119,13 +119,13 @@ class AuthFlowIn : MetroAppCompatActivity() {
                                 }
                             }
                         } catch (exception: Exception) {
-                            rxBus.send(EventTidepoolStatus(exception.toString()))
+                            tidepoolRepository.addLog(exception.toString())
                         }
                     }
                 }
             }
         } else {
-            rxBus.send(EventTidepoolStatus((authorizationException.toString())))
+            tidepoolRepository.addLog(authorizationException.toString())
         }
     }
 }

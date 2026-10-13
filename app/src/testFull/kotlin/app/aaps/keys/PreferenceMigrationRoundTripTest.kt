@@ -64,9 +64,6 @@ class PreferenceMigrationRoundTripTest {
      * and `Objective` wrote `"Objectives_" + spName + "_started"`.
      */
     private val legacyStore = mapOf<String, Any?>(
-        "Monitor_Overview_total" to 42L,
-        "Monitor_Overview_resumed" to 42L,
-        "Monitor_Overview_start" to 42L,
         "Objectives_config_started" to 42L,
         "Objectives_config_accomplished" to 42L,
         "ConfigBuilder_PUMP_VirtualPumpPlugin_Enabled" to true,

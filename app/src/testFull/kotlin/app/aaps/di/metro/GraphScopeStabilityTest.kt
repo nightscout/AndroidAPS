@@ -96,7 +96,6 @@ class GraphScopeStabilityTest {
             "activePlugin",
             "activeSceneManager",
             "activeSceneSync",
-            "activityMonitor",
             "alarmSoundPlayer",
             "appRepository",
             "appScope",
@@ -259,20 +258,23 @@ class GraphScopeStabilityTest {
             "pumpWithConcentration",
             "sourceGraph",
             "viewModelProviders",
-            "widgetUpdater",
             "workersGraph",
         )
 
         /**
-         * Cannot be built in a plain-JVM test: `workManager` needs WorkManager initialised. Pinned so a
+         * Cannot be built in a plain-JVM test: `workManager` needs WorkManager initialised, and
+         * `widgetUpdater` registers a display listener on the main looper when it is built. Pinned so a
          * newly-throwing accessor cannot quietly shrink this test's reach.
+         *
+         * `widgetUpdater` was in [FRESH_EACH_READ] until #5246 made it one instance, because it now
+         * holds the update that waits for a display to turn on.
          *
          * `graphConfigRepository` used to be here, blamed on its DataStore file. That was the wrong
          * reason: the blocker was `Dispatchers.Main` in its constructor scope, so nothing could build
          * it without a main looper. `cbe022ba1b` moved that scope to the IO dispatcher and it builds
          * now, which is why it moved into [SINGLE_INSTANCE] - the list grew rather than shrank.
          */
-        val UNREADABLE = setOf("workManager")
+        val UNREADABLE = setOf("widgetUpdater", "workManager")
 
         /**
          * Pump accessors that cannot be built in a plain-JVM test: the Dana RS `bleTransport` reaches

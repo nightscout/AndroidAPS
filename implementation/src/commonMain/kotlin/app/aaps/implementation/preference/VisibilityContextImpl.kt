@@ -82,6 +82,9 @@ class VisibilityContextImpl(
     override val isBatteryChangeLoggingEnabled: Boolean
         get() = activePlugin.activePump.isBatteryChangeLoggingEnabled()
 
+    override val isRefillingCapable: Boolean
+        get() = activePlugin.activePump.pumpDescription.isRefillingCapable
+
     override val advancedFilteringSupported: Boolean
         get() = cachedAdvancedFiltering
 

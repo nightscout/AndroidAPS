@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.isNotDeliveryError
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.appInitializedFlow
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -44,6 +45,7 @@ import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneChainResolver
@@ -63,7 +65,6 @@ import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.clientcontrol.failText
-import app.aaps.core.ui.compose.icons.IcAction
 import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcCarbs
@@ -73,6 +74,7 @@ import app.aaps.core.ui.compose.icons.IcTtActivity
 import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHypo
 import app.aaps.core.ui.compose.icons.IcTtManual
+import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.extensions.toStringFull
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.aboutDialog.AboutDialogData
@@ -80,6 +82,7 @@ import app.aaps.ui.compose.quickLaunch.QuickLaunchAction
 import app.aaps.ui.compose.quickLaunch.QuickLaunchResolver
 import app.aaps.ui.compose.quickLaunch.QuickLaunchSerializer
 import app.aaps.ui.compose.quickLaunch.ResolvedQuickLaunchItem
+import app.aaps.ui.compose.scenes.SceneIcons
 import app.aaps.ui.compose.tempTarget.toTTPresetsWithDisplayName
 import app.aaps.ui.compose.wizardDialog.showWizardBolusConfirmation
 import dev.zacsweers.metro.AppScope
@@ -165,23 +168,41 @@ class MainViewModel(
      */
     val masterOrPairedClient: StateFlow<Boolean> = nsClient.masterOrPairedClientFlow
 
+    // Ticker for time-based progress updates (every 30 seconds). Cold flow — only runs while the
+    // toolbar items or the chipStateFlow it feeds have subscribers (both are WhileSubscribed below).
+    // Declared before its first use: property initializers run in order.
+    private val progressTicker = flow {
+        while (true) {
+            emit(dateUtil.now())
+            delay(30_000L)
+        }
+    }
+
     /** Toolbar items as a separate StateFlow to avoid unnecessary recompositions of the main UI */
     private val _quickLaunchItems = MutableStateFlow<List<ResolvedQuickLaunchItem>>(emptyList())
 
     /**
-     * Public toolbar items. Two layered gates: (1) mode VISIBILITY — actions whose backing element isn't visible
+     * Public toolbar items. Three layered gates: (1) mode VISIBILITY — actions whose backing element isn't visible
      * now (e.g. MASTER_OR_PAIRED_CLIENT on an unpaired client) are HIDDEN, the same ElementVisibility gate the
      * QuickLaunch config + search use, so a pre-pinned bolus/carbs/scene drops off an unpaired client's toolbar;
-     * (2) reachability — scene-action items DISABLE (not hide) while WS is down on AAPSCLIENT. The resolver only
-     * sees local catalog state, so both checks layer on here.
+     * (2) time — a QuickWizard entry outside its time window or in its cool-down is HIDDEN, like its overview
+     * button; (3) reachability — scene-action items DISABLE (not hide) while WS is down on AAPSCLIENT. The resolver
+     * only sees local catalog state, so these checks layer on here.
      */
     val quickLaunchItems: StateFlow<List<ResolvedQuickLaunchItem>> =
-        combine(_quickLaunchItems, masterReachable, masterOrPairedClient) { items, reachable, _ ->
+        combine(
+            _quickLaunchItems, masterReachable, masterOrPairedClient,
+            // Re-check the QuickWizard time window every tick, and at once when an entry is used or edited
+            // (its cool-down starts on use).
+            progressTicker, quickWizard.changes
+        ) { items, reachable, _, _, _ ->
             items
                 // (1) Hide mode-gated actions. masterOrPairedClient is combined in only to re-emit on a pairing
                 // flip; the predicate reads the current state through visibilityContext.
                 .filter { it.action.elementType?.visibility?.isVisible(visibilityContext) ?: true }
-                // (2) Scene actions disable while the master is transiently unreachable.
+                // (2) Hide QuickWizard entries that are not active now.
+                .filter { quickLaunchResolver.isShownNow(it.action) }
+                // (3) Scene actions disable while the master is transiently unreachable.
                 .map { item ->
                     if (!reachable && item.action is QuickLaunchAction.SceneAction) item.copy(enabled = false) else item
                 }
@@ -194,15 +215,6 @@ class MainViewModel(
     val versionName: String get() = config.VERSION_NAME
     val calcProgressFlow: StateFlow<Int> = overviewDataCache.calcProgressFlow
 
-    // Ticker for time-based progress updates (every 30 seconds). Cold flow — only runs while
-    // the chipStateFlow it feeds has subscribers (via uiState's WhileSubscribed below).
-    private val progressTicker = flow {
-        while (true) {
-            emit(dateUtil.now())
-            delay(30_000L)
-        }
-    }
-
     // Flow-derived chip state: ticker + cache flows + expiry detection. Cold.
     private val chipStateFlow: Flow<ChipState> = combine(
         overviewDataCache.tempTargetFlow,
@@ -211,7 +223,9 @@ class MainViewModel(
         overviewDataCache.tbrFlow,
         // Re-emit the latest tick whenever QuickWizard entries change (local edit or synced from the
         // main phone) so the carousel rebuilds. changes is a StateFlow (initial 0) → never blocks.
-        combine(progressTicker, quickWizard.changes) { now, _ -> now }
+        // Also when app init completes: the QuickWizard items are built only after that, and must not
+        // wait for the next tick to appear.
+        combine(progressTicker, quickWizard.changes, config.appInitializedFlow) { now, _, _ -> now }
     ) { ttData, profileData, rmData, tbrData, now ->
         buildChipState(ttData, profileData, rmData, tbrData, now)
     }
@@ -367,6 +381,11 @@ class MainViewModel(
     private suspend fun computeQuickWizardItems(runningMode: RM.Mode?): List<QuickWizardItem> {
         val activeEntries = quickWizard.list().filter { it.isActive() }
         if (activeEntries.isEmpty()) return emptyList()
+        // Read and calculate nothing before app init completes; chipStateFlow rebuilds as soon as it has.
+        // Until then activePlugin.activeAPS is null, and a profile read now keeps that null: ProfileSealed
+        // takes the APS when it is built. Checking just before doCalc() was not enough, because the profile
+        // was read before that check, and it reached ProfileSealed's "APS not defined" guard (crash at start).
+        if (!config.appInitialized) return emptyList()
 
         val lastBG = iobCobCalculator.ads.lastBg()
         val profile = profileFunction.getProfile()
@@ -432,10 +451,7 @@ class MainViewModel(
         val guid = entry.guid()
 
         val globalReason = when {
-            // Before app init completes, activePlugin.activeAPS is still null, so the profile's `aps` is
-            // null and doCalc() would hit ProfileSealed's "APS not defined" guard (early-boot crash).
-            // Mirror the appInitialized gate the bolus path already has (WizardBolusExecutorImpl).
-            !config.appInitialized                   -> rh.gs(CoreUiStrings.initializing)
+            // App init is checked in computeQuickWizardItems, before the profile is read.
             lastBG == null                           -> rh.gs(CoreUiStrings.wizard_no_actual_bg)
             profile == null                          -> rh.gs(CoreUiStrings.noprofile)
             !pump.isInitialized()                    -> rh.gs(CoreUiStrings.pump_not_initialized_profile_not_set)
@@ -835,6 +851,10 @@ class MainViewModel(
     fun formatDuration(ms: Long): String = dateUtil.timeRemainingString(ms, rh)
 
     /** QuickLaunch scene → ask the MASTER to PREPARE it, render the master's authored confirmation lines, commit on OK (role-transparent). */
+    /** The icon the user picked for the scene, or the generic scene icon when the scene is not known. */
+    private fun sceneIcon(iconKey: String?): ImageVector =
+        iconKey?.let { SceneIcons.fromKey(it).icon } ?: ElementType.SCENE.icon()
+
     fun requestSceneConfirmation(sceneId: String) {
         val title = rh.gs(CoreUiStrings.scene)
         viewModelScope.launch {
@@ -845,7 +865,7 @@ class MainViewModel(
                             // commitStart uses the executor's consume-once prepared.id token, so a double
                             // onOk (fast double-tap) is idempotent — the second commit hits an already-
                             // consumed id and is discarded.
-                            title = title, message = "", confirmationLines = prepared.lines, icon = IcAction,
+                            title = title, message = "", confirmationLines = prepared.lines, icon = sceneIcon(sceneStore.getScene(sceneId)?.icon),
                             onOk = { appScope.launch { sceneActions.commitStart(prepared.id) } })
                     )
 
@@ -873,7 +893,7 @@ class MainViewModel(
             if (target != null) ActionConfirmation(
                 title = rh.gs(CoreUiStrings.scene_deactivate),
                 message = message,
-                icon = IcAction,
+                icon = sceneIcon(activeState.scene.icon),
                 onConfirmAction = ConfirmableAction.DeactivateAndChainScene(target.id),
                 confirmLabel = rh.gs(CoreUiStrings.scene_skip_to_format, target.name),
                 secondaryAction = ConfirmableAction.DeactivateScene,
@@ -882,7 +902,7 @@ class MainViewModel(
             else ActionConfirmation(
                 title = rh.gs(CoreUiStrings.scene_deactivate),
                 message = message,
-                icon = IcAction,
+                icon = sceneIcon(activeState.scene.icon),
                 onConfirmAction = ConfirmableAction.DeactivateScene
             )
         }

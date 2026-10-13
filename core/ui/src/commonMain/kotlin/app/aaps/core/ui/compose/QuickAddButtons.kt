@@ -1,7 +1,7 @@
 package app.aaps.core.ui.compose
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.CoreUiStrings
 
 /**
  * @see QuickAddButtonsPreview
@@ -27,17 +27,19 @@ fun QuickAddButtons(
 
     val focusManager = LocalFocusManager.current
 
-    Row(
+    // A FlowRow, so that with a big font a button that does not fit moves to the next line
+    // instead of being squeezed until its text breaks.
+    FlowRow(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-        verticalAlignment = Alignment.CenterVertically
+        horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium, Alignment.CenterHorizontally),
+        itemVerticalAlignment = Alignment.CenterVertically
     ) {
         increments.forEach { amount ->
             FilledTonalButton(onClick = {
                 focusManager.clearFocus()
                 onAddCarbs(amount)
             }) {
-                Text("+$amount")
+                Text(stringResource(CoreUiStrings.value_with_plus_sign, amount.toString()))
             }
         }
     }

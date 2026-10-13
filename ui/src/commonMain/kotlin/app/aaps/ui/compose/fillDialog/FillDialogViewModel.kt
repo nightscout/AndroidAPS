@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.labelOfInsulin
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
@@ -142,6 +143,7 @@ class FillDialogViewModel(
                 activeInsulinLabel = null,
                 pumpUnitsWarning = pumpUnitsWarningFor(availableInsulins.firstOrNull()),
                 showBolus = !config.AAPSCLIENT,
+                primeAvailable = activePlugin.activePump.pumpDescription.isRefillingCapable,
                 siteRotationEnabled = preferences.get(BooleanKey.SiteRotationManagePump),
                 showNotesFromPreferences = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
                 simpleMode = preferences.get(BooleanKey.GeneralSimpleMode),
@@ -149,7 +151,7 @@ class FillDialogViewModel(
             )
         }
         viewModelScope.launch {
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val activeLabel = availableInsulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
             val currentInsulin = availableInsulins.find { it.insulinLabel == activeLabel } ?: availableInsulins.firstOrNull()
             _uiState.update {
                 it.copy(
@@ -263,7 +265,7 @@ class FillDialogViewModel(
         val bolusStep = state.bolusStep
 
         return confirmationLines {
-            if (state.insulinAfterConstraints > 0) {
+            if (state.hasPrime) {
                 line(ConfirmationRole.WARNING, rh.gs(UiStrings.fill_warning))
                 line(ConfirmationRole.NORMAL, "")
                 val bolusValue =
@@ -327,7 +329,7 @@ class FillDialogViewModel(
         }
 
         val doProfileSwitch = state.insulinChanged
-        val hasPrimeBolus = state.insulinAfterConstraints > 0
+        val hasPrimeBolus = state.hasPrime
 
         // All work runs on appScope, not viewModelScope: the dialog navigates back the moment
         // confirm is tapped, which cancels viewModelScope. The prime bolus is also launched

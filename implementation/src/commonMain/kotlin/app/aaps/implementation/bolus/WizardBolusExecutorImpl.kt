@@ -1420,6 +1420,12 @@ class WizardBolusExecutorImpl(
             this.notes = notes
         }
         if (amount > 0) {
+            // Last check for every way in (Fill dialog, watch, a client). A patch pump primes in its own
+            // activation wizard and its cannula is already in the body: a prime here would be insulin outside IOB.
+            if (!activePlugin.activePump.pumpDescription.isRefillingCapable) {
+                onError(WizardBolusExecutor.Failure(rh.gs(CoreUiStrings.prime_not_available)))
+                return
+            }
             executeBolus(
                 detailedBolusInfo,
                 Action.PRIME_BOLUS,

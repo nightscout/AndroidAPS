@@ -2,6 +2,7 @@ package app.aaps.core.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
+import app.aaps.core.keys.interfaces.ElementVisibility
 import app.aaps.core.keys.interfaces.SyncChannel
 import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.keys.interfaces.SyncSpec
@@ -20,7 +21,8 @@ enum class DoubleKey(
     override val dependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
     override val unitType: UnitType = UnitType.NONE,
-    override val sync: SyncSpec? = null
+    override val sync: SyncSpec? = null,
+    override val visibility: ElementVisibility = ElementVisibility.ALWAYS
 ) : DoublePreferenceKey {
 
     OverviewInsulinButtonIncrement1(
@@ -59,9 +61,19 @@ enum class DoubleKey(
         unitType = UnitType.INSULIN,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
-    ActionsFillButton1(key = "fill_button1", defaultValue = 0.3, min = 0.05, max = 20.0, title = KeysStrings.pref_title_fill_button_1, defaultedBySM = true, hideParentScreenIfHidden = true, unitType = UnitType.INSULIN),
-    ActionsFillButton2(key = "fill_button2", defaultValue = 0.0, min = 0.0, max = 20.0, title = KeysStrings.pref_title_fill_button_2, defaultedBySM = true, unitType = UnitType.INSULIN),
-    ActionsFillButton3(key = "fill_button3", defaultValue = 0.0, min = 0.0, max = 20.0, title = KeysStrings.pref_title_fill_button_3, defaultedBySM = true, unitType = UnitType.INSULIN),
+    // Hidden where the pump cannot be primed from AAPS (patch pumps): the Fill dialog has no prime there.
+    ActionsFillButton1(
+        key = "fill_button1", defaultValue = 0.3, min = 0.05, max = 20.0, title = KeysStrings.pref_title_fill_button_1, defaultedBySM = true, hideParentScreenIfHidden = true,
+        unitType = UnitType.INSULIN, visibility = ElementVisibility.REFILLING_CAPABLE
+    ),
+    ActionsFillButton2(
+        key = "fill_button2", defaultValue = 0.0, min = 0.0, max = 20.0, title = KeysStrings.pref_title_fill_button_2, defaultedBySM = true,
+        unitType = UnitType.INSULIN, visibility = ElementVisibility.REFILLING_CAPABLE
+    ),
+    ActionsFillButton3(
+        key = "fill_button3", defaultValue = 0.0, min = 0.0, max = 20.0, title = KeysStrings.pref_title_fill_button_3, defaultedBySM = true,
+        unitType = UnitType.INSULIN, visibility = ElementVisibility.REFILLING_CAPABLE
+    ),
     SafetyMaxBolus(key = "treatmentssafety_maxbolus", defaultValue = 3.0, min = 0.1, max = 60.0, title = KeysStrings.pref_title_max_bolus, unitType = UnitType.INSULIN, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     ApsMaxBasal(
         key = "openapsma_max_basal",

@@ -49,14 +49,20 @@ data class FillDialogUiState(
 
     // Config
     val showBolus: Boolean = true,
+    /** False on a pump that fills and primes itself (patch pumps): no prime amount, no presets, no prime. */
+    val primeAvailable: Boolean = true,
     val showNotesFromPreferences: Boolean = false,
     val simpleMode: Boolean = true,
     val concentrationEnabled: Boolean = false
 ) {
 
+    /** Whether a prime will be delivered */
+    val hasPrime: Boolean
+        get() = primeAvailable && insulinAfterConstraints > 0
+
     /** Whether any actionable item is selected */
     val hasAction: Boolean
-        get() = insulinAfterConstraints > 0 || siteChange || insulinCartridgeChange
+        get() = hasPrime || siteChange || insulinCartridgeChange
 
     /** Show insulin change section when: cartridge change checked, multiple insulins, time not changed (now) */
     val showInsulinChange: Boolean

@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.xdrip.compose
 
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
+import app.aaps.core.interfaces.sync.SyncLogEntry
 import app.aaps.core.ui.CoreUiStrings
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +27,7 @@ internal class XdripViewModelTest {
     @Mock private lateinit var dataSyncSelector: DataSyncSelectorXdrip
 
     private val queueSizeFlow = MutableStateFlow(Long.MIN_VALUE)
-    private val logListFlow = MutableStateFlow<List<XdripLog>>(emptyList())
+    private val logListFlow = MutableStateFlow<List<SyncLogEntry>>(emptyList())
 
     private lateinit var sut: XdripViewModel
 
@@ -59,7 +60,7 @@ internal class XdripViewModelTest {
 
     @Test
     fun `logList flow updates uiState`() {
-        val logs = listOf(XdripLog("action", "text"))
+        val logs = listOf(SyncLogEntry("action", "text"))
         logListFlow.value = logs
         assertThat(sut.uiState.value.logList).hasSize(1)
         assertThat(sut.uiState.value.logList[0].action).isEqualTo("action")

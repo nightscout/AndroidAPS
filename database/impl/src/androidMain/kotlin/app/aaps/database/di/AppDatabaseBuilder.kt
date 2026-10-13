@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase.Callback
 import androidx.sqlite.SQLiteConnection
-import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import app.aaps.database.AppDatabase
 
@@ -39,27 +38,23 @@ open class AppDatabaseBuilder {
             .build()
 
     /**
-     * In-memory copy of the same database, used by the instrumented tests. Built the way it always
-     * was: no bundled driver, so the SupportSQLiteDatabase overload of onOpen is the one that fires.
+     * In-memory copy of the same database, used by the instrumented tests.
+     *
+     * With the same bundled SQLite as [provideAppDatabase]. It used to run on the device's own SQLite,
+     * which on the CI emulator (Android 12) is far older than the bundled one, so the tests checked an
+     * engine the app does not use. A `json_extract` query over results holding `NaN` worked in the app and
+     * failed there, and with it the graph phase of every calculation in the instrumented tests.
      */
     internal fun provideInMemoryAppDatabase(context: Context) =
         Room
             .inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+            .setDriver(BundledSQLiteDriver())
             .addCallback(object : Callback() {
-                override fun onOpen(db: SupportSQLiteDatabase) {
-                    super.onOpen(db)
-                    createCustomIndexes(db)
+                override fun onOpen(connection: SQLiteConnection) {
+                    super.onOpen(connection)
+                    createCustomIndexes(connection)
                 }
             })
             .fallbackToDestructiveMigration(false)
             .build()
-
-    private fun createCustomIndexes(database: SupportSQLiteDatabase) {
-        database.execSQL("CREATE INDEX IF NOT EXISTS `index_temporaryBasals_end` ON `temporaryBasals` (`timestamp` + `duration`)")
-        database.execSQL("CREATE INDEX IF NOT EXISTS `index_extendedBoluses_end` ON `extendedBoluses` (`timestamp` + `duration`)")
-        database.execSQL("CREATE INDEX IF NOT EXISTS `index_temporaryTargets_end` ON `temporaryTargets` (`timestamp` + `duration`)")
-        database.execSQL("CREATE INDEX IF NOT EXISTS `index_carbs_end` ON `carbs` (`timestamp` + `duration`)")
-        database.execSQL("CREATE INDEX IF NOT EXISTS `index_runningModes_end` ON `runningModes` (`timestamp` + `duration`)")
-    }
-
 }

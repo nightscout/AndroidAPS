@@ -8,6 +8,7 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.appInitializedFlow
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -89,6 +90,8 @@ class TreatmentViewModel(
             preferences.observe(BooleanKey.GeneralSimpleMode).drop(1).map {},
             // QuickWizard entries changed (local edit or synced from the main phone).
             quickWizard.changes.drop(1).map {},
+            // App init completed (or a settings import ended): the QuickWizard items are built only then.
+            config.appInitializedFlow.drop(1).map {},
         ).onEach { refreshState() }.launchIn(viewModelScope)
         rxBus.toFlow(EventRefreshOverview::class)
             .onEach { refreshState() }.launchIn(viewModelScope)
@@ -131,6 +134,11 @@ class TreatmentViewModel(
     private suspend fun buildQuickWizardItems(): List<QuickWizardItem> {
         val activeEntries = quickWizard.list().filter { it.isActive() }
         if (activeEntries.isEmpty()) return emptyList()
+        // Read and calculate nothing before app init completes; setupEventListeners refreshes as soon as it
+        // has. Until then activePlugin.activeAPS is null, and a profile read now keeps that null: ProfileSealed
+        // takes the APS when it is built. Checking just before doCalc() was not enough, because the profile
+        // was read before that check, and it reached ProfileSealed's "APS not defined" guard (crash at start).
+        if (!config.appInitialized) return emptyList()
 
         val lastBG = iobCobCalculator.ads.lastBg()
         val profile = profileFunction.getProfile()
@@ -197,10 +205,7 @@ class TreatmentViewModel(
         val guid = entry.guid()
 
         val globalReason = when {
-            // Before app init completes, activePlugin.activeAPS is still null, so the profile's `aps` is
-            // null and doCalc() would hit ProfileSealed's "APS not defined" guard (early-boot crash).
-            // Mirror the appInitialized gate the bolus path already has (WizardBolusExecutorImpl).
-            !config.appInitialized                   -> rh.gs(CoreUiStrings.initializing)
+            // App init is checked in buildQuickWizardItems, before the profile is read.
             lastBG == null                           -> rh.gs(CoreUiStrings.wizard_no_actual_bg)
             profile == null                          -> rh.gs(CoreUiStrings.noprofile)
             !pump.isInitialized()                    -> rh.gs(CoreUiStrings.pump_not_initialized_profile_not_set)

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
+import app.aaps.core.interfaces.sync.SyncLogEntry
 import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -21,7 +22,7 @@ import kotlinx.coroutines.launch
 @Immutable
 data class XdripUiState(
     val queue: String = "",
-    val logList: List<XdripLog> = emptyList()
+    val logList: List<SyncLogEntry> = emptyList()
 )
 
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())

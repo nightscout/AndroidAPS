@@ -455,7 +455,6 @@
     <string name="max_carbs_title">Макс разрешенные углеводы [g]</string>
     <string name="patient_type">Тип пациента</string>
     <!--    Protection-->
-    <string name="unlock_settings">Разблокировать настройки</string>
     <!--    Pumps -->
     <string name="battery_label">батарея</string>
     <string name="reservoir_label">Резервуар</string>

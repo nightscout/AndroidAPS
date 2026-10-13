@@ -2,6 +2,7 @@ package app.aaps.database
 
 import androidx.room.Transactor.SQLiteTransactionType
 import androidx.room.useWriterConnection
+import app.aaps.database.daos.ApsResultVariableSens
 import app.aaps.database.entities.APSResult
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
@@ -40,6 +41,39 @@ import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
+
+/** Module-local result of [AppRepository.vacuumDatabase]; mapped to `VacuumResult`, which explains each value. */
+enum class VacuumOutcome { DONE, DONE_AFTER_TRIM, OUT_OF_MEMORY }
+
+/**
+ * The decision in [AppRepository.vacuumDatabase]: [vacuum], and if that runs out of memory, [trim] and
+ * [vacuum] once more. Any other failure is thrown, and then nothing is trimmed.
+ *
+ * Kept apart from the database so a test can drive it. SQLite cannot be made to run out of memory on
+ * purpose there: the bundled build has `DEFAULT_MEMSTATUS=0`, so `PRAGMA hard_heap_limit` is accepted
+ * but never enforced.
+ */
+internal suspend fun vacuumOrTrim(vacuum: suspend () -> Unit, trim: suspend () -> Unit): VacuumOutcome {
+    try {
+        vacuum()
+        return VacuumOutcome.DONE
+    } catch (e: Exception) {
+        if (!e.isOutOfMemory()) throw e
+    }
+    trim()
+    return try {
+        vacuum()
+        VacuumOutcome.DONE_AFTER_TRIM
+    } catch (e: Exception) {
+        if (e.isOutOfMemory()) VacuumOutcome.OUT_OF_MEMORY else throw e
+    }
+}
+
+/**
+ * SQLITE_NOMEM. The bundled driver gives the code only in the text, as in the Crashlytics report this
+ * was written for: "Error code: 7, message: out of memory". The comma keeps codes like 70 out.
+ */
+internal fun Exception.isOutOfMemory(): Boolean = message?.startsWith("Error code: 7,") == true
 
 /** Module-local carrier for [AppRepository.databaseMaintenanceInfo]; mapped to `DatabaseMaintenanceInfo`. */
 data class DatabaseMaintenanceRaw(
@@ -158,7 +192,11 @@ class AppRepository internal constructor(
 
     suspend fun clearApsResults() = database.apsResultDao.deleteAllEntries()
 
-    /** Delete records with a timestamp before [than] (epoch ms). */
+    /**
+     * Delete records with a timestamp before [than] (epoch ms).
+     *
+     * Device statuses have their own, much shorter limit: [DEVICE_STATUS_KEEP_DAYS] days before now.
+     */
     suspend fun cleanupDatabase(than: Long, deleteTrackedChanges: Boolean): String {
         database.useWriterConnection { connection -> connection.usePrepared("PRAGMA optimize") { it.step() } }
         val removed = mutableListOf<Pair<String, Int>>()
@@ -183,7 +221,12 @@ class AppRepository internal constructor(
         removed.add(Pair("UserEntry", database.userEntryDao.deleteOlderThan(than)))
         removed.add(Pair("PreferenceChange", database.preferenceChangeDao.deleteOlderThan(than)))
         // keep foods database.foodDao.deleteOlderThan(than)
-        removed.add(Pair("DeviceStatus", database.deviceStatusDao.deleteOlderThan(than)))
+        // A device status is only queued for the Nightscout upload. Nothing reads it again after that, and
+        // Nightscout shows only the newest one. At about 4 kB a row, six months of them were some 300 MB
+        // and helped a database grow too big for its VACUUM. Taken from the real clock, not from [than]:
+        // the clock-jump limit on [than] protects treatments, and losing old statuses costs nothing.
+        val deviceStatusThan = maxOf(than, Clock.System.now().toEpochMilliseconds() - DEVICE_STATUS_KEEP_DAYS.days.inWholeMilliseconds)
+        removed.add(Pair("DeviceStatus", database.deviceStatusDao.deleteOlderThan(deviceStatusThan)))
         // keep at least one permanent RM (don't delete if only expired temporaries exist within window)
         if (database.runningModeDao.getRunningModeDataFromTime(than + 1).any { it.duration == 0L })
             removed.add(Pair("RunningMode", database.runningModeDao.deleteOlderThan(than)))
@@ -226,12 +269,31 @@ class AppRepository internal constructor(
      * plugins/loop/sync start). [cleanupDatabase] only deletes; this reclaims and defragments.
      * May throw if the DB is busy/locked; callers must handle that and treat only a clean return
      * as success.
+     *
+     * ## When it does not fit in memory
+     *
+     * The bundled SQLite is built with `SQLITE_TEMP_STORE=3`, so VACUUM always builds its copy of the
+     * database in memory, and `PRAGMA temp_store` cannot change that. A long-time user's database did
+     * not fit: 1.6 GB, nearly all of it APS results (about 20 kB a row, kept six months) and device
+     * statuses. So when VACUUM runs out of memory, APS results older than [VACUUM_TRIM_KEEP_DAYS] days
+     * and device statuses older than [DEVICE_STATUS_KEEP_DAYS] days are deleted, and it is tried once
+     * more. The last days of APS results stay because the loop reads the last 24 hours of them for the
+     * dynamic ISF average.
      */
-    suspend fun vacuumDatabase() {
+    suspend fun vacuumDatabase(): VacuumOutcome = vacuumOrTrim(vacuum = ::vacuum, trim = ::trimForVacuum)
+
+    private suspend fun vacuum() {
         database.useWriterConnection { connection ->
             connection.usePrepared("PRAGMA wal_checkpoint(TRUNCATE)") { it.step() }
             connection.usePrepared("VACUUM") { it.step() }
         }
+    }
+
+    /** What [vacuumDatabase] deletes to make the database fit: the old part of its two biggest tables. */
+    internal suspend fun trimForVacuum() {
+        val now = Clock.System.now().toEpochMilliseconds()
+        database.apsResultDao.deleteOlderThan(now - VACUUM_TRIM_KEEP_DAYS.days.inWholeMilliseconds)
+        database.deviceStatusDao.deleteOlderThan(now - DEVICE_STATUS_KEEP_DAYS.days.inWholeMilliseconds)
     }
 
     /**
@@ -897,6 +959,9 @@ class AppRepository internal constructor(
     suspend fun getApsResults(start: Long, end: Long): List<APSResult> =
         database.apsResultDao.getApsResults(start, end)
 
+    suspend fun getApsResultVariableSens(start: Long, end: Long): List<ApsResultVariableSens> =
+        database.apsResultDao.getVariableSens(start, end)
+
     suspend fun getGlucoseValueByPumpIdAndSource(source: String, pumpId: Long): GlucoseValue? =
         database.glucoseValueDao.getGlucoseValueByPumpIdAndSource(source, pumpId)
 
@@ -924,4 +989,13 @@ class AppRepository internal constructor(
     }
 
     fun <T> Iterable<T>.reversedIf(reverse: Boolean): List<T> = if (reverse) this.reversed() else this.toList()
+
+    companion object {
+
+        /** How many days of device statuses [cleanupDatabase] keeps, whatever cutoff it is given. */
+        const val DEVICE_STATUS_KEEP_DAYS = 2L
+
+        /** How many days of APS results [vacuumDatabase] keeps when it has to make room. */
+        const val VACUUM_TRIM_KEEP_DAYS = 2L
+    }
 }

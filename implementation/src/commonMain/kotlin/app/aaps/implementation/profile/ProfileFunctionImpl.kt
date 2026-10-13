@@ -79,7 +79,7 @@ class ProfileFunctionImpl(
 
     init {
         // Populate the mirror off the main thread so the synchronous readers never block on the DB.
-        appScope.launch { _runningICfg.value = getProfile()?.iCfg?.takeIf { it.isUsable } }
+        appScope.launch { _runningICfg.value = readRunningICfg() }
         persistenceLayer.observeChanges(EPS::class)
             .collectResilient(appScope, aapsLogger, LTag.PROFILE) { epsList ->
                 epsList.minOfOrNull { it.timestamp }?.let { timestamp ->
@@ -99,9 +99,25 @@ class ProfileFunctionImpl(
                 // Refresh the mirror in the SAME subscription, after the invalidation above — a separate
                 // collector on this flow has no ordering guarantee against it and could re-read the stale
                 // cache, pinning the mirror to the previous insulin until the next profile change.
-                _runningICfg.value = getProfile()?.iCfg?.takeIf { it.isUsable }
+                _runningICfg.value = readRunningICfg()
             }
     }
+
+    /**
+     * The insulin of the running profile, read straight from the database.
+     *
+     * Not through [getProfile], because that answers null until app init completes, and the pump needs
+     * the concentration before that: `PumpWithConcentrationImpl` falls back to 1.0 without it, which is
+     * wrong for any other insulin. This is the same value `ProfileSealed.EPS` exposes as `iCfg`.
+     */
+    private suspend fun readRunningICfg(): ICfg? =
+        persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())?.iCfg?.takeIf { it.isUsable }
+
+    // Same rule as the interface default, but the running insulin is read from the database rather than
+    // through getProfile(): the data migrations in MainApp ask for it before app init completes, and with
+    // a null profile there they would stamp old records with a substitute insulin.
+    override suspend fun getRunningOrRequestedICfg(): ICfg? =
+        readRunningICfg() ?: getRequestedProfile()?.iCfg?.takeIf { it.isUsable }
 
     override suspend fun getProfileName(): String =
         getProfileName(dateUtil.now(), customized = true, showRemainingTime = false)
@@ -136,13 +152,18 @@ class ProfileFunctionImpl(
             cache.clear()
             canonicalEps.clear()
         }
-        _runningICfg.value = getProfile()?.iCfg?.takeIf { it.isUsable }
+        _runningICfg.value = readRunningICfg()
     }
 
     override suspend fun getProfile(): EffectiveProfile? =
         getProfile(dateUtil.now())
 
     override suspend fun getProfile(time: Long): EffectiveProfile? {
+        // No profile until app init completes, and none while a settings import rebuilds plugin state.
+        // Until then activePlugin.activeAPS is null, and ProfileSealed takes the APS when it is built, so
+        // a profile from that time keeps aps = null for good. The cache below then handed it out after
+        // init too, and a wizard calculation with it crashed on "APS not defined" at start.
+        if (!config.appInitialized) return null
         val rounded = time - time % 1000
         // Clear cache after longer use
         cacheLock.withLock {

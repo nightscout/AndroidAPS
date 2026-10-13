@@ -49,6 +49,19 @@ data class DatabaseMaintenanceInfo(
     val report: String
 )
 
+/** How a [PersistenceLayer.vacuumDatabase] ended. Any other failure is thrown. */
+enum class VacuumResult {
+
+    /** The database was compacted. */
+    DONE,
+
+    /** It did not fit in memory at first, so old APS results and device statuses were deleted, and then it was compacted. */
+    DONE_AFTER_TRIM,
+
+    /** It did not fit in memory even after that. Trying again soon would only fail the same way. */
+    OUT_OF_MEMORY
+}
+
 interface PersistenceLayer {
 
     /**
@@ -73,8 +86,11 @@ interface PersistenceLayer {
      * Full VACUUM of the database: defragments the file and returns free pages to the OS.
      * Heavy and memory intensive — only call when nothing else is using the DB (e.g. on startup
      * before plugins/loop/sync start). May throw if the DB is busy/locked.
+     *
+     * When the database does not fit in memory, APS results and device statuses older than a few days
+     * are deleted and it is tried once more - see [VacuumResult].
      */
-    suspend fun vacuumDatabase()
+    suspend fun vacuumDatabase(): VacuumResult
 
     /**
      * Collect DB size, free space and per-table row counts (total, older-than-retention, tracked
@@ -1651,6 +1667,23 @@ interface PersistenceLayer {
      * @return List of APSResult
      */
     suspend fun getApsResults(start: Long, end: Long): List<APSResult>
+
+    /**
+     * Get the variable sensitivity of every APSResult in an interval, oldest first
+     *
+     * Reads only the time and the value, not the whole result, so it is cheap enough to run on every
+     * calculation. Results without a value, or with NaN, are left out.
+     *
+     * @param start from
+     * @param end to
+     * @return list of values in mg/dL
+     */
+    suspend fun getVariableSensitivities(start: Long, end: Long): List<VariableSensitivity>
+
+    data class VariableSensitivity(
+        val timestamp: Long,
+        val valueMgdl: Double
+    )
 
     /**
      * Insert or update ApsResult record

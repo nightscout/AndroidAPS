@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.profile.SingleProfile
-import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
@@ -46,7 +45,6 @@ data class ProfileUiState(
     val currentProfile: SingleProfileState? = null,
     val isEdited: Boolean = false,
     val isValid: Boolean = true,
-    val isLocked: Boolean = false,
     val selectedTab: Int = 0,
     val units: String = GlucoseUnit.MGDL.displayLabel,
     val usingDynamicIsf: Boolean = false,
@@ -78,6 +76,9 @@ data class ProfileUiState(
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
+// No protection check here: every way into the editor (profile management in EDIT mode, the setup
+// wizard) already required PREFERENCES. Checking again here failed once the short protection
+// session had expired, and left the user on a lock screen with no way to unlock (#5236).
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
@@ -90,8 +91,7 @@ class ProfileEditorViewModel(
     private val activePlugin: ActivePlugin,
     private val profileUtil: ProfileUtil,
     private val hardLimits: HardLimits,
-    val dateUtil: DateUtil,
-    private val protectionCheck: ProtectionCheck
+    val dateUtil: DateUtil
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
@@ -158,7 +158,6 @@ class ProfileEditorViewModel(
 
         val profiles = profileRepository.profiles.value.map { it.name }
         val profile = editingProfile
-        val isLocked = protectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES)
 
         val currentUnits = profile?.mgdl?.let { if (it) GlucoseUnit.MGDL else GlucoseUnit.MMOL } ?: profileFunction.getUnits()
         val isMgdl = currentUnits == GlucoseUnit.MGDL
@@ -184,7 +183,6 @@ class ProfileEditorViewModel(
                 currentProfile = profile?.toState(),
                 isEdited = locallyEdited,
                 isValid = profile != null && tabErrors.isEmpty(),
-                isLocked = isLocked,
                 units = currentUnits.displayLabel,
                 usingDynamicIsf = aps?.usingDynamicIsf() == true,
                 usingDynamicIc = aps?.supportsDynamicIc() == true,

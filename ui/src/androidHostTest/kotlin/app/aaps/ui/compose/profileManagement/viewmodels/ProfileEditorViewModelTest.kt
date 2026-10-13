@@ -4,7 +4,6 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileErrorType
 import app.aaps.core.interfaces.profile.ProfileValidationError
 import app.aaps.core.interfaces.profile.SingleProfile
-import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.objects.extensions.singleBlock
 import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -19,7 +18,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
@@ -33,8 +31,6 @@ import org.mockito.kotlin.whenever
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class ProfileEditorViewModelTest : TestBaseWithProfile() {
-
-    @Mock lateinit var protectionCheck: ProtectionCheck
 
     private val profilesFlow = MutableStateFlow<List<SingleProfile>>(emptyList())
     private val revisionFlow = MutableStateFlow(0L)
@@ -67,8 +63,7 @@ internal class ProfileEditorViewModelTest : TestBaseWithProfile() {
         whenever(profileRepository.revision).thenReturn(revisionFlow)
         whenever(profileRepository.newDraft()).thenReturn(profile("LocalProfile1"))
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
-        whenever(protectionCheck.isLocked(any())).thenReturn(false)
-        sut = ProfileEditorViewModel(aapsLogger, rh, profileRepository, profileFunction, activePlugin, profileUtil, hardLimits, dateUtil, protectionCheck)
+        sut = ProfileEditorViewModel(aapsLogger, rh, profileRepository, profileFunction, activePlugin, profileUtil, hardLimits, dateUtil)
     }
 
     @AfterEach

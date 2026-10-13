@@ -744,7 +744,6 @@
     <string name="max_carbs_title">允许的最大碳水化合物值 [g]</string>
     <string name="patient_type">患者类型</string>
     <!--    Protection-->
-    <string name="unlock_settings">解锁设置</string>
     <!--    Pumps -->
     <string name="battery_label">电池</string>
     <string name="reservoir_label">储药器</string>

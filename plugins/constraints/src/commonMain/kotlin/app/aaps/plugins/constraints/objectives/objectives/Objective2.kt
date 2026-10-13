@@ -285,12 +285,13 @@ class Objective2(
                 .learned(Learned(ConstraintsStrings.objectives_exam_learned_ecarbs))
         )
         tasks.add(
-            ExamTask(this, ConstraintsStrings.nsclient_label, ConstraintsStrings.nsclient_howcanyou, "nsclient")
+            ExamTask(this, ConstraintsStrings.nsclient_label, ConstraintsStrings.nsclient_howcanyou, "nsclient2")
                 .option(Option(ConstraintsStrings.nsclient_nightscout, true))
                 .option(Option(ConstraintsStrings.nsclient_dexcomfollow, true))
                 .option(Option(ConstraintsStrings.nsclient_data, true))
-                .option(Option(ConstraintsStrings.nsclient_fullcontrol, false))
+                .option(Option(ConstraintsStrings.nsclient_fullcontrol, true))
                 .hint(Hint(ConstraintsStrings.nsclient_hint1))
+                .hint(Hint(ConstraintsStrings.nsclient_hint2))
                 .learned(Learned(ConstraintsStrings.objectives_exam_learned_nsclient))
         )
         tasks.add(

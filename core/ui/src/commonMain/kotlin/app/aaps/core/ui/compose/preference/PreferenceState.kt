@@ -59,6 +59,7 @@ private class ReactiveVisibilityContext(
     override val isPatchPump: Boolean get() = delegate.isPatchPump
     override val isBatteryReplaceable: Boolean get() = delegate.isBatteryReplaceable
     override val isBatteryChangeLoggingEnabled: Boolean get() = delegate.isBatteryChangeLoggingEnabled
+    override val isRefillingCapable: Boolean get() = delegate.isRefillingCapable
     override val advancedFilteringSupported: Boolean get() = delegate.advancedFilteringSupported
     override val isPumpPaired: Boolean get() = delegate.isPumpPaired
     override val isPumpInitialized: Boolean get() = delegate.isPumpInitialized

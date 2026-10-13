@@ -77,15 +77,15 @@ interface InsulinManager {
     fun buildSuffix(peak: Int, dia: Double, concentration: Double): String
 
     /**
-     * Check if an iCfg already exists in the list.
-     * @param iCfg
-     * @param excludeIndex index to exclude for duplicated name identification (-1 for none)
+     * True when the list has an insulin with the same DIA, peak and concentration as [iCfg]. The label is
+     * ignored: the list rebuilds every label at start, so a label alone can never prove that an insulin
+     * is missing.
      */
-    fun insulinAlreadyExists(iCfg: ICfg, excludeIndex: Int = -1): Boolean
+    fun insulinWithSameCurveExists(iCfg: ICfg): Boolean
 
     /**
-     * Return index of the insulin within InsulinManager. -1 if iCFg is not found
-     * @param iCfg
+     * Index of the list entry for [iCfg], or -1. Same label and curve first, then the first entry with
+     * the same curve. See [app.aaps.core.data.model.indexOfInsulin].
      */
     fun insulinIndex(iCfg: ICfg?): Int
 

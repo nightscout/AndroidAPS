@@ -166,7 +166,6 @@ import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
-import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.workflow.WorkflowChainData
 import dev.zacsweers.metro.AppScope
@@ -346,9 +345,6 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val constraintsChecker: ConstraintsChecker
     val nsClientRepository: NSClientRepository
     val builtInSearchables: BuiltInSearchables
-
-    /** Read by `MainApp`. */
-    val activityMonitor: ActivityMonitor
 
     /** The one application scope. */
     @ApplicationScope val appScope: CoroutineScope

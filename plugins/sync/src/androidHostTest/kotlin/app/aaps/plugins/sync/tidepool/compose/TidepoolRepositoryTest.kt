@@ -3,6 +3,10 @@ package app.aaps.plugins.sync.tidepool.compose
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -39,8 +43,8 @@ class TidepoolRepositoryTest {
         sut.addLog("second")
         val logs = sut.logList.value
         assertThat(logs).hasSize(2)
-        assertThat(logs[0].status).isEqualTo("second")
-        assertThat(logs[1].status).isEqualTo("first")
+        assertThat(logs[0].action).isEqualTo("second")
+        assertThat(logs[1].action).isEqualTo("first")
     }
 
     @Test
@@ -48,8 +52,17 @@ class TidepoolRepositoryTest {
         for (i in 1..150) sut.addLog("log $i")
         val logs = sut.logList.value
         assertThat(logs).hasSize(100)
-        assertThat(logs.first().status).isEqualTo("log 150")
-        assertThat(logs.last().status).isEqualTo("log 51")
+        assertThat(logs.first().action).isEqualTo("log 150")
+        assertThat(logs.last().action).isEqualTo("log 51")
+    }
+
+    @Test
+    fun `requestUpload reaches a collector`() = runTest(UnconfinedTestDispatcher()) {
+        val request = async { sut.uploadRequests.first() }
+
+        sut.requestUpload()
+
+        request.await() // only returns when the request arrived
     }
 
     @Test

@@ -396,7 +396,6 @@
     <string name="max_carbs_title">Μέγιστο επιτρεπτό υδατανθράκων [g]</string>
     <string name="patient_type">Τύπος ασθενή</string>
     <!--    Protection-->
-    <string name="unlock_settings">Ξεκλείδωμα ρυθμίσεων</string>
     <!--    Pumps -->
     <string name="battery_label">Μπαταρία</string>
     <string name="reservoir_label">Αμπούλα</string>

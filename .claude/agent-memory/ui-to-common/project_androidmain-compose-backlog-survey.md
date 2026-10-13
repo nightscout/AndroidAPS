@@ -69,9 +69,7 @@ androidMain only. Check the build file before calling a third-party import a blo
 `SiteRotationManagementScreen`, `:core:ui` `KeepScreenOnEffect` and the existing
 `ScreenshotBlocking` actual; runtime permissions and BLE pre-check pin `:core:ui`
 `BluetoothPermissionsHost` / `BlePreCheckHost` and `:ui` `PermissionsViewModel`; biometrics
-(`FragmentActivity`) pins `:core:ui` `ProtectionHost`; `Application.ActivityLifecycleCallbacks`
-(`ui/activityMonitor/ActivityMonitor.kt`) pins `ActivityStatsCompose` and therefore `StatsScreen`;
-`Build.MANUFACTURER` pins `AboutDialog`; Glance pins the three widget files, permanently.
+(`FragmentActivity`) pins `:core:ui` `ProtectionHost`; `Build.MANUFACTURER` pins `AboutDialog`; Glance pins the three widget files, permanently.
 
 **Dead code found while surveying, worth confirming before deleting:**
 `AutomationComposeContent` threads `activity: FragmentActivity?` through three routes and then does

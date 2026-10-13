@@ -30,11 +30,13 @@ import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.DatabaseMaintenanceInfo
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.VacuumResult
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.database.AppRepository
+import app.aaps.database.VacuumOutcome
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.CalibrationEntry
@@ -170,8 +172,12 @@ class PersistenceLayerImpl(
         repository.cleanupDatabase(olderThan, deleteTrackedChanges)
     }
 
-    override suspend fun vacuumDatabase() = withContext(aapsIoDispatcher) {
-        repository.vacuumDatabase()
+    override suspend fun vacuumDatabase(): VacuumResult = withContext(aapsIoDispatcher) {
+        when (repository.vacuumDatabase()) {
+            VacuumOutcome.DONE            -> VacuumResult.DONE
+            VacuumOutcome.DONE_AFTER_TRIM -> VacuumResult.DONE_AFTER_TRIM
+            VacuumOutcome.OUT_OF_MEMORY   -> VacuumResult.OUT_OF_MEMORY
+        }
     }
 
     override suspend fun databaseMaintenanceInfo(retentionDays: Long): DatabaseMaintenanceInfo = withContext(aapsIoDispatcher) {
@@ -2575,6 +2581,10 @@ class PersistenceLayerImpl(
         repository.getApsResults(start, end).map { it.fromDb(apsResultProvider) }
     }
 
+    override suspend fun getVariableSensitivities(start: Long, end: Long): List<PersistenceLayer.VariableSensitivity> = withContext(aapsIoDispatcher) {
+        repository.getApsResultVariableSens(start, end).mapNotNull { row -> row.variableSens?.let { PersistenceLayer.VariableSensitivity(row.timestamp, it) } }
+    }
+
     private val nonFiniteFieldRegex = Regex("(\\w+)=(NaN|Infinity|-Infinity)\\b")
 
     // Diagnostic only — must never let a reporting failure block persistence of the APSResult, so the whole
@@ -2607,12 +2617,13 @@ class PersistenceLayerImpl(
             reportNonFiniteRtFields(apsResult)
             val result = repository.runTransactionForResultSuspend(InsertOrUpdateApsResultTransaction(apsResult.toDb()))
             val transactionResult = PersistenceLayer.TransactionResult<APSResult>()
+            // Identity only: the entity's toString holds all seven JSON columns, several KB per loop run
             result.inserted.forEach {
-                aapsLogger.debug(LTag.DATABASE, "Inserted APSResult $it")
+                aapsLogger.debug(LTag.DATABASE, "Inserted APSResult id=${it.id} timestamp=${it.timestamp} algorithm=${it.algorithm}")
                 transactionResult.inserted.add(it.fromDb(apsResultProvider))
             }
             result.updated.forEach {
-                aapsLogger.debug(LTag.DATABASE, "Updated APSResult $it")
+                aapsLogger.debug(LTag.DATABASE, "Updated APSResult id=${it.id} timestamp=${it.timestamp} algorithm=${it.algorithm}")
                 transactionResult.updated.add(it.fromDb(apsResultProvider))
             }
             transactionResult
