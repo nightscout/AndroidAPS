@@ -6,7 +6,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 /**
@@ -16,8 +15,6 @@ import androidx.compose.ui.unit.dp
  *
  * @param onClick Called when the FAB is clicked
  * @param modifier Modifier to be applied to the FAB
- * @param containerColor Background color; pass the error pair for a destructive action next to the primary one
- * @param contentColor Icon color, must pair with [containerColor]
  * @param content The content of the FAB (typically an Icon)
  *
  * @see AapsFabPreview
@@ -26,15 +23,13 @@ import androidx.compose.ui.unit.dp
 fun AapsFab(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
-    contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     content: @Composable () -> Unit
 ) {
     FloatingActionButton(
         onClick = onClick,
         modifier = modifier,
-        containerColor = containerColor,
-        contentColor = contentColor,
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         elevation = FloatingActionButtonDefaults.elevation(
             defaultElevation = 6.dp,
             pressedElevation = 12.dp,

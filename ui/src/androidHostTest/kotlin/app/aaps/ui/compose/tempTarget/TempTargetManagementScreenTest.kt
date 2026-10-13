@@ -9,7 +9,6 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.unit.height
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.ui.compose.ScreenMode
@@ -239,17 +238,30 @@ class TempTargetManagementScreenTest {
     }
 
     @Test
-    fun theCancelButtonSitsNextToActivate() {
-        // Users missed it when it floated beside the time field (4.0 beta). Both are full FABs in the
-        // same row, so the cancel button is as big as Activate and stands right of it (play, then stop).
+    fun theCancelButtonSitsInTheToolbarNextToActivate() {
+        // Users missed it when it floated beside the time field (4.0 beta). M3 allows one FAB next to
+        // a toolbar, so Cancel is the last toolbar button: left of Activate, on the same line.
         setScreen(viewModels.build(presets = builtIns, activeTT = activeTt()))
 
-        // A FAB merges its icon's description into its own node, so these are the FAB bounds.
+        // A button merges its icon's description into its own node, so these are the button bounds.
         val cancel = compose.onNodeWithContentDescription(cancelTargetLabel).getBoundsInRoot()
         val activate = compose.onNodeWithContentDescription(activateLabel).getBoundsInRoot()
-        assertThat(cancel.height).isEqualTo(activate.height)
-        assertThat(cancel.top).isEqualTo(activate.top)
-        assertThat(cancel.left).isGreaterThan(activate.right)
+        val remove = compose.onNodeWithContentDescription(removeLabel).getBoundsInRoot()
+        assertThat(cancel.right).isLessThan(activate.left)
+        assertThat(cancel.left).isGreaterThan(remove.right)
+        assertThat(cancel.top).isGreaterThan(activate.top)
+        assertThat(cancel.bottom).isLessThan(activate.bottom)
+    }
+
+    @Test
+    fun playModeKeepsOnlyTheCancelButtonInTheToolbar() {
+        // Starting and stopping a target is what the screen is used for most; the edit actions can go
+        // in play mode, Cancel cannot.
+        setScreen(viewModels.build(presets = builtIns, activeTT = activeTt()), initialMode = ScreenMode.PLAY)
+
+        compose.onNodeWithContentDescription(cancelTargetLabel).assertIsDisplayed()
+        compose.onNodeWithContentDescription(removeLabel).assertDoesNotExist()
+        compose.onNodeWithContentDescription(activateLabel).assertIsDisplayed()
     }
 
     // ---------------------------------------------------------------------------------------------
