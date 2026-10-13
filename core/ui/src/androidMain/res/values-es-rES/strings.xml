@@ -121,6 +121,8 @@
     <string name="invalid_profile">Perfil inválido</string>
     <string name="no_profile_set">NINGÚN PERFIL ACTIVO</string>
     <string name="profile_switch_no_insulin">No se puede cambiar de perfil: no hay ninguna insulina en uso y no se ha seleccionado ninguna</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">La hora del cambio de perfil debe estar dentro de las %1$d horas posteriores a la actual</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">El objetivo temporal debe comenzar dentro de las %1$d horas posteriores a la actual</string>
     <string name="profile_switch_select_insulin_hint">Todavía no hay ninguna insulina en uso. Selecciona la insulina que estás utilizando para que este cambio de perfil pueda registrarla</string>
     <string name="insulin_activation_failed">La insulina no se ha cambiado. Se sigue utilizando tu insulina anterior</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">No se cambió la insulina: %1$s Su insulina anterior sigue en uso</string>
@@ -287,6 +289,7 @@
     <!--    Insulin / Concentration-->
     <string name="ins_concentration_confirmed">Insulina %1$s confirmada</string>
     <string name="current_insulin">Activo actualmente</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Se activará</string>
     <string name="change_insulin">Cambiar</string>
     <string name="select_insulin_description">Seleccione la insulina con la que está llenando la bomba. Se aplicará un cambio de perfil después de la activación/cebado.</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
@@ -325,6 +328,7 @@
     <string name="careportal_note_message">Nota : %1$s</string>
     <string name="careportal_question_message">Pregunta : %1$s</string>
     <string name="careportal_exercise_message">Ejercicio : %1$s</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Cambio de zona de la bomba: %1$s</string>
     <string name="careportal_pump_site_change">Cambio de zona de la bomba</string>
     <string name="cgm_sensor_insert">Inserción de sensor</string>
     <string name="careportal_pump_site_management">Sitios de la bomba</string>
