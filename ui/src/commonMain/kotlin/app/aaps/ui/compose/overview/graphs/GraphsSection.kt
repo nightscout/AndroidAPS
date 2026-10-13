@@ -68,6 +68,7 @@ import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.debounce
 import kotlin.math.abs
 
@@ -82,7 +83,7 @@ import kotlin.math.abs
  *
  * Synchronization Implementation:
  * - snapshotFlow observes scroll/zoom values from BG graph
- * - debounce(30) waits for gesture to settle
+ * - conflate() takes the newest position on every frame
  * - zoomState.zoom() and scrollState.scroll() copy state to secondary graphs
  *
  * Secondary graphs are config-driven via [GraphConfig.secondaryGraphs].
@@ -305,15 +306,21 @@ fun GraphsSection(
         // Do not report a user interaction from here: the scroll/zoom values also change without the user
         // (viewport reset on a new BG, the prediction nudge, Vico's initial scroll to the end). Real gestures
         // are reported by onScrollOrZoomGesture on the BG chart.
+        var syncedZoom: Float? = null
+        var syncedCount = -1
         snapshotFlow { bgScrollState.value to bgZoomState.value }
-            .debounce(30) // Wait for gesture to settle
+            .conflate()
             .collect { (scroll, zoom) ->
                 val count = activeCount
                 // Sync zoom first, then scroll (order matters for proper positioning)
-                beltZoomState.zoom(Zoom.fixed(zoom))
-                iobZoomState.zoom(Zoom.fixed(zoom))
-                for (i in 0 until count) secZoomStates[i].zoom(Zoom.fixed(zoom))
-                delay(10)
+                if (zoom != syncedZoom || count != syncedCount) {
+                    beltZoomState.zoom(Zoom.fixed(zoom))
+                    iobZoomState.zoom(Zoom.fixed(zoom))
+                    for (i in 0 until count) secZoomStates[i].zoom(Zoom.fixed(zoom))
+                    delay(10)
+                    syncedZoom = zoom
+                    syncedCount = count
+                }
                 beltScrollState.scroll(Scroll.Absolute.pixels(scroll))
                 iobScrollState.scroll(Scroll.Absolute.pixels(scroll))
                 for (i in 0 until count) secScrollStates[i].scroll(Scroll.Absolute.pixels(scroll))
