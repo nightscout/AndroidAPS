@@ -1,7 +1,10 @@
 package app.aaps.ui.compose.overview.statusLights
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasContentDescription
@@ -90,5 +93,31 @@ class StatusSectionContentTest {
         // The action button stays a node of its own, or it could no longer be pressed. It is named
         // after the row because the same verb appears on several rows.
         compose.onNode(hasContentDescription("Battery") and hasClickAction()).assertIsDisplayed()
+    }
+
+    @Test
+    fun theProgressBarIsNotAFocusStopOfItsOwn() {
+        // Merging the row is not enough: a progress bar carries range information, which a screen
+        // reader treats as a control worth stopping on even inside a merged parent. On a phone each
+        // row read as three stops - the row, then "30 percent, progress bar", then the button - and
+        // the middle one says nothing the row has not already said. Asserted on the property rather
+        // than on spoken text, because that is what makes it a stop.
+        compose.setContent {
+            MaterialTheme {
+                StatusSectionContent(
+                    sensorStatus = null,
+                    insulinStatus = null,
+                    cannulaStatus = null,
+                    batteryStatus = StatusItem(
+                        label = "Battery", age = "14d", ageStatus = StatusLevel.CRITICAL, agePercent = 0.95f,
+                        level = "12%", levelStatus = StatusLevel.CRITICAL, levelPercent = 0.88f, icon = IcPumpBattery
+                    ),
+                    onBatteryChangeClick = {}
+                )
+            }
+        }
+
+        compose.onAllNodes(SemanticsMatcher.keyIsDefined(SemanticsProperties.ProgressBarRangeInfo))
+            .assertCountEquals(0)
     }
 }

@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -208,7 +209,13 @@ private fun StatusValueWithProgress(
                 progress = { progress },
                 modifier = Modifier
                     .width(56.dp)
-                    .height(6.dp),
+                    .height(6.dp)
+                    // Cleared, or the bar is a focus stop of its own between the row and its button -
+                    // "30 percent, progress bar", which says nothing about what it measures while the
+                    // row has already said "Cannula, 2d3h". A progress bar carries range information,
+                    // which a screen reader treats as a control worth stopping on even inside a merged
+                    // parent, so merging the row above is not enough on its own.
+                    .clearAndSetSemantics { },
                 color = progressColor,
                 trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                 strokeCap = StrokeCap.Round
