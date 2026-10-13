@@ -38,12 +38,13 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     }
 
     @Test fun doActionTest() = runTest {
-        whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any())).thenReturn(mock<PS>())
+        whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(mock<PS>())
         sut.pct = InputPercent(110.0)
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
         val result = sut.doAction()
         assertThat(result.success).isTrue()
-        verify(profileFunction, times(1)).createProfileSwitch(eq(30), eq(110), eq(0), any(), any(), any(), any())
+        // The last matcher is the timestamp: an automation rule fires at its trigger time, so it passes 0 = now.
+        verify(profileFunction, times(1)).createProfileSwitch(eq(30), eq(110), eq(0), any(), any(), any(), any(), eq(0L))
     }
 
     @Test fun hasDialogTest() = runTest {
