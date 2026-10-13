@@ -121,6 +121,8 @@
     <string name="invalid_profile">Cấu hình không hợp lệ!</string>
     <string name="no_profile_set">KHÔNG CÓ CẤU HÌNH</string>
     <string name="profile_switch_no_insulin">Không thể chuyển cấu hình điều trị: không có loại insulin nào đang được sử dụng và cũng chưa có loại nào được chọn.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Thời điểm chuyển đổi cấu hình phải nằm trong khoảng %1$d giờ so với hiện tại.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Mục tiêu tạm thời phải bắt đầu trong khoảng %1$d giờ tính từ thời điểm hiện tại.</string>
     <string name="profile_switch_select_insulin_hint">Chưa có loại insulin nào được sử dụng. Hãy chọn loại insulin bạn đang sử dụng để lần chuyển cấu hình này có thể ghi nhận loại insulin đó.</string>
     <string name="insulin_activation_failed">Loại insulin chưa được chuyển đổi. Loại insulin trước đó vẫn đang được sử dụng.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Chưa chuyển sang loại insulin mới: %1$s. Loại insulin trước đó vẫn đang được sử dụng.</string>
@@ -287,6 +289,7 @@
     <!--    Insulin / Concentration-->
     <string name="ins_concentration_confirmed">Đã xác nhận insulin %1$s</string>
     <string name="current_insulin">Đang hoạt động</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Sẽ được kích hoạt</string>
     <string name="change_insulin">Thay đổi</string>
     <string name="select_insulin_description">Chọn loại insulin bạn đang nạp vào bơm. Cấu hình sẽ được chuyển đổi sau khi kích hoạt / làm đầy.</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
