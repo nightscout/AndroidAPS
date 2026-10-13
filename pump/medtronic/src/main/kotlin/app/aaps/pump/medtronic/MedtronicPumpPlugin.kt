@@ -809,6 +809,11 @@ class MedtronicPumpPlugin(
             medtronicPumpStatus.tempBasalAmount = absoluteRate
             medtronicPumpStatus.tempBasalDuration = durationInMinutes
 
+            // The new temp basal replaced the one that ran before (a zero temp basal is replaced without a
+            // cancel). Saving the new one does not end the old one, so it showed as running again when the
+            // new one was cancelled before the next history read.
+            medtronicHistoryData.endRunningTbr(System.currentTimeMillis())
+
             val tempData = PumpDbEntryTBR(absoluteRate, true, durationInMinutes * 60, tbrType)
 
             pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)

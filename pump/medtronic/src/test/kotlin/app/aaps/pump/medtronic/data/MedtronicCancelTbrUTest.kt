@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.common.sync.PumpDbEntryTBR
 import app.aaps.pump.medtronic.MedtronicTestBase
 import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
-import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -18,7 +17,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
- * Covers [MedtronicHistoryData.endRunningTbr]: which temp basal a confirmed cancel ends in AAPS.
+ * Covers [MedtronicHistoryData.endRunningTbr]: which temp basal AAPS ends when the pump stopped one, by a
+ * cancel or by a new temp basal that replaced it.
  *
  * Seen on a Medtronic 522: a cancel ended the temp basal from 21:07 (last read from history), which had
  * already been replaced by one AAPS set at 21:15. The 21:07 one grew from 8 to 11 minutes, and the 21:15
@@ -29,7 +29,7 @@ class MedtronicCancelTbrUTest : MedtronicTestBase() {
     @Mock lateinit var medtronicPumpStatus: MedtronicPumpStatus
 
     private val serial = "678734"
-    private val cancelAt = 1_000_000_000L
+    private val stopAt = 1_000_000_000L
     private val minute = 60_000L
 
     private fun sut() = MedtronicHistoryData(
@@ -58,14 +58,14 @@ class MedtronicCancelTbrUTest : MedtronicTestBase() {
 
     @Test
     fun aTempBasalSetByAapsIsEndedByItsTemporaryIdAndNotTheOlderOneFromHistory() = runBlocking {
-        val fromHistory = tbr(date = cancelAt -11 * minute, rate = 0.5, pumpId = 4242L)
-        val setByAaps = tbr(date = cancelAt -3 * minute, rate = 1.0, temporaryId = 777L)
+        val fromHistory = tbr(date = stopAt - 11 * minute, rate = 0.5, pumpId = 4242L)
+        val setByAaps = tbr(date = stopAt - 3 * minute, rate = 1.0, temporaryId = 777L)
         whenever(medtronicPumpStatus.runningTBR).thenReturn(fromHistory)
         whenever(pumpSyncStorage.getTBRs()).thenReturn(mutableListOf(setByAaps))
         whenever(pumpSync.syncTemporaryBasalWithTempId(any(), any(), any(), any(), any(), anyOrNull(), anyOrNull(), any(), any())).thenReturn(true)
         aapsRuns(timestamp = setByAaps.date, pumpId = null)
 
-        assertThat(sut().endRunningTbr(cancelAt)).isTrue()
+        sut().endRunningTbr(stopAt)
 
         verify(pumpSync).syncTemporaryBasalWithTempId(
             eq(setByAaps.date), eq(PumpRate(1.0)), eq(3 * minute), eq(true), eq(777L),
@@ -77,12 +77,12 @@ class MedtronicCancelTbrUTest : MedtronicTestBase() {
 
     @Test
     fun aTempBasalReadFromHistoryIsEndedByItsPumpId() = runBlocking {
-        val fromHistory = tbr(date = cancelAt -10 * minute, rate = 0.5, pumpId = 4242L)
+        val fromHistory = tbr(date = stopAt - 10 * minute, rate = 0.5, pumpId = 4242L)
         whenever(medtronicPumpStatus.runningTBR).thenReturn(fromHistory)
         whenever(pumpSyncStorage.getTBRs()).thenReturn(mutableListOf())
         aapsRuns(timestamp = fromHistory.date, pumpId = 4242L)
 
-        assertThat(sut().endRunningTbr(cancelAt)).isTrue()
+        sut().endRunningTbr(stopAt)
 
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             eq(fromHistory.date), eq(PumpRate(0.5)), eq(10 * minute), eq(true),
@@ -94,12 +94,12 @@ class MedtronicCancelTbrUTest : MedtronicTestBase() {
     /** A temp basal from history that AAPS no longer runs must not be made longer. */
     @Test
     fun anOlderTempBasalFromHistoryIsNotTouched() = runBlocking {
-        val fromHistory = tbr(date = cancelAt -11 * minute, rate = 0.5, pumpId = 4242L)
+        val fromHistory = tbr(date = stopAt - 11 * minute, rate = 0.5, pumpId = 4242L)
         whenever(medtronicPumpStatus.runningTBR).thenReturn(fromHistory)
         whenever(pumpSyncStorage.getTBRs()).thenReturn(mutableListOf())
-        aapsRuns(timestamp = cancelAt -3 * minute, pumpId = 4343L)
+        aapsRuns(timestamp = stopAt - 3 * minute, pumpId = 4343L)
 
-        assertThat(sut().endRunningTbr(cancelAt)).isFalse()
+        sut().endRunningTbr(stopAt)
 
         verify(pumpSync, never()).syncTemporaryBasalWithPumpId(any(), any(), any(), any(), anyOrNull(), any(), anyOrNull(), anyOrNull())
         verify(pumpSync, never()).syncTemporaryBasalWithTempId(any(), any(), any(), any(), any(), anyOrNull(), anyOrNull(), any(), any())
@@ -108,10 +108,10 @@ class MedtronicCancelTbrUTest : MedtronicTestBase() {
 
     @Test
     fun nothingIsEndedWhenAapsRunsNoTempBasal() = runBlocking {
-        whenever(medtronicPumpStatus.runningTBR).thenReturn(tbr(date = cancelAt -10 * minute, rate = 0.5, pumpId = 4242L))
+        whenever(medtronicPumpStatus.runningTBR).thenReturn(tbr(date = stopAt - 10 * minute, rate = 0.5, pumpId = 4242L))
         whenever(pumpSync.expectedPumpState()).thenReturn(PumpSync.PumpState(null, null, null, null, serial))
 
-        assertThat(sut().endRunningTbr(cancelAt)).isFalse()
+        sut().endRunningTbr(stopAt)
 
         verify(pumpSync, never()).syncTemporaryBasalWithPumpId(any(), any(), any(), any(), anyOrNull(), any(), anyOrNull(), anyOrNull())
         verify(pumpSync, never()).syncTemporaryBasalWithTempId(any(), any(), any(), any(), any(), anyOrNull(), anyOrNull(), any(), any())
