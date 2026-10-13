@@ -112,6 +112,8 @@ class EopatchPumpPluginTest : EopatchTestBase() {
 
     @Test
     fun `isSuspended should return false when basal is not paused`() {
+        // An active patch: without one the driver is suspended (#2552).
+        patchConfig.lifecycleEvent = PatchLifecycleEvent.createActivated()
         val patchState = app.aaps.pump.eopatch.vo.PatchState()
         patchState.update(ByteArray(20), System.currentTimeMillis())
         whenever(eopatchPreferenceManager.patchState).thenReturn(patchState)

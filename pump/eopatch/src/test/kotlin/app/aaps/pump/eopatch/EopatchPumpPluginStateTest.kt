@@ -173,6 +173,21 @@ class EopatchPumpPluginStateTest {
         assertThat(sut().isSuspended()).isFalse()
     }
 
+    /** #2552: between two patches nothing is given, but the loop ran on and the scheduled basal counted as given. */
+    @Test
+    fun withNoActivePatchTheDriverIsSuspended() {
+        patch(activated = false, basalPaused = false)
+
+        assertThat(sut().isSuspended()).isTrue()
+    }
+
+    @Test
+    fun aDiscardedPatchIsSuspended() {
+        patch(activated = false, deactivated = true, basalPaused = false)
+
+        assertThat(sut().isSuspended()).isTrue()
+    }
+
     // ---- the constants the queue relies on ----
 
     /** This driver never blocks the queue on its own account. */

@@ -187,8 +187,12 @@ class EopatchPumpPlugin(
         return isConfigured() && isConnected()
     }
 
+    /**
+     * No active patch gives no insulin, so it is suspended, as Omnipod, Equil and Medtrum report it. It was "not
+     * suspended" between two patches: the loop kept running and AAPS counted the scheduled basal as given (#2552).
+     */
     override fun isSuspended(): Boolean {
-        return preferenceManager.patchState.isNormalBasalPaused
+        return !patchConfig.isActivated || preferenceManager.patchState.isNormalBasalPaused
     }
 
     override fun isBusy(): Boolean {

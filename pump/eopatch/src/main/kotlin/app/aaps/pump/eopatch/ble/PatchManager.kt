@@ -172,6 +172,9 @@ class PatchManager(
                             patchConfig.patchSerialNumber
                         )
                     }
+                    // A patch is active again: the loop ends its "suspended by pump" mode on this event, not at its
+                    // next run. connectNewPump above has already ended the no-patch temp basal.
+                    rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
                 }
             })
     }
