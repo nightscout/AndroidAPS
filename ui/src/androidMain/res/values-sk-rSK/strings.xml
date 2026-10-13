@@ -167,6 +167,7 @@
     <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
     <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
     <string name="wizard_carbs_type_bread_desc">100% okamžité sacharidy, žiadne predĺžené sacharidy (eCarbs)</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">eSacharidy znížené o %1$d%%, pridané eSacharidy %2$d%% oneskorené o %3$d min na %4$d h</string>
     <string name="wizard_include_info">Stlač pre zahrnutie/vyňatie z kalkulácie:\n• BG - glykémia (ZAP na začiatku)\n• TT - dočasný cieľ (ZAP na začiatku)\n• Trend - Trend glykémie (posledný zapamätaný stav)\n• IOB - aktívny inzulín (ZAP na začiatku)\n• COB - aktívne sacharidy (posledný zapamätaný stav)</string>
     <!-- Treatments -->
     <string name="no_records_available">Nie sú k dispozícii žiadne záznamy</string>
