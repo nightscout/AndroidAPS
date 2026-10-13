@@ -25,6 +25,8 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
 import app.aaps.ui.compose.maintenance.ImportSource
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel
@@ -138,6 +140,10 @@ fun OverviewScreen(
         objectivesDone < objectivesTotal && objectivesPlugin.isEnabled() && objectivesPlugin.hasComposeContent()
     val objectivesSetupPlugin = if (showObjectivesSetup) objectivesPlugin else null
     val objectivesProgressText = if (showObjectivesSetup) "$objectivesDone/$objectivesTotal" else null
+    // The same progress in words. The badge glyph above is unreadable to a screen reader, because
+    // Material3 clears the semantics of a navigation item's whole icon slot when it has a label.
+    val objectivesProgressDescription =
+        if (showObjectivesSetup) stringResource(UiStrings.a11y_objectives_progress, objectivesDone, objectivesTotal) else null
 
     // BG source shortcut: shown when BG quality check reports FLAT or DOUBLED
     val bgQualityState by bgQualityCheck.stateFlow.collectAsStateWithLifecycle()
@@ -229,6 +235,7 @@ fun OverviewScreen(
         bgQualityBadgeDescription = bgQualityBadgeDescription,
         objectivesSetupPlugin = objectivesSetupPlugin,
         objectivesProgressText = objectivesProgressText,
+        objectivesProgressDescription = objectivesProgressDescription,
         permissionsMissing = permState.hasAnyMissing,
         onPermissionsClick = { permissionsViewModel.showSheet() },
         // Toolbar

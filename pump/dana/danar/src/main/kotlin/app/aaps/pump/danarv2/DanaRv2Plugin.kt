@@ -23,7 +23,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.comment
-import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -117,7 +116,6 @@ class DanaRv2Plugin(
 
     init {
         pluginDescription.description(TextRef.AndroidRes(R.string.description_pump_dana_r_v2))
-        pumpDescription.fillFor(PumpType.DANA_RV2)
     }
 
     override suspend fun onStart() {

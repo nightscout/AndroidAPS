@@ -12,11 +12,16 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.scenes.SceneExpiryCheck
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.workflow.WorkOutcome
 import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /**
  * What happens when a timed scene reaches its end: revert what does not expire on its own, mark the
@@ -25,7 +30,12 @@ import dev.zacsweers.metro.SingleIn
  * All of that is a rule, not a platform call - the only Android part was being woken up at the right
  * moment, which is [SceneExpiryScheduler]'s job. `SceneExpiryWorker` is now a shell that holds this
  * and nothing else.
+ *
+ * Two callers can end a scene: the scheduled end ([run]) and the loop's check for an overdue scene
+ * ([endIfOverdue]). They take turns on one lock, and each one checks under it whether the scene has
+ * ended already, so a scene is ended once and a chained scene is started once.
  */
+@ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 @Inject
 class SceneExpiryRunner(
@@ -38,14 +48,33 @@ class SceneExpiryRunner(
     private val profileFunction: ProfileFunction,
     private val rh: TextResolver,
     private val notificationManager: NotificationManager,
-    private val config: Config
-) {
+    private val config: Config,
+    private val dateUtil: DateUtil
+) : SceneExpiryCheck {
+
+    private val mutex = Mutex()
 
     suspend fun run(sceneName: String): WorkOutcome {
         if (!config.awaitInitialized()) {
             aapsLogger.info(LTag.UI, "SceneExpiryRunner: app not yet initialized, retrying")
             return WorkOutcome.Retry("app not initialized")
         }
+        return mutex.withLock { end(sceneName) }
+    }
+
+    override suspend fun endIfOverdue() {
+        if (!config.appInitialized) return
+        mutex.withLock {
+            val state = activeSceneManager.getActiveState() ?: return@withLock
+            if (state.durationMs <= 0 || activeSceneManager.isExpired()) return@withLock
+            if (dateUtil.now() < state.activatedAt + state.durationMs) return@withLock
+            aapsLogger.warn(LTag.UI, "Scene '${state.scene.name}' is past its end and its scheduled end has not run, ending it now")
+            end(state.scene.name)
+        }
+    }
+
+    /** Ends the active scene. Call with [mutex] held. */
+    private suspend fun end(sceneName: String): WorkOutcome {
         val activeState = activeSceneManager.getActiveState()
             ?: return WorkOutcome.Skipped("no active scene")
         // If a previous run already expired this scene (e.g. it asked to be retried from the init gate

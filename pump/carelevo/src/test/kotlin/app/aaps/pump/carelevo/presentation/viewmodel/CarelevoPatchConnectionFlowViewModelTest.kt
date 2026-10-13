@@ -15,10 +15,14 @@ import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.model.Event
@@ -40,6 +44,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -52,6 +57,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.anyVararg
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
@@ -63,6 +71,7 @@ import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.util.Optional
+import app.aaps.core.interfaces.rx.events.Event as RxEvent
 
 /**
  * Unit tests for [CarelevoPatchConnectionFlowViewModel] — the activation wizard's step machine.
@@ -105,6 +114,8 @@ class CarelevoPatchConnectionFlowViewModelTest {
     private lateinit var profileRepository: ProfileRepository
     private lateinit var insulinManager: InsulinManager
     private lateinit var persistenceLayer: PersistenceLayer
+    private lateinit var rh: ResourceHelper
+    private lateinit var rxBus: RxBus
 
     private lateinit var patchStateSubject: BehaviorSubject<Optional<PatchState>>
 
@@ -139,6 +150,14 @@ class CarelevoPatchConnectionFlowViewModelTest {
         profileRepository = mock()
         insulinManager = mock()
         persistenceLayer = mock()
+        // Text for the dialogs the wizard sends. With args it answers the args, so the reason can be asserted.
+        rh = mock {
+            on { gs(any<TextRef>()) } doReturn "text"
+            on { gs(any<TextRef>(), anyVararg()) } doAnswer { it.arguments.drop(1).joinToString() }
+        }
+        rxBus = mock()
+        // A mocked suspend Boolean answers null. The switch is refused unless a test says otherwise.
+        runBlocking { whenever(profileFunction.createProfileSwitchWithNewInsulin(any(), any())).thenReturn(false) }
 
         whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
         whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
@@ -157,7 +176,9 @@ class CarelevoPatchConnectionFlowViewModelTest {
             profileFunction = profileFunction,
             profileRepository = profileRepository,
             insulinManager = insulinManager,
-            persistenceLayer = persistenceLayer
+            persistenceLayer = persistenceLayer,
+            rh = rh,
+            rxBus = rxBus
         )
     }
 
@@ -194,8 +215,9 @@ class CarelevoPatchConnectionFlowViewModelTest {
         whenever(profileFunction.getRequestedProfile()).thenReturn(requested)
         whenever(preferences.get(BooleanKey.SiteRotationManagePump)).thenReturn(siteRotation)
         whenever(insulinManager.insulins).thenReturn(ArrayList(insulins))
-        val effective: EffectiveProfile? =
-            activeLabel?.let { label -> mock { on { iCfg } doReturn ICfg(label, 55, 6.0, 1.0) } }
+        // The running insulin is a copy of its list entry, as after a real switch. The VM finds the entry by curve too.
+        val running = activeLabel?.let { label -> insulins.firstOrNull { it.insulinLabel == label }?.deepClone() ?: ICfg(label, 55, 6.0, 1.0) }
+        val effective: EffectiveProfile? = running?.let { runningICfg -> mock { on { iCfg } doReturn runningICfg } }
         whenever(profileFunction.getProfile()).thenReturn(effective)
     }
 
@@ -369,6 +391,25 @@ class CarelevoPatchConnectionFlowViewModelTest {
         assertThat(sut.availableInsulins.value.map { it.insulinLabel }).containsExactly("Fiasp", "Lyumjev").inOrder()
         assertThat(sut.selectedInsulin.value?.insulinLabel).isEqualTo("Lyumjev")
         assertThat(sut.activeInsulinLabel.value).isEqualTo("Lyumjev")
+    }
+
+    // A running insulin from an older version can have a label the list no longer has. Matching it by label
+    // selected the first insulin in the list, and continuing then switched the user to that insulin.
+    @Test
+    fun `a running insulin with an old label selects the entry with the same curve and does not switch`() = runTest(testDispatcher) {
+        val lyumjevInList = ICfg(insulinLabel = "Lyumjev 45m 5h U100", peak = 45, dia = 5.0, concentration = 1.0)
+        stubWorkflow(insulins = listOf(fiasp, lyumjevInList), activeLabel = null)
+        val effective = mock<EffectiveProfile> { on { iCfg } doReturn lyumjev }
+        whenever(profileFunction.getProfile()).thenReturn(effective)
+
+        sut.initWorkflow(CarelevoScreenType.CONNECTION_FLOW_START)
+        advanceUntilIdle()
+        sut.advanceFromInsulin()
+        advanceUntilIdle()
+
+        assertThat(sut.selectedInsulin.value?.insulinLabel).isEqualTo("Lyumjev 45m 5h U100")
+        assertThat(sut.activeInsulinLabel.value).isEqualTo("Lyumjev 45m 5h U100")
+        verifyBlocking(profileFunction, never()) { createProfileSwitchWithNewInsulin(any(), any()) }
     }
 
     @Test
@@ -593,12 +634,54 @@ class CarelevoPatchConnectionFlowViewModelTest {
         val store: ProfileStore = mock()
         whenever(profileRepository.profile).thenReturn(MutableStateFlow<ProfileStore?>(store))
         stubCreateProfileSwitch(null)
+        whenever(profileFunction.profileSwitchRefusal(any(), eq("Night"), any(), any(), any(), any())).thenReturn("The pump cannot take it")
 
         sut.activateSelectedProfile()
         advanceUntilIdle()
 
         verify(aapsLogger).error(eq(LTag.PUMP), any<String>())
         assertThat(sut.page.value).isEqualTo(CarelevoPatchStep.PROFILE_GATE)
+        // It was only logged, so the user did not know why nothing happened.
+        assertThat(sentDialog().message).isEqualTo("The pump cannot take it")
+    }
+
+    /** The one dialog the wizard sent. */
+    private fun sentDialog(): EventShowDialog.Ok {
+        val sent = argumentCaptor<RxEvent>()
+        verify(rxBus).send(sent.capture())
+        return sent.firstValue as EventShowDialog.Ok
+    }
+
+    // The patch would be filled for an insulin that is not in use, so the wizard stays and says why.
+    @Test
+    fun `a refused insulin switch says why and stays on the insulin step`() = runTest(testDispatcher) {
+        stubWorkflow(insulins = listOf(fiasp, lyumjev), activeLabel = "Fiasp")
+        sut.initWorkflow(CarelevoScreenType.CONNECTION_FLOW_START)
+        advanceUntilIdle()
+        // createProfileSwitchWithNewInsulin is not stubbed, so it refuses (false).
+        whenever(profileFunction.insulinSwitchRefusal(lyumjev)).thenReturn("The pump cannot take it")
+        sut.selectInsulin(lyumjev)
+
+        sut.advanceFromInsulin()
+        advanceUntilIdle()
+
+        assertThat(sut.page.value).isEqualTo(CarelevoPatchStep.SELECT_INSULIN)
+        assertThat(sentDialog().message).isEqualTo("The pump cannot take it")
+    }
+
+    @Test
+    fun `an accepted insulin switch moves on`() = runTest(testDispatcher) {
+        stubWorkflow(insulins = listOf(fiasp, lyumjev), activeLabel = "Fiasp")
+        sut.initWorkflow(CarelevoScreenType.CONNECTION_FLOW_START)
+        advanceUntilIdle()
+        whenever(profileFunction.createProfileSwitchWithNewInsulin(lyumjev, Sources.Carelevo)).thenReturn(true)
+        sut.selectInsulin(lyumjev)
+
+        sut.advanceFromInsulin()
+        advanceUntilIdle()
+
+        assertThat(sut.page.value).isEqualTo(CarelevoPatchStep.PATCH_START)
+        verify(rxBus, never()).send(any())
     }
 
     @Test

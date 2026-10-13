@@ -35,6 +35,9 @@ class PumpDescription {
     var maxReservoirReading = 50
     var useHardwareLink = false
     var extendedBolusMinAmount = 0.0
+
+    /** The largest extended bolus the pump takes. [Double.MAX_VALUE] when the pump has no limit of its own. */
+    var extendedBolusMaxAmount = Double.MAX_VALUE
     fun resetSettings() {
         isBolusCapable = true
         bolusStep = 0.1
@@ -65,6 +68,7 @@ class PumpDescription {
         hasCustomUnreachableAlertCheck = false
         useHardwareLink = false
         extendedBolusMinAmount = extendedBolusStep
+        extendedBolusMaxAmount = Double.MAX_VALUE
     }
 
     fun clone(): PumpDescription =
@@ -102,6 +106,7 @@ class PumpDescription {
             it.maxReservoirReading = this.maxReservoirReading
             it.useHardwareLink = this.useHardwareLink
             it.extendedBolusMinAmount = this.extendedBolusMinAmount
+            it.extendedBolusMaxAmount = this.extendedBolusMaxAmount
         }
 
     companion object {

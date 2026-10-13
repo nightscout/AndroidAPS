@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
-import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -46,9 +45,9 @@ class ConcentrationHelperImpl(
 
     override fun toPumpRate(rate: Double): PumpRate = PumpRate(rate / concentration)
 
-    // Amount-aware (Insight specialBolusSize) + concentration-adapted deliverable IU step.
-    override fun bolusStep(amount: Double): Double =
-        activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(amount / concentration) * concentration
+    // The deliverable step in insulin units. The pump answers it (Pump.bolusStepSize), the concentration
+    // wrapper converts; this only passes it on.
+    override fun bolusStep(amount: Double): Double = activePlugin.activePump.bolusStepSize(amount)
 
     override fun basalRateString(rate: PumpRate, isAbsolute: Boolean, decimals: Int): String {
         if (isAbsolute.not())
@@ -118,9 +117,10 @@ override fun basalTbrString(rate: PumpRate, startTime: Long, durationInMin: Int,
 
     override fun insulinConcentrationString(): String = rh.gs(ImplementationStrings.insulin_concentration, (concentration * 100).toInt())
 
+    // The amount is in pump units, so it is formatted with the step of the pump itself, not the converted one.
     override fun bolusWithVolume(amount: Double): String = rh.gs(
         ImplementationStrings.bolus_with_volume,
-        decimalFormatter.toPumpSupportedBolus(amount, activePlugin.activePump.pumpDescription.bolusStep),
+        decimalFormatter.toPumpSupportedBolus(amount, activePlugin.activePumpInternal.pumpDescription.bolusStep),
         amount * 10
     )
 

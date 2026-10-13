@@ -65,7 +65,8 @@ class DesktopReminderScheduler(
  * **The runner is looked up when it is needed, not when the graph is built.** There is a cycle
  * otherwise, and a real one: `SceneExpiryRunner` needs `SceneExecutor`, which needs this scheduler
  * back. Android never meets it because WorkManager constructs the runner itself, so it is not a
- * graph node there - the same reason `LazyCalculationExecutor` exists. Deferring is safe rather than
+ * graph node there. It is the same kind of cycle that `LazyCalculationExecutor` breaks for the
+ * calculation, on every platform. Deferring is safe rather than
  * merely convenient: nothing is resolved while the graph is assembled, and the first lookup happens
  * when a scene actually expires, by which time every object in the loop exists.
  *

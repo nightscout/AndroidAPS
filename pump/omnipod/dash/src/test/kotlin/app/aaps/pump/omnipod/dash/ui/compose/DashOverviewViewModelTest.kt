@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import app.aaps.core.ui.R as CoreUiR
@@ -43,7 +44,7 @@ import app.aaps.pump.omnipod.common.R as CommonR
  * Unit test for [DashOverviewViewModel]'s [PumpOverviewUiState] assembly (the initial value produced
  * by buildUiState()). The screen rendering itself is covered by core:ui's PumpOverviewScreenTest.
  *
- * Both tests keep the pod in the pre-activation ("not initialized", activationProgress = NOT_STARTED)
+ * Most tests keep the pod in the pre-activation ("not initialized", activationProgress = NOT_STARTED)
  * state which is the least stub-heavy branch of buildInfoRows(): it emits placeholder rows and never
  * dereferences the pod's optional fields (basalProgram, lastBolus, time, expiry, ...) nor the pump
  * plugin's model()/determineCorrect* helpers.
@@ -118,6 +119,39 @@ internal class DashOverviewViewModelTest {
         assertThat(refresh.enabled).isFalse()
         val activate = state.managementActions.first { it.label == "Activate pod" }
         assertThat(activate.visible).isTrue()
+    }
+
+    /**
+     * A pod that faults part way through activation (after it got its unique id) can only be removed with
+     * "Deactivate": when deactivation fails, the wizard offers "Discard". "Discard" itself is not shown at
+     * this point, so without "Deactivate" the pod could not be removed at all (#1217).
+     */
+    @Test
+    fun pairedPodPartWayThroughActivation_offersDeactivate() {
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.PRIME_COMPLETED)
+        whenever(podStateManager.isUniqueIdSet).thenReturn(true)
+        whenever(podStateManager.uniqueId).thenReturn(123L)
+        whenever(podStateManager.bluetoothAddress).thenReturn("00:11:22:33:44:55")
+        // From SET_UNIQUE_ID on, the info rows also format values (firmware, durations, reservoir).
+        whenever(rh.gs(any<Int>(), anyVararg<Any>())).thenReturn("value")
+        whenever(ch.insulinAmountString(any())).thenReturn("50 U")
+        whenever(rh.gs(CommonR.string.omnipod_common_pod_management_button_deactivate_pod)).thenReturn("Deactivate pod")
+
+        val state = createViewModel().uiState.value
+
+        val deactivate = state.managementActions.first { it.label == "Deactivate pod" }
+        assertThat(deactivate.visible).isTrue()
+        assertThat(deactivate.enabled).isTrue()
+    }
+
+    @Test
+    fun noPairedPod_hidesDeactivate() {
+        whenever(rh.gs(CommonR.string.omnipod_common_pod_management_button_deactivate_pod)).thenReturn("Deactivate pod")
+
+        val state = createViewModel().uiState.value
+
+        val deactivate = state.managementActions.first { it.label == "Deactivate pod" }
+        assertThat(deactivate.visible).isFalse()
     }
 
     @Test

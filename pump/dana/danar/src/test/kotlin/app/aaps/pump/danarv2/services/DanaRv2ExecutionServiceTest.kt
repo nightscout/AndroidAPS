@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.pump.dana.DanaPump
-import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.danarv2.comm.MessageHashTableRv2
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -22,7 +21,6 @@ import org.mockito.Mockito.`when`
 
 class DanaRv2ExecutionServiceTest : TestBaseWithProfile() {
 
-    @Mock lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Mock lateinit var danaRv2Plugin: DanaRv2Plugin
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var messageHashTableRv2: MessageHashTableRv2
@@ -47,7 +45,6 @@ class DanaRv2ExecutionServiceTest : TestBaseWithProfile() {
         danaRv2ExecutionService.activePlugin = activePlugin
         danaRv2ExecutionService.uiInteraction = uiInteraction
         danaRv2ExecutionService.pumpEnactResultProvider = pumpEnactResultProvider
-        danaRv2ExecutionService.danaRKoreanPlugin = danaRKoreanPlugin
         danaRv2ExecutionService.danaRv2Plugin = danaRv2Plugin
         danaRv2ExecutionService.commandQueue = commandQueue
         danaRv2ExecutionService.messageHashTableRv2 = messageHashTableRv2

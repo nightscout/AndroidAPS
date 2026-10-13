@@ -15,7 +15,7 @@ import org.mockito.kotlin.mock
 /**
  * Pins the rule the class exists for: a slot always holds the generation the work was tagged with.
  *
- * A worker asks for its input with the generation it was enqueued under, and gets null when the
+ * A phase asks for its input with the generation it was started under, and gets null when the
  * chain has moved on. If the counter bump and the slot write ever came apart, a slot could end up
  * holding an older generation than the work running against it, and the calculation would be
  * dropped silently - no crash, just a graph that never refreshes.
@@ -84,7 +84,7 @@ class WorkflowChainDataTest : TestBase() {
 
         assertThat(sut.postFor(HISTORY_CALCULATION, history)).isNull()
         assertThat(sut.prepareFor("not-a-job", history)).isNull()
-        assertThat(sut.postFor(null, history)).isNull()
+        assertThat(sut.postFor("not-a-job", history)).isNull()
     }
 
     @Test fun `nothing started means nothing to run`() {

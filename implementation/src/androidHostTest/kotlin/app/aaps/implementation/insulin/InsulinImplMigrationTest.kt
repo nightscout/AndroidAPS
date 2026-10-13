@@ -174,11 +174,51 @@ class InsulinImplMigrationTest : TestBase() {
     }
 
     @Test
-    fun sameParamsDifferentLabelsProduceUniqueLabels() {
-        // Both normalize to the same base name → collision rename must keep the persisted labels distinct.
-        val sut = create(cfg(ins(label = "A", peak = freePeak30Ms), ins(label = "B", peak = freePeak30Ms)))
+    fun differentNicknamesWithTheSameCurveAreBothKept() {
+        // The user may want two names for the same action. Only the same nickname makes a duplicate.
+        val sut = create(cfg(ins(label = "A", peak = freePeak30Ms, nickname = "A"), ins(label = "B", peak = freePeak30Ms, nickname = "B")))
         assertThat(sut.insulins).hasSize(2)
         assertThat(sut.insulins[0].insulinLabel).isNotEqualTo(sut.insulins[1].insulinLabel)
+    }
+
+    @Test
+    fun sameCurveWithoutNicknamesCollapsesToOne() {
+        // Both blank nicknames are filled with the same template name, so the two entries would differ only
+        // by a "(1)" in the label. That is the same insulin twice.
+        val sut = create(cfg(ins(label = "A", peak = freePeak30Ms), ins(label = "B", peak = freePeak30Ms)))
+        assertThat(sut.insulins).hasSize(1)
+    }
+
+    @Test
+    fun numberedCopiesOfOneInsulinCollapseToOne() {
+        // What older versions left behind: one copy of the running insulin added at every start, numbered by
+        // the label rebuild, plus the newest copy still under the running profile's own label.
+        val copies = listOf("Novorapid 75m 8h U100", "Novorapid (1) 75m 8h U100", "Novorapid (2) 75m 8h U100", "Novorapid")
+            .map { ins(label = it, peak = rapidPeakMs, endTime = rapidEndMs, nickname = "Novorapid") }
+        val other = ins(label = "Lyumjev 45m 8h U100", peak = lyumjevPeakMs, endTime = rapidEndMs, nickname = "Lyumjev")
+
+        val sut = create(cfg(*(copies + other).toTypedArray()))
+
+        assertThat(sut.insulins.map { it.insulinLabel }).containsExactly("Novorapid 75m 8h U100", "Lyumjev 45m 8h U100").inOrder()
+        assertThat(storedInsulinCount()).isEqualTo(2)
+    }
+
+    @Test
+    fun runningInsulinWithAnOldLabelIsAddedOnlyOnce() {
+        // MainApp.dataMigrations() does this at every start. The running profile keeps its old label
+        // "Novorapid", which the label rebuild at start never produces, so a match by label failed at every
+        // start and added one more copy each time.
+        val running = ICfg(insulinLabel = "Novorapid", insulinEndTime = rapidEndMs, insulinPeakTime = rapidPeakMs, concentration = 1.0)
+            .also { it.insulinNickname = "Novorapid" }
+        var sut = create(cfg(ins(label = "Lyumjev 45m 8h U100", peak = lyumjevPeakMs, endTime = rapidEndMs, nickname = "Lyumjev")))
+
+        repeat(5) {
+            if (!sut.insulinWithSameCurveExists(running)) sut.addNewInsulin(running.deepClone(), keepName = true)
+            sut = create(storedConfig) // next start
+        }
+
+        assertThat(sut.insulins).hasSize(2)
+        assertThat(sut.insulinWithSameCurveExists(running)).isTrue()
     }
 
     @Test

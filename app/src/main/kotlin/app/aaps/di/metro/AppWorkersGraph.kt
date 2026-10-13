@@ -19,8 +19,6 @@ import app.aaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.sync.xdrip.workers.XdripDataSyncWorker
-import app.aaps.workflow.PostCalculationWorker
-import app.aaps.workflow.PrepareGraphDataWorker
 import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.IntoMap
 import dev.zacsweers.metro.Provides
@@ -118,16 +116,6 @@ interface AppWorkersGraph {
     @IntoMap
     @WorkerKey(XdripDataSyncWorker::class)
     fun bindXdripDataSyncWorker(f: XdripDataSyncWorker.Factory): MetroWorkerCreator = f
-
-    @Provides
-    @IntoMap
-    @WorkerKey(PostCalculationWorker::class)
-    fun bindPostCalculationWorker(f: PostCalculationWorker.Factory): MetroWorkerCreator = f
-
-    @Provides
-    @IntoMap
-    @WorkerKey(PrepareGraphDataWorker::class)
-    fun bindPrepareGraphDataWorker(f: PrepareGraphDataWorker.Factory): MetroWorkerCreator = f
 
     @Provides
     @IntoMap

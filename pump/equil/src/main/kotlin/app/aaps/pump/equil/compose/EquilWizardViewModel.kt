@@ -7,11 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.labelOfInsulin
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
@@ -28,6 +27,8 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.pump.ProfileGateStepHost
+import app.aaps.core.ui.compose.pump.activateProfileFromGate
+import app.aaps.core.ui.compose.pump.switchToWizardInsulin
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.equil.EquilConst
@@ -301,24 +302,10 @@ class EquilWizardViewModel(
         val store = profileRepository.profile.value ?: return
         val iCfg = insulinManager.insulins.firstOrNull() ?: return
         viewModelScope.launch {
-            val result = profileFunction.createProfileSwitch(
-                profileStore = store,
-                profileName = name,
-                durationInMinutes = 0,
-                percentage = 100,
-                timeShiftInHours = 0,
-                timestamp = System.currentTimeMillis(),
-                action = Action.PROFILE_SWITCH,
-                source = Sources.Equil,
-                note = null,
-                listValues = listOf(ValueWithUnit.SimpleString(name)),
-                iCfg = iCfg
-            )
-            if (result == null) {
-                aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
-            } else {
+            // A refused switch says why and keeps the gate on screen.
+            if (activateProfileFromGate(profileFunction, rh, rxBus, store, name, iCfg, Sources.Equil, System.currentTimeMillis()))
                 moveToNextStep(EquilWizardStep.PROFILE_GATE)
-            }
+            else aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
         }
     }
 
@@ -908,7 +895,7 @@ class EquilWizardViewModel(
         if (_availableInsulins.value.isNotEmpty()) return
         viewModelScope.launch {
             val insulins = insulinManager.insulins.map { it.deepClone() }
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val activeLabel = insulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
             val current = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
             _availableInsulins.value = insulins
             _selectedInsulin.value = current
@@ -920,13 +907,16 @@ class EquilWizardViewModel(
         _selectedInsulin.value = iCfg
     }
 
-    /** Execute profile switch if user selected a different insulin. Called after activation completes. */
+    /**
+     * Execute profile switch if user selected a different insulin. Called after activation completes, so the
+     * pump is running by then: a refused switch cannot stop the wizard, but it says why.
+     */
     fun executeInsulinProfileSwitch() {
         val selected = _selectedInsulin.value ?: return
         val activeLabel = _activeInsulinLabel.value
         if (selected.insulinLabel == activeLabel) return
         viewModelScope.launch {
-            profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.Equil)
+            switchToWizardInsulin(profileFunction, rh, rxBus, selected, Sources.Equil)
         }
     }
 

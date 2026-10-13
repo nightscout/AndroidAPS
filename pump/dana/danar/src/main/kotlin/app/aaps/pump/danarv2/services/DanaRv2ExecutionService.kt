@@ -3,7 +3,6 @@ package app.aaps.pump.danarv2.services
 import android.os.Binder
 import android.os.SystemClock
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T.Companion.mins
 import app.aaps.core.data.time.T.Companion.secs
 import app.aaps.core.interfaces.logging.LTag
@@ -49,7 +48,6 @@ import app.aaps.pump.danar.comm.MsgStatusBasic
 import app.aaps.pump.danar.comm.MsgStatusBolusExtended
 import app.aaps.pump.danar.comm.MsgStatusTempBasal
 import app.aaps.pump.danar.services.AbstractDanaRExecutionService
-import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.danarv2.comm.MessageHashTableRv2
 import app.aaps.pump.danarv2.comm.MsgCheckValueV2
@@ -62,7 +60,6 @@ import kotlin.math.abs
 class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
 
     @Inject lateinit var uiInteraction: UiInteraction
-    @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var messageHashTableRv2: MessageHashTableRv2
@@ -163,8 +160,8 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
                     pumpSync.insertAnnouncement(
                         rh.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U",
                         null,
-                        PumpType.DANA_R_KOREAN,
-                        danaRKoreanPlugin.serialNumber()
+                        danaRv2Plugin.model(),
+                        danaRv2Plugin.serialNumber()
                     )
                     lastApproachingDailyLimit = System.currentTimeMillis()
                 }

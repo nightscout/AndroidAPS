@@ -193,7 +193,7 @@ class LoopPlugin(
 
     // Serializes loop runs. Master's invoke() was @Synchronized; the suspend migration dropped that
     // (and @Synchronized cannot span suspension points). invoke() is reachable concurrently — the
-    // per-BG PostCalculationWorker, the Accept-temp button, loop pull-to-refresh, the temp-target
+    // per-BG PostCalculationRunner, the Accept-temp button, loop pull-to-refresh, the temp-target
     // change flow, and the deferred SMB fallback — so without this lock two runs can overlap and
     // double-apply or mis-order TBR/SMB commands. Not reentrant: the SMB fallback re-invoke is
     // deferred (postDelayed + appScope.launch) and runs after the current run releases the lock.

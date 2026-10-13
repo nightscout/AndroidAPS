@@ -218,7 +218,9 @@ class CarelevoPatchFlowScreenTest {
             profileFunction = profileFunction,
             profileRepository = profileRepository,
             insulinManager = insulinManager,
-            persistenceLayer = persistenceLayer
+            persistenceLayer = persistenceLayer,
+            rh = mock(),
+            rxBus = mock()
         )
         connectViewModel = CarelevoPatchConnectViewModel(
             aapsLogger = aapsLogger,

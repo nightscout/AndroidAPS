@@ -42,6 +42,7 @@ fun PumpDescription.fillFor(pumpType: PumpType): PumpDescription {
     maxReservoirReading = pumpType.maxReservoirReading()
     useHardwareLink = pumpType.useHardwareLink
     pumpType.extendedBolusSettings()?.minDose?.let { extendedBolusMinAmount = it }
+    pumpType.extendedBolusSettings()?.maxDose?.let { extendedBolusMaxAmount = it }
 
     return this
 }

@@ -1,5 +1,6 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
@@ -28,8 +29,13 @@ class DanaRSPacketBolusGetStepBolusInformation(
         val hours = intFromBuff(data, 4, 1)
         val minutes = intFromBuff(data, 5, 1)
         if (isValidTime(hours, minutes)) {
-            if (danaPump.usingUTC) danaPump.lastBolusTime = DateTime.now().withZone(DateTimeZone.UTC).withHourOfDay(hours).withMinuteOfHour(minutes).millis
-            else danaPump.lastBolusTime = DateTime.now().withHourOfDay(hours).withMinuteOfHour(minutes).millis
+            // The pump sends only the time of day. A bolus from yesterday evening must not become a time later
+            // today, so a time after now is from yesterday. A few minutes after now still means today: the pump
+            // clock can run a little ahead of the phone until AAPS sets it.
+            val now = dateUtil.now()
+            val zone = if (danaPump.usingUTC) DateTimeZone.UTC else DateTimeZone.getDefault()
+            val today = DateTime(now, zone).withTime(hours, minutes, 0, 0)
+            danaPump.lastBolusTime = if (today.millis > now + T.mins(5).msecs()) today.minusDays(1).millis else today.millis
             danaPump.lastBolusAmount = intFromBuff(data, 6, 2) / 100.0
         } else {
             // A pump that never gave a bolus sends FF FF as time, and the amount bytes are not valid

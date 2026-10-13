@@ -78,11 +78,48 @@ class GlobalSnackbarHostTest {
         assertThat(presence.activeHosts.value).isEqualTo(1)
     }
 
-    private fun setHostContent() {
+    /**
+     * A pump driver that retries every second sent the same error each time. Every copy was queued, so
+     * the snackbars covered the bottom bar for minutes and dismissing one only showed the next.
+     */
+    @Test
+    fun sameMessageWhileShown_isNotQueuedAgain() {
+        val hostState = SnackbarHostState()
+        setHostContent(hostState)
+        compose.waitForIdle()
+
+        repeat(5) { rxBus.send(EventShowSnackbar(message = "Selected device not found", type = EventShowSnackbar.Type.Error)) }
+        compose.waitForIdle()
+        compose.onNodeWithText("Selected device not found").assertIsDisplayed()
+
+        compose.runOnIdle { hostState.currentSnackbarData?.dismiss() }
+        compose.waitForIdle()
+
+        compose.onNodeWithText("Selected device not found").assertDoesNotExist()
+    }
+
+    @Test
+    fun differentMessage_isShownAfterTheCurrentOne() {
+        val hostState = SnackbarHostState()
+        setHostContent(hostState)
+        compose.waitForIdle()
+
+        rxBus.send(EventShowSnackbar(message = "First", type = EventShowSnackbar.Type.Error))
+        rxBus.send(EventShowSnackbar(message = "Second", type = EventShowSnackbar.Type.Error))
+        compose.waitForIdle()
+        compose.onNodeWithText("First").assertIsDisplayed()
+
+        compose.runOnIdle { hostState.currentSnackbarData?.dismiss() }
+        compose.waitForIdle()
+
+        compose.onNodeWithText("Second").assertIsDisplayed()
+    }
+
+    private fun setHostContent(hostState: SnackbarHostState = SnackbarHostState()) {
         compose.setContent {
             CompositionLocalProvider(LocalPreferences provides preferences) {
                 AapsTheme {
-                    GlobalSnackbarHost(rxBus, presence, hostState = SnackbarHostState())
+                    GlobalSnackbarHost(rxBus, presence, hostState = hostState)
                 }
             }
         }

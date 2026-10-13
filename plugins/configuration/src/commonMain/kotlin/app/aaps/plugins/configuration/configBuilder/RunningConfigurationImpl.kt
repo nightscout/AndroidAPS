@@ -189,7 +189,9 @@ class RunningConfigurationImpl(
         configuration.pump?.let {
             if (preferences.get(StringKey.VirtualPumpType) != it) {
                 preferences.put(StringKey.VirtualPumpType, it)
-                activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(it))
+                // The driver's own description: through the concentration wrapper it is a copy when the
+                // insulin is not U100, and the change would be lost.
+                activePlugin.activePumpInternal.pumpDescription.fillFor(PumpType.getByDescription(it))
                 pumpSync.connectNewPump(endRunning = false) // do not end running TBRs, we call this only to accept data properly
                 aapsLogger.debug(LTag.CORE, "Changing pump type to $it")
             }

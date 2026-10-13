@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.constraints
 
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.PumpInsulin
 
 /**
  * Constraints interface
@@ -33,4 +34,16 @@ interface ConstraintsChecker : PluginConstraints {
     fun getMaxExtendedBolusAllowed(): Constraint<Double>
     fun getMaxCarbsAllowed(): Constraint<Int>
     suspend fun getMaxIOBAllowed(): Constraint<Double>
+
+    /**
+     * Limits a prime or fill amount. It is in pump units: it goes to the pump as it is, the insulin
+     * concentration does not convert it. [applyBolusConstraints] takes insulin units, so priming has its
+     * own function.
+     *
+     * The max bolus of the constraint plugins is used as a plain number of pump units, not converted by the
+     * concentration, as it was before concentrations. The limits of the pump itself (its max, and a min for
+     * Insight) are in pump units already and apply as they are. The amount is rounded down to the step of
+     * the pump.
+     */
+    fun applyPrimingConstraints(amount: PumpInsulin): PumpInsulin
 }

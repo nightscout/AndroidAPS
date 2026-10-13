@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
@@ -37,9 +38,9 @@ import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
 import app.aaps.pump.omnipod.dash.R
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
-import app.aaps.pump.omnipod.dash.history.data.BasalValuesRecord
-import app.aaps.pump.omnipod.dash.history.data.InitialResult
-import app.aaps.pump.omnipod.dash.history.data.ResolvedResult
+import app.aaps.pump.omnipod.common.history.data.BasalValuesRecord
+import app.aaps.pump.omnipod.common.history.data.InitialResult
+import app.aaps.pump.omnipod.common.history.data.ResolvedResult
 import app.aaps.pump.omnipod.dash.util.Constants
 import app.aaps.pump.omnipod.dash.util.I8n
 import dev.zacsweers.metro.AppScope
@@ -78,7 +79,8 @@ class DashOmnipodWizardViewModel(
     persistenceLayer: PersistenceLayer,
     pumpEnactResultProvider: () -> PumpEnactResult,
     logger: AAPSLogger,
-    aapsSchedulers: AapsSchedulers
+    aapsSchedulers: AapsSchedulers,
+    rxBus: RxBus
 ) : OmnipodWizardViewModel(
     logger,
     aapsSchedulers,
@@ -86,7 +88,9 @@ class DashOmnipodWizardViewModel(
     profileFunction,
     profileRepository,
     insulinManager,
-    persistenceLayer
+    persistenceLayer,
+    rh,
+    rxBus
 ) {
 
     override val pumpSource: Sources = Sources.OmnipodDash

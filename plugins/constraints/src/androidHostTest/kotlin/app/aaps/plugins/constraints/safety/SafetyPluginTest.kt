@@ -3,6 +3,7 @@ package app.aaps.plugins.constraints.safety
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -10,6 +11,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.pump.PumpWithConcentration
+import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
@@ -32,6 +34,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
@@ -71,6 +74,8 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
         whenever(activePlugin.activePump).thenReturn(pumpWithConcentration)
         whenever(pumpWithConcentration.pumpDescription).thenReturn(pumpDescription)
+        // The step is the interface default, read from the description above. A plain mock would answer 0.0.
+        whenever(pumpWithConcentration.bolusStepSize(any())).thenCallRealMethod()
         whenever(config.APS).thenReturn(true)
         safetyPlugin = SafetyPlugin(aapsLogger, text, preferences, constraintChecker, activePlugin, hardLimits, config, persistenceLayer, dateUtil, notificationManager, decimalFormatter)
         openAPSSMBPlugin =
@@ -176,7 +181,6 @@ class SafetyPluginTest : TestBaseWithProfile() {
 Safety: Percent rate 2147483647% recalculated to 21474836.47 U/h with current basal 1.00 U/h
 Safety: Limiting max basal rate to 2.00 U/h because of hard limit
 Safety: Limiting max percent rate to 200% because of pump limit
-Safety: Limiting max basal rate to 500.00 U/h because of pump limit
     """.trimIndent()
         )
         assertThat(i.getMostLimitedReasons()).isEqualTo(
@@ -244,6 +248,78 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
         val d = safetyPlugin.applyBolusConstraints(ConstraintObject(Double.MAX_VALUE, aapsLogger))
         assertThat(d.value()).isWithin(0.001).of(2.2)
+    }
+
+    @Test
+    fun bolusIsFlooredToTheStepThePumpReported() {
+        // #946: a Dana RS set to a 0.1 U step. The pump type says 0.05 U, the description says 0.1 U.
+        whenever(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(3.0)
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
+        pumpDescription.fillFor(PumpType.DANA_RS).bolusStep = 0.1
+        val d = safetyPlugin.applyBolusConstraints(ConstraintObject(1.55, aapsLogger))
+        assertThat(d.value()).isWithin(0.001).of(1.5)
+    }
+
+    @Test
+    fun bolusIsFlooredToTheStepInInsulinUnits() {
+        // A bolus is in insulin units, so the step comes from the active pump, which converts the pump's step:
+        // U20 insulin on a 0.05 U pump steps by 0.01 U. On the step of the pump itself 1.23 would become 1.2,
+        // and the wizard (which compares with 0.01) would call that rounding a constraint.
+        whenever(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(3.0)
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
+        // doReturn: the setup made bolusStepSize call the real method, which whenever() would run.
+        doReturn(0.01).whenever(pumpWithConcentration).bolusStepSize(any())
+        testPumpPlugin.pumpDescription = PumpDescription().fillFor(PumpType.DANA_RS)
+        val d = safetyPlugin.applyBolusConstraints(ConstraintObject(1.23, aapsLogger))
+        assertThat(d.value()).isWithin(0.001).of(1.23)
+    }
+
+    @Test
+    fun percentRateIsLimitedByTheMaxPercentInTheDescription() {
+        // The description is the truth, not the pump type behind it (GENERIC_AAPS allows 500 %).
+        whenever(preferences.get(DoubleKey.ApsMaxBasal)).thenReturn(1.0)
+        whenever(preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier)).thenReturn(4.0)
+        whenever(preferences.get(DoubleKey.ApsMaxDailyMultiplier)).thenReturn(3.0)
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
+        pumpDescription.tempBasalStyle = PumpDescription.PERCENT
+        pumpDescription.maxTempPercent = 150
+        val i = ConstraintObject(Int.MAX_VALUE, aapsLogger)
+        safetyPlugin.applyBasalPercentConstraints(i, validProfile)
+        assertThat(i.value()).isEqualTo(150)
+        // A percent limit, said in percent - it used to be "Limiting max basal rate to 150.00 U/h".
+        assertThat(i.getMostLimitedReasons()).isEqualTo("Safety: Limiting max percent rate to 150% because of pump limit")
+    }
+
+    @Test
+    fun extendedBolusIsFlooredToTheStepInTheDescription() {
+        // The description of the active pump is in insulin units: a 0.1 U step at U200 is 0.2 here.
+        // The pump type behind it (GENERIC_AAPS) says 0.05 U, which would give 1.55.
+        whenever(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(10.0)
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("adult")
+        pumpDescription.extendedBolusStep = 0.2
+        val d = safetyPlugin.applyExtendedBolusConstraints(ConstraintObject(1.55, aapsLogger))
+        assertThat(d.value()).isWithin(0.001).of(1.4)
+    }
+
+    @Test
+    fun extendedBolusIsLimitedByTheMaxInTheDescription() {
+        whenever(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(10.0)
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("adult")
+        pumpDescription.extendedBolusStep = 0.1
+        pumpDescription.extendedBolusMaxAmount = 2.0
+        val d = safetyPlugin.applyExtendedBolusConstraints(ConstraintObject(3.0, aapsLogger))
+        assertThat(d.value()).isWithin(0.001).of(2.0)
+    }
+
+    @Test
+    fun extendedBolusStepWithAFloatTailDoesNotMakeTheMaxNegative() {
+        // 0.05 * 0.2 (a 0.05 U step at U20) is 0.010000000000000002. Round used to overflow on it above about
+        // 9.2 U, and the max extended bolus came out as -8.45 U.
+        whenever(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(10.0)
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("adult")
+        pumpDescription.extendedBolusStep = 0.05 * 0.2
+        val d = safetyPlugin.applyExtendedBolusConstraints(ConstraintObject(Double.MAX_VALUE, aapsLogger))
+        assertThat(d.value()).isWithin(0.001).of(10.0)
     }
 
     @Test

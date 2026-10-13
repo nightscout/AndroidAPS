@@ -8,6 +8,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.configuration.Config
@@ -17,6 +18,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.EffectiveProfile
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
@@ -248,73 +250,147 @@ class ProfileFunctionImpl(
         action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>, iCfg: ICfg
     ): PS? {
         val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp, iCfg) ?: return null
-        val validity = ProfileSealed.PS(ps, activePlugin).isValid(
-            rh.gs(CoreUiStrings.careportal_profileswitch),
-            activePlugin.activePump,
-            config,
-            rh,
-            notificationManager,
-            hardLimits,
-            false
-        )
-        if (!validity.isValid) return null
+        refusal(ps)?.let {
+            aapsLogger.warn(LTag.PROFILE, "Profile switch to $profileName refused: $it")
+            return null
+        }
         val result = persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues)
         return result.inserted.firstOrNull() ?: result.updated.firstOrNull()
     }
 
     override suspend fun createProfileSwitch(
         durationInMinutes: Int, percentage: Int, timeShiftInHours: Int,
-        action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>
+        action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>, timestamp: Long
     ): PS? {
-        val profile = persistenceLayer.getPermanentProfileSwitchActiveAt(dateUtil.now()) ?: return null
-        val profileStore = profileRepository.profile.value ?: return null
-        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now(), profile.iCfg) ?: return null
-        val validity = ProfileSealed.PS(ps, activePlugin).isValid(
-            rh.gs(CoreUiStrings.careportal_profileswitch),
-            activePlugin.activePump,
-            config,
-            rh,
-            notificationManager,
-            hardLimits,
-            false
-        )
-        if (validity.isValid) {
-            val result = persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues)
-            return result.inserted.firstOrNull() ?: result.updated.firstOrNull()
+        val ps = activeProfileSwitch(durationInMinutes, percentage, timeShiftInHours, timestamp) { aapsLogger.warn(LTag.PROFILE, "Profile switch refused: $it") }
+            ?: return null
+        refusal(ps)?.let {
+            aapsLogger.warn(LTag.PROFILE, "Profile switch to ${ps.profileName} refused: $it")
+            return null
         }
+        val result = persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues)
+        return result.inserted.firstOrNull() ?: result.updated.firstOrNull()
+    }
+
+    override suspend fun profileSwitchRefusal(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, iCfg: ICfg): String? {
+        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now(), iCfg)
+            ?: return rh.gs(CoreUiStrings.notexists)
+        return refusal(ps)
+    }
+
+    override suspend fun profileSwitchRefusal(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): String? {
+        var whyNot: String? = null
+        val ps = activeProfileSwitch(durationInMinutes, percentage, timeShiftInHours, timestamp) { whyNot = it } ?: return whyNot
+        return refusal(ps)
+    }
+
+    /**
+     * A switch at [timestamp] (0 means now) of the profile in force at that time to these values. A back-dated
+     * switch so changes the profile that was really running then. When there is none to change, [whyNot] gets
+     * the sentence for the user, and the result is null.
+     */
+    private suspend fun activeProfileSwitch(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long, whyNot: (String) -> Unit): PS? {
+        val at = timestamp.takeIf { it > 0L } ?: dateUtil.now()
+        val profile = persistenceLayer.getPermanentProfileSwitchActiveAt(at)
+        if (profile == null) {
+            whyNot(rh.gs(CoreUiStrings.no_profile_set))
+            return null
+        }
+        val profileStore = profileRepository.profile.value
+        if (profileStore == null) {
+            whyNot(rh.gs(CoreUiStrings.noprofile))
+            return null
+        }
+        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, timeShiftInHours, at, profile.iCfg)
+        if (ps == null) whyNot(rh.gs(CoreUiStrings.scene_profile_not_found, profile.profileName))
+        return ps
+    }
+
+    /**
+     * Why [ps] cannot be activated, or null when it can. The pump first, with a sentence for each cause the
+     * check reports. Its own reasons are not used: they say a value "was replaced", from the time the check
+     * still changed values, and that is not true any more. Then the hard limits, which say which value is
+     * out of range.
+     */
+    private fun refusal(ps: PS): String? {
+        val profile = ProfileSealed.PS(ps, activePlugin)
+        val from = rh.gs(CoreUiStrings.careportal_profileswitch)
+        val pumpCheck = profile.validatePump(from, activePlugin.activePump, config, rh, notificationManager, false)
+        if (!pumpCheck.isValid) return when (pumpCheck.basalProblem) {
+            Profile.BasalProblem.NOT_ALIGNED_TO_HOURS -> rh.gs(InterfacesStrings.basalprofilenotaligned, from)
+            Profile.BasalProblem.BELOW_PUMP_MINIMUM   -> rh.gs(CoreUiStrings.profile_basal_below_pump_minimum)
+            Profile.BasalProblem.ABOVE_PUMP_MAXIMUM,
+            null                                      -> rh.gs(CoreUiStrings.profile_basal_not_compatible_with_pump)
+        }
+        val semantic = profile.validateSemantic(rh, hardLimits)
+        if (!semantic.isValid) return semantic.reasons.firstOrNull() ?: rh.gs(CoreUiStrings.invalid_profile)
         return null
     }
 
     override suspend fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean {
-        val profile = getProfile()
-        val eps = (profile as? ProfileSealed.EPS)?.value ?: return false
-        val profileStore = profileRepository.profile.value ?: return false
-        val profileName = eps.originalProfileName
-        val percentage = eps.originalPercentage
-        val timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt()
-        val now = dateUtil.now()
-
-        val durationMinutes = if (eps.originalDuration > 0) {
-            ((eps.originalDuration - (now - eps.timestamp)) / 60_000L).coerceAtLeast(0).toInt()
-        } else 0
-
+        val switch = newInsulinSwitch { aapsLogger.warn(LTag.PROFILE, "Insulin switch to ${iCfg.insulinLabel} refused: $it") } ?: return false
         return createProfileSwitch(
-            profileStore = profileStore,
-            profileName = profileName,
-            durationInMinutes = durationMinutes,
-            percentage = percentage,
-            timeShiftInHours = timeshiftHours,
-            timestamp = now,
+            profileStore = switch.profileStore,
+            profileName = switch.profileName,
+            durationInMinutes = switch.durationMinutes,
+            percentage = switch.percentage,
+            timeShiftInHours = switch.timeshiftHours,
+            timestamp = switch.timestamp,
             action = Action.PROFILE_SWITCH,
             source = source,
             listValues = listOfNotNull(
-                ValueWithUnit.SimpleString(profileName),
+                ValueWithUnit.SimpleString(switch.profileName),
                 ValueWithUnit.SimpleString(iCfg.insulinLabel),
-                ValueWithUnit.Percent(percentage),
-                ValueWithUnit.Hour(timeshiftHours).takeIf { timeshiftHours != 0 },
-                ValueWithUnit.Minute(durationMinutes).takeIf { durationMinutes != 0 }
+                ValueWithUnit.Percent(switch.percentage),
+                ValueWithUnit.Hour(switch.timeshiftHours).takeIf { switch.timeshiftHours != 0 },
+                ValueWithUnit.Minute(switch.durationMinutes).takeIf { switch.durationMinutes != 0 }
             ),
             iCfg = iCfg
         ) != null
+    }
+
+    override suspend fun insulinSwitchRefusal(iCfg: ICfg): String? {
+        var whyNot: String? = null
+        val switch = newInsulinSwitch { whyNot = it } ?: return whyNot
+        return profileSwitchRefusal(switch.profileStore, switch.profileName, switch.durationMinutes, switch.percentage, switch.timeshiftHours, iCfg)
+    }
+
+    /** The running profile switch with only its insulin changed: the same name, percentage, time shift and remaining time. */
+    private class NewInsulinSwitch(
+        val profileStore: ProfileStore,
+        val profileName: String,
+        val durationMinutes: Int,
+        val percentage: Int,
+        val timeshiftHours: Int,
+        val timestamp: Long
+    )
+
+    /**
+     * The values of the switch [createProfileSwitchWithNewInsulin] creates. When there is no running profile
+     * to change, [whyNot] gets the sentence for the user, and the result is null.
+     */
+    private suspend fun newInsulinSwitch(whyNot: (String) -> Unit): NewInsulinSwitch? {
+        val eps = (getProfile() as? ProfileSealed.EPS)?.value
+        if (eps == null) {
+            whyNot(rh.gs(CoreUiStrings.no_profile_set))
+            return null
+        }
+        val profileStore = profileRepository.profile.value
+        if (profileStore == null) {
+            whyNot(rh.gs(CoreUiStrings.noprofile))
+            return null
+        }
+        val now = dateUtil.now()
+        val durationMinutes = if (eps.originalDuration > 0) {
+            ((eps.originalDuration - (now - eps.timestamp)) / 60_000L).coerceAtLeast(0).toInt()
+        } else 0
+        return NewInsulinSwitch(
+            profileStore = profileStore,
+            profileName = eps.originalProfileName,
+            durationMinutes = durationMinutes,
+            percentage = eps.originalPercentage,
+            timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt(),
+            timestamp = now
+        )
     }
 }

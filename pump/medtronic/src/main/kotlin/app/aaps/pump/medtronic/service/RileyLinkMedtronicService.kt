@@ -188,6 +188,8 @@ class RileyLinkMedtronicService : RileyLinkService() {
 
                 //LOG.debug("Max Basal from AAPS settings is " + maxBasal);
             }
+            // Every time, not only on a change: setting the pump type above put back the limit of the type.
+            medtronicPumpPlugin.applyMaxBasal()
             val encodingTypeStr = preferences.get(RileyLinkStringPreferenceKey.Encoding)
             val newEncodingType = RileyLinkEncodingType.getByKey(encodingTypeStr)
             if (encodingType == null) {

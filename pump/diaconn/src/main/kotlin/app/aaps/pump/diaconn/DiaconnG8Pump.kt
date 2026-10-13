@@ -69,8 +69,9 @@ class DiaconnG8Pump(
     var pumpSuspended = false
     var dailyTotalUnits = 0.0
     var maxDailyTotalUnits = 0
-    var bolusStep = 0.01
-    var basalStep = 0.01
+    // Fixed on the G8 and the same as its pump type. Not read from the pump, only shown in the overview.
+    val bolusStep = 0.01
+    val basalStep = 0.01
     var iob = 0.0
 
     var bolusBlocked = false

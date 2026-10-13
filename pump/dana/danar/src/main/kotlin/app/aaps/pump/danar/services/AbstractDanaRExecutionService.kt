@@ -96,6 +96,9 @@ abstract class AbstractDanaRExecutionService : MetroService() {
         protected set
     @Volatile protected var mHandshakeInProgress = false
     @Volatile protected var mSerialIOThread: SerialIOThread? = null
+    // "Device not found" is shown once, then not again until the device has been found. The queue tries
+    // to connect about every second, and a message for every try covered the screen.
+    @Volatile private var deviceNotFoundShown = false
     protected var mBinder: IBinder? = null
     abstract fun messageHashTable(): MessageHashTableBase
 
@@ -199,8 +202,9 @@ abstract class AbstractDanaRExecutionService : MetroService() {
         val deviceName = preferences.get(DanaStringNonKey.RName)
         mRfcommSocket = rfcommTransport.getSocketForDevice(deviceName)
         if (mRfcommSocket == null) {
-            rxBus.send(EventShowSnackbar(rh.gs(R.string.devicenotfound), EventShowSnackbar.Type.Error))
-        }
+            if (!deviceNotFoundShown) rxBus.send(EventShowSnackbar(rh.gs(R.string.devicenotfound), EventShowSnackbar.Type.Error))
+            deviceNotFoundShown = true
+        } else deviceNotFoundShown = false
     }
 
     fun bolusStop() {

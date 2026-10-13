@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.labelOfInsulin
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
@@ -27,6 +28,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
@@ -37,7 +39,6 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.observeChange
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.clientcontrol.failText
@@ -117,8 +118,9 @@ class FillDialogViewModel(
 
     init {
         val preselect = FillPreselect.entries[savedStateHandle.get<Int>("preselect") ?: 0]
-        val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
-        val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
+        // A prime is in pump units, so its max and its step are those of the pump itself.
+        val maxInsulin = constraintChecker.applyPrimingConstraints(PumpInsulin(Double.MAX_VALUE)).cU
+        val bolusStep = activePlugin.activePumpInternal.pumpDescription.bolusStep
 
         val availableInsulins = insulinManager.insulins.map { it.deepClone() }
 
@@ -150,7 +152,7 @@ class FillDialogViewModel(
             )
         }
         viewModelScope.launch {
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val activeLabel = availableInsulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
             val currentInsulin = availableInsulins.find { it.insulinLabel == activeLabel } ?: availableInsulins.firstOrNull()
             _uiState.update {
                 it.copy(
@@ -205,9 +207,7 @@ class FillDialogViewModel(
     }
 
     fun updateInsulin(value: Double) {
-        val constrained = constraintChecker.applyBolusConstraints(
-            ConstraintObject(value, aapsLogger)
-        ).value()
+        val constrained = constraintChecker.applyPrimingConstraints(PumpInsulin(value)).cU
         _uiState.update {
             it.copy(
                 insulin = value,

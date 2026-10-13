@@ -115,6 +115,35 @@ reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused w
     - Don't explore same directories multiple times
     - Combine related searches when possible
 
+## Verify Before You Push
+
+- **A rename or a signature change is never local.** Run the suite **CI** runs, not the modules you
+  edited. The command is in `.github/workflows/unit-tests.yml`:
+  ```
+  ./gradlew.bat --console=plain --no-daemon --continue -PfirebaseDisable \
+    testFullDebugUnitTest testDebugUnitTest jvmTest testAndroidHostTest :desktop:shell:test
+  ```
+  Add `--continue` yourself. Without it gradle stops scheduling after the first failing module, so
+  you fix one thing, push, and CI goes red on the next one. (Learned the slow way on 2026-10-13:
+  three red CI rounds for a single commit, each a different module of the same change.)
+- **After renaming anything, grep case-insensitively.** `grep -rni oldname` — renaming a class also
+  renames the lowercase DI property, and `grep -rn OldName` silently misses `oldName`. Two files
+  hold names as a golden list, so they do not fail to compile, they fail a test:
+    - `app/src/testFull/kotlin/app/aaps/di/metro/GraphScopeStabilityTest.kt` — the root graph
+      accessor names.
+    - `app/src/testFull/resources/prefs-schema.txt` — the preference schema.
+- **Adding a parameter breaks Mockito matcher counts.** A `verify(...)` / `whenever(...)` with N
+  matchers now needs N+1 (`InvalidUseOfMatchersException: 8 matchers expected, 7 recorded`). A
+  default value does not spare the test: Kotlin passes the default explicitly at the call site, so
+  give the new slot a real matcher — prefer `eq(<default>)` over `any()`, it documents the intent.
+- **Never run two gradle builds at once.** They contend on the build cache (`Timeout waiting to
+  lock Build cache … Owner PID`) and fail tasks that are otherwise fine, and the extra load makes
+  real-time tests (`withTimeout`, cancellation races) flake. Run them one after the other.
+- **In a coroutine test, do not `advanceUntilIdle()` on anything that can re-arm itself.** A
+  scheduler that re-schedules from a mocked, frozen `dateUtil.now()` never goes idle, and the test
+  hangs instead of failing — it ate a whole test run before anyone noticed. Use `advanceTimeBy(d)`
+  over a bounded window and assert the event count, so a regression fails on the number.
+
 ## User Preferences
 
 - **NEVER make code changes without user confirmation** — When the user describes a problem or

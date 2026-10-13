@@ -9,6 +9,8 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -26,6 +28,8 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.Event
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneChainResolver
@@ -38,6 +42,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.ui.compose.quickLaunch.QuickLaunchAction
@@ -63,8 +68,10 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -278,5 +285,28 @@ internal class MainViewModelTest {
 
         assertThat(sut.quickLaunchItems.value.map { it.action }).containsExactly(QuickLaunchAction.Wizard, qw, configButton).inOrder()
         verify(preferences, never()).put(eq(StringNonKey.QuickLaunchActions), any<String>())
+    }
+
+    /**
+     * A switch the pump cannot take can pass the prepare and be refused by the commit. The toolbar dialog
+     * closed as if the switch was done; now it says why.
+     */
+    @Test
+    fun `a profile switch from the toolbar that the commit refuses says why`() = runTest {
+        whenever(rh.gs(any<TextRef>())).thenReturn("Profile switch")
+        whenever(batchExecutor.prepare(any(), any(), any())).thenReturn(ActionProgress.Prepared(id = 7L))
+        whenever(batchExecutor.commit(eq(7L), any(), any(), any()))
+            .thenReturn(ActionProgress.Rejected(FailureReason.ExecutionFailed, "The pump cannot take it"))
+
+        sut.requestProfileConfirmation("Basal", 150, 60)
+        advanceUntilIdle()
+        val confirmation = argumentCaptor<Event>()
+        verify(rxBus).send(confirmation.capture())
+        (confirmation.firstValue as EventShowDialog.OkCancel).onOk()
+        advanceUntilIdle()
+
+        val sent = argumentCaptor<Event>()
+        verify(rxBus, times(2)).send(sent.capture())
+        assertThat((sent.lastValue as EventShowDialog.Ok).message).isEqualTo("The pump cannot take it")
     }
 }

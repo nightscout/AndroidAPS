@@ -326,8 +326,8 @@ class DetermineBasalResult(
             }
             // always report high temp
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT) {
-                val pumpLimit = pump.pumpDescription.pumpType.tbrSettings()?.maxDose ?: 0.0
-                if (percent.toDouble() == pumpLimit) {
+                val pumpLimit = pump.pumpDescription.maxTempPercent
+                if (percent == pumpLimit) {
                     aapsLogger.debug(LTag.APS, "TRUE: Pump limit")
                     return true
                 }
@@ -362,7 +362,9 @@ class DetermineBasalResult(
             }
             // always report high temp
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-                val pumpLimit = pump.pumpDescription.pumpType.tbrSettings()?.maxDose ?: 0.0
+                // The description, not the pump type: a driver can change the limit (Medtronic sets the
+                // user's max basal), and through the concentration wrapper it is in insulin units like rate.
+                val pumpLimit = pump.pumpDescription.maxTempAbsolute
                 if (rate == pumpLimit) {
                     aapsLogger.debug(LTag.APS, "TRUE: Pump limit")
                     return true
