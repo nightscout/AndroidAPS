@@ -48,6 +48,7 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime
 import java.util.GregorianCalendar
 import java.util.Locale
+import kotlin.math.abs
 
 /**
  * Created by andy on 10/12/18.
@@ -728,10 +729,13 @@ class MedtronicHistoryData(
 //        var readOldItem = false
 
         val oneMoreEntryFromHistory = getOneMoreEntryFromHistory(PumpHistoryEntryType.TempBasalCombined)
+        // A TBR from an earlier read, added again only to be limited by what follows it. It was synced then.
+        var alreadySynced: PumpHistoryEntry? = null
 
         if (tbr.isCancelTBR) { // if we have cancel we need to limit previous TBR with this cancel
             if (oneMoreEntryFromHistory != null) {
                 entryList.add(0, oneMoreEntryFromHistory)
+                alreadySynced = oneMoreEntryFromHistory
             } else {
                 entryList.removeAt(0)
             }
@@ -740,6 +744,7 @@ class MedtronicHistoryData(
                 val tbrPrev = oneMoreEntryFromHistory.getDecodedDataEntry("Object") as TempBasalPair
                 if (tbrPrev.isZeroTBR) {  // if we had Zero TBR in last previous TBR, then we need to limit it, so we need to process it too
                     entryList.add(0, oneMoreEntryFromHistory)
+                    alreadySynced = oneMoreEntryFromHistory
                 }
             }
         }
@@ -747,6 +752,7 @@ class MedtronicHistoryData(
         val tbrRecords = pumpSyncStorage.getTBRs()
 
         val processList: MutableList<TempBasalProcessDTO> = createTBRProcessList(entryList)
+        val newTbrs = processList.filter { it.itemOne !== alreadySynced }
 
         if (processList.isNotEmpty()) {
             for (tempBasalProcessDTO in processList) {
@@ -755,8 +761,11 @@ class MedtronicHistoryData(
                 //aapsLogger.debug(LTag.PUMP, "DD: tempBasalProcessDTO.itemOne: " + gson.toJson(tempBasalProcessDTO.itemOne))
                 //aapsLogger.debug(LTag.PUMP, "DD: tempBasalProcessDTO.itemTwo: " + (if (tempBasalProcessDTO.itemTwo == null) "null" else gson.toJson(tempBasalProcessDTO.itemTwo!!)))
 
-                @Suppress("Unchecked_Cast")
-                val entryWithTempId = findDbEntry(tempBasalProcessDTO.itemOne, tbrRecords as MutableList<PumpDbEntry>) as PumpDbEntryTBR?
+                // The TBR that was synced before goes the pumpId path. Its own temp-id entry is gone, and the match
+                // by time took the entry of the next TBR and wrote this TBR into that row (#5271).
+                val entryWithTempId =
+                    if (tempBasalProcessDTO.itemOne === alreadySynced) null
+                    else findTempIdEntry(tempBasalProcessDTO, newTbrs, tbrRecords)
 
                 aapsLogger.debug(LTag.PUMP, "DD: entryWithTempId: " + (entryWithTempId?.toString() ?: "null"))
 
@@ -1070,16 +1079,37 @@ class MedtronicHistoryData(
      *
      * Looks at all boluses that have temporaryId and find one that is correct for us (if such entry exists)
      */
+    /**
+     * The temp-id entry of [dto]: the one [findDbEntry] finds, but only when no other TBR of [newTbrs] is closer
+     * to it in time. A TBR set on the pump itself has no entry of its own, and it took the entry of a TBR that
+     * AAPS set less than 2 minutes later.
+     */
+    private fun findTempIdEntry(dto: TempBasalProcessDTO, newTbrs: List<TempBasalProcessDTO>, tbrRecords: MutableList<PumpDbEntryTBR>): PumpDbEntryTBR? {
+        @Suppress("UNCHECKED_CAST")
+        val entry = findDbEntry(dto.itemOne, tbrRecords as MutableList<PumpDbEntry>) as PumpDbEntryTBR? ?: return null
+        val distance = abs(localTimeOf(dto.itemOne) - entry.date)
+        val closer = newTbrs.firstOrNull { it !== dto && abs(localTimeOf(it.itemOne) - entry.date) < distance }
+        if (closer != null) {
+            aapsLogger.debug(LTag.PUMP, "DD: temp-id entry ${entry.temporaryId} belongs to the TBR at ${closer.itemOne.atechDateTime}, not to ${dto.itemOne.atechDateTime}")
+            return null
+        }
+        return entry
+    }
+
+    /** The time of a pump history entry on the phone clock. */
+    private fun localTimeOf(entry: PumpHistoryEntry): Long {
+        val time = DateTimeUtil.toMillisFromATD(entry.atechDateTime)
+        // pumpTime should never be null, but it can theoretically happen if reading of time from pump fails
+        return pumpTime?.let { time + it.timeDifference * 1000 } ?: time
+    }
+
     private fun findDbEntry(treatment: PumpHistoryEntry, temporaryEntries: MutableList<PumpDbEntry>): PumpDbEntry? {
 
         if (temporaryEntries.isEmpty()) {
             return null
         }
 
-        var proposedTime = DateTimeUtil.toMillisFromATD(treatment.atechDateTime)
-
-        // pumpTime should never be null, but it can theoretically happen if reading of time from pump fails
-        this.pumpTime?.let { proposedTime += (it.timeDifference * 1000) }
+        val proposedTime = localTimeOf(treatment)
 
         val proposedTimeDiff: LongArray = longArrayOf(proposedTime - (2 * 60 * 1000), proposedTime + (2L * 60L * 1000L))
         val tempEntriesList: MutableList<PumpDbEntry> = mutableListOf()
