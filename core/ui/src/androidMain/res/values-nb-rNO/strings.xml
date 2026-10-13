@@ -121,10 +121,13 @@
     <string name="invalid_profile">Ugyldig profil!</string>
     <string name="no_profile_set">INGEN PROFIL VALGT</string>
     <string name="profile_switch_no_insulin">Kan ikke bytte profil: Ingen insulin er i bruk, og ingen er valgt.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Tidspunktet for profilbyttet må være innenfor %1$d timer fra nå.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Det midlertidige målet må starte innenfor %1$d timer fra nå.</string>
     <string name="profile_switch_select_insulin_hint">Ingen insulin er i bruk ennå. Velg insulinet du bruker, slik at dette profilbyttet kan registrere det.</string>
     <string name="insulin_activation_failed">Insulinet ble ikke byttet. Det forrige insulinet er fortsatt i bruk.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulinet ble ikke byttet: %1$s. Det forrige insulinet er fortsatt i bruk.</string>
     <string name="insulin_activation_unconfirmed">Kunne ikke bekrefte insulinbyttet. Kontroller hvilket insulin som er aktivt i profilen før du doserer.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Insulinet ble ikke byttet. Det forrige insulinet ditt er fortsatt i bruk.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinet ble heller ikke byttet.</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Dato</string>
@@ -224,6 +227,8 @@
     <string name="logout">Logg ut</string>
     <string name="prime_fill">Prime/fylling</string>
     <string name="prime_not_available">Denne pumpen fyller og primer seg selv under aktivering. Funksjonen for prime/fylling fra AAPS er ikke tilgjengelig.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Endre</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Fyll</string>
     <string name="site_rotation">Rotasjon av sted</string>
     <string name="edit_site">Rediger</string>
     <string name="select_arrow">Velg pil</string>
@@ -680,6 +685,7 @@
     <string name="missing_profile_name">Mangler profilnavn</string>
     <string name="profile_not_saved_activate">Profilen er ikke lagret. Vennligst lagre profilen før aktivering.</string>
     <string name="profile_basal_not_compatible_with_pump">Basaldosen er ikke kompatibel med den aktuelle pumpen og kan ikke aktiveres. Reduser prosenten eller juster basaldosen.</string>
+    <string name="profile_basal_below_pump_minimum">Basaldosen er lavere enn minimumsverdien for den aktuelle pumpen og kan ikke aktiveres. Øk prosentverdien eller juster basaldosen.</string>
     <string name="profile_pump_incompatible_label">Pumpegrense</string>
     <string name="error_in_ic_values">Feil i IK-forholdstallet</string>
     <string name="error_in_isf_values">Feil i ISF-verdien</string>
