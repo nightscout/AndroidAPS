@@ -86,6 +86,15 @@ class MedtronicCommunicationManager(
         private const val MAX_COMMAND_TRIES = 3
         private const val DEFAULT_TIMEOUT = 2000
         private const val RILEYLINK_TIMEOUT: Long = 15 * 60 * 1000L // 15 min
+
+        /** NAK error code: the pump has no history page with the asked number. */
+        internal const val NAK_PAGE_DOES_NOT_EXIST = 0x0D
+
+        /** The error code of a NAK the pump sent, or null when [response] is not a NAK. */
+        internal fun nakErrorCode(response: PumpMessage): Int? =
+            if (response.commandType == MedtronicCommandType.CommandNAK)
+                response.messageBody?.txData?.firstOrNull()?.toInt()?.and(0xFF) ?: 0
+            else null
     }
 
     var errorResponse: String? = null
@@ -303,9 +312,21 @@ class MedtronicCommunicationManager(
                 return pumpTotalResult
             }
 
+            // The pump answers a page it does not have with a NAK. Its error code was read as a frame
+            // number ("expected 1, received 13"), and the ACKs sent to retry were never answered:
+            // every history read lost about 80 s in timeouts before it gave up.
+            nakErrorCode(firstResponse!!)?.let { errorCode ->
+                if (errorCode == NAK_PAGE_DOES_NOT_EXIST)
+                    aapsLogger.info(LTag.PUMPCOMM, "getPumpHistory: Page $pageNumber does not exist, there is no older history")
+                else
+                    aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "getPumpHistory: Pump refused page %d (NAK, error 0x%02X)", pageNumber, errorCode))
+                medtronicPumpStatus.pumpDeviceState = PumpDeviceState.Sleeping
+                return pumpTotalResult
+            }
+
             // aapsLogger.info(LTag.PUMPCOMM,"getPumpHistoryPage("+pageNumber+"): " + ByteUtil.shortHexString(firstResponse.getContents()));
             val ackMsg = makePumpMessage(MedtronicCommandType.CommandACK, PumpAckMessageBody())
-            var currentResponse = GetHistoryPageCarelinkMessageBody(firstResponse!!.messageBody!!.txData)
+            var currentResponse = GetHistoryPageCarelinkMessageBody(firstResponse.messageBody!!.txData)
             var expectedFrameNum = 1
             var done = false
             // while (expectedFrameNum == currentResponse.getFrameNumber()) {
