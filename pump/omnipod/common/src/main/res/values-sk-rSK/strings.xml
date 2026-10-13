@@ -67,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Deaktivovať Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Stlačte<b>Ďalšia</b> pre deaktiváciu Podu.\n\n<b>Poznámka:</b> Úplne zastavíte podávanie inzulínu a deaktivujete Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">Deaktivovaný Pod už ne je možné znova použiť. Chcete teraz deaktivovať tento Pod?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Deaktivácia Podu</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Deaktivácia Podu.\n\nPo úspešnom dokončení deaktivácie môžete stlačiť <b>Ďalšia</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod deaktivovaný</string>
