@@ -167,6 +167,7 @@
     <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
     <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
     <string name="wizard_carbs_type_bread_desc">100% carbohidratos inmediatos, sin carbohidratos de absorción lenta</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Carbohidratos reducidos un %1$d%%, eCarbs añadidos un %2$d%% pospuestos %3$d min durante  %4$d h</string>
     <string name="wizard_include_info">Toca para incluir/excluir del cálculo:\n• BG — glucemia capilar/sensor (activado al inicio)\n• TT — objetivo temporal (activado al inicio)\n• Trend — tendencia de la glucemia (recuerda el último estado)\n• IOB — insulina activa (activado al inicio)\n• COB — carbohidratos activos (recuerda el último estado)</string>
     <!-- Treatments -->
     <string name="no_records_available">No hay registros disponibles</string>
