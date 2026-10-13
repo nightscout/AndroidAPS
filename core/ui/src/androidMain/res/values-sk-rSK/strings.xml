@@ -121,6 +121,8 @@
     <string name="invalid_profile">Neplatný profil!</string>
     <string name="no_profile_set">NENASTAVENÝ ŽIADNY PROFIL</string>
     <string name="profile_switch_no_insulin">Nie je možné prepnúť profil: nepoužíva se žiadny inzulín a žiadny nebol vybraný.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Čas prepnutia profilu musí nastať do %1$d hodín odteraz.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Dočasný cieľ musí začať do %1$d hodín odteraz.</string>
     <string name="profile_switch_select_insulin_hint">Zatiaľ sa nepoužíva žiadny inzulín. Vyberte inzulín, ktorý používate, aby ho prepnutie profilu mohlo zaznamenať.</string>
     <string name="insulin_activation_failed">Inzulín nebol prepnutý. Váš predchádzajúci inzulín sa stále používá.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Inzulín nebol prepnutý: %1$s. Váš predchádzajúci inzulín sa stále používa.</string>
