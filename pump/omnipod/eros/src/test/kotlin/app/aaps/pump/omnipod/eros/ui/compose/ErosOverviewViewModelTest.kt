@@ -1,6 +1,5 @@
 package app.aaps.pump.omnipod.eros.ui.compose
 
-import android.content.Context
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -73,7 +72,6 @@ internal class ErosOverviewViewModelTest {
     @Mock private lateinit var config: Config
     @Mock private lateinit var aapsLogger: AAPSLogger
     @Mock private lateinit var ch: ConcentrationHelper
-    @Mock private lateinit var context: Context
 
     // Concrete (final) collaborators — Mockito 5 inline mock maker handles final classes/methods.
     private val podStateManager: ErosPodStateManager = mock()
@@ -113,7 +111,7 @@ internal class ErosOverviewViewModelTest {
         rh, podStateManager, omnipodErosPumpPlugin, omnipodManager, omnipodUtil,
         omnipodAlertUtil, rileyLinkServiceData, serviceTaskExecutor, commandQueue, rxBus,
         dateUtil, preferences, profileFunction, notificationManager, uiInteraction,
-        config, aapsLogger, resetRileyLinkConfigurationTaskProvider, ch, context
+        config, aapsLogger, resetRileyLinkConfigurationTaskProvider, ch
     )
 
     @Test
