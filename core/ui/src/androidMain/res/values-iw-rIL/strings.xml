@@ -1037,6 +1037,7 @@
     <string name="import_decrypt">פענח</string>
     <string name="import_master_password">סיסמה ראשית</string>
     <string name="import_decryption_password">סיסמת פענוח</string>
+    <string name="import_wrong_password">סיסמה שגויה</string>
     <string name="import_apply_title">להחיל הגדרות מיובאות?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
