@@ -496,7 +496,15 @@ fun GraphsSection(
                     .height(graphConfig.bgHeight.dp)
                     .onScrollOrZoomGesture(graphViewModel::onGraphInteraction)
                     .then(
-                        if (graphDescription != null) Modifier.semantics { contentDescription = graphDescription }
+                        // Merging, not a bare semantics block: a described node is reached by linear
+                        // screen-reader navigation only when it is a leaf or a merging parent. This one
+                        // has a child (the chart's own node, which carries no text), so unmerged it was
+                        // skipped in both directions and could be reached only as the first step from
+                        // the glucose circle or at the wrap point after the last tab - measured with
+                        // TalkBack on a phone. Merging absorbs that empty child, so the words do not
+                        // change and no action comes with it; the edit button is a clickable sibling and
+                        // stays its own stop.
+                        if (graphDescription != null) Modifier.semantics(mergeDescendants = true) { contentDescription = graphDescription }
                         else Modifier
                     )
             )
