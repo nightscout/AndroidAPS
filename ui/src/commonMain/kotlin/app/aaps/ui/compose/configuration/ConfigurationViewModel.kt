@@ -141,8 +141,10 @@ class ConfigurationViewModel(
             if (plugins.isEmpty()) return
             val titleRes = pluginCategoryTitle(type)
             val isMultiSelect = isMultiSelect(type)
+            // The pump list is long and was in the order the plugins are built in. Alphabetical, a pump is easy to find.
+            val ordered = if (type == PluginType.PUMP) plugins.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name }) else plugins
 
-            val pluginModels = plugins.map { plugin ->
+            val pluginModels = ordered.map { plugin ->
                 val id = plugin::class.simpleName.orEmpty()
                 lookup[id] = plugin
                 val pluginEnabled = plugin.isEnabled(type)
