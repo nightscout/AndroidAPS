@@ -41,6 +41,17 @@ class AutoStartReceiverTest : TestBaseWithProfile() {
         verify(dummyServiceHelper).startService(context)
     }
 
+    /** After an update nothing else starts AAPS until a CGM broadcast or a job, so the loop would wait. */
+    @Test
+    fun `processIntent calls startService when AAPS was updated`() {
+        val updateIntent: Intent = mock()
+        whenever(updateIntent.action).thenReturn(Intent.ACTION_MY_PACKAGE_REPLACED)
+
+        autoStartReceiver.processIntent(context, updateIntent)
+
+        verify(dummyServiceHelper).startService(context)
+    }
+
     @Test
     fun `processIntent does NOT call startService for a different intent action`() {
         // Arrange

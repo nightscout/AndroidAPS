@@ -104,11 +104,16 @@ class PumpSyncImplementation(
 
         // If no value stored assume we start using new pump from now
         if (storedType.isEmpty() || storedSerial.isEmpty()) {
+            // Allow data up to 1 min older than the registration, and ignore older history. The same limit is
+            // stored for the records that follow: a driver can write several records with the same time in one
+            // go (the Equil wizard writes a cannula change and then an insulin change). With "now" stored here,
+            // the first record registered the pump and the second one was dropped as too old.
+            val allowedFrom = dateUtil.now() - T.mins(1).msecs()
             aapsLogger.debug(LTag.PUMP, "Registering new pump ${type.description} $serialNumber")
             preferences.put(StringNonKey.ActivePumpType, type.description)
             preferences.put(StringNonKey.ActivePumpSerialNumber, serialNumber)
-            preferences.put(LongNonKey.ActivePumpChangeTimestamp, dateUtil.now()) // allow only data newer than register time (ie. ignore older history)
-            return timestamp > dateUtil.now() - T.mins(1).msecs() // allow first record to be 1 min old
+            preferences.put(LongNonKey.ActivePumpChangeTimestamp, allowedFrom)
+            return timestamp >= allowedFrom
         }
 
         if (activePlugin.activePump.selectedActivePump() is VirtualPump || (type.description == storedType && serialNumber == storedSerial && timestamp >= storedTimestamp)) {

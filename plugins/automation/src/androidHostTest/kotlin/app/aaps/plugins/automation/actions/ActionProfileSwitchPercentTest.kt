@@ -38,12 +38,26 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     }
 
     @Test fun doActionTest() = runTest {
-        whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any())).thenReturn(mock<PS>())
+        whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(mock<PS>())
         sut.pct = InputPercent(110.0)
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
         val result = sut.doAction()
         assertThat(result.success).isTrue()
-        verify(profileFunction, times(1)).createProfileSwitch(eq(30), eq(110), eq(0), any(), any(), any(), any())
+        // The last matcher is the timestamp: an automation rule fires at its trigger time, so it passes 0 = now.
+        verify(profileFunction, times(1)).createProfileSwitch(eq(30), eq(110), eq(0), any(), any(), any(), any(), eq(0L))
+    }
+
+    /** A refused switch says why in the automation log, not "OK" next to a failure. */
+    @Test fun aRefusedSwitchSaysWhy() = runTest {
+        whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(null)
+        whenever(profileFunction.profileSwitchRefusal(eq(30), eq(150), eq(0), any())).thenReturn("The pump cannot take it")
+        sut.pct = InputPercent(150.0)
+        sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
+
+        val result = sut.doAction()
+
+        assertThat(result.success).isFalse()
+        assertThat(result.comment).isEqualTo("The pump cannot take it")
     }
 
     @Test fun hasDialogTest() = runTest {

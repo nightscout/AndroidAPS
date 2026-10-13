@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.VirtualPump
@@ -53,8 +54,11 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
-/** A pump that is also the virtual one, which is what the fallback check looks for. */
-internal interface VirtualPumpForTest : PumpWithConcentration, VirtualPump
+/**
+ * The virtual pump driver, which is what the fallback check looks for. A driver: the concentration wrapper
+ * (`activePump`) is never a [VirtualPump], so the check has to ask `activePumpInternal`.
+ */
+internal interface VirtualPumpForTest : Pump, VirtualPump
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class ImportViewModelTest {
@@ -72,6 +76,7 @@ internal class ImportViewModelTest {
     @Mock private lateinit var overviewDataCache: OverviewDataCache
     @Mock private lateinit var iobCobCalculator: IobCobCalculator
     @Mock private lateinit var pump: PumpWithConcentration
+    @Mock private lateinit var driver: Pump
     @Mock private lateinit var ads: AutosensDataStore
     @Mock private lateinit var notificationManager: NotificationManager
     @Mock private lateinit var profileRepository: ProfileRepository
@@ -89,6 +94,7 @@ internal class ImportViewModelTest {
         testDispatcher = StandardTestDispatcher()
         Dispatchers.setMain(testDispatcher)
         whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(activePlugin.activePumpInternal).thenReturn(driver)
         whenever(pump.serialNumber()).thenReturn("sn")
         whenever(pump.pumpDescription).thenReturn(PumpDescription())
         whenever(iobCobCalculator.ads).thenReturn(ads)
@@ -356,10 +362,9 @@ internal class ImportViewModelTest {
     @Test
     fun `an import that leaves no pump selected says which pump is active`() = runTest(testDispatcher) {
         queueGrantsHold(true)
-        // Consecutive returns, because the apply reads the active pump three times: once to remember
-        // what it was, once for the identity check inside applySettings, and once afterwards to see
-        // what it ended up as.
-        whenever(activePlugin.activePump).thenReturn(pump, pump, virtualPump)
+        // Consecutive returns, because the apply reads the driver twice: once to remember what it was,
+        // and once afterwards to see what it ended up as. The wrapper (activePump) stays what it is.
+        whenever(activePlugin.activePumpInternal).thenReturn(driver, virtualPump)
         whenever(virtualPump.pumpDescription).thenReturn(PumpDescription())
 
         sut.onApplyConfirmed()

@@ -122,10 +122,13 @@
     <string name="invalid_profile">Invalid profile!</string>
     <string name="no_profile_set">NO PROFILE SET</string>
     <string name="profile_switch_no_insulin">Cannot switch profile: no insulin is in use, and none was selected.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">The profile switch time must be within %1$d hours of now.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">The temporary target must start within %1$d hours of now.</string>
     <string name="profile_switch_select_insulin_hint">No insulin is in use yet. Select the insulin you are using, so this profile switch can record it.</string>
     <string name="insulin_activation_failed">The insulin was not switched. Your previous insulin is still in use.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">The insulin was not switched: %1$s Your previous insulin is still in use.</string>
     <string name="insulin_activation_unconfirmed">The insulin switch could not be confirmed. Check which insulin is active in your profile before dosing.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">The insulin was not switched. Your previous insulin is still in use.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nThe insulin was also not switched.</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Date</string>
@@ -226,6 +229,8 @@
     <string name="logout">Logout</string>
     <string name="prime_fill">Prime/Fill</string>
     <string name="prime_not_available">This pump fills and primes itself during activation. Prime/Fill from AAPS is not available.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Change</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Fill</string>
     <string name="site_rotation">Site Rotation</string>
     <string name="edit_site">Edit</string>
     <string name="select_arrow">Select Arrow</string>
@@ -705,6 +710,7 @@
     <string name="missing_profile_name">Missing profile name</string>
     <string name="profile_not_saved_activate">Profile not saved. Please save the profile before activating.</string>
     <string name="profile_basal_not_compatible_with_pump">Basal rate is not compatible with the current pump and cannot be activated. Reduce the percentage or adjust the basal rate.</string>
+    <string name="profile_basal_below_pump_minimum">Basal rate is below the minimum of the current pump and cannot be activated. Raise the percentage or adjust the basal rate.</string>
     <string name="profile_pump_incompatible_label">Pump limit</string>
     <string name="error_in_ic_values">Error in IC values</string>
     <string name="error_in_isf_values">Error in ISF values</string>

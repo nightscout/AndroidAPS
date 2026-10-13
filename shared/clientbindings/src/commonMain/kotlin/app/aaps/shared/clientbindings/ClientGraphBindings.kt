@@ -269,10 +269,12 @@ object ClientGraphBindings {
     fun nsConnection(connection: SocketNsConnection): NsConnection = connection
 
     /**
-     * The calculation executor, deferred so the graph accepts the runner cycle.
+     * The calculation executor, deferred so the graph accepts the runner cycle - see
+     * [LazyCalculationExecutor].
      *
-     * See [LazyCalculationExecutor] for why the cycle exists here and not on Android: WorkManager
-     * builds the runners itself there, so they are not graph nodes at all.
+     * No wake lock. Desktop has none, and on iOS the closest thing only holds off idle sleep, which
+     * does not keep a suspended app running. That is a question for the iOS background work as a
+     * whole, not for this executor.
      */
     @Provides
     @SingleIn(AppScope::class)
@@ -281,7 +283,7 @@ object ClientGraphBindings {
         aapsLogger: AAPSLogger,
         prepare: () -> PrepareGraphDataRunner,
         post: () -> PostCalculationRunner
-    ): CalculationExecutor = LazyCalculationExecutor(scope, aapsLogger, { prepare() }, { post() })
+    ): CalculationExecutor = LazyCalculationExecutor(scope, aapsLogger, { prepare() }, { post() }, wakeLock = null)
 
     /** Bolus progress. Stated rather than annotated, for the same reason as the calculator. */
     @Provides

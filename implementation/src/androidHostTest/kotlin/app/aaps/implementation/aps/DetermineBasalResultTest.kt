@@ -1,9 +1,13 @@
 package app.aaps.implementation.aps
 
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.RT
+import app.aaps.core.keys.IntKey
+import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.double
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonPrimitive
@@ -13,6 +17,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 /**
  * Covers the non-finite-field diagnostic in [DetermineBasalResult.json] (the single serialization
@@ -101,5 +106,52 @@ class DetermineBasalResultTest : TestBaseWithProfile() {
             .with(RT(runningDynamicIsf = false, algorithm = APSResult.Algorithm.SMB, rate = 1.0, duration = 30))
 
         assertThat(result.json().toString()).contains("\"rate\":1.0")
+    }
+
+    /**
+     * Open loop, no temp running, profile basal 1 U/h. With a 60 % minimum change, 140 % and 150 % are both
+     * small changes and are not reported - unless the request is at the pump limit, which is always reported.
+     */
+    private suspend fun openLoopWithNoTempRunning() {
+        whenever(constraintsChecker.isClosedLoopAllowed()).thenReturn(ConstraintObject(false, aapsLogger))
+        whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(any())).thenReturn(null)
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+        whenever(preferences.get(IntKey.LoopOpenModeMinChange)).thenReturn(60)
+    }
+
+    private suspend fun percentRequest(percent: Int): Boolean =
+        apsResultProvider().also {
+            it.isTempBasalRequested = true
+            it.usePercent = true
+            it.percent = percent
+        }.isChangeRequested()
+
+    private suspend fun absoluteRequest(rate: Double): Boolean =
+        apsResultProvider().also {
+            it.isTempBasalRequested = true
+            it.usePercent = false
+            it.rate = rate
+        }.isChangeRequested()
+
+    /** The limit is the one in the description, not the one of the pump type behind it (#946). */
+    @Test
+    fun `open loop reports a percent temp at the max percent of the description`() = runBlocking<Unit> {
+        openLoopWithNoTempRunning()
+        testPumpPlugin.pumpDescription.tempBasalStyle = PumpDescription.PERCENT
+        testPumpPlugin.pumpDescription.maxTempPercent = 150
+
+        assertThat(percentRequest(140)).isFalse()
+        assertThat(percentRequest(150)).isTrue()
+    }
+
+    /** The limit is the one in the description: a driver can change it (Medtronic sets the user's max basal). */
+    @Test
+    fun `open loop reports an absolute temp at the max rate of the description`() = runBlocking<Unit> {
+        openLoopWithNoTempRunning()
+        testPumpPlugin.pumpDescription.tempBasalStyle = PumpDescription.ABSOLUTE
+        testPumpPlugin.pumpDescription.maxTempAbsolute = 1.5
+
+        assertThat(absoluteRequest(1.4)).isFalse()
+        assertThat(absoluteRequest(1.5)).isTrue()
     }
 }

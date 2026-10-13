@@ -22,7 +22,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
-import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -137,7 +136,7 @@ class PumpWithConcentrationImpl(
         val requestedIu = detailedBolusInfo.insulin
         val converted = requestedIu / concentration
         val guarded = converted.coerceAtMost(constraintsChecker.getMaxBolusAllowed().value() / concentration)
-        val result = Round.floorTo(guarded, activePumpInternal.pumpDescription.pumpType.determineCorrectBolusStepSize(guarded))
+        val result = Round.floorTo(guarded, activePumpInternal.bolusStepSize(guarded))
         if (result != converted)
             aapsLogger.warn(LTag.PUMP, "Concentration boundary adjusted bolus: requested $requestedIu IU -> $converted cU -> $result cU (concentration $concentration)")
         detailedBolusInfo.insulin = result
@@ -197,22 +196,36 @@ class PumpWithConcentrationImpl(
         }
     }
 
+    /** In insulin units: the driver's step for the same amount in pump units, converted back. */
+    override fun bolusStepSize(amount: Double): Double {
+        val conc = concentration
+        return toInsulinUnits(activePumpInternal.bolusStepSize(amount / conc), conc)
+    }
+
     /** PumpWithConcentration.pumpDescription should be used instead of Pump.pumpDescription outside Pump Driver to have corrected values */
     override val pumpDescription: PumpDescription
         get() {
             val conc = concentration
             return if (conc != 1.0) {
                 activePumpInternal.pumpDescription.clone().also {
-                    it.bolusStep *= conc
-                    it.extendedBolusStep *= conc
-                    it.extendedBolusMinAmount *= conc
-                    it.maxTempAbsolute *= conc
-                    it.tempAbsoluteStep *= conc
-                    it.basalStep *= conc
-                    it.basalMinimumRate *= conc
-                    it.basalMaximumRate *= conc
+                    it.bolusStep = toInsulinUnits(it.bolusStep, conc)
+                    it.extendedBolusStep = toInsulinUnits(it.extendedBolusStep, conc)
+                    it.extendedBolusMinAmount = toInsulinUnits(it.extendedBolusMinAmount, conc)
+                    // No limit stays no limit (Double.MAX_VALUE times 2 would be infinity).
+                    if (it.extendedBolusMaxAmount < Double.MAX_VALUE) it.extendedBolusMaxAmount = toInsulinUnits(it.extendedBolusMaxAmount, conc)
+                    it.maxTempAbsolute = toInsulinUnits(it.maxTempAbsolute, conc)
+                    it.tempAbsoluteStep = toInsulinUnits(it.tempAbsoluteStep, conc)
+                    it.basalStep = toInsulinUnits(it.basalStep, conc)
+                    it.basalMinimumRate = toInsulinUnits(it.basalMinimumRate, conc)
+                    it.basalMaximumRate = toInsulinUnits(it.basalMaximumRate, conc)
                     it.maxReservoirReading = (it.maxReservoirReading * conc).toInt()
                 }
             } else activePumpInternal.pumpDescription
         }
+
+    /**
+     * A value in pump units times the concentration, without the float tail: 0.05 * 0.2 is 0.010000000000000002,
+     * and a step like that made Round overflow. 9 decimal places are far below any step or limit of a pump.
+     */
+    private fun toInsulinUnits(value: Double, conc: Double): Double = Round.roundTo(value * conc, 1e-9)
 }

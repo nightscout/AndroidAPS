@@ -1,6 +1,11 @@
 package app.aaps.pump.medtronic.service
 
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.ble.RFSpy
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency
@@ -8,10 +13,15 @@ import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringKey
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringPreferenceKey
 import app.aaps.pump.common.hw.rileylink.keys.RileylinkBooleanPreferenceKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
+import app.aaps.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask
+import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
+import app.aaps.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
+import app.aaps.pump.common.sync.PumpSyncStorage
 import app.aaps.pump.medtronic.MedtronicPumpPlugin
 import app.aaps.pump.medtronic.R
 import app.aaps.pump.medtronic.comm.MedtronicCommunicationManager
 import app.aaps.pump.medtronic.comm.ui.MedtronicUIComm
+import app.aaps.pump.medtronic.data.MedtronicHistoryData
 import app.aaps.pump.medtronic.defs.BatteryType
 import app.aaps.pump.medtronic.defs.MedtronicDeviceType
 import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
@@ -25,6 +35,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 /**
@@ -38,6 +49,14 @@ class RileyLinkMedtronicServiceUTest : TestBaseWithProfile() {
     @Mock lateinit var medtronicCommunicationManager: MedtronicCommunicationManager
     @Mock lateinit var medtronicUIComm: MedtronicUIComm
     @Mock lateinit var rfSpy: RFSpy
+    @Mock lateinit var commandQueue: CommandQueue
+    @Mock lateinit var medtronicHistoryData: MedtronicHistoryData
+    @Mock lateinit var serviceTaskExecutor: ServiceTaskExecutor
+    @Mock lateinit var uiInteraction: UiInteraction
+    @Mock lateinit var pumpSync: PumpSync
+    @Mock lateinit var pumpSyncStorage: PumpSyncStorage
+    @Mock lateinit var bolusProgressData: BolusProgressData
+    @Mock lateinit var blePreCheck: BlePreCheck
 
     lateinit var service: RileyLinkMedtronicService
     lateinit var medtronicPumpStatus: MedtronicPumpStatus
@@ -98,6 +117,32 @@ class RileyLinkMedtronicServiceUTest : TestBaseWithProfile() {
         assertThat(medtronicPumpStatus.maxBasal).isEqualTo(5.0)
         assertThat(medtronicPumpStatus.batteryType).isEqualTo(BatteryType.Alkaline)
         assertThat(rileyLinkServiceData.rileyLinkTargetFrequency).isEqualTo(RileyLinkTargetFrequency.MedtronicUS)
+    }
+
+    /**
+     * With the real plugin. Setting the pump type fills the description from the type again, which
+     * puts back the 35 U/h of the type, so the max basal of the user must be set again after it -
+     * every time, also when the max basal did not change.
+     */
+    @Test
+    fun `verifyConfiguration leaves the max basal of the user as the max temp basal`() {
+        setupValidConfiguration() // max basal 5 U/h
+        // Not the 522 the plugin starts with, so the pump type below proves the setter ran.
+        whenever(preferences.get(MedtronicStringPreferenceKey.PumpType)).thenReturn("523")
+        val plugin = MedtronicPumpPlugin(
+            aapsLogger, rh, preferences, commandQueue, rxBus, context, medtronicUtil, medtronicPumpStatus, medtronicHistoryData,
+            rileyLinkServiceData, serviceTaskExecutor, uiInteraction, notificationManager, dateUtil, pumpSync, pumpSyncStorage,
+            decimalFormatter, pumpEnactResultProvider, bolusProgressData, { mock<WakeAndTuneTask>() }, { mock<ResetRileyLinkConfigurationTask>() },
+            blePreCheck
+        )
+        service.medtronicPumpPlugin = plugin
+
+        // The first call sets the max basal (it was not known). The second finds it unchanged.
+        service.verifyConfiguration(forceRileyLinkAddressRenewal = false)
+        service.verifyConfiguration(forceRileyLinkAddressRenewal = false)
+
+        assertThat(plugin.pumpDescription.pumpType).isEqualTo(PumpType.MEDTRONIC_523_723_REVEL)
+        assertThat(plugin.pumpDescription.maxTempAbsolute).isEqualTo(5.0)
     }
 
     @Test

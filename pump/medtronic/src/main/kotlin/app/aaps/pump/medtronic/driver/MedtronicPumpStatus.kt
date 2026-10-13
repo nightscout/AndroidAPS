@@ -38,7 +38,6 @@ class MedtronicPumpStatus(
     var maxBolus: Double? = null
     var maxBasal: Double? = null
     var runningTBR: PumpDbEntryTBR? = null
-    var runningTBRWithTemp: PumpDbEntryTBR? = null
 
     // statuses
     var pumpDeviceState = PumpDeviceState.NeverContacted

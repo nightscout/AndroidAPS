@@ -59,6 +59,11 @@ sealed interface BatchAction {
      * the pump fill/prime and activation flows. Leave it null and the master resolves the insulin in
      * force (running profile, else a pending switch); if neither exists the batch is refused at prepare,
      * because the insulin list is a catalogue to choose from, never a source of "the current one".
+     *
+     * [timestamp] is the time the user picked for the switch; 0 means now (as for [Bolus]). A time in the
+     * past back-dates the switch, a time in the future starts it later — the master arms a timer for that
+     * start (`ProfileSwitchScheduler`). The master bounds it by
+     * [app.aaps.core.data.configuration.Constants.PROFILE_SWITCH_TIME_OFFSET] against its own clock.
      */
     data class ProfileSwitch(
         val percentage: Int,
@@ -66,7 +71,8 @@ sealed interface BatchAction {
         val durationMinutes: Int,
         val profileName: String? = null,
         val notes: String? = null,
-        val iCfg: ICfg? = null
+        val iCfg: ICfg? = null,
+        val timestamp: Long = 0L
     ) : BatchAction
 
     /**

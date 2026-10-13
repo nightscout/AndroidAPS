@@ -5,7 +5,9 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
+import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -26,6 +28,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -36,7 +39,10 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -110,6 +116,53 @@ internal class InsulinDialogViewModelTest {
 
         sut.updateTimeOffset(-1000)
         assertThat(sut.uiState.value.timeOffsetMinutes).isEqualTo(-720)
+    }
+
+    // ---- a record-only dose (a pen) is not given by the pump, so it is not put on the pump's grid ----
+
+    /** The amount the dialog sends for [insulin] at U200, where the pump steps by 0.2 U of insulin. */
+    private fun sentAmount(insulin: Double, recordOnly: Boolean): Double = runBlocking {
+        whenever(ch.bolusStep(any())).thenReturn(0.2)
+        whenever(batchExecutor.prepare(any(), any(), anyOrNull())).thenReturn(ActionProgress.Applied)
+        sut.updateRecordOnly(recordOnly)
+        sut.updateInsulin(insulin)
+        sut.prepareAndConfirm()
+        val actions = argumentCaptor<List<BatchAction>>()
+        verify(batchExecutor).prepare(actions.capture(), any(), anyOrNull())
+        actions.firstValue.filterIsInstance<BatchAction.Bolus>().single().insulin
+    }
+
+    @Test
+    fun `a record-only dose is recorded as typed`() {
+        // Floored, the 1.5 U pen dose was saved as 1.4 U and IOB was too low.
+        assertThat(sentAmount(1.5, recordOnly = true)).isEqualTo(1.5)
+    }
+
+    @Test
+    fun `a dose for the pump is floored to the pump step`() {
+        assertThat(sentAmount(1.5, recordOnly = false)).isWithin(1e-9).of(1.4)
+    }
+
+    @Test
+    fun `the quick add buttons keep a record-only dose off the pump grid too`() {
+        whenever(ch.bolusStep(any())).thenReturn(0.2)
+        sut.updateRecordOnly(true)
+        sut.addInsulin(1.5)
+        assertThat(sut.uiState.value.insulin).isEqualTo(1.5)
+
+        sut.updateRecordOnly(false)
+        sut.updateInsulin(0.0)
+        sut.addInsulin(1.5)
+        assertThat(sut.uiState.value.insulin).isWithin(1e-9).of(1.4)
+    }
+
+    @Test
+    fun `a record-only dose is shown with two decimals`() {
+        sut.updateRecordOnly(true)
+        assertThat(sut.uiState.value.displayStep).isEqualTo(0.01)
+
+        sut.updateRecordOnly(false)
+        assertThat(sut.uiState.value.displayStep).isEqualTo(sut.uiState.value.bolusStep)
     }
 
     @Test

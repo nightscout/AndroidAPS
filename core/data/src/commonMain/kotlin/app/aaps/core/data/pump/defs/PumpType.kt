@@ -544,8 +544,20 @@ enum class PumpType(
 
     companion object {
 
+        /**
+         * Types that only tag records, a user entry or a cached value. They are not pumps, so a list of pumps
+         * does not offer them and [getByDescription] does not return them.
+         */
+        val RECORD_TAGS: Set<PumpType> = setOf(USER, CACHE)
+
+        /**
+         * The pump type with this description. ACCU_CHEK_INSIGHT and ACCU_CHEK_INSIGHT_VIRTUAL (the old
+         * database type) are both "Accu-Chek Insight", so the one the real driver uses wins: a client of an
+         * Insight master must step like the pump, not by the table of the old type. A description of one of
+         * the [RECORD_TAGS] gives GENERIC_AAPS, the same as an unknown one.
+         */
         fun getByDescription(desc: String): PumpType =
-            entries.firstOrNull { it.description == desc } ?: GENERIC_AAPS
+            entries.firstOrNull { it.description == desc && it != ACCU_CHEK_INSIGHT_VIRTUAL && it !in RECORD_TAGS } ?: GENERIC_AAPS
 
         fun fromString(name: String?) = entries.firstOrNull { it.name == name }
     }

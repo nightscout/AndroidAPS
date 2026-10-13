@@ -2,6 +2,7 @@ package app.aaps.pump.virtual
 
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -12,6 +13,7 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.StringKeyWithEntries
 import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
@@ -66,6 +68,23 @@ class VirtualPumpPluginTest : TestBaseWithProfile() {
         whenever(preferences.get(StringKey.VirtualPumpType)).thenReturn("Accu-Chek Combo")
         virtualPumpPlugin.refreshConfiguration()
         assertThat(virtualPumpPlugin.pumpTypeFlow.value).isEqualTo(PumpType.ACCU_CHEK_COMBO)
+        assertThat(virtualPumpPlugin.pumpDescription.pumpType).isEqualTo(PumpType.ACCU_CHEK_COMBO)
+    }
+
+    /** The safety checks test for exactly one temp basal style. Percent and absolute together matched none of them. */
+    @Test
+    fun `before the configuration is read the description is the generic virtual pump`() {
+        assertThat(virtualPumpPlugin.pumpDescription.pumpType).isEqualTo(PumpType.GENERIC_AAPS)
+        assertThat(virtualPumpPlugin.pumpDescription.tempBasalStyle).isEqualTo(PumpDescription.PERCENT)
+    }
+
+    /** USER and CACHE only tag records, they are not pumps to pretend to be. */
+    @Test
+    fun `the pump type list offers no record tags`() {
+        val typeList = virtualPumpPlugin.getPreferenceScreenContent().items.filterIsInstance<StringKeyWithEntries>().single()
+
+        assertThat(typeList.entries.keys).containsNoneOf("USER", "CACHE")
+        assertThat(typeList.entries.keys).contains(PumpType.GENERIC_AAPS.description)
     }
 
     @Test

@@ -8,7 +8,9 @@ import android.hardware.display.DisplayManager
 import android.os.Handler
 import android.os.Looper
 import android.view.Display
-import androidx.glance.appwidget.updateAll
+import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetManager
+import androidx.glance.appwidget.compose
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.widget.WidgetUpdater
@@ -20,14 +22,17 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /**
- * Default [WidgetUpdater] implementation. Fires [AapsGlanceWidget.updateAll] on the
- * app-wide [CoroutineScope] so callers stay non-suspend. The widget instances are
- * stateless — they resolve their dependencies from the Metro graph inside
- * `provideGlance`, so this class doesn't need to hold any state-loader refs.
+ * Default [WidgetUpdater] implementation. Draws the Glance widgets in this process (see `render`) on
+ * the app-wide [CoroutineScope] so callers stay non-suspend. The widget instances are stateless —
+ * they resolve their dependencies from the Metro graph inside `provideGlance`, so this class doesn't
+ * need to hold any state-loader refs.
  */
 // One instance: it holds the update that waits for a display to turn on, and the listener for that.
 @ContributesBinding(AppScope::class)
@@ -43,6 +48,9 @@ class WidgetUpdaterImpl(
 
     private val displayManager = context.getSystemService(DisplayManager::class.java)
     private val gate = ScreenOffGate()
+
+    /** One render at a time: Glance does not allow two `compose` calls for the same widget at once. */
+    private val renderMutex = Mutex()
 
     init {
         displayManager.registerDisplayListener(
@@ -75,16 +83,45 @@ class WidgetUpdaterImpl(
     private fun runUpdate(from: String) {
         scope.launch {
             aapsLogger.debug(LTag.WIDGET, "updateWidget $from")
-            runCatching { AapsGlanceWidget().updateAll(context) }
-                .onFailure { aapsLogger.error(LTag.WIDGET, "updateWidget failed: ${it.message}", it) }
-            runCatching { BgGraphGlanceWidget().updateAll(context) }
-                .onFailure { aapsLogger.error(LTag.WIDGET, "updateBgGraphWidget failed: ${it.message}", it) }
-            runCatching { CompactBgGlanceWidget().updateAll(context) }
-                .onFailure { aapsLogger.error(LTag.WIDGET, "updateCompactBgWidget failed: ${it.message}", it) }
-            runCatching { GlucoseCircleGlanceWidget().updateAll(context) }
-                .onFailure { aapsLogger.error(LTag.WIDGET, "updateGlucoseCircleWidget failed: ${it.message}", it) }
+            renderMutex.withLock {
+                render(AapsGlanceWidget())
+                render(BgGraphGlanceWidget())
+                render(CompactBgGlanceWidget())
+                render(GlucoseCircleGlanceWidget())
+            }
             runCatching { triggerSmallWidgetUpdate() }
                 .onFailure { aapsLogger.error(LTag.WIDGET, "updateSmallWidget failed: ${it.message}", it) }
+        }
+    }
+
+    /**
+     * Draws every placed instance of [widget] in this process and hands the views to the launcher.
+     *
+     * Not Glance's `updateAll`. That runs each update as a WorkManager job, a `SessionWorker` that
+     * stays alive about 45 seconds after it has drawn - and this runs every minute while a screen is
+     * on. Android counts that job time against the app's job quota, since Android 16 also with a
+     * foreground service running. On one phone the widget used at least 59 minutes of the 4 hours a
+     * day, and once the quota ran out the calculation and the loop stopped. `compose` runs the same
+     * composition once and returns the views, with no job at all.
+     *
+     * Taps keep working: the widgets only use `actionStartActivity`, a plain pending intent that needs
+     * no session. Glance still draws by itself when the launcher asks (a widget added or resized, the
+     * daily update), which is rare.
+     */
+    private suspend fun render(widget: GlanceAppWidget) {
+        val name = widget::class.simpleName
+        try {
+            val glanceManager = GlanceAppWidgetManager(context)
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            for (glanceId in glanceManager.getGlanceIds(widget.javaClass)) {
+                val appWidgetId = glanceManager.getAppWidgetId(glanceId)
+                val views = widget.compose(context, glanceId, appWidgetManager.getAppWidgetOptions(appWidgetId))
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.WIDGET, "updateWidget $name failed: ${e.message}", e)
         }
     }
 

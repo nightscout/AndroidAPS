@@ -49,6 +49,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
+import app.aaps.core.interfaces.overview.graph.BgType
 import app.aaps.core.interfaces.overview.graph.GraphConfig
 import app.aaps.core.interfaces.overview.graph.SecondaryGraph
 import app.aaps.core.interfaces.overview.graph.SeriesType
@@ -102,6 +103,46 @@ private val SIMPLE_MODE_CONFIG = GraphConfig(
  * turning the description into a list nobody will sit through.
  */
 private const val RECENT_VALUES_SPOKEN = 5
+
+/** Which way a predicted curve is travelling, which decides the sentence spoken for it. */
+internal enum class PredictionDirection { UP, DOWN, FLAT }
+
+/**
+ * The point of a predicted curve worth saying out loud, and which way it lies from [current].
+ *
+ * The furthest excursion from the current glucose, not the last point: a curve that dips to 3.2
+ * before settling at 6.0 matters for the dip, and "heading down to" is how a user describes it.
+ * A curve that only rises therefore reports its peak, one that only falls reports its trough, and
+ * one that goes nowhere reports the value it holds.
+ *
+ * [values] must already be in the user's units. Returns null for an empty curve.
+ */
+internal fun predictionExtreme(values: List<Double>, current: Double): Pair<Double, PredictionDirection>? {
+    if (values.isEmpty()) return null
+    val highest = values.max()
+    val lowest = values.min()
+    val up = highest - current
+    val down = current - lowest
+    return when {
+        up > down -> highest to PredictionDirection.UP
+        down > up -> lowest to PredictionDirection.DOWN
+        else      -> current to PredictionDirection.FLAT
+    }
+}
+
+/**
+ * The predicted curves in the order they are spoken, with the name each is spoken by.
+ *
+ * Carbs first because a meal is what a user is most often checking on, then insulin, then the two
+ * that only appear in some setups. Absorbed COB exists on AMA only and is simply absent otherwise.
+ */
+private val PREDICTION_SPOKEN_ORDER = listOf(
+    BgType.COB_PREDICTION to UiStrings.a11y_prediction_name_cob,
+    BgType.IOB_PREDICTION to UiStrings.a11y_prediction_name_iob,
+    BgType.A_COB_PREDICTION to UiStrings.a11y_prediction_name_acob,
+    BgType.UAM_PREDICTION to UiStrings.a11y_prediction_name_uam,
+    BgType.ZT_PREDICTION to UiStrings.a11y_prediction_name_zt
+)
 
 /** Series types available as BG graph overlays */
 private val BG_OVERLAY_SERIES = listOf(SeriesType.ACTIVITY, SeriesType.PREDICTIONS)
@@ -405,6 +446,42 @@ fun GraphsSection(
             else                                   -> stringResource(UiStrings.a11y_bg_graph_summary_values_only, recentValues)
         }
 
+        // The predicted curves are drawn and nothing else on the screen states them, so they were
+        // out of reach entirely. Each curve gets one sentence naming where it is heading, which is
+        // what a listener can actually hold in their head - reading a whole series of points back
+        // would be unusable. Reported as the biggest excursion from the current glucose rather than
+        // the final point, because a curve that dips to 3.2 before settling at 6.0 matters for the
+        // dip, and that is the reading of "heading up to" or "down to" a user means.
+        val currentValue = remember(bgReadings) { newestReadings(bgReadings, 1).firstOrNull()?.value }
+        val unitLabel = if (profileUtil.units == GlucoseUnit.MMOL) stringResource(CoreUiStrings.mmol) else stringResource(CoreUiStrings.mgdl)
+        // Nothing is said about curves the user has switched off the graph.
+        val predictionsVisible = SeriesType.PREDICTIONS in graphConfig.bgOverlays
+        val predictionExtremes = remember(predictions, currentValue, predictionsVisible) {
+            if (!predictionsVisible || currentValue == null) emptyList()
+            else PREDICTION_SPOKEN_ORDER.mapNotNull { (type, name) ->
+                predictionExtreme(predictions.filter { it.type == type }.map { it.value }, currentValue)
+                    ?.let { (value, direction) -> Triple(name, value, direction) }
+            }
+        }
+        // map, not joinToString: the latter is not inline, so a @Composable call cannot sit in its
+        // lambda. The finished sentences are joined afterwards, as the graph summary joins its values.
+        val predictionSentences = predictionExtremes.map { (name, value, direction) ->
+            // BgDataPoint.value is ALREADY in the user's units, as above: format, never convert.
+            val shown = stringResource(
+                CoreUiStrings.value_with_unit,
+                if (profileUtil.units == GlucoseUnit.MGDL) decimalFormatter.to0Decimal(value) else decimalFormatter.to1Decimal(value),
+                unitLabel
+            )
+            when (direction) {
+                PredictionDirection.UP   -> stringResource(UiStrings.a11y_prediction_rises, stringResource(name), shown)
+                PredictionDirection.DOWN -> stringResource(UiStrings.a11y_prediction_falls, stringResource(name), shown)
+                PredictionDirection.FLAT -> stringResource(UiStrings.a11y_prediction_flat, stringResource(name), shown)
+            }
+        }
+        val predictionDescription =
+            if (predictionSentences.isEmpty()) null
+            else stringResource(UiStrings.a11y_predictions, predictionSentences.joinToString(" "))
+
         Box(modifier = Modifier.offset(y = (-16).dp)) {
             BgGraphCompose(
                 viewModel = graphViewModel,
@@ -419,7 +496,15 @@ fun GraphsSection(
                     .height(graphConfig.bgHeight.dp)
                     .onScrollOrZoomGesture(graphViewModel::onGraphInteraction)
                     .then(
-                        if (graphDescription != null) Modifier.semantics { contentDescription = graphDescription }
+                        // Merging, not a bare semantics block: a described node is reached by linear
+                        // screen-reader navigation only when it is a leaf or a merging parent. This one
+                        // has a child (the chart's own node, which carries no text), so unmerged it was
+                        // skipped in both directions and could be reached only as the first step from
+                        // the glucose circle or at the wrap point after the last tab - measured with
+                        // TalkBack on a phone. Merging absorbs that empty child, so the words do not
+                        // change and no action comes with it; the edit button is a clickable sibling and
+                        // stays its own stop.
+                        if (graphDescription != null) Modifier.semantics(mergeDescendants = true) { contentDescription = graphDescription }
                         else Modifier
                     )
             )
@@ -432,6 +517,18 @@ fun GraphsSection(
                         .padding(end = 4.dp, top = 2.dp)
                 )
             }
+        }
+        // A node of its own rather than more text on the graph above, so a listener reaches the
+        // readings first and swipes once to decide whether she wants the forecast, instead of having
+        // to sit through it every time. It needs real bounds to be reachable at all, hence a 1 dp
+        // strip: invisible on screen, present in the accessibility tree.
+        predictionDescription?.let { description ->
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .semantics { contentDescription = description }
+            )
         }
         if (editingBgOverlays) {
             GraphSeriesBottomSheet(

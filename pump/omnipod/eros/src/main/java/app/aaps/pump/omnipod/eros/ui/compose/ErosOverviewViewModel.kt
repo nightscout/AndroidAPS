@@ -1,6 +1,5 @@
 package app.aaps.pump.omnipod.eros.ui.compose
 
-import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Bluetooth
@@ -83,6 +82,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.Duration
+import java.util.Locale
 import java.util.TimeZone
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.common.hw.rileylink.R as RileyLinkR
@@ -113,8 +113,7 @@ class ErosOverviewViewModel(
     private val config: Config,
     private val aapsLogger: AAPSLogger,
     private val resetRileyLinkConfigurationTaskProvider: () -> ResetRileyLinkConfigurationTask,
-    private val ch: ConcentrationHelper,
-    private val context: Context
+    private val ch: ConcentrationHelper
 ) : ViewModel() {
 
     companion object {
@@ -345,8 +344,10 @@ class ErosOverviewViewModel(
                 label = rh.gs(CommonR.string.omnipod_common_pod_management_button_deactivate_pod),
                 icon = Icons.Filled.Pause,
                 category = ActionCategory.MANAGEMENT,
-                visible = podStateManager.isPodActivationCompleted,
-                enabled = podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED) && rlReady,
+                // As soon as a pod is paired, not only after activation. A pod that faults part way through
+                // activation can only be removed here: when deactivation fails, the wizard offers "Discard" (#1217).
+                visible = podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED),
+                enabled = rlReady,
                 onClick = { _events.tryEmit(OmnipodOverviewEvent.StartDeactivation) }
             ),
             PumpAction(
@@ -541,7 +542,10 @@ class ErosOverviewViewModel(
             return dateUtil.dateAndTimeString(timeAsJavaDate.time)
         }
         val isDaylightTime = timeZone.inDaylightTime(timeAsJavaDate)
-        val locale = context.resources.configuration.locales[0]
+        // Locale.getDefault() rather than the Context configuration: Android keeps the default in step with
+        // the configuration (per-app locale included), it was the only reason this view model held a Context,
+        // and reading it through a Context made the view model untestable off a device.
+        val locale = Locale.getDefault()
         val tzDisplayName = timeZone.getDisplayName(isDaylightTime, TimeZone.SHORT, locale) + " " + timeZone.getDisplayName(isDaylightTime, TimeZone.LONG, locale)
         return rh.gs(CommonR.string.omnipod_common_time_with_timezone, dateUtil.dateAndTimeString(timeAsJavaDate.time), tzDisplayName)
     }

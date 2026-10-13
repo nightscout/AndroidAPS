@@ -212,9 +212,17 @@ internal class StatusViewModelTest {
     private suspend fun awaitMore(counter: AtomicInteger, than: Int) =
         withTimeout(5_000) { while (counter.get() <= than) delay(10) }
 
-    /** Waits up to 2 s for [counter] to reach [value] and returns what it has then. */
+    /**
+     * Waits for [counter] to reach [value] and returns what it has then.
+     *
+     * These waits are real time, not virtual: the test polls a counter that a coroutine on another
+     * dispatcher increments. The timeout is only a ceiling, so a generous one costs nothing when the
+     * machine is idle and stops the test failing on a busy one - at 2 s it began failing inside the
+     * full module suite while still passing on its own, which says nothing about the behaviour under
+     * test and everything about how much else was running.
+     */
     private suspend fun awaitValue(counter: AtomicInteger, value: Int): Int =
-        withTimeoutOrNull(2_000) { while (counter.get() != value) delay(10); counter.get() } ?: counter.get()
+        withTimeoutOrNull(20_000) { while (counter.get() != value) delay(10); counter.get() } ?: counter.get()
 
     /** Enough for a whole refresh: a cannula change to count from, no profile, no pump battery. */
     private suspend fun givenStatusData() {
