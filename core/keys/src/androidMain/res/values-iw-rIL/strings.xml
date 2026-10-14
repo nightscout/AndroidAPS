@@ -232,8 +232,6 @@
     <string name="lang_tr">טורקית</string>
     <string name="lang_zh_tw">סינית מסורתית</string>
     <string name="lang_zh_cn">סינית מפושטת</string>
-    <string name="pref_title_patient_name">שם</string>
-    <string name="pref_summary_patient_name">שם לזיהוי מופע AAPS זה (מוצג בדוחות ובסנכרון)</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">תיקיית AAPS</string>
     <!-- StringKey: Protection preferences -->
