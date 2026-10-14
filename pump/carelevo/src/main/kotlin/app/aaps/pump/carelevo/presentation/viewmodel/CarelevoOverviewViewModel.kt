@@ -45,6 +45,7 @@ import app.aaps.pump.carelevo.coordinator.CarelevoAlarmClearCoordinator
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
+import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoDeleteInfusionInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.infusion.model.CarelevoDeleteInfusionRequestModel
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
@@ -102,6 +103,7 @@ class CarelevoOverviewViewModel @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase,
     private val carelevoDeleteInfusionInfoUseCase: CarelevoDeleteInfusionInfoUseCase,
+    private val patchInfoRepository: CarelevoPatchInfoRepository,
     private val rxBus: RxBus,
     private val decimalFormatter: DecimalFormatter
 ) : ViewModel() {
@@ -343,7 +345,9 @@ class CarelevoOverviewViewModel @Inject constructor(
             .observeOn(aapsSchedulers.main)
             .subscribe {
                 val infusionInfo = it.getOrNull() ?: run {
-                    val patchInfo = carelevoPatch.patchInfo.value?.getOrNull() ?: return@subscribe
+                    // The stored record, not carelevoPatch.patchInfo: that stream follows the store a moment later,
+                    // so right after a discard it still held the old patch and the wizard reopened at the needle step.
+                    val patchInfo = patchInfoRepository.getPatchInfoBySync() ?: return@subscribe
                     if (patchInfo.checkNeedle == true) {
                         _isCheckScreen.tryEmit(CarelevoScreenType.NEEDLE_INSERTION)
                     }

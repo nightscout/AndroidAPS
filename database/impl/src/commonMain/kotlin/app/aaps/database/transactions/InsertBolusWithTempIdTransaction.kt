@@ -14,7 +14,9 @@ class InsertBolusWithTempIdTransaction(
         val result = TransactionResult()
         val current = database.bolusDao.findByPumpTempIds(bolus.interfaceIDs.temporaryId!!, bolus.interfaceIDs.pumpType!!, bolus.interfaceIDs.pumpSerial!!)
         if (current == null) {
-            bolus.id = database.bolusDao.insert(bolus)
+            // insertNewEntry, not insert: only it reports the change, so the IOB and the overview know of it now,
+            // not first when the pump history replaces the temporary id (#5280).
+            bolus.id = database.bolusDao.insertNewEntry(bolus)
             result.inserted.add(bolus)
         }
         return result

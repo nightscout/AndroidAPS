@@ -16,7 +16,9 @@ class InsertTemporaryBasalWithTempIdTransaction(
         val result = TransactionResult()
         val current = database.temporaryBasalDao.findByPumpTempIds(temporaryBasal.interfaceIDs.temporaryId!!, temporaryBasal.interfaceIDs.pumpType!!, temporaryBasal.interfaceIDs.pumpSerial!!)
         if (current == null) {
-            temporaryBasal.id = database.temporaryBasalDao.insert(temporaryBasal)
+            // insertNewEntry, not insert: only it reports the change, so the IOB and the overview know of it now,
+            // not first when the pump history replaces the temporary id (#5280).
+            temporaryBasal.id = database.temporaryBasalDao.insertNewEntry(temporaryBasal)
             result.inserted.add(temporaryBasal)
         }
         return result

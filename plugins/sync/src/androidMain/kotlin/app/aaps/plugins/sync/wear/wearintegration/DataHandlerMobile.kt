@@ -1556,8 +1556,8 @@ class DataHandlerMobile(
         val openApsStatus =
             if (config.APS) loop.lastRun?.let { if (it.lastTBREnact != 0L) it.lastTBREnact else -1 } ?: -1
             else processedDeviceStatusData.openApsTimestamp
-        // Patient name for followers
-        val patientName = preferences.get(StringKey.GeneralPatientName)
+        // Instance name for followers
+        val instanceName = preferences.get(StringKey.GeneralInstanceName)
         //temptarget
         val units = profileFunction.getUnits()
         var tempTargetLevel = 0
@@ -1615,7 +1615,7 @@ class DataHandlerMobile(
                 openApsStatus = openApsStatus,
                 bgi = bgiString,
                 batteryLevel = if (phoneBattery >= 30) 1 else 0,
-                patientName = patientName,
+                patientName = instanceName, // wire field name is fixed by the watch contract
                 tempTarget = tempTarget,
                 tempTargetLevel = tempTargetLevel,
                 tempTargetDuration = tempTargetDuration,

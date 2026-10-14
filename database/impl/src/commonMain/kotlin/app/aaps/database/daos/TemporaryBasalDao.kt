@@ -42,6 +42,10 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (temporaryId = :temporaryId) AND (pumpType = :pumpType) AND (pumpSerial = :pumpSerial) AND (+referenceId IS NULL)")
     suspend fun findByPumpTempIds(temporaryId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): TemporaryBasal?
 
+    /** Set by AAPS and not found in the pump history yet: they have only a temporary id. */
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (temporaryId IS NOT NULL) AND (pumpId IS NULL) AND (isValid = 1) AND (referenceId IS NULL)")
+    suspend fun getWithTemporaryIdOnly(): List<TemporaryBasal>
+
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (+timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (+referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getTemporaryBasalActiveAtLegacy(timestamp: Long): TemporaryBasal?
 

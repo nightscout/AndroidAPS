@@ -3,6 +3,8 @@ package app.aaps.pump.eopatch.ble
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.pump.eopatch.ble.task.FetchAlarmTask
 import app.aaps.pump.eopatch.ble.task.InternalSuspendedTask
 import app.aaps.pump.eopatch.ble.task.ReadBolusFinishTimeTask
@@ -34,7 +36,8 @@ class PatchStateManager(
     private val internalSuspendedTask: InternalSuspendedTask,
     private val fetchAlarmTask: FetchAlarmTask,
     private val aapsLogger: AAPSLogger,
-    private val aapsSchedulers: AapsSchedulers
+    private val aapsSchedulers: AapsSchedulers,
+    private val rxBus: RxBus
 ) {
 
     @Synchronized fun updatePatchState(newState: PatchState) {
@@ -61,6 +64,8 @@ class PatchStateManager(
         }
 
         newState.updatedTimestamp = System.currentTimeMillis()
+        // Read now: oldState is the stored state, and it is overwritten with newState at the end.
+        val wasPaused = oldState.isNormalBasalPaused
 
         if (newState.isNewAlertAlarm) {
             fetchAlarmTask.enqueue()
@@ -171,6 +176,12 @@ class PatchStateManager(
 
         pm.patchState.update(newState)
         pm.flushPatchState()
+
+        // The loop starts and ends its "suspended by pump" mode when a pump status event comes. This driver sent one
+        // only when the connection changed, so after a resume the loop stayed suspended until its next run.
+        if (wasPaused != newState.isNormalBasalPaused) {
+            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
+        }
     }
 
     private fun onTempBasalStartState() {

@@ -616,6 +616,14 @@ class OmnipodDashPumpPlugin(
         return equal
     }
 
+    /**
+     * The 24 hourly rates the pod runs: the program it confirmed, each rate rounded to the nearest 0.05 U/h (#2454).
+     * null without an activated pod or a confirmed program: the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? =
+        if (!podStateManager.isActivationCompleted) null
+        else podStateManager.basalProgram?.hourlyRates()?.mapIndexed { hour, rate -> Profile.ProfileValue(T.hours(hour.toLong()).secs().toInt(), rate) }
+
     private val _lastDataTime = MutableStateFlow(0L)
     override val lastDataTime: StateFlow<Long> = _lastDataTime
 

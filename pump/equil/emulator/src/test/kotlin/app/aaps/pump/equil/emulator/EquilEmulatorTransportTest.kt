@@ -5,6 +5,7 @@ import app.aaps.pump.equil.manager.AESUtil
 import app.aaps.pump.equil.manager.EquilPacketCodec
 import app.aaps.pump.equil.manager.Utils
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -151,6 +152,31 @@ class EquilEmulatorTransportTest {
         )
         transport.awaitPendingCallbacks()
         assertTrue(receivedPackets.isNotEmpty(), "Phase 3 should produce response")
+    }
+
+    /**
+     * The app drops a packet with the index it has just handled, and that ends the exchange. With a new index for the
+     * ack, the app confirmed again, without end, and a read sent next on the same link got a stale answer.
+     */
+    @Test
+    fun `the ack of a confirmation repeats the index of the answer it confirms`() {
+        transport.gatt.connect("00:00:00:00:00:00")
+        sendEncryptedMessage(Utils.concat(Utils.intToBytes(10), ByteArray(8)), state.devicePassword, "0F0F0000", 0)
+        transport.awaitPendingCallbacks()
+        val initialIndex = EquilPacketCodec.getIndex(receivedPackets.last()[4])
+        receivedPackets.clear()
+
+        sendEncryptedMessage(Utils.concat(Utils.intToBytes(11), byteArrayOf(0x02, 0x00)), state.sessionPassword, "0404A1B2", 1)
+        transport.awaitPendingCallbacks()
+        val answerIndex = EquilPacketCodec.getIndex(receivedPackets.last()[4])
+        receivedPackets.clear()
+
+        sendEncryptedMessage(Utils.concat(Utils.intToBytes(12), byteArrayOf(0x00, 0x02, 0x01)), state.sessionPassword, "0404A1B2", 2)
+        transport.awaitPendingCallbacks()
+        val ackIndex = EquilPacketCodec.getIndex(receivedPackets.last()[4])
+
+        assertTrue(answerIndex != initialIndex, "a new answer gets a new index")
+        assertEquals(answerIndex, ackIndex)
     }
 
     @Test

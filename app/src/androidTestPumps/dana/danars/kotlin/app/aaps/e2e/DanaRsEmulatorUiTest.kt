@@ -394,6 +394,8 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
         // and pinning it here would fail this test for a UI tweak that broke nothing.
         val written = awaitTrue(SAVE_TIMEOUT) { emulator.pumpState.lcdOnTimeSec > before }
         assertThat(written).isTrue()
+        // The pump has the value before the save leaves the queue, and the screen keeps redrawing until it does.
+        waitForQueueIdle()
 
         // Saving may leave the screen on its own; only tap Back if it did not.
         if (!waitForVisible("Unpair", IDLE_MS)) returnToDanaOverview()

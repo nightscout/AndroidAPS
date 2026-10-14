@@ -187,6 +187,22 @@ class DanaRPumpEmulatorTest {
         assertThat(state.basalProfiles[state.activeProfile][0]).isWithin(0.001).of(1.50)
     }
 
+    /** 0x3306 starts with the profile number. A read back must give the rates that were set, not shifted by a byte. */
+    @Test
+    fun setBasalProfileStoresTheRatesAfterTheProfileNumber() {
+        val state = DanaRPumpState(DanaRVariant.DANA_R)
+        val emulator = DanaRPumpEmulator(state)
+        // Profile 0, then 6 hours at 0.51 U/h (0x0033) and 18 hours at 1.02 U/h (0x0066), high byte first.
+        val params = byteArrayOf(0) + (0 until 24).flatMap { hour -> listOf(0.toByte(), (if (hour < 6) 0x33 else 0x66).toByte()) }
+
+        emulator.processCommand(0x3306, params)
+        emulator.processCommand(0x330C, byteArrayOf(0))
+        val read = emulator.processCommand(0x3202, ByteArray(0))
+
+        val rates = (0 until 24).map { ((read[it * 2].toInt() and 0xFF shl 8) or (read[it * 2 + 1].toInt() and 0xFF)) / 100.0 }
+        assertThat(rates).containsExactlyElementsIn((0 until 24).map { if (it < 6) 0.51 else 1.02 }).inOrder()
+    }
+
     @Test
     fun setActivateBasalProfileUpdatesActiveProfile() {
         val state = DanaRPumpState(DanaRVariant.DANA_R_V2)

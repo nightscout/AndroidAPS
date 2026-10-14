@@ -1,6 +1,7 @@
 package app.aaps.pump.carelevo.ble.commands
 
 import app.aaps.pump.carelevo.ble.BleCommand
+import java.math.BigDecimal
 
 /**
  * Basal-program write (v2 encoding). One command class for both:
@@ -46,5 +47,9 @@ class BasalProgramCommand(
         const val UPDATE_RESPONSE_OPCODE: Byte = 0x81.toByte()
         private val SEQ_NO_RANGE = 0..2
         private const val MIN_RESPONSE_LENGTH = 2
+
+        /** The rate in U/h the patch gets for [speed]: the two bytes [encode] sends for it, read back (#2454). */
+        fun sentSpeed(speed: Double): Double =
+            encodeUnitCenti(speed).let { bytes -> BigDecimal(bytes.u(0)).add(BigDecimal(bytes.u(1)).movePointLeft(2)).toDouble() }
     }
 }

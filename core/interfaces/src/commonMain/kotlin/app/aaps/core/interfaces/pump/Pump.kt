@@ -4,6 +4,7 @@ import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
 import app.aaps.core.interfaces.queue.CustomCommand
@@ -111,6 +112,19 @@ interface Pump {
      * @return true if pump is running the same profile as in param
      */
     fun isThisProfileSet(profile: PumpProfile): Boolean
+
+    /**
+     * The basal the pump really gives now, read after [setNewBasalProfile] succeeded.
+     *
+     * A pump rounds each rate to its own step, so it can give a little more or less than the profile asks.
+     * AAPS keeps what the pump reports here as the running profile, so IOB, TDD and the screens show the
+     * insulin that is really given (#2454). Rounding must never turn a rate above zero into zero.
+     *
+     * @return the rates from midnight, in pump units like the [PumpProfile] the pump was given, with the first
+     * one at 0 seconds. Hour values only, like the running profile: each time on a full hour, and a rate is the
+     * insulin of that whole hour. null when the pump gives the profile exactly as it was sent.
+     */
+    fun deliveredBasal(): List<Profile.ProfileValue>? = null
 
     /**
      * timestamp of last connection to the pump in milliseconds

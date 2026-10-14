@@ -1,6 +1,7 @@
 package app.aaps.pump.carelevo.domain.usecase.basal
 
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.pump.carelevo.ble.commands.BasalProgramCommand
 import app.aaps.pump.carelevo.domain.ext.generateUUID
 import app.aaps.pump.carelevo.domain.ext.splitSegment
 import app.aaps.pump.carelevo.domain.model.basal.CarelevoBasalSegmentDomainModel
@@ -61,6 +62,26 @@ class CarelevoSetBasalProgramUseCase @Inject constructor(
             )
         ) { "update infusion info is failed" }
     }.isSuccess
+
+    /**
+     * The 24 hourly segments of the program the patch accepted, as [persistBasalProgram] stored it, or null before
+     * one was. Read from the store itself: the infusion-info stream that `CarelevoPatch` exposes follows a moment
+     * later, so right after a set it still held the old program (#2454).
+     */
+    fun acceptedBasalSegments(): List<CarelevoBasalSegmentInfusionInfoDomainModel>? =
+        infusionInfoRepository.getInfusionInfoBySync()?.basalInfusionInfo?.segments
+
+    /**
+     * Whether the patch runs [profile]: the program it accepted gives the same rates as [profile] would give when it is
+     * sent now, each rate rounded to 0.01 U/h as it is sent. null before a program was accepted.
+     */
+    fun isAccepted(profile: Profile): Boolean? {
+        val accepted = acceptedBasalSegments()?.sortedBy { it.startTime } ?: return null
+        val wanted = buildBasalProgramPlan(profile).segments
+        return accepted.size == wanted.size && accepted.zip(wanted).all { (a, w) ->
+            a.startTime == w.startTime && BasalProgramCommand.sentSpeed(a.speed) == BasalProgramCommand.sentSpeed(w.speed)
+        }
+    }
 
     /** The three sequential basal-program payloads ([programs], seqNo 0/1/2) plus the full [segments] list. */
     data class BasalProgramPlan(

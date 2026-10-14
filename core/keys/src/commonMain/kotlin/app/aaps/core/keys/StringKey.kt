@@ -80,7 +80,11 @@ enum class StringKey(
         ),
         defaultedBySM = true
     ),
-    GeneralPatientName(
+    // Not the patient: the person using THIS phone. It names this AAPS instance (export file names,
+    // the OTP label, the watch), so it stays device-local and carries no SyncSpec - a client must not
+    // take the master's name. The stored key keeps its old "patient_name" spelling on purpose, so no
+    // installation loses its value.
+    GeneralInstanceName(
         key = "patient_name",
         defaultValue = "",
         title = KeysStrings.pref_title_patient_name,

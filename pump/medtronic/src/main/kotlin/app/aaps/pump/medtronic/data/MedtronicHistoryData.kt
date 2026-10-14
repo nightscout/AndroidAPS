@@ -17,7 +17,6 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.utils.DateTimeUtil
 import app.aaps.core.utils.StringUtil
 import app.aaps.pump.common.sync.PumpDbEntry
-import app.aaps.pump.common.sync.PumpDbEntryBolus
 import app.aaps.pump.common.sync.PumpDbEntryCarbs
 import app.aaps.pump.common.sync.PumpDbEntryTBR
 import app.aaps.pump.common.sync.PumpSyncStorage
@@ -47,7 +46,9 @@ import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime
 import java.util.GregorianCalendar
+import java.util.IdentityHashMap
 import java.util.Locale
+import kotlin.math.abs
 
 /**
  * Created by andy on 10/12/18.
@@ -75,6 +76,9 @@ class MedtronicHistoryData(
     val allHistory: MutableList<PumpHistoryEntry> = mutableListOf()
     private var allPumpIds: MutableSet<Long> = mutableSetOf()
     private var newHistory: MutableList<PumpHistoryEntry> = mutableListOf()
+
+    /** Boluses in [newHistory] that an earlier read already synced, read again because the amount changed. */
+    private var changedBolusPumpIds: Set<Long> = emptySet()
     private var isInit = false
 
     private var pumpTime: ClockDTO? = null
@@ -89,6 +93,7 @@ class MedtronicHistoryData(
     fun addNewHistory(result: PumpHistoryResult) {
         val validEntries: List<PumpHistoryEntry> = result.validEntries
         val newEntries: MutableList<PumpHistoryEntry> = mutableListOf()
+        val changedBoluses = mutableSetOf<Long>()
         for (validEntry in validEntries) {
             if (!allPumpIds.contains(validEntry.pumpId)) {
                 newEntries.add(validEntry)
@@ -97,12 +102,14 @@ class MedtronicHistoryData(
 
                 if (entryByPumpId != null && entryByPumpId.hasBolusChanged(validEntry)) {
                     newEntries.add(validEntry)
+                    changedBoluses.add(validEntry.pumpId)
                     allHistory.remove(entryByPumpId)
                     allPumpIds.remove(validEntry.pumpId)
                 }
             }
         }
         newHistory = newEntries
+        changedBolusPumpIds = changedBoluses
         showLogs("List of history (before filtering): [" + newHistory.size + "]", gson.toJson(newHistory))
     }
 
@@ -600,7 +607,17 @@ class MedtronicHistoryData(
 
     private fun processBolusEntries(entryList: MutableList<PumpHistoryEntry>) {
 
-        val boluses = pumpSyncStorage.getBoluses()
+        // Only a normal bolus has a temp-id entry, and only one that was not synced before. A bolus read again with a
+        // new amount lost its entry in the earlier read, and must not take the entry of another bolus.
+        val tempIdEntries = pairWithTempIdEntries(
+            records = entryList.filter { bolus ->
+                val type = (bolus.decodedData["Object"] as BolusDTO).bolusType
+                type != PumpBolusType.Extended && type != PumpBolusType.Multiwave && bolus.pumpId !in changedBolusPumpIds
+            },
+            entries = pumpSyncStorage.getBoluses(),
+            timeOf = { bolus -> localTimeOf(bolus) },
+            sameValue = { bolus, entry -> abs(entry.insulin - (bolus.decodedData["Object"] as BolusDTO).requestedAmount) < SAME_VALUE_TOLERANCE }
+        )
 
         for (bolus in entryList) {
 
@@ -622,8 +639,7 @@ class MedtronicHistoryData(
             var temporaryId: Long? = null
 
             if (!multiWave) {
-                @Suppress("Unchecked_Cast")
-                val entryWithTempId = findDbEntry(bolus, boluses as MutableList<PumpDbEntry>) as PumpDbEntryBolus?
+                val entryWithTempId = tempIdEntries[bolus]
 
                 aapsLogger.debug(LTag.PUMP, "DD: entryWithTempId=$entryWithTempId")
 
@@ -632,7 +648,6 @@ class MedtronicHistoryData(
 
                     temporaryId = entryWithTempId.temporaryId
                     pumpSyncStorage.removeBolusWithTemporaryId(temporaryId)
-                    boluses.remove(entryWithTempId)
                     //type = entryWithTempId.bolusType
                 }
             }
@@ -728,10 +743,13 @@ class MedtronicHistoryData(
 //        var readOldItem = false
 
         val oneMoreEntryFromHistory = getOneMoreEntryFromHistory(PumpHistoryEntryType.TempBasalCombined)
+        // A TBR from an earlier read, added again only to be limited by what follows it. It was synced then.
+        var alreadySynced: PumpHistoryEntry? = null
 
         if (tbr.isCancelTBR) { // if we have cancel we need to limit previous TBR with this cancel
             if (oneMoreEntryFromHistory != null) {
                 entryList.add(0, oneMoreEntryFromHistory)
+                alreadySynced = oneMoreEntryFromHistory
             } else {
                 entryList.removeAt(0)
             }
@@ -740,6 +758,7 @@ class MedtronicHistoryData(
                 val tbrPrev = oneMoreEntryFromHistory.getDecodedDataEntry("Object") as TempBasalPair
                 if (tbrPrev.isZeroTBR) {  // if we had Zero TBR in last previous TBR, then we need to limit it, so we need to process it too
                     entryList.add(0, oneMoreEntryFromHistory)
+                    alreadySynced = oneMoreEntryFromHistory
                 }
             }
         }
@@ -747,6 +766,14 @@ class MedtronicHistoryData(
         val tbrRecords = pumpSyncStorage.getTBRs()
 
         val processList: MutableList<TempBasalProcessDTO> = createTBRProcessList(entryList)
+        // The TBR that was synced before takes no entry and goes the pumpId path. Its own temp-id entry is gone, and
+        // the match by time took the entry of the next TBR and wrote this TBR into that row (#5271).
+        val tempIdEntries = pairWithTempIdEntries(
+            records = processList.filter { it.itemOne !== alreadySynced },
+            entries = tbrRecords,
+            timeOf = { tbr -> localTimeOf(tbr.itemOne) },
+            sameValue = { tbr, entry -> tbr.itemOneTbr?.let { abs(entry.rate - it.insulinRate) < SAME_VALUE_TOLERANCE } == true }
+        )
 
         if (processList.isNotEmpty()) {
             for (tempBasalProcessDTO in processList) {
@@ -755,8 +782,7 @@ class MedtronicHistoryData(
                 //aapsLogger.debug(LTag.PUMP, "DD: tempBasalProcessDTO.itemOne: " + gson.toJson(tempBasalProcessDTO.itemOne))
                 //aapsLogger.debug(LTag.PUMP, "DD: tempBasalProcessDTO.itemTwo: " + (if (tempBasalProcessDTO.itemTwo == null) "null" else gson.toJson(tempBasalProcessDTO.itemTwo!!)))
 
-                @Suppress("Unchecked_Cast")
-                val entryWithTempId = findDbEntry(tempBasalProcessDTO.itemOne, tbrRecords as MutableList<PumpDbEntry>) as PumpDbEntryTBR?
+                val entryWithTempId = tempIdEntries[tempBasalProcessDTO]
 
                 aapsLogger.debug(LTag.PUMP, "DD: entryWithTempId: " + (entryWithTempId?.toString() ?: "null"))
 
@@ -802,10 +828,27 @@ class MedtronicHistoryData(
                             }
 
                             aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithTempId - Result: $result")
+                            if (!result) {
+                                // The entry with the temporary id is not there, or it is from before the pump was
+                                // registered again: AAPS used another pump meanwhile, and that ended it. A temp basal
+                                // that still runs on the pump is then recorded from the registration, by pump id.
+                                val fallback = runBlocking {
+                                    pumpSync.syncTemporaryBasalWithPumpId(
+                                        tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
+                                        PumpRate(tbrEntry.insulinRate),
+                                        tempBasalProcessDTO.durationAsSeconds * 1000L,
+                                        !tbrEntry.isPercent,
+                                        PumpSync.TemporaryBasalType.NORMAL,
+                                        tempBasalProcessDTO.pumpId,
+                                        medtronicPumpStatus.pumpType,
+                                        medtronicPumpStatus.serialNumber
+                                    )
+                                }
+                                aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId (no entry with the temporary id) - Result: $fallback")
+                            }
                         }
 
                         pumpSyncStorage.removeTemporaryBasalWithTemporaryId(entryWithTempId.temporaryId)
-                        tbrRecords.remove(entryWithTempId)
 
                         entryWithTempId.pumpId = tempBasalProcessDTO.pumpId
                         entryWithTempId.date = tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime)
@@ -1059,90 +1102,50 @@ class MedtronicHistoryData(
         aapsLogger.debug(LTag.PUMP, "endRunningTbr: syncTemporaryBasalWithPumpId [date=${running.timestamp}, pumpId=$pumpId, duration=${now - running.timestamp} ms] - Result: $result")
     }
 
+    private class TempIdCandidate<R, E>(val record: R, val entry: E, val sameValue: Boolean, val timeDiff: Long)
+
     /**
-     * findDbEntry - finds Db entries in database, while theoretically this should have same dateTime they
-     * don't. Entry on pump is few seconds before treatment in AAPS, and on manual boluses on pump there
-     * is no treatment at all. For now we look fro treatment that was from 0s - 1m59s within pump entry.
+     * Pairs the records read from pump history (TBRs or boluses) with the temp-id entries AAPS stored when it sent
+     * them to the pump. The pairs that fit best are taken first: the same rate or amount before a different one (the
+     * pump may round, so a different value can still be the right entry), then the smaller time difference. An entry
+     * 2 minutes away or more is not taken. A record without a pair goes the pumpId path.
      *
-     * @param treatment          Pump Entry
-     * @param temporaryEntries entries from history
-     * @return DbObject from AAPS (if found)
-     *
-     * Looks at all boluses that have temporaryId and find one that is correct for us (if such entry exists)
+     * Looking at one record at a time failed in three ways. Two entries close together, or two that were both more
+     * than a minute away, gave no entry at all: the record got a new row and its temp-id row stayed as it was, so two
+     * basals overlapped (#1724) or a bolus was there twice. And a TBR set on the pump itself, which has no entry, took
+     * the entry of a TBR that AAPS set less than 2 minutes later (#5271).
      */
-    private fun findDbEntry(treatment: PumpHistoryEntry, temporaryEntries: MutableList<PumpDbEntry>): PumpDbEntry? {
+    private fun <R, E : PumpDbEntry> pairWithTempIdEntries(
+        records: List<R>,
+        entries: List<E>,
+        timeOf: (R) -> Long,
+        sameValue: (R, E) -> Boolean
+    ): Map<R, E> {
+        val candidates = records.flatMap { record ->
+            val time = timeOf(record)
+            entries.mapNotNull { entry ->
+                val timeDiff = abs(entry.date - time)
+                if (timeDiff >= MAX_TEMP_ID_DISTANCE) null
+                else TempIdCandidate(record, entry, sameValue(record, entry), timeDiff)
+            }
+        }.sortedWith(compareBy({ !it.sameValue }, { it.timeDiff }))
 
-        if (temporaryEntries.isEmpty()) {
-            return null
+        // By identity: history entries are equal when their content is, and two records must not share a pair.
+        val matches = IdentityHashMap<R, E>()
+        val usedEntries = mutableSetOf<Long>()
+        for (candidate in candidates) {
+            if (matches.containsKey(candidate.record) || candidate.entry.temporaryId in usedEntries) continue
+            matches[candidate.record] = candidate.entry
+            usedEntries.add(candidate.entry.temporaryId)
         }
+        return matches
+    }
 
-        var proposedTime = DateTimeUtil.toMillisFromATD(treatment.atechDateTime)
-
+    /** The time of a pump history entry on the phone clock. */
+    private fun localTimeOf(entry: PumpHistoryEntry): Long {
+        val time = DateTimeUtil.toMillisFromATD(entry.atechDateTime)
         // pumpTime should never be null, but it can theoretically happen if reading of time from pump fails
-        this.pumpTime?.let { proposedTime += (it.timeDifference * 1000) }
-
-        val proposedTimeDiff: LongArray = longArrayOf(proposedTime - (2 * 60 * 1000), proposedTime + (2L * 60L * 1000L))
-        val tempEntriesList: MutableList<PumpDbEntry> = mutableListOf()
-
-        for (temporaryEntry in temporaryEntries) {
-            if (temporaryEntry.date > proposedTimeDiff[0] && temporaryEntry.date < proposedTimeDiff[1]) {
-                tempEntriesList.add(temporaryEntry)
-            }
-        }
-
-        if (tempEntriesList.isEmpty()) {
-            return null
-        } else if (tempEntriesList.size == 1) {
-            return tempEntriesList[0]
-        }
-
-        var min = 0
-        while (min < 2) {
-            var sec = 0
-            while (sec <= 50) {
-                if (min == 1 && sec == 50) {
-                    sec = 59
-                }
-                val diff = sec * 1000
-                val outList = mutableListOf<PumpDbEntry>()
-                for (treatment1 in tempEntriesList) {
-                    if (treatment1.date > proposedTime - diff && treatment1.date < proposedTime + diff) {
-                        outList.add(treatment1)
-                    }
-                }
-                if (outList.size == 1) {
-                    if (doubleBolusDebug) aapsLogger.debug(
-                        LTag.PUMP,
-                        String.format(
-                            Locale.ENGLISH,
-                            "DoubleBolusDebug: findDbEntry Treatment={}, FromDb={}. Type=EntrySelected, AtTimeMin={}, AtTimeSec={}",
-                            treatment,
-                            outList[0],
-                            min,
-                            sec
-                        )
-                    )
-                    return outList[0]
-                }
-                if (min == 0 && sec == 10 && outList.size > 1) {
-                    aapsLogger.error(
-                        String.format(
-                            Locale.ENGLISH, "Too many entries (with too small diff): (timeDiff=[min=%d,sec=%d],count=%d,list=%s)",
-                            min, sec, outList.size, gson.toJson(outList)
-                        )
-                    )
-                    if (doubleBolusDebug) aapsLogger.debug(
-                        LTag.PUMP, String.format(
-                            Locale.ENGLISH, "DoubleBolusDebug: findDbEntry Error - Too many entries (with too small diff): (timeDiff=[min=%d,sec=%d],count=%d,list=%s)",
-                            min, sec, outList.size, gson.toJson(outList)
-                        )
-                    )
-                }
-                sec += 10
-            }
-            min += 1
-        }
-        return null
+        return pumpTime?.let { time + it.timeDifference * 1000 } ?: time
     }
 
     private fun processSuspends(tempBasalProcessList: List<TempBasalProcessDTO>) {
@@ -1500,15 +1503,14 @@ class MedtronicHistoryData(
 
     companion object {
 
+        /** A temp-id entry this far or more from a record in pump history is not its entry. */
+        private const val MAX_TEMP_ID_DISTANCE = 2 * 60 * 1000L
+
         /**
-         * Double bolus debug. We seem to have small problem with double Boluses (or sometimes also missing boluses
-         * from history. This flag turns on debugging for that (default is off=false)... Debugging is pretty detailed,
-         * so log files will get bigger.
-         * Note: June 2020. Since this seems to be fixed, I am disabling this per default. I will leave code inside
-         * in case we need it again. Code that turns this on is commented out RileyLinkMedtronicService#verifyConfiguration()
+         * Rates (U/h) or amounts (U) closer than this count as the same. A value can come back from the pump rounded to
+         * its step, but two different values on the 0.05 step of a x22 pump are still told apart.
          */
-        @Suppress("ConstPropertyName")
-        const val doubleBolusDebug = false
+        private const val SAME_VALUE_TOLERANCE = 0.025
     }
 
 }

@@ -20,6 +20,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.interfaces.overview.IsfStep
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
@@ -94,8 +95,8 @@ internal fun SensitivityChip(
                     color = textColor
                 )
                 Icon(
-                    imageVector = selectIsfArrow(state.isfFrom, state.isfTo),
-                    contentDescription = stringResourceOrNull(selectIsfArrowLabel(state.isfFrom, state.isfTo)),
+                    imageVector = selectIsfArrow(state.isfStep),
+                    contentDescription = stringResourceOrNull(selectIsfArrowLabel(state.isfStep)),
                     tint = ElementType.SENSITIVITY.color(),
                     modifier = Modifier.size(16.dp)
                 )
@@ -124,22 +125,11 @@ private fun selectSensIcon(ratio: Double, isEnabled: Boolean): ImageVector =
         }
     }
 
-/** Direction of the step between the two ISF values: 1 when it goes up, -1 when it goes down, 0 when it stays. */
-private fun isfDirection(fromStr: String, toStr: String): Int {
-    val from = fromStr.replace(",", ".").toDoubleOrNull() ?: 0.0
-    val to = toStr.replace(",", ".").toDoubleOrNull() ?: 0.0
-    return when {
-        to > from -> 1
-        to < from -> -1
-        else      -> 0
-    }
-}
-
-private fun selectIsfArrow(fromStr: String, toStr: String): ImageVector =
-    when (isfDirection(fromStr, toStr)) {
-        1    -> IcArrowFortyfiveUp
-        -1   -> IcArrowFortyfiveDown
-        else -> IcArrowFlat
+private fun selectIsfArrow(step: IsfStep): ImageVector =
+    when (step) {
+        IsfStep.UP   -> IcArrowFortyfiveUp
+        IsfStep.DOWN -> IcArrowFortyfiveDown
+        IsfStep.SAME -> IcArrowFlat
     }
 
 /**
@@ -151,9 +141,9 @@ private fun selectIsfArrow(fromStr: String, toStr: String): ImageVector =
  * every word available here would either be wrong ("Right") or borrowed from the glucose trend
  * vocabulary ("stable"), which is a different thing.
  */
-private fun selectIsfArrowLabel(fromStr: String, toStr: String): TextRef? =
-    when (isfDirection(fromStr, toStr)) {
-        1    -> CoreUiStrings.arrow_up
-        -1   -> CoreUiStrings.arrow_down
-        else -> null
+private fun selectIsfArrowLabel(step: IsfStep): TextRef? =
+    when (step) {
+        IsfStep.UP   -> CoreUiStrings.arrow_up
+        IsfStep.DOWN -> CoreUiStrings.arrow_down
+        IsfStep.SAME -> null
     }
