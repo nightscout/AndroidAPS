@@ -16,14 +16,7 @@
     <string name="omnipod_dash_scan_failed">Nuskaityti nepavyko</string>
     <string name="omnipod_dash_generic_error">Bendra klaida: %1$s</string>
     <string name="omnipod_dash_connection_lost">Ryšys nutrūko</string>
-    <string name="omnipod_dash_failed_to_send">Nepavyko išsiųsti komandos</string>
-    <string name="omnipod_dash_command_not_sent">Komanda neišsiųsta</string>
-    <string name="omnipod_dash_command_not_received_by_the_pod">Pod negavo komandos</string>
-    <string name="omnipod_dash_unknown">Nežinoma komandos būklė</string>
-    <string name="omnipod_common_history_tbr_value">%1$.2f V/val., %2$d min</string>
-    <string name="omnipod_common_history_bolus_value">%1$.2f V</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulino tiekimas sustabdytas</string>
-    <string name="omnipod_common_history_total_delivered">Viso suleista: %1$.2f V</string>
     <string name="omnipod_dash_bolus_already_in_progress">Kitas bolusas jau leidžiamas</string>
     <string name="omnipod_dash_not_enough_insulin">Rezervuare nepakanka insulino</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Nepatvirtinta komanda</string>
