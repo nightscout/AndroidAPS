@@ -482,7 +482,8 @@ class IobCobCalculatorPlugin(
         onRunFailed = {
             clearCache()
             ads.reset()
-        }
+        },
+        keepAwake = { timeout -> calculationWorkflow.keepAwake(timeout) }
     ) { oldDataTimestamp, reloadBgData, triggeredByNewBG ->
         // The TDD cache clear is inside newHistoryData, so it still happens here, before the
         // recalculation and inside the scheduler's lock - and the EffectiveProfileSwitch path, which

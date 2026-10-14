@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.eopatch.RxAction
 import app.aaps.pump.eopatch.alarm.IAlarmRegistry
@@ -55,6 +56,7 @@ abstract class EopatchViewModelTestBase {
     protected val profileFunction: ProfileFunction = mock()
     protected val profileRepository: ProfileRepository = mock()
     protected val persistenceLayer: PersistenceLayer = mock()
+    protected val rxBus: RxBus = mock()
 
     protected val testDispatcher = StandardTestDispatcher()
 
@@ -91,6 +93,6 @@ abstract class EopatchViewModelTestBase {
     protected fun sut() = EopatchPatchViewModel(
         rh, patchManager, patchManagerExecutor, preferenceManager, patchConfig, alarmRegistry,
         aapsLogger, aapsSchedulers, rxAction, preferences, insulinManager, profileFunction,
-        profileRepository, persistenceLayer
+        profileRepository, persistenceLayer, rxBus
     )
 }

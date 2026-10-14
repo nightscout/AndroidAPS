@@ -3,6 +3,7 @@ package app.aaps.pump.dana
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -125,8 +126,30 @@ class DanaPump(
     var calculatorEnabled = false
     var dailyTotalUnits = 0.0
     var maxDailyTotalUnits = 0
-    var bolusStep = 0.1
-    var basalStep = 0.1
+    // The steps the pump reported, or null before it did and after [reset]. One field for the value and for
+    // "was it read", so a thread that reads them can never see a starting value marked as read.
+    @Volatile private var readBolusStep: Double? = null
+    @Volatile private var readBasalStep: Double? = null
+
+    /** The bolus step the pump reported, else the starting 0.1. A message from the pump writes it. */
+    var bolusStep: Double
+        get() = readBolusStep ?: STARTING_STEP
+        set(value) {
+            readBolusStep = value
+        }
+
+    /** The basal step the pump reported, else the starting 0.1. A message from the pump writes it. */
+    var basalStep: Double
+        get() = readBasalStep ?: STARTING_STEP
+        set(value) {
+            readBasalStep = value
+        }
+
+    /** True once [bolusStep] was written, so it is not only the starting value. [reset] clears it. */
+    val bolusStepRead: Boolean get() = readBolusStep != null
+
+    /** True once [basalStep] was written, so it is not only the starting value. [reset] clears it. */
+    val basalStepRead: Boolean get() = readBasalStep != null
     var iob = 0.0
     private val _reservoirRemainingUnitsFlow = MutableStateFlow(0.0)
     val reservoirRemainingUnitsFlow: StateFlow<Double> = _reservoirRemainingUnitsFlow.asStateFlow()
@@ -455,8 +478,9 @@ class DanaPump(
         productCode = 0
         dailyTotalUnits = 0.0
         maxDailyTotalUnits = 0
-        bolusStep = 0.1
-        basalStep = 0.1
+        // Back to the starting values, which are not a reading.
+        readBolusStep = null
+        readBasalStep = null
         activeProfile = 0
         reservoirRemainingUnits = 0.0
         batteryRemaining = null
@@ -514,6 +538,21 @@ class DanaPump(
             else -> PumpType.DANA_RS // having here default type non TBR capable is causing problem with disabling loop
         }
 
+    /**
+     * Puts the bolus and basal steps the pump is set to into [description], once they were read.
+     *
+     * A pump can be set to a 0.1 U bolus step while its pump type says 0.05 U, and a bolus of 1.55 U
+     * was then refused (#946). Before the steps are read, and after [reset], [bolusStep] and [basalStep]
+     * hold only the starting 0.1, which is not a reading, so the steps of the pump type stay.
+     * [bolusStepRead] and [basalStepRead] say which is which. The maximums cannot: on a DanaR they come
+     * in another message than the steps, and [reset] keeps them.
+     */
+    fun applyReadSteps(description: PumpDescription): PumpDescription = description.also { d ->
+        // Each step is read once, so a reset in between cannot mix a reading with a starting value.
+        readBolusStep?.takeIf { it > 0 }?.let { d.bolusStep = it }
+        readBasalStep?.takeIf { it > 0 }?.let { d.basalStep = it }
+    }
+
     // v2, RS history entries
     enum class HistoryEntry(val value: Int) {
 
@@ -559,5 +598,8 @@ class DanaPump(
         // Dana R btModel
         const val DOMESTIC_MODEL = 0x01
         const val EXPORT_MODEL = 0x03
+
+        /** The bolus and basal step before the pump reported its own. */
+        private const val STARTING_STEP = 0.1
     }
 }

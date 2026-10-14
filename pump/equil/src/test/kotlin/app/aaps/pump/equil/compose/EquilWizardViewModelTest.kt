@@ -3,6 +3,7 @@ package app.aaps.pump.equil.compose
 import android.content.Context
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
@@ -10,13 +11,17 @@ import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.Event
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.ble.EquilBleTransport
 import app.aaps.pump.equil.database.EquilHistoryRecordDao
@@ -24,6 +29,7 @@ import app.aaps.pump.equil.manager.EquilManager
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -34,9 +40,12 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 
 /**
@@ -91,6 +100,47 @@ internal class EquilWizardViewModelTest {
 
     @AfterEach
     fun tearDown() = Dispatchers.resetMain()
+
+    /** The message of the one dialog the wizard sent. */
+    private fun dialogMessage(): String {
+        val sent = argumentCaptor<Event>()
+        verify(rxBus).send(sent.capture())
+        return (sent.firstValue as EventShowDialog.Ok).message
+    }
+
+    // A refused switch was only logged: the gate did nothing and did not say why.
+    @Test
+    fun `a profile the gate cannot activate says why and stays on the gate`() = runBlocking<Unit> {
+        val insulin = ICfg("Fiasp", peak = 55, dia = 7.0, concentration = 1.0)
+        whenever(rh.gs(any<TextRef>())).thenReturn("text")
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mock<ProfileStore>()))
+        whenever(insulinManager.insulins).thenReturn(arrayListOf(insulin))
+        // createProfileSwitch is not stubbed, so it refuses (null).
+        whenever(profileFunction.profileSwitchRefusal(any(), eq("Night"), any(), any(), any(), eq(insulin))).thenReturn("The pump cannot take it")
+        sut.selectProfile("Night")
+
+        sut.activateSelectedProfile()
+        mainDispatcher.scheduler.advanceUntilIdle()
+
+        assertThat(dialogMessage()).isEqualTo("The pump cannot take it")
+        assertThat(sut.wizardStep.value).isNull()
+    }
+
+    // The pump is running by then, so the wizard goes on, but the user must know the old insulin is still in use.
+    @Test
+    fun `an insulin that is not switched says so`() = runBlocking<Unit> {
+        val chosen = ICfg("Lyumjev", peak = 45, dia = 7.0, concentration = 1.0)
+        whenever(rh.gs(any<TextRef>())).thenReturn("The insulin was not switched.")
+        // A mocked suspend Boolean answers null, so the refusal is stubbed.
+        whenever(profileFunction.createProfileSwitchWithNewInsulin(chosen, Sources.Equil)).thenReturn(false)
+        sut.selectInsulin(chosen)
+
+        sut.executeInsulinProfileSwitch()
+        mainDispatcher.scheduler.advanceUntilIdle()
+
+        assertThat(dialogMessage()).isEqualTo("The insulin was not switched.")
+        verifyBlocking(profileFunction) { createProfileSwitchWithNewInsulin(chosen, Sources.Equil) }
+    }
 
     @Test
     fun `default state exposes the PAIR workflow and cleared progress`() {

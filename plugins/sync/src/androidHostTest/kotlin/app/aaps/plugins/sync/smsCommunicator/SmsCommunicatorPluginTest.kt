@@ -156,11 +156,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         runBlocking { whenever(pumpStatusProvider.shortStatus(anyBoolean())).thenReturn(testPumpPlugin.pumpSpecificShortStatus(true)) }
         whenever(otp.name()).thenReturn("User")
         whenever(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.OK)
-
-        // Fixed text, not an echo of the format argument: Mockito does not surface the varargs of the
-        // `gs(TextRef, vararg Any?)` overload, and the assertions only check the fixed part anyway.
-        // 30 is the durationStep the mocked pump reports; see the assertions in processBasalTest.
-        // RunningModeGuard asks by TextRef, which is a different overload than the id above.
     }
 
     @Test
@@ -873,6 +868,24 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Temp basal 1.00U/h for 30 min started successfully\nVirtual Pump")
         assertThat(lastAction()).isEqualTo(BatchAction.TempBasal(rate = 1.0, isPercent = false, durationMinutes = 30))
+    }
+
+    /** The duration step is the one in the description of the pump, not the one of its pump type. */
+    @Test fun basalDurationMustBeAMultipleOfTheStepInTheDescription() = runTest {
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        testPumpPlugin.pumpDescription.tempBasalStyle = PumpDescription.ABSOLUTE
+        testPumpPlugin.pumpDescription.tempDurationStep = 60
+        whenever(constraintChecker.applyBasalConstraints(anyOrNull(), anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
+
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(Sms("1234", "BASAL 1 30"))
+        // The user is told the step of the pump.
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("TBR duration must be a multiple of 60 minutes and greater than 0.")
+        assertThat(smsCommunicatorPlugin.messageToConfirm).isNull()
+
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(Sms("1234", "BASAL 1 60"))
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To start basal 1.00 U/h for 60 min reply with code")
     }
 
     /** A temp basal the pump did not set is reported with the executor's reason, and only to the sender. */

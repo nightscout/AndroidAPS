@@ -15,6 +15,7 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -75,6 +76,28 @@ class DiaconnG8PluginTest : TestBaseWithProfile() {
         diaconnG8Pump.maxBolus = 5.0
         val result = diaconnG8Plugin.applyExtendedBolusConstraints(PumpInsulin(Double.MAX_VALUE))
         Assertions.assertEquals(5.0, result.cU, 0.01)
+    }
+
+    // ---- the max basal of the description comes from the pump, once the pump reported it ----
+
+    @Test
+    fun aStatusReadWithoutTheMaxBasalKeepsTheMaxBasalOfTheDescription() = runBlocking<Unit> {
+        val before = diaconnG8Plugin.pumpDescription.basalMaximumRate
+
+        // No service bound, as when the status read fails: the pump did not report its max basal.
+        diaconnG8Plugin.getPumpStatus("test")
+
+        assertThat(before).isGreaterThan(0.0)
+        assertThat(diaconnG8Plugin.pumpDescription.basalMaximumRate).isEqualTo(before)
+    }
+
+    @Test
+    fun theMaxBasalThePumpReportedGoesIntoTheDescription() = runBlocking<Unit> {
+        diaconnG8Pump.maxBasalPerHours = 3.5
+
+        diaconnG8Plugin.getPumpStatus("test")
+
+        assertThat(diaconnG8Plugin.pumpDescription.basalMaximumRate).isEqualTo(3.5)
     }
 
     @Test

@@ -215,9 +215,8 @@ class DiaconnG8Plugin(
 
     override suspend fun getPumpStatus(reason: String) {
         diaconnG8Service?.readPumpStatus()
-        pumpDescription.basalStep = diaconnG8Pump.basalStep
-        pumpDescription.bolusStep = diaconnG8Pump.bolusStep
-        pumpDescription.basalMaximumRate = diaconnG8Pump.maxBasalPerHours
+        // Only once the pump reported it: before that it is 0, and a max basal of 0 makes every profile invalid.
+        if (diaconnG8Pump.maxBasalPerHours > 0) pumpDescription.basalMaximumRate = diaconnG8Pump.maxBasalPerHours
     }
 
     // Diaconn Pump Interface

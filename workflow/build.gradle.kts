@@ -25,7 +25,7 @@ kotlin {
     }
 
     // The calculation chain is the point of this module and it is plain Kotlin, so it belongs in
-    // commonMain. Only the WorkManager wrappers stay on Android - see the workers below.
+    // commonMain. Only the Android executor binding with its wake lock stays in androidMain.
     iosArm64()
     iosSimulatorArm64()
 
@@ -41,6 +41,16 @@ kotlin {
                 implementation(project(":core:keys"))
                 implementation(project(":core:objects"))
                 implementation(project(":core:utils"))
+            }
+        }
+
+        // Tests of commonMain classes belong here, not in androidHostTest: that source set runs on the
+        // JVM only, so the executor that ships to iOS would be verified on Android alone. Mockito is
+        // JVM only, so tests here use hand written fakes.
+        getByName("commonTest") {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
 

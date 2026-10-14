@@ -92,7 +92,12 @@ fun BgInfoSection(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .padding(AapsSpacing.small)
-            .semantics { contentDescription = a11yDescription }
+            // Merging, not a bare semantics block: a described node is reached by linear screen-reader
+            // navigation only when it is a leaf or a merging parent. This one has the value, the delta
+            // and the age as children, so unmerged the whole sentence was skipped and those three were
+            // read instead, as loose fragments mixed in among the chips - measured with TalkBack on a
+            // phone. Merging makes the sentence one stop and takes the fragments out of the sweep.
+            .semantics(mergeDescendants = true) { contentDescription = a11yDescription }
     ) {
         // Background ring + trend arc indicator
         Canvas(modifier = Modifier.size(size)) {

@@ -8,9 +8,7 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.labelOfInsulin
 import app.aaps.core.data.time.T
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -18,8 +16,12 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.ui.compose.pump.ProfileGateStepHost
+import app.aaps.core.ui.compose.pump.activateProfileFromGate
+import app.aaps.core.ui.compose.pump.switchToWizardInsulin
 import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -73,7 +75,9 @@ abstract class OmnipodWizardViewModel(
     protected val profileFunction: ProfileFunction,
     protected val profileRepository: ProfileRepository,
     private val insulinManager: InsulinManager,
-    private val persistenceLayer: PersistenceLayer
+    private val persistenceLayer: PersistenceLayer,
+    private val rh: ResourceHelper,
+    private val rxBus: RxBus
 ) : ViewModel(), SiteLocationStepHost, ProfileGateStepHost {
 
     // region Step navigation
@@ -241,25 +245,11 @@ abstract class OmnipodWizardViewModel(
         val store = profileRepository.profile.value ?: return
         val iCfg = fallbackICfg() ?: return
         viewModelScope.launch {
-            val result = profileFunction.createProfileSwitch(
-                profileStore = store,
-                profileName = name,
-                durationInMinutes = 0,
-                percentage = 100,
-                timeShiftInHours = 0,
-                timestamp = System.currentTimeMillis(),
-                action = Action.PROFILE_SWITCH,
-                source = pumpSource,
-                note = null,
-                listValues = listOf(ValueWithUnit.SimpleString(name)),
-                iCfg = iCfg
-            )
-            if (result == null) {
-                logger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
-            } else {
+            // A refused switch says why and keeps the gate on screen.
+            if (activateProfileFromGate(profileFunction, rh, rxBus, store, name, iCfg, pumpSource, System.currentTimeMillis())) {
                 _needsProfileGate.value = false
                 moveToNext()
-            }
+            } else logger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
         }
     }
 
@@ -406,12 +396,15 @@ abstract class OmnipodWizardViewModel(
     /** Get the body text string resource for a given step. */
     @StringRes abstract fun getTextForStep(step: OmnipodWizardStep): Int
 
-    /** Execute insulin profile switch if insulin was changed during activation. */
+    /**
+     * Execute insulin profile switch if insulin was changed during activation. Called once the pod is
+     * activated, so a refused switch cannot stop the wizard, but it says why.
+     */
     fun executeInsulinProfileSwitch() {
         val selected = selectedInsulin.value ?: return
         if (selected.insulinLabel == activeInsulinLabel.value) return
         viewModelScope.launch {
-            profileFunction.createProfileSwitchWithNewInsulin(selected, pumpSource)
+            switchToWizardInsulin(profileFunction, rh, rxBus, selected, pumpSource)
         }
     }
 

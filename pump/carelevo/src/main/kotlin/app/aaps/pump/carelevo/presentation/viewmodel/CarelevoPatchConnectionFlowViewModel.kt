@@ -6,9 +6,7 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.labelOfInsulin
 import app.aaps.core.data.time.T
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -16,11 +14,15 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.pump.ProfileGateStepHost
+import app.aaps.core.ui.compose.pump.activateProfileFromGate
+import app.aaps.core.ui.compose.pump.switchToWizardInsulin
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.carelevo.command.CmdDiscard
@@ -61,7 +63,9 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val profileRepository: ProfileRepository,
     private val insulinManager: InsulinManager,
-    private val persistenceLayer: PersistenceLayer
+    private val persistenceLayer: PersistenceLayer,
+    private val rh: ResourceHelper,
+    private val rxBus: RxBus
 ) : ViewModel(), ProfileGateStepHost, SiteLocationStepHost {
 
     private val _page: MutableStateFlow<CarelevoPatchStep> = MutableStateFlow(CarelevoPatchStep.PATCH_START)
@@ -295,24 +299,10 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
         val store = profileRepository.profile.value ?: return
         val iCfg = _selectedInsulin.value ?: insulinManager.insulins.firstOrNull() ?: return
         viewModelScope.launch {
-            val result = profileFunction.createProfileSwitch(
-                profileStore = store,
-                profileName = name,
-                durationInMinutes = 0,
-                percentage = 100,
-                timeShiftInHours = 0,
-                timestamp = System.currentTimeMillis(),
-                action = Action.PROFILE_SWITCH,
-                source = Sources.Carelevo,
-                note = null,
-                listValues = listOf(ValueWithUnit.SimpleString(name)),
-                iCfg = iCfg
-            )
-            if (result == null) {
-                aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
-            } else {
+            // A refused switch says why and keeps the gate on screen.
+            if (activateProfileFromGate(profileFunction, rh, rxBus, store, name, iCfg, Sources.Carelevo, System.currentTimeMillis()))
                 goToNextStep(CarelevoPatchStep.PROFILE_GATE)
-            }
+            else aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
         }
     }
 
@@ -388,12 +378,12 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
             return
         }
         // Commit the insulin/profile switch BEFORE advancing, so later steps never race a
-        // still-in-flight profile change.
+        // still-in-flight profile change. A refused switch says why and stays on this step: the
+        // patch would be filled for an insulin that is not in use.
         viewModelScope.launch {
             val currentLabel = insulinManager.insulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
-            if (selected.insulinLabel != currentLabel) {
-                profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.Carelevo)
-            }
+            if (selected.insulinLabel != currentLabel && !switchToWizardInsulin(profileFunction, rh, rxBus, selected, Sources.Carelevo))
+                return@launch
             goToNextStep(CarelevoPatchStep.SELECT_INSULIN)
         }
     }

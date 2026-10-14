@@ -8,12 +8,14 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
@@ -33,6 +35,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -132,5 +135,43 @@ internal class TreatmentViewModelTest {
         assertThat(item.guid).isEqualTo("lunch")
         assertThat(item.disabledReason).isEqualTo("No actual BG")
         verify(profileFunction).getProfile()
+    }
+
+    // ---- an INSULIN QuickWizard is disabled only when a constraint cut the dose ----
+
+    /**
+     * The step is asked of the active pump, in insulin units: U20 insulin on a 0.05 U pump steps by 0.01 U.
+     * SafetyPlugin rounds to the same step, so a dose only rounded by it is not a constraint.
+     */
+    private fun givenInsulinQuickWizard(insulin: Double, afterConstraints: Double) {
+        val entry = mock<QuickWizardEntry>()
+        whenever(entry.isActive()).thenReturn(true)
+        whenever(entry.guid()).thenReturn("bolus")
+        whenever(entry.buttonText()).thenReturn("Bolus")
+        whenever(entry.mode()).thenReturn(QuickWizardMode.INSULIN)
+        whenever(entry.insulin()).thenReturn(insulin)
+        whenever(quickWizard.list()).thenReturn(arrayListOf(entry))
+        whenever(iobCobCalculator.ads).thenReturn(mock())
+        val pump = mock<PumpWithConcentration>()
+        whenever(pump.isInitialized()).thenReturn(true)
+        whenever(pump.bolusStepSize(any())).thenReturn(0.01)
+        whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(constraintChecker.applyBolusConstraints(any())).thenReturn(ConstraintObject(afterConstraints, aapsLogger))
+        initProgress.value = InitProgress(done = true)
+        dispatcher.scheduler.advanceUntilIdle()
+    }
+
+    @Test
+    fun `an insulin quick wizard rounded to the pump step is enabled`() = runBlocking<Unit> {
+        givenInsulinQuickWizard(insulin = 1.235, afterConstraints = 1.23)
+
+        assertThat(sut.uiState.value.quickWizardItems.single().isEnabled).isTrue()
+    }
+
+    @Test
+    fun `an insulin quick wizard cut by a constraint is disabled`() = runBlocking<Unit> {
+        givenInsulinQuickWizard(insulin = 1.235, afterConstraints = 1.0)
+
+        assertThat(sut.uiState.value.quickWizardItems.single().isEnabled).isFalse()
     }
 }

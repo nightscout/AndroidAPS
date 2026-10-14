@@ -90,6 +90,18 @@ class BatchActionMappingTest {
         assertThat(back.notes).isEqualTo("n")
         // No insulin asked of the user → the master resolves the one in force (or refuses).
         assertThat(back.iCfg).isNull()
+        // No time picked on the client → 0, and the master stamps its own clock.
+        assertThat(back.timestamp).isEqualTo(0L)
+    }
+
+    @Test
+    fun profileSwitchRoundTripsThePickedTime() {
+        // The time the user picked on a client has to reach the master, or a relayed switch is applied
+        // immediately instead of at that time (issue #5239). The master bounds the value itself.
+        val picked = 1_700_000_000_000L
+        val original = BatchAction.ProfileSwitch(percentage = 100, timeShiftHours = 0, durationMinutes = 0, profileName = "Lunch", timestamp = picked)
+        val back = original.toDto().toDomain() as BatchAction.ProfileSwitch
+        assertThat(back.timestamp).isEqualTo(picked)
     }
 
     @Test

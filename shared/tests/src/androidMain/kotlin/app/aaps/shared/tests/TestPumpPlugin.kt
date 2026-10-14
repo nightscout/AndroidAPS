@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpWithConcentration
+import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.implementation.pump.PumpEnactResultObject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,7 +38,8 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
         }
 
     val baseBasal = 0.0
-    override var pumpDescription = PumpDescription()
+    // Filled for its own pump type, so a test reads the values of a pump that exists.
+    override var pumpDescription = PumpDescription().fillFor(PumpType.GENERIC_AAPS)
 
     override fun isInitialized(): Boolean = true
     override fun isSuspended(): Boolean = pumpSuspended

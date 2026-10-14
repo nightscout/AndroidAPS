@@ -608,9 +608,10 @@ class ProfileManagementViewModel(
      * [iCfg] is the insulin the user picked when nothing was in force (see [insulinChoice]); null lets the master
      * resolve the in-force one, or refuse when there is none.
      *
-     * Note: back-dating ([timestamp]/[timeChanged]) isn't carried through the batch path — the master stamps now().
+     * [timestamp] is only sent when [timeChanged] says the user actually picked a time; otherwise the master stamps
+     * now(). A past time back-dates the switch, a future one starts it later. The master bounds the value against
+     * its own clock, so a client clock cannot place a switch days away.
      */
-    @Suppress("UNUSED_PARAMETER")
     suspend fun activateProfile(
         profileIndex: Int,
         durationMinutes: Int,
@@ -641,14 +642,7 @@ class ProfileManagementViewModel(
             return false
         }
 
-        val actions = buildList {
-            add(BatchAction.ProfileSwitch(percentage, timeshiftHours, durationMinutes, profileName = profileName, notes = notes.ifBlank { null }, iCfg = iCfg))
-            // An activity temp-target rides the same batch (raising → applied first, atomically with the switch).
-            if (withTT && durationMinutes > 0 && percentage < 100) {
-                val targetMgdl = preferences.ttTargetMgdl(TT.Reason.ACTIVITY)
-                add(BatchAction.TempTarget(TT.Reason.ACTIVITY.text, targetMgdl, targetMgdl, durationMinutes, 0))
-            }
-        }
+        val actions = buildActivationActions(profileName, durationMinutes, percentage, timeshiftHours, withTT, notes, timestamp, timeChanged, iCfg)
         val label = rh.gs(CoreUiStrings.careportal_profileswitch)
         return when (val prepared = batchExecutor.prepare(actions, Sources.ProfileSwitchDialog, label)) {
             is ActionProgress.Prepared -> {
@@ -690,6 +684,40 @@ class ProfileManagementViewModel(
             }
 
             else                       -> false // Unconfirmed → handled by the app-level pending modal
+        }
+    }
+
+    /**
+     * The batch an activation submits: the switch itself, plus the optional activity temp target that has to
+     * be applied in the same transaction. Separate from [activateProfile] so the shape of the batch — above
+     * all the time the user picked, which was silently dropped here before — can be asserted on its own.
+     */
+    internal fun buildActivationActions(
+        profileName: String,
+        durationMinutes: Int,
+        percentage: Int,
+        timeshiftHours: Int,
+        withTT: Boolean,
+        notes: String,
+        timestamp: Long,
+        timeChanged: Boolean,
+        iCfg: ICfg?
+    ): List<BatchAction> = buildList {
+        add(
+            BatchAction.ProfileSwitch(
+                percentage, timeshiftHours, durationMinutes, profileName = profileName, notes = notes.ifBlank { null }, iCfg = iCfg,
+                // 0 = now. Only an explicit pick travels, so an untouched screen keeps the master's clock.
+                timestamp = if (timeChanged) timestamp else 0L
+            )
+        )
+        // An activity temp-target rides the same batch (raising → applied first, atomically with the switch).
+        if (withTT && durationMinutes > 0 && percentage < 100) {
+            val targetMgdl = preferences.ttTargetMgdl(TT.Reason.ACTIVITY)
+            // A switch the user put in the future takes its temp target with it, so both cover the same
+            // activity. A back-dated switch keeps the target at now (there is no point in a past target),
+            // which is also how a back-dated bolus treats its temp target.
+            val startOffsetMinutes = if (timeChanged) ((timestamp - dateUtil.now()) / 60_000L).coerceAtLeast(0L).toInt() else 0
+            add(BatchAction.TempTarget(TT.Reason.ACTIVITY.text, targetMgdl, targetMgdl, durationMinutes, startOffsetMinutes))
         }
     }
 

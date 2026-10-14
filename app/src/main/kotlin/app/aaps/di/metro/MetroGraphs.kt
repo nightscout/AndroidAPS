@@ -57,7 +57,7 @@ import app.aaps.di.mergePlugins
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.notifications.SnackbarNotificationFallback
 import app.aaps.implementation.plugin.PluginStore
-import app.aaps.implementation.profile.ProfileSwitchExpiryScheduler
+import app.aaps.implementation.profile.ProfileSwitchScheduler
 import app.aaps.implementation.resources.ResourceHelperImpl
 import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
@@ -278,7 +278,7 @@ class MetroGraphs(
     val appRepository: AppRepository get() = root.appRepository
     val constraintsChecker: ConstraintsChecker get() = root.constraintsChecker
     val notificationManager: NotificationManager get() = root.notificationManager
-    val profileSwitchExpiryScheduler: ProfileSwitchExpiryScheduler get() = root.profileSwitchExpiryScheduler
+    val profileSwitchScheduler: ProfileSwitchScheduler get() = root.profileSwitchScheduler
     val snackbarNotificationFallback: SnackbarNotificationFallback get() = root.snackbarNotificationFallback
     val activePlugin: ActivePlugin get() = root.activePlugin
     val pluginStore: PluginStore get() = root.pluginStore

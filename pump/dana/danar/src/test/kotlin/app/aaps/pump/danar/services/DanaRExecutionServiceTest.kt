@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danar.comm.MessageHashTableR
-import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
@@ -21,7 +20,6 @@ import org.mockito.Mockito.`when`
 class DanaRExecutionServiceTest : TestBaseWithProfile() {
 
     @Mock lateinit var danaRPlugin: DanaRPlugin
-    @Mock lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var messageHashTableR: MessageHashTableR
     @Mock lateinit var profile: Profile
@@ -45,7 +43,6 @@ class DanaRExecutionServiceTest : TestBaseWithProfile() {
         danaRExecutionService.notificationManager = notificationManager
         danaRExecutionService.pumpEnactResultProvider = pumpEnactResultProvider
         danaRExecutionService.danaRPlugin = danaRPlugin
-        danaRExecutionService.danaRKoreanPlugin = danaRKoreanPlugin
         danaRExecutionService.commandQueue = commandQueue
         danaRExecutionService.messageHashTableR = messageHashTableR
         //danaRExecutionService.profileFunction = profileFunction

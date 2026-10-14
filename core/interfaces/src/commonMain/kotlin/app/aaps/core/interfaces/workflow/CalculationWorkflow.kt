@@ -62,6 +62,16 @@ interface CalculationWorkflow {
     suspend fun awaitCalculationIdle(job: String, timeout: Duration): Boolean
 
     /**
+     * Keeps the device awake until the returned handle is released, but never longer than [timeout].
+     * Null when the platform has no wake lock.
+     *
+     * For the waits between a new BG and the start of its calculation run, which holds a lock of its
+     * own once it is started. Without this the CPU can sleep in such a wait with the screen off, and
+     * the loop for that BG then runs only when something else wakes the device, often the next BG.
+     */
+    fun keepAwake(timeout: Duration): CalculationWakeLock.Held?
+
+    /**
      * Start calculation of data needed for displaying graphs
      *
      * @param job [MAIN_CALCULATION] or [HISTORY_CALCULATION]

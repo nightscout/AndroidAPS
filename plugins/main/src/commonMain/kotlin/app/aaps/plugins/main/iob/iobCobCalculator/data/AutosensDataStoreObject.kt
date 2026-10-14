@@ -24,7 +24,7 @@ import kotlin.time.Clock
  *
  * **Everything mutable here is guarded by the single [dataLock] monitor**, including the three
  * property accessors. It is exposed on [AutosensDataStore] because callers need to hold it across
- * compound work - `PrepareGraphDataWorker` sets [bgReadings] and then builds bucketed data from it in
+ * compound work - `PrepareGraphDataRunner` sets [bgReadings] and then builds bucketed data from it in
  * one atomic step, and `IobCobCalculatorPlugin` reads several fields together.
  *
  * It did not always work that way. The accessors used `@Synchronized`, which locks `this`, while the

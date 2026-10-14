@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpInsulin
@@ -102,6 +103,38 @@ class DanaRPluginTest : TestBaseWithProfile() {
         val result = runBlocking { danaRPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 }) }
         assertThat(result.success).isTrue()
         assertThat(result.enacted).isFalse()
+    }
+
+    // ---- #946: the description has the steps the pump is set to, once they were read ----
+
+    @Test
+    fun theDescriptionHasTheStepsThePumpReported() {
+        danaPump.bolusStep = 0.1
+        danaPump.basalStep = 0.1
+
+        assertThat(danaRPlugin.pumpDescription.bolusStep).isEqualTo(0.1)
+        assertThat(danaRPlugin.pumpDescription.basalStep).isEqualTo(0.1)
+    }
+
+    /** The Refresh button and a pump name change call reset(): the steps go back to the starting 0.1. */
+    @Test
+    fun afterAResetTheStartingStepsAreNotUsedUntilThePumpSendsThem() {
+        danaPump.bolusStep = 0.1
+        danaPump.basalStep = 0.1
+        danaPump.reset()
+
+        assertThat(danaRPlugin.pumpDescription.bolusStep).isEqualTo(0.05)
+        assertThat(danaRPlugin.pumpDescription.basalStep).isEqualTo(0.01)
+    }
+
+    @Test
+    fun connectingDoesNotPutTheStartingStepsIntoTheDescription() {
+        // connect() used to copy the starting 0.1 of DanaPump in, before anything was read.
+        danaRPlugin.connect("test")
+
+        assertThat(danaRPlugin.pumpDescription.pumpType).isEqualTo(PumpType.DANA_R)
+        assertThat(danaRPlugin.pumpDescription.bolusStep).isEqualTo(0.05)
+        assertThat(danaRPlugin.pumpDescription.basalStep).isEqualTo(0.01)
     }
 
     @Test

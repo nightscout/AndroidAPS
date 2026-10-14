@@ -59,6 +59,8 @@ internal class TempTargetManagementViewModelTest {
 
     private lateinit var sut: TempTargetManagementViewModel
 
+    private val NOW = 1_700_000_000_000L
+
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
@@ -97,6 +99,32 @@ internal class TempTargetManagementViewModelTest {
 
         assertThat(sut.uiState.value.eventTime).isEqualTo(123_456L)
         assertThat(sut.uiState.value.eventTimeChanged).isTrue()
+    }
+
+    @Test
+    fun `loading leaves the activation time at now, not at the epoch`() = runTest {
+        // Regression: loadData() assigns selectedPreset, so the screen's later selectPreset(index) returned
+        // early on "same preset" and the only line setting eventTime never ran. The state kept its 0L default,
+        // the screen showed 1/1/70, and a user who changed just the time got a target stamped in 1970 which is
+        // stored, never becomes active, and reports nothing.
+        whenever(dateUtil.now()).thenReturn(NOW)
+        givenBuiltInsInMmol()
+
+        assertThat(sut.uiState.value.eventTime).isEqualTo(NOW)
+        assertThat(sut.uiState.value.eventTimeChanged).isFalse()
+    }
+
+    @Test
+    fun `re-selecting the preset that is already loaded keeps a usable activation time`() = runTest {
+        // The early return in selectPreset is still there (it protects against a rotation re-fire), so the
+        // time has to be right without it.
+        whenever(dateUtil.now()).thenReturn(NOW)
+        givenBuiltInsInMmol()
+
+        sut.selectPreset(0)
+        advanceUntilIdle()
+
+        assertThat(sut.uiState.value.eventTime).isEqualTo(NOW)
     }
 
     @Test

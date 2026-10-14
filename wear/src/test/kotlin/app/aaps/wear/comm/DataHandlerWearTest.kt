@@ -25,7 +25,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.timeout
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
 
 /**
  * Drives [DataHandlerWear]'s message handlers through a REAL [RxBusImpl]. Handlers run on the
@@ -72,6 +74,23 @@ internal class DataHandlerWearTest : WearTestBase() {
         rxBus.send(EventData.Preferences(0L, false, true, 50, 80, 25.0, 0.5, 1.0, 5, 10, pushedWatchface = PushedWatchfaceId.WFS))
 
         verify(watchFacePushHelper, timeout(HANDLER_TIMEOUT_MS)).selectFace(PushedWatchfaceId.WFS)
+    }
+
+    @Test
+    fun `preferences event reports the push status only when it changed`() {
+        // Preferences come with every sync (about one per BG); the unconditional report is for the
+        // phone's ping, startup and an install - issue #5242.
+        rxBus.send(EventData.Preferences(0L, false, true, 50, 80, 25.0, 0.5, 1.0, 5, 10, pushedWatchface = PushedWatchfaceId.WFS))
+
+        verifyBlocking(watchFacePushHelper, timeout(HANDLER_TIMEOUT_MS)) { reportStatusIfChanged() }
+        verifyBlocking(watchFacePushHelper, never()) { reportStatus() }
+    }
+
+    @Test
+    fun `a ping always gets the push status, the phone may have restarted`() {
+        rxBus.send(EventData.ActionPing(1_000L))
+
+        verifyBlocking(watchFacePushHelper, timeout(HANDLER_TIMEOUT_MS)) { reportStatus() }
     }
 
     @Test

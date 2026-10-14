@@ -2,6 +2,7 @@ package app.aaps.plugins.main.iob.iobCobCalculator
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.workflow.CalculationWakeLock
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -41,9 +42,15 @@ import kotlin.time.Duration.Companion.seconds
  * If the calculation is still running after [maxWaitForCalculation], [run] stops it as before, so a
  * hanging calculation cannot hold changes back for ever.
  *
+ * The device is kept awake from the moment a change is scheduled until [run] has started the
+ * calculation, which then holds a lock of its own. The wait between them is a coroutine `delay`, and
+ * that does not wake a sleeping CPU: with the screen off the calculation, and the loop for a new BG,
+ * would then run only when something else woke the device, often the next BG five minutes later.
+ *
  * @param scope where the debounce runs, null while the plugin is stopped
  * @param awaitCalculationIdle waits for the running calculation, true when it ended within the timeout
  * @param onRunFailed called when [run] throws, to drop the data it may have left half invalidated
+ * @param keepAwake keeps the device awake until the handle is released, null without a wake lock
  * @param run invalidates the cached data from the timestamp and starts the calculation
  */
 internal class HistoryChangeScheduler(
@@ -53,6 +60,7 @@ internal class HistoryChangeScheduler(
     private val onRunFailed: () -> Unit,
     private val debounce: Duration = DEBOUNCE,
     private val maxWaitForCalculation: Duration = MAX_WAIT_FOR_CALCULATION,
+    private val keepAwake: (timeout: Duration) -> CalculationWakeLock.Held? = { null },
     private val run: suspend (oldDataTimestamp: Long, reloadBgData: Boolean, triggeredByNewBG: Boolean) -> Unit
 ) {
 
@@ -93,6 +101,9 @@ internal class HistoryChangeScheduler(
                 reloadBgData = reloadBgData || (current?.reloadBgData ?: false),
                 triggeredByNewBG = triggeredByNewBG || (current?.triggeredByNewBG ?: false)
             )
+            // Taken here, before the launch, so there is no moment without a lock between the caller
+            // and the waiting body. A replaced job gives its own lock back when its cancel completes.
+            val awake = keepAwake(debounce + maxWaitForCalculation + RUN_START_MARGIN)
             val launched = scope()?.launch {
                 delay(debounce)
                 if (!awaitCalculationIdle(maxWaitForCalculation))
@@ -132,8 +143,12 @@ internal class HistoryChangeScheduler(
             // Publish only when something is really scheduled. With a stopped plugin scope is null, and
             // a scheduled entry with no runner behind it would wedge the guard above in the same way.
             if (launched == null) {
+                awake?.release()
                 aapsLogger.error(LTag.AUTOSENS, "Plugin is stopped, history data change dropped")
             } else {
+                // A completion handler, not a finally: a job cancelled before it ever ran skips its body
+                // but still completes.
+                launched.invokeOnCompletion { awake?.release() }
                 scheduled = data
                 job = launched
             }
@@ -164,5 +179,8 @@ internal class HistoryChangeScheduler(
 
         /** How long a change waits for a running calculation before it stops it after all. */
         val MAX_WAIT_FOR_CALCULATION = 10.minutes
+
+        /** Room for [run] itself in the wake lock timeout: stopping the old run, invalidating, starting. */
+        private val RUN_START_MARGIN = 1.minutes
     }
 }

@@ -5,6 +5,7 @@ import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.ble.RileyLinkCommunicationException
 import app.aaps.pump.common.hw.rileylink.ble.command.RileyLinkCommand
 import app.aaps.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6b
+import app.aaps.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkCommandType
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersionBase
@@ -233,6 +234,62 @@ class RadioResponseTest {
 
         // RSSI should be interpreted as signed value
         assertEquals(0xFF.toByte().toInt(), radioResponse.rssi)
+    }
+
+    // A Medtronic 522 (serial 678734) answering the model request of the wake-up, as a RileyLink with
+    // firmware 2 received it with local 4b6b encoding. Captured on a real pump.
+    private val medtronic522ModelReply =
+        ("DD 2C 20 A9 69 96 69 68 F4 68 D5 59 56 38 E5 8F 28 F2 " + "55 ".repeat(90) + "5A 65")
+            .split(" ").map { it.toInt(16).toByte() }.toByteArray()
+
+    /**
+     * The wake-up and the frequency scan create the response without a command. It was then taken as a
+     * non-radio response and returned undecoded, so the model was read from 4b6b bytes ("h?Y") and the
+     * pump was reported unreachable although it had answered.
+     */
+    @Test
+    fun `response without command is decoded with local 4b6b encoding`() {
+        whenever(rileyLinkServiceData.firmwareVersion).thenReturn(RileyLinkFirmwareVersionBase.Version_2_0)
+        whenever(rileyLinkUtil.encoding).thenReturn(RileyLinkEncodingType.FourByteSixByteLocal)
+        whenever(rileyLinkUtil.encoding4b6b).thenReturn(Encoding4b6bGeoff(aapsLogger))
+
+        radioResponse.init(medtronic522ModelReply)
+
+        // A7 = packet type, 67 87 34 = serial, 8D = read model, then length 3 and "522"
+        val payload = radioResponse.getPayload()
+        assertArrayEquals(
+            byteArrayOf(0xA7.toByte(), 0x67, 0x87.toByte(), 0x34, 0x8D.toByte(), 0x09, 0x03, 0x35, 0x32, 0x32),
+            payload.copyOfRange(0, 10)
+        )
+        assertTrue(radioResponse.isValid())
+        assertEquals(0x2C, radioResponse.rssi)
+    }
+
+    @Test
+    fun `response without command and with a wrong CRC is not valid`() {
+        whenever(rileyLinkServiceData.firmwareVersion).thenReturn(RileyLinkFirmwareVersionBase.Version_2_0)
+        whenever(rileyLinkUtil.encoding).thenReturn(RileyLinkEncodingType.FourByteSixByteLocal)
+
+        val encodedPayload = byteArrayOf(0x55, 0x66)
+        val payloadData = byteArrayOf(0xAA.toByte(), 0xBB.toByte())
+        val wrongCRC = (CRC.crc8(payloadData) + 1).toByte()
+        whenever(encoding4b6b.decode4b6b(encodedPayload)).thenReturn(payloadData + wrongCRC)
+
+        radioResponse.init(byteArrayOf(0x00, 0x42, 0x01) + encodedPayload)
+
+        assertFalse(radioResponse.isValid())
+    }
+
+    // Unchanged: the RileyLink decodes these itself and there is no CRC byte to check here
+    @Test
+    fun `response without command with RileyLink encoding returns the payload and is valid`() {
+        whenever(rileyLinkServiceData.firmwareVersion).thenReturn(RileyLinkFirmwareVersionBase.Version_2_0)
+        whenever(rileyLinkUtil.encoding).thenReturn(RileyLinkEncodingType.FourByteSixByteRileyLink)
+
+        radioResponse.init(byteArrayOf(0x00, 0x42, 0x01, 0xAA.toByte(), 0xBB.toByte()))
+
+        assertArrayEquals(byteArrayOf(0xAA.toByte(), 0xBB.toByte()), radioResponse.getPayload())
+        assertTrue(radioResponse.isValid())
     }
 
     @Test

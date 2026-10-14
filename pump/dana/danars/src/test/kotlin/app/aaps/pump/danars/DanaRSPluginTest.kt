@@ -160,15 +160,38 @@ class DanaRSPluginTest : DanaRSTestBase() {
         assertThat(danaRSPlugin.isConfigured()).isTrue()
     }
 
+    /**
+     * #946: a pump set to a 0.1 U bolus step in its doctor menu. The steps were written into a description
+     * that a getter rebuilds on every read, so they were lost and a bolus of 1.55 U was offered and then
+     * refused by the pump. Steps other than the pump type's defaults (0.05 / 0.01), or the test cannot tell.
+     */
     @Test
-    fun getPumpStatusSyncsBasalAndBolusStepIntoTheDescription() {
-        danaPump.basalStep = 0.01
-        danaPump.bolusStep = 0.05
+    fun theDescriptionHasTheStepsThePumpReported() {
+        danaPump.bolusStep = 0.1
+        danaPump.basalStep = 0.1
 
-        runBlocking { danaRSPlugin.getPumpStatus("test") } // service null → just syncs the steps
+        assertThat(danaRSPlugin.pumpDescription.bolusStep).isWithin(0.0001).of(0.1)
+        assertThat(danaRSPlugin.pumpDescription.basalStep).isWithin(0.0001).of(0.1)
+    }
 
-        assertThat(danaRSPlugin.pumpDescription.basalStep).isWithin(0.0001).of(0.01)
+    /** DanaPump starts with 0.1 for both steps, and reset() puts that back. That is not a reading. */
+    @Test
+    fun afterAResetThePumpTypeStepsStay() {
+        danaPump.bolusStep = 0.1
+        danaPump.basalStep = 0.1
+        danaPump.reset()
+
         assertThat(danaRSPlugin.pumpDescription.bolusStep).isWithin(0.0001).of(0.05)
+        assertThat(danaRSPlugin.pumpDescription.basalStep).isWithin(0.0001).of(0.01)
+    }
+
+    /** Connected, but the steps were not read yet. */
+    @Test
+    fun connectedBeforeTheStepsAreReadThePumpTypeStepsStay() {
+        danaPump.lastConnection = 1_000L
+
+        assertThat(danaRSPlugin.pumpDescription.bolusStep).isWithin(0.0001).of(0.05)
+        assertThat(danaRSPlugin.pumpDescription.basalStep).isWithin(0.0001).of(0.01)
     }
 
     @Test

@@ -1,15 +1,19 @@
 package app.aaps.implementation.bolus
 
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -30,7 +34,9 @@ import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpWithConcentration
+import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.objects.runningMode.RunningModeGuard
@@ -333,6 +339,111 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         verify(quickWizard, never()).get(any<String>())
     }
 
+    // ---- #946: the "constraint applied" warning compares with the step the pump reported ----
+
+    /** A Dana RS set to a 0.1 U step: its pump type says 0.05 U, the description the driver fills says 0.1 U. */
+    private suspend fun preparedBolusOnA01StepPump(requested: Double, delivered: Double): WizardBolusExecutor.PrepareResult.Preview {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        stubPassthroughConstraints()
+        whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(ConstraintObject(delivered, aapsLogger))
+        testPumpPlugin.pumpDescription = PumpDescription().fillFor(PumpType.DANA_RS).also { it.bolusStep = 0.1 }
+        val bolus = BatchAction.Bolus(insulin = requested, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = "", timestamp = 0L, iCfg = null)
+        return create().prepareBatch(listOf(bolus)) as WizardBolusExecutor.PrepareResult.Preview
+    }
+
+    /** A QuickWizard that calculates [calculated] U, of which the constraints leave [afterConstraints] U. */
+    private suspend fun preparedQuickWizardOnA01StepPump(calculated: Double, afterConstraints: Double): WizardBolusExecutor.PrepareResult {
+        whenever(config.appInitialized).thenReturn(true)
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        val ads = mock<AutosensDataStore>()
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(mock())
+        whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
+        whenever(profileFunction.getProfileName()).thenReturn("Test")
+        whenever(constraintsChecker.applyCarbsConstraints(any())).thenAnswer { it.getArgument<Constraint<Int>>(0) }
+        whenever(constraintsChecker.getMaxBolusAllowed()).thenReturn(ConstraintObject(10.0, aapsLogger))
+        testPumpPlugin.pumpDescription = PumpDescription().fillFor(PumpType.DANA_RS).also { it.bolusStep = 0.1 }
+        val entry = mock<QuickWizardEntry>()
+        whenever(quickWizard.get("g")).thenReturn(entry)
+        whenever(entry.carbs()).thenReturn(20)
+        val bw = mock<BolusWizard>()
+        whenever(entry.doCalc(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(bw)
+        whenever(bw.calculatedTotalInsulin).thenReturn(calculated)
+        whenever(bw.insulinAfterConstraints).thenReturn(afterConstraints)
+        whenever(bw.carbs).thenReturn(20)
+        whenever(bw.createBolusCalculatorResult()).thenReturn(mock<BCR>())
+        whenever(bw.buildWizardDetail()).thenReturn(
+            EventData.WizardDetail(
+                totalInsulin = calculated, carbs = 20, insulinFromBG = 0.0, insulinFromTrend = 0.0, insulinFromCOB = 0.0, insulinFromCarbs = calculated,
+                insulinFromBolusIOB = 0.0, insulinFromBasalIOB = 0.0, includeBolusIOB = true, includeBasalIOB = true, percentageCorrection = 100, cob = 0.0,
+                tempTargetLabel = null, ic = 10.0, sens = 50.0
+            )
+        )
+        return create().prepareQuickWizard("g")
+    }
+
+    @Test
+    fun prepareQuickWizard_flooredWithinThePumpStep_isNotAConstraintError() = runTest {
+        // 1.58 -> 1.5 is only the rounding of this pump. With the pump type step (0.05 U) it was refused.
+        val result = preparedQuickWizardOnA01StepPump(calculated = 1.58, afterConstraints = 1.5)
+
+        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Preview::class.java)
+        // The step sent on to the confirmation (client, watch) is the one the pump reported too.
+        assertThat((result as WizardBolusExecutor.PrepareResult.Preview).wizardDetail?.bolusStep).isEqualTo(0.1)
+    }
+
+    @Test
+    fun prepareQuickWizard_cutByMoreThanThePumpStep_isAConstraintError() = runTest {
+        val result = preparedQuickWizardOnA01StepPump(calculated = 1.65, afterConstraints = 1.5)
+
+        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+    }
+
+    @Test
+    fun prepareBatch_bolusFlooredWithinThePumpStep_hasNoConstraintWarning() = runTest {
+        // 1.58 -> 1.5 is only the rounding of this pump, not a constraint.
+        val prepared = preparedBolusOnA01StepPump(requested = 1.58, delivered = 1.5)
+
+        assertThat(prepared.lines.map { it.role }).doesNotContain(ConfirmationRole.WARNING)
+    }
+
+    @Test
+    fun prepareBatch_bolusCutByMoreThanThePumpStep_hasTheConstraintWarning() = runTest {
+        val prepared = preparedBolusOnA01StepPump(requested = 1.65, delivered = 1.5)
+
+        assertThat(prepared.lines.map { it.role }).contains(ConfirmationRole.WARNING)
+    }
+
+    // A limit that cuts exactly one step is a limit, although 1.2 - 1.1 is 0.0999... as a Double.
+    @Test
+    fun prepareBatch_bolusCutByExactlyOneStep_hasTheConstraintWarning() = runTest {
+        val prepared = preparedBolusOnA01StepPump(requested = 1.2, delivered = 1.1)
+
+        assertThat(prepared.lines.map { it.role }).contains(ConfirmationRole.WARNING)
+    }
+
+    @Test
+    fun prepareQuickWizard_cutByExactlyOneStep_isAConstraintError() = runTest {
+        val result = preparedQuickWizardOnA01StepPump(calculated = 1.2, afterConstraints = 1.1)
+
+        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+    }
+
+    // A record-only dose is kept as typed, so the confirmation shows all of it, not the 1.3 U of a 0.1 U pump.
+    @Test
+    fun prepareBatch_recordOnlyDose_isShownWithTwoDecimals() = runTest {
+        stubPassthroughConstraints()
+        testPumpPlugin.pumpDescription = PumpDescription().fillFor(PumpType.DANA_RS).also { it.bolusStep = 0.1 }
+        val bolus = BatchAction.Bolus(
+            insulin = 1.33, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = true, notes = "", timestamp = 0L,
+            iCfg = ICfg("Pen", 75, 6.0, 1.0)
+        )
+
+        val prepared = create().prepareBatch(listOf(bolus)) as WizardBolusExecutor.PrepareResult.Preview
+
+        assertThat(prepared.lines.first { it.role == ConfirmationRole.BOLUS }.text).containsMatch("1[.,]33 U")
+    }
+
     // ---- confirm(onSuccess): the end of an asynchronous dose, for a caller that has to wait for it (SMS) ----
 
     @Test
@@ -427,6 +538,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         stubPassthroughConstraints()
         whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
         whenever(profileFunction.getOriginalProfileName()).thenReturn("Test")
+        whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), anyOrNull(), any(), any())).thenReturn(mock<PS>())
         val executor = create()
 
         val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(percentage = 120, timeShiftHours = 2, durationMinutes = 60))) as WizardBolusExecutor.PrepareResult.Preview
@@ -435,7 +547,8 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
         // PS-only batch: no pump bolus, no TT — only the dialog-free profile switch applied with the parked values.
         verify(commandQueue, never()).bolus(anyOrNull())
-        verify(profileFunction).createProfileSwitch(eq(60), eq(120), eq(2), eq(Action.PROFILE_SWITCH), eq(Sources.NSClient), anyOrNull(), any())
+        // timestamp 0 = now: this batch carries no picked time, so the master stamps its own clock.
+        verify(profileFunction).createProfileSwitch(eq(60), eq(120), eq(2), eq(Action.PROFILE_SWITCH), eq(Sources.NSClient), anyOrNull(), any(), eq(0L))
     }
 
     @Test
@@ -447,7 +560,170 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         val result = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(percentage = 9999, timeShiftHours = 0, durationMinutes = 30)))
 
         assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
-        verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), anyOrNull(), any())
+        verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), anyOrNull(), any(), any())
+    }
+
+    // ---- prepareBatch(): the time a temp target starts ----
+
+    @Test
+    fun prepareBatch_tempTarget_startOffsetTooFarInThePast_returnsErrorAndAppliesNothing() = runTest {
+        stubPassthroughConstraints()
+        val executor = create()
+
+        // What the temp target screen produced while its activation time was stuck at the epoch: an offset of
+        // about -29.9 million minutes. It used to be stored as a target in 1970 that never became active and
+        // never reported anything, so the user's target silently did not happen.
+        val result = executor.prepareBatch(listOf(BatchAction.TempTarget(TT.Reason.EATING_SOON.text, 90.0, 90.0, 45, -29_860_000)))
+
+        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        verify(persistenceLayer, never()).insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any())
+    }
+
+    @Test
+    fun prepareBatch_tempTarget_startOffsetTooFarInTheFuture_returnsErrorAndAppliesNothing() = runTest {
+        stubPassthroughConstraints()
+        val executor = create()
+
+        val twoDaysMinutes = (T.days(2).msecs() / 60_000L).toInt()
+        val result = executor.prepareBatch(listOf(BatchAction.TempTarget(TT.Reason.ACTIVITY.text, 90.0, 90.0, 45, twoDaysMinutes)))
+
+        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        verify(persistenceLayer, never()).insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any())
+    }
+
+    @Test
+    fun prepareBatch_tempTarget_movedOffNowGainsAStartTimeLine() = runTest {
+        stubPassthroughConstraints()
+        val executor = create()
+
+        // A target the user moved 90 min back is legitimate, and the confirmation has to name the moment it
+        // starts — the screen used to change the time with nothing on the dialog mentioning it. Asserted as
+        // "one line more than the same target starting now", because the mocked rh.gs returns a fixed string,
+        // so matching the formatted date would only test the mock. Offset 0 must stay clean: a Time line there
+        // would be noise on every temp target.
+        val movedBack = executor.prepareBatch(listOf(BatchAction.TempTarget(TT.Reason.ACTIVITY.text, 90.0, 90.0, 45, -90))) as WizardBolusExecutor.PrepareResult.Preview
+        val startingNow = executor.prepareBatch(listOf(BatchAction.TempTarget(TT.Reason.ACTIVITY.text, 90.0, 90.0, 45, 0))) as WizardBolusExecutor.PrepareResult.Preview
+
+        assertThat(movedBack.lines).hasSize(startingNow.lines.size + 1)
+    }
+
+    // ---- prepareBatch(): the time the user picked for a profile switch (issue #5239) ----
+
+    @Test
+    fun prepareBatch_profileSwitch_appliesThePickedTimeInsteadOfNow() = runTest {
+        stubPassthroughConstraints()
+        val store = mock<ProfileStore>()
+        whenever(store.getSpecificProfile("Lunch")).thenReturn(mock())
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(store))
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(someICfg)
+        val picked = dateUtil.now() + T.hours(2).msecs()
+        val executor = create()
+
+        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(100, 0, 0, profileName = "Lunch", timestamp = picked))) as WizardBolusExecutor.PrepareResult.Preview
+        executor.confirm(prepared.bolusId, Sources.NSClient, { })
+
+        // The switch is stored at the picked time, not at now — ProfileSwitchScheduler then arms its start.
+        verify(profileFunction).createProfileSwitch(eq(store), eq("Lunch"), eq(0), eq(100), eq(0), eq(picked), eq(Action.PROFILE_SWITCH), eq(Sources.NSClient), anyOrNull(), any(), eq(someICfg))
+    }
+
+    @Test
+    fun prepareBatch_profileSwitch_withoutAPickedTime_stampsNow() = runTest {
+        stubPassthroughConstraints()
+        val store = mock<ProfileStore>()
+        whenever(store.getSpecificProfile("Lunch")).thenReturn(mock())
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(store))
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(someICfg)
+        val executor = create()
+
+        val before = dateUtil.now()
+        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(100, 0, 0, profileName = "Lunch"))) as WizardBolusExecutor.PrepareResult.Preview
+        executor.confirm(prepared.bolusId, Sources.NSClient, { })
+        val after = dateUtil.now()
+
+        val stamped = argumentCaptor<Long>()
+        verify(profileFunction).createProfileSwitch(eq(store), eq("Lunch"), eq(0), eq(100), eq(0), stamped.capture(), eq(Action.PROFILE_SWITCH), eq(Sources.NSClient), anyOrNull(), any(), eq(someICfg))
+        assertThat(stamped.firstValue).isAtLeast(before)
+        assertThat(stamped.firstValue).isAtMost(after)
+    }
+
+    @Test
+    fun prepareBatch_profileSwitch_timeTooFarInTheFuture_returnsErrorAndAppliesNothing() = runTest {
+        stubPassthroughConstraints()
+        val store = mock<ProfileStore>()
+        whenever(store.getSpecificProfile("Lunch")).thenReturn(mock())
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(store))
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(someICfg)
+        val executor = create()
+
+        // Two days ahead — outside Constants.PROFILE_SWITCH_TIME_OFFSET. A client clock must not place a
+        // switch there, and it is refused rather than quietly moved to a time the user did not pick.
+        val result = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(100, 0, 0, profileName = "Lunch", timestamp = dateUtil.now() + T.days(2).msecs())))
+
+        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any())
+    }
+
+    @Test
+    fun prepareBatch_profileSwitch_timeTooFarInThePast_returnsErrorAndAppliesNothing() = runTest {
+        stubPassthroughConstraints()
+        val store = mock<ProfileStore>()
+        whenever(store.getSpecificProfile("Lunch")).thenReturn(mock())
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(store))
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(someICfg)
+        val executor = create()
+
+        val result = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(100, 0, 0, profileName = "Lunch", timestamp = dateUtil.now() - T.days(2).msecs())))
+
+        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any())
+    }
+
+    @Test
+    fun prepareBatch_profileSwitch_timeAtTheEdgeOfTheBoundIsAccepted() = runTest {
+        stubPassthroughConstraints()
+        val store = mock<ProfileStore>()
+        whenever(store.getSpecificProfile("Lunch")).thenReturn(mock())
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(store))
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(someICfg)
+        val executor = create()
+
+        // The bound is inclusive; a whole day ahead is a legitimate "tomorrow at this time".
+        val result = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(100, 0, 0, profileName = "Lunch", timestamp = dateUtil.now() + Constants.PROFILE_SWITCH_TIME_OFFSET.last)))
+
+        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Preview::class.java)
+    }
+
+    /**
+     * A switch the pump cannot take (a basal above its max basal) is refused before the confirmation. It used
+     * to pass prepare, then createProfileSwitch returned null, and the caller was told it was done.
+     */
+    @Test
+    fun prepareBatch_profileSwitchThePumpCannotTake_isRefusedBeforeTheConfirmation() = runTest {
+        stubPassthroughConstraints()
+        whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
+        whenever(profileFunction.profileSwitchRefusal(eq(60), eq(150), eq(0), any())).thenReturn("The pump cannot take it")
+        val executor = create()
+
+        val result = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(percentage = 150, timeShiftHours = 0, durationMinutes = 60)))
+
+        assertThat((result as WizardBolusExecutor.PrepareResult.Error).message).isEqualTo("The pump cannot take it")
+        verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), anyOrNull(), any(), any())
+    }
+
+    /** Fine at prepare, refused when applied (a limit changed in between): the caller hears why. */
+    @Test
+    fun confirm_profileSwitchRefusedWhenApplied_reportsTheReason() = runTest {
+        stubPassthroughConstraints()
+        whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
+        whenever(profileFunction.getOriginalProfileName()).thenReturn("Test")
+        whenever(profileFunction.profileSwitchRefusal(eq(60), eq(150), eq(0), any())).thenReturn(null, "The pump cannot take it")
+        val executor = create()
+        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(percentage = 150, timeShiftHours = 0, durationMinutes = 60))) as WizardBolusExecutor.PrepareResult.Preview
+
+        var failure: WizardBolusExecutor.Failure? = null
+        executor.confirm(prepared.bolusId, Sources.NSClient, { failure = it })
+
+        assertThat(failure?.comment).isEqualTo("The pump cannot take it")
     }
 
     // ---- prepareBatch(): negative carbs = COB removal (issue: was mislabeled "Bolus reported an error") ----
@@ -568,6 +844,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(store))
         // A named switch has to record an insulin; here it comes from the insulin in force.
         whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(someICfg)
+        whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any())).thenReturn(mock<PS>())
         val executor = create()
 
         val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(110, 0, 60, profileName = "Lunch"))) as WizardBolusExecutor.PrepareResult.Preview
@@ -925,6 +1202,8 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.isInitialized()).thenReturn(true)
         whenever(pump.pumpDescription).thenReturn(PumpDescription())
+        // The step is the interface default, read from the description; a plain mock would answer 0.0.
+        whenever(pump.bolusStepSize(any())).thenCallRealMethod()
         whenever(constraintsChecker.applyCarbsConstraints(any())).thenAnswer { it.getArgument<Constraint<Int>>(0) }
         whenever(rh.gs(any<Int>())).thenReturn("No insulin required")
         val entry = mock<QuickWizardEntry>()
