@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.overview.IsfStep
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -87,6 +88,9 @@ class SensitivityOverviewImplTest : TestBaseWithProfile() {
         assertThat(data.asText).isEmpty()
         assertThat(data.lines).containsExactly(profileIsfLine())
         assertThat(data.isEnabled).isTrue()
+        assertThat(data.isfFrom).isEmpty()
+        assertThat(data.isfTo).isEmpty()
+        assertThat(data.isfStep).isEqualTo(IsfStep.SAME)
     }
 
     @Test
@@ -115,6 +119,47 @@ class SensitivityOverviewImplTest : TestBaseWithProfile() {
 
         assertThat(data.lines).containsExactly("Autosens Value: 80%", profileIsfLine(), effectiveIsfLine(0.8)).inOrder()
         assertThat(effectiveProfile.getProfileIsfMgdl() / 0.8).isGreaterThan(effectiveProfile.getProfileIsfMgdl())
+        // The chip shows the same step, pointing up, not only the percentage.
+        assertThat(data.isfFrom).isEqualTo(decimalFormatter.to1Decimal(effectiveProfile.getProfileIsfMgdl()))
+        assertThat(data.isfTo).isEqualTo(decimalFormatter.to1Decimal(effectiveProfile.getProfileIsfMgdl() / 0.8))
+        assertThat(data.isfStep).isEqualTo(IsfStep.UP)
+    }
+
+    @Test
+    fun `a ratio above 100 percent points the chip step down`() = runBlocking {
+        autosensRatio(1.2)
+        ratioUsedByLoop(1.2)
+
+        val data = sut.build()
+
+        assertThat(data.isfStep).isEqualTo(IsfStep.DOWN)
+    }
+
+    /**
+     * The step is worked out from the numbers, but a step the chip cannot show must not get an
+     * arrow: two values that round to the same text would read "5.5 up 5.5".
+     */
+    @Test
+    fun `a ratio too small to change the shown value gives no step`() = runBlocking {
+        autosensRatio(1.0)
+        ratioUsedByLoop(0.9999)
+
+        val data = sut.build()
+
+        assertThat(data.isfFrom).isEqualTo(data.isfTo)
+        assertThat(data.isfStep).isEqualTo(IsfStep.SAME)
+    }
+
+    @Test
+    fun `an autosens value the loop did not use leaves the chip step empty`() = runBlocking {
+        autosensRatio(0.8)
+        ratioUsedByLoop(1.0)
+
+        val data = sut.build()
+
+        assertThat(data.isfFrom).isEmpty()
+        assertThat(data.isfTo).isEmpty()
+        assertThat(data.isfStep).isEqualTo(IsfStep.SAME)
     }
 
     @Test

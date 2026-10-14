@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.overview.IsfStep
 import app.aaps.core.interfaces.overview.SensitivityOverview
 import app.aaps.core.interfaces.overview.SensitivityOverviewData
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -93,6 +94,7 @@ class SensitivityOverviewImpl(
         var asText = ""
         var isfFrom = ""
         var isfTo = ""
+        var isfStep = IsfStep.SAME
         val lines = ArrayList<String>()
 
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {
@@ -106,6 +108,7 @@ class SensitivityOverviewImpl(
             val variableIsfDisplayed = profileUtil.fromMgdlToUnits(variableSens, units)
             isfFrom = decimalFormatter.to1Decimal(profileIsfDisplayed)
             isfTo = decimalFormatter.to1Decimal(variableIsfDisplayed)
+            isfStep = isfStep(isfFrom, isfTo, profileIsfDisplayed, variableIsfDisplayed)
             lines.add(rh.gs(CoreUiStrings.isf_profile, profileIsfDisplayed))
             lines.add(rh.gs(CoreUiStrings.isf_variable, variableIsfDisplayed))
             if (namesOwnRatio)
@@ -131,8 +134,15 @@ class SensitivityOverviewImpl(
                 // further and the ISF goes up. This is the "ISF from ... to ..." line that
                 // DetermineBasal writes. At a ratio of 1.0 the algorithm keeps the profile ISF, so
                 // there is nothing to show - for example when autosens is turned off.
-                if (ratioUsed != 1.0)
-                    lines.add(rh.gs(CoreUiStrings.isf_effective, profileUtil.fromMgdlToUnits(isfMgdl / ratioUsed, units)))
+                if (ratioUsed != 1.0) {
+                    val effectiveIsfDisplayed = profileUtil.fromMgdlToUnits(isfMgdl / ratioUsed, units)
+                    // The chip shows the same step as the variable ISF branch does, so a user on
+                    // plain autosens sees the two values and not only a percentage.
+                    isfFrom = decimalFormatter.to1Decimal(profileIsfDisplayed)
+                    isfTo = decimalFormatter.to1Decimal(effectiveIsfDisplayed)
+                    isfStep = isfStep(isfFrom, isfTo, profileIsfDisplayed, effectiveIsfDisplayed)
+                    lines.add(rh.gs(CoreUiStrings.isf_effective, effectiveIsfDisplayed))
+                }
             }
             // A client computes its own autosens, and a temp target can take sensitivity over from
             // autosens on the master. Either way the effective ISF above was worked out from this
@@ -145,10 +155,23 @@ class SensitivityOverviewImpl(
             asText = asText,
             isfFrom = isfFrom,
             isfTo = isfTo,
+            isfStep = isfStep,
             lines = lines,
             ratio = lastAutosensRatio ?: 1.0,
             isEnabled = isEnabled,
             hasData = lastAutosensData != null
         )
     }
+
+    /**
+     * The step between the two ISF values the chip shows. The texts decide whether there is a step
+     * to show at all - two values that round to the same text must not get an arrow - and the
+     * numbers decide which way it points.
+     */
+    private fun isfStep(fromText: String, toText: String, from: Double, to: Double): IsfStep =
+        when {
+            fromText == toText -> IsfStep.SAME
+            to > from          -> IsfStep.UP
+            else               -> IsfStep.DOWN
+        }
 }
