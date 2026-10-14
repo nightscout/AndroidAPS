@@ -9,6 +9,7 @@ import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.domain.model.ResponseResult
+import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalSegmentInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
@@ -41,6 +42,9 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
     }
 
     private var lastProfileUpdateAttemptMs: Long = 0
+
+    /** The hourly segments of the program the patch accepted, see [CarelevoSetBasalProgramUseCase.acceptedBasalSegments]. */
+    fun acceptedBasalSegments(): List<CarelevoBasalSegmentInfusionInfoDomainModel>? = setBasalProgramUseCase.acceptedBasalSegments()
 
     fun updateBasalProfile(
         profile: Profile,

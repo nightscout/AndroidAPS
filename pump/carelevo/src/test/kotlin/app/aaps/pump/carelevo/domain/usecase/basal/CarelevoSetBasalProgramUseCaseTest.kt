@@ -3,6 +3,8 @@ package app.aaps.pump.carelevo.domain.usecase.basal
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.pump.carelevo.domain.model.basal.CarelevoBasalSegmentDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalInfusionInfoDomainModel
+import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalSegmentInfusionInfoDomainModel
+import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
@@ -39,6 +41,25 @@ internal class CarelevoSetBasalProgramUseCaseTest {
 
     private fun profileWith(vararg values: Profile.ProfileValue): Profile = mock<Profile>().also {
         whenever(it.getBasalValues()).thenReturn(arrayOf(*values))
+    }
+
+    // ---------- acceptedBasalSegments ----------
+
+    @Test
+    fun `the accepted segments are the ones in the store`() {
+        val segments = (0..23).map { CarelevoBasalSegmentInfusionInfoDomainModel(startTime = it, endTime = it + 1, speed = 0.85) }
+        whenever(infusionInfoRepository.getInfusionInfoBySync()).thenReturn(
+            CarelevoInfusionInfoDomainModel(basalInfusionInfo = CarelevoBasalInfusionInfoDomainModel("id", "address", 1, segments = segments, isStop = false))
+        )
+
+        assertThat(sut.acceptedBasalSegments()).isEqualTo(segments)
+    }
+
+    @Test
+    fun `there are no accepted segments before a program was stored`() {
+        whenever(infusionInfoRepository.getInfusionInfoBySync()).thenReturn(CarelevoInfusionInfoDomainModel())
+
+        assertThat(sut.acceptedBasalSegments()).isNull()
     }
 
     // ---------- buildBasalProgramPlan ----------

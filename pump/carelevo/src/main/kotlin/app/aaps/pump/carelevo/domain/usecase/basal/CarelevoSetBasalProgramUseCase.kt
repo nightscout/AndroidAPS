@@ -62,6 +62,14 @@ class CarelevoSetBasalProgramUseCase @Inject constructor(
         ) { "update infusion info is failed" }
     }.isSuccess
 
+    /**
+     * The 24 hourly segments of the program the patch accepted, as [persistBasalProgram] stored it, or null before
+     * one was. Read from the store itself: the infusion-info stream that `CarelevoPatch` exposes follows a moment
+     * later, so right after a set it still held the old program (#2454).
+     */
+    fun acceptedBasalSegments(): List<CarelevoBasalSegmentInfusionInfoDomainModel>? =
+        infusionInfoRepository.getInfusionInfoBySync()?.basalInfusionInfo?.segments
+
     /** The three sequential basal-program payloads ([programs], seqNo 0/1/2) plus the full [segments] list. */
     data class BasalProgramPlan(
         val programs: List<List<Double>>,
