@@ -518,7 +518,7 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             for (i in 1 until events.size) {
                 if (historyEventDelayMs > 0) Thread.sleep(historyEventDelayMs)
                 if (Thread.currentThread().isInterrupted) return@launchTracked
-                val data = buildHistoryEventData(events[i], (i + 1).toShort())
+                val data = buildHistoryEventData(events[i])
                 onSpontaneousMessage?.invoke(
                     BleEncryption.DANAR_PACKET__TYPE_RESPONSE,
                     BleEncryption.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS,
@@ -534,15 +534,15 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             )
         }
 
-        return buildHistoryEventData(events[0], 1)
+        return buildHistoryEventData(events[0])
     }
 
     /**
      * Build a history event data payload in the format matching the pump's time mode.
      */
-    private fun buildHistoryEventData(event: HistoryEvent, id: Short): ByteArray {
+    private fun buildHistoryEventData(event: HistoryEvent): ByteArray {
         return if (state.usingUTC) {
-            state.historyStore.buildEventDataUtc(event, id)
+            state.historyStore.buildEventDataUtc(event)
         } else {
             state.historyStore.buildEventData(event)
         }
