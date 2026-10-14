@@ -190,11 +190,13 @@ fun SecondaryGraphCompose(
 
     val hasIob = primaryType == SeriesType.IOB
     val hasCob = primaryType == SeriesType.COB
+    // Deviations always take the left axis, so with them COB and its carb markers are on the right one
+    val cobOnSecondary = isDualAxis && secondaryType == SeriesType.COB
 
     // Collect flows for primary series (includes share flow for DEV and BGI if together on the same graph with shareAxis true)
     val iobData = if (hasIob) viewModel.iobGraphFlow.collectAsStateWithLifecycle().value else null
     val cobData = if (hasCob) viewModel.cobGraphFlow.collectAsStateWithLifecycle().value else null
-    val treatmentData = if (hasIob || hasCob) viewModel.treatmentGraphFlow.collectAsStateWithLifecycle().value else null
+    val treatmentData = if (hasIob || hasCob || cobOnSecondary) viewModel.treatmentGraphFlow.collectAsStateWithLifecycle().value else null
     val absIobData = if (primaryType == SeriesType.ABS_IOB) viewModel.absIobGraphFlow.collectAsStateWithLifecycle().value else null
     val bgiData = if (SeriesType.BGI in primaryTypes) viewModel.bgiGraphFlow.collectAsStateWithLifecycle().value else null
     val deviationsData = if (SeriesType.DEVIATIONS in primaryTypes) viewModel.deviationsGraphFlow.collectAsStateWithLifecycle().value else null
@@ -324,7 +326,7 @@ fun SecondaryGraphCompose(
     }
 
     // IOB treatment overlays processing
-    val processedIobTreatments = remember(lastTreatmentData.value, stableTimeRange) {
+    val processedIobTreatments = remember(lastTreatmentData.value, stableTimeRange, hasIob) {
         if (!hasRealTimeRange || !hasIob) return@remember ProcessedIobOverlays.EMPTY
         processIobOverlays(lastTreatmentData.value, minTimestamp, minX, maxX)
     }
@@ -339,11 +341,13 @@ fun SecondaryGraphCompose(
     }
 
     // COB carbs overlay processing
-    val processedCarbs = remember(lastTreatmentData.value, stableTimeRange) {
-        if (!hasRealTimeRange || !hasCob) return@remember emptyList()
+    val processedCarbs = remember(lastTreatmentData.value, stableTimeRange, hasCob, cobOnSecondary) {
+        if (!hasRealTimeRange || !(hasCob || cobOnSecondary)) return@remember emptyList()
         val pts = lastTreatmentData.value.carbs.map { timestampToX(it.timestamp, minTimestamp) to it.amount }
         filterToRange(pts, minX, maxX)
     }
+    val primaryCarbs = if (hasCob) processedCarbs else emptyList()
+    val secondaryCarbs = if (cobOnSecondary) processedCarbs else emptyList()
 
     // Flipped basal overlay — fixed on IOB graphs, rendered as a second chart layer.
     // Uses negative Y values so area fill goes upward to y=0 (the top of the basal layer).
@@ -423,7 +427,7 @@ fun SecondaryGraphCompose(
     // stale 0..1 axis until the next recomposition ("renders wrong, then fixes itself").
     val primarySeries = remember(
         processedDeviationLines, processedIob, processedIobTreatments, processedCob,
-        processedCarbs, processedSimpleSeries, processedDevSlopeMin, processedActivityOverlay
+        primaryCarbs, processedSimpleSeries, processedDevSlopeMin, processedActivityOverlay
     ) {
         buildList {
             // Deviation lines (per-type step lines) — first so other series draw on top
@@ -451,8 +455,8 @@ fun SecondaryGraphCompose(
                 add(PrimarySeriesSpec(cobFiltered.map { it.first }, cobFiltered.map { it.second }, SeriesSlot.CobLine))
             if (failoverFiltered.isNotEmpty())
                 add(PrimarySeriesSpec(failoverFiltered.map { it.first }, failoverFiltered.map { it.second }, SeriesSlot.FailoverDots))
-            if (processedCarbs.isNotEmpty())
-                add(PrimarySeriesSpec(processedCarbs.map { it.first }, processedCarbs.map { it.second }, SeriesSlot.CarbsMarker))
+            if (primaryCarbs.isNotEmpty())
+                add(PrimarySeriesSpec(primaryCarbs.map { it.first }, primaryCarbs.map { it.second }, SeriesSlot.CarbsMarker))
             // Simple line series
             processedSimpleSeries.forEach { (type, pts) ->
                 if (pts.isNotEmpty())
@@ -521,6 +525,8 @@ fun SecondaryGraphCompose(
                     } else {
                         series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
                     }
+                    if (secondaryCarbs.isNotEmpty())
+                        series(x = secondaryCarbs.map { it.first }, y = secondaryCarbs.map { it.second })
                     // Normalizer for end axis layer
                     series(x = normalizerX(maxX), y = NORMALIZER_Y)
                 }
@@ -619,9 +625,9 @@ fun SecondaryGraphCompose(
     // `primaryY=[null..null] n=0` against `modelY=[0.0..43.0] slots=[CarbsMarker]`, giving an axis of
     // 0..44 that a COB curve reaching 148 was drawn straight through.
     val primaryYValues = remember(
-        processedIob, processedCob, processedCarbs, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
+        processedIob, processedCob, primaryCarbs, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
     ) {
-        windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedCarbs, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
+        windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, primaryCarbs, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
     }
 
     // IOB (with basal overlay active): zero-floor nice range — 0 if the visible window has no
@@ -656,9 +662,9 @@ fun SecondaryGraphCompose(
     // below a point that is "below zero" on the other. We compute a shared zero
     // fraction from both data extents and extend each side's range to match it.
     // Only applied to true dual-axis case (no basal overlay, secondary present).
-    val dualAxisRanges = remember(isDualAxis, hasBasalLayer, primaryYValues, processedSecondary, visibleMinX, visibleMaxX) {
+    val dualAxisRanges = remember(isDualAxis, hasBasalLayer, primaryYValues, processedSecondary, secondaryCarbs, visibleMinX, visibleMaxX) {
         if (!isDualAxis || hasBasalLayer) return@remember null
-        val secondaryY = windowedY(processedSecondary, visibleMinX, visibleMaxX)
+        val secondaryY = windowedY(processedSecondary + secondaryCarbs, visibleMinX, visibleMaxX)
         if (primaryYValues.isEmpty() || secondaryY.isEmpty()) return@remember null
 
         val primaryIsPivot = primaryType == SeriesType.SENSITIVITY || primaryType == SeriesType.DEV_SLOPE
@@ -822,7 +828,11 @@ fun SecondaryGraphCompose(
             )
         )
     }
-    val secondaryAxisLines = remember(secondaryAxisLine, normalizerLine) { listOf(secondaryAxisLine, normalizerLine) }
+    // One style per series of the right-axis model, in the same order
+    val hasSecondaryCarbs = secondaryCarbs.isNotEmpty()
+    val secondaryAxisLines = remember(secondaryAxisLine, normalizerLine, cobLineStyle, hasSecondaryCarbs) {
+        if (hasSecondaryCarbs) listOf(secondaryAxisLine, cobLineStyle.carbsLine, normalizerLine) else listOf(secondaryAxisLine, normalizerLine)
+    }
     // Secondary range: zero-aligned counterpart to primary when available, otherwise auto-range.
     val secondaryRangeProvider = remember(maxX, dualAxisRanges) {
         if (dualAxisRanges != null)
