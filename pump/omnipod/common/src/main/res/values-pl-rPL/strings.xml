@@ -192,4 +192,11 @@
         <item quantity="other">Alarmy Poda: %1$s</item>
     </plurals>
     <string name="omnipod_common_overview_pod_hard_end_date">Twardy koniec Poda</string>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Korekta bazowa</string>
+    <string name="omnipod_common_bolus_type_priming">Napełnianie</string>
+    <string name="omnipod_common_history_total_delivered">Razem dostarczono: %1$.2f U</string>
 </resources>
