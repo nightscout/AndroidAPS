@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.PowerManager
 import androidx.compose.ui.text.font.FontWeight
 import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.data.Block
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -15,6 +17,7 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.Profile.ProfileValue
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -33,6 +36,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -53,6 +57,8 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -62,6 +68,7 @@ import org.mockito.kotlin.whenever
 import org.mockito.verification.VerificationMode
 import java.util.Calendar
 import kotlin.reflect.KClass
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -339,6 +346,140 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         completeQueuedProfileSet()
 
         verify(persistenceLayer, times(1)).insertOrUpdateEffectiveProfileSwitch(any())
+    }
+
+    // endregion
+
+    // region #2454 - the EPS holds the basal the pump really gives
+
+    private val hour = 1.hours.inWholeMilliseconds
+
+    private suspend fun savedEps(): EPS = argumentCaptor<EPS>().run {
+        verify(persistenceLayer).insertOrUpdateEffectiveProfileSwitch(capture())
+        firstValue
+    }
+
+    private fun roundingNotices(): List<String> = argumentCaptor<String>().run {
+        verify(notificationManager, atLeast(0)).post(
+            eq(NotificationId.BASAL_ROUNDED_BY_PUMP), capture(), any<NotificationLevel>(), any<Int>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
+        )
+        allValues
+    }
+
+    /** A new PS (id 140) set in a pump that reports [delivered]. */
+    private suspend fun setNewPsInPumpThatGives(delivered: List<ProfileValue>?, event: EventProfileChangeRequested = EventProfileChangeRequested()) {
+        givenActiveEpsFrom(139)
+        testPumpPlugin.isProfileSet = false
+        testPumpPlugin.delivered = delivered
+        rxBus.send(event)
+        completeQueuedProfileSet()
+    }
+
+    @Test
+    fun `a pump that rounds the basal gets an EPS with the rates it really gives`() = runTest {
+        setNewPsInPumpThatGives(listOf(ProfileValue(0, 0.95), ProfileValue(6 * 3600, 1.0)))
+
+        assertThat(savedEps().basalBlocks).containsExactly(Block(6 * hour, 0.95), Block(18 * hour, 1.0)).inOrder()
+        // The profile asks 1 U/h all day: 24 U. The pump gives 6 * 0.95 + 18 * 1.0 = 23.7 U.
+        assertThat(roundingNotices()).containsExactly(
+            "The pump rounds the basal to its own step. It gives ${"%.2f".format(23.7)} U per day instead of ${"%.2f".format(24.0)} U."
+        )
+    }
+
+    @Test
+    fun `a pump that gives the profile exactly gets the profile basal and no rounding notice`() = runTest {
+        setNewPsInPumpThatGives(null)
+
+        assertThat(savedEps().basalBlocks).isEqualTo(profileSwitch.basalBlocks)
+        assertThat(roundingNotices()).isEmpty()
+        verify(notificationManager).dismiss(NotificationId.BASAL_ROUNDED_BY_PUMP)
+    }
+
+    @Test
+    fun `rounding that does not change the insulin per day gives no notice`() = runTest {
+        setNewPsInPumpThatGives(listOf(ProfileValue(0, 0.95), ProfileValue(12 * 3600, 1.05)))
+
+        assertThat(savedEps().basalBlocks).containsExactly(Block(12 * hour, 0.95), Block(12 * hour, 1.05)).inOrder()
+        assertThat(roundingNotices()).isEmpty()
+    }
+
+    /** The running profile is still the old one (U100) when the new one (U200) has just been set. */
+    @Test
+    fun `the rates are converted with the concentration of the profile that was set`() = runTest {
+        whenever(profileFunction.getRequestedProfile()).thenReturn(profileSwitch.copy(id = 140, iCfg = someICfg.copy(concentration = 2.0)))
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(effectiveProfileSwitch.copy(id = 311, originalPsId = 139))
+        testPumpPlugin.isProfileSet = false
+        testPumpPlugin.delivered = listOf(ProfileValue(0, 0.5))
+
+        rxBus.send(EventProfileChangeRequested())
+        completeQueuedProfileSet()
+
+        assertThat(savedEps().basalBlocks).containsExactly(Block(24 * hour, 1.0))
+        assertThat(roundingNotices()).isEmpty()
+    }
+
+    @Test
+    fun `a report that does not start at midnight is not used`() = runTest {
+        setNewPsInPumpThatGives(listOf(ProfileValue(3600, 0.9)))
+
+        assertThat(savedEps().basalBlocks).isEqualTo(profileSwitch.basalBlocks)
+        assertThat(roundingNotices()).isEmpty()
+    }
+
+    /** The running profile holds hour values only. */
+    @Test
+    fun `a report with a half hour is not used`() = runTest {
+        setNewPsInPumpThatGives(listOf(ProfileValue(0, 0.9), ProfileValue(1800, 1.0)))
+
+        assertThat(savedEps().basalBlocks).isEqualTo(profileSwitch.basalBlocks)
+    }
+
+    /** One value per hour, as EOPatch reports it, is merged like the profile itself. */
+    @Test
+    fun `hours with the same rate are merged into one block`() = runTest {
+        setNewPsInPumpThatGives((0 until 24).map { hour -> ProfileValue(hour * 3600, if (hour < 6) 0.4 else 1.0) })
+
+        assertThat(savedEps().basalBlocks).containsExactly(Block(6 * hour, 0.4), Block(18 * hour, 1.0)).inOrder()
+    }
+
+    @Test
+    fun `a report with times out of order is not used`() = runTest {
+        setNewPsInPumpThatGives(listOf(ProfileValue(0, 0.9), ProfileValue(7200, 1.0), ProfileValue(3600, 1.1)))
+
+        assertThat(savedEps().basalBlocks).isEqualTo(profileSwitch.basalBlocks)
+    }
+
+    @Test
+    fun `a set by a scene posts no rounding notice`() = runTest {
+        setNewPsInPumpThatGives(listOf(ProfileValue(0, 0.95)), EventProfileChangeRequested(silent = true))
+
+        assertThat(savedEps().basalBlocks).containsExactly(Block(24 * hour, 0.95))
+        assertThat(roundingNotices()).isEmpty()
+    }
+
+    /** A new pump with another step: the PS is the same, but the EPS must hold what this pump gives. */
+    @Test
+    fun `an effective PS set again gets a new EPS when this pump gives other rates`() = runTest {
+        givenActiveEpsFrom(140)
+        testPumpPlugin.isProfileSet = false
+        testPumpPlugin.delivered = listOf(ProfileValue(0, 0.95))
+
+        rxBus.send(EventProfileChangeRequested())
+        completeQueuedProfileSet()
+
+        assertThat(savedEps().basalBlocks).containsExactly(Block(24 * hour, 0.95))
+    }
+
+    /** Before, the rounded EPS never matched the PS by value, so a profile that was set looked unset for good. */
+    @Test
+    fun `a PS is set when the pump has it and its EPS holds the rounded basal`() = runTest {
+        // Built before whenever(): the constructor reads activePlugin, a mock.
+        val running = ProfileSealed.EPS(effectiveProfileSwitch.copy(originalPsId = 140, basalBlocks = listOf(Block(24 * hour, 0.95))), activePlugin)
+        whenever(profileFunction.getProfile()).thenReturn(running)
+        testPumpPlugin.isProfileSet = true
+
+        assertThat(commandQueue.isThisProfileSet(ProfileSealed.PS(profileSwitch.copy(id = 140), activePlugin))).isTrue()
+        assertThat(commandQueue.isThisProfileSet(ProfileSealed.PS(profileSwitch.copy(id = 141), activePlugin))).isFalse()
     }
 
     // endregion

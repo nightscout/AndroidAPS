@@ -9,6 +9,8 @@ import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.InterfacesStrings
@@ -32,6 +34,7 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.Command.CommandType
@@ -46,6 +49,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -89,6 +93,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.concurrent.Volatile
+import kotlin.math.abs
 import kotlin.reflect.KClass
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -149,6 +154,12 @@ class CommandQueueImplementation(
     @Suppress("PrivatePropertyName")
     private val PROFILE_SET_TIMEOUT_MS = 10 * 60 * 1000
 
+    @Suppress("PrivatePropertyName")
+    private val HOUR_SECONDS = 60 * 60
+
+    @Suppress("PrivatePropertyName")
+    private val DAY_SECONDS = 24 * HOUR_SECONDS
+
     // How long one command may run before the user is alarmed. Longer than the slowest legitimate
     // command: a 25 U bolus at the slowest pump speed (60 s/U) takes about 25 minutes.
     @Suppress("PrivatePropertyName")
@@ -196,14 +207,20 @@ class CommandQueueImplementation(
             if (result == null)
                 aapsLogger.error(LTag.PROFILE, "setProfile timed out after $PROFILE_SET_TIMEOUT_MS ms for PS id=${it.id}")
             // Central profile-set notification lifecycle (unified across all pump drivers). Returns true on a
-            // successful write, in which case we persist the EffectiveProfileSwitch below - but not a second
-            // one for a PS that is already effective, which only had to be set in the pump again.
-            if (postProfileWriteResult(result, silent) && !alreadyEffective) {
+            // successful write, in which case we persist the EffectiveProfileSwitch below.
+            if (postProfileWriteResult(result, silent)) {
+                val requested = ProfileSealed.PS(it, activePlugin)
                 // Pump may return enacted == false if basal profile is the same, but IC/ISF can be different
-                val nonCustomized = ProfileSealed.PS(it, activePlugin).convertToNonCustomizedProfile(dateUtil)
+                val nonCustomized = requested.convertToNonCustomizedProfile(dateUtil)
+                // The basal the pump really gives: it can round the rates to its own step (#2454).
+                val basalBlocks = deliveredBasalBlocks(requested.insulinConcentration()) ?: nonCustomized.basalBlocks
+                if (!silent) notifyBasalRounding(asked = nonCustomized.basalBlocks, given = basalBlocks)
+                // A PS that is already effective only had to be set in the pump again. It gets no second EPS,
+                // unless this pump gives another basal than the EPS holds, e.g. a new pump with another step.
+                if (alreadyEffective && active?.basalBlocks == basalBlocks) return@let
                 val eps = EPS(
                     timestamp = dateUtil.now(),
-                    basalBlocks = nonCustomized.basalBlocks,
+                    basalBlocks = basalBlocks,
                     isfBlocks = nonCustomized.isfBlocks,
                     icBlocks = nonCustomized.icBlocks,
                     targetBlocks = nonCustomized.targetBlocks,
@@ -260,6 +277,55 @@ class CommandQueueImplementation(
             notificationManager.post(NotificationId.PROFILE_SET_OK, CoreUiStrings.profile_set_ok, validMinutes = 60)
         return true
     }
+
+    /**
+     * The basal the pump reports it really gives, as blocks in insulin units, or null when it gives the profile
+     * as it was sent. [concentration] is the one of the profile that was just set. Hours with the same rate are
+     * merged, as `shiftBlock` merges the profile. A report that does not cover the day from midnight in full
+     * hours is not used: the requested basal is kept, and the error is logged.
+     */
+    internal fun deliveredBasalBlocks(concentration: Double): List<Block>? {
+        val values = activePlugin.activePump.deliveredBasal() ?: return null
+        val valid = values.isNotEmpty() && values.first().timeAsSeconds == 0 && values.last().timeAsSeconds < DAY_SECONDS &&
+            values.all { it.timeAsSeconds % HOUR_SECONDS == 0 && it.value >= 0.0 } &&
+            values.zipWithNext().all { (a, b) -> a.timeAsSeconds < b.timeAsSeconds }
+        if (!valid) {
+            aapsLogger.error(LTag.PROFILE, "The pump reported a basal that does not cover the day in full hours, the profile is kept: ${values.map { "${it.timeAsSeconds}=${it.value}" }}")
+            return null
+        }
+        val blocks = ArrayList<Block>(values.size)
+        values.forEachIndexed { index, value ->
+            val end = values.getOrNull(index + 1)?.timeAsSeconds ?: DAY_SECONDS
+            val duration = T.secs((end - value.timeAsSeconds).toLong()).msecs()
+            // Without the float tail: 0.05 * 0.2 is 0.010000000000000002.
+            val amount = Round.roundTo(PumpRate(value.value).iU(concentration, true), 1e-9)
+            val last = blocks.lastOrNull()
+            if (last != null && last.amount == amount) blocks[blocks.size - 1] = last.copy(duration = last.duration + duration)
+            else blocks.add(Block(duration, amount))
+        }
+        return blocks
+    }
+
+    /**
+     * Tells the user when the pump gives a little more or less per day than the profile asks, because it rounds
+     * the rates to its own step (#2454). Like "Basal profile in pump updated", it is shown for an hour.
+     */
+    internal fun notifyBasalRounding(asked: List<Block>, given: List<Block>) {
+        val askedPerDay = asked.insulinPerDay()
+        val givenPerDay = given.insulinPerDay()
+        if (abs(givenPerDay - askedPerDay) < 0.005) {
+            notificationManager.dismiss(NotificationId.BASAL_ROUNDED_BY_PUMP)
+            return
+        }
+        aapsLogger.debug(LTag.PROFILE, "The pump rounds the basal: $givenPerDay U per day instead of $askedPerDay U")
+        notificationManager.post(
+            NotificationId.BASAL_ROUNDED_BY_PUMP,
+            rh.gs(ImplementationStrings.basal_rounded_by_pump, rh.gs(InterfacesStrings.format_insulin_units, givenPerDay), rh.gs(InterfacesStrings.format_insulin_units, askedPerDay)),
+            validMinutes = 60
+        )
+    }
+
+    private fun List<Block>.insulinPerDay(): Double = sumOf { it.amount * it.duration } / T.hours(1).msecs()
 
     private fun executingNowError(): PumpEnactResult =
         pumpEnactResultProvider().success(false).enacted(false).comment(ImplementationStrings.executing_right_now)
@@ -805,7 +871,7 @@ class CommandQueueImplementation(
 
     override suspend fun isThisProfileSet(requestedProfile: EffectiveProfile): Boolean {
         val runningProfile = profileFunction.getProfile() ?: return false
-        val result = activePlugin.activePump.isThisProfileSet(requestedProfile) && requestedProfile.isEqual(runningProfile)
+        val result = activePlugin.activePump.isThisProfileSet(requestedProfile) && requestedProfile.isAppliedAs(runningProfile)
         if (!result) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Current profile: ${profileFunction.getProfile()}")
             aapsLogger.debug(LTag.PUMPQUEUE, "New profile: $requestedProfile")

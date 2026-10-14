@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.EffectiveProfile
+import app.aaps.core.interfaces.profile.Profile.ProfileValue
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
@@ -121,6 +122,12 @@ class PumpWithConcentrationImpl(
 
     override fun isThisProfileSet(profile: PumpProfile): Boolean = error("Must no be called directly. Use: isThisProfileSet(profile: EffectiveProfile)")
     override fun isThisProfileSet(profile: EffectiveProfile): Boolean = activePumpInternal.isThisProfileSet(profile.toPump())
+
+    /**
+     * Still in pump units. The caller converts it with the concentration of the profile it set: the running one,
+     * used everywhere else in this class, is still the old profile at that moment.
+     */
+    override fun deliveredBasal(): List<ProfileValue>? = activePumpInternal.deliveredBasal()
 
     override val baseBasalRate: PumpRate get() = activePumpInternal.baseBasalRate
 

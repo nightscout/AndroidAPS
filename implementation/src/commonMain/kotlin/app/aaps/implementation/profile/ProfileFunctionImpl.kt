@@ -221,7 +221,11 @@ class ProfileFunctionImpl(
     override suspend fun isProfileChangePending(): Boolean {
         val requested = getRequestedProfile() ?: return false
         val running = getProfile() ?: return true
-        return !ProfileSealed.PS(requested, activePlugin).isEqual(running)
+        // On AAPSClient the running profile comes from the master: its originalPsId is the master's id, and the pump
+        // there can have rounded the basal (#2454). The master has applied this PS when it wrote the EPS after it.
+        if (config.AAPSCLIENT && running is ProfileSealed.EPS)
+            return running.value.timestamp < requested.timestamp && !ProfileSealed.PS(requested, activePlugin).isEqual(running)
+        return !ProfileSealed.PS(requested, activePlugin).isAppliedAs(running)
     }
 
     override fun getUnits(): GlucoseUnit =

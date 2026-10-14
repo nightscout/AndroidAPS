@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
@@ -266,8 +267,10 @@ class ProfileManagementViewModel(
         // surfaced as an amber "won't run on this pump" hint on the card, distinct from red errors.
         val pumpWarnings = profiles.map { profileRepository.validatePumpCompatibility(it).isNotEmpty() }
 
+        val activatedPs = activeEps?.let { activatedPs(it) }
+
         val (selectedProfile, compareData) = computeSelectedProfileAndCompareData(
-            profiles, currentIndex, activeEps, activeProfileName
+            profiles, currentIndex, activeEps, activeProfileName, activatedPs
         )
 
         return ProfileManagementUiState(
@@ -299,11 +302,22 @@ class ProfileManagementViewModel(
                 .filter { it.type != ProfileErrorType.NAME || it.message != rh.gs(CoreUiStrings.profile_name_contains_dot) }
         }
 
-    private fun computeSelectedProfileAndCompareData(
+    /**
+     * The PS [eps] was made from. The pump can round the basal (#2454), so the EPS alone cannot tell whether the
+     * local profile was edited since it was activated. Found by time, the PS that was active when the EPS was
+     * written, not by `originalPsId`: on AAPSClient that is the id in the master's database.
+     */
+    internal suspend fun activatedPs(eps: EPS): PS? =
+        persistenceLayer.getProfileSwitchActiveAt(eps.timestamp)
+            ?.takeIf { it.profileName == eps.originalProfileName && it.percentage == eps.originalPercentage && it.timeshift == eps.originalTimeshift }
+
+    /** `internal` so it can be unit-tested: what the carousel shows for the active profile. */
+    internal fun computeSelectedProfileAndCompareData(
         profiles: List<SingleProfile>,
         currentIndex: Int,
         activeEps: EPS?,
-        activeProfileName: String?
+        activeProfileName: String?,
+        activatedPs: PS?
     ): Pair<Profile?, ProfileCompareData?> {
         if (currentIndex !in profiles.indices) return null to null
 
@@ -321,10 +335,15 @@ class ProfileManagementViewModel(
         val baseProfile = profiles[currentIndex].toPureProfile(dateUtil)
             ?.let { ProfileSealed.Pure(it, activePlugin) }
             ?.also { it.iCfg = effectiveProfile.iCfg }
+        // What was activated: the PS behind the EPS. Without it (older records) the EPS itself.
+        val activated: Profile = activatedPs?.let { ProfileSealed.PS(it, activePlugin) } ?: effectiveProfile
+        // The pump gives the basal rounded to its own step, so the running profile differs from what was activated.
+        val roundedByPump = activated !== effectiveProfile && !activated.isEqual(effectiveProfile, ignoreName = true)
 
         // Detect if underlying local profile was edited since activation. Cannot use isEqual()
         // here because Pure.profileName is always "" which causes a false mismatch with
-        // EPS.originalProfileName — so we ignore name in the comparison.
+        // EPS.originalProfileName — so we ignore name in the comparison. Compared with what was
+        // activated, not with the EPS: a basal rounded by the pump is not an edit.
         val baseChanged = baseProfile?.let {
             val compareLocal = profiles[currentIndex].toPureProfile(dateUtil)?.let { pure ->
                 ProfileSealed.Pure(pure, activePlugin).apply {
@@ -332,7 +351,7 @@ class ProfileManagementViewModel(
                     this.ts = T.msecs(tsMs).hours().toInt()
                 }
             }
-            compareLocal != null && !compareLocal.isEqual(effectiveProfile, ignoreName = true)
+            compareLocal != null && !compareLocal.isEqual(activated, ignoreName = true)
         } ?: false
 
         return when {
@@ -361,10 +380,11 @@ class ProfileManagementViewModel(
                 effectiveProfile to compareData
             }
 
-            hasModifications && baseProfile != null -> {
+            // Rounded by the pump only: the profile next to the rates the pump really gives.
+            (hasModifications || roundedByPump) && baseProfile != null -> {
                 val profileName = profiles[currentIndex].name
                 val tsHours = (tsMs / 3600000).toInt()
-                val effectiveLabel = buildString {
+                val effectiveLabel = if (!hasModifications) rh.gs(CoreUiStrings.running) else buildString {
                     append(profileName)
                     append(" (")
                     append("$pct%")

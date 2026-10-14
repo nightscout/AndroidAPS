@@ -128,6 +128,53 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
         assertThat(createSut().getRunningOrRequestedICfg()).isEqualTo(someICfg)
     }
 
+    /** #2454: the pump rounds the basal, so the EPS holds other rates than the PS it was made from. */
+    private suspend fun runningEpsFromPs(psId: Long) {
+        whenever(config.appInitialized).thenReturn(true)
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong())).thenReturn(profileSwitch.copy(id = 140, iCfg = someICfg))
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong()))
+            .thenReturn(effectiveProfileSwitch.copy(originalPsId = psId, basalBlocks = listOf(Block(T.hours(24).msecs(), 0.95))))
+    }
+
+    @Test
+    fun aProfileWhoseBasalThePumpRoundedIsNotPending() = runTest {
+        runningEpsFromPs(140)
+
+        assertThat(createSut().isProfileChangePending()).isFalse()
+    }
+
+    @Test
+    fun aProfileThatIsNotRunningYetIsPending() = runTest {
+        runningEpsFromPs(139)
+
+        assertThat(createSut().isProfileChangePending()).isTrue()
+    }
+
+    /** On AAPSClient the EPS comes from the master: its originalPsId (999 here) is an id in the master's database. */
+    private suspend fun clientRunsEpsWrittenAt(epsTimestamp: Long) {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        whenever(config.appInitialized).thenReturn(true)
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong())).thenReturn(profileSwitch.copy(id = 140, timestamp = now, iCfg = someICfg))
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong()))
+            .thenReturn(effectiveProfileSwitch.copy(timestamp = epsTimestamp, originalPsId = 999, basalBlocks = listOf(Block(T.hours(24).msecs(), 0.95))))
+    }
+
+    @Test
+    fun onTheClientAnEpsTheMasterWroteAfterTheSwitchIsItsAnswer() = runTest {
+        clientRunsEpsWrittenAt(now + 1000)
+
+        assertThat(createSut().isProfileChangePending()).isFalse()
+    }
+
+    @Test
+    fun onTheClientAnOlderEpsWithOtherValuesIsStillPending() = runTest {
+        clientRunsEpsWrittenAt(now - 1000)
+
+        assertThat(createSut().isProfileChangePending()).isTrue()
+    }
+
     // Regression, issue #5020: the DB v33 SQL step stamps `insulinEndTime = -1` onto every pre-ICfg row —
     // the *running* profile's included. Returning that as a value made the migration write the sentinel back
     // over itself, leaving a DIA of 0.0 that fails the hard-limit check and aborts every loop cycle. Reporting
