@@ -74,6 +74,15 @@ class CarelevoBolusCoordinator @Inject constructor(
         private const val PROGRESS_POLL_MS = 100L
         private const val RESULT_SUCCESS = 0
 
+        // ImmediateBolusCommand reject codes
+        private const val RESULT_INSULIN_DEFICIENCY = 1
+        private const val RESULT_EXPIRED = 2
+        private const val RESULT_LOW_VOLTAGE = 3
+        private const val RESULT_ABNORMAL_TEMP = 4
+        private const val RESULT_PUMP_ERROR = 12
+        private const val RESULT_EXCEED_LIMIT = 20
+        private const val MIN_BOLUS_UNITS = 0.05
+
         // The out-of-band cancel opens a fresh GATT per attempt, so cap retries low — a single bounded
         // connect+write settles a reachable patch; more attempts only lengthen the two-GATT-collision
         // window against an unreachable one (which can't be stopped anyway).
@@ -314,7 +323,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                 result.success = false
                 result.enacted = false
                 result.bolusDelivered = 0.0
-                return result.comment(rh.gs(R.string.alarm_feat_msg_check_patch_connect))
+                return result.comment(startRejectedMessage(response.resultCode, response.remainingReservoirUnits))
             }
             // The pump ACKed (resultCode==0) — insulin IS being delivered from this point on. The
             // local persist is bookkeeping only: if it fails we MUST still run the delivery loop and
@@ -554,6 +563,23 @@ class CarelevoBolusCoordinator @Inject constructor(
             result.bolusDelivered = 0.0
             result.comment(rh.gs(app.aaps.core.ui.R.string.stop))
         }
+    }
+
+    /**
+     * Reason shown under the core's bolus-error alarm when the patch rejects the start. On
+     * [RESULT_EXCEED_LIMIT] the response carries the amount still deliverable instead of the reservoir.
+     */
+    private fun startRejectedMessage(resultCode: Int, remains: Double): String = when (resultCode) {
+        RESULT_INSULIN_DEFICIENCY -> rh.gs(R.string.alarm_feat_title_warning_low_insulin)
+        RESULT_EXPIRED            -> rh.gs(R.string.alarm_feat_title_warning_expired_patch)
+        RESULT_LOW_VOLTAGE        -> rh.gs(R.string.alarm_feat_title_warning_low_battery)
+        RESULT_ABNORMAL_TEMP      -> rh.gs(R.string.alarm_feat_title_warning_invalid_temperature)
+        RESULT_PUMP_ERROR         -> rh.gs(R.string.alarm_feat_title_warning_patch_error)
+        RESULT_EXCEED_LIMIT       ->
+            if (remains < MIN_BOLUS_UNITS) rh.gs(R.string.carelevo_bolus_rejected_exceed_limit_none)
+            else rh.gs(R.string.carelevo_bolus_rejected_exceed_limit, rh.gs(R.string.common_label_unit_value_dose_with_space, remains))
+
+        else                      -> rh.gs(R.string.alarm_feat_msg_check_patch_connect)
     }
 
     private fun handleBolusError(e: Throwable, result: PumpEnactResult) {

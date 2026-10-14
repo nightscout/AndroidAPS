@@ -7,6 +7,8 @@ import app.aaps.pump.carelevo.ble.commands.BolusCancelResponse
 import app.aaps.pump.carelevo.ble.commands.ExtendBolusCancelCommand
 import app.aaps.pump.carelevo.ble.commands.ExtendBolusCommand
 import app.aaps.pump.carelevo.ble.commands.ExtendBolusResponse
+import app.aaps.pump.carelevo.ble.commands.ImmediateBolusCommand
+import app.aaps.pump.carelevo.ble.commands.ImmediateBolusResponse
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import com.google.common.truth.Truth.assertThat
@@ -15,6 +17,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.isA
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
@@ -198,6 +201,24 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
 
         assertThat(result.success).isFalse()
         assertThat(result.bolusDelivered).isWithin(0.001).of(0.0)
+    }
+
+    @Test
+    fun `deliverTreatment should explain an over-limit reject with the deliverable amount`() {
+        whenever { bleSession.runSingle(any(), isA<ImmediateBolusCommand>(), any()) }
+            .thenReturn(ImmediateBolusResponse(actionId = 1, resultCode = 20, expectedCompletionSeconds = 0, remainingReservoirUnits = 2.8))
+        whenever(rh.gs(eq(app.aaps.pump.carelevo.R.string.common_label_unit_value_dose_with_space), any())).thenReturn("2.8 U")
+        whenever(rh.gs(eq(app.aaps.pump.carelevo.R.string.carelevo_bolus_rejected_exceed_limit), eq("2.8 U"))).thenReturn("over limit 2.8 U")
+
+        val result = runBlocking {
+            plugin.deliverTreatment(DetailedBolusInfo().apply {
+                insulin = 3.0
+                carbs = 0.0
+            })
+        }
+
+        assertThat(result.success).isFalse()
+        assertThat(result.comment).isEqualTo("over limit 2.8 U")
     }
 
     @Test
