@@ -61,7 +61,8 @@ import dev.zacsweers.metro.SingleIn
  * module - see section 1a of `_docs/NFC_KMP_MIGRATION.md`.
  */
 @SingleIn(AppScope::class)
-class NfcActionFactory @Inject constructor(
+@Inject
+class NfcActionFactory(
     private val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,
     private val bolusProgressData: BolusProgressData,

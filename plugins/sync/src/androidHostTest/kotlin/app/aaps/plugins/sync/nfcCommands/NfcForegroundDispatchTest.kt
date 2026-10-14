@@ -135,6 +135,7 @@ class NfcForegroundDispatchTest : TestBaseWithProfile() {
     }
 
     @Test
+    @Suppress("DEPRECATION")
     fun `onNewIntent forwards TAG_DISCOVERED intent to NfcControlActivity`() {
         val intent = mock<Intent>()
         whenever(intent.action).thenReturn(NfcAdapter.ACTION_TAG_DISCOVERED)

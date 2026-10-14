@@ -205,10 +205,10 @@ class NfcControlActivityTest : TestBaseWithProfile() {
         return intent
     }
 
+    @Suppress("DEPRECATION")
     private fun createTagDiscoveredIntent(nfcTag: Tag? = mockNfcTag(fakeUid)): Intent {
         val intent = mock<Intent>()
         whenever(intent.action).thenReturn(NfcAdapter.ACTION_TAG_DISCOVERED)
-        @Suppress("DEPRECATION")
         whenever(intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)).thenReturn(nfcTag)
         return intent
     }

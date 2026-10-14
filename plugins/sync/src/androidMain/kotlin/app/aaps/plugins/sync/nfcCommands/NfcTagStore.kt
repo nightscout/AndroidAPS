@@ -41,7 +41,8 @@ data class NfcLogEntry(
 )
 
 @SingleIn(AppScope::class)
-class NfcTagStore @Inject constructor(
+@Inject
+class NfcTagStore(
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger
 ) {

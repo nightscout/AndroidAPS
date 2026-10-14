@@ -53,6 +53,10 @@ class NfcForegroundDispatch(
 
     fun onNewIntent(intent: Intent) {
         val action = intent.action ?: return
+        // ACTION_TAG_DISCOVERED is deprecated since API 37, but Android offers no replacement and the
+        // plugin still needs it for tags that carry no NDEF record. Same choice as
+        // NfcCommandsPlugin.processIntent.
+        @Suppress("DEPRECATION")
         if (action != NfcAdapter.ACTION_NDEF_DISCOVERED &&
             action != NfcAdapter.ACTION_TECH_DISCOVERED &&
             action != NfcAdapter.ACTION_TAG_DISCOVERED

@@ -82,7 +82,8 @@ data class NfcExecutionResult(
 @NotNSClient
 @IntKey(380)
 @SingleIn(AppScope::class)
-class NfcCommandsPlugin @Inject constructor(
+@Inject
+class NfcCommandsPlugin(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
     preferences: Preferences,

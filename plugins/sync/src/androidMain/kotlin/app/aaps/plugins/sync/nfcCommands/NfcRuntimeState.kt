@@ -13,7 +13,8 @@ import dev.zacsweers.metro.SingleIn
  * plugin to reach them. They are here so an action can ask for this and nothing else.
  */
 @SingleIn(AppScope::class)
-class NfcRuntimeState @Inject constructor() {
+@Inject
+class NfcRuntimeState() {
 
     /**
      * When the last bolus was delivered through NFC, used for the remote bolus cooldown that
