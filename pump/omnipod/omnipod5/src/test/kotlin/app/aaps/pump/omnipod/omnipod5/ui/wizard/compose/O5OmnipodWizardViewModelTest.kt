@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.omnipod5.bledriver.comm.O5BleManager
@@ -77,6 +78,7 @@ internal class O5OmnipodWizardViewModelTest {
     }
     private val pumpEnactResultProvider: () -> PumpEnactResult = { enactResult }
     @Mock private lateinit var logger: AAPSLogger
+    @Mock private lateinit var rxBus: RxBus
     private val aapsSchedulers: AapsSchedulers = TestAapsSchedulers()
 
     private lateinit var sut: O5OmnipodWizardViewModel
@@ -88,7 +90,7 @@ internal class O5OmnipodWizardViewModelTest {
         sut = O5OmnipodWizardViewModel(
             bleManager, podStateManager, preferences, rh, commandQueue,
             notificationManager, history, pumpSync, insulinManager, persistenceLayer,
-            profileFunction, profileRepository, pumpEnactResultProvider, logger, aapsSchedulers
+            profileFunction, profileRepository, pumpEnactResultProvider, logger, aapsSchedulers, rxBus
         )
     }
 

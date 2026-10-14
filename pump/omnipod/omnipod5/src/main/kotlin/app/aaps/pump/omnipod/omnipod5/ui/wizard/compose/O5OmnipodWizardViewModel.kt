@@ -57,6 +57,7 @@ import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
 import app.aaps.pump.omnipod.omnipod5.history.O5History
 import androidx.lifecycle.ViewModel
+import app.aaps.core.interfaces.rx.bus.RxBus
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -104,7 +105,8 @@ class O5OmnipodWizardViewModel @Inject constructor(
     profileRepository: ProfileRepository,
     pumpEnactResultProvider: () -> PumpEnactResult,
     logger: AAPSLogger,
-    aapsSchedulers: AapsSchedulers
+    aapsSchedulers: AapsSchedulers,
+    rxBus: RxBus
 ) : OmnipodWizardViewModel(
     logger,
     aapsSchedulers,
@@ -112,7 +114,9 @@ class O5OmnipodWizardViewModel @Inject constructor(
     profileFunction,
     profileRepository,
     insulinManager,
-    persistenceLayer
+    persistenceLayer,
+    rh,
+    rxBus
 ) {
 
     public override val pumpSource: Sources = Sources.Omnipod5
