@@ -15,19 +15,24 @@ import app.aaps.pump.carelevo.ble.commands.SafetyCheckCommand
 import app.aaps.pump.carelevo.ble.commands.SafetyCheckResponse
 import app.aaps.pump.carelevo.ble.commands.SimpleResultResponse
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.domain.model.ResponseResult
+import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.SafetyProgress
+import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import app.aaps.pump.carelevo.domain.usecase.alarm.AlarmClearPatchDiscardUseCase
 import app.aaps.pump.carelevo.domain.usecase.alarm.AlarmClearRequestUseCase
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoSetBasalProgramUseCase
 import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoPumpResumeUseCase
 import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoPumpStopUseCase
+import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchNeedleInsertionCheckUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchSafetyCheckUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUpdateLowInsulinNoticeAmountUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUpdateMaxBolusDoseUseCase
 import com.google.common.truth.Truth.assertThat
 import dev.zacsweers.metro.Provider
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -69,6 +74,7 @@ internal class CarelevoActivationExecutorTest {
     @Mock lateinit var updateLowInsulinNoticeAmountUseCase: CarelevoUpdateLowInsulinNoticeAmountUseCase
     @Mock lateinit var alarmClearRequestUseCase: AlarmClearRequestUseCase
     @Mock lateinit var alarmClearPatchDiscardUseCase: AlarmClearPatchDiscardUseCase
+    @Mock lateinit var patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase
     @Mock lateinit var bleSession: CarelevoBleSession
 
     private val pumpEnactResultProvider = Provider<PumpEnactResult> { FakePumpEnactResult() }
@@ -90,8 +96,10 @@ internal class CarelevoActivationExecutorTest {
             updateLowInsulinNoticeAmountUseCase = updateLowInsulinNoticeAmountUseCase,
             alarmClearRequestUseCase = alarmClearRequestUseCase,
             alarmClearPatchDiscardUseCase = alarmClearPatchDiscardUseCase,
+            patchForceDiscardUseCase = patchForceDiscardUseCase,
             bleSession = bleSession
         )
+        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.just<ResponseResult<CarelevoUseCaseResponse>>(ResponseResult.Success(ResultSuccess)))
         // Happy default: a patch address is stored. Individual "no address" tests re-stub to null.
         whenever(carelevoPatch.getPatchInfoAddress()).thenReturn(ADDRESS)
     }
@@ -466,11 +474,19 @@ internal class CarelevoActivationExecutorTest {
         verify(carelevoPatch).discardTeardown()
     }
 
+    /** Seen on the Pixel: the teardown cleared only memory, and the discarded patch was back after a restart. */
+    @Test fun `an accepted discard deletes the stored patch and infusion info`() {
+        stubRunSingle(SimpleResultResponse(resultCode = 0))
+        sut.execute(CmdDiscard())
+        verify(patchForceDiscardUseCase).execute()
+    }
+
     @Test fun `discard does not tear down and fails when the stop write is rejected`() {
         stubRunSingle(SimpleResultResponse(resultCode = 1))
         val result = sut.execute(CmdDiscard())
         assertThat(result?.success).isFalse()
         verify(carelevoPatch, never()).discardTeardown()
+        verify(patchForceDiscardUseCase, never()).execute()
     }
 
     @Test fun `discard swallows the write exception and fails without teardown`() {

@@ -18,6 +18,7 @@ import app.aaps.pump.carelevo.ble.commands.SafetyCheckCommand
 import app.aaps.pump.carelevo.ble.commands.SetTimeCommand
 import app.aaps.pump.carelevo.ble.commands.SimpleResultResponse
 import app.aaps.pump.carelevo.common.CarelevoPatch
+import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.bt.SafetyCheckResult
 import app.aaps.pump.carelevo.domain.model.bt.SafetyCheckResultModel
 import app.aaps.pump.carelevo.domain.type.SafetyProgress
@@ -26,6 +27,7 @@ import app.aaps.pump.carelevo.domain.usecase.alarm.AlarmClearRequestUseCase
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoSetBasalProgramUseCase
 import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoPumpResumeUseCase
 import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoPumpStopUseCase
+import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchNeedleInsertionCheckUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchSafetyCheckUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUpdateLowInsulinNoticeAmountUseCase
@@ -65,6 +67,7 @@ class CarelevoActivationExecutor @Inject constructor(
     private val updateLowInsulinNoticeAmountUseCase: CarelevoUpdateLowInsulinNoticeAmountUseCase,
     private val alarmClearRequestUseCase: AlarmClearRequestUseCase,
     private val alarmClearPatchDiscardUseCase: AlarmClearPatchDiscardUseCase,
+    private val patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase,
     private val bleSession: CarelevoBleSession
 ) {
 
@@ -333,7 +336,14 @@ class CarelevoActivationExecutor @Inject constructor(
             aapsLogger.error(LTag.PUMPCOMM, "newBle.discard stop exception", e)
             false
         }
-        if (stopped) carelevoPatch.discardTeardown()
+        if (stopped) {
+            // Delete the stored patch and infusion info, as the discard did before it moved to the queue. The teardown
+            // below clears only the copies in memory: without this, the discarded patch was loaded again at the next
+            // start of AAPS, and AAPS kept connecting to it instead of offering a new activation.
+            val deleted = patchForceDiscardUseCase.execute().blockingGet()
+            if (deleted !is ResponseResult.Success) aapsLogger.error(LTag.PUMPCOMM, "newBle.discard could not delete the stored patch: $deleted")
+            carelevoPatch.discardTeardown()
+        }
         aapsLogger.info(LTag.PUMPCOMM, "newBle.discard stopped=$stopped")
         return result.success(stopped).enacted(stopped)
     }
