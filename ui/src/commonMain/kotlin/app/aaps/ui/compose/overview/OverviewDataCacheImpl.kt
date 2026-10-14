@@ -883,7 +883,7 @@ class OverviewDataCacheImpl(
                     amount = bs.amount,
                     bolusType = if (bs.type == BS.Type.SMB) BolusType.SMB else BolusType.NORMAL,
                     isValid = bs.isValid,
-                    label = decimalFormatter.toPumpSupportedBolus(bs.amount, bolusStep)
+                    label = decimalFormatter.toPumpSupportedBolusWithUnits(bs.amount, bolusStep)
                 )
             }
 
