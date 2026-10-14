@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaBooleanKey
+import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danar.services.DanaRExecutionService
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -135,6 +136,42 @@ class DanaRPluginTest : TestBaseWithProfile() {
         assertThat(danaRPlugin.pumpDescription.pumpType).isEqualTo(PumpType.DANA_R)
         assertThat(danaRPlugin.pumpDescription.bolusStep).isEqualTo(0.05)
         assertThat(danaRPlugin.pumpDescription.basalStep).isEqualTo(0.01)
+    }
+
+    private fun initializedPump() {
+        whenever(preferences.get(DanaStringNonKey.RName)).thenReturn("DAN12345AB")
+        whenever(preferences.get(DanaIntNonKey.Password)).thenReturn(1234)
+        danaPump.password = 1234
+        danaPump.lastConnection = 1
+        danaPump.maxBasal = 3.0
+        danaPump.isExtendedBolusEnabled = true
+    }
+
+    /** #2454: AAPS keeps the rates the pump reports as the running basal, one per hour. */
+    @Test
+    fun deliveredBasalIsWhatThePumpReports() {
+        initializedPump()
+        danaPump.activeProfile = 0
+        danaPump.pumpProfiles = Array(4) { Array(48) { 0.0 } }.also { profiles -> for (hour in 0..23) profiles[0][hour] = if (hour < 6) 0.56 else 0.84 }
+
+        val delivered = danaRPlugin.deliveredBasal()!!
+
+        assertThat(delivered.map { it.timeAsSeconds }).containsExactlyElementsIn((0..23).map { it * 3600 }).inOrder()
+        assertThat(delivered.map { it.value }).containsExactlyElementsIn((0..23).map { if (it < 6) 0.56 else 0.84 }).inOrder()
+    }
+
+    @Test
+    fun deliveredBasalIsUnknownBeforeThePumpWasRead() {
+        initializedPump()
+        danaPump.pumpProfiles = null
+        assertThat(danaRPlugin.deliveredBasal()).isNull()
+    }
+
+    /** A profile set while the pump is not ready is only stored: the old rates say nothing about it. */
+    @Test
+    fun deliveredBasalIsUnknownWhileNotInitialized() {
+        danaPump.pumpProfiles = Array(4) { Array(48) { 0.5 } }
+        assertThat(danaRPlugin.deliveredBasal()).isNull()
     }
 
     @Test
