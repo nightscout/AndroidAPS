@@ -187,4 +187,25 @@ class MedtronicTbrMatchingUTest : MedtronicTestBase() {
         verify(pumpSync, times(1)).syncTemporaryBasalWithTempId(any(), any(), any(), any(), any(), anyOrNull(), anyOrNull(), any(), any())
         Unit
     }
+
+    /**
+     * AAPS used another pump meanwhile: that ended B's row, and the pump is read again only from its new registration,
+     * so the row with the temporary id is not updated. B still runs on the pump, so it is recorded by its pump id,
+     * from the registration on. Before, it was lost, and AAPS showed no temp basal while the pump ran one.
+     */
+    @Test
+    fun aTbrWhoseEntryIsRefusedIsRecordedByItsPumpId() = runBlocking {
+        whenever(pumpSync.syncTemporaryBasalWithTempId(any(), any(), any(), any(), any(), anyOrNull(), anyOrNull(), any(), any())).thenReturn(false)
+        val b = tbr(20261013222214L, 0.9, 30)
+        val data = sut()
+        data.readNew(b)
+
+        data.processNewHistoryData()
+
+        verify(pumpSync).syncTemporaryBasalWithPumpId(
+            eq(DateTimeUtil.toMillisFromATD(20261013222214L)), eq(PumpRate(0.9)), eq(1_800_000L), eq(true),
+            anyOrNull(), eq(b.pumpId), eq(PumpType.MEDTRONIC_522_722), eq(serial)
+        )
+        Unit
+    }
 }
