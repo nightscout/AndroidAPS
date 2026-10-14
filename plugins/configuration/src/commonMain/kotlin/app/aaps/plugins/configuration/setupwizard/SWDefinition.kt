@@ -29,6 +29,7 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
@@ -183,12 +184,21 @@ class SWDefinition(
                     .comment(ConfigurationStrings.high_mark_comment)
             )
 
+    /**
+     * Android only: runtime permissions are an Android idea and the other shells have nothing to ask
+     * for. The desktop shell answers `onRequestPermission` with `notWiredYet` and the iOS one with
+     * `reportNotAvailable`, so on those two this screen cannot do anything - it asked the user to
+     * grant permissions that do not exist, and every button on it was dead. It was `.skippable(true)`,
+     * so it could be clicked past, which is why it survived unnoticed until a desktop client was run
+     * through the wizard on 2026-10-14.
+     */
     private val screenPermissions
         get() = swScreenProvider().with(ConfigurationStrings.setupwizard_permissions)
             .skippable(true)
             .add(swInfoTextProvider().label(ConfigurationStrings.setupwizard_permissions_info))
             .add(swBreakProvider())
             .add(swPermissionsProvider().with(this))
+            .visibility { config.platform in AppPlatform.ANDROID_ONLY }
 
     private val screenImport
         get() = swScreenProvider().with(CoreUiStrings.import_setting)
