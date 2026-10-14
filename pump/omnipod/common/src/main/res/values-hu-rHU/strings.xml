@@ -30,4 +30,6 @@
         <item quantity="one">%1$d nap</item>
         <item quantity="other">%1$d nap</item>
     </plurals>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_bolus_value">%1$.2f E</string>
 </resources>
