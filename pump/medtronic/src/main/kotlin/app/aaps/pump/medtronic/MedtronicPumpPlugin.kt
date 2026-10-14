@@ -582,6 +582,17 @@ class MedtronicPumpPlugin(
         return !invalid
     }
 
+    /**
+     * The 24 hourly rates the pump runs, rounded to its step: 0.05 U/h, or 0.025 U/h below 1 U/h on a 523 and
+     * later (#2454). Read from the pump at start, and the profile as it was sent after each set. null while they
+     * are not known: the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? =
+        if (!isDriverInitialized) null
+        else medtronicPumpStatus.basalsByHour
+            ?.takeIf { !BasalProfile.isBasalProfileByHourUndefined(it) }
+            ?.mapIndexed { hour, rate -> Profile.ProfileValue(hour * SECONDS_PER_HOUR, rate) }
+
     override val baseBasalRate: PumpRate
         get() = PumpRate(medtronicPumpStatus.basalProfileForHour)
 
@@ -1125,6 +1136,7 @@ class MedtronicPumpPlugin(
 
     companion object {
 
+        private const val SECONDS_PER_HOUR = 60 * 60
         val pumpFreqValues = arrayOf<CharSequence>(RileyLinkTargetFrequency.MedtronicUS.key!!, RileyLinkTargetFrequency.MedtronicWorldWide.key!!)
         val encodingValues = arrayOf<CharSequence>(RileyLinkEncodingType.FourByteSixByteLocal.key!!, RileyLinkEncodingType.FourByteSixByteRileyLink.key!!)
         val batteryValues = mutableListOf<CharSequence>().also { list -> BatteryType.entries.forEach { list.add(it.key) } }.toTypedArray()
