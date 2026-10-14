@@ -360,5 +360,7 @@
     <string name="cal_precheck_delta_too_high">Glucose is changing too fast (Δ %1$s %3$s per 5 min, limit %2$s). Wait for stability.</string>
     <string name="cal_precheck_mark_sensor_change">Mark sensor change</string>
     <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
+    <string name="belt_bolus_carbs" comment="Text of a meal marker above the BG graph: a bolus and the carbs entered with it. %1$s=insulin with its unit, %2$s=carbs with its unit. Example: 4.50 U, 50 g">%1$s, %2$s</string>
+    <string name="belt_carbs_over" comment="Text of an eCarbs marker above the BG graph. %1$s=carbs with its unit, %2$s=duration with its unit. Example: 30 g over 180 min">%1$s over %2$s</string>
 
 </resources>

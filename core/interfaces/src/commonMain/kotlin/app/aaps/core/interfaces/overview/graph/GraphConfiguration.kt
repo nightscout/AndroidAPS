@@ -25,7 +25,9 @@ enum class SeriesType {
     HEART_RATE,
     STEPS,
     ACTIVITY,
-    PREDICTIONS
+    PREDICTIONS,
+    /** UI-only overlay flag: meal markers on the treatment belt */
+    TREATMENTS
 }
 
 /**
@@ -45,7 +47,8 @@ data class SecondaryGraph(
  * - IOB graph: IOB line with bolus markers + flipped basal overlay, with optional activity
  *   overlay (toggled via [iobOverlays]).
  *
- * @param bgOverlays       Overlay toggles for the BG graph (currently only [SeriesType.ACTIVITY]).
+ * @param bgOverlays       Overlay toggles for the BG graph ([SeriesType.ACTIVITY], [SeriesType.PREDICTIONS],
+ *   [SeriesType.TREATMENTS]).
  * @param iobOverlays      Overlay toggles for the fixed IOB graph (currently only [SeriesType.ACTIVITY]).
  * @param secondaryGraphs  Ordered list of user-configurable secondary graph configurations.
  *   IOB cannot appear here (it has a dedicated fixed slot). Each graph is a List (not Set) to
@@ -54,7 +57,7 @@ data class SecondaryGraph(
  *   Max 2 series per graph. FIFO: adding a 3rd deselects the oldest.
  */
 data class GraphConfig(
-    val bgOverlays: List<SeriesType> = listOf(SeriesType.ACTIVITY, SeriesType.PREDICTIONS),
+    val bgOverlays: List<SeriesType> = listOf(SeriesType.ACTIVITY, SeriesType.PREDICTIONS, SeriesType.TREATMENTS),
     val iobOverlays: List<SeriesType> = listOf(SeriesType.ACTIVITY),
     val bgHeight: Int = DEFAULT_GRAPH_HEIGHT_DP,
     val iobHeight: Int = DEFAULT_GRAPH_HEIGHT_DP,
