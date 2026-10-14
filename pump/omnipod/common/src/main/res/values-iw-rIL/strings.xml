@@ -171,4 +171,7 @@
         <item quantity="two">התראות פוד: %1$s</item>
         <item quantity="other">התראות פוד: %1$s</item>
     </plurals>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_bolus_value">%1$.2f יח\'</string>
+    <string name="omnipod_common_history_total_delivered">סה\"כ הוזרקו: %1$.2f יח\'</string>
 </resources>
