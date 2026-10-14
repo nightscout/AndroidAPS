@@ -1636,7 +1636,11 @@ class O5PumpPlugin @Inject constructor(
             ),
             O5IntentKey.CertificateStore.withCompose(
                 ComposeScreenContent { onBack ->
-                    O5CertificateStoreScreen(rh = rh, onBack = onBack)
+                    O5CertificateStoreScreen(
+                        rh = rh,
+                        onBack = onBack,
+                        allowManualImport = config.isEngineeringMode()
+                    )
                 }
             ),
             O5IntentKey.PodHistory.withCompose(
