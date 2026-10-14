@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.dash.ui.compose
+package app.aaps.pump.omnipod.common.ui.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow

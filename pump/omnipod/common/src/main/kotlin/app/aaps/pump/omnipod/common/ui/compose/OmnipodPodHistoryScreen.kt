@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.dash.ui.compose
+package app.aaps.pump.omnipod.common.ui.compose
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -16,11 +16,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -40,11 +43,12 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.pump.common.defs.PumpHistoryEntryGroup
+import app.aaps.pump.omnipod.common.R
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
-import app.aaps.pump.omnipod.dash.R
 import app.aaps.pump.omnipod.common.history.data.BasalValuesRecord
 import app.aaps.pump.omnipod.common.history.data.BolusRecord
 import app.aaps.pump.omnipod.common.history.data.HistoryRecord
@@ -53,12 +57,59 @@ import app.aaps.pump.omnipod.common.history.data.ResolvedResult
 import app.aaps.pump.omnipod.common.history.data.TempBasalRecord
 import app.aaps.core.ui.R as CoreUiR
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
-fun DashPodHistoryScreen(
+fun OmnipodPodHistoryScreen(
     records: List<HistoryRecord>,
     rh: ResourceHelper,
-    profileUtil: ProfileUtil
+    profileUtil: ProfileUtil,
+    pumpType: PumpType,
+    onBack: (() -> Unit)? = null,
+    modifier: Modifier = Modifier
+) {
+    if (onBack != null) {
+        Scaffold(
+            modifier = modifier,
+            topBar = {
+                AapsTopAppBar(
+                    title = { Text(stringResource(R.string.omnipod_common_pod_management_button_pod_history)) },
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(CoreUiR.string.back)
+                            )
+                        }
+                    }
+                )
+            }
+        ) { paddingValues ->
+            OmnipodPodHistoryContent(
+                records = records,
+                rh = rh,
+                profileUtil = profileUtil,
+                pumpType = pumpType,
+                modifier = Modifier.padding(paddingValues)
+            )
+        }
+    } else {
+        OmnipodPodHistoryContent(
+            records = records,
+            rh = rh,
+            profileUtil = profileUtil,
+            pumpType = pumpType,
+            modifier = modifier
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
+@Composable
+private fun OmnipodPodHistoryContent(
+    records: List<HistoryRecord>,
+    rh: ResourceHelper,
+    profileUtil: ProfileUtil,
+    pumpType: PumpType,
+    modifier: Modifier = Modifier
 ) {
     val groups = remember { PumpHistoryEntryGroup.getTranslatedList(rh) }
     var selectedGroup by remember { mutableStateOf(PumpHistoryEntryGroup.All) }
@@ -77,8 +128,7 @@ fun DashPodHistoryScreen(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        // Filter chips
+    Column(modifier = modifier.fillMaxSize()) {
         FlowRow(
             modifier = Modifier
                 .fillMaxWidth()
@@ -94,7 +144,6 @@ fun DashPodHistoryScreen(
             }
         }
 
-        // History list with day headers
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -117,7 +166,7 @@ fun DashPodHistoryScreen(
                 }
 
                 items(itemsForDay, key = { it.id }) { record ->
-                    DashHistoryCard(record, rh, profileUtil, dateUtil)
+                    OmnipodHistoryCard(record, rh, profileUtil, dateUtil, pumpType)
                 }
             }
         }
@@ -125,27 +174,22 @@ fun DashPodHistoryScreen(
 }
 
 @Composable
-private fun DashHistoryCard(
+private fun OmnipodHistoryCard(
     record: HistoryRecord,
     rh: ResourceHelper,
     profileUtil: ProfileUtil,
-    dateUtil: DateUtil
+    dateUtil: DateUtil,
+    pumpType: PumpType
 ) {
     HistoryCardContent(
         commandName = stringResource(record.commandType.resourceId),
         time = dateUtil.timeString(record.displayTimestamp()),
         isSuccess = record.isSuccess(),
-        description = formatValue(record, rh, profileUtil),
+        description = formatValue(record, rh, profileUtil, pumpType),
         extra = record.totalAmountDelivered?.let { stringResource(R.string.omnipod_common_history_total_delivered, it) }
     )
 }
 
-/**
- * @see PreviewSuccessCard
- * @see PreviewSuccessSimple
- * @see PreviewFailure
- * @see PreviewTbr
- */
 @Composable
 internal fun HistoryCardContent(
     commandName: String,
@@ -161,11 +205,10 @@ internal fun HistoryCardContent(
         ) {
             Icon(
                 imageVector = if (isSuccess) Icons.Filled.CheckCircle else Icons.Filled.Error,
-                // Success or failure was only this icon and its colour. Read first in the row.
                 contentDescription = stringResource(if (isSuccess) CoreUiR.string.success else CoreUiR.string.error),
                 modifier = Modifier
                     .size(20.dp)
-                    .padding(top = 2.dp),
+                    .padding(top = AapsSpacing.extraSmall),
                 tint = if (isSuccess) MaterialTheme.colorScheme.primary
                 else MaterialTheme.colorScheme.error
             )
@@ -214,7 +257,12 @@ internal fun HistoryCardContent(
     }
 }
 
-private fun formatValue(record: HistoryRecord, rh: ResourceHelper, profileUtil: ProfileUtil): String {
+private fun formatValue(
+    record: HistoryRecord,
+    rh: ResourceHelper,
+    profileUtil: ProfileUtil,
+    pumpType: PumpType
+): String {
     if (!record.isSuccess()) {
         return rh.gs(translatedFailure(record))
     }
@@ -242,7 +290,7 @@ private fun formatValue(record: HistoryRecord, rh: ResourceHelper, profileUtil: 
         OmnipodCommandType.INSERT_CANNULA,
         OmnipodCommandType.RESUME_DELIVERY     -> {
             val basal = record.record as? BasalValuesRecord
-            basal?.let { profileUtil.getBasalProfilesDisplayable(it.segments.toTypedArray(), PumpType.OMNIPOD_DASH) } ?: ""
+            basal?.let { profileUtil.getBasalProfilesDisplayable(it.segments.toTypedArray(), pumpType) } ?: ""
         }
 
         else                                   -> ""
@@ -250,10 +298,10 @@ private fun formatValue(record: HistoryRecord, rh: ResourceHelper, profileUtil: 
 }
 
 private fun translatedFailure(record: HistoryRecord): Int = when {
-    record.initialResult == InitialResult.FAILURE_SENDING                                         -> R.string.omnipod_dash_failed_to_send
-    record.initialResult == InitialResult.NOT_SENT                                                -> R.string.omnipod_dash_command_not_sent
-    record.initialResult == InitialResult.SENT && record.resolvedResult == ResolvedResult.FAILURE -> R.string.omnipod_dash_command_not_received_by_the_pod
-    else                                                                                          -> R.string.omnipod_dash_unknown
+    record.initialResult == InitialResult.FAILURE_SENDING                                         -> R.string.omnipod_common_failed_to_send
+    record.initialResult == InitialResult.NOT_SENT                                                -> R.string.omnipod_common_command_not_sent
+    record.initialResult == InitialResult.SENT && record.resolvedResult == ResolvedResult.FAILURE -> R.string.omnipod_common_command_not_received_by_the_pod
+    else                                                                                          -> R.string.omnipod_common_unknown
 }
 
 private fun groupForCommandType(type: OmnipodCommandType): PumpHistoryEntryGroup = when (type) {
