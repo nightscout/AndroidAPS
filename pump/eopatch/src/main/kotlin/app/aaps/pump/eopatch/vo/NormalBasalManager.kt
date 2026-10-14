@@ -66,6 +66,8 @@ class NormalBasalManager : IPreference<NormalBasalManager> {
 
     fun setNormalBasal(profile: Profile) {
         normalBasal.list.clear()
+        // A new basal that was not sent yet: the doses of the old one say nothing about it.
+        normalBasal.sentDoses = null
 
         val size = profile.getBasalValues().size
         for (idx in profile.getBasalValues().indices) {

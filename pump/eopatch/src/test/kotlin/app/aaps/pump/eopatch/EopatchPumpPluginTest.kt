@@ -233,6 +233,51 @@ class EopatchPumpPluginTest : EopatchTestBase() {
         assertThat(result).isTrue()
     }
 
+    /** #2454: AAPS keeps what the patch really gives as the running profile, one value per hour. */
+    @Test
+    fun `deliveredBasal reports each hour as the patch gives it`() {
+        whenever(profile.getBasalValues()).thenReturn(arrayOf(Profile.ProfileValue(0, 0.42), Profile.ProfileValue(6 * 3600, 0.45)))
+        normalBasalManager.normalBasal = normalBasalManager.convertProfileToNormalBasal(profile)
+
+        val delivered = plugin.deliveredBasal()
+
+        assertThat(delivered.map { it.timeAsSeconds }).containsExactlyElementsIn((0 until 24).map { it * 3600 }).inOrder()
+        assertThat(delivered.map { it.value }).containsExactlyElementsIn(List(24) { hour -> if (hour < 6) 0.4 else 0.45 }).inOrder()
+    }
+
+    /** After the update that changed the rounding, the patch still runs the old program until it gets the basal again. */
+    @Test
+    fun `an active patch that runs the old rounding does not have the profile set`() {
+        patchConfig.lifecycleEvent = PatchLifecycleEvent.createActivated()
+        normalBasalManager.normalBasal = normalBasalManager.convertProfileToNormalBasal(profile)
+
+        assertThat(plugin.isThisProfileSet(profile)).isFalse()
+
+        normalBasalManager.normalBasal.sentDoses = normalBasalManager.normalBasal.doseUnitPerSegmentArray
+
+        assertThat(plugin.isThisProfileSet(profile)).isTrue()
+    }
+
+    @Test
+    fun `without an active patch only the profile values count`() {
+        patchConfig.lifecycleEvent = PatchLifecycleEvent.createShutdown()
+        normalBasalManager.setNormalBasal(profile)
+
+        assertThat(plugin.isThisProfileSet(profile)).isTrue()
+    }
+
+    @Test
+    fun `baseBasalRate is the rate the patch gives, not the profile rate`() {
+        patchConfig.lifecycleEvent = PatchLifecycleEvent.createActivated()
+        val patchState = app.aaps.pump.eopatch.vo.PatchState()
+        patchState.update(ByteArray(20), System.currentTimeMillis())
+        whenever(eopatchPreferenceManager.patchState).thenReturn(patchState)
+        whenever(profile.getBasalValues()).thenReturn(arrayOf(Profile.ProfileValue(0, 0.42)))
+        normalBasalManager.normalBasal = normalBasalManager.convertProfileToNormalBasal(profile)
+
+        assertThat(plugin.baseBasalRate.cU).isEqualTo(0.4)
+    }
+
     @Test
     fun `pumpDescription should be initialized`() {
         assertThat(plugin.pumpDescription).isNotNull()

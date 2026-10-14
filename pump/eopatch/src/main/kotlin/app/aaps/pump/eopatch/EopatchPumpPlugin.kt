@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -298,10 +299,17 @@ class EopatchPumpPlugin(
         //     return true
         // }
 
-        val ret = normalBasalManager.isEqual(profile)
-        aapsLogger.info(LTag.PUMP, "Is this profile set? $ret")
+        // An active patch must also run this basal as it is rounded now. After an update that changed the rounding
+        // it still runs the old program, and AAPS would report doses it does not give (#2454).
+        val sent = !patchConfig.isActivated || normalBasalManager.normalBasal.isSentWithCurrentRounding
+        val ret = normalBasalManager.isEqual(profile) && sent
+        aapsLogger.info(LTag.PUMP, "Is this profile set? $ret (sent with current rounding: $sent)")
         return ret
     }
+
+    /** The patch rounds each rate to the nearest 0.05 U/h (#2454), see [app.aaps.pump.eopatch.vo.NormalBasal.doseUnitPerSegmentArray]. */
+    override fun deliveredBasal(): List<Profile.ProfileValue> =
+        normalBasalManager.normalBasal.deliveredDoseUnitPerHour.mapIndexed { hour, rate -> Profile.ProfileValue(T.hours(hour.toLong()).secs().toInt(), rate) }
 
     private val _lastDataTime = MutableStateFlow(0L)
     override val lastDataTime: StateFlow<Long> = _lastDataTime
@@ -319,7 +327,8 @@ class EopatchPumpPlugin(
     override val baseBasalRate: PumpRate
         get() = PumpRate(
             if (!patchConfig.isActivated || preferenceManager.patchState.isNormalBasalPaused) 0.0
-            else normalBasalManager.normalBasal.getCurrentSegment()?.doseUnitPerHour?.toDouble() ?: 0.05
+            // What the patch really gives, as the running profile holds it - not the rate it was asked for.
+            else normalBasalManager.normalBasal.currentDeliveredDoseUnitPerHour
         )
 
     override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
