@@ -46,6 +46,7 @@
     <string name="setupwizard_pairing_status_master_none">Chưa có thiết bị khách nào được ghép nối</string>
     <string name="setupwizard_pairing_status_client_paired">Đã ghép nối với thiết bị chính</string>
     <string name="setupwizard_pairing_status_client_not_paired">Chưa được ghép nối</string>
+    <string name="setupwizard_instance_name_title">Ai đang sử dụng điện thoại này?</string>
     <string name="readstatus">Đọc trạng thái</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Thiết bị này dường như không hỗ trợ loại trừ khỏi tối ưu pin – bạn có thể gặp các vấn đề về hiệu suất.</string>
