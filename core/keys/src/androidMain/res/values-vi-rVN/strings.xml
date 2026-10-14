@@ -267,6 +267,8 @@
     <string name="lang_tr">Tiếng Thổ Nhĩ Kỳ</string>
     <string name="lang_zh_tw">Tiếng Trung Phồn Thể</string>
     <string name="lang_zh_cn">Tiếng Trung, Giản thể</string>
+    <string name="pref_title_patient_name">Tên người dùng</string>
+    <string name="pref_summary_patient_name">Tên người sử dụng điện thoại này. Tên này giúp phân biệt phiên bản AAPS trên thiết bị trong các báo cáo và quá trình đồng bộ hóa.</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">Thư mục AAPS</string>
     <!-- StringKey: Protection preferences -->
