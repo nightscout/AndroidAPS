@@ -1,87 +1,59 @@
 package app.aaps.pump.equil.manager.command
 
-import app.aaps.core.interfaces.profile.Profile
-import app.aaps.pump.equil.keys.EquilStringKey
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.shared.tests.TestBaseWithProfile
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.kotlin.whenever
 
+/** #2454: what the pump reports it runs is read back after a set. */
 class CmdBasalGetTest : TestBaseWithProfile() {
 
-    @Mock
-    private lateinit var equilManager: EquilManager
+    @Mock private lateinit var equilManager: EquilManager
 
-    @Mock
-    private lateinit var mockProfile: Profile
+    /** The answer: 6 bytes, then 48 half hours of 0.00625 U steps, low byte first. */
+    private fun answer(halfHours: List<Int>): ByteArray =
+        ByteArray(6) + halfHours.flatMap { listOf((it and 0xFF).toByte(), ((it shr 8) and 0xFF).toByte()) }
 
-    @BeforeEach
-    fun setUp() {
-        whenever(preferences.get(EquilStringKey.Device)).thenReturn("0123456789ABCDEF")
-        whenever(preferences.get(EquilStringKey.Password)).thenReturn("0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF")
+    @Test
+    fun `an hour is the insulin of its two half hours`() {
+        // 0.25 U in each half hour of the first hour (0.50 U/h), then 0.40 + 0.35 U (0.75 U/h), then 1.0 U/h.
+        val halfHours = listOf(40, 40, 64, 56) + List(44) { 80 }
+        val cmd = CmdBasalGet(aapsLogger, preferences, equilManager)
 
-        // Mock profile basal rates
-        for (i in 0..23) {
-            whenever(mockProfile.getBasalTimeFromMidnight(i * 60 * 60)).thenReturn(1.0)
-        }
+        cmd.decodeConfirmData(answer(halfHours))
+
+        assertThat(cmd.cmdSuccess).isTrue()
+        assertThat(cmd.hourlyRates).containsExactlyElementsIn(listOf(0.5, 0.75) + List(22) { 1.0 }).inOrder()
     }
 
     @Test
-    fun `constructor should store profile`() {
-        val cmd = CmdBasalGet(mockProfile, aapsLogger, preferences, equilManager)
-        assertEquals(mockProfile, cmd.profile)
+    fun `a short answer is not a basal`() {
+        val cmd = CmdBasalGet(aapsLogger, preferences, equilManager)
+
+        cmd.decodeConfirmData(ByteArray(8))
+
+        assertThat(cmd.cmdSuccess).isFalse()
+        assertThat(cmd.hourlyRates).isNull()
     }
 
+    /** An ack after the answer repeats nothing useful: it must not replace the table read before. */
     @Test
-    fun `getEventType should return null`() {
-        val cmd = CmdBasalGet(mockProfile, aapsLogger, preferences, equilManager)
-        assertNull(cmd.getEventType())
+    fun `a later short answer keeps the table`() {
+        val cmd = CmdBasalGet(aapsLogger, preferences, equilManager)
+
+        cmd.decodeConfirmData(answer(List(48) { 80 }))
+        cmd.decodeConfirmData(ByteArray(24))
+
+        assertThat(cmd.cmdSuccess).isTrue()
+        assertThat(cmd.hourlyRates).containsExactlyElementsIn(List(24) { 1.0 })
     }
 
+    /** The rate CmdBasalSet sends is cut down to a 0.0125 U/h step, never rounded up. */
     @Test
-    fun `getFirstData should return byte array with correct structure`() {
-        val cmd = CmdBasalGet(mockProfile, aapsLogger, preferences, equilManager)
-        val data = cmd.getFirstData()
-
-        assertNotNull(data)
-        assertEquals(6, data.size)
-    }
-
-    @Test
-    fun `getFirstData should have correct command bytes`() {
-        val cmd = CmdBasalGet(mockProfile, aapsLogger, preferences, equilManager)
-        val data = cmd.getFirstData()
-
-        assertEquals(0x02.toByte(), data[4])
-        assertEquals(0x02.toByte(), data[5])
-    }
-
-    @Test
-    fun `getNextData should return byte array with correct structure`() {
-        val cmd = CmdBasalGet(mockProfile, aapsLogger, preferences, equilManager)
-        val data = cmd.getNextData()
-
-        assertNotNull(data)
-        assertEquals(7, data.size)
-    }
-
-    @Test
-    fun `decodeConfirmData should set cmdSuccess to true`() {
-        val cmd = CmdBasalGet(mockProfile, aapsLogger, preferences, equilManager)
-        val testData = ByteArray(100)
-
-        val thread = Thread {
-            cmd.decodeConfirmData(testData)
-        }
-        thread.start()
-        thread.join(1000)
-
-        assertTrue(cmd.cmdSuccess)
+    fun `the rate sent for a basal is cut down to the pump step`() {
+        assertThat(CmdBasalSet.deliveredRate(1.0)).isEqualTo(1.0)
+        assertThat(CmdBasalSet.deliveredRate(0.79)).isEqualTo(0.7875)
+        assertThat(CmdBasalSet.deliveredRate(0.05)).isEqualTo(0.05)
     }
 }
