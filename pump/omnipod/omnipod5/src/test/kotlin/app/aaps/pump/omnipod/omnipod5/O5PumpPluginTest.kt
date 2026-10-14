@@ -30,6 +30,8 @@ import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import app.aaps.pump.omnipod.common.bledriver.pod.command.StopDeliveryCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.SuspendDeliveryCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramBasalCommand
+import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramBolusCommand
+import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramTempBasalCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramAlertsCommand
 import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod
 import app.aaps.pump.omnipod.common.queue.command.CommandDeliverBasalCorrection
@@ -47,6 +49,8 @@ import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
@@ -513,6 +517,151 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         assertThat(result!!.success).isTrue()
         assertThat(result.enacted).isFalse()
         verify(bleManager, never()).sendCommand(any(), any())
+    }
+
+    @Test
+    fun `zero temp basal allows a correction within 5 minutes of a bolus - same as Dash`() {
+        stubBasalCorrectionDrift(0.0)
+        whenever(podStateManager.lastBolusStartTime).thenReturn(System.currentTimeMillis())
+        whenever(bleManager.sendCommand(argThat { this is ProgramBolusCommand }, any()))
+            .thenReturn(Observable.error(IllegalStateException("Correction command not sent")))
+
+        plugin.executeCustomCommand(CommandDeliverBasalCorrection())
+
+        verify(bleManager).sendCommand(argThat { this is ProgramBolusCommand }, any())
+    }
+
+    @Test
+    fun `zero temp basal blocks a correction more than 5 minutes after a bolus`() {
+        stubBasalCorrectionDrift(0.0)
+        whenever(podStateManager.lastBolusStartTime).thenReturn(System.currentTimeMillis() - 6 * 60 * 1000L)
+
+        val result = plugin.executeCustomCommand(CommandDeliverBasalCorrection())
+
+        assertThat(result!!.success).isTrue()
+        assertThat(result.enacted).isFalse()
+        verify(bleManager, never()).sendCommand(any(), any())
+        verify(podStateManager, never()).lastBasalCorrectionTime = anyOrNull()
+    }
+
+    @Test
+    fun `zero temp basal blocks a correction without a recent bolus`() {
+        stubBasalCorrectionDrift(0.0)
+
+        val result = plugin.executeCustomCommand(CommandDeliverBasalCorrection())
+
+        assertThat(result!!.enacted).isFalse()
+        verify(bleManager, never()).sendCommand(any(), any())
+    }
+
+    @Test
+    fun `replacing a temp basal with zero queues no correction before or after the replacement`() = runBlocking<Unit> {
+        stubBasalCorrectionDrift(0.55)
+        stubStopTempBasal()
+
+        val result = plugin.setTempBasalAbsolute(0.0, 30, false, PumpSync.TemporaryBasalType.NORMAL)
+
+        assertThat(result.success).isTrue()
+        assertThat(result.enacted).isTrue()
+        val commands = inOrder(bleManager)
+        commands.verify(bleManager).sendCommand(argThat { this is StopDeliveryCommand }, any())
+        commands.verify(bleManager).sendCommand(argThat { this is ProgramTempBasalCommand }, any())
+        commands.verifyNoMoreInteractions()
+        verify(commandQueue, never()).customCommand(any())
+        verify(podStateManager, never()).lastBasalCorrectionTime = anyOrNull()
+    }
+
+    @Test
+    fun `replacing a temp basal queues a correction only after the positive replacement`() = runBlocking<Unit> {
+        stubBasalCorrectionDrift(0.55)
+        stubStopTempBasal()
+
+        val result = plugin.setTempBasalAbsolute(0.4, 30, false, PumpSync.TemporaryBasalType.NORMAL)
+
+        assertThat(result.success).isTrue()
+        val commands = inOrder(bleManager, commandQueue)
+        commands.verify(bleManager).sendCommand(argThat { this is StopDeliveryCommand }, any())
+        commands.verify(bleManager).sendCommand(argThat { this is ProgramTempBasalCommand }, any())
+        commands.verify(commandQueue).customCommand(argThat { this is CommandDeliverBasalCorrection })
+        verify(bleManager, never()).sendCommand(argThat { this is ProgramBolusCommand }, any())
+        verify(podStateManager, never()).lastBasalCorrectionTime = anyOrNull()
+    }
+
+    @Test
+    fun `a correction is not queued twice`() = runBlocking<Unit> {
+        stubBasalCorrectionDrift(0.55)
+        stubStopTempBasal()
+        whenever(commandQueue.isCustomCommandInQueue(CommandDeliverBasalCorrection::class)).thenReturn(true)
+
+        val result = plugin.setTempBasalAbsolute(0.4, 30, false, PumpSync.TemporaryBasalType.NORMAL)
+
+        assertThat(result.success).isTrue()
+        verify(commandQueue, never()).customCommand(any())
+    }
+
+    @Test
+    fun `a failed zero temp basal replacement does not queue a correction`() = runBlocking<Unit> {
+        stubBasalCorrectionDrift(0.55)
+        stubStopTempBasal()
+        whenever(bleManager.sendCommand(argThat { this is ProgramTempBasalCommand }, any()))
+            .thenReturn(Observable.error(IllegalStateException("Temp basal command not sent")))
+        whenever(rh.gs(R.string.omnipod_5_error_setting_temp_basal_might_have_failed)).thenReturn("Temp basal failed")
+
+        val result = plugin.setTempBasalAbsolute(0.0, 30, false, PumpSync.TemporaryBasalType.NORMAL)
+
+        assertThat(result.success).isFalse()
+        verify(bleManager, never()).sendCommand(argThat { this is ProgramBolusCommand }, any())
+        verify(commandQueue, never()).customCommand(any())
+        verify(podStateManager, never()).lastBasalCorrectionTime = anyOrNull()
+    }
+
+    @Test
+    fun `a standalone temp basal cancel queues a correction after the cancel`() = runBlocking<Unit> {
+        stubBasalCorrectionDrift(0.0)
+        stubStopTempBasal()
+
+        val result = plugin.cancelTempBasal(false)
+
+        assertThat(result.success).isTrue()
+        val commands = inOrder(bleManager, commandQueue)
+        commands.verify(bleManager).sendCommand(argThat { this is StopDeliveryCommand }, any())
+        commands.verify(commandQueue).customCommand(argThat { this is CommandDeliverBasalCorrection })
+        verify(bleManager, never()).sendCommand(argThat { this is ProgramBolusCommand }, any())
+    }
+
+    @Test
+    fun `a pending dose blocks the drift reset and the correction`() {
+        stubBasalCorrectionDrift(0.55)
+        // 3 bolus pulses are not counted yet, so basal looks 0.15 U too high
+        whenever(podStateManager.totalPulsesDelivered).thenReturn(23)
+        whenever(podStateManager.basalExpected).thenReturn(0.0)
+        whenever(podStateManager.pendingDoseCommand).thenReturn(pendingBolus(sequenceNumber = 4))
+
+        val result = plugin.executeCustomCommand(CommandDeliverBasalCorrection())
+
+        assertThat(result!!.success).isFalse()
+        assertThat(result.enacted).isFalse()
+        verify(podStateManager, never()).basalExpected = any()
+        verify(bleManager, never()).sendCommand(any(), any())
+        verify(podStateManager, never()).lastBasalCorrectionTime = anyOrNull()
+    }
+
+    private fun stubBasalCorrectionDrift(initialRate: Double) {
+        plugin.scope = CoroutineScope(Dispatchers.Unconfined)
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
+        whenever(podStateManager.totalPulsesDelivered).thenReturn(20)
+        whenever(podStateManager.cumulativeBolusPulsesDelivered).thenReturn(20)
+        whenever(podStateManager.basalExpected).thenReturn(0.05)
+        whenever(podStateManager.reservoirPulsesRemaining).thenReturn(1000)
+        whenever(podStateManager.podId).thenReturn(12345L)
+        whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.TEMP_BASAL_ACTIVE)
+        whenever(bleManager.sendCommand(any(), any())).thenReturn(Observable.empty())
+        var activeRate: Double? = initialRate
+        whenever(podStateManager.activeTempBasalRate).thenAnswer { activeRate }
+        doAnswer {
+            activeRate = it.getArgument<Double?>(0)
+            null
+        }.whenever(podStateManager).activeTempBasalRate = anyOrNull()
     }
 
 
