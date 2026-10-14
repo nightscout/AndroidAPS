@@ -46,6 +46,7 @@
     <string name="setupwizard_pairing_status_master_none">Brak sparowanych klientów</string>
     <string name="setupwizard_pairing_status_client_paired">Sparowano z telefonem pacjenta</string>
     <string name="setupwizard_pairing_status_client_not_paired">Jeszcze nie sparowano</string>
+    <string name="setupwizard_instance_name_title">Kto korzysta z tego telefonu?</string>
     <string name="readstatus">Odczyt stanu</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">To urządzenie nie obsługuje białej listy optymalizacji baterii - mogą wystąpić problemy z wydajnością.</string>
