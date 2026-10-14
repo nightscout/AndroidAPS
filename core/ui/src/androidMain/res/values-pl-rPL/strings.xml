@@ -127,6 +127,7 @@
     <string name="insulin_activation_failed">Insulina nie została przełączona. Twoja poprzednia insulina nadal jest w użyciu.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulina nie została przełączona: %1$s Twoja poprzednia insulina nadal jest w użyciu.</string>
     <string name="insulin_activation_unconfirmed">Nie udało się potwierdzić zmiany insuliny. Sprawdź, która insulina jest aktywna w swoim profilu, zanim podasz dawkę.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Insulina nie została zmieniona. Twoja poprzednia insulina nadal jest używana.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulina także nie została przełączona.</string>
     <string name="active"><![CDATA[<Aktywny>]]></string>
     <string name="date">Data</string>
@@ -684,6 +685,7 @@
     <string name="missing_profile_name">Brak nazwy profilu</string>
     <string name="profile_not_saved_activate">Profil nie został zapisany. Przed aktywacją zapisz profil.</string>
     <string name="profile_basal_not_compatible_with_pump">Wartość bazy nie jest zgodna z aktualną pompą i nie może zostać aktywowana. Zmniejsz procent lub dostosuj dawki bazowe.</string>
+    <string name="profile_basal_below_pump_minimum">Wartość bazy jest poniżej minimum pompy i nie może zostać aktywowana. Zwiększ procent lub dostosuj dawkę bazową.</string>
     <string name="profile_pump_incompatible_label">Limit pompy</string>
     <string name="error_in_ic_values">Błąd w przelicznikach IC</string>
     <string name="error_in_isf_values">Błąd w wartościach ISF</string>
