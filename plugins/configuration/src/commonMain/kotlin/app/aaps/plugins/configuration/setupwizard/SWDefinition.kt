@@ -248,11 +248,13 @@ class SWDefinition(
             .add(swPairingStatusProvider())
             .add(swInfoTextProvider().label(ConfigurationStrings.setupwizard_pairing_ws_warning).visibility { !preferences.get(BooleanKey.NsClient3UseWs) })
 
-    private val screenPatientName
-        get() = swScreenProvider().with(StringKey.GeneralPatientName.title)
+    // Asks as a question rather than with the preference title ("Instance name"), which reads badly as
+    // a wizard heading. The setting is device-local, so every role asks it.
+    private val screenInstanceName
+        get() = swScreenProvider().with(ConfigurationStrings.setupwizard_instance_name_title)
             .skippable(true)
-            .add(swInfoTextProvider().label(StringKey.GeneralPatientName.summary!!))
-            .add(swEditStringProvider().validator(String::isNotEmpty).preference(StringKey.GeneralPatientName))
+            .add(swInfoTextProvider().label(StringKey.GeneralInstanceName.summary!!))
+            .add(swEditStringProvider().validator(String::isNotEmpty).preference(StringKey.GeneralInstanceName))
 
     private val screenMasterPassword
         get() = swScreenProvider().with(StringKey.ProtectionMasterPassword.title)
@@ -403,7 +405,7 @@ class SWDefinition(
 
             .add(screenNsClient)
             .add(screenClientControl)
-            .add(screenPatientName)
+            .add(screenInstanceName)
             .add(screenAge)
             .add(screenInsulin)
             .add(screenBgSource)
@@ -425,7 +427,7 @@ class SWDefinition(
             .add(displaySettings)
 
             .add(screenNsClient)
-            .add(screenPatientName)
+            .add(screenInstanceName)
             .add(screenAge)
             .add(screenInsulin)
             .add(screenBgSource)
@@ -435,17 +437,21 @@ class SWDefinition(
             .add(screenPump)
             .add(screenSensitivity)
 
+    // A client asks only for what it owns itself. Units and the low/high marks are deliberately NOT
+    // here: they carry SyncSpec(Cold, Bidirectional), so the master's cold running-config doc
+    // overwrites whatever the user sets (applySyncedPrefs adopts with putRemote(.., 0L)) as soon as
+    // the Nightscout connection is up - pairing is not even needed for that. Asking would be wasted
+    // work, and on a re-run of the wizard an edit here would instead push to the master. They stay
+    // editable in Settings, where the sync badge says they are shared with the main phone.
+    // There is no BG source screen either: a client reads BG from Nightscout.
     private fun swDefinitionNSClient() = // List all the screens here
         add(screenSetupWizard)
             .add(screenEula)
             .add(screenPermissions)
             .add(screenMasterPassword)
             .add(screenImport)
-            .add(screenUnits)
-            .add(displaySettings)
 
             .add(screenNsClient)
             .add(screenPairWithMaster)
-            //.add(screenBgSource)
-            .add(screenPatientName)
+            .add(screenInstanceName)
 }

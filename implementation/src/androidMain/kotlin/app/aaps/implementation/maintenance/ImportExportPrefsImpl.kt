@@ -371,12 +371,12 @@ class ImportExportPrefsImpl(
         val n6 = Settings.Global.getString(context.contentResolver, "device_name")
 
         // name provided (hopefully) by user
-        val patientName = preferences.get(StringKey.GeneralPatientName)
-        val defaultPatientName = rh.gs(app.aaps.core.ui.R.string.patient_name_default)
+        val instanceName = preferences.get(StringKey.GeneralInstanceName)
+        val defaultInstanceName = rh.gs(app.aaps.core.ui.R.string.patient_name_default)
 
         // name we detect from OS
-        val systemName = n1 ?: n4 ?: n5 ?: n6 ?: defaultPatientName
-        return if (patientName.isNotEmpty() && patientName != defaultPatientName) patientName else systemName
+        val systemName = n1 ?: n4 ?: n5 ?: n6 ?: defaultInstanceName
+        return if (instanceName.isNotEmpty() && instanceName != defaultInstanceName) instanceName else systemName
     }
 
     /**

@@ -83,7 +83,7 @@ class MorePreferenceComponentsTest {
     fun adaptiveStringListItemRenders() {
         render {
             AdaptiveStringListPreferenceItem(
-                stringKey = StringKey.GeneralPatientName,
+                stringKey = StringKey.GeneralInstanceName,
                 entries = mapOf("a" to "Alpha", "b" to "Beta")
             )
         }
@@ -92,7 +92,7 @@ class MorePreferenceComponentsTest {
 
     @Test
     fun inlineStringItemRenders() {
-        render { InlineStringPreferenceItem(stringKey = StringKey.GeneralPatientName) }
+        render { InlineStringPreferenceItem(stringKey = StringKey.GeneralInstanceName) }
         compose.onRoot().assertIsDisplayed()
     }
 
@@ -100,7 +100,7 @@ class MorePreferenceComponentsTest {
     fun inlineStringListItemRenders() {
         render {
             InlineStringListPreferenceItem(
-                stringKey = StringKey.GeneralPatientName,
+                stringKey = StringKey.GeneralInstanceName,
                 entries = mapOf("a" to "Alpha", "b" to "Beta")
             )
         }

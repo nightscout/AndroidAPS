@@ -9,7 +9,7 @@ import app.aaps.core.keys.StringKey
 internal fun AdaptiveStringPreferencePreview() {
     PreviewTheme {
         AdaptiveStringPreferenceItem(
-            stringKey = StringKey.GeneralPatientName
+            stringKey = StringKey.GeneralInstanceName
         )
     }
 }
