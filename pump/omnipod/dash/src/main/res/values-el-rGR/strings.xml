@@ -13,13 +13,7 @@
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Προσπάθεια σύζευξης με το νέο Pod και πλήρωσή του.\n\nΌταν ολοκληρωθεί επιτυχώς η διαδικασία αρχικοποίησης, μπορείτε να πατήσετε <b>Επόμενο</b>.</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_generic_error">Γενικό σφάλμα: %1$s</string>
-    <string name="omnipod_dash_failed_to_send">Αποτυχία αποστολής της εντολής</string>
-    <string name="omnipod_dash_command_not_sent">Η εντολή δεν εστάλη</string>
-    <string name="omnipod_dash_command_not_received_by_the_pod">Εντολή που δεν ελήφθη από το pod</string>
-    <string name="omnipod_dash_unknown">Άγνωστη κατάσταση της εντολής</string>
-    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d λεπτά</string>
     <string name="omnipod_common_alert_delivery_suspended">Η χορήγηση ινσουλίνης είναι σε αναστολή</string>
-    <string name="omnipod_common_history_total_delivered">Σύνολο παραδόθηκε: %1$.2f U</string>
     <string name="omnipod_dash_bolus_already_in_progress">Ένα άλλο bolus παραδίδεται</string>
     <string name="omnipod_dash_not_enough_insulin">Δεν υπάρχει αρκετή ινσουλίνη στη δεξαμενή</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Ανεπιβεβαίωτη εντολή</string>
