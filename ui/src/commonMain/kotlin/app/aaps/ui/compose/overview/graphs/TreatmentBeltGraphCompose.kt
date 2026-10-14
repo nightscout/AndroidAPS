@@ -7,9 +7,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -46,7 +48,9 @@ import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvi
 import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarkerController
+import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarkerVisibilityListener
 import com.patrykandpatrick.vico.compose.cartesian.marker.DefaultCartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.marker.rememberDefaultCartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
@@ -96,6 +100,8 @@ fun TreatmentBeltGraphCompose(
     zoomState: VicoZoomState,
     derivedTimeRange: Pair<Long, Long>?,
     nowTimestamp: Long,
+    tooltipDismissKey: Int = 0,
+    onTooltipShownChange: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val dateUtil = LocalDateUtil.current
@@ -472,6 +478,13 @@ fun TreatmentBeltGraphCompose(
     // =========================================================================
     val modeNameMap = rememberModeNameMap()
     val beltMarker = rememberBeltMarker(modeNameMap)
+    val currentOnTooltipShownChange by rememberUpdatedState(onTooltipShownChange)
+    val markerVisibilityListener = remember {
+        object : CartesianMarkerVisibilityListener {
+            override fun onShown(marker: CartesianMarker, targets: List<CartesianMarker.Target>) = currentOnTooltipShownChange(true)
+            override fun onHidden(marker: CartesianMarker) = currentOnTooltipShownChange(false)
+        }
+    }
 
     // Now line decoration
     val nowLineColor = MaterialTheme.colorScheme.onSurface
@@ -482,38 +495,42 @@ fun TreatmentBeltGraphCompose(
         CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = 1.0)
     }
 
-    CartesianChartHost(
-        chart = rememberCartesianChart(
-            rememberLineCartesianLayer(
-                lineProvider = LineCartesianLayer.LineProvider.series(lines),
-                rangeProvider = rangeProvider
-            ),
-            marker = beltMarker,
-            markerController = CartesianMarkerController.rememberToggleOnTap(),
-            decorations = beltDecorations,
-            startAxis = VerticalAxis.rememberStart(
-                label = rememberTextComponent(
-                    style = TextStyle(color = Color.Transparent),
-                    minWidth = TextComponent.MinWidth.fixed(30.dp)
+    // A new dismiss key rebuilds the chart, which is the only way to close Vico's tooltip from outside
+    key(tooltipDismissKey) {
+        CartesianChartHost(
+            chart = rememberCartesianChart(
+                rememberLineCartesianLayer(
+                    lineProvider = LineCartesianLayer.LineProvider.series(lines),
+                    rangeProvider = rangeProvider
                 ),
-                tick = rememberAxisTickComponent(fill = Fill(Color.Transparent)),
-                itemPlacer = remember { VerticalAxis.ItemPlacer.count({ 2 }) }
+                marker = beltMarker,
+                markerVisibilityListener = markerVisibilityListener,
+                markerController = CartesianMarkerController.rememberToggleOnTap(),
+                decorations = beltDecorations,
+                startAxis = VerticalAxis.rememberStart(
+                    label = rememberTextComponent(
+                        style = TextStyle(color = Color.Transparent),
+                        minWidth = TextComponent.MinWidth.fixed(30.dp)
+                    ),
+                    tick = rememberAxisTickComponent(fill = Fill(Color.Transparent)),
+                    itemPlacer = remember { VerticalAxis.ItemPlacer.count({ 2 }) }
+                ),
+                bottomAxis = HorizontalAxis.rememberBottom(
+                    valueFormatter = timeFormatter,
+                    itemPlacer = bottomAxisItemPlacer,
+                    label = null,
+                    tick = null
+                ),
+                getXStep = { _, _, _ -> 1.0 }
             ),
-            bottomAxis = HorizontalAxis.rememberBottom(
-                valueFormatter = timeFormatter,
-                itemPlacer = bottomAxisItemPlacer,
-                label = null,
-                tick = null
-            ),
-            getXStep = { _, _, _ -> 1.0 }
-        ),
-        modelProducer = modelProducer,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(48.dp),
-        scrollState = scrollState,
-        zoomState = zoomState
-    )
+            modelProducer = modelProducer,
+            modifier = modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            scrollState = scrollState,
+            zoomState = zoomState
+        )
+    }
 }
 
 /**
