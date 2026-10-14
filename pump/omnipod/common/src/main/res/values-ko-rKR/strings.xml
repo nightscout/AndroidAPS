@@ -147,4 +147,7 @@
     <plurals name="omnipod_common_pod_alerts">
         <item quantity="other">Pod 경고: %1$s</item>
     </plurals>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_history_total_delivered">총 주입량: %1$.2f U</string>
 </resources>
