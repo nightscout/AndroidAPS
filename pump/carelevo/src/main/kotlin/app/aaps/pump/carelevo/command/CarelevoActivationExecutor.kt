@@ -341,7 +341,7 @@ class CarelevoActivationExecutor @Inject constructor(
             // the discarded patch is reloaded as connected on the next app start.
             val persisted = patchForceDiscardUseCase.execute().blockingGet() is ResponseResult.Success
             if (!persisted) aapsLogger.error(LTag.PUMPCOMM, "newBle.discard persist failed")
-            carelevoPatch.discardTeardown()
+            carelevoPatch.discardTeardown(address)
         }
         aapsLogger.info(LTag.PUMPCOMM, "newBle.discard stopped=$stopped")
         return result.success(stopped).enacted(stopped)

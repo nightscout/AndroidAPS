@@ -2,6 +2,7 @@ package app.aaps.pump.carelevo
 
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.ble.commands.BolusCancelCommand
 import app.aaps.pump.carelevo.ble.commands.BolusCancelResponse
 import app.aaps.pump.carelevo.ble.commands.ExtendBolusCancelCommand
@@ -207,8 +208,8 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
     fun `deliverTreatment should explain an over-limit reject with the deliverable amount`() {
         whenever { bleSession.runSingle(any(), isA<ImmediateBolusCommand>(), any()) }
             .thenReturn(ImmediateBolusResponse(actionId = 1, resultCode = 20, expectedCompletionSeconds = 0, remainingReservoirUnits = 2.8))
-        whenever(rh.gs(eq(app.aaps.pump.carelevo.R.string.common_label_unit_value_dose_with_space), any())).thenReturn("2.8 U")
-        whenever(rh.gs(eq(app.aaps.pump.carelevo.R.string.carelevo_bolus_rejected_exceed_limit), eq("2.8 U"))).thenReturn("over limit 2.8 U")
+        whenever(rh.gs(eq(R.string.common_label_unit_value_dose_with_space), eq("2.80"))).thenReturn("2.80 U")
+        whenever(rh.gs(eq(R.string.carelevo_bolus_rejected_exceed_limit), eq("2.80 U"))).thenReturn("over limit 2.80 U")
 
         val result = runBlocking {
             plugin.deliverTreatment(DetailedBolusInfo().apply {
@@ -218,7 +219,7 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
         }
 
         assertThat(result.success).isFalse()
-        assertThat(result.comment).isEqualTo("over limit 2.8 U")
+        assertThat(result.comment).isEqualTo("over limit 2.80 U")
     }
 
     @Test

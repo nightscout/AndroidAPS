@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.pump.carelevo.R
@@ -28,6 +29,8 @@ import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.coordinator.CarelevoBolusCoordinator.Companion.CANCEL_WAIT_TIMEOUT_MS
 import app.aaps.pump.carelevo.coordinator.CarelevoBolusCoordinator.Companion.NEW_STACK_CANCEL_MAX_RETRY
 import app.aaps.pump.carelevo.domain.model.ResponseResult
+import app.aaps.pump.carelevo.domain.model.bt.SetBolusProgramResult
+import app.aaps.pump.carelevo.domain.model.bt.SetBolusProgramResult.Companion.codeToSetBolusProgramCommand
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoCancelExtendBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoCancelImmeBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoFinishImmeBolusInfusionUseCase
@@ -65,7 +68,8 @@ class CarelevoBolusCoordinator @Inject constructor(
     private val finishImmeBolusInfusionUseCase: CarelevoFinishImmeBolusInfusionUseCase,
     private val cancelImmeBolusInfusionUseCase: CarelevoCancelImmeBolusInfusionUseCase,
     private val startExtendBolusInfusionUseCase: CarelevoStartExtendBolusInfusionUseCase,
-    private val cancelExtendBolusInfusionUseCase: CarelevoCancelExtendBolusInfusionUseCase
+    private val cancelExtendBolusInfusionUseCase: CarelevoCancelExtendBolusInfusionUseCase,
+    private val decimalFormatter: DecimalFormatter
 ) {
 
     companion object {
@@ -73,15 +77,6 @@ class CarelevoBolusCoordinator @Inject constructor(
         private const val STOP_BOLUS_TIME_OUT = 15_000L
         private const val PROGRESS_POLL_MS = 100L
         private const val RESULT_SUCCESS = 0
-
-        // ImmediateBolusCommand reject codes
-        private const val RESULT_INSULIN_DEFICIENCY = 1
-        private const val RESULT_EXPIRED = 2
-        private const val RESULT_LOW_VOLTAGE = 3
-        private const val RESULT_ABNORMAL_TEMP = 4
-        private const val RESULT_PUMP_ERROR = 12
-        private const val RESULT_EXCEED_LIMIT = 20
-        private const val MIN_BOLUS_UNITS = 0.05
 
         // The out-of-band cancel opens a fresh GATT per attempt, so cap retries low — a single bounded
         // connect+write settles a reachable patch; more attempts only lengthen the two-GATT-collision
@@ -567,19 +562,19 @@ class CarelevoBolusCoordinator @Inject constructor(
 
     /**
      * Reason shown under the core's bolus-error alarm when the patch rejects the start. On
-     * [RESULT_EXCEED_LIMIT] the response carries the amount still deliverable instead of the reservoir.
+     * [SetBolusProgramResult.EXCEED_LIMIT] the response carries the amount still deliverable instead of the reservoir.
      */
-    private fun startRejectedMessage(resultCode: Int, remains: Double): String = when (resultCode) {
-        RESULT_INSULIN_DEFICIENCY -> rh.gs(R.string.alarm_feat_title_warning_low_insulin)
-        RESULT_EXPIRED            -> rh.gs(R.string.alarm_feat_title_warning_expired_patch)
-        RESULT_LOW_VOLTAGE        -> rh.gs(R.string.alarm_feat_title_warning_low_battery)
-        RESULT_ABNORMAL_TEMP      -> rh.gs(R.string.alarm_feat_title_warning_invalid_temperature)
-        RESULT_PUMP_ERROR         -> rh.gs(R.string.alarm_feat_title_warning_patch_error)
-        RESULT_EXCEED_LIMIT       ->
-            if (remains < MIN_BOLUS_UNITS) rh.gs(R.string.carelevo_bolus_rejected_exceed_limit_none)
-            else rh.gs(R.string.carelevo_bolus_rejected_exceed_limit, rh.gs(R.string.common_label_unit_value_dose_with_space, remains))
+    private fun startRejectedMessage(resultCode: Int, remains: Double): String = when (resultCode.codeToSetBolusProgramCommand()) {
+        SetBolusProgramResult.INSULIN_DEFICIENCY -> rh.gs(R.string.alarm_feat_title_warning_low_insulin)
+        SetBolusProgramResult.EXPIRED            -> rh.gs(R.string.alarm_feat_title_warning_expired_patch)
+        SetBolusProgramResult.LOW_VOLTAGE        -> rh.gs(R.string.alarm_feat_title_warning_low_battery)
+        SetBolusProgramResult.ABNORMAL_TEMP      -> rh.gs(R.string.alarm_feat_title_warning_invalid_temperature)
+        SetBolusProgramResult.PUMP_ERROR         -> rh.gs(R.string.alarm_feat_title_warning_patch_error)
+        SetBolusProgramResult.EXCEED_LIMIT       ->
+            if (remains < PumpType.CAREMEDI_CARELEVO.bolusSize()) rh.gs(R.string.carelevo_bolus_rejected_exceed_limit_none)
+            else rh.gs(R.string.carelevo_bolus_rejected_exceed_limit, rh.gs(R.string.common_label_unit_value_dose_with_space, decimalFormatter.to2Decimal(remains)))
 
-        else                      -> rh.gs(R.string.alarm_feat_msg_check_patch_connect)
+        else                                     -> rh.gs(R.string.alarm_feat_msg_check_patch_connect)
     }
 
     private fun handleBolusError(e: Throwable, result: PumpEnactResult) {

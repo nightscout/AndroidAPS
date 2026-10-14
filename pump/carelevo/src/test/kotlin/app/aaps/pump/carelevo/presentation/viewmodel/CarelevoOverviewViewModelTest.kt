@@ -978,7 +978,7 @@ class CarelevoOverviewViewModelTest {
 
         verifyBlocking(commandQueue) { customCommand(any<CmdDiscard>()) }
         // The queue's CmdDiscard owns unBond + releasePatch; the VM must not double-tear-down.
-        verify(carelevoPatch, never()).discardTeardown()
+        verify(carelevoPatch, never()).discardTeardown(anyOrNull())
         verify(patchForceDiscardUseCase, never()).execute()
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
         assertThat(events).isEmpty()
@@ -994,7 +994,7 @@ class CarelevoOverviewViewModelTest {
         sut.startDiscardProcess()
 
         verify(patchForceDiscardUseCase).execute()
-        verify(carelevoPatch).discardTeardown()
+        verify(carelevoPatch).discardTeardown(anyOrNull())
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
         assertThat(events).isEmpty()
     }
@@ -1008,7 +1008,7 @@ class CarelevoOverviewViewModelTest {
         sut.startDiscardProcess()
 
         assertThat(events).containsExactly(CarelevoOverviewEvent.DiscardFailed)
-        verify(carelevoPatch, never()).discardTeardown()
+        verify(carelevoPatch, never()).discardTeardown(anyOrNull())
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
     }
 
@@ -1021,7 +1021,7 @@ class CarelevoOverviewViewModelTest {
         sut.startDiscardProcess()
 
         assertThat(events).containsExactly(CarelevoOverviewEvent.DiscardFailed)
-        verify(carelevoPatch, never()).discardTeardown()
+        verify(carelevoPatch, never()).discardTeardown(anyOrNull())
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
     }
 
@@ -1034,7 +1034,7 @@ class CarelevoOverviewViewModelTest {
         sut.startDiscardProcess()
 
         assertThat(events).containsExactly(CarelevoOverviewEvent.DiscardFailed)
-        verify(carelevoPatch, never()).discardTeardown()
+        verify(carelevoPatch, never()).discardTeardown(anyOrNull())
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
     }
 

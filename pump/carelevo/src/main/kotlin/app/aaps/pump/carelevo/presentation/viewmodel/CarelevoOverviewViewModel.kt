@@ -528,11 +528,11 @@ class CarelevoOverviewViewModel @Inject constructor(
         }
     }
 
-    private fun handlePatchDiscardResponse(response: ResponseResult<*>) {
+    private fun handlePatchDiscardResponse(response: ResponseResult<*>, address: String?) {
         when (response) {
             is ResponseResult.Success -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "[startPatchDiscard] success")
-                carelevoPatch.discardTeardown()
+                carelevoPatch.discardTeardown(address)
             }
 
             else                      -> {
@@ -551,12 +551,13 @@ class CarelevoOverviewViewModel @Inject constructor(
 
     /** Only reached from [startDiscardProcess], which already holds the operation lock. */
     private fun startPatchForceDiscard() {
+        val address = carelevoPatch.getPatchInfoAddress()
         compositeDisposable += patchForceDiscardUseCase.execute()
             .timeout(10, TimeUnit.SECONDS)
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
             .subscribe(
-                { response -> handlePatchDiscardResponse(response) },
+                { response -> handlePatchDiscardResponse(response, address) },
                 { error -> handlePatchDiscardError(error) }
             )
     }

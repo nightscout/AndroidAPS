@@ -44,6 +44,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -471,7 +472,8 @@ internal class CarelevoActivationExecutorTest {
         assertThat(result?.success).isTrue()
         assertThat(result?.enacted).isTrue()
         verify(patchForceDiscardUseCase).execute()
-        verify(carelevoPatch).discardTeardown()
+        // The bond is removed with the address read before the stored patch was deleted.
+        verify(carelevoPatch).discardTeardown(ADDRESS)
     }
 
     @Test fun `discard does not tear down and fails when the stop write is rejected`() {
@@ -479,14 +481,14 @@ internal class CarelevoActivationExecutorTest {
         val result = sut.execute(CmdDiscard())
         assertThat(result?.success).isFalse()
         verify(patchForceDiscardUseCase, never()).execute()
-        verify(carelevoPatch, never()).discardTeardown()
+        verify(carelevoPatch, never()).discardTeardown(anyOrNull())
     }
 
     @Test fun `discard swallows the write exception and fails without teardown`() {
         stubRunSingleThrows()
         val result = sut.execute(CmdDiscard())
         assertThat(result?.success).isFalse()
-        verify(carelevoPatch, never()).discardTeardown()
+        verify(carelevoPatch, never()).discardTeardown(anyOrNull())
     }
 
     // endregion
