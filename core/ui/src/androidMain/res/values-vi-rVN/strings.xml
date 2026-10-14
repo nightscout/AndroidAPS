@@ -127,6 +127,7 @@
     <string name="insulin_activation_failed">Loại insulin chưa được chuyển đổi. Loại insulin trước đó vẫn đang được sử dụng.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Chưa chuyển sang loại insulin mới: %1$s. Loại insulin trước đó vẫn đang được sử dụng.</string>
     <string name="insulin_activation_unconfirmed">Không thể xác nhận việc chuyển đổi loại insulin. Hãy kiểm tra loại insulin nào đang hoạt động trong cấu hình trước khi tiêm insulin.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Chưa chuyển đổi loại insulin. Loại insulin trước đó vẫn đang được sử dụng.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nLoại insulin cũng chưa được chuyển đổi.</string>
     <string name="active"><![CDATA[<Đang hoạt động>]]></string>
     <string name="date">Ngày</string>
@@ -226,6 +227,8 @@
     <string name="logout">Đăng xuất</string>
     <string name="prime_fill">Mồi/Nạp</string>
     <string name="prime_not_available">Bơm này tự nạp insulin và mồi trong quá trình kích hoạt. Không thể thực hiện thao tác Nạp/Mồi từ AAPS.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Thay đổi</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Làm đầy</string>
     <string name="site_rotation">Chuyển vị trí</string>
     <string name="edit_site">Sửa</string>
     <string name="select_arrow">Chọn Mũi tên</string>
@@ -682,6 +685,7 @@
     <string name="missing_profile_name">Thiếu tên cấu hình</string>
     <string name="profile_not_saved_activate">Cấu hình điều trị chưa được lưu. Vui lòng lưu trước khi kích hoạt.</string>
     <string name="profile_basal_not_compatible_with_pump">Tỷ lệ liều nền không tương thích với máy bơm hiện tại và không thể được kích hoạt. Hãy giảm tỷ lệ phần trăm hoặc điều chỉnh tỷ lệ liều nền.</string>
+    <string name="profile_basal_below_pump_minimum">Tốc độ liều nền thấp hơn mức tối thiểu của bơm hiện tại nên không thể kích hoạt. Hãy tăng tỷ lệ phần trăm hoặc điều chỉnh tốc độ liều nền.</string>
     <string name="profile_pump_incompatible_label">Giới hạn Bơm</string>
     <string name="error_in_ic_values">Lỗi trong giá trị IC</string>
     <string name="error_in_isf_values">Lỗi trong giá trị IC</string>
