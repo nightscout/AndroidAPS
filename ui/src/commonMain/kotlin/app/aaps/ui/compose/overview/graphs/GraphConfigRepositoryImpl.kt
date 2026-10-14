@@ -77,6 +77,8 @@ class GraphConfigRepositoryImpl(
 
         private const val KEY_SECONDARY_GRAPHS = "secondaryGraphs"
         private const val KEY_BG_OVERLAYS = "bgOverlays"
+        // Written with every config, so a stored config without it is from before the meal markers
+        private const val KEY_HAS_TREATMENTS_OVERLAY = "hasTreatmentsOverlay"
         private const val KEY_IOB_OVERLAYS = "iobOverlays"
         private const val KEY_BG_HEIGHT = "bgHeight"
         private const val KEY_IOB_HEIGHT = "iobHeight"
@@ -104,6 +106,7 @@ class GraphConfigRepositoryImpl(
         fun toJson(config: GraphConfig): String =
             buildJsonObject {
                 put(KEY_BG_OVERLAYS, overlaysToJson(config.bgOverlays))
+                put(KEY_HAS_TREATMENTS_OVERLAY, true)
                 put(KEY_IOB_OVERLAYS, overlaysToJson(config.iobOverlays))
                 put(KEY_BG_HEIGHT, config.bgHeight)
                 put(KEY_IOB_HEIGHT, config.iobHeight)
@@ -133,7 +136,10 @@ class GraphConfigRepositoryImpl(
 
         fun fromJson(json: String): GraphConfig {
             val obj = Json.parseToJsonElement(json) as JsonObject
-            val bgOverlays = overlaysFromJson(obj.array(KEY_BG_OVERLAYS), listOf(SeriesType.ACTIVITY, SeriesType.PREDICTIONS))
+            val storedBgOverlays = overlaysFromJson(obj.array(KEY_BG_OVERLAYS), listOf(SeriesType.ACTIVITY, SeriesType.PREDICTIONS, SeriesType.TREATMENTS))
+            val bgOverlays =
+                if (obj[KEY_HAS_TREATMENTS_OVERLAY] == null && SeriesType.TREATMENTS !in storedBgOverlays) storedBgOverlays + SeriesType.TREATMENTS
+                else storedBgOverlays
             val iobOverlays = overlaysFromJson(obj.array(KEY_IOB_OVERLAYS), listOf(SeriesType.ACTIVITY))
             val bgHeight = obj.height(KEY_BG_HEIGHT)
             val iobHeight = obj.height(KEY_IOB_HEIGHT)

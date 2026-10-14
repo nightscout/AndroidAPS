@@ -281,7 +281,10 @@ enum class TherapyEventType {
     SETTINGS_EXPORT,       // Settings export
     EXERCISE,              // Exercise
     GENERAL,               // General event (no duration)
-    GENERAL_WITH_DURATION  // General event with duration
+    GENERAL_WITH_DURATION, // General event with duration
+    BOLUS,                 // Meal bolus without carbs (no SMB)
+    CARBS,                 // Carbs without a bolus, eCarbs included
+    BOLUS_WITH_CARBS       // Meal bolus with the carbs entered with it
 }
 
 /**

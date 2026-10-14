@@ -117,6 +117,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.roundToInt
 
 /**
  * Implementation of OverviewDataCache using MutableStateFlow.
@@ -875,7 +876,8 @@ class OverviewDataCacheImpl(
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
 
         // Boluses and SMBs
-        val bolusPoints = persistenceLayer.getBolusesFromTimeToTime(fromTime, toTime, true)
+        val boluses = persistenceLayer.getBolusesFromTimeToTime(fromTime, toTime, true)
+        val bolusPoints = boluses
             .filter { it.type == BS.Type.NORMAL || it.type == BS.Type.SMB }
             .map { bs ->
                 BolusGraphPoint(
@@ -934,11 +936,36 @@ class OverviewDataCacheImpl(
                 )
             }
 
+        // Not expanded, so eCarbs stay one entry
+        val carbs = persistenceLayer.getCarbsFromTimeNotExpanded(fromTime, true).filter { it.timestamp <= toTime }
+        val mealPoints = beltMeals(boluses, carbs).map { meal ->
+            val insulin = meal.insulin?.let { decimalFormatter.toPumpSupportedBolusWithUnits(it, bolusStep) }
+            val carbsText = meal.carbs?.let { grams ->
+                val amount = rh.gs(InterfacesStrings.format_carbs, grams.roundToInt())
+                if (meal.carbsDuration > 0) rh.gs(UiStrings.belt_carbs_over, amount, rh.gs(CoreUiStrings.format_mins, T.msecs(meal.carbsDuration).mins().toInt()))
+                else amount
+            }
+            TherapyEventGraphPoint(
+                timestamp = meal.timestamp,
+                eventType = when {
+                    insulin != null && carbsText != null -> TherapyEventType.BOLUS_WITH_CARBS
+                    insulin != null                      -> TherapyEventType.BOLUS
+                    else                                 -> TherapyEventType.CARBS
+                },
+                label = when {
+                    insulin != null && carbsText != null -> rh.gs(UiStrings.belt_bolus_carbs, insulin, carbsText)
+                    else                                 -> insulin ?: carbsText ?: ""
+                },
+                // The eCarbs duration is in the text
+                duration = 0L
+            )
+        }
+
         _treatmentGraphFlow.value = TreatmentGraphData(
             boluses = bolusPoints,
             carbs = carbsPoints,
             extendedBoluses = extendedBolusPoints,
-            therapyEvents = therapyEventPoints
+            therapyEvents = therapyEventPoints + mealPoints
         )
     }
 
@@ -1340,4 +1367,25 @@ internal fun mergeRunningModeSegments(samples: List<Pair<Long, RM.Mode>>, endTim
         else segments.add(RunningModeSegment(mode, start, end))
     }
     return segments
+}
+
+/** A meal on the treatment belt: a bolus, carbs, or both. [carbsDuration] is set for eCarbs. */
+internal data class BeltMeal(val timestamp: Long, val insulin: Double?, val carbs: Double?, val carbsDuration: Long)
+
+/**
+ * Meal boluses (no SMBs) and carbs for the belt. Carbs within [window] of a bolus join the nearest one,
+ * because the database does not link them; eCarbs are always their own entry.
+ */
+internal fun beltMeals(boluses: List<BS>, carbs: List<CA>, window: Long = T.mins(15).msecs()): List<BeltMeal> {
+    val mealBoluses = boluses.filter { it.isValid && it.type == BS.Type.NORMAL && it.amount > 0.0 }
+    val carbsOfBolus = mealBoluses.associateWith { mutableListOf<CA>() }
+    val ownCarbs = mutableListOf<CA>()
+    for (ca in carbs.filter { it.isValid && it.amount > 0.0 }) {
+        val bolus = if (ca.duration > 0) null
+        else mealBoluses.filter { abs(it.timestamp - ca.timestamp) <= window }.minByOrNull { abs(it.timestamp - ca.timestamp) }
+        if (bolus == null) ownCarbs.add(ca) else carbsOfBolus.getValue(bolus).add(ca)
+    }
+    val withBolus = carbsOfBolus.map { (bs, cas) -> BeltMeal(bs.timestamp, bs.amount, cas.sumOf { it.amount }.takeIf { cas.isNotEmpty() }, 0L) }
+    val alone = ownCarbs.map { BeltMeal(it.timestamp, null, it.amount, it.duration) }
+    return (withBolus + alone).sortedBy { it.timestamp }
 }

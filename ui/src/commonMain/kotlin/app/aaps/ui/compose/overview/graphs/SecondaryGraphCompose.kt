@@ -233,6 +233,7 @@ fun SecondaryGraphCompose(
         SeriesType.STEPS           -> viewModel.stepsGraphFlow.collectAsStateWithLifecycle().value.steps
         SeriesType.ACTIVITY        -> viewModel.activityGraphFlow.collectAsStateWithLifecycle().value.activity
         SeriesType.PREDICTIONS     -> emptyList() // UI-only overlay flag, not a secondary series
+        SeriesType.TREATMENTS      -> emptyList() // UI-only overlay flag, not a secondary series
     }
 
     // Cache last non-empty treatment data to survive reset() cycles
@@ -1149,6 +1150,7 @@ data class SeriesColors(
         SeriesType.STEPS           -> steps
         SeriesType.ACTIVITY        -> activity
         SeriesType.PREDICTIONS     -> activity // unused — PREDICTIONS is a BG overlay flag, not a secondary series
+        SeriesType.TREATMENTS      -> activity // unused — TREATMENTS is a BG overlay flag, not a secondary series
     }
 }
 

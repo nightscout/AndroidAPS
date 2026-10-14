@@ -87,15 +87,24 @@ class GraphConfigRepositoryImplTest {
     fun `missing overlays fall back to the defaults`() {
         val restored = GraphConfigRepositoryImpl.fromJson("{}")
 
-        assertThat(restored.bgOverlays).containsExactly(SeriesType.ACTIVITY, SeriesType.PREDICTIONS).inOrder()
+        assertThat(restored.bgOverlays).containsExactly(SeriesType.ACTIVITY, SeriesType.PREDICTIONS, SeriesType.TREATMENTS).inOrder()
         assertThat(restored.iobOverlays).containsExactly(SeriesType.ACTIVITY)
     }
 
     @Test
     fun `an empty overlay list is kept empty, not replaced by the default`() {
         // Written explicitly means the user turned them all off - that is not the same as absent.
-        val restored = GraphConfigRepositoryImpl.fromJson("""{"bgOverlays":[]}""")
+        val restored = GraphConfigRepositoryImpl.fromJson("""{"bgOverlays":[],"hasTreatmentsOverlay":true}""")
 
         assertThat(restored.bgOverlays).isEmpty()
+    }
+
+    @Test
+    fun `a config saved before the meal markers existed gets them once, a newer one keeps the choice`() {
+        val old = GraphConfigRepositoryImpl.fromJson("""{"bgOverlays":["ACTIVITY"]}""")
+        assertThat(old.bgOverlays).containsExactly(SeriesType.ACTIVITY, SeriesType.TREATMENTS).inOrder()
+
+        val turnedOff = GraphConfigRepositoryImpl.fromJson(GraphConfigRepositoryImpl.toJson(old.copy(bgOverlays = listOf(SeriesType.ACTIVITY))))
+        assertThat(turnedOff.bgOverlays).containsExactly(SeriesType.ACTIVITY)
     }
 }
