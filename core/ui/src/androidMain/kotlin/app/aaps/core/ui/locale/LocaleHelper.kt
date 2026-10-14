@@ -31,6 +31,15 @@ object LocaleHelper {
     // one copy is what stops that happening again.
     private fun isoLanguage(language: String): String = LanguageTag.isoLanguage(language)
 
+    /**
+     * True when the user did not pick a language, so resources must follow the phone.
+     *
+     * Ask this instead of comparing a locale with [Locale.getDefault]. [update] and [wrap] both move
+     * the default locale to the selected language, so after either of them has run such a comparison
+     * says "already right" for a context that is still in the phone language.
+     */
+    fun isSystemDefault(context: Context): Boolean = selectedLanguage(context) == "default"
+
     fun currentLocale(context: Context): Locale {
         val language = selectedLanguage(context)
         if (language == "default") return Locale.getDefault()
@@ -47,7 +56,7 @@ object LocaleHelper {
 
     fun update(context: Context) {
         // no action for system default language
-        if (selectedLanguage(context) == "default") return
+        if (isSystemDefault(context)) return
 
         val locale = currentLocale(context)
         Locale.setDefault(locale)
@@ -55,7 +64,7 @@ object LocaleHelper {
 
     fun wrap(ctx: Context): Context {
         // no action for system default language
-        if (selectedLanguage(ctx) == "default") return ctx
+        if (isSystemDefault(ctx)) return ctx
 
         val configuration = Configuration(ctx.resources.configuration)
         val newLocale = currentLocale(ctx)

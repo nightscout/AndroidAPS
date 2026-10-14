@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.insight.app_layer.AppLayerMessage
+import app.aaps.pump.insight.app_layer.ReadParameterBlockMessage
 import app.aaps.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage
 import app.aaps.pump.insight.app_layer.configuration.OpenConfigurationWriteSessionMessage
 import app.aaps.pump.insight.app_layer.configuration.WriteConfigurationBlockMessage
@@ -18,6 +19,7 @@ import app.aaps.pump.insight.connection_service.MessageRequest
 import app.aaps.pump.insight.database.InsightDatabase
 import app.aaps.pump.insight.database.InsightDbHelper
 import app.aaps.pump.insight.descriptors.BasalProfile
+import app.aaps.pump.insight.descriptors.BasalProfileBlock
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -134,6 +136,60 @@ class InsightPluginBasalProfileTest : TestBaseWithProfile() {
         val rates = writtenBlocks().filterIsInstance<BRProfile1Block>().single()
         assertThat(rates.profileBlocks.map { it.duration }).containsExactly(360, 720, 360).inOrder()
         assertThat(rates.profileBlocks.map { it.basalAmount }).containsExactly(0.5, 0.8, 0.6).inOrder()
+    }
+
+    // --- #2454: the running basal is what the pump keeps ---
+
+    private fun blocks(vararg blocks: Pair<Int, Double>) = blocks.map { (minutes, amount) -> BasalProfileBlock().apply { duration = minutes; basalAmount = amount } }
+
+    /** The pump answers the read of profile 1 with [reported], or with nothing when it is null. */
+    private fun pumpReports(reported: List<BasalProfileBlock>?) {
+        whenever(connectionService.isPaired).thenReturn(true)
+        whenever(connectionService.requestMessage(any<AppLayerMessage>())).thenAnswer { invocation ->
+            val message = invocation.getArgument<AppLayerMessage>(0)
+            if (message is ReadParameterBlockMessage && message.parameterBlockId == BRProfile1Block::class.java) {
+                val answer = mock<ReadParameterBlockMessage>()
+                whenever(answer.parameterBlock).thenReturn(reported?.let { BRProfile1Block().apply { profileBlocks = it.toMutableList() } })
+                MessageRequest(message).also { it.response = answer }
+            } else answered(message)
+        }
+    }
+
+    @Test
+    fun afterTheSetTheProfileIsReadBackAndThatIsTheDeliveredBasal() = runBlocking {
+        pumpReports(blocks(360 to 0.49, 720 to 0.8, 360 to 0.6))
+
+        sut.setNewBasalProfile(profile)
+
+        val delivered = sut.deliveredBasal()!!
+        assertThat(delivered.map { it.timeAsSeconds }).containsExactlyElementsIn((0..23).map { it * 3600 }).inOrder()
+        assertThat(delivered.map { it.value }).containsExactlyElementsIn((0..23).map { if (it < 6) 0.49 else if (it < 18) 0.8 else 0.6 }).inOrder()
+    }
+
+    @Test
+    fun whenTheReadFailsTheBlocksAsTheyWereSentAreTheDeliveredBasal() = runBlocking {
+        pumpReports(null)
+
+        sut.setNewBasalProfile(profile)
+
+        assertThat(sut.deliveredBasal()!!.map { it.value }).containsExactlyElementsIn((0..23).map { if (it < 6) 0.5 else if (it < 18) 0.8 else 0.6 }).inOrder()
+    }
+
+    @Test
+    fun anHourWithTwoBlocksCountsEachForItsMinutes() = runBlocking {
+        pumpReports(blocks(30 to 0.5, 1410 to 1.0))
+
+        sut.setNewBasalProfile(profile)
+
+        val delivered = sut.deliveredBasal()!!.map { it.value }
+        assertThat(delivered[0]).isEqualTo(0.75)
+        assertThat(delivered.drop(1).distinct()).containsExactly(1.0)
+    }
+
+    @Test
+    fun theDeliveredBasalIsUnknownBeforeAProfileWasSetOrRead() {
+        whenever(connectionService.isPaired).thenReturn(true)
+        assertThat(sut.deliveredBasal()).isNull()
     }
 
     @Test

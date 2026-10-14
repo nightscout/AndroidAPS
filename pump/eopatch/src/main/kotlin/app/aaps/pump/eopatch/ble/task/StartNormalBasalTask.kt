@@ -27,17 +27,20 @@ class StartNormalBasalTask(
     }
 
     fun startJob(basal: NormalBasal): Single<BasalScheduleSetResponse> {
-        return basalScheduleSetBig.set(basal.doseUnitPerSegmentArray)
+        val doses = basal.doseUnitPerSegmentArray
+        return basalScheduleSetBig.set(doses)
             .doOnSuccess(Consumer { response: BasalScheduleSetResponse -> this.checkResponse(response) })
             .observeOn(aapsSchedulers.io)
-            .doOnSuccess(Consumer { v: BasalScheduleSetResponse -> onStartNormalBasalResponse(v, basal) })
+            .doOnSuccess(Consumer { v: BasalScheduleSetResponse -> onStartNormalBasalResponse(v, basal, doses) })
             .doOnError(Consumer { e: Throwable -> aapsLogger.error(LTag.PUMPCOMM, e.message ?: "StartNormalBasalTask error") })
     }
 
-    private fun onStartNormalBasalResponse(response: BasalScheduleSetResponse, basal: NormalBasal) {
+    private fun onStartNormalBasalResponse(response: BasalScheduleSetResponse, basal: NormalBasal, doses: FloatArray) {
         val timeStamp = response.timestamp
         patchStateManager.onBasalStarted(basal, timeStamp + 1000)
 
+        // What the patch runs now, which AAPS reports as the running basal (#2454)
+        basal.sentDoses = doses
         normalBasalManager.normalBasal = basal
         pm.flushNormalBasalManager()
         enqueue(TaskFunc.UPDATE_CONNECTION)

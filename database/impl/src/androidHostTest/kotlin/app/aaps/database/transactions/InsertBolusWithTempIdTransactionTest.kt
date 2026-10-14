@@ -2,9 +2,11 @@ package app.aaps.database.transactions
 
 import app.aaps.database.DelegatedAppDatabase
 import app.aaps.database.daos.BolusDao
+import app.aaps.database.daos.delegated.DelegatedBolusDao
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.interfaces.DBEntry
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -32,7 +34,7 @@ class InsertBolusWithTempIdTransactionTest {
         val bolus = createBolus(tempId = 500L, amount = 5.0)
 
         whenever(bolusDao.findByPumpTempIds(500L, InterfaceIDs.PumpType.DANA_I, "ABC123")).thenReturn(null)
-        whenever(bolusDao.insert(bolus)).thenReturn(1L)
+        whenever(bolusDao.insertNewEntry(bolus)).thenReturn(1L)
 
         val transaction = InsertBolusWithTempIdTransaction(bolus)
         transaction.database = database
@@ -41,7 +43,23 @@ class InsertBolusWithTempIdTransactionTest {
         assertThat(result.inserted).hasSize(1)
         assertThat(bolus.id).isEqualTo(1L)
 
-        verify(bolusDao).insert(bolus)
+        verify(bolusDao).insertNewEntry(bolus)
+    }
+
+    /** #5280: the raw insert reported no change, so the IOB and the overview saw the row only after the pump history. */
+    @Test
+    fun `a new bolus is reported as a change`() = runTest {
+        val changes = mutableListOf<DBEntry>()
+        whenever(database.bolusDao).thenReturn(DelegatedBolusDao(changes, bolusDao))
+        val bolus = createBolus(tempId = 500L, amount = 5.0)
+        whenever(bolusDao.findByPumpTempIds(500L, InterfaceIDs.PumpType.DANA_I, "ABC123")).thenReturn(null)
+        whenever(bolusDao.insertNewEntry(bolus)).thenReturn(1L)
+
+        val transaction = InsertBolusWithTempIdTransaction(bolus)
+        transaction.database = database
+        transaction.run()
+
+        assertThat(changes).containsExactly(bolus)
     }
 
     @Test
@@ -58,6 +76,7 @@ class InsertBolusWithTempIdTransactionTest {
         assertThat(result.inserted).isEmpty()
 
         verify(bolusDao, never()).insert(any())
+        verify(bolusDao, never()).insertNewEntry(any())
     }
 
     private fun createBolus(

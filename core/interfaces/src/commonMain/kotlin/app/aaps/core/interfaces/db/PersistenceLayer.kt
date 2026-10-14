@@ -1078,6 +1078,15 @@ interface PersistenceLayer {
      */
     suspend fun insertTemporaryBasalWithTempId(temporaryBasal: TB): TransactionResult<TB>
 
+    /**
+     * Keeps the temp basals and boluses with only a temporary id (set by AAPS, not found in the pump history yet)
+     * as they were set: each is stored again with its temporary id as pump id, so it is uploaded to Nightscout, and
+     * the old entry is invalidated. For a pump change, after which no pump confirms them any more.
+     *
+     * @return how many records were kept
+     */
+    suspend fun confirmTemporaryIds(): Int
+
     // EB
     /**
      * Get running extended bolus at time

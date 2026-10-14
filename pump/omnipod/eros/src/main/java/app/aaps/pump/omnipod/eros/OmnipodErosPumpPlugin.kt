@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.OmnipodEros
@@ -123,6 +124,7 @@ import org.joda.time.Duration
 import org.joda.time.Instant
 import java.util.Optional
 import java.util.function.Supplier
+import kotlin.math.roundToInt
 import dev.zacsweers.metro.IntKey as MetroIntKey
 
 /**
@@ -530,6 +532,20 @@ class OmnipodErosPumpPlugin(
             // When we activate a new Pod, we just use ProfileFunction to set the currently active profile
             true
         } else podStateManager.basalSchedule == AapsOmnipodErosManager.mapProfileToBasalSchedule(profile)
+
+    /**
+     * The 24 hourly rates the pod runs: its schedule, each rate rounded to the nearest 0.05 U/h (#2454). An hour is the
+     * insulin of its two half hours. null without an activated pod, or while the pod may not have the schedule
+     * (an uncertain set): the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? {
+        if (!podStateManager.isPodActivationCompleted || !podStateManager.isBasalCertain) return null
+        val schedule = podStateManager.basalSchedule ?: return null
+        fun hundredthsAt(minutes: Long) = (schedule.rateAt(Duration.standardMinutes(minutes)) * 100).roundToInt()
+        return (0 until 24).map { hour ->
+            Profile.ProfileValue(hour * SECONDS_PER_HOUR, (hundredthsAt(hour * 60L) + hundredthsAt(hour * 60L + 30)) / 200.0)
+        }
+    }
 
     private val _lastBolusTime = MutableStateFlow<Long?>(null)
     override val lastBolusTime: StateFlow<Long?> = _lastBolusTime
@@ -978,5 +994,6 @@ class OmnipodErosPumpPlugin(
         const val RESERVOIR_OVER_50_UNITS_DEFAULT: Double = 75.0
         private const val RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1000L // 3 minutes
         private const val STATUS_CHECK_INTERVAL_MILLIS = 60 * 1000L // 1 minute
+        private const val SECONDS_PER_HOUR = 3600
     }
 }

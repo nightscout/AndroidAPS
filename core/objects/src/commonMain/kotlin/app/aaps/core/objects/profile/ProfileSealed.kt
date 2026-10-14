@@ -81,6 +81,10 @@ sealed class ProfileSealed(
     ), EffectiveProfile {
 
         override val iCfg: ICfg = value.iCfg
+
+        /** The running profile was made from this switch when it links to it. Without a link (older records) the values decide. */
+        override fun isAppliedAs(running: Profile): Boolean =
+            (running is EPS && value.id != 0L && running.value.originalPsId == value.id) || isEqual(running)
     }
 
     /**

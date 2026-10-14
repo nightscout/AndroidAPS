@@ -33,6 +33,10 @@ fun AAPSProfile.toComboCtlBasalProfile(): BasalProfile {
     return BasalProfile(factors)
 }
 
+/** The rates of a Combo basal profile, one per hour from midnight, in IU per hour (#2454). */
+internal fun BasalProfile.toHourlyProfileValues(): List<AAPSProfile.ProfileValue> =
+    factors.mapIndexed { hour, factor -> AAPSProfile.ProfileValue(hour * 60 * 60, factor.cctlBasalToIU()) }
+
 internal class RetryPermissionCheckException : ComboException("retry permission check")
 
 // Utility function to perform Android permission checks before running a block.

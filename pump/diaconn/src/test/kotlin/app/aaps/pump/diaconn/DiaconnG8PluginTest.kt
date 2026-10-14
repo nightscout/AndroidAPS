@@ -110,6 +110,40 @@ class DiaconnG8PluginTest : TestBaseWithProfile() {
         assertThat(diaconnG8Plugin.isInitialized()).isTrue()
     }
 
+    private fun initializedPump() {
+        whenever(preferences.get(DiaconnStringNonKey.Address)).thenReturn("AA:BB:CC:DD:EE:FF")
+        whenever(preferences.get(DiaconnStringNonKey.Name)).thenReturn("TestPump")
+        diaconnG8Plugin.changePump()
+        diaconnG8Pump.lastConnection = System.currentTimeMillis()
+        diaconnG8Pump.maxBasal = 3.0
+    }
+
+    /** #2454: AAPS keeps the rates the pump reports as the running basal, one per hour. */
+    @Test
+    fun deliveredBasalIsWhatThePumpReports() {
+        initializedPump()
+        diaconnG8Pump.activeProfile = 0
+        diaconnG8Pump.pumpProfiles = Array(4) { Array(24) { 0.0 } }.also { profiles -> for (hour in 0..23) profiles[0][hour] = if (hour < 6) 0.56 else 0.84 }
+
+        val delivered = diaconnG8Plugin.deliveredBasal()!!
+
+        assertThat(delivered.map { it.timeAsSeconds }).containsExactlyElementsIn((0..23).map { it * 3600 }).inOrder()
+        assertThat(delivered.map { it.value }).containsExactlyElementsIn((0..23).map { if (it < 6) 0.56 else 0.84 }).inOrder()
+    }
+
+    @Test
+    fun deliveredBasalIsUnknownBeforeThePumpWasRead() {
+        initializedPump()
+        diaconnG8Pump.pumpProfiles = null
+        assertThat(diaconnG8Plugin.deliveredBasal()).isNull()
+    }
+
+    @Test
+    fun deliveredBasalIsUnknownWhileNotInitialized() {
+        diaconnG8Pump.pumpProfiles = Array(4) { Array(24) { 0.5 } }
+        assertThat(diaconnG8Plugin.deliveredBasal()).isNull()
+    }
+
     @Test
     fun isInitializedShouldReturnFalseWhenNotConnected() {
         diaconnG8Pump.lastConnection = 0

@@ -36,14 +36,16 @@ class CarelevoPatchForceDiscardUseCase @Inject constructor(
                     throw IllegalStateException("update user setting info is failed")
                 }
 
-                val deleteInfusionInfoResult = infusionInfoRepository.deleteInfusionInfo()
-                if (!deleteInfusionInfoResult) {
-                    throw IllegalStateException("delete infusion info is failed")
-                }
-
+                // The patch record goes first. A patch with an inserted needle and no infusion record is an
+                // activation to finish, so the other order reopened the wizard at the needle step after a discard.
                 val deletePatchInfoResult = patchInfoRepository.deletePatchInfo()
                 if (!deletePatchInfoResult) {
                     throw IllegalStateException("delete patch info is failed")
+                }
+
+                val deleteInfusionInfoResult = infusionInfoRepository.deleteInfusionInfo()
+                if (!deleteInfusionInfoResult) {
+                    throw IllegalStateException("delete infusion info is failed")
                 }
                 ResultSuccess
             }.fold(

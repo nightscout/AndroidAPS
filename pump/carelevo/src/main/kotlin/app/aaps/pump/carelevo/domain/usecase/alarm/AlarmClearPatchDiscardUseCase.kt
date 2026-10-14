@@ -16,8 +16,8 @@ class AlarmClearPatchDiscardUseCase @Inject constructor(
 
     /**
      * Persist the alarm-triggered discard outcome after a successful discard write: ack the alarm, clear
-     * the user-setting sync flags, and delete the infusion + patch records. Returns false with no
-     * user-setting record or if any write fails.
+     * the user-setting sync flags, and delete the patch + infusion records. Returns false with no
+     * user-setting record or if any write fails. The patch record goes first, see `CarelevoPatchForceDiscardUseCase`.
      */
     fun persistAlarmDiscarded(alarmId: String): Boolean = runCatching {
         alarmRepository.removeAlarm(alarmId).blockingAwait()
@@ -29,7 +29,7 @@ class AlarmClearPatchDiscardUseCase @Inject constructor(
                 userSettingInfo.copy(updatedAt = Clock.System.now(), needMaxBolusDoseSyncPatch = false, needMaxBasalSpeedSyncPatch = false, needLowInsulinNoticeAmountSyncPatch = false)
             )
         ) { "update user setting info is failed" }
-        require(infusionInfoRepository.deleteInfusionInfo()) { "delete infusion info is failed" }
         require(patchInfoRepository.deletePatchInfo()) { "delete patch info is failed" }
+        require(infusionInfoRepository.deleteInfusionInfo()) { "delete infusion info is failed" }
     }.isSuccess
 }

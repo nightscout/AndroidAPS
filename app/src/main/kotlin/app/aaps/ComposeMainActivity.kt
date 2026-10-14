@@ -82,7 +82,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
@@ -324,6 +323,10 @@ class ComposeMainActivity : MetroAppCompatActivity() {
             // The Activity keeps a reference so an incoming intent can route without the composition.
             onNavControllerReady = { navController = it },
             onClose = { finish() },
+            // An instrumented pump test starts with an empty preference store, so without this every
+            // one of them would open the wizard instead of the screen it means to drive. The check is
+            // androidMain only, which is why the shared root takes it as a parameter.
+            suppressSetupWizard = isRunningRealPumpTest(),
             content = { navController -> AppContent(navController) }
         )
     }
@@ -343,16 +346,9 @@ class ComposeMainActivity : MetroAppCompatActivity() {
             onDispose { navController.removeOnDestinationChangedListener(listener) }
         }
 
-        // Auto-launch setup wizard on first run
-        LaunchedEffect(Unit) {
-            if (!preferences.get(BooleanNonKey.GeneralSetupWizardProcessed) && !isRunningRealPumpTest()) {
-                protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
-                    if (result == ProtectionResult.GRANTED) {
-                        navController.navigate(AppRoute.SetupWizard.route)
-                    }
-                }
-            }
-        }
+        // The first-run setup wizard used to be opened here, which is why only Android ever offered
+        // it. It is in `AapsAppRoot` now, so desktop and iOS get it too; this shell only says when to
+        // keep it shut - see `suppressSetupWizard` where AapsAppRoot is called below.
 
         // Permissions bottom sheet
         val permState by permissionsViewModel.uiState.collectAsStateWithLifecycle()

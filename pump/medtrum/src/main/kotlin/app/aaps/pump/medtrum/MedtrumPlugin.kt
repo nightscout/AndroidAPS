@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -264,6 +265,15 @@ class MedtrumPlugin(
         }
         return result
     }
+
+    /**
+     * The 24 hourly rates the patch runs: the profile it accepted, each rate rounded to the nearest 0.05 U/h (#2454).
+     * null without an active patch: the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? =
+        if (!isInitialized()) null
+        else medtrumPump.hourlyBasalFromMedtrumProfileArray(medtrumPump.actualBasalProfile)
+            ?.mapIndexed { hour, rate -> Profile.ProfileValue(T.hours(hour.toLong()).secs().toInt(), rate) }
 
     override val lastDataTime: StateFlow<Long> = medtrumPump.lastConnectionFlow
     override val lastBolusTime: StateFlow<Long?> = medtrumPump.lastBolusTimeFlow

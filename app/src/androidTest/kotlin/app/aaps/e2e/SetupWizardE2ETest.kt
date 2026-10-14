@@ -207,9 +207,9 @@ class SetupWizardE2ETest {
         tapNext("Client control")
 
         // 7b. Client control (master ↔ client pairing) — skip
-        tapNext("Name")
+        tapNext("Who is using this phone?")
 
-        // 8. Patient name — skip
+        // 8. Instance name — skip
         tapNext("Patient type")
 
         // 9. Patient type / safety limits

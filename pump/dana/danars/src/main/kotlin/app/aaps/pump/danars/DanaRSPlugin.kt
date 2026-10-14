@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.Dana
@@ -285,6 +286,15 @@ class DanaRSPlugin(
         }
         return true
     }
+
+    /**
+     * The 24 hourly rates the pump itself reports: it keeps them in 0.01 U/h steps and is read again after each set
+     * (#2454). If that read failed, they are still the old ones; then [isThisProfileSet] fails too, and KeepAlive
+     * sets the profile again. null before the pump was read: the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? =
+        if (!isInitialized()) null
+        else danaPump.pumpProfiles?.get(danaPump.activeProfile)?.take(24)?.mapIndexed { hour, rate -> Profile.ProfileValue(T.hours(hour.toLong()).secs().toInt(), rate) }
 
     override val baseBasalRate get() = PumpRate(danaPump.currentBasal)
 

@@ -51,7 +51,7 @@ class AdaptivePreferenceItemsTest {
 
     @Test
     fun stringItemRenders() {
-        render { AdaptiveStringPreferenceItem(stringKey = StringKey.GeneralPatientName) }
+        render { AdaptiveStringPreferenceItem(stringKey = StringKey.GeneralInstanceName) }
         compose.onRoot().assertIsDisplayed()
     }
 
