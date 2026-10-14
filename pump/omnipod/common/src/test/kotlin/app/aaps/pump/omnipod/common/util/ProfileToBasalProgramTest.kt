@@ -106,4 +106,17 @@ class ProfileToBasalProgramTest {
         val basalProgramElement: BasalProgram.Segment = basalProgram.segments[0]
         assertThat(basalProgramElement.basalRateInHundredthUnitsPerHour).isEqualTo(5)
     }
+
+    /** #2454: an hour is the insulin of its two half hours, as the pod got them. */
+    @Test fun hourlyRatesAreTheMeanOfTheHalfHours() {
+        val profile: Profile = mock()
+        whenever(profile.getBasalValues()).thenReturn(arrayOf(ProfileValue(0, 0.5), ProfileValue(1800, 1.0), ProfileValue(7200, 0.42)))
+
+        val hourly = mapProfileToBasalProgram(profile, PumpType.OMNIPOD_DASH).hourlyRates()
+
+        assertThat(hourly).hasSize(24)
+        assertThat(hourly[0]).isEqualTo(0.75)
+        assertThat(hourly[1]).isEqualTo(1.0)
+        assertThat(hourly.drop(2).distinct()).containsExactly(0.4)
+    }
 }
