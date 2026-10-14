@@ -366,12 +366,18 @@ class ProfileFunctionImpl(
     )
 
     /**
-     * The values of the switch [createProfileSwitchWithNewInsulin] creates. When there is no running profile
-     * to change, [whyNot] gets the sentence for the user, and the result is null.
+     * The values of the switch [createProfileSwitchWithNewInsulin] creates. When there is no profile to change,
+     * [whyNot] gets the sentence for the user, and the result is null.
+     *
+     * The running profile first. Before it exists, the requested switch: a pump wizard switches the profile at
+     * its gate, and on a new pump that switch is set only after the activation, when the wizard has already
+     * switched the insulin. Without this the chosen insulin was not applied, and the wizard said "no profile set".
      */
     private suspend fun newInsulinSwitch(whyNot: (String) -> Unit): NewInsulinSwitch? {
-        val eps = (getProfile() as? ProfileSealed.EPS)?.value
-        if (eps == null) {
+        val current = (getProfile() as? ProfileSealed.EPS)?.value
+            ?.let { CurrentSwitch(it.originalProfileName, it.originalPercentage, it.originalTimeshift, it.timestamp, it.originalDuration) }
+            ?: getRequestedProfile()?.let { CurrentSwitch(it.profileName, it.percentage, it.timeshift, it.timestamp, it.duration) }
+        if (current == null) {
             whyNot(rh.gs(CoreUiStrings.no_profile_set))
             return null
         }
@@ -381,16 +387,19 @@ class ProfileFunctionImpl(
             return null
         }
         val now = dateUtil.now()
-        val durationMinutes = if (eps.originalDuration > 0) {
-            ((eps.originalDuration - (now - eps.timestamp)) / 60_000L).coerceAtLeast(0).toInt()
+        val durationMinutes = if (current.duration > 0) {
+            ((current.duration - (now - current.start)) / 60_000L).coerceAtLeast(0).toInt()
         } else 0
         return NewInsulinSwitch(
             profileStore = profileStore,
-            profileName = eps.originalProfileName,
+            profileName = current.profileName,
             durationMinutes = durationMinutes,
-            percentage = eps.originalPercentage,
-            timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt(),
+            percentage = current.percentage,
+            timeshiftHours = T.msecs(current.timeshift).hours().toInt(),
             timestamp = now
         )
     }
+
+    /** The switch whose insulin is changed. [timeshift] and [duration] in milliseconds, [start] when it began. */
+    private class CurrentSwitch(val profileName: String, val percentage: Int, val timeshift: Long, val start: Long, val duration: Long)
 }
