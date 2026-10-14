@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
@@ -882,6 +883,14 @@ class ComboV2Plugin(
 
         return (activeBasalProfile == profile.toComboCtlBasalProfile())
     }
+
+    /**
+     * The 24 hourly rates the pump runs, as the driver set them or read them at connect. The Combo takes 0.01 U/h
+     * steps below 1 U/h, 0.05 U/h steps up to 10 U/h and 0.1 U/h steps above (#2454). null while they are not
+     * known: the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? =
+        if (!isInitialized()) null else activeBasalProfile?.toHourlyProfileValues()
 
     override val lastDataTime: StateFlow<Long> = _lastConnectionTimestamp
 
