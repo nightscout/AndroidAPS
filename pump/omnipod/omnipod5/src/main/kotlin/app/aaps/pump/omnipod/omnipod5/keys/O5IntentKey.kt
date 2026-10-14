@@ -1,5 +1,6 @@
 package app.aaps.pump.omnipod.omnipod5.keys
 
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
@@ -30,5 +31,14 @@ enum class O5IntentKey(
     PodHistory(
         key = "omnipod_5_history",
         title = TextRef.AndroidRes(R.string.omnipod_common_pod_management_button_pod_history),
-    )
+    );
+
+    companion object {
+
+        fun ConfigEnabledEntries(config: Config): List<O5IntentKey> = if (config.isEngineeringMode()) {
+            listOf(CertificateStore, PodHistory)
+        } else {
+            listOf(PodHistory)
+        }
+    }
 }
