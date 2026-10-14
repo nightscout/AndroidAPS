@@ -367,8 +367,16 @@ jobs:
 
       - run:
           name: Collect app shard results
+          # The wait prints a line every minute. CircleCI stops a step after 10 minutes with no output, and
+          # this loop used to wait in silence: when a shard ran past that, the step timed out, the job ran
+          # "Kill emulators", and the shard still running lost its emulator ("adb: device offline"). So a
+          # slow shard C looked like an emulator crash in SetupWizardE2ETest.
           command: |
-            for i in $(seq 1 600); do [ -f /tmp/rc-A ] && [ -f /tmp/rc-B ] && [ -f /tmp/rc-C ] && break; sleep 2; done
+            for i in $(seq 1 600); do
+              [ -f /tmp/rc-A ] && [ -f /tmp/rc-B ] && [ -f /tmp/rc-C ] && break
+              [ $((i % 30)) = 0 ] && echo "waiting for the shards: $((i * 2)) s"
+              sleep 2
+            done
             RCA=$(cat /tmp/rc-A 2>/dev/null || echo 1); RCB=$(cat /tmp/rc-B 2>/dev/null || echo 1); RCC=$(cat /tmp/rc-C 2>/dev/null || echo 1)
             echo "shard A rc=$RCA  shard B rc=$RCB  shard C rc=$RCC"
             # rc is 1 if any leg failed a test OR produced missing/short coverage - so a silently dropped
