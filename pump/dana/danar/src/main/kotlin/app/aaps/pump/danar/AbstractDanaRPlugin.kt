@@ -3,6 +3,7 @@ package app.aaps.pump.danar
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.PumpPluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -12,6 +13,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.Dana
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -177,6 +179,15 @@ abstract class AbstractDanaRPlugin protected constructor(
         }
         return true
     }
+
+    /**
+     * The 24 hourly rates the pump itself reports: it keeps them in 0.01 U/h steps and is read again after each set
+     * (#2454). If that read failed, they are still the old ones; then [isThisProfileSet] fails too, and the profile
+     * is set again at the next connection. null before the pump was read: the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? =
+        if (!isInitialized()) null
+        else danaPump.pumpProfiles?.get(danaPump.activeProfile)?.take(24)?.mapIndexed { hour, rate -> Profile.ProfileValue(T.hours(hour.toLong()).secs().toInt(), rate) }
 
     override val lastDataTime: StateFlow<Long> = danaPump.lastConnectionFlow
     override val lastBolusTime: StateFlow<Long?> = danaPump.lastBolusTimeFlow

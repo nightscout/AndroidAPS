@@ -533,16 +533,28 @@ class DanaRPumpEmulator(
     // --- Set commands ---
 
     private fun handleSetSingleBasalProfile(params: ByteArray): ByteArray {
-        if (params.size >= 48) {
-            for (i in 0 until 24) {
-                val rate = ((params[i * 2].toInt() and 0xFF shl 8) or (params[i * 2 + 1].toInt() and 0xFF)) / 100.0
-                state.basalProfiles[state.activeProfile][i] = rate
-            }
-        }
+        storeBasalRates(params, offset = 0, profile = state.activeProfile)
         return byteArrayOf(0x01)
     }
 
-    private fun handleSetBasalProfile(params: ByteArray): ByteArray = handleSetSingleBasalProfile(params)
+    /**
+     * MsgSetBasalProfile: `[profile number][24 rates, 2 bytes each, high byte first]`. The rates start after the profile
+     * number. Read from byte 0 as in the single profile message, every rate was one byte off: 0.51 U/h was kept as
+     * 130.56, and the next basal read reported it to AAPS.
+     */
+    private fun handleSetBasalProfile(params: ByteArray): ByteArray {
+        if (params.isNotEmpty()) storeBasalRates(params, offset = 1, profile = (params[0].toInt() and 0xFF).coerceIn(0, 3))
+        return byteArrayOf(0x01)
+    }
+
+    private fun storeBasalRates(params: ByteArray, offset: Int, profile: Int) {
+        if (params.size < offset + 48) return
+        for (i in 0 until 24) {
+            val high = params[offset + i * 2].toInt() and 0xFF
+            val low = params[offset + i * 2 + 1].toInt() and 0xFF
+            state.basalProfiles[profile][i] = ((high shl 8) or low) / 100.0
+        }
+    }
 
     private fun handleSetUserOptions(params: ByteArray): ByteArray {
         if (params.size >= 9) {

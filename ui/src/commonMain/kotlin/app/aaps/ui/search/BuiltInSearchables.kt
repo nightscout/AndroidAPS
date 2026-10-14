@@ -83,7 +83,7 @@ class BuiltInSearchables(
                     else null
                 },
                 BooleanKey.OverviewKeepScreenOn,
-                StringKey.GeneralPatientName,
+                StringKey.GeneralInstanceName,
             ),
             icon = Icons.Default.Settings
         )

@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.pump.carelevo.ble.BleCommand
 import app.aaps.pump.carelevo.ble.BleResponse
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.commands.AlarmClearResponse
@@ -19,6 +20,7 @@ import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.SafetyProgress
+import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import app.aaps.pump.carelevo.domain.usecase.alarm.AlarmClearPatchDiscardUseCase
 import app.aaps.pump.carelevo.domain.usecase.alarm.AlarmClearRequestUseCase
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoSetBasalProgramUseCase
@@ -45,8 +47,10 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
@@ -99,6 +103,7 @@ internal class CarelevoActivationExecutorTest {
             patchForceDiscardUseCase = patchForceDiscardUseCase,
             bleSession = bleSession
         )
+        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.just<ResponseResult<CarelevoUseCaseResponse>>(ResponseResult.Success(ResultSuccess)))
         // Happy default: a patch address is stored. Individual "no address" tests re-stub to null.
         whenever(carelevoPatch.getPatchInfoAddress()).thenReturn(ADDRESS)
     }
@@ -476,6 +481,13 @@ internal class CarelevoActivationExecutorTest {
         verify(carelevoPatch).discardTeardown(ADDRESS)
     }
 
+    /** Seen on the Pixel: the teardown cleared only memory, and the discarded patch was back after a restart. */
+    @Test fun `an accepted discard deletes the stored patch and infusion info`() {
+        stubRunSingle(SimpleResultResponse(resultCode = 0))
+        sut.execute(CmdDiscard())
+        verify(patchForceDiscardUseCase).execute()
+    }
+
     @Test fun `discard does not tear down and fails when the stop write is rejected`() {
         stubRunSingle(SimpleResultResponse(resultCode = 1))
         val result = sut.execute(CmdDiscard())
@@ -530,6 +542,44 @@ internal class CarelevoActivationExecutorTest {
         val result = sut.execute(CmdNeedleCheck())
         assertThat(result?.success).isFalse()
         assertThat(result?.comment).isEqualTo(BOOM)
+    }
+
+    /** The commands the executor sent, in order, as their wire bytes. */
+    private fun sentCommands(count: Int): List<List<Byte>> = argumentCaptor<BleCommand<BleResponse>>().run {
+        verifyBlocking(bleSession, times(count)) { runSingle(any(), capture(), any()) }
+        allValues.map { it.encode().toList() }
+    }
+
+    /** A real patch raised "Patch Activation Incomplete" 20 minutes after an insertion it never got a confirmation for. */
+    @Test fun `needleCheck confirms an inserted needle to the patch`() {
+        stubRunSingle(SimpleResultResponse(resultCode = 0))
+        whenever(needleCheckUseCase.persistNeedleResult(any())).thenReturn(true)
+
+        sut.execute(CmdNeedleCheck())
+
+        assertThat(sentCommands(2)).containsExactly(listOf<Byte>(0x1A, 0x00), listOf<Byte>(0x19, 0x00)).inOrder()
+    }
+
+    @Test fun `needleCheck does not confirm a needle that is not inserted`() {
+        stubRunSingle(SimpleResultResponse(resultCode = 2))
+        whenever(needleCheckUseCase.persistNeedleResult(any())).thenReturn(true)
+
+        sut.execute(CmdNeedleCheck())
+
+        assertThat(sentCommands(1)).containsExactly(listOf<Byte>(0x1A, 0x00))
+    }
+
+    /** The cannula is in. A lost confirmation only brings the alarm, from which the user finishes the activation. */
+    @Test fun `needleCheck succeeds when the confirmation gets no answer`() {
+        whenever { bleSession.runSingle<BleResponse>(any(), any(), any()) }
+            .thenReturn(SimpleResultResponse(resultCode = 0))
+            .thenAnswer { throw RuntimeException(BOOM) }
+        whenever(needleCheckUseCase.persistNeedleResult(any())).thenReturn(true)
+
+        val result = sut.execute(CmdNeedleCheck())
+
+        assertThat(result?.success).isTrue()
+        verify(needleCheckUseCase).persistNeedleResult(true)
     }
 
     // endregion

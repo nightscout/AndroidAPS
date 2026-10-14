@@ -73,7 +73,8 @@ enum class PumpType(
         pumpTempBasalType = PumpTempBasalType.Percent,
         tbrSettings = DoseSettings(10.0, 15, 12 * 60, 0.0, 500.0),
         specialBasalDurations = arrayOf(Capability.BasalRate_Duration15minAllowed, Capability.BasalRate_Duration30minAllowed),
-        baseBasalMinValue = 0.01,
+        // Below 0.05 U/h the Combo takes only 0 or 0.05, and the driver rounds 0.01 - 0.024 U/h to 0: no basal at all.
+        baseBasalMinValue = 0.05,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = DoseStepSize.ComboBasal,
         pumpCapability = PumpCapability.ComboCapabilities,

@@ -57,6 +57,10 @@ class MedtrumPump(
     companion object {
 
         const val FAKE_TBR_LENGTH = 4800L
+        private const val MINUTES_PER_DAY = 24 * 60
+
+        // 1 U/h for one hour is 20 steps of 0.05 U/h for 60 minutes.
+        private const val STEP_MINUTES_PER_UNIT = 1200.0
     }
 
     // Connection state flow
@@ -441,6 +445,32 @@ class MedtrumPump(
             }
         }
         return basal
+    }
+
+    /**
+     * The insulin of each hour of the day from midnight, in U/h, from a profile as the patch keeps it (#2454). Each
+     * rate is a number of 0.05 U/h steps; an hour with two rates counts each one for its minutes. null when the
+     * array holds no valid profile from midnight.
+     */
+    fun hourlyBasalFromMedtrumProfileArray(basalProfile: ByteArray): List<Double>? {
+        if (basalProfile.size < 4 || (basalProfile.size - 1) % 3 != 0) return null
+        val basalCount = basalProfile[0].toInt()
+        if (basalCount > 24 || basalCount != (basalProfile.size - 1) / 3) return null
+        // (steps of 0.05 U/h, start minute)
+        val entries = (0 until basalCount).map { index ->
+            val rateAndTime = basalProfile.copyOfRange(1 + index * 3, 4 + index * 3).toInt()
+            Pair(rateAndTime shr 12, rateAndTime and 0xFFF)
+        }
+        if (entries.first().second != 0) return null
+        return (0 until 24).map { hour ->
+            var stepMinutes = 0
+            entries.forEachIndexed { index, (steps, start) ->
+                val end = entries.getOrNull(index + 1)?.second ?: MINUTES_PER_DAY
+                val overlap = minOf(end, (hour + 1) * 60) - maxOf(start, hour * 60)
+                if (overlap > 0) stepMinutes += steps * overlap
+            }
+            stepMinutes / STEP_MINUTES_PER_UNIT
+        }
     }
 
     fun handleBolusStatusUpdate(bolusType: Int, bolusCompleted: Boolean, amountDelivered: Double) {

@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.overview.chips
 
 import androidx.compose.runtime.Immutable
+import app.aaps.core.interfaces.overview.IsfStep
 
 /**
  * What the overview chips show.
@@ -26,6 +27,7 @@ data class SensitivityUiState(
     val asText: String = "",
     val isfFrom: String = "",
     val isfTo: String = "",
+    val isfStep: IsfStep = IsfStep.SAME,
     val dialogText: String = "",
     val ratio: Double = 1.0,
     val isEnabled: Boolean = true,

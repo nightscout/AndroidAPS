@@ -62,6 +62,7 @@ import app.aaps.database.transactions.CancelProfileSwitchTransaction
 import app.aaps.database.transactions.CancelRunningModeTransaction
 import app.aaps.database.transactions.CancelTherapyEventTransaction
 import app.aaps.database.transactions.CgmSourceTransaction
+import app.aaps.database.transactions.ConfirmTemporaryIdsTransaction
 import app.aaps.database.transactions.CutCarbsTransaction
 import app.aaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.database.transactions.InsertBolusWithTempIdTransaction
@@ -1769,6 +1770,18 @@ class PersistenceLayerImpl(
             transactionResult
         } catch (e: Exception) {
             aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryBasal", e)
+            throw e
+        }
+    }
+
+    override suspend fun confirmTemporaryIds(): Int = withContext(aapsIoDispatcher) {
+        try {
+            val result = repository.runTransactionForResultSuspend(ConfirmTemporaryIdsTransaction())
+            result.temporaryBasals.forEach { aapsLogger.debug(LTag.DATABASE, "Kept TemporaryBasal with its temporary id as pump id $it") }
+            result.boluses.forEach { aapsLogger.debug(LTag.DATABASE, "Kept Bolus with its temporary id as pump id $it") }
+            result.temporaryBasals.size + result.boluses.size
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while keeping records with a temporary id", e)
             throw e
         }
     }

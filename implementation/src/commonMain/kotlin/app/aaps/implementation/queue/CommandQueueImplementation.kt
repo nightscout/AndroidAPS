@@ -9,6 +9,8 @@ import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.InterfacesStrings
@@ -32,6 +34,7 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.Command.CommandType
@@ -46,6 +49,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -89,6 +93,9 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.concurrent.Volatile
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.reflect.KClass
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -149,6 +156,16 @@ class CommandQueueImplementation(
     @Suppress("PrivatePropertyName")
     private val PROFILE_SET_TIMEOUT_MS = 10 * 60 * 1000
 
+    @Suppress("PrivatePropertyName")
+    private val HOUR_SECONDS = 60 * 60
+
+    @Suppress("PrivatePropertyName")
+    private val DAY_SECONDS = 24 * HOUR_SECONDS
+
+    // The most a pump may change a rate by rounding, in U/h, unless its own step is coarser (see deliveredBasalBlocks).
+    @Suppress("PrivatePropertyName")
+    private val MAX_BASAL_ROUNDING = 0.1
+
     // How long one command may run before the user is alarmed. Longer than the slowest legitimate
     // command: a 25 U bolus at the slowest pump speed (60 s/U) takes about 25 minutes.
     @Suppress("PrivatePropertyName")
@@ -196,14 +213,24 @@ class CommandQueueImplementation(
             if (result == null)
                 aapsLogger.error(LTag.PROFILE, "setProfile timed out after $PROFILE_SET_TIMEOUT_MS ms for PS id=${it.id}")
             // Central profile-set notification lifecycle (unified across all pump drivers). Returns true on a
-            // successful write, in which case we persist the EffectiveProfileSwitch below - but not a second
-            // one for a PS that is already effective, which only had to be set in the pump again.
-            if (postProfileWriteResult(result, silent) && !alreadyEffective) {
+            // successful write, in which case we persist the EffectiveProfileSwitch below.
+            if (postProfileWriteResult(result)) {
+                val requested = ProfileSealed.PS(it, activePlugin)
                 // Pump may return enacted == false if basal profile is the same, but IC/ISF can be different
-                val nonCustomized = ProfileSealed.PS(it, activePlugin).convertToNonCustomizedProfile(dateUtil)
+                val nonCustomized = requested.convertToNonCustomizedProfile(dateUtil)
+                // The basal the pump really gives: it can round the rates to its own step (#2454).
+                val report = deliveredBasalBlocks(requested.insulinConcentration(), asked = nonCustomized.basalBlocks)
+                val basalBlocks = (report as? BasalReport.Given)?.blocks ?: nonCustomized.basalBlocks
+                // One notice for a real write that is not internal (a Scene reverting its own ProfileSwitch, #4959).
+                // A write the pump did not need (enacted == false) stays silent, and a rejected report has its alarm.
+                if (result?.enacted == true && !silent && report != BasalReport.Rejected)
+                    notifyProfileSet(asked = nonCustomized.basalBlocks, given = basalBlocks)
+                // A PS that is already effective only had to be set in the pump again. It gets no second EPS,
+                // unless this pump gives another basal than the EPS holds, e.g. a new pump with another step.
+                if (alreadyEffective && active?.basalBlocks == basalBlocks) return@let
                 val eps = EPS(
                     timestamp = dateUtil.now(),
-                    basalBlocks = nonCustomized.basalBlocks,
+                    basalBlocks = basalBlocks,
                     isfBlocks = nonCustomized.isfBlocks,
                     icBlocks = nonCustomized.icBlocks,
                     targetBlocks = nonCustomized.targetBlocks,
@@ -231,17 +258,15 @@ class CommandQueueImplementation(
      *    the reason (a timeout has none). Deliberately NOT a full-screen `runAlarm` — a wrong base profile is serious
      *    but persistent, so a dismissible alarm-notification is the right weight (a failed TBR is even quieter,
      *    surfaced only in the loop status).
-     *  - success: clear any stale FAILED_UPDATE_PROFILE; and on a real write ([PumpEnactResult.enacted]) that is not
-     *    internal/automatic (`!silent` — e.g. a Scene reverting its own ProfileSwitch, issue #4959) raise the
-     *    "Basal profile in pump updated" ([NotificationId.PROFILE_SET_OK]) confirmation. Deferred / already-set writes
-     *    return enacted=false and stay fully silent per the contract.
+     *  - success: clear any stale FAILED_UPDATE_PROFILE. The "Basal profile in pump updated" confirmation follows from
+     *    [notifyProfileSet], once the basal the pump gives is known, so it is one notice.
      *
      * Dismissing FAILED_UPDATE_PROFILE centrally is safe only because Equil's alarms were migrated off that id to
      * EQUIL_LOW_BATTERY / PUMP_ERROR.
      *
      * @return true when write succeeded (the caller then persists the EffectiveProfileSwitch).
      */
-    internal fun postProfileWriteResult(result: PumpEnactResult?, silent: Boolean): Boolean {
+    internal fun postProfileWriteResult(result: PumpEnactResult?): Boolean {
         // Dropped on purpose (an import, a cleared queue): the write did not happen, so return false
         // and let the caller skip the EffectiveProfileSwitch - but say nothing about it. It is not a
         // failed update. With the old success = true drain this was worse: it took the success branch
@@ -256,10 +281,99 @@ class CommandQueueImplementation(
             return false
         }
         notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
-        if (result.enacted && !silent)
-            notificationManager.post(NotificationId.PROFILE_SET_OK, CoreUiStrings.profile_set_ok, validMinutes = 60)
         return true
     }
+
+    /** What the pump reported about the basal it gives after a profile was set. */
+    internal sealed interface BasalReport {
+
+        /** Nothing usable: the pump gives the profile as it was sent, or the report did not cover the day. */
+        data object None : BasalReport
+
+        /** The basal the pump gives, as blocks in insulin units. */
+        data class Given(val blocks: List<Block>) : BasalReport
+
+        /** Far from the profile: not used, and the user was told to check the pump. */
+        data object Rejected : BasalReport
+    }
+
+    /**
+     * The basal the pump reports it really gives. [concentration] is the one of the profile that was just set. Hours
+     * with the same rate are merged, as `shiftBlock` merges the profile. A report that does not cover the day from
+     * midnight in full hours is not used: the requested basal is kept, and the error is logged.
+     *
+     * A pump rounds a rate by about one step. A report with an hour much further from [asked] is not a rounding: the
+     * pump or its driver is wrong, and the pump does not give what it was asked. It is not used either, and the user
+     * is told to check the basal in the pump, as for a failed profile update.
+     */
+    internal fun deliveredBasalBlocks(concentration: Double, asked: List<Block>): BasalReport {
+        val values = activePlugin.activePump.deliveredBasal() ?: return BasalReport.None
+        val valid = values.isNotEmpty() && values.first().timeAsSeconds == 0 && values.last().timeAsSeconds < DAY_SECONDS &&
+            values.all { it.timeAsSeconds % HOUR_SECONDS == 0 && it.value >= 0.0 } &&
+            values.zipWithNext().all { (a, b) -> a.timeAsSeconds < b.timeAsSeconds }
+        if (!valid) {
+            aapsLogger.error(LTag.PROFILE, "The pump reported a basal that does not cover the day in full hours, the profile is kept: ${values.map { "${it.timeAsSeconds}=${it.value}" }}")
+            return BasalReport.None
+        }
+        val blocks = ArrayList<Block>(values.size)
+        values.forEachIndexed { index, value ->
+            val end = values.getOrNull(index + 1)?.timeAsSeconds ?: DAY_SECONDS
+            val duration = T.secs((end - value.timeAsSeconds).toLong()).msecs()
+            // Without the float tail: 0.05 * 0.2 is 0.010000000000000002.
+            val amount = Round.roundTo(PumpRate(value.value).iU(concentration, true), 1e-9)
+            val last = blocks.lastOrNull()
+            if (last != null && last.amount == amount) blocks[blocks.size - 1] = last.copy(duration = last.duration + duration)
+            else blocks.add(Block(duration, amount))
+        }
+        val tolerance = max(MAX_BASAL_ROUNDING, 2 * activePlugin.activePump.pumpDescription.basalStep)
+        val farHour = (0 until 24).firstOrNull { hour -> abs(blocks.rateInHour(hour) - asked.rateInHour(hour)) > tolerance }
+        if (farHour != null) {
+            aapsLogger.error(
+                LTag.PROFILE,
+                "The pump reported a basal far from the profile at $farHour:00 (${blocks.rateInHour(farHour)} instead of ${asked.rateInHour(farHour)} U/h), the profile is kept"
+            )
+            notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, rh.gs(ImplementationStrings.basal_reported_far_from_profile), sound = AlarmSound.BOLUS_ERROR)
+            return BasalReport.Rejected
+        }
+        return BasalReport.Given(blocks)
+    }
+
+    /** The mean rate of the blocks in this hour of the day, in U/h. */
+    private fun List<Block>.rateInHour(hour: Int): Double {
+        val from = T.hours(hour.toLong()).msecs()
+        val to = from + T.hours(1).msecs()
+        var start = 0L
+        var insulin = 0.0
+        for (block in this) {
+            val end = start + block.duration
+            val overlap = min(end, to) - max(start, from)
+            if (overlap > 0) insulin += block.amount * overlap
+            start = end
+        }
+        return insulin / T.hours(1).msecs()
+    }
+
+    /**
+     * "Basal profile in pump updated", shown for an hour. When the pump gives a little more or less per day than the
+     * profile asks, because it rounds the rates to its own step (#2454), the same notice says how much: one notice
+     * for one profile switch.
+     */
+    internal fun notifyProfileSet(asked: List<Block>, given: List<Block>) {
+        val askedPerDay = asked.insulinPerDay()
+        val givenPerDay = given.insulinPerDay()
+        if (abs(givenPerDay - askedPerDay) < 0.005) {
+            notificationManager.post(NotificationId.PROFILE_SET_OK, CoreUiStrings.profile_set_ok, validMinutes = 60)
+            return
+        }
+        aapsLogger.debug(LTag.PROFILE, "The pump rounds the basal: $givenPerDay U per day instead of $askedPerDay U")
+        notificationManager.post(
+            NotificationId.PROFILE_SET_OK,
+            rh.gs(ImplementationStrings.profile_set_ok_rounded, rh.gs(InterfacesStrings.format_insulin_units, givenPerDay), rh.gs(InterfacesStrings.format_insulin_units, askedPerDay)),
+            validMinutes = 60
+        )
+    }
+
+    private fun List<Block>.insulinPerDay(): Double = sumOf { it.amount * it.duration } / T.hours(1).msecs()
 
     private fun executingNowError(): PumpEnactResult =
         pumpEnactResultProvider().success(false).enacted(false).comment(ImplementationStrings.executing_right_now)
@@ -805,7 +919,7 @@ class CommandQueueImplementation(
 
     override suspend fun isThisProfileSet(requestedProfile: EffectiveProfile): Boolean {
         val runningProfile = profileFunction.getProfile() ?: return false
-        val result = activePlugin.activePump.isThisProfileSet(requestedProfile) && requestedProfile.isEqual(runningProfile)
+        val result = activePlugin.activePump.isThisProfileSet(requestedProfile) && requestedProfile.isAppliedAs(runningProfile)
         if (!result) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Current profile: ${profileFunction.getProfile()}")
             aapsLogger.debug(LTag.PUMPQUEUE, "New profile: $requestedProfile")

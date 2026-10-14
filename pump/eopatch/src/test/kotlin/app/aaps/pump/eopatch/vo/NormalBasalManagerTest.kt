@@ -111,6 +111,16 @@ class NormalBasalManagerTest : TestBaseWithProfile() {
         assertThat(manager.normalBasal.list.size).isNotEqualTo(initialSize)
     }
 
+    /** #2454: the doses of the old basal must not be reported for a new one that was not sent yet. */
+    @Test
+    fun `setNormalBasal forgets the doses sent for the old basal`() {
+        manager.normalBasal.sentDoses = FloatArray(48) { 0.5f }
+
+        manager.setNormalBasal(mockProfile)
+
+        assertThat(manager.normalBasal.sentDoses).isNull()
+    }
+
     @Test
     fun `convertProfileToNormalBasal should create new basal without modifying manager`() {
         val profile = mockProfile

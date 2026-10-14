@@ -36,6 +36,7 @@ import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseRequest
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
+import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.infusion.CarelevoDeleteInfusionInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.infusion.model.CarelevoDeleteInfusionRequestModel
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
@@ -143,6 +144,7 @@ class CarelevoOverviewViewModelTest {
     private lateinit var aapsSchedulers: AapsSchedulers
     private lateinit var patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase
     private lateinit var deleteInfusionInfoUseCase: CarelevoDeleteInfusionInfoUseCase
+    private lateinit var patchInfoRepository: CarelevoPatchInfoRepository
     private lateinit var rxBus: RxBus
     private lateinit var decimalFormatter: DecimalFormatter
     private lateinit var bleSession: CarelevoBleSession
@@ -288,6 +290,7 @@ class CarelevoOverviewViewModelTest {
         aapsSchedulers = mock()
         patchForceDiscardUseCase = mock()
         deleteInfusionInfoUseCase = mock()
+        patchInfoRepository = mock()
         rxBus = mock()
         decimalFormatter = mock()
         // Deterministic, locale-independent 2-decimal text (the real impl is locale aware).
@@ -350,6 +353,7 @@ class CarelevoOverviewViewModelTest {
             aapsSchedulers = aapsSchedulers,
             patchForceDiscardUseCase = patchForceDiscardUseCase,
             carelevoDeleteInfusionInfoUseCase = deleteInfusionInfoUseCase,
+            patchInfoRepository = patchInfoRepository,
             rxBus = rxBus,
             decimalFormatter = decimalFormatter
         )
@@ -755,12 +759,27 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `observeInfusionInfo re-latches the needle screen when the infusion record is gone`() {
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = true)))
+        whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(patchInfo(checkNeedle = true))
         sut.observeInfusionInfo()
 
         infusionSubject.onNext(Optional.empty())
 
         assertThat(sut.isCheckScreen.value).isEqualTo(CarelevoScreenType.NEEDLE_INSERTION)
+    }
+
+    /**
+     * Seen on a real patch: after a discard the patch stream still held the old patch (needle in) when the infusion
+     * record was already gone, and the new activation wizard opened at the needle step. The store decides.
+     */
+    @Test
+    fun `observeInfusionInfo does not reopen the needle step for a discarded patch`() {
+        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = true)))
+        whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(null)
+        sut.observeInfusionInfo()
+
+        infusionSubject.onNext(Optional.empty())
+
+        assertThat(sut.isCheckScreen.value).isNull()
     }
 
     @Test
@@ -775,7 +794,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `observeInfusionInfo does not latch the needle screen while the needle is not yet inserted`() {
-        patchInfoSubject.onNext(Optional.of(patchInfo(checkNeedle = false)))
+        whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(patchInfo(checkNeedle = false))
         sut.observeInfusionInfo()
 
         infusionSubject.onNext(Optional.empty())

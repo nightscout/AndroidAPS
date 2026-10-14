@@ -41,6 +41,15 @@ internal class BasalProgramCommandTest {
         assertFailsWith<IllegalArgumentException> { BasalProgramCommand(false, 0, emptyList()) }
     }
 
+    /** #2454: the rate the patch gets is the one the two bytes carry, rounded half up to 0.01 U/h. */
+    @Test
+    fun `sent speed is the rate the bytes carry`() {
+        assertThat(BasalProgramCommand.sentSpeed(1.3335)).isEqualTo(1.33)
+        assertThat(BasalProgramCommand.sentSpeed(0.7905)).isEqualTo(0.79)
+        assertThat(BasalProgramCommand.sentSpeed(0.785)).isEqualTo(0.79)
+        assertThat(BasalProgramCommand.sentSpeed(2.0)).isEqualTo(2.0)
+    }
+
     @Test
     fun `set command rejects update response opcode`() {
         assertFailsWith<IllegalArgumentException> { BasalProgramCommand(false, 0, listOf(1.0)).decode(byteArrayOf(0x81.toByte(), 0x00)) }

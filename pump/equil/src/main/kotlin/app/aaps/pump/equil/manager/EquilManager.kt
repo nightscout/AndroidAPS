@@ -635,8 +635,10 @@ class EquilManager(
         storePodState()
     }
 
-    fun setBasalSchedule(basalSchedule: BasalSchedule) {
+    /** Stores the schedule the pump accepted, with the hourly rates it reported for it, or null when they were not read. */
+    fun setBasalSchedule(basalSchedule: BasalSchedule, reportedBasal: List<Double>? = null) {
         equilState?.basalSchedule = basalSchedule
+        equilState?.reportedBasal = reportedBasal
         storePodState()
     }
 
@@ -786,6 +788,9 @@ class EquilManager(
         var bluetoothConnectionState: BluetoothConnectionState? = BluetoothConnectionState.DISCONNECTED
         var startHistoryIndex = 0
         var basalSchedule: BasalSchedule? = null
+
+        /** The hourly rates the pump reported for [basalSchedule] after it was set, see CmdBasalGet. null when not read. */
+        var reportedBasal: List<Double>? = null
     }
 
     fun setRunMode(mode: Int) {
