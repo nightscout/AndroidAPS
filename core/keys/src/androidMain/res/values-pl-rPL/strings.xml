@@ -267,6 +267,8 @@
     <string name="lang_tr">Turecki</string>
     <string name="lang_zh_tw">Chiński (tradycyjny)</string>
     <string name="lang_zh_cn">Chiński (uproszczony)</string>
+    <string name="pref_title_patient_name">Nazwa pacjenta</string>
+    <string name="pref_summary_patient_name">Imię osoby korzystającej z tego telefonu. Pozwala odróżnić tę instancję AAPS w raportach i synchronizacji.</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">Katalog AAPS</string>
     <!-- StringKey: Protection preferences -->
