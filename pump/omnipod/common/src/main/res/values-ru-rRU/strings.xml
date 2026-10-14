@@ -167,4 +167,7 @@
         <item quantity="many">Оповещений Pod: %1$s</item>
         <item quantity="other">Оповещений Pod: %1$s</item>
     </plurals>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_bolus_value">%1$.2f ед</string>
+    <string name="omnipod_common_history_total_delivered">Всего подано: %1$.2f ед</string>
 </resources>
