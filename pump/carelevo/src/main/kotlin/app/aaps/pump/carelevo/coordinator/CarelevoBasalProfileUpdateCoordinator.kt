@@ -46,6 +46,9 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
     /** The hourly segments of the program the patch accepted, see [CarelevoSetBasalProgramUseCase.acceptedBasalSegments]. */
     fun acceptedBasalSegments(): List<CarelevoBasalSegmentInfusionInfoDomainModel>? = setBasalProgramUseCase.acceptedBasalSegments()
 
+    /** Whether the patch runs [profile], see [CarelevoSetBasalProgramUseCase.isAccepted]. */
+    fun isAccepted(profile: Profile): Boolean? = setBasalProgramUseCase.isAccepted(profile)
+
     fun updateBasalProfile(
         profile: Profile,
         cancelExtendedBolus: () -> PumpEnactResult,

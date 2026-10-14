@@ -689,9 +689,14 @@ class CarelevoPumpPlugin @Inject constructor(
         )
     }
 
-    override fun isThisProfileSet(profile: PumpProfile): Boolean {
-        return carelevoPatch.checkIsSameProfile(profile)
-    }
+    /**
+     * Compared with the program the patch accepted, which is stored and survives a restart. The profile held in memory
+     * is the running one after a restart, and that holds the basal the patch gives, rounded (#2454). It never matched
+     * the requested profile, so every restart set the basal again and cancelled the running temp basal. Before a
+     * program was accepted (no patch yet) the profile held in memory is used.
+     */
+    override fun isThisProfileSet(profile: PumpProfile): Boolean =
+        basalProfileUpdateCoordinator.isAccepted(profile) ?: carelevoPatch.checkIsSameProfile(profile)
 
     /**
      * The 24 hourly rates the patch runs: the program it accepted, each rate rounded to 0.01 U/h as it is sent (#2454).

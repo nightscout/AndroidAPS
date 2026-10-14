@@ -62,6 +62,44 @@ internal class CarelevoSetBasalProgramUseCaseTest {
         assertThat(sut.acceptedBasalSegments()).isNull()
     }
 
+    // ---------- isAccepted ----------
+
+    private fun storeProgram(speed: (hour: Int) -> Double) {
+        val segments = (0..23).map { CarelevoBasalSegmentInfusionInfoDomainModel(startTime = it, endTime = it + 1, speed = speed(it)) }
+        whenever(infusionInfoRepository.getInfusionInfoBySync()).thenReturn(
+            CarelevoInfusionInfoDomainModel(basalInfusionInfo = CarelevoBasalInfusionInfoDomainModel("id", "address", 1, segments = segments, isStop = false))
+        )
+    }
+
+    @Test
+    fun `a profile is accepted when the stored program gives its rates`() {
+        storeProgram { hour -> if (hour < 6) 0.5415 else 1.083 }
+
+        assertThat(sut.isAccepted(profileWith(Profile.ProfileValue(0, 0.5415), Profile.ProfileValue(6 * 3600, 1.083)))).isTrue()
+    }
+
+    /** The patch takes 0.01 U/h: two rates that are sent the same are the same program. */
+    @Test
+    fun `a rate that differs below the patch step is accepted`() {
+        storeProgram { 0.851 }
+
+        assertThat(sut.isAccepted(profileWith(Profile.ProfileValue(0, 0.853)))).isTrue()
+    }
+
+    @Test
+    fun `a profile with another rate in one hour is not accepted`() {
+        storeProgram { hour -> if (hour == 13) 1.2 else 1.0 }
+
+        assertThat(sut.isAccepted(profileWith(Profile.ProfileValue(0, 1.0)))).isFalse()
+    }
+
+    @Test
+    fun `nothing is accepted before a program was stored`() {
+        whenever(infusionInfoRepository.getInfusionInfoBySync()).thenReturn(CarelevoInfusionInfoDomainModel())
+
+        assertThat(sut.isAccepted(profileWith(Profile.ProfileValue(0, 1.0)))).isNull()
+    }
+
     // ---------- buildBasalProgramPlan ----------
 
     @Test
