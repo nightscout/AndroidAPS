@@ -3,6 +3,7 @@
     <string name="executing_right_now">Il comando sarà eseguito ora</string>
     <string name="smb_being_delivered">Un SMB è in fase di consegna. Riprova quando è finito.</string>
     <string name="basal_value_below_minimum">Valore basale inferiore al minimo. Profilo non impostato!</string>
+    <string name="basal_rounded_by_pump" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Il micro arrotonda la basale al proprio passo. Dà %1$s al giorno invece di %2$s.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">CHO</string>
     <!--    PumpStatusGenerator-->
