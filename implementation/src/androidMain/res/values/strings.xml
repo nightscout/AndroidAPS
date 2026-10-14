@@ -3,7 +3,8 @@
     <string name="executing_right_now">Command is executed right now</string>
     <string name="smb_being_delivered">An SMB is being delivered right now. Try again when it has finished.</string>
     <string name="basal_value_below_minimum">Basal value below minimum. Profile not set!</string>
-    <string name="basal_rounded_by_pump" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">The pump rounds the basal to its own step. It gives %1$s per day instead of %2$s.</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Basal profile in pump updated. The pump rounds the basal to its own step: it gives %1$s per day instead of %2$s.</string>
+    <string name="basal_reported_far_from_profile">The pump reports a basal far from the profile. AAPS keeps the profile basal. Check the basal rates in the pump.</string>
 
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">Carbs</string>
