@@ -12,13 +12,7 @@
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Tentando emparelhar com o novo Pod e prima-o.\n\nQuando o processo de inicialização for concluído com sucesso, pode pressionar <b>Next</b>.</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_generic_error">Erro genérico: %1$s</string>
-    <string name="omnipod_dash_failed_to_send">Falha ao enviar o comando</string>
-    <string name="omnipod_dash_command_not_sent">Comando não enviado</string>
-    <string name="omnipod_dash_command_not_received_by_the_pod">Comando não recebido pelo pod</string>
-    <string name="omnipod_dash_unknown">Estado desconhecido para o comando</string>
-    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minutos</string>
     <string name="omnipod_common_alert_delivery_suspended">A entrega de insulina está suspensa</string>
-    <string name="omnipod_common_history_total_delivered">Total administrado: %1$.2f U</string>
     <string name="omnipod_dash_bolus_already_in_progress">Outro bólus está a ser administrado</string>
     <string name="omnipod_dash_not_enough_insulin">Não há insulina suficiente no reservatório</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Comando não confirmado</string>
