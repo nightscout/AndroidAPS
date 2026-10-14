@@ -714,7 +714,8 @@ class PrepareGraphDataRunner(
     private suspend fun prepareIobAutosensGraphData(data: PrepareGraphData, isStopped: () -> Boolean) {
         val cacheTimeRange = data.cache.timeRangeFlow.value
         val fromTime = cacheTimeRange?.fromTime ?: data.overviewData.fromTime
-        val endTime = cacheTimeRange?.endTime ?: data.overviewData.endTime
+        // The BG phase reset the cached end to the next full hour; overviewData still has the horizon
+        val endTime = maxOf(cacheTimeRange?.endTime ?: 0L, data.overviewData.endTime)
 
         data.signals.emitProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 0)
 
