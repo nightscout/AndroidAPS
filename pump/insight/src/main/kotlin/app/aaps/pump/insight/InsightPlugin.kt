@@ -139,6 +139,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
@@ -522,6 +524,15 @@ class InsightPlugin(
                     .enacted(true)
                     .comment(app.aaps.core.ui.R.string.virtualpump_resultok)
                 this.profileBlocks = profileBlocks
+                // Read back what the pump keeps now: the running profile is built from it (#2454). When the read
+                // fails, the blocks as they were sent stay.
+                try {
+                    connectionService?.let { readService ->
+                        ParameterBlockUtil.readParameterBlock(readService, Service.CONFIGURATION, BRProfile1Block::class.java)?.profileBlocks?.let { this.profileBlocks = it }
+                    }
+                } catch (e: Exception) {
+                    aapsLogger.warn(LTag.PUMP, "The basal profile could not be read after it was set: ${e.message}")
+                }
                 try {
                     fetchStatus()
                 } catch (_: Exception) {
@@ -563,6 +574,27 @@ class InsightPlugin(
             }
         }
         return true
+    }
+
+    /**
+     * The 24 hourly rates the pump runs: its profile 1 as it was read back after the set, in 0.01 U/h steps (0.1 U/h
+     * above 5 U/h) (#2454). An hour with two blocks counts each one for its minutes. null without a paired pump, before
+     * it was read, or while it runs another profile: the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? {
+        if (!isConfigured() || activeBasalProfile != BasalProfile.PROFILE_1) return null
+        val blocks = profileBlocks ?: return null
+        if (blocks.sumOf { it.duration } != MINUTES_PER_DAY) return null
+        return (0 until 24).map { hour ->
+            var insulin = BigDecimal.ZERO // U/h x minutes
+            var start = 0
+            for (block in blocks) {
+                val overlap = minOf(start + block.duration, (hour + 1) * 60) - maxOf(start, hour * 60)
+                if (overlap > 0) insulin += BigDecimal(block.basalAmount.toString()).multiply(BigDecimal(overlap))
+                start += block.duration
+            }
+            Profile.ProfileValue(hour * 3600, insulin.divide(BigDecimal(60), 4, RoundingMode.HALF_UP).toDouble())
+        }
     }
 
     private var lastDataTimeJob: Job? = null
@@ -1668,6 +1700,7 @@ class InsightPlugin(
     companion object {
 
         const val ALERT_CHANNEL_ID = "AAPS-InsightAlert"
+        private const val MINUTES_PER_DAY = 24 * 60
     }
 
 }
