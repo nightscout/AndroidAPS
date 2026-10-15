@@ -26,7 +26,6 @@
     <string name="objectives2_maintenance">Exportați setările local folosind meniul de întreținere.</string>
     <string name="objectives2_cloud">Copiați fișierul de preferințe într-o locație sigură în afara telefonului dumneavoastră (spre exemplu folosind un spațiu de stocare online cloud, conectând un cablu la un computer, un e-mail șamd)</string>
     <string name="objectives2_easyrestore">În cazul în care telefonul este deteriorat sau pierdut, există modalități simple de a vă recupera setările fără o copie de rezervă.</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_label">Citiri zgomotoase ale CGM</string>
     <string name="noisycgm_whattodo">Ce ar trebui făcut dacă valorile CGM sunt nesigure?</string>
     <string name="noisycgm_nothing">Nu faceți nimic - AAPS va rezolva asta.</string>
