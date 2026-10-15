@@ -33,8 +33,11 @@ fun IobCobChipsRow(
         val intrinsicsWithIcons = withIcons.map { it.maxIntrinsicWidth(constraints.maxHeight) }
         val totalWithIcons = intrinsicsWithIcons.sum()
 
-        // If chips with icons don't fit, hide icons to free up space
-        val showIcons = if (isWidthBounded) totalWithIcons <= availableWidth else true
+        // If chips with icons don't fit, hide icons to free up space. Not while carbs are required:
+        // the blinking COB icon is the cue, and the "16req" text is what made the row too narrow in
+        // the first place, so the cue would vanish exactly when it is needed. The COB text scrolls
+        // instead (see CobChip).
+        val showIcons = cobUiState.carbsReq > 0 || !isWidthBounded || totalWithIcons <= availableWidth
 
         val measurables = if (showIcons) {
             withIcons
