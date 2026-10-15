@@ -354,6 +354,7 @@
     <string name="temporary_target">Target temporaneo</string>
     <string name="temporary_targets">Target temporanei</string>
     <string name="running_mode">Modalità esecuzione</string>
+    <string name="running_mode_desc">Chiudere o aprire il loop, sospenderlo o scollegare il microinfusore</string>
     <string name="running_mode_change_not_allowed">Cambio modalità di esecuzione non disponibile</string>
     <string name="pump_reconnect">Riconnetti micro</string>
     <string name="scene">Scena</string>
