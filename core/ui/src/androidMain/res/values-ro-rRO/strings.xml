@@ -112,6 +112,8 @@
     <string name="format_mins">%1$d min</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
     <string name="objectives">Obiective</string>
     <string name="please_wait">Așteptați…</string>
     <string name="stop">Stop</string>
@@ -119,6 +121,8 @@
     <string name="invalid_profile">Profil invalid!</string>
     <string name="no_profile_set">NICIUN PROFIL SETAT</string>
     <string name="profile_switch_no_insulin">Nu se poate schimba profilul: nicio insulină nu este în uz și nu a fost selectată niciuna.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Timpul de schimbare a profilului trebuie să fie în %1$d ore de acum.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Ținta temporară trebuie să înceapă în %1$d ore de acum.</string>
     <string name="profile_switch_select_insulin_hint">Nicio insulină nu este încă utilizată. Selectați insulina pe care o utilizați, astfel încât această modificare de profil să o poată înregistra.</string>
     <string name="insulin_activation_failed">Insulina nu a fost schimbată. Insulina anterioară este încă în uz.</string>
     <string name="insulin_activation_unconfirmed">Schimbarea insulinei nu a putut fi confirmată. Verificați care insulină este activă în profilul dumneavoastră înainte de administrare.</string>
