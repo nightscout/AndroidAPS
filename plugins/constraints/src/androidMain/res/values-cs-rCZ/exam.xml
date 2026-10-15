@@ -32,7 +32,7 @@
     <string name="objectives2_cloud">Zkopírujte soubor předvoleb do bezpečného umístění mimo telefon (např. pomocí cloudového disku, připojením kabelu k počítači, e-mailem apod.)</string>
     <string name="objectives2_easyrestore">Je-li váš telefon poškozen nebo ztracen, existují jednoduché způsoby, jak vzdáleně obnovit vaše nastavení bez zálohování.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/cs/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/cs/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/cs/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">Šum dat ze senzoru</string>
     <string name="noisycgm_whattodo">Co by mělo být provedeno v případě, že CGM data poskakují?</string>
     <string name="noisycgm_nothing">Nic, smyčka se s tím vypořádá.</string>
