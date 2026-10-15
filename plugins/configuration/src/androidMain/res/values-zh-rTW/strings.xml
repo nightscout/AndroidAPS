@@ -46,6 +46,7 @@
     <string name="setupwizard_pairing_status_master_none">尚未配對任何用戶端</string>
     <string name="setupwizard_pairing_status_client_paired">已與主控端配對</string>
     <string name="setupwizard_pairing_status_client_not_paired">尚未配對</string>
+    <string name="setupwizard_instance_name_title">誰在使用這支手機？</string>
     <string name="readstatus">讀取狀態</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">此設備似乎不支援電池優化白名單 - 您可能會遇到效能問題。</string>
