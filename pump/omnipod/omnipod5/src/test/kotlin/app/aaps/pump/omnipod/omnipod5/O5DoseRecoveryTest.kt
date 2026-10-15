@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.profile.Profile
@@ -14,13 +15,17 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.R
 import app.aaps.pump.omnipod.common.bledriver.event.PodEvent
+import app.aaps.pump.omnipod.common.bledriver.pod.command.GetStatusCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramBasalCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramBolusCommand
+import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramTempBasalCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.StopDeliveryCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.base.Command
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.response.DefaultStatusResponse
+import app.aaps.pump.omnipod.common.queue.command.CommandDeliverBasalCorrection
 import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.pump.omnipod.omnipod5.bledriver.comm.O5BleManager
@@ -34,18 +39,29 @@ import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.async
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -53,8 +69,16 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.nio.ByteBuffer
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 class O5DoseRecoveryTest : TestBaseWithProfile() {
+
+    private companion object {
+        const val CONCURRENCY_TIMEOUT_MS = 5_000L
+        // Short wait used to prove that something is still blocked. It is a bound, not a sleep.
+        const val BLOCKED_PROBE_MS = 200L
+    }
 
     @Mock lateinit var ble: O5BleManager
     @Mock lateinit var history: O5History
@@ -283,6 +307,362 @@ class O5DoseRecoveryTest : TestBaseWithProfile() {
         assertThat(state.lastBolusDeliveredUnits).isNull()
         assertThat(state.cumulativeBolusPulsesDelivered).isEqualTo(0.toShort())
         verify(sync, never()).syncBolusWithPumpId(any(), any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun `status recovery waits for bolus accounting and runs after the dose lock is released`() = runBlocking<Unit> {
+        val programEntered = CountDownLatch(1)
+        val allowProgram = CountDownLatch(1)
+        val accountingEntered = CountDownLatch(1)
+        val allowAccounting = CountDownLatch(1)
+        val statusStarted = CountDownLatch(1)
+        val statusCommandEntered = CountDownLatch(1)
+
+        whenever(history.setTotalAmountDelivered(any(), anyOrNull())).thenReturn(
+            Completable.fromAction {
+                accountingEntered.countDown()
+                check(allowAccounting.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS))
+            }
+        )
+        whenever(ble.sendCommand(any(), any())).thenAnswer {
+            val command = it.getArgument<Command>(0)
+            when (command) {
+                is ProgramBolusCommand -> {
+                    programEntered.countDown()
+                    check(allowProgram.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS))
+                    val response = status(1, DeliveryStatus.BOLUS_AND_BASAL_ACTIVE, 1)
+                    state.updateFromDefaultStatusResponse(response)
+                    Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+                }
+                is StopDeliveryCommand -> {
+                    val response = status(2, DeliveryStatus.BASAL_ACTIVE)
+                    state.updateFromDefaultStatusResponse(response)
+                    Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+                }
+                is GetStatusCommand -> {
+                    statusCommandEntered.countDown()
+                    val response = status(2, DeliveryStatus.BASAL_ACTIVE)
+                    state.updateFromDefaultStatusResponse(response)
+                    Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+                }
+                else -> Observable.empty()
+            }
+        }
+
+        val bolus = async(Dispatchers.IO) {
+            plugin.deliverTreatment(DetailedBolusInfo().also { it.insulin = 0.05 })
+        }
+        try {
+            assertThat(programEntered.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS)).isTrue()
+            withTimeout(CONCURRENCY_TIMEOUT_MS) {
+                async(Dispatchers.IO) { plugin.stopBolusDelivering() }.await()
+            }
+            allowProgram.countDown()
+            assertThat(accountingEntered.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS)).isTrue()
+
+            val statusRead = async(Dispatchers.IO) {
+                statusStarted.countDown()
+                plugin.getPumpStatus("concurrent recovery test")
+            }
+            assertThat(statusStarted.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS)).isTrue()
+            // Simulated hung accounting holds the dose lock, so the waiting status read must time out.
+            assertThrows<TimeoutCancellationException> {
+                runBlocking { withTimeout(BLOCKED_PROBE_MS) { statusRead.await() } }
+            }
+            assertThat(statusRead.isActive).isTrue()
+            assertThat(statusCommandEntered.count).isEqualTo(1L)
+
+            allowAccounting.countDown()
+            withTimeout(CONCURRENCY_TIMEOUT_MS) { bolus.await() }
+            withTimeout(CONCURRENCY_TIMEOUT_MS) { statusRead.await() }
+            assertThat(statusCommandEntered.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS)).isTrue()
+            assertThat(state.pendingDoseCommand).isNull()
+        } finally {
+            allowProgram.countDown()
+            allowAccounting.countDown()
+        }
+    }
+
+    @Test
+    fun `status read times out while a hung pod command holds the dose lock and resumes after release`() = runBlocking<Unit> {
+        val programEntered = CountDownLatch(1)
+        val allowProgram = CountDownLatch(1)
+        val statusCommandEntered = CountDownLatch(1)
+
+        whenever(ble.sendCommand(any(), any())).thenAnswer {
+            val command = it.getArgument<Command>(0)
+            when (command) {
+                is ProgramBolusCommand -> {
+                    // Simulated hung BLE call inside the dose lock. The wait is finite and released in finally.
+                    programEntered.countDown()
+                    check(allowProgram.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS))
+                    val response = status(1, DeliveryStatus.BOLUS_AND_BASAL_ACTIVE, 1)
+                    state.updateFromDefaultStatusResponse(response)
+                    Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+                }
+                is StopDeliveryCommand -> {
+                    val response = status(2, DeliveryStatus.BASAL_ACTIVE)
+                    state.updateFromDefaultStatusResponse(response)
+                    Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+                }
+                is GetStatusCommand -> {
+                    statusCommandEntered.countDown()
+                    val response = status(2, DeliveryStatus.BASAL_ACTIVE)
+                    state.updateFromDefaultStatusResponse(response)
+                    Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+                }
+                else -> Observable.empty()
+            }
+        }
+
+        val bolus = async(Dispatchers.IO) {
+            plugin.deliverTreatment(DetailedBolusInfo().also { it.insulin = 0.05 })
+        }
+        try {
+            assertThat(programEntered.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS)).isTrue()
+            val statusRead = async(Dispatchers.IO) { plugin.getPumpStatus("hung pod command test") }
+
+            assertThrows<TimeoutCancellationException> {
+                runBlocking { withTimeout(BLOCKED_PROBE_MS) { statusRead.await() } }
+            }
+            assertThat(statusRead.isActive).isTrue()
+            assertThat(statusCommandEntered.count).isEqualTo(1L)
+
+            // Stop the bolus so the completion wait ends early, then release the hung command.
+            withTimeout(CONCURRENCY_TIMEOUT_MS) {
+                async(Dispatchers.IO) { plugin.stopBolusDelivering() }.await()
+            }
+            allowProgram.countDown()
+            withTimeout(CONCURRENCY_TIMEOUT_MS) { bolus.await() }
+            withTimeout(CONCURRENCY_TIMEOUT_MS) { statusRead.await() }
+            assertThat(statusCommandEntered.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS)).isTrue()
+            assertThat(state.pendingDoseCommand).isNull()
+        } finally {
+            allowProgram.countDown()
+        }
+    }
+
+    @Test
+    fun `BLE callback waiting for plugin status deadlocks the dose lock until externally released`() = runBlocking<Unit> {
+        val allowResponse = CountDownLatch(1)
+        val statusAttempted = CompletableDeferred<Deferred<Unit>>()
+        val statusCommandEntered = CountDownLatch(1)
+        val scopeJob = SupervisorJob()
+        val testScope = CoroutineScope(scopeJob + Dispatchers.IO)
+
+        whenever(ble.sendCommand(any(), any())).thenAnswer {
+            val command = it.getArgument<Command>(0)
+            when (command) {
+                is ProgramBolusCommand -> Observable.defer {
+                    // Start inline: getPumpStatus reaches the real dose lock before async returns.
+                    val statusRead = testScope.async(start = CoroutineStart.UNDISPATCHED) {
+                        plugin.getPumpStatus("BLE callback circular wait test")
+                    }
+                    statusRead.invokeOnCompletion { allowResponse.countDown() }
+                    statusAttempted.complete(statusRead)
+                    // Bolus owns doseMutex -> BLE response -> status read -> the same doseMutex.
+                    check(allowResponse.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS))
+                    val response = status(1, DeliveryStatus.BOLUS_AND_BASAL_ACTIVE, 1)
+                    state.updateFromDefaultStatusResponse(response)
+                    Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+                }
+                is StopDeliveryCommand -> {
+                    val response = status(2, DeliveryStatus.BASAL_ACTIVE)
+                    state.updateFromDefaultStatusResponse(response)
+                    Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+                }
+                is GetStatusCommand -> {
+                    statusCommandEntered.countDown()
+                    val response = status(2, DeliveryStatus.BASAL_ACTIVE)
+                    state.updateFromDefaultStatusResponse(response)
+                    Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+                }
+                else -> Observable.empty()
+            }
+        }
+
+        val bolus = testScope.async {
+            plugin.deliverTreatment(DetailedBolusInfo().also { it.insulin = 0.05 })
+        }
+        try {
+            val statusRead = withTimeout(CONCURRENCY_TIMEOUT_MS) { statusAttempted.await() }
+            withTimeout(CONCURRENCY_TIMEOUT_MS) {
+                async(Dispatchers.IO) { plugin.stopBolusDelivering() }.await()
+            }
+            // Only this test has a timeout. Production has no lock timeout or automatic recovery.
+            assertThrows<TimeoutCancellationException> {
+                runBlocking { withTimeout(BLOCKED_PROBE_MS) { statusRead.await() } }
+            }
+            assertThrows<TimeoutCancellationException> {
+                runBlocking { withTimeout(BLOCKED_PROBE_MS) { bolus.await() } }
+            }
+            assertThat(statusRead.isActive).isTrue()
+            assertThat(bolus.isActive).isTrue()
+            assertThat(allowResponse.count).isEqualTo(1L)
+            assertThat(statusCommandEntered.count).isEqualTo(1L)
+            verify(sync, never()).syncBolusWithPumpId(any(), any(), any(), any(), any(), any())
+
+            // Break the injected dependency, not the lock, and let both plugin calls finish.
+            allowResponse.countDown()
+            val result = withTimeout(CONCURRENCY_TIMEOUT_MS) { bolus.await() }
+            withTimeout(CONCURRENCY_TIMEOUT_MS) { statusRead.await() }
+            assertThat(result.success).isTrue()
+            assertThat(result.bolusDelivered).isWithin(0.00001).of(0.05)
+            assertThat(statusCommandEntered.count).isEqualTo(0L)
+            withTimeout(CONCURRENCY_TIMEOUT_MS) { plugin.getPumpStatus("after circular wait recovery") }
+            assertThat(state.pendingDoseCommand).isNull()
+            assertThat(state.lastBolusDeliveredUnits).isWithin(0.00001).of(0.05)
+            assertThat(state.cumulativeBolusPulsesDelivered).isEqualTo(1.toShort())
+            verify(history, times(1)).setTotalAmountDelivered(eq(7L), eq(0.05))
+            // The expected and final amounts update the same pump record; recovery adds neither.
+            verify(sync, times(2)).syncBolusWithPumpId(
+                any(), argThat<PumpInsulin> { cU == 0.05 }, any(), eq(7L), eq(PumpType.OMNIPOD_5), eq("12345")
+            )
+            verify(ble, times(1)).sendCommand(argThat { this is ProgramBolusCommand }, any())
+            verify(ble, times(1)).sendCommand(argThat { this is StopDeliveryCommand }, any())
+            verify(ble, times(2)).sendCommand(argThat { this is GetStatusCommand }, any())
+        } finally {
+            allowResponse.countDown()
+            withTimeout(CONCURRENCY_TIMEOUT_MS) {
+                scopeJob.children.toList().joinAll()
+                scopeJob.cancelAndJoin()
+            }
+        }
+        assertThat(scopeJob.isCompleted).isTrue()
+    }
+
+    @Test
+    fun `bolus cancellation returns while the dose lock is held and sends a stop command`() = runBlocking<Unit> {
+        val programEntered = CountDownLatch(1)
+        val allowProgram = CountDownLatch(1)
+        val stopCommandEntered = CountDownLatch(1)
+
+        whenever(ble.sendCommand(any(), any())).thenAnswer {
+            val command = it.getArgument<Command>(0)
+            when (command) {
+                is ProgramBolusCommand -> {
+                    programEntered.countDown()
+                    check(allowProgram.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS))
+                    val response = status(1, DeliveryStatus.BOLUS_AND_BASAL_ACTIVE, 1)
+                    state.updateFromDefaultStatusResponse(response)
+                    Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+                }
+                is StopDeliveryCommand -> {
+                    stopCommandEntered.countDown()
+                    val response = status(2, DeliveryStatus.BASAL_ACTIVE)
+                    state.updateFromDefaultStatusResponse(response)
+                    Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+                }
+                else -> Observable.empty()
+            }
+        }
+
+        val bolus = async(Dispatchers.IO) {
+            plugin.deliverTreatment(DetailedBolusInfo().also { it.insulin = 0.05 })
+        }
+        try {
+            assertThat(programEntered.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS)).isTrue()
+            withTimeout(CONCURRENCY_TIMEOUT_MS) {
+                async(Dispatchers.IO) { plugin.stopBolusDelivering() }.await()
+            }
+            allowProgram.countDown()
+            withTimeout(CONCURRENCY_TIMEOUT_MS) { bolus.await() }
+            assertThat(stopCommandEntered.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS)).isTrue()
+            verify(ble).sendCommand(argThat { this is StopDeliveryCommand }, any())
+        } finally {
+            allowProgram.countDown()
+        }
+    }
+
+    @Test
+    fun `queued basal correction runs after temp basal releases the dose lock`() = runBlocking<Unit> {
+        val queueEntered = CountDownLatch(1)
+        val correctionAttempting = CountDownLatch(1)
+        val correctionEntered = CountDownLatch(1)
+        val allowCorrection = CountDownLatch(1)
+        val queueResult = CompletableDeferred<PumpEnactResult>()
+        val queueCallerReturned = CompletableDeferred<PumpEnactResult>()
+        val scopeJob = SupervisorJob()
+        val testScope = CoroutineScope(scopeJob + Dispatchers.IO)
+
+        state.activationProgress = ActivationProgress.COMPLETED
+        state.basalExpected = 0.05
+        plugin.scope = testScope
+        whenever(queue.isCustomCommandInQueue(CommandDeliverBasalCorrection::class)).thenReturn(false)
+        // Model the real queue: the caller suspends until a separate worker has run the command.
+        whenever(queue.customCommand(any())).doSuspendableAnswer {
+            queueEntered.countDown()
+            testScope.launch {
+                correctionAttempting.countDown()
+                queueResult.complete(
+                    plugin.executeCustomCommand(CommandDeliverBasalCorrection())
+                )
+            }
+            queueResult.await().also { queueCallerReturned.complete(it) }
+        }
+        whenever(ble.sendCommand(any(), any())).thenAnswer {
+            val command = it.getArgument<Command>(0)
+            when (command) {
+                is ProgramTempBasalCommand -> {
+                    val response = status(0, DeliveryStatus.TEMP_BASAL_ACTIVE)
+                    state.updateFromDefaultStatusResponse(response)
+                    state.basalExpected = 0.05
+                    Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+                }
+                is ProgramBolusCommand -> {
+                    correctionEntered.countDown()
+                    check(allowCorrection.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS))
+                    val response = status(state.msgSequenceNumber.toInt(), DeliveryStatus.BOLUS_AND_BASAL_ACTIVE, 1)
+                    state.updateFromDefaultStatusResponse(response)
+                    Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+                }
+                is StopDeliveryCommand -> {
+                    val response = status(state.msgSequenceNumber.toInt(), DeliveryStatus.BASAL_ACTIVE)
+                    state.updateFromDefaultStatusResponse(response)
+                    Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+                }
+                else -> Observable.empty()
+            }
+        }
+
+        try {
+            // The temp basal holds the dose lock while it enqueues the correction. It must return
+            // without waiting for the queued command, or the two would deadlock.
+            val tempBasalResult = withTimeout(CONCURRENCY_TIMEOUT_MS) {
+                async(Dispatchers.IO) {
+                    plugin.setTempBasalAbsolute(0.4, 30, false, PumpSync.TemporaryBasalType.NORMAL)
+                }.await()
+            }
+            assertThat(tempBasalResult.success).isTrue()
+            assertThat(queueEntered.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS)).isTrue()
+            assertThat(correctionAttempting.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS)).isTrue()
+
+            // The correction now owns the dose lock and is held inside the pod command.
+            assertThat(correctionEntered.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS)).isTrue()
+            assertThrows<TimeoutCancellationException> {
+                runBlocking { withTimeout(BLOCKED_PROBE_MS) { queueCallerReturned.await() } }
+            }
+            assertThat(queueResult.isActive).isTrue()
+
+            withTimeout(CONCURRENCY_TIMEOUT_MS) {
+                async(Dispatchers.IO) { plugin.stopBolusDelivering() }.await()
+            }
+            allowCorrection.countDown()
+            withTimeout(CONCURRENCY_TIMEOUT_MS) { queueCallerReturned.await() }
+
+            assertThat(state.pendingDoseCommand).isNull()
+            assertThat(state.lastBolusDeliveredUnits).isWithin(0.00001).of(0.05)
+            assertThat(state.cumulativeBolusPulsesDelivered).isEqualTo(0.toShort())
+            verify(sync, never()).syncBolusWithPumpId(any(), any(), any(), any(), any(), any())
+            verify(ble, times(1)).sendCommand(argThat { this is ProgramBolusCommand }, any())
+            verify(queue, times(1)).customCommand(any())
+        } finally {
+            allowCorrection.countDown()
+            withTimeout(CONCURRENCY_TIMEOUT_MS) {
+                scopeJob.children.toList().joinAll()
+                scopeJob.cancelAndJoin()
+            }
+        }
     }
 
     @ParameterizedTest
