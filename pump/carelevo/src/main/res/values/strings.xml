@@ -251,5 +251,7 @@
     <string name="alarm_notification_desc_notice_lgs_error">Please check patch and CGM connection.</string>
 
     <string name="carelevo_profile_update_skip_comment">Skipped: update too soon.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">The patch did not confirm the stop. Waiting for the bolus to end…</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">The patch did not confirm the stop. The full bolus of %1$s is recorded.</string>
 
 </resources>
