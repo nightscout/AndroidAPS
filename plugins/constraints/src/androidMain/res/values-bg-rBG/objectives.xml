@@ -61,17 +61,13 @@
     <string name="objectives_exam_learned_wrongcarbs">Ако сте направили грешен вход в AAPS или не отговаря на реалността, разрешете го възможно най-скоро. Може да доведе до предозиране. AAPS трябва винаги да бъде информирано по възможно най-добрия начин за въглехидратите, инсулина и т. н.</string>
     <string name="objectives_exam_learned_breadgrams">Въвеждането на въглехидрати е разрешено само в грамове.</string>
     <string name="objectives_exam_learned_ecarbs">E-carbs е заместител на удължения болус от помпата.</string>
-    <string name="objectives_exam_learned_concentration2">При превключването от U200 инсулин с профил на 50% към U200 чрез функцията за концентрация ще трябва да създам нов профил на 100%, изключа ДинамиченISF за една седмица и да свикна с работата в новите обикновени единици.</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">При превключването от U200 инсулин с профил на 50% към U200 чрез функцията за концентрация ще трябва да създам нов профил на 100%, изключа ДинамиченISF за една седмица и да свикна с работата в новите обикновени единици.</string>
     <string name="objectives_exam_learned_concentration3">Концентрацията може да бъде сменена само при смяна на инсулин или пач, но най-важно (особено при помпи с маркучи) никога да не ползвам помпата за болуси.</string>
     <string name="answerdisabledto">Изключено до: %1$s</string>
     <string name="wronganswer">Грешен отговор!</string>
     <string name="unfinshed_button">Следващия неотговорен</string>
     <string name="requestcode">Код (request code): %1$s</string>
     <string name="objectives_hint">(отбележете всички правилни отговори)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Няма връзка с Интернет!</string>
     <string name="requirementnotmet">Задачите не са изпълнени</string>
     <string name="what_i_ve_learned">Какво научих:</string>
