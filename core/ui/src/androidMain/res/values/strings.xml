@@ -121,6 +121,7 @@
     <string name="invalid_profile">Invalid profile!</string>
     <string name="no_profile_set">NO PROFILE SET</string>
     <string name="profile_switch_no_insulin">Cannot switch profile: no insulin is in use, and none was selected.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">This temporary switch has %1$s, but the permanent profile under it has %2$s. Activate the insulin that is in the pump in Insulin settings first.</string>
     <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">The profile switch time must be within %1$d hours of now.</string>
     <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">The temporary target must start within %1$d hours of now.</string>
     <string name="profile_switch_select_insulin_hint">No insulin is in use yet. Select the insulin you are using, so this profile switch can record it.</string>

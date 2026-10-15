@@ -33,6 +33,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -464,6 +465,26 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
                 timestamp = now - T.mins(startedMinutesAgo).msecs(), duration = T.mins(durationMinutes).msecs()
             )
         )
+        noLaterSwitches()
+    }
+
+    /** No switch is set to start later. A mock answers null for a suspend function, not an empty list. */
+    private suspend fun noLaterSwitches() {
+        whenever(persistenceLayer.getProfileSwitchesFromTime(anyLong(), any())).thenReturn(emptyList())
+    }
+
+    /** The database writes what it is given, so the test can read it back with [writtenSwitches]. */
+    private suspend fun writesWhatItIsGiven() {
+        whenever(persistenceLayer.insertOrUpdateProfileSwitches(any(), any(), any(), anyOrNull(), any())).thenAnswer { invocation ->
+            PersistenceLayer.TransactionResult<PS>().also { it.inserted.addAll(invocation.getArgument<List<PS>>(0)) }
+        }
+    }
+
+    /** The switches of the one transaction an insulin change writes. */
+    private suspend fun writtenSwitches(): List<PS> {
+        val written = argumentCaptor<List<PS>>()
+        verify(persistenceLayer).insertOrUpdateProfileSwitches(written.capture(), any(), any(), anyOrNull(), any())
+        return written.firstValue
     }
 
     @Test
@@ -483,22 +504,169 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
             .isEqualTo("Basal rate is not compatible with the current pump and cannot be activated. Reduce the percentage or adjust the basal rate.")
     }
 
+    /** There is no permanent switch here, so only the requested temporary one is copied. */
     @Test
     fun theInsulinChosenInAPumpWizardIsAppliedBeforeTheProfileRuns() = runTest {
         requestedSwitchNotRunningYet(percentage = 80, durationMinutes = 60, startedMinutesAgo = 15)
-        whenever(persistenceLayer.insertOrUpdateProfileSwitch(any(), any(), any(), anyOrNull(), any())).thenAnswer { invocation ->
-            PersistenceLayer.TransactionResult<PS>().also { it.inserted.add(invocation.getArgument(0)) }
-        }
+        writesWhatItIsGiven()
         val chosen = someICfg.copy(insulinLabel = "Chosen in the wizard")
 
         assertThat(createSutWithText().createProfileSwitchWithNewInsulin(chosen, Sources.Equil)).isTrue()
 
-        val inserted = argumentCaptor<PS>()
-        verify(persistenceLayer).insertOrUpdateProfileSwitch(inserted.capture(), any(), any(), anyOrNull(), any())
-        assertThat(inserted.firstValue.profileName).isEqualTo(TESTPROFILENAME)
-        assertThat(inserted.firstValue.percentage).isEqualTo(80)
-        assertThat(inserted.firstValue.duration).isEqualTo(T.mins(45).msecs())
-        assertThat(inserted.firstValue.iCfg.insulinLabel).isEqualTo("Chosen in the wizard")
+        val written = writtenSwitches()
+        assertThat(written).hasSize(1)
+        assertThat(written[0].profileName).isEqualTo(TESTPROFILENAME)
+        assertThat(written[0].percentage).isEqualTo(80)
+        assertThat(written[0].duration).isEqualTo(T.mins(45).msecs())
+        assertThat(written[0].iCfg.insulinLabel).isEqualTo("Chosen in the wizard")
+    }
+
+    @Test
+    fun anInsulinChangeOnAPermanentSwitchWritesOnlyThatSwitch() = runTest {
+        requestedSwitchNotRunningYet(percentage = 95)
+        writesWhatItIsGiven()
+
+        assertThat(createSutWithText().createProfileSwitchWithNewInsulin(fiasp, Sources.FillDialog)).isTrue()
+
+        val written = writtenSwitches()
+        assertThat(written).hasSize(1)
+        assertThat(written[0].percentage).isEqualTo(95)
+        assertThat(written[0].duration).isEqualTo(0L)
+        assertThat(written[0].timestamp).isEqualTo(now)
+        assertThat(written[0].iCfg).isEqualTo(fiasp)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // An insulin change while a temporary switch runs (#5081)
+    //
+    // Only a copy of the temporary switch got the new insulin before. When the copy ended, the permanent switch with
+    // the old insulin came back, and every switch made from the running profile took the old insulin over. Seen on a
+    // phone: a 90 % switch for 10 min, an insulin change in the fill dialog, and 8 minutes later the old insulin ran.
+    // ---------------------------------------------------------------------------------------------
+
+    private val fiasp = ICfg(insulinLabel = "Fiasp", insulinEndTime = 8 * 3600 * 1000L, insulinPeakTime = 55 * 60 * 1000L, concentration = 1.0)
+
+    /**
+     * A temporary 90 % switch of [durationMinutes], started [startedMillisAgo] ago, runs over the permanent 95 % switch.
+     * Both have the insulin [someICfg].
+     */
+    private suspend fun temporarySwitchOverAPermanentOne(durationMinutes: Long = 10, startedMillisAgo: Long = T.mins(2).msecs()) {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(config.appInitialized).thenReturn(true)
+        whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong())).thenReturn(
+            profileSwitch.copy(
+                id = 43, profileName = TESTPROFILENAME, percentage = 90, iCfg = someICfg,
+                timestamp = now - startedMillisAgo, duration = T.mins(durationMinutes).msecs()
+            )
+        )
+        whenever(persistenceLayer.getPermanentProfileSwitchActiveAt(anyLong())).thenReturn(
+            profileSwitch.copy(id = 41, profileName = TESTPROFILENAME, percentage = 95, iCfg = someICfg, timestamp = now - T.hours(5).msecs())
+        )
+        noLaterSwitches()
+        writesWhatItIsGiven()
+    }
+
+    @Test
+    fun anInsulinChangeDuringATemporarySwitchAlsoChangesThePermanentOne() = runTest {
+        temporarySwitchOverAPermanentOne()
+
+        assertThat(createSutWithText().createProfileSwitchWithNewInsulin(fiasp, Sources.FillDialog)).isTrue()
+
+        // One transaction, so the pump queue never sees the permanent switch without the copy over it.
+        verify(persistenceLayer, never()).insertOrUpdateProfileSwitch(any(), any(), any(), anyOrNull(), any())
+        val written = writtenSwitches()
+        assertThat(written).hasSize(2)
+        val (permanent, copy) = written
+        assertThat(permanent.percentage).isEqualTo(95)
+        assertThat(permanent.duration).isEqualTo(0L)
+        assertThat(permanent.iCfg).isEqualTo(fiasp)
+        assertThat(copy.percentage).isEqualTo(90)
+        assertThat(copy.iCfg).isEqualTo(fiasp)
+        // The copy is newer, so it stays in force over the permanent switch until it ends…
+        assertThat(copy.timestamp).isGreaterThan(permanent.timestamp)
+        // …and it ends when the original ends, to the millisecond. Rounded down to minutes, it ended up to a minute
+        // early, and the original with the old insulin was in force again for those seconds.
+        assertThat(copy.timestamp + copy.duration).isEqualTo(now - T.mins(2).msecs() + T.mins(10).msecs())
+    }
+
+    @Test
+    fun withLessThanAMinuteLeftOnlyThePermanentSwitchGetsTheNewInsulin() = runTest {
+        // A 10 min switch started 9 min 30 s ago: 30 s are left.
+        temporarySwitchOverAPermanentOne(startedMillisAgo = T.secs(570).msecs())
+
+        assertThat(createSutWithText().createProfileSwitchWithNewInsulin(fiasp, Sources.FillDialog)).isTrue()
+
+        // Not a permanent switch at 90 %: rounded down to 0 minutes, the temporary percentage stayed for good.
+        val written = writtenSwitches()
+        assertThat(written).hasSize(1)
+        assertThat(written[0].percentage).isEqualTo(95)
+        assertThat(written[0].duration).isEqualTo(0L)
+        assertThat(written[0].timestamp).isEqualTo(now)
+        assertThat(written[0].iCfg).isEqualTo(fiasp)
+    }
+
+    @Test
+    fun switchesSetToStartLaterGetTheNewInsulinToo() = runTest {
+        temporarySwitchOverAPermanentOne()
+        val later = profileSwitch.copy(id = 50, profileName = TESTPROFILENAME, percentage = 110, iCfg = someICfg, timestamp = now + T.hours(2).msecs())
+        whenever(persistenceLayer.getProfileSwitchesFromTime(anyLong(), any())).thenReturn(listOf(later))
+
+        assertThat(createSutWithText().createProfileSwitchWithNewInsulin(fiasp, Sources.FillDialog)).isTrue()
+
+        verify(persistenceLayer).getProfileSwitchesFromTime(now + 1, true)
+        val written = writtenSwitches()
+        assertThat(written).hasSize(3)
+        // The same record, changed: it has not started yet, so no history changes.
+        assertThat(written[2].id).isEqualTo(50)
+        assertThat(written[2].timestamp).isEqualTo(later.timestamp)
+        assertThat(written[2].iCfg).isEqualTo(fiasp)
+    }
+
+    /** The permanent switch is at 150 %: 1.5 U/h, above a pump max basal of 1.2 U/h. The 90 % one would fit. */
+    @Test
+    fun anInsulinChangeIsRefusedWhenThePermanentSwitchDoesNotFitThePump() = runTest {
+        temporarySwitchOverAPermanentOne()
+        whenever(persistenceLayer.getPermanentProfileSwitchActiveAt(anyLong()))
+            .thenReturn(profileSwitch.copy(profileName = TESTPROFILENAME, percentage = 150, iCfg = someICfg, timestamp = now - T.hours(5).msecs()))
+        testPumpPlugin.pumpDescription.basalMaximumRate = 1.2
+        val sut = createSutWithText()
+
+        assertThat(sut.insulinSwitchRefusal(fiasp))
+            .isEqualTo("Basal rate is not compatible with the current pump and cannot be activated. Reduce the percentage or adjust the basal rate.")
+        assertThat(sut.createProfileSwitchWithNewInsulin(fiasp, Sources.FillDialog)).isFalse()
+        verify(persistenceLayer, never()).insertOrUpdateProfileSwitches(any(), any(), any(), anyOrNull(), any())
+    }
+
+    // The same trap from any other place: a temporary switch with another insulin than the permanent one under it.
+
+    @Test
+    fun aTemporarySwitchWithAnotherInsulinThanThePermanentOneIsRefused() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getPermanentProfileSwitchActiveAt(anyLong())).thenReturn(profileSwitch.copy(profileName = TESTPROFILENAME, iCfg = someICfg))
+        val sut = createSutWithText()
+
+        assertThat(sut.profileSwitchRefusal(getValidProfileStore(), TESTPROFILENAME, 60, 90, 0, fiasp))
+            .isEqualTo("This temporary switch has Fiasp, but the permanent profile under it has Fake. Activate the insulin that is in the pump in Insulin settings first.")
+        val created = sut.createProfileSwitch(getValidProfileStore(), TESTPROFILENAME, 60, 90, 0, now, Action.PROFILE_SWITCH, Sources.Scene, null, emptyList(), fiasp)
+        assertThat(created).isNull()
+        verify(persistenceLayer, never()).insertOrUpdateProfileSwitch(any(), any(), any(), anyOrNull(), any())
+    }
+
+    /** The insulin list builds its names again at every start, so a name alone is not another insulin. */
+    @Test
+    fun aTemporarySwitchWithTheSameInsulinUnderAnotherNameIsNotRefused() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getPermanentProfileSwitchActiveAt(anyLong())).thenReturn(profileSwitch.copy(profileName = TESTPROFILENAME, iCfg = someICfg))
+
+        assertThat(createSutWithText().profileSwitchRefusal(getValidProfileStore(), TESTPROFILENAME, 60, 90, 0, someICfg.copy(insulinLabel = "Fake 60m 9h"))).isNull()
+    }
+
+    @Test
+    fun aPermanentSwitchMayHaveANewInsulin() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getPermanentProfileSwitchActiveAt(anyLong())).thenReturn(profileSwitch.copy(profileName = TESTPROFILENAME, iCfg = someICfg))
+
+        assertThat(createSutWithText().profileSwitchRefusal(getValidProfileStore(), TESTPROFILENAME, 0, 100, 0, fiasp)).isNull()
     }
 
     /** The running profile is at 150 %: 1.5 U/h, above a pump max basal of 1.2 U/h. A new insulin does not change that. */
@@ -508,6 +676,7 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
         whenever(config.appInitialized).thenReturn(true)
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong()))
             .thenReturn(effectiveProfileSwitch.copy(originalProfileName = TESTPROFILENAME, originalPercentage = 150))
+        noLaterSwitches()
         testPumpPlugin.pumpDescription.basalMaximumRate = 1.2
 
         assertThat(createSutWithText().insulinSwitchRefusal(someICfg))
@@ -520,6 +689,7 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
         whenever(config.appInitialized).thenReturn(true)
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong()))
             .thenReturn(effectiveProfileSwitch.copy(originalProfileName = TESTPROFILENAME, originalPercentage = 100))
+        noLaterSwitches()
 
         assertThat(createSutWithText().insulinSwitchRefusal(someICfg)).isNull()
     }

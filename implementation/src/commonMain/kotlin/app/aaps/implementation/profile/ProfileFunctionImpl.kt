@@ -314,9 +314,10 @@ class ProfileFunctionImpl(
      * Why [ps] cannot be activated, or null when it can. The pump first, with a sentence for each cause the
      * check reports. Its own reasons are not used: they say a value "was replaced", from the time the check
      * still changed values, and that is not true any more. Then the hard limits, which say which value is
-     * out of range.
+     * out of range. Then the insulin, unless [checkInsulin] is false: an insulin change gives all the
+     * switches it writes the same new insulin, see [insulinChange].
      */
-    private fun refusal(ps: PS): String? {
+    private suspend fun refusal(ps: PS, checkInsulin: Boolean = true): String? {
         val profile = ProfileSealed.PS(ps, activePlugin)
         val from = rh.gs(CoreUiStrings.careportal_profileswitch)
         val pumpCheck = profile.validatePump(from, activePlugin.activePump, config, rh, notificationManager, false)
@@ -328,60 +329,73 @@ class ProfileFunctionImpl(
         }
         val semantic = profile.validateSemantic(rh, hardLimits)
         if (!semantic.isValid) return semantic.reasons.firstOrNull() ?: rh.gs(CoreUiStrings.invalid_profile)
+        if (checkInsulin) insulinRefusal(ps)?.let { return it }
         return null
     }
 
+    /**
+     * A temporary switch must have the insulin of the permanent switch under it. The insulin is what is in the
+     * pump. When only a temporary switch had the new one, the old insulin came back when it ended, and every
+     * switch made from the running profile after that took the old insulin over (#5081). The name may differ,
+     * the curve may not: the insulin list builds its names again at every start.
+     */
+    private suspend fun insulinRefusal(ps: PS): String? {
+        if (ps.duration == 0L) return null
+        val permanent = persistenceLayer.getPermanentProfileSwitchActiveAt(ps.timestamp)?.iCfg?.takeIf { it.isUsable } ?: return null
+        if (ps.iCfg.hasSameCurve(permanent)) return null
+        return rh.gs(CoreUiStrings.profile_switch_insulin_not_permanent, ps.iCfg.insulinLabel, permanent.insulinLabel)
+    }
+
     override suspend fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean {
-        val switch = newInsulinSwitch { aapsLogger.warn(LTag.PROFILE, "Insulin switch to ${iCfg.insulinLabel} refused: $it") } ?: return false
-        return createProfileSwitch(
-            profileStore = switch.profileStore,
-            profileName = switch.profileName,
-            durationInMinutes = switch.durationMinutes,
-            percentage = switch.percentage,
-            timeShiftInHours = switch.timeshiftHours,
-            timestamp = switch.timestamp,
+        val change = insulinChange(iCfg) { aapsLogger.warn(LTag.PROFILE, "Insulin switch to ${iCfg.insulinLabel} refused: $it") } ?: return false
+        val shown = change.shown
+        val timeshiftHours = T.msecs(shown.timeshift).hours().toInt()
+        val durationMinutes = T.msecs(shown.duration).mins().toInt()
+        val result = persistenceLayer.insertOrUpdateProfileSwitches(
+            profileSwitches = change.switches,
             action = Action.PROFILE_SWITCH,
             source = source,
             listValues = listOfNotNull(
-                ValueWithUnit.SimpleString(switch.profileName),
+                ValueWithUnit.SimpleString(shown.profileName),
                 ValueWithUnit.SimpleString(iCfg.insulinLabel),
-                ValueWithUnit.Percent(switch.percentage),
-                ValueWithUnit.Hour(switch.timeshiftHours).takeIf { switch.timeshiftHours != 0 },
-                ValueWithUnit.Minute(switch.durationMinutes).takeIf { switch.durationMinutes != 0 }
-            ),
-            iCfg = iCfg
-        ) != null
+                ValueWithUnit.Percent(shown.percentage),
+                ValueWithUnit.Hour(timeshiftHours).takeIf { timeshiftHours != 0 },
+                ValueWithUnit.Minute(durationMinutes).takeIf { durationMinutes != 0 }
+            )
+        )
+        return result.inserted.isNotEmpty() || result.updated.isNotEmpty()
     }
 
     override suspend fun insulinSwitchRefusal(iCfg: ICfg): String? {
         var whyNot: String? = null
-        val switch = newInsulinSwitch { whyNot = it } ?: return whyNot
-        return profileSwitchRefusal(switch.profileStore, switch.profileName, switch.durationMinutes, switch.percentage, switch.timeshiftHours, iCfg)
+        insulinChange(iCfg) { whyNot = it }
+        return whyNot
     }
 
-    /** The running profile switch with only its insulin changed: the same name, percentage, time shift and remaining time. */
-    private class NewInsulinSwitch(
-        val profileStore: ProfileStore,
-        val profileName: String,
-        val durationMinutes: Int,
-        val percentage: Int,
-        val timeshiftHours: Int,
-        val timestamp: Long
-    )
+    /** What an insulin change writes, in one transaction. [shown] is the switch in force after it, for the user entry. */
+    private class InsulinChange(val switches: List<PS>, val shown: PS)
 
     /**
-     * The values of the switch [createProfileSwitchWithNewInsulin] creates. When there is no profile to change,
-     * [whyNot] gets the sentence for the user, and the result is null.
+     * The switches that give the profile in force the insulin [iCfg]. When there is no profile to change, or one
+     * of the switches would be refused, [whyNot] gets the sentence for the user, and the result is null.
      *
-     * The running profile first. Before it exists, the requested switch: a pump wizard switches the profile at
-     * its gate, and on a new pump that switch is set only after the activation, when the wizard has already
-     * switched the insulin. Without this the chosen insulin was not applied, and the wizard said "no profile set".
+     * The insulin is what is in the pump, so it goes on the permanent switch: its profile, percentage and time
+     * shift with the new insulin. A temporary switch that is running gets a copy with the new insulin, which ends
+     * when it would have ended. Before, only that copy was written, and the old insulin came back when it ended
+     * (#5081). The copy is one second newer than the permanent switch, so it stays in force, and each record has its
+     * own time in Nightscout. With less than a minute left the temporary switch is not copied, and the permanent one
+     * takes over now. Switches set to start later get the new insulin too, or they would bring the old one back.
+     *
+     * The switch in force is the requested one. It differs from the running profile only while the pump has not set
+     * a newer switch yet, and a copy of the running one would undo that switch. A pump wizard on a new pump also
+     * needs it: the gate switches the profile, but it runs only after the activation, when the wizard has already
+     * switched the insulin. Only with no switch at all is the running profile used.
      */
-    private suspend fun newInsulinSwitch(whyNot: (String) -> Unit): NewInsulinSwitch? {
-        val current = (getProfile() as? ProfileSealed.EPS)?.value
-            ?.let { CurrentSwitch(it.originalProfileName, it.originalPercentage, it.originalTimeshift, it.timestamp, it.originalDuration) }
-            ?: getRequestedProfile()?.let { CurrentSwitch(it.profileName, it.percentage, it.timeshift, it.timestamp, it.duration) }
-        if (current == null) {
+    private suspend fun insulinChange(iCfg: ICfg, whyNot: (String) -> Unit): InsulinChange? {
+        val inForce = getRequestedProfile()?.let { CurrentSwitch(it.profileName, it.percentage, it.timeshift, it.timestamp, it.duration) }
+            ?: (getProfile() as? ProfileSealed.EPS)?.value
+                ?.let { CurrentSwitch(it.originalProfileName, it.originalPercentage, it.originalTimeshift, it.timestamp, it.originalDuration) }
+        if (inForce == null) {
             whyNot(rh.gs(CoreUiStrings.no_profile_set))
             return null
         }
@@ -391,19 +405,46 @@ class ProfileFunctionImpl(
             return null
         }
         val now = dateUtil.now()
-        val durationMinutes = if (current.duration > 0) {
-            ((current.duration - (now - current.start)) / 60_000L).coerceAtLeast(0).toInt()
-        } else 0
-        return NewInsulinSwitch(
-            profileStore = profileStore,
-            profileName = current.profileName,
-            durationMinutes = durationMinutes,
-            percentage = current.percentage,
-            timeshiftHours = T.msecs(current.timeshift).hours().toInt(),
-            timestamp = now
-        )
+        val remaining = inForce.start + inForce.duration - now
+        val copyTemporary = inForce.duration > 0 && remaining >= MIN_REMAINING_TO_COPY
+        // With no permanent switch at all, a temporary one about to end becomes the permanent switch, as before.
+        val permanent = if (inForce.duration == 0L) inForce
+        else persistenceLayer.getPermanentProfileSwitchActiveAt(now)
+            ?.let { CurrentSwitch(it.profileName, it.percentage, it.timeshift, it.timestamp, it.duration) }
+            ?: inForce.takeIf { !copyTemporary }
+
+        fun build(switch: CurrentSwitch, timestamp: Long, duration: Long): PS? =
+            buildProfileSwitch(profileStore, switch.profileName, 0, switch.percentage, T.msecs(switch.timeshift).hours().toInt(), timestamp, iCfg)
+                ?.copy(duration = duration)
+
+        val written = mutableListOf<PS>()
+        permanent?.let { written += build(it, if (copyTemporary) now - PERMANENT_BEFORE_COPY else now, 0L) ?: return notInStore(whyNot) }
+        if (copyTemporary) written += build(inForce, now, remaining) ?: return notInStore(whyNot)
+        val shown = written.last()
+        written += persistenceLayer.getProfileSwitchesFromTime(now + 1, true)
+            .filterNot { it.iCfg.isEqual(iCfg) }
+            .map { it.copy(iCfg = iCfg) }
+        for (switch in written) refusal(switch, checkInsulin = false)?.let {
+            whyNot(it)
+            return null
+        }
+        return InsulinChange(written, shown)
+    }
+
+    private fun notInStore(whyNot: (String) -> Unit): InsulinChange? {
+        whyNot(rh.gs(CoreUiStrings.notexists))
+        return null
     }
 
     /** The switch whose insulin is changed. [timeshift] and [duration] in milliseconds, [start] when it began. */
     private class CurrentSwitch(val profileName: String, val percentage: Int, val timeshift: Long, val start: Long, val duration: Long)
+
+    private companion object {
+
+        /** A temporary switch with less time left is not copied: the pump would only set two profiles a minute apart. */
+        const val MIN_REMAINING_TO_COPY = 60_000L
+
+        /** How much older the permanent switch of an insulin change is than the copy of the temporary one. */
+        const val PERMANENT_BEFORE_COPY = 1_000L
+    }
 }

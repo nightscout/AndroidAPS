@@ -1413,22 +1413,24 @@ class PersistenceLayerImpl(
         repository.getLastProfileSwitchId()
     }
 
-    override suspend fun insertOrUpdateProfileSwitch(profileSwitch: PS, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<PS> = withContext(aapsIoDispatcher) {
+    // One record changes one row, so the single user entry of the list version is the same as before.
+    override suspend fun insertOrUpdateProfileSwitch(profileSwitch: PS, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<PS> =
+        insertOrUpdateProfileSwitches(listOf(profileSwitch), action, source, note, listValues)
+
+    override suspend fun insertOrUpdateProfileSwitches(profileSwitches: List<PS>, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<PS> = withContext(aapsIoDispatcher) {
         try {
-            val result = repository.runTransactionForResultSuspend(InsertOrUpdateProfileSwitchTransaction(profileSwitch.toDb()))
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateProfileSwitchTransaction(profileSwitches.map { it.toDb() }))
             val transactionResult = PersistenceLayer.TransactionResult<PS>()
-            val ueValues = mutableListOf<UE>()
             result.inserted.forEach {
                 aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch from ${source.name} $it")
                 transactionResult.inserted.add(it.fromDb())
-                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
             }
             result.updated.forEach {
                 aapsLogger.debug(LTag.DATABASE, "Updated ProfileSwitch from ${source.name} $it")
                 transactionResult.updated.add(it.fromDb())
-                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
             }
-            log(ueValues)
+            if (transactionResult.inserted.isNotEmpty() || transactionResult.updated.isNotEmpty())
+                log(listOf(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues)))
             transactionResult
         } catch (e: Exception) {
             aapsLogger.error(LTag.DATABASE, "Error while inserting ProfileSwitch", e)

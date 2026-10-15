@@ -115,6 +115,9 @@ interface ProfileFunction {
      * Why [createProfileSwitch] would refuse a switch to [profileName] with these values, as a sentence for the
      * user, or null when it would accept it. It runs the same check and writes nothing, so a caller can refuse
      * before it asks the user to confirm, and can say why when the switch failed.
+     *
+     * Besides the pump and the hard limits, a temporary switch is refused when its insulin is not the insulin of
+     * the permanent switch under it. The old insulin would come back when it ends, see [createProfileSwitchWithNewInsulin].
      */
     suspend fun profileSwitchRefusal(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, iCfg: ICfg): String?
 
@@ -124,16 +127,21 @@ interface ProfileFunction {
      */
     suspend fun profileSwitchRefusal(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long = 0L): String?
 
-    /** The same as [profileSwitchRefusal], for the switch [createProfileSwitchWithNewInsulin] would create. */
+    /** The same as [profileSwitchRefusal], for the switches [createProfileSwitchWithNewInsulin] would write. */
     suspend fun insulinSwitchRefusal(iCfg: ICfg): String?
 
     /**
-     * Re-apply the currently active profile switch with a different insulin configuration.
-     * Preserves the original profile name, percentage, timeshift, and remaining duration.
+     * Give the profile in force a different insulin, because another insulin is now in the pump.
+     *
+     * The permanent switch gets the new insulin, with its profile name, percentage and time shift. A temporary
+     * switch that is running gets a copy with the new insulin that ends when it would have ended (not with less
+     * than a minute left), and switches set to start later get the new insulin too. All of them are written in
+     * one transaction. Before, only the copy of a temporary switch had the new insulin, and the old insulin came
+     * back when the copy ended (#5081).
      *
      * @param iCfg new insulin configuration to apply
      * @param source Source for UserEntry logging
-     * @return true if profile switch was created
+     * @return true if the switches were written
      */
     suspend fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean
 
