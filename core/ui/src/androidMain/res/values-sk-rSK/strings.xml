@@ -127,6 +127,7 @@
     <string name="insulin_activation_failed">Inzulín nebol prepnutý. Váš predchádzajúci inzulín sa stále používá.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Inzulín nebol prepnutý: %1$s. Váš predchádzajúci inzulín sa stále používa.</string>
     <string name="insulin_activation_unconfirmed">Prepnutie inzulínu nemohlo byť potvrdené. Skontrolujte, ktorý inzulín je aktívny vo vašom profile pred dávkovaním.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Inzulín nebol zmenený. Váš predchádzajúci inzulín sa stále používa.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInzulín tiež nebol prepnutý.</string>
     <string name="active"><![CDATA[<Aktívny>]]></string>
     <string name="date">Dátum</string>
@@ -226,6 +227,8 @@
     <string name="logout">Odhlásiť sa</string>
     <string name="prime_fill">Plnenie/doplňovanie</string>
     <string name="prime_not_available">Táto pumpa sa pri aktivácii plní a odvzdušňuje sama. Možnosť manuálneho plnenia priamo cez AAPS tu preto nefunguje.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Výmena</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Plnenie</string>
     <string name="site_rotation">Striedanie miest</string>
     <string name="edit_site">Upraviť</string>
     <string name="select_arrow">Zvoľ šípku</string>
@@ -682,6 +685,7 @@
     <string name="missing_profile_name">Chýba názov profilu</string>
     <string name="profile_not_saved_activate">Profil nebol uložený. Pred aktiváciou, prosím, uložte profil.</string>
     <string name="profile_basal_not_compatible_with_pump">Bazál nie je kompatibilný s aktuálnou pumpou a nemôže byť aktivovaný. Zníž percento, alebo prispôsob bazál.</string>
+    <string name="profile_basal_below_pump_minimum">Bazálna dávka je nižšia ako minimálna hodnota podporovaná aktuálnou inzulínovou pumpou a nie je možné ju aktivovať. Zvýšte percentuálnu hodnotu alebo upravte bazálnu dávku.</string>
     <string name="profile_pump_incompatible_label">Limit pumpy</string>
     <string name="error_in_ic_values">Chyba v hodnotách inz./sach. prevodu</string>
     <string name="error_in_isf_values">Chyba v hodnotách citlivosti</string>
