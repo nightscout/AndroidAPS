@@ -4,7 +4,7 @@
     <string name="dia_label_exam">Duración de la acción de insulina (DAI)</string>
     <string name="dia_profile">Debe configurar el valor de la DIA en la configuración de la insulina (Administrar → Configuración de insulina), no en el perfil.</string>
     <string name="dia_minimumis5h">El valor mínimo permitido es de 5 horas.</string>
-    <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="dia_hint1">https://wiki.aaps.app/es/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">Si estás satisfecho de que el valor para DIA que utilizó en su bomba antes de AAPS funcionaba bien, no hay necesidad de cambiarlo cuando empiece el lazo</string>
     <string name="dia_valuemustbedetermined">Deberás determinar por ti mismo el valor apropiado para DAI.</string>
     <string name="hypott_label">Objetivo temporal ante Hipoglucemia</string>
@@ -19,7 +19,7 @@
     <string name="pumpdisconnect_missinginsulin">Evita que la AAPS contabilice la insulina que no se administró mientras la bomba estaba físicamente desconectada</string>
     <string name="pumpdisconnect_notstop">No detendrá la administración de insulina si la bomba permanece conectada a su cuerpo</string>
     <string name="pumpdisconnect_openloop">Se activará el modo de lazo abierto en AAPS.</string>
-    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/AapsScreens.html#loop-status</string>
+    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-loop-status</string>
     <string name="objectives_label">Ajustes de AAPS</string>
     <string name="objectives2_label">Ajustes de AAPS</string>
     <string name="objectives_howtosave">¿Cuáles son las mejores prácticas para hacer copias de seguridad de sus configuraciones?</string>
@@ -98,14 +98,14 @@
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
     <string name="insulin_actrapid">Actrapid®/Humulin R®/insulina humana \"regular\".</string>
-    <string name="insulin_hint1">https://wiki.aaps.app/es/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="insulin_hint1">https://wiki.aaps.app/es/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="sensitivity_label">Plugins de sensibilidad</string>
     <string name="sensitivity_adjust">Los plugins de sensibilidad permiten a AAPS ajustarse para cambios temporales o de corta duración en la sensibilidad a la insulina (por ejemplo, cambios hormonales o problemas con la absorción en el sitio de infusión).</string>
     <string name="sensitivity_edit">Los plugins de sensibilidad proporcionan al usuario sugerencias de cambios en las tasas basales, las relaciones I:C y el ISF que pueden utilizarse para editar el perfil</string>
     <string name="sensitivity_cannula">El registro de un cambio de cánula restablecerá el ratio Autosens al 100%</string>
     <string name="sensitivity_time">Algunas de las opciones del plugin tienen intervalos de tiempo configurables y el usuario puede establecerlos</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="sensitivity_hint2">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/KeyAapsFeatures.html#autosens</string>
+    <string name="sensitivity_hint2">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/KeyAapsFeatures.html#open-aps-features-autosens</string>
     <string name="wrongcarbs_label">Error de ingreso de Carbohidratos</string>
     <string name="wrongcarbs_whattodo">¿Qué deberías hacer si has cometido un error al ingresar carbohidratos?</string>
     <string name="wrongcarbs_treatmentstab">Elimine la entrada incorrecta en el historial de tratamientos e introduzca el valor de hidratos de carbono correcto</string>
@@ -140,7 +140,7 @@
     <string name="breadgrams_exchange">Los carbohidratos consumidos se pueden registrar utilizando un sistema de intercambio apropiado (por ejemplo, los intercambios DAFNE \"CHO\" o \"Unidades de Pan\" europeas).</string>
     <string name="breadgrams_decay">AAPS utiliza un modelo dinámico para estimar la absorción de carbohidratos y calcular el COB</string>
     <string name="breadgrams_calc">Si los niveles de glucosa en sangre están fuera de los valores aceptables (demasiado bajos o demasiado altos), la calculadora del bolo se puede utilizar para proporcionar sugerencias para las correcciones de carbohidratos o de insulina.</string>
-    <string name="breadgrams_hint1">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/AapsScreens.html#bolus-wizard</string>
+    <string name="breadgrams_hint1">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/AapsScreens.html#aaps-screens-bolus-wizard</string>
     <string name="breadgrams_hint2">https://wiki.aaps.app/es/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="extendedcarbs_label">e-carbs</string>
     <string name="extendedcarbs_handling">¿Para qué podría utilizar los e-carbs (carbohidratos extendidos)?</string>
@@ -202,7 +202,6 @@
     <string name="u200_with_profile_reports">Mi base de datos de AAPS y los informes de NS se vuelven erróneos. Todos los valores (bolos, tasas, TDD) se deben multiplicar por 2 para ver los valores reales, especialmente para los médicos y el equipo sanitario</string>
     <string name="u200_with_profile_pens">No tengo que convertir nada entre AAPS y el boli si utilizo un boli U200 para administrar un bolo externo</string>
     <string name="u200_with_profile_pens2">Independientemente del boli que utilice para administrar un bolo externo (U100 o U200), tengo que realizar la conversión entre la cantidad calculada por AAPS y la cantidad que selecciono en el boli, para cada bolo externo</string>
-    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
     <string name="switch_u200_profile">Ha estado utilizando el truco del perfil al 50% con insulina U200 y desea cambiar a la función de Concentración de insulina. ¿Cuáles de las siguientes respuestas son verdaderas?</string>
     <string name="switch_u200_profile_any_time">Puedo cambiar en cualquier momento, porque ya tengo la insulina U200 correcta en mi bomba</string>
     <string name="switch_u200_profile_ps">Tengo que preparar un perfil el doble de agresivo (200% en comparación con el perfil predeterminado actual) y sincronizar este nuevo perfil tras el próximo cambio de parche/reservorio cuando se seleccione la insulina U200</string>
