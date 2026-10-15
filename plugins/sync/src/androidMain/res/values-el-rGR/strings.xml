@@ -80,7 +80,6 @@
     <string name="aps">APS</string>
     <string name="last_run">Τελευταία εκτέλεση</string>
     <string name="last_enact">Τελευταία Ενέργεια</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Σήμερα</string>
     <string name="weighted">σταθμισμένο</string>
     <!-- SMS Communicator & OTP Authenticator -->
