@@ -78,6 +78,10 @@
     <string name="unfinshed_button">Neste ubesvarte</string>
     <string name="requestcode">Be om kode: %1$s</string>
     <string name="objectives_hint">(kontroller alle riktige svar)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Ikke koblet til Internett</string>
     <string name="failedretrievetime">Kunne ikke hente klokkeslettet</string>
     <string name="requirementnotmet">Læringmålets krav er ikke oppfylt</string>
