@@ -25,7 +25,6 @@
     <string name="objectives2_maintenance">Експортирайки вашите настройки локално, като използвате менюто поддръжка.</string>
     <string name="objectives2_cloud">Копирайки файла с вашите предпочитания на безопасно място извън телефона си (напр. като използвайки облачна услуга (Dropbox, GDrive ), свързване чрез кабел към компютър, имейл и т.н.)</string>
     <string name="objectives2_easyrestore">Ако телефонът ви е повреден или изгубен, има лесни начини за дистанционно възстановяване на настройките ви, без архивиране.</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_label">Шумни показания от CGM</string>
     <string name="noisycgm_whattodo">Какво трябва да се направи, ако CGM данните са шумни?</string>
     <string name="noisycgm_nothing">Не правете нищо - AAPS ще се справи с това.</string>
