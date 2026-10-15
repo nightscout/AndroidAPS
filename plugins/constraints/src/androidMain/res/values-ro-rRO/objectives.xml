@@ -61,17 +61,13 @@
     <string name="objectives_exam_learned_wrongcarbs">Dacă ați introdus greșit date în AAPS sau acestea nu se potrivesc cu realitatea, corectați cât mai repede. Altfel, greșelile pot duce la supradozare. AAPS trebuie informat întotdeauna cât mai corect despre carbohidrați, insulină șamd.</string>
     <string name="objectives_exam_learned_breadgrams">Sunt permise numai grame pentru introducerea carbohidraților.</string>
     <string name="objectives_exam_learned_ecarbs">În universul pompelor, carbohidrații extinși reprezintă un înlocuitor pentru bolusul extins.</string>
-    <string name="objectives_exam_learned_concentration2">Trecerea de la U200 cu un profil de la 50% la U200 cu caracteristica concentrației de insulină va necesita crearea unui profil nou mai puternic, să se dezactiveze DynISF o săptămână și să ne instruim creierul pentru a gândi în Unități Internaționale.</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">Trecerea de la U200 cu un profil de la 50% la U200 cu caracteristica concentrației de insulină va necesita crearea unui profil nou mai puternic, să se dezactiveze DynISF o săptămână și să ne instruim creierul pentru a gândi în Unități Internaționale.</string>
     <string name="objectives_exam_learned_concentration3">Concentrația insulinei poate fi modificată numai atunci când este schimbată insulina sau plasturele. Dar cel mai important, mai ales în cazul pompelor cu fir, nu folosiți niciodată interfața utilizatorului pompei pentru a administra bolusuri direct din pompă.</string>
     <string name="answerdisabledto">Posibilitatea de a răspunde este dezactivată până la: %1$s</string>
     <string name="wronganswer">Răspuns greșit!</string>
     <string name="unfinshed_button">Următoarea nefinalizată</string>
     <string name="requestcode">Solicită codul: %1$s</string>
     <string name="objectives_hint">(bifați toate răspunsurile corecte)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Nu există conexiune la internet</string>
     <string name="requirementnotmet">Nu au fost îndeplinite cerințele obiectivului</string>
     <string name="what_i_ve_learned">Ce am învățat:</string>
