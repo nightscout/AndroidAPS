@@ -30,6 +30,7 @@
     <string name="objectives2_cloud">안전한 외부 기기 (예를 들어, 클라우드 드라이브, 컴퓨터에 케이블 연결, email, 등)에 설정 파일을 복사합니다.</string>
     <string name="objectives2_easyrestore">핸드폰을 잃어버렸거나 고장난 경우, 백업해놓지 않아도 설정값을 원격으로 쉽게 되살릴 수 있습니다.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/ko/latest/Maintenance/ExportImportSettings.html</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/ko/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">노이즈가 심한 CGM의 혈당값</string>
     <string name="noisycgm_whattodo">CGM 혈당의 노이즈가 심하다면 어떻게 해야합니까?</string>
     <string name="noisycgm_nothing">특별한 조치를 하지 않습니다. - AAPS가 이를 알아서 처리할 것입니다.</string>
