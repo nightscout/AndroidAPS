@@ -54,6 +54,7 @@
     <string name="wear_infos_watchface">Infos Watchface</string>
     <string name="wear_export_watchface">Vorlage exportieren</string>
     <string name="wear_new_custom_watchface_exported">Benutzerdefinierte Watchface Vorlage exportiert</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/de/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Alle Daten erneut senden</string>
     <string name="open_settings_on_wear">Öffne Einstellungen auf der Uhr</string>
     <string name="cwf_infos_pref_locked">Liste der von der Watchface gesperrten Prefs</string>
