@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.overview.graphs
 
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -182,5 +183,110 @@ internal class GraphUtilsTest {
             assertThat(scale.min).isAtMost(-12.0)
             assertThat(scale.max).isAtLeast(3.0)
         }
+    }
+
+    /**
+     * The insulin activity overlay is never the primary series of a graph, so it has no axis of its
+     * own and is mapped into the host axis' units instead. These pin that mapping: zero always
+     * lands exactly on the anchor the host asked for, and the curve always stays inside the room
+     * the host has — the host scale is never widened to make it fit.
+     */
+    @Nested
+    inner class ActivityOverlayScaleTest {
+
+        @Test
+        fun `all-positive activity fills the configured fraction of the room above zero`() {
+            // zeroFloorNiceRange(0, 8) -> 0..8, so the peak lands at exactly 0.8 * 100.
+            val scale = activityOverlayScale(
+                activityMin = 0.0, activityMax = 8.0,
+                zeroLevel = 0.0, roomAbove = 100.0, roomBelow = 0.0
+            )
+            assertThat(scale.map(0.0)).isWithin(TOLERANCE).of(0.0)
+            assertThat(scale.map(8.0)).isWithin(TOLERANCE).of(80.0)
+        }
+
+        @Test
+        fun `zero is drawn at the anchor, not at the host axis floor`() {
+            // BG graph case: anchor is the low mark (72), BG axis 50..200.
+            val scale = activityOverlayScale(
+                activityMin = 0.0, activityMax = 8.0,
+                zeroLevel = 72.0, roomAbove = 128.0, roomBelow = 22.0
+            )
+            assertThat(scale.map(0.0)).isWithin(TOLERANCE).of(72.0)
+            assertThat(scale.map(8.0)).isWithin(TOLERANCE).of(72.0 + 0.8 * 128.0)
+        }
+
+        @Test
+        fun `a negative excursion that would not fit shrinks the whole curve instead of clipping`() {
+            // zeroFloorNiceRange(-4, 6) -> -4..6. The positive side alone would allow 100*0.8/6,
+            // but the negative side only allows 10/4 = 2.5, and the smaller limit must win.
+            val scale = activityOverlayScale(
+                activityMin = -4.0, activityMax = 6.0,
+                zeroLevel = 0.0, roomAbove = 100.0, roomBelow = 10.0
+            )
+            assertThat(scale.scale).isWithin(TOLERANCE).of(2.5)
+            assertThat(scale.map(-4.0)).isWithin(TOLERANCE).of(-10.0)
+            assertThat(scale.map(6.0)).isWithin(TOLERANCE).of(15.0)
+        }
+
+        @Test
+        fun `with no room below, the positive side keeps its full scale`() {
+            // Reachable on the BG graph whenever the low mark is an exact multiple of the BG axis
+            // step and the window holds no BG below it (80/90/100 mg/dL, 4 or 5 mmol/L). The
+            // negative tail is clipped there; the positive side must NOT be shrunk to compensate.
+            val scale = activityOverlayScale(
+                activityMin = -4.0, activityMax = 6.0,
+                zeroLevel = 0.0, roomAbove = 100.0, roomBelow = 0.0
+            )
+            assertThat(scale.scale).isWithin(TOLERANCE).of(100.0 * 0.8 / 6.0)
+        }
+
+        @Test
+        fun `a window holding only negative activity is scaled by its negative side`() {
+            // zeroFloorNiceRange(-0.5, 0) -> -0.5..0: there is no positive side to scale from, so
+            // the curve must fall back to the room below instead of collapsing to nothing.
+            val scale = activityOverlayScale(
+                activityMin = -0.5, activityMax = 0.0,
+                zeroLevel = 0.0, roomAbove = 100.0, roomBelow = 20.0
+            )
+            assertThat(scale.scale).isWithin(TOLERANCE).of(40.0)
+            assertThat(scale.map(-0.5)).isWithin(TOLERANCE).of(-20.0)
+        }
+
+        @Test
+        fun `no room on the only side that has data draws nothing`() {
+            val scale = activityOverlayScale(
+                activityMin = -0.5, activityMax = 0.0,
+                zeroLevel = 0.0, roomAbove = 100.0, roomBelow = 0.0
+            )
+            assertThat(scale.scale).isEqualTo(0.0)
+        }
+
+        @Test
+        fun `never leaves the room it was given, across a range of data shapes`() {
+            val shapes = listOf(
+                0.0 to 0.02, -0.001 to 0.02, -0.01 to 0.01, -0.02 to 0.002, 0.0 to 12.0, -5.0 to 5.0
+            )
+            val rooms = listOf(100.0 to 0.0, 128.0 to 22.0, 128.0 to 5.0, 10.0 to 10.0, 2.5 to 0.0)
+            for ((dataMin, dataMax) in shapes) {
+                for ((above, below) in rooms) {
+                    val scale = activityOverlayScale(dataMin, dataMax, zeroLevel = 72.0, roomAbove = above, roomBelow = below)
+                    val label = "data=[$dataMin..$dataMax] room=[-$below..+$above]"
+                    assertThat(scale.scale).isAtLeast(0.0)
+                    assertWithMessage(label).that(scale.map(dataMax)).isAtMost(72.0 + above + TOLERANCE)
+                    // The negative side is only guaranteed in frame when there is room for it —
+                    // with roomBelow == 0 the tail is knowingly clipped (see the test above).
+                    if (below > 0.0 && dataMin < 0.0) {
+                        assertWithMessage(label).that(scale.map(dataMin)).isAtLeast(72.0 - below - TOLERANCE)
+                    }
+                }
+            }
+        }
+    }
+
+    private companion object {
+
+        /** These results come out of log10/pow, so compare with a tolerance rather than exactly. */
+        const val TOLERANCE = 1e-9
     }
 }

@@ -720,7 +720,6 @@ class PrepareGraphDataRunner(
 
         val now = dateUtil.now().toDouble()
         var time = fromTime
-        var maxActivity = 0.0
 
         val iobListCompose: MutableList<GraphDataPoint> = ArrayList()
         val absIobListCompose: MutableList<GraphDataPoint> = ArrayList()
@@ -782,8 +781,6 @@ class PrepareGraphDataRunner(
 
             if (time <= now) activityListCompose.add(GraphDataPoint(time, iob.activity))
             else activityPredictionListCompose.add(GraphDataPoint(time, iob.activity))
-            if (iob.activity > maxActivity) maxActivity = iob.activity
-            else if (-iob.activity > maxActivity) maxActivity = -iob.activity
 
             time += 5 * 60 * 1000L
         }
@@ -808,8 +805,7 @@ class PrepareGraphDataRunner(
         data.cache.updateActivityGraph(
             ActivityGraphData(
                 activity = activityListCompose,
-                activityPrediction = activityPredictionListCompose,
-                maxActivity = maxActivity
+                activityPrediction = activityPredictionListCompose
             )
         )
         data.cache.updateBgiGraph(BgiGraphData(bgi = bgiListCompose, bgiPrediction = bgiPredictionListCompose))
