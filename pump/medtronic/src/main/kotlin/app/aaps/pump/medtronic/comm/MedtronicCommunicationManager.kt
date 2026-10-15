@@ -310,6 +310,8 @@ class MedtronicCommunicationManager(
             medtronicUtil.setCurrentCommand(MedtronicCommandType.GetHistoryData, pageNumber, null)
             val firstResponse = requestHistoryPage(getHistoryMsg)
             if (firstResponse == null) {
+                aapsLogger.error(LTag.PUMPCOMM, "getPumpHistory: Page $pageNumber could not be asked for, the read failed.")
+                pumpTotalResult.readFailed = true
                 medtronicPumpStatus.pumpDeviceState = PumpDeviceState.Sleeping
                 return pumpTotalResult
             }
@@ -320,8 +322,10 @@ class MedtronicCommunicationManager(
             nakErrorCode(firstResponse)?.let { errorCode ->
                 if (errorCode == NAK_PAGE_DOES_NOT_EXIST)
                     aapsLogger.info(LTag.PUMPCOMM, "getPumpHistory: Page $pageNumber does not exist, there is no older history")
-                else
+                else {
                     aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "getPumpHistory: Pump refused page %d (NAK, error 0x%02X)", pageNumber, errorCode))
+                    pumpTotalResult.readFailed = true
+                }
                 medtronicPumpStatus.pumpDeviceState = PumpDeviceState.Sleeping
                 return pumpTotalResult
             }
@@ -432,6 +436,9 @@ class MedtronicCommunicationManager(
                 doneWithError = true
             }
             if (doneWithError) {
+                // The pages before this one were read, but the entries on this page are missing. Processed without them,
+                // a temp basal was ended by the wrong entry, and the missing ones were never read again (#3378).
+                pumpTotalResult.readFailed = true
                 medtronicPumpStatus.pumpDeviceState = PumpDeviceState.Sleeping
                 return pumpTotalResult
             }
@@ -453,7 +460,11 @@ class MedtronicCommunicationManager(
     private fun requestHistoryPage(getHistoryMsg: PumpMessage): PumpMessage? {
         for (retries in 0 until MAX_COMMAND_TRIES) {
             try {
-                return runCommandWithArgs(getHistoryMsg)
+                val reply = runCommandWithArgs(getHistoryMsg)
+                // No ACK to the attention packet: the pump did not start the page. This reply was taken as the
+                // first frame, and ACKing a page that never started timed out for about 70 s.
+                if (!reply.isErrorResponse) return reply
+                aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "First call for PumpHistory got no ACK (retry=%d)", retries))
             } catch (_: RileyLinkCommunicationException) {
                 aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "First call for PumpHistory failed (retry=%d)", retries))
             }
