@@ -78,10 +78,10 @@
     <string name="unfinshed_button">Next unfinished</string>
     <string name="requestcode">Request code: %1$s</string>
     <string name="objectives_hint">(check all correct answers)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Not connected to the internet</string>
     <string name="failedretrievetime">Failed to retrieve time</string>
     <string name="requirementnotmet">Objective requirements not met</string>
