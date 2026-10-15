@@ -147,7 +147,6 @@
     <string name="aps">APS</string>
     <string name="last_run">Última execução</string>
     <string name="last_enact">Ultima execução</string>
-    <string name="tdd_line">%1$.2f / %1$.0f U%%</string>
     <string name="today">Hoje</string>
     <string name="weighted">ponderado</string>
     <string name="full_xdrip_sync_comment">Sincronização completa? Isso pode levar algum tempo e, até terminar, você não verá dados novos no xDrip+.</string>
