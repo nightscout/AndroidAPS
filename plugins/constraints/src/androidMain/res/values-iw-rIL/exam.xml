@@ -32,7 +32,7 @@
     <string name="objectives2_cloud">העתיקו את קובץ ההגדרות למיקום בטוח, מחוץ לטלפון (לדוגמה באחסון ענן, העתקה באמצעות חיבור הטלפון למחשב ע\"י כבל, שליחה במייל וכו\')</string>
     <string name="objectives2_easyrestore">אם הטלפון ניזוק או אבד, ישנן דרכים נוחות לשחזור ההגדרות מרחוק, ללא צורך בגיבוי.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/he/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/he/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">נתוני הסנסור שאינם יציבים</string>
     <string name="noisycgm_whattodo">מה לעשות אם נתוני הסנסור לא יציבים?</string>
     <string name="noisycgm_nothing">אין צורך לעשות דבר - AndroidAPS יטפל בכך בעצמו.</string>
