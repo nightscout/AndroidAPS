@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -22,6 +23,7 @@ import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.pump.omnipod.common.R
 import app.aaps.pump.omnipod.common.ui.compose.OmnipodComposeHost
+import app.aaps.pump.omnipod.common.ui.compose.OmnipodPodHistoryScreen
 import app.aaps.pump.omnipod.omnipod5.bledriver.comm.pair.O5RegistrationData
 import app.aaps.pump.omnipod.omnipod5.ui.O5CredentialImportViewModel
 import app.aaps.pump.omnipod.omnipod5.ui.O5CredentialImportWebViewScreen
@@ -107,10 +109,11 @@ class OmnipodO5ComposeContent(
                 val historyViewModel: O5PodHistoryViewModel = metroViewModel()
                 val records by historyViewModel.records.collectAsStateWithLifecycle()
                 Box(Modifier.fillMaxSize()) {
-                    O5PodHistoryScreen(
+                    OmnipodPodHistoryScreen(
                         records = records,
                         rh = historyViewModel.rh,
-                        profileUtil = historyViewModel.profileUtil
+                        profileUtil = historyViewModel.profileUtil,
+                        pumpType = PumpType.OMNIPOD_5
                     )
                 }
             }

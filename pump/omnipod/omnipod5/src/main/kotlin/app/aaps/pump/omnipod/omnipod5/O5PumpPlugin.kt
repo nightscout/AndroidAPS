@@ -106,6 +106,7 @@ import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandSuspendDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration
+import app.aaps.pump.omnipod.common.ui.compose.OmnipodPodHistoryScreen
 import app.aaps.pump.omnipod.omnipod5.keys.O5IntentKey
 import app.aaps.pump.omnipod.omnipod5.ui.O5CertificateStoreScreen
 import app.aaps.pump.omnipod.omnipod5.ui.compose.OmnipodO5ComposeContent
@@ -1767,11 +1768,12 @@ class O5PumpPlugin @Inject constructor(
                 ComposeScreenContent { onBack ->
                     val historyViewModel: O5PodHistoryViewModel = metroViewModel()
                     val records by historyViewModel.records.collectAsStateWithLifecycle()
-                    O5PodHistoryScreen(
+                    OmnipodPodHistoryScreen(
                         records = records,
                         rh = historyViewModel.rh,
                         profileUtil = historyViewModel.profileUtil,
-                        onBack = onBack
+                        pumpType = PumpType.OMNIPOD_5,
+                        onBack = onBack,
                     )
                 }
             )
