@@ -30,7 +30,7 @@
     <string name="objectives2_cloud">Nustatymų failą reikia perkelti į saugią vietą ne telefone (pvz.: saugykloje debesyje, kompiuteryje, el. pašte ir pan.)</string>
     <string name="objectives2_easyrestore">Galima paprastai atkurti nustatymus be atsarginės kopijos, jei telefonas pamestas ar sugadintas.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/lt/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/lt/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">Triukšmingi jutiklio rodmenys</string>
     <string name="noisycgm_whattodo">Ką reikėtų daryti, jei jutiklio duomenys yra triukšmingi?</string>
     <string name="noisycgm_nothing">Nieko - AAPS savaime susitvarkys.</string>
