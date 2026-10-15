@@ -67,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Hủy kích hoạt Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Nhấn <b>Tiếp theo</b> để hủy kích hoạt Pod.\n\n<b>Lưu ý:</b> Thao tác này sẽ tạm dừng toàn bộ việc truyền insulin và hủy kích hoạt Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">Pod sau khi bị hủy kích hoạt sẽ không thể sử dụng lại. Bạn có muốn hủy kích hoạt Pod này ngay bây giờ không?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Đang hủy kích hoạt Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Đang hủy kích hoạt Pod.\n\nKhi quá trình hủy kích hoạt hoàn tất thành công, bạn có thể nhấn <b>Tiếp theo</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Đã hủy kích hoạt Pod</string>
@@ -179,4 +180,11 @@
         <item quantity="other">Cảnh báo Pod: %1$s</item>
     </plurals>
     <string name="omnipod_common_overview_pod_hard_end_date">Pod hết hạn sử dụng</string>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Điều chỉnh liều nền</string>
+    <string name="omnipod_common_bolus_type_priming">Đang mồi</string>
+    <string name="omnipod_common_history_total_delivered">Tổng lượng đã tiêm: %1$.2f U</string>
 </resources>

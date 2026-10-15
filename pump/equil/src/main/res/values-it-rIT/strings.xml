@@ -24,6 +24,12 @@
     <string name="equil_title_unpair_detach">Scollega pompa</string>
     <string name="equil_title_history_events">Storico eventi</string>
     <string name="equil_tone">Tono di allerta</string>
+    <string name="equil_bolus_speed">Velocità del bolo</string>
+    <string name="equil_bolus_speed_summary">Un bolo più veloce può dare più allarmi occlusione.</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1.5 U/min (standard)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 U/min</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 U/min</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 U/min</string>
     <string name="equil_tone_mode_mute">Muto</string>
     <string name="equil_tone_mode_shake">Solo vibrazione</string>
     <string name="equil_tone_mode_tone">Solo suoneria</string>
@@ -33,6 +39,10 @@
     <string name="equil_error">Errore di connessione</string>
     <string name="equil_change">Cambia Micro</string>
     <string name="equil_change_content">Si prega di staccare il micro dalla base.</string>
+    <string name="equil_new_infusion_set_question">Si metterà anche un nuovo set di infusione (piastra di base e cannula)?</string>
+    <string name="equil_new_infusion_set_yes">Sì, nuovo set di infusione</string>
+    <string name="equil_new_infusion_set_no">No, solo serbatoio o batteria</string>
+    <string name="equil_same_infusion_set_hint">La cannula non sarà innescata e non verrà registrato alcun cambiamento di cannula.</string>
     <string name="equil_unpair_alert">Sei sicuro di voler rinunciare al controllo di %1$s?</string>
     <string name="equil_record_basal">Tasso basale %1$s U/H</string>
     <string name="equil_record_basal_temp">Tasso basale temporaneo %1$s U/H</string>
@@ -40,8 +50,10 @@
     <string name="equil_error_set_temp_basal_failed_validation">La durata del TBR deve essere maggiore di zero e un multiplo di %1$s minuti.</string>
     <string name="equil_basal_exceeds_max">La velocità basale del profilo %1$s U/h supera la velocità basale massima del microinfusore %2$s U/h. Aumenta l\'impostazione basale massima e ricollega la pompa.</string>
     <string name="equil_not_enough_insulin">Insulina nel serbatoio insufficiente</string>
-    <string name="equil_low_battery">Batteria bassa</string>
-    <string name="equil_low_insulin">Insulina nel serbatoio insufficiente</string>
+    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Batteria bassa: %1$d%%</string>
+    <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Insulina nel serbatoio insufficiente: %1$s</string>
+    <string name="equil_reservoir_empty">Il serbatoio è vuoto. La pompa non eroga più insulina.</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">La pompa si è fermata durante il bolo. Data: %1$s di %2$s</string>
     <string name="equil_pump_not_run">Micro non in esecuzione</string>
     <string name="equil_pair">Accoppiamento</string>
     <string name="equil_pair_error">Errore accoppiamento</string>

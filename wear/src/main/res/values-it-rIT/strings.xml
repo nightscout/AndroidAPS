@@ -16,6 +16,7 @@
     <string name="pref_display_settings">Schermo</string>
     <string name="pref_graph_settings">Grafico</string>
     <string name="pref_interface_settings">Interfaccia</string>
+    <string name="pref_tile_settings">Tessere</string>
     <string name="pref_others_settings">Altri</string>
     <string name="pref_complication_settings">Complicazione</string>
     <string name="pref_show_date">Mostra data</string>
@@ -61,6 +62,10 @@
     <string name="pref_single_target">Target singolo</string>
     <string name="pref_wizard_percentage">Calcolatore percentuale</string>
     <string name="pref_complication_tap_action">Complication Tap Action</string>
+    <string name="pref_complication_bg_graph_hours">Intervallo orario grafico glicemia</string>
+    <string name="duration_1_hour">1 ora</string>
+    <string name="duration_3_hours">3 ore</string>
+    <string name="duration_6_hours">6 ore</string>
     <string name="pref_unicode_in_complications">Unicode in Complications</string>
     <string name="pref_version">Versione:</string>
     <string name="pref_moreWatchfaceSettings">Più impostazioni watchface</string>
@@ -79,6 +84,11 @@
     <string name="menu_bg_graph">Grafico BG</string>
     <string name="menu_resync">Re-Sincronizza</string>
     <string name="menu_prime_fill">Carica/Riempi</string>
+    <string name="menu_install_watchface">Installa watchface</string>
+    <string name="menu_installing_watchface">Installazione della watchface…</string>
+    <string name="watchface_installed_active">Watchface installata e impostata come attiva</string>
+    <string name="watchface_installed_select">Watchface installata, selezionarlo nel selettore delle watchface</string>
+    <string name="watchface_install_failed">Installazione Watchface fallita</string>
     <string name="menu_none">Nessuno</string>
     <string name="menu_default">Default</string>
     <string name="menu_menu">Menu</string>
@@ -99,6 +109,7 @@
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Alto[%s]</string>
     <string name="action_carbs">CHO</string>
     <string name="action_carbs_gram">Carboidrati [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Rimozione massima: %1$d g (COB)</string>
     <string name="action_ecarbs">CHO estesi</string>
     <string name="action_percentage">Percentuale\n[%]</string>
     <string name="action_start_minutes">Start\n[minutes]</string>
@@ -180,6 +191,8 @@
     <string name="bolus_progress_silent_channel_name">Progresso bolo AAPS silenzioso</string>
     <string name="bolus_progress_channel_description">Progresso e cancellazione bolo</string>
     <string name="bolus_progress_silent_channel_description">Progresso e cancellazione bolo con meno vibrazioni</string>
+    <string name="open_loop_channel_name">AAPS Open Loop</string>
+    <string name="open_loop_channel_description">Notifica richiesta Loop aperto</string>
     <string name="simple_ui_off">Off</string>
     <string name="simple_ui_charging">Durante la ricarica</string>
     <string name="simple_ui_always_on">Modalità Always On</string>
@@ -248,6 +261,7 @@
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
     <string name="complication_br_iob">BR &amp; IoB</string>
     <string name="complication_br">Velocità basale</string>
+    <string name="complication_br_tt">BR &amp; Target</string>
     <string name="complication_target">Target</string>
     <string name="complication_cob_iob">CoB &amp; IoB</string>
     <string name="complication_cob_icon">Icona CoB</string>
@@ -276,7 +290,9 @@
     <string name="contacting_master_unknown">Stato sconosciuto — controlla il telefono</string>
     <string name="tile_settings">Impostazioni delle caselle</string>
     <string name="loop_status_error">Impossibile aggiornare lo stato</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">%1$s rimanente</string>
     <string name="loop_status_tbr_continues">Continua basale temporanea</string>
     <string name="loop_status_tbr_cancel">Impostazione basale normale</string>
     <string name="loop_status_smb">%1$.2f U</string>

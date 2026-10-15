@@ -23,13 +23,11 @@
     <string name="objectives_usereconnectpump">... i torneu a connectar de la mateixa manera</string>
     <string name="objectives_useloop">Mostreu el contingut del plugin Loop (llaç)</string>
     <string name="objectives_exam_objective">Demostreu els vostres coneixements</string>
-    <string name="objectives_exam_gate">Estudieu les preguntes. Se us donen quatre possibles respostes a cada pregunta. Pot haver-hi més d\'una resposta correcta. Marqueu totes les correctes i seleccioneu VERIFICAR.</string>
     <string name="answerdisabledto">Resposta deshabilitada fins: %1$s</string>
     <string name="wronganswer">Resposta incorrecta!</string>
     <string name="unfinshed_button">Següent no finalitzada</string>
     <string name="requestcode">Sol·licitar codi: %1$s</string>
     <string name="objectives_hint">(marqueu totes les respostes correctes)</string>
     <string name="notconnected">No hi ha connexió a internet</string>
-    <string name="failedretrievetime">Errada en recuperar l\'hora</string>
     <string name="requirementnotmet">No es compleixen els requeriments de l\'objectiu</string>
 </resources>

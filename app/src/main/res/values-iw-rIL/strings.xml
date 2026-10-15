@@ -4,4 +4,12 @@
     <string name="identification_not_set">אמצעי הזיהוי אינו מוגדר במצב מפתחים</string>
     <string name="select">בחר</string>
     <string name="set">הגדר</string>
+    <string name="migrating_preferences">מעביר העדפות…</string>
+    <string name="optimizing_database">מבצע אופטימיזציה של מסד הנתונים…</string>
+    <string name="initializing_plugins">מאתחל תוספים…</string>
+    <string name="initializing">מאתחל…</string>
+    <string name="migrating_profile_switches">מעביר מתגי פרופיל…</string>
+    <string name="migrating_effective_profile_switches">מעביר מתגי פרופיל אפקטיביים…</string>
+    <string name="migrating_boluses">מעביר בולוסים…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">בנתונים ישנים יותר לא הייתה הגדרת אינסולין ולא היה פרופיל פעיל, לכן %1$s שימש עבורם. יש לבדוק את הגדרות האינסולין שלך — נתונים שכבר הועברו לא מתעדכנות לאחר מכן.</string>
 </resources>

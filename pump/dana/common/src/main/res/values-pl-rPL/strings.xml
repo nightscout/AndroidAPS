@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Przekroczono limit czasu parowania</string>
+    <string name="danars_bonding_failed">Parowanie Bluetooth z pompą nie powiodło się lub zostało anulowane. Spróbuj ponownie i wpisz PIN wyświetlany na pompie.</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="description_pump_dana_rs">Integracja z pompami DANA Diabecare RS i Dana-i</string>
     <string name="maxbolusviolation">Przekroczenie ograniczenia maks. bolusa</string>
@@ -8,14 +9,22 @@
     <string name="speederror">Błąd prędkości</string>
     <string name="insulinlimitviolation">Przekroczono limit insuliny</string>
     <string name="boluserrorcode">Zadano: %1$.2fU Dostarczono: %2$.2fU Kod błędu: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">Pompa nie jest napełniona</string>
+    <string name="danai2_bolus_error_not_enough_insulin">Za mało insuliny w zbiorniku</string>
+    <string name="danai2_bolus_error_easy_sleep">Tryb Easy sleep jest włączony w pompie.</string>
+    <string name="danai2_pump_check_error">Błąd sprawdzania pompy</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Tryb uproszczony</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Automatyczna blokada</string>
     <string name="danar_valuenotsetproperly">Wartość ustawiona nieprawidłowo</string>
     <string name="danar_setbasalstep001">Ustaw krok bazy na 0.01 U/h</string>
     <string name="resetpairing">Zresetować sparowanie?</string>
     <string name="dana_model">%1$s\nModel: %2$02X\nProtokół: %3$02X\nKod: %4$02X</string>
     <string name="processinghistory">Przetwarzanie zdarzenia</string>
     <string name="danar_enableextendedbolus">Uaktywnij bolusy przedłużone w pompie</string>
+    <string name="danar_disablebolusblock">Blokada bolusa jest włączona w pompie. AAPS nie może podawać insuliny, dopóki jest aktywna. Wyłącz blokadę bolusa w ustawieniach pompy.</string>
     <string name="overview_bolusprogress_stoped">Zatrzymane</string>
     <string name="unsupportedfirmware">Nieobsługiwane oprogramowanie pompy</string>
+    <string name="danars_unsupported_model">Nieobsługiwany model pompy (kod %1$s).</string>
     <string name="pumperror">Błąd pompy</string>
     <string name="lowbattery">Niski stan baterii</string>
     <string name="basalcompare">Dostarczanie mniej niż wstępnie ustawiona baza</string>
@@ -36,6 +45,7 @@
     <string name="gettingtempbasalstatus">Status otrzymywania tymczasowej bazy</string>
     <string name="gettingpumpsettings">Otrzymywanie ustawień pompy</string>
     <string name="gettingpumptime">Otrzymywanie czasu pompy</string>
+    <string name="largetimedifftitle">Duża rozbieżność czasu</string>
     <string name="largetimediff">Duża różnica czasu:\nCzas w pompie jest wyłączony przez więcej niż 1,5 godziny.\n. Ustaw czas ręcznie na pompie i upewnij się, że odczyt historii pompy nie powoduje błędu.\nJeśli to możliwe, usuń historię z pompy przed zmianą czasu lub wyłącz pętlę zamkniętą do jednego DIA po ostatnim nieprawidłowym wpisie dziennika, ale co najmniej jeden DIA od teraz.</string>
     <string name="pairfirst">Proszę sparować swoją pompę z telefonem!</string>
     <string name="approachingdailylimit">Zbliżam się do dziennego limitu insuliny</string>
@@ -89,6 +99,9 @@
     <string name="danars_password_title">Hasło pompy (tylko v1)</string>
     <string name="danar_password_title">Hasło pompy</string>
     <string name="danar_useextended_title">Używaj przedłużonych bolusów dla &gt;200%</string>
+    <string name="bolus_speed_12">12 s/U</string>
+    <string name="bolus_speed_30">30 s/U</string>
+    <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Wybrana pompa</string>
     <string name="rs_loginsulinchange_title">Zapisz zmianę zbiorniczka</string>
     <string name="rs_loginsulinchange_summary">Dodaj zdarzenie \"Zmiana zasobnika insuliny\" do portalu opieki Nightscout, gdy wykryto je w historii pompy</string>
@@ -98,4 +111,18 @@
     <string name="num1pin">1: (12 cyfr)</string>
     <string name="num2pin">2: (8 cyfr)</string>
     <string name="basal_bolus_step">Rozmiar kroku Bazy/Bolusa</string>
+    <string name="connecting_to_pump">Łączenie z pompą…</string>
+    <string name="pairing_successful">Sparowano pomyślnie!</string>
+    <string name="pairing_successful_message">Twoja pompa jest teraz połączona i gotowa do użycia.</string>
+    <string name="cancel_pairing_title">Anulować parowanie?</string>
+    <string name="cancel_pairing_message">Proces parowania zostanie przerwany.</string>
+    <string name="done">Gotowe</string>
+    <string name="open_bluetooth_settings">Otwórz ustawienia Bluetooth</string>
+    <string name="enter_pump_password">Wpisz hasło pompy.</string>
+    <string name="select_paired_device">Wybierz sparowane urządzenie</string>
+    <string name="no_paired_devices">Nie znaleziono żadnych sparowanych urządzeń Dana. Najpierw sparuj pompę w ustawieniach Bluetooth Androida.</string>
+    <string name="password_hint">4-cyfrowe hasło (0–9999)</string>
+    <string name="connecting_verifying">Łączenie i weryfikowanie hasła…</string>
+    <string name="password_ok">Hasło zweryfikowano pomyślnie!</string>
+    <string name="password_wrong">Nieprawidłowe hasło. Wróć i popraw je.</string>
 </resources>

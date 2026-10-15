@@ -62,6 +62,11 @@ class QuickLaunchConfigViewModelFixture(private val screen: AapsScreenFixture) {
             Unit
         }.whenever(screen.preferences).put(eq(StringNonKey.QuickLaunchActions), any<String>())
         whenever(screen.preferences.get(StringNonKey.TempTargetPresets)).thenReturn("[]")
+        // Some elements decide their visibility from a preference - the pairing screens read
+        // NsClient3UseWs - so the context needs the same preferences the rest of the fixture uses.
+        // Left null it threw only once such an element reached the list, which is a long way from
+        // the cause.
+        whenever(visibilityContext.preferences).thenReturn(screen.preferences)
         whenever(quickWizard.list()).thenReturn(arrayListOf())
         whenever(automation.executionEnabled).thenReturn(false)
         whenever(activePlugin.getPluginsList()).thenReturn(arrayListOf())

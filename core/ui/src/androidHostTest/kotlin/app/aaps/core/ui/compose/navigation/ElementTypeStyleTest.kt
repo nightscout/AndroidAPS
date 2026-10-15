@@ -30,7 +30,6 @@ class ElementTypeStyleTest {
      */
     private val typesWithoutDescription = setOf(
         ElementType.QUICK_WIZARD,
-        ElementType.RUNNING_MODE,
         ElementType.AUTOMATION,
         ElementType.PUMP,
         ElementType.SETTINGS,

@@ -261,8 +261,6 @@
     <string name="lang_tr">Turkish</string>
     <string name="lang_zh_tw">Chinese, Traditional</string>
     <string name="lang_zh_cn">Chinese, Simplified</string>
-    <string name="pref_title_patient_name">Име</string>
-    <string name="pref_summary_patient_name">Име на тази инстанция на AAPS (използвана в доклади и синхронизация)</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">AAPS директория</string>
     <!-- StringKey: Protection preferences -->

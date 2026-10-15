@@ -24,7 +24,14 @@
     <string name="password_not_changed">Hasło nie zostało zmienione</string>
     <string name="pin_not_changed">PIN nie został zmieniony</string>
     <string name="pin_cleared">PIN został wyczyszczony!</string>
+    <string name="protection_password_hint">Wpisz hasło tutaj</string>
+    <string name="protection_pin_hint">Wpisz PIN tutaj</string>
+    <string name="auth_hint_master_password">Wpisz hasło główne</string>
+    <string name="auth_hint_master_or_pin">Wpisz hasło główne lub PIN</string>
+    <string name="auth_hint_master_or_password">Wpisz hasło główne lub niestandardowe</string>
+    <string name="use_pin_password">Użyj PINu/hasła</string>
     <string name="current_master_password">Aktualne hasło główne</string>
     <string name="master_password_not_set">Hasło główne nie zostało ustawione</string>
     <string name="aaps_directory_not_selected">Katalog AAPS nie został wybrany</string>
+    <string name="aaps_directory_access_lost">Utracono dostęp do katalogu AAPS, więc ustawienia nie są już zapisywane w telefonie. Wybierz katalog ponownie.</string>
 </resources>

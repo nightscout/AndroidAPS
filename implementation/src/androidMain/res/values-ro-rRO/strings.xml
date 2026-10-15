@@ -17,6 +17,7 @@
     <string name="permission_directory_description">Selectați un dosar pentru setările aplicației și fișierele de jurnal</string>
     <string name="permission_notifications_title">Notificări</string>
     <string name="permission_notifications_description">Necesar pentru a afișa alerte, alarme și actualizări ale stării pompei</string>
+    <!--    Notification channels, shown in the Android settings-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0μl)</string>
     <string name="insulin_concentration">U%1$d</string>

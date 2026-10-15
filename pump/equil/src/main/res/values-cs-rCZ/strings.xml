@@ -24,6 +24,12 @@
     <string name="equil_title_unpair_detach">Odpojit pumpu</string>
     <string name="equil_title_history_events">Historie událostí</string>
     <string name="equil_tone">Typ výstrahy</string>
+    <string name="equil_bolus_speed">Rychlost bolusu</string>
+    <string name="equil_bolus_speed_summary">Rychlejší bolus může způsobit více alarmů okluze.</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1,5 U/min (standardní)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 U/min</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 U/min</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 U/min</string>
     <string name="equil_tone_mode_mute">Ztlumit</string>
     <string name="equil_tone_mode_shake">Pouze vibrovat</string>
     <string name="equil_tone_mode_tone">Pouze zvuky</string>
@@ -33,6 +39,10 @@
     <string name="equil_error">Chyba připojení</string>
     <string name="equil_change">Vyměnit pumpu</string>
     <string name="equil_change_content">Vyjměte pumpu ze základny.</string>
+    <string name="equil_new_infusion_set_question">Budete také aplikovat nový infuzní set (základnu a kanylu)?</string>
+    <string name="equil_new_infusion_set_yes">Ano, nový infuzní set</string>
+    <string name="equil_new_infusion_set_no">Ne, pouze zásobník nebo baterie</string>
+    <string name="equil_same_infusion_set_hint">Kanyla nebude naplněna a nebude zaznamenána žádná výměna kanyly.</string>
     <string name="equil_unpair_alert">Opravdu se chcete vzdát kontroly nad %1$s?</string>
     <string name="equil_record_basal">Bazál %1$s U/h</string>
     <string name="equil_record_basal_temp">Dočasný bazál %1$s U/h</string>
@@ -40,8 +50,10 @@
     <string name="equil_error_set_temp_basal_failed_validation">Doba trvání TBR musí být větší než nula, a musí být násobkem %1$s minut.</string>
     <string name="equil_basal_exceeds_max">Profilová bazální dávka %1$s U/h překračuje maximální bazální dávku %2$s U/h. Zvyšte maximální bazál a připojte pumpu.</string>
     <string name="equil_not_enough_insulin">V zásobníku nezbývá dostatek inzulínu</string>
-    <string name="equil_low_battery">Slabá baterie</string>
-    <string name="equil_low_insulin">V zásobníku nezbývá dostatek inzulínu</string>
+    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Vybitá baterie: %1$d%%</string>
+    <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">V zásobníku nezbývá dostatek inzulínu: %1$s</string>
+    <string name="equil_reservoir_empty">Zásobník je prázdný. Pumpa již nedodává žádný inzulín.</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Pumpa se zastavila během bolusu. Vydáno: %1$s z %2$s</string>
     <string name="equil_pump_not_run">Pumpa neběží</string>
     <string name="equil_pair">Párovat</string>
     <string name="equil_pair_error">Chyba párování</string>

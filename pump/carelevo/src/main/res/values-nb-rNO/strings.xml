@@ -209,4 +209,6 @@
     <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS avsluttet av ukjent årsak.</string>
     <string name="alarm_notification_desc_notice_lgs_error">Kontroller tilkoblingen til patch og CGM.</string>
     <string name="carelevo_profile_update_skip_comment">Hoppet over: oppdatering for tidlig.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">Patch bekreftet ikke stansen. Venter på at bolusen skal avsluttes…</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Patch bekreftet ikke stansen. Hele bolusmengden på %1$s er registrert.</string>
 </resources>

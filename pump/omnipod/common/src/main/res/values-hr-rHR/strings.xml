@@ -26,4 +26,6 @@
         <item quantity="few">%1$d dana</item>
         <item quantity="other">%1$d dana</item>
     </plurals>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
 </resources>

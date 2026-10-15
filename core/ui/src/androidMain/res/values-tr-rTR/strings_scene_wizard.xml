@@ -10,6 +10,7 @@
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
     <!-- Driving: TT 108 (Hypo) — 1h -->
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_wizard_info_bathing">Pompanızın bağlantısını kestiğinizde insülin iletimi tamamen durur. Bazal, bolus veya düzeltme verilmez. Algoritma, bağlantı kesik moduna geçer ve herhangi bir ayar yapmayı durdurur. Duş alma, banyo yapma veya yüzme gibi kısa süreli durumlar için bu normaldir. Söz konusu durum sona erdiğinde pompa yeniden bağlanır ve algoritma otomatik olarak çalışmaya devam eder. Bağlantıyı kısa süreli tutmaya özen gösterin çünkü bazal insülin alınmadığında kan şekeri 1–2 saat içinde yükselmeye başlayacaktır.</string>
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <!-- Hot Weather: Profile 85% — 8h -->
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->

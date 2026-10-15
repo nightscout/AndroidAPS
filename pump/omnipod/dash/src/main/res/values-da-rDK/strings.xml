@@ -12,14 +12,7 @@
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Forsøger at parre med den nye Pod og forfylde den.\n\nNår initialiseringsprocessen er gennemført, kan du trykke på <b>Næste</b>.</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_generic_error">Generisk fejl: %1$s</string>
-    <string name="omnipod_dash_failed_to_send">Kunne ikke sende kommandoen</string>
-    <string name="omnipod_dash_command_not_sent">Kommando ikke sendt</string>
-    <string name="omnipod_dash_command_not_received_by_the_pod">Kommando ikke modtaget af poden</string>
-    <string name="omnipod_dash_unknown">Ukendt tilstand for kommandoen</string>
-    <string name="omnipod_common_history_tbr_value">%1$.2f IE/t, %2$d minutter</string>
-    <string name="omnipod_common_history_bolus_value">%1$.2f IE</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulintilførslen suspenderet</string>
-    <string name="omnipod_common_history_total_delivered">Levering i alt: %1$.2f IE</string>
     <string name="omnipod_dash_bolus_already_in_progress">En anden bolus er ved at blive afgivet</string>
     <string name="omnipod_dash_not_enough_insulin">Ikke nok insulin tilbage i pod.</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Ubekræftet kommando</string>

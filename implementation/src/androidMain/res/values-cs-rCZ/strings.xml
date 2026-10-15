@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Příkaz je právě prováděn</string>
+    <string name="smb_being_delivered">Právě nyní se vydává SMB. Zkuste to znovu po dokončení výdeje.</string>
     <string name="basal_value_below_minimum">Hodnota bazálu pod povoleným minimem. Nenastaveno!</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">Sach</string>
@@ -19,6 +20,19 @@
     <string name="permission_notifications_description">Vyžadováno pro zobrazování výstrah, alarmů a aktualizací stavu pumpy</string>
     <string name="permission_schedule_exact_alarm_title">Alarmy a připomenutí</string>
     <string name="permission_schedule_exact_alarm_description">Vyžadováno, aby budíky mohly probudit obrazovku, když je AAPS na pozadí a připomenutí zazvonilo včas</string>
+    <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">AAPS alarmy</string>
+    <string name="alarm_channel_standard">Standardní alarm</string>
+    <string name="alarm_channel_bolus_error">Chyba bolusu</string>
+    <string name="alarm_channel_error">Obecná chyba</string>
+    <string name="alarm_channel_urgent">Urgentní alarm</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (přepsat režim Nerušit)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (respektuje režim Nerušit)</string>
+    <string name="alarm_channel_silent_urgent">Urgentní alarm (režim zvyšování hlasitosti)</string>
+    <string name="alarm_channel_silent">Alarm (režim zvyšování hlasitosti)</string>
+    <string name="alarm_channel_silent_description">Používá se při zapnuté funkci \'Postupně zvýšovat hlasitost oznámení\'. Obrazovka alarmu přehraje zvuk.</string>
+    <string name="ongoing_channel_name">Průběžný stav</string>
+    <string name="notifications_channel_name">AAPS oznámení</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>
