@@ -123,7 +123,7 @@
     <string name="wear_infos_watchface">Ekrano info</string>
     <string name="wear_export_watchface">Eksportuoti šabloną</string>
     <string name="wear_new_custom_watchface_exported">Pasirinktinio ekrano šablonas eksportuotas</string>
-    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/lt/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Pakartotinai siųsti visus duomenis</string>
     <string name="open_settings_on_wear">Atidaryti išmaniojo laikrodžio nustatymus</string>
     <string name="wear_import_custom_watchface_title">Pasirinkti pasirinktinį ciferblatą</string>
