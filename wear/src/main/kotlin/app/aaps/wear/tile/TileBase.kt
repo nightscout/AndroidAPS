@@ -51,6 +51,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.guava.future
 import kotlin.math.sqrt
 
+/** Places in the button grid. A longer list shows its first four, in the order the phone sent them. */
+private const val MAX_ACTIONS = 4
 private const val SPACING_ACTIONS = 3f
 private const val ICON_SIZE_FRACTION = 0.4f // Percentage of button diameter
 private val BUTTON_COLOR = R.color.gray_850
@@ -239,7 +241,7 @@ abstract class TileBase : TileService() {
      * - ENABLED state with no actions: Show "No configuration" message
      *
      * @param wearControl Current wear control state
-     * @param actions List of actions to display (0-4 actions)
+     * @param actions List of actions to display; only the first four are drawn
      * @param deviceParameters Screen dimensions and shape
      * @return Layout element to render
      */
@@ -295,20 +297,23 @@ abstract class TileBase : TileService() {
                 .setText(resources.getString(R.string.wear_control_no_data))
                 .build()
         }
-        if (actions.isNotEmpty()) {
+        // The grid has four places. A source that hands over more (five QuickWizard entries valid at
+        // the same time) used to match none of the arrangements below, and the tile came out blank.
+        val shown = actions.take(MAX_ACTIONS)
+        if (shown.isNotEmpty()) {
             with(Column.Builder()) {
-                if (actions.size == 1 || actions.size == 3) {
-                    addContent(addRowSingle(actions[0], deviceParameters))
+                if (shown.size == 1 || shown.size == 3) {
+                    addContent(addRowSingle(shown[0], deviceParameters))
                 }
-                if (actions.size == 4 || actions.size == 2) {
-                    addContent(addRowDouble(actions[0], actions[1], deviceParameters))
+                if (shown.size == 4 || shown.size == 2) {
+                    addContent(addRowDouble(shown[0], shown[1], deviceParameters))
                 }
-                if (actions.size == 3) {
-                    addContent(addRowDouble(actions[1], actions[2], deviceParameters))
+                if (shown.size == 3) {
+                    addContent(addRowDouble(shown[1], shown[2], deviceParameters))
                 }
-                if (actions.size == 4) {
+                if (shown.size == 4) {
                     addContent(Spacer.Builder().setHeight(dp(SPACING_ACTIONS)).build())
-                    addContent(addRowDouble(actions[2], actions[3], deviceParameters))
+                    addContent(addRowDouble(shown[2], shown[3], deviceParameters))
                 }
                 return build()
             }
