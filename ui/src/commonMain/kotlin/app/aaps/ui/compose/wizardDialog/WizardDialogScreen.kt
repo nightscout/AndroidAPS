@@ -90,9 +90,11 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ExpandableRowHeader
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.QuickAddButtons
+import app.aaps.core.ui.compose.StepButtons
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
@@ -740,15 +742,15 @@ internal fun WizardDialogContent(
                         }
                     }
 
-                    // Direct Correction input
-                    NumberInputRow(
-                        labelRef = CoreUiStrings.wizard_correction,
-                        value = uiState.directCorrection,
-                        onValueChange = onDirectCorrectionChange,
-                        valueRange = -uiState.maxBolus..uiState.maxBolus,
-                        step = uiState.bolusStep,
-                        unitLabel = CoreUiStrings.insulin_unit_shortname,
-                        decimalPlaces = 2,
+                    // Direct Correction: stepped with +/- only, never typed. An open text field
+                    // here looked like the carbs field right above it, and users typed grams into
+                    // it and bolused that many units. A dose of its own belongs in the insulin
+                    // dialog, not in the wizard.
+                    CorrectionRow(
+                        correction = uiState.directCorrection,
+                        bolusStep = uiState.bolusStep,
+                        maxBolus = uiState.maxBolus,
+                        onCorrectionChange = onDirectCorrectionChange,
                         modifier = itemModifier
                     )
 
@@ -982,6 +984,58 @@ private fun ProfileDropdown(
                 )
             }
         }
+    }
+}
+
+/**
+ * `Correction: 0.00 U            (−) (+)`
+ *
+ * The correction can only be stepped, by the pump's bolus step with hold to repeat. There is no
+ * text field on purpose: one looked like the carbs field above it, and grams typed there became
+ * units. The label and the value are in a FlowRow, so with a big font the value moves to the
+ * next line as a whole instead of being squeezed one letter per line.
+ */
+@Composable
+private fun CorrectionRow(
+    correction: Double,
+    bolusStep: Double,
+    maxBolus: Double,
+    onCorrectionChange: (Double) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val label = stringResource(CoreUiStrings.wizard_correction)
+    val hasCorrection = correction != 0.0
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
+    ) {
+        FlowRow(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
+            itemVerticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(CoreUiStrings.label_with_colon, label),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = if (hasCorrection) stringResource(CoreUiStrings.format_insulin_units_signed, correction)
+                else stringResource(InterfacesStrings.format_insulin_units, 0.0),
+                style = MaterialTheme.typography.titleMedium,
+                color = if (hasCorrection) ElementType.INSULIN.color() else MaterialTheme.colorScheme.onSurface
+            )
+        }
+        StepButtons(
+            label = label,
+            value = correction,
+            onValueChange = onCorrectionChange,
+            valueRange = -maxBolus..maxBolus,
+            step = bolusStep,
+            unitLabel = CoreUiStrings.insulin_unit_shortname,
+            decimalPlaces = 2
+        )
     }
 }
 

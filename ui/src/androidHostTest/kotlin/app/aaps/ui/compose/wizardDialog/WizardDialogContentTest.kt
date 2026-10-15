@@ -9,6 +9,8 @@ import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasScrollAction
+import androidx.compose.ui.test.hasSetTextAction
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -53,6 +55,12 @@ class WizardDialogContentTest {
     /** Result extras for 71% and a +1 U correction, built from the same templates as the screen. */
     private lateinit var percentageAndCorrection: String
 
+    /** Screen reader name of the plus button of the correction row, for the 0.05 U bolus step of [loaded]. */
+    private lateinit var correctionPlusButton: String
+
+    /** A correction text field would be the only node with a set-text action and the correction label. */
+    private lateinit var correctionTextField: SemanticsMatcher
+
     @Before
     fun setUp() {
         // The app registers this at start. Without it every UiStrings text shows its key name.
@@ -75,6 +83,13 @@ class WizardDialogContentTest {
                 ctx.getString(CoreUiR.string.format_insulin_units_signed, 1.0)
             )
         )
+        val correctionLabel = ctx.getString(CoreUiR.string.wizard_correction)
+        correctionPlusButton = ctx.getString(
+            CoreUiR.string.a11y_plus_button_description,
+            correctionLabel,
+            ctx.getString(CoreUiR.string.value_with_unit, "0.05", ctx.getString(CoreUiR.string.insulin_unit_shortname))
+        )
+        correctionTextField = hasSetTextAction() and hasText(correctionLabel)
     }
 
     @Test
@@ -116,6 +131,23 @@ class WizardDialogContentTest {
         compose.onNodeWithText(percentageAndCorrection).assertIsDisplayed()
     }
 
+    /** The correction text field looked like the carbs field above it, and grams typed there became units. */
+    @Test
+    fun correctionCannotBeTyped() {
+        setWizard(uiState = { loaded() })
+        compose.onNode(correctionTextField).assertDoesNotExist()
+        compose.onNodeWithContentDescription(correctionPlusButton).assertExists()
+    }
+
+    /** The row steps by the bolus step, once per tap. */
+    @Test
+    fun collapsedCorrectionRowStepsByTheBolusStep() {
+        val changes = mutableListOf<Double>()
+        setWizard(uiState = { loaded() }, onDirectCorrectionChange = { changes += it })
+        compose.onNodeWithContentDescription(correctionPlusButton).performClick()
+        assertThat(changes).containsExactly(0.05)
+    }
+
     @Test
     fun recordOnlyBannerStaysOnScreenWhenTheUserScrollsDown() {
         setWizard(uiState = { loaded(bgAgeMinutes = 2, forcedRecordOnly = true) })
@@ -129,13 +161,19 @@ class WizardDialogContentTest {
             bg = if (hasBgData) 120.0 else 0.0,
             maxCarbs = 100,
             maxBolus = 10.0,
+            // Not the UiState default (0.1), so a test sees whether the screen uses the state's step.
+            bolusStep = 0.05,
             hasBgData = hasBgData,
             bgAgeMinutes = bgAgeMinutes,
             forcedRecordOnly = forcedRecordOnly
         )
 
     /** [uiState] is read inside the composition, so a test can change the state after the first frame. */
-    private fun setWizard(uiState: () -> WizardDialogUiState, onNavigateBack: () -> Unit = {}) {
+    private fun setWizard(
+        uiState: () -> WizardDialogUiState,
+        onNavigateBack: () -> Unit = {},
+        onDirectCorrectionChange: (Double) -> Unit = {}
+    ) {
         compose.setContent {
             MaterialTheme {
                 WizardDialogContent(
@@ -147,7 +185,7 @@ class WizardDialogContentTest {
                     onAddCarbs = {},
                     onCarbsTypeChange = {},
                     onPercentageChange = {},
-                    onDirectCorrectionChange = {},
+                    onDirectCorrectionChange = onDirectCorrectionChange,
                     onCarbTimeChange = {},
                     onNotesChange = {},
                     onProfileSelect = {},
