@@ -4,13 +4,16 @@ import app.aaps.core.data.model.CA
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.OverviewData
+import app.aaps.core.interfaces.overview.graph.ActivityGraphData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.overview.graph.TimeRange
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
@@ -26,6 +29,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -158,6 +163,39 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
         verify(signals).emitProgress(eq(ProgressData.DRAW_BG), any())
         verify(signals).emitProgress(eq(ProgressData.DRAW_IOB), any())
         verify(signals).emitProgress(eq(ProgressData.DRAW_FINAL), any())
+    }
+
+    /**
+     * The prepare pass runs before the one that knows the horizon, so it has to leave the horizon
+     * alone. When it wrote `endTime = toTime` instead, the future activity stopped at the next full
+     * hour while the axis went on to the newest prediction.
+     *
+     * `updateTimeRange` writes through to the flow on purpose: the pass reads the range back when it
+     * builds the IOB and activity series, so a collapsed end has to be able to reach that read, or
+     * this test would pass with the bug in place.
+     */
+    @Test
+    fun `the prepare pass keeps the horizon and the future activity reaches it`() = runTest {
+        stubSuspendCalls()
+        val toTime = now + T.mins(30).msecs()
+        val horizon = toTime + T.hours(4).msecs()
+        whenever(overviewData.toTime).thenReturn(toTime)
+        // As the post phase of the previous run left it.
+        val timeRange = MutableStateFlow<TimeRange?>(TimeRange(fromTime = toTime - T.hours(24).msecs(), toTime = toTime, endTime = horizon))
+        whenever(cache.timeRangeFlow).thenReturn(timeRange)
+        whenever(cache.updateTimeRange(any())).then { timeRange.value = it.arguments[0] as TimeRange? }
+        whenever(profileFunction.getProfile(any<Long>())).thenReturn(effectiveProfile)
+        whenever(dataIobCob.calculateFromTreatmentsAndTemps(any(), any())).thenAnswer { IobTotal(it.arguments[0] as Long, activity = 0.01) }
+        whenever(dataIobCob.calculateAbsoluteIobFromBaseBasals(any())).thenAnswer { IobTotal(it.arguments[0] as Long) }
+        whenever(workflowChainData.prepareFor(anyOrNull(), any())).thenReturn(buildData(bgDataReload = false, emitFinalProgress = false))
+
+        run()
+
+        assertThat(timeRange.value?.endTime).isEqualTo(horizon)
+        val activity = argumentCaptor<ActivityGraphData>()
+        verify(cache).updateActivityGraph(activity.capture())
+        assertThat(activity.lastValue.activityPrediction.last().timestamp).isGreaterThan(toTime)
+        assertThat(activity.lastValue.activityPrediction.last().timestamp).isAtMost(horizon)
     }
 
     @Test

@@ -131,12 +131,16 @@ class PostCalculationRunner(
             .toInstant(zone) + 1.hours
         if (predictionsAvailable && apsResult != null) {
             var predictionHours = (ceil(apsResult.latestPredictionsTime - Clock.System.now().toEpochMilliseconds().toDouble()) / (60 * 60 * 1000)).toInt()
-            predictionHours = min(2, predictionHours)
+            predictionHours = min(PREDICTION_WINDOW_HOURS, predictionHours)
             predictionHours = max(0, predictionHours)
             val hoursToFetch = Constants.GRAPH_TIME_RANGE_HOURS - predictionHours
             data.overviewData.toTime = nextHour.toEpochMilliseconds() + 100000 // GraphView-era nudge, retained while workers still consume this shape
             data.overviewData.fromTime = data.overviewData.toTime - T.hours(hoursToFetch.toLong()).msecs()
-            data.overviewData.endTime = data.overviewData.toTime + T.hours(predictionHours.toLong()).msecs()
+            // The newest prediction, not the clamped window share. The axis is already
+            // max(newest point, endTime), so this widens nothing - it only makes endTime agree with
+            // the edge, so the series built against it (IOB, activity, basal) reach it. The clamp
+            // above stays where it belongs: it decides how much history to fetch, not where to stop.
+            data.overviewData.endTime = max(data.overviewData.toTime, apsResult.latestPredictionsTime)
         } else {
             data.overviewData.toTime = nextHour.toEpochMilliseconds() + 100000
             data.overviewData.fromTime = data.overviewData.toTime - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()

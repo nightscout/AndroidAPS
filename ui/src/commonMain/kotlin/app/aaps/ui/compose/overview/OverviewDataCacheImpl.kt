@@ -321,10 +321,9 @@ class OverviewDataCacheImpl(
         }
 
         // Scope-agnostic: new predictions move the right edge of the axis, and the series that are
-        // drawn to that edge have to follow. `timeRangeFlow` alone is not enough - it only carries
-        // the horizon as `TimeRange.endTime`, which is clamped to two hours, and a `StateFlow` drops
-        // a value equal to the last one. So a prediction run that leaves `endTime` where it was
-        // emits nothing here, and the basal would keep the previous horizon while the axis has
+        // drawn to that edge have to follow. `timeRangeFlow` alone is not enough: a `StateFlow`
+        // drops a value equal to the last one, so a prediction run that leaves `endTime` where it
+        // was emits nothing here, and the basal would keep the previous horizon while the axis has
         // already taken the new one.
         scope.launch {
             predictionsFlow
@@ -1300,13 +1299,15 @@ internal fun profileBoundariesIn(switches: List<EPS>, fromTime: Long): List<Long
  *
  * `graphTimeRange` ends at `TimeRange.endTime`, and that is not always the right edge of the chart.
  * The axis is `max(newest BG / bucketed / prediction point, endTime)` (see
- * `GraphViewModel.derivedTimeRange`), and `endTime` is the shorter of the two in two ways:
+ * `GraphViewModel.derivedTimeRange`), and `endTime` can still be the shorter of the two: it is only
+ * as new as the last run of `PostCalculationRunner`, which is the phase that owns it. Until that
+ * phase has run once - a fresh start, or a restore that reset the cache - the range holds `toTime`
+ * alone while a prediction from an earlier loop run already reaches further.
  *
- * - `PostCalculationRunner` clamps the horizon to two hours while the predictions themselves are
- *   not clamped, so the last prediction can sit past `endTime`.
- * - `PrepareGraphDataRunner` collapses `endTime` back to `toTime` on every pass and
- *   `PostCalculationRunner` restores it afterwards, so it stays short for as long as that second
- *   pass does not run - after a failed or skipped loop run, indefinitely.
+ * It used to be short in two more ways, both fixed in `:workflow` rather than worked around here:
+ * the horizon was clamped to two hours while the predictions were not, and `PrepareGraphDataRunner`
+ * collapsed `endTime` back to `toTime` on every pass - which also cut the future IOB and activity
+ * short, because those are built in that pass. See `app.aaps.workflow.keptEndTime`.
  *
  * A series that stops at `endTime` then ends before the axis does. On the basal graph that reads as
  * the line simply stopping short of "now", because basal is the one series a reader expects to be
