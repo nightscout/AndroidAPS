@@ -254,6 +254,32 @@ internal class GraphUtilsTest {
         }
 
         @Test
+        fun `activity that is zero across the whole window draws nothing`() {
+            // Reachable whenever there is no insulin on board at all. zeroFloorNiceRange(0, 0) is
+            // 0..1 (niceScale widens a zero-width range), so without an explicit guard this would
+            // get a positive scale and draw a flat line on the anchor — on the BG graph, right on
+            // the low mark, where it looks like a second target line.
+            val scale = activityOverlayScale(
+                activityMin = 0.0, activityMax = 0.0,
+                zeroLevel = 72.0, roomAbove = 128.0, roomBelow = 22.0
+            )
+            assertThat(scale.scale).isEqualTo(0.0)
+        }
+
+        @Test
+        fun `constant non-zero activity still draws, flat at the configured fraction`() {
+            // The guard above must not swallow this one: a window where activity is real but does
+            // not change is a flat line at a readable height, not an empty series.
+            // zeroFloorNiceRange(8, 8) -> 0..8, so the flat curve lands at exactly 0.8 * 100.
+            val scale = activityOverlayScale(
+                activityMin = 8.0, activityMax = 8.0,
+                zeroLevel = 0.0, roomAbove = 100.0, roomBelow = 0.0
+            )
+            assertThat(scale.scale).isGreaterThan(0.0)
+            assertThat(scale.map(8.0)).isWithin(TOLERANCE).of(80.0)
+        }
+
+        @Test
         fun `no room on the only side that has data draws nothing`() {
             val scale = activityOverlayScale(
                 activityMin = -0.5, activityMax = 0.0,

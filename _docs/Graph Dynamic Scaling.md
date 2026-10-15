@@ -158,6 +158,13 @@ activity range. One factor for both sides, so the curve stays linear:
 The range is passed through `zeroFloorNiceRange` even though no label is ever drawn from it: the
 bound then moves in discrete jumps, so the curve's height does not wobble on every scroll tick.
 
+A window whose activity is zero everywhere — no insulin on board at all — is caught before that
+nice-ification and returns a zero scale, so nothing is drawn. It has to be caught first, because
+`zeroFloorNiceRange(0.0, 0.0)` returns `0..1` (`niceScale` widens a zero-width range by 1 so it
+always has a usable tick step), which would otherwise give a positive scale and draw a flat line
+on the anchor. On the BG graph that is the low mark, where it reads as a second target line. A
+window where activity is constant but *not* zero is a real curve and still draws, flat.
+
 **The host scale is never widened to make the activity fit.** The caller passes the room the host
 axis already leaves on each side of the anchor, and the curve is fitted inside it. This is a
 deliberate constraint: the BG and IOB scales are what the user actually reads, and an overlay with
@@ -168,10 +175,20 @@ no axis of its own must not move them.
 | | BG graph | IOB/BAS graph |
 |---|---|---|
 | zero anchor | the **low mark** | IOB zero |
-| room above | `bgNice.max - lowMark` | `iobDataMax` (stops below the reserved basal band) |
+| room above | `bgNice.max - lowMark` | `primaryDataNiceRange.max` (stops below the reserved basal band) |
 | room below | `lowMark - bgNice.min` | IOB's own negative sliver, usually none |
 
 On the IOB/BAS graph this is the ordinary vertical zero alignment — activity zero on IOB zero.
+
+The IOB room comes from `primaryDataNiceRange`, the windowed nice range of the primary layer, and
+not from the IOB+basal axis itself. That axis only exists when basal is drawn (single-axis IOB),
+so reading the room from it would make the overlay disappear with no other symptom if IOB were
+ever paired with a second series on its own axis. Today `GraphsSection` always builds the IOB
+graph from `listOf(SeriesType.IOB)` alone, so the paired case is unreachable — but it is one
+config change away, and a silently missing curve is the wrong failure. In the paired case the real
+axis is the zero-aligned dual-axis range, which always contains this nice range (no clipping is a
+property of `fractionAlignedNiceRange`), so the curve is sized a little conservatively and still
+sits in frame with its zero on the axis' zero.
 
 On the BG graph the anchor is the low mark rather than the axis floor, because the low mark is the
 bottom edge of the green in-range belt: a horizontal reference the eye already uses, with the band

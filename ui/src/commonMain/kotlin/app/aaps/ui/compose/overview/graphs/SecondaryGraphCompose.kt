@@ -430,12 +430,20 @@ fun SecondaryGraphCompose(
         windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedCarbs, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
     }
 
-    // IOB (with basal overlay active): zero-floor nice range — 0 if the visible window has no
-    // negative IOB, else a disparity-aware negative sliver (never centering zero) — then reserve
-    // the top BASAL_HEIGHT_FRACTION of the height for basal, ABOVE the actual data range (not
-    // above y=0 — those only coincide when nice.min is 0; when IOB has a negative excursion,
-    // reserving "above 0" would eat into the negative portion's share and let positive IOB data
-    // creep into the fraction of the axis meant for basal). Solving for axisMax such that
+    // Zero-floor nice range of the primary layer, windowed — 0 if the visible window has no
+    // negative IOB, else a disparity-aware negative sliver (never centering zero).
+    // Deliberately NOT conditioned on hasBasalLayer: the IOB+basal axis below is built from it,
+    // and so is the activity overlay, which needs the room the axis leaves on each side of zero
+    // whether or not basal is drawn.
+    val primaryDataNiceRange = remember(primaryYValues) {
+        if (primaryYValues.isEmpty()) null
+        else zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max().coerceAtLeast(0.1), IOB_GRAPH_TICK_COUNT)
+    }
+    // IOB (with basal overlay active): reserve the top BASAL_HEIGHT_FRACTION of the height for
+    // basal, ABOVE the actual data range (not above y=0 — those only coincide when nice.min is 0;
+    // when IOB has a negative excursion, reserving "above 0" would eat into the negative portion's
+    // share and let positive IOB data creep into the fraction of the axis meant for basal).
+    // Solving for axisMax such that
     // (nice.max - nice.min) / (axisMax - nice.min) == (1 - BASAL_HEIGHT_FRACTION) gives:
     // axisMax = nice.min + (nice.max - nice.min) / (1 - BASAL_HEIGHT_FRACTION)
     // — this reduces to the simpler nice.max / (1 - frac) exactly when nice.min == 0. The tick
@@ -443,27 +451,29 @@ fun SecondaryGraphCompose(
     // Result pairs the final (inflated) axis range with the un-inflated data max — the latter is
     // where tick labels must stop (see ClampedVerticalAxisItemPlacer) so they don't extend into
     // the reserved basal band above the actual IOB data.
-    val iobBasalScaleResult = remember(hasBasalLayer, primaryYValues) {
+    val iobBasalScaleResult = remember(hasBasalLayer, primaryDataNiceRange) {
         if (!hasBasalLayer) return@remember null // auto-range when no basal
-        if (primaryYValues.isEmpty()) null
-        else {
-            val nice = zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max().coerceAtLeast(0.1), IOB_GRAPH_TICK_COUNT)
-            val axisMax = nice.min + (nice.max - nice.min) / (1 - BASAL_HEIGHT_FRACTION)
-            NiceScale(nice.min, axisMax, nice.step) to nice.max
-        }
+        val nice = primaryDataNiceRange ?: return@remember null
+        val axisMax = nice.min + (nice.max - nice.min) / (1 - BASAL_HEIGHT_FRACTION)
+        NiceScale(nice.min, axisMax, nice.step) to nice.max
     }
     val iobBasalScale = iobBasalScaleResult?.first
     val iobDataMax = iobBasalScaleResult?.second
 
     // Activity overlay — mapped into the IOB axis' own units, zero activity on IOB zero. The IOB
     // scale is never changed to fit it: the curve gets the room the IOB axis already leaves, which
-    // is the data region below the reserved basal band above zero (iobDataMax) and IOB's own
-    // negative sliver below zero (usually none, so a negative activity tail is clipped there).
+    // is the data region below the reserved basal band above zero and IOB's own negative sliver
+    // below zero (usually none, so a negative activity tail is clipped there).
     // Both the activity range and the IOB range come from the visible window only.
-    val processedActivityOverlay = remember(activityOverlay, hasIob, activityData, iobBasalScaleResult, stableTimeRange, visibleMinX, visibleMaxX) {
+    // The room comes from primaryDataNiceRange rather than from the IOB+basal axis, so that the
+    // overlay does not quietly vanish when that axis is absent. With basal drawn the two are the
+    // same range. Without it (IOB paired with a second series on its own axis) the real axis is
+    // the zero-aligned dual-axis range, which always contains this nice range — never clips it,
+    // see fractionAlignedNiceRange — so the curve is sized a little conservatively but still sits
+    // inside the frame with its zero on the axis' zero.
+    val processedActivityOverlay = remember(activityOverlay, hasIob, activityData, primaryDataNiceRange, stableTimeRange, visibleMinX, visibleMaxX) {
         if (!hasRealTimeRange || !activityOverlay || !hasIob || activityData == null) return@remember Pair(emptyList(), emptyList())
-        val iobNiceMin = iobBasalScale?.min ?: return@remember Pair(emptyList(), emptyList())
-        val iobNiceMax = iobDataMax ?: return@remember Pair(emptyList(), emptyList())
+        val iobNice = primaryDataNiceRange ?: return@remember Pair(emptyList(), emptyList())
         val hist = activityData.activity
             .map { timestampToX(it.timestamp, minTimestamp) to it.value }
             .let { filterToRange(it, minX, maxX) }
@@ -476,8 +486,8 @@ fun SecondaryGraphCompose(
             activityMin = windowed.min(),
             activityMax = windowed.max(),
             zeroLevel = 0.0,
-            roomAbove = iobNiceMax,
-            roomBelow = -iobNiceMin
+            roomAbove = iobNice.max,
+            roomBelow = -iobNice.min
         )
         if (scale.scale <= 0.0) return@remember Pair(emptyList(), emptyList())
         hist.map { (x, y) -> x to scale.map(y) } to pred.map { (x, y) -> x to scale.map(y) }

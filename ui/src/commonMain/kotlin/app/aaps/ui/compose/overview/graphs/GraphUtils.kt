@@ -619,6 +619,8 @@ data class ActivityOverlayScale(val zeroLevel: Double, val scale: Double) {
  * [activityMin] and [activityMax] are taken from the visible window only, like every other scale in
  * these graphs. They are nice-ified ([zeroFloorNiceRange]) even though no label is ever drawn from
  * them, so the curve's height steps in discrete jumps instead of wobbling on every scroll tick.
+ *
+ * A window whose activity is zero everywhere returns a zero scale, so the caller draws nothing.
  */
 fun activityOverlayScale(
     activityMin: Double,
@@ -628,6 +630,13 @@ fun activityOverlayScale(
     roomBelow: Double,
     heightFraction: Double = ACTIVITY_HEIGHT_FRACTION
 ): ActivityOverlayScale {
+    // Activity is zero across the whole window (no insulin on board) — there is no curve to draw.
+    // This has to be caught before the nice-ification: zeroFloorNiceRange(0.0, 0.0) comes back as
+    // 0..1, because niceScale widens a zero-width range by 1 so that it always has a usable tick
+    // step. That would give a positive scale and draw a flat line on [zeroLevel] — on the BG graph
+    // that is the low mark, the bottom edge of the in-range belt, where it reads as a second
+    // target line.
+    if (activityMin == 0.0 && activityMax == 0.0) return ActivityOverlayScale(zeroLevel, 0.0)
     val nice = zeroFloorNiceRange(activityMin, activityMax, SECONDARY_GRAPH_TICK_COUNT)
     val positiveLimit = if (nice.max > 0.0) roomAbove * heightFraction / nice.max else Double.MAX_VALUE
     val negativeLimit = if (nice.min < 0.0 && roomBelow > 0.0) roomBelow / -nice.min else Double.MAX_VALUE
