@@ -347,8 +347,8 @@ class MedtronicOverviewViewModel(
                 category = ActionCategory.MANAGEMENT,
                 onClick = {
                     if (isConfigured) {
+                        // No snackbar: the RileyLink status row already shows the tune-up.
                         serviceTaskExecutor.startTask(wakeAndTuneTaskProvider())
-                        _events.tryEmit(MedtronicOverviewEvent.ShowSnackbar(rh.gs(R.string.medtronic_custom_action_wake_and_tune)))
                     } else {
                         emitNotConfiguredDialog()
                     }

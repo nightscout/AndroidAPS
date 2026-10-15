@@ -232,6 +232,37 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(0)
     }
 
+    /**
+     * A pump that is neither connected nor connecting is asked to connect, and then the command runs. A Medtronic
+     * after a failed tune-up reports this now: it reported connecting, so the queue only waited until it timed out
+     * and never asked it to connect, and nothing tuned again (#3253).
+     */
+    @Test
+    fun `a pump that is not connected and not connecting is asked to connect`() = runTest {
+        testPumpPlugin.connected = false
+        lateinit var executor: CommandExecutor
+        commandQueue = CommandQueueImplementation(
+            aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
+            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
+            pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
+            { executor }, testScope, bolusProgressData
+        )
+        executor = CommandExecutor(
+            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform()
+        )
+
+        var result: PumpEnactResult? = null
+        CoroutineScope(Dispatchers.IO).launch { result = commandQueue.bolus(DetailedBolusInfo()) }
+        var waitedMs = 0
+        while (result == null && waitedMs < 8000) {
+            Thread.sleep(100); waitedMs += 100
+        }
+
+        // TestPumpPlugin.connect() sets connected. Without the call the queue waits for the connection until it times out.
+        assertThat(testPumpPlugin.connected).isTrue()
+        assertThat(result?.success).isTrue()
+    }
+
     @Test
     fun bolusSucceedsButCarbsFailToStore_postsCarbsLostNotification() = runTest {
         // Regression: bolus delivered, but persisting the accompanying carbs threw. This used to be
