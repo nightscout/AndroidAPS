@@ -155,6 +155,7 @@
     <string name="aps">APS</string>
     <string name="last_run">ההפעלה האחרונה</string>
     <string name="last_enact">נקבעו לאחרונה</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fיח\' %2$.0f%%</string>
     <string name="today">היום</string>
     <string name="weighted">משוקלל</string>
     <string name="full_xdrip_sync_comment">בטוחים שברצונכם לבצע סנכרון מלא? סנכרון מלא ייקח שעות מרובות ובינתיים לא תוכלו לראות נתונים חדשים ב-xDrip+.</string>
