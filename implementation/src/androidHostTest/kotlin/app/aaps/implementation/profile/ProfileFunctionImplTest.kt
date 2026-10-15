@@ -108,12 +108,26 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
     )
 
     @Test
-    fun runningProfileWins() = runTest {
+    fun withNoSwitchTheRunningProfileIsUsed() = runTest {
         whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(effectiveProfileSwitch)
 
-        // The running EPS is authoritative — a pending switch must not override what the pump is actually using.
         assertThat(createSut().getRunningOrRequestedICfg()).isEqualTo(effectiveProfileSwitch.iCfg)
+    }
+
+    /**
+     * #5081: after an insulin change the requested switch has the new insulin at once, the running profile only when
+     * the pump has set it, which took 50 s on a Medtronic. A scene started in that time took the old insulin: its
+     * switch was refused, or, for a scene with no end, the old insulin was written as a permanent switch.
+     */
+    @Test
+    fun theRequestedSwitchWinsOverTheRunningProfile() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(effectiveProfileSwitch.copy(iCfg = someICfg))
+        val newInsulin = someICfg.copy(insulinLabel = "New", insulinPeakTime = 55 * 60 * 1000L)
+        whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong())).thenReturn(profileSwitch.copy(iCfg = newInsulin))
+
+        assertThat(createSut().getRunningOrRequestedICfg()).isEqualTo(newInsulin)
     }
 
     @Test
@@ -620,6 +634,70 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
         assertThat(written[2].id).isEqualTo(50)
         assertThat(written[2].timestamp).isEqualTo(later.timestamp)
         assertThat(written[2].iCfg).isEqualTo(fiasp)
+    }
+
+    // A temporary switch that started less than a second ago: the permanent switch has to be newer than it, or the
+    // temporary one, with the old insulin, would come back when its copy is cut.
+    @Test
+    fun thePermanentSwitchIsNewerThanATemporarySwitchThatJustStarted() = runTest {
+        temporarySwitchOverAPermanentOne(startedMillisAgo = 300L)
+
+        createSutWithText().createProfileSwitchWithNewInsulin(fiasp, Sources.FillDialog)
+
+        val (permanent, copy) = writtenSwitches()
+        assertThat(permanent.timestamp).isEqualTo(now - 300L + 1)
+        assertThat(copy.timestamp).isEqualTo(now)
+    }
+
+    // The switches are copies of the records, so a profile renamed in the store since does not refuse the insulin
+    // change. Built from the store, the permanent switch here was "not found" and the whole change was refused.
+    @Test
+    fun anInsulinChangeWorksForAProfileThatIsNoLongerInTheStore() = runTest {
+        temporarySwitchOverAPermanentOne()
+        whenever(persistenceLayer.getPermanentProfileSwitchActiveAt(anyLong()))
+            .thenReturn(profileSwitch.copy(id = 41, profileName = "Renamed since", percentage = 95, iCfg = someICfg, timestamp = now - T.hours(5).msecs()))
+
+        assertThat(createSutWithText().createProfileSwitchWithNewInsulin(fiasp, Sources.FillDialog)).isTrue()
+
+        val (permanent, _) = writtenSwitches()
+        assertThat(permanent.profileName).isEqualTo("Renamed since")
+        assertThat(permanent.basalBlocks).isEqualTo(profileSwitch.basalBlocks)
+        assertThat(permanent.iCfg).isEqualTo(fiasp)
+    }
+
+    @Test
+    fun aSwitchLikeAnotherIsANewRecordWithItsProfile() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.insertOrUpdateProfileSwitch(any(), any(), any(), anyOrNull(), any())).thenAnswer { invocation ->
+            PersistenceLayer.TransactionResult<PS>().also { it.inserted.add(invocation.getArgument(0)) }
+        }
+        val original = profileSwitch.copy(id = 41, profileName = "Gone from the store", percentage = 95, timeshift = T.hours(1).msecs(), iCfg = someICfg)
+
+        val written = createSutWithText().createProfileSwitchLike(original, now, 0L, fiasp, Action.PROFILE_SWITCH, Sources.Scene, null, emptyList())
+
+        assertThat(written).isNotNull()
+        // A new record: no id and no Nightscout id, or it would be uploaded as a change of the original.
+        assertThat(written!!.id).isEqualTo(0L)
+        assertThat(written.ids.nightscoutId).isNull()
+        assertThat(written.profileName).isEqualTo("Gone from the store")
+        assertThat(written.percentage).isEqualTo(95)
+        assertThat(written.timeshift).isEqualTo(T.hours(1).msecs())
+        assertThat(written.timestamp).isEqualTo(now)
+        assertThat(written.iCfg).isEqualTo(fiasp)
+    }
+
+    /** The original is at 150 %: 1.5 U/h, above a pump max basal of 1.2 U/h. */
+    @Test
+    fun aSwitchLikeAnotherIsRefusedWithThePumpReason() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        testPumpPlugin.pumpDescription.basalMaximumRate = 1.2
+        val original = profileSwitch.copy(id = 41, profileName = TESTPROFILENAME, percentage = 150, iCfg = someICfg)
+        val sut = createSutWithText()
+
+        assertThat(sut.createProfileSwitchLike(original, now, 0L, fiasp, Action.PROFILE_SWITCH, Sources.Scene, null, emptyList())).isNull()
+        assertThat(sut.profileSwitchLikeRefusal(original, now, 0L, fiasp))
+            .isEqualTo("Basal rate is not compatible with the current pump and cannot be activated. Reduce the percentage or adjust the basal rate.")
+        verify(persistenceLayer, never()).insertOrUpdateProfileSwitch(any(), any(), any(), anyOrNull(), any())
     }
 
     /** The permanent switch is at 150 %: 1.5 U/h, above a pump max basal of 1.2 U/h. The 90 % one would fit. */

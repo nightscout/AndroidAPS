@@ -2,6 +2,7 @@ package app.aaps.implementation.scenes
 
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
@@ -547,13 +548,21 @@ class SceneExecutor(
                 is SceneAction.ProfileSwitch   -> {
                     // Shorten the scene's PS so its window ends now; the resolver picks up
                     // any underlying temp/permanent PS automatically (mirrors TT/RM revert).
-                    // Override-protection: if the active EPS no longer derives from the scene's
-                    // PS, the user changed profile during the scene — leave their choice alone.
+                    // Override-protection: if neither the requested switch nor the active EPS is the
+                    // scene's PS, the user changed profile during the scene — leave their choice alone.
+                    // The requested switch counts too: until the pump has set the scene's PS, the EPS is
+                    // still the one from before. An insulin change during the scene is not a change of
+                    // profile: ActiveSceneManager follows the copy it makes of the scene's PS. Asked here,
+                    // not left to its change event, which may not have run yet, or not at all when the app
+                    // was killed in between.
+                    val psId = activeSceneManager.followInsulinCopyNow() ?: scoped.psId
+                    val requested = persistenceLayer.getProfileSwitchActiveAt(now)
                     val currentEps = persistenceLayer.getEffectiveProfileSwitchActiveAt(now)
-                    val profileStillFromScene = scoped.psId != null &&
-                        currentEps?.originalPsId == scoped.psId
 
-                    if (profileStillFromScene) {
+                    if (psId != null && (requested?.id == psId || currentEps?.originalPsId == psId)) {
+                        restoreProfileBeforeScene(requested?.takeIf { it.id == psId }, state, now)?.let { reason ->
+                            return SceneExecutionResult.ActionResult(action, success = false, errorMessage = reason)
+                        }
                         // Scene revert is an internal/automatic write — suppress the central "Basal profile in
                         // pump updated" notification (issue #4959). Two triggers reach onProfileChanged for this
                         // revert: cancelProfileSwitch's observeChanges(PS) emission (silenced by the armed gate) AND
@@ -562,7 +571,7 @@ class SceneExecutor(
                         // silencedProfileWrite resets the gate on the no-op / throwing paths.
                         silencedProfileWrite(wroteRow = { it.updated.isNotEmpty() }) {
                             persistenceLayer.cancelProfileSwitch(
-                                id = scoped.psId!!,
+                                id = psId,
                                 timestamp = now,
                                 action = Action.PROFILE_SWITCH,
                                 source = Sources.Scene,
@@ -628,6 +637,51 @@ class SceneExecutor(
             aapsLogger.error(LTag.UI, "Failed to revert scene action: $action", e)
             SceneExecutionResult.ActionResult(action, success = false, errorMessage = e.message)
         }
+    }
+
+    /**
+     * An indefinite scene's profile switch is permanent, so an insulin change during the scene has no switch under it
+     * to give the new insulin to: it only copies the scene's switch. Cutting that copy would bring back the scene's own
+     * switch, or the profile from before the scene with the old insulin (#5081). So the profile from before the scene
+     * is written again with the insulin of the copy, before the copy is cut. It is the newest switch then, so cutting
+     * the copy changes nothing more, and the pump sets the profile only once.
+     *
+     * It is a copy of the switch from before the scene, not of the profile store's version, so a profile renamed or
+     * edited during the scene does not matter.
+     *
+     * Only for a copy: a permanent [sceneSwitch] newer than the scene's start. The scene's own switch has the insulin
+     * of the scene's start, which is not a reason to change the insulin under it.
+     *
+     * Returns why it could not be done, or null. Then the scene's switch is not cut, because a percentage that stays is
+     * better than an old insulin, and a notification says so: the End Scene dialog does not show the result.
+     */
+    private suspend fun restoreProfileBeforeScene(sceneSwitch: PS?, state: ActiveSceneState, now: Long): String? {
+        if (sceneSwitch == null || sceneSwitch.duration != 0L || sceneSwitch.timestamp <= state.activatedAt) return null
+        val before = persistenceLayer.getPermanentProfileSwitchActiveAt(state.activatedAt - 1)
+        val restored = if (before == null) null else {
+            silencedProfileWrite(wroteRow = { it != null }) {
+                profileFunction.createProfileSwitchLike(
+                    original = before,
+                    timestamp = now,
+                    duration = 0L,
+                    iCfg = sceneSwitch.iCfg,
+                    action = Action.PROFILE_SWITCH,
+                    source = Sources.Scene,
+                    note = null,
+                    listValues = listOf(ValueWithUnit.SimpleString(before.profileName), ValueWithUnit.Percent(before.percentage))
+                )
+            }
+        }
+        if (restored != null) return null
+        val reason = if (before == null) rh.gs(CoreUiStrings.scene_no_profile_before)
+        else profileFunction.profileSwitchLikeRefusal(before, now, 0L, sceneSwitch.iCfg) ?: rh.gs(CoreUiStrings.invalid_profile)
+        aapsLogger.error(LTag.UI, "Scene '${state.scene.name}': the profile from before it was not written, its switch ${sceneSwitch.id} stays: $reason")
+        notificationManager.post(
+            id = NotificationId.SCENE_PROFILE_NOT_RESTORED,
+            text = rh.gs(CoreUiStrings.scene_profile_not_restored, state.scene.name, reason),
+            validMinutes = 0
+        )
+        return reason
     }
 
     companion object {
