@@ -127,7 +127,6 @@
     <string name="wear_infos_watchface">O tarczy</string>
     <string name="wear_export_watchface">Eksportuj szablon</string>
     <string name="wear_new_custom_watchface_exported">Szablon tarczy niestandardowej wyeksportowany</string>
-    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Prześlij ponownie wszystkie dane</string>
     <string name="open_settings_on_wear">Otwórz ustawienia dla Wear</string>
     <string name="wear_import_custom_watchface_title">Wybierz niestandardową tarczę zegarka</string>
