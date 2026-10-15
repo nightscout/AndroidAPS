@@ -154,7 +154,6 @@
     <string name="aps">APS</string>
     <string name="last_run">Paskutinis veiksmas</string>
     <string name="last_enact">Paskutinis veiksmas</string>
-    <string name="tdd_line">%1$.2fv %1$.0f%%</string>
     <string name="today">Šiandien</string>
     <string name="weighted">svertinis</string>
     <string name="full_xdrip_sync_comment">Vykdyti pilną sinchronizaciją? Tai gali užtrukti nemažai laiko ir kol ji nebus užbaigta, nematysite atnaujintų xDrip+.</string>
