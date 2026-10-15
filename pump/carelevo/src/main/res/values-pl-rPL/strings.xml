@@ -207,4 +207,6 @@
     <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS zakończono z nieznanej przyczyny.</string>
     <string name="alarm_notification_desc_notice_lgs_error">Sprawdź połączenie patcha i CGM.</string>
     <string name="carelevo_profile_update_skip_comment">Pominięto: aktualizacja zbyt wcześnie.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">Patch nie potwierdził zatrzymania. Czekam na zakończenie bolusa…</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Patch nie potwierdził zatrzymania. Pełny bolus wynoszący %1$s został zapisany.</string>
 </resources>
