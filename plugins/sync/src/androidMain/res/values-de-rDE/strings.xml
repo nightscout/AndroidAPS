@@ -80,7 +80,6 @@
     <string name="aps">APS</string>
     <string name="last_run">Letzte Ausführung</string>
     <string name="last_enact">Letzte Abgabe</string>
-    <string name="tdd_line">%1$.2fE %1$.0f%%</string>
     <string name="today">Heute</string>
     <string name="weighted">gewichtet</string>
     <!-- SMS Communicator & OTP Authenticator -->
