@@ -1,17 +1,31 @@
 package app.aaps.pump.carelevo
 
+import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.pump.carelevo.ble.commands.BolusCancelCommand
+import app.aaps.pump.carelevo.ble.commands.BolusCancelResponse
 import app.aaps.pump.carelevo.ble.commands.ExtendBolusCancelCommand
 import app.aaps.pump.carelevo.ble.commands.ExtendBolusCommand
 import app.aaps.pump.carelevo.ble.commands.ExtendBolusResponse
+import app.aaps.pump.carelevo.ble.commands.ImmediateBolusCommand
+import app.aaps.pump.carelevo.ble.commands.ImmediateBolusResponse
+import app.aaps.pump.carelevo.ble.commands.InfusionInfoResponse
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Timeout
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.isA
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import java.util.Optional
@@ -178,6 +192,115 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
     }
 
     @Test
+    fun `deliverTreatment should not send the bolus when stop was pressed before the patch got it`() {
+        whenever(bolusProgressData.isStopPressed).thenReturn(true)
+
+        val result = runBlocking { plugin.deliverTreatment(bolus(1.0)) }
+
+        assertThat(result.success).isFalse()
+        assertThat(result.bolusDelivered).isWithin(0.001).of(0.0)
+        verifyBlocking(bleSession, never()) { runSingle(any(), isA<ImmediateBolusCommand>(), any()) }
+        verifyBlocking(pumpSync, never()) { syncBolusWithPumpId(any(), any(), any(), any(), any(), any()) }
+    }
+
+    /** The timeout also guards the wait for the cancel: a cancel that ends before the wait starts must not block it. */
+    @Test
+    @Timeout(10)
+    fun `deliverTreatment should record what the patch gave when the patch does not confirm the stop`() {
+        stopDuringStart(BolusCancelResponse(resultCode = 1, infusedAmount = 0.0))
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0), infusionInfo(bolusTotal = 2.4))
+
+        val result = runBlocking { plugin.deliverTreatment(bolus(2.0)) }
+
+        val amount = argumentCaptor<PumpInsulin>()
+        verifyBlocking(pumpSync) { syncBolusWithPumpId(any(), amount.capture(), any(), any(), any(), any()) }
+        assertThat(amount.firstValue.cU).isWithin(0.001).of(0.4)
+        assertThat(result.success).isTrue()
+        assertThat(result.bolusDelivered).isWithin(0.001).of(0.4)
+        verify(cancelImmeBolusInfusionUseCase).persistImmeBolusCancelled()
+    }
+
+    @Test
+    @Timeout(10)
+    fun `deliverTreatment should wait while the patch still reports the bolus running`() {
+        stopDuringStart(BolusCancelResponse(resultCode = 1, infusedAmount = 0.0))
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(
+            infusionInfo(bolusTotal = 2.0),
+            infusionInfo(bolusTotal = 2.3, modeRaw = IMME_BOLUS_MODE),
+            infusionInfo(bolusTotal = 3.5)
+        )
+
+        val result = runBlocking { plugin.deliverTreatment(bolus(1.5)) }
+
+        val amount = argumentCaptor<PumpInsulin>()
+        verifyBlocking(pumpSync) { syncBolusWithPumpId(any(), amount.capture(), any(), any(), any(), any()) }
+        assertThat(amount.firstValue.cU).isWithin(0.001).of(1.5)
+        assertThat(result.bolusDelivered).isWithin(0.001).of(1.5)
+        verifyBlocking(bleSession, times(3)) { readInfusionInfo(any()) }
+    }
+
+    @Test
+    @Timeout(10)
+    fun `deliverTreatment should record the full bolus when the patch cannot tell after a stop it did not confirm`() {
+        stopDuringStart(BolusCancelResponse(resultCode = 1, infusedAmount = 0.0))
+        whenever { bleSession.readInfusionInfo(any()) }
+            .thenReturn(infusionInfo(bolusTotal = 2.0))
+            .thenAnswer { throw IllegalStateException("unreachable") }
+        whenever(rh.gs(any<TextRef>(), any())).thenReturn("2.00 U")
+        whenever(rh.gs(any<Int>(), any())).thenReturn("The patch did not confirm the stop.")
+
+        val result = runBlocking { plugin.deliverTreatment(bolus(2.0)) }
+
+        val amount = argumentCaptor<PumpInsulin>()
+        verifyBlocking(pumpSync) { syncBolusWithPumpId(any(), amount.capture(), any(), any(), any(), any()) }
+        assertThat(amount.firstValue.cU).isWithin(0.001).of(2.0)
+        assertThat(result.bolusDelivered).isWithin(0.001).of(2.0)
+        assertThat(result.comment).isEqualTo("The patch did not confirm the stop.")
+    }
+
+    @Test
+    @Timeout(10)
+    fun `deliverTreatment should record a confirmed stop only once`() {
+        stopDuringStart(BolusCancelResponse(resultCode = 0, infusedAmount = 0.3))
+
+        runBlocking { plugin.deliverTreatment(bolus(2.0)) }
+
+        val amount = argumentCaptor<PumpInsulin>()
+        verifyBlocking(pumpSync, times(1)) { syncBolusWithPumpId(any(), amount.capture(), any(), any(), any(), any()) }
+        assertThat(amount.firstValue.cU).isWithin(0.001).of(0.3)
+        verifyBlocking(bleSession, times(1)) { readInfusionInfo(any()) }
+    }
+
+    /** The user presses stop while the patch starts the bolus, and the patch answers the cancel with [cancelResponse]. */
+    private fun stopDuringStart(cancelResponse: BolusCancelResponse) {
+        whenever(bolusProgressData.state).thenReturn(MutableStateFlow<BolusProgressState?>(null))
+        // Not pressed yet when the bolus is sent, pressed from then on.
+        whenever(bolusProgressData.isStopPressed).thenReturn(false, true)
+        whenever { bleSession.runSingle(any(), isA<BolusCancelCommand>(), any()) }.thenReturn(cancelResponse)
+        whenever { bleSession.runSingle(any(), isA<ImmediateBolusCommand>(), any()) }.thenAnswer {
+            plugin.stopBolusDelivering()
+            ImmediateBolusResponse(actionId = 1, resultCode = 0, expectedCompletionSeconds = 1, remainingReservoirUnits = 60.0)
+        }
+    }
+
+    private fun bolus(insulin: Double) = DetailedBolusInfo().apply {
+        this.insulin = insulin
+        carbs = 0.0
+    }
+
+    private fun infusionInfo(bolusTotal: Double, modeRaw: Int = BASAL_MODE) = InfusionInfoResponse(
+        subId = 0,
+        runningMinutes = 100,
+        insulinRemaining = 60.0,
+        infusedTotalBasalAmount = 1.0,
+        infusedTotalBolusAmount = bolusTotal,
+        pumpStateRaw = 0,
+        modeRaw = modeRaw,
+        currentInfusedProgramVolume = 0.0,
+        realInfusedTime = 0
+    )
+
+    @Test
     fun `cancelExtendedBolus should fail when the session throws`() {
         whenever { bleSession.runSingle(any(), isA<ExtendBolusCancelCommand>(), any()) }
             .thenAnswer { throw IllegalStateException("failed") }
@@ -186,5 +309,12 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
+    }
+
+    private companion object {
+
+        // Raw infusion modes the patch reports in 0x91.
+        const val BASAL_MODE = 1
+        const val IMME_BOLUS_MODE = 3
     }
 }

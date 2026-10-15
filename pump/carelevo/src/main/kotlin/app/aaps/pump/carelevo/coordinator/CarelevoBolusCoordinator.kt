@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
@@ -24,10 +25,13 @@ import app.aaps.pump.carelevo.ble.commands.BolusCancelCommand
 import app.aaps.pump.carelevo.ble.commands.ExtendBolusCancelCommand
 import app.aaps.pump.carelevo.ble.commands.ExtendBolusCommand
 import app.aaps.pump.carelevo.ble.commands.ImmediateBolusCommand
+import app.aaps.pump.carelevo.ble.commands.InfusionInfoResponse
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.coordinator.CarelevoBolusCoordinator.Companion.CANCEL_WAIT_TIMEOUT_MS
 import app.aaps.pump.carelevo.coordinator.CarelevoBolusCoordinator.Companion.NEW_STACK_CANCEL_MAX_RETRY
 import app.aaps.pump.carelevo.domain.model.ResponseResult
+import app.aaps.pump.carelevo.domain.model.bt.InfusionModeResult
+import app.aaps.pump.carelevo.domain.model.bt.InfusionModeResult.Companion.codeToInfusionModeCommand
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoCancelExtendBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoCancelImmeBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoFinishImmeBolusInfusionUseCase
@@ -80,9 +84,20 @@ class CarelevoBolusCoordinator @Inject constructor(
         private const val NEW_STACK_CANCEL_MAX_RETRY = 1
 
         // Backstop only: the guard normally releases the moment the cancel session finishes (via
-        // immeBolusCancelInFlight), not on this timer. Sized to comfortably exceed a bounded cancel span so the
+        // immeBolusCancelDone), not on this timer. Sized to comfortably exceed a bounded cancel span so the
         // deadline never fires mid-attempt; it just prevents an unexpected hang from blocking the worker forever.
         private const val CANCEL_WAIT_TIMEOUT_MS = 60_000L
+
+        // After a stop the patch did not confirm, the patch is read this long after the expected bolus end. On a
+        // real patch a bolus was still running 1-2 s after its expected end.
+        private const val BOLUS_END_MARGIN_MS = 3_000L
+
+        // If the patch still reports the bolus running (or does not answer), read it again this many times.
+        private const val BOLUS_END_MAX_READS = 6
+        private const val BOLUS_END_READ_INTERVAL_MS = 5_000L
+
+        // The patch reports its bolus total in 0.01 U.
+        private const val BOLUS_TOTAL_STEP = 0.01
     }
 
     @Volatile private var isImmeBolusStop = false
@@ -90,6 +105,10 @@ class CarelevoBolusCoordinator @Inject constructor(
     // True for the WHOLE out-of-band cancel span (across retries) — the delivery worker's guard blocks
     // while this is set so it can't re-dial the primary link while the cancel's GATT is open (two-GATT status-133).
     @Volatile private var immeBolusCancelInFlight = false
+
+    // Set when the out-of-band cancel has finished, confirmed or not. The delivery worker waits for it, also when
+    // the cancel finished before the worker started to wait.
+    @Volatile private var immeBolusCancelDone = false
 
     // Written on the queue worker (handleBolusSuccess), read from the out-of-band cancel thread
     // (calculateMaxRetry in cancelImmediateBolusInternal) — needs the same visibility guarantee
@@ -133,6 +152,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         }
 
         isImmeBolusStop = false
+        immeBolusCancelDone = false
         val actionId = (carelevoPatch.patchInfo.value?.getOrNull()?.bolusActionSeq ?: 0) + 1
         val normalizedActionId = if (actionId <= 0) 1 else ((actionId - 1) % 255) + 1
 
@@ -304,7 +324,22 @@ class CarelevoBolusCoordinator @Inject constructor(
             return result.comment("no patch address")
         }
         return try {
+            // The patch's bolus total before this bolus. It is needed only when the patch does not confirm a stop:
+            // the total after the bolus minus this one is what the bolus really gave. A failed read does not stop
+            // the bolus.
+            val bolusTotalBefore = readInfusionInfoOrNull(address)?.infusedTotalBolusAmount
+            if (bolusProgressData.isStopPressed) {
+                // Stop was pressed before the patch got the bolus (for example while the queue was connecting). The
+                // cancel found no bolus to stop, so the bolus must not be sent now.
+                aapsLogger.info(LTag.PUMPCOMM, "newBle.deliverTreatment stopped before start, bolus not sent")
+                awaitCancelSessionClosed()
+                result.success = false
+                result.enacted = false
+                result.bolusDelivered = 0.0
+                return result.comment(rh.gs(app.aaps.core.ui.R.string.stop))
+            }
             val response = runBlocking { bleSession.runSingle(address, ImmediateBolusCommand(actionId, detailedBolusInfo.insulin)) }
+            val bolusStartMs = System.currentTimeMillis()
             if (response.resultCode != RESULT_SUCCESS) {
                 aapsLogger.error(LTag.PUMPCOMM, "newBle.deliverTreatment start failed result=${response.resultCode}")
                 result.success = false
@@ -322,7 +357,7 @@ class CarelevoBolusCoordinator @Inject constructor(
             aapsLogger.info(LTag.PUMPCOMM, "ble.deliverTreatment start insulin=${detailedBolusInfo.insulin} expectSec=${response.expectedCompletionSeconds}")
             // Start session has closed; run the synthetic progress loop with NO link (Option A) via
             // handleBolusSuccess with a synthesized success response.
-            handleBolusSuccess(
+            val completed = handleBolusSuccess(
                 ResponseResult.Success(StartImmeBolusInfusionResponseModel(expectSec = response.expectedCompletionSeconds)),
                 detailedBolusInfo,
                 result,
@@ -332,6 +367,9 @@ class CarelevoBolusCoordinator @Inject constructor(
                 pluginDisposable
             )
             awaitImmeBolusCancelIfStopped()
+            if (!completed && bolusProgressData.isStopPressed && !isImmeBolusStop) {
+                recordUnconfirmedStop(detailedBolusInfo, bolusTotalBefore, bolusStartMs, address, result, serialNumber, onStatusRefreshRequested)
+            }
             result
         } catch (e: Exception) {
             handleBolusError(e, result)
@@ -350,16 +388,110 @@ class CarelevoBolusCoordinator @Inject constructor(
         if (!bolusProgressData.isStopPressed || isImmeBolusStop) return
         val deadline = System.currentTimeMillis() + CANCEL_WAIT_TIMEOUT_MS
         // Block until the out-of-band cancel session has fully finished (its GATT closed) before freeing the
-        // worker. Exit on: confirmed cancel (isImmeBolusStop); OR the cancel ran and finished without confirming
-        // (engaged then cleared → gave up, so no GATT is open → safe); OR the backstop deadline.
-        var engaged = false
+        // worker. Exit on: confirmed cancel (isImmeBolusStop); OR the cancel finished without confirming
+        // (immeBolusCancelDone, so no GATT is open → safe); OR the backstop deadline.
         while (System.currentTimeMillis() < deadline) {
-            if (isImmeBolusStop) break
-            if (immeBolusCancelInFlight) engaged = true else if (engaged) break
+            if (isImmeBolusStop || immeBolusCancelDone) break
             SystemClock.sleep(PROGRESS_POLL_MS)
         }
         aapsLogger.info(LTag.PUMPCOMM, "newBle.deliverTreatment stop settled isImmeBolusStop=$isImmeBolusStop inFlight=$immeBolusCancelInFlight")
     }
+
+    /** Waits (bounded) until a running cancel session has closed, so the freed worker cannot open a second GATT. */
+    private fun awaitCancelSessionClosed() {
+        val deadline = System.currentTimeMillis() + CANCEL_WAIT_TIMEOUT_MS
+        while (immeBolusCancelInFlight && System.currentTimeMillis() < deadline) SystemClock.sleep(PROGRESS_POLL_MS)
+    }
+
+    /**
+     * The user pressed stop, but the patch did not confirm the cancel: it rejected it, did not answer, or could not
+     * be reached. The patch may have given anything from nothing to the full bolus. Like the Dana drivers, wait
+     * until the bolus must have ended, then take the real amount from the patch: its bolus total now minus the total
+     * before the bolus. If the patch cannot tell, record the full bolus. Counting too much is the safer error,
+     * because the loop then gives less insulin, not more.
+     */
+    private fun recordUnconfirmedStop(
+        detailedInfo: DetailedBolusInfo,
+        bolusTotalBefore: Double?,
+        bolusStartMs: Long,
+        address: String,
+        result: PumpEnactResult,
+        serialNumber: String,
+        onStatusRefreshRequested: () -> Unit
+    ) {
+        aapsLogger.warn(LTag.PUMPCOMM, "newBle.deliverTreatment stop not confirmed, waiting for the bolus end")
+        bolusProgressData.updateProgress(
+            bolusProgressData.state.value?.percent ?: 0,
+            TextRef.AndroidRes(R.string.carelevo_bolus_stop_not_confirmed),
+            bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
+        )
+        val waitMs = bolusStartMs + bolusExpectMs + BOLUS_END_MARGIN_MS - System.currentTimeMillis()
+        if (waitMs > 0) SystemClock.sleep(waitMs)
+        val bolusTotalAfter = readBolusTotalAfterEnd(address)
+
+        val requested = detailedInfo.insulin
+        val given = if (bolusTotalBefore != null && bolusTotalAfter != null) bolusTotalAfter - bolusTotalBefore else null
+        // A total lower than before means the patch counter started again; the amount is not known then. More than
+        // asked for can come from a running extended bolus; this bolus cannot have given more than asked for.
+        val fromPatch = given?.takeIf { it >= 0.0 }?.let { Round.roundTo(min(it, requested), BOLUS_TOTAL_STEP) }
+        val delivered = fromPatch ?: requested
+        aapsLogger.info(LTag.PUMPCOMM, "newBle.deliverTreatment stop not confirmed before=$bolusTotalBefore after=$bolusTotalAfter delivered=$delivered fromPatch=${fromPatch != null}")
+
+        // The cancel answered late and has recorded the amount itself.
+        if (isImmeBolusStop) return
+        if (delivered > 0.0) {
+            runBlocking {
+                pumpSync.syncBolusWithPumpId(
+                    detailedInfo.timestamp,
+                    PumpInsulin(delivered),
+                    detailedInfo.bolusType,
+                    dateUtil.now(),
+                    PumpType.CAREMEDI_CARELEVO,
+                    serialNumber
+                )
+            }
+        }
+        // The bolus has ended on the patch (or its expected end has passed), so the local record must not keep
+        // rejecting the next bolus as "in progress".
+        if (!cancelImmeBolusInfusionUseCase.persistImmeBolusCancelled()) aapsLogger.error(LTag.PUMPCOMM, "newBle.deliverTreatment stop not confirmed, clearing the local bolus record failed")
+        onStatusRefreshRequested()
+
+        val percent = bolusProgressData.state.value?.percent ?: 100
+        result.enacted = delivered > 0.0
+        result.bolusDelivered = delivered
+        if (fromPatch != null) {
+            bolusProgressData.updateProgress(percent, InterfacesStrings.bolus_delivered_successfully.withArgs(delivered.toFloat()), PumpInsulin(delivered))
+            result.success = true
+        } else {
+            val text = rh.gs(R.string.carelevo_bolus_stop_not_confirmed_full, rh.gs(InterfacesStrings.format_insulin_units, delivered))
+            bolusProgressData.updateProgress(percent, TextRef.Literal(text), PumpInsulin(delivered))
+            result.success = false
+            result.comment(text)
+        }
+    }
+
+    /** Reads the patch until it reports no running immediate bolus. Returns its bolus total then, or null. */
+    private fun readBolusTotalAfterEnd(address: String): Double? {
+        repeat(BOLUS_END_MAX_READS) { attempt ->
+            val info = readInfusionInfoOrNull(address)
+            if (info != null && !info.isImmeBolusRunning()) return info.infusedTotalBolusAmount
+            aapsLogger.warn(LTag.PUMPCOMM, "newBle.deliverTreatment bolus end not seen attempt=$attempt answered=${info != null}")
+            if (attempt < BOLUS_END_MAX_READS - 1) SystemClock.sleep(BOLUS_END_READ_INTERVAL_MS)
+        }
+        return null
+    }
+
+    /** One status read (0x31 → 0x91). A failure is logged and gives null; it must not end the bolus flow. */
+    private fun readInfusionInfoOrNull(address: String): InfusionInfoResponse? =
+        try {
+            runBlocking { bleSession.readInfusionInfo(address) }
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.PUMPCOMM, "newBle.readInfusionInfo for bolus failed error=$e")
+            null
+        }
+
+    private fun InfusionInfoResponse.isImmeBolusRunning(): Boolean =
+        modeRaw.codeToInfusionModeCommand().let { it == InfusionModeResult.IMME_BOLUS || it == InfusionModeResult.EXTEND_IMME_BOLUS }
 
     /**
      * Immediate-bolus cancel core (Option A). Stop arrives OUT-OF-BAND (off the queue worker, via
@@ -436,9 +568,11 @@ class CarelevoBolusCoordinator @Inject constructor(
             }
         } finally {
             immeBolusCancelInFlight = false
+            immeBolusCancelDone = true
         }
     }
 
+    /** Runs the progress loop. Returns true when the bolus ran to its end, false when it was stopped. */
     private fun handleBolusSuccess(
         response: ResponseResult<*>,
         detailedInfo: DetailedBolusInfo,
@@ -447,7 +581,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         onLastDataUpdated: () -> Unit,
         onStatusRefreshRequested: () -> Unit,
         pluginDisposable: CompositeDisposable
-    ) {
+    ): Boolean {
         if (response !is ResponseResult.Success) {
             val message = when (response) {
                 is ResponseResult.Failure -> response.message
@@ -458,7 +592,7 @@ class CarelevoBolusCoordinator @Inject constructor(
             result.enacted = false
             result.bolusDelivered = 0.0
             result.comment(message)
-            return
+            return false
         }
 
         val data = response.data as StartImmeBolusInfusionResponseModel
@@ -533,13 +667,15 @@ class CarelevoBolusCoordinator @Inject constructor(
             result.bolusDelivered = detailedInfo.insulin
         } else {
             // User stopped mid-bolus (loop broke before the finish step). The actual partial amount is
-            // recorded separately by the cancel path via syncBolusWithPumpId(infusedAmount), so don't
-            // report the full requested dose as delivered. Matches VirtualPumpPlugin's stop contract.
+            // recorded separately: by the cancel path via syncBolusWithPumpId(infusedAmount), or by
+            // recordUnconfirmedStop when the patch did not confirm the stop. So don't report the full
+            // requested dose as delivered here. Matches VirtualPumpPlugin's stop contract.
             result.success = false
             result.enacted = false
             result.bolusDelivered = 0.0
             result.comment(rh.gs(app.aaps.core.ui.R.string.stop))
         }
+        return completed
     }
 
     private fun handleBolusError(e: Throwable, result: PumpEnactResult) {
