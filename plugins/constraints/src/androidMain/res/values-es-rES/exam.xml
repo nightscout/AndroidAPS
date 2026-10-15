@@ -32,7 +32,7 @@
     <string name="objectives2_cloud">Copie el archivo de preferencias a una ubicación segura fuera de su teléfono (p.e. mediante el uso del almacenamiento en la nube, conectando su teléfono con un cable a una computadora, correo electrónico, etc.)</string>
     <string name="objectives2_easyrestore">Si su teléfono es dañado o perdido, hay formas fáciles de recuperar remotamente su configuración sin hacer una copia de seguridad.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/es/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/es/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/es/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">Lecturas MCG con mucha variabilidad</string>
     <string name="noisycgm_whattodo">¿Qué se debe hacer si los datos de MCG tienen mucha variabilidad?</string>
     <string name="noisycgm_nothing">No hacer nada: AAPS se ocupará de ello.</string>
