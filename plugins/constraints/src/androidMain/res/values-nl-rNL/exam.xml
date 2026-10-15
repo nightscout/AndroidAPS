@@ -30,7 +30,7 @@
     <string name="objectives2_cloud">Kopieer je instellingenbestand naar een veilige locatie buiten je telefoon (bijvoorbeeld met behulp van een cloudopslagdienst, door je telefoon met een kabel met de computer te verbinden, per e-mail, etc.)</string>
     <string name="objectives2_easyrestore">Als je telefoon beschadigd of verloren raakt, zijn er eenvoudige manieren om zonder back-up op afstand je instellingen te herstellen.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/nl/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/nl/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/nl/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">Ruis in CGM-metingen</string>
     <string name="noisycgm_whattodo">Wat moet er gebeuren als CGM-gegevens ruis vertonen?</string>
     <string name="noisycgm_nothing">Niets, AAPS lost het op.</string>
