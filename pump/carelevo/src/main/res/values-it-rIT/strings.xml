@@ -210,4 +210,6 @@
     <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS è terminato per una ragione sconosciuta.</string>
     <string name="alarm_notification_desc_notice_lgs_error">Controllare la connessione cerotto e CGM.</string>
     <string name="carelevo_profile_update_skip_comment">Saltato: aggiorna troppo presto.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">Il cerotto non ha confermato l’arresto. In attesa che il bolo finisca…</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">La patch non ha confermato l\'arresto. Viene registrato il bolo completo di %1$s.</string>
 </resources>
