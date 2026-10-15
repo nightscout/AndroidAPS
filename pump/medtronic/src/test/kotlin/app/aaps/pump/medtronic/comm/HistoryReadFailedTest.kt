@@ -26,6 +26,7 @@ import org.mockito.kotlin.whenever
  * Seen on a Medtronic 515 (#3378): page 0 of the history was read, but the pump did not answer the request for
  * page 1. The entries of page 0 were processed alone, and a temp basal was ended by the wrong entry. The entries
  * of page 1 came later as new, but older than the ones already processed, and a temp basal got a negative length.
+ * On a 712 (#2512) the same happened after page 1 came with a wrong CRC, and a frame lost on the radio broke a page too.
  */
 class HistoryReadFailedTest {
 
@@ -101,6 +102,33 @@ class HistoryReadFailedTest {
         assertThat(result.validEntries.map { it.atechDateTime }).containsExactly(20240712094629L, 20240712094627L)
     }
 
+    /** #2512: page 1 came with a wrong CRC. It was not used, but the entries of page 0 were processed alone. */
+    @Test
+    fun `a page with a wrong checksum makes the whole read fail`() {
+        pump.badCrcPages += 1
+
+        assertThat(readHistory().readFailed).isTrue()
+    }
+
+    /** #2512: the pump sent frame 6 after frame 4. The page is read again, and the read is complete. */
+    @Test
+    fun `a page that lost a frame is read again`() {
+        pump.readsThatLoseFrame5[1] = 1
+
+        val result = readHistory()
+
+        assertThat(result.readFailed).isFalse()
+        assertThat(result.validEntries.map { it.atechDateTime })
+            .containsExactly(20240712094629L, 20240712094627L, 20240712092939L)
+    }
+
+    @Test
+    fun `a page that loses a frame on every read makes the whole read fail`() {
+        pump.readsThatLoseFrame5[1] = Int.MAX_VALUE
+
+        assertThat(readHistory().readFailed).isTrue()
+    }
+
     /** Page 0 has only entries newer than the target date. Page 1 reaches back past it, so the search ends there. */
     private fun entriesOfPage(page: Int): MutableList<PumpHistoryEntry> =
         when (page) {
@@ -117,12 +145,15 @@ class HistoryReadFailedTest {
     /**
      * A pump with [pages] history pages, each 16 frames of 64 bytes with a valid CRC. It answers the attention packet
      * with an ACK, the page request with frame 1 and each ACK with the next frame. The attention packet for a page is
-     * left without an answer as often as [unansweredAttentions] says for that page, as on the radio in #3378.
+     * left without an answer as often as [unansweredAttentions] says for that page, as on the radio in #3378. A page in
+     * [badCrcPages] is sent with a wrong CRC, and [readsThatLoseFrame5] says how many reads of a page lose frame 5 (#2512).
      */
     private class FakePump {
 
         var pages = 2
         val unansweredAttentions = mutableMapOf<Int, Int>()
+        val badCrcPages = mutableSetOf<Int>()
+        val readsThatLoseFrame5 = mutableMapOf<Int, Int>()
         var acks = 0
             private set
         var lastSentPage = -1
@@ -132,6 +163,7 @@ class HistoryReadFailedTest {
         private var page = -1
         private var frame = 0
         private val pageData = ByteArray(1022).let { it + CRC.calculate16CCITT(it) }
+        private val badCrcPageData = pageData.copyOf().also { it[it.size - 1] = (it[it.size - 1] + 1).toByte() }
 
         fun answer(sent: ByteArray): ByteArray =
             when (sent[4]) {
@@ -163,13 +195,18 @@ class HistoryReadFailedTest {
         private fun nextFrame(): ByteArray {
             if (page < 0) return NO_ANSWER
             frame++
+            val losingReads = readsThatLoseFrame5[page] ?: 0
+            if (frame == 5 && losingReads > 0) {
+                readsThatLoseFrame5[page] = losingReads - 1
+                frame++
+            }
             return currentFrame()
         }
 
         private fun currentFrame(): ByteArray {
             val last = frame == FRAMES_PER_PAGE
             val frameByte = if (last) frame or 0x80 else frame
-            val data = pageData.copyOfRange((frame - 1) * 64, frame * 64)
+            val data = (if (page in badCrcPages) badCrcPageData else pageData).copyOfRange((frame - 1) * 64, frame * 64)
             if (last) {
                 lastSentPage = page
                 nextPage = page + 1
