@@ -60,16 +60,21 @@ fun CarbTimeRow(
     var expanded by rememberSaveable { mutableStateOf(false) }
     val expandRequester = rememberBringIntoViewOnExpand(expanded)
 
-    Column(
+    ExpandableNumberInputRow(
+        labelRef = CoreUiStrings.wizard_carb_time,
+        // The row heads itself "Carb time" and labels the field inside it "Time".
+        inputLabelRef = CoreUiStrings.time,
+        value = offsetMinutes.toDouble(),
+        onValueChange = { onOffsetChange(it.toInt()) },
+        valueRange = offsetRange.first.toDouble()..offsetRange.last.toDouble(),
+        step = offsetStep.toDouble(),
+        unitLabel = CoreUiStrings.units_min,
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
         modifier = modifier
             .fillMaxWidth()
-            .bringIntoViewRequester(expandRequester)
-    ) {
-        ExpandableRowHeader(
-            label = stringResource(CoreUiStrings.wizard_carb_time),
-            expanded = expanded,
-            onExpand = { expanded = true }
-        ) {
+            .bringIntoViewRequester(expandRequester),
+        valueContent = {
             if (offsetMinutes == 0) {
                 Text(
                     text = stringResource(CoreUiStrings.carb_time_now),
@@ -101,58 +106,39 @@ fun CarbTimeRow(
                     modifier = Modifier.size(16.dp)
                 )
             }
-        }
-
-        // Expandable content — no local state, all changes go directly to parent
-        AnimatedVisibility(
-            visible = expanded,
-            enter = expandVertically(),
-            exit = shrinkVertically()
-        ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Offset input
-                NumberInputRow(
-                    labelRef = CoreUiStrings.time,
-                    value = offsetMinutes.toDouble(),
-                    onValueChange = { onOffsetChange(it.toInt()) },
-                    valueRange = offsetRange.first.toDouble()..offsetRange.last.toDouble(),
-                    step = offsetStep.toDouble(),
-                    unitLabel = CoreUiStrings.units_min
-                )
-
-                // Alarm toggle (disabled when offset <= 0)
-                val alarmEnabled = offsetMinutes > 0
-                Spacer(modifier = Modifier.height(4.dp))
-                val alarmAlpha = if (alarmEnabled) 1f else 0.38f
-                LabeledSwitch(
-                    label = stringResource(CoreUiStrings.wizard_set_alarm),
-                    checked = alarmChecked && alarmEnabled,
-                    onCheckedChange = onAlarmChange,
-                    enabled = alarmEnabled,
-                    labelColor = MaterialTheme.colorScheme.onSurface.copy(alpha = alarmAlpha),
-                    labelStyle = MaterialTheme.typography.bodyMedium,
-                    leadingContent = {
-                        Icon(
-                            imageVector = Icons.Outlined.Notifications,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alarmAlpha),
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .size(20.dp)
-                        )
-                    }
-                )
-
-                // Optional date/time content (Carbs dialog)
-                if (dateTimeContent != null) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    dateTimeContent()
+        },
+        // No local state here either - all changes go straight to the parent.
+        expandedContent = {
+            // Alarm toggle (disabled when offset <= 0)
+            val alarmEnabled = offsetMinutes > 0
+            Spacer(modifier = Modifier.height(4.dp))
+            val alarmAlpha = if (alarmEnabled) 1f else 0.38f
+            LabeledSwitch(
+                label = stringResource(CoreUiStrings.wizard_set_alarm),
+                checked = alarmChecked && alarmEnabled,
+                onCheckedChange = onAlarmChange,
+                enabled = alarmEnabled,
+                labelColor = MaterialTheme.colorScheme.onSurface.copy(alpha = alarmAlpha),
+                labelStyle = MaterialTheme.typography.bodyMedium,
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Outlined.Notifications,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alarmAlpha),
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .size(20.dp)
+                    )
                 }
+            )
+
+            // Optional date/time content (Carbs dialog)
+            if (dateTimeContent != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                dateTimeContent()
             }
         }
-    }
+    )
 }
 
 @Composable

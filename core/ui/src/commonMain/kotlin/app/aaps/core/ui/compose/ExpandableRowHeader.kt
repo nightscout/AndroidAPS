@@ -22,8 +22,11 @@ import app.aaps.core.ui.CoreUiStrings
  * the next line as a whole. In a plain Row it was squeezed until it wrapped one letter per line.
  *
  * @param label the field name. A colon is added after it.
- * @param expanded true while the input is open. The "Change" button is hidden then.
+ * @param expanded true while the input is open. The trailing controls are hidden then.
  * @param onExpand called when the user taps "Change"
+ * @param actions replaces the "Change" button, for a row that carries its own controls. Unlike that
+ *   button it is shown in both states, so the row can offer a way to close itself again; the row is
+ *   then responsible for both directions.
  * @param content the value, shown after the label
  */
 @Composable
@@ -32,6 +35,7 @@ fun ExpandableRowHeader(
     expanded: Boolean,
     onExpand: () -> Unit,
     modifier: Modifier = Modifier,
+    actions: (@Composable () -> Unit)? = null,
     content: @Composable FlowRowScope.() -> Unit
 ) {
     Row(
@@ -51,10 +55,11 @@ fun ExpandableRowHeader(
             )
             content()
         }
-        if (!expanded) {
-            FilledTonalButton(onClick = onExpand) {
-                Text(stringResource(CoreUiStrings.change))
-            }
+        // A row that carries its own controls puts them here instead of the "Change" button, and
+        // keeps them in both states so it can offer a way back, see [ExpandableNumberInputRow].
+        if (actions != null) actions()
+        else if (!expanded) FilledTonalButton(onClick = onExpand) {
+            Text(stringResource(CoreUiStrings.change))
         }
     }
 }

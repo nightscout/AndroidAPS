@@ -84,6 +84,7 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
+import app.aaps.core.ui.compose.ExpandableNumberInputRow
 import app.aaps.core.ui.compose.ExpandableRowHeader
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.QuickAddButtons
@@ -720,8 +721,11 @@ internal fun WizardDialogContent(
                         }
                     }
 
-                    // Direct Correction input
-                    NumberInputRow(
+                    // Direct Correction: collapsed, so there is no second open field under the carbs
+                    // one. They looked alike, and grams typed into this one were bolused as units
+                    // (reported on Discord). Nudging still works from the collapsed row; the pencil
+                    // opens the field for a value that would take too many steps.
+                    ExpandableNumberInputRow(
                         labelRef = CoreUiStrings.wizard_correction,
                         value = uiState.directCorrection,
                         onValueChange = onDirectCorrectionChange,
@@ -742,15 +746,23 @@ internal fun WizardDialogContent(
                     )
                     // BG (collapsible, auto-expand when old/missing)
                     val bgExpandRequester = rememberBringIntoViewOnExpand(bgExpandedByUser)
-                    Column(modifier = itemModifier.bringIntoViewRequester(bgExpandRequester)) {
-                        ExpandableRowHeader(
-                            label = stringResource(CoreUiStrings.wizard_bg_label),
-                            expanded = bgExpanded,
-                            onExpand = {
-                                bgExpanded = true
-                                bgExpandedByUser = true
-                            }
-                        ) {
+                    ExpandableNumberInputRow(
+                        labelRef = CoreUiStrings.wizard_bg_label,
+                        value = uiState.bg,
+                        onValueChange = onBgChange,
+                        valueRange = uiState.bgRange,
+                        step = uiState.bgStep,
+                        unitLabel = TextRef.Literal(unitsLabel),
+                        decimalPlaces = if (uiState.isMgdl) 0 else 1,
+                        expanded = bgExpanded,
+                        onExpandedChange = {
+                            bgExpanded = it
+                            if (it) bgExpandedByUser = true
+                        },
+                        modifier = itemModifier.bringIntoViewRequester(bgExpandRequester),
+                        // More than the number: how old the reading is, red and spoken when stale,
+                        // and a plain "not available" when there is none.
+                        valueContent = {
                             if (uiState.hasBgData) {
                                 val bgFormat = if (uiState.isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1
                                 Text(
@@ -776,53 +788,30 @@ internal fun WizardDialogContent(
                                 )
                             }
                         }
-                        AnimatedVisibility(
-                            visible = bgExpanded,
-                            enter = expandVertically(),
-                            exit = shrinkVertically()
-                        ) {
-                            NumberInputRow(
-                                labelRef = CoreUiStrings.wizard_bg_label,
-                                value = uiState.bg,
-                                onValueChange = onBgChange,
-                                valueRange = uiState.bgRange,
-                                step = uiState.bgStep,
-                                unitLabel = TextRef.Literal(unitsLabel),
-                                decimalPlaces = if (uiState.isMgdl) 0 else 1
-                            )
-                        }
-                    }
+                    )
 
                     // Percentage (collapsible)
                     val percentageExpandRequester = rememberBringIntoViewOnExpand(percentageExpanded)
-                    Column(modifier = itemModifier.bringIntoViewRequester(percentageExpandRequester)) {
-                        ExpandableRowHeader(
-                            label = stringResource(CoreUiStrings.wizard_use_percentage),
-                            expanded = percentageExpanded,
-                            onExpand = { percentageExpanded = true }
-                        ) {
+                    ExpandableNumberInputRow(
+                        labelRef = CoreUiStrings.wizard_use_percentage,
+                        value = uiState.percentage.toDouble(),
+                        onValueChange = onPercentageChange,
+                        valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
+                        step = 5.0,
+                        unitLabel = TextRef.Literal("%"),
+                        decimalPlaces = 0,
+                        expanded = percentageExpanded,
+                        onExpandedChange = { percentageExpanded = it },
+                        modifier = itemModifier.bringIntoViewRequester(percentageExpandRequester),
+                        // The percent sign sits in its own format resource here, not after the number.
+                        valueContent = {
                             Text(
                                 text = stringResource(CoreUiStrings.format_percent, uiState.percentage),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
-                        AnimatedVisibility(
-                            visible = percentageExpanded,
-                            enter = expandVertically(),
-                            exit = shrinkVertically()
-                        ) {
-                            NumberInputRow(
-                                labelRef = CoreUiStrings.wizard_use_percentage,
-                                value = uiState.percentage.toDouble(),
-                                onValueChange = onPercentageChange,
-                                valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
-                                step = 5.0,
-                                unitLabel = TextRef.Literal("%"),
-                                decimalPlaces = 0
-                            )
-                        }
-                    }
+                    )
 
                     // Profile (collapsible, hidden in simple mode)
                     if (!uiState.simpleMode) {
