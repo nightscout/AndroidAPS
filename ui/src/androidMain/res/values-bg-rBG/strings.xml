@@ -13,8 +13,6 @@
     <string name="widget_compact_bg_description">AAPS BG + IOB + COB (малка)</string>
     <string name="widget_small_description">AAPS малка</string>
     <!--     Activities-->
-    <string name="activity_monitor">Мониторинг на активност</string>
-    <string name="time_range">Времеви диапазон</string>
     <string name="dexcom_tir">Dexcom TIR</string>
     <string name="cgp_title">Глюкозен пентагон (CGP) — 14 дни</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
@@ -30,7 +28,6 @@
     <string name="cgp_pgr_moderate">Умерен риск</string>
     <string name="cgp_pgr_high">Висок риск</string>
     <string name="cgp_pgr_extremely_high">Много висок риск</string>
-    <string name="do_you_want_reset_stats">Искате да нулирате статистиката?</string>
     <string name="do_you_want_recalculate_tdd_stats">Искате ли да преизчисля данните за ОДД?</string>
     <string name="calculation_in_progress">Калкулация в прогресс</string>
     <string name="age">Възраст</string>
@@ -163,7 +160,6 @@
     <!-- WizardDialog -->
     <string name="missing_carbs">Нужни %1$d гр</string>
     <string name="wizard_carbs_type_bread_desc">100% въглехидрати веднага, без удължени въглехидрати</string>
-    <string name="wizard_carbs_type_desc">Въглехидрати намалени с %1$d%%, удължени %2$d%% след %3$dмин с продължителност %4$dч</string>
     <string name="wizard_include_info">Натиснетете за да включите/изключите от изчисленията:\n• КЗ — кръвна захар (ВКЛ в началото)\n• TT — временна цел (ВКЛ в началото)\n• Посока — промяната в КЗ (запазен последен избор)\n• IOB — действащ инсулии (ВКЛ в началото)\n• COB — въглехидрати (запазане последен избор)</string>
     <!-- Treatments -->
     <string name="no_records_available">Няма налични записи</string>

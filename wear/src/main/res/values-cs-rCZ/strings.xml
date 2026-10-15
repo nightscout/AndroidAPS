@@ -191,6 +191,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS Průběh vydávání bolusu tichý</string>
     <string name="bolus_progress_channel_description">Průběh bolusu a zrušení</string>
     <string name="bolus_progress_silent_channel_description">Průběh bolusu a zrušení s méně vibracemi</string>
+    <string name="open_loop_channel_name">AAPS otevřená smyčka</string>
+    <string name="open_loop_channel_description">Oznámení požadavku otevřené smyčky</string>
     <string name="simple_ui_off">Vypnuto</string>
     <string name="simple_ui_charging">Při nabíjení</string>
     <string name="simple_ui_always_on">Vždy zapnuto</string>

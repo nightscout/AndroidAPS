@@ -143,6 +143,5 @@
     <string name="bolus_constraint_applied_warn">Приложено болус ограничение: %1$.2f Е към %2$.2f Е</string>
     <string name="bolus_recorded_only">Само запиши (без да да го стартираш в помпата)</string>
     <string name="advisoralarm">Аларма, когато е време за хранене</string>
-    <string name="wizard_ecarbs">Уд въглехидрати %1$dгр / %2$dч (+%3$dмин)</string>
     <string name="format_insulin_units">%1$.2fЕ</string>
 </resources>

@@ -8,9 +8,6 @@
     <string name="configure">Deckkraft konfigurieren</string>
     <string name="widget_description">AAPS Widget</string>
     <!--     Activities-->
-    <string name="activity_monitor">Aktivitätsmonitor</string>
-    <string name="time_range">Zeitraum</string>
-    <string name="do_you_want_reset_stats">Willst Du die Aktivitätsstatistik zurücksetzen?</string>
     <string name="calculation_in_progress">Kalkulation wird gerade durchgeführt</string>
     <string name="age">Alter</string>
     <string name="weight_label">Gewicht</string>

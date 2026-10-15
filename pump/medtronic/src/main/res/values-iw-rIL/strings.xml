@@ -11,6 +11,7 @@
     <string name="medtronic_pump_max_basal">מקסימום בזאלי במשאבה (יח\' לשעה)</string>
     <string name="medtronic_custom_action_wake_and_tune">התעוררות וכוונון</string>
     <string name="medtronic_custom_action_clear_bolus_block">ביטול חסימת בולוס</string>
+    <string name="medtronic_custom_action_reset_rileylink">אתחל RileyLink</string>
     <string name="medtronic_pump_battery_select">סוג סוללה (תצוגת חשמל)</string>
     <string name="medtronic_pump_battery_no">לא נבחר (תצוגה פשוטה)</string>
     <string name="medtronic_pump_battery_alkaline">אלקליין (תצוגה מורחבת)</string>
@@ -18,7 +19,20 @@
     <string name="medtronic_pump_battery_nizn">NiZn (תצוגה מורחבת)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (תצוגה מורחבת)</string>
     <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">אחר (לא נתמך)
+סוג המשאבה של מדטרוניק לא נתמך</string>
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A או נמוך יותר)</string>
+    <string name="medtronic_pump_type_723_24a">723 (Fw 2.4A או נמוך יותר)</string>
     <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 שניות</string>
+    <string name="medtronic_bolus_delay_10s">10 שניות</string>
+    <string name="medtronic_bolus_delay_15s">15 שניות</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">סוללת ריילילינק</string>
     <!-- MDT Errors -->

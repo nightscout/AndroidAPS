@@ -24,7 +24,6 @@
     <string name="maxiobset">MaxIOB задан корректно (Не требуется в простом режиме)</string>
     <string name="objectives_autosens_objective">Настраиваем базал и коэффициенты с последующей активацией auto-sens</string>
     <string name="objectives_autosens_gate">1 неделя успешной дневной работы с регулярным введением углеводов</string>
-    <string name="objectives_autosens_learned">Если результаты расчетов auto-sense не колеблются около 100%, то, возможно, ваш профиль неверный.</string>
     <string name="objectives_smb_objective">Активация в дневное время дополнительных функций, таких как микроболюсы SMB</string>
     <string name="objectives_smb_gate">Прочтите статью wiki и увеличьте maxIOB, чтобы SMB заработал как положено! Для начала рассчитайте maxIOB = средний болюс на еду + макс. суточная базальная скорость*3</string>
     <string name="objectives_smb_learned">Ваша цель - пользоваться микроболюсами SMB. Алгоритм Oref1 также помогает с болюсами. Следует вводить не полный болюс на еду, а только часть его, позволив AAPS при необходимости ввести остальную часть болюса. Таким образом нивелируются ошибки при подсчете углеводов. Знаете ли вы, что можно установить процент от результата калькулятора болюса, чтобы уменьшить размер болюса?</string>
@@ -38,15 +37,12 @@
     <string name="accomplished">Выполнено: %1$s</string>
     <string name="objectives_usage_objective">Научитесь контролировать AAPS</string>
     <string name="objectives_usage_gate">Выполняйте различные действия в AAPS</string>
-    <string name="objectives_usage_learned">Вы узнали основы работы с AAPS. Главные элементы управления системой расположены на экране Начало и доступны по короткому или длинному нажатию на них, еще больше элементов управления расположены на вкладке Действия. Следует научится, как расположить экран расширения (плагина) в верхнее прокручиваемое меню вкладок или оставить его в левом списке включённых расширений.</string>
     <string name="objectives_useprofileswitch">Установите профиль 90% на 10 минут</string>
     <string name="objectives_usedisconnectpump">Представьте, что идете в душ. Отсоедините помпу на 1 ч</string>
     <string name="objectives_usereconnectpump">... и обратное подключение таким же способом</string>
     <string name="objectives_usetemptarget">Создайте свою временную цель длительностью 10 минут</string>
     <string name="objectives_useloop">Просмотр содержимого модуля Замкнутый цикл</string>
     <string name="objectives_exam_objective">Подтвердите ваши знания</string>
-    <string name="objectives_exam_gate">Изучите вопросы. Вам дано четыре возможных варианта ответа на каждый вопрос. Правильных ответов может быть более одного. Отметьте все, которые считаете правильными, и нажмите ПОДТВЕРДИТЬ.</string>
-    <string name="objectives_exam_learned_prerequisites">Вам не нужно быть программистом, но вам понадобится свой сайт Nightscout для прохождения целей, совместимая помпа и компьютер для сборки AAPS и обновлений.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS может работать в автономном режиме.</string>
     <string name="objectives_exam_learned_basaltest">Следует пересмотреть и обновить профиль. Лучший профиль = лучшие результаты.</string>
     <string name="objectives_exam_learned_dia">DIA в AAPS имеет иное значение (время до полного поглощения инсулина), чем в классической помповой терапии (время до поглощения основной массы инсулина).</string>
@@ -59,16 +55,12 @@
     <string name="objectives_exam_learned_exercise2">Установка более высокой врем цели по крайней мере за 1 час до физ нагрузки помогает уменьшить количество инсулина в организме.</string>
     <string name="objectives_exam_learned_noisycgm">Когда нет возможности целиком довериться данным мониторинга, цикл ИПЖ не следует оставлять без внимания.</string>
     <string name="objectives_exam_learned_pumpdisconnect">Для правильного подсчета активного инсулина AAPS должен знать, что помпа отключена от системы.</string>
-    <string name="objectives_exam_learned_insulin">Необходимо указывать, какой инсулин находится в помпе, поскольку это влияет на расчет IOB.</string>
     <string name="objectives_exam_learned_sensitivity">Обнаружение чувствительности является частью алгоритма, который позволяет адаптировать дозировку инсулина к различным ситуациям.</string>
     <string name="objectives_exam_learned_objectives">Ваш прогресс в продвижении к Целям хранится вместе с другими настройками и должен периодически сохраняться.</string>
     <string name="objectives_exam_learned_objectives2">Всегда храните экспортированные настройки и самостоятельно собранные APK вне вашего телефона. Телефон может быть утерян, поврежден и т.д. Хорошим местом может быть любое облачное хранилище, доступное с телефона. В этом случае можно восстановить AAPS на другом устройстве в течение нескольких минут. Хорошая практика также хранить мастер-пароль в безопасном месте. Без него ваша резервная копия бесполезна. То же самое верно для ключа подписи (файл с расширением.jks) и паролей к сборке AAPS. Остальное не важно - его можно загрузить снова из интернета.</string>
     <string name="objectives_exam_learned_wrongcarbs">Если введены неверные данные в AAPS или данные не соответствуют реальности, решайте этот вопрос безотлагательно. Игнорирование может привести к передозировке. AAPS всегда должен иметь точную информацию об углеводах, инсулине и т. д.</string>
-    <string name="objectives_exam_learned_iob">Наблюдение за графиком активного инсулина IOB позволяет определить, хорошо ли работает AAPS и дает много полезной информации.</string>
-    <string name="objectives_exam_learned_cob">Расчёт активных углеводов COB зависит от соотношения между чувствительностью к инсулину ISF и углеводным коэффициентом IC. Повышение ISF или уменьшение IC приводит к увеличению времени усваивания. Но переключение процента профиля изменяет обе величины одновременно, и время поглощения не затрагивается.</string>
     <string name="objectives_exam_learned_breadgrams">Ввод углеводов допускается только в граммах.</string>
     <string name="objectives_exam_learned_ecarbs">E-carbs - это эквивалент пролонгированного болюса на помпах.</string>
-    <string name="objectives_exam_learned_nsclient">Удаленный мониторинг и управление возможны, но не все функции должны быть доступны удаленно.</string>
     <string name="answerdisabledto">Ответы отключены до: %1$s</string>
     <string name="wronganswer">Неверный ответ!</string>
     <string name="unfinshed_button">Следующий незавершенный</string>
@@ -79,7 +71,6 @@
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/ru/latest/SettingUpAaps/ConfigBuilder.html</string>
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Нет подключения к Интернету</string>
-    <string name="failedretrievetime">Не удалось загрузить время</string>
     <string name="requirementnotmet">Требования к цели не выполнены</string>
     <string name="what_i_ve_learned">Мной усвоено:</string>
     <string name="verify_master_password">Убедитесь, что вы знаете мастер-пароль</string>

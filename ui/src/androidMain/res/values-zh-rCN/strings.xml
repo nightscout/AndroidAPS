@@ -10,11 +10,10 @@
     <string name="configure">配置透明度</string>
     <string name="widget_description">AAPS 小部件</string>
     <string name="widget_bg_graph_description">AAPS 血糖图表</string>
+    <string name="widget_glucose_circle_description">AAPS 血糖圆环</string>
     <string name="widget_compact_bg_description">AAPS 血糖 + IOB+COB（紧凑）</string>
     <string name="widget_small_description">AAPS 小</string>
     <!--     Activities-->
-    <string name="activity_monitor">活动监视器</string>
-    <string name="time_range">时间范围</string>
     <string name="dexcom_tir">Dexcom TIR</string>
     <string name="cgp_title">血糖五边形（CGP）- 14天</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
@@ -30,7 +29,6 @@
     <string name="cgp_pgr_moderate">中等风险</string>
     <string name="cgp_pgr_high">高风险</string>
     <string name="cgp_pgr_extremely_high">极高风险</string>
-    <string name="do_you_want_reset_stats">您想要重置所有的统计信息吗？</string>
     <string name="do_you_want_recalculate_tdd_stats">您想重新计算 TDD每日总剂量统计数据吗？</string>
     <string name="calculation_in_progress">正在进行计算</string>
     <string name="age">年龄</string>
@@ -165,7 +163,6 @@
     <!-- WizardDialog -->
     <string name="missing_carbs">缺少 %1$d 克</string>
     <string name="wizard_carbs_type_bread_desc">100% 即时碳水，无扩展碳水</string>
-    <string name="wizard_carbs_type_desc">碳水减少了 %1$d%%，添加了eCarbs %2$d%%，延迟了 %3$d 分钟，持续 %4$d 小时</string>
     <string name="wizard_include_info">轻触以在计算中包含/排除：\n•血糖—血糖（起始为开启）\n•临时目标—临时目标（起始为开启）\n•趋势—血糖趋势（会记住上次状态）\n•IOB—活性胰岛素（起始为开启）\n•COB—活性碳水化合物（会记住上次状态）</string>
     <!-- Treatments -->
     <string name="no_records_available">当前暂无记录</string>
@@ -176,6 +173,15 @@
     <string name="careportal_remove_started_events">删除 AAPS 启动的条目</string>
     <string name="user_entry">用户条目</string>
     <string name="clone_label">克隆</string>
+    <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">血糖图表。近期数值 %1$s。 %2$s。 %3$s</string>
+    <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">通知 %1$d</string>
+    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">无临时目标，使用配置文件目标</string>
+    <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">由闭环调整</string>
+    <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s 于 %2$s</string>
+    <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">差值 %1$s</string>
+    <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">旧读数</string>
+    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">血糖图表。近期数值 %1$s</string>
+    <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">执行</string>
     <string name="add_new_profile">添加新配置文件</string>
     <string name="edit_label">编辑</string>
     <string name="activate_label">激活</string>
@@ -272,6 +278,8 @@
     </string-array>
     <!-- Toolbar configuration -->
     <string name="quick_launch_selected_actions">已选操作</string>
+    <string name="a11y_quick_launch_add" comment="Screen-reader label of the button that adds an action to the QuickLaunch bar. %1$s=the action name. Example: Add Bolus wizard">添加 %1$s</string>
+    <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">移除 %1$s</string>
     <string name="quick_launch_no_dynamic_items">无可用项目</string>
     <string name="quick_launch_category_treatment">治疗</string>
     <string name="quick_launch_category_care">关怀入口</string>

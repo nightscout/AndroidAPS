@@ -17,6 +17,7 @@
     <string name="equil_title_dressing">Kartuşu değiştir</string>
     <string name="equil_title_history_events">Olay Geçmişi</string>
     <string name="equil_tone">Uyarı tonu</string>
+    <string name="equil_bolus_speed">Bolus hızı</string>
     <string name="equil_tone_mode_mute">Sessiz</string>
     <string name="equil_tone_mode_shake">Sadece titreşim</string>
     <string name="equil_tone_mode_tone">Sadece ses</string>
@@ -31,8 +32,6 @@
     <string name="equil_record_bolus">Bolus %1$s Ü</string>
     <string name="equil_error_set_temp_basal_failed_validation">GBO süresi sıfırdan büyük ve %1$s dakikanın katı olmalıdır.</string>
     <string name="equil_not_enough_insulin">Rezervuarda yeterli insülin kalmadı</string>
-    <string name="equil_low_battery">Düşük pil</string>
-    <string name="equil_low_insulin">Rezervuarda yeterli insülin kalmadı</string>
     <string name="equil_pump_not_run">Pompa çalışmıyor</string>
     <string name="equil_pair">Eşleştir</string>
     <string name="equil_pair_error">Eşleşme hatası</string>

@@ -12,14 +12,7 @@
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Yeni Pod ile eşleşmeye ve kullanıma hazırlanmaya çalışılıyor.\n\nBaşlatma işlemi başarıyla tamamlandığında, <b>İleri</b>\'ye basabilirsiniz.</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_generic_error">Genel hata: %1$s</string>
-    <string name="omnipod_dash_failed_to_send">Komut gönderilirken hata</string>
-    <string name="omnipod_dash_command_not_sent">Komut gönderilmedi</string>
-    <string name="omnipod_dash_command_not_received_by_the_pod">Pod\'dan komut alınmadı</string>
-    <string name="omnipod_dash_unknown">Bilinmeyen komut durumu</string>
-    <string name="omnipod_common_history_tbr_value">%1$.2f Ü/s, %2$d dakika</string>
-    <string name="omnipod_common_history_bolus_value">%1$.2f Ü</string>
     <string name="omnipod_common_alert_delivery_suspended">İnsülin iletimi askıya alındı</string>
-    <string name="omnipod_common_history_total_delivered">Toplam gönderilen: %1$.2f Ü</string>
     <string name="omnipod_dash_bolus_already_in_progress">Diğer bolus iletiliyor</string>
     <string name="omnipod_dash_not_enough_insulin">Rezervuarda yeterli insülin kalmamış</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Onaylanmamış komut</string>

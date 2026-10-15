@@ -14,4 +14,5 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
     <string name="old_data">NIEAKTUALNE DANE</string>
+    <string name="notification_iob_short">%1$.1fU</string>
 </resources>

@@ -13,13 +13,7 @@
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">새로운 Pod를 연결하고, prime하세요. \n\n시작 과정이 성공적으로 마무리되면, <b>다음</b>을 누르세요.</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_generic_error">일반적인 오류: %1$s</string>
-    <string name="omnipod_dash_failed_to_send">명령 전송이 실패함</string>
-    <string name="omnipod_dash_command_not_sent">명령 비전송</string>
-    <string name="omnipod_dash_command_not_received_by_the_pod">Pod에서 명령이 받아들여지지 않음</string>
-    <string name="omnipod_dash_unknown">알려지지 않은 명령 상태</string>
-    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d 분</string>
     <string name="omnipod_common_alert_delivery_suspended">인슐린 주입이 중지되었습니다.</string>
-    <string name="omnipod_common_history_total_delivered">총 주입량: %1$.2f U</string>
     <string name="omnipod_dash_bolus_already_in_progress">또다른 bolus가 주입되고 있습니다.</string>
     <string name="omnipod_dash_not_enough_insulin">레저버에 남은 인슐린이 충분하지 않음</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">확인되지 않은 명령</string>

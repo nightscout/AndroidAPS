@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="resetpairing">לאפס את נתוני הצימוד?</string>
     <string name="diaconn_pairing">צימוד משאבת Diaconn</string>
     <string name="diaconn_g8_history_alarm">התראות</string>
     <string name="diaconn_g8_history_basalhours">שעות בזאליות</string>
@@ -10,8 +11,11 @@
     <string name="gettingpumpsettings">מאחזר הגדרות משאבה</string>
     <string name="gettingpumptime">מאחזר שעון המשאבה</string>
     <string name="largetimediff">הפרש זמנים גדול:\nשעון המשאבה לא מכוון במעלה משעה וחצי.\n נא להתאים את שעון המשאבה באופן ידני ולוודא כי קריאת ההיסטוריה מהמשאבה אינה גורמת להתנהגות בלתי צפויה.\nבמידת האפשר, מחקו את ההיסטוריה מהמשאבה לפני שתשנו את השעה או השביתו את הלולאה הסגורה למשך פעילות אינסולין (DIA) לאחר רשומת ההיסטוריה השגויה האחרונה אך לפחות DIA אחד מעכשיו.</string>
+    <string name="largetimedifftitle">הפרש זמן גדול</string>
     <string name="approachingdailylimit">מתקרב למגבלת האינסולין היומית</string>
     <string name="startingbolus">מתחיל מתן בולוס</string>
+    <string name="waitingforbolusend">ממתין לסיום הבולוס</string>
+    <string name="gettingbolusstatus">מקבל סטטוס בולוס</string>
     <string name="stoppingtempbasal">מפסיק בזאלי זמני</string>
     <string name="settingtempbasal">מגדיר בזאלי זמני</string>
     <string name="settingextendedbolus">מגדיר בולוס ממושך</string>
@@ -28,6 +32,7 @@
     <string name="bolus_step">צעד במינון בולוס</string>
     <string name="basal_step">צעד במינון בזאלי</string>
     <string name="pairfirst">נא לצמד את המשאבה עם הטלפון שלכם!</string>
+    <string name="processinghistory">מעבד אירוע</string>
     <string name="diaconn_g8_history_tempbasal">בזאלי זמני</string>
     <string name="diaconng8_pump_settings">הגדרות משאבת Diaconn</string>
     <string name="diaconn_g8_pumpalarm">צלילים</string>
@@ -113,4 +118,14 @@
     <string name="diaconn_g8_errorcode_36">הפסקת באזלי זמני נדחת כאשר לא פעיל באזלי זמני</string>
     <string name="diaconn_g8_cloudsend_summary">שלח יומני משאבה לענן Diaconn.</string>
     <string name="diaconn_g8_cloudsend_title">סנכרון Diaconn Cloud </string>
+    <string name="bolus_speed_1">1 יחידות/דקה</string>
+    <string name="bolus_speed_2">2 יחידות/דקה</string>
+    <string name="bolus_speed_3">3 יחידות/דקה</string>
+    <string name="bolus_speed_4">4 יחידות/דקה</string>
+    <string name="bolus_speed_5">5 יחידות/דקה</string>
+    <string name="bolus_speed_6">6 יחידות/דקה</string>
+    <string name="bolus_speed_7">7 יחידות/דקה</string>
+    <string name="bolus_speed_8">8 יחידות/דקה</string>
+    <string name="diaconn_pairing_successful">ההתאמה בוצעה בהצלחה!</string>
+    <string name="diaconn_pairing_successful_message">המשאבה שלך מחוברת ומוכנה לשימוש.</string>
 </resources>

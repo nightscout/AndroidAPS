@@ -150,4 +150,7 @@
         <item quantity="one">Pod-Alarm: %1$s</item>
         <item quantity="other">Pod-Alarm: %1$s</item>
     </plurals>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_bolus_value">%1$.2f IE</string>
+    <string name="omnipod_common_history_total_delivered">Gesamt geliefert: %1$.2f E</string>
 </resources>

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Kommandoen utføres akkurat nå</string>
+    <string name="smb_being_delivered">En SMB leveres akkurat nå. Prøv igjen når den er ferdig.</string>
     <string name="basal_value_below_minimum">Basalverdi under minimum. Profilen settes ikke!</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Basalprofilen i pumpen er oppdatert. Pumpen runder basalen til sitt eget trinn: den gir %1$s per dag i stedet for %2$s.</string>
+    <string name="basal_reported_far_from_profile">Pumpen rapporterer en basaldose langt fra profilen. AAPS beholder profilbasalen. Sjekk basaldosene i pumpen.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">Karbo</string>
     <!--    PumpStatusGenerator-->
@@ -19,6 +22,19 @@
     <string name="permission_notifications_description">Kreves for å vise varsler, alarmer og oppdateringer om pumpestatus</string>
     <string name="permission_schedule_exact_alarm_title">Alarmer og påminnelser</string>
     <string name="permission_schedule_exact_alarm_description">Nødvendig for at alarmer skal kunne vekke skjermen mens AAPS kjører i bakgrunnen, og for at påminnelser skal varsle til rett tid</string>
+    <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">AAPS-alarmer</string>
+    <string name="alarm_channel_standard">Standardalarm</string>
+    <string name="alarm_channel_bolus_error">Bolusfeil</string>
+    <string name="alarm_channel_error">Generell feil</string>
+    <string name="alarm_channel_urgent">Kritisk alarm</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (overstyr Ikke forstyrr)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (følger innstillingen Ikke forstyrr)</string>
+    <string name="alarm_channel_silent_urgent">Kritisk alarm (modus med gradvis volumøkning)</string>
+    <string name="alarm_channel_silent">Alarm (modus med gradvis volumøkning)</string>
+    <string name="alarm_channel_silent_description">Brukes når «Øk varslingsvolumet gradvis» er aktivert. Alarmskjermen spiller av lyden.</string>
+    <string name="ongoing_channel_name">Pågående status</string>
+    <string name="notifications_channel_name">AAPS-varsler</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0E (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">E%1$d</string>

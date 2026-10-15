@@ -3,6 +3,7 @@
     <!--       Stats -->
     <!--    PumpStatusGenerator-->
     <!--    Permissions-->
+    <!--    Notification channels, shown in the Android settings-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="filenotfound">Fájl nem található</string>

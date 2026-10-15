@@ -38,8 +38,6 @@
     <string name="equil_error_set_temp_basal_failed_validation">A duração da TBR deve ser maior que zero e um múltiplo de %1$s minutos.</string>
     <string name="equil_basal_exceeds_max">A taxa basal do perfil %1$s U/h excede a basal máxima da bomba %2$s U/h. Aumente a configuração de basal máxima e reconecte a bomba.</string>
     <string name="equil_not_enough_insulin">Não há insulina suficiente no reservatório</string>
-    <string name="equil_low_battery">Bateria fraca</string>
-    <string name="equil_low_insulin">Não há insulina suficiente no reservatório</string>
     <string name="equil_pump_not_run">Bomba não está em operação</string>
     <string name="equil_pair">Parear</string>
     <string name="equil_pair_error">Erro ao parear</string>

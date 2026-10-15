@@ -16,18 +16,7 @@
     <string name="omnipod_dash_scan_failed">Skanningen mislyktes</string>
     <string name="omnipod_dash_generic_error">Generell feil: %1$s</string>
     <string name="omnipod_dash_connection_lost">Tilkoblingen ble brutt</string>
-    <string name="omnipod_dash_failed_to_send">Kunne ikke sende kommandoen</string>
-    <string name="omnipod_dash_command_not_sent">Kommando ikke sendt</string>
-    <string name="omnipod_dash_command_not_received_by_the_pod">Kommandoen ikke mottatt av podden</string>
-    <string name="omnipod_dash_unknown">Ukjent tilstand for kommandoen</string>
-    <string name="omnipod_common_history_tbr_value">%1$.2f E/t, %2$d minutter</string>
-    <string name="omnipod_common_history_bolus_value">%1$.2f E</string>
-    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
-    <string name="omnipod_common_bolus_type_smb">SMB</string>
-    <string name="omnipod_common_bolus_type_basal_correction">Basalkorreksjon</string>
-    <string name="omnipod_common_bolus_type_priming">Priming</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulinlevering er pauset</string>
-    <string name="omnipod_common_history_total_delivered">Totalt levert: %1$.2f E</string>
     <string name="omnipod_dash_bolus_already_in_progress">En annen bolus holder på å leveres</string>
     <string name="omnipod_dash_not_enough_insulin">Ikke nok insulin igjen i reservoaret</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Kommando er ikke bekreftet</string>

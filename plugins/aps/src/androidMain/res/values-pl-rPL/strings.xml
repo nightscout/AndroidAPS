@@ -14,6 +14,7 @@
     <string name="description_ama">Stan algorytmu w 2017</string>
     <string name="description_smb">Najnowszy algorytm dla zaawansowanych użytkowników</string>
     <string name="description_smb_dynamic_isf">Najnowszy algorytm dla zaawansowanych użytkowników z dynamicznym/automatycznym ISF</string>
+    <string name="description_auto_isf">Eksperymentalny algorytm dla zaawansowanych użytkowników z rozszerzeniami AutoISF.</string>
     <string name="openapsma_last_run_label">Ostatnie działanie</string>
     <string name="openapsma_input_parameters_label">Parametry wejściowe</string>
     <string name="openapsma_glucose_status_label">Stan glukozy</string>
@@ -37,9 +38,11 @@
     <string name="maxvalueinpreferences">maks. wartość w ustawieniach</string>
     <string name="hardlimit">twarde ograniczenie</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">Szczyt</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Bolus został podany w ciągu ostatnich 3 minut, opuszczam SMB</string>
     <string name="pump_not_initialized">Pompa nie zainicjalizowana!</string>
+    <string name="zero_basal_not_set">Pompa nie zaakceptowała zerowej bazy tymczasowej (TBR). Może nadal podawać insulinę bazową. Sprawdź pompę.</string>
     <string name="description_loop">Włącz lub wyłącz działanie pętli.</string>
     <string name="no_aps_selected">NIE WYBRANO APS LUB NIE UZYSKANO WYNIKU</string>
     <string name="ignore5m">Ignoruj 5 min</string>
@@ -47,6 +50,8 @@
     <string name="ignore30m">Ignoruj 30 min</string>
     <string name="carbs_suggestion">Sugestia węglowodanów</string>
     <string name="open_loop_new_suggestion">Dostępna nowa sugestia</string>
+    <string name="loop_notification_channel_name">Sugestie pętli</string>
+    <string name="open_loop_suggestion_too_old">Ta sugestia jest zbyt stara. Nic nie zostało wysłane do pompy. Poczekaj na następną.</string>
     <string name="basal_set_correctly">Baza ustawiona prawidłowo</string>
     <string name="last_run_label">Ostatnie uruchomienie</string>
     <string name="loop_aps_label">APS</string>
