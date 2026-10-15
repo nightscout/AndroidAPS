@@ -30,7 +30,7 @@
     <string name="objectives2_cloud">将您的首选项文件复制到手机以外的安全位置(如使用云盘，用数据线传到计算机，电子邮箱等等)</string>
     <string name="objectives2_easyrestore">如果您的手机损坏或丢失，在没有备份的情况下可以轻松的远程恢复您的设置。</string>
     <string name="objectives_hint1">https://wiki.aaps.app/zh-cn/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/zh-cn/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/zh-cn/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">CGM数据噪音</string>
     <string name="noisycgm_whattodo">如果 CGM 数据有噪声，我们应该怎么办?</string>
     <string name="noisycgm_nothing">什么都不需要做，AAPS会处理的。</string>
