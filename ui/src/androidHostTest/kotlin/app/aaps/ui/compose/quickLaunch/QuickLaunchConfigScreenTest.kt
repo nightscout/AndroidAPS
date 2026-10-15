@@ -162,10 +162,14 @@ class QuickLaunchConfigScreenTest {
         }
 
         setScreen()
-        // The section sits below the static ones, so the list has to be scrolled to reach it.
+        // The section sits below the static ones, so the list has to be scrolled to reach it. Each
+        // node is scrolled to on its own: scrolling to the header alone leaves it at the bottom edge
+        // with the entry under it still off screen, which made this fail as soon as the static
+        // sections grew.
         compose.onNode(hasScrollToNodeAction()).performScrollToNode(hasText(quickWizardHeader))
-
         compose.onNodeWithText(quickWizardHeader).assertIsDisplayed()
+
+        compose.onNode(hasScrollToNodeAction()).performScrollToNode(hasText("Breakfast"))
         compose.onNodeWithText("Breakfast").assertIsDisplayed()
     }
 
