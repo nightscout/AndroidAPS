@@ -30,7 +30,6 @@
     <string name="rate_duration">Ráta: %1$.2fU/ó (%2$.2f%%) \nIdőtartam %3$d perc</string>
     <string name="aps">APS</string>
     <string name="last_run">Legutóbbi futás</string>
-    <string name="tdd_line">%1$.2fE %1$.0f%%</string>
     <string name="today">Ma</string>
     <string name="weighted">súlyozott</string>
     <!-- SMS Communicator & OTP Authenticator -->
