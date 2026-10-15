@@ -218,7 +218,7 @@
     <string name="available_profile">Dostupný profil</string>
     <string name="format_with_tdd">Věk: %1$d CDD: %2$.0f U</string>
     <string name="format_with_tdd_and_pct">Věk: %1$d CDD: %2$.0f U %3$d%%</string>
-    <string name="format_with_weight">Věk: %1$.0f Hmotnost: %2$.0f kg</string>
+    <string name="format_with_weight">Věk: %1$d Hmotnost: %2$.0f kg</string>
     <string name="dpv_default_profile">Výchozí profil DPV</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
