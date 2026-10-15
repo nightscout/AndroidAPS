@@ -4,6 +4,7 @@
     <string name="dia_label_exam">Doba působnosti inzulínu (DIA)</string>
     <string name="dia_profile">Měli byste nastavit hodnotu DIA v nastavení inzulínu (Správa → nastavení inzulínu), ne v profilu.</string>
     <string name="dia_minimumis5h">Minimální hodnota je 5 hodin.</string>
+    <string name="dia_hint1">https://wiki.aaps.app/cs/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">Pokud jste spokojeni s tím, že hodnota DIA použitá v pumpě před AAPS dobře fungovala, není třeba ji měnit, když začínáte se smyčkou.</string>
     <string name="dia_valuemustbedetermined">Měli byste si pro sebe určit příslušnou hodnotu DIA.</string>
     <string name="hypott_label">Dočasný cíl při hypoglykémii</string>
@@ -18,7 +19,7 @@
     <string name="pumpdisconnect_missinginsulin">Zabraňuje AAPS započítat inzulín, který nebyl dodán, když je pumpa fyzicky odpojena.</string>
     <string name="pumpdisconnect_notstop">Nezastaví vydávání inzulínu, pokud pumpa zůstane připojena k tělu.</string>
     <string name="pumpdisconnect_openloop">Pošle AAPS do režimu otevřené smyčky.</string>
-    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#loop-status</string>
+    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-loop-status</string>
     <string name="objectives_label">Nastavení AAPS</string>
     <string name="objectives2_label">Nastavení AAPS</string>
     <string name="objectives_howtosave">Jaké jsou nejlepší postupy pro zálohování vašich nastavení?</string>
@@ -45,6 +46,7 @@
     <string name="exerciseprofile_switchprofileabove100">Přepněte profil na více než 100 %.</string>
     <string name="exerciseprofile_leaveat100">Ponechte profil nastavený na hodnotu 100%.</string>
     <string name="exerciseprofile_suspendloop">Pozastavte smyčku.</string>
+    <string name="exerciseprofile_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
     <string name="exercise_label">Cvičení a dočasné cíle</string>
     <string name="exercise_whattodo">Jak můžete použít dočasné cíle pro nejlepší pomoc při práci se systémem při aerobním cvičení?</string>
     <string name="exercise_settt">Nastavte cílovou hodnotu glykémie vhodnou dobu před zahájením cvičení.</string>
@@ -96,14 +98,14 @@
     <string name="insulin_novorapid">NovoRapid ® /Novolog ®</string>
     <string name="insulin_humalog">Humalog®</string>
     <string name="insulin_actrapid">Actrapid ®/Humulin R ®/„krátkodobě působící“ humánní inzulín.</string>
-    <string name="insulin_hint1">https://wiki.aaps.app/cs/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="insulin_hint1">https://wiki.aaps.app/cs/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="sensitivity_label">Pluginy Citlivost</string>
     <string name="sensitivity_adjust">Pluginy citlivosti umožňují AAPS přizpůsobit se dočasným nebo krátkodobým změnám v citlivosti inzulinu (například hormonální změny nebo problémy s absorpcí na infúzním místě).</string>
     <string name="sensitivity_edit">Pluginy citlivosti poskytují uživateli návrh změn bazálních hodnot, I:C poměrů a ISF, které mohou být použity k úpravě profilu.</string>
     <string name="sensitivity_cannula">Výměna kanyly nebo změna profilu automaticky nastaví Autosense zpět na 100%.</string>
     <string name="sensitivity_time">Některé pluginy mají konfigurovatelné časové rozmezí, které může nastavit uživatel.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="sensitivity_hint2">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/KeyAapsFeatures.html#autosens</string>
+    <string name="sensitivity_hint2">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/KeyAapsFeatures.html#open-aps-features-autosens</string>
     <string name="wrongcarbs_label">Chyby při zadávání sacharidů</string>
     <string name="wrongcarbs_whattodo">Co byste měli udělat, pokud jste zadali chybně sacharidy?</string>
     <string name="wrongcarbs_treatmentstab">Odstranit nesprávný záznam v historii ošetření a zadat správnou hodnotu sacharidů.</string>
@@ -138,7 +140,7 @@
     <string name="breadgrams_exchange">Spotřebované sacharidy lze nahrávat pomocí vhodného systému (např. \"výměnné jednotky\").</string>
     <string name="breadgrams_decay">AAPS používá dynamický model k odhadu vstřebávání sacharidů a k výpočtu COB.</string>
     <string name="breadgrams_calc">Pokud jsou hladiny glykémie v krvi mimo přijatelné hodnoty (příliš nízké nebo příliš vysoké), může být použit bolusová kalkulačka k podávání návrhů na sacharidy nebo na korekční bolus.</string>
-    <string name="breadgrams_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#bolus-wizard</string>
+    <string name="breadgrams_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#aaps-screens-bolus-wizard</string>
     <string name="breadgrams_hint2">https://wiki.aaps.app/cs/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="extendedcarbs_label">e-sacharidy</string>
     <string name="extendedcarbs_handling">Na co byste mohli použít e-sacharidy (prodloužené sacharidy)?</string>
@@ -154,6 +156,7 @@
     <string name="nsclient_data">Pro dálkové sledování nebo ovládání AAPS potřebují oba telefony přístup k internetu (například Wi-Fi nebo mobilní data).</string>
     <string name="nsclient_fullcontrol">Pokud je AAPSClient spárován s hlavním telefonem, můžete také dálkově ovládat AAPS, například bolus, sacharidy, dočasné cíle, přepnutí profilu a režim smyčky.</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/cs/latest/RemoteFeatures/RemoteMonitoring.html</string>
+    <string name="nsclient_hint2">https://wiki.aaps.app/cs/latest/RemoteFeatures/RemoteControl.html</string>
     <string name="isf_label_exam">Citlivost inzulínu (ISF)</string>
     <string name="isf_increasingvalue">Zvýšení hodnot citlivosti povede k větší dodávce inzulínu k pokrytí určitého množství sacharidů.</string>
     <string name="isf_decreasingvalue">Snížení hodnot citlivosti vede k většímu množství inzulinu pro korekci vyšší glykémie.</string>
