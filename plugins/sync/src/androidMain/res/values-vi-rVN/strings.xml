@@ -127,7 +127,6 @@
     <string name="wear_infos_watchface">Mặt đồng hồ thông tin</string>
     <string name="wear_export_watchface">Xuất mẫu</string>
     <string name="wear_new_custom_watchface_exported">Mẫu mặt đồng hồ tùy chỉnh đã được xuất</string>
-    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Gửi lại toàn bộ dữ liệu</string>
     <string name="open_settings_on_wear">Mở Cài đặt trên Wear</string>
     <string name="wear_import_custom_watchface_title">Chọn mặt đồng hồ</string>
