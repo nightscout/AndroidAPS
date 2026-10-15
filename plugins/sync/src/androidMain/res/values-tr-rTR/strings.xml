@@ -89,6 +89,7 @@
     <string name="aps">APS (YPS)</string>
     <string name="last_run">Son Çalıştırma</string>
     <string name="last_enact">Son sahne</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fÜ %2$.0f%%</string>
     <string name="today">Bugün</string>
     <string name="weighted">ağırlıklı</string>
     <string name="full_xdrip_sync_comment">Tam senkronizasyon? Biraz zaman alabilir ve tamamlanana kadar xDrip+\'ta yeni verileri göremezsiniz.</string>
