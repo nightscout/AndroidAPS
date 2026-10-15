@@ -66,10 +66,10 @@
     <string name="unfinshed_button">Следующий незавершенный</string>
     <string name="requestcode">Код запроса: %1$s</string>
     <string name="objectives_hint">(отметьте все правильные ответы)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/ru/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/AapsScreens.html</string>
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/ru/latest/SettingUpAaps/ConfigBuilder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/AapsScreens.html</string>
     <string name="notconnected">Нет подключения к Интернету</string>
     <string name="requirementnotmet">Требования к цели не выполнены</string>
     <string name="what_i_ve_learned">Мной усвоено:</string>
