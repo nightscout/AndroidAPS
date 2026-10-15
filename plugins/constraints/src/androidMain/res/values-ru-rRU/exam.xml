@@ -22,7 +22,7 @@
     <string name="objectives_afterchange">Экспортируйте настройки после изменения любого параметра.</string>
     <string name="objectives2_easyrestore">Если ваш телефон поврежден или утерян, существует легкий способ удаленно восстановить настройки без резервной копии.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/ru/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/ru/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">Зашумленные данные мониторинга</string>
     <string name="noisycgm_whattodo">Что следует делать, если данные мониторинга зашумлены?</string>
     <string name="noisycgm_nothing">Ничего не делать - алгоритм AAPS сам справится с этим.</string>
