@@ -54,7 +54,7 @@
     <string name="objectives_exam_learned_isf">Has aprendido el significado del valor ISF y cómo afecta a la cantidad de insulina utilizada para corregir la glucemia</string>
     <string name="objectives_exam_learned_ic">Has aprendido el significado del valor IC y cómo afecta a la cantidad de insulina necesaria para cubrir los carbohidratos</string>
     <string name="objectives_exam_learned_hypott">El objetivo temporal de hipoglucemia sólo se utiliza para evitar la sobrecorrección tras una hipo, cuando suele haber IOB negativa acumulada. Deben evaluarse acciones adicionales para evitar que esta situación se repita en el futuro.</string>
-    <string name="objectives_exam_learned_profileswitch">El uso del porcentaje no afecta a las glucemias objetivo, pero la basal, el ISF y el IC se ajustan para administrar más insulina (por encima del 100%) o menos insulina (por debajo del 100%)</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">El uso del porcentaje no afecta a las glucemias objetivo, pero la basal, el ISF y el IC se ajustan para administrar más insulina (por encima del 100%) o menos insulina (por debajo del 100%)</string>
     <string name="objectives_exam_learned_profileswitchtime">Utilizar el desplazamiento de hora en el cambio de perfil, puede adaptar el perfil circadiano a irregularidades como despertarse tarde</string>
     <string name="objectives_exam_learned_profileswitch4">Editar perfil en sí mismo no es suficiente para hacer un cambio. Aún necesitas activar el perfil para aplicar los cambios</string>
     <string name="objectives_exam_learned_exercise">Debe reducir la cantidad de insulina en el cuerpo al menos 1 hora antes de comenzar el ejercicio, seleccionando el perfil por debajo del 100%</string>
@@ -72,17 +72,17 @@
     <string name="objectives_exam_learned_ecarbs">Los eCarbs son un reemplazo del bolo extendido, en el mundo de las bombas</string>
     <string name="objectives_exam_learned_nsclient">Puede realizar el seguimiento remoto de AAPS con AAPSClient o Nightscout. Cuando AAPSClient está emparejado con el teléfono maestro, también puede controlar AAPS de forma remota</string>
     <string name="objectives_exam_learned_concentration1">Utilizar insulina U200 con un perfil al 50% requerirá una conversión permanente: para los bolos externos con bolis, y todos los informes estándar proporcionados por AAPS o NS serán erróneos y deberán convertirse a UI para el equipo sanitario</string>
-    <string name="objectives_exam_learned_concentration2">Cambiar de U200 con un perfil al 50% a U200 con la función de concentración de insulina requerirá crear un nuevo perfil más fuerte, desactivar DynISF durante una semana y entrenar al cerebro para pensar en Unidades Internacionales</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">Cambiar de U200 con un perfil al 50% a U200 con la función de concentración de insulina requerirá crear un nuevo perfil más fuerte, desactivar DynISF durante una semana y entrenar al cerebro para pensar en Unidades Internacionales</string>
     <string name="objectives_exam_learned_concentration3">La concentración de insulina solo puede cambiarse cuando se cambia la insulina o el parche. Pero lo más importante, especialmente en las bombas de tubo, es no utilizar nunca la interfaz de usuario de la bomba para administrar bolos directamente desde ella</string>
     <string name="answerdisabledto">Respuesta deshabilitada a: %1$s</string>
     <string name="wronganswer">Respuesta incorrecta!</string>
     <string name="unfinshed_button">Siguien&amp;te sin terminar</string>
     <string name="requestcode">Solicitar código: %1$s</string>
     <string name="objectives_hint">(compruebe todas las respuestas correctas)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/es/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/es/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/es/latest/SettingUpAaps/ConfigBuilder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Sin conexión a Internet</string>
     <string name="failedretrievetime">Error al obtener la hora</string>
     <string name="requirementnotmet">No se cumplen los requisitos de objetivo</string>
