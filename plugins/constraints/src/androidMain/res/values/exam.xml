@@ -32,7 +32,7 @@
     <string name="objectives2_cloud">Copy your preferences file to a safe location outside of your phone (e.g. by using a cloud drive, connecting a cable to a computer, email, etc.)</string>
     <string name="objectives2_easyrestore">If your phone is damaged or lost, there are easy ways to remotely recover your settings without a backup.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/en/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">Noisy CGM Readings</string>
     <string name="noisycgm_whattodo">What should be done if CGM data is noisy?</string>
     <string name="noisycgm_nothing">Do nothing - AAPS will deal with it.</string>
