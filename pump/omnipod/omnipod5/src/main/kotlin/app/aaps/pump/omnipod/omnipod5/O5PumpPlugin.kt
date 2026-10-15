@@ -279,7 +279,7 @@ class O5PumpPlugin @Inject constructor(
             commandQueue.size() == 0 &&
             commandQueue.performing() == null
         ) {
-            scope?.launch { commandQueue.readStatus(rh.gs(R.string.omnipod_5_unconfirmed_command)) }
+            pluginScope.launch { commandQueue.readStatus(rh.gs(R.string.omnipod_5_unconfirmed_command)) }
         }
     }
 
@@ -1519,7 +1519,7 @@ class O5PumpPlugin @Inject constructor(
     private fun queueBasalCorrectionIfNeeded() {
         if (!commandQueue.isCustomCommandInQueue(CommandDeliverBasalCorrection::class) && needsBasalCorrection()) {
             // Queue-worker deadlock guard - don't unwrap the .launch. See CommandQueue kdoc.
-            scope?.launch { commandQueue.customCommand(CommandDeliverBasalCorrection()) }
+            pluginScope.launch { commandQueue.customCommand(CommandDeliverBasalCorrection()) }
         }
     }
 
