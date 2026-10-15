@@ -261,8 +261,8 @@ private fun TherapyEventItem(
                     .padding(start = 8.dp, top = 1.dp, end = 8.dp, bottom = 2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Duration
-                if (therapyEvent.duration != 0L) {
+                // Duration. An event without an end (a scene without a duration) has none to show.
+                if (therapyEvent.duration != 0L && therapyEvent.hasEnd) {
                     Text(
                         text = dateUtil.niceTimeScalar(therapyEvent.duration, rh),
                         modifier = Modifier.padding(start = 16.dp),

@@ -146,6 +146,5 @@
     <string name="bolus_constraint_applied_warn">Contrainte de Bolus appliquée : %1$.2f U vers %2$.2f U</string>
     <string name="bolus_recorded_only">Les bolus seront seulement enregistrés (pas délivrés par la pompe)</string>
     <string name="advisoralarm">Alerter quand il est temps de manger</string>
-    <string name="wizard_ecarbs">eGlucides %1$d g / %2$d h (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f U</string>
 </resources>

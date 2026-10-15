@@ -17,14 +17,7 @@
     <string name="omnipod_dash_scan_failed">Неуспешно сканиране</string>
     <string name="omnipod_dash_generic_error">Обща грешка: %1$s</string>
     <string name="omnipod_dash_connection_lost">Връзката е прекъсната</string>
-    <string name="omnipod_dash_failed_to_send">Грешка при изпращане на команда</string>
-    <string name="omnipod_dash_command_not_sent">Командата не е изпратена</string>
-    <string name="omnipod_dash_command_not_received_by_the_pod">Командата не е получена от pod</string>
-    <string name="omnipod_dash_unknown">Неизвестно състояние за командата</string>
-    <string name="omnipod_common_history_tbr_value">%1$.2f Е/ч, %2$d минути</string>
-    <string name="omnipod_common_history_bolus_value">%1$.2fЕ</string>
     <string name="omnipod_common_alert_delivery_suspended">Доставянето на инсулин е спряно</string>
-    <string name="omnipod_common_history_total_delivered">Общо доставени: %1$.2f Ед.</string>
     <string name="omnipod_dash_bolus_already_in_progress">Доставя се друг болус</string>
     <string name="omnipod_dash_not_enough_insulin">Недостатъчно инсулин в резервоара</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Непотвърдена команда</string>

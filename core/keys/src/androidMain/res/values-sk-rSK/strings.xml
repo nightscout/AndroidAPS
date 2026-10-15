@@ -267,8 +267,8 @@
     <string name="lang_tr">Turečtina</string>
     <string name="lang_zh_tw">Čínština (tradičná)</string>
     <string name="lang_zh_cn">Čínština (zjednodušená)</string>
-    <string name="pref_title_patient_name">Názov</string>
-    <string name="pref_summary_patient_name">Názov pre identifikáciu tejto inštancie AAPS (zobrazený v reportoch a synchronizácii)</string>
+    <string name="pref_title_patient_name">Názov inštancie</string>
+    <string name="pref_summary_patient_name">Meno osoby používajúcej tento telefón. Slúži na odlíšenie tejto inštancie AAPS v prehľadoch a pri synchronizácii.</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">AAPS priečinok</string>
     <!-- StringKey: Protection preferences -->

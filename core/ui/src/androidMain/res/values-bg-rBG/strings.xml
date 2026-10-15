@@ -350,7 +350,6 @@
     <string name="scene_action_careportal">Запис: %1$s</string>
     <string name="scene_management">Сценарии</string>
     <string name="scene_management_desc">Създай, редактирай и управлявай сценарии</string>
-    <string name="scene_action_count">%1$d действия</string>
     <string name="scene_start_from_template">Стартирай от темплейт</string>
     <string name="scene_editor_target">Цел</string>
     <string name="scene_editor_tt_preset">Шаблон на цел</string>

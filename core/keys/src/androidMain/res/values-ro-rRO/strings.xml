@@ -32,6 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Ridicați alarmele urgente ca notificări Android</string>
     <string name="pref_title_alert_increase_volume">Creșteți treptat volumul notificărilor</string>
     <string name="pref_title_alert_override_dnd">Suprascrieți modul Nu Deranjați</string>
+    <string name="pref_summary_alert_override_dnd">Când este activat, alarmele AAPS sună chiar dacă telefonul este în mod silențios sau în modul Nu deranjați. Când este dezactivat, alarmele rămân tăcute în acele moduri.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Încărcați datele de glicemie în NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Înregistrați schimbarea senzorului</string>
@@ -144,6 +145,9 @@
     <string name="pref_title_wear_wizard_cob">Includeți COB în asistent</string>
     <string name="pref_title_wear_wizard_iob">Includeți IOB în asistent</string>
     <string name="pref_title_wear_custom_watchface_authorization">Autorizați cadrane de ceas personalizate</string>
+    <string name="pref_title_wear_pushed_watchface">Fața de ceas instalată pe ceas</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Față de ceas cu complicații</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Față de ceas personalizată</string>
     <string name="pref_title_wear_notify_on_smb">Notificați despre SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Trimiteți notificări către ceas atunci când SMB este administrat.</string>
     <string name="pref_title_wear_broadcast_data">Transmiteți date către ceas</string>
@@ -177,6 +181,7 @@
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Timp de expirare a protecției</string>
     <string name="pref_title_protection_type_application">Nivelul 0: Protecția aplicației</string>
+    <string name="pref_summary_protection_type_application">Lansare aplicație și la revenirea la aplicație. Independentă de alte niveluri</string>
     <string name="pref_title_protection_type_bolus">Nivelul 1: Protecție bolus</string>
     <string name="pref_summary_protection_type_bolus">Tratamente, activare profil. Necesită nivelul 2</string>
     <string name="pref_title_protection_type_settings">Nivelul 2: Protecție setări</string>
@@ -235,6 +240,7 @@
     <string name="pref_title_units">Unități</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">Limbă</string>
     <string name="lang_default">Implicit sistem</string>
     <string name="lang_en">Engleză</string>
     <string name="lang_af">Afrikaans</string>
@@ -261,8 +267,8 @@
     <string name="lang_tr">Turcă</string>
     <string name="lang_zh_tw">Chineză tradițională</string>
     <string name="lang_zh_cn">Chineză simplificată</string>
-    <string name="pref_title_patient_name">Nume</string>
-    <string name="pref_summary_patient_name">Numele pentru a identifica această instanță AAPS (afișată în rapoarte și sincronizare)</string>
+    <string name="pref_title_patient_name">Nume instanță</string>
+    <string name="pref_summary_patient_name">Numele persoanei care folosește acest telefon. Diferențiază această instanță de AAPS în rapoarte și sincronizare.</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">Dosar AAPS</string>
     <!-- StringKey: Protection preferences -->

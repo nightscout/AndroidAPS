@@ -264,8 +264,6 @@
     <string name="lang_tr">Turque</string>
     <string name="lang_zh_tw">Chinois traditionnel</string>
     <string name="lang_zh_cn">Chinois simplifié</string>
-    <string name="pref_title_patient_name">Nom</string>
-    <string name="pref_summary_patient_name">Nom pour identifier cette instance AAPS (affichée dans les rapports et la synchronisation)</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">Répertoire AAPS</string>
     <!-- StringKey: Protection preferences -->

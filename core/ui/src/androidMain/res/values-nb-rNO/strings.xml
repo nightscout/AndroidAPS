@@ -111,6 +111,9 @@
     <string name="format_hours">%1$.2f t</string>
     <string name="format_mins">%1$d min</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
+    <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
     <string name="objectives">Opplæringsmål</string>
     <string name="please_wait">Vennligst vent…</string>
     <string name="stop">Stopp</string>
@@ -118,10 +121,13 @@
     <string name="invalid_profile">Ugyldig profil!</string>
     <string name="no_profile_set">INGEN PROFIL VALGT</string>
     <string name="profile_switch_no_insulin">Kan ikke bytte profil: Ingen insulin er i bruk, og ingen er valgt.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Tidspunktet for profilbyttet må være innenfor %1$d timer fra nå.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Det midlertidige målet må starte innenfor %1$d timer fra nå.</string>
     <string name="profile_switch_select_insulin_hint">Ingen insulin er i bruk ennå. Velg insulinet du bruker, slik at dette profilbyttet kan registrere det.</string>
     <string name="insulin_activation_failed">Insulinet ble ikke byttet. Det forrige insulinet er fortsatt i bruk.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulinet ble ikke byttet: %1$s. Det forrige insulinet er fortsatt i bruk.</string>
     <string name="insulin_activation_unconfirmed">Kunne ikke bekrefte insulinbyttet. Kontroller hvilket insulin som er aktivt i profilen før du doserer.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Insulinet ble ikke byttet. Det forrige insulinet ditt er fortsatt i bruk.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinet ble heller ikke byttet.</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Dato</string>
@@ -191,6 +197,9 @@
     <string name="a11y_arrow_unknown">ukjent</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">reduser %1$s med %2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">øk %1$s med %2$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Flytt opp</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Flytt ned</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Steg %1$d av %2$d</string>
     <string name="decrement">reduksjon</string>
     <string name="increment">økning</string>
     <string name="a11y_high">høyt</string>
@@ -217,6 +226,9 @@
     <string name="login">Login</string>
     <string name="logout">Logg ut</string>
     <string name="prime_fill">Prime/fylling</string>
+    <string name="prime_not_available">Denne pumpen fyller og primer seg selv under aktivering. Funksjonen for prime/fylling fra AAPS er ikke tilgjengelig.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Endre</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Fyll</string>
     <string name="site_rotation">Rotasjon av sted</string>
     <string name="edit_site">Rediger</string>
     <string name="select_arrow">Velg pil</string>
@@ -280,6 +292,7 @@
     <!--    Insulin / Concentration-->
     <string name="ins_concentration_confirmed">Insulin %1$s bekreftet</string>
     <string name="current_insulin">Aktiv for øyeblikket</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Vil bli aktivert</string>
     <string name="change_insulin">Endre</string>
     <string name="select_insulin_description">Velg insulinet du fyller pumpen med. Et profilbytte vil bli brukt etter aktivering/priming.</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
@@ -318,7 +331,8 @@
     <string name="careportal_note_message">Notat: %1$s</string>
     <string name="careportal_question_message">Spørsmål: %1$s</string>
     <string name="careportal_exercise_message">Aktivitet: %1$s</string>
-    <string name="careportal_pump_site_change">Bytte av pumpens kanyle</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Bytte av pumpested: %1$s</string>
+    <string name="careportal_pump_site_change">Bytte av pumpested</string>
     <string name="cgm_sensor_insert">Sensorbytte</string>
     <string name="careportal_pump_site_management">Pumpeområder</string>
     <string name="careportal_cgm_site_management">Sensor-områder</string>
@@ -367,7 +381,6 @@
     <string name="scene_action_careportal">Logg: %1$s</string>
     <string name="scene_management">Scener</string>
     <string name="scene_management_desc">Lage, endre og håndtere scener</string>
-    <string name="scene_action_count">%1$d handlinger</string>
     <string name="scene_start_from_template">Start fra mal</string>
     <string name="scene_editor_target">Mål</string>
     <string name="scene_editor_tt_preset">Forhåndsinnstilt mål</string>
@@ -383,6 +396,8 @@
     <string name="scene_editor_enabled">Aktivert</string>
     <string name="scene_editor_disabled">Deaktivert</string>
     <string name="scene_summary">%1$d handlinger, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_duration_indefinite">Ubestemt (manuell slutt)</string>
     <string name="scene_some_actions_failed">Noen handlinger mislyktes</string>
     <string name="scene_no_active">Ingen aktiv scene</string>
@@ -490,7 +505,7 @@
     <string name="automation_management_desc">Opprett regler som automatisk utfører handlinger basert på utløsere</string>
     <string name="settingsexport">Eksporter innstillinger</string>
     <string name="custom">Egendefinert</string>
-    <string name="preset_settings">Forhåndsinnstilte innstillinger</string>
+    <string name="preset_settings">Forhåndsinnstillinger</string>
     <string name="activation">Aktivering</string>
     <string name="temp_target_management">Midlertidig mål</string>
     <string name="revert_to_defaults">Tilbakestill til standardinnstillinger</string>
@@ -670,6 +685,7 @@
     <string name="missing_profile_name">Mangler profilnavn</string>
     <string name="profile_not_saved_activate">Profilen er ikke lagret. Vennligst lagre profilen før aktivering.</string>
     <string name="profile_basal_not_compatible_with_pump">Basaldosen er ikke kompatibel med den aktuelle pumpen og kan ikke aktiveres. Reduser prosenten eller juster basaldosen.</string>
+    <string name="profile_basal_below_pump_minimum">Basaldosen er lavere enn minimumsverdien for den aktuelle pumpen og kan ikke aktiveres. Øk prosentverdien eller juster basaldosen.</string>
     <string name="profile_pump_incompatible_label">Pumpegrense</string>
     <string name="error_in_ic_values">Feil i IK-forholdstallet</string>
     <string name="error_in_isf_values">Feil i ISF-verdien</string>
@@ -732,6 +748,7 @@
     <string name="wizard_carb_time">Karbotid</string>
     <string name="carb_time_now">Nå</string>
     <string name="change">Endre</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
     <string name="grant">Tillat</string>
     <string name="set">Angi</string>
     <string name="wizard_set_alarm">Sett alarm</string>

@@ -6,9 +6,6 @@
     <string name="time_offset">Decalatge horari</string>
     <!--    Widget-->
     <!--     Activities-->
-    <string name="activity_monitor">Monitor d\'activitat</string>
-    <string name="time_range">Interval de temps</string>
-    <string name="do_you_want_reset_stats">Voleu restablir les estadístiques d\'activitat?</string>
     <string name="calculation_in_progress">Càlculs en procés</string>
     <string name="age">Edat</string>
     <string name="weight_label">Ponderació</string>

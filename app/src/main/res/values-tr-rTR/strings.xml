@@ -4,4 +4,6 @@
     <string name="identification_not_set">Tanımlama geliştirme modunda ayarlanmadı</string>
     <string name="select">Seçin</string>
     <string name="set">Uygula</string>
+    <string name="migrating_profile_switches">Profil geçişleri taşınıyor…</string>
+    <string name="migrating_effective_profile_switches">Geçerli profil geçişleri taşınıyor…</string>
 </resources>

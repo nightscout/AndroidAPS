@@ -191,6 +191,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS stille bolusfremdrift</string>
     <string name="bolus_progress_channel_description">Bolusfremdrift og avbryt</string>
     <string name="bolus_progress_silent_channel_description">Bolusfremdrift og avbryt med mindre vibrasjoner</string>
+    <string name="open_loop_channel_name">AAPS Åpen loop</string>
+    <string name="open_loop_channel_description">Varsel om forespørsel fra åpen loop</string>
     <string name="simple_ui_off">Av</string>
     <string name="simple_ui_charging">Under lading</string>
     <string name="simple_ui_always_on">Alltid På modus</string>

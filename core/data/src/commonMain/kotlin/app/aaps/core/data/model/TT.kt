@@ -49,8 +49,13 @@ data class TT(
         }
     }
 
+    /** [Long.MAX_VALUE] for a target without an end, see [endOf]. */
     val end
-        get() = timestamp + duration
+        get() = endOf(timestamp, duration)
+
+    /** False while a scene without a duration runs: its target has no end until the scene ends. */
+    val hasEnd
+        get() = end != Long.MAX_VALUE
 
     companion object
 }

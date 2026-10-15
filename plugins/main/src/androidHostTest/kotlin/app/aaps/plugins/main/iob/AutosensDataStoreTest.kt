@@ -1,6 +1,7 @@
 package app.aaps.plugins.main.iob
 
 import androidx.collection.LongSparseArray
+import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.SourceSensor
@@ -1542,6 +1543,40 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
         // empty table + stale stored fallback → null
         ads.autosensDataTable = LongSparseArray<AutosensData>()
         assertThat(ads.getLastAutosensData("test", aapsLogger, dateUtil)).isNull()
+    }
+
+    /**
+     * There can be no autosens result for a time that has not happened yet, so the store refuses to
+     * answer for one.
+     *
+     * Worth pinning because something else depends on it: the future part of the BGI series on the
+     * overview is built only where this method answers, so it is empty, and that is not obvious from
+     * reading `PrepareGraphDataRunner` alone.
+     *
+     * The future is measured against the **real** clock, not `dateUtil.now()`, because the method
+     * reads `Clock.System.now()` itself rather than taking the clock it is given. So the times here
+     * come from the real clock too. The past case is asserted as well: without it, a null that merely
+     * came from "no bucketed data at all" would look like a pass.
+     */
+    @Test
+    fun getAutosensDataAtTimeReturnsNothingForATimeInTheFuture() {
+        val realNow = System.currentTimeMillis()
+        val past = realNow - T.mins(10).msecs()
+        val ads = AutosensDataStoreObject()
+        ads.bucketedData = mutableListOf(
+            InMemoryGlucoseValue(timestamp = past, value = 100.0),
+            InMemoryGlucoseValue(timestamp = past - T.mins(5).msecs(), value = 100.0)
+        )
+        ads.autosensDataTable = LongSparseArray<AutosensData>()
+        ads.autosensDataTable.append(
+            ads.roundUpTime(past),
+            AutosensDataObject(aapsLogger, preferences, dateUtil).apply { time = past }
+        )
+
+        // a time that has happened is answered from the table
+        assertThat(ads.getAutosensDataAtTime(past)?.time).isEqualTo(past)
+        // a time that has not is refused, even though the bucketed data behind it is the same
+        assertThat(ads.getAutosensDataAtTime(realNow + T.hours(1).msecs())).isNull()
     }
 
     // ---- holdsSameData --------------------------------------------------------------------------

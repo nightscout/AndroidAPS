@@ -916,7 +916,13 @@ class MedtronicPumpPlugin(
         if (debugHistory) aapsLogger.debug(LTag.PUMP, "HST: After task")
         val historyResult = responseTask2?.result as PumpHistoryResult?
         if (debugHistory) aapsLogger.debug(LTag.PUMP, "HST: History Result: $historyResult")
-        val latestEntry = historyResult!!.latestEntry
+        if (historyResult!!.readFailed) {
+            // Entries between the pages that were read and the target date can be missing. The last entry stays as
+            // it is, so the next read asks for the same time again and gets the missing entries too (#3378).
+            aapsLogger.warn(LTag.PUMP, "History read failed, nothing is processed. It is read again next time.")
+            return
+        }
+        val latestEntry = historyResult.latestEntry
         if (debugHistory) aapsLogger.debug(LTag.PUMP, "Last entry: " + latestEntry)
         if (latestEntry == null) // no new history to read
             return

@@ -7,6 +7,7 @@ import app.aaps.pump.danars.DanaRSTestBase
 import com.google.common.truth.Truth.assertThat
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import org.joda.time.LocalDateTime
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.verifyNoInteractions
@@ -69,6 +70,25 @@ class DanaRsPacketInvalidDateTest : DanaRSTestBase() {
             val time = apsHistory().dateTimeSecFromBuff(date(26, 3, 29, 2, 30, 0), 0)
 
             assertThat(time).isEqualTo(DateTime(2026, 3, 29, 3, 30, 0, prague).millis)
+        } finally {
+            DateTimeZone.setDefault(defaultZone)
+        }
+    }
+
+    /** The shipping date is read on every connection. Where the clock goes forward at midnight, that midnight does not exist */
+    @Test
+    fun dateOnTheDayTheClockChangesAtMidnightIsRead() {
+        val defaultZone = DateTimeZone.getDefault()
+        try {
+            val havana = DateTimeZone.forID("America/Havana")
+            DateTimeZone.setDefault(havana)
+            // Cuba moves the clock from 00:00 to 01:00 on the second Sunday of March
+            assertThat(havana.isLocalDateTimeGap(LocalDateTime(2027, 3, 14, 0, 0))).isTrue()
+
+            // dateFromBuff takes the position in the whole packet, header included
+            val time = apsHistory().dateFromBuff(header + byteArrayOf(27, 3, 14), 2)
+
+            assertThat(time).isEqualTo(DateTime(2027, 3, 14, 1, 0, 0, havana).millis)
         } finally {
             DateTimeZone.setDefault(defaultZone)
         }

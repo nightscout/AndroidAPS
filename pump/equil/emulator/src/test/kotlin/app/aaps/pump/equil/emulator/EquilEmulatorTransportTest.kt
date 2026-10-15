@@ -179,6 +179,33 @@ class EquilEmulatorTransportTest {
         assertEquals(answerIndex, ackIndex)
     }
 
+    /**
+     * The fill step: CmdStepSet without sendConfig does not confirm its answer, and CmdResistanceGet comes next on the
+     * same link. Taken as a confirmation, the read got the step answer again with the same index, the app dropped it as
+     * a repeat, and the fill timed out.
+     */
+    @Test
+    fun `a command after an answer that was not confirmed gets its own answer`() {
+        state.resistance = 600
+        transport.gatt.connect("00:00:00:00:00:00")
+        sendEncryptedMessage(Utils.concat(Utils.intToBytes(10), ByteArray(8)), state.devicePassword, "0F0F0000", 0)
+        transport.awaitPendingCallbacks()
+        receivedPackets.clear()
+
+        sendEncryptedMessage(Utils.concat(Utils.intToBytes(11), byteArrayOf(0x01, 0x07), Utils.intToBytes(160)), state.sessionPassword, "0404A1B2", 1)
+        transport.awaitPendingCallbacks()
+        val stepIndex = EquilPacketCodec.getIndex(receivedPackets.last()[4])
+        receivedPackets.clear()
+
+        sendEncryptedMessage(Utils.concat(Utils.intToBytes(12), byteArrayOf(0x02, 0x02)), state.sessionPassword, "1515A1B2", 2)
+        transport.awaitPendingCallbacks()
+        val readIndex = EquilPacketCodec.getIndex(receivedPackets.last()[4])
+        val answer = Utils.hexStringToBytes(AESUtil.decrypt(reassembleResponse()!!, state.sessionPassword))
+
+        assertTrue(readIndex != stepIndex, "the read gets a new index, or the app drops it as a repeat")
+        assertEquals(600, Utils.bytesToInt(answer[7], answer[6]))
+    }
+
     @Test
     fun `scanner should emit device`() {
         var emitted = false

@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Save
@@ -223,7 +224,17 @@ fun InsulinManagementScreen(
                     }
                 },
                 actions = {
-                    if (!isPlayMode) {
+                    if (isPlayMode) {
+                        // Without this the screen is a dead end: it opens read only, and the caller
+                        // hands down the mode it was itself in, so arriving from a screen in PLAY
+                        // left no way to ask for EDIT and no way to reach the protection check.
+                        IconButton(onClick = onRequestEditMode, enabled = editingEnabled) {
+                            Icon(
+                                imageVector = Icons.Filled.Edit,
+                                contentDescription = stringResource(CoreUiStrings.switch_to_edit)
+                            )
+                        }
+                    } else {
                         IconButton(
                             onClick = {
                                 focusManager.clearFocus()

@@ -83,7 +83,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
@@ -363,10 +362,14 @@ class CarelevoOverviewViewModel @Inject constructor(
         _tempBasalRateFlow.value = temp?.speed
     }
 
+    /**
+     * Removes temp basal and extended bolus records whose time has passed. A left immediate bolus record is not
+     * removed here: it can belong to a bolus the app never recorded, and `CarelevoBolusCoordinator.recoverLeftoverBolus`
+     * records that bolus from the patch and then removes the record.
+     */
     private fun clearExpiredInfusions() {
         val infusionInfo = carelevoPatch.infusionInfo.value?.getOrNull() ?: return
         val tempBasalInfusionInfo = infusionInfo.tempBasalInfusionInfo
-        val immeBolusInfusionInfo = infusionInfo.immeBolusInfusionInfo
         val extendBolusInfusionInfo = infusionInfo.extendBolusInfusionInfo
 
         val now = Clock.System.now()
@@ -377,12 +380,6 @@ class CarelevoOverviewViewModel @Inject constructor(
             endTime > now
         }
 
-        val immeBolus = immeBolusInfusionInfo?.takeIf { infusion ->
-            val duration = infusion.infusionDurationSeconds ?: return@takeIf true
-            val endTime = infusion.createdAt + duration.seconds
-            endTime > now
-        }
-
         val extendBolus = extendBolusInfusionInfo?.takeIf { infusion ->
             val duration = infusion.infusionDurationMin ?: return@takeIf true
             val endTime = infusion.createdAt + duration.minutes
@@ -390,14 +387,13 @@ class CarelevoOverviewViewModel @Inject constructor(
         }
 
         val deleteTemp = (infusionInfo.tempBasalInfusionInfo != null && tempBasal == null)
-        val deleteImme = (infusionInfo.immeBolusInfusionInfo != null && immeBolus == null)
         val deleteExtend = (infusionInfo.extendBolusInfusionInfo != null && extendBolus == null)
 
-        if (!deleteTemp && !deleteImme && !deleteExtend) return
+        if (!deleteTemp && !deleteExtend) return
 
         val requestModel = CarelevoDeleteInfusionRequestModel(
             isDeleteTempBasal = deleteTemp,
-            isDeleteImmeBolus = deleteImme,
+            isDeleteImmeBolus = false,
             isDeleteExtendBolus = deleteExtend
         )
         clearInfusionInfo(requestModel)
@@ -532,11 +528,11 @@ class CarelevoOverviewViewModel @Inject constructor(
         }
     }
 
-    private fun handlePatchDiscardResponse(response: ResponseResult<*>) {
+    private fun handlePatchDiscardResponse(response: ResponseResult<*>, address: String?) {
         when (response) {
             is ResponseResult.Success -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "[startPatchDiscard] success")
-                carelevoPatch.discardTeardown()
+                carelevoPatch.discardTeardown(address)
             }
 
             else                      -> {
@@ -555,12 +551,13 @@ class CarelevoOverviewViewModel @Inject constructor(
 
     /** Only reached from [startDiscardProcess], which already holds the operation lock. */
     private fun startPatchForceDiscard() {
+        val address = carelevoPatch.getPatchInfoAddress()
         compositeDisposable += patchForceDiscardUseCase.execute()
             .timeout(10, TimeUnit.SECONDS)
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
             .subscribe(
-                { response -> handlePatchDiscardResponse(response) },
+                { response -> handlePatchDiscardResponse(response, address) },
                 { error -> handlePatchDiscardError(error) }
             )
     }

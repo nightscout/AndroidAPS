@@ -50,7 +50,10 @@ data class CarelevoImmeBolusInfusionInfoEntity(
     val createdAt: String,
     val updatedAt: String,
     val volume: Double? = null,
-    val infusionDurationSeconds: Int? = null
+    val infusionDurationSeconds: Int? = null,
+    val pumpId: Long? = null,
+    val bolusTotalBefore: Double? = null,
+    val bolusType: String? = null
 )
 
 data class CarelevoExtendBolusInfusionInfoEntity(

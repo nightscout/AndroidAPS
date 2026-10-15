@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Il comando sarà eseguito ora</string>
+    <string name="smb_being_delivered">Un SMB è in fase di consegna. Riprova quando è finito.</string>
     <string name="basal_value_below_minimum">Valore basale inferiore al minimo. Profilo non impostato!</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Il micro arrotonda la basale al proprio passo. Dà %1$s al giorno invece di %2$s.</string>
+    <string name="basal_reported_far_from_profile">La pompa riporta una basale lontano dal profilo. AAPS mantiene il profilo basale. Controlla le velocità basali nella pompa.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">CHO</string>
     <!--    PumpStatusGenerator-->
@@ -19,6 +22,19 @@
     <string name="permission_notifications_description">Richiesto per mostrare gli aggiornamenti, avvisi, allarmi e stato del micro</string>
     <string name="permission_schedule_exact_alarm_title">Sveglie e promemoria</string>
     <string name="permission_schedule_exact_alarm_description">Richiesto in modo che gli avvisi possano riattivare lo schermo mentre AAPS è in background, e quindi i promemoria suonano in tempo</string>
+    <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">Allarmi AAPS</string>
+    <string name="alarm_channel_standard">Allarme standard</string>
+    <string name="alarm_channel_bolus_error">Errore bolo</string>
+    <string name="alarm_channel_error">Errore generale</string>
+    <string name="alarm_channel_urgent">Allarme urgente</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (sovrascrive Non Disturbare)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (rispetta Non Disturbare)</string>
+    <string name="alarm_channel_silent_urgent">Allarme urgente (modalità volume-rampa)</string>
+    <string name="alarm_channel_silent">Allarme (modalità volume-rampa)</string>
+    <string name="alarm_channel_silent_description">Usato quando \'Aumenta gradualmente il volume delle notifiche\' è acceso. La schermata di allarme riproduce il suono.</string>
+    <string name="ongoing_channel_name">Stato in corso</string>
+    <string name="notifications_channel_name">Notifiche AAPS</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>

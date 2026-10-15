@@ -25,8 +25,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -35,7 +33,6 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
-import kotlin.time.Duration.Companion.milliseconds
 
 @SingleIn(AppScope::class)
 @Inject
@@ -87,14 +84,14 @@ class DanaPump(
     var pumpTime: Long = 0
     var zoneOffset: Int = 0 // i (hw 7+)
 
+    /**
+     * Time of a pump that keeps UTC (Dana-i).
+     *
+     * @param value the time of the pump clock, read as UTC
+     * @param zoneOffset the time zone the pump keeps beside its UTC clock, in hours
+     */
     fun setPumpTime(value: Long, zoneOffset: Int) {
-        // Store time according to timezone in phone
-        val tz = DateTimeZone.getDefault()
-        val instant = DateTime.now().millis
-        val offsetInMilliseconds = tz.getOffset(instant).toLong()
-        val offset = offsetInMilliseconds.milliseconds.inWholeHours
-        pumpTime = value + T.hours(offset).msecs()
-        // but save zone in pump
+        pumpTime = value
         this.zoneOffset = zoneOffset
     }
 

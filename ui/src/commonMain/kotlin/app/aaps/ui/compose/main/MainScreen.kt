@@ -506,7 +506,8 @@ fun MainScreen(
             automationItems = automationState.items,
             onItemClick = { item -> mainViewModel.requestAutomationConfirmation(item.eventId) },
             sceneItems = automationState.sceneItems,
-            onSceneClick = { sceneId -> mainViewModel.requestSceneConfirmation(sceneId) }
+            onSceneClick = { sceneId -> mainViewModel.requestSceneConfirmation(sceneId) },
+            onEditScenesClick = { onNavigate(NavigationRequest.Element(ElementType.SCENE_MANAGEMENT)) }
         )
     }
 

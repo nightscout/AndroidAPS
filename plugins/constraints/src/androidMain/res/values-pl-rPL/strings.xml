@@ -20,6 +20,7 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Ograniczenie bolusa przedłużonego do %1$.1f U z powodu %2$s</string>
     <string name="limitingcarbs">Ograniczam węglow. do %1$d g z uwagi na %2$s</string>
+    <string name="safety">Bezpieczeństwo terapii</string>
     <string name="pumpisnottempbasalcapable">Pompa nie jest zdolna do wykonywania dawek bazowych tymczasowych</string>
     <string name="closed_loop_disabled_on_dev_branch">Uruchomiona jest wersja dev. Zamknięta pętla jest wyłączona.</string>
     <string name="closed_loop_disabled_with_eb">Zamknięta pętla wyłączona, ponieważ działa Extended Bolus (bolus przedłużony)</string>
@@ -40,4 +41,5 @@
     <string name="doyouwantresetstart">Czy chcesz zresetować czas rozpoczęcia zadania? Możesz utracić postępy.</string>
     <string name="objectives_button_unfinish">Resetuj stan zakończenia</string>
     <string name="objectives_button_unstart">Resetuj stan rozpoczęcia</string>
+    <string name="bg_doubled_lgs">Tryb LGS z powodu zduplikowanych wartości w źródle glikemii</string>
 </resources>

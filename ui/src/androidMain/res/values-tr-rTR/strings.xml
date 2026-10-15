@@ -8,9 +8,6 @@
     <string name="configure">Şeffaflığı yapılandır</string>
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
-    <string name="activity_monitor">Aktivite monitörü</string>
-    <string name="time_range">Zaman aralığı</string>
-    <string name="do_you_want_reset_stats">Etkinlik istatistiklerini sıfırlamak istiyor musunuz?</string>
     <string name="do_you_want_recalculate_tdd_stats">GTD istatistiklerini tekrar hesaplamak istiyor musunuz?</string>
     <string name="calculation_in_progress">Hesaplanıyor</string>
     <string name="age">Yaş</string>
@@ -56,7 +53,7 @@
     <string name="activate_profile">Profil etkinleştir</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Profil tipi</string>
-    <string name="profile_switches">Profil Değişimleri</string>
+    <string name="profile_switches">Profil Geçişleri</string>
     <string name="basal_pct_from_tdd_label">% bazalın</string>
     <string name="selected_profile">Seçildi:</string>
     <string name="motol_default_profile">Varsayılan profil</string>

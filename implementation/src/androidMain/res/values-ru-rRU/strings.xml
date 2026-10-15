@@ -11,6 +11,7 @@
     <string name="short_status_battery">Бат: %1$d%%</string>
     <string name="short_status_not_initialized">Помпа не иниц</string>
     <!--    Permissions-->
+    <!--    Notification channels, shown in the Android settings-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="export_to_cloud_failed">Не удалось экспортировать в облачное хранилище</string>

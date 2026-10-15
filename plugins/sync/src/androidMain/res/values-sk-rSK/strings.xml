@@ -74,6 +74,8 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Ak je táto možnosť povolená, odosielané dáta pôjdu na testovacie servery namiesto bežných</string>
     <string name="title_tidepool_dev_servers">Používať testovacie servery</string>
+    <string name="title_tidepool_use_ns_connection">Použiť nastavenia pripojenia Nightscout</string>
+    <string name="summary_tidepool_use_ns_connection">Vypnite, ak chcete nastaviť samostatné pripojenie pre Tidepool</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Nahrávánie dát na Tidepool</string>
     <string name="upload_now">Nahrať teraz</string>
@@ -107,6 +109,7 @@
     <string name="scene_not_available">Vybratá scéna %1$s nie je dostupná, prosím obnovte svoju dlaždicu</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Vzdialené príkazy pre inzulín sú v klientskom režime zakázané</string>
     <string name="wear_phone_not_ready">Telefón sa stále spúšťa alebo aplikuje nastavenia. Skúste to znova o chvíľu.</string>
+    <string name="wear_control_disabled">Ovládanie z hodiniek je v nastaveniach telefónu vypnuté.</string>
     <string name="wear_action_tempt_unit_error">Použité rozdielne jednotky v hodinkách a v telefóne!</string>
     <string name="wear_action_tempt_min_bg_error">Minimálna glykémia mimo rozsah!</string>
     <string name="wear_action_tempt_max_bg_error">Maximálna glykémia mimo rozsah!</string>

@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
@@ -38,6 +41,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.MultiChoiceSegmentedButtonRow
@@ -73,7 +77,9 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.format.NumberFormat
@@ -84,6 +90,7 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
+import app.aaps.core.ui.compose.ExpandableNumberInputRow
 import app.aaps.core.ui.compose.ExpandableRowHeader
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.QuickAddButtons
@@ -339,16 +346,29 @@ internal fun WizardDialogContent(
                             .fillMaxWidth()
                             .clickable { onCalculationExpandToggle() },
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Text(
+                        // The title gives way first: it is the weighted child, so it is measured
+                        // after the values and gets only the space they leave, shrinking its font
+                        // down to the minimum before it is cut. On a narrow screen the summary
+                        // used to be cut off instead, and the summary is what matters here.
+                        BasicText(
                             text = stringResource(CoreUiStrings.wizard_calculation),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = LocalContentColor.current
+                            ),
+                            autoSize = TextAutoSize.StepBased(minFontSize = 11.sp, maxFontSize = 16.sp, stepSize = 1.sp),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f)
                         )
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        // Last resort when the values alone are wider than the row (very big
+                        // font): a value that does not fit moves to the next line as a whole,
+                        // still right-aligned.
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.End),
+                            itemVerticalAlignment = Alignment.CenterVertically
                         ) {
                             // Result summary (always visible)
                             if (uiState.hasResult && (uiState.totalInsulin > 0.0 || uiState.carbs > 0)) {
@@ -398,12 +418,13 @@ internal fun WizardDialogContent(
                                     color = ElementType.CARBS.color()
                                 )
                             }
-                            Icon(
-                                imageVector = if (uiState.calculationExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                                contentDescription = stringResource(if (uiState.calculationExpanded) CoreUiStrings.collapse else CoreUiStrings.expand),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
                         }
+                        // Outside the FlowRow, so it never wraps to the second line.
+                        Icon(
+                            imageVector = if (uiState.calculationExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                            contentDescription = stringResource(if (uiState.calculationExpanded) CoreUiStrings.collapse else CoreUiStrings.expand),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
 
                     // Toggle buttons row (always visible)
@@ -720,8 +741,11 @@ internal fun WizardDialogContent(
                         }
                     }
 
-                    // Direct Correction input
-                    NumberInputRow(
+                    // Direct Correction: collapsed, so there is no second open field under the carbs
+                    // one. They looked alike, and grams typed into this one were bolused as units
+                    // (reported on Discord). Nudging still works from the collapsed row; the pencil
+                    // opens the field for a value that would take too many steps.
+                    ExpandableNumberInputRow(
                         labelRef = CoreUiStrings.wizard_correction,
                         value = uiState.directCorrection,
                         onValueChange = onDirectCorrectionChange,
@@ -742,15 +766,23 @@ internal fun WizardDialogContent(
                     )
                     // BG (collapsible, auto-expand when old/missing)
                     val bgExpandRequester = rememberBringIntoViewOnExpand(bgExpandedByUser)
-                    Column(modifier = itemModifier.bringIntoViewRequester(bgExpandRequester)) {
-                        ExpandableRowHeader(
-                            label = stringResource(CoreUiStrings.wizard_bg_label),
-                            expanded = bgExpanded,
-                            onExpand = {
-                                bgExpanded = true
-                                bgExpandedByUser = true
-                            }
-                        ) {
+                    ExpandableNumberInputRow(
+                        labelRef = CoreUiStrings.wizard_bg_label,
+                        value = uiState.bg,
+                        onValueChange = onBgChange,
+                        valueRange = uiState.bgRange,
+                        step = uiState.bgStep,
+                        unitLabel = TextRef.Literal(unitsLabel),
+                        decimalPlaces = if (uiState.isMgdl) 0 else 1,
+                        expanded = bgExpanded,
+                        onExpandedChange = {
+                            bgExpanded = it
+                            if (it) bgExpandedByUser = true
+                        },
+                        modifier = itemModifier.bringIntoViewRequester(bgExpandRequester),
+                        // More than the number: how old the reading is, red and spoken when stale,
+                        // and a plain "not available" when there is none.
+                        valueContent = {
                             if (uiState.hasBgData) {
                                 val bgFormat = if (uiState.isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1
                                 Text(
@@ -776,53 +808,30 @@ internal fun WizardDialogContent(
                                 )
                             }
                         }
-                        AnimatedVisibility(
-                            visible = bgExpanded,
-                            enter = expandVertically(),
-                            exit = shrinkVertically()
-                        ) {
-                            NumberInputRow(
-                                labelRef = CoreUiStrings.wizard_bg_label,
-                                value = uiState.bg,
-                                onValueChange = onBgChange,
-                                valueRange = uiState.bgRange,
-                                step = uiState.bgStep,
-                                unitLabel = TextRef.Literal(unitsLabel),
-                                decimalPlaces = if (uiState.isMgdl) 0 else 1
-                            )
-                        }
-                    }
+                    )
 
                     // Percentage (collapsible)
                     val percentageExpandRequester = rememberBringIntoViewOnExpand(percentageExpanded)
-                    Column(modifier = itemModifier.bringIntoViewRequester(percentageExpandRequester)) {
-                        ExpandableRowHeader(
-                            label = stringResource(CoreUiStrings.wizard_use_percentage),
-                            expanded = percentageExpanded,
-                            onExpand = { percentageExpanded = true }
-                        ) {
+                    ExpandableNumberInputRow(
+                        labelRef = CoreUiStrings.wizard_use_percentage,
+                        value = uiState.percentage.toDouble(),
+                        onValueChange = onPercentageChange,
+                        valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
+                        step = 5.0,
+                        unitLabel = TextRef.Literal("%"),
+                        decimalPlaces = 0,
+                        expanded = percentageExpanded,
+                        onExpandedChange = { percentageExpanded = it },
+                        modifier = itemModifier.bringIntoViewRequester(percentageExpandRequester),
+                        // The percent sign sits in its own format resource here, not after the number.
+                        valueContent = {
                             Text(
                                 text = stringResource(CoreUiStrings.format_percent, uiState.percentage),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
-                        AnimatedVisibility(
-                            visible = percentageExpanded,
-                            enter = expandVertically(),
-                            exit = shrinkVertically()
-                        ) {
-                            NumberInputRow(
-                                labelRef = CoreUiStrings.wizard_use_percentage,
-                                value = uiState.percentage.toDouble(),
-                                onValueChange = onPercentageChange,
-                                valueRange = Constants.WIZARD_PERCENTAGE_RANGE,
-                                step = 5.0,
-                                unitLabel = TextRef.Literal("%"),
-                                decimalPlaces = 0
-                            )
-                        }
-                    }
+                    )
 
                     // Profile (collapsible, hidden in simple mode)
                     if (!uiState.simpleMode) {

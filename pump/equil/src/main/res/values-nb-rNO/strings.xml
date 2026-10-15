@@ -24,6 +24,12 @@
     <string name="equil_title_unpair_detach">Løsne pumpen</string>
     <string name="equil_title_history_events">Historiske hendelser</string>
     <string name="equil_tone">Varseltone</string>
+    <string name="equil_bolus_speed">Bolushastighet</string>
+    <string name="equil_bolus_speed_summary">En raskere bolus kan føre til flere okklusjonsalarmer.</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1,5 E/min (standard)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 E/min</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 E/min</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 E/min</string>
     <string name="equil_tone_mode_mute">Demp lyd</string>
     <string name="equil_tone_mode_shake">Kun vibrering</string>
     <string name="equil_tone_mode_tone">Kun lyd</string>
@@ -33,6 +39,10 @@
     <string name="equil_error">Tilkoblingsfeil</string>
     <string name="equil_change">Bytt pumpe</string>
     <string name="equil_change_content">Vennligst fjern pumpen fra basen.</string>
+    <string name="equil_new_infusion_set_question">Skal du også sette på et nytt infusjonssett (festeplate og kanyle)?</string>
+    <string name="equil_new_infusion_set_yes">Ja, nytt infusjonssett</string>
+    <string name="equil_new_infusion_set_no">Nei, bare reservoar eller batteri</string>
+    <string name="equil_same_infusion_set_hint">Kanylen vil ikke bli fylt, og det vil ikke bli registrert noe kanylebytte.</string>
     <string name="equil_unpair_alert">Er du sikker på at du vil gi fra kontroll over %1$s?</string>
     <string name="equil_record_basal">Basaldose %1$s E/t</string>
     <string name="equil_record_basal_temp">Midlertidig basaldose %1$s E/t</string>
@@ -40,8 +50,10 @@
     <string name="equil_error_set_temp_basal_failed_validation">Midlertidig basalvarighet må være større enn null og et multiplum av %1$s minutter.</string>
     <string name="equil_basal_exceeds_max">Profilens basalrate på %1$s U/t overskrider pumpens maksimale basalrate på %2$s U/t. Øk maksimal basalrate i innstillingene og koble til pumpen på nytt.</string>
     <string name="equil_not_enough_insulin">Ikke nok insulin igjen i reservoaret</string>
-    <string name="equil_low_battery">Lavt batterinivå</string>
-    <string name="equil_low_insulin">Ikke nok insulin igjen i reservoaret</string>
+    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Lavt batterinivå: %1$d%%</string>
+    <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Det er ikke nok insulin igjen i reservoaret: %1$s</string>
+    <string name="equil_reservoir_empty">Insulinreservoaret er tomt. Pumpen leverer ikke lenger insulin.</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Pumpen stoppet under bolusen. Gitt: %1$s av %2$s</string>
     <string name="equil_pump_not_run">Pumpen kjører ikke</string>
     <string name="equil_pair">Paring</string>
     <string name="equil_pair_error">Paringsfeil</string>

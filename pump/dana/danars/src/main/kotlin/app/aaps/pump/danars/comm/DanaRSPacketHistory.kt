@@ -15,6 +15,8 @@ import app.aaps.pump.danars.comm.DanaRSPacketHistory.Companion.RECORD_SIZE
 import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import org.joda.time.LocalDate
+import org.joda.time.LocalDateTime
 import java.util.Calendar
 import java.util.GregorianCalendar
 
@@ -101,7 +103,8 @@ abstract class DanaRSPacketHistory internal constructor(
      * The daily total does not use this: it has only a date, and UTC midnight would be the previous day west of UTC.
      */
     private fun historyTime(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int = 0): DateTime =
-        DateTime(2000 + year, month, day, hour, minute, second, if (danaPump.usingUTC) DateTimeZone.UTC else DateTimeZone.getDefault())
+        if (danaPump.usingUTC) DateTime(2000 + year, month, day, hour, minute, second, DateTimeZone.UTC)
+        else DateTime(localTimeToMillis(LocalDateTime(2000 + year, month, day, hour, minute, second)))
 
     /** One history record of [RECORD_SIZE] bytes, starting at [start] */
     private fun processRecord(data: ByteArray, start: Int) {
@@ -157,7 +160,7 @@ abstract class DanaRSPacketHistory internal constructor(
             0x03 -> {
                 danaRHistoryRecord.code = RecordTypes.RECORD_TYPE_DAILY
                 messageType += "dailyinsulin"
-                val date = DateTime(2000 + historyYear, historyMonth, historyDay, 0, 0)
+                val date = LocalDate(2000 + historyYear, historyMonth, historyDay).toDateTimeAtStartOfDay()
                 danaRHistoryRecord.timestamp = date.millis
                 danaRHistoryRecord.dailyBasal = dailyBasal
                 danaRHistoryRecord.dailyBolus = dailyBolus

@@ -125,9 +125,11 @@ class MedtronicPumpHistoryDecoder(
                 }
                 addToStatistics(pe, decoded, null)
                 record++
-                if (decoded === RecordDecodeStatus.OK) // we add only OK records, all others are ignored
-                {
-                    outList.add(pe)
+                if (decoded === RecordDecodeStatus.OK) { // we add only OK records, all others are ignored
+                    // A record read from the wrong place in the page has a date that does not exist. A suspend dated
+                    // 30.00.2060 00:20:60 was the newest entry, so the pump was shown as suspended for good (#1398).
+                    if (hasRealDate(pe)) outList.add(pe)
+                    else aapsLogger.error(LTag.PUMPBTCOMM, "Record with a date that does not exist, not used: $pe")
                 }
             }
         } while (counter < dataClearInput.size)
@@ -532,6 +534,10 @@ class MedtronicPumpHistoryDecoder(
             aapsLogger.warn(LTag.PUMPBTCOMM, "Unknown datetime format: " + entry.dateTimeLength)
         }
     }
+
+    /** False when the full date and time (5 bytes) of [entry] does not exist, like month 0 or 60 seconds. */
+    private fun hasRealDate(entry: PumpHistoryEntry): Boolean =
+        entry.dateTimeLength != 5 || runCatching { DateTimeUtil.toLocalDateTime(entry.atechDateTime) }.isSuccess
 
     private fun isEndResults(entryType: PumpHistoryEntryType?): Boolean {
         return entryType === PumpHistoryEntryType.EndResultTotals ||

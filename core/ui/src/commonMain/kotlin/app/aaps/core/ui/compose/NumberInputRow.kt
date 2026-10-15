@@ -320,27 +320,15 @@ fun NumberInputRow(
             }
         }
 
-        // +/- filled buttons with long-press repeat
-        RepeatingIconButton(
-            onClick = { stepValue(-1) },
-            enabled = enabled && value > valueRange.start
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Remove,
-                contentDescription = decreaseDescription,
-                modifier = Modifier.size(20.dp)
-            )
-        }
-        RepeatingIconButton(
-            onClick = { stepValue(1) },
-            enabled = enabled && value < valueRange.endInclusive
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Add,
-                contentDescription = increaseDescription,
-                modifier = Modifier.size(20.dp)
-            )
-        }
+        // +/- filled buttons with long-press repeat. Stepping stays here rather than in
+        // [StepButtons]: it reads the field's own text, which a row without a field cannot do.
+        StepButtons(
+            decreaseDescription = decreaseDescription,
+            increaseDescription = increaseDescription,
+            canDecrease = enabled && value > valueRange.start,
+            canIncrease = enabled && value < valueRange.endInclusive,
+            onStep = { direction -> stepValue(direction) }
+        )
     }
 }
 

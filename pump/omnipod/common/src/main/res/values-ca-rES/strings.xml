@@ -151,4 +151,6 @@
         <item quantity="one">Alerta pod: %1$s</item>
         <item quantity="other">Alertes pod: %1$s</item>
     </plurals>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
 </resources>

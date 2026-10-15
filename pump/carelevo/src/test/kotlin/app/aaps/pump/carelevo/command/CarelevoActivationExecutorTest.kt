@@ -46,6 +46,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -469,12 +470,15 @@ internal class CarelevoActivationExecutorTest {
         assertThat(result?.comment).isEqualTo("no patch address")
     }
 
-    @Test fun `discard tears down and succeeds when the stop write is accepted`() {
+    @Test fun `discard deletes the stored patch, tears down and succeeds when the stop write is accepted`() {
         stubRunSingle(SimpleResultResponse(resultCode = 0))
+        whenever(patchForceDiscardUseCase.execute()).thenReturn(Single.just(ResponseResult.Success(ResultSuccess)))
         val result = sut.execute(CmdDiscard())
         assertThat(result?.success).isTrue()
         assertThat(result?.enacted).isTrue()
-        verify(carelevoPatch).discardTeardown()
+        verify(patchForceDiscardUseCase).execute()
+        // The bond is removed with the address read before the stored patch was deleted.
+        verify(carelevoPatch).discardTeardown(ADDRESS)
     }
 
     /** Seen on the Pixel: the teardown cleared only memory, and the discarded patch was back after a restart. */
@@ -488,15 +492,15 @@ internal class CarelevoActivationExecutorTest {
         stubRunSingle(SimpleResultResponse(resultCode = 1))
         val result = sut.execute(CmdDiscard())
         assertThat(result?.success).isFalse()
-        verify(carelevoPatch, never()).discardTeardown()
         verify(patchForceDiscardUseCase, never()).execute()
+        verify(carelevoPatch, never()).discardTeardown(anyOrNull())
     }
 
     @Test fun `discard swallows the write exception and fails without teardown`() {
         stubRunSingleThrows()
         val result = sut.execute(CmdDiscard())
         assertThat(result?.success).isFalse()
-        verify(carelevoPatch, never()).discardTeardown()
+        verify(carelevoPatch, never()).discardTeardown(anyOrNull())
     }
 
     // endregion

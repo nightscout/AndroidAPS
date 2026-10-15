@@ -1694,7 +1694,9 @@ class DataHandlerMobile(
         persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())?.let { tt ->
             // Show the full low–high range (was passing lowTarget twice — a range TT only showed its low bound).
             out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(SyncStrings.temp_target), profileUtil.toTargetRangeString(tt.lowTarget, tt.highTarget, GlucoseUnit.MGDL)))
-            out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(InterfacesStrings.confirmation_line, rh.gs(SyncStrings.until), dateUtil.timeString(tt.end)))
+            // A target without an end (a scene without a duration) has no "until" line.
+            if (tt.hasEnd)
+                out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(InterfacesStrings.confirmation_line, rh.gs(SyncStrings.until), dateUtil.timeString(tt.end)))
         }
         out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(SyncStrings.default_range), profileUtil.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL)))
         out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(SyncStrings.target), profileUtil.fromMgdlToStringInUnits(profile.getTargetMgdl())))

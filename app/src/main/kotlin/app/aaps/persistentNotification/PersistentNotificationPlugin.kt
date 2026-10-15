@@ -336,8 +336,9 @@ class PersistentNotificationPlugin(
                 var aaTarget = ""
                 val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
                 if (tempTarget != null) {
+                    // A target without an end (a scene without a duration) shows no remaining time, like the overview chip.
                     aaTarget = profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) +
-                        " " + dateUtil.untilString(tempTarget.end, rh)
+                        if (tempTarget.hasEnd) " " + dateUtil.untilString(tempTarget.end, rh) else ""
                 } else {
                     profileFunction.getProfile()?.let { profile ->
                         val adjustedTarget = profile.apsAdjustedTargetMgdl(loop, config, processedDeviceStatusData)

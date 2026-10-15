@@ -198,6 +198,8 @@
     <string name="a11y_arrow_unknown">unknown</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">decrement %1$s by %2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">increment %1$s by %2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">open %1$s for typing</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">close %1$s</string>
     <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Move up</string>
     <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Move down</string>
     <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Step %1$d of %2$d</string>
@@ -365,6 +367,7 @@
     <string name="temporary_target">Temporary target</string>
     <string name="temporary_targets">Temporary targets</string>
     <string name="running_mode">Running mode</string>
+    <string name="running_mode_desc">Close or open the loop, suspend it, or disconnect the pump</string>
     <string name="running_mode_change_not_allowed">Running mode change not available</string>
     <string name="pump_reconnect">Reconnect pump</string>
     <string name="scene">Scene</string>

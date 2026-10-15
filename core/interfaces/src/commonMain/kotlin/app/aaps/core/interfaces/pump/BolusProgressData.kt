@@ -123,6 +123,9 @@ class BolusProgressData(
 
     /**
      * Check if user requested stop. Used by pump drivers.
+     *
+     * Also read by the bolus executor after the bolus command has finished, so it does not alarm about a bolus the
+     * user stopped. That is why `CommandBolus` completes a stopped bolus instead of clearing its state.
      */
     val isStopPressed: Boolean get() = _state.value?.stopPressed == true
 

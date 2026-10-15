@@ -41,6 +41,10 @@ data class TE(
             previous.ids.nightscoutId == null &&
             ids.nightscoutId != null
 
+    /** False while a scene without a duration runs: its event has no end until the scene ends, see [endOf]. */
+    val hasEnd
+        get() = endOf(timestamp, duration) != Long.MAX_VALUE
+
     enum class MeterType(val text: String) {
         FINGER("Finger"),
         SENSOR("Sensor"),

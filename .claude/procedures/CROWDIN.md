@@ -138,7 +138,44 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/
   `--import-eq-suggestions` would import them too.
 - **A hand-written translation in a short folder** (e.g. `values-ko` next to Crowdin's
   `values-ko-rKR`) is not what Crowdin reads or writes. To bring it in, copy it into the temp
-  workspace under the Crowdin folder name (`values-ko-rKR`) and upload with `-l <lang>`.
+  workspace under the Crowdin folder name (`values-ko-rKR`) and upload with `-l <lang>`. Then
+  delete the short folder, or Korean lives in two places and drifts (carelevo's `values-ko` was
+  deleted on 2026-10-15 for this reason).
+- **Changing the placeholders of an English string drops its translations on Crowdin.** Numbering
+  `%s %s` to `%1$s %2$s` (carelevo, 2026-09-29) left those strings untranslated in every language.
+  The old text is still offered by translation memory; enter it again with the new placeholders
+  and approve it.
+- **Crowdin QA can block Save for a correct text**, e.g. the Korean grammar marker `(으)로` is
+  reported as "extra symbol". Use "Save Anyway".
+
+## Fixing one string in the web editor
+
+Without an API token, the editor is the only way, and every click has to be confirmed in the
+browser extension, so it suits a handful of strings at most.
+
+- Open `https://crowdin.com/editor/androidaps/all/en-<lang>?search_scope=everything` and type the
+  string **key** in "Search strings" (the search matches keys too). `<lang>` is the editor slug:
+  `cs`, `sk`, `ko`, `zhtw`… Changing only `#q=` in the URL does not search again.
+- Saving adds a new translation next to the old one. Approve the new one - that removes approval
+  from the old one. Only approved text is exported.
+- After Save the editor moves on to the next search result, so check which string is selected
+  before you approve.
+
+## Seeing the aapt warnings about translations
+
+aapt prints "Multiple substitutions specified in non-positional format" only when it really merges
+the resources. With the build cache on (`org.gradle.caching=true`), even a build after `clean` takes
+the merge from the cache and prints nothing. Force only the merge tasks to run:
+
+```bash
+./gradlew.bat :app:mergeFullDebugResources --rerun :wear:mergeFullDebugResources --rerun --no-daemon --console=plain > res.log 2>&1
+grep "Multiple substitutions" res.log
+```
+
+aapt does not see everything. A translation can use the wrong type (`%1$.0f` for an `Int`), the
+wrong number (`%1$d` twice), a broken placeholder (`%2$小時`) or a single `%` in a formatted
+string, and the build stays silent. These need a placeholder comparison against English.
+`rh.gs()` catches the error and shows English instead; `stringResource()` in Compose crashes.
 
 ## Moving a source file
 

@@ -46,6 +46,7 @@
     <string name="setupwizard_pairing_status_master_none">Zatiaľ nemáte žiadnych spárovaných klientov</string>
     <string name="setupwizard_pairing_status_client_paired">Spárované s hlavným zariadením</string>
     <string name="setupwizard_pairing_status_client_not_paired">Zatiaľ nespárované</string>
+    <string name="setupwizard_instance_name_title">Kto používa tento telefón?</string>
     <string name="readstatus">Načítať stav</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zariadenie zrejme neumožňuje vypnúť optimalizáciu batérie - môže dochádzať k problémom s výkonom.</string>

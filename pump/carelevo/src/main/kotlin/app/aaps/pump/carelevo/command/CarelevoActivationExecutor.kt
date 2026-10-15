@@ -344,7 +344,8 @@ class CarelevoActivationExecutor @Inject constructor(
             // start of AAPS, and AAPS kept connecting to it instead of offering a new activation.
             val deleted = patchForceDiscardUseCase.execute().blockingGet()
             if (deleted !is ResponseResult.Success) aapsLogger.error(LTag.PUMPCOMM, "newBle.discard could not delete the stored patch: $deleted")
-            carelevoPatch.discardTeardown()
+            // Pass the address read before the delete: the copy in memory may already be empty, and the bond would stay.
+            carelevoPatch.discardTeardown(address)
         }
         aapsLogger.info(LTag.PUMPCOMM, "newBle.discard stopped=$stopped")
         return result.success(stopped).enacted(stopped)

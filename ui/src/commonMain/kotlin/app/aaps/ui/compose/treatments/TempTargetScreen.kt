@@ -188,8 +188,9 @@ private fun TempTargetItem(
             // Time range, targets, duration, reason - all in one compact format
             Text(
                 text = buildString {
-                    // Time range
-                    append(dateUtil.timeRangeString(tempTarget.timestamp, tempTarget.end))
+                    // Time range. A target without an end (a scene without a duration) shows only its start.
+                    if (tempTarget.hasEnd) append(dateUtil.timeRangeString(tempTarget.timestamp, tempTarget.end))
+                    else append(dateUtil.timeString(tempTarget.timestamp))
                     append(" ")
                     // Targets - show only one value if low and high are the same
                     if (tempTarget.lowTarget == tempTarget.highTarget) {
@@ -201,9 +202,11 @@ private fun TempTargetItem(
                     }
                     append(" ")
                     // Duration
-                    append(T.msecs(tempTarget.duration).mins().toInt())
-                    append(stringResource(CoreUiStrings.units_min))
-                    append(" ")
+                    if (tempTarget.hasEnd) {
+                        append(T.msecs(tempTarget.duration).mins().toInt())
+                        append(stringResource(CoreUiStrings.units_min))
+                        append(" ")
+                    }
                     // Reason (without "Reason:" label)
                     append(translator.translate(tempTarget.reason))
                 },

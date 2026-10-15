@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.commands.BolusCancelCommand
@@ -24,6 +25,7 @@ import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartExtendBolusInfus
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartImmeBolusInfusionUseCase
 import com.google.common.truth.Truth.assertThat
 import dev.zacsweers.metro.Provider
+import java.util.Locale
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
@@ -37,6 +39,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
 import org.mockito.kotlin.isA
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verifyBlocking
@@ -53,6 +56,10 @@ import java.util.concurrent.atomic.AtomicInteger
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 internal class CarelevoBolusCoordinatorTest {
+
+    private val decimalFormatter: DecimalFormatter = mock<DecimalFormatter>().also {
+        whenever(it.to2Decimal(any<Double>())).thenAnswer { inv -> "%.2f".format(Locale.US, inv.getArgument<Double>(0)) }
+    }
 
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var rh: ResourceHelper
@@ -144,7 +151,8 @@ internal class CarelevoBolusCoordinatorTest {
             finishImmeBolusInfusionUseCase = finishImmeBolusInfusionUseCase,
             cancelImmeBolusInfusionUseCase = cancelImmeBolusInfusionUseCase,
             startExtendBolusInfusionUseCase = startExtendBolusInfusionUseCase,
-            cancelExtendBolusInfusionUseCase = cancelExtendBolusInfusionUseCase
+            cancelExtendBolusInfusionUseCase = cancelExtendBolusInfusionUseCase,
+            decimalFormatter = decimalFormatter
         )
     }
 

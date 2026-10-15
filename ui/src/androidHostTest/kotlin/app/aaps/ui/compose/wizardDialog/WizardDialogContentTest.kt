@@ -49,6 +49,7 @@ class WizardDialogContentTest {
 
     /** Screen reader name of the plus button of the BG input. It exists only while the BG input is open. */
     private lateinit var bgPlusButton: String
+    private lateinit var bgExpandButton: String
 
     /** Result extras for 71% and a +1 U correction, built from the same templates as the screen. */
     private lateinit var percentageAndCorrection: String
@@ -67,6 +68,10 @@ class WizardDialogContentTest {
             ctx.getString(CoreUiR.string.wizard_bg_label),
             ctx.getString(CoreUiR.string.value_with_unit, "1", UNITS)
         )
+        // The chevron is what tells the two states apart, by which way it points. The +/- are in
+        // both: the row can be nudged while closed, and the open field has its own pair with the
+        // same spoken names.
+        bgExpandButton = ctx.getString(CoreUiR.string.a11y_expand_button_description, ctx.getString(CoreUiR.string.wizard_bg_label))
         percentageAndCorrection = ctx.getString(
             CoreUiR.string.value_in_parentheses,
             ctx.getString(
@@ -92,12 +97,15 @@ class WizardDialogContentTest {
         var state by mutableStateOf(WizardDialogUiState())
         setWizard(uiState = { state })
         compose.runOnIdle { state = loaded(bgAgeMinutes = 2) }
-        compose.onNodeWithContentDescription(bgPlusButton).assertDoesNotExist()
+        // Closed means the pencil is still offered, not that the row has no controls.
+        compose.onNodeWithContentDescription(bgExpandButton).assertExists()
     }
 
     @Test
     fun bgInputOpensByItselfWhenThereIsNoBg() {
         setWizard(uiState = { loaded(hasBgData = false) })
+        // Open: the field is there instead of the pencil, and the +/- belong to the field.
+        compose.onNodeWithContentDescription(bgExpandButton).assertDoesNotExist()
         compose.onNodeWithContentDescription(bgPlusButton).assertExists()
     }
 

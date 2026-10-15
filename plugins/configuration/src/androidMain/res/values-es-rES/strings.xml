@@ -46,6 +46,7 @@
     <string name="setupwizard_pairing_status_master_none">Ningún cliente emparejado todavía</string>
     <string name="setupwizard_pairing_status_client_paired">Vinculado con un máster</string>
     <string name="setupwizard_pairing_status_client_not_paired">No emparejado todavía</string>
+    <string name="setupwizard_instance_name_title">¿Quién usa este teléfono?</string>
     <string name="readstatus">Leer estado</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo no parece soportar la optimización de la batería por medio de los ajustes - pueden ocurrir problemas de rendimiento.</string>

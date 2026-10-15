@@ -25,7 +25,7 @@
     <string name="extended_boluses">Yayma Bolus</string>
     <string name="carbohydrates">Karbonhidrat</string>
     <string name="careportal_events">Bakım Portalı etkinlikleri (notlar hariç)</string>
-    <string name="profile_switches">Profil Değişimleri</string>
+    <string name="profile_switches">Profil Geçişleri</string>
     <string name="total_daily_doses">Günlük Toplam Doz</string>
     <string name="temporary_basal_rates">Geçici Bazal Oranları</string>
     <string name="temporary_targets">Geçici Hedefler</string>

@@ -8,9 +8,6 @@
     <string name="configure">Configurar opacidade</string>
     <string name="widget_description">Widget AAPS</string>
     <!--     Activities-->
-    <string name="activity_monitor">Monitor de actividade</string>
-    <string name="time_range">Intervalo de tempo</string>
-    <string name="do_you_want_reset_stats">Quer reiniciar as estatísticas de actividade?</string>
     <string name="calculation_in_progress">Cálculo em curso</string>
     <string name="age">Idade</string>
     <string name="weight_label">Peso</string>

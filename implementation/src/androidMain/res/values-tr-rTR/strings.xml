@@ -11,6 +11,7 @@
     <string name="short_status_battery">Pil: %1$d%%</string>
     <string name="short_status_not_initialized">Pompa başlatılamadı</string>
     <!--    Permissions-->
+    <!--    Notification channels, shown in the Android settings-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported">Tercihler dışa aktarıldı</string>

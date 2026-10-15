@@ -14,7 +14,7 @@
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Kliknij tutaj, aby zalogować się ponownie, jeśli wylogowanie nie było celowe.</string>
     <string name="next">Dalej</string>
     <string name="welcome_to_open_humans">Witaj w Open Humans</string>
-    <string name="setup_data_upload">Aby ustawić wysyłanie danych klinkij \'Next \'</string>
+    <string name="setup_data_upload">Aby ustawić wysyłanie danych kliknij \'Next \'</string>
     <string name="consent">Zgoda</string>
     <string name="terms_of_use">Warunki użytkowania</string>
     <string name="please_read__information">Proszę uważnie przeczytać poniższe informacje i zaakceptować warunki aby kontynuować.</string>
@@ -37,11 +37,11 @@
     <string name="data_not_uploaded">Dane NIE przesłane</string>
     <string name="passwords">Hasła</string>
     <string name="nightscout_url">Adres URL strony Nightscout</string>
-    <string name="nightscout_api_secret">Twoje API secret Nightscout</string>
+    <string name="nightscout_api_secret">API SECRET Nightscout</string>
     <string name="free_text_fields">Wolne pola tekstowe</string>
     <string name="agree">Rozumiem i zgadzam się.</string>
     <string name="login_open_humans">Zaloguj się do Open Humans</string>
-    <string name="final_touches">Wykończenie</string>
+    <string name="final_touches">Ostatnie szlify</string>
     <string name="uploading_proceed">Jesteś tylko o jeden krok od przesłania swoich danych do Open Humans. Czy chcesz kontynuować?</string>
     <string name="cancel">Anuluj</string>
     <string name="proceed">Kontynuuj</string>
