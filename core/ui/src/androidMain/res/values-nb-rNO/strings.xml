@@ -354,6 +354,7 @@
     <string name="temporary_target">Midlertidig mål</string>
     <string name="temporary_targets">Midlertidige mål</string>
     <string name="running_mode">Kjøremodus</string>
+    <string name="running_mode_desc">Lukk eller åpne loopen, sett den på pause eller koble fra pumpen</string>
     <string name="running_mode_change_not_allowed">Endring av kjøremodus er ikke tilgjengelig</string>
     <string name="pump_reconnect">Koble til pumpen på nytt</string>
     <string name="scene">Scene</string>
