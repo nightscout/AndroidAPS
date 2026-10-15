@@ -54,7 +54,7 @@
     <string name="objectives_exam_learned_isf">Bạn đã học được ý nghĩa của giá trị ISF và cách nó ảnh hưởng đến lượng insulin được sử dụng để điều chỉnh đường huyết.</string>
     <string name="objectives_exam_learned_ic">Bạn đã học được ý nghĩa của giá trị IC và cách nó ảnh hưởng đến lượng insulin cần thiết để bù cho lượng carbs.</string>
     <string name="objectives_exam_learned_hypott">Mục tiêu tạm thời Hypo (Hypo temp target) chỉ nên được sử dụng để tránh điều chỉnh quá mức sau hạ đường huyết, khi thường có IOB âm tích lũy. Cần xem xét thêm các biện pháp bổ sung để ngăn tình huống này lặp lại trong dự kiến.</string>
-    <string name="objectives_exam_learned_profileswitch">Việc sử dụng phần trăm không ảnh hưởng đến mục tiêu đường huyết, nhưng liều nền, ISF và IC sẽ được điều chỉnh để cấp nhiều insulin hơn (trên 100%) hoặc ít insulin hơn (dưới 100%).</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">Việc sử dụng phần trăm không ảnh hưởng đến mục tiêu đường huyết, nhưng liều nền, ISF và IC sẽ được điều chỉnh để cấp nhiều insulin hơn (trên 100%) hoặc ít insulin hơn (dưới 100%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Bằng cách sử dụng dịch chuyển thời gian trong chuyển đổi cấu hình, bạn có thể điều chỉnh cấu hình theo nhịp sinh học để thích ứng với những thay đổi bất thường, như việc thức dậy muộn.</string>
     <string name="objectives_exam_learned_profileswitch4">Chỉ chỉnh sửa cấu hình thôi là chưa đủ để áp dụng thay đổi. Bạn vẫn cần thực hiện chuyển đổi cấu hình để kích hoạt các thay đổi.</string>
     <string name="objectives_exam_learned_exercise">Bạn nên giảm lượng insulin trong cơ thể ít nhất 1 giờ trước khi bắt đầu tập thể dục bằng cách chọn cấu hình dưới 100%.</string>
@@ -72,17 +72,13 @@
     <string name="objectives_exam_learned_ecarbs">E-carbs là sự thay thế cho bolus kéo dài trong thế giới bơm insulin.</string>
     <string name="objectives_exam_learned_nsclient">Bạn có thể theo dõi AAPS từ xa bằng AAPSClient hoặc Nightscout. Khi AAPSClient được ghép đôi với điện thoại chính, bạn cũng có thể điều khiển AAPS từ xa.</string>
     <string name="objectives_exam_learned_concentration1">Dùng insulin U200 với cấu hình 50% sẽ khiến bạn phải quy đổi liều mỗi lần tiêm bolus bằng bút bên ngoài AAPS. Các báo cáo tiêu chuẩn của AAPS hoặc Nightscout cũng sẽ không phản ánh đúng giá trị thực và cần được quy đổi về IU trước khi gửi cho đội ngũ y tế.</string>
-    <string name="objectives_exam_learned_concentration2">Chuyển từ U200 với cấu hình 50% sang U200 bằng tính năng nồng độ insulin sẽ yêu cầu tạo một cấu hình mạnh hơn, tắt DynISF trong một tuần và rèn luyện để làm quen với việc tính theo đơn vị quốc tế.</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">Chuyển từ U200 với cấu hình 50% sang U200 bằng tính năng nồng độ insulin sẽ yêu cầu tạo một cấu hình mạnh hơn, tắt DynISF trong một tuần và rèn luyện để làm quen với việc tính theo đơn vị quốc tế.</string>
     <string name="objectives_exam_learned_concentration3">Chỉ có thể thay đổi nồng độ insulin khi thay insulin hoặc patch. Nhưng quan trọng nhất, đặc biệt với bơm có dây, tuyệt đối không sử dụng giao diện của bơm để tiêm bolus trực tiếp từ bơm.</string>
     <string name="answerdisabledto">Trả lời bị vô hiệu hóa cho đến: %1$s</string>
     <string name="wronganswer">Câu trả lời sai!</string>
     <string name="unfinshed_button">Tiếp theo chưa hoàn thành</string>
     <string name="requestcode">Mã yêu cầu: %1$s</string>
     <string name="objectives_hint">(chọn tất cả các đáp án đúng)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Không kết nối với Internet</string>
     <string name="failedretrievetime">Không thể lấy thông tin thời gian</string>
     <string name="requirementnotmet">Chưa đáp ứng yêu cầu của Mục tiêu</string>
