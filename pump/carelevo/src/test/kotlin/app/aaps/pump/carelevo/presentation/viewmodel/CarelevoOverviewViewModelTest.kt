@@ -845,7 +845,7 @@ class CarelevoOverviewViewModelTest {
     // ---- clearExpiredInfusions (driven by the init second-tick) --------------------------------
 
     @Test
-    fun `the second tick deletes every infusion whose window has elapsed`() {
+    fun `the second tick deletes every elapsed infusion except an immediate bolus`() {
         val past = Clock.System.now() - 2.hours
         infusionSubject.onNext(
             Optional.of(
@@ -861,7 +861,8 @@ class CarelevoOverviewViewModelTest {
         // atLeastOnce: the ticker keeps firing, so a strict times(1) could race a second tick.
         val captor = argumentCaptor<CarelevoUseCaseRequest>()
         verify(deleteInfusionInfoUseCase, timeout(3_000).atLeastOnce()).execute(captor.capture())
-        assertThat(captor.firstValue).isEqualTo(CarelevoDeleteInfusionRequestModel(true, true, true))
+        // A left immediate bolus can be one the app never recorded; the bolus coordinator records it, then removes it.
+        assertThat(captor.firstValue).isEqualTo(CarelevoDeleteInfusionRequestModel(true, false, true))
     }
 
     @Test

@@ -637,6 +637,9 @@ class CarelevoPumpPlugin @Inject constructor(
                 "newBle.readInfusionInfo OK remains=${info.insulinRemaining} basal=${info.infusedTotalBasalAmount} " +
                     "bolus=${info.infusedTotalBolusAmount} pumpState=${info.pumpStateRaw} mode=${info.modeRaw} running=${info.runningMinutes}"
             )
+            // A bolus the app did not record (it stopped during the bolus) is recorded here. The queue reads the status
+            // when the app starts ("Pump driver changed"), so this runs seconds after a restart.
+            bolusCoordinator.recoverLeftoverBolus(info, serialNumber())
         } catch (e: Throwable) {
             aapsLogger.error(LTag.PUMPCOMM, "newBle.readInfusionInfo FAILED", e)
         }

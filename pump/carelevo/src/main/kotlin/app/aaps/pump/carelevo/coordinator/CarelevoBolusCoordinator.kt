@@ -110,6 +110,11 @@ class CarelevoBolusCoordinator @Inject constructor(
     // the cancel finished before the worker started to wait.
     @Volatile private var immeBolusCancelDone = false
 
+    // Pump id and type of the running immediate bolus, also read by the out-of-band cancel. Every record of the bolus
+    // uses this pump id, so a later record of it (recoverLeftoverBolus) updates the first one instead of adding one.
+    @Volatile private var immeBolusPumpId: Long = 0
+    @Volatile private var immeBolusType: BS.Type = BS.Type.NORMAL
+
     // Written on the queue worker (handleBolusSuccess), read from the out-of-band cancel thread
     // (calculateMaxRetry in cancelImmediateBolusInternal) — needs the same visibility guarantee
     // as its two sibling flags above.
@@ -143,12 +148,17 @@ class CarelevoBolusCoordinator @Inject constructor(
                 "immeInfo=${infusionInfo?.immeBolusInfusionInfo}"
         )
         if (infusionInfo?.immeBolusInfusionInfo != null) {
-            aapsLogger.warn(LTag.PUMPCOMM, "deliverTreatment.reject reason=immeBolusInProgress")
-            result.success = false
-            result.enacted = false
-            result.bolusDelivered = 0.0
-            result.comment("Another bolus is in progress")
-            return result
+            // A record of an earlier bolus is left. Record or correct that bolus from the patch first. If it had not
+            // been recorded, this bolus was calculated without it, so it is refused once.
+            val leftover = recoverLeftoverBolus(carelevoPatch.getPatchInfoAddress()?.let { readInfusionInfoOrNull(it) }, serialNumber)
+            if (leftover != LeftoverBolus.CORRECTED) {
+                aapsLogger.warn(LTag.PUMPCOMM, "deliverTreatment.reject reason=immeBolusInProgress leftover=$leftover")
+                result.success = false
+                result.enacted = false
+                result.bolusDelivered = 0.0
+                result.comment(if (leftover == LeftoverBolus.ADDED) rh.gs(R.string.carelevo_bolus_rejected_missed_bolus_recorded) else "Another bolus is in progress")
+                return result
+            }
         }
 
         isImmeBolusStop = false
@@ -338,6 +348,8 @@ class CarelevoBolusCoordinator @Inject constructor(
                 result.bolusDelivered = 0.0
                 return result.comment(rh.gs(app.aaps.core.ui.R.string.stop))
             }
+            immeBolusPumpId = dateUtil.now()
+            immeBolusType = detailedBolusInfo.bolusType
             val response = runBlocking { bleSession.runSingle(address, ImmediateBolusCommand(actionId, detailedBolusInfo.insulin)) }
             val bolusStartMs = System.currentTimeMillis()
             if (response.resultCode != RESULT_SUCCESS) {
@@ -351,7 +363,10 @@ class CarelevoBolusCoordinator @Inject constructor(
             // local persist is bookkeeping only: if it fails we MUST still run the delivery loop and
             // record the bolus in pumpSync, otherwise a delivered dose would vanish from IOB and the
             // loop could stack insulin on top of it. Persist failure is logged as a secondary fault.
-            if (!startImmeBolusInfusionUseCase.persistImmeBolusStarted(actionId, detailedBolusInfo.insulin, response.expectedCompletionSeconds)) {
+            if (!startImmeBolusInfusionUseCase.persistImmeBolusStarted(
+                    actionId, detailedBolusInfo.insulin, response.expectedCompletionSeconds, immeBolusPumpId, immeBolusType, bolusTotalBefore
+                )
+            ) {
                 aapsLogger.error(LTag.PUMPCOMM, "newBle.deliverTreatment persist failed — continuing, pump is delivering (bookkeeping will recover on next status read)")
             }
             aapsLogger.info(LTag.PUMPCOMM, "ble.deliverTreatment start insulin=${detailedBolusInfo.insulin} expectSec=${response.expectedCompletionSeconds}")
@@ -445,7 +460,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                     detailedInfo.timestamp,
                     PumpInsulin(delivered),
                     detailedInfo.bolusType,
-                    dateUtil.now(),
+                    immeBolusPumpId,
                     PumpType.CAREMEDI_CARELEVO,
                     serialNumber
                 )
@@ -468,6 +483,57 @@ class CarelevoBolusCoordinator @Inject constructor(
             result.success = false
             result.comment(text)
         }
+    }
+
+    /** What [recoverLeftoverBolus] found and did. */
+    enum class LeftoverBolus {
+
+        /** No bolus record is left. */
+        NONE,
+
+        /** The patch could not be read, so nothing was changed. */
+        UNKNOWN,
+
+        /** The patch still gives the bolus. The full dose is recorded for now; the record stays. */
+        RUNNING,
+
+        /** The bolus had not been recorded. It is recorded now and the record is removed. */
+        ADDED,
+
+        /** The bolus was already recorded. Its amount is set to what the patch gave and the record is removed. */
+        CORRECTED
+    }
+
+    /**
+     * A bolus record is left when the app stopped during a bolus (an update, out of memory, a crash), or when a bolus
+     * was not cleaned up. The patch then gave the bolus, but it may never have been recorded. Record it now, at its
+     * start: the patch's bolus total now minus the total saved before the bolus, or the full dose when that is not
+     * known. It uses the bolus' own pump id, so a bolus that was already recorded is only corrected, never counted
+     * twice. While the patch still gives the bolus, the full dose is recorded and the record stays, so this runs
+     * again at the next status read. Runs on the queue worker: from the status read and before a new bolus.
+     */
+    fun recoverLeftoverBolus(info: InfusionInfoResponse?, serialNumber: String): LeftoverBolus {
+        val leftover = carelevoPatch.infusionInfo.value?.getOrNull()?.immeBolusInfusionInfo ?: return LeftoverBolus.NONE
+        if (info == null) return LeftoverBolus.UNKNOWN
+        val running = info.isImmeBolusRunning()
+        val volume = leftover.volume ?: 0.0
+        // Another patch's total says nothing about this bolus.
+        val samePatch = leftover.address.equals(carelevoPatch.getPatchInfoAddress(), ignoreCase = true)
+        val fromPatch = leftover.bolusTotalBefore
+            ?.takeIf { !running && samePatch }
+            ?.let { info.infusedTotalBolusAmount - it }
+            ?.takeIf { it >= 0.0 }
+            ?.let { Round.roundTo(min(it, volume), BOLUS_TOTAL_STEP) }
+        val amount = fromPatch ?: volume
+        val pumpId = leftover.pumpId ?: leftover.createdAt.toEpochMilliseconds()
+        val type = BS.Type.entries.firstOrNull { it.name == leftover.bolusType } ?: BS.Type.NORMAL
+        val added = amount > 0.0 && runBlocking {
+            pumpSync.syncBolusWithPumpId(pumpId, PumpInsulin(amount), type, pumpId, PumpType.CAREMEDI_CARELEVO, serialNumber)
+        }
+        aapsLogger.warn(LTag.PUMPCOMM, "newBle.leftoverBolus volume=$volume amount=$amount fromPatch=${fromPatch != null} running=$running added=$added pumpId=$pumpId")
+        if (running) return LeftoverBolus.RUNNING
+        if (!cancelImmeBolusInfusionUseCase.persistImmeBolusCancelled()) aapsLogger.error(LTag.PUMPCOMM, "newBle.leftoverBolus clearing the local bolus record failed")
+        return if (added) LeftoverBolus.ADDED else LeftoverBolus.CORRECTED
     }
 
     /** Reads the patch until it reports no running immediate bolus. Returns its bolus total then, or null. */
@@ -537,11 +603,13 @@ class CarelevoBolusCoordinator @Inject constructor(
                         val persisted = cancelImmeBolusInfusionUseCase.persistImmeBolusCancelled()
                         if (!persisted) aapsLogger.error(LTag.PUMPCOMM, "newBle.cancelImmediateBolus persist failed — stale local bolus record until next status read")
                         runBlocking {
+                            // At the bolus start, with its own type and pump id: a stopped priming bolus must stay
+                            // PRIMING, and a later record of this bolus must update this one.
                             pumpSync.syncBolusWithPumpId(
-                                dateUtil.now(),
+                                immeBolusPumpId,
                                 PumpInsulin(infusedAmount),
-                                BS.Type.NORMAL,
-                                dateUtil.now(),
+                                immeBolusType,
+                                immeBolusPumpId,
                                 PumpType.CAREMEDI_CARELEVO,
                                 serialNumber
                             )
@@ -629,7 +697,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                         detailedInfo.timestamp,
                         PumpInsulin(detailedInfo.insulin),
                         detailedInfo.bolusType,
-                        dateUtil.now(),
+                        immeBolusPumpId,
                         PumpType.CAREMEDI_CARELEVO,
                         serialNumber
                     )

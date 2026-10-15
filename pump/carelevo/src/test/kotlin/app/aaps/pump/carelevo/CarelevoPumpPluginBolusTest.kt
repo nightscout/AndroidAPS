@@ -1,5 +1,6 @@
 package app.aaps.pump.carelevo
 
+import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpInsulin
@@ -21,7 +22,9 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Timeout
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.isA
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -29,6 +32,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import java.util.Optional
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
 
@@ -87,6 +92,7 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
 
     @Test
     fun `deliverTreatment should reject when immediate bolus is already running`() {
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 2.0, modeRaw = IMME_BOLUS_MODE))
         infusionInfoSubject.onNext(
             Optional.of(
                 CarelevoInfusionInfoDomainModel(
@@ -154,7 +160,7 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
         // Pump ACKed (resultCode==0 stubbed in the base) — insulin IS being delivered. A failed
         // local persist must NOT turn that into "nothing happened": the delivery loop still runs
         // and the bolus still reaches pumpSync, or IOB would silently lose a delivered dose.
-        whenever(startImmeBolusInfusionUseCase.persistImmeBolusStarted(any(), any(), any())).thenReturn(false)
+        whenever(startImmeBolusInfusionUseCase.persistImmeBolusStarted(any(), any(), any(), any(), any(), anyOrNull())).thenReturn(false)
 
         val result = runBlocking {
             plugin.deliverTreatment(DetailedBolusInfo().apply {
@@ -271,6 +277,134 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
         verifyBlocking(bleSession, times(1)) { readInfusionInfo(any()) }
     }
 
+    @Test
+    fun `deliverTreatment should record a bolus the app did not record and refuse the new one once`() {
+        leftover(volume = 0.6, bolusTotalBefore = 12.5, bolusType = "SMB")
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 13.1))
+        whenever { pumpSync.syncBolusWithPumpId(any(), any(), anyOrNull(), any(), any(), any()) }.thenReturn(true)
+        whenever(rh.gs(R.string.carelevo_bolus_rejected_missed_bolus_recorded)).thenReturn("added")
+
+        val result = runBlocking { plugin.deliverTreatment(bolus(1.0)) }
+
+        assertThat(result.success).isFalse()
+        assertThat(result.comment).isEqualTo("added")
+        verifyLeftoverRecorded(amount = 0.6, type = BS.Type.SMB)
+        verify(cancelImmeBolusInfusionUseCase).persistImmeBolusCancelled()
+        verifyBlocking(bleSession, never()) { runSingle(any(), isA<ImmediateBolusCommand>(), any()) }
+    }
+
+    @Test
+    fun `deliverTreatment should go on when the left bolus was already recorded`() {
+        leftover(volume = 1.0, bolusTotalBefore = 2.0)
+        // syncBolusWithPumpId answers false: the record of this pump id existed and was only updated.
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 3.0))
+
+        val result = runBlocking { plugin.deliverTreatment(bolus(0.25)) }
+
+        assertThat(result.success).isTrue()
+        verifyBlocking(bleSession) { runSingle(any(), isA<ImmediateBolusCommand>(), any()) }
+    }
+
+    @Test
+    fun `the status read records a left bolus from the patch total and removes its record`() {
+        leftover(volume = 0.6, bolusTotalBefore = 12.5, bolusType = "SMB")
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 13.0))
+
+        runBlocking { plugin.getPumpStatus("test") }
+
+        // The patch gave 0.5 U of the 0.6 U (it stopped by itself, for example on an occlusion).
+        verifyLeftoverRecorded(amount = 0.5, type = BS.Type.SMB)
+        verify(cancelImmeBolusInfusionUseCase).persistImmeBolusCancelled()
+    }
+
+    @Test
+    fun `the status read records the full dose and keeps the record while the patch still gives the bolus`() {
+        leftover(volume = 0.6, bolusTotalBefore = 12.5)
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 12.8, modeRaw = IMME_BOLUS_MODE))
+
+        runBlocking { plugin.getPumpStatus("test") }
+
+        verifyLeftoverRecorded(amount = 0.6, type = BS.Type.NORMAL)
+        verify(cancelImmeBolusInfusionUseCase, never()).persistImmeBolusCancelled()
+    }
+
+    @Test
+    fun `the status read records the full dose when the patch total cannot tell`() {
+        // A lower total than before the bolus: the patch counter started again.
+        leftover(volume = 0.6, bolusTotalBefore = 12.5)
+        whenever { bleSession.readInfusionInfo(any()) }.thenReturn(infusionInfo(bolusTotal = 1.0))
+
+        runBlocking { plugin.getPumpStatus("test") }
+
+        verifyLeftoverRecorded(amount = 0.6, type = BS.Type.NORMAL)
+    }
+
+    @Test
+    fun `the status read records a left bolus of an older app version at its start as a normal bolus`() {
+        leftover(volume = 0.6, bolusTotalBefore = null, bolusType = null, pumpId = null, createdAt = Instant.fromEpochMilliseconds(OLD_CREATED_AT))
+
+        runBlocking { plugin.getPumpStatus("test") }
+
+        val amount = argumentCaptor<PumpInsulin>()
+        verifyBlocking(pumpSync) { syncBolusWithPumpId(eq(OLD_CREATED_AT), amount.capture(), eq(BS.Type.NORMAL), eq(OLD_CREATED_AT), any(), any()) }
+        assertThat(amount.firstValue.cU).isWithin(0.001).of(0.6)
+    }
+
+    @Test
+    fun `a finished bolus is recorded with the pump id saved at its start`() {
+        whenever(dateUtil.now()).thenReturn(START_PUMP_ID)
+
+        runBlocking { plugin.deliverTreatment(bolus(0.25)) }
+
+        verify(startImmeBolusInfusionUseCase).persistImmeBolusStarted(any(), any(), any(), eq(START_PUMP_ID), eq(BS.Type.NORMAL), eq(2.0))
+        verifyBlocking(pumpSync) { syncBolusWithPumpId(any(), any(), anyOrNull(), eq(START_PUMP_ID), any(), any()) }
+    }
+
+    @Test
+    @Timeout(10)
+    fun `a confirmed stop is recorded at the bolus start with its own type and pump id`() {
+        whenever(dateUtil.now()).thenReturn(START_PUMP_ID)
+        stopDuringStart(BolusCancelResponse(resultCode = 0, infusedAmount = 0.3))
+
+        runBlocking { plugin.deliverTreatment(bolus(2.0).apply { bolusType = BS.Type.PRIMING }) }
+
+        verifyBlocking(pumpSync) { syncBolusWithPumpId(eq(START_PUMP_ID), any(), eq(BS.Type.PRIMING), eq(START_PUMP_ID), any(), any()) }
+    }
+
+    /** A record of an earlier bolus is left, as after the app stopped during that bolus. */
+    private fun leftover(
+        volume: Double,
+        bolusTotalBefore: Double?,
+        bolusType: String? = "NORMAL",
+        pumpId: Long? = LEFTOVER_PUMP_ID,
+        createdAt: Instant = Clock.System.now()
+    ) {
+        infusionInfoSubject.onNext(
+            Optional.of(
+                CarelevoInfusionInfoDomainModel(
+                    immeBolusInfusionInfo = CarelevoImmeBolusInfusionInfoDomainModel(
+                        infusionId = "imme-1",
+                        address = "AA:BB:CC:DD:EE:FF",
+                        mode = 3,
+                        createdAt = createdAt,
+                        volume = volume,
+                        infusionDurationSeconds = 44,
+                        pumpId = pumpId,
+                        bolusTotalBefore = bolusTotalBefore,
+                        bolusType = bolusType
+                    )
+                )
+            )
+        )
+    }
+
+    /** The left bolus is recorded at its start, under its own pump id. */
+    private fun verifyLeftoverRecorded(amount: Double, type: BS.Type) {
+        val recorded = argumentCaptor<PumpInsulin>()
+        verifyBlocking(pumpSync) { syncBolusWithPumpId(eq(LEFTOVER_PUMP_ID), recorded.capture(), eq(type), eq(LEFTOVER_PUMP_ID), any(), any()) }
+        assertThat(recorded.firstValue.cU).isWithin(0.001).of(amount)
+    }
+
     /** The user presses stop while the patch starts the bolus, and the patch answers the cancel with [cancelResponse]. */
     private fun stopDuringStart(cancelResponse: BolusCancelResponse) {
         whenever(bolusProgressData.state).thenReturn(MutableStateFlow<BolusProgressState?>(null))
@@ -316,5 +450,9 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
         // Raw infusion modes the patch reports in 0x91.
         const val BASAL_MODE = 1
         const val IMME_BOLUS_MODE = 3
+
+        const val LEFTOVER_PUMP_ID = 1_760_000_000_000L
+        const val START_PUMP_ID = 1_760_000_100_000L
+        const val OLD_CREATED_AT = 1_760_000_200_000L
     }
 }

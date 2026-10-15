@@ -70,6 +70,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.isA
 import org.mockito.kotlin.mock
@@ -172,7 +173,9 @@ abstract class CarelevoPumpPluginTestBase {
         whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(true)
         whenever(startTempBasalInfusionUseCase.persistTempBasalStarted(any())).thenReturn(true)
         whenever(cancelTempBasalInfusionUseCase.persistTempBasalCancelled()).thenReturn(true)
-        whenever(startImmeBolusInfusionUseCase.persistImmeBolusStarted(any(), any(), any())).thenReturn(true)
+        whenever(startImmeBolusInfusionUseCase.persistImmeBolusStarted(any(), any(), any(), any(), any(), anyOrNull())).thenReturn(true)
+        // An unstubbed suspend mock answers null; false = the record of this pump id existed and was updated.
+        whenever { pumpSync.syncBolusWithPumpId(any(), any(), anyOrNull(), any(), any(), any()) }.thenReturn(false)
         whenever(cancelImmeBolusInfusionUseCase.persistImmeBolusCancelled()).thenReturn(true)
         whenever(startExtendBolusInfusionUseCase.persistExtendBolusStarted(any(), any(), any())).thenReturn(true)
         whenever(cancelExtendBolusInfusionUseCase.persistExtendBolusCancelled()).thenReturn(true)
