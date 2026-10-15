@@ -2,6 +2,7 @@ package app.aaps.pump.omnipod.omnipod5.bledriver.pod.state
 
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants
 import java.time.Duration
 import java.time.Instant
@@ -12,7 +13,7 @@ import java.util.TimeZone
 
 /**
  * Estimated pod expiration time, mirroring
- * [OmnipodDashPodStateManagerImpl.expiry]'s formula (including its unexplained
+ * `OmnipodDashPodStateManagerImpl.expiry`'s formula (including its unexplained
  * `.minusHours(8)` grace-period adjustment, copied verbatim rather than guessed at) -
  * null until [O5PodStateManager.podLifeInHours]/[O5PodStateManager.minutesSinceActivation]
  * are known (i.e. before [app.aaps.pump.omnipod.common.bledriver.pod.response
@@ -89,7 +90,7 @@ val O5PodStateManager.basalDrift: Double
 /**
  * Integrates expected basal delivery (units) over `[startTime, endTime]`, accounting for
  * an active temp basal overriding the scheduled program during its window. Mirrors
- * [OmnipodDashPodStateManagerImpl.integrateExpectedDelivery], simplified: O5 doesn't track
+ * `OmnipodDashPodStateManagerImpl.integrateExpectedDelivery`, simplified: O5 doesn't track
  * a separate pod-timezone offset the way Dash does (every other O5 basal-rate lookup -
  * see [app.aaps.pump.omnipod.omnipod5.O5PumpPlugin.baseBasalRate] - already calls
  * [BasalProgram.rateAt] directly against device-local time, so this does the same rather
@@ -153,3 +154,14 @@ fun O5PodStateManager.nextBasalExpected(previousUpdate: Long?, now: Long): Doubl
             )?.let { delta -> current + delta }
         } ?: current
     } ?: basalDelivered.takeIf { activationProgress == ActivationProgress.COMPLETED }
+
+/** Save acceptance with the status itself, before a later stop can replace its sequence. */
+internal fun O5PodStateManager.PendingDoseCommand.withPodAcceptance(
+    podSequence: Short,
+    status: DeliveryStatus
+): O5PodStateManager.PendingDoseCommand {
+    val sequenceMatches = bolusCancelRequested != true &&
+        sequenceNumber?.let { (it.toInt() and 0x0f) == (podSequence.toInt() and 0x0f) } == true
+    val bolusActive = type == O5PodStateManager.PendingDoseType.BOLUS && status.bolusDeliveringActive()
+    return if (!confirmedByStatus && (sequenceMatches || bolusActive)) copy(confirmedByStatus = true) else this
+}

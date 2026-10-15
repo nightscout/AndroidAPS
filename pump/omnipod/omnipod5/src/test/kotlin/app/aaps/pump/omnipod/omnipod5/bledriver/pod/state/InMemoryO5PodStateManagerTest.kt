@@ -20,6 +20,34 @@ import java.util.TimeZone
 class InMemoryO5PodStateManagerTest {
 
     @Test
+    fun `a matching response saves acceptance before a stop changes the sequence`() {
+        val state = InMemoryO5PodStateManager()
+        val response = DefaultStatusResponse(hexToBytes("1D1800A02800000463E8"))
+        state.pendingDoseCommand = O5PodStateManager.PendingDoseCommand(
+            type = O5PodStateManager.PendingDoseType.BOLUS,
+            requestedUnits = 3.0, startedAt = 1000L,
+            sequenceNumber = response.sequenceNumberOfLastProgrammingCommand
+        )
+        state.updateFromDefaultStatusResponse(response)
+        assertThat(state.pendingDoseCommand!!.confirmedByStatus).isTrue()
+        state.pendingDoseCommand = state.pendingDoseCommand!!.copy(bolusCancelRequested = true, bolusCancelSequenceNumber = 6)
+        state.updateFromDefaultStatusResponse(DefaultStatusResponse(hexToBytes("1D1800A03000000463E8")))
+        assertThat(state.pendingDoseCommand!!.confirmedByStatus).isTrue()
+    }
+
+    @Test
+    fun `a stop response cannot prove acceptance of an unknown bolus`() {
+        val state = InMemoryO5PodStateManager()
+        state.pendingDoseCommand = O5PodStateManager.PendingDoseCommand(
+            type = O5PodStateManager.PendingDoseType.BOLUS, requestedUnits = 3.0,
+            startedAt = 1000L, sequenceNumber = 5,
+            bolusCancelRequested = true, bolusCancelSequenceNumber = 6
+        )
+        state.updateFromDefaultStatusResponse(DefaultStatusResponse(hexToBytes("1D1800A03000000463E8")))
+        assertThat(state.pendingDoseCommand!!.confirmedByStatus).isFalse()
+    }
+
+    @Test
     fun `above 50 reservoir response does not replace a measured value`() {
         val measured = DefaultStatusResponse(hexToBytes("1D1800A02800000463E8"))
         val above50 = DefaultStatusResponse(hexToBytes("1D1800A02800000463FF"))

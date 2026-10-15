@@ -1,6 +1,7 @@
 package app.aaps.pump.omnipod.omnipod5.bledriver.pod.state
 
 import app.aaps.core.data.model.BS
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.omnipod.common.bledriver.comm.pair.PairResult
 import app.aaps.pump.omnipod.common.bledriver.comm.session.EapSqn
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
@@ -25,18 +26,18 @@ import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Persisted/in-memory state needed to connect to, pair with, and read status from an
- * Omnipod 5 pod, plus the dosing/control state ([O5PumpPlugin][app.aaps.pump.omnipod
- * .common.O5PumpPlugin] needs to track basal program, last bolus, active temp basal, and
+ * Omnipod 5 pod, plus the dosing/control state ([app.aaps.pump.omnipod.omnipod5.O5PumpPlugin]
+ * needs to track basal program, last bolus, active temp basal, and
  * an in-flight dose command whose outcome is still uncertain (BLE response never
  * arrived) so it can be reconciled on the next status poll. Deliberately does NOT use a
- * Dash-style historyId/persisted-ledger ([OmnipodDashPodStateManager.ActiveCommand])
- * to track in-flight commands - [app.aaps.pump.omnipod.common.bledriver.comm
+ * Dash-style historyId/persisted-ledger (`OmnipodDashPodStateManager.ActiveCommand`)
+ * to track in-flight commands - [app.aaps.pump.omnipod.omnipod5.bledriver.comm
  * .O5BleManager.sendCommand] already gives 1:1 request/response correlation per call
  * (unlike Dash's continuous connection-scoped event bus), so [pendingDoseCommand] only
  * needs to be a single flat marker, not a ledger.
  *
- * [updateFromVersionResponse] and [updateFromDefaultStatusResponse] are read-only status
- * updates - reused directly from [VersionResponse]/[DefaultStatusResponse], which turned
+ * [updateFromDefaultStatusResponse] also saves command acceptance before another command
+ * can replace its sequence. Responses are reused from [VersionResponse]/[DefaultStatusResponse], which turned
  * out to have no Dash-specific assumptions baked in (pure byte-offset parsing), matching
  * the same finding as [app.aaps.pump.omnipod.common.bledriver.pod.command.base
  * .HeaderEnabledCommand].
@@ -136,7 +137,7 @@ interface O5PodStateManager {
 
     /**
      * A single dose-affecting command whose outcome is not yet confirmed - set
-     * optimistically right before the [app.aaps.pump.omnipod.common.bledriver.comm
+     * optimistically right before the [app.aaps.pump.omnipod.omnipod5.bledriver.comm
      * .O5BleManager.sendCommand] `Observable` for a bolus/temp-basal/basal-program
      * command is subscribed, and cleared once the next status response confirms (or
      * denies) it actually took effect. This is the field that makes uncertain BLE
@@ -163,8 +164,9 @@ interface O5PodStateManager {
          *
          * This is what makes an uncertain outcome *decidable* rather than guessable: the pod
          * reports the sequence number of the last programming command it accepted (see
-         * [sequenceNumberOfLastProgrammingCommand]), so comparing the two answers "did the pod
-         * actually get this command" outright. Without it, reconciliation can only look at
+         * [sequenceNumberOfLastProgrammingCommand]). A later bolus stop replaces that value,
+         * so its sequence is saved separately and cannot reject the original bolus.
+         * Without a sequence, reconciliation can only look at
          * whether delivery is currently active, which cannot tell a bolus that finished from
          * one that never started.
          *
@@ -172,14 +174,24 @@ interface O5PodStateManager {
          * field existed; reconciliation falls back to the delivery-status heuristic then.
          */
         val sequenceNumber: Short? = null,
-        /** True only for the micro-bolus [app.aaps.pump.omnipod.omnipod5.O5PumpPlugin
-         *  .deliverBasalCorrection] issues - excluded from [cumulativeBolusPulsesDelivered]
+        /** True only for the micro-bolus `O5PumpPlugin.deliverBasalCorrection`
+         *  issues - excluded from [cumulativeBolusPulsesDelivered]
          *  tracking so it counts toward delivered *basal* insulin, not bolus insulin
          *  (the whole point of the correction is to true up basal drift). */
         val isBasalCorrection: Boolean = false,
         val bolusRecordExpected: Boolean = false,
+        /** Pod acceptance saved from a matching sequence or observed bolus delivery,
+         *  never from a BLE write alone. */
         val confirmedByStatus: Boolean = false,
-        val historyId: Long? = null
+        val historyId: Long? = null,
+        val tempBasalType: PumpSync.TemporaryBasalType? = null,
+        val requestedBasalProgram: BasalProgram? = null,
+        /** A stop command replaces the pod's last programming sequence. Keep its intent
+         *  separate from acceptance of the original bolus, including across restarts.
+         *  Null in older state files, where cancellation intent was not saved. */
+        val bolusCancelRequested: Boolean? = false,
+        val bolusCancelSequenceNumber: Short? = null,
+        val bolusCancelHistoryId: Long? = null
     ) : Serializable
 
 
@@ -283,7 +295,8 @@ interface O5PodStateManager {
      *  rapid repeated corrections. Null if none has ever been delivered. */
     var lastBasalCorrectionTime: Long?
 
-    /** True while a basal-drift correction bolus is in flight - prevents [deliverTreatment]
+    /** True while a basal-drift correction bolus is in flight - prevents
+     *  [app.aaps.pump.omnipod.omnipod5.O5PumpPlugin.deliverTreatment]
      *  concurrency guards from misreading it as a user-requested bolus. */
     var basalCorrectionInProgress: Boolean
 
@@ -480,6 +493,7 @@ class InMemoryO5PodStateManager : O5PodStateManager {
         activeAlerts = response.activeAlerts
         minutesSinceActivation = response.minutesSinceActivation
         sequenceNumberOfLastProgrammingCommand = response.sequenceNumberOfLastProgrammingCommand
+        pendingDoseCommand = pendingDoseCommand?.withPodAcceptance(response.sequenceNumberOfLastProgrammingCommand, response.deliveryStatus)
         lastStatusResponseReceived = now
     }
 
@@ -494,6 +508,7 @@ class InMemoryO5PodStateManager : O5PodStateManager {
         activeAlerts = response.activeAlerts
         minutesSinceActivation = response.minutesSinceActivation
         sequenceNumberOfLastProgrammingCommand = response.sequenceNumberOfLastProgrammingCommand
+        pendingDoseCommand = pendingDoseCommand?.withPodAcceptance(response.sequenceNumberOfLastProgrammingCommand, response.deliveryStatus)
         alarmType = response.alarmType
         alarmTime = response.alarmTime
         occlusionAlarm = response.occlusionAlarm

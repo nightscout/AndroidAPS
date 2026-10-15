@@ -1,6 +1,7 @@
 package app.aaps.pump.omnipod.omnipod5.bledriver.pod.state
 
 import app.aaps.core.data.model.BS
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlarmType
@@ -120,6 +121,56 @@ class PersistedO5PodStateManagerTest : TestBase() {
         assertThat(reader.pendingDoseCommand).isEqualTo(pending)
         assertThat(reader.pendingDoseCommand!!.bolusType).isEqualTo(BS.Type.SMB)
         assertThat(reader.pendingDoseCommand!!.bolusRecordExpected).isTrue()
+    }
+
+    @Test
+    fun `pending temp type and exact basal program survive restart`() {
+        val writer = newManager()
+        val temp = O5PodStateManager.PendingDoseCommand(
+            type = O5PodStateManager.PendingDoseType.TEMP_BASAL_START,
+            requestedRate = 0.7, requestedDurationMinutes = 30, startedAt = 1000L,
+            tempBasalType = PumpSync.TemporaryBasalType.SUPERBOLUS, historyId = 7L
+        )
+        writer.pendingDoseCommand = temp
+        assertThat(newManager().pendingDoseCommand).isEqualTo(temp)
+        val program = O5PodStateManager.PendingDoseCommand(
+            type = O5PodStateManager.PendingDoseType.BASAL_PROGRAM, startedAt = 2000L,
+            requestedBasalProgram = BasalProgram(listOf(BasalProgram.Segment(0, 24, 70), BasalProgram.Segment(24, 48, 120)))
+        )
+        writer.pendingDoseCommand = program
+        assertThat(newManager().pendingDoseCommand).isEqualTo(program)
+    }
+
+    @Test
+    fun `status acceptance survives restart and a later cancellation sequence`() {
+        val writer = newManager()
+        val response = DefaultStatusResponse(hexToBytes("1D1800A02800000463E8"))
+        writer.pendingDoseCommand = O5PodStateManager.PendingDoseCommand(
+            type = O5PodStateManager.PendingDoseType.BOLUS, requestedUnits = 3.0,
+            startedAt = 1000L, sequenceNumber = response.sequenceNumberOfLastProgrammingCommand
+        )
+        writer.updateFromDefaultStatusResponse(response)
+        val restarted = newManager()
+        assertThat(restarted.pendingDoseCommand!!.confirmedByStatus).isTrue()
+        restarted.pendingDoseCommand = restarted.pendingDoseCommand!!.copy(
+            bolusCancelRequested = true, bolusCancelSequenceNumber = 6, bolusCancelHistoryId = 8L
+        )
+        restarted.updateFromDefaultStatusResponse(DefaultStatusResponse(hexToBytes("1D1800A03000000463E8")))
+        val afterCancel = newManager()
+        assertThat(afterCancel.pendingDoseCommand!!.confirmedByStatus).isTrue()
+        assertThat(afterCancel.pendingDoseCommand!!.bolusCancelRequested).isTrue()
+        assertThat(afterCancel.pendingDoseCommand!!.bolusCancelSequenceNumber).isEqualTo(6.toShort())
+        assertThat(afterCancel.pendingDoseCommand!!.bolusCancelHistoryId).isEqualTo(8L)
+    }
+
+    @Test
+    fun `older state without cancel intent is loaded as unknown rather than not cancelled`() {
+        val writer = newManager()
+        writer.pendingDoseCommand = O5PodStateManager.PendingDoseCommand(
+            type = O5PodStateManager.PendingDoseType.BOLUS, requestedUnits = 1.0, startedAt = 1000L
+        )
+        backingStore = requireNotNull(backingStore).replace(",\"bolusCancelRequested\":false", "")
+        assertThat(newManager().pendingDoseCommand!!.bolusCancelRequested).isNull()
     }
 
     @Test

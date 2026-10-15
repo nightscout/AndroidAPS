@@ -411,6 +411,7 @@ class PersistedO5PodStateManager @Inject constructor(
         podState.activeAlerts = activeAlerts
         podState.minutesSinceActivation = minutesSinceActivation
         podState.sequenceNumberOfLastProgrammingCommand = sequenceNumberOfLastProgrammingCommand
+        podState.pendingDoseCommand = podState.pendingDoseCommand?.withPodAcceptance(sequenceNumberOfLastProgrammingCommand, deliveryStatus)
         podState.lastStatusResponseReceived = now
     }
 
