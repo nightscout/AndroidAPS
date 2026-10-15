@@ -371,11 +371,23 @@ jobs:
           # this loop used to wait in silence: when a shard ran past that, the step timed out, the job ran
           # "Kill emulators", and the shard still running lost its emulator ("adb: device offline"). So a
           # slow shard C looked like an emulator crash in SetupWizardE2ETest.
+          #
+          # The limit is 2400 s, not 1200 s. A healthy shard C takes about 600 s, but RetryRule runs a failing test
+          # three times, so a few real failures make it much slower. In builds 41881-41900 six Equil tests failed,
+          # shard C needed more than 1200 s, Collect gave up, and the emulator was killed in the middle of the last
+          # test. The shard log then ended with "adb: device offline" and the real failures looked like a flake.
+          # A shard that does not finish in time prints the failures it has so far, so the cause is visible here.
           command: |
-            for i in $(seq 1 600); do
+            for i in $(seq 1 1200); do
               [ -f /tmp/rc-A ] && [ -f /tmp/rc-B ] && [ -f /tmp/rc-C ] && break
               [ $((i % 30)) = 0 ] && echo "waiting for the shards: $((i * 2)) s"
               sleep 2
+            done
+            for s in A B C; do
+              if [ ! -f /tmp/rc-$s ]; then
+                echo "shard $s did not finish in 2400 s. Failures so far:"
+                grep -h -A2 "^Error in" shard-$s-*.txt 2>/dev/null || echo "  none"
+              fi
             done
             RCA=$(cat /tmp/rc-A 2>/dev/null || echo 1); RCB=$(cat /tmp/rc-B 2>/dev/null || echo 1); RCC=$(cat /tmp/rc-C 2>/dev/null || echo 1)
             echo "shard A rc=$RCA  shard B rc=$RCB  shard C rc=$RCC"

@@ -56,11 +56,6 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
     }
 
     /**
-     * Process an incoming encrypted message.
-     *
-     * For pairing (port 0D0D), call [processPairInitial] instead.
-     */
-    /**
      * True when the last response was the ack of a confirmation. It repeats the answer it confirms, and the transport
      * sends it with the same packet index: the app drops a packet with the index it has just handled, and that ends the
      * exchange. With a new index the app confirmed again, the emulator answered again, and a read sent next on the
@@ -69,8 +64,19 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
     var lastResponseWasConfirmationAck = false
         private set
 
+    /**
+     * Process an incoming encrypted message.
+     *
+     * For pairing (port 0D0D), call [processPairInitial] instead.
+     */
     fun processMessage(model: EquilCmdModel, password: ByteArray, incomingPort: String = ""): EquilCmdModel? {
         aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: processMessage phase=$phase")
+        // Not every command confirms its answer: CmdResistanceGet and CmdStepSet without sendConfig do not, and the app
+        // sends the next command on the same link. Taken as a confirmation, that command got the old answer again.
+        if (phase == Phase.AWAITING_CONFIRM && !isConfirmation(model, password)) {
+            aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: the last answer was not confirmed, this is a new command")
+            phase = Phase.AWAITING_COMMAND
+        }
         lastResponseWasConfirmationAck = phase == Phase.AWAITING_CONFIRM
         return when (phase) {
             Phase.AWAITING_INITIAL          -> handleInitialRequest(model, password)
@@ -168,6 +174,16 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
 
         phase = Phase.AWAITING_CONFIRM
         return AESUtil.aesEncrypt(password, responseData)
+    }
+
+    /**
+     * A confirmation has 0x00 after the 4-byte index (`getNextData` of every command), a command has 0x01 (set) or
+     * 0x02 (get) there. A message that cannot be decrypted counts as a confirmation, so [handleConfirmation] deals
+     * with it as before.
+     */
+    private fun isConfirmation(model: EquilCmdModel, password: ByteArray): Boolean {
+        val content = runCatching { Utils.hexStringToBytes(AESUtil.decrypt(model, password)) }.getOrNull() ?: return true
+        return content.size < 5 || content[4].toInt() == 0x00
     }
 
     private fun handleConfirmation(model: EquilCmdModel, password: ByteArray): EquilCmdModel? {
@@ -476,14 +492,13 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
 
     // --- Helpers ---
 
-    /** Build an OK response with index + resistance value at [6-7]. 24 bytes to satisfy any decodeConfirmData.
-     *  Resistance is included in all responses because CmdResistanceGet reads [6-7] and its command
-     *  phase may be skipped due to session phase confusion. Other commands ignore these bytes. */
+    /**
+     * Build an OK response with the index. 24 bytes to satisfy any decodeConfirmData.
+     * It has no resistance in it: the resistance read gets its own answer, see [processMessage].
+     */
     private fun indexedResponse(): ByteArray {
         val response = ByteArray(24)
         putIndex(response)
-        response[6] = (state.resistance and 0xFF).toByte()
-        response[7] = ((state.resistance shr 8) and 0xFF).toByte()
         return response
     }
 
