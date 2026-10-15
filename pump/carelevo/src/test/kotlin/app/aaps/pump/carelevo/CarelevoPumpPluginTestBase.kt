@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -64,6 +65,7 @@ import dev.zacsweers.metro.Provider
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import java.util.Locale
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -83,6 +85,10 @@ import kotlin.time.Duration.Companion.hours
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 abstract class CarelevoPumpPluginTestBase {
+
+    private val decimalFormatter: DecimalFormatter = mock<DecimalFormatter>().also {
+        whenever(it.to2Decimal(any<Double>())).thenAnswer { inv -> "%.2f".format(Locale.US, inv.getArgument<Double>(0)) }
+    }
 
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var rh: ResourceHelper
@@ -207,7 +213,8 @@ abstract class CarelevoPumpPluginTestBase {
             finishImmeBolusInfusionUseCase = finishImmeBolusInfusionUseCase,
             cancelImmeBolusInfusionUseCase = cancelImmeBolusInfusionUseCase,
             startExtendBolusInfusionUseCase = startExtendBolusInfusionUseCase,
-            cancelExtendBolusInfusionUseCase = cancelExtendBolusInfusionUseCase
+            cancelExtendBolusInfusionUseCase = cancelExtendBolusInfusionUseCase,
+            decimalFormatter = decimalFormatter
         )
         val tempBasalCoordinator = CarelevoTempBasalCoordinator(
             aapsLogger = aapsLogger,

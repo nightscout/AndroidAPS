@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.ble.commands.BolusCancelCommand
 import app.aaps.pump.carelevo.ble.commands.BolusCancelResponse
 import app.aaps.pump.carelevo.ble.commands.ExtendBolusCancelCommand
@@ -173,6 +174,36 @@ class CarelevoPumpPluginBolusTest : CarelevoPumpPluginTestBase() {
         assertThat(result.enacted).isTrue()
         assertThat(result.bolusDelivered).isWithin(0.001).of(0.25)
         verifyBlocking(pumpSync) { syncBolusWithPumpId(any(), any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    @Timeout(10)
+    fun `deliverTreatment should report a pump-confirmed user stop as a partial success`() {
+        stopDuringStart(BolusCancelResponse(resultCode = 0, infusedAmount = 0.3))
+
+        val result = runBlocking { plugin.deliverTreatment(bolus(1.0)) }
+
+        assertThat(result.success).isTrue()
+        assertThat(result.enacted).isTrue()
+        assertThat(result.bolusDelivered).isWithin(0.001).of(0.3)
+    }
+
+    @Test
+    fun `deliverTreatment should explain an over-limit reject with the deliverable amount`() {
+        whenever { bleSession.runSingle(any(), isA<ImmediateBolusCommand>(), any()) }
+            .thenReturn(ImmediateBolusResponse(actionId = 1, resultCode = 20, expectedCompletionSeconds = 0, remainingReservoirUnits = 2.8))
+        whenever(rh.gs(eq(R.string.common_label_unit_value_dose_with_space), eq("2.80"))).thenReturn("2.80 U")
+        whenever(rh.gs(eq(R.string.carelevo_bolus_rejected_exceed_limit), eq("2.80 U"))).thenReturn("over limit 2.80 U")
+
+        val result = runBlocking {
+            plugin.deliverTreatment(DetailedBolusInfo().apply {
+                insulin = 3.0
+                carbs = 0.0
+            })
+        }
+
+        assertThat(result.success).isFalse()
+        assertThat(result.comment).isEqualTo("over limit 2.80 U")
     }
 
     @Test
