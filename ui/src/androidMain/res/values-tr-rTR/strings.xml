@@ -53,7 +53,7 @@
     <string name="activate_profile">Profil etkinleştir</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Profil tipi</string>
-    <string name="profile_switches">Profil Değişimleri</string>
+    <string name="profile_switches">Profil Geçişleri</string>
     <string name="basal_pct_from_tdd_label">% bazalın</string>
     <string name="selected_profile">Seçildi:</string>
     <string name="motol_default_profile">Varsayılan profil</string>
