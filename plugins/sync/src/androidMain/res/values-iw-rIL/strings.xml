@@ -124,7 +124,7 @@
     <string name="wear_infos_watchface">פני שעון מידע</string>
     <string name="wear_export_watchface">ייצוא תבנית</string>
     <string name="wear_new_custom_watchface_exported">תבנית פני השעון יוצאה</string>
-    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/he/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
     <string name="open_settings_on_wear">פתיחת הגדרות Wear</string>
     <string name="wear_import_custom_watchface_title">בחירת פני שעון מותאמים אישית</string>
