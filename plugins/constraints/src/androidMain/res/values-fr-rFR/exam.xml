@@ -30,7 +30,7 @@
     <string name="objectives2_cloud">Copiez votre fichier de préférences vers un emplacement sûr en dehors de votre téléphone (par ex. en utilisant un disque cloud, en connectant un câble à un ordinateur, un courriel, etc.)</string>
     <string name="objectives2_easyrestore">Si votre téléphone est endommagé ou perdu, il existe des moyens faciles de récupérer vos paramètres à distance sans aucune sauvegarde.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/fr/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/fr/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/fr/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">Valeurs MGC bruitées</string>
     <string name="noisycgm_whattodo">Que faut-il faire si les données de MGC sont bruitées ?</string>
     <string name="noisycgm_nothing">Ne faites rien - AAPS s\'en occupera.</string>
