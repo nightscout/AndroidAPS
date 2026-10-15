@@ -30,6 +30,7 @@
     <string name="objectives2_cloud">Kopieren Deine Einstellungen an einen sicheren Ort außerhalb Deines Telefons (z. durch Verwendung eines Cloud-Laufwerks, Verbindung eines Kabels mit einem Computer, E-Mail, etc.)</string>
     <string name="objectives2_easyrestore">Wenn Dein Telefon beschädigt ist oder verloren geht, gibt es einfache Möglichkeiten, Deine Einstellungen ohne Sicherungskopie wiederherzustellen.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/de/latest/Maintenance/ExportImportSettings.html</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/de/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">Verrauschte CGM Werte</string>
     <string name="noisycgm_whattodo">Was sollte getan werden, wenn CGM-Daten unzuverlässig werden?</string>
     <string name="noisycgm_nothing">Tue nichts - AndroidAPS kümmert sich darum.</string>
