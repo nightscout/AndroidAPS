@@ -25,6 +25,7 @@
     <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3시간 30분</string>
     <string name="carelevo_pump_stop_duration_label_4_hour">4시간</string>
     <string name="common_unit_value_day_hour_min">%1$d일 %2$02d:%3$02d</string>
+    <string name="common_unit_remain_min_sec">%1$d분 %2$02d초 남음</string>
     <string name="carelevo_btn_insulin_guide">인슐린 채우기 가이드</string>
     <string name="carelevo_btn_patch_expiration">사용 종료</string>
     <string name="carelevo_btn_input_search_patch">패치 검색</string>
@@ -43,7 +44,7 @@
     <string name="carelevo_overview_pump_suspend_btn_label">주입 정지</string>
     <string name="carelevo_overview_pump_resume_btn_label">주입 재개</string>
     <string name="patch_prepare_dialog_title_insulin_amount">채운 인슐린 양 입력</string>
-    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">설정 가능 범위 : 50 ~ 300 U</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">설정 가능 범위 : %1$d ~ %2$d U</string>
     <string name="carelevo_insulin_refill_step1">1. 패치 블리스터 뒷면의 포장지를 제거합니다.</string>
     <string name="carelevo_insulin_refill_step2">2. 알콜솜을 사용하여 인슐린 바이알의 고무캡을 소독합니다.</string>
     <string name="carelevo_insulin_refill_step3">3. 인슐린 주입용 주사기의 바늘 보호캡을 당겨 제거합니다.</string>
@@ -65,7 +66,7 @@
     <string name="carelevo_low_reservoir_reminders_title_value">인슐린 부족 알람 설정 값</string>
     <string name="carelevo_patch_expiration_reminders_title_value">패치 사용 기간 알림 설정 값</string>
     <string name="carelevo_title_fill_insulin">패치에 인슐린 채우기</string>
-    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">사용 기간 (최대 168시간)을 고려하여 패치에 인슐린을 채워주세요.\n(50 U - 300 U)인슐린 양 입력 버튼을 눌러 채운 인슐린 양을 입력해 주세요.</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">사용 기간 (최대 168시간)을 고려하여 패치에 인슐린을 채워주세요.\n(%1$d U - %2$d U)인슐린 양 입력 버튼을 눌러 채운 인슐린 양을 입력해 주세요.</string>
     <string name="carelevo_patch_connect_step_1_title">바늘 보호캡 제거하기</string>
     <string name="carelevo_patch_connect_step_1_desc">패치를 포장재에서 꺼낸 후 바늘 보호캡을 제거해 주세요.</string>
     <string name="carelevo_patch_connect_step_2_title">전원 켜기 및 연결</string>
@@ -181,6 +182,8 @@
     <string name="alarm_notification_desc_alert_resume_infusion">주입 정지가 종료되었습니다. 주입 재개를 눌러 기저 주입을 다시 시작해 주세요.</string>
     <string name="alarm_notification_desc_alert_off_bluetooth">패치 사용을 위해 블루투스가 필요합니다. 확인 버튼을 누르고 블루투스를 켜 주세요.</string>
     <string name="alarm_notification_desc_notice_low_insulin">패치에 남은 인슐린이 %s U 미만입니다. 패치 교체를 준비해 주세요.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">패치 사용 기간이 %1$s일 %2$s시간이 되었습니다. 패치 사용에 참고해 주세요.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">%1$s(UTC %2$s)에서 %3$s(UTC %4$s)(으)로 국가 표준시간이 변경되었습니다.</string>
     <string name="alarm_notification_desc_notice_check_bg">볼러스 주입 후 %s이 지났습니다. 혈당을 확인해 주세요.</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS 작동이 시작 되었습니다.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">패치 또는 CGM 연결이 끊겨 LGS 작동이 종료 되었습니다.</string>
