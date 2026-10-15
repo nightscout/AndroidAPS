@@ -189,6 +189,50 @@ internal class TempTargetManagementViewModelTest {
         assertThat(sut.isEditorDifferentFromDefaults()).isTrue()
     }
 
+    // A scene without a duration stores its target with duration Long.MAX_VALUE until the scene ends. The
+    // editor copied that duration, so activating from the editor would start a target that never ends and
+    // that no scene would ever close.
+
+    private fun sceneTargetWithoutEnd(reason: TT.Reason, targetMgdl: Double) = TT(
+        timestamp = NOW - 60_000L, utcOffset = 0, reason = reason,
+        lowTarget = targetMgdl, highTarget = targetMgdl, duration = Long.MAX_VALUE
+    )
+
+    @Test
+    fun `an active target without an end gives the editor the default duration`() = runTest {
+        whenever(dateUtil.now()).thenReturn(NOW)
+        val sceneTarget = sceneTargetWithoutEnd(TT.Reason.CUSTOM, 144.0)
+        whenever(persistenceLayer.getTemporaryTargetActiveAt(NOW)).thenReturn(sceneTarget)
+        givenBuiltInsInMmol()
+
+        // No preset matches, so the editor mirrors the active target (the standalone active card).
+        assertThat(sut.uiState.value.activeTT).isEqualTo(sceneTarget)
+        assertThat(sut.uiState.value.selectedPreset).isNull()
+        assertThat(sut.uiState.value.editorDuration).isEqualTo(60L * 60L * 1000L)
+
+        // Away to a preset and back to the active card.
+        sut.selectPreset(0)
+        sut.selectActiveTT()
+        assertThat(sut.uiState.value.editorDuration).isEqualTo(60L * 60L * 1000L)
+    }
+
+    @Test
+    fun `an active target without an end that matches a preset gives the editor the preset duration`() = runTest {
+        whenever(dateUtil.now()).thenReturn(NOW)
+        whenever(persistenceLayer.getTemporaryTargetActiveAt(NOW))
+            .thenReturn(sceneTargetWithoutEnd(TT.Reason.ACTIVITY, Constants.DEFAULT_TT_ACTIVITY_TARGET))
+        givenBuiltInsInMmol()
+        val activityDuration = Constants.DEFAULT_TT_ACTIVITY_DURATION * 60L * 1000L
+
+        assertThat(sut.uiState.value.activePresetIndex).isEqualTo(1)
+        assertThat(sut.uiState.value.editorDuration).isEqualTo(activityDuration)
+
+        // Away to another preset and back to the active one.
+        sut.selectPreset(0)
+        sut.selectPreset(1)
+        assertThat(sut.uiState.value.editorDuration).isEqualTo(activityDuration)
+    }
+
     // ---------------------------------------------------------------------------------------------
     // Reorder ("sort") mode
     // ---------------------------------------------------------------------------------------------

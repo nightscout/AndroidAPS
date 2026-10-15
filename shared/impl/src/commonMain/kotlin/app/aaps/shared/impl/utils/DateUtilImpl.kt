@@ -246,10 +246,14 @@ class DateUtilImpl(
 
     override fun timeFrameString(timeInMillis: Long, rh: TextResolver, withParentheses: Boolean): String {
         val duration = timeInMillis.milliseconds
-        val totalHours = duration.inWholeHours
-        val remainingMinutes = (duration - totalHours.hours).inWholeMinutes
-        val hoursPart = if (totalHours > 0) "$totalHours${rh.gs(InterfacesStrings.shorthour)} " else ""
-        val body = "$hoursPart$remainingMinutes'"
+        // A time frame over about 146 million years, like the one to the end of a target without an end, is an
+        // infinite Duration. Infinite minus infinite throws, so it gets its own text.
+        val body = if (duration.isInfinite()) "∞" else {
+            val totalHours = duration.inWholeHours
+            val remainingMinutes = (duration - totalHours.hours).inWholeMinutes
+            val hoursPart = if (totalHours > 0) "$totalHours${rh.gs(InterfacesStrings.shorthour)} " else ""
+            "$hoursPart$remainingMinutes'"
+        }
         return if (withParentheses) "($body)" else body
     }
 

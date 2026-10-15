@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.endOf
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.overview.graph.TherapyEventGraphPoint
 import app.aaps.core.interfaces.overview.graph.TherapyEventType
@@ -221,7 +222,7 @@ fun TreatmentBeltGraphCompose(
             .filter { it.eventType == TherapyEventType.EXERCISE && it.duration > 0 }
             .mapNotNull { event ->
                 val startX = timestampToX(event.timestamp, minTimestamp)
-                val endX = timestampToX(event.timestamp + event.duration, minTimestamp)
+                val endX = timestampToX(endOf(event.timestamp, event.duration), minTimestamp)
                 if (endX < minX || startX > maxX) return@mapNotNull null
                 val cStart = startX.coerceIn(minX, maxX)
                 val cEnd = endX.coerceIn(minX, maxX)
@@ -232,7 +233,7 @@ fun TreatmentBeltGraphCompose(
             .filter { it.eventType == TherapyEventType.GENERAL_WITH_DURATION && it.duration > 0 }
             .mapNotNull { event ->
                 val startX = timestampToX(event.timestamp, minTimestamp)
-                val endX = timestampToX(event.timestamp + event.duration, minTimestamp)
+                val endX = timestampToX(endOf(event.timestamp, event.duration), minTimestamp)
                 if (endX < minX || startX > maxX) return@mapNotNull null
                 val cStart = startX.coerceIn(minX, maxX)
                 val cEnd = endX.coerceIn(minX, maxX)
@@ -297,7 +298,7 @@ fun TreatmentBeltGraphCompose(
                         val x = timestampToX(event.timestamp, minTimestamp)
                         put(x, event)
                         if (event.duration > 0) {
-                            put(timestampToX(event.timestamp + event.duration, minTimestamp), event)
+                            put(timestampToX(endOf(event.timestamp, event.duration), minTimestamp), event)
                         }
                     }
                 }

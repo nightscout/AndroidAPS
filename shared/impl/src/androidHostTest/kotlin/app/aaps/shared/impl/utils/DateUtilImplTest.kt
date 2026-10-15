@@ -1054,6 +1054,19 @@ class DateUtilImplTest {
         assertThat(dateUtilImpl.timeFrameString(duration3, rh)).isEqualTo(expected3)
         assertThat(dateUtilOldImpl.timeFrameString(duration3, rh)).isEqualTo(expected3)
     }
+
+    /**
+     * The time to the end of a target without an end (a scene without a duration) is too long for a
+     * Duration, which makes it infinite, and infinite minus infinite threw. The home screen widgets
+     * called this for every active temporary target (issue #5301).
+     */
+    @Test
+    fun `timeFrameString of a time frame too long for a Duration does not throw`() {
+        val rh = FakeResourceHelper()
+        assertThat(dateUtilImpl.timeFrameString(Long.MAX_VALUE, rh)).isEqualTo("(∞)")
+        assertThat(dateUtilImpl.timeFrameString(Long.MAX_VALUE, rh, withParentheses = false)).isEqualTo("∞")
+        assertThat(dateUtilImpl.untilString(Long.MAX_VALUE, rh)).isEqualTo("(∞)")
+    }
     //endregion
 
     //region Timezone Logic
