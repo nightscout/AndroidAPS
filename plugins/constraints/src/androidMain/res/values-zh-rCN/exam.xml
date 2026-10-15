@@ -3,6 +3,7 @@
     <string name="dia_whatmeansdia">关于DIA(胰岛素作用持续时间)哪些是对的?</string>
     <string name="dia_label_exam">胰岛素作用持续时间 ( DIA)</string>
     <string name="dia_minimumis5h">允许的最小值为 5 小时。</string>
+    <string name="dia_hint1">https://wiki.aaps.app/zh-cn/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">如果您确认在使用 AAPS 之前，泵里设置的 DIA（胰岛素作用时长） 数值效果良好，那么开始闭环时无需更改该值。</string>
     <string name="dia_valuemustbedetermined">您应该为自己确定 DIA 的适当值。</string>
     <string name="hypott_label">低血糖临时目标</string>
@@ -17,7 +18,7 @@
     <string name="pumpdisconnect_missinginsulin">避免 AAPS 将泵物理断开期间未实际输注的胰岛素计入计算。</string>
     <string name="pumpdisconnect_notstop">若胰岛素泵仍正常佩戴在身上，胰岛素输注不会被中断。</string>
     <string name="pumpdisconnect_openloop">它将让AAPS进入开环模式。</string>
-    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/zh-cn/latest/DailyLifeWithAaps/AapsScreens.html#loop-status</string>
+    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/zh-cn/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-loop-status</string>
     <string name="objectives_label">AAPS 设置</string>
     <string name="objectives2_label">AAPS 设置</string>
     <string name="objectives_howtosave">备份设置的最佳办法是什么?</string>
@@ -42,6 +43,7 @@
     <string name="exerciseprofile_switchprofileabove100">请执行高于100%的配置文件切换。</string>
     <string name="exerciseprofile_leaveat100">将配置文件设置为100%。</string>
     <string name="exerciseprofile_suspendloop">暂停闭环。</string>
+    <string name="exerciseprofile_hint1">https://wiki.aaps.app/zh-cn/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
     <string name="exercise_label">运动和临时目标</string>
     <string name="exercise_whattodo">你如何使用临时目标功能来最好地帮助APS系统处理有氧运动？</string>
     <string name="exercise_settt">在开始运动之前，选一个合适的时间设置活动血糖目标。</string>
@@ -86,14 +88,14 @@
     <string name="insulin_novorapid">诺和锐®/门冬胰岛素®</string>
     <string name="insulin_humalog">优泌乐®赖脯胰岛素</string>
     <string name="insulin_actrapid">诺和灵®/优泌林 R®/\"常规\"人胰岛素。</string>
-    <string name="insulin_hint1">https://wiki.aaps.app/zh-cn/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="insulin_hint1">https://wiki.aaps.app/zh-cn/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="sensitivity_label">敏感度插件</string>
     <string name="sensitivity_adjust">灵敏度插件允许AAPS临时调整胰岛素敏感度的短暂变化(例如激素变化或与输液部位吸收相关的问题)。</string>
     <string name="sensitivity_edit">灵敏度插件为用户提供basal基础率，I:C碳水化合物系数和ISF胰岛素敏感系数的更改建议，可用来编辑配置文件。</string>
     <string name="sensitivity_cannula">记录输注导管更换会将Autosens比率重置回100%。</string>
     <string name="sensitivity_time">一些插件选项具有可配置的时间范围，可由用户设置。</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/zh-cn/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="sensitivity_hint2">https://wiki.aaps.app/zh-cn/latest/DailyLifeWithAaps/KeyAapsFeatures.html#autosens</string>
+    <string name="sensitivity_hint2">https://wiki.aaps.app/zh-cn/latest/DailyLifeWithAaps/KeyAapsFeatures.html#open-aps-features-autosens</string>
     <string name="wrongcarbs_label">碳水化合物输入错误</string>
     <string name="wrongcarbs_whattodo">如果您输入了不正确的碳水化合物，该怎么办?</string>
     <string name="wrongcarbs_donothing">什么都不做-AAPS将进行适当的调整。</string>
@@ -113,7 +115,7 @@
     <string name="breadgrams_exchange">消耗的碳水化合物可以使用适当地交换份系统 (例如：正常饮食剂量调整DAFNE的“碳水化合物量CHO” 或者 欧洲“面包单位Bread Units”)进行记录。</string>
     <string name="breadgrams_decay">AAPS 采用动态模型来估算碳水化合物吸收情况并计算 COB（活性碳水）。</string>
     <string name="breadgrams_calc">如果血糖水平超出可接受值(过低或过高)，则可以使用大剂量向导计算器提供碳水化合物或胰岛素的校正建议。</string>
-    <string name="breadgrams_hint1">https://wiki.aaps.app/zh-cn/latest/DailyLifeWithAaps/AapsScreens.html#bolus-wizard</string>
+    <string name="breadgrams_hint1">https://wiki.aaps.app/zh-cn/latest/DailyLifeWithAaps/AapsScreens.html#aaps-screens-bolus-wizard</string>
     <string name="breadgrams_hint2">https://wiki.aaps.app/zh-cn/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="extendedcarbs_label">扩展碳水化合物</string>
     <string name="extendedcarbs_handling">你能使用碳水时间偏移功能 (扩展碳水化合物) 做什么？</string>
@@ -123,6 +125,7 @@
     <string name="extendedcarbs_rescue">用于记录治疗低血糖的碳水化合物。</string>
     <string name="extendedcarbs_hint1">https://wiki.aaps.app/zh-cn/latest/DailyLifeWithAaps/ExtendedCarbs.html</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/zh-cn/latest/RemoteFeatures/RemoteMonitoring.html</string>
+    <string name="nsclient_hint2">https://wiki.aaps.app/zh-cn/latest/RemoteFeatures/RemoteControl.html</string>
     <string name="isf_label_exam">胰岛素敏感系数(ISF)</string>
     <string name="isf_increasingvalue">提高ISF值将导致更多的胰岛素输注，以消化特定数量的碳水化合物。</string>
     <string name="isf_decreasingvalue">降低ISF值会导致更多的胰岛素输注，用于纠正高于目标的血糖值。</string>
@@ -165,7 +168,6 @@
     <string name="concentration_feature_label">胰岛素浓度管理</string>
     <string name="u200_with_profile">在 AAPS 支持胰岛素浓度设置之前，用户通过将配置设为 50% 来让所有数值减半，从而使用 U200 胰岛素。
 在这种设置下，哪些说法是正确的？</string>
-    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
     <string name="switch_u200_profile_ps">我需要准备一份强度翻倍的配置方案（相较于当前默认配置的 200%），并在选择 U200 胰岛素后、下次更换贴片 / 储药器时同步这份新配置。</string>
     <string name="switch_u200_profile_dynisf">我必须禁用 DynISF 功能至少一周，才能让每日总胰岛素量（TDD）与以国际单位计算的实际 TDD 值完全一致。</string>
     <string name="switch_u200_profile_mental">切换之后，我需要在数周内格外小心，让自己习惯以  国际单位（IU） 来思考大剂量、基础率和每日总胰岛素量（TDD）数值。</string>
