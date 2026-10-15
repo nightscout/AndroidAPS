@@ -115,7 +115,6 @@
     <string name="wear_infos_watchface">Информация за Watchface</string>
     <string name="wear_export_watchface">Експорт на шаблона</string>
     <string name="wear_new_custom_watchface_exported">Шаблон за watchface експортиран</string>
-    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Изпрати отново всички дани</string>
     <string name="open_settings_on_wear">Отвори настройките на часовника</string>
     <string name="wear_import_custom_watchface_title">Избери различен Watchface</string>
