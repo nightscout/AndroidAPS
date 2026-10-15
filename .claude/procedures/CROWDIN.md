@@ -153,9 +153,18 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/
 Without an API token, the editor is the only way, and every click has to be confirmed in the
 browser extension, so it suits a handful of strings at most.
 
-- Open `https://crowdin.com/editor/androidaps/all/en-<lang>?search_scope=everything` and type the
-  string **key** in "Search strings" (the search matches keys too). `<lang>` is the editor slug:
-  `cs`, `sk`, `ko`, `zhtw`… Changing only `#q=` in the URL does not search again.
+- **Fastest: a direct link to the string.** `https://crowdin.com/editor/androidaps/<fileId>/en-<lang>#<stringId>`
+  opens the string already selected, in any language. Find both ids once: open the file in the
+  editor, and the string's list item has the id `phrase_<stringId>`. Example: `tdd_line` in
+  `plugins/sync` is file `5835`, string `216755`.
+- Otherwise open `https://crowdin.com/editor/androidaps/all/en-<lang>?search_scope=everything` and
+  type the string **key** in "Search strings" (the search matches keys too). Changing only `#q=` in
+  the URL does not search again.
+- `<lang>` is the editor slug, not the Android code and not always the Crowdin code: `es-ES` is `es`,
+  `pt-PT` is `pt`, `zh-TW` is `zhtw`, `he` is `he`. A wrong slug shows a language picker. The
+  language page `https://crowdin.com/project/androidaps/<Crowdin code>` links to the right slug.
+- With the browser extension, the first search or typing after a page load is often lost. Check
+  with a screenshot and type again.
 - Saving adds a new translation next to the old one. Approve the new one - that removes approval
   from the old one. Only approved text is exported.
 - After Save the editor moves on to the next search result, so check which string is selected
