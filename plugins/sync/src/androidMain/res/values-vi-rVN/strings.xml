@@ -158,7 +158,6 @@
     <string name="aps">APS</string>
     <string name="last_run">Lần chạy gần nhất</string>
     <string name="last_enact">Lần thực hiện cuối</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Hôm nay</string>
     <string name="weighted">weighted</string>
     <string name="full_xdrip_sync_comment">Đồng bộ đầy đủ? Quá trình này có thể mất một thời gian và cho đến khi hoàn tất, bạn sẽ không thấy dữ liệu mới trong xDrip+.</string>
