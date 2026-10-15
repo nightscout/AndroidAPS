@@ -79,7 +79,6 @@
     <string name="aps">APS</string>
     <string name="last_run">Kördes senast</string>
     <string name="last_enact">Senaste handling</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Idag</string>
     <string name="weighted">viktad</string>
     <!-- SMS Communicator & OTP Authenticator -->
