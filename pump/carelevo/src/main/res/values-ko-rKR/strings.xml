@@ -10,6 +10,7 @@
     <string name="carelevo_insulin_remain_key">인슐린 잔량</string>
     <string name="carelevo_running_remain_time">패치 남은 시간</string>
     <string name="carelevo_total_insulin_key">총 인슐린 주입량</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%1$d시간 %2$d분</string>
     <string name="common_label_unit_value_minute">%d분</string>
     <string name="common_label_unit_value_duration_hour">%d시간</string>
     <string name="carelevo_pump_resume_title">주입을 재개 할까요?</string>
