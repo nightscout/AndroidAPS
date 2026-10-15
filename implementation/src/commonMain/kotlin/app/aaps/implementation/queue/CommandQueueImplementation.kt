@@ -232,7 +232,10 @@ class CommandQueueImplementation(
                 val basalBlocks = (report as? BasalReport.Given)?.blocks ?: nonCustomized.basalBlocks
                 // One notice for a real write that is not internal (a Scene reverting its own ProfileSwitch, #4959).
                 // A write the pump did not need (enacted == false) stays silent, and a rejected report has its alarm.
-                if (result?.enacted == true && !silent && report != BasalReport.Rejected)
+                // Internal also when a scene marked this switch: while the pump was busy the events queued up, and
+                // the one that led here can be an unrelated one, a Nightscout id arriving, with no silent flag.
+                val silentWrite = silent || profileSwitchSilentGate.isSilent(it.id, dateUtil.now())
+                if (result?.enacted == true && !silentWrite && report != BasalReport.Rejected)
                     notifyProfileSet(asked = nonCustomized.basalBlocks, given = basalBlocks)
                 // A PS that is already effective only had to be set in the pump again. It gets no second EPS,
                 // unless this pump gives another basal than the EPS holds, e.g. a new pump with another step.

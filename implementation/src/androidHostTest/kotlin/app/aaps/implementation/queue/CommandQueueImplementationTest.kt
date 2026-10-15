@@ -458,6 +458,39 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         verifyOkPosted()
     }
 
+    // #4959 on a Medtronic: a scene ended during a 38 s write, the events queued up, and the write that followed was
+    // made for a Nightscout id arriving, which carries no silent flag. So the scene marks the switch it writes.
+
+    @Test
+    fun `a write of a switch a scene marked posts no notice whichever event led to it`() = runTest {
+        profileSwitchSilentGate.markSilent(140, now)
+
+        setNewPsInPumpThatGives(null)
+
+        assertThat(roundingNotices()).isEmpty()
+        verifyNoPlainOkPosted()
+    }
+
+    @Test
+    fun `a mark for another switch does not make this write silent`() = runTest {
+        profileSwitchSilentGate.markSilent(141, now)
+
+        setNewPsInPumpThatGives(null)
+
+        verifyOkPosted()
+    }
+
+    // A mark lasts as long as the queue waits for one write, so it cannot silence a later write of the same switch,
+    // for example the pump's basal changed by hand hours later.
+    @Test
+    fun `a mark from more than ten minutes ago does not make this write silent`() = runTest {
+        profileSwitchSilentGate.markSilent(140, now - ProfileSwitchSilentGate.SILENT_FOR - 1)
+
+        setNewPsInPumpThatGives(null)
+
+        verifyOkPosted()
+    }
+
     /** The pump had this basal already (enacted == false): nothing was updated, so nothing is said. */
     @Test
     fun `a set the pump did not need posts no notice but gets an EPS`() = runTest {

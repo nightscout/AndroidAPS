@@ -458,6 +458,8 @@ class SceneExecutor(
                                 iCfg = iCfg
                             )
                         }
+                        // Also when another change event leads to the pump write, see ProfileSwitchSilentGate.markSilent
+                        ps?.let { profileSwitchSilentGate.markSilent(it.id, now) }
                         SceneExecutionResult.ActionResult(
                             action = action,
                             success = ps != null,
@@ -579,6 +581,8 @@ class SceneExecutor(
                                 listValues = emptyList()
                             )
                         }
+                        // The switch now in force is the one the pump gets: its write is the scene's too
+                        persistenceLayer.getProfileSwitchActiveAt(now)?.let { profileSwitchSilentGate.markSilent(it.id, now) }
                         rxBus.send(EventProfileChangeRequested(silent = true))
                     } else {
                         aapsLogger.info(LTag.UI, "Skipping profile revert — profile was changed during scene")
@@ -672,7 +676,10 @@ class SceneExecutor(
                 )
             }
         }
-        if (restored != null) return null
+        if (restored != null) {
+            profileSwitchSilentGate.markSilent(restored.id, now)
+            return null
+        }
         val reason = if (before == null) rh.gs(CoreUiStrings.scene_no_profile_before)
         else profileFunction.profileSwitchLikeRefusal(before, now, 0L, sceneSwitch.iCfg) ?: rh.gs(CoreUiStrings.invalid_profile)
         aapsLogger.error(LTag.UI, "Scene '${state.scene.name}': the profile from before it was not written, its switch ${sceneSwitch.id} stays: $reason")

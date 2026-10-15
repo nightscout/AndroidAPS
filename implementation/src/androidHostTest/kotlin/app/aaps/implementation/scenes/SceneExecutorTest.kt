@@ -132,6 +132,22 @@ class SceneExecutorTest : TestBaseWithProfile() {
         assertThat(captor.firstValue).isEqualTo(someICfg)
     }
 
+    // #4959: the scene's switch is marked, so its write stays silent whichever change event leads to it.
+    @Test fun `a scene marks its profile switch silent`() = runBlocking {
+        val ps = mock<PS>()
+        whenever(ps.id).thenReturn(7L)
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(someICfg)
+        whenever(
+            profileFunction.createProfileSwitch(
+                anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
+            )
+        ).thenReturn(ps)
+
+        sut.activate(scene, durationMinutes = 0)
+
+        verify(profileSwitchSilentGate).markSilent(7L, now)
+    }
+
     /**
      * The expiry is the ONLY thing that takes a scene's temp target, profile switch and SMB setting off
      * again. If it is not armed, the scene runs forever. This could not be asserted while the executor
@@ -205,6 +221,19 @@ class SceneExecutorTest : TestBaseWithProfile() {
         verifyBlocking(persistenceLayer) { cancelProfileSwitch(eq(22L), eq(now), any(), any(), anyOrNull(), any()) }
     }
 
+    // #4959: the switch the scene's end brings back is marked, so its write stays silent whichever event leads to it.
+    @Test fun `the end of a scene marks the switch it brings back silent`() = runBlocking {
+        val sceneSwitch = profileSwitch.copy(id = 22, profileName = TESTPROFILENAME, percentage = 90, timestamp = now - T.mins(10).msecs(), duration = T.mins(60).msecs())
+        val before = profileSwitch.copy(id = 41, profileName = TESTPROFILENAME, percentage = 95, timestamp = now - T.hours(5).msecs(), duration = 0)
+        sceneRunning(activatedAt = now - T.mins(10).msecs(), durationMs = T.mins(60).msecs(), psId = 22, requested = sceneSwitch)
+        // In force before the cut, and after it
+        whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong())).thenReturn(sceneSwitch, before)
+
+        sut.deactivate()
+
+        verify(profileSwitchSilentGate).markSilent(41L, now)
+    }
+
     // Until the pump has set the scene's switch, the effective one is still from before. The scene's switch is cut all the same.
     @Test fun `ending a scene cuts its profile switch before the pump has set it`() = runBlocking {
         val sceneSwitch = profileSwitch.copy(id = 22, profileName = TESTPROFILENAME, percentage = 90, timestamp = now - T.mins(1).msecs(), duration = T.mins(60).msecs())
@@ -259,6 +288,7 @@ class SceneExecutorTest : TestBaseWithProfile() {
         val order = inOrder(profileFunction, persistenceLayer)
         order.verify(profileFunction).createProfileSwitchLike(eq(before), eq(now), eq(0L), eq(fiasp), any(), any(), anyOrNull(), any())
         order.verify(persistenceLayer).cancelProfileSwitch(eq(31L), eq(now), any(), any(), anyOrNull(), any())
+        verify(profileSwitchSilentGate).markSilent(60L, now)
     }
 
     // Without an insulin change the scene's own switch is cut, and the resolver brings back what was under it.
@@ -275,7 +305,7 @@ class SceneExecutorTest : TestBaseWithProfile() {
         }
     }
 
-    /** The text of the one notification that says the scene's profile switch is still in force. */
+    /** The text of the one notification that says the scene's profile is still in use. */
     private fun notRestoredNotice(): String {
         val text = argumentCaptor<String>()
         verify(notificationManager).post(
@@ -301,7 +331,7 @@ class SceneExecutorTest : TestBaseWithProfile() {
         assertThat(result.success).isFalse()
         verifyBlocking(persistenceLayer, never()) { cancelProfileSwitch(any(), any(), any(), any(), anyOrNull(), any()) }
         assertThat(notRestoredNotice())
-            .isEqualTo("Scene Test scene has ended, but its profile switch is still in force. The pump cannot take it. Activate a profile by hand.")
+            .isEqualTo("Scene Test scene has ended, but its profile is still in use. The pump cannot take it. Activate a profile by hand.")
     }
 
     @Test fun `with no profile from before an indefinite scene its switch stays and the user is told`() = runBlocking {
@@ -314,7 +344,7 @@ class SceneExecutorTest : TestBaseWithProfile() {
 
         verifyBlocking(persistenceLayer, never()) { cancelProfileSwitch(any(), any(), any(), any(), anyOrNull(), any()) }
         assertThat(notRestoredNotice()).isEqualTo(
-            "Scene Test scene has ended, but its profile switch is still in force. There is no profile switch from before the scene to go back to. Activate a profile by hand."
+            "Scene Test scene has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand."
         )
     }
 
