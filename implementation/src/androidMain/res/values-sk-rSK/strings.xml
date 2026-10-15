@@ -3,6 +3,8 @@
     <string name="executing_right_now">Príkaz sa práve vykonáva</string>
     <string name="smb_being_delivered">Práve prebieha podávanie SMB. Skúste to znova po jeho dokončení.</string>
     <string name="basal_value_below_minimum">Hodnota bazálu pod povoleným minimom. Profil nenastavený!</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Bazálny profil v pumpe bol aktualizovaný. Pumpa zaokrúhľuje bazál podľa vlastného kroku dávkovania: namiesto %2$s podáva %1$s denne.</string>
+    <string name="basal_reported_far_from_profile">Pumpa hlási bazálnu dávku, ktorá sa výrazne líši od hodnoty v profile. AAPS ponecháva bazálnu dávku podľa profilu. Skontrolujte bazálne dávky v pumpe.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">Sach</string>
     <!--    PumpStatusGenerator-->
