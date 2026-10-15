@@ -3,6 +3,7 @@
     <string name="dia_whatmeansdia">Wat is waar over DIA?</string>
     <string name="dia_label_exam">Duur van insuline activiteit (DIA)</string>
     <string name="dia_minimumis5h">De minimumwaarde is 5 uur.</string>
+    <string name="dia_hint1">https://wiki.aaps.app/nl/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">Als je tevreden bent met de waarde voor DIA die je in je pomp gebruikte voordat je AndroidAPS ging gebruiken goed werkte, dan is het niet nodig om deze te wijzigen als je begint met loopen.</string>
     <string name="dia_valuemustbedetermined">Je moet voor jezelf de juiste waarde voor DIA bepalen.</string>
     <string name="hypott_label">Hypo Tijdelijk streefdoel</string>
@@ -17,7 +18,7 @@
     <string name="pumpdisconnect_missinginsulin">Het voorkomt dat AndroidAPS insuline meerekent, die niet werd toegediend terwijl de pomp fysiek losgekoppeld was.</string>
     <string name="pumpdisconnect_notstop">Het zal de insuline toediening niet stoppen als de pomp verbonden blijft met je lichaam.</string>
     <string name="pumpdisconnect_openloop">Dit zet AndroidAPS in open-loopmodus.</string>
-    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/AapsScreens.html#loop-status</string>
+    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-loop-status</string>
     <string name="objectives_label">AAPS-instellingen</string>
     <string name="objectives2_label">AAPS-instellingen</string>
     <string name="objectives_howtosave">Welke dingen kun je het beste doen om een back-up van je instellingen te maken?</string>
@@ -42,6 +43,7 @@
     <string name="exerciseprofile_switchprofileabove100">Pas het profiel percentage aan naar een waarde boven de 100%.</string>
     <string name="exerciseprofile_leaveat100">Laat het profiel op 100% staan.</string>
     <string name="exerciseprofile_suspendloop">Onderbreek de loop.</string>
+    <string name="exerciseprofile_hint1">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
     <string name="exercise_label">Inspanning en tijdelijke doelen</string>
     <string name="exercise_whattodo">Hoe kun je tijdelijke doelen gebruiken om het systeem het beste te helpen omgaan met conditietraining?</string>
     <string name="exercise_settt">Stel een Activiteit tijdelijk streefdoel in dat start vóór de inspanning.</string>
@@ -86,14 +88,14 @@
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
     <string name="insulin_actrapid">Actrapid®/Humulin R®/\"algemene\" menselijke insuline.</string>
-    <string name="insulin_hint1">https://wiki.aaps.app/nl/latest/Configuration/Config-Builder.html#insuline</string>
+    <string name="insulin_hint1">https://wiki.aaps.app/nl/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="sensitivity_label">Gevoeligheidsplugins</string>
     <string name="sensitivity_adjust">Gevoeligheidsplugins stellen AndroidAPS in staat om aan te passen aan tijdelijke of kortstondige veranderingen in insulinegevoeligheid (bijvoorbeeld hormonale veranderingen of problemen met insuline-opname bij de infuusplaats).</string>
     <string name="sensitivity_edit">Gevoeligheidsplugins bieden de gebruiker suggesties voor wijzigingen aan basaaalstanden, I:C ratio\'s en ISF die kunnen worden gebruikt om het profiel mee aan te passen.</string>
     <string name="sensitivity_cannula">Het vastleggen van een canulewissel zet de Autosens-ratio terug naar 100%.</string>
     <string name="sensitivity_time">Sommige van de plugins hebben configureerbare tijdbereiken die kunnen worden ingesteld door de gebruiker.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="sensitivity_hint2">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/KeyAapsFeatures.html#autosens</string>
+    <string name="sensitivity_hint2">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/KeyAapsFeatures.html#open-aps-features-autosens</string>
     <string name="wrongcarbs_label">Koolhydraatinvoerfouten</string>
     <string name="wrongcarbs_whattodo">Wat moet u doen als u een onjuiste hoeveelheid koolhydraten hebt ingevoerd?</string>
     <string name="wrongcarbs_donothing">Doe niets – AndroidAPS zal de juiste aanpassingen maken.</string>
@@ -113,7 +115,7 @@
     <string name="breadgrams_exchange">Koolhydraten kunnen worden geregistreerd met behulp van een geschikt uitwisselingssysteem (bv. DAFNE \"CHO\" of Europese \"Bread Units\").</string>
     <string name="breadgrams_decay">AndroidAPS gebruikt een dynamisch model om koolhydraat\"verval\" te schatten en COB te berekenen.</string>
     <string name="breadgrams_calc">Als de bloedglucosespiegels buiten aanvaardbare waarden liggen (te laag of te hoog), kan de boluscalculator worden gebruikt om suggesties te doen voor koolhydraat-of insuline-correcties.</string>
-    <string name="breadgrams_hint1">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/AapsScreens.html#bolus-wizard</string>
+    <string name="breadgrams_hint1">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/AapsScreens.html#aaps-screens-bolus-wizard</string>
     <string name="breadgrams_hint2">https://wiki.aaps.app/nl/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="extendedcarbs_label">e-carbs</string>
     <string name="extendedcarbs_handling">Waarvoor kun je e-carbs (uigestelde koolhydraten) gebruiken?</string>
@@ -123,6 +125,7 @@
     <string name="extendedcarbs_rescue">Voor het vastleggen van reddingskoolhydraten die je gebruikt voor de behandeling van een lage bloedglucose.</string>
     <string name="extendedcarbs_hint1">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/ExtendedCarbs.html</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/nl/latest/RemoteFeatures/RemoteMonitoring.html</string>
+    <string name="nsclient_hint2">https://wiki.aaps.app/nl/latest/RemoteFeatures/RemoteControl.html</string>
     <string name="isf_label_exam">Insulinegevoeligheidsfactor (ISF)</string>
     <string name="isf_increasingvalue">Het verhogen van de ISF-waarde zal leiden tot meer insulinetoediening om een dezelfde hoeveelheid koolhydraten te dekken.</string>
     <string name="isf_decreasingvalue">Het verlagen van de ISF-waarde leidt tot meer insulinetoediening om een verhoogde bloedglucose te corrigeren.</string>
