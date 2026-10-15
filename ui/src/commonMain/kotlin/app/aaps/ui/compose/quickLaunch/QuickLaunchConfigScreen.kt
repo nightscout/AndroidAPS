@@ -186,6 +186,23 @@ fun QuickLauchConfigScreen(
                 }
             }
 
+            // ── Available: Manage ── (hidden when empty)
+            // Same header string as the Manage sheet, so the two lists name this group the same way.
+            val manageItems = state.availableStaticItems.filter {
+                it.action.elementType?.category == ElementCategory.MANAGEMENT
+            }
+            if (manageItems.isNotEmpty()) {
+                item(key = "divider_manage") {
+                    HorizontalDivider()
+                }
+                item(key = "header_manage") {
+                    SectionHeader(stringResource(CoreUiStrings.manage))
+                }
+                items(manageItems, key = { "avail_${it.action.typeId}" }) { item ->
+                    AvailableActionItem(item = item, onAdd = { viewModel.addAction(item.action) }, modifier = Modifier.animateItem())
+                }
+            }
+
             // ── Available: Care Portal ── (hidden when empty)
             val careItems = state.availableStaticItems.filter {
                 it.action.elementType?.category in setOf(ElementCategory.CAREPORTAL, ElementCategory.DEVICE)

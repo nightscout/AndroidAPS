@@ -27,6 +27,7 @@ import java.security.MessageDigest
  * - Bolus set (0x01,0x03 — CmdLargeBasalSet)
  * - Extended bolus set (0x01,0x03 — CmdExtendedBolusSet, different param layout)
  * - Basal profile set (0x01,0x02)
+ * - Basal profile get (0x02,0x02) and resistance get (0x02,0x02 on port 1515)
  * - Insulin get (0x02,0x07)
  * - History get (0x02,0x01)
  * - Alarm set (0x01,0x0b)
@@ -55,15 +56,31 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
     }
 
     /**
+     * True when the last response was the ack of a confirmation. It repeats the answer it confirms, and the transport
+     * sends it with the same packet index: the app drops a packet with the index it has just handled, and that ends the
+     * exchange. With a new index the app confirmed again, the emulator answered again, and a read sent next on the
+     * same link got a stale answer.
+     */
+    var lastResponseWasConfirmationAck = false
+        private set
+
+    /**
      * Process an incoming encrypted message.
      *
      * For pairing (port 0D0D), call [processPairInitial] instead.
      */
-    fun processMessage(model: EquilCmdModel, password: ByteArray): EquilCmdModel? {
+    fun processMessage(model: EquilCmdModel, password: ByteArray, incomingPort: String = ""): EquilCmdModel? {
         aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: processMessage phase=$phase")
+        // Not every command confirms its answer: CmdResistanceGet and CmdStepSet without sendConfig do not, and the app
+        // sends the next command on the same link. Taken as a confirmation, that command got the old answer again.
+        if (phase == Phase.AWAITING_CONFIRM && !isConfirmation(model, password)) {
+            aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: the last answer was not confirmed, this is a new command")
+            phase = Phase.AWAITING_COMMAND
+        }
+        lastResponseWasConfirmationAck = phase == Phase.AWAITING_CONFIRM
         return when (phase) {
             Phase.AWAITING_INITIAL          -> handleInitialRequest(model, password)
-            Phase.AWAITING_COMMAND          -> handleCommandData(model, password)
+            Phase.AWAITING_COMMAND          -> handleCommandData(model, password, incomingPort)
             Phase.AWAITING_CONFIRM          -> handleConfirmation(model, password)
             Phase.PAIRING_AWAITING_CONFIRM  -> handlePairConfirm(model)
         }
@@ -141,7 +158,7 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         return AESUtil.aesEncrypt(password, responseData)
     }
 
-    private fun handleCommandData(model: EquilCmdModel, password: ByteArray): EquilCmdModel? {
+    private fun handleCommandData(model: EquilCmdModel, password: ByteArray, incomingPort: String): EquilCmdModel? {
         val contentHex: String
         try {
             contentHex = AESUtil.decrypt(model, password)
@@ -151,12 +168,22 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         }
         val contentBytes = Utils.hexStringToBytes(contentHex)
         val cmdType = if (contentBytes.size >= 6) "%02X,%02X".format(contentBytes[4], contentBytes[5]) else "??"
-        val responseData = processCommand(contentBytes)
+        val responseData = processCommand(contentBytes, incomingPort)
         lastCommandResponse = responseData
         aapsLogger?.debug(LTag.PUMPEMULATOR, "Emulator: handleCommandData cmd=$cmdType responseSize=${responseData.size} response=${Utils.bytesToHex(responseData)}")
 
         phase = Phase.AWAITING_CONFIRM
         return AESUtil.aesEncrypt(password, responseData)
+    }
+
+    /**
+     * A confirmation has 0x00 after the 4-byte index (`getNextData` of every command), a command has 0x01 (set) or
+     * 0x02 (get) there. A message that cannot be decrypted counts as a confirmation, so [handleConfirmation] deals
+     * with it as before.
+     */
+    private fun isConfirmation(model: EquilCmdModel, password: ByteArray): Boolean {
+        val content = runCatching { Utils.hexStringToBytes(AESUtil.decrypt(model, password)) }.getOrNull() ?: return true
+        return content.size < 5 || content[4].toInt() == 0x00
     }
 
     private fun handleConfirmation(model: EquilCmdModel, password: ByteArray): EquilCmdModel? {
@@ -229,8 +256,9 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
     /**
      * Dispatch command by type bytes.
      * Data format: [4-byte index][cmdType1][cmdType2][params...]
+     * The resistance and the basal read share 0x02,0x02: the resistance read comes on port 1515.
      */
-    private fun processCommand(data: ByteArray): ByteArray {
+    private fun processCommand(data: ByteArray, incomingPort: String = ""): ByteArray {
         if (data.size < 6) return indexedResponse()
 
         val cmdType1 = data[4].toInt() and 0xFF
@@ -241,7 +269,7 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
             cmdType1 == 0x02 && cmdType2 == 0x00 -> processRunningModeGet()
             cmdType1 == 0x02 && cmdType2 == 0x04 -> processTempBasalGet()
             cmdType1 == 0x02 && cmdType2 == 0x07 -> processInsulinGet()
-            cmdType1 == 0x02 && cmdType2 == 0x02 -> processResistanceGet()
+            cmdType1 == 0x02 && cmdType2 == 0x02 -> if (incomingPort.startsWith(RESISTANCE_PORT)) processResistanceGet() else processBasalGet()
             cmdType1 == 0x02 && cmdType2 == 0x01 -> processHistoryGet(data)
 
             // --- SET commands (0x01, ...) ---
@@ -296,6 +324,18 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
         val resistance = state.resistance
         response[6] = (resistance and 0xFF).toByte()
         response[7] = ((resistance shr 8) and 0xFF).toByte()
+        return response
+    }
+
+    private fun processBasalGet(): ByteArray {
+        // CmdBasalGet: [index(4)][2 unused][48 half hours, low byte first]. The emulator keeps one value per hour.
+        val response = ByteArray(6 + 48 * 2)
+        putIndex(response)
+        for (halfHour in 0 until 48) {
+            val value = state.basalRates[halfHour / 2]
+            response[6 + 2 * halfHour] = (value and 0xFF).toByte()
+            response[7 + 2 * halfHour] = ((value shr 8) and 0xFF).toByte()
+        }
         return response
     }
 
@@ -452,14 +492,13 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
 
     // --- Helpers ---
 
-    /** Build an OK response with index + resistance value at [6-7]. 24 bytes to satisfy any decodeConfirmData.
-     *  Resistance is included in all responses because CmdResistanceGet reads [6-7] and its command
-     *  phase may be skipped due to session phase confusion. Other commands ignore these bytes. */
+    /**
+     * Build an OK response with the index. 24 bytes to satisfy any decodeConfirmData.
+     * It has no resistance in it: the resistance read gets its own answer, see [processMessage].
+     */
     private fun indexedResponse(): ByteArray {
         val response = ByteArray(24)
         putIndex(response)
-        response[6] = (state.resistance and 0xFF).toByte()
-        response[7] = ((state.resistance shr 8) and 0xFF).toByte()
         return response
     }
 
@@ -476,4 +515,10 @@ class EquilPumpEmulator(val state: EquilPumpState = EquilPumpState(), private va
 
     private fun getInt(data: ByteArray, offset: Int): Int =
         Utils.bytes2Int(byteArrayOf(data[offset], data[offset + 1], data[offset + 2], data[offset + 3]))
+
+    companion object {
+
+        /** The port CmdResistanceGet sends on. */
+        private const val RESISTANCE_PORT = "1515"
+    }
 }

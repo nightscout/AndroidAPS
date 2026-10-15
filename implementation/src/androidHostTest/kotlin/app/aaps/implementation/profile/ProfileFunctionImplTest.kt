@@ -2,6 +2,7 @@ package app.aaps.implementation.profile
 
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -27,6 +28,8 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
@@ -123,6 +126,53 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
 
         // No EPS yet (the pump hasn't confirmed), but the user already chose — still a real choice, not a guess.
         assertThat(createSut().getRunningOrRequestedICfg()).isEqualTo(someICfg)
+    }
+
+    /** #2454: the pump rounds the basal, so the EPS holds other rates than the PS it was made from. */
+    private suspend fun runningEpsFromPs(psId: Long) {
+        whenever(config.appInitialized).thenReturn(true)
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong())).thenReturn(profileSwitch.copy(id = 140, iCfg = someICfg))
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong()))
+            .thenReturn(effectiveProfileSwitch.copy(originalPsId = psId, basalBlocks = listOf(Block(T.hours(24).msecs(), 0.95))))
+    }
+
+    @Test
+    fun aProfileWhoseBasalThePumpRoundedIsNotPending() = runTest {
+        runningEpsFromPs(140)
+
+        assertThat(createSut().isProfileChangePending()).isFalse()
+    }
+
+    @Test
+    fun aProfileThatIsNotRunningYetIsPending() = runTest {
+        runningEpsFromPs(139)
+
+        assertThat(createSut().isProfileChangePending()).isTrue()
+    }
+
+    /** On AAPSClient the EPS comes from the master: its originalPsId (999 here) is an id in the master's database. */
+    private suspend fun clientRunsEpsWrittenAt(epsTimestamp: Long) {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        whenever(config.appInitialized).thenReturn(true)
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong())).thenReturn(profileSwitch.copy(id = 140, timestamp = now, iCfg = someICfg))
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong()))
+            .thenReturn(effectiveProfileSwitch.copy(timestamp = epsTimestamp, originalPsId = 999, basalBlocks = listOf(Block(T.hours(24).msecs(), 0.95))))
+    }
+
+    @Test
+    fun onTheClientAnEpsTheMasterWroteAfterTheSwitchIsItsAnswer() = runTest {
+        clientRunsEpsWrittenAt(now + 1000)
+
+        assertThat(createSut().isProfileChangePending()).isFalse()
+    }
+
+    @Test
+    fun onTheClientAnOlderEpsWithOtherValuesIsStillPending() = runTest {
+        clientRunsEpsWrittenAt(now - 1000)
+
+        assertThat(createSut().isProfileChangePending()).isTrue()
     }
 
     // Regression, issue #5020: the DB v33 SQL step stamps `insulinEndTime = -1` onto every pre-ICfg row —
@@ -391,12 +441,64 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
     // insulinSwitchRefusal: the same check, for the switch that changes only the insulin of the running profile
 
     @Test
-    fun anInsulinSwitchWithNoRunningProfileSaysThatNoProfileIsSet() = runTest {
+    fun anInsulinSwitchWithNoProfileAtAllSaysThatNoProfileIsSet() = runTest {
         whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         whenever(config.appInitialized).thenReturn(true)
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(null)
+        whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong())).thenReturn(null)
 
         assertThat(createSutWithText().insulinSwitchRefusal(someICfg)).isEqualTo(baseText.gs(CoreUiStrings.no_profile_set))
+    }
+
+    /**
+     * A pump wizard on a new pump: the gate switched the profile, but it is set only after the activation, so
+     * nothing runs yet when the wizard switches the insulin. The switch is built from the requested one.
+     */
+    private suspend fun requestedSwitchNotRunningYet(percentage: Int = 100, durationMinutes: Long = 0, startedMinutesAgo: Long = 0) {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(config.appInitialized).thenReturn(true)
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(null)
+        whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong())).thenReturn(
+            profileSwitch.copy(
+                profileName = TESTPROFILENAME, percentage = percentage, iCfg = someICfg,
+                timestamp = now - T.mins(startedMinutesAgo).msecs(), duration = T.mins(durationMinutes).msecs()
+            )
+        )
+    }
+
+    @Test
+    fun anInsulinSwitchBeforeTheProfileRunsIsNotRefused() = runTest {
+        requestedSwitchNotRunningYet()
+
+        assertThat(createSutWithText().insulinSwitchRefusal(someICfg)).isNull()
+    }
+
+    /** The requested switch is at 150 %: 1.5 U/h, above a pump max basal of 1.2 U/h. Its own values are checked. */
+    @Test
+    fun anInsulinSwitchBeforeTheProfileRunsIsCheckedWithTheRequestedValues() = runTest {
+        requestedSwitchNotRunningYet(percentage = 150)
+        testPumpPlugin.pumpDescription.basalMaximumRate = 1.2
+
+        assertThat(createSutWithText().insulinSwitchRefusal(someICfg))
+            .isEqualTo("Basal rate is not compatible with the current pump and cannot be activated. Reduce the percentage or adjust the basal rate.")
+    }
+
+    @Test
+    fun theInsulinChosenInAPumpWizardIsAppliedBeforeTheProfileRuns() = runTest {
+        requestedSwitchNotRunningYet(percentage = 80, durationMinutes = 60, startedMinutesAgo = 15)
+        whenever(persistenceLayer.insertOrUpdateProfileSwitch(any(), any(), any(), anyOrNull(), any())).thenAnswer { invocation ->
+            PersistenceLayer.TransactionResult<PS>().also { it.inserted.add(invocation.getArgument(0)) }
+        }
+        val chosen = someICfg.copy(insulinLabel = "Chosen in the wizard")
+
+        assertThat(createSutWithText().createProfileSwitchWithNewInsulin(chosen, Sources.Equil)).isTrue()
+
+        val inserted = argumentCaptor<PS>()
+        verify(persistenceLayer).insertOrUpdateProfileSwitch(inserted.capture(), any(), any(), anyOrNull(), any())
+        assertThat(inserted.firstValue.profileName).isEqualTo(TESTPROFILENAME)
+        assertThat(inserted.firstValue.percentage).isEqualTo(80)
+        assertThat(inserted.firstValue.duration).isEqualTo(T.mins(45).msecs())
+        assertThat(inserted.firstValue.iCfg.insulinLabel).isEqualTo("Chosen in the wizard")
     }
 
     /** The running profile is at 150 %: 1.5 U/h, above a pump max basal of 1.2 U/h. A new insulin does not change that. */

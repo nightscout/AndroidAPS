@@ -22,10 +22,32 @@
     <string name="random_bg">נתוני סוכר אקראיים</string>
     <string name="description_source_random_bg">הפקת נתוני גלוקוז אקראיים (מצב הדגמה בלבד)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">קבלת נתוני גלוקוז מאפליקציית Syai/Ottai.</string>
     <!-- Patched SI App -->
+    <string name="patched_si_app">אפליקציית SI</string>
+    <string name="description_source_patched_si_app">קבלת נתוני סוכר מאפליקציית Sibionic SI מותאמת או מאפליקציית Sibionics.</string>
     <!-- Patched Sino App -->
+    <string name="patched_sino_app">אפליקציית Sino</string>
+    <string name="description_source_patched_sino_app">קבלת נתוני סוכר מאפליקציית Sino מותאמת.</string>
     <!-- Instara App -->
+    <string name="description_source_instara_app">קבלת ערכי סוכר מאפליקציית Instara.</string>
     <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">בקשת נתונים היסטוריים מ־Instara</string>
+    <string name="pref_summary_instara_history_request">בקשת נתונים היסטוריים חסרים, אם קיימים, ברקע.</string>
     <!-- Notification Reader -->
+    <string name="notification_reader">קורא התראות</string>
+    <string name="description_source_notification_reader">קריאת ערכי גלוקוז מהתראות של אפליקציות CGM רשמיות, כגון Dexcom, Medtronic ו־Eversense.</string>
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">דקסקום CGM</string>
+    <string name="permission_dexcom_description">האפליקציה זקוקה להרשאה כדי לקבל נתוני CGM מאפליקציית דקסקום.</string>
+    <string name="permission_notification_listener_title">גישה להתראות</string>
+    <string name="permission_notification_listener_description">נדרשת הרשאה כדי לקרוא ערכי גלוקוז מהתראות של אפליקציות CGM.</string>
+    <string name="aidex">אפליקציית MicroTech CGM</string>
+    <string name="description_source_aidex">קבלת ערכי CGM מ־LinX, ‏LinX vista, ‏Equil G. Smart 2, ‏Diaexpert 2 ועוד.</string>
+    <string name="aidex_sensor_expired">תוקף החיישן הסתיים. יש להחליף לחיישן חדש.</string>
+    <string name="aidex_sensor_error">שגיאת חיישן. יש לבדוק את מצב החיישן.</string>
+    <string name="aidex_sensor_stabilizing">החיישן נמצא בתהליך התייצבות. נא להמתין…</string>
+    <string name="aidex_sensor_replace">נדרשת החלפת חיישן, אנא החלף לחיישן חדש בהקדם האפשרי</string>
+    <string name="aidex_signal_lost">אות החיישן אבד, אנא בדוק את החיבור</string>
 </resources>

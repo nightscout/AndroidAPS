@@ -16,14 +16,7 @@
     <string name="omnipod_dash_scan_failed">扫描失败</string>
     <string name="omnipod_dash_generic_error">一般错误： %1$s</string>
     <string name="omnipod_dash_connection_lost">连接中断</string>
-    <string name="omnipod_dash_failed_to_send">发送命令失败：</string>
-    <string name="omnipod_dash_command_not_sent">命令没有发送</string>
-    <string name="omnipod_dash_command_not_received_by_the_pod">Pod 没有接收命令</string>
-    <string name="omnipod_dash_unknown">命令的未知状态</string>
-    <string name="omnipod_common_history_tbr_value">%1$.2f U/h，%2$d 分钟</string>
-    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">胰岛素输注已暂停</string>
-    <string name="omnipod_common_history_total_delivered">总输注: %1$.2f U</string>
     <string name="omnipod_dash_bolus_already_in_progress">另一个大剂量正在输注</string>
     <string name="omnipod_dash_not_enough_insulin">储药器中的胰岛素不足</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">未确认命令</string>

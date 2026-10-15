@@ -191,6 +191,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS 注射進度靜音</string>
     <string name="bolus_progress_channel_description">注射進度和取消</string>
     <string name="bolus_progress_silent_channel_description">注射進度和取消，震動較少</string>
+    <string name="open_loop_channel_name">AAPS 開環</string>
+    <string name="open_loop_channel_description">開環請求通知</string>
     <string name="simple_ui_off">關閉</string>
     <string name="simple_ui_charging">充電時</string>
     <string name="simple_ui_always_on">始終開啟模式</string>

@@ -158,4 +158,7 @@
         <item quantity="one">Pod Alarmı: %1$s</item>
         <item quantity="other">Pod Alarmları: %1$s</item>
     </plurals>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_bolus_value">%1$.2f Ü</string>
+    <string name="omnipod_common_history_total_delivered">Toplam gönderilen: %1$.2f Ü</string>
 </resources>

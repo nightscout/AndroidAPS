@@ -18,6 +18,7 @@
     <string name="permission_notifications_description">Necessário para mostrar alertas, alarmes e atualizações do status da bomba</string>
     <string name="permission_schedule_exact_alarm_title">Alarmes e lembretes</string>
     <string name="permission_schedule_exact_alarm_description">Necessário para que os alarmes possam ativar a tela enquanto o AAPS estiver em segundo plano e para que os lembretes toquem no horário</string>
+    <!--    Notification channels, shown in the Android settings-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported_to_cloud">Configurações exportadas com sucesso para o armazenamento na nuvem</string>

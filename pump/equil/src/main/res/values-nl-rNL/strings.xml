@@ -31,8 +31,6 @@
     <string name="equil_record_bolus">Bolus %1$s E</string>
     <string name="equil_error_set_temp_basal_failed_validation">Tijdelijke basaal duur moet groter zijn dan nul en een veelvoud van %1$s minuten.</string>
     <string name="equil_not_enough_insulin">Onvoldoende insuline beschikbaar in het reservoir</string>
-    <string name="equil_low_battery">Batterij laag</string>
-    <string name="equil_low_insulin">Onvoldoende insuline beschikbaar in het reservoir</string>
     <string name="equil_pump_not_run">Pomp niet actief</string>
     <string name="equil_pair">Koppel</string>
     <string name="equil_pair_error">Koppel fout</string>

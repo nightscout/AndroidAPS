@@ -294,8 +294,8 @@ fun ElementType.description(): TextRef? = when (this) {
     ElementType.AUTOMATION_MANAGEMENT   -> CoreUiStrings.automation_management_desc
     ElementType.AUTHORIZED_CLIENTS      -> CoreUiStrings.authorized_clients_manage_desc
     ElementType.PAIR_WITH_MASTER        -> CoreUiStrings.pair_with_master_manage_desc
+    ElementType.RUNNING_MODE            -> CoreUiStrings.running_mode_desc
     ElementType.QUICK_WIZARD,
-    ElementType.RUNNING_MODE,
     ElementType.AUTOMATION,
     ElementType.PUMP,
     ElementType.SETTINGS,

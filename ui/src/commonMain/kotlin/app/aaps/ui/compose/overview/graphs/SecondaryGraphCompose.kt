@@ -56,11 +56,19 @@ import kotlinx.coroutines.delay
 /**
  * CartesianChartModelProducer.update() skips notifying receivers (and thus skips recomputing axis
  * ranges) when a transaction's partials AND extraStore are both unchanged from the last one. Since
- * scrolling/zooming re-submits identical series data (only the visible window changed), stashing
- * the visible window here forces the extraStore to differ, so Vico actually reprocesses the
+ * scrolling/zooming re-submits identical series data (only the axis ranges changed), stashing
+ * the axis setup here forces the extraStore to differ, so Vico actually reprocesses the
  * transaction instead of silently dropping it.
  */
-private val VISIBLE_RANGE_KEY = ExtraStore.Key<Pair<Double?, Double?>>()
+private val AXIS_SCALE_KEY = ExtraStore.Key<AxisScale>()
+
+/** The axis setup that a scroll or zoom can change. Equal values mean the axes did not change. */
+private data class AxisScale(
+    val primary: CartesianLayerRangeProvider,
+    val secondary: CartesianLayerRangeProvider,
+    val basal: CartesianLayerRangeProvider,
+    val startAxisItemPlacer: VerticalAxis.ItemPlacer
+)
 
 /**
  * Secondary graphs are much shorter than the BG graph, so Vico's ItemPlacer thins out a denser
@@ -143,6 +151,8 @@ fun SecondaryGraphCompose(
     nowTimestamp: Long,
     activityOverlay: Boolean = false,
     onVisibleRangeChanged: ((Pair<Double, Double>?) -> Unit)? = null,
+    /** While holding the BG graph, a line at the inspected time. Null turns it off. */
+    inspect: GraphInspectState? = null,
     modifier: Modifier = Modifier
 ) {
     val dateUtil = LocalDateUtil.current
@@ -360,22 +370,6 @@ fun SecondaryGraphCompose(
 
     val hasBasalLayer = hasIob && basalData != null && !isDualAxis
 
-    // Activity overlay (scaled to fit within IOB's Y range, like BG graph)
-    val processedActivityOverlay = remember(activityOverlay, hasIob, activityData, processedIob, stableTimeRange) {
-        if (!hasRealTimeRange || !activityOverlay || !hasIob || activityData == null) return@remember Pair(emptyList(), emptyList())
-        val maxAct = activityData.maxActivity
-        if (maxAct <= 0.0) return@remember Pair(emptyList(), emptyList())
-        val iobMaxY = processedIob.maxOfOrNull { it.second }?.coerceAtLeast(0.1) ?: 0.1
-        val scale = iobMaxY * 0.8 / maxAct
-        val hist = activityData.activity
-            .map { timestampToX(it.timestamp, minTimestamp) to (it.value * scale) }
-            .let { filterToRange(it, minX, maxX) }
-        val pred = activityData.activityPrediction
-            .map { timestampToX(it.timestamp, minTimestamp) to (it.value * scale) }
-            .let { filterToRange(it, minX, maxX) }
-        hist to pred
-    }
-
     // Process secondary (right axis) series
     val processedSecondary = remember(secondaryLineData, stableTimeRange) {
         if (!hasRealTimeRange || secondaryLineData.isEmpty()) return@remember emptyList()
@@ -387,9 +381,9 @@ fun SecondaryGraphCompose(
     // own chart, instead of the full loaded time range.
     // The reporter writes into a StateFlow holder (not Compose state) on every draw pass — see
     // VisibleRangeHolder — and we collect it here, keeping Compose state writes off the draw path.
-    // Computed here (before the model-rebuild LaunchedEffect below) so visibleMinX/visibleMaxX can
-    // be included in that effect's keys — Vico only reliably re-applies axis ranges via a real
-    // modelProducer.runTransaction, not merely by swapping the CartesianLayerRangeProvider instance.
+    // The axis ranges below are windowed to it, and the model is rebuilt when they change — Vico
+    // only reliably re-applies axis ranges via a real modelProducer.runTransaction, not merely by
+    // swapping the CartesianLayerRangeProvider instance.
     val visibleRangeHolder = remember { VisibleRangeHolder() }
     val visibleRangeReporter = rememberVisibleRangeReporter(visibleRangeHolder)
 
@@ -414,6 +408,90 @@ fun SecondaryGraphCompose(
 
     val visibleMinX = visibleRange?.first
     val visibleMaxX = visibleRange?.second
+
+    // Union of Y values across all primary-layer series (IOB, COB, simple series, DevSlope-min,
+    // deviation lines), windowed to the visible scroll/zoom range — computed once here since the
+    // IOB+basal scale, the activity overlay scale, the dual-axis alignment, the single-axis
+    // nice-scale dispatch, and the generic auto-range fallback below all need the exact same union.
+    // Carb markers are in here because they are in the model. `hasPrimaryData` counts them, so a
+    // graph holding nothing but carb markers claims to have data - and if the range union left them
+    // out, every branch that needs a non-empty union (dual-axis alignment, the single-axis nice
+    // scale, the auto-range) returned null while the "no data" branch was skipped, so the axis fell
+    // through to Vico's raw auto-range over the model. That is reachable on a cold start: carbs come
+    // straight from the database, COB waits for the calculation workflow, and in between the axis was
+    // sized to the carb amounts alone. Measured on a Pixel with COB+ABS after a restart:
+    // `primaryY=[null..null] n=0` against `modelY=[0.0..43.0] slots=[CarbsMarker]`, giving an axis of
+    // 0..44 that a COB curve reaching 148 was drawn straight through.
+    // Deliberately does NOT include the activity overlay: that one is mapped into this axis' units
+    // (see processedActivityOverlay below), so feeding it back in here would be circular.
+    val primaryYValues = remember(
+        processedIob, processedCob, processedCarbs, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
+    ) {
+        windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedCarbs, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
+    }
+
+    // Zero-floor nice range of the primary layer, windowed — 0 if the visible window has no
+    // negative IOB, else a disparity-aware negative sliver (never centering zero).
+    // Deliberately NOT conditioned on hasBasalLayer: the IOB+basal axis below is built from it,
+    // and so is the activity overlay, which needs the room the axis leaves on each side of zero
+    // whether or not basal is drawn.
+    val primaryDataNiceRange = remember(primaryYValues) {
+        if (primaryYValues.isEmpty()) null
+        else zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max().coerceAtLeast(0.1), IOB_GRAPH_TICK_COUNT)
+    }
+    // IOB (with basal overlay active): reserve the top BASAL_HEIGHT_FRACTION of the height for
+    // basal, ABOVE the actual data range (not above y=0 — those only coincide when nice.min is 0;
+    // when IOB has a negative excursion, reserving "above 0" would eat into the negative portion's
+    // share and let positive IOB data creep into the fraction of the axis meant for basal).
+    // Solving for axisMax such that
+    // (nice.max - nice.min) / (axisMax - nice.min) == (1 - BASAL_HEIGHT_FRACTION) gives:
+    // axisMax = nice.min + (nice.max - nice.min) / (1 - BASAL_HEIGHT_FRACTION)
+    // — this reduces to the simpler nice.max / (1 - frac) exactly when nice.min == 0. The tick
+    // step comes from the un-inflated nice range, so gridlines in the data region stay clean.
+    // Result pairs the final (inflated) axis range with the un-inflated data max — the latter is
+    // where tick labels must stop (see ClampedVerticalAxisItemPlacer) so they don't extend into
+    // the reserved basal band above the actual IOB data.
+    val iobBasalScaleResult = remember(hasBasalLayer, primaryDataNiceRange) {
+        if (!hasBasalLayer) return@remember null // auto-range when no basal
+        val nice = primaryDataNiceRange ?: return@remember null
+        val axisMax = nice.min + (nice.max - nice.min) / (1 - BASAL_HEIGHT_FRACTION)
+        NiceScale(nice.min, axisMax, nice.step) to nice.max
+    }
+    val iobBasalScale = iobBasalScaleResult?.first
+    val iobDataMax = iobBasalScaleResult?.second
+
+    // Activity overlay — mapped into the IOB axis' own units, zero activity on IOB zero. The IOB
+    // scale is never changed to fit it: the curve gets the room the IOB axis already leaves, which
+    // is the data region below the reserved basal band above zero and IOB's own negative sliver
+    // below zero (usually none, so a negative activity tail is clipped there).
+    // Both the activity range and the IOB range come from the visible window only.
+    // The room comes from primaryDataNiceRange rather than from the IOB+basal axis, so that the
+    // overlay does not quietly vanish when that axis is absent. With basal drawn the two are the
+    // same range. Without it (IOB paired with a second series on its own axis) the real axis is
+    // the zero-aligned dual-axis range, which always contains this nice range — never clips it,
+    // see fractionAlignedNiceRange — so the curve is sized a little conservatively but still sits
+    // inside the frame with its zero on the axis' zero.
+    val processedActivityOverlay = remember(activityOverlay, hasIob, activityData, primaryDataNiceRange, stableTimeRange, visibleMinX, visibleMaxX) {
+        if (!hasRealTimeRange || !activityOverlay || !hasIob || activityData == null) return@remember Pair(emptyList(), emptyList())
+        val iobNice = primaryDataNiceRange ?: return@remember Pair(emptyList(), emptyList())
+        val hist = activityData.activity
+            .map { timestampToX(it.timestamp, minTimestamp) to it.value }
+            .let { filterToRange(it, minX, maxX) }
+        val pred = activityData.activityPrediction
+            .map { timestampToX(it.timestamp, minTimestamp) to it.value }
+            .let { filterToRange(it, minX, maxX) }
+        val windowed = windowedY(hist + pred, visibleMinX, visibleMaxX)
+        if (windowed.isEmpty()) return@remember Pair(emptyList(), emptyList())
+        val scale = activityOverlayScale(
+            activityMin = windowed.min(),
+            activityMax = windowed.max(),
+            zeroLevel = 0.0,
+            roomAbove = iobNice.max,
+            roomBelow = -iobNice.min
+        )
+        if (scale.scale <= 0.0) return@remember Pair(emptyList(), emptyList())
+        hist.map { (x, y) -> x to scale.map(y) } to pred.map { (x, y) -> x to scale.map(y) }
+    }
 
     // Single source of truth for the primary layer: build the (x, y, slot) specs synchronously,
     // in the exact order they are emitted to the model below. Deriving the line styles,
@@ -470,69 +548,6 @@ fun SecondaryGraphCompose(
         }
     }
     val hasPrimaryData = primarySeries.isNotEmpty()
-
-    LaunchedEffect(
-        processedSimpleSeries,
-        processedDevSlopeMin,
-        processedDeviationLines,
-        processedIob,
-        processedIobTreatments,
-        processedCob,
-        processedCarbs,
-        processedBasalProfile,
-        processedBasalActual,
-        processedSecondary,
-        processedActivityOverlay,
-        maxX,
-        visibleMinX,
-        visibleMaxX
-    ) {
-        // Always populate the model — even with no data / no real time range — so the chart frame
-        // (axes, grid, now-line) renders the empty-state normalizer series instead of staying blank.
-        // (Matches TreatmentBeltGraphCompose.) When data is absent the processed* lists are empty,
-        // so only the normalizer is emitted; the primary range provider anchors an empty 0..1 axis.
-        modelProducer.runTransaction {
-            // Primary line layer — emit in the exact order of `primarySeries` so the line styles
-            // (built from the same list) map 1:1 to the series.
-            lineModel {
-                primarySeries.forEach { spec -> series(x = spec.x, y = spec.y) }
-                // Normalizer — ensures identical maxPointSize across all charts
-                series(x = normalizerX(maxX), y = NORMALIZER_Y)
-            }
-
-            // Block 2 → Basal layer (end axis, flipped) OR secondary series layer (end axis)
-            if (hasBasalLayer) {
-                lineModel {
-                    if (processedBasalActual.size >= 2) {
-                        series(x = processedBasalActual.map { it.first }, y = processedBasalActual.map { it.second })
-                    } else {
-                        series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
-                    }
-                    if (processedBasalProfile.size >= 2) {
-                        series(x = processedBasalProfile.map { it.first }, y = processedBasalProfile.map { it.second })
-                    } else {
-                        series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
-                    }
-                }
-            } else if (isDualAxis) {
-                lineModel {
-                    if (processedSecondary.isNotEmpty()) {
-                        series(x = processedSecondary.map { it.first }, y = processedSecondary.map { it.second })
-                    } else {
-                        series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
-                    }
-                    // Normalizer for end axis layer
-                    series(x = normalizerX(maxX), y = NORMALIZER_Y)
-                }
-            }
-
-            // Forces Vico to reprocess this transaction even when the series data above is
-            // identical to last time (see VISIBLE_RANGE_KEY doc) — otherwise scrolling/zooming
-            // would re-submit the same partials and get silently skipped, never picking up the
-            // updated primaryRangeProvider.
-            extras { it[VISIBLE_RANGE_KEY] = visibleMinX to visibleMaxX }
-        }
-    }
 
     // =========================================================================
     // Line styles
@@ -599,55 +614,12 @@ fun SecondaryGraphCompose(
     // Chart rendering
     // =========================================================================
 
-    val timeFormatter = rememberTimeFormatter(minTimestamp)
     val bottomAxisItemPlacer = rememberBottomAxisItemPlacer(minTimestamp)
     val nowLineColor = MaterialTheme.colorScheme.onSurface
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
-    val decorations = remember(nowLine, visibleRangeReporter) { listOf(nowLine, visibleRangeReporter) }
+    val inspectLine = rememberInspectLine(inspect)
+    val decorations = remember(nowLine, visibleRangeReporter, inspectLine) { listOfNotNull(nowLine, visibleRangeReporter, inspectLine) }
 
-    // Union of Y values across all primary-layer series (IOB, COB, simple series, DevSlope-min,
-    // deviation lines), windowed to the visible scroll/zoom range — computed once here since the
-    // IOB+basal scale, the dual-axis alignment, the single-axis nice-scale dispatch, and the
-    // generic auto-range fallback below all need the exact same union.
-    // Carb markers are in here because they are in the model. `hasPrimaryData` counts them, so a
-    // graph holding nothing but carb markers claims to have data - and if the range union left them
-    // out, every branch that needs a non-empty union (dual-axis alignment, the single-axis nice
-    // scale, the auto-range) returned null while the "no data" branch was skipped, so the axis fell
-    // through to Vico's raw auto-range over the model. That is reachable on a cold start: carbs come
-    // straight from the database, COB waits for the calculation workflow, and in between the axis was
-    // sized to the carb amounts alone. Measured on a Pixel with COB+ABS after a restart:
-    // `primaryY=[null..null] n=0` against `modelY=[0.0..43.0] slots=[CarbsMarker]`, giving an axis of
-    // 0..44 that a COB curve reaching 148 was drawn straight through.
-    val primaryYValues = remember(
-        processedIob, processedCob, processedCarbs, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
-    ) {
-        windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedCarbs, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
-    }
-
-    // IOB (with basal overlay active): zero-floor nice range — 0 if the visible window has no
-    // negative IOB, else a disparity-aware negative sliver (never centering zero) — then reserve
-    // the top BASAL_HEIGHT_FRACTION of the height for basal, ABOVE the actual data range (not
-    // above y=0 — those only coincide when nice.min is 0; when IOB has a negative excursion,
-    // reserving "above 0" would eat into the negative portion's share and let positive IOB data
-    // creep into the fraction of the axis meant for basal). Solving for axisMax such that
-    // (nice.max - nice.min) / (axisMax - nice.min) == (1 - BASAL_HEIGHT_FRACTION) gives:
-    // axisMax = nice.min + (nice.max - nice.min) / (1 - BASAL_HEIGHT_FRACTION)
-    // — this reduces to the simpler nice.max / (1 - frac) exactly when nice.min == 0. The tick
-    // step comes from the un-inflated nice range, so gridlines in the data region stay clean.
-    // Result pairs the final (inflated) axis range with the un-inflated data max — the latter is
-    // where tick labels must stop (see ClampedVerticalAxisItemPlacer) so they don't extend into
-    // the reserved basal band above the actual IOB data.
-    val iobBasalScaleResult = remember(hasBasalLayer, primaryYValues) {
-        if (!hasBasalLayer) return@remember null // auto-range when no basal
-        if (primaryYValues.isEmpty()) null
-        else {
-            val nice = zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max().coerceAtLeast(0.1), IOB_GRAPH_TICK_COUNT)
-            val axisMax = nice.min + (nice.max - nice.min) / (1 - BASAL_HEIGHT_FRACTION)
-            NiceScale(nice.min, axisMax, nice.step) to nice.max
-        }
-    }
-    val iobBasalScale = iobBasalScaleResult?.first
-    val iobDataMax = iobBasalScaleResult?.second
     // Dual-axis zero alignment.
     // Why: Vico computes each vertical axis range independently, so y=0 on the
     // left axis lands at a different pixel row than y=0 on the right axis. When
@@ -849,6 +821,71 @@ fun SecondaryGraphCompose(
             else               -> stepPlacer
         }
     }
+
+    // Rebuilt only when the data or the axes change, not on every scroll step
+    val axisScale = AxisScale(primaryRangeProvider, secondaryRangeProvider, basalRangeProvider, startAxisItemPlacer)
+    LaunchedEffect(
+        processedSimpleSeries,
+        processedDevSlopeMin,
+        processedDeviationLines,
+        processedIob,
+        processedIobTreatments,
+        processedCob,
+        processedCarbs,
+        processedBasalProfile,
+        processedBasalActual,
+        processedSecondary,
+        processedActivityOverlay,
+        maxX,
+        axisScale
+    ) {
+        // Always populate the model — even with no data / no real time range — so the chart frame
+        // (axes, grid, now-line) renders the empty-state normalizer series instead of staying blank.
+        // (Matches TreatmentBeltGraphCompose.) When data is absent the processed* lists are empty,
+        // so only the normalizer is emitted; the primary range provider anchors an empty 0..1 axis.
+        modelProducer.runTransaction {
+            // Primary line layer — emit in the exact order of `primarySeries` so the line styles
+            // (built from the same list) map 1:1 to the series.
+            lineModel {
+                primarySeries.forEach { spec -> series(x = spec.x, y = spec.y) }
+                // Normalizer — ensures identical maxPointSize across all charts
+                series(x = normalizerX(maxX), y = NORMALIZER_Y)
+            }
+
+            // Block 2 → Basal layer (end axis, flipped) OR secondary series layer (end axis)
+            if (hasBasalLayer) {
+                lineModel {
+                    if (processedBasalActual.size >= 2) {
+                        series(x = processedBasalActual.map { it.first }, y = processedBasalActual.map { it.second })
+                    } else {
+                        series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
+                    }
+                    if (processedBasalProfile.size >= 2) {
+                        series(x = processedBasalProfile.map { it.first }, y = processedBasalProfile.map { it.second })
+                    } else {
+                        series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
+                    }
+                }
+            } else if (isDualAxis) {
+                lineModel {
+                    if (processedSecondary.isNotEmpty()) {
+                        series(x = processedSecondary.map { it.first }, y = processedSecondary.map { it.second })
+                    } else {
+                        series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
+                    }
+                    // Normalizer for end axis layer
+                    series(x = normalizerX(maxX), y = NORMALIZER_Y)
+                }
+            }
+
+            // Forces Vico to reprocess this transaction even when the series data above is
+            // identical to last time (see AXIS_SCALE_KEY doc) — otherwise scrolling/zooming
+            // would re-submit the same partials and get silently skipped, never picking up the
+            // updated primaryRangeProvider.
+            extras { it[AXIS_SCALE_KEY] = axisScale }
+        }
+    }
+
     val startAxis = VerticalAxis.rememberStart(
         itemPlacer = startAxisItemPlacer,
         label = rememberTextComponent(
@@ -857,12 +894,12 @@ fun SecondaryGraphCompose(
         ),
         guideline = LineComponent(fill = Fill(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)))
     )
+    // No time labels: the BG graph above shows them, and the hour lines stay aligned with it.
+    // This keeps the graphs below BG compact.
     val bottomAxis = HorizontalAxis.rememberBottom(
-        valueFormatter = timeFormatter,
         itemPlacer = bottomAxisItemPlacer,
-        label = rememberTextComponent(
-            style = TextStyle(color = MaterialTheme.colorScheme.onSurface)
-        ),
+        label = null,
+        tick = null,
         guideline = LineComponent(fill = Fill(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)))
     )
 

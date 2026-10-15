@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.EffectiveProfile
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
@@ -103,6 +104,18 @@ class PumpWithConcentrationImplTest : TestBase() {
         sut.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.55 })
 
         verify(pump).deliverTreatment(argThat { abs(insulin - 1.5) < 1e-9 })
+    }
+
+    /**
+     * #2454: still in pump units. The running profile is the old one when a new profile has just been set, so the
+     * caller converts with the concentration of the profile it set, not the one this class reads.
+     */
+    @Test
+    fun `deliveredBasal is passed on in pump units`() = runBlocking<Unit> {
+        setupConcentration(2.0)
+        whenever(pump.deliveredBasal()).thenReturn(listOf(Profile.ProfileValue(0, 0.5)))
+
+        assertThat(sut.deliveredBasal()).containsExactly(Profile.ProfileValue(0, 0.5))
     }
 
     @Test

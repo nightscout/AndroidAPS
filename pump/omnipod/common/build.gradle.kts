@@ -17,6 +17,7 @@ dependencies {
     implementation(project(":core:keys"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
+    implementation(project(":pump:common"))
 
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)

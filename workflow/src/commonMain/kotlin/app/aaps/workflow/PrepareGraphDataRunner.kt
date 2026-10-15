@@ -201,10 +201,12 @@ class PrepareGraphDataRunner(
             aapsLogger.debug("No bucketed data.")
             return
         }
-        // Refresh the 24h window so history navigation doesn't inherit a stale range.
+        // Refresh the 24h window so history navigation doesn't inherit a stale range. The horizon is
+        // kept rather than rewritten, see keptEndTime.
         val newToTime = data.overviewData.toTime
         val newFromTime = newToTime - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
-        data.cache.updateTimeRange(TimeRange(fromTime = newFromTime, toTime = newToTime, endTime = newToTime))
+        val newEndTime = keptEndTime(data.cache.timeRangeFlow.value?.endTime, newToTime)
+        data.cache.updateTimeRange(TimeRange(fromTime = newFromTime, toTime = newToTime, endTime = newEndTime))
 
         val highMark = preferences.get(UnitDoubleKey.OverviewHighMark)
         val lowMark = preferences.get(UnitDoubleKey.OverviewLowMark)
@@ -255,7 +257,9 @@ class PrepareGraphDataRunner(
                 )
             }
 
-        data.cache.updateTimeRange(TimeRange(fromTime = fromTime, toTime = toTime, endTime = toTime))
+        // Keeps the horizon the post phase put there, see keptEndTime.
+        val endTime = keptEndTime(data.cache.timeRangeFlow.value?.endTime, toTime)
+        data.cache.updateTimeRange(TimeRange(fromTime = fromTime, toTime = toTime, endTime = endTime))
         data.cache.updateBgReadings(bgDataPoints)
     }
 
@@ -714,13 +718,14 @@ class PrepareGraphDataRunner(
     private suspend fun prepareIobAutosensGraphData(data: PrepareGraphData, isStopped: () -> Boolean) {
         val cacheTimeRange = data.cache.timeRangeFlow.value
         val fromTime = cacheTimeRange?.fromTime ?: data.overviewData.fromTime
+        // The cached end already holds the horizon: the two passes before this one keep it instead of
+        // rewriting it, see keptEndTime. Nothing to widen here.
         val endTime = cacheTimeRange?.endTime ?: data.overviewData.endTime
 
         data.signals.emitProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 0)
 
         val now = dateUtil.now().toDouble()
         var time = fromTime
-        var maxActivity = 0.0
 
         val iobListCompose: MutableList<GraphDataPoint> = ArrayList()
         val absIobListCompose: MutableList<GraphDataPoint> = ArrayList()
@@ -782,8 +787,6 @@ class PrepareGraphDataRunner(
 
             if (time <= now) activityListCompose.add(GraphDataPoint(time, iob.activity))
             else activityPredictionListCompose.add(GraphDataPoint(time, iob.activity))
-            if (iob.activity > maxActivity) maxActivity = iob.activity
-            else if (-iob.activity > maxActivity) maxActivity = -iob.activity
 
             time += 5 * 60 * 1000L
         }
@@ -808,8 +811,7 @@ class PrepareGraphDataRunner(
         data.cache.updateActivityGraph(
             ActivityGraphData(
                 activity = activityListCompose,
-                activityPrediction = activityPredictionListCompose,
-                maxActivity = maxActivity
+                activityPrediction = activityPredictionListCompose
             )
         )
         data.cache.updateBgiGraph(BgiGraphData(bgi = bgiListCompose, bgiPrediction = bgiPredictionListCompose))

@@ -67,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Dezactivare Pompă</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">\nApăsați <b>Următor</b> pentru a dezactiva pompa.\n\n<b>Notă:</b> Acest lucru va suspenda orice administrare de insulină și va dezactiva pompa.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">O pompă dezactivată nu poate fi folosită din nou. Dezactivați această pompă acum?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Se dezactivează pompa</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Se dezactivează pompa.\n\nCand dezactivarea s-a încheiat cu succes, puteți sa apăsați <b>Următorul</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pompă dezactivată</string>
@@ -99,6 +100,8 @@
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sunet pentru notificările SMB incerte activat</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Sunet activat pentru notificări bolus incert</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Sunet când notificarea de administrare suspendată este activă</string>
+    <string name="omnipod_dash_use_bonding">Asociere Bluetooth</string>
+    <string name="omnipod_dash_use_bonding_summary">Încercați aceasta doar dacă dispozitivul nu poate menține o conexiune stabilă. Telefonul va afișa cereri de asociere pe care trebuie să le acceptați. Lăsați dezactivat dacă pompa se conectează bine. Nu are efect sub Android 15.</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Nicio pompă activă</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Setare în desfășurare (se așteaptă activarea pompei)</string>
@@ -109,9 +112,21 @@
     <string name="omnipod_common_pod_status_inactive">Inactiv</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Defecțiune Pompă: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">Notificare telecomandă</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Rezervor gol</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Administrarea insulinei a fost oprită. Schimbați acum pompa.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Auto-oprire</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Administrarea insulinei este oprită. Telecomanda și pompa dumneavoastră nu au comunicat în ultimele 4 ore. Pentru a relua administrarea insulinei, schimbați pompa acum.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Pompă expirată</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">Administrarea insulinei a fost oprită. Schimbați pompa acum.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Ocluzie detectată</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Administrarea insulinei a fost oprită. Schimbați pompa acum. Verificați-vă glicemia</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Eroare pompă</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Administrarea insulinei a fost oprită. Schimbați pompa acum.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pompa va expira în curând</string>
     <string name="omnipod_common_alert_expiration_advisory">Pompa va expira în curând</string>
@@ -173,4 +188,16 @@
         <item quantity="other">Alerte Pompă: %1$s</item>
     </plurals>
     <string name="omnipod_common_overview_pod_hard_end_date">Sfârșit tare pompă</string>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minute</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Corecție bazală</string>
+    <string name="omnipod_common_bolus_type_priming">Se amorsează</string>
+    <string name="omnipod_common_history_total_delivered">Total livrat: %1$.2f U</string>
+    <string name="omnipod_common_failed_to_send">Nu s-a reușit trimiterea comenzii</string>
+    <string name="omnipod_common_command_not_sent">Comanda nu a fost trimisă</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">Comanda nu a fost primită de pompă</string>
+    <string name="omnipod_common_unknown">Stare necunoscută a comenzii</string>
 </resources>

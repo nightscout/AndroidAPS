@@ -828,6 +828,24 @@ class MedtronicHistoryData(
                             }
 
                             aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithTempId - Result: $result")
+                            if (!result) {
+                                // The entry with the temporary id is not there, or it is from before the pump was
+                                // registered again: AAPS used another pump meanwhile, and that ended it. A temp basal
+                                // that still runs on the pump is then recorded from the registration, by pump id.
+                                val fallback = runBlocking {
+                                    pumpSync.syncTemporaryBasalWithPumpId(
+                                        tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
+                                        PumpRate(tbrEntry.insulinRate),
+                                        tempBasalProcessDTO.durationAsSeconds * 1000L,
+                                        !tbrEntry.isPercent,
+                                        PumpSync.TemporaryBasalType.NORMAL,
+                                        tempBasalProcessDTO.pumpId,
+                                        medtronicPumpStatus.pumpType,
+                                        medtronicPumpStatus.serialNumber
+                                    )
+                                }
+                                aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId (no entry with the temporary id) - Result: $fallback")
+                            }
                         }
 
                         pumpSyncStorage.removeTemporaryBasalWithTemporaryId(entryWithTempId.temporaryId)

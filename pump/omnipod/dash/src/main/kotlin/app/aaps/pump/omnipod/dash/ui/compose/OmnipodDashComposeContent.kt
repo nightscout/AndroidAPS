@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
@@ -16,6 +17,7 @@ import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.pump.omnipod.common.R
 import app.aaps.pump.omnipod.common.ui.compose.OmnipodComposeHost
+import app.aaps.pump.omnipod.common.ui.compose.OmnipodPodHistoryScreen
 import app.aaps.pump.omnipod.dash.ui.wizard.compose.DashOmnipodWizardViewModel
 import app.aaps.core.ui.R as CoreUiR
 
@@ -62,10 +64,11 @@ class OmnipodDashComposeContent(
                         )
                     )
                 }
-                DashPodHistoryScreen(
+                OmnipodPodHistoryScreen(
                     records = records,
                     rh = historyViewModel.rh,
-                    profileUtil = historyViewModel.profileUtil
+                    profileUtil = historyViewModel.profileUtil,
+                    pumpType = PumpType.OMNIPOD_DASH
                 )
             }
         )

@@ -85,6 +85,13 @@ sealed class QuickLaunchAction {
         val Calibration = StaticAction(ElementType.CALIBRATION)
         val InsulinManagement = StaticAction(ElementType.INSULIN_MANAGEMENT)
         val ProfileSwitch = StaticAction(ElementType.PROFILE_MANAGEMENT)
+        val TempTargetManagement = StaticAction(ElementType.TEMP_TARGET_MANAGEMENT)
+        val QuickWizardManagement = StaticAction(ElementType.QUICK_WIZARD_MANAGEMENT)
+        val SceneManagement = StaticAction(ElementType.SCENE_MANAGEMENT)
+        val AutomationManagement = StaticAction(ElementType.AUTOMATION_MANAGEMENT)
+        val FoodManagement = StaticAction(ElementType.FOOD_MANAGEMENT)
+        val RunningMode = StaticAction(ElementType.RUNNING_MODE)
+        val AuthorizedClients = StaticAction(ElementType.AUTHORIZED_CLIENTS)
         val BgCheck = StaticAction(ElementType.BG_CHECK)
         val Note = StaticAction(ElementType.NOTE)
         val Exercise = StaticAction(ElementType.EXERCISE)
@@ -97,9 +104,21 @@ sealed class QuickLaunchAction {
         val SiteRotation = StaticAction(ElementType.SITE_ROTATION)
         val QuickLaunchConfig = StaticAction(ElementType.QUICK_LAUNCH_CONFIG)
 
-        /** All static actions available for the configuration screen (excluding QuickLaunchConfig) */
+        /**
+         * All static actions available for the configuration screen (excluding QuickLaunchConfig).
+         *
+         * The management block follows the order of the Manage sheet, so the two lists read the same
+         * way, with `RUNNING_MODE` after it - that one is a management screen too, but the sheet does
+         * not list it because the navigation bar already leads there. Two of the sheet's entries are
+         * deliberately absent: `SCENE`, which starts a scene
+         * rather than opening a screen and already has one [SceneAction] per scene, and
+         * `PAIR_WITH_MASTER`, which is a one time setup step and not something to keep on a toolbar.
+         */
         val staticActions: List<QuickLaunchAction> = listOf(
-            Insulin, InsulinManagement, Carbs, Wizard, Treatment, Cgm, Calibration,
+            Insulin, Carbs, Wizard, Treatment, Cgm, Calibration,
+            ProfileSwitch, InsulinManagement, TempTargetManagement, QuickWizardManagement,
+            SceneManagement, AutomationManagement, FoodManagement, RunningMode,
+            AuthorizedClients,
             BgCheck, Note, Exercise, Question, Announcement,
             SensorInsert, BatteryChange, CannulaChange, Fill, SiteRotation
         )

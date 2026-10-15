@@ -108,6 +108,8 @@
     <string name="triggerCannulaAgeDesc">管路使用时间 %1$s %2$.1f 小时</string>
     <string name="triggerPodChangeLabel">Pod激活</string>
     <string name="triggerPodChangeDesc">Pod 已激活</string>
+    <string name="triggerUnknownLabel">未知触发器</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">未知触发条件 %1$s——永远不成立</string>
     <string name="triggerInsulinAgeLabel">胰岛素使用时间</string>
     <string name="triggerInsulinAgeDesc">胰岛素使用时间 %1$s %2$.1f 小时</string>
     <string name="triggerPumpBatteryAgeLabel">泵电池使用时间</string>

@@ -17,6 +17,7 @@
     <string name="permission_directory_description">Sélectionnez un répertoire pour les paramètres de l\'application et les fichiers journaux</string>
     <string name="permission_notifications_title">Notifications</string>
     <string name="permission_notifications_description">Requis pour afficher les alertes, les alarmes et les mises à jour des états de la pompe</string>
+    <!--    Notification channels, shown in the Android settings-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>

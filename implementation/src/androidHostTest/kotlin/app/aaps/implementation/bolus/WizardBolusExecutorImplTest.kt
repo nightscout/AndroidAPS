@@ -429,6 +429,113 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
     }
 
+    // ---- manual wizard above the max bolus: capped with a warning, not refused (as the phone wizard did in v3) ----
+
+    /** A manual wizard that calculates [calculated] U, of which the constraints leave [afterConstraints] U. */
+    private suspend fun preparedManualWizard(
+        calculated: Double,
+        afterConstraints: Double,
+        carbs: Int = 20,
+        executor: WizardBolusExecutorImpl = create()
+    ): WizardBolusExecutor.PrepareResult {
+        whenever(config.appInitialized).thenReturn(true)
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
+        whenever(profileFunction.getProfileName()).thenReturn("Test")
+        whenever(constraintsChecker.applyCarbsConstraints(any())).thenAnswer { it.getArgument<Constraint<Int>>(0) }
+        whenever(constraintsChecker.getMaxBolusAllowed()).thenReturn(ConstraintObject(12.0, aapsLogger))
+        testPumpPlugin.pumpDescription = PumpDescription().fillFor(PumpType.DANA_RS).also { it.bolusStep = 0.1 }
+        val bw = mock<BolusWizard>()
+        whenever(bolusWizardProvider.invoke()).thenReturn(bw)
+        whenever(
+            bw.doCalc(
+                anyOrNull(), any(), anyOrNull(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), anyOrNull()
+            )
+        ).thenReturn(bw)
+        whenever(bw.calculatedTotalInsulin).thenReturn(calculated)
+        whenever(bw.unclampedCalculatedInsulin).thenReturn(calculated)
+        whenever(bw.insulinAfterConstraints).thenReturn(afterConstraints)
+        whenever(bw.carbs).thenReturn(carbs)
+        // Read before the stubbing: dateUtil is a mock too, and a mock call inside thenReturn breaks the stubbing.
+        val now = dateUtil.now()
+        whenever(bw.timeStamp).thenReturn(now)
+        whenever(bw.createBolusCalculatorResult()).thenReturn(mock<BCR>())
+        whenever(bw.buildWizardDetail()).thenReturn(
+            EventData.WizardDetail(
+                totalInsulin = calculated, carbs = carbs, insulinFromBG = 0.0, insulinFromTrend = 0.0, insulinFromCOB = 0.0, insulinFromCarbs = calculated,
+                insulinFromBolusIOB = 0.0, insulinFromBasalIOB = 0.0, includeBolusIOB = true, includeBasalIOB = true, percentageCorrection = 100, cob = 0.0,
+                tempTargetLabel = null, ic = 10.0, sens = 50.0
+            )
+        )
+        val inputs = WizardBolusExecutor.WizardInputs(
+            bg = 0.0, carbs = carbs, percentage = 100, directCorrection = 0.0, carbTime = 0, useBg = false, useCob = false, useIob = false,
+            useTt = false, useTrend = false, alarm = false, notes = ""
+        )
+        return executor.prepareWizard(inputs)
+    }
+
+    @Test
+    fun prepareWizard_aboveMaxBolus_isCappedNotRefused() = runTest {
+        val result = preparedManualWizard(calculated = 13.9, afterConstraints = 12.0)
+
+        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Preview::class.java)
+        // The watch adds its +/- steps to this base, so the total it shows is the capped dose that is given.
+        assertThat((result as WizardBolusExecutor.PrepareResult.Preview).wizardDetail?.unclampedInsulin).isEqualTo(12.0)
+    }
+
+    @Test
+    fun prepareWizard_aboveMaxBolus_confirmGivesTheCappedDose() = runTest {
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        whenever(constraintsChecker.applyBolusConstraints(any())).thenAnswer {
+            ConstraintObject(it.getArgument<Constraint<Double>>(0).value().coerceAtMost(12.0), aapsLogger)
+        }
+        val executor = create()
+        val prepared = preparedManualWizard(calculated = 13.9, afterConstraints = 12.0, executor = executor) as WizardBolusExecutor.PrepareResult.Preview
+
+        executor.confirm(prepared.bolusId, Sources.WizardDialog, { })
+
+        val dbiCaptor = argumentCaptor<DetailedBolusInfo>()
+        verify(commandQueue).bolus(dbiCaptor.capture())
+        assertThat(dbiCaptor.firstValue.insulin).isEqualTo(12.0)
+    }
+
+    // The watch shows the base + its steps as the total. Below the cap, that total is exactly the dose given.
+    @Test
+    fun prepareWizard_aboveMaxBolus_watchStepDownGivesTheShownTotal() = runTest {
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        whenever(constraintsChecker.applyBolusConstraints(any())).thenAnswer {
+            ConstraintObject(it.getArgument<Constraint<Double>>(0).value().coerceAtMost(12.0), aapsLogger)
+        }
+        val executor = create()
+        val prepared = preparedManualWizard(calculated = 13.9, afterConstraints = 12.0, executor = executor) as WizardBolusExecutor.PrepareResult.Preview
+        val shownOnWatch = prepared.wizardDetail!!.unclampedInsulin + -0.5
+
+        executor.confirm(prepared.bolusId, Sources.Wear, { }, correctionU = -0.5)
+
+        val dbiCaptor = argumentCaptor<DetailedBolusInfo>()
+        verify(commandQueue).bolus(dbiCaptor.capture())
+        assertThat(dbiCaptor.firstValue.insulin).isWithin(1e-9).of(shownOnWatch)
+        assertThat(dbiCaptor.firstValue.insulin).isWithin(1e-9).of(11.5)
+    }
+
+    @Test
+    fun prepareWizard_flooredWithinThePumpStep_keepsTheCalculatedBase() = runTest {
+        val result = preparedManualWizard(calculated = 1.58, afterConstraints = 1.5)
+
+        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Preview::class.java)
+        assertThat((result as WizardBolusExecutor.PrepareResult.Preview).wizardDetail?.unclampedInsulin).isEqualTo(1.58)
+    }
+
+    @Test
+    fun prepareWizard_limitLeavesNoInsulinAndNoCarbs_isRefused() = runTest {
+        val result = preparedManualWizard(calculated = 2.0, afterConstraints = 0.0, carbs = 0)
+
+        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        // The constraint message, not "no insulin required": the calculation did ask for insulin.
+        assertThat((result as WizardBolusExecutor.PrepareResult.Error).message).contains("Cannot deliver 2.00")
+    }
+
     // A record-only dose is kept as typed, so the confirmation shows all of it, not the 1.3 U of a 0.1 U pump.
     @Test
     fun prepareBatch_recordOnlyDose_isShownWithTwoDecimals() = runTest {

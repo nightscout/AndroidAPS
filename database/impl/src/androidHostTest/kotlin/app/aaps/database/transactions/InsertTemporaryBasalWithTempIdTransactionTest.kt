@@ -2,8 +2,10 @@ package app.aaps.database.transactions
 
 import app.aaps.database.DelegatedAppDatabase
 import app.aaps.database.daos.TemporaryBasalDao
+import app.aaps.database.daos.delegated.DelegatedTemporaryBasalDao
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.interfaces.DBEntry
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -31,7 +33,7 @@ class InsertTemporaryBasalWithTempIdTransactionTest {
         val tb = createTemporaryBasal(tempId = 500L, rate = 1.5, duration = 60_000L)
 
         whenever(temporaryBasalDao.findByPumpTempIds(500L, InterfaceIDs.PumpType.DANA_I, "ABC123")).thenReturn(null)
-        whenever(temporaryBasalDao.insert(tb)).thenReturn(1L)
+        whenever(temporaryBasalDao.insertNewEntry(tb)).thenReturn(1L)
 
         val transaction = InsertTemporaryBasalWithTempIdTransaction(tb)
         transaction.database = database
@@ -40,7 +42,23 @@ class InsertTemporaryBasalWithTempIdTransactionTest {
         assertThat(result.inserted).hasSize(1)
         assertThat(tb.id).isEqualTo(1L)
 
-        verify(temporaryBasalDao).insert(tb)
+        verify(temporaryBasalDao).insertNewEntry(tb)
+    }
+
+    /** #5280: the raw insert reported no change, so the IOB and the overview saw the row only after the pump history. */
+    @Test
+    fun `a new temporary basal is reported as a change`() = runTest {
+        val changes = mutableListOf<DBEntry>()
+        whenever(database.temporaryBasalDao).thenReturn(DelegatedTemporaryBasalDao(changes, temporaryBasalDao))
+        val tb = createTemporaryBasal(tempId = 500L, rate = 1.5, duration = 60_000L)
+        whenever(temporaryBasalDao.findByPumpTempIds(500L, InterfaceIDs.PumpType.DANA_I, "ABC123")).thenReturn(null)
+        whenever(temporaryBasalDao.insertNewEntry(tb)).thenReturn(1L)
+
+        val transaction = InsertTemporaryBasalWithTempIdTransaction(tb)
+        transaction.database = database
+        transaction.run()
+
+        assertThat(changes).containsExactly(tb)
     }
 
     @Test
@@ -57,6 +75,7 @@ class InsertTemporaryBasalWithTempIdTransactionTest {
         assertThat(result.inserted).isEmpty()
 
         verify(temporaryBasalDao, never()).insert(any())
+        verify(temporaryBasalDao, never()).insertNewEntry(any())
     }
 
     private fun createTemporaryBasal(

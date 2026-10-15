@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -62,6 +63,7 @@ import app.aaps.pump.equil.keys.EquilStringKey
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.BaseCmd
 import app.aaps.pump.equil.manager.command.CmdAlarmSet
+import app.aaps.pump.equil.manager.command.CmdBasalGet
 import app.aaps.pump.equil.manager.command.CmdBasalSet
 import app.aaps.pump.equil.manager.command.CmdDevicesGet
 import app.aaps.pump.equil.manager.command.CmdSettingSet
@@ -261,7 +263,7 @@ class EquilPumpPlugin(
             if (!settingResult.success) return settingResult
             SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
             val pumpEnactResult = equilManager.executeCmd(CmdBasalSet(basalSchedule, profile, aapsLogger, preferences, equilManager))
-            if (pumpEnactResult.success) equilManager.equilState?.basalSchedule = basalSchedule
+            if (pumpEnactResult.success) equilManager.setBasalSchedule(basalSchedule, readBasalFromPump())
             return pumpEnactResult
         }
         return pumpEnactResultProvider().enacted(false).success(false).comment(rh.gs(R.string.equil_pump_not_run))
@@ -275,11 +277,40 @@ class EquilPumpPlugin(
         } else equilManager.equilState?.basalSchedule == BasalSchedule.mapProfileToBasalSchedule(profile)
     }
 
+    /** The hourly rates the pump reports it runs, read right after a set (#2454). null when the read failed. */
+    private fun readBasalFromPump(): List<Double>? {
+        SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
+        val basalGet = CmdBasalGet(aapsLogger, preferences, equilManager)
+        val result = equilManager.executeCmd(basalGet)
+        if (!result.success) aapsLogger.warn(LTag.PUMPCOMM, "The basal could not be read after it was set: ${result.comment}")
+        return if (result.success) basalGet.hourlyRates else null
+    }
+
+    /**
+     * The 24 hourly rates the pump runs (#2454): as it reported them after the last set. If that read failed, the
+     * schedule it accepted, each rate cut down to a 0.0125 U/h step as it is sent. null without an activated pump or
+     * before it accepted a schedule: the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? {
+        if (!equilManager.isActivationCompleted()) return null
+        val state = equilManager.equilState ?: return null
+        state.reportedBasal?.let { rates -> return rates.mapIndexed { hour, rate -> Profile.ProfileValue(hour * SECONDS_PER_HOUR, rate) } }
+        val schedule = state.basalSchedule ?: return null
+        return schedule.getEntries().map { Profile.ProfileValue(it.startTime.standardSeconds.toInt(), CmdBasalSet.deliveredRate(it.rate)) }
+    }
+
     override val lastDataTime: StateFlow<Long> = equilManager.lastConnectionFlow
     override val lastBolusTime: StateFlow<Long?> = equilManager.lastBolusTimeFlow
     override val lastBolusAmount: StateFlow<PumpInsulin?> = equilManager.lastBolusAmountFlow.mapState { it?.let(::PumpInsulin) }
 
-    override val baseBasalRate: PumpRate get() = PumpRate(if (isSuspended()) 0.0 else equilManager.equilState?.basalSchedule?.rateAt(toDuration(DateTime.now())) ?: 0.0)
+    // What the pump really gives in this hour, as the running profile holds it - not the rate it was asked for (#2454).
+    override val baseBasalRate: PumpRate
+        get() {
+            if (isSuspended()) return PumpRate(0.0)
+            val now = toDuration(DateTime.now())
+            val delivered = deliveredBasal()?.lastOrNull { it.timeAsSeconds <= now.standardSeconds }?.value
+            return PumpRate(delivered ?: equilManager.equilState?.basalSchedule?.rateAt(now) ?: 0.0)
+        }
 
     override val reservoirLevel: StateFlow<PumpInsulin> = equilManager.reservoirFlow.mapState(::PumpInsulin)
     override val batteryLevel: StateFlow<Int?> = equilManager.batteryFlow
@@ -494,6 +525,7 @@ class EquilPumpPlugin(
     companion object {
 
         private val BASAL_STEP_DURATION: Duration = Duration.standardMinutes(30)
+        private const val SECONDS_PER_HOUR = 3600
         fun toDuration(dateTime: DateTime): Duration = Duration(dateTime.toLocalTime().millisOfDay.toLong())
     }
 

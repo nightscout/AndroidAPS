@@ -17,6 +17,7 @@
     <string name="permission_directory_description">Selecteer een map voor applicatie-instellingen en log bestanden</string>
     <string name="permission_notifications_title">Notificaties</string>
     <string name="permission_notifications_description">Vereist voor het weergeven van waarschuwingen, alarmen en pomp status updates</string>
+    <!--    Notification channels, shown in the Android settings-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="insulin_concentration">U%1$d</string>
     <string name="concentration_format">%1$s (%2$s)</string>

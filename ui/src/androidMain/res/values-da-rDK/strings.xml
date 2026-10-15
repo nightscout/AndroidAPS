@@ -8,9 +8,6 @@
     <string name="configure">Indstil gennemsigtighed</string>
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
-    <string name="activity_monitor">Aktivitetsovervågning</string>
-    <string name="time_range">Tidsinterval</string>
-    <string name="do_you_want_reset_stats">Ønsker du at nulstille aktivitetsstatistik?</string>
     <string name="calculation_in_progress">Beregning i gang</string>
     <string name="age">Alder</string>
     <string name="weight_label">Vægt</string>

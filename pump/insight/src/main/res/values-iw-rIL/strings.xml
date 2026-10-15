@@ -48,4 +48,7 @@
     <string name="min_recovery_duration">משך זמן התאוששות מינימלי [s]</string>
     <string name="pump_alert">התראת משאבה</string>
     <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">ביטול צימוד</string>
+    <string name="reset_pairing">לאפס את נתוני הצימוד?</string>
+    <string name="reservoir_level">כמות במכל</string>
 </resources>

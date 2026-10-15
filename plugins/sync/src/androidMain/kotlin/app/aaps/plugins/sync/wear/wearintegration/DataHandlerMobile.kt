@@ -1556,8 +1556,8 @@ class DataHandlerMobile(
         val openApsStatus =
             if (config.APS) loop.lastRun?.let { if (it.lastTBREnact != 0L) it.lastTBREnact else -1 } ?: -1
             else processedDeviceStatusData.openApsTimestamp
-        // Patient name for followers
-        val patientName = preferences.get(StringKey.GeneralPatientName)
+        // Instance name for followers
+        val instanceName = preferences.get(StringKey.GeneralInstanceName)
         //temptarget
         val units = profileFunction.getUnits()
         var tempTargetLevel = 0
@@ -1615,7 +1615,7 @@ class DataHandlerMobile(
                 openApsStatus = openApsStatus,
                 bgi = bgiString,
                 batteryLevel = if (phoneBattery >= 30) 1 else 0,
-                patientName = patientName,
+                patientName = instanceName, // wire field name is fixed by the watch contract
                 tempTarget = tempTarget,
                 tempTargetLevel = tempTargetLevel,
                 tempTargetDuration = tempTargetDuration,
@@ -1694,7 +1694,9 @@ class DataHandlerMobile(
         persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())?.let { tt ->
             // Show the full low–high range (was passing lowTarget twice — a range TT only showed its low bound).
             out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(SyncStrings.temp_target), profileUtil.toTargetRangeString(tt.lowTarget, tt.highTarget, GlucoseUnit.MGDL)))
-            out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(InterfacesStrings.confirmation_line, rh.gs(SyncStrings.until), dateUtil.timeString(tt.end)))
+            // A target without an end (a scene without a duration) has no "until" line.
+            if (tt.hasEnd)
+                out += ConfirmationLine(ConfirmationRole.INFO, rh.gs(InterfacesStrings.confirmation_line, rh.gs(SyncStrings.until), dateUtil.timeString(tt.end)))
         }
         out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(SyncStrings.default_range), profileUtil.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL)))
         out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(SyncStrings.target), profileUtil.fromMgdlToStringInUnits(profile.getTargetMgdl())))

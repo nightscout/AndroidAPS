@@ -146,6 +146,5 @@
     <string name="bolus_constraint_applied_warn">Bolusbeperking toegepast: %1$.2f E naar %2$.2f E</string>
     <string name="bolus_recorded_only">Bolus wordt alleen geregistreerd (niet toegediend door pomp)</string>
     <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>
-    <string name="wizard_ecarbs">eCarbs %1$dg / %2$du (+%3$dmin)</string>
     <string name="format_insulin_units">%1$.2f E</string>
 </resources>

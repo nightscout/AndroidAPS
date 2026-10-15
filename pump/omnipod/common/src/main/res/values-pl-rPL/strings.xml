@@ -67,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Odłącz Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Naciśnij <b>Dalej</b> w celu deaktywacji Poda.\n\n<b>Uwaga:</b> To spowoduje zawieszenie wszystkich dostaw insuliny i dezaktywuje Poda.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">Zdeaktywowanego poda nie można użyć ponownie. Czy na pewno chcesz teraz dezaktywować tego poda?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Deaktywuję Poda</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Deaktywuję Poda.\n\nPo pomyślnej dezaktywacji można nacisnąć <b>Dalej</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod dezaktywowany</string>
@@ -98,6 +99,9 @@
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Dźwięk dla powiadomień o niepewnych TBR włączony</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Dźwięk dla niepewnych powiadomień SMB włączony</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Dźwięk dla powiadomień o niepewnych bolusach włączony</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Dźwięk przy powiadomieniu o zawieszeniu podawania</string>
+    <string name="omnipod_dash_use_bonding">Parowanie Bluetooth</string>
+    <string name="omnipod_dash_use_bonding_summary">Wypróbuj tę opcję tylko wtedy, gdy pod nie może utrzymać stabilnego połączenia. Telefon będzie wyświetlał prośby o parowanie, które musisz zaakceptować. Pozostaw wyłączone, jeśli pod łączy się poprawnie. Nie ma wpływu na działanie poniżej Androida 15.</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Brak akt. Poda</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Konfiguracja w toku (oczekiwanie na aktywację Poda)</string>
@@ -108,9 +112,21 @@
     <string name="omnipod_common_pod_status_inactive">Nieaktywny</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Błąd Poda: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">Powiadomienie PDM</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Nr ref.: %1$s</string>
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Pusty zbiornik</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Podawanie insuliny zostało zatrzymane. Wymień Pod teraz.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Auto-wyłączenie</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Podawanie insuliny zostało zatrzymane. Twój PDM i pod nie komunikowały się przez ostatnie 4 godziny. Aby wznowić dostarczanie insuliny, zmień pod teraz.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Pod wygasł</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">Podawanie insuliny zostało zatrzymane. Zmień Poda teraz.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Wykryto zatkanie</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Podawanie insuliny zostało zatrzymane. Zmień Poda teraz. Sprawdź swoją glikemię.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Błąd Poda</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Podawanie insuliny zostało zatrzymane. Zmień Pod teraz.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod wkrótce straci ważność</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod wkrótce straci ważność</string>
@@ -124,6 +140,8 @@
     <string name="omnipod_common_cmd_set_basal_schedule">Ustaw harmonogram Dawki bazowej</string>
     <string name="omnipod_common_cmd_set_bolus">Podanie bolusa</string>
     <string name="omnipod_common_cmd_cancel_bolus">Anulowanie bolusa</string>
+    <string name="omnipod_common_cmd_set_tbr">Ustawienie TBR</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Anulowanie TBR</string>
     <string name="omnipod_common_cmd_discard_pod">Usuń Poda</string>
     <string name="omnipod_common_cmd_get_pod_status">Pobierz status Poda</string>
     <string name="omnipod_common_cmd_set_time">Ustaw czas</string>
@@ -132,10 +150,17 @@
     <string name="omnipod_common_cmd_read_pulse_log">Odczytaj Pulse Log</string>
     <string name="omnipod_common_cmd_suspend_delivery">Wstrzymaj podawanie</string>
     <string name="omnipod_common_cmd_resume_delivery">Wznów podawanie</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Anulowanie TBR (przez użytkownika)</string>
     <string name="omnipod_common_cmd_get_pod_info">Pobierz informacje o Podzie</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Ustawienie pozornego zawieszenia TBR</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Anulowanie pozornego zawieszenia TBR</string>
+    <string name="omnipod_common_cmd_split_tbr">Podział TBR</string>
     <string name="omnipod_common_cmd_play_test_beep">Odtwarzaj test dźwięku</string>
     <string name="omnipod_common_cmd_unknown_entry">Nieznany Wpis</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Wyłącz alarmy zawieszenia</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Przypomnienie o zakończeniu parowania Poda</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Przypomnienie o zakończeniu konfiguracji Poda</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Moment temu</string>
@@ -166,4 +191,17 @@
         <item quantity="many">Alarmy Poda: %1$s</item>
         <item quantity="other">Alarmy Poda: %1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Twardy koniec Poda</string>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minut</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Korekta bazowa</string>
+    <string name="omnipod_common_bolus_type_priming">Napełnianie</string>
+    <string name="omnipod_common_history_total_delivered">Razem dostarczono: %1$.2f U</string>
+    <string name="omnipod_common_failed_to_send">Nie udało się wysłać polecenia</string>
+    <string name="omnipod_common_command_not_sent">Polecenie nie zostało wysłane</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">Polecenie nie zostało odebrane przez pod.</string>
+    <string name="omnipod_common_unknown">Nieznany stan polecenia</string>
 </resources>

@@ -39,6 +39,8 @@ Jeśli po więcej niż ~5 minutach połączenie nie zostanie ustanowione:\n\n
 3. Spróbuj sparować ponownie</string>
     <string name="combov2_enter_pin">Wprowadź PIN</string>
     <string name="combov2_cancel_pairing">Anuluj parowanie</string>
+    <string name="combov2_confirm_cancel_pairing_message">Czy na pewno chcesz anulować parowanie?</string>
+    <string name="combov2_confirm_unpair_message">Czy na pewno chcesz odłączyć pompę od aplikacji?</string>
     <string name="combov2_pin_hint">10-cyfrowy PIN</string>
     <string name="combov2_pairing_finished_successfully">Pomyślnie sparowano z Combo</string>
     <string name="combov2_pairing_cancelled">Parowanie z Combo anulowane przez użytkownika</string>
@@ -87,6 +89,9 @@ Jeśli po więcej niż ~5 minutach połączenie nie zostanie ustanowione:\n\n
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (pozostało mniej niż minuta)</string>
     <string name="combov2_load_tdds_cancelled">Ładowanie TDD anulowane</string>
     <string name="combov2_retrieving_tdds_failed">Pobieranie TDDs nie powiodło się</string>
+    <string name="combov2_battery_empty">Rozładowana</string>
+    <string name="combov2_battery_low">Słaba</string>
+    <string name="combov2_battery_full">Pełna</string>
     <string name="combov2_battery_low_warning">Poziom baterii pompy jest niski</string>
     <string name="combov2_reservoir_low_warning">Poziom zbiornika pompy jest niski</string>
     <string name="combov2_setting_tbr_succeeded">Ustawianie TBR powiodło się</string>

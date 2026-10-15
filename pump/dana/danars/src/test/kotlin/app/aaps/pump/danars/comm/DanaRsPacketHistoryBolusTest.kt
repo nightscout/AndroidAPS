@@ -25,9 +25,9 @@ class DanaRsPacketHistoryBolusTest : DanaRSTestBase() {
 
     private fun packet() = DanaRSPacketHistoryBolus(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump).with(0)
 
-    /** One step bolus record: code 2, 2026-10-01 HH:mm:00, step bolus, [centiUnits] / 100 U */
-    private fun bolusRecord(hour: Int, minute: Int, centiUnits: Int) =
-        byteArrayOf(0x02, 26, 10, 1, hour.toByte(), minute.toByte(), 0, 0x80.toByte(), (centiUnits shr 8).toByte(), centiUnits.toByte())
+    /** One step bolus record: code 2, 2026-10-01 (or [month]-[day] of 20[year]) HH:mm:00, step bolus, [centiUnits] / 100 U */
+    private fun bolusRecord(hour: Int, minute: Int, centiUnits: Int, year: Int = 26, month: Int = 10, day: Int = 1) =
+        byteArrayOf(0x02, year.toByte(), month.toByte(), day.toByte(), hour.toByte(), minute.toByte(), 0, 0x80.toByte(), (centiUnits shr 8).toByte(), centiUnits.toByte())
 
     private val header = byteArrayOf(0xB2.toByte(), 0x11)
 
@@ -65,6 +65,23 @@ class DanaRsPacketHistoryBolusTest : DanaRSTestBase() {
         packet.handleMessage(header + bolusRecord(20, 8, 50))
 
         assertThat(packet.danaRHistoryRecord.timestamp).isEqualTo(DateTime(2026, 10, 1, 20, 8, DateTimeZone.getDefault()).millis)
+    }
+
+    /** #449: a bolus given while the pump clock was still in the hour that does not exist after the clock went forward */
+    @Test fun olderPumpRecordInTheDaylightSavingGapIsRead() {
+        val defaultZone = DateTimeZone.getDefault()
+        try {
+            val prague = DateTimeZone.forID("Europe/Prague")
+            DateTimeZone.setDefault(prague)
+            danaPump.hwModel = 0x05 // Dana RS
+            val packet = packet()
+
+            packet.handleMessage(header + bolusRecord(2, 30, 50, year = 27, month = 3, day = 28))
+
+            assertThat(packet.danaRHistoryRecord.timestamp).isEqualTo(DateTime(2027, 3, 28, 3, 30, prague).millis)
+        } finally {
+            DateTimeZone.setDefault(defaultZone)
+        }
     }
 
     @Test fun endPacketStillEndsTheHistory() {

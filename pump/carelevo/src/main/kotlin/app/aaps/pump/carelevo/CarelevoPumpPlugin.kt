@@ -49,6 +49,7 @@ import app.aaps.core.keys.interfaces.withEntries
 import app.aaps.core.ui.compose.icons.IcPluginCarelevo
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
+import app.aaps.pump.carelevo.ble.commands.BasalProgramCommand
 import app.aaps.pump.carelevo.ble.data.BleState
 import app.aaps.pump.carelevo.ble.data.BondingState
 import app.aaps.pump.carelevo.ble.data.DeviceModuleState
@@ -107,6 +108,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import kotlin.jvm.optionals.getOrNull
 import app.aaps.core.ui.R as CoreUiR
@@ -635,6 +637,9 @@ class CarelevoPumpPlugin @Inject constructor(
                 "newBle.readInfusionInfo OK remains=${info.insulinRemaining} basal=${info.infusedTotalBasalAmount} " +
                     "bolus=${info.infusedTotalBolusAmount} pumpState=${info.pumpStateRaw} mode=${info.modeRaw} running=${info.runningMinutes}"
             )
+            // A bolus the app did not record (it stopped during the bolus) is recorded here. The queue reads the status
+            // when the app starts ("Pump driver changed"), so this runs seconds after a restart.
+            bolusCoordinator.recoverLeftoverBolus(info, serialNumber())
         } catch (e: Throwable) {
             aapsLogger.error(LTag.PUMPCOMM, "newBle.readInfusionInfo FAILED", e)
         }
@@ -687,9 +692,24 @@ class CarelevoPumpPlugin @Inject constructor(
         )
     }
 
-    override fun isThisProfileSet(profile: PumpProfile): Boolean {
-        return carelevoPatch.checkIsSameProfile(profile)
-    }
+    /**
+     * Compared with the program the patch accepted, which is stored and survives a restart. The profile held in memory
+     * is the running one after a restart, and that holds the basal the patch gives, rounded (#2454). It never matched
+     * the requested profile, so every restart set the basal again and cancelled the running temp basal. Before a
+     * program was accepted (no patch yet) the profile held in memory is used.
+     */
+    override fun isThisProfileSet(profile: PumpProfile): Boolean =
+        basalProfileUpdateCoordinator.isAccepted(profile) ?: carelevoPatch.checkIsSameProfile(profile)
+
+    /**
+     * The 24 hourly rates the patch runs: the program it accepted, each rate rounded to 0.01 U/h as it is sent (#2454).
+     * The patch cannot report its program, so this is the one stored after the patch accepted it. null before a
+     * program was accepted: the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? =
+        basalProfileUpdateCoordinator.acceptedBasalSegments()
+            ?.sortedBy { it.startTime }
+            ?.map { Profile.ProfileValue(it.startTime * SECONDS_PER_HOUR, BasalProgramCommand.sentSpeed(it.speed)) }
 
     // Activation ops (safety check, …) are queued so they get the CommandQueue's managed
     // connect-before-execute / reconnect lifecycle instead of a direct BLE call.
@@ -705,8 +725,13 @@ class CarelevoPumpPlugin @Inject constructor(
     override val lastBolusAmount: StateFlow<PumpInsulin?>
         get() = bolusCoordinator.lastBolusAmount
 
+    // What the patch really gives in this hour, as the running profile holds it - not the rate it was asked for (#2454).
     override val baseBasalRate: PumpRate
-        get() = PumpRate(carelevoPatch.profile.value?.getOrNull()?.getBasal() ?: 0.0)
+        get() {
+            val secondsOfDay = Calendar.getInstance().let { it.get(Calendar.HOUR_OF_DAY) * SECONDS_PER_HOUR + it.get(Calendar.MINUTE) * 60 }
+            val delivered = deliveredBasal()?.lastOrNull { it.timeAsSeconds <= secondsOfDay }?.value
+            return PumpRate(delivered ?: carelevoPatch.profile.value?.getOrNull()?.getBasal() ?: 0.0)
+        }
 
     private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))
     override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
@@ -821,5 +846,10 @@ class CarelevoPumpPlugin @Inject constructor(
         val insulin = patchInfo.insulinRemain?.toInt() ?: 0
         val result = commandQueue.customCommand(CmdTimeZoneUpdate(insulinAmount = insulin))
         if (result.success) _lastDataTime.value = System.currentTimeMillis()
+    }
+
+    private companion object {
+
+        const val SECONDS_PER_HOUR = 3600
     }
 }

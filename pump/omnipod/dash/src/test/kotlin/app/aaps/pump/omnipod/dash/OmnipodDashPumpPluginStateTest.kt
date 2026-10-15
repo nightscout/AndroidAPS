@@ -1,8 +1,10 @@
 package app.aaps.pump.omnipod.dash
 
 import app.aaps.core.data.pump.defs.ManufacturerType
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -18,6 +20,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
+import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
@@ -139,6 +142,41 @@ class OmnipodDashPumpPluginStateTest {
         whenever(podStateManager.alarmType).thenReturn(null)
 
         assertThat(sut.baseBasalRate.cU).isEqualTo(0.0)
+    }
+
+    // endregion
+
+    // region deliveredBasal - what AAPS keeps as the running basal (#2454)
+
+    /** The pod gets each rate rounded to the nearest 0.05 U/h: 0.42 runs as 0.40 and 0.43 as 0.45. */
+    @Test
+    fun `the delivered basal is the program the pod confirmed hour by hour`() {
+        val profile = mock<PumpProfile>()
+        whenever(profile.getBasalValues()).thenReturn(arrayOf(Profile.ProfileValue(0, 0.42), Profile.ProfileValue(6 * 3600, 0.43)))
+        val program = mapProfileToBasalProgram(profile, PumpType.OMNIPOD_DASH)
+        whenever(podStateManager.isActivationCompleted).thenReturn(true)
+        whenever(podStateManager.basalProgram).thenReturn(program)
+
+        val delivered = sut.deliveredBasal()!!
+
+        assertThat(delivered.map { it.timeAsSeconds }).containsExactlyElementsIn((0..23).map { it * 3600 }).inOrder()
+        assertThat(delivered.map { it.value }).containsExactlyElementsIn((0..23).map { if (it < 6) 0.40 else 0.45 }).inOrder()
+    }
+
+    @Test
+    fun `the delivered basal is unknown without an activated pod`() {
+        whenever(podStateManager.isActivationCompleted).thenReturn(false)
+        whenever(podStateManager.basalProgram).thenReturn(BasalProgram(listOf(BasalProgram.Segment(0, 48, 100))))
+
+        assertThat(sut.deliveredBasal()).isNull()
+    }
+
+    @Test
+    fun `the delivered basal is unknown before a program was confirmed`() {
+        whenever(podStateManager.isActivationCompleted).thenReturn(true)
+        whenever(podStateManager.basalProgram).thenReturn(null)
+
+        assertThat(sut.deliveredBasal()).isNull()
     }
 
     // endregion

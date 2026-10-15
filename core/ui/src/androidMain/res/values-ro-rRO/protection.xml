@@ -33,4 +33,5 @@
     <string name="current_master_password">Parola principală curentă</string>
     <string name="master_password_not_set">Parola principală nu este setată</string>
     <string name="aaps_directory_not_selected">Directorul AAPS nu a fost selectat</string>
+    <string name="aaps_directory_access_lost">Accesul la dosarul AAPS a fost pierdut, astfel încât setările nu mai sunt salvate pe telefon. Selectați din nou dosarul.</string>
 </resources>

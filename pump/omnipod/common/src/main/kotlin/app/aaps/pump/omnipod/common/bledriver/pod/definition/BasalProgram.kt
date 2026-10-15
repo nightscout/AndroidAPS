@@ -29,6 +29,16 @@ class BasalProgram(
         return (slot?.basalRateInHundredthUnitsPerHour ?: 0).toDouble() / 100
     }
 
+    /**
+     * The insulin of each hour of the day from midnight, in U/h: the mean rate of its two half-hour slots. Hour values
+     * only, like the running profile in AAPS (#2454). A profile with hourly rates gives back its rates as the pod got them.
+     */
+    fun hourlyRates(): List<Double> =
+        (0 until 24).map { hour -> (rateInHundredthsAtSlot(2 * hour) + rateInHundredthsAtSlot(2 * hour + 1)) / 200.0 }
+
+    private fun rateInHundredthsAtSlot(slotIndex: Int): Int =
+        segments.find { it.startSlotIndex <= slotIndex && slotIndex < it.endSlotIndex }?.basalRateInHundredthUnitsPerHour ?: 0
+
     class Segment(
         val startSlotIndex: Short,
         val endSlotIndex: Short,
