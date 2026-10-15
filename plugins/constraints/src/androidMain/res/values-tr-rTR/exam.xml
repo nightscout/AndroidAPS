@@ -30,7 +30,7 @@
     <string name="objectives2_cloud">Tercihler dosyanızı telefonunuzun dışındaki güvenli bir konuma kopyalayın (ör. bulut sürücüsü kullanarak, bilgisayara kablo bağlayarak, e-posta vb.)</string>
     <string name="objectives2_easyrestore">Telefonunuz hasar görürse veya kaybolursa, ayarlarınızı yedeklemeden uzaktan kurtarmanın kolay yolları vardır.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/tr/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/tr/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">Gürültülü CGM Okumaları</string>
     <string name="noisycgm_whattodo">CGM (dexcom, miaomaio vs.) verileri gürültülü ise ne yapılmalı?</string>
     <string name="noisycgm_nothing">Hiçbir şey yapmayın - AAPS bununla ilgilenecektir.</string>
