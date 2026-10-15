@@ -215,6 +215,15 @@ class CommandQueueImplementation(
             // Central profile-set notification lifecycle (unified across all pump drivers). Returns true on a
             // successful write, in which case we persist the EffectiveProfileSwitch below.
             if (postProfileWriteResult(result)) {
+                // The switches can have changed while the pump was busy, which took 40 s on a Medtronic: a scene
+                // ended and cut this one, or an insulin change wrote a newer one. The event for that change waits
+                // behind this one and sets the switch then in force. An EPS for this one now put the old profile in
+                // force until that next pump write: the percentage of the scene that had ended, or the insulin from
+                // before the change. So it gets no EPS and no notice.
+                if (profileFunction.getRequestedProfile()?.id != it.id) {
+                    aapsLogger.debug(LTag.PROFILE, "PS id=${it.id} is no longer the requested switch after the pump set it, no EPS for it")
+                    return@let
+                }
                 val requested = ProfileSealed.PS(it, activePlugin)
                 // Pump may return enacted == false if basal profile is the same, but IC/ISF can be different
                 val nonCustomized = requested.convertToNonCustomizedProfile(dateUtil)

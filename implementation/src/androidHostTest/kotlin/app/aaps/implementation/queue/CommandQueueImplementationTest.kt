@@ -379,6 +379,26 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         verify(persistenceLayer, times(1)).insertOrUpdateEffectiveProfileSwitch(any())
     }
 
+    /**
+     * The switches changed while the pump was busy: on a Medtronic a scene ended 40 s into the write and cut this
+     * switch. Its EPS put the scene's percentage in force again until the next pump write. The event for the change
+     * waits behind this one and sets the switch then in force, so this one gets no EPS and no notice.
+     */
+    @Test
+    fun `a PS that is no longer requested when the pump has set it gets no EPS`() = runTest {
+        givenActiveEpsFrom(139)
+        testPumpPlugin.isProfileSet = false
+
+        rxBus.send(EventProfileChangeRequested())
+        assertThat(commandQueue.size()).isEqualTo(1)
+        whenever(profileFunction.getRequestedProfile()).thenReturn(profileSwitch.copy(id = 141))
+        completeQueuedProfileSet()
+
+        verify(persistenceLayer, never()).insertOrUpdateEffectiveProfileSwitch(any())
+        assertThat(roundingNotices()).isEmpty()
+        verifyNoPlainOkPosted()
+    }
+
     // endregion
 
     // region #2454 - the EPS holds the basal the pump really gives
