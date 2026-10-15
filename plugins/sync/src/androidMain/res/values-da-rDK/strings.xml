@@ -80,7 +80,6 @@
     <string name="aps">APS</string>
     <string name="last_run">Sidste brug</string>
     <string name="last_enact">Sidste Aktivering</string>
-    <string name="tdd_line">%1$.2fIE %1$.0f%%</string>
     <string name="today">I dag</string>
     <string name="weighted">vægtet</string>
     <!-- SMS Communicator & OTP Authenticator -->
