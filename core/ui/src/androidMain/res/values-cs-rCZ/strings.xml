@@ -121,6 +121,7 @@
     <string name="invalid_profile">Neplatný profil!</string>
     <string name="no_profile_set">ŽÁDNÝ PROFIL NENASTAVEN</string>
     <string name="profile_switch_no_insulin">Nelze přepnout profil: nepoužívá se žádný inzulín a žádný nebyl vybrán.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Toto dočasné přepnutí profilu má %1$s, ale trvalý profil je %2$s. Nejprve aktivujte inzulín, který je v pumpě v nastavení inzulínu.</string>
     <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Čas přepnutí profilu musí být v rozmezí %1$d hodin od teď.</string>
     <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Dočasný cíl musí začínat v rozmezí %1$d hodin od teď.</string>
     <string name="profile_switch_select_insulin_hint">Zatím se nepoužívá žádný inzulín. Vyberte inzulín, který používáte, aby jej přepnutí profilu mohlo zaznamenat.</string>
