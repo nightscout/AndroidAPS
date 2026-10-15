@@ -53,7 +53,7 @@
     <string name="objectives_exam_learned_isf">Nauczyłeś się znaczenia wartości ISF i jej wpływu na ilość insuliny użytej do korekty glikemii.</string>
     <string name="objectives_exam_learned_ic">Nauczyłeś się znaczenia wartości IC i jej wpływu na ilość insuliny potrzebną do pokrycia węglowodanów.</string>
     <string name="objectives_exam_learned_hypott">Cel tymczasowy Hipo jest używany tylko aby zapobiec nadmiernej korekcie po hipoglikemii, kiedy zazwyczaj występuje nagromadzony ujemny wskaźnik IOB. Należy rozważyć dodatkowe działania, aby zapobiec takiej sytuacji w przyszłości.</string>
-    <string name="objectives_exam_learned_profileswitch">Używanie procentów nie wpływa na cele glikemii, ale baza, ISF i IC są dostosowywane, aby podawać więcej insuliny (powyżej 100%) lub mniej insuliny (poniżej 100%).</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">Używanie procentów nie wpływa na cele glikemii, ale baza, ISF i IC są dostosowywane, aby podawać więcej insuliny (powyżej 100%) lub mniej insuliny (poniżej 100%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Używając zmiany czasu (systemu timeshift) w przełączniku profilu, możesz dostosować profil okołodobowy do nieprawidłowości takich jak spóźniona pobudka.</string>
     <string name="objectives_exam_learned_profileswitch4">Edycja profilu nie jest wystarczająca aby dokonać zmiany. Nadal musisz przełączyć się na ten profil aby zastosować zmiany.</string>
     <string name="objectives_exam_learned_exercise">Należy zmniejszyć ilość insuliny w organizmie na co najmniej 1 godzinę przed rozpoczęciem wysiłku fizycznego, wybierając profil i ustawiając mnożnik poniżej 100%.</string>
@@ -71,17 +71,13 @@
     <string name="objectives_exam_learned_ecarbs">e-Węgle (e-Carbs) są zamiennikiem występującego w niektórych pompach bolusa przedłużonego.</string>
     <string name="objectives_exam_learned_nsclient">Możesz śledzić AAPS zdalnie za pomocą AAPSClient lub Nightscout. Gdy AAPSClient jest sparowany z telefonem pacjenta, możesz także zdalnie sterować AAPS.</string>
     <string name="objectives_exam_learned_concentration1">Używanie insuliny U200 z profilem 50% będzie wymagało trwałej konwersji: dla bolusów zewnętrznych z penami oraz wszystkich standardowych raportów generowanych przez AAPS lub NS, które staną się błędne i będą musiały zostać przeliczone na IU dla zespołu medycznego.</string>
-    <string name="objectives_exam_learned_concentration2">Przejście z U200 z profilem 50% na U200 z funkcją koncentracji insuliny będzie wymagało utworzenia nowego, silniejszego profilu, wyłączenia DynISF na tydzień oraz wypracowania sobie nawyku myślenia w jednostkach międzynarodowych.</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">Przejście z U200 z profilem 50% na U200 z funkcją koncentracji insuliny będzie wymagało utworzenia nowego, silniejszego profilu, wyłączenia DynISF na tydzień oraz wypracowania sobie nawyku myślenia w jednostkach międzynarodowych.</string>
     <string name="objectives_exam_learned_concentration3">Stężenie insuliny można zmienić tylko podczas wymiany insuliny lub Patcha. Ale przede wszystkim, zwłaszcza w przypadku pomp z drenem, nigdy nie używaj interfejsu użytkownika pompy do podawania bolusów bezpośrednio z pompy.</string>
     <string name="answerdisabledto">Odpowiadanie wyłączone do: %1$s</string>
     <string name="wronganswer">Odpowiedź nieprawidłowa!</string>
     <string name="unfinshed_button">Następny niedokończony</string>
     <string name="requestcode">Kod zapytania: %1$s</string>
     <string name="objectives_hint">(zaznacz wszystkie poprawne odpowiedzi)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Brak połączenia z Internetem</string>
     <string name="failedretrievetime">Nie udało się zsynchronizować czasu</string>
     <string name="requirementnotmet">Wymagania celu nie zostały spełnione</string>
