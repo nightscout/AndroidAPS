@@ -28,7 +28,6 @@
     <string name="objectives2_internalstorage">Plik z ustawieniami jest zapisany w folderze \"preferences\" wewnątrz folderu AAPS, który wybrano w telefonie.</string>
     <string name="objectives2_cloud">Skopiuj plik preferencji w bezpieczne miejsce poza telefonem (np. Korzystając z dysku w chmurze, podłączając kabel do komputera, e-mail itp.)</string>
     <string name="objectives2_easyrestore">Jeśli Twój telefon zostanie uszkodzony lub zgubiony, istnieją łatwe sposoby, aby zdalnie odzyskać ustawienia bez kopii zapasowej.</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_label">Szumy w odczytach z CGM</string>
     <string name="noisycgm_whattodo">Co powinno być wykonane gdy dane CGM są zaszumione?</string>
     <string name="noisycgm_nothing">Nic nie rób - AAPS sobie z tym poradzi.</string>
