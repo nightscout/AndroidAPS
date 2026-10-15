@@ -128,7 +128,7 @@
     <string name="wear_infos_watchface">資訊錶盤</string>
     <string name="wear_export_watchface">匯出範本</string>
     <string name="wear_new_custom_watchface_exported">自訂錶盤模板已匯出</string>
-    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/zh-tw/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">重新發送所有資料</string>
     <string name="open_settings_on_wear">在 Wear 上打開設定</string>
     <string name="wear_import_custom_watchface_title">選擇自訂錶盤</string>
