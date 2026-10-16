@@ -29,13 +29,15 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -59,6 +61,7 @@ import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsFab
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.MasterOfflineBanner
@@ -100,7 +103,7 @@ fun TempTargetManagementScreen(
     // On a client whose master is unreachable, force VIEW-ONLY so preset (synced config) edits can't be made
     // while they couldn't sync. DERIVED from current state (no setScreenMode side-effect) → deterministic at
     // startup and flips the instant reachability changes. Master is never gated. Both preset edits AND the
-    // master-bound action FABs (Activate / Cancel) are gated by this on a client.
+    // master-bound actions (Activate / Cancel) are gated by this on a client.
     val editingEnabled = masterEditingEnabled()
     val isPlayMode = uiState.screenMode == ScreenMode.PLAY || !editingEnabled
 
@@ -214,9 +217,13 @@ fun TempTargetManagementScreen(
     )
 
     // The view model outlives the screen, so an uncommitted order would otherwise survive until the
-    // screen is reopened — dropping the user straight back into sort mode with a stale order.
+    // screen is reopened — dropping the user straight back into sort mode with a stale order. The
+    // same goes for the state a confirmed Activate/Cancel left behind: reload it now, out of sight.
     DisposableEffect(Unit) {
-        onDispose { viewModel.cancelReorder() }
+        onDispose {
+            viewModel.cancelReorder()
+            viewModel.onScreenClosed()
+        }
     }
 
     AapsTheme {
@@ -502,23 +509,6 @@ fun TempTargetManagementScreen(
                         }
                     }
 
-                    // Mini FAB for Cancel (only visible when TT is active). Hidden on a client whose master is
-                    // unreachable — canceling a TT is a master/NS action that couldn't be delivered.
-                    if (editingEnabled && uiState.activeTT != null && !isReorderMode) {
-                        SmallFloatingActionButton(
-                            onClick = { viewModel.cancelActive(onSuccess = onNavigateBack) },
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(end = 16.dp, bottom = 88.dp),
-                            containerColor = MaterialTheme.colorScheme.error
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Close,
-                                contentDescription = stringResource(CoreUiStrings.cancel)
-                            )
-                        }
-                    }
-
                     // Floating Toolbar with FAB (M3 style) — both are absolutely positioned over the
                     // cards, so they are hidden while sorting rather than left floating over the sort controls.
                     if (!isReorderMode) Row(
@@ -528,8 +518,16 @@ fun TempTargetManagementScreen(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Floating Toolbar — hidden in PLAY mode
-                        if (!isPlayMode) {
+                        // Cancel the active TT. Same master-reachable rule as Activate: cancelling is a
+                        // master/NS action that couldn't be delivered.
+                        val showCancel = editingEnabled && uiState.activeTT != null
+
+                        // Floating Toolbar — the edit actions are hidden in PLAY mode, Cancel stays as long
+                        // as a target is running. M3 allows one FAB next to a toolbar, so Cancel is a toolbar
+                        // icon button, placed last so it sits right beside Activate (stop next to play). It
+                        // used to be a small × floating above this row, which landed beside the time field
+                        // and read as "clear this field".
+                        if (!isPlayMode || showCancel) {
                             Surface(
                                 shape = RoundedCornerShape(percent = 50),
                                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -540,35 +538,69 @@ fun TempTargetManagementScreen(
                                     modifier = Modifier.padding(horizontal = 4.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    IconButton(onClick = { viewModel.addNewPreset() }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Add,
-                                            contentDescription = stringResource(CoreUiStrings.add)
-                                        )
-                                    }
-                                    // Revert button (only for fixed presets when editor values differ from defaults)
-                                    val showRevert = uiState.selectedPreset?.isDeletable == false &&
-                                        viewModel.isEditorDifferentFromDefaults()
-                                    if (showRevert) {
-                                        IconButton(onClick = { viewModel.revertToDefaults() }) {
+                                    if (!isPlayMode) {
+                                        IconButton(onClick = { viewModel.addNewPreset() }) {
                                             Icon(
-                                                imageVector = Icons.Filled.Refresh,
-                                                contentDescription = stringResource(CoreUiStrings.revert_to_defaults)
+                                                imageVector = Icons.Filled.Add,
+                                                contentDescription = stringResource(CoreUiStrings.add)
+                                            )
+                                        }
+                                        // Revert button (only for fixed presets when editor values differ from defaults)
+                                        val showRevert = uiState.selectedPreset?.isDeletable == false &&
+                                            viewModel.isEditorDifferentFromDefaults()
+                                        if (showRevert) {
+                                            IconButton(onClick = { viewModel.revertToDefaults() }) {
+                                                Icon(
+                                                    imageVector = Icons.Filled.Refresh,
+                                                    contentDescription = stringResource(CoreUiStrings.revert_to_defaults)
+                                                )
+                                            }
+                                        }
+                                        IconButton(
+                                            onClick = { showDeleteDialog = true },
+                                            enabled = uiState.selectedPreset?.isDeletable == true
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Filled.Delete,
+                                                contentDescription = stringResource(UiStrings.remove_label),
+                                                tint = if (uiState.selectedPreset?.isDeletable == true)
+                                                    MaterialTheme.colorScheme.error
+                                                else
+                                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                                             )
                                         }
                                     }
-                                    IconButton(
-                                        onClick = { showDeleteDialog = true },
-                                        enabled = uiState.selectedPreset?.isDeletable == true
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Delete,
-                                            contentDescription = stringResource(UiStrings.remove_label),
-                                            tint = if (uiState.selectedPreset?.isDeletable == true)
-                                                MaterialTheme.colorScheme.error
-                                            else
-                                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                        )
+                                    if (showCancel) {
+                                        // Cancel acts on the running target, the icons before it on the preset.
+                                        // A divider keeps the two groups apart (reviewer request on #5274).
+                                        if (!isPlayMode) {
+                                            VerticalDivider(
+                                                modifier = Modifier
+                                                    .height(AapsSpacing.xxLarge)
+                                                    .padding(horizontal = AapsSpacing.small)
+                                            )
+                                        }
+                                        // Tonal error disc: the loudest a toolbar button gets without being
+                                        // a second FAB, so "stop" reads next to "play" at a glance.
+                                        FilledTonalIconButton(
+                                            onClick = { viewModel.cancelActive(onSuccess = onNavigateBack) },
+                                            // A filled square needs more air than a bare icon, whose 24 dp glyph
+                                            // sits 12 dp inside its button: 8 dp here gives 16 dp to the pill end
+                                            // (same as the leading icon) and centres the divider.
+                                            modifier = Modifier.padding(horizontal = AapsSpacing.medium),
+                                            // Rounded square like the play FAB, not a disc. At 40 dp the corner
+                                            // has to be smaller than the FAB's 16 dp or it still reads as round.
+                                            shape = RoundedCornerShape(AapsSpacing.medium),
+                                            colors = IconButtonDefaults.filledTonalIconButtonColors(
+                                                containerColor = MaterialTheme.colorScheme.errorContainer,
+                                                contentColor = MaterialTheme.colorScheme.onErrorContainer
+                                            )
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Filled.Close,
+                                                contentDescription = stringResource(CoreUiStrings.clientcontrol_action_cancel_temp_target)
+                                            )
+                                        }
                                     }
                                 }
                             }
