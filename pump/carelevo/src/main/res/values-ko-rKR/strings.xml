@@ -161,6 +161,8 @@
     <string name="alarm_feat_btn_resume_infusion">주입 재개</string>
     <!-- General Messages -->
     <string name="alarm_feat_msg_check_patch_connect">패치 연결 상태를 확인해 주세요.</string>
+    <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">볼러스를 주입할 수 없습니다. 주입 가능량: %1$s</string>
+    <string name="carelevo_bolus_rejected_exceed_limit_none">볼러스를 주입할 수 없습니다. 남은 인슐린이 부족합니다.</string>
     <!--    notification -->
     <string name="alarm_notification_desc_warning_low_insulin">패치에 인슐린이 10 U 미만 으로, 주입이 중단되었습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
     <string name="alarm_notification_desc_warning_expired_patch">패치 사용 및 인슐린 주입이 중단되었습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
@@ -194,4 +196,7 @@
     <string name="alarm_notification_desc_notice_lgs_ended_unknown">알수 없는 이유로 인해 LGS 작동 종료 되었습니다.</string>
     <string name="alarm_notification_desc_notice_lgs_error">패치 및 CGM 연결 상태를 확인해 주세요.</string>
     <string name="carelevo_profile_update_skip_comment">업데이트 요청 간격이 짧아 실행되지 않았습니다.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">패치에서 정지가 확인되지 않았습니다. 볼러스 종료를 기다리는중...</string>
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">기록되지 않은 볼러스를 방금 추가했습니다. IOB를 확인한 후 다시 시도하세요.</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">패치에서 정지가 확인되지 않아 볼러스 전체(%1$s)를 기록했습니다.</string>
 </resources>
