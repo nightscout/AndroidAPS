@@ -152,7 +152,7 @@ Check the active state.</string>
     <string name="load_peak_from">載入峰值來源</string>
     <string name="cannot_delete_last_insulin">無法刪除最後一個胰島素</string>
     <string name="cannot_delete_active_insulin">無法刪除目前使用中的胰島素</string>
-    <string name="reuse_profile_pct_hours">重新使用 %1$d%% %2$小時</string>
+    <string name="reuse_profile_pct_hours">重新使用 %1$d%% %2$d小時</string>
     <string name="percentage_label">百分比</string>
     <!-- LoopDialog -->
     <string name="disconnectpump">中斷幫浦連線</string>

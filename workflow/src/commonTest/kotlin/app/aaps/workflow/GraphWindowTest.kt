@@ -30,7 +30,7 @@ class GraphWindowTest {
      * hour while the axis went on to the newest prediction.
      */
     @Test
-    fun `a known horizon is kept, not collapsed to the window end`() {
+    fun `a known horizon is kept rather than collapsed to the window end`() {
         val horizon = toTime + hours(4)
 
         assertEquals(horizon, keptEndTime(horizon, toTime))

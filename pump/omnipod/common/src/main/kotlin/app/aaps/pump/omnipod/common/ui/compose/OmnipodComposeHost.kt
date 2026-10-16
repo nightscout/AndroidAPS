@@ -187,22 +187,26 @@ fun OmnipodComposeHost(
 
         showWizard       -> {
             KeepScreenOnEffect()
-            BlePreCheckHost(blePreCheck = blePreCheck, onFailed = { showWizard = false })
-            val viewModel = wizardViewModel()
-            val wizardReady by viewModel.ready.collectAsStateWithLifecycle()
-            LaunchedEffect(wizardReady, isDeactivation, wizardActivationType) {
-                if (!wizardReady) return@LaunchedEffect
-                if (isDeactivation) {
-                    viewModel.initializeDeactivation()
-                } else {
-                    wizardActivationType?.let(viewModel::initializeActivation)
+            // The wizard uses Bluetooth, so it starts only after the check has passed
+            var bleReady by remember { mutableStateOf(false) }
+            BlePreCheckHost(blePreCheck = blePreCheck, onReady = { bleReady = true }, onFailed = { showWizard = false })
+            if (bleReady) {
+                val viewModel = wizardViewModel()
+                val wizardReady by viewModel.ready.collectAsStateWithLifecycle()
+                LaunchedEffect(wizardReady, isDeactivation, wizardActivationType) {
+                    if (!wizardReady) return@LaunchedEffect
+                    if (isDeactivation) {
+                        viewModel.initializeDeactivation()
+                    } else {
+                        wizardActivationType?.let(viewModel::initializeActivation)
+                    }
                 }
+                OmnipodWizardScreen(
+                    viewModel = viewModel,
+                    onFinish = { showWizard = false },
+                    setToolbarConfig = setToolbarConfig
+                )
             }
-            OmnipodWizardScreen(
-                viewModel = viewModel,
-                onFinish = { showWizard = false },
-                setToolbarConfig = setToolbarConfig
-            )
         }
 
         showExtraContent -> (historyContent ?: extraContent)?.invoke { showExtraContent = false }

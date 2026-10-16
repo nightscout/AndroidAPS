@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.di.newRxHelper
 import app.aaps.di.testGraphs
+import app.aaps.helpers.RxHelper
 import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
@@ -40,7 +41,7 @@ class LoopTest : AapsInstrumentedTest() {
     private val nsIncomingDataProcessor get() = testGraphs.nsIncomingDataProcessor
     private val profileRepository get() = testGraphs.profileRepository
     private val dateUtil get() = testGraphs.dateUtil
-    private val rxHelper by lazy { newRxHelper() }
+    private lateinit var rxHelper: RxHelper
     private val l get() = testGraphs.l
     private val config get() = testGraphs.config
     private val objectivesPlugin get() = testGraphs.objectivesPlugin
@@ -55,11 +56,18 @@ class LoopTest : AapsInstrumentedTest() {
 
     @Before
     fun inject() {
+        // Per attempt: a retry runs on a new graph, see newRxHelper
+        rxHelper = newRxHelper()
         // Cancel background workers from previous tests, clear all caches and DB
         androidx.work.WorkManager.getInstance(context).cancelAllWork()
         iobCobCalculator.clearCache()
         runBlocking { persistenceLayer.clearDatabases() }
         (profileFunction as ProfileFunctionImpl).cache.clear()
+        // Step 1 needs the first objective not started. tearDown sets that too, but preferences are saved in
+        // the background: a process that ends right after the test, or crashes in it, kept it started, and
+        // the loop then ran open instead of disabled.
+        objectivesPlugin.objectives.forEach { it.startedOn = 0 }
+        loop.lastRun = null
     }
 
     @After

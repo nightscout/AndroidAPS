@@ -159,8 +159,10 @@ open the wiki in its own language when there is one.
   translations at all.
 - **In Crowdin:** for a wiki language the translation is the English link with that language's
   code, approved. Slovak gets the Czech wiki (close language, better than English). Every other
-  language has **no translation**, so the app falls back to the English link. A plain copy of
-  the English link is not harmless: it stops a later fix from reaching that language.
+  language opens the English page: either it has no translation, or a plain copy of the English
+  link. A copy is harmless - a later change of the English link drops it anyway. Do not delete
+  copies: translators of other languages add them again within minutes to reach 100% (Italian and
+  Norwegian did on 2026-10-15). Only a link to a *different* page or language needs fixing.
 - **Language ids:** Crowdin `es-ES` → `es`, `zh-CN` → `zh-cn`, `zh-TW` → `zh-tw`, `sk` → `cs`;
   the others are the same.
 - **Anchors: use the fixed label, never the heading anchor.** `#the-homescreen` is made from the

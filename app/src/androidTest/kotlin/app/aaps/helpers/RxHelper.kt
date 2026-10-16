@@ -111,5 +111,9 @@ class RxHelper(
         // Cancels the running collectors but keeps the scope usable, the way CompositeDisposable.clear()
         // left its container usable. A plain scope.cancel() would make every later listen() do nothing.
         scope.coroutineContext.cancelChildren()
+        // And forgets them. listen() returns a class it already knows without subscribing again, so a
+        // listen() after clear() kept the cancelled collector and never saw an event (LoopTest retries).
+        hashMap.clear()
+        eventHashMap.clear()
     }
 }

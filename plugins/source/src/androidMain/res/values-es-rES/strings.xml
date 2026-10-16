@@ -22,7 +22,7 @@
     <string name="random_bg">Glucosa aleatoria</string>
     <string name="description_source_random_bg">Generar datos aleatorios de glucosa (sólo modo Demo)</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai</string>
+    <string name="syai_tag_app">Syai/Ottai</string>
     <string name="description_source_patched_syai_tag_app">Recibir los valores de glucosa de la aplicación Syai/Ottai</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">Aplicación Sibionic SI</string>
@@ -51,4 +51,5 @@
     <string name="aidex_sensor_stabilizing">El sensor se está estabilizando. Por favor, espere…</string>
     <string name="aidex_sensor_replace">Reemplazo de sensor requerido. Por favor, cámbielo por un nuevo sensor lo antes posible</string>
     <string name="aidex_signal_lost">Señal del sensor perdida. Por favor, compruebe la conexión</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">lectura duplicada</string>
 </resources>

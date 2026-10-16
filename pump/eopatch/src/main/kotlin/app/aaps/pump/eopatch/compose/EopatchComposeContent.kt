@@ -90,44 +90,48 @@ class EopatchComposeContent(
             // Keep screen on and lock orientation during patch workflow.
             KeepScreenOnEffect()
 
-            // BLE pre-check
+            // BLE pre-check. The workflow uses Bluetooth, so it starts only after the check has passed.
+            var bleReady by remember { mutableStateOf(false) }
             BlePreCheckHost(
                 blePreCheck = blePreCheck,
+                onReady = { bleReady = true },
                 onFailed = {
                     showPatchWorkflow = false
                     startPatchStep = null
                 }
             )
 
-            // Create PatchViewModel scoped to the workflow
-            val patchViewModel: EopatchPatchViewModel = metroViewModel()
+            if (bleReady) {
+                // Create PatchViewModel scoped to the workflow
+                val patchViewModel: EopatchPatchViewModel = metroViewModel()
 
-            // Reset and initialize with the start step
-            LaunchedEffect(startPatchStep) {
-                startPatchStep?.let { step ->
-                    patchViewModel.reset()
-                    patchViewModel.forceDiscard = forceDiscard
-                    patchViewModel.isInAlarmHandling = isAlarmHandling
-                    patchViewModel.initializePatchStep(step)
+                // Reset and initialize with the start step
+                LaunchedEffect(startPatchStep) {
+                    startPatchStep?.let { step ->
+                        patchViewModel.reset()
+                        patchViewModel.forceDiscard = forceDiscard
+                        patchViewModel.isInAlarmHandling = isAlarmHandling
+                        patchViewModel.initializePatchStep(step)
+                    }
                 }
-            }
 
-            // Observe finish events
-            LaunchedEffect(patchViewModel) {
-                patchViewModel.events.collect { event ->
-                    when (event) {
-                        is PatchEvent.Finish -> {
-                            showPatchWorkflow = false
-                            startPatchStep = null
-                        }
+                // Observe finish events
+                LaunchedEffect(patchViewModel) {
+                    patchViewModel.events.collect { event ->
+                        when (event) {
+                            is PatchEvent.Finish -> {
+                                showPatchWorkflow = false
+                                startPatchStep = null
+                            }
 
-                        else                 -> { /* handled by step composables */
+                            else                 -> { /* handled by step composables */
+                            }
                         }
                     }
                 }
-            }
 
-            EopatchPatchScreen(viewModel = patchViewModel, setToolbarConfig = setToolbarConfig)
+                EopatchPatchScreen(viewModel = patchViewModel, setToolbarConfig = setToolbarConfig)
+            }
         } else {
             EopatchOverviewScreen(viewModel = overviewViewModel)
         }

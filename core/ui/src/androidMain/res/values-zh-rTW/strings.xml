@@ -354,6 +354,7 @@
     <string name="temporary_target">臨時目標</string>
     <string name="temporary_targets">臨時目標</string>
     <string name="running_mode">運行模式</string>
+    <string name="running_mode_desc">關閉或開啟循環、暫停循環，或中斷與幫浦的連線</string>
     <string name="running_mode_change_not_allowed">執行模式變更不可用</string>
     <string name="pump_reconnect">重新連線至幫浦</string>
     <string name="scene">情境</string>

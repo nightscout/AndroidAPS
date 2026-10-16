@@ -63,7 +63,7 @@
     <string name="wear_infos_watchface">Циферблат Infos</string>
     <string name="wear_export_watchface">Экспортировать шаблон</string>
     <string name="wear_new_custom_watchface_exported">Пользовательский шаблон циферблата экспортирован</string>
-    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/ru/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Повторить отправку всех данных</string>
     <string name="open_settings_on_wear">Открыть настройки на часах</string>
     <string name="cwf_infos_pref_locked">Список настроек, блокируемых циферблатом</string>
@@ -91,7 +91,7 @@
     <string name="aps">APS</string>
     <string name="last_run">Предыдущее выполнение</string>
     <string name="last_enact">Предыдущая активация</string>
-    <string name="tdd_line">%1$.2fед%1$.0f%%</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fед %2$.0f%%</string>
     <string name="today">Сегодня</string>
     <string name="weighted">взвешенный</string>
     <string name="full_xdrip_sync_comment">Полная синхронизация? Это может занять длительное время и до завершения вы не увидите новые данные в xDrip+.</string>

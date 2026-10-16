@@ -121,6 +121,9 @@
     <string name="invalid_profile">Cấu hình không hợp lệ!</string>
     <string name="no_profile_set">KHÔNG CÓ CẤU HÌNH</string>
     <string name="profile_switch_no_insulin">Không thể chuyển cấu hình điều trị: không có loại insulin nào đang được sử dụng và cũng chưa có loại nào được chọn.</string>
+    <string name="scene_no_profile_before">Trước khi ngữ cảnh bắt đầu, không có cấu hình nào đang được sử dụng.</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">Ngữ cảnh %1$s đã kết thúc, nhưng cấu hình vẫn đang được sử dụng. %2$s Hãy kích hoạt cấu hình thủ công.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Cấu hình chuyển đổi tạm thời này có %1$s, nhưng cấu hình vĩnh viễn bên dưới có %2$s. Trước tiên, hãy kích hoạt loại insulin đang có trong bơm tại phần Cài đặt insulin.</string>
     <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Thời điểm chuyển đổi cấu hình phải nằm trong khoảng %1$d giờ so với hiện tại.</string>
     <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Mục tiêu tạm thời phải bắt đầu trong khoảng %1$d giờ tính từ thời điểm hiện tại.</string>
     <string name="profile_switch_select_insulin_hint">Chưa có loại insulin nào được sử dụng. Hãy chọn loại insulin bạn đang sử dụng để lần chuyển cấu hình này có thể ghi nhận loại insulin đó.</string>
@@ -197,6 +200,8 @@
     <string name="a11y_arrow_unknown">không biết</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">giảm %1$s bởi %2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">tăng %1$s bởi %2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">mở %1$s để nhập liệu</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">đóng %1$s</string>
     <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Chuyển lên</string>
     <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Chuyển xuống</string>
     <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Bước %1$d của %2$d</string>
@@ -354,6 +359,7 @@
     <string name="temporary_target">Mục tiêu Tạm thời</string>
     <string name="temporary_targets">Mục tiêu tạm thời</string>
     <string name="running_mode">Chế độ đang chạy</string>
+    <string name="running_mode_desc">Đóng hoặc mở vòng lặp, tạm ngừng vòng lặp hoặc ngắt kết nối bơm</string>
     <string name="running_mode_change_not_allowed">Không thể thay đổi chế độ hoạt động</string>
     <string name="pump_reconnect">Kết nối lại bơm</string>
     <string name="scene">Ngữ cảnh</string>

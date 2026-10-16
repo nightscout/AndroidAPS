@@ -54,6 +54,7 @@
     <string name="wear_infos_watchface">워치 페이스 정보</string>
     <string name="wear_export_watchface">템플릿 내보내기</string>
     <string name="wear_new_custom_watchface_exported">사용자 지정 워치 페이스 템플릿 내보내기</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/ko/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">모든 데이터 다시 보내기</string>
     <string name="open_settings_on_wear">워치에서 설정 열기</string>
     <string name="cwf_infos_pref_locked">워치 페이스에 의해 잠긴 선호 목록</string>
@@ -80,7 +81,6 @@
     <string name="aps">APS</string>
     <string name="last_run">마지막 실행</string>
     <string name="last_enact">마지막 실행</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">오늘</string>
     <string name="weighted">몸무게</string>
     <!-- SMS Communicator & OTP Authenticator -->

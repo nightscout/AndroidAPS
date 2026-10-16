@@ -2,6 +2,7 @@
 <resources>
     <string name="dia_whatmeansdia">Что верно о длительности работы инсулина DIA?</string>
     <string name="dia_label_exam">Время действия инсулина (DIA)</string>
+    <string name="dia_hint1">https://wiki.aaps.app/ru/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">Если вы удовлетворены значением длительности действия инсулина DIA, заданным в помпе до AAPS, то при запуске цикла изменять это значение не требуется.</string>
     <string name="dia_valuemustbedetermined">Следует самостоятельно определить DIA подходящее для вас.</string>
     <string name="hypott_label">Временная цель Гипо </string>
@@ -14,14 +15,14 @@
     <string name="pumpdisconnect_missinginsulin">В этом случае AAPS не будет учитывать инсулин, поданный во время физического отключения помпы от тела.</string>
     <string name="pumpdisconnect_notstop">Это не прекратит подачу инсулина, если помпа остается подключенной к телу.</string>
     <string name="pumpdisconnect_openloop">Это переведет AAPS в режим открытого цикла.</string>
-    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#loop-status</string>
+    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-loop-status</string>
     <string name="objectives_label">Настройки AAPS</string>
     <string name="objectives2_label">Настройки AAPS</string>
     <string name="objectives_notesettings">Экспорт настроек не нужен, если они у вас где-то записаны.</string>
     <string name="objectives_afterchange">Экспортируйте настройки после изменения любого параметра.</string>
     <string name="objectives2_easyrestore">Если ваш телефон поврежден или утерян, существует легкий способ удаленно восстановить настройки без резервной копии.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/ru/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/ru/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">Зашумленные данные мониторинга</string>
     <string name="noisycgm_whattodo">Что следует делать, если данные мониторинга зашумлены?</string>
     <string name="noisycgm_nothing">Ничего не делать - алгоритм AAPS сам справится с этим.</string>
@@ -32,6 +33,7 @@
     <string name="exerciseprofile_switchprofileabove100">Задать профиль выше 100%.</string>
     <string name="exerciseprofile_leaveat100">Оставить профиль на 100%.</string>
     <string name="exerciseprofile_suspendloop">Приостановить цикл.</string>
+    <string name="exerciseprofile_hint1">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
     <string name="exercise_label">Физическая нагрузка и временные цели</string>
     <string name="exercise_whattodo">Как использовать временные цели, чтобы помочь системе справиться с аэробными упражнениями?</string>
     <string name="exercise_settt">Установить временную цель \"Нагрузка\" заблаговременно перед началом упражнения.</string>
@@ -78,14 +80,14 @@ Context | Edit Context</string>
     <string name="insulin_novorapid">Novoapid ® /Novolog ®</string>
     <string name="insulin_humalog">Хумалог®</string>
     <string name="insulin_actrapid">Actrapid ® /Humalin R ®/\"обычный\" человеческий инсулин.</string>
-    <string name="insulin_hint1">https://wiki.aaps.app/ru/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="insulin_hint1">https://wiki.aaps.app/ru/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="sensitivity_label">Модули чувствительности</string>
     <string name="sensitivity_adjust">Модули чувствительности позволяют AAPS подстраиваться под временные или кратковременные изменения в чувствительности к инсулину (например, гормональные изменения или проблемы с поглощением в месте установки катетера).</string>
     <string name="sensitivity_edit">Модули чувствительности предлагают пользователю изменения скорости базала, коэффициентов I:C и ISF, которые можно внести в профиль.</string>
     <string name="sensitivity_cannula">Внесение записи о замене катетера вернет коэффициент Autosens к 100%.</string>
     <string name="sensitivity_time">У некоторых опций модуля есть настраиваемые диапазоны времени, которые может задать пользователь.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="sensitivity_hint2">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/KeyAapsFeatures.html#autosens</string>
+    <string name="sensitivity_hint2">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/KeyAapsFeatures.html#open-aps-features-autosens</string>
     <string name="wrongcarbs_donothing">Ничего не делать – AAPS сам внесет необходимые изменения.</string>
     <string name="wronginsulin_label">Ошибки подачи/поступления инсулина</string>
     <string name="wronginsulin_whattodo">Что делать, если вы получили меньше инсулина, чем указано в истории помпы, например, из-за окклюзии, проблем с канюлей или из-за того, что вы забыли подключить помпу обратно после душа?</string>
@@ -103,7 +105,7 @@ Context | Edit Context</string>
     <string name="breadgrams_exchange">Употребленные углеводы можно записывать с помощью соответствующей системы обмена (например, DAFNE «CHO» или европейские «хлебные единицы»).</string>
     <string name="breadgrams_decay">AAPS использует динамическую модель для оценки усвоения углеводов и подсчета активных углеводов COB.</string>
     <string name="breadgrams_calc">Если уровень глюкозы в крови находится вне допустимых значений (слишком низкое или слишком высокое), то калькулятор болюса может быть использован для внесения предложений по коррекции углеводного коэффициента IC.</string>
-    <string name="breadgrams_hint1">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/AapsScreens.html#id28</string>
+    <string name="breadgrams_hint1">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/AapsScreens.html#aaps-screens-bolus-wizard</string>
     <string name="breadgrams_hint2">https://wiki.aaps.app/ru/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="extendedcarbs_label">Растянутые углеводы</string>
     <string name="extendedcarbs_handling">Для чего можно использовать e-carbs (растянутые углеводы)?</string>
@@ -113,6 +115,7 @@ Context | Edit Context</string>
     <string name="extendedcarbs_rescue">Для записи «компенсаторных» углеводов на подъем низкой ГК.</string>
     <string name="extendedcarbs_hint1">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/ExtendedCarbs.html</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/ru/latest/RemoteFeatures/RemoteMonitoring.html</string>
+    <string name="nsclient_hint2">https://wiki.aaps.app/ru/latest/RemoteFeatures/RemoteControl.html</string>
     <string name="isf_label_exam">Фактор Чувствительности к Инсулину (ISF)</string>
     <string name="isf_increasingvalue">Увеличения фактора чувствительности к инсулину ISF приведет к увеличению дозы инсулина на покрытие определенного числа углеводов.</string>
     <string name="isf_decreasingvalue">Уменьшение фактора чувствительности к инсулину ISF приведет к увеличению дозы инсулина для корректировки ГК выше целевого уровня.</string>

@@ -64,7 +64,7 @@ internal fun CobChip(
     val hasValue = state.cobValue != 0.0
     // Name the whole chip, not the icon. state.text is only a bare value like "45 g", which says
     // nothing about what it measures. It goes on the Surface because the icon is dropped when the
-    // row is too narrow (see IobCobChips) and the label would go with it.
+    // row is too narrow and no carbs are required (see IobCobChips) and the label would go with it.
     //
     // Only the noun belongs here, never the value - a description on a merging node is added
     // beside the children rather than replacing them, so repeating the value says it twice.

@@ -61,17 +61,17 @@
     <string name="objectives_exam_learned_wrongcarbs">Si vous avez fait une entrée incorrecte dans AAPS ou si cela ne correspond pas à la réalité, résolvez-la dès que possible. Cela pourrait conduire à un surdosage. AAPS doit toujours être informé de la meilleure façon possible sur les glucides, l\'insuline, etc.</string>
     <string name="objectives_exam_learned_breadgrams">Seuls les grammes sont autorisés pour l\'entrée des glucides.</string>
     <string name="objectives_exam_learned_ecarbs">Les E-glucides remplacent les bolus étendus dans le monde de la pompe.</string>
-    <string name="objectives_exam_learned_concentration2">Passer de l\'U200 avec un profil de 50 % à U200 avec la fonction de concentration d\'insuline nécessite de créer un nouveau profil plus agressif, désactiver DynISF pendant une semaine et entraîner le cerveau à penser en Unités Internationales.</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">Passer de l\'U200 avec un profil de 50 % à U200 avec la fonction de concentration d\'insuline nécessite de créer un nouveau profil plus agressif, désactiver DynISF pendant une semaine et entraîner le cerveau à penser en Unités Internationales.</string>
     <string name="objectives_exam_learned_concentration3">La concentration de l\'insuline ne peut être modifiée que lorsque l\'insuline ou le patch sont changés. Mais le plus important, en particulier pour les pompes à tubes, est de ne jamais utiliser l\'interface utilisateur de la pompe pour injecter des bolus directement depuis la pompe.</string>
     <string name="answerdisabledto">Réponse désactivée jusqu\'à : %1$s</string>
     <string name="wronganswer">Mauvaise réponse !</string>
     <string name="unfinshed_button">Prochain non terminé</string>
     <string name="requestcode">Code requis : %1$s</string>
     <string name="objectives_hint">(Sélectionnez toutes les bonnes réponses)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/fr/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/fr/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/fr/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/fr/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/fr/latest/SettingUpAaps/ConfigBuilder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/fr/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/fr/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Non connecté à Internet</string>
     <string name="requirementnotmet">Exigences de l\'objectif non atteintes</string>
     <string name="what_i_ve_learned">Ce que j\'ai appris :</string>

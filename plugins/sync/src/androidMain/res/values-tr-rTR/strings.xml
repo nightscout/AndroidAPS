@@ -62,7 +62,7 @@
     <string name="wear_infos_watchface">Saat arayüzü bilgisi</string>
     <string name="wear_export_watchface">Şablonu Dışarı Aktar</string>
     <string name="wear_new_custom_watchface_exported">Saat arayüzü şablonu dışa aktarıldı</string>
-    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/tr/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Tüm verileri yeniden gönderin</string>
     <string name="open_settings_on_wear">Wear\'de ayarları aç</string>
     <string name="cwf_infos_pref_locked">Saat arayüzü tarafından kilitlenen tercihlerin listesi</string>
@@ -89,7 +89,7 @@
     <string name="aps">APS (YPS)</string>
     <string name="last_run">Son Çalıştırma</string>
     <string name="last_enact">Son sahne</string>
-    <string name="tdd_line">%1$.2fÜ %1$.0f%%</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fÜ %2$.0f%%</string>
     <string name="today">Bugün</string>
     <string name="weighted">ağırlıklı</string>
     <string name="full_xdrip_sync_comment">Tam senkronizasyon? Biraz zaman alabilir ve tamamlanana kadar xDrip+\'ta yeni verileri göremezsiniz.</string>

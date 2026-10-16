@@ -91,7 +91,7 @@
     <string name="aps">APS</string>
     <string name="last_run">Laatst uitgevoerd</string>
     <string name="last_enact">Laatste uitvoering</string>
-    <string name="tdd_line">%1$.2fE %1$.0f%%</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fE %2$.0f%%</string>
     <string name="today">Vandaag</string>
     <string name="weighted">gewogen</string>
     <string name="full_xdrip_sync_comment">Volledige synchronisatie? Het kan enige tijd duren en tot het is voltooid zie je geen nieuwe gegevens in xDrip+.</string>

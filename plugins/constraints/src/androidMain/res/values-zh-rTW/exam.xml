@@ -4,7 +4,7 @@
     <string name="dia_label_exam">胰島素作用時間 (DIA)</string>
     <string name="dia_profile">您應該在胰島素設定（管理 → 胰島素設定）中設定 DIA 的數值，而不是在設定檔中。</string>
     <string name="dia_minimumis5h">允許的最小值是5小時。</string>
-    <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="dia_hint1">https://wiki.aaps.app/zh-tw/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">如果您對之前在幫浦中使用的DIA值感到滿意，則在開始循環時無需更改。</string>
     <string name="dia_valuemustbedetermined">您應該自行確定適合的DIA值。</string>
     <string name="hypott_label">低血糖臨時目標</string>
@@ -19,7 +19,7 @@
     <string name="pumpdisconnect_missinginsulin">它防止AAPS計算幫浦物理中斷連線期間未輸送的胰島素。</string>
     <string name="pumpdisconnect_notstop">如果幫浦仍然連線到您的身體，它將不會停止胰島素輸送。</string>
     <string name="pumpdisconnect_openloop">它將使AAPS進入開環模式。</string>
-    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/AapsScreens.html#loop-status</string>
+    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-loop-status</string>
     <string name="objectives_label">AAPS設定</string>
     <string name="objectives2_label">AAPS設定</string>
     <string name="objectives_howtosave">備份您的設定的最佳實踐是什麼？</string>
@@ -32,7 +32,7 @@
     <string name="objectives2_cloud">將您的偏好設定文件複製到手機以外的安全位置（例如使用雲端硬碟、連線到電腦的電纜、電子郵件等）。</string>
     <string name="objectives2_easyrestore">如果您的手機損壞或遺失，有簡便的方法可以在沒有備份的情況下遠端恢復您的設定。</string>
     <string name="objectives_hint1">https://wiki.aaps.app/zh-tw/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/zh-tw/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/zh-tw/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">干擾的CGM讀取值</string>
     <string name="noisycgm_whattodo">如果CGM資料干擾，應該怎麼做？</string>
     <string name="noisycgm_nothing">什麼也不做 - AAPS會處理。</string>
@@ -46,7 +46,7 @@
     <string name="exerciseprofile_switchprofileabove100">進行設定檔切換到高於100%。</string>
     <string name="exerciseprofile_leaveat100">將設定檔設置為100%。</string>
     <string name="exerciseprofile_suspendloop">暫停循環。</string>
-    <string name="exerciseprofile_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
+    <string name="exerciseprofile_hint1">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
     <string name="exercise_label">運動與臨時目標</string>
     <string name="exercise_whattodo">如何使用臨時目標來幫助系統最好地應對有氧運動？</string>
     <string name="exercise_settt">在運動開始前的適當時間設置運動血糖目標。</string>
@@ -98,14 +98,14 @@
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
     <string name="insulin_actrapid">Actrapid®/Humulin R®/\"regular\"  人類胰島素</string>
-    <string name="insulin_hint1">https://wiki.aaps.app/zh-tw/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="insulin_hint1">https://wiki.aaps.app/zh-tw/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="sensitivity_label">敏感性外掛</string>
     <string name="sensitivity_adjust">敏感性外掛允許AAPS調整因臨時或短期的胰島素敏感性變化（例如荷爾蒙變化或注射部位的吸收問題）。</string>
     <string name="sensitivity_edit">敏感性外掛為用戶提供對基礎速率、I:C比率和ISF的建議變更，可用於編輯設定檔。</string>
     <string name="sensitivity_cannula">紀錄套管更換將重置自動敏感比率至100%。</string>
     <string name="sensitivity_time">一些外掛選項有可配置的時間範圍，用戶可以設置。</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="sensitivity_hint2">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/KeyAapsFeatures.html#autosens</string>
+    <string name="sensitivity_hint2">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/KeyAapsFeatures.html#open-aps-features-autosens</string>
     <string name="wrongcarbs_label">碳水化合物輸入錯誤</string>
     <string name="wrongcarbs_whattodo">如果您輸入了錯誤的碳水化合物值，應該怎麼做？</string>
     <string name="wrongcarbs_treatmentstab">刪除治療記錄中不正確的項目，並輸入正確的碳水數值。</string>
@@ -140,7 +140,7 @@
     <string name="breadgrams_exchange">攝入的碳水化合物可以使用適當的交換系統紀錄（例如DAFNE「CHO」交換或歐洲「麵包單位」）。</string>
     <string name="breadgrams_decay">AAPS使用動態模型來估計碳水化合物吸收並計算COB。</string>
     <string name="breadgrams_calc">如果血糖數值超出可接受範圍（過低或過高），注射計算機可以用來提供碳水化合物或胰島素的修正建議。</string>
-    <string name="breadgrams_hint1">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/AapsScreens.html#bolus-wizard</string>
+    <string name="breadgrams_hint1">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/AapsScreens.html#aaps-screens-bolus-wizard</string>
     <string name="breadgrams_hint2">https://wiki.aaps.app/zh-tw/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="extendedcarbs_label">展延碳水化合物</string>
     <string name="extendedcarbs_handling">您可以使用延長碳水化合物(extended carbs) 做什麼？</string>
@@ -156,7 +156,7 @@
     <string name="nsclient_data">要遠端追蹤或控制 AAPS，兩支手機都需要可用的網路連線（例如 Wi‑Fi 或行動數據）。</string>
     <string name="nsclient_fullcontrol">當 AAPSClient 與主手機完成配對後，您也可以遠端控制 AAPS，例如進行注射、輸入碳水、設定臨時目標、切換設定檔與循環模式。</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/zh-tw/latest/RemoteFeatures/RemoteMonitoring.html</string>
-    <string name="nsclient_hint2">https://wiki.aaps.app/en/latest/RemoteFeatures/RemoteControl.html</string>
+    <string name="nsclient_hint2">https://wiki.aaps.app/zh-tw/latest/RemoteFeatures/RemoteControl.html</string>
     <string name="isf_label_exam">胰島素敏感因子 (ISF)</string>
     <string name="isf_increasingvalue">提高ISF值將導致輸送更多的胰島素來覆蓋特定量的碳水化合物。</string>
     <string name="isf_decreasingvalue">降低ISF值將導致輸送更多的胰島素來修正高於目標的血糖。</string>
@@ -202,7 +202,6 @@
     <string name="u200_with_profile_reports">我的 AAPS 資料庫與 NS 報表會變得不正確。所有數值（注射、速率、TDD）都必須乘以 2 才能查看真實數值，尤其是在提供給醫師與醫療團隊時。</string>
     <string name="u200_with_profile_pens">若我使用 U200 筆進行外部注射，就不需要在 AAPS 與筆之間進行任何換算。</string>
     <string name="u200_with_profile_pens2">無論我使用哪種筆（U100 或 U200）進行外部注射，每一次外部注射我都必須在 AAPS 計算的劑量與我在筆上選擇的劑量之間進行換算。</string>
-    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
     <string name="switch_u200_profile">您一直使用 U200 搭配 50% 設定檔的權宜作法，並想切換到「胰島素濃度」功能。哪些答案是正確的？</string>
     <string name="switch_u200_profile_any_time">我可以隨時切換，因為我的幫浦中已經是正確的 U200 胰島素。</string>
     <string name="switch_u200_profile_ps">我必須準備一個更強的設定檔（相較目前預設設定檔為 200%），並在下一次更換貼片／儲藥槽且選擇 U200 胰島素時，同步這個新設定檔。</string>

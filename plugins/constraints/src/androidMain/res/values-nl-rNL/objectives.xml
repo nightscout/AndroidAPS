@@ -63,10 +63,10 @@
     <string name="unfinshed_button">Volgende onvoltooide</string>
     <string name="requestcode">Aanvraagcode: %1$s</string>
     <string name="objectives_hint">(controleer alle juiste antwoorden)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/nl/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/nl/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/nl/latest/SettingUpAaps/ConfigBuilder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Niet verbonden met het internet</string>
     <string name="requirementnotmet">Vereisten van doel niet behaald</string>
     <string name="what_i_ve_learned">Wat ik heb geleerd:</string>
