@@ -15,7 +15,7 @@ android {
 // Dexcom G7 / ONE+ read straight over Bluetooth, as a BG source. Android only: the Bluetooth link, the
 // camera for the applicator barcode, and the screens. The wire protocol is in :cgm:dexcomg7:protocol.
 dependencies {
-    api(project(":cgm:dexcomg7:protocol"))
+    api(project(":cgm:dexcomg7:core"))
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))

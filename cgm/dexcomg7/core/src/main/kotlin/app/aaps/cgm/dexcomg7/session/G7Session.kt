@@ -30,7 +30,6 @@ import app.aaps.cgm.dexcomg7.protocol.G7Opcode
 import app.aaps.cgm.dexcomg7.protocol.TransmitterVersionMessage
 import app.aaps.cgm.dexcomg7.protocol.hexToBytesOrNull
 import app.aaps.cgm.dexcomg7.protocol.toHex
-import app.aaps.core.interfaces.db.PersistenceLayer
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -71,7 +70,7 @@ class G7Session(
     private val bluetooth: G7Bluetooth,
     private val store: G7StateStore,
     private val commLog: G7CommLog,
-    private val persistenceLayer: PersistenceLayer
+    private val history: G7ReadingHistory
 ) : G7GattClient.Events {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default.limitedParallelism(1))
@@ -441,7 +440,7 @@ class G7Session(
             // command at a time, and a request on top of the reading request cost us the reading.
             backfillPending = true
             // Read before the live reading is stored, or it would hide the gap it closes.
-            latestAtSessionStart = runCatching { persistenceLayer.getLastGlucoseValue()?.timestamp }.getOrNull()
+            latestAtSessionStart = runCatching { history.newestReadingAt() }.getOrNull()
             send(c, G7Commands.GLUCOSE)
         } catch (e: G7LinkException) {
             log("Could not open the session: ${e.message}")

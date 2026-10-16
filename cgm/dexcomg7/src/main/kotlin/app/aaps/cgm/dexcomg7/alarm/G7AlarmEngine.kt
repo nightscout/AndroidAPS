@@ -210,7 +210,8 @@ object G7AlarmEngine {
      */
     private fun reminderAt(track: G7AlarmTrack, state: G7State): Long {
         val due = track.lastAlertAt!! + REMINDER_MS
-        val newerReading = state.latestReadingAt != null && state.latestReadingAt > (track.alertReadingAt ?: Long.MIN_VALUE)
+        val latest = state.latestReadingAt
+        val newerReading = latest != null && latest > (track.alertReadingAt ?: Long.MIN_VALUE)
         return if (newerReading) due else due + REMINDER_WAIT_MS
     }
 

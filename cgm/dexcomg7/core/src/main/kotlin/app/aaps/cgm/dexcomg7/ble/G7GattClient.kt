@@ -14,7 +14,6 @@ import app.aaps.cgm.dexcomg7.protocol.G7Characteristic
 import app.aaps.cgm.dexcomg7.protocol.G7Gatt
 import app.aaps.cgm.dexcomg7.protocol.G7Link
 import app.aaps.cgm.dexcomg7.protocol.G7LinkException
-import app.aaps.core.utils.extensions.connectGattCompat
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -83,7 +82,7 @@ class G7GattClient(
     fun connect(autoConnect: Boolean) {
         closed = false
         this.autoConnect = autoConnect
-        gatt = device.connectGattCompat(context, autoConnect, callback, BluetoothDevice.TRANSPORT_LE)
+        gatt = device.connectGatt(context, autoConnect, callback, BluetoothDevice.TRANSPORT_LE)
         if (gatt == null) log("Bluetooth refused to open a connection to $address")
     }
 
