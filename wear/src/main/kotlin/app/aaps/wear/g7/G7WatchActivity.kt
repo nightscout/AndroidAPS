@@ -1,7 +1,12 @@
 package app.aaps.wear.g7
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -29,8 +34,9 @@ import app.aaps.wear.R
 import dev.zacsweers.metro.Inject
 
 /**
- * Direct-to-watch on the watch itself: asks for the Bluetooth permission, and keeps the screen on while
- * the sensor's pairing requests are due, so they are not missed behind the watch face.
+ * Direct-to-watch on the watch itself: asks for the Bluetooth permission and for unrestricted battery use,
+ * and keeps the screen on while the sensor's pairing requests are due, so they are not missed behind the
+ * watch face.
  */
 class G7WatchActivity : ComponentActivity() {
 
@@ -43,7 +49,8 @@ class G7WatchActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                val state by watchDirect.state.collectAsState()
+                val status by watchDirect.status.collectAsState()
+                val state = status.state
                 LaunchedEffect(state) {
                     if (state == EventData.G7WatchState.PAIRING) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                     else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -63,8 +70,42 @@ class G7WatchActivity : ComponentActivity() {
                         Button(onClick = { askPermission.launch(arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT)) }) {
                             Text(stringResource(R.string.g7_watch_allow))
                         }
+                    } else if (status.batteryRestricted) {
+                        Spacer(Modifier.height(8.dp))
+                        Text(stringResource(R.string.g7_watch_notification_battery), style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+                        Spacer(Modifier.height(12.dp))
+                        Button(onClick = { askForUnrestrictedBattery() }) {
+                            Text(stringResource(R.string.g7_watch_allow_battery))
+                        }
                     }
                 }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Back from the settings: battery use may have changed
+        watchDirect.refresh()
+    }
+
+    /**
+     * The system prompt for unrestricted battery use. Not every watch has it, so fall back to the list of
+     * apps and their battery use, then to this app's settings page.
+     */
+    @SuppressLint("BatteryLife")
+    private fun askForUnrestrictedBattery() {
+        val intents = listOf(
+            Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:$packageName")),
+            Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS),
+            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))
+        )
+        for (intent in intents) {
+            try {
+                startActivity(intent)
+                return
+            } catch (_: ActivityNotFoundException) {
+                // try the next one
             }
         }
     }

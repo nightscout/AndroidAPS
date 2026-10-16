@@ -230,7 +230,9 @@ class G7OverviewViewModel(
             EventData.G7WatchState.CONNECTED        -> watchReading(status.latestReadingAt, now) to StatusLevel.NORMAL
             EventData.G7WatchState.REFUSED          -> rh.gs(R.string.dexcom_g7_watch_refused, DexcomG7Formatting.refusal(rh, status.detail ?: "")) to StatusLevel.CRITICAL
         }
-        return listOf(PumpInfoRow(rh.gs(R.string.dexcom_g7_row_watch), text, level))
+        val rows = mutableListOf(PumpInfoRow(rh.gs(R.string.dexcom_g7_row_watch), text, level))
+        if (status?.batteryRestricted == true) rows += PumpInfoRow(rh.gs(R.string.dexcom_g7_row_watch_battery), rh.gs(R.string.dexcom_g7_watch_battery_restricted), StatusLevel.WARNING)
+        return rows
     }
 
     private fun watchReading(at: Long?, now: Long): String =

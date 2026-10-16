@@ -630,8 +630,23 @@ sealed class EventData : Event() {
         val address: String? = null,
         val latestReadingAt: Long? = null,
         /** The last refusal or problem, in plain words, for the phone's status line. */
-        val detail: String? = null
+        val detail: String? = null,
+        /**
+         * True when the watch may put the app to sleep in the background. Samsung watches then freeze it as
+         * soon as the screen dims, and the sensor's readings are missed. Fixed by unrestricted battery use.
+         */
+        val batteryRestricted: Boolean = false
     ) : EventData()
+
+    /**
+     * Wear→Mobile: lines of the watch's own Dexcom G7 log, with the times they were written, for the
+     * phone's G7 log. The watch app's log cannot be read on the watch itself.
+     */
+    @Serializable
+    data class G7WatchLog(val lines: List<G7WatchLogLine>) : EventData()
+
+    @Serializable
+    data class G7WatchLogLine(val time: Long, val text: String)
 
     @Serializable
     enum class G7WatchState {

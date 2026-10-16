@@ -48,6 +48,8 @@
     <string name="dexcom_g7_row_firmware">Firmware</string>
     <string name="dexcom_g7_row_display_slot">Display slot</string>
     <string name="dexcom_g7_row_watch">Watch</string>
+    <string name="dexcom_g7_row_watch_battery">Watch battery use</string>
+    <string name="dexcom_g7_watch_battery_restricted">The watch can put AAPS to sleep and then misses readings. On the watch, open the AAPS notification and allow unrestricted battery use.</string>
     <string name="dexcom_g7_watch_direct_turn_on">Direct to watch: turn on</string>
     <string name="dexcom_g7_watch_direct_turn_off">Direct to watch: turn off</string>
     <string name="dexcom_g7_watch_waiting_for_watch">Waiting for the watch. Is the AAPS watch app installed and the watch nearby?</string>

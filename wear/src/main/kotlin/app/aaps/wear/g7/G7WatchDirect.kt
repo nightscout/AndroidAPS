@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import app.aaps.cgm.dexcomg7.ble.G7Bluetooth
@@ -29,11 +30,13 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
@@ -48,6 +51,7 @@ import kotlinx.coroutines.launch
  * The phone owns the glucose alarms. The watch raises only a low or urgent low of its own, and only while
  * the phone has sent nothing for [G7WatchReadings.PHONE_SILENT_MS].
  */
+@OptIn(FlowPreview::class)
 @SingleIn(AppScope::class)
 @Inject
 class G7WatchDirect(
@@ -71,12 +75,23 @@ class G7WatchDirect(
     private var raisedLowAt = 0L
     private var lastReported: EventData.G7WatchStatus? = null
 
-    private val _state = MutableStateFlow(EventData.G7WatchState.OFF)
+    private val _status = MutableStateFlow(EventData.G7WatchStatus(EventData.G7WatchState.OFF))
 
     /** For the watch's own screen. */
-    val state: StateFlow<EventData.G7WatchState> = _state.asStateFlow()
+    val status: StateFlow<EventData.G7WatchStatus> = _status.asStateFlow()
+
+    /** Log lines up to this time have gone to the phone. */
+    private var logSentUpTo = 0L
 
     val isSupported: Boolean get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+    /**
+     * False when the watch may put the app to sleep in the background. A Samsung watch then freezes it as
+     * soon as the screen dims (seen on a Galaxy Watch Ultra 2: frozen for minutes, foreground service or
+     * not), and the sensor's readings are missed. Unrestricted battery use stops that.
+     */
+    val isBatteryUnrestricted: Boolean
+        get() = context.getSystemService(PowerManager::class.java)?.isIgnoringBatteryOptimizations(context.packageName) == true
 
     fun start() {
         if (started) return
@@ -86,7 +101,7 @@ class G7WatchDirect(
             rxBus.toFlow(EventData.SingleBg::class).collect { if (it.dataset == 0 && !it.fromSensor) lastPhoneReadingAt = System.currentTimeMillis() }
         }
         if (!isSupported) {
-            _state.value = EventData.G7WatchState.NOT_SUPPORTED
+            _status.value = EventData.G7WatchStatus(EventData.G7WatchState.NOT_SUPPORTED)
             return
         }
         scope.launch { session.readings.collect { onReadings(it) } }
@@ -95,12 +110,23 @@ class G7WatchDirect(
                 .distinctUntilChanged()
                 .collect { report(it) }
         }
+        // The watch app's log cannot be read on the watch, so new lines go to the phone's G7 log
+        scope.launch {
+            commLog.entries
+                .debounce(LOG_BATCH_MS)
+                .collect { sendLog(it, since = maxOf(logSentUpTo, System.currentTimeMillis() - LOG_RESEND_MS)) }
+        }
         if (store.value.isPaired) scope.launch { startSession() }
     }
 
     /** After the wearer allowed Bluetooth on the watch's own screen. */
     fun retry() {
         scope.launch { if (store.value.isPaired) startSession() }
+    }
+
+    /** The watch's own screen came back: battery use may have been changed in the settings. */
+    fun refresh() {
+        scope.launch { report(describe(store.value, session.status.value)) }
     }
 
     private suspend fun handle(message: EventData.G7WatchDirect) {
@@ -135,16 +161,28 @@ class G7WatchDirect(
                 commLog.add("Direct to watch: turned off by the phone")
             }
             session.stop().join()
+            G7WatchService.stop(context)
             clearLowAlarm()
         }
         // Always answer, so the phone knows the message arrived.
         report(describe(store.value, session.status.value), force = true)
+        // The phone sends this after it was away or restarted: lines sent in between may have been lost.
+        // It drops the lines it already has.
+        sendLog(commLog.entries.value, since = System.currentTimeMillis() - LOG_RESEND_MS)
     }
 
     private suspend fun startSession() {
         // Restart, so a session that stopped on a missing permission or Bluetooth being off tries again.
         session.stop().join()
         session.start().join()
+        G7WatchService.start(context)
+    }
+
+    private fun sendLog(entries: List<G7CommLog.Entry>, since: Long) {
+        val lines = entries.filter { it.time > since }.takeLast(LOG_MAX_LINES)
+        if (lines.isEmpty()) return
+        logSentUpTo = maxOf(logSentUpTo, lines.last().time)
+        rxBus.send(EventWearToMobile(EventData.G7WatchLog(lines.map { EventData.G7WatchLogLine(it.time, it.text) })))
     }
 
     private fun describe(state: G7State, status: G7ConnectionStatus): EventData.G7WatchStatus {
@@ -162,16 +200,19 @@ class G7WatchDirect(
             state = watchState,
             address = state.address,
             latestReadingAt = state.latestReadingAt,
-            detail = state.lastAuthenticationFailure.takeIf { watchState == EventData.G7WatchState.REFUSED }
+            detail = state.lastAuthenticationFailure.takeIf { watchState == EventData.G7WatchState.REFUSED },
+            batteryRestricted = state.isPaired && isSupported && !isBatteryUnrestricted
         )
     }
 
     private fun report(status: EventData.G7WatchStatus, force: Boolean = false) {
-        _state.value = status.state
-        updateNotification(status.state)
+        _status.value = status
+        updateNotification(status)
         if (!force && status == lastReported) return
+        if (status.batteryRestricted && lastReported?.batteryRestricted != true)
+            commLog.add("Direct to watch: battery use is not unrestricted; the watch may freeze AAPS in the background and miss readings")
         lastReported = status
-        aapsLogger.debug(LTag.WEAR, "G7 direct: ${status.state}")
+        aapsLogger.debug(LTag.WEAR, "G7 direct: ${status.state} batteryRestricted=${status.batteryRestricted}")
         rxBus.send(EventWearToMobile(status))
     }
 
@@ -219,13 +260,18 @@ class G7WatchDirect(
         rxBus.send(EventData.CgmAlarmCancel(LOW_ALARM_ID))
     }
 
-    /** A notification only when the wearer has to do something: allow Bluetooth, or accept the pairing. */
-    private fun updateNotification(state: EventData.G7WatchState) {
-        val text = when (state) {
-            EventData.G7WatchState.NEEDS_PERMISSION -> R.string.g7_watch_notification_permission
-            EventData.G7WatchState.PAIRING          -> R.string.g7_watch_notification_pairing
-            EventData.G7WatchState.REFUSED          -> R.string.g7_watch_notification_refused
-            else                                    -> null
+    /**
+     * A notification only when the wearer has to do something: allow Bluetooth, allow unrestricted battery
+     * use, or accept the pairing.
+     */
+    private fun updateNotification(status: EventData.G7WatchStatus) {
+        val text = when {
+            status.state == EventData.G7WatchState.NEEDS_PERMISSION -> R.string.g7_watch_notification_permission
+            // Before the pairing: a frozen app misses the sensor's visit, the pairing included
+            status.batteryRestricted                                -> R.string.g7_watch_notification_battery
+            status.state == EventData.G7WatchState.PAIRING          -> R.string.g7_watch_notification_pairing
+            status.state == EventData.G7WatchState.REFUSED          -> R.string.g7_watch_notification_refused
+            else                                                    -> null
         }
         val manager = NotificationManagerCompat.from(context)
         if (text == null) {
@@ -254,6 +300,15 @@ class G7WatchDirect(
     companion object {
 
         const val LOW_ALARM_ID = "G7_WATCH_LOW"
+
+        /** New log lines are collected this long, then sent to the phone in one message. */
+        private const val LOG_BATCH_MS = 3_000L
+
+        /** How far back the log is sent again when the phone asks, in case lines were lost while it was away. */
+        private const val LOG_RESEND_MS = 2 * 60 * 60_000L
+
+        /** A cap per message. A normal reading cycle writes about ten lines. */
+        private const val LOG_MAX_LINES = 400
         private const val CHANNEL_ID = "AndroidAPS-G7Direct"
 
         // Clear of the ids DataLayerListenerServiceWear (1, 2, 556677) and CgmAlarmWear (7700..7955) use.

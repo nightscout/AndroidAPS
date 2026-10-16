@@ -6,6 +6,9 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- Direct-to-watch: the Dexcom G7 link in the background, and the prompt for unrestricted battery use -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.BODY_SENSORS" />
@@ -907,6 +910,10 @@
         <!-- taskAffinity="" on the two service-launched overlays: without it their NEW_TASK launch
              routes into the default app task, dragging a backgrounded main menu to the front —
              which is then what remains on screen once the overlay finishes -->
+        <service
+            android:name=".g7.G7WatchService"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
         <activity
             android:name=".g7.G7WatchActivity"
             android:exported="false"

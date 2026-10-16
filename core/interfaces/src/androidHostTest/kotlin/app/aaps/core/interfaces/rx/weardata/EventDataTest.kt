@@ -234,6 +234,14 @@ class EventDataTest {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
+        EventData.G7WatchStatus(EventData.G7WatchState.WAITING, "F6:E6:B1:55:0B:A9", 1_000L, batteryRestricted = true).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.G7WatchLog(listOf(EventData.G7WatchLogLine(1_000L, "Bonded (0801)"), EventData.G7WatchLogLine(2_000L, "send control 4e"))).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
         EventData.G7WatchStatus(EventData.G7WatchState.REFUSED, "F6:E6:B1:55:0B:A9", 1_000L, "key").let {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)

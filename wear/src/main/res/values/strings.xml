@@ -437,6 +437,9 @@
     <string name="g7_watch_title">Dexcom G7 on the watch</string>
     <string name="g7_watch_channel">Dexcom G7 on the watch</string>
     <string name="g7_watch_allow">Allow Bluetooth</string>
+    <string name="g7_watch_allow_battery">Allow unrestricted battery use</string>
+    <string name="g7_watch_service_channel">Dexcom G7 connection</string>
+    <string name="g7_watch_notification_battery">The watch can put AAPS to sleep and then misses the sensor\'s readings. Tap to allow unrestricted battery use.</string>
     <string name="g7_watch_notification_permission">To read the sensor itself, the watch needs Bluetooth. Tap to allow it.</string>
     <string name="g7_watch_notification_pairing">The watch pairs with the sensor at its next reading. Accept the pairing requests that come up, there are usually two.</string>
     <string name="g7_watch_notification_refused">The sensor refused the watch. See the Dexcom G7 page in AAPS on the phone.</string>

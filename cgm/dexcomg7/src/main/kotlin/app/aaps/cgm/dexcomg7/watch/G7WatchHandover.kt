@@ -71,6 +71,12 @@ class G7WatchHandover(
         job?.cancel()
         job = scope.launch {
             launch { rxBus.toFlow(EventData.G7WatchStatus::class).collect { onStatus(it) } }
+            // The watch app's own log cannot be read on the watch; it lands in this log instead
+            launch {
+                rxBus.toFlow(EventData.G7WatchLog::class).collect { log ->
+                    commLog.addFrom(WATCH_LOG_SOURCE, log.lines.map { G7CommLog.Entry(it.time, it.text) })
+                }
+            }
             // The watch app (re)started, or a watch connected: it may have missed the last message.
             launch { rxBus.toFlow(EventData.ActionResendData::class).collect { send("watch asked for data") } }
             // A new sensor, or the same one paired again: the watch must follow.
@@ -112,6 +118,7 @@ class G7WatchHandover(
         val previous = _report.value?.status
         _report.value = G7WatchReport(status, System.currentTimeMillis())
         if (previous?.state != status.state || previous.detail != status.detail) commLog.add("Watch reports ${status.state}" + (status.detail?.let { ": $it" } ?: ""))
+        if (status.batteryRestricted && previous?.batteryRestricted != true) commLog.add("Watch reports that it may put AAPS to sleep in the background (battery not unrestricted)")
         if (!matches(wanted(), status)) {
             val now = System.currentTimeMillis()
             if (now - lastResendAt < RESEND_INTERVAL_MS) return
@@ -121,6 +128,9 @@ class G7WatchHandover(
     }
 
     companion object {
+
+        /** Marks the watch's lines in the phone's G7 log. */
+        const val WATCH_LOG_SOURCE = "Watch"
 
         /** At most one corrective message a minute, so a watch that cannot follow is not flooded. */
         const val RESEND_INTERVAL_MS = 60_000L

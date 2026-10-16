@@ -55,6 +55,22 @@ class G7CommLog(
         }
     }
 
+    /**
+     * Lines written by another device (the watch), kept with their own times and marked with [source].
+     * A line already in the log is not added again, so the same lines may be sent more than once.
+     */
+    fun addFrom(source: String, lines: List<Entry>) {
+        ensureLoaded()
+        val now = System.currentTimeMillis()
+        synchronized(lock) {
+            val known = _entries.value.mapTo(HashSet()) { it.time to it.text }
+            val added = lines.map { Entry(it.time, "$source: ${it.text.replace('\n', ' ')}") }.filter { (it.time to it.text) !in known }
+            if (added.isEmpty()) return
+            _entries.value = keep(_entries.value + added, now)
+            compact(now)
+        }
+    }
+
     fun clear() = synchronized(lock) {
         _entries.value = emptyList()
         runCatching { file.delete() }
@@ -92,8 +108,9 @@ class G7CommLog(
         /** A hard limit, in case something logs far more than normal. */
         const val MAX_ENTRIES = 50_000
 
+        /** The last 24 hours, oldest first. Sorted because lines from another device can arrive late. */
         fun keep(entries: List<Entry>, now: Long): List<Entry> =
-            entries.filter { it.time >= now - KEEP_MS }.takeLast(MAX_ENTRIES)
+            entries.filter { it.time >= now - KEEP_MS }.sortedBy { it.time }.takeLast(MAX_ENTRIES)
 
         fun format(entry: Entry): String = "${entry.time}\t${entry.text}\n"
 
