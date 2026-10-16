@@ -202,6 +202,7 @@
     <string name="u200_with_profile_reports">Údaje v mojej databáze AAPS a v prehľadoch NS sú nesprávne. Všetky hodnoty (bolusy, dávkovanie, TDD) treba vynásobiť 2, aby sa zobrazili skutočné hodnoty – čo je dôležité najmä pre lekárov a zdravotnícky tím.</string>
     <string name="u200_with_profile_pens">Ak na podanie externého bolusu použijem pero U200, nemusím nič prepočítavať medzi systémom AAPS a perom.</string>
     <string name="u200_with_profile_pens2">Bez ohľadu na to, aké pero použijem na podanie externého bolusu (U100 alebo U200), pri každom takomto boluse musím prepočítavať množstvo vypočítané aplikáciou AAPS na množstvo, ktoré nastavujem na pere.</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
     <string name="switch_u200_profile">Používali ste náhradné riešenie s 50 % profilom pre U200 a chcete prejsť na funkciu koncentrácie inzulínu. Ktoré tvrdenia sú pravdivé?</string>
     <string name="switch_u200_profile_any_time">Môžem kedykoľvek prejsť na iný režim, pretože v pumpa už mám správny inzulín U200.</string>
     <string name="switch_u200_profile_ps">Musím si pripraviť dvakrát agresivnejší profil (200 % oproti súčasnému profilu) a tento nový profil synchronizovať po ďalšej výmene Patchu/zásobníka, keď je zvolený inzulín U200.</string>
