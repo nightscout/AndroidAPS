@@ -9,26 +9,22 @@
     <string name="medtronic_pump_bolus_delay">Odgoda prije početka bolusa (s)</string>
     <string name="medtronic_pump_max_bolus">Max Bolus na Pumpi (U)</string>
     <string name="medtronic_pump_max_basal">Max Basal na Pumpi (U/h)</string>
-    <string name="medtronic_pump_encoding">Medtronic kodiranje</string>
     <string name="medtronic_custom_action_wake_and_tune">Buđenje i podešavanje</string>
     <string name="medtronic_custom_action_clear_bolus_block">Izbriši bolusni blok</string>
-    <string name="medtronic_custom_action_reset_rileylink">Resetirajte konfiguraciju RileyLink</string>
     <string name="medtronic_pump_battery_select">Vrsta baterije (Power View)</string>
     <string name="medtronic_pump_battery_no">Nije odabrano (jednostavan prikaz)</string>
     <string name="medtronic_pump_battery_alkaline">Alkalno (prošireni prikaz)</string>
     <string name="medtronic_pump_battery_lithium">Litij (prošireni prikaz)</string>
     <string name="medtronic_pump_battery_nizn">Nikal-Cink (prošireni prikaz)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (prošireni prikaz)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Baterija RileyLink</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Greške</string>
-    <string name="medtronic_error_serial_not_set">Serijski broj nije unesen.</string>
     <string name="medtronic_error_serial_invalid">Greška serijskog broja.</string>
     <string name="medtronic_error_pump_type_not_set">Vrsta pumpe nije postavljena.</string>
     <string name="medtronic_error_pump_type_invalid">Vrsta pumpe nije podržana.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Frekvencija pumpe nije postavljena.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Frekvencija pumpe nije podržana.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink adresa nevažeća.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Otkrivena vrsta pumpe nije ista kao konfigurirana vrsta.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Postavka bazalnih profila/uzoraka nije omogućena na pumpi. Omogućite ga na pumpi.</string>
@@ -45,7 +41,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Povijest Medtronic pumpe</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Otkazali ste bolus nakon što je već bio postavljen na Pumpi. Budući da Medtronic Pump ne podržava otkazivanje, morat ćete ga ručno otkazati. Stavite pumpu u način rada Suspend, a zatim izvršite Resume (ako još uvijek želite otkazati). Aplikacija će pokupiti promjene pri sljedećem ažuriranju (za manje od 5 minuta).</string>
     <string name="medtronic_cmd_cant_read_tbr">Nije moguće pročitati trenutni TBR.</string>
@@ -57,10 +52,6 @@
     <string name="medtronic_cmd_cant_cancel_tbr">Nije moguće otkazati trenutni TBR.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Bazalni profil nije mogao biti postavljen.</string>
     <string name="medtronic_cmd_basal_profile_not_set_is_same">Bazalni profil je isti, tako da se više neće postavljati.</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pumpa nedostupna</string>
-    <!-- medtronic_warning -->
-    <!-- combo_pump_connected_now -->
     <!-- combo_notification_check_time_date -->
     <string name="riley_statistics">RL statistika</string>
-    <string name="medtronic_history_type">Tip:</string>
 </resources>

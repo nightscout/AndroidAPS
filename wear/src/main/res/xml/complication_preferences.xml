@@ -10,6 +10,14 @@
         android:title="@string/pref_complication_tap_action"
         android:summary="%s" />
 
+    <ListPreference
+        android:defaultValue="3"
+        android:entries="@array/complication_bg_graph_hours"
+        android:entryValues="@array/complication_bg_graph_hours_values"
+        android:key="@string/key_complication_bg_graph_hours"
+        android:title="@string/pref_complication_bg_graph_hours"
+        android:summary="%s" />
+
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="complication_unicode"

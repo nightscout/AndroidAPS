@@ -10,6 +10,7 @@ import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.complications.data.PhotoImageComplicationData
 import androidx.wear.watchface.complications.data.PlainComplicationText
 import app.aaps.core.interfaces.logging.LTag
+import dev.zacsweers.metro.HasMemberInjections
 import java.io.IOException
 
 /**
@@ -20,6 +21,7 @@ import java.io.IOException
  * Type: LARGE_IMAGE
  *
  */
+@HasMemberInjections
 abstract class WallpaperComplication : ModernBaseComplicationProviderService() {
 
     abstract val wallpaperAssetsFileName: String

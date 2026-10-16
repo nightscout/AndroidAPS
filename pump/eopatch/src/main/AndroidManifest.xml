@@ -4,17 +4,7 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application>
-        <activity
-            android:name=".ui.EopatchActivity"
-            android:configChanges="orientation|layoutDirection|screenLayout|density|screenSize|smallestScreenSize"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".ui.AlarmHelperActivity"
-            android:configChanges="orientation|layoutDirection|screenLayout|density|screenSize|smallestScreenSize"/>
-        <activity
-            android:name=".ui.DialogHelperActivity"
-            android:configChanges="orientation|layoutDirection|screenLayout|density|screenSize|smallestScreenSize"/>
-        <receiver android:name=".OsAlarmReceiver"/>
-	</application>
+        <receiver android:name=".OsAlarmReceiver" />
+    </application>
 
 </manifest>

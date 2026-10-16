@@ -1,5 +1,6 @@
 package app.aaps.pump.medtrum.comm.packets
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.comm.enums.BasalType
@@ -8,11 +9,10 @@ import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
-import dagger.android.HasAndroidInjector
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.round
 
-class SetTempBasalPacket(injector: HasAndroidInjector, private val absoluteRate: Double, private val durationInMinutes: Int) : MedtrumPacket(injector) {
+class SetTempBasalPacket(injector: MetroMemberInjector, private val absoluteRate: Double, private val durationInMinutes: Int) : MedtrumPacket(injector) {
 
     @Inject lateinit var medtrumPump: MedtrumPump
     @Inject lateinit var medtrumTimeUtil: MedtrumTimeUtil

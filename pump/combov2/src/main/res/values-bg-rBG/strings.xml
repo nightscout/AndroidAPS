@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Сдвояване с помпата</string>
     <string name="combov2_unpair_pump_title">Раздвояване с помпата</string>
     <string name="combov2_driver_state_label">Състояние на драйвера</string>
-    <string name="combov2_current_activity_label">Текуща дейност</string>
     <string name="bluetooth_address">Bluetooth адрес</string>
     <string name="combov2_start_pairing">Започване на сдвояване</string>
     <string name="combov2_pairing_in_progress">Combo в процес на сдвояване</string>
@@ -40,13 +39,14 @@
 3. Опитайте да сдвоите отново</string>
     <string name="combov2_enter_pin">Въведи PIN</string>
     <string name="combov2_cancel_pairing">Отмени сдвояване</string>
+    <string name="combov2_confirm_cancel_pairing_message">Сигурни ли сте че искате да прекратите свързването?</string>
+    <string name="combov2_confirm_unpair_message">Сигурни ли сте че искате да раздвоите помпата?</string>
     <string name="combov2_pin_hint">10-цифрен PIN</string>
     <string name="combov2_pairing_finished_successfully">Успешно сдвоен с Combo</string>
     <string name="combov2_pairing_cancelled">Сдвояването с Combo е отменено от потребителя</string>
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo Времето за сканиране е изтекло</string>
     <string name="combov2_pairing_failed_due_to_error">Сдвояването неуспешно, поради грешка: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Сдвояването е прекъснато по неизвестни причини</string>
-    <string name="combov2_pairing_invalid_pin_length">"Невалидна дължина на ПИН за сдвояване: нужни %1$d цифри, въведени %2$d"</string>
     <string name="combov2_scanning_for_pump">Сканиране за помпа</string>
     <string name="combov2_establishing_bt_connection">Установява се Bluetooth връзка (опит № %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Извършване на синхронизация с помпа</string>
@@ -66,7 +66,6 @@
     <string name="combov2_setting_basal_profile_cmddesc">Настройва базалният профил</string>
     <string name="combov2_setting_tbr_cmddesc">Задава се %1$d%% Временен базал за %2$d минути</string>
     <string name="combov2_cancelling_tbr">Отмяната продължителността на Временния базал</string>
-    <string name="combov2_delivering_bolus_cmddesc">Доставяне на %1$.1f Е болус</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Извличане на TDD(Обща дневна доза) история</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Актуализиране времето на помпата</string>
     <string name="combov2_updating_pump_status_cmddesc">Актуализиране състоянието на помпата</string>
@@ -90,6 +89,9 @@
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (остава по-малко от 1 минута)</string>
     <string name="combov2_load_tdds_cancelled">Зареждането на TDD(Обща дневна доза) е отменено</string>
     <string name="combov2_retrieving_tdds_failed">Извличането на TDD(Обща дневна доза) не бе успешно</string>
+    <string name="combov2_battery_empty">Празен</string>
+    <string name="combov2_battery_low">Слаба</string>
+    <string name="combov2_battery_full">Пълна</string>
     <string name="combov2_battery_low_warning">Батерията на помпата е слаба</string>
     <string name="combov2_reservoir_low_warning">Нивото на резервоара на помпата е ниско</string>
     <string name="combov2_setting_tbr_succeeded">Задаването на Временен базал е успешно</string>
@@ -99,7 +101,6 @@
     <string name="combov2_ignoring_redundant_100_tbr">Игнориране на излишна заявка за 100% Временен базал</string>
     <string name="combov2_hit_unexpected_tbr_limit">Възникна неочакван лимит при коригиране на Временния базал: целевият процент беше %1$d%%, достигна лимит от %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Не може да се зададе абсолютен Временен базал, ако той е нула</string>
-    <string name="combov2_pair_with_pump_summary">Сдвоете AndroidAPS и Android с несвързана в момента помпа Accu-Chek Combo</string>
     <string name="combov2_unpair_pump_summary">Раздвоете AndroidAPS и Android със свързаната в момента помпа Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Неизвестен Временен базал беше открит и спрян; процент: %1$d%%; оставаща продължителност: %2$s</string>
     <string name="combov2_connection_error">Грешка при свързване: %1$s</string>

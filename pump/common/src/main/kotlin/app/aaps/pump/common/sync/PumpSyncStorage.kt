@@ -1,104 +1,113 @@
 package app.aaps.pump.common.sync
 
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import com.thoughtworks.xstream.XStream
-import com.thoughtworks.xstream.security.AnyTypePermission
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 /**
  * This class is intended for Pump Drivers that use temporaryId and need way to pair records
+ *
+ * The preference store is the only copy. There is no in-memory list, and that is deliberate: the
+ * previous version loaded once behind a `storageInitialized` flag and then held the entries for the
+ * life of the process, so it never saw an outside change to its own keys - not from a settings
+ * import, not from anything - and the next save wrote the stale copy straight back over it.
+ *
+ * Reading on every call costs a small JSON parse. Measured against how this is actually used that is
+ * nothing: [getBoluses] and [getTBRs] are read once per Medtronic history pass, not in a loop, and the
+ * list only ever holds what is in flight to the pump.
  */
-@Singleton
-class PumpSyncStorage @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class PumpSyncStorage(
     val pumpSync: PumpSync,
     val preferences: Preferences,
     val aapsLogger: AAPSLogger
 ) {
 
-    var pumpSyncStorageBolus: MutableList<PumpDbEntryBolus> = mutableListOf()
-    var pumpSyncStorageTBR: MutableList<PumpDbEntryTBR> = mutableListOf()
+    /**
+     * Guards read-modify-write. The store makes each write atomic on its own, which is not the same
+     * thing: two threads adding a bolus at once would both read the same list, and one of the two
+     * would be written over. The old version had no lock at all on the mutation path.
+     */
+    private val lock = AapsLock()
 
-    private var storageInitialized: Boolean = false
-    private var xstream: XStream = XStream()
+    private val json = Json { ignoreUnknownKeys = true }
 
-    init {
-        initStorage()
-    }
+    /**
+     * A copy, not the stored list.
+     *
+     * Callers do mutate what they get back - `MedtronicHistoryData` removes the entry it has just
+     * matched - and on the old shared list that mutation silently skipped the store. Now the removal
+     * they make locally affects this pass only, and the durable one goes through
+     * [removeBolusWithTemporaryId] as it already did.
+     */
+    fun getBoluses(): MutableList<PumpDbEntryBolus> = lock.withLock { readBoluses() }
 
-    fun initStorage() {
-        if (storageInitialized)
-            return
+    fun getTBRs(): MutableList<PumpDbEntryTBR> = lock.withLock { readTbrs() }
 
-        xstream.addPermission(AnyTypePermission.ANY)
-
-        preferences.getIfExists(StringKey.PumpCommonBolusStorage)?.let { jsonData ->
-            if (jsonData.isNotBlank()) {
-                @Suppress("UNCHECKED_CAST")
-                pumpSyncStorageBolus = try {
-                    xstream.fromXML(jsonData, MutableList::class.java) as MutableList<PumpDbEntryBolus>
-                } catch (_: Exception) {
-                    mutableListOf()
-                }
-
-                aapsLogger.debug(LTag.PUMP, "Loading Pump Sync Storage Bolus: boluses=${pumpSyncStorageBolus.size}")
-                aapsLogger.debug(LTag.PUMP, "DD: PumpSyncStorageBolus=$pumpSyncStorageBolus")
-            }
+    private fun readBoluses(): MutableList<PumpDbEntryBolus> =
+        decode(StringNonKey.PumpCommonBolusStorage) { text ->
+            json.decodeFromString<List<StoredBolus>>(text).map { it.toEntry() }
         }
 
-        preferences.getIfExists(StringKey.PumpCommonTbrStorage)?.let { jsonData ->
-            if (jsonData.isNotBlank()) {
-                @Suppress("UNCHECKED_CAST")
-                pumpSyncStorageTBR = try {
-                    xstream.fromXML(jsonData, MutableList::class.java) as MutableList<PumpDbEntryTBR>
-                } catch (_: Exception) {
-                    mutableListOf()
-                }
-
-                aapsLogger.debug(LTag.PUMP, "Loading Pump Sync Storage: tbrs=${pumpSyncStorageTBR.size}.")
-                aapsLogger.debug(LTag.PUMP, "DD: PumpSyncStorageTBR=$pumpSyncStorageTBR")
-            }
+    private fun readTbrs(): MutableList<PumpDbEntryTBR> =
+        decode(StringNonKey.PumpCommonTbrStorage) { text ->
+            json.decodeFromString<List<StoredTbr>>(text).map { it.toEntry() }
         }
-        storageInitialized = true
+
+    /**
+     * Never throws. Unreadable stored data costs the pairing of whatever was already in flight, which
+     * is what a fresh install has anyway; throwing would take the pump driver down with it.
+     */
+    private fun <T> decode(key: StringNonKey, parse: (String) -> List<T>): MutableList<T> {
+        val text = preferences.getIfExists(key)
+        if (text.isNullOrBlank()) return mutableListOf()
+        return runCatching { parse(text).toMutableList() }
+            .getOrElse { error ->
+                aapsLogger.error(LTag.PUMP, "Unreadable ${key.key}, starting empty: $error")
+                mutableListOf()
+            }
     }
 
-    fun saveStorageBolus() {
-        if (pumpSyncStorageBolus.isNotEmpty()) {
-            preferences.put(StringKey.PumpCommonBolusStorage, xstream.toXML(pumpSyncStorageBolus))
-            aapsLogger.debug(LTag.PUMP, "Saving Pump Sync Storage: boluses=${pumpSyncStorageBolus.size}")
-        } else preferences.remove(StringKey.PumpCommonBolusStorage)
+    private fun writeBoluses(entries: List<PumpDbEntryBolus>) {
+        if (entries.isEmpty()) preferences.remove(StringNonKey.PumpCommonBolusStorage)
+        else preferences.put(StringNonKey.PumpCommonBolusStorage, json.encodeToString(entries.map { it.toStored() }))
+        aapsLogger.debug(LTag.PUMP, "Pump sync storage: boluses=${entries.size}")
     }
 
-    fun saveStorageTBR() {
-        if (pumpSyncStorageTBR.isNotEmpty()) {
-            preferences.put(StringKey.PumpCommonTbrStorage, xstream.toXML(pumpSyncStorageTBR))
-            aapsLogger.debug(LTag.PUMP, "Saving Pump Sync Storage: tbr=${pumpSyncStorageTBR.size}")
-        } else preferences.remove(StringKey.PumpCommonTbrStorage)
-    }
-
-    fun getBoluses(): MutableList<PumpDbEntryBolus> {
-        return pumpSyncStorageBolus
-    }
-
-    fun getTBRs(): MutableList<PumpDbEntryTBR> {
-        return pumpSyncStorageTBR
+    private fun writeTbrs(entries: List<PumpDbEntryTBR>) {
+        if (entries.isEmpty()) preferences.remove(StringNonKey.PumpCommonTbrStorage)
+        else preferences.put(StringNonKey.PumpCommonTbrStorage, json.encodeToString(entries.map { it.toStored() }))
+        aapsLogger.debug(LTag.PUMP, "Pump sync storage: tbrs=${entries.size}")
     }
 
     fun addBolusWithTempId(detailedBolusInfo: DetailedBolusInfo, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator): Boolean {
         val temporaryId = creator.generateTempId(detailedBolusInfo.timestamp)
-        val result = pumpSync.addBolusWithTempId(
-            detailedBolusInfo.timestamp,
-            detailedBolusInfo.insulin,
-            temporaryId,
-            detailedBolusInfo.bolusType,
-            creator.model(),
-            creator.serialNumber()
-        )
+        val result = runBlocking {
+            pumpSync.addBolusWithTempId(
+                detailedBolusInfo.timestamp,
+                amount = PumpInsulin(detailedBolusInfo.insulin),
+                temporaryId,
+                detailedBolusInfo.bolusType,
+                creator.model(),
+                creator.serialNumber()
+            )
+        }
 
         aapsLogger.debug(
             LTag.PUMP, "addBolusWithTempId [date=${detailedBolusInfo.timestamp}, temporaryId=$temporaryId, " +
@@ -121,20 +130,21 @@ class PumpSyncStorage @Inject constructor(
 
             aapsLogger.debug("PumpDbEntryBolus: $dbEntry")
 
-            pumpSyncStorageBolus.add(dbEntry)
-            saveStorageBolus()
+            lock.withLock { writeBoluses(readBoluses().apply { add(dbEntry) }) }
         }
         return result
     }
 
     fun addCarbs(carbsDto: PumpDbEntryCarbs) {
-        val result = pumpSync.syncCarbsWithTimestamp(
-            carbsDto.date,
-            carbsDto.carbs,
-            null,
-            carbsDto.pumpType,
-            carbsDto.serialNumber
-        )
+        val result = runBlocking {
+            pumpSync.syncCarbsWithTimestamp(
+                carbsDto.date,
+                carbsDto.carbs,
+                null,
+                carbsDto.pumpType,
+                carbsDto.serialNumber
+            )
+        }
 
         aapsLogger.debug(
             LTag.PUMP, "syncCarbsWithTimestamp [date=${carbsDto.date}, " +
@@ -146,16 +156,18 @@ class PumpSyncStorage @Inject constructor(
         val timeNow: Long = System.currentTimeMillis()
         val temporaryId = creator.generateTempId(timeNow)
 
-        val response = pumpSync.addTemporaryBasalWithTempId(
-            timeNow,
-            temporaryBasal.rate,
-            (temporaryBasal.durationInSeconds * 1000L),
-            temporaryBasal.isAbsolute,
-            temporaryId,
-            temporaryBasal.tbrType,
-            creator.model(),
-            creator.serialNumber()
-        )
+        val response = runBlocking {
+            pumpSync.addTemporaryBasalWithTempId(
+                timeNow,
+                PumpRate(temporaryBasal.rate),
+                (temporaryBasal.durationInSeconds * 1000L),
+                temporaryBasal.isAbsolute,
+                temporaryId,
+                temporaryBasal.tbrType,
+                creator.model(),
+                creator.serialNumber()
+            )
+        }
 
         if (response && writeToInternalHistory) {
             val dbEntry = PumpDbEntryTBR(
@@ -169,43 +181,73 @@ class PumpSyncStorage @Inject constructor(
 
             aapsLogger.debug("PumpDbEntryTBR: $dbEntry")
 
-            pumpSyncStorageTBR.add(dbEntry)
-            saveStorageTBR()
+            lock.withLock { writeTbrs(readTbrs().apply { add(dbEntry) }) }
         }
 
         return response
     }
 
-    fun removeBolusWithTemporaryId(temporaryId: Long) {
-        var dbEntry: PumpDbEntryBolus? = null
-
-        for (pumpDbEntry in pumpSyncStorageBolus) {
-            if (pumpDbEntry.temporaryId == temporaryId) {
-                dbEntry = pumpDbEntry
-            }
-        }
-
-        if (dbEntry != null) {
-            pumpSyncStorageBolus.remove(dbEntry)
-        }
-
-        saveStorageBolus()
+    fun removeBolusWithTemporaryId(temporaryId: Long) = lock.withLock {
+        val remaining = readBoluses().filterNot { it.temporaryId == temporaryId }
+        writeBoluses(remaining)
     }
 
-    fun removeTemporaryBasalWithTemporaryId(temporaryId: Long) {
-        var dbEntry: PumpDbEntryTBR? = null
-
-        for (pumpDbEntry in pumpSyncStorageTBR) {
-            if (pumpDbEntry.temporaryId == temporaryId) {
-                dbEntry = pumpDbEntry
-            }
-        }
-
-        if (dbEntry != null) {
-            pumpSyncStorageTBR.remove(dbEntry)
-        }
-
-        saveStorageTBR()
+    fun removeTemporaryBasalWithTemporaryId(temporaryId: Long) = lock.withLock {
+        val remaining = readTbrs().filterNot { it.temporaryId == temporaryId }
+        writeTbrs(remaining)
     }
-
 }
+
+/**
+ * The stored shape, separate from [PumpDbEntryBolus] itself.
+ *
+ * Same reason `DetailedBolusInfoStorageImpl` keeps a `StoredBolusInfo`: kotlinx only serializes types
+ * it owns, and the three enums here belong to other modules. Holding them by `name` also means a value
+ * that no longer exists is one unreadable entry rather than a parse failure for the whole list.
+ */
+@Serializable
+private data class StoredBolus(
+    val temporaryId: Long,
+    val date: Long,
+    val pumpType: String,
+    val serialNumber: String,
+    val pumpId: Long? = null,
+    val insulin: Double,
+    val carbs: Double,
+    val bolusType: String
+)
+
+@Serializable
+private data class StoredTbr(
+    val temporaryId: Long,
+    val date: Long,
+    val pumpType: String,
+    val serialNumber: String,
+    val pumpId: Long? = null,
+    val rate: Double,
+    val isAbsolute: Boolean,
+    val durationInSeconds: Int,
+    val tbrType: String
+)
+
+private fun PumpDbEntryBolus.toStored() = StoredBolus(
+    temporaryId = temporaryId, date = date, pumpType = pumpType.name, serialNumber = serialNumber,
+    pumpId = pumpId, insulin = insulin, carbs = carbs, bolusType = bolusType.name
+)
+
+private fun StoredBolus.toEntry() = PumpDbEntryBolus(
+    temporaryId = temporaryId, date = date, pumpType = PumpType.valueOf(pumpType), serialNumber = serialNumber,
+    pumpId = pumpId, insulin = insulin, carbs = carbs, bolusType = BS.Type.valueOf(bolusType)
+)
+
+private fun PumpDbEntryTBR.toStored() = StoredTbr(
+    temporaryId = temporaryId, date = date, pumpType = pumpType.name, serialNumber = serialNumber,
+    pumpId = pumpId, rate = rate, isAbsolute = isAbsolute, durationInSeconds = durationInSeconds,
+    tbrType = tbrType.name
+)
+
+private fun StoredTbr.toEntry() = PumpDbEntryTBR(
+    temporaryId = temporaryId, date = date, pumpType = PumpType.valueOf(pumpType), serialNumber = serialNumber,
+    pumpId = pumpId, rate = rate, isAbsolute = isAbsolute, durationInSeconds = durationInSeconds,
+    tbrType = PumpSync.TemporaryBasalType.valueOf(tbrType)
+)

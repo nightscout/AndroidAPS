@@ -225,7 +225,7 @@ class ByteBuf(length: Int) {
 
     private fun getUTF16(position: Int, stringLength: Int): String {
         val string = String(getBytes(position, stringLength * 2 + 2), StandardCharsets.UTF_16LE)
-        return string.substring(0, string.indexOf(String(charArrayOf(0.toChar(), 0.toChar()))))
+        return string.substring(0, string.indexOf(String(charArrayOf(Char(0), Char(0)))))
     }
 
     //private String getUTF16(int stringLength) { return getUTF16(0, stringLength); }
@@ -242,7 +242,7 @@ class ByteBuf(length: Int) {
 
     private fun getASCII(position: Int, stringLength: Int): String {
         val string = String(getBytes(position, stringLength + 1), StandardCharsets.US_ASCII)
-        return string.substring(0, string.indexOf(0.toChar()))
+        return string.substring(0, string.indexOf(Char(0)))
     }
 
     //private String getASCII(int stringLength) { return getASCII(0, stringLength); }

@@ -190,6 +190,8 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 
+    <color name="userOption">#66BB6A</color>
+
     <!-- Wizard Result Colors -->
     <color name="insulin_positive">#66BB6A</color>
     <color name="insulin_negative">#EF5350</color>

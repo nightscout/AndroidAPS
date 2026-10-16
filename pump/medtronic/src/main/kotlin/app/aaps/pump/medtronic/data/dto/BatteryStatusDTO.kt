@@ -1,8 +1,8 @@
 package app.aaps.pump.medtronic.data.dto
 
-import com.google.gson.annotations.Expose
 import app.aaps.pump.medtronic.defs.BatteryType
-import java.util.*
+import com.google.gson.annotations.Expose
+import java.util.Locale
 
 /**
  * Created by andy on 6/14/18.

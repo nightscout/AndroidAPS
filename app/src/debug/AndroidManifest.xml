@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- LeakCanary (debug only) still declares the legacy storage permissions.
+         The app uses scoped storage / SAF (minSdk 31), so remove them.
+         These rules live in the debug source set because no library in a release
+         build declares them, and a removal with nothing to remove is a warning. -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:node="remove" />
+
+</manifest>

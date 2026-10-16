@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_calibration_name">ללא כיול</string>
+    <string name="description_no_calibration">"לא מוחל תיקון כיול. ערכי החיישן משמשים כפי שהם. השתמשו באפשרות זו כאשר החיישן כבר מכויל מהמפעל ומדויק."</string>
+    <string name="linear_calibration_name">כיול ליניארי</string>
+    <string name="description_linear_calibration">"תיקון כיול ליניארי לכל חיישן בנפרד (שיפוע והיסט), המחושב לפי מדידות גלוקוז ממדידות אצבע. למדידות האחרונות ניתן משקל גבוה יותר. התיקון מוחל לאחר תחילת החיישן הנוכחי; השעתיים הראשונות אינן נכללות בגלל זמן החימום."</string>
+    <string name="sensor_change_detected_text">ייתכן שזוהתה החלפת חיישן ב־%1$s. לסמן כחיישן חדש?</string>
+    <string name="sensor_change_detected_action">רישום החלפת חיישן</string>
+    <!-- Calibration management screen -->
+    <string name="cal_status_no_session">יש לרשום החלפת חיישן כדי להפעיל כיול.</string>
+    <string name="cal_status_warmup">החיישן בזמן חימום — הכיול יופעל לאחר %1$s.</string>
+    <string name="cal_status_need_more_entries">נדרשות לפחות 2 מדידות אצבע (כרגע יש %1$d).</string>
+    <string name="cal_status_unsafe_fit">תוצאת ההתאמה מחוץ לטווח הבטוח — הכיול לא הוחל.</string>
+    <string name="cal_status_applied">הכיול הוחל.</string>
+    <string name="cal_status_applied_offset_only">הוחל כיול היסט בלבד — טווח החיישן צר מדי לחישוב שיפוע.</string>
+    <string name="cal_status_applied_slope_clamped">הכיול הוחל — השיפוע הוגבל לטווח בטוח. הוסיפו מדידות נוספות כדי לאפשר התאמה רחבה יותר.</string>
+    <string name="cal_slope_offset">שיפוע %1$.2f, תיקון טווח אמצע %2$s</string>
+    <string name="cal_session_started">הפעלת החיישן: %1$s</string>
+    <string name="cal_mark_sensor_change_now">רישום החלפת חיישן</string>
+    <string name="cal_add_calibration">הוספת כיול</string>
+    <string name="cal_entries_header">מדידות אצבע (%1$d)</string>
+    <string name="cal_no_entries">עדיין לא הוזנו מדידות אצבע.</string>
+    <string name="cal_entry_pair">מדידת אצבע %1$s ← חיישן %2$s (Δ %3$s)</string>
+    <string name="cal_remove_entry_title">להסיר את המדידה?</string>
+    <string name="cal_remove_entry_message">המדידה תסומן כלא תקפה והכיול יחושב מחדש.</string>
+    <string name="cal_chart_entry_readout">מדידה %1$d/%2$d · %3$s · חיישן %4$s ← גלוקוז %5$s</string>
+</resources>

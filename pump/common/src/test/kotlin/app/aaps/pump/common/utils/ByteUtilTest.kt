@@ -88,17 +88,16 @@ internal class ByteUtilTest {
         assertThat(ByteUtil.compare(byteArrayOf(0x02, 0x01), byteArrayOf(0x01, 0x02))).isEqualTo(1)
     }
 
-    @Suppress("RemoveRedundantCallsOfConversionMethods")
     @Test
     fun toInt() {
-        assertThat(ByteUtil.toInt(0x01.toInt(), 0x02.toInt(), 0x03.toInt(), 0x04.toInt(), ByteUtil.BitConversion.LITTLE_ENDIAN)).isEqualTo(0x04030201)
-        assertThat(ByteUtil.toInt(0x01.toInt(), 0x02.toInt(), 0x03.toInt(), null, ByteUtil.BitConversion.LITTLE_ENDIAN)).isEqualTo(0x030201)
-        assertThat(ByteUtil.toInt(0x01.toInt(), 0x02.toInt(), null, null, ByteUtil.BitConversion.LITTLE_ENDIAN)).isEqualTo(0x0201)
-        assertThat(ByteUtil.toInt(0x01.toInt(), null, null, null, ByteUtil.BitConversion.LITTLE_ENDIAN)).isEqualTo(0x01)
-        assertThat(ByteUtil.toInt(0x01.toInt(), 0x02.toInt(), 0x03.toInt(), 0x04.toInt(), ByteUtil.BitConversion.BIG_ENDIAN)).isEqualTo(0x01020304)
-        assertThat(ByteUtil.toInt(0x01.toInt(), 0x02.toInt(), 0x03.toInt(), null, ByteUtil.BitConversion.BIG_ENDIAN)).isEqualTo(0x010203)
-        assertThat(ByteUtil.toInt(0x01.toInt(), 0x02.toInt(), null, null, ByteUtil.BitConversion.BIG_ENDIAN)).isEqualTo(0x0102)
-        assertThat(ByteUtil.toInt(0x01.toInt(), null, null, null, ByteUtil.BitConversion.BIG_ENDIAN)).isEqualTo(0x01)
+        assertThat(ByteUtil.toInt(0x01, 0x02, 0x03, 0x04, ByteUtil.BitConversion.LITTLE_ENDIAN)).isEqualTo(0x04030201)
+        assertThat(ByteUtil.toInt(0x01, 0x02, 0x03, null, ByteUtil.BitConversion.LITTLE_ENDIAN)).isEqualTo(0x030201)
+        assertThat(ByteUtil.toInt(0x01, 0x02, null, null, ByteUtil.BitConversion.LITTLE_ENDIAN)).isEqualTo(0x0201)
+        assertThat(ByteUtil.toInt(0x01, null, null, null, ByteUtil.BitConversion.LITTLE_ENDIAN)).isEqualTo(0x01)
+        assertThat(ByteUtil.toInt(0x01, 0x02, 0x03, 0x04, ByteUtil.BitConversion.BIG_ENDIAN)).isEqualTo(0x01020304)
+        assertThat(ByteUtil.toInt(0x01, 0x02, 0x03, null, ByteUtil.BitConversion.BIG_ENDIAN)).isEqualTo(0x010203)
+        assertThat(ByteUtil.toInt(0x01, 0x02, null, null, ByteUtil.BitConversion.BIG_ENDIAN)).isEqualTo(0x0102)
+        assertThat(ByteUtil.toInt(0x01, null, null, null, ByteUtil.BitConversion.BIG_ENDIAN)).isEqualTo(0x01)
 
         assertThat(ByteUtil.toInt(0x01.toByte(), 0x02.toByte(), 0x03.toByte(), 0x04.toByte(), ByteUtil.BitConversion.LITTLE_ENDIAN)).isEqualTo(0x04030201)
         assertThat(ByteUtil.toInt(0x01.toByte(), 0x02.toByte(), 0x03.toByte(), null, ByteUtil.BitConversion.LITTLE_ENDIAN)).isEqualTo(0x030201)
@@ -109,11 +108,11 @@ internal class ByteUtilTest {
         assertThat(ByteUtil.toInt(0x01.toByte(), 0x02.toByte(), null, null, ByteUtil.BitConversion.BIG_ENDIAN)).isEqualTo(0x0102)
         assertThat(ByteUtil.toInt(0x01.toByte(), null, null, null, ByteUtil.BitConversion.BIG_ENDIAN)).isEqualTo(0x01)
 
-        assertThat(ByteUtil.toInt(0x01.toInt(), 0x02.toInt())).isEqualTo(0x0102)
-        assertThat(ByteUtil.toInt(0x01.toInt(), 0x02.toInt(), ByteUtil.BitConversion.BIG_ENDIAN)).isEqualTo(0x0102)
+        assertThat(ByteUtil.toInt(0x01, 0x02)).isEqualTo(0x0102)
+        assertThat(ByteUtil.toInt(0x01, 0x02, ByteUtil.BitConversion.BIG_ENDIAN)).isEqualTo(0x0102)
         assertThat(ByteUtil.toInt(0x01.toByte(), 0x02.toByte())).isEqualTo(0x0102)
         assertThat(ByteUtil.toInt(0x01.toByte(), 0x02.toByte(), 0x03.toByte())).isEqualTo(0x010203)
-        assertThat(ByteUtil.toInt(0x01.toInt(), 0x02.toInt(), 0x03.toInt())).isEqualTo(0x010203)
+        assertThat(ByteUtil.toInt(0x01, 0x02, 0x03)).isEqualTo(0x010203)
     }
 
     @Test

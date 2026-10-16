@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_oref1">Ευαισθησία Oref1</string>
+    <string name="sensitivity_aaps">Ευαισθησία AAPS</string>
+    <string name="sensitivity_weighted_average">Ευαισθησία WeightedAverage</string>
+    <string name="description_sensitivity_aaps">Η ευαισθησία υπολογίζεται με τον ίδιο τρόπο όπως το Oref0, αλλά μπορείτε να καθορίσετε το χρονικό διάστημα στο παρελθόν. Η ελάχιστη απορρόφηση υδατανθράκων υπολογίζεται από την μέγιστη απορρόφηση υδατανθράκων από τις επιλογές.</string>
+    <string name="description_sensitivity_oref1">Η ευαισθησία υπολογίζεται από 8h δεδομένα στο παρελθόν και οι υδατάνθρακες (αν δεν έχουν απορροφηθεί) κόβονται μετά από χρονικό διάστημα που καθορίζεται στις επιλογές. Η προσθήκη υπολογίζει ακόμα το UAM.</string>
+    <string name="description_sensitivity_weighted_average">Η ευαισθησία υπολογίζεται ως ο σταθμισμένος μέσος όρος των αποκλίσεων. Νεότερες αποκλίσεις έχουν μεγαλύτερο βάρος. Η ελάχιστη απορρόφηση υδατανθράκων υπολογίζεται από τον χρόνο της μέγιστης απορρόφησης υδατανθράκων από τις επιλογές. Αυτός ο αλγόριθμος είναι ο πιο γρήγορος για να ακολουθεί τις αλλαγές της ευαισθησίας.</string>
+    <string name="uam_disabled_oref1_not_selected">Το UAM απενεργοποιήθηκε επειδή είναι ενεργοποιημένο στην προσθήκη ευαισθησία στο Oref1</string>
+    <string name="absorption_settings_title">Ρύθμιση απορρόφησης</string>
+</resources>

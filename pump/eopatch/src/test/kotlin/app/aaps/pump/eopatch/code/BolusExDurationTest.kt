@@ -2,7 +2,7 @@ package app.aaps.pump.eopatch.code
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.minutes
 
 class BolusExDurationTest {
 
@@ -24,9 +24,9 @@ class BolusExDurationTest {
 
     @Test
     fun `milli should convert minutes to milliseconds correctly`() {
-        assertThat(BolusExDuration.MINUTE_30.milli()).isEqualTo(TimeUnit.MINUTES.toMillis(30))
-        assertThat(BolusExDuration.MINUTE_60.milli()).isEqualTo(TimeUnit.MINUTES.toMillis(60))
-        assertThat(BolusExDuration.MINUTE_120.milli()).isEqualTo(TimeUnit.MINUTES.toMillis(120))
+        assertThat(BolusExDuration.MINUTE_30.milli()).isEqualTo(30.minutes.inWholeMilliseconds)
+        assertThat(BolusExDuration.MINUTE_60.milli()).isEqualTo(60.minutes.inWholeMilliseconds)
+        assertThat(BolusExDuration.MINUTE_120.milli()).isEqualTo(120.minutes.inWholeMilliseconds)
         assertThat(BolusExDuration.OFF.milli()).isEqualTo(0)
     }
 

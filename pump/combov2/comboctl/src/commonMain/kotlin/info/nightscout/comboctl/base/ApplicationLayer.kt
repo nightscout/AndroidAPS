@@ -1,5 +1,6 @@
 package info.nightscout.comboctl.base
 
+import info.nightscout.comboctl.base.ApplicationLayer.MAX_VALID_PAYLOAD_SIZE
 import info.nightscout.comboctl.base.ApplicationLayer.createCMDDeliverBolusPacket
 import info.nightscout.comboctl.base.ApplicationLayer.createCMDReadHistoryBlockPacket
 import info.nightscout.comboctl.base.ApplicationLayer.parseCMDReadHistoryBlockResponsePacket
@@ -1350,6 +1351,11 @@ object ApplicationLayer {
                 "historyGap: $historyGap  " +
                 "number of events: $numEvents"
         }
+
+        // The oldest events were lost before we could read them. Log this at a level
+        // that is kept in the logs, so a report of missing boluses can be checked later.
+        if (historyGap)
+            logger(LogLevel.WARN) { "History gap: the pump overwrote its oldest history events before they were read" }
 
         val events = mutableListOf<CMDHistoryEvent>()
         for (eventIndex in 0 until numEvents) {
