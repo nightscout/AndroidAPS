@@ -121,6 +121,9 @@
     <string name="invalid_profile">無效的設定檔！</string>
     <string name="no_profile_set">未設置設定檔</string>
     <string name="profile_switch_no_insulin">無法切換設定檔：目前沒有使用中的胰島素，且也未選取任何胰島素。</string>
+    <string name="scene_no_profile_before">場景開始前，未啟用任何設定檔。</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">場景 %1$s 已結束，但其設定檔仍在使用中。%2$s 請手動啟用設定檔。</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">此為暫時切換使用的胰島素為 %1$s，但其下方的永久設定檔使用的胰島素為 %2$s。請先前往「胰島素」設定，啟用目前幫浦中使用的胰島素。</string>
     <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">設定檔切換時間必須在距現在 %1$d 小時以內。</string>
     <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">臨時目標必須在距現在 %1$d 小時以內開始。</string>
     <string name="profile_switch_select_insulin_hint">目前尚未啟用任何胰島素。請選取你正在使用的胰島素，讓這次設定檔切換能記錄該胰島素。</string>
@@ -197,6 +200,8 @@
     <string name="a11y_arrow_unknown">未知</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">將 %1$s 減少 %2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">將 %1$s 增加 %2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">開啟 %1$s 輸入</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">關閉 %1$s</string>
     <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">上移</string>
     <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">下移</string>
     <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">第 %1$d 步，共 %2$d 步</string>
