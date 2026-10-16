@@ -5,7 +5,6 @@ import app.aaps.pump.medtronic.comm.message.MessageBody
 import app.aaps.pump.medtronic.comm.message.PumpAckMessageBody
 import app.aaps.pump.medtronic.comm.message.UnknownMessageBody
 import app.aaps.pump.medtronic.defs.MedtronicDeviceType.Companion.isSameDevice
-import java.util.*
 
 /**
  * Taken from GNU Gluco Control diabetes management software (ggc.sourceforge.net)

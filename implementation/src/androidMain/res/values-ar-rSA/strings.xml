@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--       Stats -->
+    <!--    PumpStatusGenerator-->
+    <!--    Permissions-->
+    <!--    Notification channels, shown in the Android settings-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Scene wizard: template picker intro -->
+    <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <!-- Sleep: no default actions — 8h -->
+    <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <!-- Driving: TT 108 (Hypo) — 1h -->
+    <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <!-- Hot Weather: Profile 85% — 8h -->
+    <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <!-- Blank: no actions — 1h -->
+    <!-- Scene wizard: action step education -->
+    <!-- Scene wizard: UI labels -->
+    <!-- Scene wizard: chain step -->
+    <!-- Scene list: chain indicator -->
+    <!-- Scene expiry: chain result notifications -->
+</resources>

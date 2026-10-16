@@ -6,7 +6,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.command.base.builder.NonceEnab
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
 import app.aaps.pump.omnipod.common.bledriver.pod.util.AlertUtil
 import java.nio.ByteBuffer
-import java.util.*
+import java.util.EnumSet
 
 class SilenceAlertsCommand private constructor(
     uniqueId: Int,

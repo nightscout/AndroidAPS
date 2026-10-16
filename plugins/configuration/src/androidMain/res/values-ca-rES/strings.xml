@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="units">Unitats</string>
+    <string name="setupwizard_units_prompt">Seleccioneu en quines unitats voleu mostrar els valors</string>
+    <string name="next_button">Següent</string>
+    <string name="previous_button">Previ</string>
+    <string name="setupwizard_finish">FINALITZAR</string>
+    <string name="welcometosetupwizard">Benvinguts a l\'assistent de configuració. Us guiarà durant tot el procés\n</string>
+    <string name="end_user_license_agreement">Acord de llicència per a l\'usuari final</string>
+    <string name="end_user_license_agreement_text">NO S\'HA D\'UTILITZAR PER A PRENDRE DECISIONS MÈDIQUES. EL PROGRAMA NO TÉ GARANTIA, EN LA MESURA QUE HO PERMET LA LLEI APLICABLE. EXCEPTE QUAN S\'INDIQUI EL CONTRARI PER ESCRIT, ELS PROPIETARIS DEL COPYRIGHT I/O ALTRES PARTS PROPORCIONEN EL PROGRAMA \"TAL QUAL\" SENSE CAP MENA DE GARANTIA, NI IMPLÍCITA NI EXPLÍCITA, INCLOENT, PERÒ SENSE ESTAR LIMITADES A, LES GARANTIES IMPLÍCITES DE COMERCIALITZACIÓ I ADEQUACIÓ A UN OBJECTIU PARTICULAR. US FEU RESPONSABLES TOTALMENT DELS RISCOS EN QUANT A LA QUALITAT I EL RENDIMENT DEL PROGRAMA. SI EL PROGRAMA FOS DEFECTUÓS, VOSALTRES ASSUMIU EL COST DE TOT SERVEI, REPARACIÓ O CORRECCIÓ.</string>
+    <string name="end_user_license_agreement_i_understand">ENTENC I ACCEPTO</string>
+    <string name="display_settings">Configuració pantalla</string>
+    <string name="low_mark">Límit BAIX</string>
+    <string name="high_mark">Límit ALT</string>
+    <string name="low_mark_comment">Valor inferior de l\'area \"en rang\" (només visualització)</string>
+    <string name="high_mark_comment">Valor superior de l\'area \"en rang\" (només visualització)</string>
+    <string name="storedsettingsfound">Trobada configuració emmagatzemada</string>
+    <string name="master_password_summary">La clau mestra es fa servir per encriptar la còpia de seguretat i per editar la seguretat a l\'aplicació. Recordeu-la o emmagatzemeu-la en un lloc segur.</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">Utilitzeu valors del vostre àpat més gros habitualment\n</string>
+    <string name="diawarning">Si us plau recordeu: els nous perfils d\'insulina requereixen una DIA de al menys 5h. Una DIA de 5-6h a un perfil nou és equivalent a DIA de 3h d\'un perfil antic.</string>
+    <string name="profile">Perfil</string>
+    <string name="doprofileswitch">Canviar de perfil</string>
+    <string name="exitwizard">Ometre assistent de configuració</string>
+    <string name="setupwizard_sensitivity_description">El plugin de sensibilitat s\'utilitza per detectar la sensibilitat i calcular els COB. Per més informació:</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureu el vostre RileyLink a continuació. Un cop seleccionat, serà possible continuar configurant-lo un cop l\'estatus del RileyLink sigui \"Connectat\". Pot trigar un minut.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Podeu continuar amb la configuració un cop la bomba estigui configurada.\n</string>
+    <string name="startobjective">Iniciar primer objectiu</string>
+    <string name="setupwizard_pump_riley_link_status">Estat RileyLink:</string>
+    <string name="readstatus">Estat lectura</string>
+    <!-- Provider-agnostic cloud export/import strings -->
+    <string name="alert_dialog_permission_battery_optimization_failed">Sembla que aquest dispositiu no permet optimitzar la bateria amb llistes blanques, això pot provocar problemes de rendiment.</string>
+    <!--    ConfigBuilder-->
+    <string name="configbuilder_aps_description">Quin algoritme APS ha d\'anar fent ajustos de teràpia?</string>
+    <string name="configbuilder_sensitivity_description">Quin algoritme de sensibilitat voleu utilitzar?</string>
+    <!--ImportExport-->
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
+    <!-- export_to moved to core:ui -->
+    <!-- master_password_missing moved to core:ui -->
+    <!-- Maintenance -->
+    <!-- Maintenance -->
+    <!-- maintenance_email moved to core:keys module -->
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
+</resources>

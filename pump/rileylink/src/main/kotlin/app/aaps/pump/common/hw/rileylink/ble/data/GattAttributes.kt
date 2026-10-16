@@ -1,6 +1,5 @@
 package app.aaps.pump.common.hw.rileylink.ble.data
 
-import java.util.HashMap
 import java.util.UUID
 
 /**

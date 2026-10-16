@@ -5,14 +5,16 @@ package app.aaps.pump.eopatch
 import android.os.SystemClock
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class RxAction @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class RxAction(
     private val aapsSchedulers: AapsSchedulers,
     private val aapsLogger: AAPSLogger
 ) {

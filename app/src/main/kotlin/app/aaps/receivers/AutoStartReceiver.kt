@@ -4,11 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
-import app.aaps.plugins.main.general.persistentNotification.DummyServiceHelper
-import dagger.android.DaggerBroadcastReceiver
-import javax.inject.Inject
+import app.aaps.core.objects.workflow.MetroBroadcastReceiver
+import app.aaps.persistentNotification.DummyServiceHelper
+import dev.zacsweers.metro.Inject
 
-class AutoStartReceiver : DaggerBroadcastReceiver() {
+class AutoStartReceiver : MetroBroadcastReceiver() {
 
     @Inject lateinit var dummyServiceHelper: DummyServiceHelper
 
@@ -18,9 +18,16 @@ class AutoStartReceiver : DaggerBroadcastReceiver() {
         processIntent(context, intent)
     }
 
+    /**
+     * Starts DummyService after a boot and after an update of AAPS.
+     *
+     * After an update nothing else would start the process until a CGM broadcast, a job or the user
+     * opens the app, and the loop does not run until then. Both broadcasts are on Android's list of
+     * moments when an app may start a foreground service from the background.
+     */
     @VisibleForTesting
     fun processIntent(context: Context, intent: Intent) {
-        if (intent.action == Intent.ACTION_BOOT_COMPLETED)
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED || intent.action == Intent.ACTION_MY_PACKAGE_REPLACED)
             dummyServiceHelper.startService(context)
     }
 }

@@ -1,7 +1,7 @@
 package app.aaps.pump.eopatch.vo
 
 import app.aaps.pump.eopatch.AppConstant
-import java.util.*
+import java.util.Calendar
 import java.util.function.BiFunction
 
 abstract class SegmentsEntity<T : SegmentEntity<T>> {

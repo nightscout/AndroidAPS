@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="danar_history_glucose">Glükóz</string>
+    <string name="option_on">Be</string>
+    <string name="option_off">Ki</string>
+</resources>

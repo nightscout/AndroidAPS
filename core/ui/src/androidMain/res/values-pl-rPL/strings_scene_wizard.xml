@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">Wybierz od czego zacząć. Szablony wstępnie wypełniają zalecane działania w typowych sytuacjach - wszystko możesz dostosować w kolejnych krokach.</string>
+    <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">Ćwiczenia</string>
+    <string name="scene_wizard_exercise_desc">Podnieś cel, obniż profil do 70%, wyłącz SMB, aby zapobiec spadkom glikemii podczas ćwiczeń.</string>
+    <string name="scene_wizard_info_exercise">Podczas aktywności fizycznej mięśnie szybciej zużywają glukozę, a wrażliwość na insulinę wzrasta. Wcześniejsze podniesienie tymczasowego celu daje algorytmowi przewagę - zacznie on wcześniej ograniczać podawanie insuliny, tworząc bufor chroniący przed spadkami glikemii wywołanymi ćwiczeniami. Zaleca się również wyłączenie SMB, ponieważ bolusy korekcyjne podawane podczas ćwiczeń mogą powodować szybkie spadki glikemii. Aby uzyskać najlepsze wyniki, aktywuj ten scenariusz 1–2 godziny przed rozpoczęciem ćwiczeń, aby algorytm miał czas na obniżenie aktywnej insuliny (IOB).</string>
+    <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">Choroba</string>
+    <string name="scene_wizard_sick_day_desc">Silniejszy profil (150%) przy zwiększonej insulinooporności podczas choroby.</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">Choroba, gorączka i hormony stresu mogą znacznie zwiększyć insulinooporność - czasem nawet o 50% lub więcej. Silniejszy profil (np. 150%) informuje algorytm, aby podawał więcej insuliny we wszystkich obliczeniach - dawkach bazowych, sugestiach bolusa i współczynnikach korekcji. W kolejnych krokach możesz też dodać cel tymczasowy lub zmienić aktywny tryb pracy. Obserwuj uważnie i dostosowuj ustawienia w miarę, jak Twój organizm dochodzi do siebie.</string>
+    <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">Choroba — wymioty</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">Obniżony profil z LGS - przeciwieństwo typowego profilu na Chorobę, gdy nie możesz wchłaniać jedzenia.</string>
+    <string name="scene_wizard_info_sick_day_vomiting">Gdy nie możesz utrzymać jedzenia w żołądku, standardowe podejście na dni choroby - polegające na zwiększaniu insuliny - może być niebezpieczne. Wymioty oznaczają, że węglowodany nie są wchłaniane, więc glikemia może spaść zamiast wzrosnąć. Obniżony profil (60%) zmniejsza podaż insuliny, a tryb LGS dodaje dodatkowr zabezpieczenie, wstrzymując insulinę, gdy glikemia spada. Wyłączenie SMB zapobiega podawaniu dodatkowych bolusów. Monitoruj często - sprawdzaj glikemię co 1–2 godziny oraz ketony co 2–4 godziny. Zgłoś się po pomoc medyczną, jeśli wymioty utrzymują się dłużej niż kilka godzin lub ketony wzrosną powyżej 1,5 mmol/L.</string>
+    <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">Sen</string>
+    <string name="scene_wizard_sleep_desc">Węższy cel dla lepszej kontroli w nocy.</string>
+    <string name="scene_wizard_info_sleep">W nocy wiele osób doświadcza niewykrytych wysokich lub niskich wartości glikemii. Nieco ciaśniejszy cel podczas snu pozwala algorytmowi wprowadzać drobniejsze korekty przez całą noc. Dla najlepszych wyników połącz to z profilem odpowiadającym twojemu nocnemu zapotrzebowaniu bazowemu.</string>
+    <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">Noc po treningu</string>
+    <string name="scene_wizard_post_exercise_night_desc">Obniżony profil, wyższy cel, SMB wyłączone - chroni przed opóźnionymi nocnymi hipoglikemiami po ćwiczeniach.</string>
+    <string name="scene_wizard_info_post_exercise_night">Po wysiłku fizycznym mięśnie przez wiele godzin uzupełniają zapasy glikogenu, a wrażliwość na insulinę może pozostać podwyższona przez 24–48h, przy czym najwyższe ryzyko nocnej hipoglikemii występuje 6–12h po ćwiczeniach. Obniżony profil zmniejsza podawanie insuliny bazowej przez całą noc, wyższy tymczasowy cel daje algorytmowi margines bezpieczeństwa, a wyłączenie SMB zapobiega nadmiernym korektom krótkotrwałych wzrostów glikemii przez algorytm. Aktywuj tę scenę przed snem w dni ćwiczeń, szczególnie po dłuższych treningach lub gdy wykonywano nowe ćwiczenia. Trzymaj przy łóżku szybkie węglowodany i rozważ ustawienie alarmu na kontrolę w środku nocy.</string>
+    <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">Przed posiłkiem</string>
+    <string name="scene_wizard_pre_meal_desc">Obniż cel, aby wyprzedzić skok glikemii po posiłku.</string>
+    <string name="scene_wizard_info_pre_meal">Ustawienie niższego celu na 30–60 minut przed jedzeniem informuje algorytm, aby zaczął budować insulinę czynną (IOB), zanim dotrą węglowodany. Pomaga to złagodzić skok glikemii po posiłku, który występuje, gdy jedzenie trafia do krwiobiegu szybciej, niż insulina zdąży zadziałać. Najlepiej stosować, gdy wiesz, że wkrótce będziesz jeść.</string>
+    <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">Alkohol</string>
+    <string name="scene_wizard_alcohol_desc">Tryb LGS, obniżony profil, SMB wyłączone - chroni przed opóźnioną hipoglikemią po alkoholu.</string>
+    <string name="scene_wizard_info_alcohol">Alkohol jest szczególnie niebezpieczny i zdradliwy dla osób z cukrzycą typu 1. Wątroba w pierwszej kolejności przetwarza alkohol zamiast uwalniać glukozę, co może spowodować opóźnioną hipoglikemię 6–24 godziny później - często w nocy, gdy śpisz. Tryb LGS zapobiega kumulowaniu się insuliny, ograniczając podawanie tylko wtedy, gdy glukoza spada. Obniżony profil i wyłączone SMB dodatkowo ograniczają insulinę czynną (IOB). Zawsze sprawdź glikemię przed snem i rozważ ustawienie alarmu na kontrolę w środku nocy.</string>
+    <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">Prowadzenie pojazdu</string>
+    <string name="scene_wizard_driving_desc">Lekko wyższy cel, aby bezpiecznie prowadzić pojazd.</string>
+    <string name="scene_wizard_info_driving">Bezpieczna jazda wymaga stabilnej glikemii powyżej 90 mg/dL (5,0 mmol/L). W niektórych krajach kontrola glikemi przed i w trakcie długich podróży jest wymogiem prawnym. Nieco wyższy cel daje algorytmowi margines bezpieczeństwa - będzie dążył do utrzymania glikemii powyżej poziomu, przy którym zaczyna spadać koncentracja i czas reakcji. Jeśli podczas jazdy spadnie ci glikemia poniżej normy, natychmiast zjedź na pobocze, docukrz i zalecz hipo. Odczekaj co najmniej 45 minut od powrotu glikemii do normy, zanim ruszysz dalej.</string>
+    <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_template_bathing">Kąpiel</string>
+    <string name="scene_wizard_bathing_desc">Odłącz pompę na prysznic, pływanie, kąpiel lub jakąkolwiek aktywność w wodzie.</string>
+    <string name="scene_wizard_info_bathing">Gdy odłączysz pompę, dostarczanie insuliny zatrzymuje się całkowicie - bez insuliny bazowej, bez bolusów i bez korekt. Algorytm przechodzi w tryb odłączenia i przestaje wprowadzać zmiany. Jest to normalne przy krótkich czynnościach, takich jak prysznic, kąpiel czy pływanie. Gdy scena się zakończy, pompa połączy się ponownie, a algorytm wznowi działanie automatycznie. Odłączenia trzymaj krótko - bez insuliny bazowej glikemia zacznie rosnąć w ciągu 1–2 godzin.</string>
+    <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">Faza lutealna</string>
+    <string name="scene_wizard_luteal_phase_desc">Zwiększony profil, aby radzić sobie z insulinoopornością przed okresem.</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">Wiele kobiet doświadcza zwiększonej insulinooporności w fazie lutealnej (mniej więcej 1–2 tygodnie przed miesiączką). Jest to spowodowane wzrostem poziomu progesteronu, który zmniejsza wrażliwość na insulinę. Efekt jest bardzo zróżnicowany u różnych osób - u niektórych zapotrzebowanie na insulinę wzrasta o 10–30%, inni zauważają minimalne zmiany. Zacznij od ostrożnego zwiększenia (115%) i dostosuj je do własnych wzorców w ciągu kilku cykli. Śledzenie tego w Portalu Opieki (CarePortal) pomaga zidentyfikować twój osobisty rytm.</string>
+    <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">Upał</string>
+    <string name="scene_wizard_hot_weather_desc">Zmniejszony profil - ciepło przyspiesza wchłanianie insuliny.</string>
+    <string name="scene_wizard_info_hot_weather">Wysokie temperatury powodują rozszerzanie się naczyń krwionośnych, co przyspiesza wchłanianie insuliny - ta sama dawka działa szybciej i mocniej. Może to prowadzić do nieoczekiwanych spadków glikemii, zwłaszcza podczas aktywności na świeżym powietrzu. Umiarkowane obniżenie profilu (85%) kompensuje szybsze wchłanianie. Pij wystarczająco dużo płynów, częściej kontroluj glikemię i pamiętaj, że insulina przechowywana w ciepłej pompie lub wstrzykiwaczu (pen) może tracić swoje właściwości. Jeśli dodatkowo ćwiczysz w upale, rozważ połączenie tego z sceną ćwiczeń, aby zapewnić sobie dodatkowe zabezpieczenie.</string>
+    <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">Zabieg medyczny</string>
+    <string name="scene_wizard_medical_procedure_desc">Otwarta pętla z wyłączonym SMB podczas operacji lub zabiegów medycznych.</string>
+    <string name="scene_wizard_info_medical_procedure">Podczas operacji lub zabiegów medycznych znieczulenie i hormony stresu sprawiają, że glikemia staje się nieprzewidywalna. Zalecana jest otwarta pętla, ponieważ algorytm nie może wiarygodnie przewidzieć, jak organizm zareaguje w tych warunkach. Wyższy cel (150 mg/dL) zapewnia margines bezpieczeństwa przed hipoglikemią śródoperacyjną. Wyłączenie SMB zapobiega nieoczekiwanemu podaniu insuliny podczas zabiegu. Zawsze poinformuj personel medyczny, że nosisz pompę insulinową i CGM. Przy zabiegach trwających dłużej niż 3 godziny zespół może przełączyć cię na insulinę dożylnie.</string>
+    <!-- Blank: no actions — 1h -->
+    <string name="scene_template_blank">Pusta</string>
+    <string name="scene_wizard_blank_desc">Zacznij od zera, bez wstępnie wybranych działań.</string>
+    <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info" formatted="false">Przełączenie profilu zmienia jednocześnie dawki bazowe, współczynnik wrażliwości na insulinę (ISF) oraz stosunek insuliny do węglowodanów (IC). Możesz skalować wszystko procentowo - na przykład 110% zwiększa bazę, obliczenia bolusa i szybkość wchłaniania węglowodanów o 10%. Możesz też przełączyć się na zupełnie inny profil, jeśli masz skonfigurowany profil dla określonych sytuacji.</string>
+    <string name="scene_wizard_tt_info">Tymczasowy cel mówi algorytmowi, aby przez określony czas dążył do innego poziomu glikemii. Wyższy cel sprawia, że algorytm wolniej reaguje na rosnącą glikemię i ogólnie celuje w wyższą wartość - zmniejsza to podawanie insuliny i pomaga zapobiegać hipoglikemiom podczas ćwiczeń. Niższy cel sprawia, że algorytm reaguje wcześniej i podaje więcej insuliny - przydatne, aby wyprzedzić posiłek. Wybierz jedną predefiniowanych konfiguracji - cele z uzasadnieniem.</string>
+    <string name="scene_wizard_smb_info">Super Micro Bolusy (SMB) pozwalają algorytmowi podawać insulinę z wyprzedzeniem w postaci małych bolusów, jednocześnie czasowo wstrzymując podawanie insuliny bazowej, aby to zrekompensować. W efekcie algorytm pożycza insulinę z przyszłości, by szybciej zareagować. Wyłączenie SMB temu zapobiega i ogranicza algorytm wyłącznie do korygowania dawek bazowych. Reakcja staje się wolniejsza i bardziej stopniowa, co często jest preferowane podczas ćwiczeń lub snu.</string>
+    <string name="scene_wizard_loop_mode_info">Tryb pracy określa, jaką autonomię ma algorytm. W zamkniętej pętli (Closed Loop) algorytm automatycznie dostosowuje dostarczanie insuliny. LGS (Low Glucose Suspend) tylko zmniejsza lub zatrzymuje insulinę, gdy glukoza spada w kierunku hipoglikemii - nie zwiększa dostarczania. Otwarta pętla (Open Loop) oblicza sugestie, ale czeka na potwierdzenie przez Ciebie każdej z nich.</string>
+    <string name="scene_wizard_careportal_info">Zdarzenie Portalu Opieki (CarePortal) to wpis w dzienniku - nie zmienia podawania insuliny ani działania algorytmu. Użyj go, aby oznaczyć aktywności, sytuacje lub notatki na osi czasu leczenia. Te wpisy możesz przejrzeć w Leczenie - Portal Opieki oraz w Nightscout, co pomoże Tobie i lekarzowi zauważyć wzorce w danych.</string>
+    <string name="scene_wizard_duration_info">Czas trwania określa, jak długo scena pozostaje aktywna. Gdy czas minie, działania zależne od czasu (cel tymczasowy, przełączenie profilu, tryb działania) same wygasają, a trwałe zmiany (na przykład przełącznik SMB) są automatycznie cofane do poprzednich wartości. Ustawienie czasu trwania na 0 sprawia, że scena nie ma limitu czasu - wszystkie działania pozostają aktywne, dopóki ręcznie nie zakończysz sceny.</string>
+    <string name="scene_wizard_name_info">Wybierz nazwę i ikonę, dzięki którym ta scena będzie łatwa do rozpoznania na pierwszy rzut oka. Zobaczysz je na przycisku aktywacji oraz w banerze aktywnej sceny na ekranie głównym.</string>
+    <!-- Scene wizard: UI labels -->
+    <string name="scene_wizard_include_action">Uwzględnij %1$s w scenie</string>
+    <string name="scene_wizard_finish">Zakończ</string>
+    <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">Następna scena</string>
+    <string name="scene_wizard_chain_info">Opcjonalnie połącz kolejną scenę, która aktywuje się automatycznie po wygaśnięciu tej. Możesz też przejść do niej wcześniej, kończąc tę scenę przed czasem. Scena następna uruchomi się tylko wtedy, gdy cel jest włączony, a pompa dostępna; w przeciwnym razie otrzymasz powiadomienie.</string>
+    <string name="scene_chain_none">Brak</string>
+    <string name="scene_skip_to_format">Przejdź do %1$s</string>
+    <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">Powiązana scena została usunięta</string>
+    <!-- Scene expiry: chain result notifications -->
+    <string name="scene_ended_format">Scena „%1$s” została zakończona.</string>
+    <string name="scene_chained_format">Scena połączona: %1$s → %2$s</string>
+    <string name="scene_chain_ended_with_skip">%1$s zakończona - następna scena pominięta: %2$s</string>
+    <string name="scene_chain_skipped_deleted">scena docelowa została usunięta</string>
+    <string name="scene_chain_skipped_disabled">„%1$s” jest wyłączona</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s: %3$d z %4$d akcji nie powiodło się</string>
+</resources>

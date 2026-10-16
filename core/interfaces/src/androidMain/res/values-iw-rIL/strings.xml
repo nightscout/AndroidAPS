@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">אישור</string>
+    <!--    Events-->
+    <string name="bolus_delivering">מזריק %1$.2f יח\'</string>
+    <string name="bolus_delivered_so_far">הוזרקו %1$.2f יח\' מתוך %2$.2f יח\'</string>
+    <string name="bolus_delivered_successfully">%1$.2f יח\' הוזרקו בהצלחה</string>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">מנהל התקן המשאבה שונה.</string>
+    <!--    DateUtil-->
+    <string name="minago">לפני %1$d</string>
+    <string name="secago">לפני%1$d ימים</string>
+    <string name="min_plus">(+%1$d דק\')</string>
+    <string name="sec_plus">(+%1$d שנ\')</string>
+    <string name="minago_long">לפני %1$d דקות</string>
+    <string name="hoursago">לפני %1$.1f שעות</string>
+    <string name="days_ago">לפני %1$.1f ימים</string>
+    <string name="days_ago_round">לפני %1$.0f ימים</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">לפני %1$s יום ו-%2$s שעות</item>
+        <item quantity="two">לפני %1$s ימים %2$s שעות</item>
+        <item quantity="other">לפני %1$s ימים %2$s שעות</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">לפני %1$s שעה</item>
+        <item quantity="two">לפני %1$s שעות</item>
+        <item quantity="other">לפני %1$s שעות</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">לפני רגע</item>
+        <item quantity="two">לפני %1$s דקות</item>
+        <item quantity="other">לפני %1$s דקות</item>
+    </plurals>
+    <string name="seconds_ago">לפני שניות</string>
+    <string name="in_days">בעוד %1$.0f ימים</string>
+    <string name="in_days_round">בעוד %1$.0f ימים</string>
+    <string name="shorthour">שעה</string>
+    <string name="days">ימים</string>
+    <string name="hours">שעות</string>
+    <string name="unit_second">שניה</string>
+    <string name="unit_minute">דקה</string>
+    <string name="unit_hour">שעה</string>
+    <string name="unit_day">יום</string>
+    <string name="unit_week">שבוע</string>
+    <string name="unit_seconds">שניות</string>
+    <string name="unit_minutes">דקות</string>
+    <string name="unit_hours">שעות</string>
+    <string name="unit_days">ימים</string>
+    <string name="unit_weeks">שבועות</string>
+    <string name="shortminute">דקה</string>
+    <string name="shortday">י\'</string>
+    <string name="time_remaining_h_m">נותרו %1$d שעות ו- %2$d דקות</string>
+    <string name="time_remaining_m">נותרו %1$d דקות</string>
+    <string name="later_today">מאוחר יותר היום</string>
+    <string name="tomorrow">מחר</string>
+    <string name="today">היום</string>
+    <string name="yesterday">אתמול</string>
+    <!-- Rx -->
+    <string name="connecting_for">מתחבר במשך %1$d שניות</string>
+    <string name="handshaking">לוחץ יד</string>
+    <string name="connected">מחובר</string>
+    <string name="authorized">מורשה</string>
+    <string name="disconnecting">מתנתק</string>
+    <string name="waiting_for_disconnection">ממתין לניתוק</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">נוצר ב: %1$s</string>
+    <string name="metadata_label_watchface_author">יוצר/ת: %1$s</string>
+    <string name="metadata_label_watchface_name">שם: %1$s</string>
+    <string name="metadata_wear_import_filename">שם קובץ: %1$s</string>
+    <string name="metadata_label_plugin_version">גרסת פלאגין: %1$s</string>
+    <string name="metadata_label_watchface_name_version">שם: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">מידע: %1$s</string>
+    <string name="pref_show_iob">הצג אינסולין פעיל</string>
+    <string name="pref_show_detailed_iob">הצגת אינס\' פעיל מפורט</string>
+    <string name="pref_show_cob">הצג פח\' פעילות</string>
+    <string name="pref_show_delta">הצג דלתא</string>
+    <string name="pref_show_detailed_delta">הצג דלתא מפורטת</string>
+    <string name="pref_show_avgdelta">הצג דלתא ממוצעת</string>
+    <string name="pref_show_tempTarget">הצג יעד מטרה זמני</string>
+    <string name="pref_show_reservoir_level">הצג את הכמות במכל</string>
+    <string name="pref_show_phone_battery">הצג את סוללת הטלפון</string>
+    <string name="pref_show_rig_battery">הצג סוללת ריג</string>
+    <string name="pref_show_basal_rate">הצג מינון בזאלי</string>
+    <string name="pref_show_loop_status">הצג סטטוס לולאה</string>
+    <string name="pref_show_bg">הצג רמת סוכר</string>
+    <string name="pref_show_bgi">הצג השפעת רמת הסוכר</string>
+    <string name="pref_show_direction_arrow">הצג חץ מגמה</string>
+    <string name="pref_show_ago">הצג עבר</string>
+    <string name="pref_show_week_number">הצג מספר שבוע</string>
+    <string name="pref_show_date">הצג תאריך</string>
+    <string name="pref_show_seconds">הצג שניות</string>
+    <string name="pref_show_complication1">הצג סיבוך 1</string>
+    <string name="pref_show_complication2">הצג סיבוך 2</string>
+    <string name="pref_show_complication3">הצג סיבוך 3</string>
+    <string name="pref_show_complication4">הצג סיבוך 4</string>
+    <string name="pref_show_complication5">הצג סיבוך 5</string>
+    <string name="default_custom_watchface_comment">ברירת המחדל של פני השעון, ניתן ללחוץ על כפתור ייצוא פני שעון כדי ליצור תבנית</string>
+    <string name="default_custom_watchface_external_comment">תצוגת השעון המוגדרת כברירת מחדל, כולל תצוגות חיצוניות עבור עוקבים. ניתן ללחוץ על לחצן \'ייצוא תצוגת השעון\' כדי ליצור דגם</string>
+    <string name="wear_default_watchface">ברירת מחדל פני שעון</string>
+    <string name="wear_more_watchfaces">עוד פני שעון</string>
+    <string name="temp_basal_absolute_rate">%1$.2f. יח\' ב-%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% ב-%2$s %3$d/%4$d</string>
+    <string name="temp_basal_extended_bolus">ממושך %1$.2f יח\'\ש\' ב-%2$s %3$d/%4$d דק\'</string>
+    <string name="forever">לנצח</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">בלוטות\'</string>
+    <string name="permission_bluetooth_description">האפליקציה זקוקה להרשאת בלוטות\' כדי לתקשר עם המשאבה</string>
+    <!-- Insulin -->
+    <string name="unknown">לא ידוע</string>
+    <string name="rapid_acting_oref">נובוראפיד</string>
+    <string name="lyumjev">ליומג\'ב</string>
+    <string name="free_peak_oref">Oref שיא חופשי</string>
+    <string name="ultra_rapid_oref">פיאספ</string>
+    <string name="fast_acting_insulin_comment">נובוראפיד, נובולוג, הומלוג</string>
+    <string name="ultra_fast_acting_insulin_comment">פיאספ</string>
+    <string name="insulin_peak_time">זמן שיא [min]</string>
+    <!-- Concentration -->
+    <string name="u10">U10יח\'</string>
+    <string name="u20">U20</string>
+    <string name="u40">U40יח\'</string>
+    <string name="u50">U50יח\'</string>
+    <string name="u100">U100יח\'</string>
+    <string name="u200">U200יח\'</string>
+    <string name="u300">U300יח\'</string>
+    <string name="u500">U500יח\'</string>
+    <string name="profile_isf_units_mgdl">מ\"ג/ד\"ל/יחידה</string>
+    <string name="profile_isf_units_mmol">מילימול/לליטר/ליחידה</string>
+    <string name="formatsignedinsulinunits">%1$+.2f יח\'</string>
+    <string name="format_carbs">%1$d גר\'</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%2$s :%1$s</string>
+    <string name="carbs">פחמימות</string>
+    <string name="alarminxmin">הפעל התראה בעוד %1$d דקות</string>
+    <string name="pumpsuspended">משאבה מושהית</string>
+    <string name="loopsuspended">לולאה מושהית</string>
+    <string name="pump_disconnected">המשאבה מנותקת</string>
+    <string name="basalprofilenotaligned">ערכי הבזאלי לא מותאמים לשעות: %1$s</string>
+    <string name="minimalbasalvaluereplaced">ערכי הבזאלי הוחלפו בערכים הנתמכים המינימליים: %1$s</string>
+    <string name="maximumbasalvaluereplaced">ערכי הבזאלי הוחלפו בערכים הנתמכים המינימליים: %1$s</string>
+    <string name="profile_ins_units_per_hour">יח\'\\שעה</string>
+    <string name="profile_carbs_per_unit">גר\'\\יח\'</string>
+    <string name="mins">%1$d דקות</string>
+    <string name="record">הקלטה</string>
+    <string name="bolus">בולוס</string>
+    <string name="uel_extended_carbs">פחמימות מורכבות</string>
+    <string name="profile_low_target">ערך המטרה הנמוך של הפרופיל</string>
+    <string name="profile_high_target">ערך המטרה הגבוה של הפרופיל</string>
+    <string name="profile_dia">ערך DIA של הפרופיל</string>
+    <string name="profile_sensitivity_value">ערך הרגישות של הפרופיל</string>
+    <string name="profile_carbs_ratio_value">יחס הפחמימות של הפרופיל</string>
+    <string name="value_out_of_hard_limits">»הערך %1$s« %2$.2f מחוץ לתחום הקשיח</string>
+    <string name="basal_value">ערך בזאלי</string>
+    <string name="cobvsiob">פחמ\' פעילות לעומת אינ\' פעיל</string>
+    <string name="slowabsorptiondetected_plain">!!!!! זוהתה ספיגה איטית של פחמימות: %1$d %% מהזמן. יש לבדוק היטב את החישוב שלך. ייתכן שהערכת ה-COB גבוהה מדי, ולכן ייתכן שניתן יותר אינסולין !!!!!</string>
+    <string name="bolus_constraint_applied_warn">מגבלת בולוס יושמה: %1$.2f עד %2$.2f יח\'</string>
+    <string name="bolus_recorded_only">בולוס רשום בלבד (לא מוזרק על ידי המשאבה)</string>
+    <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">פחמ\' ממושכות %1$d גר\' / %2$d שעות (+%3$d דקות)</string>
+    <string name="format_insulin_units">%1$.2f יח\'</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">התוסף %1$s לא הצליח לפעול וייתכן שלא יתפקד. נא להפעיל מחדש את AAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">אירעה שגיאה בתוסף %1$s וחלק ממנו הפסיק לפעול. נא להפעיל מחדש את AAPS.</string>
+</resources>

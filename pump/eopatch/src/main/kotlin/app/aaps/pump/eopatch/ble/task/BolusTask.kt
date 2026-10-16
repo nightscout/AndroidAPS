@@ -4,7 +4,9 @@ import app.aaps.pump.eopatch.AppConstant
 import app.aaps.pump.eopatch.code.BolusExDuration
 import app.aaps.pump.eopatch.core.code.BolusType
 import app.aaps.pump.eopatch.core.util.FloatAdjusters
+import dev.zacsweers.metro.HasMemberInjections
 
+@HasMemberInjections
 abstract class BolusTask(func: TaskFunc) : TaskBase(func) {
 
     fun onQuickBolusStarted(nowDoseU: Float, exDoseU: Float, exDuration: BolusExDuration) {
@@ -61,7 +63,7 @@ abstract class BolusTask(func: TaskFunc) : TaskBase(func) {
         val nowID = bolusCurrent.historyId(BolusType.NOW)
         if (nowID > 0 && !bolusCurrent.endTimeSynced(BolusType.NOW)) {
             val stopTime = if ((suspendedTimestamp > 0)) suspendedTimestamp else System.currentTimeMillis()
-            val injectedDoseU = FloatAdjusters.FLOOR2_BOLUS.apply(injected * AppConstant.INSULIN_UNIT_P)
+            val injectedDoseU = FloatAdjusters.FLOOR2_BOLUS(injected * AppConstant.INSULIN_UNIT_P)
             bolusCurrent.nowBolus.injected = injectedDoseU
             bolusCurrent.nowBolus.endTimestamp = stopTime
             bolusCurrent.setEndTimeSynced(BolusType.NOW, true)
@@ -74,7 +76,7 @@ abstract class BolusTask(func: TaskFunc) : TaskBase(func) {
         val extID = bolusCurrent.historyId(BolusType.EXT)
         if (extID > 0 && !bolusCurrent.endTimeSynced(BolusType.EXT)) {
             val stopTime = if ((suspendedTimestamp > 0)) suspendedTimestamp else System.currentTimeMillis()
-            val injectedDoseU = FloatAdjusters.FLOOR2_BOLUS.apply(injected * AppConstant.INSULIN_UNIT_P)
+            val injectedDoseU = FloatAdjusters.FLOOR2_BOLUS(injected * AppConstant.INSULIN_UNIT_P)
             bolusCurrent.extBolus.injected = injectedDoseU
             bolusCurrent.extBolus.endTimestamp = stopTime
             bolusCurrent.setEndTimeSynced(BolusType.EXT, true)

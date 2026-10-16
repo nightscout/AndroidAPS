@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Widget-->
+    <!--     Activities-->
+    <string name="calculation_in_progress">Számítás folyamatban</string>
+    <string name="age">Kor</string>
+    <string name="weight_label">Súly</string>
+    <string name="bg_other">Egyéb</string>
+    <string name="bg_meter">Mérő</string>
+    <string name="bg_sensor">Szenzor</string>
+    <!-- WizardDialog -->
+    <!-- SiteRotationDialog -->
+    <!-- FillDialog -->
+    <!-- Scene -->
+    <!-- Insulin Management -->
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <!-- LoopDialog -->
+    <string name="resume">Folytatás</string>
+    <string name="duration1h">1 óra</string>
+    <string name="duration2h">2 óra</string>
+    <string name="duration3h">3 óra</string>
+    <string name="duration10h">10 óra</string>
+    <!-- WizardDialog -->
+    <string name="missing_carbs">Hiányzik %1$d g</string>
+    <!-- Treatments -->
+    <!-- ProfileHelperActivity -->
+    <string name="profile_type">Profil típusa</string>
+    <string name="selected_profile">Kiválasztott:</string>
+    <string name="motol_default_profile">Alapértelmezett profil</string>
+    <!-- Other dialogs -->
+    <!--QuickWizard-->
+    <!--    History browser-->
+    <!--    Widget-->
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+</resources>

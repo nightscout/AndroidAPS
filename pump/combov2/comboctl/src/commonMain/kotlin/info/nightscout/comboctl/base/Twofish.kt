@@ -1,5 +1,9 @@
 package info.nightscout.comboctl.base
 
+import info.nightscout.comboctl.base.Twofish.blockDecrypt
+import info.nightscout.comboctl.base.Twofish.blockEncrypt
+import info.nightscout.comboctl.base.Twofish.processKey
+
 /**
  * Implementation of the Two-Fish symmetric block cipher.
  *

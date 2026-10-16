@@ -1,10 +1,10 @@
 package app.aaps.pump.medtronic.data.dto
 
-import app.aaps.core.utils.StringUtil
+import app.aaps.core.utils.formatUS
 import app.aaps.core.utils.pump.ByteUtil
-import com.google.gson.annotations.Expose
 import app.aaps.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import app.aaps.pump.medtronic.comm.history.pump.PumpHistoryEntryType
+import com.google.gson.annotations.Expose
 import org.apache.commons.lang3.builder.ToStringBuilder
 import java.util.Locale
 
@@ -55,10 +55,10 @@ class DailyTotalsDTO(var entry: PumpHistoryEntry) {
     private var bolusCountCorr: Int? = null
     private fun setDisplayable() {
         if (insulinBasal == 0.0) {
-            entry.displayableValue = "Total Insulin: " + StringUtil.getFormattedValueUS(insulinTotal, 2)
+            entry.displayableValue = "Total Insulin: " + insulinTotal.formatUS(2)
         } else {
-            entry.displayableValue = ("Basal Insulin: " + StringUtil.getFormattedValueUS(insulinBasal, 2)
-                + ", Total Insulin: " + StringUtil.getFormattedValueUS(insulinTotal, 2))
+            entry.displayableValue = ("Basal Insulin: " + insulinBasal.formatUS(2)
+                + ", Total Insulin: " + insulinTotal.formatUS(2))
         }
     }
 

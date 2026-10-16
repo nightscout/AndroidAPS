@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Autotune-->
+    <string name="openapsma_no_glucose_data">Nema dostupnih podataka o glukozi</string>
+    <string name="description_ama">Stanje algoritma iz 2017.</string>
+    <string name="description_smb">Najnoviji algoritam za napredne korisnike</string>
+    <string name="description_smb_dynamic_isf">Najnoviji algoritam za napredne korisnike s dinamičkim/automatskim ISF-om</string>
+    <string name="openapsma_last_run_label">Zadnje pokretanje</string>
+    <string name="openapsma_input_parameters_label">Ulazni parametri</string>
+    <string name="openapsma_glucose_status_label">Stanje glukoze</string>
+    <string name="openapsma_iob_data_label">IOB podaci</string>
+    <string name="openapsma_profile_label">Profil</string>
+    <string name="openapsma_meal_data_label">Podaci o obroku</string>
+    <string name="openapsma_request_label">Zahtjev</string>
+    <!--    Verify if needed in safety-->
+    <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="description_loop">Aktiviraj ili deaktiviraj implementaciju koja pokreće loop.</string>
+    <!-- Autotune -->
+    <string name="autotune_default_tune_days_title">Broj dana podataka</string>
+    <string name="autotune_tunedprofile_name">Ugođen</string>
+    <string name="autotune_profile">Profile :</string>
+    <string name="autotune_last_run">Zadnje izvođenje:</string>
+    <string name="autotune_warning">Upozorenje:</string>
+    <string name="autotune_ic_warning">Odabrani profil ima %1$d IC vrijednosti. Autotune će koristiti %2$.2f g/U</string>
+    <string name="autotune_isf_warning">Odabrani profil ima %1$d ISF vrijednosti. Autotune će koristiti %2$.1f %3$s/U</string>
+    <string name="autotune_error">Pogreška u unosu podataka, pokušajte ponovno pokrenuti automatsko podešavanje ili smanjite broj dana</string>
+    <string name="autotune_warning_during_run">Autotune izračun je započeo, molimo za strpljenje</string>
+    <string name="autotune_warning_after_run">Prije uporabe pažljivo provjerite rezultate!</string>
+    <string name="autotune_partial_result">Djelomični rezultat dan %1$d / %2$d podešeno</string>
+    <string name="autotune_result">Rezultat: %1$s</string>
+    <string name="autotune_param">Param</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Nedostaje</string>
+    <string name="autotune_run">Pokrenite Autotune</string>
+    <string name="autotune_check_input_profile_button">Provjerite ulazni profil</string>
+    <string name="autotune_compare_profile">Usporedite profile</string>
+    <string name="autotune_copy_localprofile_button">Kopiraj na lokalni profil</string>
+    <string name="autotune_update_input_profile_button">Ažurirajte ulazni profil</string>
+    <string name="autotune_revert_input_profile_button">Vrati profil unosa</string>
+    <string name="autotune_copy_local_profile_message">Napraviti novi lokalni profil iz ovog Autotune profila?</string>
+    <string name="autotune_update_local_profile_message">Želite li ažurirati %1$s profil pomoću Autotune profila?</string>
+    <string name="autotune_revert_local_profile_message">Vratiti profil %1$s s profilom unosa?</string>
+    <string name="autotune_profile_invalid">Profil nije valjan</string>
+    <!--    autoISF -->
+</resources>

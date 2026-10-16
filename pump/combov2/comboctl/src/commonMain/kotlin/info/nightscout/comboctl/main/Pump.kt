@@ -1358,8 +1358,7 @@ class Pump(
         // the TBR was actually set, and if so, whether it was set correctly.
         // If not, throw an exception, since this is an error.
 
-        val mainScreen = waitUntilScreenAppears(rtNavigationContext, ParsedScreen.MainScreen::class)
-        val mainScreenContent = when (mainScreen) {
+        val mainScreenContent = when (val mainScreen = waitUntilScreenAppears(rtNavigationContext, ParsedScreen.MainScreen::class)) {
             is ParsedScreen.MainScreen -> mainScreen.content
             else                       -> throw NoUsableRTScreenException()
         }
@@ -1668,6 +1667,8 @@ class Pump(
         logger(LogLevel.DEBUG) { "Waiting until bolus delivery is complete" }
 
         var bolusFinishedCompletely = false
+        // True once the history delta shows exactly the bolus that was asked for.
+        var bolusConfirmedInHistory = false
 
         try {
             // The Combo does not send immediate bolus delivery information on its own.
@@ -1844,6 +1845,7 @@ class Pump(
                             logger(LogLevel.ERROR) { "History delta contained unexpected additional bolus entries" }
                             throw UnaccountedBolusDetectedException()
                         }
+                        bolusConfirmedInHistory = true
                     }
                 }
             } finally {
@@ -1860,25 +1862,39 @@ class Pump(
                 // (hence the loop). In particular, a W1 low reservoir warning
                 // can show up if the delivered bolus brought the reservoir level
                 // below the low threshold. W1 is dismissible.
-                while (true) {
-                    try {
-                        pumpIO.switchMode(PumpIO.Mode.REMOTE_TERMINAL)
-                        // Not calling updateStatusImpl(), instead calling this directly.
-                        // That's because updateStatusImpl() calls executeCommand(),
-                        // and here, we already are running in a lambda that's run
-                        // by executeCommand().
-                        updateStatusByReadingMainAndQuickinfoScreens(switchStatesIfNecessary = true)
-                        break
-                    } catch (e: AlertScreenException) {
-                        logger(LogLevel.DEBUG) { "Got alert screen after bolus" }
-                        // If this is a trivial, purely informative, dismissible
-                        // warning screen, this call dismisses it and also emits
-                        // an event if appropriate (like an event about a low
-                        // reservoir level). If this is a non-dismissible warning
-                        // screen or an error screen, this call itself throws
-                        // an AlertScreenException to propagate the alert further.
-                        handleAlertScreenContent(e.alertScreenContent)
+                try {
+                    while (true) {
+                        try {
+                            pumpIO.switchMode(PumpIO.Mode.REMOTE_TERMINAL)
+                            // Not calling updateStatusImpl(), instead calling this directly.
+                            // That's because updateStatusImpl() calls executeCommand(),
+                            // and here, we already are running in a lambda that's run
+                            // by executeCommand().
+                            updateStatusByReadingMainAndQuickinfoScreens(switchStatesIfNecessary = true)
+                            break
+                        } catch (e: AlertScreenException) {
+                            logger(LogLevel.DEBUG) { "Got alert screen after bolus" }
+                            // If this is a trivial, purely informative, dismissible
+                            // warning screen, this call dismisses it and also emits
+                            // an event if appropriate (like an event about a low
+                            // reservoir level). If this is a non-dismissible warning
+                            // screen or an error screen, this call itself throws
+                            // an AlertScreenException to propagate the alert further.
+                            handleAlertScreenContent(e.alertScreenContent)
+                        }
                     }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: AlertScreenException) {
+                    throw e
+                } catch (e: Exception) {
+                    // The pump history already shows the bolus. If this status read failed, the
+                    // whole bolus used to fail, and AAPS reported "bolus failed" for insulin that
+                    // was given, so the user might give it again (#4240). Keep the bolus as
+                    // delivered; the next connection reads the status again.
+                    if (!bolusConfirmedInHistory)
+                        throw e
+                    logger(LogLevel.ERROR) { "Could not re-read the pump status after a confirmed bolus; not failing the bolus: $e" }
                 }
             }
         }
@@ -2044,6 +2060,40 @@ class Pump(
 
     private fun packetReceiverExceptionThrown(e: TransportLayer.PacketReceiverException) {
         parsedDisplayFrameStream.abortDueToError(e)
+
+        // CancellationException is the normal disconnect path — the receive
+        // loop's coroutine was cancelled by disconnect(), not a real failure.
+        // Without this, every clean disconnect flips Ready → Error and the
+        // UI flow gets stuck at Error (setDriverState() does not downgrade
+        // Error → Disconnected for the UI).
+        if (e.cause is CancellationException) return
+
+        // If the receive loop dies asynchronously while the pump is idle
+        // (ReadyForCommands or Suspended), there is no in-flight suspend call
+        // to observe the closed channel — the failure is silently swallowed
+        // and the driver state stays at "Ready" until something forces a
+        // reconnect (typically the user restarting the app). Surface it as
+        // an Error so observers (ComboV2Plugin → pump queue) can drive a
+        // reconnect via EventPumpStatusChanged.
+        //
+        // For Connecting / CheckingPump / ExecutingCommand, the in-flight
+        // receive() call will throw on its own once the receiver channel is
+        // closed, and connect() / executeCommand() already handle that path
+        // — touching the state here would race with them.
+        //
+        // Use compareAndSet so a concurrent transition (e.g. disconnect()
+        // moving us to Disconnected, or another error path setting Error)
+        // wins instead of being clobbered. PacketReceiverException always
+        // wraps a non-null cause per its constructor.
+        val newError = State.Error(throwable = e.cause, message = "Packet receiver failed asynchronously")
+        val transitioned = _stateFlow.compareAndSet(State.ReadyForCommands, newError) ||
+            _stateFlow.compareAndSet(State.Suspended, newError)
+        if (transitioned) {
+            logger(LogLevel.ERROR) {
+                "Packet receiver failed asynchronously while pump was idle; " +
+                    "transitioned to Error to trigger reconnect"
+            }
+        }
     }
 
     private inline fun <reified ProgressStageSubtype : ProgressStage> createBasalProgressReporter() =
@@ -2660,7 +2710,7 @@ class Pump(
             // be ahead of the current time. In such cases, compensate
             // for that by using the current time instead.
             val now = Clock.System.now()
-            val bolusTimestamp = lastBolusInfusionTimestamp!!.let {
+            val bolusTimestamp = lastBolusInfusionTimestamp.let {
                 if (now < it) now else it
             }
 
@@ -3486,16 +3536,12 @@ class Pump(
     }
 
     private suspend fun updateStatusByReadingMainAndQuickinfoScreens(switchStatesIfNecessary: Boolean) {
-        val mainScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.MainScreen::class, pumpSuspended)
-
-        val mainScreenContent = when (mainScreen) {
+        val mainScreenContent = when (val mainScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.MainScreen::class, pumpSuspended)) {
             is ParsedScreen.MainScreen -> mainScreen.content
             else                       -> throw NoUsableRTScreenException()
         }
 
-        val quickinfoScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.QuickinfoMainScreen::class, pumpSuspended)
-
-        val quickinfo = when (quickinfoScreen) {
+        val quickinfo = when (val quickinfoScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.QuickinfoMainScreen::class, pumpSuspended)) {
             is ParsedScreen.QuickinfoMainScreen -> {
                 // After parsing the quickinfo screen, exit back to the main screen by pressing BACK.
                 rtNavigationContext.shortPressButton(RTNavigationButton.BACK)
