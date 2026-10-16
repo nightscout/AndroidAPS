@@ -47,6 +47,7 @@
     <string name="dexcom_g7_row_serial">Serial number</string>
     <string name="dexcom_g7_row_pairing_code">Pairing code</string>
     <string name="dexcom_g7_row_firmware">Firmware</string>
+    <string name="dexcom_g7_row_display_slot">Display slot</string>
     <string name="dexcom_g7_row_paired">Paired</string>
     <string name="dexcom_g7_row_calibration">Last calibration</string>
     <string name="dexcom_g7_row_previous_sensor">Previous sensor</string>
@@ -84,6 +85,8 @@
     <string name="dexcom_g7_scan_barcode">Scan applicator barcode</string>
     <string name="dexcom_g7_pairing_code">Pairing code</string>
     <string name="dexcom_g7_pairing_code_hint">4 digits</string>
+    <string name="dexcom_g7_use_watch_slot">Use the watch slot (test)</string>
+    <string name="dexcom_g7_use_watch_slot_summary">Pairs into the sensor\'s watch slot instead of the phone slot, so a second phone can test direct-to-watch while the main phone keeps its connection. Leave off on the main phone.</string>
     <string name="dexcom_g7_pair">Pair</string>
     <string name="dexcom_g7_scan_explanation">Point the camera at the square barcode on the applicator.</string>
     <string name="dexcom_g7_type_code_instead">Type the code instead</string>

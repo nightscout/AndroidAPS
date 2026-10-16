@@ -3,6 +3,7 @@ package app.aaps.cgm.dexcomg7.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -63,7 +65,7 @@ fun G7PairingScreen(
     ) { step, onCancelDialog ->
         when (step) {
             G7PairingStep.INTRO   -> IntroStep(uiState.conflictingApps, viewModel.isReplacingSensor, viewModel::continueFromIntro, onCancelDialog)
-            G7PairingStep.CODE    -> CodeStep(uiState, viewModel::updateCode, viewModel::openScanner, viewModel::startPairing, onCancelDialog)
+            G7PairingStep.CODE    -> CodeStep(uiState, viewModel::updateCode, viewModel::updateUseWatchSlot, viewModel::openScanner, viewModel::startPairing, onCancelDialog)
             G7PairingStep.SCANNER -> ScannerStep(viewModel::onBarcode, viewModel::closeScanner)
             G7PairingStep.PAIRING -> ProgressStep(uiState.pairing) {
                 viewModel.cancel()
@@ -107,6 +109,7 @@ private fun IntroStep(conflictingApps: List<String>, replacing: Boolean, onNext:
 private fun CodeStep(
     uiState: G7PairingUiState,
     onCodeChange: (String) -> Unit,
+    onUseWatchSlotChange: (Boolean) -> Unit,
     onScan: () -> Unit,
     onPair: () -> Unit,
     onCancel: () -> Unit
@@ -135,6 +138,14 @@ private fun CodeStep(
         uiState.scanMessage?.let {
             Spacer(Modifier.height(AapsSpacing.medium))
             Text(it, style = MaterialTheme.typography.bodyMedium)
+        }
+        Spacer(Modifier.height(AapsSpacing.large))
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.dexcom_g7_use_watch_slot), style = MaterialTheme.typography.bodyLarge)
+                Text(stringResource(R.string.dexcom_g7_use_watch_slot_summary), style = MaterialTheme.typography.bodySmall)
+            }
+            Switch(checked = uiState.useWatchSlot, onCheckedChange = onUseWatchSlotChange)
         }
     }
 }

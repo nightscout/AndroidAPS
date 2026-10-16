@@ -1,6 +1,7 @@
 package app.aaps.cgm.dexcomg7.data
 
 import app.aaps.cgm.dexcomg7.protocol.AlgorithmState
+import app.aaps.cgm.dexcomg7.protocol.G7DisplayType
 import app.aaps.cgm.dexcomg7.protocol.G7Lifecycle
 import app.aaps.cgm.dexcomg7.protocol.G7LifecycleState
 import app.aaps.cgm.dexcomg7.protocol.G7SensorModel
@@ -20,6 +21,11 @@ data class G7State(
     val pairingCode: String? = null,
     /** 16-byte key agreed at pairing, as hex. Lets a reconnect skip the key exchange. */
     val sharedKeyHex: String? = null,
+    /**
+     * Code of the display slot the key belongs to ([G7DisplayType]). Phone normally; watch only to test the
+     * watch slot from a second phone. The sensor ties the key to the slot, so it is chosen at pairing.
+     */
+    val displayTypeCode: Int = G7DisplayType.PHONE.code,
     /** Name reported by the sensor ("DXCMxx" / "Dexcomxx"). Set by the first reading. */
     val sensorName: String? = null,
     /** Serial from the applicator barcode, or from the sensor once it has told us. */
@@ -50,6 +56,8 @@ data class G7State(
 ) {
 
     val isPaired: Boolean get() = address != null
+
+    val displayType: G7DisplayType get() = G7DisplayType.fromCode(displayTypeCode)
 
     val canAuthenticate: Boolean get() = sharedKeyHex != null || pairingCode != null
 

@@ -320,6 +320,7 @@ class G7Session(
             pairingCode = code,
             storedSharedKey = key,
             stepTimeoutMs = if (key == null) G7Authenticator.PAIRING_STEP_TIMEOUT_MS else G7Authenticator.RECONNECT_STEP_TIMEOUT_MS,
+            displayType = state.displayType,
             log = ::log
         )
         try {

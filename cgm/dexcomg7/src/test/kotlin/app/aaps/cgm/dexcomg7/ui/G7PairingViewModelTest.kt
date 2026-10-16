@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import app.aaps.cgm.dexcomg7.data.G7State
 import app.aaps.cgm.dexcomg7.data.G7StateStore
+import app.aaps.cgm.dexcomg7.protocol.G7DisplayType
 import app.aaps.cgm.dexcomg7.session.G7PairingService
 import app.aaps.cgm.dexcomg7.session.G7PairingState
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -88,12 +89,20 @@ class G7PairingViewModelTest : TestBase() {
     fun pairingStartsOnlyWithAValidCode() {
         viewModel.updateCode("12")
         viewModel.startPairing()
-        verify(pairing, never()).start(any(), any())
+        verify(pairing, never()).start(any(), any(), any())
 
         viewModel.onBarcode("21123456789012" + gs + "2401155")
         viewModel.startPairing()
-        verify(pairing).start("1155", "123456789012")
+        verify(pairing).start("1155", "123456789012", G7DisplayType.PHONE)
         assertThat(viewModel.uiState.value.step).isEqualTo(G7PairingStep.PAIRING)
+    }
+
+    @Test
+    fun watchSlotSwitchPairsAsAWatch() {
+        viewModel.updateCode("1155")
+        viewModel.updateUseWatchSlot(true)
+        viewModel.startPairing()
+        verify(pairing).start("1155", null, G7DisplayType.WATCH)
     }
 
     @Test

@@ -11,8 +11,8 @@ class G7AuthenticatorTest {
 
     private val logs = mutableListOf<String>()
 
-    private fun authenticator(code: String?, key: ByteArray?) =
-        G7Authenticator(code, key, G7Authenticator.PAIRING_STEP_TIMEOUT_MS, log = { logs.add(it) })
+    private fun authenticator(code: String?, key: ByteArray?, displayType: G7DisplayType = G7DisplayType.PHONE) =
+        G7Authenticator(code, key, G7Authenticator.PAIRING_STEP_TIMEOUT_MS, displayType, log = { logs.add(it) })
 
     @Test
     fun firstPairingRunsTheWholeHandshake() = runTest {
@@ -27,6 +27,17 @@ class G7AuthenticatorTest {
         assertThat(sensor.bondRequested).isTrue()
         assertThat(sensor.enabled).containsExactly(G7Characteristic.AUTHENTICATION, G7Characteristic.CERTIFICATE)
         assertThat(logs.joinToString()).doesNotContain("1155")
+    }
+
+    @Test
+    fun challengeNamesTheDisplaySlot() = runTest {
+        val phone = SimulatedG7Sensor("1155")
+        authenticator("1155", null).authenticate(phone)
+        assertThat(phone.challengeDisplayTypes).containsExactly(G7DisplayType.PHONE.code)
+
+        val watch = SimulatedG7Sensor("1155")
+        authenticator("1155", null, G7DisplayType.WATCH).authenticate(watch)
+        assertThat(watch.challengeDisplayTypes).containsExactly(G7DisplayType.WATCH.code)
     }
 
     @Test

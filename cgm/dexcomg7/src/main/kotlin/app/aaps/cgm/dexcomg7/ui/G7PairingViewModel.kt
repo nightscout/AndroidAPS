@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.cgm.dexcomg7.R
 import app.aaps.cgm.dexcomg7.data.G7StateStore
+import app.aaps.cgm.dexcomg7.protocol.G7DisplayType
 import app.aaps.cgm.dexcomg7.protocol.G7SensorPackage
 import app.aaps.cgm.dexcomg7.session.G7PairingService
 import app.aaps.cgm.dexcomg7.session.G7PairingState
@@ -33,6 +34,8 @@ data class G7PairingUiState(
     val serial: String? = null,
     /** Result of the last barcode scan, to show under the code field. */
     val scanMessage: String? = null,
+    /** Test only: pair into the sensor's watch slot, to try it from a second phone. */
+    val useWatchSlot: Boolean = false,
     val pairing: G7PairingState = G7PairingState.Idle,
     val failureText: String? = null
 ) {
@@ -82,6 +85,8 @@ class G7PairingViewModel(
 
     fun updateCode(code: String) = _uiState.update { it.copy(code = code.filter(Char::isDigit).take(4), serial = null, scanMessage = null) }
 
+    fun updateUseWatchSlot(useWatchSlot: Boolean) = _uiState.update { it.copy(useWatchSlot = useWatchSlot) }
+
     fun openScanner() = _uiState.update { it.copy(step = G7PairingStep.SCANNER) }
 
     fun closeScanner() = _uiState.update { it.copy(step = G7PairingStep.CODE) }
@@ -116,7 +121,7 @@ class G7PairingViewModel(
         val ui = _uiState.value
         if (!ui.codeIsValid) return
         _uiState.update { it.copy(step = G7PairingStep.PAIRING, failureText = null) }
-        pairing.start(ui.code, ui.serial)
+        pairing.start(ui.code, ui.serial, if (ui.useWatchSlot) G7DisplayType.WATCH else G7DisplayType.PHONE)
     }
 
     fun cancel() {

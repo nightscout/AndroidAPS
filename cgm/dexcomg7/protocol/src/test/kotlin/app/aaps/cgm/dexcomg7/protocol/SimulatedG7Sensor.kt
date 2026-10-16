@@ -85,6 +85,9 @@ class SimulatedG7Sensor(
         private set
     override var isConnected = true
 
+    /** Display type code at the end of each challenge we sent. */
+    val challengeDisplayTypes = mutableListOf<Int>()
+
     /** The certificates we sent, as received. */
     val receivedCertificates = mutableListOf<ByteArray>()
 
@@ -158,6 +161,7 @@ class SimulatedG7Sensor(
             0x02 -> {
                 // A fresh exchange ends with our round 3 in the buffer.
                 takeClientRound()
+                challengeDisplayTypes.add(value[9].toInt() and 0xFF)
                 if (clientRounds.size == 3) storedKey = jpake.sharedSecret(clientRounds[1], clientRounds[2]).copyOf(16)
                 val key = storedKey ?: ByteArray(16)
                 val ours = byteArrayOf(0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x08)

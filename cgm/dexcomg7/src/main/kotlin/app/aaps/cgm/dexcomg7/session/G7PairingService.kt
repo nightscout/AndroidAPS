@@ -9,6 +9,7 @@ import app.aaps.cgm.dexcomg7.data.G7State
 import app.aaps.cgm.dexcomg7.data.G7StateStore
 import app.aaps.cgm.dexcomg7.protocol.G7AuthException
 import app.aaps.cgm.dexcomg7.protocol.G7Authenticator
+import app.aaps.cgm.dexcomg7.protocol.G7DisplayType
 import app.aaps.cgm.dexcomg7.protocol.G7LinkException
 import app.aaps.cgm.dexcomg7.protocol.G7PairingPlanner
 import app.aaps.cgm.dexcomg7.protocol.G7SensorModel
@@ -76,6 +77,7 @@ class G7PairingService(
 
     private var planner = G7PairingPlanner()
     private var pairingCode = ""
+    private var displayType = G7DisplayType.PHONE
     private var expectedSerial: String? = null
     private var excludedAddress: String? = null
     private var runJob: Job? = null
@@ -91,7 +93,7 @@ class G7PairingService(
      * Starts pairing with [code]. [serial] is the package serial when the code came from the barcode;
      * sensors that cannot have that serial are then skipped.
      */
-    fun start(code: String, serial: String?) {
+    fun start(code: String, serial: String?, displayType: G7DisplayType = G7DisplayType.PHONE) {
         runJob = scope.launch {
             cancelRun()
             val trimmed = code.trim()
@@ -106,6 +108,7 @@ class G7PairingService(
             }
             session.pauseForPairing()
             pairingCode = trimmed
+            this@G7PairingService.displayType = displayType
             expectedSerial = serial?.takeIf { it.isNotBlank() }
             // Pairing a new sensor: never try the one we already have. Pairing the same sensor again with
             // its own code (a lost key): that one is the target.
@@ -116,7 +119,7 @@ class G7PairingService(
             active = true
             scanStartedAt = System.currentTimeMillis()
             _state.value = G7PairingState.Scanning(emptyList(), scanStartedAt)
-            log("Pairing: scanning for sensors" + (expectedSerial?.let { " (looking for serial $it)" } ?: ""))
+            log("Pairing: scanning for sensors as display $displayType" + (expectedSerial?.let { " (looking for serial $it)" } ?: ""))
             val started = bluetooth.startScan(
                 onResult = { result -> scope.launch { handleScanResult(result) } },
                 onFailed = { reason -> scope.launch { log("Pairing scan: $reason") } }
@@ -183,9 +186,9 @@ class G7PairingService(
         if (result.address == excludedAddress) return
         expectedSerial?.let { serial -> if (!advertisement.couldHaveSerial(serial)) return }
         val rssi = if (result.rssi < 0) result.rssi else G7PairingPlanner.UNKNOWN_RSSI
-        val held = advertisement.isSlotHeld()
+        val held = advertisement.isSlotHeld(displayType)
         if (planner.addCandidate(result.address, advertisement.name, held ?: false, rssi)) {
-            log(if (held == true) "Found ${advertisement.name}; another phone used it recently, so trying others first" else "Found ${advertisement.name}")
+            log(if (held == true) "Found ${advertisement.name}; another $displayType display used it recently, so trying others first" else "Found ${advertisement.name}")
             if (_state.value is G7PairingState.Scanning) _state.value = G7PairingState.Scanning(planner.candidates.map { it.name }, scanStartedAt)
         } else {
             planner.updateSlot(result.address, held, rssi)
@@ -226,7 +229,7 @@ class G7PairingService(
                 finishAttempt(candidateClient, planner.abandonCurrentCandidate("no Dexcom CGM service"))
                 return@launch
             }
-            val authenticator = G7Authenticator(pairingCode, null, G7Authenticator.PAIRING_STEP_TIMEOUT_MS, log = ::log)
+            val authenticator = G7Authenticator(pairingCode, null, G7Authenticator.PAIRING_STEP_TIMEOUT_MS, displayType, log = ::log)
             try {
                 val result = withTimeoutOrNull(AUTHENTICATION_TIMEOUT_MS) { authenticator.authenticate(candidateClient) }
                 if (result == null) {
@@ -295,6 +298,7 @@ class G7PairingService(
                 address = candidate.id,
                 pairingCode = pairingCode,
                 sharedKeyHex = sharedKey.toHex(),
+                displayTypeCode = displayType.code,
                 sensorName = candidate.name,
                 serial = expectedSerial ?: if (sameSensor) old.serial else null,
                 firmware = if (sameSensor) old.firmware else null,

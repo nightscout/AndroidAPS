@@ -17,6 +17,7 @@ import app.aaps.cgm.dexcomg7.data.G7CalibrationRecord
 import app.aaps.cgm.dexcomg7.data.G7State
 import app.aaps.cgm.dexcomg7.data.G7StateStore
 import app.aaps.cgm.dexcomg7.protocol.AlgorithmState
+import app.aaps.cgm.dexcomg7.protocol.G7DisplayType
 import app.aaps.cgm.dexcomg7.protocol.G7Lifecycle
 import app.aaps.cgm.dexcomg7.protocol.G7LifecycleState
 import app.aaps.cgm.dexcomg7.protocol.G7Trend
@@ -194,6 +195,7 @@ class G7OverviewViewModel(
         row(R.string.dexcom_g7_row_serial, state.serial)
         row(R.string.dexcom_g7_row_pairing_code, state.pairingCode)
         row(R.string.dexcom_g7_row_firmware, state.firmware)
+        if (state.displayType != G7DisplayType.PHONE) row(R.string.dexcom_g7_row_display_slot, state.displayType.name.lowercase(), StatusLevel.WARNING)
         state.pairedAt?.let { row(R.string.dexcom_g7_row_paired, DexcomG7Formatting.dateTime(rh, dateUtil, it)) }
         state.calibration?.let { row(R.string.dexcom_g7_row_calibration, calibration(it)) }
         state.previousSensor?.let { row(R.string.dexcom_g7_row_previous_sensor, DexcomG7Formatting.previous(rh, dateUtil, it)) }
