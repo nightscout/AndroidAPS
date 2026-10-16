@@ -22,6 +22,7 @@
     <string name="random_bg">BG casuale</string>
     <string name="description_source_random_bg">Genera dati glicemia casuali (solo modalità demo)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
     <string name="description_source_patched_syai_tag_app">Ricevi dati della glicemia dall\'app Ottai.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">App SI</string>
@@ -50,4 +51,5 @@
     <string name="aidex_sensor_stabilizing">Il sensore si sta stabilizzando, attendere…</string>
     <string name="aidex_sensor_replace">Sostituzione del sensore necessaria, sostituire con un nuovo sensore il prima possibile</string>
     <string name="aidex_signal_lost">Segnale sensore perso, controlla la connessione</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">lettura duplicata</string>
 </resources>
