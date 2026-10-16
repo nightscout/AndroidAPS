@@ -4,7 +4,7 @@
     <string name="dia_label_exam">Thời gian tác dụng của Insulin (DIA)</string>
     <string name="dia_profile">Bạn nên thiết lập giá trị DIA trong phần Cài đặt insulin (Quản lý → Cài đặt insulin), không phải trong cấu hình.</string>
     <string name="dia_minimumis5h">Giá trị nhỏ nhất được phép là 5 giờ.</string>
-    <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">Nếu bạn thấy giá trị DIA mà bạn đã sử dụng trên Bơm trước khi dùng AAPS hoạt động tốt, thì không cần thay đổi giá trị này khi bắt đầu chạy vòng kín.</string>
     <string name="dia_valuemustbedetermined">Bạn nên tự xác định giá trị DIA phù hợp cho mình.</string>
     <string name="hypott_label">Hypo Temp-Target</string>
@@ -19,7 +19,7 @@
     <string name="pumpdisconnect_missinginsulin">Nó ngăn AAPS tính toán lượng insulin không được tiêm khi bơm đã ngắt kết nối vật lý.</string>
     <string name="pumpdisconnect_notstop">Nó sẽ không dừng việc tiêm insulin nếu bơm vẫn được kết nối với cơ thể bạn.</string>
     <string name="pumpdisconnect_openloop">Thao tác này sẽ chuyển AAPS sang chế độ vòng lặp mở (open loop).</string>
-    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#loop-status</string>
+    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-loop-status</string>
     <string name="objectives_label">Cài đặt AAPS</string>
     <string name="objectives2_label">Cài đặt AAPS</string>
     <string name="objectives_howtosave">Những cách tốt nhất để sao lưu cài đặt của bạn là gì?</string>
@@ -32,7 +32,7 @@
     <string name="objectives2_cloud">Hãy sao chép tệp cài đặt của bạn đến một vị trí an toàn bên ngoài điện thoại (ví dụ: dùng lưu trữ đám mây, kết nối cáp với máy tính, gửi email, v.v.)</string>
     <string name="objectives2_easyrestore">Nếu điện thoại của bạn bị hỏng hoặc mất, vẫn có cách dễ dàng để khôi phục cài đặt từ xa mà không cần bản sao lưu.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/en/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">Dữ liệu CGM không ổn định</string>
     <string name="noisycgm_whattodo">Xử lý thế nào khi dữ liệu CGM nhiễu?</string>
     <string name="noisycgm_nothing">Không cần làm gì – AAPS sẽ tự xử lý.</string>
@@ -98,14 +98,14 @@
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
     <string name="insulin_actrapid">Actrapid®/Humulin R®/\"regular\" human insulin.</string>
-    <string name="insulin_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="insulin_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="sensitivity_label">Plugin độ nhạy Insulin</string>
     <string name="sensitivity_adjust">Các plugin về độ nhạy cho phép AAPS điều chỉnh khi có những thay đổi tạm thời hoặc ngắn hạn trong độ nhạy insulin (ví dụ như thay đổi nội tiết tố hoặc vấn đề hấp thu tại vị trí truyền).</string>
     <string name="sensitivity_edit">Các plugin về độ nhạy cung cấp cho người dùng những gợi ý thay đổi về tỷ lệ liều nền, tỷ lệ I:C và ISF để có thể chỉnh sửa cấu hình.</string>
     <string name="sensitivity_cannula">Ghi lại việc thay kim luồn sẽ đặt lại tỷ lệ Autosens về 100%.</string>
     <string name="sensitivity_time">Một số tùy chọn plugin có phạm vi thời gian có thể cấu hình, và người dùng có thể tự thiết lập chúng.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="sensitivity_hint2">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/KeyAapsFeatures.html#autosens</string>
+    <string name="sensitivity_hint2">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/KeyAapsFeatures.html#open-aps-features-autosens</string>
     <string name="wrongcarbs_label">Lỗi khi nhập lượng carb</string>
     <string name="wrongcarbs_whattodo">Bạn nên làm gì nếu đã nhập sai lượng carb?</string>
     <string name="wrongcarbs_treatmentstab">Xóa mục nhập không chính xác trong Lịch sử điều trị và nhập lại lượng carb chính xác.</string>
@@ -140,7 +140,7 @@
     <string name="breadgrams_exchange">Lượng carbohydrate tiêu thụ có thể được ghi lại bằng cách sử dụng hệ thống quy đổi phù hợp (ví dụ: đơn vị trao đổi ‘CHO’ của DAFNE hoặc ‘Đơn vị Bánh mì’ theo chuẩn châu Âu).</string>
     <string name="breadgrams_decay">AAPS sử dụng một mô hình động để ước tính quá trình hấp thu carbohydrate và tính toán lượng carb còn lại (COB).</string>
     <string name="breadgrams_calc">Nếu mức đường huyết nằm ngoài giá trị chấp nhận được (quá thấp hoặc quá cao), bộ tính bolus có thể được sử dụng để đưa ra gợi ý điều chỉnh bằng carbohydrate hoặc insulin.</string>
-    <string name="breadgrams_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#bolus-wizard</string>
+    <string name="breadgrams_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aaps-screens-bolus-wizard</string>
     <string name="breadgrams_hint2">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="extendedcarbs_label">e-carbs</string>
     <string name="extendedcarbs_handling">Bạn có thể sử dụng e-carbs (carb mở rộng) cho mục đích gì?</string>

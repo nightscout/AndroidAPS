@@ -26,7 +26,6 @@
     <string name="doprofileswitch">Schimbați profilul</string>
     <string name="exitwizard">Omiteți asistentul de configurare</string>
     <string name="setupwizard_sensitivity_description">Modulul Sensibilitate este folosit pentru estimarea sensibilității și calcularea COB. Pentru mai multe info vizitați:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Selectați unul dintre algoritmii disponibili. Aceștia sunt sortați de la cel mai vechi la cel mai nou. Algoritmul mai nou este de obicei mai puternic. Nu uitați să citiți documentația OpenAPS și să o configurați înainte de utilizare.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vă rugăm configurați RileyLink mai jos. După selectarea unui RileyLink, va fi posibil să continuați setarea odată ce starea RieyLink este \"Conectată\". Acest lucru ar putea dura un minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Notă:</b> Puteți continua configurarea imediat ce pompa a fost inițializată.\n</string>

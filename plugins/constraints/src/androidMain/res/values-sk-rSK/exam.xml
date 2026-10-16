@@ -4,7 +4,7 @@
     <string name="dia_label_exam">Doba pôsobenia inzulínu (DIA)</string>
     <string name="dia_profile">Hodnotu DIA by ste mali nastaviť v nastaveniach inzulínu (Spravovať → Nastavenia inzulínu), nie v profile.</string>
     <string name="dia_minimumis5h">Minimálna hodnota je 5 hodín.</string>
-    <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="dia_hint1">https://wiki.aaps.app/cs/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">Pokiaľ ste spokojný s tým, že hodnota DIA použitá v pumpe pred AAPS dobre fungovala, nie je potrebné ju meniť, keď začínate s uzavretým okruhom.</string>
     <string name="dia_valuemustbedetermined">Mali by ste si pre seba určiť príslušnú hodnotu DIA.</string>
     <string name="hypott_label">Dočasný cieľ pri hypoglykémii</string>
@@ -19,7 +19,7 @@
     <string name="pumpdisconnect_missinginsulin">Zabraňuje AndroidAPS započítať inzulín, ktorý nebol vydaný, keď je pumpa fyzicky odpojená.</string>
     <string name="pumpdisconnect_notstop">Nezastaví vydávanie inzulínu, pokiaľ pumpa zostane pripojená.</string>
     <string name="pumpdisconnect_openloop">Prepne AAPS do režimu otvoreného okruhu.</string>
-    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#loop-status</string>
+    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-loop-status</string>
     <string name="objectives_label">Nastavenie AAPS</string>
     <string name="objectives2_label">Nastavenie AAPS</string>
     <string name="objectives_howtosave">Aké sú najlepšie postupy pre zálohovanie vašich nastavení?</string>
@@ -32,7 +32,7 @@
     <string name="objectives2_cloud">Skopírujte súbor s vašimi nastaveniami do bezpečného umiestnenia mimo telefón (napr. pomocou cloudového disku, pripojením kábla k počítaču, E-mailom a pod.)</string>
     <string name="objectives2_easyrestore">Ak je váš telefón poškodený, alebo stratený, existujú jednoduché spôsoby, ako vzdialene obnoviť vaše nastavenia bez zálohovania.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/cs/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/cs/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/cs/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">Šum dát zo senzora</string>
     <string name="noisycgm_whattodo">Čo je potrebné urobiť v prípade, že CGM dáta poskakujú?</string>
     <string name="noisycgm_nothing">Nerobte nič, AAPS sa s tým vysporiada.</string>
@@ -46,7 +46,7 @@
     <string name="exerciseprofile_switchprofileabove100">Prepnite profil na viac ako 100 %.</string>
     <string name="exerciseprofile_leaveat100">Ponechajte profil nastavený na hodnotu 100%.</string>
     <string name="exerciseprofile_suspendloop">Pozastavte uzavretý okruh.</string>
-    <string name="exerciseprofile_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
+    <string name="exerciseprofile_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
     <string name="exercise_label">Cvičenie a dočasné ciele</string>
     <string name="exercise_whattodo">Ako môžete použiť dočasné ciele pre najlepšiu pomoc pri práci so systémom pri aeróbnom cvičení?</string>
     <string name="exercise_settt">Nastavte cieľovú hodnotu glykémie vo vhodnej dobe pred zahájením cvičenia.</string>
@@ -98,14 +98,14 @@
     <string name="insulin_novorapid">NovoRapid ® /Humalog ®</string>
     <string name="insulin_humalog">Humalog®</string>
     <string name="insulin_actrapid">Actrapid ®/Humulin R ®/ \"bežný\" ľudský inzulín.</string>
-    <string name="insulin_hint1">https://wiki.aaps.app/cs/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="insulin_hint1">https://wiki.aaps.app/cs/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="sensitivity_label">Pluginy Citlivosť</string>
     <string name="sensitivity_adjust">Pluginy citlivosti umožňujú AndroidAPS prispôsobiť sa dočasným, alebo krátkodobým zmenám v citlivosti inzulínu (napríklad hormonálne zmeny, alebo problémy s absorbciou na infúznom mieste).</string>
     <string name="sensitivity_edit">Pluginy citlivosti poskytujú používateľovi návrh zmien bazálnych hodnôt, I:C pomerov a ISF, ktoré môžu byť použité k úprave profilu.</string>
     <string name="sensitivity_cannula">Záznam o výmene kanyly, automaticky zresetuje hodnotu Autosense späť na 100%.</string>
     <string name="sensitivity_time">Niektoré pluginy majú konfigurovateľné časové rozmedzie a používateľ si ich môže nastaviť.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="sensitivity_hint2">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/KeyAapsFeatures.html#autosens</string>
+    <string name="sensitivity_hint2">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/KeyAapsFeatures.html#open-aps-features-autosens</string>
     <string name="wrongcarbs_label">Chyby pri zadávaní sacharidov</string>
     <string name="wrongcarbs_whattodo">Čo by ste mali urobiť, pokiaľ ste chybne zadali sacharidy?</string>
     <string name="wrongcarbs_treatmentstab">Odstrániť nesprávny záznam v Ošetreniach a zadať správnu novú hodnotu sacharidov.</string>
@@ -140,7 +140,7 @@
     <string name="breadgrams_exchange">Spotrebované sacharidy je možné zaznamenávať pomocou vhodného systému (napr. \"sacharidové jednotky\").</string>
     <string name="breadgrams_decay">AAPS používa dynamický model k odhadu vstrebávania sacharidov a k výpočtu COB.</string>
     <string name="breadgrams_calc">Pokiaľ sú hladiny glykémie v krvi mimo prijateľných hodnôt (príliš nízke, alebo príliš vysoké), môže byť použitá bolusová kalkulačka k podávaniu návrhov na sacharidy, alebo na korekčný bolus.</string>
-    <string name="breadgrams_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#bolus-wizard</string>
+    <string name="breadgrams_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#aaps-screens-bolus-wizard</string>
     <string name="breadgrams_hint2">https://wiki.aaps.app/cs/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="extendedcarbs_label">e-sacharidy</string>
     <string name="extendedcarbs_handling">Na čo by ste mohli použiť e-sacharidy (predĺžené sacharidy)?</string>
@@ -156,7 +156,7 @@
     <string name="nsclient_data">Na vzdialené sledovanie alebo ovládanie systému AAPS potrebujú oba telefóny prístup na internet (napríklad cez Wi-Fi alebo mobilné dáta).</string>
     <string name="nsclient_fullcontrol">Keď je AAPSClient spárovaný s hlavným telefónom, môžete AAPS ovládať aj na diaľku – napríklad podávanie bolusu, zadávanie sacharidov, dočasné cieľové hodnoty, zmenu profilu či režim slučky.</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/cs/latest/RemoteFeatures/RemoteMonitoring.html</string>
-    <string name="nsclient_hint2">https://wiki.aaps.app/en/latest/RemoteFeatures/RemoteControl.html</string>
+    <string name="nsclient_hint2">https://wiki.aaps.app/cs/latest/RemoteFeatures/RemoteControl.html</string>
     <string name="isf_label_exam">Citlivosť inzulínu (ISF)</string>
     <string name="isf_increasingvalue">Zvýšenie hodnôt citlivosti povedie k väčšej dodávke inzulínu na pokrytie určitého množstva sacharidov.</string>
     <string name="isf_decreasingvalue">Zníženie hodnôt citlivosti vedie k väčšiemu množstvu inzulínu na korekciu vyššej glykémie.</string>
@@ -202,7 +202,7 @@
     <string name="u200_with_profile_reports">Údaje v mojej databáze AAPS a v prehľadoch NS sú nesprávne. Všetky hodnoty (bolusy, dávkovanie, TDD) treba vynásobiť 2, aby sa zobrazili skutočné hodnoty – čo je dôležité najmä pre lekárov a zdravotnícky tím.</string>
     <string name="u200_with_profile_pens">Ak na podanie externého bolusu použijem pero U200, nemusím nič prepočítavať medzi systémom AAPS a perom.</string>
     <string name="u200_with_profile_pens2">Bez ohľadu na to, aké pero použijem na podanie externého bolusu (U100 alebo U200), pri každom takomto boluse musím prepočítavať množstvo vypočítané aplikáciou AAPS na množstvo, ktoré nastavujem na pere.</string>
-    <string name="concentration_hint1">https://wiki.aaps.app/cs/latest/AdvancedOptions/InsulinConcentration.html</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
     <string name="switch_u200_profile">Používali ste náhradné riešenie s 50 % profilom pre U200 a chcete prejsť na funkciu koncentrácie inzulínu. Ktoré tvrdenia sú pravdivé?</string>
     <string name="switch_u200_profile_any_time">Môžem kedykoľvek prejsť na iný režim, pretože v pumpa už mám správny inzulín U200.</string>
     <string name="switch_u200_profile_ps">Musím si pripraviť dvakrát agresivnejší profil (200 % oproti súčasnému profilu) a tento nový profil synchronizovať po ďalšej výmene Patchu/zásobníka, keď je zvolený inzulín U200.</string>

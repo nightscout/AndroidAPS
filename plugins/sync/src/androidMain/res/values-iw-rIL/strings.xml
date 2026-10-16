@@ -124,7 +124,7 @@
     <string name="wear_infos_watchface">פני שעון מידע</string>
     <string name="wear_export_watchface">ייצוא תבנית</string>
     <string name="wear_new_custom_watchface_exported">תבנית פני השעון יוצאה</string>
-    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/he/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
     <string name="open_settings_on_wear">פתיחת הגדרות Wear</string>
     <string name="wear_import_custom_watchface_title">בחירת פני שעון מותאמים אישית</string>
@@ -155,7 +155,7 @@
     <string name="aps">APS</string>
     <string name="last_run">ההפעלה האחרונה</string>
     <string name="last_enact">נקבעו לאחרונה</string>
-    <string name="tdd_line">%1$.2fיח\' %1$.0f%</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fיח\' %2$.0f%%</string>
     <string name="today">היום</string>
     <string name="weighted">משוקלל</string>
     <string name="full_xdrip_sync_comment">בטוחים שברצונכם לבצע סנכרון מלא? סנכרון מלא ייקח שעות מרובות ובינתיים לא תוכלו לראות נתונים חדשים ב-xDrip+.</string>

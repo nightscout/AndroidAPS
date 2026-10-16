@@ -329,6 +329,7 @@
     <string name="pref_title_low_mark">סימון סוכר נמוך</string>
     <string name="pref_title_high_mark">סימון סוכר גבוה</string>
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="pref_title_lgs_threshold">סף השהיה עקב ערך סוכר נמוך</string>
     <string name="lgs_threshold_summary">ערך הסוכר שמתחתיו מושעה הזרקת אינסולין. ערך ברירת המחדל משתמש במודל מטרה סטנדרטי. המשתמש יכול להגדיר ערך בין 60 ל-100 מג\"\\ד\"ל. ערכים מתחת ל-65 מביאים לשימוש במודל ברירת המחדל</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->

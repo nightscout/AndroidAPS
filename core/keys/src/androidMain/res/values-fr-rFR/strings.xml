@@ -145,6 +145,9 @@
     <string name="pref_title_wear_wizard_cob">Inclure GA dans l\'assistant</string>
     <string name="pref_title_wear_wizard_iob">Inclure IA dans l\'assistant</string>
     <string name="pref_title_wear_custom_watchface_authorization">Autoriser les cadrans personnalisés à modifier les paramètres AAPS de la montre</string>
+    <string name="pref_title_wear_pushed_watchface">Cadran installé sur la montre</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Cadran des complications</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Cadran personnalisé</string>
     <string name="pref_title_wear_notify_on_smb">Notifier en cas de SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Envoyer des notifications à la montre lorsqu\'un SMB est injecté.</string>
     <string name="pref_title_wear_broadcast_data">Diffuser les données à la montre</string>
@@ -264,6 +267,7 @@
     <string name="lang_tr">Turque</string>
     <string name="lang_zh_tw">Chinois traditionnel</string>
     <string name="lang_zh_cn">Chinois simplifié</string>
+    <string name="pref_summary_patient_name">Nom de la personne qui utilise ce téléphone. Il différencie cette instance d\'AAPS dans les rapports et la synchronisation.</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">Répertoire AAPS</string>
     <!-- StringKey: Protection preferences -->

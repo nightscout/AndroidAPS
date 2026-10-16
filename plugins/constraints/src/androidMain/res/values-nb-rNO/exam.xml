@@ -4,7 +4,7 @@
     <string name="dia_label_exam">Insulinets virkningstid (DIA)</string>
     <string name="dia_profile">Du bør angi DIA-verdien under Insulininnstillinger (Administrer → Insulininnstillinger), ikke i profilen.</string>
     <string name="dia_minimumis5h">Minimum tillatt DIA verdi er 5 timer.</string>
-    <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">Hvis du føler at DIA verdien (insulinvarigheten) som du benyttet i pumpen fungerte godt før du tok i bruk AndroidAPS, da er det ikke nødvendig å endre dette når du starter å loope.</string>
     <string name="dia_valuemustbedetermined">Du må selv bestemme hvilken verdi som passer for DIA.</string>
     <string name="hypott_label">Hypo midlertidig mål (TT)</string>
@@ -19,7 +19,7 @@
     <string name="pumpdisconnect_missinginsulin">Det hjelper AndroidAPS å forstå at ingen insulin ble levert mens pumpen var fysisk frakoblet.</string>
     <string name="pumpdisconnect_notstop">Det stopper ikke levering av insulin hvis pumpen forblir koblet til kroppen din.</string>
     <string name="pumpdisconnect_openloop">Det vil sette AndroidAPS i åpen loop modus.</string>
-    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#loop-status</string>
+    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-loop-status</string>
     <string name="objectives_label">AAPS innstillinger</string>
     <string name="objectives2_label">AAPS innstillinger</string>
     <string name="objectives_howtosave">Hva er beste praksis for å ta sikkerhetskopi av dine innstillinger?</string>
@@ -32,7 +32,7 @@
     <string name="objectives2_cloud">Kopier din eksporterte innstillingsfil til en trygg plass utenfor din mobil (f.eks. ved å bruke skylagring, koble mobil til PC via kabel, epost etc.)</string>
     <string name="objectives2_easyrestore">Hvis din mobil er ødelagt eller mistet, finnes det enkle metoder for å gjenopprette dine innstillinger uten å bruke en sikkerhetskopi.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/en/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">Støy i sensor-målinger</string>
     <string name="noisycgm_whattodo">Hva bør gjøres hvis sensor-data har støy?</string>
     <string name="noisycgm_nothing">Gjør ingenting - AAPS vil håndtere det.</string>
@@ -98,14 +98,14 @@
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
     <string name="insulin_actrapid">Actrapid®/Humulin R®/«vanlig» humant insulin.</string>
-    <string name="insulin_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="insulin_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="sensitivity_label">Sensitivitets plugin</string>
     <string name="sensitivity_adjust">Sensitivitets plugin gjør det mulig for AAPS å gjøre midlertidige eller kortvarige justeringer av insulin sensitivitet (f. eks. hormonelle forandringer eller problemer med absorpsjon ved innstikkstedet).</string>
     <string name="sensitivity_edit">Sensitivitetsplugin gir brukeren forslag til endringer i basaldoser, IK- og ISF-forhold som kan benyttes til å redigere profilen.</string>
     <string name="sensitivity_cannula">Hvis du logger bytte av kanyle vil Autosens-verdien tilbakestilles til 100%.</string>
     <string name="sensitivity_time">Noen plugins har konfigurerbare tidsintervaller som kan settes av brukeren.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="sensitivity_hint2">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/KeyAapsFeatures.html#autosens</string>
+    <string name="sensitivity_hint2">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/KeyAapsFeatures.html#open-aps-features-autosens</string>
     <string name="wrongcarbs_label">Feil i KH angivelse</string>
     <string name="wrongcarbs_whattodo">Hva skal du gjøre hvis du har gjort en feilaktig registrering av karbohydrater?</string>
     <string name="wrongcarbs_treatmentstab">Slett den feilaktige oppføringen i behandlingshistorikken, og legg inn riktig karbohydratmengde.</string>
@@ -140,7 +140,7 @@
     <string name="breadgrams_exchange">Karbohydrater som konsumeres kan registreres ved hjelp av et passende byttesystem (f.eks. DAFNE \"CHO\" eller europeiske \"brødenheter\").</string>
     <string name="breadgrams_decay">AAPS bruker en dynamisk modell til å estimere karbohydrat opptaket og beregne COB.</string>
     <string name="breadgrams_calc">Hvis blodsukkernivået er utenfor akseptable verdier (for lavt eller for høy), kan boluskalkulatoren brukes til å gi forslag til korreksjoner for karbohydrater eller insulin.</string>
-    <string name="breadgrams_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#bolus-wizard</string>
+    <string name="breadgrams_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aaps-screens-bolus-wizard</string>
     <string name="breadgrams_hint2">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="extendedcarbs_label">e-Karbo</string>
     <string name="extendedcarbs_handling">Hva kan du bruke e-karbohydrater (forlengede karbohydrater) til?</string>

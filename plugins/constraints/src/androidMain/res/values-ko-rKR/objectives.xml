@@ -57,6 +57,10 @@
     <string name="unfinshed_button">다음 미답변</string>
     <string name="requestcode">요청 코드: %1$s</string>
     <string name="objectives_hint">(올바른 답변을 모두 체크하세요)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/ko/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/ko/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/ko/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/ko/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">인터넷에 연결되지 않음</string>
     <string name="requirementnotmet">목표 요구 사항이 충족되지 않음</string>
     <string name="what_i_ve_learned">내가 배운 것들:</string>

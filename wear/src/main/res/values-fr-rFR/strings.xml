@@ -97,6 +97,7 @@
     <string name="action_user_action_confirmation">Action de l\'utilisateur demandée</string>
     <string name="action_scene_confirmation">Scenario demandé</string>
     <string name="scene_end">Fin</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Ignorer</string>
     <string name="action_treatment_confirmation">Traitement demandé</string>
     <string name="action_bolus_confirmation">Bolus demandé</string>
     <string name="action_wizard_confirmation">Calcul demandé</string>
@@ -190,6 +191,8 @@
     <string name="bolus_progress_silent_channel_name">Progression Bolus silencieuse</string>
     <string name="bolus_progress_channel_description">Progression et annulation Bolus</string>
     <string name="bolus_progress_silent_channel_description">Progression et annulation Bolus avec moins de vibrations</string>
+    <string name="open_loop_channel_name">Boucle ouverte AAPS</string>
+    <string name="open_loop_channel_description">Notification de demande d\'ouverture de la boucle</string>
     <string name="simple_ui_off">Désactivé</string>
     <string name="simple_ui_charging">Pendant la charge</string>
     <string name="simple_ui_always_on">Toujours allumé</string>
@@ -264,6 +267,8 @@
     <string name="complication_iob_icon">Icône IA</string>
     <string name="complication_iob_detailed">IA détaillée</string>
     <string name="complication_uploader_phone_battery">Batterie téléphone</string>
+    <string name="running_mode_resume">Reprendre la boucle</string>
+    <string name="running_mode_reconnect">Reconnecter la pompe</string>
     <string name="label_running_mode_title">Mode</string>
     <string name="label_bg_graph_tile">Graphique Glycémie</string>
     <string name="tile_tap_action">Action du clic</string>
@@ -313,6 +318,18 @@
     <string name="loop_status_target_range">Plage</string>
     <string name="loop_status_target">Cible</string>
     <string name="loop_status_adjusted_target">Cible ajustée</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Jusqu\'à l\'arrêt</string>
+    <string name="loop_status_scene_ended">Terminée</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Suivi</string>
+    <string name="loop_status_profile">Profil</string>
+    <string name="loop_status_no_profile">Aucun profil séléctionné</string>
+    <string name="loop_status_profile_percentage">Pourcentage</string>
+    <string name="loop_status_profile_timeshift">Décalage horaire</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Retourner à</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+d h</string>
+    <string name="loop_status_sensitivity">Sensibilité</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Défini par la scène active</string>
     <string name="loop_status">État de la boucle</string>
     <string name="loop_status_refresh">Actualiser</string>
     <string name="confirm">Confirmer</string>

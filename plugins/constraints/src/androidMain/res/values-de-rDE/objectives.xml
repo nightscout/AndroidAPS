@@ -58,6 +58,10 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="unfinshed_button">Nächste offene</string>
     <string name="requestcode">Code anfordern: %1$s</string>
     <string name="objectives_hint">(Kreuze alle richtigen Antworten an)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/de/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/de/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/de/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/de/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Keine Verbindung zum Internet</string>
     <string name="requirementnotmet">Anforderungen des Zieles nicht erfüllt</string>
     <string name="what_i_ve_learned">Was ich gelernt habe:</string>

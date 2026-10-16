@@ -25,6 +25,7 @@
     <string name="doprofileswitch">Profilwechsel durchführen</string>
     <string name="exitwizard">Einrichtungsassistenten überspringen</string>
     <string name="setupwizard_sensitivity_description">Das Sensitivitäts-Plugin wird für die Sensitivitäts- und COB-Berechnung verwendet. Für weitere Informationen siehe:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/de/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Bitte konfiguriere Deinen RileyLink unten. Nachdem Du einen RileyLink ausgewählt hast, kannst Du die Installation fortsetzen, sobald der RileyLink-Status \"Verbunden\" ist. Das kann eine Minute dauern.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Hinweis:</b> Du kannst das Setup fortsetzen, sobald die Pumpe initialisiert wurde.\n</string>
     <string name="startobjective">Starte deine erste Zielsetzung</string>
