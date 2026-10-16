@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -33,6 +34,7 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.formatMinutesAsDuration
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
@@ -59,9 +61,10 @@ internal fun ProfileCarouselCard(
         eps.originalPercentage != 100 || eps.originalTimeshift != 0L || eps.originalDuration != 0L
     } ?: false
 
-    // Calculate progress for temporary profiles with auto-update
+    // Calculate progress and remaining time for temporary profiles with auto-update
     val hasDuration = activeProfileSwitch?.originalDuration?.let { it > 0L } ?: false
     var progress by remember { mutableFloatStateOf(0f) }
+    var remainingMs by remember { mutableLongStateOf(0L) }
 
     // Auto-update progress every 30 seconds
     LaunchedEffect(isActive, hasDuration, activeProfileSwitch?.timestamp) {
@@ -73,10 +76,12 @@ internal fun ProfileCarouselCard(
                 progress = if (remaining > 0) {
                     (elapsed.toFloat() / activeProfileSwitch.originalDuration.toFloat()).coerceIn(0f, 1f)
                 } else 1f
+                remainingMs = remaining.coerceAtLeast(0L)
                 delay(30_000L) // Update every 30 seconds
             }
         } else {
             progress = 0f
+            remainingMs = 0L
         }
     }
 
@@ -180,8 +185,11 @@ internal fun ProfileCarouselCard(
                         overflow = TextOverflow.Ellipsis
                     )
 
-                    // Percentage and timeshift for active profile
+                    // Percentage, timeshift and remaining time for active profile
                     activeProfileSwitch?.let { eps ->
+                        // Resolved outside buildString: stringResource is a Composable call. Whole minutes,
+                        // rounded down like the Overview chip, so both show the same number.
+                        val remainingText = if (remainingMs > 0L) formatMinutesAsDuration(T.msecs(remainingMs).mins().toInt()) else null
                         val details = buildString {
                             if (eps.originalPercentage != 100) {
                                 append("${eps.originalPercentage}%")
@@ -190,6 +198,10 @@ internal fun ProfileCarouselCard(
                             if (timeshiftHours != 0) {
                                 if (isNotEmpty()) append(" ")
                                 append(if (timeshiftHours > 0) "+${timeshiftHours}h" else "${timeshiftHours}h")
+                            }
+                            if (remainingText != null) {
+                                if (isNotEmpty()) append(" · ")
+                                append(remainingText)
                             }
                         }
                         if (details.isNotEmpty()) {
