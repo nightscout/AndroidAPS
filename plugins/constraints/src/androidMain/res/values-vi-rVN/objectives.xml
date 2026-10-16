@@ -79,6 +79,10 @@
     <string name="unfinshed_button">Tiếp theo chưa hoàn thành</string>
     <string name="requestcode">Mã yêu cầu: %1$s</string>
     <string name="objectives_hint">(chọn tất cả các đáp án đúng)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Không kết nối với Internet</string>
     <string name="failedretrievetime">Không thể lấy thông tin thời gian</string>
     <string name="requirementnotmet">Chưa đáp ứng yêu cầu của Mục tiêu</string>
