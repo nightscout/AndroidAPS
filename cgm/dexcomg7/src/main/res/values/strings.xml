@@ -48,6 +48,17 @@
     <string name="dexcom_g7_row_pairing_code">Pairing code</string>
     <string name="dexcom_g7_row_firmware">Firmware</string>
     <string name="dexcom_g7_row_display_slot">Display slot</string>
+    <string name="dexcom_g7_row_watch">Watch</string>
+    <string name="dexcom_g7_watch_direct_turn_on">Direct to watch: turn on</string>
+    <string name="dexcom_g7_watch_direct_turn_off">Direct to watch: turn off</string>
+    <string name="dexcom_g7_watch_waiting_for_watch">Waiting for the watch. Is the AAPS watch app installed and the watch nearby?</string>
+    <string name="dexcom_g7_watch_not_supported">This watch is too old. Direct to watch needs Wear OS with Android 12 or newer.</string>
+    <string name="dexcom_g7_watch_needs_permission">Allow Bluetooth on the watch: tap the AAPS notification there.</string>
+    <string name="dexcom_g7_watch_bluetooth_off">Bluetooth is off on the watch</string>
+    <string name="dexcom_g7_watch_pairing">Pairing at the next reading. Accept the pairing requests on the watch.</string>
+    <string name="dexcom_g7_watch_connected" comment="%1$s=how long ago, for example 2 min ago">Reading the sensor itself, last reading %1$s</string>
+    <string name="dexcom_g7_watch_connected_no_reading">Paired, waiting for the first reading</string>
+    <string name="dexcom_g7_watch_refused" comment="%1$s=the reason, a whole sentence, for example: The sensor refused this phone\'s key. Pair the sensor again.">The sensor refused the watch. %1$s</string>
     <string name="dexcom_g7_row_paired">Paired</string>
     <string name="dexcom_g7_row_calibration">Last calibration</string>
     <string name="dexcom_g7_row_previous_sensor">Previous sensor</string>

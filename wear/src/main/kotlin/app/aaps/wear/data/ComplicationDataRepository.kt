@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.shared.impl.weardata.ResFileMap
 import app.aaps.wear.R
+import app.aaps.wear.g7.G7WatchReadings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -77,7 +78,8 @@ class ComplicationDataRepository(
         try {
             dataStore.updateData { current ->
                 when (singleBg.dataset) {
-                    0 -> current.copy(bgData = singleBg, lastUpdateTimestamp = System.currentTimeMillis())
+                    // A newer reading the watch took from the sensor itself is not replaced by an older one from the phone.
+                    0 -> current.copy(bgData = G7WatchReadings.choose(current.bgData, singleBg), lastUpdateTimestamp = System.currentTimeMillis())
                     1 -> current.copy(bgData1 = singleBg, lastUpdateTimestamp = System.currentTimeMillis())
                     2 -> current.copy(bgData2 = singleBg, lastUpdateTimestamp = System.currentTimeMillis())
                     else -> {
@@ -128,6 +130,27 @@ class ComplicationDataRepository(
             aapsLogger.error(LTag.WEAR, "Failed to update graph data", e)
         }
     }
+
+    /**
+     * Readings the watch took from the sensor itself (direct-to-watch). [latest] goes on the face when it
+     * is newer than what the phone sent; [all] go into the graph where it has no reading of that time.
+     */
+    suspend fun addSensorReadings(latest: EventData.SingleBg?, all: List<EventData.SingleBg>) {
+        try {
+            dataStore.updateData { current ->
+                current.copy(
+                    bgData = latest?.let { G7WatchReadings.choose(current.bgData, it) } ?: current.bgData,
+                    graphData = EventData.GraphData(G7WatchReadings.mergeIntoGraph(current.graphData.entries, all)),
+                    lastUpdateTimestamp = System.currentTimeMillis()
+                )
+            }
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.WEAR, "Failed to add sensor readings", e)
+        }
+    }
+
+    /** The stored data as it is now. */
+    suspend fun current(): ComplicationData = complicationData.first()
 
     /**
      * Update Treatment data from phone

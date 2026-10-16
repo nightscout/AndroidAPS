@@ -13,11 +13,11 @@ import app.aaps.cgm.dexcomg7.session.G7PairingService
 import app.aaps.cgm.dexcomg7.session.G7Reading
 import app.aaps.cgm.dexcomg7.session.G7Session
 import app.aaps.cgm.dexcomg7.ui.G7ComposeContent
+import app.aaps.cgm.dexcomg7.watch.G7BooleanNonKey
+import app.aaps.cgm.dexcomg7.watch.G7WatchHandover
 import app.aaps.cgm.dexcomg7.protocol.G7LifecycleState
-import app.aaps.cgm.dexcomg7.protocol.G7Trend
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
-import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -77,6 +77,7 @@ class DexcomG7DirectPlugin(
     private val pairing: G7PairingService,
     private val alerts: G7Alerts,
     private val alarms: G7Alarms,
+    private val watchHandover: G7WatchHandover,
     private val blePreCheck: BlePreCheck
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
@@ -86,7 +87,7 @@ class DexcomG7DirectPlugin(
         .shortName(TextRef.AndroidRes(R.string.dexcom_g7_direct_short))
         .preferencesVisibleInSimpleMode(false)
         .description(TextRef.AndroidRes(R.string.description_dexcom_g7_direct)),
-    ownPreferences = G7StringNonKey.entries + G7AlarmKeys.all,
+    ownPreferences = G7StringNonKey.entries + G7BooleanNonKey.entries + G7AlarmKeys.all,
     aapsLogger = aapsLogger,
     rh = rh,
     preferences = preferences,
@@ -144,9 +145,11 @@ class DexcomG7DirectPlugin(
         alerts.start()
         alarms.start()
         session.start()
+        watchHandover.start()
     }
 
     override suspend fun onStop() {
+        watchHandover.stop()
         pairing.cancel()
         session.stop()
         alerts.stop()
@@ -187,25 +190,11 @@ class DexcomG7DirectPlugin(
                 value = it.clampedGlucose!!.toDouble(),
                 raw = null,
                 noise = null,
-                trendArrow = trendArrow(it.trend),
+                trendArrow = it.trendArrow,
                 sourceSensor = SourceSensor.DEXCOM_G7_NATIVE
             )
         }
         runCatching { persistenceLayer.insertCgmSourceData(Sources.Dexcom, values, emptyList(), sensorStart) }
             .onFailure { aapsLogger.error(LTag.BGSOURCE, "Dexcom G7: storing readings failed", it) }
-    }
-
-    companion object {
-
-        fun trendArrow(trend: G7Trend?): TrendArrow = when (trend) {
-            G7Trend.DOUBLE_DOWN     -> TrendArrow.DOUBLE_DOWN
-            G7Trend.SINGLE_DOWN     -> TrendArrow.SINGLE_DOWN
-            G7Trend.FORTY_FIVE_DOWN -> TrendArrow.FORTY_FIVE_DOWN
-            G7Trend.FLAT            -> TrendArrow.FLAT
-            G7Trend.FORTY_FIVE_UP   -> TrendArrow.FORTY_FIVE_UP
-            G7Trend.SINGLE_UP       -> TrendArrow.SINGLE_UP
-            G7Trend.DOUBLE_UP       -> TrendArrow.DOUBLE_UP
-            null                    -> TrendArrow.NONE
-        }
     }
 }

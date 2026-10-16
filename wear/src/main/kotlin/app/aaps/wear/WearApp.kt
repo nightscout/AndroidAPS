@@ -17,6 +17,7 @@ import app.aaps.wear.comm.ExceptionHandlerWear
 import app.aaps.wear.complications.cwf.CwfComplicationUpdater
 import app.aaps.wear.di.WearGraph
 import app.aaps.wear.events.EventWearPreferenceChange
+import app.aaps.wear.g7.G7WatchDirect
 import app.aaps.wear.watchfaces.WatchFacePushHelper
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.MembersInjector
@@ -46,6 +47,7 @@ class WearApp : Application(), MetroMemberInjector {
     @Inject lateinit var exceptionHandlerWear: ExceptionHandlerWear
     @Inject lateinit var watchFacePushHelper: WatchFacePushHelper
     @Inject lateinit var cwfComplicationUpdater: CwfComplicationUpdater
+    @Inject lateinit var g7WatchDirect: G7WatchDirect
 
     /**
      * Held in a field on purpose: `SharedPreferences` keeps its change listeners in a
@@ -73,6 +75,8 @@ class WearApp : Application(), MetroMemberInjector {
         // Refreshes the Custom watch face image complications when the picture changes, rather
         // than leaving them on the system's slow periodic timer
         cwfComplicationUpdater.start()
+        // Direct-to-watch: listens for the phone turning it on, and picks a set-up sensor up again after a restart
+        g7WatchDirect.start()
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(preferenceChangeListener)
         startForegroundService(Intent(this, DataLayerListenerServiceWear::class.java))
     }

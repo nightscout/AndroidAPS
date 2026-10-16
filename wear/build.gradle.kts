@@ -228,6 +228,8 @@ dependencies {
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
     implementation(project(":core:data"))
+    // Direct-to-watch: the watch reads the Dexcom G7 itself, in the sensor's watch slot.
+    implementation(project(":cgm:dexcomg7:core"))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core)

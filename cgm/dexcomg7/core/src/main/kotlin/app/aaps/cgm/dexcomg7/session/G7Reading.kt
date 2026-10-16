@@ -3,6 +3,7 @@ package app.aaps.cgm.dexcomg7.session
 import app.aaps.cgm.dexcomg7.protocol.AlgorithmState
 import app.aaps.cgm.dexcomg7.protocol.G7GlucoseLimits
 import app.aaps.cgm.dexcomg7.protocol.G7Trend
+import app.aaps.core.data.model.TrendArrow
 
 /** One glucose reading from the sensor, live or from backfill, with its time on the phone's clock. */
 data class G7Reading(
@@ -25,6 +26,22 @@ data class G7Reading(
 
     /** The value limited to what the sensor can measure (40..400 mg/dL). */
     val clampedGlucose: Int? get() = glucose?.coerceIn(G7GlucoseLimits.MINIMUM, G7GlucoseLimits.MAXIMUM)
+
+    val trendArrow: TrendArrow get() = trendArrow(trend)
+
+    companion object {
+
+        fun trendArrow(trend: G7Trend?): TrendArrow = when (trend) {
+            G7Trend.DOUBLE_DOWN     -> TrendArrow.DOUBLE_DOWN
+            G7Trend.SINGLE_DOWN     -> TrendArrow.SINGLE_DOWN
+            G7Trend.FORTY_FIVE_DOWN -> TrendArrow.FORTY_FIVE_DOWN
+            G7Trend.FLAT            -> TrendArrow.FLAT
+            G7Trend.FORTY_FIVE_UP   -> TrendArrow.FORTY_FIVE_UP
+            G7Trend.SINGLE_UP       -> TrendArrow.SINGLE_UP
+            G7Trend.DOUBLE_UP       -> TrendArrow.DOUBLE_UP
+            null                    -> TrendArrow.NONE
+        }
+    }
 }
 
 /** How the link to the sensor is doing, for the status screen. */

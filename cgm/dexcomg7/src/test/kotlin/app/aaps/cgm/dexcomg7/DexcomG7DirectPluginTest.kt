@@ -11,6 +11,7 @@ import app.aaps.cgm.dexcomg7.session.G7Alerts
 import app.aaps.cgm.dexcomg7.session.G7PairingService
 import app.aaps.cgm.dexcomg7.session.G7Reading
 import app.aaps.cgm.dexcomg7.session.G7Session
+import app.aaps.cgm.dexcomg7.watch.G7WatchHandover
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
@@ -50,6 +51,7 @@ class DexcomG7DirectPluginTest : TestBase() {
     @Mock lateinit var pairing: G7PairingService
     @Mock lateinit var alerts: G7Alerts
     @Mock lateinit var alarms: G7Alarms
+    @Mock lateinit var watchHandover: G7WatchHandover
     @Mock lateinit var blePreCheck: BlePreCheck
 
     private lateinit var plugin: DexcomG7DirectPlugin
@@ -60,7 +62,7 @@ class DexcomG7DirectPluginTest : TestBase() {
     fun setUp() {
         whenever(rh.gs(any<Int>())).thenReturn("")
         whenever(rh.gs(any<TextRef>())).thenReturn("")
-        plugin = DexcomG7DirectPlugin(rh, aapsLogger, preferences, notificationManager, context, persistenceLayer, store, session, pairing, alerts, alarms, blePreCheck)
+        plugin = DexcomG7DirectPlugin(rh, aapsLogger, preferences, notificationManager, context, persistenceLayer, store, session, pairing, alerts, alarms, watchHandover, blePreCheck)
         whenever(store.value).thenReturn(G7State(address = "AA", activatedAt = now - 60_000_000))
     }
 
@@ -112,8 +114,8 @@ class DexcomG7DirectPluginTest : TestBase() {
 
     @Test
     fun mapsEveryTrend() {
-        assertThat(DexcomG7DirectPlugin.trendArrow(null)).isEqualTo(TrendArrow.NONE)
-        assertThat(G7Trend.entries.map { DexcomG7DirectPlugin.trendArrow(it) }).containsNoDuplicates()
+        assertThat(G7Reading.trendArrow(null)).isEqualTo(TrendArrow.NONE)
+        assertThat(G7Trend.entries.map { G7Reading.trendArrow(it) }).containsNoDuplicates()
     }
 
     /**

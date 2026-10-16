@@ -308,7 +308,10 @@ sealed class EventData : Event() {
         val color: Int = 0,
         val deltaMgdl: Double? = null,
         val avgDeltaMgdl: Double? = null,
-        val id: Int = 0
+        val id: Int = 0,
+        // True when the watch read this value from the sensor itself (direct-to-watch), not from the phone.
+        // Keep new fields at the END of this class: the ProtoBuf wire format numbers fields by declaration order.
+        val fromSensor: Boolean = false
     ) : EventDataSet, EventData(), Comparable<SingleBg> {
 
         override fun equals(other: Any?): Boolean =
@@ -579,6 +582,55 @@ sealed class EventData : Event() {
     /** Wear→Mobile: the wearer acknowledged the alarm [id] on the watch. */
     @Serializable
     data class CgmAlarmAcknowledge(val id: String) : EventData()
+
+    /**
+     * Mobile→Wear: direct-to-watch for the Dexcom G7. With [active] the watch connects to the sensor
+     * itself, in the sensor's watch slot, next to the phone. It makes its own key from [pairingCode]; the
+     * phone's key never leaves the phone. Without [active] the watch lets the sensor go.
+     */
+    @Serializable
+    data class G7WatchDirect(
+        val active: Boolean,
+        val pairingCode: String? = null,
+        val address: String? = null,
+        val serial: String? = null,
+        val sensorName: String? = null
+    ) : EventData()
+
+    /** Wear→Mobile: how the watch's own connection to the Dexcom G7 is doing. */
+    @Serializable
+    data class G7WatchStatus(
+        val state: G7WatchState,
+        /** The sensor the watch is set up for, so the phone can see when it holds an old one. */
+        val address: String? = null,
+        val latestReadingAt: Long? = null,
+        /** The last refusal or problem, in plain words, for the phone's status line. */
+        val detail: String? = null
+    ) : EventData()
+
+    @Serializable
+    enum class G7WatchState {
+
+        /** Direct-to-watch is off. */
+        OFF,
+
+        /** The watch runs Android 11 or older; the sensor code needs Android 12. */
+        NOT_SUPPORTED,
+
+        /** The wearer has to allow Bluetooth on the watch. */
+        NEEDS_PERMISSION,
+        BLUETOOTH_OFF,
+
+        /** No key yet: the next connection runs the key exchange and the pairing prompts. */
+        PAIRING,
+
+        /** Paired, waiting for the sensor's next reading. The normal state between readings. */
+        WAITING,
+        CONNECTED,
+
+        /** The sensor refused the watch. [G7WatchStatus.detail] says why. */
+        REFUSED
+    }
 
     // Wear -> Wear (workaround)
     @Serializable

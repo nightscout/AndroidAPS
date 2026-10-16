@@ -419,4 +419,17 @@
     <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
     <string name="cgm_alarm_channel">CGM alarms</string>
     <string name="cgm_alarm_acknowledge">Acknowledge</string>
+    <string name="g7_watch_title">Dexcom G7 on the watch</string>
+    <string name="g7_watch_channel">Dexcom G7 on the watch</string>
+    <string name="g7_watch_allow">Allow Bluetooth</string>
+    <string name="g7_watch_notification_permission">To read the sensor itself, the watch needs Bluetooth. Tap to allow it.</string>
+    <string name="g7_watch_notification_pairing">The watch pairs with the sensor at its next reading. Accept the pairing requests that come up, there are usually two.</string>
+    <string name="g7_watch_notification_refused">The sensor refused the watch. See the Dexcom G7 page in AAPS on the phone.</string>
+    <string name="g7_watch_state_off">Direct to watch is off. Turn it on from the Dexcom G7 page in AAPS on the phone.</string>
+    <string name="g7_watch_state_not_supported">This watch is too old for direct to watch. It needs Android 12 or newer.</string>
+    <string name="g7_watch_state_bluetooth_off">Bluetooth is off on the watch.</string>
+    <string name="g7_watch_state_running">The watch reads the sensor itself, next to the phone.</string>
+    <string name="g7_watch_low">Low (from the sensor)</string>
+    <string name="g7_watch_urgent_low">Urgent low (from the sensor)</string>
+    <string name="g7_watch_low_message" comment="%1$s=glucose value, for example 3.1, %2$s=trend arrow">%1$s %2$s. No reading from the phone. Check your glucose.</string>
 </resources>

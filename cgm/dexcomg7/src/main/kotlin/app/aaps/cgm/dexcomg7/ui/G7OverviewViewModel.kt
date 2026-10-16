@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.BluetoothDisabled
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.NotificationsOff
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Watch
 import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -23,6 +24,9 @@ import app.aaps.cgm.dexcomg7.protocol.G7LifecycleState
 import app.aaps.cgm.dexcomg7.protocol.G7Trend
 import app.aaps.cgm.dexcomg7.session.G7ConnectionStatus
 import app.aaps.cgm.dexcomg7.session.G7Session
+import app.aaps.cgm.dexcomg7.watch.G7WatchHandover
+import app.aaps.cgm.dexcomg7.watch.G7WatchReport
+import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -67,7 +71,8 @@ class G7OverviewViewModel(
     private val profileUtil: ProfileUtil,
     private val store: G7StateStore,
     private val session: G7Session,
-    private val alarms: G7Alarms
+    private val alarms: G7Alarms,
+    private val watchHandover: G7WatchHandover
 ) : ViewModel() {
 
     val events = MutableSharedFlow<G7OverviewEvent>(extraBufferCapacity = 4)
@@ -79,8 +84,10 @@ class G7OverviewViewModel(
         }
     }
 
+    private val watch = combine(watchHandover.enabled, watchHandover.report) { enabled, report -> WatchView(enabled, report) }
+
     val uiState: StateFlow<PumpOverviewUiState> =
-        combine(store.state, session.status, alarms.runtime, ticker) { state, status, alarm, now -> build(state, status, alarm, now) }
+        combine(store.state, session.status, alarms.runtime, watch, ticker) { state, status, alarm, watch, now -> build(state, status, alarm, watch, now) }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), PumpOverviewUiState())
 
     val canCalibrate: Boolean get() = store.value.lifecycleState(System.currentTimeMillis()) == G7LifecycleState.OK
@@ -96,13 +103,13 @@ class G7OverviewViewModel(
         session.forgetSensor(removeBond = true)
     }
 
-    private fun build(state: G7State, status: G7ConnectionStatus, alarm: G7AlarmRuntime, now: Long): PumpOverviewUiState {
+    private fun build(state: G7State, status: G7ConnectionStatus, alarm: G7AlarmRuntime, watch: WatchView, now: Long): PumpOverviewUiState {
         val lifecycle = state.lifecycleState(now)
         val raised = alarm.raised.firstOrNull()
         return PumpOverviewUiState(
             statusBanner = raised?.let { StatusBanner(rh.gs(R.string.dexcom_g7_alarm_banner, rh.gs(it.title), alarms.body(it, state)), StatusLevel.CRITICAL) }
                 ?: banner(state, lifecycle, status, now),
-            infoRows = rows(state, lifecycle, status, now),
+            infoRows = rows(state, lifecycle, status, now) + watchRows(state, watch, now),
             primaryActions = listOf(
                 PumpAction(
                     label = rh.gs(R.string.dexcom_g7_alarm_acknowledge),
@@ -121,6 +128,12 @@ class G7OverviewViewModel(
                     enabled = lifecycle == G7LifecycleState.OK,
                     visible = state.isPaired,
                     onClick = { events.tryEmit(G7OverviewEvent.Calibrate) }
+                ),
+                PumpAction(
+                    label = rh.gs(if (watch.enabled) R.string.dexcom_g7_watch_direct_turn_off else R.string.dexcom_g7_watch_direct_turn_on),
+                    icon = Icons.Filled.Watch,
+                    visible = watchHandover.isAvailable(state),
+                    onClick = { watchHandover.setEnabled(!watch.enabled) }
                 ),
                 PumpAction(
                     label = rh.gs(R.string.dexcom_g7_cancel_calibration),
@@ -202,6 +215,28 @@ class G7OverviewViewModel(
         return rows
     }
 
+    /** The watch row: what the watch last reported about its own link to the sensor. */
+    private fun watchRows(state: G7State, watch: WatchView, now: Long): List<PumpInfoRow> {
+        if (!watch.enabled || !watchHandover.isAvailable(state)) return emptyList()
+        val status = watch.report?.status
+        val (text, level) = when (status?.state) {
+            null                                    -> rh.gs(R.string.dexcom_g7_watch_waiting_for_watch) to StatusLevel.WARNING
+            EventData.G7WatchState.OFF              -> rh.gs(R.string.dexcom_g7_watch_waiting_for_watch) to StatusLevel.WARNING
+            EventData.G7WatchState.NOT_SUPPORTED    -> rh.gs(R.string.dexcom_g7_watch_not_supported) to StatusLevel.CRITICAL
+            EventData.G7WatchState.NEEDS_PERMISSION -> rh.gs(R.string.dexcom_g7_watch_needs_permission) to StatusLevel.WARNING
+            EventData.G7WatchState.BLUETOOTH_OFF    -> rh.gs(R.string.dexcom_g7_watch_bluetooth_off) to StatusLevel.WARNING
+            EventData.G7WatchState.PAIRING          -> rh.gs(R.string.dexcom_g7_watch_pairing) to StatusLevel.WARNING
+            EventData.G7WatchState.WAITING,
+            EventData.G7WatchState.CONNECTED        -> watchReading(status.latestReadingAt, now) to StatusLevel.NORMAL
+            EventData.G7WatchState.REFUSED          -> rh.gs(R.string.dexcom_g7_watch_refused, DexcomG7Formatting.refusal(rh, status.detail ?: "")) to StatusLevel.CRITICAL
+        }
+        return listOf(PumpInfoRow(rh.gs(R.string.dexcom_g7_row_watch), text, level))
+    }
+
+    private fun watchReading(at: Long?, now: Long): String =
+        if (at == null) rh.gs(R.string.dexcom_g7_watch_connected_no_reading)
+        else rh.gs(R.string.dexcom_g7_watch_connected, dateUtil.minOrSecAgo(rh, at).takeIf { at <= now } ?: "")
+
     private fun lastReading(state: G7State, now: Long): String? {
         val at = state.latestReadingAt ?: return null
         val glucose = state.latestGlucose?.takeIf { state.latestAlgorithmState?.let { s -> AlgorithmState(s).hasReliableGlucose } == true }
@@ -234,6 +269,8 @@ class G7OverviewViewModel(
             )
         }
     }
+
+    private data class WatchView(val enabled: Boolean, val report: G7WatchReport?)
 
     companion object {
 

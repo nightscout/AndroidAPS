@@ -16,6 +16,7 @@ android {
 // run the same connection in the sensor's watch slot. Needs nothing the watch app does not have.
 dependencies {
     api(project(":cgm:dexcomg7:protocol"))
+    implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
 
