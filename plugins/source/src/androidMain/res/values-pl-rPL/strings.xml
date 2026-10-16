@@ -22,6 +22,7 @@
     <string name="random_bg">Losowa glikemia</string>
     <string name="description_source_random_bg">Generuj losowe odczyty glukozy (wyłącznie do celów demonstracyjnych)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
     <string name="description_source_patched_syai_tag_app">Otrzymuj glikemię z aplikacji Syai/Ottai.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">SI App</string>
@@ -50,4 +51,5 @@
     <string name="aidex_sensor_stabilizing">Sensor się stabilizuje, poczekaj…</string>
     <string name="aidex_sensor_replace">Wymagana wymiana sensora, wymień go na nowy jak najszybciej.</string>
     <string name="aidex_signal_lost">Utracono sygnał z sensora, sprawdź połączenie.</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">Duplikat odczytu</string>
 </resources>
