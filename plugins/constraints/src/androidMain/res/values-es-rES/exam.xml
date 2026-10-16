@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dia_whatmeansdia">¿Qué es cierto acerca de DAI?</string>
-    <string name="dia_label_exam">Duración de la acción de insulina (DAI)</string>
+    <string name="dia_whatmeansdia">¿Qué es cierto acerca de DIA?</string>
+    <string name="dia_label_exam">Duración de la acción de insulina (DIA)</string>
     <string name="dia_profile">Debe configurar el valor de la DIA en la configuración de la insulina (Administrar → Configuración de insulina), no en el perfil.</string>
-    <string name="dia_minimumis5h">El valor mínimo permitido es de 5 horas.</string>
+    <string name="dia_minimumis5h">El valor mínimo permitido es de 5 horas</string>
     <string name="dia_hint1">https://wiki.aaps.app/es/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">Si estás satisfecho de que el valor para DIA que utilizó en su bomba antes de AAPS funcionaba bien, no hay necesidad de cambiarlo cuando empiece el lazo</string>
-    <string name="dia_valuemustbedetermined">Deberás determinar por ti mismo el valor apropiado para DAI.</string>
+    <string name="dia_valuemustbedetermined">Deberás determinar por ti mismo el valor apropiado para DIA.</string>
     <string name="hypott_label">Objetivo temporal ante Hipoglucemia</string>
     <string name="hypott_whenhypott">¿Cuál es la razón principal para establecer un objetivo temporal por hipoglucemia?</string>
     <string name="hypott_wrongbasal">Para corregir hipoglucemias causadas por ajustes incorrectos de la tasa basal.</string>
@@ -202,6 +202,7 @@
     <string name="u200_with_profile_reports">Mi base de datos de AAPS y los informes de NS se vuelven erróneos. Todos los valores (bolos, tasas, TDD) se deben multiplicar por 2 para ver los valores reales, especialmente para los médicos y el equipo sanitario</string>
     <string name="u200_with_profile_pens">No tengo que convertir nada entre AAPS y el boli si utilizo un boli U200 para administrar un bolo externo</string>
     <string name="u200_with_profile_pens2">Independientemente del boli que utilice para administrar un bolo externo (U100 o U200), tengo que realizar la conversión entre la cantidad calculada por AAPS y la cantidad que selecciono en el boli, para cada bolo externo</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/es/dev/AdvancedOptions/InsulinConcentration.html</string>
     <string name="switch_u200_profile">Ha estado utilizando el truco del perfil al 50% con insulina U200 y desea cambiar a la función de Concentración de insulina. ¿Cuáles de las siguientes respuestas son verdaderas?</string>
     <string name="switch_u200_profile_any_time">Puedo cambiar en cualquier momento, porque ya tengo la insulina U200 correcta en mi bomba</string>
     <string name="switch_u200_profile_ps">Tengo que preparar un perfil el doble de agresivo (200% en comparación con el perfil predeterminado actual) y sincronizar este nuevo perfil tras el próximo cambio de parche/reservorio cuando se seleccione la insulina U200</string>
