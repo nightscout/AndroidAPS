@@ -305,8 +305,51 @@ class O5DoseRecoveryTest : TestBaseWithProfile() {
         plugin.reconcilePendingDose()
         assertThat(state.pendingDoseCommand).isNotNull()
         assertThat(state.lastBolusDeliveredUnits).isNull()
-        assertThat(state.cumulativeBolusPulsesDelivered).isEqualTo(0.toShort())
+        assertThat(state.cumulativeBolusPulsesDelivered).isEqualTo(8.toShort())
         verify(sync, never()).syncBolusWithPumpId(any(), any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun `saved acceptance cannot finalize from an unrelated inactive status`() = runBlocking<Unit> {
+        state.pendingDoseCommand = pendingBolus()
+        state.updateFromDefaultStatusResponse(status(4, DeliveryStatus.BOLUS_AND_BASAL_ACTIVE, 16))
+        assertThat(state.cumulativeBolusPulsesDelivered).isEqualTo(4.toShort())
+        state.updateFromDefaultStatusResponse(status(9, DeliveryStatus.BASAL_ACTIVE))
+        plugin.reconcilePendingDose()
+        assertThat(state.pendingDoseCommand).isNotNull()
+        assertThat(state.pendingDoseCommand!!.confirmedByStatus).isTrue()
+        assertThat(state.cumulativeBolusPulsesDelivered).isEqualTo(4.toShort())
+        assertThat(state.lastBolusDeliveredUnits).isNull()
+        verify(sync, never()).syncBolusWithPumpId(any(), any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun `unknown delivery status cannot finalize or account a requested bolus`() = runBlocking<Unit> {
+        state.pendingDoseCommand = pendingBolus()
+        state.updateFromDefaultStatusResponse(status(4, DeliveryStatus.UNKNOWN))
+        plugin.reconcilePendingDose()
+        assertThat(state.pendingDoseCommand).isNotNull()
+        assertThat(state.cumulativeBolusPulsesDelivered).isEqualTo(0.toShort())
+        assertThat(state.lastBolusDeliveredUnits).isNull()
+        verify(sync, never()).syncBolusWithPumpId(any(), any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun `failed finalization retains accounted progress and retry adds no pulses`() = runBlocking<Unit> {
+        state.pendingDoseCommand = pendingBolus()
+        state.updateFromDefaultStatusResponse(status(4, DeliveryStatus.BOLUS_AND_BASAL_ACTIVE, 16))
+        state.updateFromDefaultStatusResponse(status(4, DeliveryStatus.BASAL_ACTIVE))
+        assertThat(state.cumulativeBolusPulsesDelivered).isEqualTo(20.toShort())
+        whenever(history.setTotalAmountDelivered(eq(7L), anyOrNull()))
+            .thenReturn(Completable.error(IllegalStateException("Store unavailable")), Completable.complete())
+        assertThrows<IllegalStateException> { runBlocking { plugin.reconcilePendingDose() } }
+        assertThat(state.pendingDoseCommand!!.accountedBolusPulses).isEqualTo(20)
+        state.updateFromDefaultStatusResponse(status(4, DeliveryStatus.BASAL_ACTIVE))
+        plugin.reconcilePendingDose()
+        plugin.reconcilePendingDose()
+        assertThat(state.cumulativeBolusPulsesDelivered).isEqualTo(20.toShort())
+        assertThat(state.pendingDoseCommand).isNull()
+        verify(sync).syncBolusWithPumpId(eq(1000L), argThat<PumpInsulin> { cU == 1.0 }, any(), eq(7L), any(), any())
     }
 
     @Test
@@ -332,6 +375,7 @@ class O5DoseRecoveryTest : TestBaseWithProfile() {
                     check(allowProgram.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS))
                     val response = status(1, DeliveryStatus.BOLUS_AND_BASAL_ACTIVE, 1)
                     state.updateFromDefaultStatusResponse(response)
+                    state.increaseMessageSequenceNumber()
                     Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
                 }
                 is StopDeliveryCommand -> {
@@ -398,6 +442,7 @@ class O5DoseRecoveryTest : TestBaseWithProfile() {
                     check(allowProgram.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS))
                     val response = status(1, DeliveryStatus.BOLUS_AND_BASAL_ACTIVE, 1)
                     state.updateFromDefaultStatusResponse(response)
+                    state.increaseMessageSequenceNumber()
                     Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
                 }
                 is StopDeliveryCommand -> {
@@ -464,6 +509,7 @@ class O5DoseRecoveryTest : TestBaseWithProfile() {
                     check(allowResponse.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS))
                     val response = status(1, DeliveryStatus.BOLUS_AND_BASAL_ACTIVE, 1)
                     state.updateFromDefaultStatusResponse(response)
+                    state.increaseMessageSequenceNumber()
                     Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
                 }
                 is StopDeliveryCommand -> {
@@ -545,6 +591,7 @@ class O5DoseRecoveryTest : TestBaseWithProfile() {
                     check(allowProgram.await(CONCURRENCY_TIMEOUT_MS, TimeUnit.MILLISECONDS))
                     val response = status(1, DeliveryStatus.BOLUS_AND_BASAL_ACTIVE, 1)
                     state.updateFromDefaultStatusResponse(response)
+                    state.increaseMessageSequenceNumber()
                     Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
                 }
                 is StopDeliveryCommand -> {
@@ -796,13 +843,16 @@ class O5DoseRecoveryTest : TestBaseWithProfile() {
         writer.podId = 12345L
         writer.cumulativeBolusPulsesDelivered = 10
         writer.pendingDoseCommand = pendingBolus()
-        writer.updateFromDefaultStatusResponse(status(4, DeliveryStatus.BOLUS_AND_BASAL_ACTIVE, 20))
+        writer.updateFromDefaultStatusResponse(status(4, DeliveryStatus.BOLUS_AND_BASAL_ACTIVE, 16))
+        assertThat(writer.cumulativeBolusPulsesDelivered).isEqualTo(14.toShort())
         writer.pendingDoseCommand = writer.pendingDoseCommand!!.copy(
             bolusCancelRequested = true, bolusCancelSequenceNumber = 6, bolusCancelHistoryId = 8L
         )
         state = PersistedO5PodStateManager(aapsLogger, storage)
         plugin = newPlugin()
+        assertThat(state.pendingDoseCommand!!.accountedBolusPulses).isEqualTo(4)
         state.updateFromDefaultStatusResponse(status(6, DeliveryStatus.BASAL_ACTIVE, 12))
+        assertThat(state.cumulativeBolusPulsesDelivered).isEqualTo(18.toShort())
         plugin.reconcilePendingDose()
         state = PersistedO5PodStateManager(aapsLogger, storage)
         plugin = newPlugin()

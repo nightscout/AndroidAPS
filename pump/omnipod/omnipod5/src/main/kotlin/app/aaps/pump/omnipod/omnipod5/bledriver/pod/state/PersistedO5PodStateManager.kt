@@ -34,7 +34,7 @@ import dev.zacsweers.metro.binding
 
 /**
  * [O5PodStateManager] persisted across app restarts, mirroring
- * [OmnipodDashPodStateManagerImpl]'s Gson + [Preferences] store/load pattern exactly -
+ * `OmnipodDashPodStateManagerImpl`'s Gson + [Preferences] store/load pattern exactly -
  * just for O5's smaller state surface (see [O5PodStateManager]'s class doc for why).
  */
 @ContributesBinding(AppScope::class, binding = binding<O5PodStateManager>())
@@ -368,13 +368,12 @@ class PersistedO5PodStateManager @Inject constructor(
         store()
     }
 
+    @Synchronized
     override fun updateFromDefaultStatusResponse(response: DefaultStatusResponse) {
         val previousUpdate = podState.lastStatusResponseReceived
         val now = System.currentTimeMillis()
         logger.debug(LTag.PUMPCOMM, "Default status response :$response")
         logBasalTracking {
-            podState.totalPulsesDelivered = response.totalPulsesDelivered
-            podState.basalExpected = nextBasalExpected(previousUpdate, now)
             updatePodState(
                 response.totalPulsesDelivered,
                 response.podStatus,
@@ -386,6 +385,7 @@ class PersistedO5PodStateManager @Inject constructor(
                 response.sequenceNumberOfLastProgrammingCommand,
                 now
             )
+            podState.basalExpected = nextBasalExpected(previousUpdate, now)
         }
         store()
     }
@@ -411,10 +411,16 @@ class PersistedO5PodStateManager @Inject constructor(
         podState.activeAlerts = activeAlerts
         podState.minutesSinceActivation = minutesSinceActivation
         podState.sequenceNumberOfLastProgrammingCommand = sequenceNumberOfLastProgrammingCommand
-        podState.pendingDoseCommand = podState.pendingDoseCommand?.withPodAcceptance(sequenceNumberOfLastProgrammingCommand, deliveryStatus)
+        podState.pendingDoseCommand?.let { pending ->
+            val updated = pending.withPodProgress(sequenceNumberOfLastProgrammingCommand, deliveryStatus, bolusPulsesRemaining)
+            val delta = updated.accountedBolusPulses - pending.accountedBolusPulses
+            if (delta > 0) podState.cumulativeBolusPulsesDelivered = ((podState.cumulativeBolusPulsesDelivered ?: 0) + delta).toShort()
+            podState.pendingDoseCommand = updated
+        }
         podState.lastStatusResponseReceived = now
     }
 
+    @Synchronized
     override fun updateFromAlarmStatusResponse(response: AlarmStatusResponse) {
         logger.info(LTag.PUMPCOMM, "Received AlarmStatusResponse: $response")
         logBasalTracking {
@@ -474,14 +480,16 @@ class PersistedO5PodStateManager @Inject constructor(
     @Synchronized
     override fun completeBolus(startedAt: Long, requestedUnits: Double, deliveredUnits: Double, deliveredPulses: Short?) {
         val alreadyCompleted = podState.lastBolusStartTime == startedAt && podState.lastBolusDeliveredUnits != null
-        if (!alreadyCompleted && deliveredPulses != null) {
+        val pending = podState.pendingDoseCommand?.takeIf { it.startedAt == startedAt }
+        if (!alreadyCompleted && deliveredPulses != null && pending?.isBasalCorrection != true) {
+            val remainder = (deliveredPulses.toInt() - (pending?.accountedBolusPulses ?: 0)).coerceAtLeast(0)
             podState.cumulativeBolusPulsesDelivered =
-                ((podState.cumulativeBolusPulsesDelivered ?: 0) + deliveredPulses).toShort()
+                ((podState.cumulativeBolusPulsesDelivered ?: 0) + remainder).toShort()
         }
         podState.lastBolusStartTime = startedAt
         podState.lastBolusRequestedUnits = requestedUnits
         podState.lastBolusDeliveredUnits = deliveredUnits
-        if (podState.pendingDoseCommand?.startedAt == startedAt) {
+        if (pending != null) {
             podState.pendingDoseCommand = null
         }
         store()

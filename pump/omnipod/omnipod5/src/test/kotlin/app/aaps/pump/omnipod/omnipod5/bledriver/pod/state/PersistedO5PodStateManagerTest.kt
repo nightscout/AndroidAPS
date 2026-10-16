@@ -1,6 +1,8 @@
 package app.aaps.pump.omnipod.omnipod5.bledriver.pod.state
 
 import app.aaps.core.data.model.BS
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
@@ -19,10 +21,17 @@ import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.nio.ByteBuffer
 
 /**
  * Gson+[Preferences] persistence round-trip for [PersistedO5PodStateManager], with a
@@ -222,6 +231,89 @@ class PersistedO5PodStateManagerTest : TestBase() {
         manager.completeBolus(1_000L, 1.0, 0.75, 15)
 
         assertThat(manager.cumulativeBolusPulsesDelivered).isEqualTo(25.toShort())
+    }
+
+    @ParameterizedTest
+    @CsvSource("10, false", "5, false", "10, true", "5, true")
+    fun `basal log uses status bolus accounting before completion including after restart`(deliveredPulses: Short, restart: Boolean) {
+        val logger = mock<AAPSLogger>()
+        val bytes = hexToBytes("1D1800A02800000463FF")
+        ByteBuffer.wrap(bytes).putInt(2, (320 shl 15) or (5 shl 11) or (10 - deliveredPulses))
+        val response = DefaultStatusResponse(bytes)
+        var manager = PersistedO5PodStateManager(logger, preferences)
+        manager.activationProgress = ActivationProgress.COMPLETED
+        manager.cumulativeBolusPulsesDelivered = 10
+        manager.basalExpected = (response.totalPulsesDelivered - 10 - deliveredPulses) * PodConstants.POD_PULSE_BOLUS_UNITS
+        manager.pendingDoseCommand = O5PodStateManager.PendingDoseCommand(
+            type = O5PodStateManager.PendingDoseType.BOLUS,
+            requestedUnits = 0.5,
+            bolusType = BS.Type.SMB,
+            startedAt = 1_000L,
+            sequenceNumber = 5
+        )
+
+        manager.updateFromDefaultStatusResponse(response)
+        if (restart) manager = PersistedO5PodStateManager(logger, preferences)
+        manager.updateFromDefaultStatusResponse(response)
+
+        assertThat(manager.cumulativeBolusPulsesDelivered).isEqualTo((10 + deliveredPulses).toShort())
+        assertThat(manager.basalDrift).isWithin(1e-9).of(0.0)
+        assertThat(manager.pendingDoseCommand).isNotNull()
+        val deliveredUnits = deliveredPulses * PodConstants.POD_PULSE_BOLUS_UNITS
+        manager.completeBolus(1_000L, 0.5, deliveredUnits, deliveredPulses)
+
+        val message = argumentCaptor<String>()
+        verify(logger, times(2)).info(eq(LTag.PUMP), message.capture())
+        assertThat(message.firstValue).contains("act=%.2fU".format(manager.basalExpected))
+        assertThat(message.firstValue).contains("err=%+.4fU".format(0.0))
+        assertThat(manager.basalDrift).isWithin(1e-9).of(0.0)
+        assertThat(newManager().cumulativeBolusPulsesDelivered).isEqualTo((10 + deliveredPulses).toShort())
+        assertThat(newManager().pendingDoseCommand).isNull()
+    }
+
+    @Test
+    fun `alarm status accounts ordinary bolus pulses before basal logging`() {
+        val logger = mock<AAPSLogger>()
+        val response = AlarmStatusResponse(hexToBytes("021602080100000501BD00000003FF01950000000000670A"))
+        val manager = PersistedO5PodStateManager(logger, preferences)
+        manager.activationProgress = ActivationProgress.COMPLETED
+        manager.cumulativeBolusPulsesDelivered = 10
+        manager.basalExpected = (response.totalPulsesDelivered - 20) * PodConstants.POD_PULSE_BOLUS_UNITS
+        manager.pendingDoseCommand = O5PodStateManager.PendingDoseCommand(
+            type = O5PodStateManager.PendingDoseType.BOLUS, requestedUnits = 0.5, startedAt = 1_000L,
+            sequenceNumber = response.sequenceNumberOfLastProgrammingCommand
+        )
+
+        manager.updateFromAlarmStatusResponse(response)
+
+        val message = argumentCaptor<String>()
+        verify(logger).info(eq(LTag.PUMP), message.capture())
+        assertThat(message.firstValue).contains("err=%+.4fU".format(0.0))
+        assertThat(manager.basalDrift).isWithin(1e-9).of(0.0)
+        assertThat(newManager().cumulativeBolusPulsesDelivered).isEqualTo(20.toShort())
+        assertThat(newManager().pendingDoseCommand).isNotNull()
+    }
+
+    @Test
+    fun `basal correction pulses are still logged as basal before completion`() {
+        val logger = mock<AAPSLogger>()
+        val response = DefaultStatusResponse(hexToBytes("1D1800A02800000463FF"))
+        val manager = PersistedO5PodStateManager(logger, preferences)
+        manager.activationProgress = ActivationProgress.COMPLETED
+        manager.cumulativeBolusPulsesDelivered = 10
+        manager.basalExpected = (response.totalPulsesDelivered - 10) * PodConstants.POD_PULSE_BOLUS_UNITS
+        manager.pendingDoseCommand = O5PodStateManager.PendingDoseCommand(
+            type = O5PodStateManager.PendingDoseType.BOLUS,
+            requestedUnits = 0.05, startedAt = 1_000L, isBasalCorrection = true
+        )
+
+        manager.updateFromDefaultStatusResponse(response)
+
+        val message = argumentCaptor<String>()
+        verify(logger).info(eq(LTag.PUMP), message.capture())
+        assertThat(message.firstValue).startsWith("PUMP_BASAL ")
+        assertThat(manager.basalDrift).isWithin(1e-9).of(0.0)
+        assertThat(manager.cumulativeBolusPulsesDelivered).isEqualTo(10.toShort())
     }
 
     @Test

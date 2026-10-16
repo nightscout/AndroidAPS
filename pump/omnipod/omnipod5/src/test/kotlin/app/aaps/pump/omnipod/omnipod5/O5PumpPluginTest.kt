@@ -1043,7 +1043,14 @@ class O5PumpPluginTest : TestBaseWithProfile() {
 
     @Test
     fun `a canceled bolus reconnects and re-sends the stop command when the link dropped mid-delivery`() {
-        whenever(podStateManager.pendingDoseCommand).thenReturn(null)
+        var pending: O5PodStateManager.PendingDoseCommand? = null
+        whenever(podStateManager.pendingDoseCommand).thenAnswer { pending }
+        doAnswer {
+            pending = it.getArgument(0)
+            null
+        }.whenever(podStateManager).pendingDoseCommand = anyOrNull()
+        whenever(podStateManager.sequenceNumberOfLastProgrammingCommand).thenReturn(0)
+        whenever(podStateManager.bolusPulsesRemaining).thenReturn(0)
         whenever(podStateManager.reservoirPulsesRemaining).thenReturn(2000)
         whenever(podStateManager.lastStatusResponseReceived).thenReturn(System.currentTimeMillis())
         whenever(podStateManager.lastBolusStartTime).thenReturn(null)
@@ -1055,6 +1062,9 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         whenever(bleManager.connect()).thenReturn(Observable.empty())
         // The user presses cancel while the bolus program command is in flight.
         whenever(bleManager.sendCommand(any(), any())).thenAnswer {
+            if (it.getArgument<Command>(0) is ProgramBolusCommand) {
+                pending = pending?.copy(confirmedByStatus = true)
+            }
             plugin.stopBolusDelivering()
             Observable.empty<PodEvent>()
         }

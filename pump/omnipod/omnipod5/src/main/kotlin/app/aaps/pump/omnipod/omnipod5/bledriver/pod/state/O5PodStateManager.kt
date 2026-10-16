@@ -9,6 +9,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlarmType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.SoftwareVersion
 import app.aaps.pump.omnipod.common.bledriver.pod.response.AlarmStatusResponse
@@ -23,6 +24,7 @@ import java.util.Calendar
 import java.util.EnumSet
 import java.util.TimeZone
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.math.roundToInt
 
 /**
  * Persisted/in-memory state needed to connect to, pair with, and read status from an
@@ -191,8 +193,37 @@ interface O5PodStateManager {
          *  Null in older state files, where cancellation intent was not saved. */
         val bolusCancelRequested: Boolean? = false,
         val bolusCancelSequenceNumber: Short? = null,
-        val bolusCancelHistoryId: Long? = null
-    ) : Serializable
+        val bolusCancelHistoryId: Long? = null,
+        /** Ordinary bolus pulses already included in [cumulativeBolusPulsesDelivered].
+         *  Saved with each status; completion adds only the remainder. Older files start at zero. */
+        val accountedBolusPulses: Int = 0
+    ) : Serializable {
+
+        /** Acceptance alone does not make an unrelated status's remaining count belong to this bolus.
+         *  A stop sequence is useful only if acceptance of the original bolus was already saved.
+         *  Use remaining pulses, not total pulse growth: basal can run at the same time. */
+        internal fun deliveredBolusPulses(podSequence: Short?, status: DeliveryStatus?, remaining: Short?): Int? {
+            if (type != PendingDoseType.BOLUS || !confirmedByStatus ||
+                status == null || status == DeliveryStatus.UNKNOWN || status == DeliveryStatus.PRIMING || remaining == null
+            ) return null
+            val matchesBolus = sequenceNumber != null && podSequence != null &&
+                (sequenceNumber.toInt() and 0x0f) == (podSequence.toInt() and 0x0f)
+            val matchesCancel = bolusCancelRequested == true && bolusCancelSequenceNumber != null && podSequence != null &&
+                (bolusCancelSequenceNumber.toInt() and 0x0f) == (podSequence.toInt() and 0x0f)
+            if (!matchesBolus && !matchesCancel && !status.bolusDeliveringActive()) return null
+            val requestedPulses = ((requestedUnits ?: return null) / PodConstants.POD_PULSE_BOLUS_UNITS).roundToInt()
+            if (remaining.toInt() !in 0..requestedPulses) return null
+            return requestedPulses - remaining
+        }
+
+        /** Saved progress only grows, so repeated status never adds the same ordinary bolus pulses twice. */
+        internal fun withPodProgress(podSequence: Short, status: DeliveryStatus, remaining: Short): PendingDoseCommand {
+            val accepted = withPodAcceptance(podSequence, status)
+            if (isBasalCorrection) return accepted
+            val delivered = accepted.deliveredBolusPulses(podSequence, status, remaining) ?: return accepted
+            return if (delivered > accountedBolusPulses) accepted.copy(accountedBolusPulses = delivered) else accepted
+        }
+    }
 
 
     val podStatus: PodStatus?
@@ -479,10 +510,12 @@ class InMemoryO5PodStateManager : O5PodStateManager {
         lastStatusResponseReceived = System.currentTimeMillis()
     }
 
+    @Synchronized
     override fun updateFromDefaultStatusResponse(response: DefaultStatusResponse) {
         val previousUpdate = lastStatusResponseReceived
         val now = System.currentTimeMillis()
         totalPulsesDelivered = response.totalPulsesDelivered
+        updatePendingBolus(response.sequenceNumberOfLastProgrammingCommand, response.deliveryStatus, response.bolusPulsesRemaining)
         basalExpected = nextBasalExpected(previousUpdate, now)
         podStatus = response.podStatus
         deliveryStatus = response.deliveryStatus
@@ -493,10 +526,10 @@ class InMemoryO5PodStateManager : O5PodStateManager {
         activeAlerts = response.activeAlerts
         minutesSinceActivation = response.minutesSinceActivation
         sequenceNumberOfLastProgrammingCommand = response.sequenceNumberOfLastProgrammingCommand
-        pendingDoseCommand = pendingDoseCommand?.withPodAcceptance(response.sequenceNumberOfLastProgrammingCommand, response.deliveryStatus)
         lastStatusResponseReceived = now
     }
 
+    @Synchronized
     override fun updateFromAlarmStatusResponse(response: AlarmStatusResponse) {
         podStatus = response.podStatus
         deliveryStatus = response.deliveryStatus
@@ -508,13 +541,21 @@ class InMemoryO5PodStateManager : O5PodStateManager {
         activeAlerts = response.activeAlerts
         minutesSinceActivation = response.minutesSinceActivation
         sequenceNumberOfLastProgrammingCommand = response.sequenceNumberOfLastProgrammingCommand
-        pendingDoseCommand = pendingDoseCommand?.withPodAcceptance(response.sequenceNumberOfLastProgrammingCommand, response.deliveryStatus)
+        updatePendingBolus(response.sequenceNumberOfLastProgrammingCommand, response.deliveryStatus, response.bolusPulsesRemaining)
         alarmType = response.alarmType
         alarmTime = response.alarmTime
         occlusionAlarm = response.occlusionAlarm
         podStatusWhenAlarmOccurred = response.podStatusWhenAlarmOccurred
         rssi = response.rssi
         lastStatusResponseReceived = System.currentTimeMillis()
+    }
+
+    private fun updatePendingBolus(sequence: Short, status: DeliveryStatus, remaining: Short) {
+        val pending = pendingDoseCommand ?: return
+        val updated = pending.withPodProgress(sequence, status, remaining)
+        val delta = updated.accountedBolusPulses - pending.accountedBolusPulses
+        if (delta > 0) cumulativeBolusPulsesDelivered = ((cumulativeBolusPulsesDelivered ?: 0) + delta).toShort()
+        pendingDoseCommand = updated
     }
 
     override fun updateFromActivationTimeResponse(response: PodInfoActivationTimeResponse) {
@@ -546,8 +587,10 @@ class InMemoryO5PodStateManager : O5PodStateManager {
     @Synchronized
     override fun completeBolus(startedAt: Long, requestedUnits: Double, deliveredUnits: Double, deliveredPulses: Short?) {
         val alreadyCompleted = lastBolusStartTime == startedAt && lastBolusDeliveredUnits != null
-        if (!alreadyCompleted && deliveredPulses != null) {
-            cumulativeBolusPulsesDelivered = ((cumulativeBolusPulsesDelivered ?: 0) + deliveredPulses).toShort()
+        val pending = pendingDoseCommand?.takeIf { it.startedAt == startedAt }
+        if (!alreadyCompleted && deliveredPulses != null && pending?.isBasalCorrection != true) {
+            val remainder = (deliveredPulses.toInt() - (pending?.accountedBolusPulses ?: 0)).coerceAtLeast(0)
+            cumulativeBolusPulsesDelivered = ((cumulativeBolusPulsesDelivered ?: 0) + remainder).toShort()
         }
         lastBolusStartTime = startedAt
         lastBolusRequestedUnits = requestedUnits

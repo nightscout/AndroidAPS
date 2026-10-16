@@ -669,9 +669,8 @@ class O5PumpPlugin @Inject constructor(
         when (pending.type) {
             O5PodStateManager.PendingDoseType.BOLUS              ->
                 if (!status.bolusDeliveringActive() && (status.basalActive() || status.tempBasalActive() || status.suspended())) {
-                    val remainingPulses = podStateManager.bolusPulsesRemaining ?: return
-                    val deliveredUnits = (pending.requestedUnits ?: return) -
-                        remainingPulses.toInt() * PodConstants.POD_PULSE_BOLUS_UNITS
+                    val deliveredPulses = pending.deliveredBolusPulses(podSequence, status, podStateManager.bolusPulsesRemaining) ?: return
+                    val deliveredUnits = deliveredPulses * PodConstants.POD_PULSE_BOLUS_UNITS
                     finalizeBolus(pending, deliveredUnits)
                 }
 
@@ -1112,10 +1111,13 @@ class O5PumpPlugin @Inject constructor(
                 else ceil(remainingUnits / PodConstants.POD_PULSE_BOLUS_UNITS).toLong() * 2 + 3
                 Thread.sleep(sleepSeconds * 1000)
             } else {
-                val remainingPulses = podStateManager.bolusPulsesRemaining
-                if (remainingPulses != null) {
-                    val deliveredUnits = requestedUnits - remainingPulses.toInt() * PodConstants.POD_PULSE_BOLUS_UNITS
-                    return@defer Single.just(BolusCompletion(deliveredUnits))
+                val deliveredPulses = podStateManager.pendingDoseCommand?.deliveredBolusPulses(
+                    podStateManager.sequenceNumberOfLastProgrammingCommand,
+                    podStateManager.deliveryStatus,
+                    podStateManager.bolusPulsesRemaining
+                )
+                if (deliveredPulses != null) {
+                    return@defer Single.just(BolusCompletion(deliveredPulses * PodConstants.POD_PULSE_BOLUS_UNITS))
                 }
             }
         }
