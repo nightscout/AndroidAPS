@@ -38,6 +38,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.collectResilient
+import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withCompose
@@ -1077,8 +1078,14 @@ class O5PumpPlugin @Inject constructor(
         while (waited < estimatedSeconds && !bolusCanceled) {
             waited += 1
             Thread.sleep(1000)
-            val percent = (waited.toFloat() / estimatedSeconds) * 100
-            bolusProgressData.updateProgress(percent.toInt())
+            bolusProgressData.updateProgress(
+                delivered = PumpInsulin(
+                    Round.roundTo(
+                        (waited.toFloat() / estimatedSeconds) * requestedUnits,
+                        PodConstants.POD_PULSE_BOLUS_UNITS
+                    )
+                )
+            )
         }
 
         repeat(BOLUS_RETRIES) {
