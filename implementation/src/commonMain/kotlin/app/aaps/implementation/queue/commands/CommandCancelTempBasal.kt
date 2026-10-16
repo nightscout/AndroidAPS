@@ -5,7 +5,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
@@ -21,8 +20,7 @@ class CommandCancelTempBasal(
     private val enforceNew: Boolean,
     /** true if called by detection of pump in suspend mode */
     private val autoForced: Boolean,
-    override val callback: Callback?,
-) : Command {
+) : Command() {
 
     override val commandType: Command.CommandType = Command.CommandType.TEMPBASAL
 

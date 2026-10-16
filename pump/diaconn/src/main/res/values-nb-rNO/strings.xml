@@ -23,7 +23,6 @@
     <string name="updatingbasalrates">Oppdaterer basaldoser</string>
     <string name="description_pump_diaconn_g8">Pumpe integrasjon for Diaconn G8 Pumper</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Max bolus nådd</string>
     <string name="commanderror">Kommandofeil</string>
     <string name="speederror">Hastighetsfeil</string>

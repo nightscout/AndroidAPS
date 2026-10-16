@@ -1,7 +1,6 @@
 package app.aaps.pump.medtronic.keys
 
 import app.aaps.core.keys.PreferenceType
-import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.StringValidator
 import app.aaps.core.keys.interfaces.TextRef

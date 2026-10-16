@@ -5,6 +5,7 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.interfaces.profile.EffectiveProfile
+import app.aaps.core.interfaces.profile.Profile.ProfileValue
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -13,6 +14,7 @@ import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpWithConcentration
+import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.implementation.pump.PumpEnactResultObject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,7 +39,8 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
         }
 
     val baseBasal = 0.0
-    override var pumpDescription = PumpDescription()
+    // Filled for its own pump type, so a test reads the values of a pump that exists.
+    override var pumpDescription = PumpDescription().fillFor(PumpType.GENERIC_AAPS)
 
     override fun isInitialized(): Boolean = true
     override fun isSuspended(): Boolean = pumpSuspended
@@ -62,6 +65,10 @@ class TestPumpPlugin(val rh: ResourceHelper) : PumpWithConcentration {
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult = PumpEnactResultObject(rh)
     override fun isThisProfileSet(profile: EffectiveProfile): Boolean = isProfileSet
     override fun isThisProfileSet(profile: PumpProfile): Boolean = isProfileSet
+
+    /** What the pump reports it really gives after a profile set. null: the profile exactly. */
+    var delivered: List<ProfileValue>? = null
+    override fun deliveredBasal(): List<ProfileValue>? = delivered
     private val _lastBolusTime = MutableStateFlow<Long?>(null)
     override val lastBolusTime: StateFlow<Long?> = _lastBolusTime
     private val _lastBolusAmount = MutableStateFlow<PumpInsulin?>(null)

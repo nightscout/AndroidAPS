@@ -12,11 +12,12 @@ import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
-import app.aaps.di.ResetGraphRule
-import app.aaps.di.testGraphs
 import app.aaps.ComposeMainActivity
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.BooleanNonKey
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
+import app.aaps.ui.compose.wizardDialog.CarbsType
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -25,6 +26,8 @@ import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.io.File
 import java.util.regex.Pattern
+import app.aaps.core.ui.R as CoreUiR
+import app.aaps.ui.R as UiR
 
 /**
  * **In-process** end-to-end UI test: drives a fresh AAPS setup wizard all the way to a running,
@@ -205,9 +208,9 @@ class SetupWizardE2ETest {
         tapNext("Client control")
 
         // 7b. Client control (master ↔ client pairing) — skip
-        tapNext("Name")
+        tapNext("Who is using this phone?")
 
-        // 8. Patient name — skip
+        // 8. Instance name — skip
         tapNext("Patient type")
 
         // 9. Patient type / safety limits
@@ -333,7 +336,7 @@ class SetupWizardE2ETest {
     /** Manage → Insulin: the insulin-management screen (carousel + nickname/peak/DIA editors). */
     private fun visitInsulinManagement() {
         openVia("Manage", expect = "Site Rotation")    // open the Manage sheet (distinctive marker)
-        openVia("Insulin", expect = "Add new insulin") // → insulin management screen
+        openVia("Insulin settings", expect = "Add new insulin") // → insulin management screen
         returnToOverview()
     }
 
@@ -370,10 +373,10 @@ class SetupWizardE2ETest {
         assertVisible("Sick Day")                            // the created scene row
 
         // Activate: the card's Activate (Play) icon → confirmation dialog → Activate.
-        click("Activate")                                    // Play IconButton (content-desc)
+        click("Activate: Sick Day")                          // Play IconButton (content-desc names its scene)
         assertTextContains("Activate scene")                 // SceneActivationDialog title
         click("Activate")                                    // dialog confirm button (text)
-        assertVisible("End Scene")                           // card now active
+        assertVisible("End Scene: Sick Day")                 // card now active (Stop IconButton content-desc)
 
         // The overview renders ActiveSceneBanner while a scene is active — return there so the banner
         // (scene name, remaining time, progress, End button) is exercised, then end it from the banner.
@@ -394,11 +397,31 @@ class SetupWizardE2ETest {
     /** Treatments → Bolus wizard: open the calculator, add a quick-carb preset, then CANCEL (no delivery). */
     private fun openAndCancelBolusWizard() {
         openVia("Treatments", expect = "Bolus wizard")
-        openVia("Bolus wizard", expect = "Correction") // → wizard dialog (calculator)
-        click("CAKE")                                  // a quick-carb preset → exercises the calculation
+        openVia("Bolus wizard", expect = correctionHeader()) // → wizard dialog (calculator)
+        click(cakeCarbsTypeLabel())                    // a quick-carb preset → exercises the calculation
         device.waitForIdle(IDLE_MS)
         click("Close")                                 // dismiss WITHOUT delivering — the cancel path
         returnToOverview()
+    }
+
+    /**
+     * The correction row opens closed, and a closed row shows its label with a colon ("Correction:"). Built from the
+     * same resources the row uses, so the test follows the real text.
+     */
+    private fun correctionHeader(): String = with(instrumentation.targetContext) {
+        getString(CoreUiR.string.label_with_colon, getString(CoreUiR.string.wizard_correction))
+    }
+
+    /**
+     * The CAKE carbs-type button's description. It was the enum name "CAKE"; it now says what the
+     * choice does to the carbs, built from the same resource and numbers the dialog uses, so a
+     * rewording of that string cannot break this test.
+     */
+    private fun cakeCarbsTypeLabel(): String = with(CarbsType.CAKE) {
+        instrumentation.targetContext.getString(
+            UiR.string.wizard_carbs_type_desc,
+            100 - carbsPercent, eCarbsPercent, eCarbsDelayMinutes, eCarbsDurationHours
+        )
     }
 
     /**

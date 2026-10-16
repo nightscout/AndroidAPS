@@ -6,12 +6,12 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlin.time.Clock
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlin.time.Clock
 
 // App-scoped: a view model injects this, and ViewModelOwnershipTest requires every concrete class
 // a view model injects to have one owner. It is a stateless view over the app-scoped DAOs, so one
@@ -36,14 +36,16 @@ class CarelevoPatchForceDiscardUseCase @Inject constructor(
                     throw IllegalStateException("update user setting info is failed")
                 }
 
-                val deleteInfusionInfoResult = infusionInfoRepository.deleteInfusionInfo()
-                if (!deleteInfusionInfoResult) {
-                    throw IllegalStateException("delete infusion info is failed")
-                }
-
+                // The patch record goes first. A patch with an inserted needle and no infusion record is an
+                // activation to finish, so the other order reopened the wizard at the needle step after a discard.
                 val deletePatchInfoResult = patchInfoRepository.deletePatchInfo()
                 if (!deletePatchInfoResult) {
                     throw IllegalStateException("delete patch info is failed")
+                }
+
+                val deleteInfusionInfoResult = infusionInfoRepository.deleteInfusionInfo()
+                if (!deleteInfusionInfoResult) {
+                    throw IllegalStateException("delete infusion info is failed")
                 }
                 ResultSuccess
             }.fold(

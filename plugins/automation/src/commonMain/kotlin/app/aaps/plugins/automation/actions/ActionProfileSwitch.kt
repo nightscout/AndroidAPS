@@ -1,8 +1,5 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -13,8 +10,11 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.utils.lenientString
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.elements.InputProfileName
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -77,7 +77,11 @@ class ActionProfileSwitch(
             ),
             iCfg = iCfg
         )
-        return pumpEnactResultProvider().success(result != null).comment(CoreUiStrings.ok)
+        if (result != null) return pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
+        // Say why in the automation log, not "OK" next to a failure.
+        val reason = profileFunction.profileSwitchRefusal(profileStore, inputProfileName.value, 0, 100, 0, iCfg) ?: rh.gs(CoreUiStrings.invalid_profile)
+        aapsLogger.error(LTag.AUTOMATION, "Profile switch to ${inputProfileName.value} refused: $reason")
+        return pumpEnactResultProvider().success(false).comment(reason)
     }
 
     override fun hasDialog(): Boolean = true

@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.TextResolver
@@ -28,8 +27,7 @@ class CommandSetProfile(
     override val pumpEnactResultProvider: () -> PumpEnactResult,
     private val profile: EffectiveProfile,
     private val hasNsId: Boolean,
-    override val callback: Callback?,
-) : Command {
+) : Command() {
 
     override val commandType: Command.CommandType = Command.CommandType.BASAL_PROFILE
 

@@ -33,8 +33,10 @@ import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHypo
 import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.core.ui.compose.navigation.label
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.core.ui.compose.ttReasonColor
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.main.TempTargetChipState
 
 /**
@@ -68,7 +70,13 @@ fun TempTargetChip(
     // Why a temp target is running was carried only by which of the four icons was drawn, so
     // "eating soon" and "hypo" - which mean very different things - were announced identically.
     // Mirrors the wording TranslatorImpl already uses for the same enum, so nothing new to translate.
-    val reasonState = stringResourceOrNull(reason.toDescription())
+    // With no temp target the chip shows the profile target, and a target the loop has adjusted
+    // differs only by colour - both read as "Temp target 5.5", the same as a real temp target.
+    val reasonState = when (state) {
+        TempTargetChipState.Active   -> stringResourceOrNull(reason.toDescription())
+        TempTargetChipState.Adjusted -> stringResource(UiStrings.a11y_tt_adjusted)
+        TempTargetChipState.None     -> stringResource(UiStrings.a11y_tt_none)
+    }
     Surface(
         onClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); onClick() },
         enabled = enabled,

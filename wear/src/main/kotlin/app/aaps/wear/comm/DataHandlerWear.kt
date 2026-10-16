@@ -29,8 +29,6 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.complications.BgGraphComplication
-import app.aaps.wear.complications.CwfAmbientBgComplication
-import app.aaps.wear.complications.CwfAmbientStatusComplication
 import app.aaps.wear.complications.BrCobIobComplication
 import app.aaps.wear.complications.BrCobIobComplicationExt1
 import app.aaps.wear.complications.BrCobIobComplicationExt2
@@ -40,6 +38,8 @@ import app.aaps.wear.complications.BrTtComplication
 import app.aaps.wear.complications.CobDetailedComplication
 import app.aaps.wear.complications.CobIconComplication
 import app.aaps.wear.complications.CobIobComplication
+import app.aaps.wear.complications.CwfAmbientBgComplication
+import app.aaps.wear.complications.CwfAmbientStatusComplication
 import app.aaps.wear.complications.IobDetailedComplication
 import app.aaps.wear.complications.IobIconComplication
 import app.aaps.wear.complications.LongStatusComplication
@@ -135,6 +135,9 @@ class DataHandlerWear(
     private fun setupBus() {
         onEvent<EventData.ActionPing> {
             rxBus.send(EventWearToMobile(EventData.ActionPong(System.currentTimeMillis(), Build.VERSION.SDK_INT)))
+            // The phone pings when it (re)connects, also after its app restarted and lost what the
+            // watch last told it. The syncs in between only report a changed status.
+            dataStoreScope.launch { watchFacePushHelper.reportStatus() }
         }
         onEvent<EventData.ConfirmAction> {
             // The resolving terminal (master-authored lines, or an error) arrived → dismiss the "contacting master"
@@ -204,8 +207,9 @@ class DataHandlerWear(
             dataStoreScope.launch {
                 complicationDataRepository.updateStatusData(it)
 
-                // Trigger complications AFTER DataStore write completes
-                // This ensures complications showing IOB/COB/BR update immediately
+                // The one complication refresh of a sync, AFTER the DataStore write. Status is the last
+                // data message of a resend and SingleBg is only ever sent inside one, so refreshing here
+                // covers both; refreshing on SingleBg too rebuilt all 23 complications twice per sync.
                 triggerComplicationUpdates()
             }
             LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
@@ -214,9 +218,8 @@ class DataHandlerWear(
             // Store in DataStore - supports all datasets (0, 1, 2)
             dataStoreScope.launch {
                 complicationDataRepository.updateBgData(it)
-
-                // Trigger complications AFTER DataStore write completes
-                triggerComplicationUpdates()
+                // Complications are refreshed once, on Status (see above); the graph tile draws from
+                // the BG data alone, so it refreshes here.
                 TileService.getUpdater(context).requestUpdate(BgGraphTileService::class.java)
             }
 
@@ -239,9 +242,14 @@ class DataHandlerWear(
         onEvent<EventData.Preferences> {
             if (it.wearControl != preferences.get(BooleanKey.WearControl)) {
                 preferences.put(BooleanKey.WearControl, it.wearControl)
+                // Every TileBase tile renders the disabled state itself, but only when asked to render.
+                // A tile missing here keeps its cached buttons until its own data changes.
                 TileService.getUpdater(context).requestUpdate(ActionsTileService::class.java)
                 TileService.getUpdater(context).requestUpdate(TempTargetTileService::class.java)
                 TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
+                TileService.getUpdater(context).requestUpdate(RunningModeTileService::class.java)
+                TileService.getUpdater(context).requestUpdate(SceneTileService::class.java)
+                TileService.getUpdater(context).requestUpdate(UserActionTileService::class.java)
             }
             sp.putBoolean(R.string.key_units_mgdl, it.unitsMgdl)
             sp.putInt(R.string.key_bolus_wizard_percentage, it.bolusPercentage)
@@ -254,11 +262,13 @@ class DataHandlerWear(
             // The Watch Face Push face the wearer chose on the phone. Stored whatever the watch
             // can do with it, so a watch updated to Wear OS 6 later installs the chosen face on
             // its next start; swapped now when the watch can. Either way the phone is told what
-            // the watch has, which is what lets its screen show the choice only where it applies
+            // the watch has, which is what lets its screen show the choice only where it applies.
+            // These preferences come with every sync, so the reply goes out only when the status
+            // changed; the phone's ping (connect, app restart) and an install always get one.
             val faceChanged = watchFacePushHelper.selectFace(it.pushedWatchface)
             dataStoreScope.launch {
                 if (faceChanged) watchFacePushHelper.installOrUpdate()
-                else watchFacePushHelper.reportStatus()
+                else watchFacePushHelper.reportStatusIfChanged()
             }
         }
         onEvent<EventData.QuickWizard> {
@@ -330,9 +340,8 @@ class DataHandlerWear(
     }
 
     private fun handleBolusProgress(bolusProgress: EventData.BolusProgress) {
-        val vibratePattern: LongArray
+        // The vibration comes from the channel (see createBolusProgressChannels)
         val vibrate = sp.getBoolean("vibrateOnBolus", true)
-        vibratePattern = if (vibrate) longArrayOf(0, 50, 1000) else longArrayOf(0, 1, 1000)
 
         createBolusProgressChannels()
         val cancelIntent = Intent(context, DataLayerListenerServiceWear::class.java)
@@ -349,7 +358,6 @@ class DataHandlerWear(
                 .setSubText(context.getString(R.string.press_to_cancel))
                 .setContentIntent(cancelPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setVibrate(vibratePattern)
                 .setOnlyAlertOnce(true)
                 .addAction(R.drawable.ic_cancel, context.getString(R.string.cancel_bolus), cancelPendingIntent)
         val notificationManager = NotificationManagerCompat.from(context)
@@ -390,22 +398,22 @@ class DataHandlerWear(
     }
 
     private fun handleOpenLoopRequest(command: EventData.OpenLoopRequest) {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        val name: CharSequence = "AAPS Open Loop"
-        val description = "Open Loop request notification"
-        val channel = NotificationChannel(DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP, name, NotificationManager.IMPORTANCE_HIGH)
-        channel.description = description
-        channel.enableVibration(true)
-
-        // Register the channel with the system; you can't change the importance
-        // or other notification behaviors after this
-        context.getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+        // The vibration pattern must be on the channel: a pattern set on the notification is ignored. The
+        // old channel had the default pattern, and an app cannot change an existing channel, so this one
+        // has a new id (#5217).
+        context.getSystemService(NotificationManager::class.java)
+            .deleteNotificationChannel(DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP_OLD)
+        createNotificationChannel(
+            longArrayOf(1000, 1000, 1000, 1000, 1000),
+            DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP,
+            context.getString(R.string.open_loop_channel_name),
+            context.getString(R.string.open_loop_channel_description),
+            NotificationManager.IMPORTANCE_HIGH
+        )
         var builder = NotificationCompat.Builder(context, DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP)
             .setSmallIcon(R.drawable.notif_icon)
             .setContentTitle(command.title)
             .setContentText(command.message)
-            .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
         // Creates an explicit intent for an Activity in your app

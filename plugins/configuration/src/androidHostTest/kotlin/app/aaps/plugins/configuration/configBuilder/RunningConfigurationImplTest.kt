@@ -1,5 +1,7 @@
 package app.aaps.plugins.configuration.configBuilder
 
+import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -13,6 +15,7 @@ import app.aaps.core.interfaces.scenes.ActiveSceneSnapshot
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.SyncChannel
@@ -157,6 +160,24 @@ internal class RunningConfigurationImplTest {
         whenever(activePlugin.activePumpInternal).thenReturn(pump)
         sut.applyCold(NSRunningConfiguration())
         verify(pump as VirtualPump, never()).fakeDataDetected = any()
+    }
+
+    /**
+     * The pump type of the master goes into the driver's own description. Through the concentration wrapper
+     * it would go into a copy when the insulin is not U100, and be lost.
+     */
+    @Test
+    fun applyColdPutsThePumpTypeOfTheMasterIntoTheDriversOwnDescription() {
+        val description = PumpDescription()
+        val driver = mock<Pump>()
+        whenever(driver.pumpDescription).thenReturn(description)
+        whenever(activePlugin.activePumpInternal).thenReturn(driver)
+        whenever(preferences.get(StringKey.VirtualPumpType)).thenReturn("Generic AAPS")
+
+        sut.applyCold(NSRunningConfiguration(pump = "Accu-Chek Combo"))
+
+        assertEquals(PumpType.ACCU_CHEK_COMBO, description.pumpType)
+        verify(activePlugin, never()).activePump
     }
 
     /**

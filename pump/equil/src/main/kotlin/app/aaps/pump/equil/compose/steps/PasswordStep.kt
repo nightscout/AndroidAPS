@@ -18,6 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -28,6 +31,7 @@ import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.compose.EquilWizardViewModel
+import app.aaps.core.ui.R as CoreUiR
 
 private val HEX_4_PATTERN = Regex("^[A-F0-9]{4}$")
 
@@ -83,6 +87,8 @@ internal fun PasswordStep(
 
         Spacer(Modifier.height(AapsSpacing.medium))
 
+        val pairLabel = stringResource(R.string.equil_pair)
+        val busyLabel = stringResource(CoreUiR.string.please_wait)
         Button(
             onClick = {
                 if (isPasswordValid) {
@@ -90,7 +96,16 @@ internal fun PasswordStep(
                 }
             },
             enabled = !scanning && isPasswordValid,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                // Only a spinner is drawn while scanning; keep the name and say it is busy.
+                .then(
+                    if (scanning) Modifier.semantics {
+                        contentDescription = pairLabel
+                        stateDescription = busyLabel
+                    }
+                    else Modifier
+                )
         ) {
             if (scanning) {
                 CircularProgressIndicator(

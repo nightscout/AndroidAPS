@@ -46,6 +46,7 @@
     <string name="setupwizard_pairing_status_master_none">Nessun client ancora associato</string>
     <string name="setupwizard_pairing_status_client_paired">Associato a un master</string>
     <string name="setupwizard_pairing_status_client_not_paired">Non ancora associato</string>
+    <string name="setupwizard_instance_name_title">Chi sta usando questo telefono?</string>
     <string name="readstatus">Lettura stato</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Questo dispositivo non sembra supportare la whitelist dell\'ottimizzazione batteria: potrebbero verificarsi problemi di prestazioni.</string>

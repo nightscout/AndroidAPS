@@ -10,13 +10,13 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.tempTargets.toJson
 import app.aaps.core.interfaces.tempTargets.toTTPresets
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -59,6 +59,8 @@ internal class TempTargetManagementViewModelTest {
 
     private lateinit var sut: TempTargetManagementViewModel
 
+    private val NOW = 1_700_000_000_000L
+
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
@@ -97,6 +99,32 @@ internal class TempTargetManagementViewModelTest {
 
         assertThat(sut.uiState.value.eventTime).isEqualTo(123_456L)
         assertThat(sut.uiState.value.eventTimeChanged).isTrue()
+    }
+
+    @Test
+    fun `loading leaves the activation time at now, not at the epoch`() = runTest {
+        // Regression: loadData() assigns selectedPreset, so the screen's later selectPreset(index) returned
+        // early on "same preset" and the only line setting eventTime never ran. The state kept its 0L default,
+        // the screen showed 1/1/70, and a user who changed just the time got a target stamped in 1970 which is
+        // stored, never becomes active, and reports nothing.
+        whenever(dateUtil.now()).thenReturn(NOW)
+        givenBuiltInsInMmol()
+
+        assertThat(sut.uiState.value.eventTime).isEqualTo(NOW)
+        assertThat(sut.uiState.value.eventTimeChanged).isFalse()
+    }
+
+    @Test
+    fun `re-selecting the preset that is already loaded keeps a usable activation time`() = runTest {
+        // The early return in selectPreset is still there (it protects against a rotation re-fire), so the
+        // time has to be right without it.
+        whenever(dateUtil.now()).thenReturn(NOW)
+        givenBuiltInsInMmol()
+
+        sut.selectPreset(0)
+        advanceUntilIdle()
+
+        assertThat(sut.uiState.value.eventTime).isEqualTo(NOW)
     }
 
     @Test
@@ -159,6 +187,50 @@ internal class TempTargetManagementViewModelTest {
 
         assertThat(sut.hasUnsavedChanges()).isTrue()
         assertThat(sut.isEditorDifferentFromDefaults()).isTrue()
+    }
+
+    // A scene without a duration stores its target with duration Long.MAX_VALUE until the scene ends. The
+    // editor copied that duration, so activating from the editor would start a target that never ends and
+    // that no scene would ever close.
+
+    private fun sceneTargetWithoutEnd(reason: TT.Reason, targetMgdl: Double) = TT(
+        timestamp = NOW - 60_000L, utcOffset = 0, reason = reason,
+        lowTarget = targetMgdl, highTarget = targetMgdl, duration = Long.MAX_VALUE
+    )
+
+    @Test
+    fun `an active target without an end gives the editor the default duration`() = runTest {
+        whenever(dateUtil.now()).thenReturn(NOW)
+        val sceneTarget = sceneTargetWithoutEnd(TT.Reason.CUSTOM, 144.0)
+        whenever(persistenceLayer.getTemporaryTargetActiveAt(NOW)).thenReturn(sceneTarget)
+        givenBuiltInsInMmol()
+
+        // No preset matches, so the editor mirrors the active target (the standalone active card).
+        assertThat(sut.uiState.value.activeTT).isEqualTo(sceneTarget)
+        assertThat(sut.uiState.value.selectedPreset).isNull()
+        assertThat(sut.uiState.value.editorDuration).isEqualTo(60L * 60L * 1000L)
+
+        // Away to a preset and back to the active card.
+        sut.selectPreset(0)
+        sut.selectActiveTT()
+        assertThat(sut.uiState.value.editorDuration).isEqualTo(60L * 60L * 1000L)
+    }
+
+    @Test
+    fun `an active target without an end that matches a preset gives the editor the preset duration`() = runTest {
+        whenever(dateUtil.now()).thenReturn(NOW)
+        whenever(persistenceLayer.getTemporaryTargetActiveAt(NOW))
+            .thenReturn(sceneTargetWithoutEnd(TT.Reason.ACTIVITY, Constants.DEFAULT_TT_ACTIVITY_TARGET))
+        givenBuiltInsInMmol()
+        val activityDuration = Constants.DEFAULT_TT_ACTIVITY_DURATION * 60L * 1000L
+
+        assertThat(sut.uiState.value.activePresetIndex).isEqualTo(1)
+        assertThat(sut.uiState.value.editorDuration).isEqualTo(activityDuration)
+
+        // Away to another preset and back to the active one.
+        sut.selectPreset(0)
+        sut.selectPreset(1)
+        assertThat(sut.uiState.value.editorDuration).isEqualTo(activityDuration)
     }
 
     // ---------------------------------------------------------------------------------------------

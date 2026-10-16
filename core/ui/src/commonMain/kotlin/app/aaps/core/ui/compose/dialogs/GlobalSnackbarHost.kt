@@ -36,6 +36,8 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.SnackbarColors
 import app.aaps.core.ui.compose.stringResource
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * Root-level snackbar host that subscribes to [EventShowSnackbar] on [rxBus]
@@ -74,13 +76,28 @@ fun GlobalSnackbarHost(
     // The presence handle is held for exactly as long as this collector runs,
     // which is what tells the fallback to stay out of the way. It is released
     // on cancellation too, so the hand-off cannot be missed.
+    //
+    // A message that is on screen or waiting to be shown is not queued again. A pump driver that
+    // retries every second sent the same error each time, and the queue grew faster than the
+    // snackbars went away, so they covered the bottom of the screen for minutes.
     LaunchedEffect(rxBus, snackbarHostPresence, lifecycleOwner) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             snackbarHostPresence.acquire().use {
-                rxBus.toFlow(EventShowSnackbar::class).collect { event ->
-                    hostState.showSnackbar(
-                        BusSnackbarVisuals(message = event.message, type = event.type)
-                    )
+                val queued = mutableSetOf<Pair<String, EventShowSnackbar.Type>>()
+                coroutineScope {
+                    rxBus.toFlow(EventShowSnackbar::class).collect { event ->
+                        val key = event.message to event.type
+                        if (!queued.add(key)) return@collect
+                        // showSnackbar waits until the snackbar is gone, and the host shows one at a
+                        // time in the order they were asked for. So each one waits in its own coroutine.
+                        launch {
+                            try {
+                                hostState.showSnackbar(BusSnackbarVisuals(message = event.message, type = event.type))
+                            } finally {
+                                queued.remove(key)
+                            }
+                        }
+                    }
                 }
             }
         }

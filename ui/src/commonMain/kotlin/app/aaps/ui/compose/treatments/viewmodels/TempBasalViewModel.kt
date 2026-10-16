@@ -26,10 +26,8 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.extensions.toStringFull
-import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import dev.zacsweers.metro.Inject
-import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,6 +37,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * ViewModel for TempBasalScreen managing temporary basal state and business logic.
@@ -95,7 +94,10 @@ class TempBasalViewModel(
 
                     val convertedExtendedBoluses = extendedBolusList.mapNotNull { eb ->
                         profileFunction.getProfile(eb.timestamp)?.let { profile ->
-                            eb.toTemporaryBasal(profile)
+                            // The converted row is built here and has no id of its own, so every one was 0
+                            // and two of them crashed the list with a duplicate key. Give it the extended
+                            // bolus id; TempBasalScreen keys these rows apart from real temp basals.
+                            eb.toTemporaryBasal(profile).copy(id = eb.id)
                         }
                     }
 

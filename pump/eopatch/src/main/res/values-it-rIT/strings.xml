@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Integrazione del microinfusore EOPatch2 / GlucoMen Day</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Il cerotto non ha confermato la fine del bolo. %1$s è registrato, ma il cerotto potrebbe averne dato di più. Controlli il cerotto prima di somministrare più insulina.</string>
     <string name="low_reservoir">Avvisi livello serbatoio basso</string>
     <string name="patch_expiration_reminders">Promemoria scadenza patch</string>
     <string name="patch_buzzer_reminders">Promemoria buzzer della patch</string>
@@ -93,7 +93,4 @@
     <string name="wizard_exit_deactivation_warning">Esci dalla procedura guidata di disattivazione? Il cerotto può rimanere attivo e continuare a fornire insulina.</string>
     <string name="patch_force_reset">Forza Reset</string>
     <string name="patch_force_reset_confirm">Questo cancellerà lo stato della patch localmente senza inviare comandi alla patch. Usare solo se la disattivazione normale fallisce. La patch continuerà a erogare fino a quando la batteria non si esaurirà o viene disattivata manualmente.</string>
-    <!-- Permission rationales -->
-    <string name="permission_exact_alarm_title">Allarmi Esatti</string>
-    <string name="permission_exact_alarm_description">L\'applicazione ha bisogno del permesso per pianificare gli avvisi esatti per la gestione delle patch</string>
 </resources>

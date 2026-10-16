@@ -32,6 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Déclencher les alarmes urgentes vers les notifications Android</string>
     <string name="pref_title_alert_increase_volume">Augmenter progressivement le volume des notifications</string>
     <string name="pref_title_alert_override_dnd">Outrepasser le mode Ne pas déranger</string>
+    <string name="pref_summary_alert_override_dnd">Lorsque cette option est activée, les alarmes AAPS sonnent même si le téléphone est en mode silencieux ou en mode Ne pas déranger. Lorsque désactivé, les alarmes restent silencieuses dans ces modes.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Télécharger des Gly vers NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Enreg. changement de capteur</string>
@@ -144,6 +145,9 @@
     <string name="pref_title_wear_wizard_cob">Inclure GA dans l\'assistant</string>
     <string name="pref_title_wear_wizard_iob">Inclure IA dans l\'assistant</string>
     <string name="pref_title_wear_custom_watchface_authorization">Autoriser les cadrans personnalisés à modifier les paramètres AAPS de la montre</string>
+    <string name="pref_title_wear_pushed_watchface">Cadran installé sur la montre</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Cadran des complications</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Cadran personnalisé</string>
     <string name="pref_title_wear_notify_on_smb">Notifier en cas de SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Envoyer des notifications à la montre lorsqu\'un SMB est injecté.</string>
     <string name="pref_title_wear_broadcast_data">Diffuser les données à la montre</string>
@@ -177,6 +181,7 @@
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Délai d\'attente de la protection</string>
     <string name="pref_title_protection_type_application">Niveau 0 : Protection de l\'application</string>
+    <string name="pref_summary_protection_type_application">Lancement de l\'application et lors du retour à l\'application. Indépendant des autres niveaux</string>
     <string name="pref_title_protection_type_bolus">Niveau 1 : Protection bolus</string>
     <string name="pref_summary_protection_type_bolus">Traitements, activation de profil. Nécessite le niveau 2</string>
     <string name="pref_title_protection_type_settings">Niveau 2 : Protection des paramètres</string>
@@ -235,6 +240,7 @@
     <string name="pref_title_units">Unités</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">Langue</string>
     <string name="lang_default">Système</string>
     <string name="lang_en">Anglais</string>
     <string name="lang_af">Africain</string>
@@ -261,8 +267,7 @@
     <string name="lang_tr">Turque</string>
     <string name="lang_zh_tw">Chinois traditionnel</string>
     <string name="lang_zh_cn">Chinois simplifié</string>
-    <string name="pref_title_patient_name">Nom</string>
-    <string name="pref_summary_patient_name">Nom pour identifier cette instance AAPS (affichée dans les rapports et la synchronisation)</string>
+    <string name="pref_summary_patient_name">Nom de la personne qui utilise ce téléphone. Il différencie cette instance d\'AAPS dans les rapports et la synchronisation.</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">Répertoire AAPS</string>
     <!-- StringKey: Protection preferences -->

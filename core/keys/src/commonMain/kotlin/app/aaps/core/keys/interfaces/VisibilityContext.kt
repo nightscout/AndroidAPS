@@ -26,6 +26,12 @@ interface VisibilityContext {
     val isBatteryChangeLoggingEnabled: Boolean
 
     /**
+     * Whether the active pump can be filled and primed from AAPS. Patch pumps cannot: they fill and
+     * prime in their own activation wizard.
+     */
+    val isRefillingCapable: Boolean
+
+    /**
      * Whether the active BG source supports advanced filtering (for SMB-related preferences).
      */
     val advancedFilteringSupported: Boolean

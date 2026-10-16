@@ -27,6 +27,7 @@
     <string name="constraint_applied">Constrângere aplicată!</string>
     <string name="tt_label">Țintă temporară</string>
     <string name="pump_unreachable">Pompă indisponibilă</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Driverul pompei nu răspunde. \"%1$s\" a rulat pentru %2$d minute şi nicio altă comandă nu poate ajunge la pompă. Verificați pompa, apoi reporniți AAPS.</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
@@ -63,6 +64,9 @@
     <string name="configbuilder_switch_confirmation">Acest lucru va dezactiva %1$s și va activa %2$s.</string>
     <string name="expand">Extindeți</string>
     <string name="collapse">Restrângeți</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Finalizat</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Extins</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Restrâns</string>
     <string name="no_compose_preferences">Nu există preferințe de compunere disponibile pentru acest modul</string>
     <string name="confirm_password_hint">Confirmați parola</string>
     <string name="confirm_pin_hint">Confirmați codul PIN</string>
@@ -107,6 +111,9 @@
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
+    <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
     <string name="objectives">Obiective</string>
     <string name="please_wait">Așteptați…</string>
     <string name="stop">Stop</string>
@@ -114,9 +121,10 @@
     <string name="invalid_profile">Profil invalid!</string>
     <string name="no_profile_set">NICIUN PROFIL SETAT</string>
     <string name="profile_switch_no_insulin">Nu se poate schimba profilul: nicio insulină nu este în uz și nu a fost selectată niciuna.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Timpul de schimbare a profilului trebuie să fie în %1$d ore de acum.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Ținta temporară trebuie să înceapă în %1$d ore de acum.</string>
     <string name="profile_switch_select_insulin_hint">Nicio insulină nu este încă utilizată. Selectați insulina pe care o utilizați, astfel încât această modificare de profil să o poată înregistra.</string>
     <string name="insulin_activation_failed">Insulina nu a fost schimbată. Insulina anterioară este încă în uz.</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Insulina nu a fost schimbată: %1$s. Insulina anterioară este încă în uz.</string>
     <string name="insulin_activation_unconfirmed">Schimbarea insulinei nu a putut fi confirmată. Verificați care insulină este activă în profilul dumneavoastră înainte de administrare.</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulina nu a fost de asemenea schimbată.</string>
     <string name="active"><![CDATA[<Activ>]]></string>
@@ -183,6 +191,8 @@
     <string name="a11y_arrow_double_up">în creștere rapidă</string>
     <string name="a11y_arrow_none">nimic</string>
     <string name="a11y_arrow_unknown">necunoscută</string>
+    <string name="decrement">scădere</string>
+    <string name="increment">creștere</string>
     <string name="a11y_high">hiper</string>
     <string name="a11y_inrange">în țintă</string>
     <string name="a11y_low">hipo</string>
@@ -350,7 +360,6 @@
     <string name="scene_action_careportal">Jurnal: %1$s</string>
     <string name="scene_management">Scene</string>
     <string name="scene_management_desc">Creați, editați și gestionați scene</string>
-    <string name="scene_action_count">%1$d acțiuni</string>
     <string name="scene_start_from_template">Porniți de la șablon</string>
     <string name="scene_editor_target">Țintă</string>
     <string name="scene_editor_tt_preset">Presetare țintă temporară</string>
@@ -431,7 +440,6 @@
     <string name="treatment_insulin_desc">Administrați bolusul manual</string>
     <string name="treatment_carbs_desc">Înregistrați carbohidrați fără insulină</string>
     <string name="treatment_calculator_desc">Calculați bolusul</string>
-    <string name="insulin_management">Insulină</string>
     <string name="manage_insulin_desc">Gestionați și activați configurațiile insulinei</string>
     <string name="concentration_disable_blocked">Nu se poate dezactiva suportul concentrației cât timp există insuline non-U100. Îndepărtați mai întâi toate configurațiile de insulină non-U100 și treceți la un profil U100.</string>
     <string name="simple_mode_blocked_by_concentration">Nu se poate activa modul simplu în timp ce se folosește insulina non-U100. Mai întâi se trece la insulina U100.</string>
@@ -717,7 +725,6 @@
     <string name="wizard_include_iob">Includeți IOB</string>
     <string name="wizard_include_cob">Includeți COB</string>
     <string name="wizard_calculation">Calcul</string>
-    <string name="no_action_selected">Nicio acțiune selectată, nu se va întâmpla nimic</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Eliminare maximă: %1$d g (carbohidrați la bord)</string>
     <string name="wizard_no_insulin_required">Nu este necesară insulină</string>
     <string name="wizard_no_actual_bg">Nicio glicemie recentă pe care să se bazeze calculul!</string>
@@ -739,7 +746,6 @@
     <string name="max_carbs_title">Carbohidrați admiși maxim [g]</string>
     <string name="patient_type">Tip de pacient</string>
     <!--    Protection-->
-    <string name="unlock_settings">Deblocați setările</string>
     <!--    Pumps -->
     <string name="battery_label">Baterie</string>
     <string name="reservoir_label">Rezervor</string>
@@ -895,7 +901,7 @@
     <string name="reorder">Reordonați</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Mutați mai devreme</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Mutați mai târziu</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Afișați detalii</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Afișați detalii</string>
     <string name="presets_changed_reorder_aborted">Presetări schimbate în altă parte. Ordinea nouă nu a fost salvată.</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Poziția %1$d din %2$d</string>
@@ -1018,6 +1024,11 @@
     <string name="import_wrong_password">Parolă greșită</string>
     <string name="import_btn">Importați</string>
     <string name="import_anyway_btn">Importați oricum</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="import_source_local">Local</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Încărcați mai multe</string>

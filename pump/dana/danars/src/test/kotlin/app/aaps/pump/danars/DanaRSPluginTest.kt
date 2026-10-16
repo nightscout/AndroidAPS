@@ -1,7 +1,11 @@
 package app.aaps.pump.danars
 
+import android.content.ComponentName
+import android.content.Intent
+import android.content.ServiceConnection
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
@@ -13,6 +17,7 @@ import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
+import app.aaps.pump.danars.services.DanaRSService
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
@@ -20,7 +25,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -79,6 +86,42 @@ class DanaRSPluginTest : DanaRSTestBase() {
         assertThat(danaRSPlugin.isInitialized()).isFalse()
     }
 
+    private fun initializedPump() {
+        whenever(preferences.get(DanaStringNonKey.RsName)).thenReturn("UHH00002TI")
+        whenever(preferences.get(DanaStringNonKey.MacAddress)).thenReturn("00:11:22:33:44:55")
+        danaRSPlugin.changePump()
+        danaPump.lastConnection = 1
+        danaPump.maxBasal = 3.0
+        danaPump.ignoreUserPassword = true
+    }
+
+    /** #2454: AAPS keeps the rates the pump reports as the running basal, one per hour. */
+    @Test
+    fun deliveredBasalIsWhatThePumpReports() {
+        initializedPump()
+        danaPump.activeProfile = 0
+        danaPump.pumpProfiles = Array(4) { Array(48) { 0.0 } }.also { profiles -> for (hour in 0..23) profiles[0][hour] = if (hour < 6) 0.56 else 0.84 }
+
+        val delivered = danaRSPlugin.deliveredBasal()!!
+
+        assertThat(delivered.map { it.timeAsSeconds }).containsExactlyElementsIn((0..23).map { it * 3600 }).inOrder()
+        assertThat(delivered.map { it.value }).containsExactlyElementsIn((0..23).map { if (it < 6) 0.56 else 0.84 }).inOrder()
+    }
+
+    @Test
+    fun deliveredBasalIsUnknownBeforeThePumpWasRead() {
+        initializedPump()
+        danaPump.pumpProfiles = null
+        assertThat(danaRSPlugin.deliveredBasal()).isNull()
+    }
+
+    /** A profile set while the pump is not ready is only stored: the old rates say nothing about it. */
+    @Test
+    fun deliveredBasalIsUnknownWhileNotInitialized() {
+        danaPump.pumpProfiles = Array(4) { Array(48) { 0.5 } }
+        assertThat(danaRSPlugin.deliveredBasal()).isNull()
+    }
+
     @Test
     fun isSuspendedReflectsPumpState() {
         assertThat(danaRSPlugin.isSuspended()).isFalse()
@@ -119,6 +162,27 @@ class DanaRSPluginTest : DanaRSTestBase() {
         danaRSPlugin.stopBolusDelivering()    // service null → no-op
     }
 
+    /**
+     * onServiceDisconnected is not called after unbindService, so a stopped plugin kept the destroyed
+     * service (a leak LeakCanary found after switching to Virtual Pump) and still talked to it.
+     */
+    @Test
+    fun stoppingThePluginForgetsTheBoundService() {
+        runBlocking { danaRSPlugin.onStart() }
+        val connection = argumentCaptor<ServiceConnection>()
+        verify(context).bindService(any<Intent>(), connection.capture(), any<Int>())
+        val service = mock<DanaRSService>()
+        whenever(service.isConnected).thenReturn(true)
+        val binder = mock<DanaRSService.LocalBinder>()
+        whenever(binder.serviceInstance).thenReturn(service)
+        connection.firstValue.onServiceConnected(mock<ComponentName>(), binder)
+        assertThat(danaRSPlugin.isConnected()).isTrue()
+
+        runBlocking { danaRSPlugin.onStop() }
+
+        assertThat(danaRSPlugin.isConnected()).isFalse()
+    }
+
     @Test
     fun changePumpLoadsDeviceDetailsFromPreferences() {
         whenever(preferences.get(DanaStringNonKey.RsName)).thenReturn("UHH00002TI")
@@ -132,15 +196,38 @@ class DanaRSPluginTest : DanaRSTestBase() {
         assertThat(danaRSPlugin.isConfigured()).isTrue()
     }
 
+    /**
+     * #946: a pump set to a 0.1 U bolus step in its doctor menu. The steps were written into a description
+     * that a getter rebuilds on every read, so they were lost and a bolus of 1.55 U was offered and then
+     * refused by the pump. Steps other than the pump type's defaults (0.05 / 0.01), or the test cannot tell.
+     */
     @Test
-    fun getPumpStatusSyncsBasalAndBolusStepIntoTheDescription() {
-        danaPump.basalStep = 0.01
-        danaPump.bolusStep = 0.05
+    fun theDescriptionHasTheStepsThePumpReported() {
+        danaPump.bolusStep = 0.1
+        danaPump.basalStep = 0.1
 
-        runBlocking { danaRSPlugin.getPumpStatus("test") } // service null → just syncs the steps
+        assertThat(danaRSPlugin.pumpDescription.bolusStep).isWithin(0.0001).of(0.1)
+        assertThat(danaRSPlugin.pumpDescription.basalStep).isWithin(0.0001).of(0.1)
+    }
 
-        assertThat(danaRSPlugin.pumpDescription.basalStep).isWithin(0.0001).of(0.01)
+    /** DanaPump starts with 0.1 for both steps, and reset() puts that back. That is not a reading. */
+    @Test
+    fun afterAResetThePumpTypeStepsStay() {
+        danaPump.bolusStep = 0.1
+        danaPump.basalStep = 0.1
+        danaPump.reset()
+
         assertThat(danaRSPlugin.pumpDescription.bolusStep).isWithin(0.0001).of(0.05)
+        assertThat(danaRSPlugin.pumpDescription.basalStep).isWithin(0.0001).of(0.01)
+    }
+
+    /** Connected, but the steps were not read yet. */
+    @Test
+    fun connectedBeforeTheStepsAreReadThePumpTypeStepsStay() {
+        danaPump.lastConnection = 1_000L
+
+        assertThat(danaRSPlugin.pumpDescription.bolusStep).isWithin(0.0001).of(0.05)
+        assertThat(danaRSPlugin.pumpDescription.basalStep).isWithin(0.0001).of(0.01)
     }
 
     @Test
@@ -270,6 +357,53 @@ class DanaRSPluginTest : DanaRSTestBase() {
     fun cancelExtendedBolusIsANoOpSuccessWhenNoneRunning() {
         val result = runBlocking { danaRSPlugin.cancelExtendedBolus() }
         assertThat(result.success).isTrue()
+        assertThat(result.enacted).isFalse()
+    }
+
+    /** Binds [service] the way Android would, so deliverTreatment talks to it. */
+    private fun bind(service: DanaRSService) {
+        runBlocking { danaRSPlugin.onStart() }
+        val connection = argumentCaptor<ServiceConnection>()
+        verify(context).bindService(any<Intent>(), connection.capture(), any<Int>())
+        val binder = mock<DanaRSService.LocalBinder>()
+        whenever(binder.serviceInstance).thenReturn(service)
+        connection.firstValue.onServiceConnected(mock<ComponentName>(), binder)
+    }
+
+    /** A service whose bolus() returns [connectionOk] and reports [delivered] U as given, like the real one. */
+    private fun bolusService(connectionOk: Boolean, delivered: Double): DanaRSService = mock<DanaRSService>().also { service ->
+        whenever(service.bolus(any())).thenAnswer {
+            bolusProgressData.start(1.0, isSMB = false)
+            bolusProgressData.updateProgress(delivered = PumpInsulin(delivered))
+            connectionOk
+        }
+    }
+
+    @Test
+    fun deliveredBolusIsEnacted() {
+        bind(bolusService(connectionOk = true, delivered = 1.0))
+        val result = runBlocking { danaRSPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 }) }
+        assertThat(result.success).isTrue()
+        assertThat(result.enacted).isTrue()
+        assertThat(result.bolusDelivered).isWithin(0.0001).of(1.0)
+    }
+
+    /** A stopped bolus counts as a success, but if nothing was given nothing changed on the pump. */
+    @Test
+    fun stoppedBolusWithNothingGivenIsNotEnacted() {
+        danaPump.bolusStopped = true
+        bind(bolusService(connectionOk = true, delivered = 0.0))
+        val result = runBlocking { danaRSPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 }) }
+        assertThat(result.success).isTrue()
+        assertThat(result.enacted).isFalse()
+    }
+
+    @Test
+    fun failedBolusIsNotEnacted() {
+        whenever(rh.gs(eq(app.aaps.pump.dana.R.string.boluserrorcode), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("bolus error")
+        bind(bolusService(connectionOk = false, delivered = 0.4))
+        val result = runBlocking { danaRSPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 }) }
+        assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
     }
 

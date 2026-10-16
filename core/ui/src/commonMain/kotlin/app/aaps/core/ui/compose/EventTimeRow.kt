@@ -3,12 +3,9 @@ package app.aaps.core.ui.compose
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.relocation.bringIntoViewRequester
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,9 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.CoreUiStrings
 
 /**
@@ -46,34 +41,17 @@ fun EventTimeRow(
     val expandRequester = rememberBringIntoViewOnExpand(expanded)
 
     Column(modifier = modifier.fillMaxWidth().bringIntoViewRequester(expandRequester)) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
+        ExpandableRowHeader(
+            label = stringResource(CoreUiStrings.time),
+            expanded = expanded,
+            onExpand = { expanded = true }
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = stringResource(CoreUiStrings.time) + ": ",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = if (timeChanged) displayText else stringResource(CoreUiStrings.carb_time_now),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = if (timeChanged) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.onSurface
-                )
-            }
-
-            if (!expanded) {
-                FilledTonalButton(onClick = { expanded = true }) {
-                    Text(stringResource(CoreUiStrings.change))
-                }
-            }
+            Text(
+                text = if (timeChanged) displayText else stringResource(CoreUiStrings.carb_time_now),
+                style = MaterialTheme.typography.titleMedium,
+                color = if (timeChanged) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.onSurface
+            )
         }
 
         AnimatedVisibility(

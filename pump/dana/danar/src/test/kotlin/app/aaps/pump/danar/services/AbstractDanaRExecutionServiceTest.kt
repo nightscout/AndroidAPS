@@ -6,6 +6,9 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.rfcomm.RfcommSocket
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.keys.DanaStringNonKey
@@ -22,6 +25,8 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.mockingDetails
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 
@@ -277,5 +282,24 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
         testService.getSocketForSelectedPump()
 
         // Should handle null socket gracefully
+    }
+
+    // The queue tries to connect about every second. A message for every try piled up on the screen.
+    @Test
+    fun deviceNotFound_isShownOnceUntilTheDeviceIsFoundAgain() {
+        val bus = mock(RxBus::class.java)
+        testService.rxBus = bus
+        `when`(preferences.get(DanaStringNonKey.RName)).thenReturn("TestPump")
+        `when`(testService.rfcommTransport.getSocketForDevice("TestPump")).thenReturn(null)
+
+        repeat(3) { testService.getSocketForSelectedPump() }
+        verify(bus, times(1)).send(any<EventShowSnackbar>())
+
+        `when`(testService.rfcommTransport.getSocketForDevice("TestPump")).thenReturn(mock(RfcommSocket::class.java))
+        testService.getSocketForSelectedPump()
+        `when`(testService.rfcommTransport.getSocketForDevice("TestPump")).thenReturn(null)
+        testService.getSocketForSelectedPump()
+
+        verify(bus, times(2)).send(any<EventShowSnackbar>())
     }
 }

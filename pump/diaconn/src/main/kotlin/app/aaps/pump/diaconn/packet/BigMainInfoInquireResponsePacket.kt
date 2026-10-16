@@ -1,14 +1,14 @@
 package app.aaps.pump.diaconn.packet
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import app.aaps.pump.diaconn.pumplog.PumpLogUtil
-import app.aaps.core.interfaces.di.MetroMemberInjector
-import org.joda.time.DateTime
 import dev.zacsweers.metro.Inject
+import org.joda.time.DateTime
 import kotlin.math.floor
 
 /**

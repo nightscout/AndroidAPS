@@ -165,6 +165,37 @@ class EquilPumpEmulatorTest {
         assertEquals(0x0140, state.basalRates[0])
     }
 
+    // --- Basal profile get (0x02, 0x02) ---
+
+    /** #2454: AAPS reads back the basal it set, 48 half hours with the low byte first. */
+    @Test
+    fun `basal get returns the profile that was set`() {
+        sendInitial()
+        val rates = ByteArray(24 * 4)
+        byteArrayOf(0x40, 0x01, 0x40, 0x01, 0x50, 0x00, 0x50, 0x00).copyInto(rates)
+        sendCommand(byteArrayOf(0x01, 0x02), rates)
+        sendConfirmation()
+
+        // The confirmation leaves the emulator waiting for the next command of the session.
+        val bytes = decryptResponse(sendCommand(byteArrayOf(0x02, 0x02))!!, state.sessionPassword)
+
+        assertEquals(6 + 48 * 2, bytes.size)
+        assertEquals(0x0140, Utils.bytesToInt(bytes[7], bytes[6]))
+        assertEquals(0x0140, Utils.bytesToInt(bytes[9], bytes[8]))
+        assertEquals(0x50, Utils.bytesToInt(bytes[11], bytes[10]))
+        assertEquals(0x50, Utils.bytesToInt(bytes[13], bytes[12]))
+    }
+
+    /** The resistance read uses the same type bytes, on its own port. */
+    @Test
+    fun `resistance get on its port still returns the resistance`() {
+        state.resistance = 600
+        sendInitial()
+        val bytes = decryptResponse(sendCommand(byteArrayOf(0x02, 0x02), port = "1515A1B2")!!, state.sessionPassword)
+
+        assertEquals(600, Utils.bytesToInt(bytes[7], bytes[6]))
+    }
+
     // --- Insulin get (0x02, 0x07) ---
 
     @Test
@@ -349,10 +380,11 @@ class EquilPumpEmulatorTest {
         state.devicePassword
     )
 
-    private fun sendCommand(typeBytes: ByteArray, params: ByteArray = ByteArray(0)) =
+    private fun sendCommand(typeBytes: ByteArray, params: ByteArray = ByteArray(0), port: String = "0404A1B2") =
         emulator.processMessage(
             AESUtil.aesEncrypt(state.sessionPassword, Utils.concat(Utils.intToBytes(11), typeBytes, params)),
-            state.sessionPassword
+            state.sessionPassword,
+            port
         )
 
     private fun sendConfirmation() = emulator.processMessage(

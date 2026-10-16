@@ -8,6 +8,7 @@ import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.bolus.BatchExecutor
@@ -15,23 +16,25 @@ import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
-import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.overview.SensitivityOverview
+import app.aaps.core.interfaces.overview.SensitivityOverviewData
 import app.aaps.core.interfaces.overview.graph.BgInfoData
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.GraphConfig
 import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.rx.events.EventCustomActionsChanged
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventNsClientStatusUpdated
-import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.sync.NsClient
@@ -89,6 +92,11 @@ internal class OverviewViewModelFixture(private val screen: AapsScreenFixture) {
     val processedDeviceStatusData: ProcessedDeviceStatusData = mock()
     val iobCobCalculator: IobCobCalculator = mock()
     val constraintChecker: ConstraintsChecker = mock()
+    // A fake, not a mock: the chip collects this on every screen, and an unstubbed mock hands
+    // back null for the data class
+    val sensitivityOverview: SensitivityOverview = object : SensitivityOverview {
+        override suspend fun build() = SensitivityOverviewData()
+    }
     val graphConfigRepository: GraphConfigRepository = mock()
     val nsClient: NsClient = mock()
     val visibilityContext: VisibilityContext = mock()
@@ -152,10 +160,11 @@ internal class OverviewViewModelFixture(private val screen: AapsScreenFixture) {
         whenever(bgSource.sensorBatteryLevel).thenReturn(-1)
         whenever(activePump.pumpDescription).thenReturn(pumpDescription)
         whenever(activePump.batteryLevel).thenReturn(MutableStateFlow<Int?>(null))
+        whenever(activePump.reservoirLevel).thenReturn(MutableStateFlow(PumpInsulin(0.0)))
         whenever(pumpPlugin.pumpDescription).thenReturn(pumpDescription)
         whenever(pumpPlugin.batteryLevel).thenReturn(MutableStateFlow<Int?>(null))
         whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventConfigBuilderChange::class)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventNsClientStatusUpdated::class)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventCustomActionsChanged::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(TE::class)).thenReturn(emptyFlow())
@@ -170,11 +179,7 @@ internal class OverviewViewModelFixture(private val screen: AapsScreenFixture) {
     }
 
     val chipsViewModel: ChipsViewModel by lazy {
-        ChipsViewModel(
-            cache, iobCobCalculator, loop, screen.config, persistenceLayer, constraintChecker, profileFunction,
-            processedDeviceStatusData, screen.profileUtil, activePlugin, rh, decimalFormatter, screen.dateUtil,
-            aapsLogger, screen.preferences, rxBus
-        )
+        ChipsViewModel(cache, iobCobCalculator, loop, screen.config, persistenceLayer, sensitivityOverview, rh, decimalFormatter, rxBus)
     }
 
     val statusViewModel: StatusViewModel by lazy {

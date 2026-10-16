@@ -1,6 +1,7 @@
 package app.aaps.di
 
 import app.aaps.core.interfaces.configuration.ExternalOptions
+import app.aaps.di.ExternalOptionsOverride.Companion.NONE
 
 /**
  * Extra [ExternalOptions] to report as enabled, on top of what the production file lookup finds.

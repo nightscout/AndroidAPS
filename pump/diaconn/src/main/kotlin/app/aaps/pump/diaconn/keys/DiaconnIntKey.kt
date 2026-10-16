@@ -1,7 +1,6 @@
 package app.aaps.pump.diaconn.keys
 
 import app.aaps.core.keys.PreferenceType
-import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.diaconn.R

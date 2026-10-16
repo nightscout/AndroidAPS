@@ -2,7 +2,6 @@
 <resources>
     <string name="danars_pairingtimedout">연동시간초과</string>
     <string name="danarspump">Dana-i/RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">DANA Diabecare RS와 Dana-i 펌프를 위한 펌프 연동</string>
     <string name="maxbolusviolation">최대 Bolus 위반</string>
     <string name="commanderror">명령 오류</string>
@@ -74,7 +73,6 @@
     <string name="description_pump_dana_r">다나R 펌프와 연동(다나 RN)</string>
     <string name="description_pump_dana_r_korean">내수용 다나R 펌프와 연동(다나 R)</string>
     <string name="description_pump_dana_r_v2">업그레이드 펌웨어가 설치된 다나R 펌프와 연동</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">선택된 기기를 찾지 못했습니다</string>
     <string name="danar_switchtouhmode">펌프에서 U/d에서 U/h로 모드를 변경하세요</string>
     <string name="danarkoreanpump">다나R 한글</string>

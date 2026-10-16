@@ -1,9 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">אוטומציה</string>
+    <string name="automation_enabled">מופעל</string>
+    <string name="automation_read_only">לקריאה בלבד</string>
+    <string name="automation_new_rule">כלל חדש</string>
+    <string name="automation_empty_desc">צרו כלל כדי לבצע פעולות אוטומטיות בהתאם לטריגרים.</string>
+    <string name="automation_edit_rule">עריכת כלל</string>
+    <string name="automation_discard_title">לבטל את השינויים?</string>
+    <string name="automation_discard_message">הכלל אינו שלם ולא ניתן לשמור אותו. לבטל את השינויים?</string>
+    <string name="automation_discard_confirm">ביטול שינויים</string>
+    <string name="automation_category_time">&amp;זמן ותזמון</string>
+    <string name="automation_category_glucose">גלוקוז וטיפול&amp;</string>
+    <string name="automation_category_device">מצב המכשיר</string>
+    <string name="automation_category_sensors">&amp;חיישנים וקישוריות</string>
+    <string name="automation_category_other">אחר</string>
+    <string name="automation_choose_trigger">הוספת טריגר</string>
+    <string name="automation_add_group">קבוצה</string>
+    <string name="automation_choose_action">הוספת פעולה</string>
+    <string name="automation_category_targets">ערכי מטרה</string>
+    <string name="automation_category_profile">פרופיל</string>
+    <string name="automation_category_loop">לולאה &amp;ואינסולין</string>
+    <string name="automation_category_alerts">התראות</string>
+    <string name="automation_category_system">מערכת</string>
+    <string name="automation_category_scenes">תרחישים</string>
+    <string name="action_run_scene">הפעלת תרחיש</string>
+    <string name="action_run_scene_short">הפעלת תרחיש: %1$s</string>
+    <string name="action_enable_scene">הפעלת תרחיש</string>
+    <string name="action_enable_scene_short">הפעלת תרחיש: %1$s</string>
+    <string name="action_disable_scene">השבתת תרחיש</string>
+    <string name="action_disable_scene_short">השבתת תרחיש: %1$s</string>
+    <string name="action_scene_label">תרחיש</string>
+    <string name="trigger_scene_active">תרחיש</string>
+    <string name="trigger_scene_active_compared">תרחיש %1$s</string>
+    <string name="action_scene_not_found">התרחיש לא נמצא</string>
+    <string name="action_scene_disabled">התרחיש מושבת</string>
+    <string name="automation_unit_meters">מ׳</string>
+    <string name="automation_unit_bpm">פעימות/דקה</string>
     <string name="automation_missing_task_name">נא להזין שם לפעולה.</string>
     <string name="automation_missing_trigger">נא לציין טריגר אחד לפחות.</string>
     <string name="automation_missing_action">נא לציין פעולה אחת לפחות.</string>
+    <string name="exportsettings_message">ייצוא הגדרות: %1$s</string>
+    <string name="export_settings_short">טקסט בטיפול:</string>
     <string name="alarm_message">התראה: %1$s</string>
     <string name="alarm_short">התראה:</string>
     <string name="message_short">הודעה:</string>
@@ -46,6 +83,7 @@
     <string name="location_outside">כשנמצאים מחוץ לאזור</string>
     <string name="location_going_in">כשנכנסים לאזור ששמו</string>
     <string name="location_going_out">כשעוזבים אזור ששמו</string>
+    <string name="time_range">טווח זמן</string>
     <string name="timerange_value">הזמן בין %1$s ו- %2$s</string>
     <string name="add_short">הוספה</string>
     <string name="temptargetcompared">ערך מטרה זמני %1$s</string>
@@ -64,6 +102,20 @@
     <string name="cobcompared">פחמ\' פעילות %1$s %2$.0f</string>
     <string name="triggerHeartRate">קצב לב</string>
     <string name="triggerHeartRateDesc">קצב לב %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">גיל החיישן</string>
+    <string name="triggerSensorAgeDesc">גיל החיישן %1$s %2$.1f שעות</string>
+    <string name="triggerCannulaAgeLabel">גיל הצינורית</string>
+    <string name="triggerCannulaAgeDesc">גיל הצינורית %1$s %2$.1f שעות</string>
+    <string name="triggerPodChangeLabel">הפעלת הפוד</string>
+    <string name="triggerPodChangeDesc">הפוד הופעל</string>
+    <string name="triggerInsulinAgeLabel">גיל האינסולין</string>
+    <string name="triggerInsulinAgeDesc">גיל האינסולין %1$s %2$.1f שעות</string>
+    <string name="triggerPumpBatteryAgeLabel">גיל סוללת המשאבה</string>
+    <string name="triggerPumpBatteryAgeDesc">גיל סוללת המשאבה %1$s %2$.1f שעות</string>
+    <string name="triggerReservoirLevelLabel">רמת המכל</string>
+    <string name="triggerReservoirLevelDesc">רמת המכל %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">רמת סוללת המשאבה</string>
+    <string name="triggerPumpBatteryLevelDesc">רמת סוללת המשאבה %1$s %2$.0f</string>
     <string name="recurringTime">זמן חוזרני</string>
     <string name="every">בכל</string>
     <string name="never">אף פעם</string>
@@ -89,8 +141,27 @@
     <string name="autotune_run_with_error">שגיאה במהלך הכיוונון האוטומטי האחרון</string>
     <string name="autotune_run_cancelled">נמצאה הפעלה נוספת של הכוונון האוטומטי ברקע, ההפעלה בוטלה</string>
     <!--    Steps count-->
+    <string name="triggerStepsCountLabel">מספר צעדים</string>
+    <string name="triggerStepsCountDesc">מספר צעדים ב־%1$s דקות %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">משך המדידה</string>
     <!--    SMB mode-->
+    <string name="changeSmbState">הפעלה/השבתה של SMB</string>
+    <string name="changeSmbTo">שינוי SMB ל־%1$s</string>
+    <string name="newSmbMode">מצב SMB חדש:</string>
+    <string name="on">מופעל</string>
+    <string name="off">כבוי</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">שינוי החלקה</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">שינוי ההחלקה ל־%1$s</string>
+    <string name="smoothing_label">החלקה</string>
+    <string name="precondition_smoothing_not_active_name">החלקה אינה פעילה</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">החלקה %1$s אינה פעילה</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">בחירה מהמפה</string>
+    <string name="tap_to_select_location">הקישו על המפה כדי לבחור מיקום</string>
+    <string name="selected_coords">נבחר: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">מיקום</string>
+    <string name="permission_location_description">נדרשת הרשאת מיקום עבור טריגרים מבוססי מיקום וזיהוי רשת Wi‑Fi</string>
+    <string name="permission_background_location_description">נדרשת הרשאת מיקום ברקע כדי שטריגרים של אוטומציה יפעלו כשהאפליקציה ברקע</string>
 </resources>

@@ -78,16 +78,21 @@ class TriggerFactory(
     /** Builds an empty trigger from its class name, for the "add trigger" list in the editor. */
     fun instantiate(className: String): Trigger? = empty(className)
 
+    /**
+     * Rebuilds a trigger from its stored form.
+     * An unknown type, or data that fails to parse, reads as [TriggerUnknown]: a rule written by a
+     * newer version must not take the whole list down, and it must not fire either. This used to be
+     * an empty connector, which is always true, so the rule ran on every cycle.
+     */
     fun instantiate(obj: JsonObject): Trigger {
         try {
             val type = obj.lenientString("type")
             val data = obj["data"] as? JsonObject ?: JsonObject(emptyMap())
-            // An unknown type reads as an empty connector, which is what it always did - a rule
-            // written by a newer version must not take the whole list down.
-            return empty(type)?.fromJSON(data.toString()) ?: TriggerConnector(deps)
+            empty(type)?.let { return it.fromJSON(data.toString()) }
+            aapsLogger.error(LTag.AUTOMATION, "Unknown trigger type: $type")
         } catch (e: Exception) {
             aapsLogger.error(LTag.AUTOMATION, "Error parsing $obj : $e")
         }
-        return TriggerConnector(deps)
+        return TriggerUnknown(deps, obj)
     }
 }

@@ -1,12 +1,11 @@
 package app.aaps.pump.carelevo.domain.usecase.bolus
 
+import app.aaps.core.data.model.BS
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import com.google.common.truth.Truth.assertThat
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.hours
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
@@ -20,6 +19,8 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -31,6 +32,15 @@ internal class CarelevoStartImmeBolusInfusionUseCaseTest {
 
     private fun patchInfo(address: String = "AA:BB:CC:DD:EE:FF"): CarelevoPatchInfoDomainModel =
         CarelevoPatchInfoDomainModel(address = address, createdAt = Clock.System.now(), updatedAt = Clock.System.now(), mode = 1)
+
+    private fun persist(
+        actionSeq: Int,
+        volume: Double,
+        expectedTimeSeconds: Int,
+        pumpId: Long = PUMP_ID,
+        bolusType: BS.Type = BS.Type.NORMAL,
+        bolusTotalBefore: Double? = null
+    ) = sut.persistImmeBolusStarted(actionSeq, volume, expectedTimeSeconds, pumpId, bolusType, bolusTotalBefore)
 
     private fun capturedInfusion(): CarelevoImmeBolusInfusionInfoDomainModel {
         val captor = argumentCaptor<CarelevoImmeBolusInfusionInfoDomainModel>()
@@ -50,7 +60,7 @@ internal class CarelevoStartImmeBolusInfusionUseCaseTest {
     fun `returns false when no patch record exists and never writes infusion info`() {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(null)
 
-        assertThat(sut.persistImmeBolusStarted(actionSeq = 1, volume = 2.0, expectedTimeSeconds = 30)).isFalse()
+        assertThat(persist(actionSeq = 1, volume = 2.0, expectedTimeSeconds = 30)).isFalse()
         verify(infusionInfoRepository, never()).updateImmeBolusInfusionInfo(any())
         verify(patchInfoRepository, never()).updatePatchInfo(any())
     }
@@ -60,7 +70,7 @@ internal class CarelevoStartImmeBolusInfusionUseCaseTest {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(patchInfo())
         whenever(infusionInfoRepository.updateImmeBolusInfusionInfo(any())).thenReturn(false)
 
-        assertThat(sut.persistImmeBolusStarted(actionSeq = 1, volume = 2.0, expectedTimeSeconds = 30)).isFalse()
+        assertThat(persist(actionSeq = 1, volume = 2.0, expectedTimeSeconds = 30)).isFalse()
         verify(patchInfoRepository, never()).updatePatchInfo(any())
     }
 
@@ -70,14 +80,14 @@ internal class CarelevoStartImmeBolusInfusionUseCaseTest {
         whenever(infusionInfoRepository.updateImmeBolusInfusionInfo(any())).thenReturn(true)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(false)
 
-        assertThat(sut.persistImmeBolusStarted(actionSeq = 1, volume = 2.0, expectedTimeSeconds = 30)).isFalse()
+        assertThat(persist(actionSeq = 1, volume = 2.0, expectedTimeSeconds = 30)).isFalse()
     }
 
     @Test
     fun `returns false when patch read throws`() {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenThrow(RuntimeException("boom"))
 
-        assertThat(sut.persistImmeBolusStarted(actionSeq = 1, volume = 2.0, expectedTimeSeconds = 30)).isFalse()
+        assertThat(persist(actionSeq = 1, volume = 2.0, expectedTimeSeconds = 30)).isFalse()
         verify(infusionInfoRepository, never()).updateImmeBolusInfusionInfo(any())
     }
 
@@ -86,7 +96,7 @@ internal class CarelevoStartImmeBolusInfusionUseCaseTest {
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(patchInfo())
         whenever(infusionInfoRepository.updateImmeBolusInfusionInfo(any())).thenThrow(RuntimeException("boom"))
 
-        assertThat(sut.persistImmeBolusStarted(actionSeq = 1, volume = 2.0, expectedTimeSeconds = 30)).isFalse()
+        assertThat(persist(actionSeq = 1, volume = 2.0, expectedTimeSeconds = 30)).isFalse()
         verify(patchInfoRepository, never()).updatePatchInfo(any())
     }
 
@@ -98,7 +108,7 @@ internal class CarelevoStartImmeBolusInfusionUseCaseTest {
         whenever(infusionInfoRepository.updateImmeBolusInfusionInfo(any())).thenReturn(true)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        assertThat(sut.persistImmeBolusStarted(actionSeq = 9, volume = 3.5, expectedTimeSeconds = 42)).isTrue()
+        assertThat(persist(actionSeq = 9, volume = 3.5, expectedTimeSeconds = 42)).isTrue()
 
         val persisted = capturedInfusion()
         assertThat(persisted.address).isEqualTo("11:22:33:44:55:66")
@@ -109,13 +119,27 @@ internal class CarelevoStartImmeBolusInfusionUseCaseTest {
     }
 
     @Test
+    fun `success keeps what a later record of the bolus needs`() {
+        whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(patchInfo())
+        whenever(infusionInfoRepository.updateImmeBolusInfusionInfo(any())).thenReturn(true)
+        whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
+
+        assertThat(persist(actionSeq = 1, volume = 0.6, expectedTimeSeconds = 44, pumpId = 1_234L, bolusType = BS.Type.SMB, bolusTotalBefore = 12.5)).isTrue()
+
+        val persisted = capturedInfusion()
+        assertThat(persisted.pumpId).isEqualTo(1_234L)
+        assertThat(persisted.bolusType).isEqualTo("SMB")
+        assertThat(persisted.bolusTotalBefore).isEqualTo(12.5)
+    }
+
+    @Test
     fun `success stamps patch mode 3 and the bolus action seq`() {
         val original = patchInfo().copy(updatedAt = Clock.System.now() - 1.hours)
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(original)
         whenever(infusionInfoRepository.updateImmeBolusInfusionInfo(any())).thenReturn(true)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        assertThat(sut.persistImmeBolusStarted(actionSeq = 9, volume = 3.5, expectedTimeSeconds = 42)).isTrue()
+        assertThat(persist(actionSeq = 9, volume = 3.5, expectedTimeSeconds = 42)).isTrue()
 
         val persisted = capturedPatch()
         assertThat(persisted.mode).isEqualTo(3)
@@ -129,7 +153,7 @@ internal class CarelevoStartImmeBolusInfusionUseCaseTest {
         whenever(infusionInfoRepository.updateImmeBolusInfusionInfo(any())).thenReturn(true)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        assertThat(sut.persistImmeBolusStarted(actionSeq = 0, volume = 1.0, expectedTimeSeconds = 10)).isTrue()
+        assertThat(persist(actionSeq = 0, volume = 1.0, expectedTimeSeconds = 10)).isTrue()
 
         val order = inOrder(infusionInfoRepository, patchInfoRepository)
         order.verify(infusionInfoRepository).updateImmeBolusInfusionInfo(any())
@@ -142,8 +166,8 @@ internal class CarelevoStartImmeBolusInfusionUseCaseTest {
         whenever(infusionInfoRepository.updateImmeBolusInfusionInfo(any())).thenReturn(true)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        assertThat(sut.persistImmeBolusStarted(actionSeq = 1, volume = 1.0, expectedTimeSeconds = 10)).isTrue()
-        assertThat(sut.persistImmeBolusStarted(actionSeq = 2, volume = 1.0, expectedTimeSeconds = 10)).isTrue()
+        assertThat(persist(actionSeq = 1, volume = 1.0, expectedTimeSeconds = 10)).isTrue()
+        assertThat(persist(actionSeq = 2, volume = 1.0, expectedTimeSeconds = 10)).isTrue()
 
         val captor = argumentCaptor<CarelevoImmeBolusInfusionInfoDomainModel>()
         verify(infusionInfoRepository, times(2)).updateImmeBolusInfusionInfo(captor.capture())
@@ -156,9 +180,14 @@ internal class CarelevoStartImmeBolusInfusionUseCaseTest {
         whenever(infusionInfoRepository.updateImmeBolusInfusionInfo(any())).thenReturn(true)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
-        assertThat(sut.persistImmeBolusStarted(actionSeq = 0, volume = 0.05, expectedTimeSeconds = 0)).isTrue()
+        assertThat(persist(actionSeq = 0, volume = 0.05, expectedTimeSeconds = 0)).isTrue()
 
         assertThat(capturedInfusion().infusionDurationSeconds).isEqualTo(0)
         assertThat(capturedPatch().bolusActionSeq).isEqualTo(0)
+    }
+
+    private companion object {
+
+        const val PUMP_ID = 1_000L
     }
 }

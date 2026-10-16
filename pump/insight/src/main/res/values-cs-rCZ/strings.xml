@@ -24,7 +24,6 @@
     <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Vyměněna hadičky</string>
-    <string name="insightpump_shortname">Insight</string>
     <string name="insight_alert_notification_channel">Upozornění pumpy Insight</string>
     <string name="disable_vibration">Zakázat vibrace při ručním podání bolusu</string>
     <string name="disable_vibration_summary">Pro bolus a prodloužený bolus (dostupné pouze s Insight firmware 3.x)</string>

@@ -3,6 +3,9 @@ package app.aaps.pump.carelevo
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalInfusionInfoDomainModel
+import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalSegmentInfusionInfoDomainModel
+import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
@@ -27,6 +30,51 @@ class CarelevoPumpPluginTest : CarelevoPumpPluginTestBase() {
         patchInfoSubject.onNext(Optional.of(samplePatchInfo(manufactureNumber = "SN-1234")))
 
         assertThat(plugin.serialNumber()).isEqualTo("SN-1234")
+    }
+
+    // --- #2454: the basal the patch runs ---
+
+    @Test
+    fun `the delivered basal is the program the patch accepted rounded as it is sent`() {
+        val segments = (0..23).map { CarelevoBasalSegmentInfusionInfoDomainModel(startTime = it, endTime = it + 1, speed = if (it < 6) 0.7905 else 1.0) }
+        whenever(setBasalProgramUseCase.acceptedBasalSegments()).thenReturn(segments.shuffled())
+
+        val delivered = plugin.deliveredBasal()!!
+
+        assertThat(delivered.map { it.timeAsSeconds }).containsExactlyElementsIn((0..23).map { it * 3600 }).inOrder()
+        assertThat(delivered.map { it.value }).containsExactlyElementsIn((0..23).map { if (it < 6) 0.79 else 1.0 }).inOrder()
+    }
+
+    /**
+     * Seen on the Pixel: right after a set the infusion-info stream still held the old program, and the report said
+     * 1.02 U/h where the patch had just accepted 1.14. The report reads the store, which the write updates at once.
+     */
+    @Test
+    fun `the delivered basal does not come from the infusion info stream`() {
+        val old = (0..23).map { CarelevoBasalSegmentInfusionInfoDomainModel(startTime = it, endTime = it + 1, speed = 1.02) }
+        val accepted = (0..23).map { CarelevoBasalSegmentInfusionInfoDomainModel(startTime = it, endTime = it + 1, speed = 1.14) }
+        infusionInfoSubject.onNext(
+            Optional.of(CarelevoInfusionInfoDomainModel(basalInfusionInfo = CarelevoBasalInfusionInfoDomainModel("id", "address", 1, segments = old, isStop = false)))
+        )
+        whenever(setBasalProgramUseCase.acceptedBasalSegments()).thenReturn(accepted)
+
+        assertThat(plugin.deliveredBasal()!!.map { it.value }.distinct()).containsExactly(1.14)
+    }
+
+    /** The base basal is what the patch gives in this hour, the same rate the running profile holds. */
+    @Test
+    fun `the base basal is the delivered rate of this hour`() {
+        val segments = (0..23).map { CarelevoBasalSegmentInfusionInfoDomainModel(startTime = it, endTime = it + 1, speed = 0.7905) }
+        whenever(setBasalProgramUseCase.acceptedBasalSegments()).thenReturn(segments)
+
+        assertThat(plugin.baseBasalRate.cU).isEqualTo(0.79)
+    }
+
+    @Test
+    fun `the delivered basal is unknown before the patch accepted a program`() {
+        whenever(setBasalProgramUseCase.acceptedBasalSegments()).thenReturn(null)
+
+        assertThat(plugin.deliveredBasal()).isNull()
     }
 
     @Test

@@ -15,6 +15,7 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -77,6 +78,28 @@ class DiaconnG8PluginTest : TestBaseWithProfile() {
         Assertions.assertEquals(5.0, result.cU, 0.01)
     }
 
+    // ---- the max basal of the description comes from the pump, once the pump reported it ----
+
+    @Test
+    fun aStatusReadWithoutTheMaxBasalKeepsTheMaxBasalOfTheDescription() = runBlocking<Unit> {
+        val before = diaconnG8Plugin.pumpDescription.basalMaximumRate
+
+        // No service bound, as when the status read fails: the pump did not report its max basal.
+        diaconnG8Plugin.getPumpStatus("test")
+
+        assertThat(before).isGreaterThan(0.0)
+        assertThat(diaconnG8Plugin.pumpDescription.basalMaximumRate).isEqualTo(before)
+    }
+
+    @Test
+    fun theMaxBasalThePumpReportedGoesIntoTheDescription() = runBlocking<Unit> {
+        diaconnG8Pump.maxBasalPerHours = 3.5
+
+        diaconnG8Plugin.getPumpStatus("test")
+
+        assertThat(diaconnG8Plugin.pumpDescription.basalMaximumRate).isEqualTo(3.5)
+    }
+
     @Test
     fun isInitializedShouldReturnTrueWhenPumpIsConnected() {
         whenever(preferences.get(DiaconnStringNonKey.Address)).thenReturn("AA:BB:CC:DD:EE:FF")
@@ -85,6 +108,40 @@ class DiaconnG8PluginTest : TestBaseWithProfile() {
         diaconnG8Pump.lastConnection = System.currentTimeMillis()
         diaconnG8Pump.maxBasal = 1.0
         assertThat(diaconnG8Plugin.isInitialized()).isTrue()
+    }
+
+    private fun initializedPump() {
+        whenever(preferences.get(DiaconnStringNonKey.Address)).thenReturn("AA:BB:CC:DD:EE:FF")
+        whenever(preferences.get(DiaconnStringNonKey.Name)).thenReturn("TestPump")
+        diaconnG8Plugin.changePump()
+        diaconnG8Pump.lastConnection = System.currentTimeMillis()
+        diaconnG8Pump.maxBasal = 3.0
+    }
+
+    /** #2454: AAPS keeps the rates the pump reports as the running basal, one per hour. */
+    @Test
+    fun deliveredBasalIsWhatThePumpReports() {
+        initializedPump()
+        diaconnG8Pump.activeProfile = 0
+        diaconnG8Pump.pumpProfiles = Array(4) { Array(24) { 0.0 } }.also { profiles -> for (hour in 0..23) profiles[0][hour] = if (hour < 6) 0.56 else 0.84 }
+
+        val delivered = diaconnG8Plugin.deliveredBasal()!!
+
+        assertThat(delivered.map { it.timeAsSeconds }).containsExactlyElementsIn((0..23).map { it * 3600 }).inOrder()
+        assertThat(delivered.map { it.value }).containsExactlyElementsIn((0..23).map { if (it < 6) 0.56 else 0.84 }).inOrder()
+    }
+
+    @Test
+    fun deliveredBasalIsUnknownBeforeThePumpWasRead() {
+        initializedPump()
+        diaconnG8Pump.pumpProfiles = null
+        assertThat(diaconnG8Plugin.deliveredBasal()).isNull()
+    }
+
+    @Test
+    fun deliveredBasalIsUnknownWhileNotInitialized() {
+        diaconnG8Pump.pumpProfiles = Array(4) { Array(24) { 0.5 } }
+        assertThat(diaconnG8Plugin.deliveredBasal()).isNull()
     }
 
     @Test

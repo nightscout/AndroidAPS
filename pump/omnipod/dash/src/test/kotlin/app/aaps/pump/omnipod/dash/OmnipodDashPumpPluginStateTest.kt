@@ -1,14 +1,16 @@
 package app.aaps.pump.omnipod.dash
 
 import app.aaps.core.data.pump.defs.ManufacturerType
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -18,6 +20,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
+import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
@@ -25,7 +28,10 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
@@ -38,17 +44,19 @@ import org.mockito.kotlin.whenever
 class OmnipodDashPumpPluginStateTest {
 
     private lateinit var podStateManager: OmnipodDashPodStateManager
+    private lateinit var omnipodManager: OmnipodDashManager
     private lateinit var sut: OmnipodDashPumpPlugin
 
     @BeforeEach
     fun setUp() {
         podStateManager = mock()
+        omnipodManager = mock()
         sut = OmnipodDashPumpPlugin(
             aapsLogger = mock<AAPSLogger>(),
             rh = mock<ResourceHelper>(),
             preferences = mock<Preferences>(),
             commandQueue = mock<CommandQueue>(),
-            omnipodManager = mock<OmnipodDashManager>(),
+            omnipodManager = omnipodManager,
             podStateManager = podStateManager,
             history = mock<DashHistory>(),
             pumpSync = mock<PumpSync>(),
@@ -111,7 +119,7 @@ class OmnipodDashPumpPluginStateTest {
     @Test
     fun `an alarming pod reports a zero base rate even with a program loaded`() {
         val program = mock<BasalProgram>()
-        whenever(program.rateAt(org.mockito.kotlin.any())).thenReturn(1.25)
+        whenever(program.rateAt(any())).thenReturn(1.25)
         whenever(podStateManager.basalProgram).thenReturn(program)
         whenever(podStateManager.alarmType).thenReturn(mock())
 
@@ -121,7 +129,7 @@ class OmnipodDashPumpPluginStateTest {
     @Test
     fun `a healthy pod reports the rate its program gives for now`() {
         val program = mock<BasalProgram>()
-        whenever(program.rateAt(org.mockito.kotlin.any())).thenReturn(1.25)
+        whenever(program.rateAt(any())).thenReturn(1.25)
         whenever(podStateManager.basalProgram).thenReturn(program)
         whenever(podStateManager.alarmType).thenReturn(null)
 
@@ -134,6 +142,41 @@ class OmnipodDashPumpPluginStateTest {
         whenever(podStateManager.alarmType).thenReturn(null)
 
         assertThat(sut.baseBasalRate.cU).isEqualTo(0.0)
+    }
+
+    // endregion
+
+    // region deliveredBasal - what AAPS keeps as the running basal (#2454)
+
+    /** The pod gets each rate rounded to the nearest 0.05 U/h: 0.42 runs as 0.40 and 0.43 as 0.45. */
+    @Test
+    fun `the delivered basal is the program the pod confirmed hour by hour`() {
+        val profile = mock<PumpProfile>()
+        whenever(profile.getBasalValues()).thenReturn(arrayOf(Profile.ProfileValue(0, 0.42), Profile.ProfileValue(6 * 3600, 0.43)))
+        val program = mapProfileToBasalProgram(profile, PumpType.OMNIPOD_DASH)
+        whenever(podStateManager.isActivationCompleted).thenReturn(true)
+        whenever(podStateManager.basalProgram).thenReturn(program)
+
+        val delivered = sut.deliveredBasal()!!
+
+        assertThat(delivered.map { it.timeAsSeconds }).containsExactlyElementsIn((0..23).map { it * 3600 }).inOrder()
+        assertThat(delivered.map { it.value }).containsExactlyElementsIn((0..23).map { if (it < 6) 0.40 else 0.45 }).inOrder()
+    }
+
+    @Test
+    fun `the delivered basal is unknown without an activated pod`() {
+        whenever(podStateManager.isActivationCompleted).thenReturn(false)
+        whenever(podStateManager.basalProgram).thenReturn(BasalProgram(listOf(BasalProgram.Segment(0, 48, 100))))
+
+        assertThat(sut.deliveredBasal()).isNull()
+    }
+
+    @Test
+    fun `the delivered basal is unknown before a program was confirmed`() {
+        whenever(podStateManager.isActivationCompleted).thenReturn(true)
+        whenever(podStateManager.basalProgram).thenReturn(null)
+
+        assertThat(sut.deliveredBasal()).isNull()
     }
 
     // endregion
@@ -166,6 +209,36 @@ class OmnipodDashPumpPluginStateTest {
 
         whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
         assertThat(sut.isBusy()).isFalse()
+    }
+
+    /**
+     * Pairing runs while the progress is still NOT_STARTED. If the pump was not busy then, the queue
+     * ran its commands and disconnected the pod in the middle of the pairing (#5219).
+     */
+    @Test
+    fun `the pump is busy while an activation step is running, even before any progress`() {
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)
+        whenever(omnipodManager.isActivationRunning).thenReturn(true)
+
+        assertThat(sut.isBusy()).isTrue()
+    }
+
+    @Test
+    fun `disconnect does not close the link while an activation step is running`() {
+        whenever(omnipodManager.isActivationRunning).thenReturn(true)
+
+        sut.disconnect("Queue empty")
+
+        verify(omnipodManager, never()).disconnect(any<Boolean>())
+    }
+
+    @Test
+    fun `disconnect closes the link when no activation is running`() {
+        whenever(omnipodManager.isActivationRunning).thenReturn(false)
+
+        sut.disconnect("Queue empty")
+
+        verify(omnipodManager).disconnect(false)
     }
 
     /**

@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS(圓形)</string>
     <string name="label_watchface_digital_style">AAPS(數位風格)</string>
     <string name="label_watchface_custom">AAPS(自訂)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS（自訂）常時顯示</string>
     <string name="label_actions_tile">動作</string>
     <string name="label_temp_target_tile">臨時目標</string>
     <string name="label_quick_wizard_tile">快速嚮導</string>
@@ -96,6 +97,7 @@
     <string name="action_user_action_confirmation">用戶操作請求</string>
     <string name="action_scene_confirmation">已請求場景</string>
     <string name="scene_end">結束</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">跳過</string>
     <string name="action_treatment_confirmation">已請求治療</string>
     <string name="action_bolus_confirmation">已請求注射</string>
     <string name="action_wizard_confirmation">已請求計算</string>
@@ -159,6 +161,21 @@
     <string name="pref_simplify_ui">簡化 UI</string>
     <string name="pref_vibrate_hourly">每小時震動</string>
     <string name="pref_show_weeknumber">顯示週數</string>
+    <string name="pref_complication_1">小工具 1</string>
+    <string name="pref_complication_2">小工具 2</string>
+    <string name="pref_complication_3">小工具 3</string>
+    <string name="pref_complication_4">小工具 4</string>
+    <string name="pref_complication_5">小工具 5</string>
+    <string name="complication_summary_none">輕觸以選擇資料來源</string>
+    <string name="pref_complication_type_priority">小工具類型優先順序</string>
+    <string name="pref_complication_type_priority_all">所有欄位使用預設值</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">此處的變更會在你下次選取資料來源時生效。僅再次選取同一個來源並不足夠：請先選取不同的資料來源，再選回你想要的那個。</string>
+    <string name="complication_type_priority_value">數值或量表</string>
+    <string name="complication_type_priority_text">文字</string>
+    <string name="complication_type_priority_icon">圖示</string>
+    <string name="complication_type_priority_use_default">使用預設值</string>
+    <string name="cwf_complication_layout">小工具版面配置</string>
+    <string name="cwf_complication_layout_description">小工具的位置與大小，取自已載入的自訂錶面。</string>
     <string name="pref_include_external">在模板中包含外部視圖</string>
     <string name="pref_switch_external">切換錶盤顯示的外部資料</string>
     <string name="custom_pref_show_seconds">顯示秒數</string>
@@ -174,6 +191,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS 注射進度靜音</string>
     <string name="bolus_progress_channel_description">注射進度和取消</string>
     <string name="bolus_progress_silent_channel_description">注射進度和取消，震動較少</string>
+    <string name="open_loop_channel_name">AAPS 開環</string>
+    <string name="open_loop_channel_description">開環請求通知</string>
     <string name="simple_ui_off">關閉</string>
     <string name="simple_ui_charging">充電時</string>
     <string name="simple_ui_always_on">始終開啟模式</string>
@@ -231,6 +250,12 @@
     <string name="complication_blood_glucose_ext1">血糖 Ext1</string>
     <string name="complication_blood_glucose_ext2">血糖  Ext2</string>
     <string name="complication_bg_graph">血糖圖表</string>
+    <string name="complication_cwf_image">自訂錶面</string>
+    <string name="complication_cwf_ambient_bg">自訂錶面環境模式血糖</string>
+    <string name="complication_cwf_ambient_status">自訂錶面環境模式狀態</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">自訂錶面背景</string>
+    <string name="complication_cwf_upper">自訂錶面時鐘</string>
     <string name="complication_br_cob_iob">BR、CoB及IoB</string>
     <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
@@ -295,6 +320,18 @@
     <string name="loop_status_target_range">範圍</string>
     <string name="loop_status_target">目標</string>
     <string name="loop_status_adjusted_target">調整後目標</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">直到結束</string>
+    <string name="loop_status_scene_ended">已結束</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">後續</string>
+    <string name="loop_status_profile">設定檔</string>
+    <string name="loop_status_no_profile">尚未設定設定檔</string>
+    <string name="loop_status_profile_percentage">百分比</string>
+    <string name="loop_status_profile_timeshift">時間偏移</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">返回至</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+d 小時</string>
+    <string name="loop_status_sensitivity">敏感度</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">由啟用中的情境所設定</string>
     <string name="loop_status"> 循環狀態</string>
     <string name="loop_status_refresh">重新整理</string>
     <string name="confirm">確認</string>

@@ -24,7 +24,6 @@
     <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">已更換導管</string>
-    <string name="insightpump_shortname">Sight</string>
     <string name="insight_alert_notification_channel">Insight 幫浦警報</string>
     <string name="disable_vibration">停用手動胰島素注射時的震動</string>
     <string name="disable_vibration_summary">對於注射和延長注射（僅適用於 Insight 韌體 3.x）</string>

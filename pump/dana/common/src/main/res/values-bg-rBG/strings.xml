@@ -2,7 +2,6 @@
 <resources>
     <string name="danars_pairingtimedout">Времето за сдвояване изтече</string>
     <string name="danarspump">Dana-i/RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Интеграция за помпа DANA Diabecare RS и Dana-i</string>
     <string name="maxbolusviolation">Превишавате макс болус</string>
     <string name="commanderror">Грешка при команда</string>
@@ -76,7 +75,6 @@
     <string name="description_pump_dana_r">Поддръжка за Dana Diabecare R помпи</string>
     <string name="description_pump_dana_r_korean">Поддръжка за корейски Dana Diabecare R помпи</string>
     <string name="description_pump_dana_r_v2">Поддръжка за Dana Diabecare R помпи с обновен софтуер</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">Избраното устройство не е открито</string>
     <string name="danar_switchtouhmode">Променете режима от Е/д на Е/ч в помпата</string>
     <string name="danarkoreanpump">DanaR Корейска</string>

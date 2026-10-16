@@ -15,12 +15,13 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
-import app.aaps.core.interfaces.concurrent.AapsLock
-import app.aaps.core.interfaces.concurrent.withLock
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -39,14 +40,12 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.objects.runningMode.PumpCommandGate
@@ -54,13 +53,14 @@ import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.formatMinutesAsDuration
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.ceil
 
@@ -238,9 +238,14 @@ class WizardBolusExecutorImpl(
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != entry.carbs()) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
+        // The eCarbs amount is STORED in the preset, so the carbs limit may have been lowered after it was entered
+        // (also: a settings import, or a preset synced from a device with a higher limit). Re-check it exactly like
+        // the immediate carbs above — a preset that no longer fits the limit is refused, never silently trimmed.
+        val eCarbsGrams = entry.eCarbsGrams()
+        if (constraintChecker.applyCarbsConstraints(ConstraintObject(eCarbsGrams, aapsLogger)).value() != eCarbsGrams)
+            return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
         val insulinAfterConstraints = wizard.insulinAfterConstraints
-        val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
-        if (abs(insulinAfterConstraints - wizard.calculatedTotalInsulin) >= minStep)
+        if (Round.isMoreThanRounding(wizard.calculatedTotalInsulin, insulinAfterConstraints, pump.bolusStepSize(insulinAfterConstraints)))
             return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
         // A correction-only QuickWizard (0 carbs) that nets to nothing → reject rather than show an empty confirm.
         if (wizard.calculatedTotalInsulin <= 0.0 && wizard.carbs <= 0)
@@ -251,7 +256,6 @@ class WizardBolusExecutorImpl(
         // Build the master's color-coded confirmation lines here so the client renders the master's EXACT
         // wizard confirmation (shared builder). advisorApplies offers the high-BG "correct now, eat later" fork.
         val advisorApplies = wizard.needsBolusAdvisor()
-        val eCarbsGrams = if (entry.useEcarbs() == QuickWizardEntry.ALWAYS) entry.carbs2() else 0
         return WizardBolusExecutor.PrepareResult.Preview(
             insulin = wizard.calculatedTotalInsulin,
             carbs = wizard.carbs,
@@ -266,7 +270,7 @@ class WizardBolusExecutorImpl(
                 carbTimeMinutes = entry.carbTime(),
                 alarm = entry.useAlarm() == QuickWizardEntry.ALWAYS && entry.carbTime() > 0,
                 maxBolus = constraintChecker.getMaxBolusAllowed().value(),
-                bolusStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints),
+                bolusStep = pump.bolusStepSize(wizard.insulinAfterConstraints),
             ),
         )
     }
@@ -304,18 +308,24 @@ class WizardBolusExecutorImpl(
             inputs.useBg, inputs.useCob, inputs.useIob, inputs.useIob, false, inputs.useTt, inputs.useTrend, inputs.alarm, inputs.notes, inputs.carbTime
         )
         val insulinAfterConstraints = wizard.insulinAfterConstraints
-        val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
-        if (abs(insulinAfterConstraints - wizard.calculatedTotalInsulin) >= minStep)
-            return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
+        // Above a limit (max bolus) the dose is capped, not refused, as the phone wizard did in v3: the confirmation
+        // shows the capped dose and a "constraint applied" warning. A QuickWizard preset is still refused, see
+        // prepareQuickWizard. The capped dose is also the base the watch adds its +/- steps to, so the total the
+        // watch shows is the dose that is given.
+        val capped = Round.isMoreThanRounding(wizard.calculatedTotalInsulin, insulinAfterConstraints, pump.bolusStepSize(insulinAfterConstraints))
+        val baseInsulin = if (capped) insulinAfterConstraints else wizard.unclampedCalculatedInsulin
         // Nothing to deliver (e.g. BG below target + high IOB, no carbs): reject so the caller shows the standard
         // "no insulin required" instead of an empty confirmation. The guard lives here so every surface that recomputes
         // through this path — phone wizard dialog, client relay, watch — gets it (it was previously only in the wear handler).
         if (wizard.calculatedTotalInsulin <= 0.0 && wizard.carbs <= 0)
             return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_insulin_required))
+        // A limit that leaves no insulin at all, and there are no carbs either: nothing would be given.
+        if (capped && insulinAfterConstraints <= 0.0 && wizard.carbs <= 0)
+            return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
         evictStalePending()
         pending.park(wizard.timeStamp,
             PendingBolus(
-                wizard.unclampedCalculatedInsulin,
+                baseInsulin,
                 wizard.carbs,
                 wizard.createBolusCalculatorResult(),
                 wizard.timeStamp,
@@ -345,13 +355,14 @@ class WizardBolusExecutorImpl(
             advisorApplies = advisorApplies,
             advisorLines = if (advisorApplies) wizard.buildConfirmationLines(advisor = true) else emptyList(),
             wizardDetail = wizard.buildWizardDetail().copy(
+                unclampedInsulin = baseInsulin,
                 eCarbsGrams = inputs.eCarbsGrams,
                 eCarbsDelayMinutes = inputs.eCarbsDelayMinutes,
                 eCarbsDurationHours = inputs.eCarbsDurationHours,
                 carbTimeMinutes = inputs.carbTime,
                 alarm = inputs.alarm && inputs.carbTime > 0,
                 maxBolus = constraintChecker.getMaxBolusAllowed().value(),
-                bolusStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints),
+                bolusStep = pump.bolusStepSize(wizard.insulinAfterConstraints),
             ),
         )
     }
@@ -373,6 +384,14 @@ class WizardBolusExecutorImpl(
         // (lastUsed cooldown) here — the master is SOT and republishes the pref; the client never writes it. Null for a
         // dialog/wear batch, or a guid the master hasn't synced yet (graceful → no mark).
         val entry = bolus?.quickWizardGuid?.takeIf { it.isNotEmpty() }?.let { quickWizard.get(it) }
+        // A CARBS-mode QuickWizard arrives here with the preset's eCarbs amount. That amount is STORED, so the carbs
+        // limit may have been lowered after it was entered — refuse the preset rather than trim it silently, matching
+        // the WIZARD-mode path in prepareQuickWizard and the disabled button the overview already shows for an
+        // over-limit `carbs`. Only for a QuickWizard: a wear or dialog eCarbs value was clamped by its own input
+        // field moments ago, and capFixed below is what bounds the rest of a batch.
+        if (entry != null && bolus != null && bolus.eCarbsGrams > 0 &&
+            constraintChecker.applyCarbsConstraints(ConstraintObject(bolus.eCarbsGrams, aapsLogger)).value() != bolus.eCarbsGrams
+        ) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
         // Gate + pump-init only for an actual INSULIN delivery — carbs-only, a record-only log, and a TT-only batch
         // are always allowed (mirrors executeBolus, which gates only when insulin > 0).
         if (bolus != null && !recordOnly && bolus.insulin > 0.0) {
@@ -389,6 +408,11 @@ class WizardBolusExecutorImpl(
             recordOnly    -> Triple(bolus.insulin, bolus.carbs, TE.Type.CORRECTION_BOLUS)
             else          -> capFixed(bolus.insulin, bolus.carbs).let { (i, c, t) -> Triple(i, clampNegativeCarbs(c, bolus.carbsTimeOffsetMinutes), t) }
         }
+        // Clock sanity bound for a temp target's start, against the MASTER's clock and for the same reason as the
+        // profile switch below. It matters more here: a target outside the window is stored, never becomes active,
+        // and nothing says so, so the user believes they set a target that silently does not happen.
+        if (tt != null && T.mins(tt.startOffsetMinutes.toLong()).msecs() !in Constants.TEMP_TARGET_TIME_OFFSET)
+            return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.temp_target_time_too_far, T.msecs(Constants.TEMP_TARGET_TIME_OFFSET.last).hours().toInt()))
         // Validate a profile switch up-front (the master is the authority): no active profile, or a value out of the
         // CPP hard limits, fails the whole batch before parking — mirrors the old wear-local checks.
         if (ps != null) {
@@ -411,6 +435,16 @@ class WizardBolusExecutorImpl(
                 return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.valueoutofrange, "Profile-Timeshift"))
             if (ps.durationMinutes.toDouble() !in Constants.ACTION_DURATION)
                 return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.valueoutofrange, "Profile-Duration"))
+            // Clock sanity bound, checked against the MASTER's clock. The time comes from a user picker, so it may
+            // legitimately be in the past (back-dating) or the future (a scheduled start), but only within a day:
+            // a paired client sends its own time, and a client with a wrong clock would otherwise place a switch
+            // where it either never runs or silently rewrites history. Refused, never clamped — moving the time the
+            // user picked without saying so would be worse than asking them to fix it.
+            if (ps.timestamp > 0L && (ps.timestamp - dateUtil.now()) !in Constants.PROFILE_SWITCH_TIME_OFFSET)
+                return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.profile_switch_time_too_far, T.msecs(Constants.PROFILE_SWITCH_TIME_OFFSET.last).hours().toInt()))
+            // The check the switch itself runs (the pump's basal limits, the hard limits). A switch the pump
+            // cannot take is refused here, before the user confirms, not reported as done and silently skipped.
+            profileSwitchRefusal(ps)?.let { return WizardBolusExecutor.PrepareResult.Error(it) }
         }
         // Validate a running-mode change up-front: the master re-checks the mode is still a legal transition
         // (a client/watch list may be stale — TOCTOU), and the temporary modes require a positive duration.
@@ -501,7 +535,14 @@ class WizardBolusExecutorImpl(
         return WizardBolusExecutor.PrepareResult.Preview(insulin, carbs, bolusId, lines = lines, advisorApplies = false, advisorLines = emptyList())
     }
 
-    override suspend fun confirm(bolusId: Long, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit, asAdvisor: Boolean, correctionU: Double): WizardBolusExecutor.ConfirmResult {
+    override suspend fun confirm(
+        bolusId: Long,
+        source: Sources,
+        onError: (WizardBolusExecutor.Failure) -> Unit,
+        asAdvisor: Boolean,
+        correctionU: Double,
+        onSuccess: () -> Unit
+    ): WizardBolusExecutor.ConfirmResult {
         // Atomic consume-once: remove(bolusId) returns the parked dose and removes it in one step, so two
         // concurrent commits of the same id can't both deliver (the loser gets null → NoPending). A non-matching
         // id removes nothing, leaving other actors' parked doses intact.
@@ -542,7 +583,8 @@ class WizardBolusExecutorImpl(
                         eventType = p.eventType,
                         recordOnly = true,
                         iCfg = p.iCfg,
-                        timestamp = p.bolusTimestamp
+                        timestamp = p.bolusTimestamp,
+                        onSuccess = onSuccess
                     )
                 }
 
@@ -551,12 +593,16 @@ class WizardBolusExecutorImpl(
                     // Carbs dialog uses, so a client carb entry and a master carb entry are identical (TE.Type, duration,
                     // delay) — not the generic deliver() which would tag it CARBS_CORRECTION instead of deliverECarbs's
                     // CORRECTION_BOLUS convention.
-                    deliverECarbs(p.carbs, dateUtil.now() + T.mins(p.carbTimeMinutes.toLong()).msecs(), p.carbsDurationHours, p.carbTimeMinutes, notes, source, wrapped)
+                    deliverECarbs(p.carbs, dateUtil.now() + T.mins(p.carbTimeMinutes.toLong()).msecs(), p.carbsDurationHours, p.carbTimeMinutes, notes, source, wrapped, onSuccess)
 
                 else                             -> {
                     // Insulin (± carbs): deliver the parked amounts as-is. carbsTime = now + offset; carbsDuration in hours.
+                    // With no insulin and no carbs this is a no-op, and onSuccess is not called (see confirm's contract).
                     val carbsTime = if (p.carbs > 0) dateUtil.now() + T.mins(p.carbTimeMinutes.toLong()).msecs() else null
-                    deliver(p.insulin, p.carbs, carbsTime = carbsTime, carbsDuration = p.carbsDurationHours, bolusCalculatorResult = p.bcr, notes = notes, source = source, onError = wrapped, eventType = p.eventType)
+                    deliver(
+                        p.insulin, p.carbs, carbsTime = carbsTime, carbsDuration = p.carbsDurationHours, bolusCalculatorResult = p.bcr, notes = notes, source = source,
+                        onError = wrapped, eventType = p.eventType, onSuccess = onSuccess
+                    )
                 }
             }
             // eCarbs split (e.g. a CARBS-mode QuickWizard entry with eCarbs configured): the immediate carbs are
@@ -575,7 +621,7 @@ class WizardBolusExecutorImpl(
             // not-found target surfaces via onError → the commit reports Rejected/Failed (not a silent success).
             p.therapyEventEdits.forEach { applyTherapyEventEdit(it, source, onError) }
             // A profile switch isn't gated on a dose (a PS-only batch funnels through here with a no-op deliver(0,0)).
-            p.profileSwitch?.let { applyProfileSwitch(it, source) }
+            p.profileSwitch?.let { applyProfileSwitch(it, source, onError) }
             // A running-mode change is likewise independent of any dose (an RM-only batch no-ops the deliver(0,0)).
             p.runningMode?.let { applyRunningMode(it, source) }
             // Pump-direct manual actions (relayed from a client, or a master-local dialog) — independent of any dose.
@@ -597,7 +643,7 @@ class WizardBolusExecutorImpl(
         // High-BG advisor branch (user chose "correct now, eat later"): a correction-only CORRECTION_BOLUS —
         // no carbs, no eCarbs, no super-bolus, no eat reminder. mg/dL BG comes from the BCR's glucoseValue.
         if (asAdvisor) {
-            deliverBolusAdvisor(p.insulin, p.bcr?.glucoseValue, p.bcr, notes, source, onError)
+            executeBolusAdvisor(p.insulin, p.bcr?.glucoseValue, p.bcr, notes, source, onError, onSuccess)
             p.entry?.markAsUsed()
             return WizardBolusExecutor.ConfirmResult.Delivered
         }
@@ -656,7 +702,7 @@ class WizardBolusExecutorImpl(
                 totalInsulin = correctedInsulin  // actual delivered amount (already coerced ≥ 0)
             )
         else p.bcr
-        deliverWizardBolus(correctedInsulin, p.carbs, carbTimeOffset.toInt(), p.bcr?.glucoseValue, correctedBcr, notes, source, onError)
+        executeWizardBolus(correctedInsulin, p.carbs, carbTimeOffset.toInt(), p.bcr?.glucoseValue, correctedBcr, notes, source, onError, onSuccess)
         if (carbs2 > 0) deliverECarbs(carbs2, eventTime, duration, eCarbsDelay, notes, source, onError)
         if (useAlarm && p.carbs > 0 && carbTimeOffset > 0)
             automation.scheduleTimeToEatReminder(T.mins(carbTimeOffset).secs().toInt())
@@ -725,11 +771,16 @@ class WizardBolusExecutorImpl(
         val pumpDescription = activePlugin.activePump.pumpDescription
         val out = mutableListOf<ConfirmationLine>()
         if (insulin > 0.0) {
-            out += ConfirmationLine(ConfirmationRole.BOLUS, rh.gs(InterfacesStrings.confirmation_line, rh.gs(InterfacesStrings.bolus), decimalFormatter.toPumpSupportedBolusWithUnits(insulin, pumpDescription.bolusStep)))
+            // A record-only dose is kept as typed (a pen can give 1.33 U), so it is shown with 2 decimals, not
+            // rounded to the step of the pump.
+            val insulinText =
+                if (recordOnly) rh.gs(InterfacesStrings.format_insulin_units, insulin)
+                else decimalFormatter.toPumpSupportedBolusWithUnits(insulin, pumpDescription.bolusStep)
+            out += ConfirmationLine(ConfirmationRole.BOLUS, rh.gs(InterfacesStrings.confirmation_line, rh.gs(InterfacesStrings.bolus), insulinText))
             if (recordOnly) {
                 out += ConfirmationLine(ConfirmationRole.WARNING, rh.gs(InterfacesStrings.bolus_recorded_only))
                 bolus.iCfg?.let { out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(CoreUiStrings.selected_insulin, it.insulinLabel)) }
-            } else if (abs(insulin - bolus.insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulin)) {
+            } else if (Round.isMoreThanRounding(bolus.insulin, insulin, activePlugin.activePump.bolusStepSize(insulin))) {
                 out += ConfirmationLine(ConfirmationRole.WARNING, rh.gs(InterfacesStrings.bolus_constraint_applied_warn, bolus.insulin, insulin))
             }
         }
@@ -782,22 +833,42 @@ class WizardBolusExecutorImpl(
         return out
     }
 
-    /** The TT line(s) for any batch (wear / client / phone) — range + duration + a localized reason, or a cancel line. */
-    private fun buildTtLine(tt: BatchAction.TempTarget, standalone: Boolean = false): List<ConfirmationLine> =
-        buildTempTargetLines(localizeTtReason(tt.reason), tt.lowMgdl, tt.highMgdl, tt.durationMinutes, standalone)
+    /**
+     * The TT line(s) for any batch (wear / client / phone) — range + duration + a localized reason, or a cancel
+     * line, plus the start time when the user moved it off now. That last line is why this wraps
+     * [buildTempTargetLines] instead of extending it: the shared generator is also used where no offset exists.
+     */
+    private fun buildTtLine(tt: BatchAction.TempTarget, standalone: Boolean = false): List<ConfirmationLine> {
+        val out = buildTempTargetLines(localizeTtReason(tt.reason), tt.lowMgdl, tt.highMgdl, tt.durationMinutes, standalone).toMutableList()
+        // A target that starts at another moment than the confirmation has to say so before the user accepts it.
+        // Date and time, because the picked day can differ from today. A cancel always carries offset 0.
+        if (tt.startOffsetMinutes != 0)
+            out += ConfirmationLine(
+                ConfirmationRole.NORMAL,
+                rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.time), dateUtil.dateAndTimeString(dateUtil.now() + T.mins(tt.startOffsetMinutes.toLong()).msecs()))
+            )
+        return out
+    }
 
     /**
      * Apply a batch ProfileSwitch via the dialog-free domain path. `profileName` non-null → switch to that named
      * profile from the master's store (a relayed/dialog switch); null → modify the currently active profile (wear / CPP).
      */
-    private suspend fun applyProfileSwitch(ps: BatchAction.ProfileSwitch, source: Sources) {
+    private suspend fun applyProfileSwitch(ps: BatchAction.ProfileSwitch, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit) {
         val psName = ps.profileName
-        if (psName != null) {
-            val store = profileRepository.profile.value ?: return
+        // The time the user picked, bounded at prepare; 0 = now. A future time is stored as is and
+        // ProfileSwitchScheduler arms the start, so the switch is not applied before the user asked.
+        val at = ps.timestamp.takeIf { it > 0L } ?: dateUtil.now()
+        val created = if (psName != null) {
+            val store = profileRepository.profile.value ?: run {
+                onError(WizardBolusExecutor.Failure(rh.gs(CoreUiStrings.noprofile)))
+                return
+            }
             // Supplied by the caller that asked the user, else the insulin in force. prepare() refuses the
             // batch when neither exists, so null here means the batch bypassed prepare — a bug, not a user state.
             val iCfg = ps.iCfg ?: profileFunction.getRunningOrRequestedICfg() ?: run {
                 aapsLogger.error(LTag.CORE, "applyProfileSwitch: no insulin config available for '$psName' — prepare should have refused this batch")
+                onError(WizardBolusExecutor.Failure(rh.gs(CoreUiStrings.profile_switch_no_insulin)))
                 return
             }
             profileFunction.createProfileSwitch(
@@ -806,7 +877,7 @@ class WizardBolusExecutorImpl(
                 durationInMinutes = ps.durationMinutes,
                 percentage = ps.percentage,
                 timeShiftInHours = ps.timeShiftHours,
-                timestamp = dateUtil.now(),
+                timestamp = at,
                 action = Action.PROFILE_SWITCH,
                 source = source,
                 note = ps.notes,
@@ -814,7 +885,8 @@ class WizardBolusExecutorImpl(
                     ValueWithUnit.SimpleString(psName),
                     ValueWithUnit.Percent(ps.percentage),
                     ValueWithUnit.Hour(ps.timeShiftHours).takeIf { ps.timeShiftHours != 0 },
-                    ValueWithUnit.Minute(ps.durationMinutes).takeIf { ps.durationMinutes != 0 }
+                    ValueWithUnit.Minute(ps.durationMinutes).takeIf { ps.durationMinutes != 0 },
+                    ValueWithUnit.Timestamp(at).takeIf { ps.timestamp > 0L }
                 ),
                 iCfg = iCfg
             )
@@ -829,13 +901,27 @@ class WizardBolusExecutorImpl(
                 listValues = listOfNotNull(
                     ValueWithUnit.Percent(ps.percentage),
                     ValueWithUnit.Hour(ps.timeShiftHours).takeIf { ps.timeShiftHours != 0 },
-                    ValueWithUnit.Minute(ps.durationMinutes)
-                )
+                    ValueWithUnit.Minute(ps.durationMinutes),
+                    ValueWithUnit.Timestamp(at).takeIf { ps.timestamp > 0L }
+                ),
+                timestamp = ps.timestamp
             )
         }
+        // prepare() checked the same, but things can change before the confirmation (a new pump limit, a
+        // profile edit). Without this the caller was told the switch was done.
+        if (created == null) onError(WizardBolusExecutor.Failure(profileSwitchRefusal(ps) ?: rh.gs(CoreUiStrings.invalid_profile)))
     }
 
-    /** The PS line(s) for any batch (wear / client / phone) — target profile name + percentage + optional time-shift + duration. */
+    /** Why [ProfileFunction.createProfileSwitch] would refuse [ps], or null when it would take it. */
+    private suspend fun profileSwitchRefusal(ps: BatchAction.ProfileSwitch): String? {
+        val psName = ps.profileName ?: return profileFunction.profileSwitchRefusal(ps.durationMinutes, ps.percentage, ps.timeShiftHours, ps.timestamp)
+        // prepare() refuses a missing store or insulin with its own message before this is asked.
+        val store = profileRepository.profile.value ?: return null
+        val iCfg = ps.iCfg ?: profileFunction.getRunningOrRequestedICfg() ?: return null
+        return profileFunction.profileSwitchRefusal(store, psName, ps.durationMinutes, ps.percentage, ps.timeShiftHours, iCfg)
+    }
+
+    /** The PS line(s) for any batch (wear / client / phone) — target profile name + percentage + optional time-shift + duration + picked time. */
     private suspend fun buildPsLine(ps: BatchAction.ProfileSwitch): List<ConfirmationLine> {
         val out = mutableListOf<ConfirmationLine>()
         out += ConfirmationLine(ConfirmationRole.PRIMARY, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.profile), ps.profileName ?: profileFunction.getOriginalProfileName()))
@@ -844,6 +930,11 @@ class WizardBolusExecutorImpl(
             out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.timeshift_label), rh.gs(CoreUiStrings.value_with_unit, ps.timeShiftHours.toString(), rh.gs(InterfacesStrings.shorthour))))
         if (ps.durationMinutes > 0)
             out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.duration), formatMinutesAsDuration(ps.durationMinutes, rh)))
+        // Only when the user picked a time (0 = now): the switch then starts, or is recorded, at another moment
+        // than the confirmation itself, and that has to be visible before they confirm. Date and time, because
+        // the picked day can differ from today.
+        if (ps.timestamp > 0L)
+            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.time), dateUtil.dateAndTimeString(ps.timestamp)))
         return out
     }
 
@@ -1091,6 +1182,19 @@ class WizardBolusExecutorImpl(
         notes: String?,
         source: Sources,
         onError: (WizardBolusExecutor.Failure) -> Unit
+    ) = executeWizardBolus(insulin, carbs, carbTimeMinutes, mgdlGlucose, bolusCalculatorResult, notes, source, onError, onSuccess = {})
+
+    /** [deliverWizardBolus] with an [onSuccess], for [confirm]'s caller. */
+    private suspend fun executeWizardBolus(
+        insulin: Double,
+        carbs: Int,
+        carbTimeMinutes: Int,
+        mgdlGlucose: Double?,
+        bolusCalculatorResult: BCR?,
+        notes: String?,
+        source: Sources,
+        onError: (WizardBolusExecutor.Failure) -> Unit,
+        onSuccess: () -> Unit
     ) {
         // Type-specific entry point: build the canonical BOLUS_WIZARD end state from the wizard inputs,
         // then funnel into the shared core. Phone (WizardDialog) and watch (QuickWizard) differ only in
@@ -1117,7 +1221,7 @@ class WizardBolusExecutorImpl(
                 ValueWithUnit.Gram(carbs).takeIf { carbs != 0 },
                 ValueWithUnit.Minute(carbTimeMinutes).takeIf { carbTimeMinutes != 0 }
             )
-            executeBolus(detailedBolusInfo, action, uelValues, notes, bolusCalculatorResult, source, onError)
+            executeBolus(detailedBolusInfo, action, uelValues, notes, bolusCalculatorResult, source, onError, onSuccess)
         }
     }
 
@@ -1128,6 +1232,17 @@ class WizardBolusExecutorImpl(
         notes: String?,
         source: Sources,
         onError: (WizardBolusExecutor.Failure) -> Unit
+    ) = executeBolusAdvisor(insulin, mgdlGlucose, bolusCalculatorResult, notes, source, onError, onSuccess = {})
+
+    /** [deliverBolusAdvisor] with an [onSuccess], for [confirm]'s caller. */
+    private suspend fun executeBolusAdvisor(
+        insulin: Double,
+        mgdlGlucose: Double?,
+        bolusCalculatorResult: BCR?,
+        notes: String?,
+        source: Sources,
+        onError: (WizardBolusExecutor.Failure) -> Unit,
+        onSuccess: () -> Unit
     ) {
         // Correction-only advisor bolus (BG high, carbs imminent): canonical CORRECTION_BOLUS end state,
         // and the eat reminder is scheduled on delivery success. The BCR rides the DBI but is not persisted
@@ -1149,7 +1264,10 @@ class WizardBolusExecutorImpl(
                 detailedBolusInfo, Action.BOLUS_ADVISOR, uelValues, notes,
                 bolusCalculatorResult = null,
                 source, onError,
-                onSuccess = { automation.scheduleAutomationEventEatReminder() }
+                onSuccess = {
+                    automation.scheduleAutomationEventEatReminder()
+                    onSuccess()
+                }
             )
         }
     }
@@ -1332,6 +1450,12 @@ class WizardBolusExecutorImpl(
             this.notes = notes
         }
         if (amount > 0) {
+            // Last check for every way in (Fill dialog, watch, a client). A patch pump primes in its own
+            // activation wizard and its cannula is already in the body: a prime here would be insulin outside IOB.
+            if (!activePlugin.activePump.pumpDescription.isRefillingCapable) {
+                onError(WizardBolusExecutor.Failure(rh.gs(CoreUiStrings.prime_not_available)))
+                return
+            }
             executeBolus(
                 detailedBolusInfo,
                 Action.PRIME_BOLUS,

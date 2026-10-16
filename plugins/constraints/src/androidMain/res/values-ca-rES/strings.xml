@@ -21,7 +21,6 @@
     <string name="loopenabled">Llaç activat</string>
     <string name="apsselected">APS seleccionat</string>
     <string name="closedmodeenabled">Llaç tancat activat</string>
-    <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Programa d\'aprenentatge</string>
     <string name="doyouwantresetstart">Voleu reiniciar l\'objectiu? Podeu perdre el vostre progrés.</string>
 </resources>

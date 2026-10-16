@@ -72,7 +72,6 @@
     <string name="summary_tidepool_dev_servers">Данните да отиват в тест сървърите вместо в реалните</string>
     <string name="title_tidepool_dev_servers">Използвай тестовите сървъри</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Качване на данни в Tidepool</string>
     <string name="upload_now">Качи сега</string>
     <string name="tidepool_purge_data">Изтрий всички данни</string>
@@ -82,7 +81,6 @@
     <string name="working">Работи</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Изпращай данни за КЗ към xDrip+</string>
     <string name="xdrip_status_settings">xDrip+ линия със статута (часовник)</string>
     <string name="xdrip_not_installed">xDrip+ не е инсталиран</string>
@@ -91,7 +89,6 @@
     <string name="xdrip_local_broadcasts_title">Активиране на предаване на данни към xDrip+.</string>
     <!--    DataBroadcast-->
     <string name="tizen">Външни проследяващи апове</string>
-    <string name="tizen_short">CAB</string>
     <string name="tizen_description">Разрешава изпращане на данни към други апове</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
@@ -99,7 +96,6 @@
     <string name="garmin_local_http_server_port">Local HTTP server port</string>
     <string name="garmin_local_http_server">Local HTTP server</string>
     <!--    Wear-->
-    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Наблюдавайте и контролирайте AndroidAPS, от вашия WearOS часовник.</string>
     <string name="no_watch_connected">(Няма активна връзка)</string>
     <string name="pump_status">Статус на помпата</string>
@@ -119,7 +115,6 @@
     <string name="wear_infos_watchface">Информация за Watchface</string>
     <string name="wear_export_watchface">Експорт на шаблона</string>
     <string name="wear_new_custom_watchface_exported">Шаблон за watchface експортиран</string>
-    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Изпрати отново всички дани</string>
     <string name="open_settings_on_wear">Отвори настройките на часовника</string>
     <string name="wear_import_custom_watchface_title">Избери различен Watchface</string>
@@ -150,7 +145,7 @@
     <string name="aps">АПС</string>
     <string name="last_run">Последно изпълнение</string>
     <string name="last_enact">Последно зададено</string>
-    <string name="tdd_line">%1$.2fЕ %1$.0f%%</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fЕ %2$.0f%%</string>
     <string name="today">Днес</string>
     <string name="weighted">тегло</string>
     <string name="full_xdrip_sync_comment">Пълна синхронизация? Ще отнеме малко време и до тогава няма да виждате данните в xDrip+.</string>
@@ -160,7 +155,6 @@
     <string name="garmin_request_key">Ключ</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS комуникатор</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Отдалечен контрол на AAPS чрез SMS команди.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">От Аудиентикатора за: %1$s следван от PIN</string>
     <string name="smscommunicator_tab_otp_label">Аудиентикатор Настройка</string>

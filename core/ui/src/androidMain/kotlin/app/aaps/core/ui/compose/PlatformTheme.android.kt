@@ -1,12 +1,12 @@
 package app.aaps.core.ui.compose
 
-import androidx.compose.runtime.DisposableEffect
-import androidx.appcompat.app.AppCompatActivity
 import android.content.pm.ActivityInfo
-import android.text.format.DateFormat
 import android.content.res.Configuration
+import android.text.format.DateFormat
 import androidx.activity.compose.LocalActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext

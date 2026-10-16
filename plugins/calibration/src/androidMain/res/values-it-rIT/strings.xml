@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="calibration_shortname">CAL</string>
     <string name="no_calibration_name">Nessuna calibrazione</string>
     <string name="description_no_calibration">"Nessun superamento della calibrazione applicato. I valori dei sensori sono usati così com'è. Usalo quando il sensore è già calibrato in fabbrica e accurato."</string>
     <string name="linear_calibration_name">Calibrazione lineare</string>

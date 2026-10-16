@@ -57,7 +57,7 @@ class DanaHistoryViewModel(
     init {
         val pump = activePlugin.activePump
         val isKorean = pump.pumpDescription.pumpType == PumpType.DANA_R_KOREAN
-        val isRS = pump.pumpDescription.pumpType == PumpType.DANA_RS || pump.pumpDescription.pumpType == PumpType.DANA_I
+        val isRS = pump.pumpDescription.pumpType in setOf(PumpType.DANA_RS, PumpType.DANA_I, PumpType.DANA_I2)
 
         val types = buildList {
             add(PumpHistoryType(RecordTypes.RECORD_TYPE_ALARM, rh.gs(R.string.danar_history_alarm)))

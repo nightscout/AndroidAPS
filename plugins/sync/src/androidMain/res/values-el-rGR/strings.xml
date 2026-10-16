@@ -23,7 +23,6 @@
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">Χρησιμοποιήστε διακομιστές ολοκλήρωσης (δοκιμής)</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Αποστολή δεδομένων στο Tidepool</string>
     <string name="upload_now">Ανέβασμα τώρα</string>
     <string name="not_connected">Μη συνδεδεμένο</string>
@@ -31,7 +30,6 @@
     <string name="working">Σε επεξεργασία</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Αποστολή δεδομένων στο xDrip+</string>
     <string name="xdrip_status_settings">Γραμμή Κατάστασης xDrip+ Για Προχωρημένους</string>
     <string name="xdrip_not_installed">xDrip+ μη εγκατεστημένο</string>
@@ -56,6 +54,7 @@
     <string name="wear_infos_watchface">Πληροφορίες Watchface</string>
     <string name="wear_export_watchface">Εξαγωγή Προτύπου</string>
     <string name="wear_new_custom_watchface_exported">Εξήχθη προσαρμοσμένο πρότυπο watchface</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/el/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Ξαναστείλτε όλα τα Δεδομένα</string>
     <string name="open_settings_on_wear">Ρυθμίσεις στο Wear</string>
     <string name="cwf_infos_pref_locked">Λίστα προτιμήσεων που κλειδώθηκαν από το Watchface</string>
@@ -82,12 +81,10 @@
     <string name="aps">APS</string>
     <string name="last_run">Τελευταία εκτέλεση</string>
     <string name="last_enact">Τελευταία Ενέργεια</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Σήμερα</string>
     <string name="weighted">σταθμισμένο</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Επικοινωνία με SMS</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Απομακρυσμένος έλεγχος του AAPS με τη χρήση SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">από την εφαρμογή Ελέγχου Ταυτότητας για: %1$s ακολουθούμενο από PIN</string>
     <string name="smscommunicator_tab_otp_label">Ρύθμιση ελέγχου ταυτότητας</string>

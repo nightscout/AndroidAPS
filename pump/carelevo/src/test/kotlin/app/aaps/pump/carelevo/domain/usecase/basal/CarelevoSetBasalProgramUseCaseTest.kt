@@ -3,12 +3,12 @@ package app.aaps.pump.carelevo.domain.usecase.basal
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.pump.carelevo.domain.model.basal.CarelevoBasalSegmentDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalInfusionInfoDomainModel
+import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalSegmentInfusionInfoDomainModel
+import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import com.google.common.truth.Truth.assertThat
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.hours
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
@@ -20,6 +20,8 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -39,6 +41,63 @@ internal class CarelevoSetBasalProgramUseCaseTest {
 
     private fun profileWith(vararg values: Profile.ProfileValue): Profile = mock<Profile>().also {
         whenever(it.getBasalValues()).thenReturn(arrayOf(*values))
+    }
+
+    // ---------- acceptedBasalSegments ----------
+
+    @Test
+    fun `the accepted segments are the ones in the store`() {
+        val segments = (0..23).map { CarelevoBasalSegmentInfusionInfoDomainModel(startTime = it, endTime = it + 1, speed = 0.85) }
+        whenever(infusionInfoRepository.getInfusionInfoBySync()).thenReturn(
+            CarelevoInfusionInfoDomainModel(basalInfusionInfo = CarelevoBasalInfusionInfoDomainModel("id", "address", 1, segments = segments, isStop = false))
+        )
+
+        assertThat(sut.acceptedBasalSegments()).isEqualTo(segments)
+    }
+
+    @Test
+    fun `there are no accepted segments before a program was stored`() {
+        whenever(infusionInfoRepository.getInfusionInfoBySync()).thenReturn(CarelevoInfusionInfoDomainModel())
+
+        assertThat(sut.acceptedBasalSegments()).isNull()
+    }
+
+    // ---------- isAccepted ----------
+
+    private fun storeProgram(speed: (hour: Int) -> Double) {
+        val segments = (0..23).map { CarelevoBasalSegmentInfusionInfoDomainModel(startTime = it, endTime = it + 1, speed = speed(it)) }
+        whenever(infusionInfoRepository.getInfusionInfoBySync()).thenReturn(
+            CarelevoInfusionInfoDomainModel(basalInfusionInfo = CarelevoBasalInfusionInfoDomainModel("id", "address", 1, segments = segments, isStop = false))
+        )
+    }
+
+    @Test
+    fun `a profile is accepted when the stored program gives its rates`() {
+        storeProgram { hour -> if (hour < 6) 0.5415 else 1.083 }
+
+        assertThat(sut.isAccepted(profileWith(Profile.ProfileValue(0, 0.5415), Profile.ProfileValue(6 * 3600, 1.083)))).isTrue()
+    }
+
+    /** The patch takes 0.01 U/h: two rates that are sent the same are the same program. */
+    @Test
+    fun `a rate that differs below the patch step is accepted`() {
+        storeProgram { 0.851 }
+
+        assertThat(sut.isAccepted(profileWith(Profile.ProfileValue(0, 0.853)))).isTrue()
+    }
+
+    @Test
+    fun `a profile with another rate in one hour is not accepted`() {
+        storeProgram { hour -> if (hour == 13) 1.2 else 1.0 }
+
+        assertThat(sut.isAccepted(profileWith(Profile.ProfileValue(0, 1.0)))).isFalse()
+    }
+
+    @Test
+    fun `nothing is accepted before a program was stored`() {
+        whenever(infusionInfoRepository.getInfusionInfoBySync()).thenReturn(CarelevoInfusionInfoDomainModel())
+
+        assertThat(sut.isAccepted(profileWith(Profile.ProfileValue(0, 1.0)))).isNull()
     }
 
     // ---------- buildBasalProgramPlan ----------

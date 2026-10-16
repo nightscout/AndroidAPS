@@ -128,7 +128,9 @@ class DataLayerListenerServiceWear : WearableListenerService() {
 
         when (messageEvent.path) {
             rxPath     -> {
-                aapsLogger.debug(LTag.WEAR, "onMessageReceived: ${String(messageEvent.data)}")
+                // Size only, like the data path below: the whole payload (GraphData is the big one)
+                // went into the log file on every sync, and the type is logged by its handler anyway.
+                aapsLogger.debug(LTag.WEAR, "onMessageReceived: ${messageEvent.data.size}")
                 val command = EventData.deserialize(String(messageEvent.data))
                 rxBus.send(command.also { it.sourceNodeId = messageEvent.sourceNodeId })
                 // Use this sender
@@ -315,7 +317,10 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         const val FOREGROUND_NOTIF_ID = 3
         const val CHANGE_NOTIF_ID = 556677
 
-        const val AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP = "AndroidAPS-OpenLoop"
+        // Do not change the ID: Android keeps the user's channel settings by ID. The name shown is set
+        // where the channel is created ("AAPS Open Loop").
+        const val AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP_OLD = "AndroidAPS-OpenLoop"
+        const val AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP = "AndroidAPS-OpenLoop-v2"
         const val AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS = "bolus progress vibration"
         const val AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS_SILENT = "bolus progress silent"
     }

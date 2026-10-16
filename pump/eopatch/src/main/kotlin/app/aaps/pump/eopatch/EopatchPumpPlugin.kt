@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -54,6 +55,11 @@ import app.aaps.pump.eopatch.keys.EopatchStringNonKey
 import app.aaps.pump.eopatch.vo.NormalBasalManager
 import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.TempBasal
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -62,6 +68,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
@@ -70,14 +77,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.IntKey as MetroIntKey
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
 import kotlin.math.abs
 import app.aaps.core.ui.R as CoreUiR
+import dev.zacsweers.metro.IntKey as MetroIntKey
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver
@@ -115,7 +117,6 @@ class EopatchPumpPlugin(
         }
         .icon(IcPluginEopatch)
         .pluginName(TextRef.AndroidRes(R.string.eopatch))
-        .shortName(TextRef.AndroidRes(R.string.eopatch_shortname))
         .description(TextRef.AndroidRes(R.string.eopatch_pump_description)),
     ownPreferences = EopatchIntKey.entries + EopatchBooleanKey.entries + EopatchStringNonKey.entries,
     aapsLogger, rh, preferences, commandQueue, notificationManager
@@ -187,8 +188,12 @@ class EopatchPumpPlugin(
         return isConfigured() && isConnected()
     }
 
+    /**
+     * No active patch gives no insulin, so it is suspended, as Omnipod, Equil and Medtrum report it. It was "not
+     * suspended" between two patches: the loop kept running and AAPS counted the scheduled basal as given (#2552).
+     */
     override fun isSuspended(): Boolean {
-        return preferenceManager.patchState.isNormalBasalPaused
+        return !patchConfig.isActivated || preferenceManager.patchState.isNormalBasalPaused
     }
 
     override fun isBusy(): Boolean {
@@ -294,10 +299,17 @@ class EopatchPumpPlugin(
         //     return true
         // }
 
-        val ret = normalBasalManager.isEqual(profile)
-        aapsLogger.info(LTag.PUMP, "Is this profile set? $ret")
+        // An active patch must also run this basal as it is rounded now. After an update that changed the rounding
+        // it still runs the old program, and AAPS would report doses it does not give (#2454).
+        val sent = !patchConfig.isActivated || normalBasalManager.normalBasal.isSentWithCurrentRounding
+        val ret = normalBasalManager.isEqual(profile) && sent
+        aapsLogger.info(LTag.PUMP, "Is this profile set? $ret (sent with current rounding: $sent)")
         return ret
     }
+
+    /** The patch rounds each rate to the nearest 0.05 U/h (#2454), see [app.aaps.pump.eopatch.vo.NormalBasal.doseUnitPerSegmentArray]. */
+    override fun deliveredBasal(): List<Profile.ProfileValue> =
+        normalBasalManager.normalBasal.deliveredDoseUnitPerHour.mapIndexed { hour, rate -> Profile.ProfileValue(T.hours(hour.toLong()).secs().toInt(), rate) }
 
     private val _lastDataTime = MutableStateFlow(0L)
     override val lastDataTime: StateFlow<Long> = _lastDataTime
@@ -315,7 +327,8 @@ class EopatchPumpPlugin(
     override val baseBasalRate: PumpRate
         get() = PumpRate(
             if (!patchConfig.isActivated || preferenceManager.patchState.isNormalBasalPaused) 0.0
-            else normalBasalManager.normalBasal.getCurrentSegment()?.doseUnitPerHour?.toDouble() ?: 0.05
+            // What the patch really gives, as the running profile holds it - not the rate it was asked for.
+            else normalBasalManager.normalBasal.currentDeliveredDoseUnitPerHour
         )
 
     override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
@@ -337,22 +350,41 @@ class EopatchPumpPlugin(
                 .subscribe({ result.onNext(it.isSuccess) }, { result.onNext(false) })
         )
 
+        // The end is only known from a patch state notification. If it never comes, this loop used to
+        // wait forever and stall the whole command queue (#5209) - and if the user then restarted AAPS,
+        // the bolus was never recorded at all. Give up 10 minutes after the expected end (or after the
+        // call, if the start was never confirmed: endTimestamp is set only then). That is long enough
+        // for the patch to reconnect after a normal BLE drop, so a short drop does not decide the dose.
+        val callStart = System.currentTimeMillis()
+        var endNotConfirmed = false
         do {
-            SystemClock.sleep(100)
+            delay(100)
             if (patchManagerExecutor.patchConnectionState.isConnected) {
                 val delivered = PumpInsulin(preferenceManager.bolusCurrent.nowBolus.injected.toDouble())
                 bolusProgressData.updateProgress(delivered = delivered)
+            }
+            val expectedEnd = preferenceManager.bolusCurrent.nowBolus.endTimestamp.coerceAtLeast(callStart)
+            if (System.currentTimeMillis() > expectedEnd + T.mins(10).msecs()) {
+                aapsLogger.error(LTag.PUMP, "Bolus end not reported by the patch, giving up. ${preferenceManager.bolusCurrent.nowBolus}")
+                endNotConfirmed = true
+                break
             }
         } while (!preferenceManager.bolusCurrent.nowBolus.endTimeSynced && isSuccess)
 
         bolusProgressData.updateProgress(100)
 
+        // Without a confirmed end this is the last amount the patch reported, which can be lower than
+        // what it gave. It is still recorded - nothing would record it later - but the result fails
+        // with a text that tells the user to check the patch before giving more insulin.
         detailedBolusInfo.insulin = preferenceManager.bolusCurrent.nowBolus.injected.toDouble()
         patchManager.addBolusToHistory(detailedBolusInfo)
 
         disposable.dispose()
 
-        return if (isSuccess && abs(askedInsulin - detailedBolusInfo.insulin) < pumpDescription.bolusStep)
+        return if (endNotConfirmed)
+            pumpEnactResultProvider().success(false).bolusDelivered(Round.roundTo(detailedBolusInfo.insulin, 0.01))
+                .comment(rh.gs(R.string.eopatch_bolus_end_not_confirmed, rh.gs(InterfacesStrings.format_insulin_units, detailedBolusInfo.insulin)))
+        else if (isSuccess && abs(askedInsulin - detailedBolusInfo.insulin) < pumpDescription.bolusStep)
             pumpEnactResultProvider().success(true).enacted(true).bolusDelivered(askedInsulin)
         else
             pumpEnactResultProvider().success(false)/*.enacted(false)*/.bolusDelivered(Round.roundTo(detailedBolusInfo.insulin, 0.01))

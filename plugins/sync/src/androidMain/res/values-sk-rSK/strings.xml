@@ -4,6 +4,7 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Nastavenie pripojenia</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
+    <string name="description_ns_client_v3">Synchronizuje vaše dáta s Nightscoutom prostredníctvom v3 API</string>
     <string name="blocked_by_charging">Zablokované možnosti nabíjania</string>
     <string name="blocked_by_connectivity">Zablokované možnosti pripojenia</string>
     <string name="no_connectivity">Žiadne pripojenie</string>
@@ -50,6 +51,7 @@
     <string name="pair_with_master_error_ambiguous_pin">Viacero párovaní sa zhoduje s týmto PIN kódom. Požiadajte na hlavnom zariadení o vygenerovanie nového a skúste to znova.</string>
     <string name="pair_with_master_error_expired">Platnosť tohto párovania vypršala. Vygenerujte nový PIN kód na hlavnom zariadení.</string>
     <string name="pair_with_master_error_network">Nedá sa spojiť s Nightscout. Skontrolujte pripojenie a skúste to znova.</string>
+    <string name="pair_with_master_error_secret_store">Párovací kľúč sa nepodarilo uložiť preto bolo párovanie zrušené. Neboli vykonané žiadne zmeny. Skúste to znova a ak bude problém pretrvávať, reštartujte aplikáciu.</string>
     <string name="pair_with_master_retry">Skúsiť to znova</string>
     <string name="pair_with_master_already_paired_title">Už spárované</string>
     <string name="pair_with_master_already_paired_master">Momentálne spárované s hlavným zariadením %1$s. Najprv zrušte párovanie a zadajte nový PIN kód.</string>
@@ -72,8 +74,9 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Ak je táto možnosť povolená, odosielané dáta pôjdu na testovacie servery namiesto bežných</string>
     <string name="title_tidepool_dev_servers">Používať testovacie servery</string>
+    <string name="title_tidepool_use_ns_connection">Použiť nastavenia pripojenia Nightscout</string>
+    <string name="summary_tidepool_use_ns_connection">Vypnite, ak chcete nastaviť samostatné pripojenie pre Tidepool</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Nahrávánie dát na Tidepool</string>
     <string name="upload_now">Nahrať teraz</string>
     <string name="tidepool_purge_data">Zmazať všetky dáta</string>
@@ -83,7 +86,6 @@
     <string name="working">Pracujem</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Posielam dáta do xDripu</string>
     <string name="xdrip_status_settings">Rozšírený stavový riadok xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ nie je nainštalovaný</string>
@@ -92,7 +94,6 @@
     <string name="xdrip_local_broadcasts_title">Povoliť odosielanie do xDrip+.</string>
     <!--    DataBroadcast-->
     <string name="tizen">Externé sprievodné (Companion) aplikácie</string>
-    <string name="tizen_short">CAB</string>
     <string name="tizen_description">Povoľuje vysielanie údajov do rôznych externých sprievodných (Companion) aplikácií</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
@@ -100,7 +101,6 @@
     <string name="garmin_local_http_server_port">Port lokálneho HTTP servera</string>
     <string name="garmin_local_http_server">Lokálny HTTP server</string>
     <!--    Wear-->
-    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
     <string name="no_watch_connected">(Žiadne hodinky nie sú pripojené)</string>
     <string name="pump_status">Stav pumpy</string>
@@ -108,6 +108,8 @@
     <string name="user_action_not_available">Vybratá akcia užívateľa %1$s už viac nie je dostupná, prosím obnovte svoju dlaždicu</string>
     <string name="scene_not_available">Vybratá scéna %1$s nie je dostupná, prosím obnovte svoju dlaždicu</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Vzdialené príkazy pre inzulín sú v klientskom režime zakázané</string>
+    <string name="wear_phone_not_ready">Telefón sa stále spúšťa alebo aplikuje nastavenia. Skúste to znova o chvíľu.</string>
+    <string name="wear_control_disabled">Ovládanie z hodiniek je v nastaveniach telefónu vypnuté.</string>
     <string name="wear_action_tempt_unit_error">Použité rozdielne jednotky v hodinkách a v telefóne!</string>
     <string name="wear_action_tempt_min_bg_error">Minimálna glykémia mimo rozsah!</string>
     <string name="wear_action_tempt_max_bg_error">Maximálna glykémia mimo rozsah!</string>
@@ -116,6 +118,11 @@
     <string name="wear_general_settings">Všeobecné nastavenia</string>
     <string name="wear_custom_watchface_settings">Nastavenie vlastného ciferníka</string>
     <string name="wear_custom_watchface">Vlastný ciferník: %1$s</string>
+    <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Inštalácia...</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Hodinky zobrazujú Ciferník s komplikáciami. Vyberte si Vlastný ciferník, ak chcete na hodinkách zobraziť %1$s.</string>
+    <string name="wear_pushed_watchface_confirm_title">Zmeniť ciferník na hodinkách?</string>
+    <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s nahradí %2$s na hodinkách.</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s budú nahradené %2$s na hodinkách. Komplikácie, ktoré ste zmenili v editore ciferníka, sa vrátia na predvolené hodnoty.</string>
     <string name="wear_load_watchface">Nahrať ciferník</string>
     <string name="wear_infos_watchface">Informácie o ciferníku</string>
     <string name="wear_export_watchface">Exportovať šablónu</string>
@@ -131,6 +138,7 @@
     <string name="disabled">Vypnuté</string>
     <string name="pump_fetching_data">pokus o načítanie dát z pumpy.</string>
     <string name="pump_old_data">CDD: Stále staré dáta! Nie je možné načítať z pumpy.</string>
+    <string name="units_short">U</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
     <string name="target_only_aps_mode">Ciele sa použijú iba v režime APS!</string>
@@ -150,7 +158,7 @@
     <string name="aps">APS</string>
     <string name="last_run">Posledné spustenie</string>
     <string name="last_enact">Naposledy vykonané</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fU %2$.0f%%</string>
     <string name="today">Dnes</string>
     <string name="weighted">vážený</string>
     <string name="full_xdrip_sync_comment">Úplná synchronizácia? Môže to chvíľu trvať a kým neskončí, neuvidíte nové dáta v xDrip+.</string>
@@ -160,7 +168,6 @@
     <string name="garmin_request_key">Požadovaný kľúč</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS komunikátor</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Vzdialené ovládanie AAPS použitím SMS príkazov.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">z aplikácie Authenticator pre: %1$s nasledované kódom PIN</string>
     <string name="smscommunicator_tab_otp_label">Nastavenie autentifikátora</string>
@@ -252,6 +259,8 @@
     <string name="sms_read_status_failed">Načítanie stavu zlyhalo</string>
     <string name="sms_profile_switch_created">Prepnutie profilu vytvorené</string>
     <string name="sms_wrong_tbr_duration">Trvanie dočasného bazálu musí byť násobkom %1$d minút a musí byť väčšie ako 0.</string>
+    <string name="sms_tbr_percent_only">Táto pumpa prijíma dočasný bazál len v percentách, nie v U/h.</string>
+    <string name="sms_tbr_absolute_only">Táto pumpa prijíma dočasný bazál len v jednotkách U/h, nie v percentách.</string>
     <string name="a11y_otp_qr_code">QR kód pre nastavenie jednorázového hesla</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">Aplikácia potrebuje povolenie SMS pre vzdialené ovládanie pomocou textových správ.</string>

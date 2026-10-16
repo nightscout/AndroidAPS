@@ -14,19 +14,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.ui.compose.metroViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.ui.R as CoreUiR
-import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.ui.compose.ComposablePluginContent
+import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.common.CarelevoAlarmNotifier
@@ -34,6 +33,7 @@ import app.aaps.pump.carelevo.compose.alarm.CarelevoAlarmHost
 import app.aaps.pump.carelevo.compose.patchflow.CarelevoPatchFlowScreen
 import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoOverviewViewModel
+import app.aaps.core.ui.R as CoreUiR
 
 class CarelevoComposeContent(
     private val aapsLogger: AAPSLogger,
@@ -151,18 +151,23 @@ class CarelevoComposeContent(
                 }
 
                 CarelevoScreenType.CONNECTION_FLOW_START -> {
+                    // The flow scans for the patch, so it starts only after the check has passed.
+                    var bleReady by remember { mutableStateOf(isEmulating) }
                     if (!isEmulating) {
                         BlePreCheckHost(
                             blePreCheck = blePreCheck,
+                            onReady = { bleReady = true },
                             onFailed = { manualWorkflowScreen = null }
                         )
                     }
-                    CarelevoPatchFlowScreen(
-                        screenType = activeWorkflowScreen,
-                        setToolbarConfig = setToolbarConfig,
-                        snackbarHostState = snackbarHostState,
-                        onExitFlow = dismissWorkflow
-                    )
+                    if (bleReady) {
+                        CarelevoPatchFlowScreen(
+                            screenType = activeWorkflowScreen,
+                            setToolbarConfig = setToolbarConfig,
+                            snackbarHostState = snackbarHostState,
+                            onExitFlow = dismissWorkflow
+                        )
+                    }
                 }
 
                 else -> {

@@ -33,4 +33,5 @@
     <string name="current_master_password">Contraseña maestra actual</string>
     <string name="master_password_not_set">Contraseña maestra no establecida</string>
     <string name="aaps_directory_not_selected">Directorio de AAPS no seleccionado</string>
+    <string name="aaps_directory_access_lost">Se ha perdido el acceso al directorio de AAPS, por lo que la configuración ya no se guarda en el teléfono. Selecciona el directorio de nuevo</string>
 </resources>

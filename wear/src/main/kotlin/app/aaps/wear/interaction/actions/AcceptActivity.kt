@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -63,7 +64,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import androidx.appcompat.app.AppCompatActivity
 
 /**
  * Two-page confirmation screen for an action authored on (or relayed by) the master.
@@ -158,7 +158,10 @@ class AcceptActivity : AppCompatActivity() {
                     HorizontalPager(state = pagerState) { page ->
                         when (page) {
                             0 -> if (wizardDetail != null) {
-                                WizardDetailPage(wizardDetail, correctionSteps) { correctionSteps = it }
+                                // The other lines repeat what the detail page shows. A warning is the one thing the
+                                // page would otherwise drop, e.g. a dose capped to the max bolus.
+                                val warnings = lines.filter { (role, _) -> role == "WARNING" }.map { (_, text) -> text }
+                                WizardDetailPage(wizardDetail, correctionSteps, warnings) { correctionSteps = it }
                             } else {
                                 val curvedTitle = if (hasLines) title.ifEmpty { null } else null
                                 Box(modifier = Modifier.fillMaxSize()) {
@@ -359,8 +362,9 @@ private fun WizardConfirmPage(enabled: Boolean, totalInsulin: Double?, carbs: In
     }
 }
 
+/** [warnings] are the master's warning lines, already localized, shown under the total so a capped dose is not taken for the calculated one. */
 @Composable
-private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: Int, onCorrectionStepsChange: (Int) -> Unit) {
+private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: Int, warnings: List<String>, onCorrectionStepsChange: (Int) -> Unit) {
     val fmt2 = remember { NumberFormat.DECIMAL_2 }
     val fmt1 = remember { NumberFormat.DECIMAL_1 }
     val haptic = LocalHapticFeedback.current
@@ -403,12 +407,14 @@ private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: In
     var isExpanded by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
+    // Scrolls in both states: a warning line under the total makes the summary card taller, and the
+    // "New IOB" line of the collapsed calculation card then sits under the round edge of the screen.
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .let { if (isExpanded) it.verticalScroll(scrollState) else it }
+            .verticalScroll(scrollState)
             .padding(horizontal = 10.dp)
-            .padding(top = 10.dp, bottom = if (isExpanded) 36.dp else 10.dp),
+            .padding(top = 10.dp, bottom = 36.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -548,6 +554,16 @@ private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: In
                         text = stringResource(R.string.wizard_result_ecarbs, detail.eCarbsGrams, detail.eCarbsDurationHours, detail.eCarbsDelayMinutes),
                         color = CarbsOrange,
                         fontSize = carbsFontSize,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+                // Same amber as the warning rows of the lines screen, so a capped dose reads the same on both.
+                warnings.forEach { warning ->
+                    Text(
+                        text = warning,
+                        color = WearWarningAmber,
+                        fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                     )

@@ -27,6 +27,7 @@
     <string name="constraint_applied">Đã áp dụng giới hạn!</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Không thể kết nối với bơm</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Trình điều khiển bơm không phản hồi. \"%1$s\" đã chạy trong %2$d phút và không có lệnh nào khác có thể kết nối với bơm. Hãy kiểm tra bơm, sau đó khởi động lại AAPS.</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
@@ -63,6 +64,9 @@
     <string name="configbuilder_switch_confirmation">Thao tác này sẽ tắt %1$s và bật %2$s.</string>
     <string name="expand">Mở rộng</string>
     <string name="collapse">Thu gọn</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Đã hoàn thành</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Đã mở rộng</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Đã thu gọn</string>
     <string name="no_compose_preferences">Plugin này không có tùy chọn nào</string>
     <string name="confirm_password_hint">Xác nhận mật khẩu</string>
     <string name="confirm_pin_hint">Xác nhận mã PIN</string>
@@ -107,6 +111,9 @@
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d phút</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
+    <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
     <string name="objectives">Mục tiêu học tập</string>
     <string name="please_wait">Vui lòng chờ…</string>
     <string name="stop">Dừng lại</string>
@@ -114,10 +121,16 @@
     <string name="invalid_profile">Cấu hình không hợp lệ!</string>
     <string name="no_profile_set">KHÔNG CÓ CẤU HÌNH</string>
     <string name="profile_switch_no_insulin">Không thể chuyển cấu hình điều trị: không có loại insulin nào đang được sử dụng và cũng chưa có loại nào được chọn.</string>
+    <string name="scene_no_profile_before">Trước khi ngữ cảnh bắt đầu, không có cấu hình nào đang được sử dụng.</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">Ngữ cảnh %1$s đã kết thúc, nhưng cấu hình vẫn đang được sử dụng. %2$s Hãy kích hoạt cấu hình thủ công.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Cấu hình chuyển đổi tạm thời này có %1$s, nhưng cấu hình vĩnh viễn bên dưới có %2$s. Trước tiên, hãy kích hoạt loại insulin đang có trong bơm tại phần Cài đặt insulin.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Thời điểm chuyển đổi cấu hình phải nằm trong khoảng %1$d giờ so với hiện tại.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Mục tiêu tạm thời phải bắt đầu trong khoảng %1$d giờ tính từ thời điểm hiện tại.</string>
     <string name="profile_switch_select_insulin_hint">Chưa có loại insulin nào được sử dụng. Hãy chọn loại insulin bạn đang sử dụng để lần chuyển cấu hình này có thể ghi nhận loại insulin đó.</string>
     <string name="insulin_activation_failed">Loại insulin chưa được chuyển đổi. Loại insulin trước đó vẫn đang được sử dụng.</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Không thể chuyển đổi loại insulin: %1$s. Loại insulin trước đó vẫn đang được sử dụng.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Chưa chuyển sang loại insulin mới: %1$s. Loại insulin trước đó vẫn đang được sử dụng.</string>
     <string name="insulin_activation_unconfirmed">Không thể xác nhận việc chuyển đổi loại insulin. Hãy kiểm tra loại insulin nào đang hoạt động trong cấu hình trước khi tiêm insulin.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Chưa chuyển đổi loại insulin. Loại insulin trước đó vẫn đang được sử dụng.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nLoại insulin cũng chưa được chuyển đổi.</string>
     <string name="active"><![CDATA[<Đang hoạt động>]]></string>
     <string name="date">Ngày</string>
@@ -174,6 +187,7 @@
     <string name="notconfigured">Chưa được thiết lập</string>
     <string name="loop_suspended_by_dst">Vòng lặp bị tạm dừng do thay đổi múi giờ</string>
     <string name="required">req</string>
+    <string name="a11y_arrow_triple_down">đang giảm rất nhanh</string>
     <string name="a11y_arrow_double_down">giảm nhanh</string>
     <string name="a11y_arrow_single_down">giảm</string>
     <string name="a11y_arrow_forty_five_down">giảm chậm</string>
@@ -181,8 +195,18 @@
     <string name="a11y_arrow_forty_five_up">tăng chậm</string>
     <string name="a11y_arrow_single_up">tăng</string>
     <string name="a11y_arrow_double_up">tăng nhanh</string>
+    <string name="a11y_arrow_triple_up">đang tăng rất nhanh</string>
     <string name="a11y_arrow_none">không</string>
     <string name="a11y_arrow_unknown">không biết</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">giảm %1$s bởi %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">tăng %1$s bởi %2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">mở %1$s để nhập liệu</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">đóng %1$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Chuyển lên</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Chuyển xuống</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Bước %1$d của %2$d</string>
+    <string name="decrement">giảm dần</string>
+    <string name="increment">tăng dần</string>
     <string name="a11y_high">cao</string>
     <string name="a11y_inrange">trong phạm vi</string>
     <string name="a11y_low">thấp</string>
@@ -207,6 +231,9 @@
     <string name="login">Đăng nhập</string>
     <string name="logout">Đăng xuất</string>
     <string name="prime_fill">Mồi/Nạp</string>
+    <string name="prime_not_available">Bơm này tự nạp insulin và mồi trong quá trình kích hoạt. Không thể thực hiện thao tác Nạp/Mồi từ AAPS.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Thay đổi</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Làm đầy</string>
     <string name="site_rotation">Chuyển vị trí</string>
     <string name="edit_site">Sửa</string>
     <string name="select_arrow">Chọn Mũi tên</string>
@@ -270,6 +297,7 @@
     <!--    Insulin / Concentration-->
     <string name="ins_concentration_confirmed">Đã xác nhận insulin %1$s</string>
     <string name="current_insulin">Đang hoạt động</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Sẽ được kích hoạt</string>
     <string name="change_insulin">Thay đổi</string>
     <string name="select_insulin_description">Chọn loại insulin bạn đang nạp vào bơm. Cấu hình sẽ được chuyển đổi sau khi kích hoạt / làm đầy.</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
@@ -308,6 +336,7 @@
     <string name="careportal_note_message">Ghi chú : %1$s</string>
     <string name="careportal_question_message">Câu hỏi: %1$s</string>
     <string name="careportal_exercise_message">Bài tập luyện : %1$s</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Thay đổi vị trí truyền insulin: %1$s</string>
     <string name="careportal_pump_site_change">Thay vị trí bơm</string>
     <string name="cgm_sensor_insert">Gắn cảm biến</string>
     <string name="careportal_pump_site_management">Vị trí tiêm</string>
@@ -330,6 +359,7 @@
     <string name="temporary_target">Mục tiêu Tạm thời</string>
     <string name="temporary_targets">Mục tiêu tạm thời</string>
     <string name="running_mode">Chế độ đang chạy</string>
+    <string name="running_mode_desc">Đóng hoặc mở vòng lặp, tạm ngừng vòng lặp hoặc ngắt kết nối bơm</string>
     <string name="running_mode_change_not_allowed">Không thể thay đổi chế độ hoạt động</string>
     <string name="pump_reconnect">Kết nối lại bơm</string>
     <string name="scene">Ngữ cảnh</string>
@@ -340,6 +370,8 @@
     <string name="scene_active">Kích hoạt</string>
     <string name="scene_ended">Ngữ cảnh đã kết thúc</string>
     <string name="scene_end_active">Tắt ngữ cảnh đang chạy</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Chuyển đến</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Tác vụ tiếp theo %1$s sẽ không bắt đầu</string>
     <string name="scene_confirm_activate">Kích hoạt ngữ cảnh “%1$s”?</string>
     <string name="scene_confirm_deactivate">Kết thúc ngữ cảnh “%1$s” và hoàn tác các thay đổi?</string>
     <string name="scene_conflict_active_tt">Mục tiêu tạm thời đang hoạt động sẽ được thay thế</string>
@@ -355,7 +387,6 @@
     <string name="scene_action_careportal">Log: %1$s</string>
     <string name="scene_management">Ngữ cảnh</string>
     <string name="scene_management_desc">Tạo, chỉnh sửa và quản lý các ngữ cảnh</string>
-    <string name="scene_action_count">%1$d hành động</string>
     <string name="scene_start_from_template">Bắt đầu từ mẫu</string>
     <string name="scene_editor_target">Mục tiêu</string>
     <string name="scene_editor_tt_preset">Thiết lập sẵn TT</string>
@@ -371,6 +402,8 @@
     <string name="scene_editor_enabled">Đã bật</string>
     <string name="scene_editor_disabled">Đã tắt</string>
     <string name="scene_summary">%1$d hành động, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_duration_indefinite">Không thời hạn (kết thúc thủ công)</string>
     <string name="scene_some_actions_failed">Một số hành động thất bại</string>
     <string name="scene_no_active">Không có ngữ cảnh nào đang hoạt động</string>
@@ -406,6 +439,9 @@
     <string name="clientcontrol_fail_scene_disabled">Ngữ cảnh đã bị vô hiệu hóa.</string>
     <string name="clientcontrol_fail_partial">Không thể áp dụng một số thao tác.</string>
     <string name="clientcontrol_fail_execution">Thiết bị chính không thể áp dụng thay đổi này.</string>
+    <string name="clientcontrol_fail_cancelled">Lệnh đã bị hủy trước khi thực thi. Không có lệnh nào được gửi đến bơm.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Liều bolus đã bị hủy. Không có insulin nào được cấp.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Đã Hủy</string>
     <string name="clientcontrol_fail_control_disabled">Điều khiển từ xa đang bị tắt trên thiết bị chính.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Liều Bolus đã chuẩn bị đã hết hiệu lực hoặc bị thay thế. Hãy nhấn nút lại.</string>
     <string name="clientcontrol_fail_bolus_compute">Thiết bị chính không thể tính toán bolus (thiếu dữ liệu đường huyết, cấu hình hoặc bơm chưa sẵn sàng).</string>
@@ -436,7 +472,7 @@
     <string name="treatment_insulin_desc">Tiêm liều bolus thủ công</string>
     <string name="treatment_carbs_desc">Ghi nhận carb không kèm insulin</string>
     <string name="treatment_calculator_desc">Tính toán liều bolus</string>
-    <string name="insulin_management">Insulin</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Cài đặt insulin</string>
     <string name="manage_insulin_desc">Quản lý và kích hoạt các cấu hình insulin</string>
     <string name="concentration_disable_blocked">Không thể tắt hỗ trợ nồng độ khi vẫn còn insulin không phải U100. Hãy xóa tất cả các cấu hình insulin không phải U100 và chuyển sang cấu hình U100 trước.</string>
     <string name="simple_mode_blocked_by_concentration">Không thể bật chế độ đơn giản khi đang sử dụng insulin không phải U100. Hãy chuyển sang insulin U100 trước.</string>
@@ -458,6 +494,9 @@
     <string name="treatment_cannula_change_desc">Ghi lại việc thay kim luồn/bộ truyền</string>
     <string name="treatment_fill_desc">Mồi và làm đầy kim luồn</string>
     <string name="temp_basal">Liều nền tạm thời</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Cấu hình cao hơn</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Cấu hình thấp hơn</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Không</string>
     <string name="user_entry">Nhập liệu của người dùng</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Ngón tay</string>
@@ -652,6 +691,7 @@
     <string name="missing_profile_name">Thiếu tên cấu hình</string>
     <string name="profile_not_saved_activate">Cấu hình điều trị chưa được lưu. Vui lòng lưu trước khi kích hoạt.</string>
     <string name="profile_basal_not_compatible_with_pump">Tỷ lệ liều nền không tương thích với máy bơm hiện tại và không thể được kích hoạt. Hãy giảm tỷ lệ phần trăm hoặc điều chỉnh tỷ lệ liều nền.</string>
+    <string name="profile_basal_below_pump_minimum">Tốc độ liều nền thấp hơn mức tối thiểu của bơm hiện tại nên không thể kích hoạt. Hãy tăng tỷ lệ phần trăm hoặc điều chỉnh tốc độ liều nền.</string>
     <string name="profile_pump_incompatible_label">Giới hạn Bơm</string>
     <string name="error_in_ic_values">Lỗi trong giá trị IC</string>
     <string name="error_in_isf_values">Lỗi trong giá trị IC</string>
@@ -686,6 +726,7 @@
     <string name="basal">Liều Basal</string>
     <string name="basalpct">Liều nền %</string>
     <string name="sensitivity">Độ nhạy</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Tắt Autosens</string>
     <string name="isf_for_carbs">ISF trung bình cho Tính toán và Hấp thu carb: %1$.1f</string>
     <string name="isf_profile">Cấu hình ISF: %1$.1f</string>
     <string name="isf_variable">ISF thay đổi: %1$.1f</string>
@@ -713,6 +754,7 @@
     <string name="wizard_carb_time">Thời gian ăn</string>
     <string name="carb_time_now">Bây giờ</string>
     <string name="change">Thay đổi</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
     <string name="grant">Cấp quyền</string>
     <string name="set">Cài đặt</string>
     <string name="wizard_set_alarm">Đặt báo thức</string>
@@ -723,7 +765,7 @@
     <string name="wizard_include_iob">Bao gồm IOB</string>
     <string name="wizard_include_cob">Bao gồm COB</string>
     <string name="wizard_calculation">Tính toán</string>
-    <string name="no_action_selected">Không có hành động nào được chọn, sẽ không có gì xảy ra</string>
+    <string name="no_action_selected">Chưa chọn hành động nào, sẽ không có gì xảy ra.</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Loại bỏ tối đa: %1$d g (carb đang hoạt động)</string>
     <string name="wizard_no_insulin_required">Không cần insulin</string>
     <string name="wizard_no_actual_bg">Chưa có BG gần đây để tính toán!</string>
@@ -745,7 +787,6 @@
     <string name="max_carbs_title">Lượng carb tối đa [g]</string>
     <string name="patient_type">Loại bệnh nhân</string>
     <!--    Protection-->
-    <string name="unlock_settings">Mở khóa cài đặt</string>
     <!--    Pumps -->
     <string name="battery_label">Pin</string>
     <string name="reservoir_label">Bình chứa</string>
@@ -770,10 +811,11 @@
     <string name="connection_error">Lỗi kết nối bơm</string>
     <string name="reading_pump_history">Đang đọc lịch sử bơm</string>
     <string name="password_cleared">Đã xóa bỏ mật khẩu!</string>
-    <string name="pairing">Đang ghép đôi</string>
+    <string name="pairing">Ghép đôi</string>
     <string name="initializing">Đang khởi chạy…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Cảnh báo</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Nghiêm trọng</string>
     <string name="alert" comment="Generic alert dialog title">Cảnh báo</string>
     <string name="retry" comment="Button label to retry a failed operation">Thử lại</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Kết thúc</string>
@@ -886,7 +928,7 @@
     <string name="appearance">Bố cục</string>
     <string name="manage">Quản lý</string>
     <string name="localprofile">Cấu hình</string>
-    <string name="nav_setupwizard">Setup Wizard</string>
+    <string name="nav_setupwizard">Hướng dẫn thiết lập</string>
     <string name="nav_setupwizard_desc">Cấu hình AAPS theo từng bước</string>
     <string name="statistics">Thống kê</string>
     <string name="statistics_desc">Xem thống kê và báo cáo</string>
@@ -904,7 +946,7 @@
     <string name="reorder">Sắp xếp lại</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Chuyển sớm hơn</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Chuyển muộn hơn</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Hiện các chi tiết</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Hiện các chi tiết</string>
     <string name="presets_changed_reorder_aborted">Các cài đặt sẵn đã được thay đổi ở nơi khác. Thứ tự mới không được lưu.</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Vị trí %1$d của %2$d</string>
@@ -1021,8 +1063,18 @@
     <string name="import_wrong_password">Sai mật khẩu</string>
     <string name="import_btn">Nhập</string>
     <string name="import_anyway_btn">Vẫn nhập</string>
-    <string name="import_apply_title">Đã nhập cài đặt</string>
-    <string name="import_apply_message">Các cài đặt đã nhập sẽ được áp dụng ngay bây giờ. Các plugin có thay đổi sẽ được khởi động lại.</string>
+    <string name="import_apply_title">Áp dụng các cài đặt đã nhập?</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Số các cài đặt cần thay đổi: %1$d. Các plugin có thay đổi sẽ được khởi động lại.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Số các cài đặt cần thay đổi: %1$d. Các cài đặt bơm được giữ lại: %2$d, vì vậy bơm của bạn vẫn tiếp tục hoạt động.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Các cài đặt đã nhập chọn một loại bơm không có trên điện thoại này. %1$s hiện đang hoạt động — hãy kiểm tra cài đặt bơm.</string>
+    <string name="import_applying">Áp dụng các cài đặt…</string>
+    <string name="import_replace_pump_settings">Đồng thời thay thế cài đặt bơm</string>
+    <string name="import_replace_pump_settings_summary">Để tắt tùy chọn này để giữ lại bơm mà điện thoại này đang ghép nối. Bật tùy chọn này khi khôi phục trên điện thoại mới với cùng một bơm.</string>
     <string name="import_apply_waiting">Đang chờ phản hồi từ Bơm…</string>
     <string name="import_apply_pump_busy">Bơm vẫn đang bận nên các cài đặt chưa được áp dụng.</string>
     <string name="import_apply_retry_question">Thử lại ngay bây giờ?</string>

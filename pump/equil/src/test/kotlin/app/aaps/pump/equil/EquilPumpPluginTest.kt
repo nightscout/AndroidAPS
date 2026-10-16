@@ -2,24 +2,45 @@ package app.aaps.pump.equil
 
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.pump.equil.data.RunMode
 import app.aaps.pump.equil.driver.definition.ActivationProgress
+import app.aaps.pump.equil.driver.definition.BasalSchedule
+import app.aaps.pump.equil.driver.definition.BasalScheduleEntry
+import app.aaps.pump.equil.keys.EquilBooleanKey
+import app.aaps.pump.equil.keys.EquilBooleanPreferenceKey
 import app.aaps.pump.equil.manager.EquilManager
+import app.aaps.pump.equil.manager.command.CmdBasalGet
+import app.aaps.pump.equil.manager.customCommands.CmdCancelStaleTempBasal
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.joda.time.DateTime
 import org.joda.time.Duration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.isNull
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 class EquilPumpPluginTest : TestBaseWithProfile() {
@@ -46,6 +67,119 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
                 aapsLogger, rh, preferences, commandQueue, rxBus, context,
                 pumpSync, equilManager, pumpEnactResultProvider, constraintsChecker, ch, notificationManager, protectionCheck, blePreCheck, config
             )
+    }
+
+    // --- low insulin / low battery alarms (#3837) ---
+
+    private val alarmFlags = mutableMapOf<EquilBooleanKey, Boolean>()
+    private val pumpState = EquilManager.EquilState().apply { runMode = RunMode.RUN }
+
+    /** playAlarm runs on every pump data update; flags are kept in a map like real preferences. */
+    private fun prepareAlarms(insulin: Int, battery: Int? = 100) {
+        pumpState.currentInsulin = insulin
+        pumpState.battery = battery
+        whenever(equilManager.equilState).thenReturn(pumpState)
+        whenever(equilManager.isActivationCompleted()).thenReturn(true)
+        whenever(preferences.get(EquilBooleanPreferenceKey.EquilAlarmInsulin)).thenReturn(true)
+        whenever(preferences.get(EquilBooleanPreferenceKey.EquilAlarmBattery)).thenReturn(true)
+        whenever(preferences.get(any<EquilBooleanKey>())).thenAnswer { alarmFlags[it.arguments[0]] ?: false }
+        doAnswer { alarmFlags[it.arguments[0] as EquilBooleanKey] = it.arguments[1] as Boolean; null }
+            .whenever(preferences).put(any<EquilBooleanKey>(), any<Boolean>())
+    }
+
+    private fun alarmsPosted(id: NotificationId): Int =
+        Mockito.mockingDetails(notificationManager).invocations.count { it.method.name == "post" && it.arguments[0] == id }
+
+    @Test
+    fun `2 U alarm sounds once, not again on every pump update`() {
+        prepareAlarms(insulin = 2)
+
+        repeat(5) { equilPumpPlugin.playAlarm() }
+
+        // It used to be posted again with sound on every update, so it could not be snoozed.
+        assertEquals(1, alarmsPosted(NotificationId.EQUIL_ALARM_INSULIN))
+    }
+
+    @Test
+    fun `each low insulin level alarms once while the reservoir goes down`() {
+        for (insulin in listOf(10, 9, 5, 4, 2, 1, 0, 0)) {
+            prepareAlarms(insulin)
+            equilPumpPlugin.playAlarm()
+        }
+
+        // 10 U, 5 U, 2 U and empty: one alarm each.
+        assertEquals(4, alarmsPosted(NotificationId.EQUIL_ALARM_INSULIN))
+    }
+
+    @Test
+    fun `battery under 5 percent alarms once`() {
+        prepareAlarms(insulin = 100, battery = 4)
+
+        repeat(3) { equilPumpPlugin.playAlarm() }
+
+        assertEquals(1, alarmsPosted(NotificationId.EQUIL_LOW_BATTERY))
+    }
+
+    @Test
+    fun `an unknown battery level after a reservoir change does not alarm`() {
+        prepareAlarms(insulin = 100, battery = null)
+
+        equilPumpPlugin.playAlarm()
+
+        assertEquals(0, alarmsPosted(NotificationId.EQUIL_LOW_BATTERY))
+    }
+
+    @Test
+    fun `a reservoir change arms the alarms again`() {
+        prepareAlarms(insulin = 2)
+        equilPumpPlugin.playAlarm()
+
+        equilPumpPlugin.resetData()
+        equilPumpPlugin.playAlarm()
+
+        assertEquals(2, alarmsPosted(NotificationId.EQUIL_ALARM_INSULIN))
+    }
+
+    // --- cancel the stale temp basal after a resume (#3830, #4486) ---
+
+    private fun prepareResume(aapsTbr: PumpSync.PumpState.TemporaryBasal?) {
+        whenever(equilManager.isActivationCompleted()).thenReturn(true)
+        runBlocking {
+            whenever(pumpSync.expectedPumpState()).thenReturn(PumpSync.PumpState(aapsTbr, null, null, null, "7000F3"))
+            whenever(equilManager.setTempBasal(any(), any(), any())).thenReturn(pumpEnactResultProvider().success(true).enacted(true))
+        }
+    }
+
+    @Test
+    fun `after a resume the old temp basal on the pump is cancelled`() = runTest {
+        prepareResume(aapsTbr = null)
+
+        equilPumpPlugin.executeCustomCommand(CmdCancelStaleTempBasal())
+
+        verify(equilManager).setTempBasal(0.0, 0, true)
+    }
+
+    @Test
+    fun `the suspend record of this resume does not count as a temp basal set again`() = runTest {
+        // Still running in AAPS for a moment after the resume: the pump's old temp basal must go anyway.
+        val suspend = PumpSync.PumpState.TemporaryBasal(1000L, 4800 * 60_000L, 0.0, true, PumpSync.TemporaryBasalType.PUMP_SUSPEND, 1L, 1L)
+        prepareResume(aapsTbr = suspend)
+
+        equilPumpPlugin.executeCustomCommand(CmdCancelStaleTempBasal())
+
+        verify(equilManager).setTempBasal(0.0, 0, true)
+    }
+
+    @Test
+    fun `a zero temp basal set again after the resume is not cancelled`() = runTest {
+        // "Disconnect pump" is active: the reconciler queued its zero temp basal before this command.
+        val zero = PumpSync.PumpState.TemporaryBasal(1000L, 30 * 60_000L, 0.0, true, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, 1L, 1L)
+        prepareResume(aapsTbr = zero)
+
+        val result = equilPumpPlugin.executeCustomCommand(CmdCancelStaleTempBasal())
+
+        assertTrue(result!!.success)
+        verify(equilManager, never()).setTempBasal(any(), any(), any())
     }
 
     @Test
@@ -202,5 +336,104 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
     @Test
     fun `pumpDescription should have correct pump type`() {
         assertEquals(PumpType.EQUIL, equilPumpPlugin.pumpDescription.pumpType)
+    }
+
+    // --- the basal the pump really runs (#2454) ---
+
+    private fun activatedPump(state: EquilManager.EquilState) {
+        whenever(equilManager.isActivationCompleted()).thenReturn(true)
+        whenever(equilManager.equilState).thenReturn(state)
+    }
+
+    @Test
+    fun `the delivered basal is what the pump reported after the set`() {
+        activatedPump(EquilManager.EquilState().apply {
+            basalSchedule = BasalSchedule(List(24) { BasalScheduleEntry(0.79, Duration.standardHours(it.toLong())) })
+            reportedBasal = List(24) { 0.7875 }
+        })
+
+        val delivered = equilPumpPlugin.deliveredBasal()!!
+
+        assertEquals((0..23).map { it * 3600 }, delivered.map { it.timeAsSeconds })
+        assertEquals(List(24) { 0.7875 }, delivered.map { it.value })
+    }
+
+    /** When the read failed, the rate as it was sent: cut down to the 0.0125 U/h step of the pump. */
+    @Test
+    fun `without a report the delivered basal is the schedule as it was sent`() {
+        activatedPump(EquilManager.EquilState().apply {
+            basalSchedule = BasalSchedule(List(24) { BasalScheduleEntry(if (it < 6) 0.79 else 1.0, Duration.standardHours(it.toLong())) })
+        })
+
+        val delivered = equilPumpPlugin.deliveredBasal()!!
+
+        assertEquals((0..23).map { it * 3600 }, delivered.map { it.timeAsSeconds })
+        assertEquals((0..23).map { if (it < 6) 0.7875 else 1.0 }, delivered.map { it.value })
+    }
+
+    /** The base basal is what the pump gives in this hour, the same rate the running profile holds. */
+    @Test
+    fun `the base basal is the delivered rate of this hour`() {
+        activatedPump(EquilManager.EquilState().apply {
+            runMode = RunMode.RUN
+            basalSchedule = BasalSchedule(List(24) { BasalScheduleEntry(0.79, Duration.standardHours(it.toLong())) })
+            reportedBasal = List(24) { 0.7875 }
+        })
+
+        assertEquals(0.7875, equilPumpPlugin.baseBasalRate.cU, 0.0)
+    }
+
+    @Test
+    fun `the delivered basal is unknown without an activated pump`() {
+        whenever(equilManager.isActivationCompleted()).thenReturn(false)
+        assertNull(equilPumpPlugin.deliveredBasal())
+    }
+
+    private fun prepareBasalSet(answer: ByteArray?) {
+        val state = EquilManager.EquilState().apply { runMode = RunMode.RUN }
+        activatedPump(state)
+        whenever(constraintsChecker.getMaxBolusAllowed()).thenReturn(ConstraintObject(10.0, aapsLogger))
+        doAnswer { invocation ->
+            val command = invocation.arguments[0]
+            if (command is CmdBasalGet) {
+                if (answer == null) return@doAnswer pumpEnactResultProvider().success(false)
+                command.decodeConfirmData(answer)
+            }
+            pumpEnactResultProvider().success(true).enacted(true)
+        }.whenever(equilManager).executeCmd(any())
+    }
+
+    @Test
+    fun `after a set the pump is asked what it runs and that is kept`() = runTest {
+        // 0.39375 U in each half hour = 0.7875 U/h
+        prepareBasalSet(ByteArray(6) + List(48) { listOf(63.toByte(), 0.toByte()) }.flatten())
+        val profile = mock<PumpProfile>()
+        whenever(profile.getBasalTimeFromMidnight(any())).thenReturn(0.79)
+
+        assertTrue(equilPumpPlugin.setNewBasalProfile(profile).success)
+
+        val reported = argumentCaptor<List<Double>>()
+        verify(equilManager).setBasalSchedule(any(), reported.capture())
+        assertEquals(List(24) { 0.7875 }, reported.firstValue)
+    }
+
+    @Test
+    fun `when the read fails the schedule is kept without a report`() = runTest {
+        prepareBasalSet(answer = null)
+        val profile = mock<PumpProfile>()
+        whenever(profile.getBasalTimeFromMidnight(any())).thenReturn(0.79)
+
+        assertTrue(equilPumpPlugin.setNewBasalProfile(profile).success)
+
+        verify(equilManager).setBasalSchedule(any(), isNull())
+    }
+
+    @Test
+    fun `pumpDescription should not offer fill or battery change`() {
+        // The Equil wizard fills the reservoir and fits the charged battery itself, so the generic
+        // Prime/Fill and Pump battery change actions must stay hidden.
+        assertFalse(equilPumpPlugin.pumpDescription.isRefillingCapable)
+        assertFalse(equilPumpPlugin.pumpDescription.isBatteryReplaceable)
+        assertTrue(equilPumpPlugin.pumpDescription.isPatchPump)
     }
 }

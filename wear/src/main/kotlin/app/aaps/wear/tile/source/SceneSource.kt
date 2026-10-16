@@ -19,16 +19,34 @@ import dev.zacsweers.metro.SingleIn
 class SceneSource(private val context: Context, private val sp: SP, private val aapsLogger: AAPSLogger) : TileSource {
 
     override fun getSelectedActions(): List<Action> {
-        if (isSceneActive()) {
-            aapsLogger.info(LTag.WEAR, "getSelectedActions: scene is active, showing End")
-            return listOf(
-                Action(
-                    buttonText = context.resources.getString(R.string.scene_end),
-                    iconRes = R.drawable.ic_cancel_red,
-                    activityClass = BackgroundActionActivity::class.java.name,
-                    action = EventData.ActionSceneStopPreCheck(),
+        activeSceneState()?.takeIf { it.active }?.let { state ->
+            aapsLogger.info(LTag.WEAR, "getSelectedActions: scene ${state.sceneName} is active, showing End" + if (state.chainTargetName != null) " and Skip" else "")
+            // End, with the scene's name under it; and Skip when the phone says a follow-up can
+            // start, with the follow-up's name under it - the two choices the phone's own End
+            // dialog offers. A phone from before the follow-up fields sends neither name, and the
+            // tile then looks as it did.
+            return buildList {
+                add(
+                    Action(
+                        buttonText = context.resources.getString(R.string.scene_end),
+                        buttonTextSub = state.sceneName,
+                        iconRes = R.drawable.ic_scene_end,
+                        activityClass = BackgroundActionActivity::class.java.name,
+                        action = EventData.ActionSceneStopPreCheck(),
+                    )
                 )
-            )
+                state.chainTargetName?.let { target ->
+                    add(
+                        Action(
+                            buttonText = context.resources.getString(R.string.scene_skip),
+                            buttonTextSub = target,
+                            iconRes = R.drawable.ic_scene_skip,
+                            activityClass = BackgroundActionActivity::class.java.name,
+                            action = EventData.ActionSceneStopPreCheck(triggerChain = true),
+                        )
+                    )
+                }
+            }
         }
         val sceneData = getSceneData(sp)
         val slotValues = (1..4).map { sp.getString(preferenceKey(it), SLOT_AUTO) }
@@ -66,13 +84,14 @@ class SceneSource(private val context: Context, private val sp: SP, private val 
     private fun getSceneData(sp: SP): EventData.SceneList =
         EventData.deserialize(sp.getString(R.string.key_scene_data, EventData.SceneList(arrayListOf()).serialize())) as EventData.SceneList
 
-    private fun isSceneActive(): Boolean {
+    /** The last active-scene state the phone sent, or null when none or unreadable */
+    private fun activeSceneState(): EventData.ActiveSceneState? {
         val raw = sp.getString(R.string.key_active_scene_state, "")
-        if (raw.isEmpty()) return false
-        return runCatching { (EventData.deserialize(raw) as? EventData.ActiveSceneState)?.active == true }.getOrDefault(false)
+        if (raw.isEmpty()) return null
+        return runCatching { EventData.deserialize(raw) as? EventData.ActiveSceneState }.getOrNull()
     }
 
-    override fun getResourceReferences(resources: Resources): List<Int> = listOf(R.drawable.ic_scene_purple, R.drawable.ic_cancel_red)
+    override fun getResourceReferences(resources: Resources): List<Int> = listOf(R.drawable.ic_scene_purple, R.drawable.ic_scene_end, R.drawable.ic_scene_skip)
 
     companion object {
         /** Slot not deliberately touched by the user — auto-fills with the next unclaimed scene. */

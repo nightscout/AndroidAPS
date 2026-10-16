@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Pumpintegration för EOPatch2 / GlucoMen Day</string>
     <string name="low_reservoir">Varningar för låg reservoar</string>
     <string name="patch_expiration_reminders">Påminnelse om att byta patch</string>
@@ -80,5 +79,4 @@
     <string name="string_resumed_insulin_delivery_message">Insulinleveransen har återupptagits.</string>
     <string name="string_temp_basal_remained_hhmm">återstående tid: %1$s:%2$s</string>
     <string name="string_resume_failed">Återupptagande misslyckades.</string>
-    <!-- Permission rationales -->
 </resources>

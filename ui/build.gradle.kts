@@ -103,6 +103,9 @@ kotlin {
         getByName("commonTest") {
             dependencies {
                 implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
+                // Answers the wiki search requests in WikiSearchClientTest.
+                implementation(libs.io.ktor.client.mock)
             }
         }
 

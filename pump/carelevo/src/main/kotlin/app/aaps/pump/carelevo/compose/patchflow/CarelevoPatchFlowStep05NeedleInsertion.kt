@@ -27,6 +27,7 @@ import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
+import app.aaps.core.ui.compose.pump.announceWhenShown
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.compose.dialog.CarelevoActionDialog
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectNeedleEvent
@@ -216,12 +217,16 @@ private fun CarelevoPatchFlowStep05NeedleInsertionContent(
         }
 
         if (isRetry) {
+            // A failed needle check only changed this count; said so the user knows it failed and
+            // how many tries are left before the flow closes.
+            val retryText = stringResource(
+                R.string.carelevo_dialog_patch_needle_retry_count,
+                (MAX_NEEDLE_CHECK_COUNT - failCount).coerceAtLeast(0)
+            )
             Text(
-                text = stringResource(
-                    R.string.carelevo_dialog_patch_needle_retry_count,
-                    (MAX_NEEDLE_CHECK_COUNT - failCount).coerceAtLeast(0)
-                ),
-                style = MaterialTheme.typography.bodyMedium
+                text = retryText,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.announceWhenShown(retryText)
             )
         }
     }

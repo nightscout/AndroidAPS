@@ -9,9 +9,15 @@ import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -27,15 +33,14 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.Command.CommandType
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.implementation.ImplementationStrings
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
@@ -44,6 +49,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -51,6 +57,8 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.getCustomizedName
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.objects.runningMode.PumpCommandGate
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.implementation.ImplementationStrings
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.implementation.queue.commands.CommandBolus
 import app.aaps.implementation.queue.commands.CommandCancelExtendedBolus
@@ -72,27 +80,26 @@ import app.aaps.implementation.queue.commands.CommandStopPump
 import app.aaps.implementation.queue.commands.CommandTempBasalAbsolute
 import app.aaps.implementation.queue.commands.CommandTempBasalPercent
 import app.aaps.implementation.queue.commands.CommandUpdateTime
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import kotlin.concurrent.Volatile
-import kotlinx.coroutines.CompletableDeferred
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
-import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.interfaces.concurrent.AapsLock
-import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
-import app.aaps.core.interfaces.concurrent.withLock
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.SingleIn
+import kotlin.concurrent.Volatile
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.reflect.KClass
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 
 @OpenForTesting
 @ContributesBinding(AppScope::class)
@@ -143,11 +150,26 @@ class CommandQueueImplementation(
     @Volatile var performing: Command? = null
 
     // Upper bound for a single pump profile push. A normal connection failure resolves the command
-    // (and the awaited deferred) on its own; this only guards the pathological lost-callback case so a
+    // (and the awaited completion) on its own; this only guards the pathological lost-completion case so a
     // hung set can't block the sequential profile-change collector forever. Tune if pumps legitimately
     // need longer.
     @Suppress("PrivatePropertyName")
     private val PROFILE_SET_TIMEOUT_MS = 10 * 60 * 1000
+
+    @Suppress("PrivatePropertyName")
+    private val HOUR_SECONDS = 60 * 60
+
+    @Suppress("PrivatePropertyName")
+    private val DAY_SECONDS = 24 * HOUR_SECONDS
+
+    // The most a pump may change a rate by rounding, in U/h, unless its own step is coarser (see deliveredBasalBlocks).
+    @Suppress("PrivatePropertyName")
+    private val MAX_BASAL_ROUNDING = 0.1
+
+    // How long one command may run before the user is alarmed. Longer than the slowest legitimate
+    // command: a 25 U bolus at the slowest pump speed (60 s/U) takes about 25 minutes.
+    @Suppress("PrivatePropertyName")
+    private val STUCK_COMMAND_ALARM = 30.minutes
 
     init {
         // collectResilient guarantees a single failed onProfileChanged() can never permanently wedge
@@ -169,15 +191,20 @@ class CommandQueueImplementation(
         aapsLogger.debug(LTag.PROFILE, "onProfileChanged (silent=$silent)")
         // Exceptions are handled by collectResilient at the call site; here we only guard the hang vector.
         profileFunction.getRequestedProfile()?.let {
-            // Skip if the active EPS was already triggered by this PS (e.g. NSClient updating PS with nsId
-            // retriggers observeChanges(PS)). The previous onProfileChanged already pushed the profile to the pump.
+            // The active EPS was already made from this PS, e.g. NSClient updating the PS with its nsId
+            // retriggers observeChanges(PS). Then there is nothing to do - unless the pump has another basal.
+            // KeepAliveWorker sends EventProfileChangeRequested exactly for that: a new or replaced pump, or a
+            // basal changed on the pump itself. Skipping it then left the pump on its own basal for good.
             val active = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())
-            if (active != null && active.originalPsId != null && active.originalPsId == it.id) {
-                aapsLogger.debug(LTag.PROFILE, "Skipping onProfileChanged: active EPS id=${active.id} already represents PS id=${it.id}")
+            val alreadyEffective = active != null && active.originalPsId != null && active.originalPsId == it.id
+            if (alreadyEffective && activePlugin.activePump.isThisProfileSet(ProfileSealed.PS(it, activePlugin))) {
+                aapsLogger.debug(LTag.PROFILE, "Skipping onProfileChanged: active EPS id=${active?.id} already represents PS id=${it.id} and the pump has it")
                 return@let
             }
-            // Bound the pump round-trip. setProfile() awaits a CommandSetProfile callback; if that
-            // callback is ever lost the deferred never completes, and because the collector processes
+            if (alreadyEffective)
+                aapsLogger.debug(LTag.PROFILE, "onProfileChanged: active EPS id=${active?.id} represents PS id=${it.id}, but the pump has another basal. Setting it again")
+            // Bound the pump round-trip. setProfile() awaits the completion of a CommandSetProfile; if
+            // that is never completed the await never returns, and because the collector processes
             // emissions sequentially that single hang would block every future ProfileSwitch. On
             // timeout, we treat it as a failed update so the collector stays alive.
             val result = withTimeoutOrNull(PROFILE_SET_TIMEOUT_MS.milliseconds) {
@@ -187,12 +214,35 @@ class CommandQueueImplementation(
                 aapsLogger.error(LTag.PROFILE, "setProfile timed out after $PROFILE_SET_TIMEOUT_MS ms for PS id=${it.id}")
             // Central profile-set notification lifecycle (unified across all pump drivers). Returns true on a
             // successful write, in which case we persist the EffectiveProfileSwitch below.
-            if (postProfileWriteResult(result, silent)) {
+            if (postProfileWriteResult(result)) {
+                // The switches can have changed while the pump was busy, which took 40 s on a Medtronic: a scene
+                // ended and cut this one, or an insulin change wrote a newer one. The event for that change waits
+                // behind this one and sets the switch then in force. An EPS for this one now put the old profile in
+                // force until that next pump write: the percentage of the scene that had ended, or the insulin from
+                // before the change. So it gets no EPS and no notice.
+                if (profileFunction.getRequestedProfile()?.id != it.id) {
+                    aapsLogger.debug(LTag.PROFILE, "PS id=${it.id} is no longer the requested switch after the pump set it, no EPS for it")
+                    return@let
+                }
+                val requested = ProfileSealed.PS(it, activePlugin)
                 // Pump may return enacted == false if basal profile is the same, but IC/ISF can be different
-                val nonCustomized = ProfileSealed.PS(it, activePlugin).convertToNonCustomizedProfile(dateUtil)
+                val nonCustomized = requested.convertToNonCustomizedProfile(dateUtil)
+                // The basal the pump really gives: it can round the rates to its own step (#2454).
+                val report = deliveredBasalBlocks(requested.insulinConcentration(), asked = nonCustomized.basalBlocks)
+                val basalBlocks = (report as? BasalReport.Given)?.blocks ?: nonCustomized.basalBlocks
+                // One notice for a real write that is not internal (a Scene reverting its own ProfileSwitch, #4959).
+                // A write the pump did not need (enacted == false) stays silent, and a rejected report has its alarm.
+                // Internal also when a scene marked this switch: while the pump was busy the events queued up, and
+                // the one that led here can be an unrelated one, a Nightscout id arriving, with no silent flag.
+                val silentWrite = silent || profileSwitchSilentGate.isSilent(it.id, dateUtil.now())
+                if (result?.enacted == true && !silentWrite && report != BasalReport.Rejected)
+                    notifyProfileSet(asked = nonCustomized.basalBlocks, given = basalBlocks)
+                // A PS that is already effective only had to be set in the pump again. It gets no second EPS,
+                // unless this pump gives another basal than the EPS holds, e.g. a new pump with another step.
+                if (alreadyEffective && active?.basalBlocks == basalBlocks) return@let
                 val eps = EPS(
                     timestamp = dateUtil.now(),
-                    basalBlocks = nonCustomized.basalBlocks,
+                    basalBlocks = basalBlocks,
                     isfBlocks = nonCustomized.isfBlocks,
                     icBlocks = nonCustomized.icBlocks,
                     targetBlocks = nonCustomized.targetBlocks,
@@ -220,17 +270,15 @@ class CommandQueueImplementation(
      *    the reason (a timeout has none). Deliberately NOT a full-screen `runAlarm` — a wrong base profile is serious
      *    but persistent, so a dismissible alarm-notification is the right weight (a failed TBR is even quieter,
      *    surfaced only in the loop status).
-     *  - success: clear any stale FAILED_UPDATE_PROFILE; and on a real write ([PumpEnactResult.enacted]) that is not
-     *    internal/automatic (`!silent` — e.g. a Scene reverting its own ProfileSwitch, issue #4959) raise the
-     *    "Basal profile in pump updated" ([NotificationId.PROFILE_SET_OK]) confirmation. Deferred / already-set writes
-     *    return enacted=false and stay fully silent per the contract.
+     *  - success: clear any stale FAILED_UPDATE_PROFILE. The "Basal profile in pump updated" confirmation follows from
+     *    [notifyProfileSet], once the basal the pump gives is known, so it is one notice.
      *
      * Dismissing FAILED_UPDATE_PROFILE centrally is safe only because Equil's alarms were migrated off that id to
      * EQUIL_LOW_BATTERY / PUMP_ERROR.
      *
      * @return true when write succeeded (the caller then persists the EffectiveProfileSwitch).
      */
-    internal fun postProfileWriteResult(result: PumpEnactResult?, silent: Boolean): Boolean {
+    internal fun postProfileWriteResult(result: PumpEnactResult?): Boolean {
         // Dropped on purpose (an import, a cleared queue): the write did not happen, so return false
         // and let the caller skip the EffectiveProfileSwitch - but say nothing about it. It is not a
         // failed update. With the old success = true drain this was worse: it took the success branch
@@ -245,10 +293,99 @@ class CommandQueueImplementation(
             return false
         }
         notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
-        if (result.enacted && !silent)
-            notificationManager.post(NotificationId.PROFILE_SET_OK, CoreUiStrings.profile_set_ok, validMinutes = 60)
         return true
     }
+
+    /** What the pump reported about the basal it gives after a profile was set. */
+    internal sealed interface BasalReport {
+
+        /** Nothing usable: the pump gives the profile as it was sent, or the report did not cover the day. */
+        data object None : BasalReport
+
+        /** The basal the pump gives, as blocks in insulin units. */
+        data class Given(val blocks: List<Block>) : BasalReport
+
+        /** Far from the profile: not used, and the user was told to check the pump. */
+        data object Rejected : BasalReport
+    }
+
+    /**
+     * The basal the pump reports it really gives. [concentration] is the one of the profile that was just set. Hours
+     * with the same rate are merged, as `shiftBlock` merges the profile. A report that does not cover the day from
+     * midnight in full hours is not used: the requested basal is kept, and the error is logged.
+     *
+     * A pump rounds a rate by about one step. A report with an hour much further from [asked] is not a rounding: the
+     * pump or its driver is wrong, and the pump does not give what it was asked. It is not used either, and the user
+     * is told to check the basal in the pump, as for a failed profile update.
+     */
+    internal fun deliveredBasalBlocks(concentration: Double, asked: List<Block>): BasalReport {
+        val values = activePlugin.activePump.deliveredBasal() ?: return BasalReport.None
+        val valid = values.isNotEmpty() && values.first().timeAsSeconds == 0 && values.last().timeAsSeconds < DAY_SECONDS &&
+            values.all { it.timeAsSeconds % HOUR_SECONDS == 0 && it.value >= 0.0 } &&
+            values.zipWithNext().all { (a, b) -> a.timeAsSeconds < b.timeAsSeconds }
+        if (!valid) {
+            aapsLogger.error(LTag.PROFILE, "The pump reported a basal that does not cover the day in full hours, the profile is kept: ${values.map { "${it.timeAsSeconds}=${it.value}" }}")
+            return BasalReport.None
+        }
+        val blocks = ArrayList<Block>(values.size)
+        values.forEachIndexed { index, value ->
+            val end = values.getOrNull(index + 1)?.timeAsSeconds ?: DAY_SECONDS
+            val duration = T.secs((end - value.timeAsSeconds).toLong()).msecs()
+            // Without the float tail: 0.05 * 0.2 is 0.010000000000000002.
+            val amount = Round.roundTo(PumpRate(value.value).iU(concentration, true), 1e-9)
+            val last = blocks.lastOrNull()
+            if (last != null && last.amount == amount) blocks[blocks.size - 1] = last.copy(duration = last.duration + duration)
+            else blocks.add(Block(duration, amount))
+        }
+        val tolerance = max(MAX_BASAL_ROUNDING, 2 * activePlugin.activePump.pumpDescription.basalStep)
+        val farHour = (0 until 24).firstOrNull { hour -> abs(blocks.rateInHour(hour) - asked.rateInHour(hour)) > tolerance }
+        if (farHour != null) {
+            aapsLogger.error(
+                LTag.PROFILE,
+                "The pump reported a basal far from the profile at $farHour:00 (${blocks.rateInHour(farHour)} instead of ${asked.rateInHour(farHour)} U/h), the profile is kept"
+            )
+            notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, rh.gs(ImplementationStrings.basal_reported_far_from_profile), sound = AlarmSound.BOLUS_ERROR)
+            return BasalReport.Rejected
+        }
+        return BasalReport.Given(blocks)
+    }
+
+    /** The mean rate of the blocks in this hour of the day, in U/h. */
+    private fun List<Block>.rateInHour(hour: Int): Double {
+        val from = T.hours(hour.toLong()).msecs()
+        val to = from + T.hours(1).msecs()
+        var start = 0L
+        var insulin = 0.0
+        for (block in this) {
+            val end = start + block.duration
+            val overlap = min(end, to) - max(start, from)
+            if (overlap > 0) insulin += block.amount * overlap
+            start = end
+        }
+        return insulin / T.hours(1).msecs()
+    }
+
+    /**
+     * "Basal profile in pump updated", shown for an hour. When the pump gives a little more or less per day than the
+     * profile asks, because it rounds the rates to its own step (#2454), the same notice says how much: one notice
+     * for one profile switch.
+     */
+    internal fun notifyProfileSet(asked: List<Block>, given: List<Block>) {
+        val askedPerDay = asked.insulinPerDay()
+        val givenPerDay = given.insulinPerDay()
+        if (abs(givenPerDay - askedPerDay) < 0.005) {
+            notificationManager.post(NotificationId.PROFILE_SET_OK, CoreUiStrings.profile_set_ok, validMinutes = 60)
+            return
+        }
+        aapsLogger.debug(LTag.PROFILE, "The pump rounds the basal: $givenPerDay U per day instead of $askedPerDay U")
+        notificationManager.post(
+            NotificationId.PROFILE_SET_OK,
+            rh.gs(ImplementationStrings.profile_set_ok_rounded, rh.gs(InterfacesStrings.format_insulin_units, givenPerDay), rh.gs(InterfacesStrings.format_insulin_units, askedPerDay)),
+            validMinutes = 60
+        )
+    }
+
+    private fun List<Block>.insulinPerDay(): Double = sumOf { it.amount * it.duration } / T.hours(1).msecs()
 
     private fun executingNowError(): PumpEnactResult =
         pumpEnactResultProvider().success(false).enacted(false).comment(ImplementationStrings.executing_right_now)
@@ -286,12 +423,18 @@ class CommandQueueImplementation(
 
     override fun isRunning(type: CommandType): Boolean = performing?.commandType == type
 
-    private fun removeAll(type: CommandType) {
+    /**
+     * Drops every queued command of [type]. The default reports success, because a newer command of
+     * the same type replaces it. A bolus must pass success = false, whether it is stopped or replaced:
+     * the caller of a dropped bolus saves its carbs on success, and the insulin never reached the
+     * pump (#5193).
+     */
+    private fun removeAll(type: CommandType, comment: TextRef = CoreUiStrings.command_replaced, success: Boolean = true, cancelled: Boolean = false) {
         instanceLock.withLock {
             queueLock.withLock {
                 for (i in queue.indices.reversed()) {
                     if (queue[i].commandType == type) {
-                        queue[i].cancel(CoreUiStrings.command_replaced)
+                        queue[i].cancel(comment, success, cancelled)
                         queue.removeAt(i)
                     }
                 }
@@ -301,7 +444,8 @@ class CommandQueueImplementation(
 
     /**
      * READSTATUS dedup + stall telemetry. If a READSTATUS sits at the tail of the queue for more than
-     * 15 min the executor is stalled (a driver's execute() is blocking). Surface it for telemetry only.
+     * 15 min the executor is stalled (a driver's execute() is blocking). Telemetry only here; the user is
+     * alarmed by [watchForStuck].
      */
     private var readScheduledDetected: Long? = null
 
@@ -336,8 +480,38 @@ class CommandQueueImplementation(
     }
 
     override fun pickup() {
-        instanceLock.withLock {
-            queueLock.withLock { performing = queue.removeFirstOrNull() }
+        val picked = instanceLock.withLock {
+            queueLock.withLock { queue.removeFirstOrNull().also { performing = it } }
+        }
+        picked?.let { watchForStuck(it) }
+    }
+
+    /**
+     * Raises an alarm if [command] is still running after [STUCK_COMMAND_ALARM].
+     *
+     * The queue runs one command at a time, so a driver that never returns from `execute()` blocks
+     * every later bolus, temp basal and status read until the app is restarted (#5209). The executor
+     * cannot safely give up on it: the driver may still be talking to the pump, maybe in the middle of
+     * a bolus, and starting the next command on top of it, or telling the caller "failed", could lead
+     * to a double dose. So this only makes the problem visible.
+     *
+     * Keyed on [Command.completion], not on [performing]: a drain clears [performing] while the command
+     * is still running, but only the end of `execute()` completes it. Runs on [appScope], never on the
+     * executor's own one-thread dispatcher, which the blocked driver is holding.
+     */
+    private fun watchForStuck(command: Command) {
+        appScope.launch {
+            if (withTimeoutOrNull(STUCK_COMMAND_ALARM) { command.completion.await() } != null) return@launch
+            aapsLogger.error(LTag.PUMPQUEUE, "Command still running after $STUCK_COMMAND_ALARM: ${command.log()}")
+            fabricPrivacy.logCustom("CommandStuckAlarm")
+            notificationManager.post(
+                NotificationId.PUMP_DRIVER_NOT_RESPONDING,
+                rh.gs(CoreUiStrings.pump_driver_not_responding, command.status(), STUCK_COMMAND_ALARM.inWholeMinutes.toInt()),
+                sound = AlarmSound.ALARM
+            )
+            command.completion.await()
+            aapsLogger.debug(LTag.PUMPQUEUE, "Stuck command finished: ${command.log()}")
+            notificationManager.dismiss(NotificationId.PUMP_DRIVER_NOT_RESPONDING)
         }
     }
 
@@ -385,7 +559,7 @@ class CommandQueueImplementation(
     // Connection-timeout drop: the pump was never reached, so the command was not executed. Report
     // failure (success = false) so a waiting bolus caller is not told a dose was delivered, and
     // cancelled = false because this IS a delivery failure and must still raise its alarm.
-    // (Supersession via removeAll keeps the default success = true.)
+    // (Supersession via removeAll keeps the default success = true, except for a bolus.)
     override fun clear() = drain(CoreUiStrings.connectiontimedout, success = false, cancelled = false)
 
     // Dropped on purpose, so cancelled = true: the caller is told it did not happen, and nothing
@@ -395,7 +569,7 @@ class CommandQueueImplementation(
     private fun drain(comment: TextRef, success: Boolean, cancelled: Boolean) = instanceLock.withLock {
         performing = null
         queueLock.withLock {
-            // Through Command.cancel, never the callback directly. CommandBolus and CommandSMBBolus
+            // Through Command.cancel, never Command.completion directly. CommandBolus and CommandSMBBolus
             // override cancel to clear BolusProgressData, and going behind them left a dropped bolus
             // showing progress with nothing left to finish it.
             for (i in queue.indices) queue[i].cancel(comment, success, cancelled)
@@ -417,6 +591,16 @@ class CommandQueueImplementation(
     fun notifyAboutNewCommand(): Boolean {
         commandExecutor().signal()
         return true
+    }
+
+    /**
+     * Adds [command] to the queue and wakes the executor. Returns the command, so the caller can
+     * await [Command.completion]. Not suspend, so it can run inside `enqueueLock`; await after the lock.
+     */
+    private fun enqueue(command: Command): Command {
+        add(command)
+        notifyAboutNewCommand()
+        return command
     }
 
     override fun bolusInQueue(): Boolean {
@@ -460,13 +644,7 @@ class CommandQueueImplementation(
         val type = if (detailedBolusInfo.bolusType == BS.Type.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
         // Suspend DB read must stay outside enqueueLock; CommandSMBBolus.execute() re-checks freshness at execution time.
         val lastBolusTime = if (type == CommandType.SMB_BOLUS) persistenceLayer.getNewestBolus()?.timestamp ?: 0L else 0L
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        val cb = object : Callback() {
-            override fun run() {
-                deferred.complete(result)
-            }
-        }
-        enqueueLock.withLock {
+        val command = enqueueLock.withLock {
             if (type == CommandType.SMB_BOLUS) {
                 if (bolusInQueue()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting SMB since a bolus is queue/running")
@@ -476,24 +654,43 @@ class CommandQueueImplementation(
                     aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting bolus, another bolus was issued since request time")
                     return pumpEnactResultProvider().enacted(false).success(false)
                 }
-                removeAll(CommandType.SMB_BOLUS)
+                removeAll(CommandType.SMB_BOLUS, success = false, cancelled = true)
             }
             if (isRunning(type)) return executingNowError()
-            removeAll(type)
-            // apply constraints
-            detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
+            if (type == CommandType.BOLUS) {
+                // A waiting SMB was calculated without this bolus, and this bolus without the SMB, so giving
+                // both would treat the same BG twice. Drop the SMB: after a failed SMB the loop runs again
+                // with temp basal only.
+                removeAll(CommandType.SMB_BOLUS, success = false, cancelled = true)
+                // An SMB that is already being delivered cannot be dropped. Refuse this bolus instead of
+                // queueing it behind the SMB: both would use the one progress state, and the SMB would write
+                // into this bolus's dialog (#4546). Checked after the drop, so an SMB is either dropped above
+                // or running here. Cancelled, because no insulin was given: the user is told, without the
+                // delivery error alarm.
+                if (isRunning(CommandType.SMB_BOLUS))
+                    return pumpEnactResultProvider().success(false).enacted(false).cancelled(true).comment(ImplementationStrings.smb_being_delivered)
+            }
+            // A replaced bolus was not delivered either. Its caller must hear that, or it saves its
+            // carbs next to the carbs of the bolus that replaces it.
+            removeAll(type, success = false, cancelled = true)
+            // apply constraints. A prime is in pump units, every other bolus in insulin units.
+            detailedBolusInfo.insulin =
+                if (detailedBolusInfo.bolusType == BS.Type.PRIMING) constraintChecker.applyPrimingConstraints(PumpInsulin(detailedBolusInfo.insulin)).cU
+                else constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
             val bolusGeneration = bolusProgressData.start(detailedBolusInfo.insulin, isSMB = detailedBolusInfo.bolusType === BS.Type.SMB, isPriming = detailedBolusInfo.bolusType == BS.Type.PRIMING)
-            if (detailedBolusInfo.bolusType == BS.Type.SMB) {
-                add(CommandSMBBolus(aapsLogger, rh, dateUtil, activePlugin, persistenceLayer, preferences, bolusProgressData, pumpEnactResultProvider, detailedBolusInfo, cb, bolusGeneration))
-            } else {
-                add(CommandBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider, bolusProgressData, detailedBolusInfo, cb, type, bolusGeneration))
-                if (type == CommandType.BOLUS) { // Notify Wear about upcoming bolus
-                    rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 0, status = rh.gs(CoreUiStrings.goingtodeliver, detailedBolusInfo.insulin))))
-                }
+            val command =
+                if (detailedBolusInfo.bolusType == BS.Type.SMB)
+                    CommandSMBBolus(aapsLogger, rh, dateUtil, activePlugin, persistenceLayer, preferences, bolusProgressData, pumpEnactResultProvider, detailedBolusInfo, bolusGeneration)
+                else
+                    CommandBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider, bolusProgressData, detailedBolusInfo, type, bolusGeneration)
+            add(command)
+            if (type == CommandType.BOLUS) { // Notify Wear about upcoming bolus
+                rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 0, status = rh.gs(CoreUiStrings.goingtodeliver, detailedBolusInfo.insulin))))
             }
             notifyAboutNewCommand()
+            command
         }
-        val result = deferred.await()
+        val result = command.completion.await()
         // Persist carbs only when the bolus actually succeeded.
         if (hasCarbs && result.success) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Going to store carbs")
@@ -514,38 +711,14 @@ class CommandQueueImplementation(
         return result
     }
 
-    override suspend fun stopPump(): PumpEnactResult {
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandStopPump(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
-            override fun run() {
-                deferred.complete(result)
-            }
-        }))
-        notifyAboutNewCommand()
-        return deferred.await()
-    }
+    override suspend fun stopPump(): PumpEnactResult =
+        enqueue(CommandStopPump(aapsLogger, rh, activePlugin, pumpEnactResultProvider)).completion.await()
 
-    override suspend fun startPump(): PumpEnactResult {
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandStartPump(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
-            override fun run() {
-                deferred.complete(result)
-            }
-        }))
-        notifyAboutNewCommand()
-        return deferred.await()
-    }
+    override suspend fun startPump(): PumpEnactResult =
+        enqueue(CommandStartPump(aapsLogger, rh, activePlugin, pumpEnactResultProvider)).completion.await()
 
-    override suspend fun setTBROverNotification(enable: Boolean): PumpEnactResult {
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandInsightSetTBROverNotification(aapsLogger, rh, activePlugin, pumpEnactResultProvider, enable, object : Callback() {
-            override fun run() {
-                deferred.complete(result)
-            }
-        }))
-        notifyAboutNewCommand()
-        return deferred.await()
-    }
+    override suspend fun setTBROverNotification(enable: Boolean): PumpEnactResult =
+        enqueue(CommandInsightSetTBROverNotification(aapsLogger, rh, activePlugin, pumpEnactResultProvider, enable)).completion.await()
 
     override fun cancelAllBoluses(id: Long?) {
         enqueueLock.withLock {
@@ -554,8 +727,10 @@ class CommandQueueImplementation(
             } else {
                 bolusProgressData.clear()
             }
-            removeAll(CommandType.BOLUS)
-            removeAll(CommandType.SMB_BOLUS)
+            // The user stopped it, nothing replaces it: the waiting caller must hear "not delivered"
+            // (no carbs saved), and cancelled = true, because a stop is not a delivery failure.
+            removeAll(CommandType.BOLUS, CoreUiStrings.stop_pressed, success = false, cancelled = true)
+            removeAll(CommandType.SMB_BOLUS, CoreUiStrings.stop_pressed, success = false, cancelled = true)
         }
         // Was `Thread { ... }.start()`: a fire and forget hop off the caller so a blocking driver call
         // cannot stall the queue. Same intent, on the shared IO dispatcher instead of a raw thread.
@@ -565,84 +740,54 @@ class CommandQueueImplementation(
     override suspend fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val gateKind = if (absoluteRate == 0.0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
         rejectedByRunningModeGate(gateKind)?.let { return it }
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        enqueueLock.withLock {
+        val command = enqueueLock.withLock {
             if (!enforceNew && isRunning(CommandType.TEMPBASAL)) return executingNowError()
             removeAll(CommandType.TEMPBASAL)
             val rateAfterConstraints = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
-            add(CommandTempBasalAbsolute(aapsLogger, rh, activePlugin, pumpEnactResultProvider, rateAfterConstraints, durationInMinutes, enforceNew, tbrType, object : Callback() {
-                override fun run() {
-                    deferred.complete(result)
-                }
-            }))
-            notifyAboutNewCommand()
+            enqueue(CommandTempBasalAbsolute(aapsLogger, rh, activePlugin, pumpEnactResultProvider, rateAfterConstraints, durationInMinutes, enforceNew, tbrType))
         }
-        return deferred.await()
+        return command.completion.await()
     }
 
     override suspend fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val gateKind = if (percent == 0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
         rejectedByRunningModeGate(gateKind)?.let { return it }
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        enqueueLock.withLock {
+        val command = enqueueLock.withLock {
             if (!enforceNew && isRunning(CommandType.TEMPBASAL)) return executingNowError()
             removeAll(CommandType.TEMPBASAL)
             val percentAfterConstraints = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percent, aapsLogger), profile).value()
-            add(CommandTempBasalPercent(aapsLogger, rh, activePlugin, pumpEnactResultProvider, percentAfterConstraints, durationInMinutes, enforceNew, tbrType, object : Callback() {
-                override fun run() {
-                    deferred.complete(result)
-                }
-            }))
-            notifyAboutNewCommand()
+            enqueue(CommandTempBasalPercent(aapsLogger, rh, activePlugin, pumpEnactResultProvider, percentAfterConstraints, durationInMinutes, enforceNew, tbrType))
         }
-        return deferred.await()
+        return command.completion.await()
     }
 
     override suspend fun extendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         rejectedByRunningModeGate(PumpCommandGate.CommandKind.EXTENDED_BOLUS)?.let { return it }
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        enqueueLock.withLock {
+        val command = enqueueLock.withLock {
             if (isRunning(CommandType.EXTENDEDBOLUS)) return executingNowError()
             val rateAfterConstraints = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
             removeAll(CommandType.EXTENDEDBOLUS)
-            add(CommandExtendedBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider, rateAfterConstraints, durationInMinutes, object : Callback() {
-                override fun run() {
-                    deferred.complete(result)
-                }
-            }))
-            notifyAboutNewCommand()
+            enqueue(CommandExtendedBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider, rateAfterConstraints, durationInMinutes))
         }
-        return deferred.await()
+        return command.completion.await()
     }
 
     override suspend fun cancelTempBasal(enforceNew: Boolean, autoForced: Boolean): PumpEnactResult {
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        enqueueLock.withLock {
+        val command = enqueueLock.withLock {
             if (!enforceNew && isRunning(CommandType.TEMPBASAL)) return executingNowError()
             removeAll(CommandType.TEMPBASAL)
-            add(CommandCancelTempBasal(aapsLogger, rh, activePlugin, pumpSync, dateUtil, pumpEnactResultProvider, enforceNew, autoForced, object : Callback() {
-                override fun run() {
-                    deferred.complete(result)
-                }
-            }))
-            notifyAboutNewCommand()
+            enqueue(CommandCancelTempBasal(aapsLogger, rh, activePlugin, pumpSync, dateUtil, pumpEnactResultProvider, enforceNew, autoForced))
         }
-        return deferred.await()
+        return command.completion.await()
     }
 
     override suspend fun cancelExtended(): PumpEnactResult {
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        enqueueLock.withLock {
+        val command = enqueueLock.withLock {
             if (isRunning(CommandType.EXTENDEDBOLUS)) return executingNowError()
             removeAll(CommandType.EXTENDEDBOLUS)
-            add(CommandCancelExtendedBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
-                override fun run() {
-                    deferred.complete(result)
-                }
-            }))
-            notifyAboutNewCommand()
+            enqueue(CommandCancelExtendedBolus(aapsLogger, rh, activePlugin, pumpEnactResultProvider))
         }
-        return deferred.await()
+        return command.completion.await()
     }
 
     suspend fun setProfile(profile: EffectiveProfile, hasNsId: Boolean): PumpEnactResult {
@@ -664,18 +809,12 @@ class CommandQueueImplementation(
         }
         notificationManager.dismiss(NotificationId.BASAL_VALUE_BELOW_MINIMUM)
         removeAll(CommandType.BASAL_PROFILE)
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        add(
+        return enqueue(
             CommandSetProfile(
                 aapsLogger, rh, smsCommunicator(), activePlugin, dateUtil, this, config, persistenceLayer, pumpEnactResultProvider,
-                profile, hasNsId, object : Callback() {
-                    override fun run() {
-                        deferred.complete(result)
-                    }
-                }
-            ))
-        notifyAboutNewCommand()
-        return deferred.await()
+                profile, hasNsId
+            )
+        ).completion.await()
     }
 
     override suspend fun readStatus(reason: String): PumpEnactResult {
@@ -683,14 +822,7 @@ class CommandQueueImplementation(
             aapsLogger.debug(LTag.PUMPQUEUE, "READSTATUS $reason ignored as duplicated")
             return executingNowError()
         }
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandReadStatus(aapsLogger, rh, activePlugin, localAlertUtils(), pumpEnactResultProvider, reason, object : Callback() {
-            override fun run() {
-                deferred.complete(result)
-            }
-        }))
-        notifyAboutNewCommand()
-        return deferred.await()
+        return enqueue(CommandReadStatus(aapsLogger, rh, activePlugin, localAlertUtils(), pumpEnactResultProvider, reason)).completion.await()
     }
 
     override fun statusInQueue(): Boolean {
@@ -710,104 +842,48 @@ class CommandQueueImplementation(
     override suspend fun loadHistory(type: Byte): PumpEnactResult {
         if (isRunning(CommandType.LOAD_HISTORY)) return executingNowError()
         removeAll(CommandType.LOAD_HISTORY)
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandLoadHistory(aapsLogger, rh, activePlugin, pumpEnactResultProvider, type, object : Callback() {
-            override fun run() {
-                deferred.complete(result)
-            }
-        }))
-        notifyAboutNewCommand()
-        return deferred.await()
+        return enqueue(CommandLoadHistory(aapsLogger, rh, activePlugin, pumpEnactResultProvider, type)).completion.await()
     }
 
     override suspend fun setUserOptions(): PumpEnactResult {
         if (isRunning(CommandType.SET_USER_SETTINGS)) return executingNowError()
         removeAll(CommandType.SET_USER_SETTINGS)
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandSetUserSettings(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
-            override fun run() {
-                deferred.complete(result)
-            }
-        }))
-        notifyAboutNewCommand()
-        return deferred.await()
+        return enqueue(CommandSetUserSettings(aapsLogger, rh, activePlugin, pumpEnactResultProvider)).completion.await()
     }
 
     override suspend fun loadTDDs(): PumpEnactResult {
         if (isRunning(CommandType.LOAD_TDD)) return executingNowError()
         removeAll(CommandType.LOAD_TDD)
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandLoadTDDs(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
-            override fun run() {
-                deferred.complete(result)
-            }
-        }))
-        notifyAboutNewCommand()
-        return deferred.await()
+        return enqueue(CommandLoadTDDs(aapsLogger, rh, activePlugin, pumpEnactResultProvider)).completion.await()
     }
 
     override suspend fun loadEvents(): PumpEnactResult {
         if (isRunning(CommandType.LOAD_EVENTS)) return executingNowError()
         removeAll(CommandType.LOAD_EVENTS)
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandLoadEvents(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
-            override fun run() {
-                deferred.complete(result)
-            }
-        }))
-        notifyAboutNewCommand()
-        return deferred.await()
+        return enqueue(CommandLoadEvents(aapsLogger, rh, activePlugin, pumpEnactResultProvider)).completion.await()
     }
 
     override suspend fun clearAlarms(): PumpEnactResult {
         if (isRunning(CommandType.CLEAR_ALARMS)) return executingNowError()
         removeAll(CommandType.CLEAR_ALARMS)
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandClearAlarms(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
-            override fun run() {
-                deferred.complete(result)
-            }
-        }))
-        notifyAboutNewCommand()
-        return deferred.await()
+        return enqueue(CommandClearAlarms(aapsLogger, rh, activePlugin, pumpEnactResultProvider)).completion.await()
     }
 
     override suspend fun deactivate(): PumpEnactResult {
         if (isRunning(CommandType.DEACTIVATE)) return executingNowError()
         removeAll(CommandType.DEACTIVATE)
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandDeactivate(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
-            override fun run() {
-                deferred.complete(result)
-            }
-        }))
-        notifyAboutNewCommand()
-        return deferred.await()
+        return enqueue(CommandDeactivate(aapsLogger, rh, activePlugin, pumpEnactResultProvider)).completion.await()
     }
 
     override suspend fun updateTime(): PumpEnactResult {
         if (isRunning(CommandType.UPDATE_TIME)) return executingNowError()
         removeAll(CommandType.UPDATE_TIME)
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandUpdateTime(aapsLogger, rh, activePlugin, pumpEnactResultProvider, object : Callback() {
-            override fun run() {
-                deferred.complete(result)
-            }
-        }))
-        notifyAboutNewCommand()
-        return deferred.await()
+        return enqueue(CommandUpdateTime(aapsLogger, rh, activePlugin, pumpEnactResultProvider)).completion.await()
     }
 
     override suspend fun customCommand(customCommand: CustomCommand): PumpEnactResult {
         if (isCustomCommandInQueue(customCommand::class)) return executingNowError()
-        val deferred = CompletableDeferred<PumpEnactResult>()
-        add(CommandCustomCommand(aapsLogger, activePlugin, pumpEnactResultProvider, customCommand, object : Callback() {
-            override fun run() {
-                deferred.complete(result)
-            }
-        }))
-        notifyAboutNewCommand()
-        return deferred.await()
+        return enqueue(CommandCustomCommand(aapsLogger, activePlugin, pumpEnactResultProvider, customCommand)).completion.await()
     }
 
     override fun isCustomCommandInQueue(customCommandType: KClass<out CustomCommand>): Boolean {
@@ -855,7 +931,7 @@ class CommandQueueImplementation(
 
     override suspend fun isThisProfileSet(requestedProfile: EffectiveProfile): Boolean {
         val runningProfile = profileFunction.getProfile() ?: return false
-        val result = activePlugin.activePump.isThisProfileSet(requestedProfile) && requestedProfile.isEqual(runningProfile)
+        val result = activePlugin.activePump.isThisProfileSet(requestedProfile) && requestedProfile.isAppliedAs(runningProfile)
         if (!result) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Current profile: ${profileFunction.getProfile()}")
             aapsLogger.debug(LTag.PUMPQUEUE, "New profile: $requestedProfile")

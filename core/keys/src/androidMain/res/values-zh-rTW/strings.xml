@@ -145,6 +145,9 @@
     <string name="pref_title_wear_wizard_cob">在嚮導中包含活性碳水化合物</string>
     <string name="pref_title_wear_wizard_iob">在嚮導中包含活性胰島素</string>
     <string name="pref_title_wear_custom_watchface_authorization">授權自訂錶盤</string>
+    <string name="pref_title_wear_pushed_watchface">已在手錶上安裝錶面</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">小工具錶面</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">自訂錶面</string>
     <string name="pref_title_wear_notify_on_smb">微量注射時通知</string>
     <string name="pref_summary_wear_notify_on_smb">當執行微量注射時，將通知傳送到手錶。</string>
     <string name="pref_title_wear_broadcast_data">廣播資料到手錶</string>
@@ -264,8 +267,8 @@
     <string name="lang_tr">土耳其語</string>
     <string name="lang_zh_tw">繁體中文</string>
     <string name="lang_zh_cn">簡體中文</string>
-    <string name="pref_title_patient_name">名稱</string>
-    <string name="pref_summary_patient_name">用於識別此 AAPS 執行個體的名稱（會顯示在報告與同步中）</string>
+    <string name="pref_title_patient_name">執行個體名稱</string>
+    <string name="pref_summary_patient_name">使用此手機者的名稱。用於在報表與同步中區分此 AAPS 執行個體。</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">AAPS 目錄</string>
     <!-- StringKey: Protection preferences -->

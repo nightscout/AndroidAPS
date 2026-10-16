@@ -1,19 +1,18 @@
 package app.aaps.pump.carelevo.compose
 
+// Aliased: the simple name collides with Robolectric's @Config annotation used below.
 import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.isSelectable
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-// Aliased: the simple name collides with Robolectric's @Config annotation used below.
-import app.aaps.core.interfaces.configuration.Config as AapsConfig
+import androidx.compose.ui.text.AnnotatedString
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -55,6 +54,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import app.aaps.core.interfaces.configuration.Config as AapsConfig
 import app.aaps.core.ui.R as CoreUiR
 
 /**

@@ -17,14 +17,7 @@
     <string name="omnipod_dash_scan_failed">Error de escaneo</string>
     <string name="omnipod_dash_generic_error">Error genérico: %1$s</string>
     <string name="omnipod_dash_connection_lost">Conexión perdida</string>
-    <string name="omnipod_dash_failed_to_send">Error al enviar el comando</string>
-    <string name="omnipod_dash_command_not_sent">Comando no enviado</string>
-    <string name="omnipod_dash_command_not_received_by_the_pod">Comando no recibido por el POD</string>
-    <string name="omnipod_dash_unknown">Estado desconocido para el comando</string>
-    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minutos</string>
-    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">Suspendida la entrega de insulina</string>
-    <string name="omnipod_common_history_total_delivered">Total entregado: %1$.2f U</string>
     <string name="omnipod_dash_bolus_already_in_progress">Otro bolo está siendo entregado</string>
     <string name="omnipod_dash_not_enough_insulin">No queda suficiente insulina en el reservorio</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Comando no confirmado</string>

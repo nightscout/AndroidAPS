@@ -1,10 +1,10 @@
 package app.aaps.implementation.plugin
 
 import app.aaps.core.interfaces.aps.APS
+import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.Pump
-import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.interfaces.Preferences

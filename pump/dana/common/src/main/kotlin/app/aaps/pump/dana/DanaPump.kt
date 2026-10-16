@@ -3,6 +3,7 @@ package app.aaps.pump.dana
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -16,25 +17,22 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.security.InvalidParameterException
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
-import kotlin.time.Duration.Companion.milliseconds
 
 @SingleIn(AppScope::class)
 @Inject
@@ -86,14 +84,14 @@ class DanaPump(
     var pumpTime: Long = 0
     var zoneOffset: Int = 0 // i (hw 7+)
 
+    /**
+     * Time of a pump that keeps UTC (Dana-i).
+     *
+     * @param value the time of the pump clock, read as UTC
+     * @param zoneOffset the time zone the pump keeps beside its UTC clock, in hours
+     */
     fun setPumpTime(value: Long, zoneOffset: Int) {
-        // Store time according to timezone in phone
-        val tz = DateTimeZone.getDefault()
-        val instant = DateTime.now().millis
-        val offsetInMilliseconds = tz.getOffset(instant).toLong()
-        val offset = offsetInMilliseconds.milliseconds.inWholeHours
-        pumpTime = value + T.hours(offset).msecs()
-        // but save zone in pump
+        pumpTime = value
         this.zoneOffset = zoneOffset
     }
 
@@ -106,6 +104,12 @@ class DanaPump(
         get() = hwModel >= 7
     val profile24
         get() = hwModel >= 7
+    val isDanaI2
+        get() = hwModel == 0x0B || hwModel == 0x0C
+
+    /** RS Easy, Dana-i and Dana-i2 variants that have an easy mode (it can be on or off, see [isEasyModeEnabled]) */
+    val hasEasyMode
+        get() = hwModel == 0x06 || hwModel == 0x0A || hwModel == 0x0C
 
     var protocol = 0
     var productCode = 0
@@ -119,8 +123,30 @@ class DanaPump(
     var calculatorEnabled = false
     var dailyTotalUnits = 0.0
     var maxDailyTotalUnits = 0
-    var bolusStep = 0.1
-    var basalStep = 0.1
+    // The steps the pump reported, or null before it did and after [reset]. One field for the value and for
+    // "was it read", so a thread that reads them can never see a starting value marked as read.
+    @Volatile private var readBolusStep: Double? = null
+    @Volatile private var readBasalStep: Double? = null
+
+    /** The bolus step the pump reported, else the starting 0.1. A message from the pump writes it. */
+    var bolusStep: Double
+        get() = readBolusStep ?: STARTING_STEP
+        set(value) {
+            readBolusStep = value
+        }
+
+    /** The basal step the pump reported, else the starting 0.1. A message from the pump writes it. */
+    var basalStep: Double
+        get() = readBasalStep ?: STARTING_STEP
+        set(value) {
+            readBasalStep = value
+        }
+
+    /** True once [bolusStep] was written, so it is not only the starting value. [reset] clears it. */
+    val bolusStepRead: Boolean get() = readBolusStep != null
+
+    /** True once [basalStep] was written, so it is not only the starting value. [reset] clears it. */
+    val basalStepRead: Boolean get() = readBasalStep != null
     var iob = 0.0
     private val _reservoirRemainingUnitsFlow = MutableStateFlow(0.0)
     val reservoirRemainingUnitsFlow: StateFlow<Double> = _reservoirRemainingUnitsFlow.asStateFlow()
@@ -293,6 +319,7 @@ class DanaPump(
     var cannulaVolume = 0
     var refillAmount = 0
     var target = 0 // mgdl 40~400 mmol 2.2~22 => 220~2200
+    var autoLock = false // Dana-i2 only
     var userOptionsFromPump: ByteArray? = null
     var initialBolusAmount = 0.0
 
@@ -448,8 +475,9 @@ class DanaPump(
         productCode = 0
         dailyTotalUnits = 0.0
         maxDailyTotalUnits = 0
-        bolusStep = 0.1
-        basalStep = 0.1
+        // Back to the starting values, which are not a reading.
+        readBolusStep = null
+        readBasalStep = null
         activeProfile = 0
         reservoirRemainingUnits = 0.0
         batteryRemaining = null
@@ -482,6 +510,8 @@ class DanaPump(
             0x06       -> "DanaRS Korean"
             0x07       -> "Dana-i (BLE4.2)"
             0x09, 0x0A -> "Dana-i (BLE5)"
+            0x0B       -> "Dana-i2"
+            0x0C       -> "Dana-i2 Korean"
             else       -> "Unknown Dana pump"
         }
 
@@ -500,8 +530,25 @@ class DanaPump(
             0x07 -> PumpType.DANA_I
             0x09 -> PumpType.DANA_I
             0x0A -> PumpType.DANA_I // Korean version
+            0x0B -> PumpType.DANA_I2
+            0x0C -> PumpType.DANA_I2 // Korean version
             else -> PumpType.DANA_RS // having here default type non TBR capable is causing problem with disabling loop
         }
+
+    /**
+     * Puts the bolus and basal steps the pump is set to into [description], once they were read.
+     *
+     * A pump can be set to a 0.1 U bolus step while its pump type says 0.05 U, and a bolus of 1.55 U
+     * was then refused (#946). Before the steps are read, and after [reset], [bolusStep] and [basalStep]
+     * hold only the starting 0.1, which is not a reading, so the steps of the pump type stay.
+     * [bolusStepRead] and [basalStepRead] say which is which. The maximums cannot: on a DanaR they come
+     * in another message than the steps, and [reset] keeps them.
+     */
+    fun applyReadSteps(description: PumpDescription): PumpDescription = description.also { d ->
+        // Each step is read once, so a reset in between cannot mix a reading with a starting value.
+        readBolusStep?.takeIf { it > 0 }?.let { d.bolusStep = it }
+        readBasalStep?.takeIf { it > 0 }?.let { d.basalStep = it }
+    }
 
     // v2, RS history entries
     enum class HistoryEntry(val value: Int) {
@@ -521,7 +568,11 @@ class DanaPump(
         PROFILE_CHANGE(13),
         CARBS(14),
         PRIME_CANNULA(15),
-        TIME_CHANGE(16)
+        TIME_CHANGE(16),
+
+        // Dana-i2 only
+        STEP_BOLUS_COMMAND(18), // Data[0] setting amount (U * 100), Data[1] command type 0 = normal, 1 = algorithm
+        BASAL_RATE_CHANGE(19) // Data[0] new rate (U/h * 100, or U/d), Data[1] 0x80 if U/d + reason flag
         ;
 
         companion object {
@@ -544,5 +595,8 @@ class DanaPump(
         // Dana R btModel
         const val DOMESTIC_MODEL = 0x01
         const val EXPORT_MODEL = 0x03
+
+        /** The bolus and basal step before the pump reported its own. */
+        private const val STARTING_STEP = 0.1
     }
 }

@@ -33,4 +33,5 @@
     <string name="current_master_password">Aktuálne hlavné heslo</string>
     <string name="master_password_not_set">Master password not set</string>
     <string name="aaps_directory_not_selected">Nebol vybratý priečinok AAPS</string>
+    <string name="aaps_directory_access_lost">Prístup do priečinka AAPS bol stratený, takže nastavenia sa už neukladajú do telefónu. Zvoľte priečinok znovu.</string>
 </resources>

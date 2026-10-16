@@ -1,8 +1,14 @@
 package app.aaps.ui.compose.profileManagement.viewmodels
 
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.time.T
+import app.aaps.core.graph.profile.ProfileCompareData
+import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -13,15 +19,16 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.SingleProfile
-import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.singleBlock
 import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.core.ui.compose.ScreenMode
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -323,5 +330,128 @@ internal class ProfileManagementViewModelTest {
         givenProfiles(3)
         assertThat(sut.commitReorder()).isNull()
         verify(profileRepository, never()).reorder(any())
+    }
+
+    // --- The batch an activation submits (issue #5239: the picked time was dropped here) ---
+
+    private fun actions(timestamp: Long, timeChanged: Boolean, withTT: Boolean = false, percentage: Int = 100, durationMinutes: Int = 0) =
+        sut.buildActivationActions(
+            profileName = "P0", durationMinutes = durationMinutes, percentage = percentage, timeshiftHours = 0,
+            withTT = withTT, notes = "", timestamp = timestamp, timeChanged = timeChanged, iCfg = null
+        )
+
+    @Test
+    fun `a picked time is carried in the profile switch action`() {
+        val picked = 1_700_000_000_000L
+        val ps = actions(timestamp = picked, timeChanged = true).filterIsInstance<BatchAction.ProfileSwitch>().single()
+        assertThat(ps.timestamp).isEqualTo(picked)
+    }
+
+    @Test
+    fun `an untouched time field leaves the stamping to the master`() {
+        // 0 = now. The screen always hands over a timestamp, so only timeChanged tells a real pick apart
+        // from the value the screen opened with.
+        val ps = actions(timestamp = 1_700_000_000_000L, timeChanged = false).filterIsInstance<BatchAction.ProfileSwitch>().single()
+        assertThat(ps.timestamp).isEqualTo(0L)
+    }
+
+    @Test
+    fun `an activity temp target starts together with a switch put in the future`() {
+        whenever(dateUtil.now()).thenReturn(1_700_000_000_000L)
+        // ttTargetMgdl is an extension over this one preference; empty means "use the built-in default".
+        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("")
+        val picked = 1_700_000_000_000L + T.mins(90).msecs()
+
+        val tt = actions(timestamp = picked, timeChanged = true, withTT = true, percentage = 80, durationMinutes = 60)
+            .filterIsInstance<BatchAction.TempTarget>().single()
+
+        assertThat(tt.startOffsetMinutes).isEqualTo(90)
+    }
+
+    @Test
+    fun `an activity temp target for a back-dated switch still starts now`() {
+        whenever(dateUtil.now()).thenReturn(1_700_000_000_000L)
+        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("")
+        val picked = 1_700_000_000_000L - T.mins(90).msecs()
+
+        val tt = actions(timestamp = picked, timeChanged = true, withTT = true, percentage = 80, durationMinutes = 60)
+            .filterIsInstance<BatchAction.TempTarget>().single()
+
+        // A target in the past would be over before it is written, so the offset is never negative.
+        assertThat(tt.startOffsetMinutes).isEqualTo(0)
+    }
+
+    // --- #2454: the pump rounds the basal, so the running profile (EPS) differs from the PS it was made from ---
+
+    private fun localProfile(basal: Double) = SingleProfile(
+        name = "P0", mgdl = true, ic = singleBlock(15.0), isf = singleBlock(100.0), basal = singleBlock(basal), target = singleTargetBlock(110.0, 120.0)
+    )
+
+    private val activatedPs = PS(
+        id = 140, timestamp = 1_000L, basalBlocks = singleBlock(0.42), isfBlocks = singleBlock(100.0), icBlocks = singleBlock(15.0),
+        targetBlocks = singleTargetBlock(110.0, 120.0), glucoseUnit = GlucoseUnit.MGDL, profileName = "P0", timeshift = 0, percentage = 100,
+        duration = 0, iCfg = iCfg("Fiasp")
+    )
+
+    private fun runningEps(basal: Double, fromPs: Long?) = EPS(
+        id = 311, timestamp = 1_000L, basalBlocks = singleBlock(basal), isfBlocks = singleBlock(100.0), icBlocks = singleBlock(15.0),
+        targetBlocks = singleTargetBlock(110.0, 120.0), glucoseUnit = GlucoseUnit.MGDL, originalProfileName = "P0", originalCustomizedName = "P0",
+        originalTimeshift = 0, originalPercentage = 100, originalDuration = 0, originalEnd = 0, originalPsId = fromPs, iCfg = iCfg("Fiasp")
+    )
+
+    private fun carouselFor(local: SingleProfile, eps: EPS, ps: PS?): ProfileCompareData? {
+        whenever(dateUtil.formatHHMM(any())).thenReturn("00:00")
+        whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
+        return sut.computeSelectedProfileAndCompareData(listOf(local), 0, eps, "P0", ps).second
+    }
+
+    @Test
+    fun `a basal rounded by the pump is shown next to the profile, not as an edit`() {
+        val compare = carouselFor(localProfile(0.42), runningEps(0.40, fromPs = 140), activatedPs)
+
+        assertThat(compare).isNotNull()
+        assertThat(compare!!.baseName).isEqualTo("P0")
+        assertThat(compare.effectiveName).isEqualTo("Running")
+        assertThat(compare.basalRows.first().value1).isEqualTo(NumberFormat.DECIMAL_2.format(0.42))
+        assertThat(compare.basalRows.first().value2).isEqualTo(NumberFormat.DECIMAL_2.format(0.40))
+    }
+
+    @Test
+    fun `a profile edited after it was activated is still shown as changed`() {
+        val compare = carouselFor(localProfile(0.50), runningEps(0.40, fromPs = 140), activatedPs)
+
+        // The changed layout puts the running profile first.
+        assertThat(compare!!.baseName).isEqualTo("Running")
+        assertThat(compare.effectiveName).isEqualTo("P0")
+    }
+
+    @Test
+    fun `a profile the pump gives exactly shows no comparison`() {
+        assertThat(carouselFor(localProfile(0.42), runningEps(0.42, fromPs = 140), activatedPs)).isNull()
+    }
+
+    /** By time, not by id: on AAPSClient originalPsId is the master's id (here 999, which no local PS has). */
+    @Test
+    fun `the activated PS is the one active when the EPS was written`() = runTest {
+        whenever(persistenceLayer.getProfileSwitchActiveAt(1_000L)).thenReturn(activatedPs)
+
+        assertThat(sut.activatedPs(runningEps(0.40, fromPs = 999))).isEqualTo(activatedPs)
+    }
+
+    @Test
+    fun `a PS of another profile is not taken as the activated one`() = runTest {
+        whenever(persistenceLayer.getProfileSwitchActiveAt(1_000L)).thenReturn(activatedPs.copy(profileName = "P1"))
+        assertThat(sut.activatedPs(runningEps(0.40, fromPs = 140))).isNull()
+
+        whenever(persistenceLayer.getProfileSwitchActiveAt(1_000L)).thenReturn(activatedPs.copy(percentage = 90))
+        assertThat(sut.activatedPs(runningEps(0.40, fromPs = 140))).isNull()
+    }
+
+    /** Without the PS (older records) the EPS is all there is to compare with, as before. */
+    @Test
+    fun `without the activated PS a rounded basal still looks like an edit`() {
+        val compare = carouselFor(localProfile(0.42), runningEps(0.40, fromPs = null), null)
+
+        assertThat(compare!!.baseName).isEqualTo("Running")
     }
 }

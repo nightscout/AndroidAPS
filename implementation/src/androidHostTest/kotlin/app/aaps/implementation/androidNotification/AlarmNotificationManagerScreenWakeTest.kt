@@ -5,6 +5,7 @@ import android.app.AlarmManager
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
+import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -42,6 +43,7 @@ class AlarmNotificationManagerScreenWakeTest {
             preferences = mock<Preferences>(),
             iconsProvider = mock<IconsProvider>(),
             uiInteractionProvider = { uiInteraction },
+            notificationHolderProvider = { mock<NotificationHolder>() },
             alarmSoundPlayer = mock<AlarmSoundPlayer>(),
             rh = mock<ResourceHelper>()
         )

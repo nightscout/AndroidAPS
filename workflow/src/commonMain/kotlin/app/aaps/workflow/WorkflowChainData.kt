@@ -5,38 +5,32 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.HISTORY_CALCULATION
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.UPDATE_PREDICTIONS
-import app.aaps.workflow.WorkflowChainData.Companion.GEN_KEY
-import app.aaps.workflow.WorkflowChainData.Companion.JOB_KEY
-
-import kotlin.concurrent.atomics.AtomicReference
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlin.concurrent.atomics.AtomicReference
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 /**
  * Holds the input data for in-flight calculation chains.
  *
- * Three fixed slots, one per WorkManager unique-work name:
+ * Three fixed slots, one per job name:
  *  - MAIN_CALCULATION → prepare + post
  *  - HISTORY_CALCULATION → prepare only
  *  - UPDATE_PREDICTIONS → post only
  *
  * Replace-on-start semantics: when a new chain is started under a given name,
- * its slot is overwritten atomically. Cancellation by WorkManager (REPLACE policy)
- * can therefore never orphan input data — the next runCalculation just overwrites
- * whatever was there. Map size is bounded by the slot count (≤3 references).
- *
- * Workers identify their slot via [JOB_KEY] in their input [androidx.work.Data];
- * the chain owner ([CalculationWorkflowImpl]) sets it when enqueueing.
+ * its slot is overwritten atomically. Replacing a run can therefore never orphan
+ * input data — the next runCalculation just overwrites whatever was there. Map
+ * size is bounded by the slot count (≤3 references).
  *
  * Each [startMain]/[startHistory]/[startPredictions] increments a monotonic
  * generation counter and stores it alongside the chain data. The chain owner
- * plumbs that generation into [androidx.work.Data] via [GEN_KEY]. Workers pass
- * their generation to [prepareFor]/[postFor] which returns null when the
- * generation no longer matches — closing the race where a tail worker from a
- * superseded chain dispatches in the narrow window between slot overwrite and
- * WorkManager's REPLACE-cancel taking effect.
+ * ([CalculationWorkflowImpl]) hands the job name and that generation to the
+ * [CalculationExecutor], and each phase passes them to [prepareFor]/[postFor],
+ * which return null when the generation no longer matches — closing the race
+ * where a phase from a superseded chain runs in the narrow window between the
+ * slot overwrite and the old run noticing that it was replaced.
  */
 @OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
@@ -106,16 +100,16 @@ class WorkflowChainData(
 
     // Each safe-call performs a single volatile read of the slot reference and
     // dereferences the snapshot — no double load, no torn reads possible.
-    fun prepareFor(job: String?, expectedGen: Long): PrepareGraphData? =
+    fun prepareFor(job: String, expectedGen: Long): PrepareGraphData? =
         when (job) {
             MAIN_CALCULATION    -> chains.load().main.validate(expectedGen, job)?.prepare
             HISTORY_CALCULATION -> chains.load().history.validate(expectedGen, job)?.prepare
             else                -> warnUnknown("prepareFor", job)
         }
 
-    // HISTORY_CALCULATION has no post phase — only MAIN and UPDATE_PREDICTIONS enqueue
-    // PostCalculationWorker. A HISTORY job key reaching this method would be a wiring bug.
-    fun postFor(job: String?, expectedGen: Long): PostCalculationData? =
+    // HISTORY_CALCULATION has no post phase — only MAIN and UPDATE_PREDICTIONS start
+    // PostCalculationRunner. A HISTORY job key reaching this method would be a wiring bug.
+    fun postFor(job: String, expectedGen: Long): PostCalculationData? =
         when (job) {
             MAIN_CALCULATION   -> chains.load().main.validate(expectedGen, job)?.post
             UPDATE_PREDICTIONS -> chains.load().predictions.validate(expectedGen, job)?.post
@@ -134,14 +128,8 @@ class WorkflowChainData(
         return slot
     }
 
-    private fun warnUnknown(method: String, job: String?): Nothing? {
+    private fun warnUnknown(method: String, job: String): Nothing? {
         aapsLogger.warn(LTag.WORKER, "WorkflowChainData.$method: unknown job key '$job'")
         return null
-    }
-
-    companion object {
-
-        const val JOB_KEY = "job"
-        const val GEN_KEY = "gen"
     }
 }

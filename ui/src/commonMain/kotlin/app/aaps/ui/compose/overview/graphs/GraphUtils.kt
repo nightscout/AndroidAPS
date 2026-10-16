@@ -4,10 +4,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.overview.graph.SeriesType
@@ -18,6 +22,11 @@ import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -25,12 +34,9 @@ import kotlin.math.log10
 import kotlin.math.pow
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
-import kotlin.concurrent.Volatile
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 /**
- * Shared utilities for Vico graphs in AndroidAPS.
+ * Shared utilities for Vico graphs in AAPS.
  *
  * CRITICAL: All graphs MUST use the same x-coordinate system to ensure proper alignment.
  * This uses whole minutes from minTimestamp to avoid label repetition and precision errors.
@@ -130,6 +136,45 @@ const val MIN_GRAPH_ZOOM_MINUTES = 30.0
  * so the viewport doesn't snap back while the user is examining the graph.
  */
 const val INTERACTION_GRACE_MS = 60_000L
+
+/**
+ * Calls [onGesture] when the user scrolls or zooms the chart with a pointer: when a finger moves past the
+ * touch slop or a second finger comes down, again when the gesture ends (so the [INTERACTION_GRACE_MS]
+ * window counts from the last touch), and on a mouse wheel event.
+ *
+ * Taps do not count. Scroll or zoom changes made by code do not reach here, which is the point: the
+ * "use scroll or zoom on BG chart" objective must only be completed by the user.
+ *
+ * Events are observed in the [PointerEventPass.Initial] pass and never consumed, so the chart still
+ * gets every event.
+ */
+fun Modifier.onScrollOrZoomGesture(onGesture: () -> Unit): Modifier = pointerInput(onGesture) {
+    awaitPointerEventScope {
+        var downPosition: Offset? = null
+        var moved = false
+        while (true) {
+            val event = awaitPointerEvent(PointerEventPass.Initial)
+            val pressed = event.changes.filter { it.pressed }
+            val start = downPosition
+            when {
+                event.type == PointerEventType.Scroll -> onGesture()
+
+                pressed.isEmpty()                     -> {
+                    if (moved) onGesture()
+                    downPosition = null
+                    moved = false
+                }
+
+                start == null                         -> downPosition = pressed.first().position
+
+                !moved && (pressed.size > 1 || (pressed.first().position - start).getDistance() > viewConfiguration.touchSlop) -> {
+                    moved = true
+                    onGesture()
+                }
+            }
+        }
+    }
+}
 
 /**
  * Fraction of the graph height occupied by the basal overlay.
@@ -334,18 +379,23 @@ fun rememberNowLine(minTimestamp: Long, nowTimestamp: Long, color: Color): NowLi
 }
 
 /**
- * Plain (non-Compose-state) holder for the latest visible x-range, written from
- * [VisibleRangeReporter.drawOverLayers] on every draw pass.
+ * Holder for the latest visible x-range, written from [VisibleRangeReporter.drawOverLayers] on
+ * every draw pass.
  *
  * Deliberately NOT a Compose `State`: writing Compose state synchronously from the draw phase
  * fights with Vico's own gesture-driven scroll/zoom mutations — the resulting invalidate-during-draw
- * starves pinch-zoom gesture recognition (observed: zoom became unresponsive). Callers must poll
- * [value] from a coroutine (e.g. a `LaunchedEffect` with a periodic `delay`) and only then write it
- * into real Compose state.
+ * starves pinch-zoom gesture recognition (observed: zoom became unresponsive). A [StateFlow] write
+ * invalidates nothing: it only schedules the collector, which runs after the draw pass and writes
+ * real Compose state there. Equal values are not emitted, so a redraw without scroll or zoom (or no
+ * draw at all, e.g. the app in background) wakes nobody. Do not replace this with a polling loop.
  */
 class VisibleRangeHolder {
-    @Volatile
-    var value: Pair<Double, Double>? = null
+    private val _value = MutableStateFlow<Pair<Double, Double>?>(null)
+    val value: StateFlow<Pair<Double, Double>?> = _value.asStateFlow()
+
+    fun report(range: Pair<Double, Double>) {
+        _value.value = range
+    }
 }
 
 /**
@@ -369,7 +419,7 @@ class VisibleRangeReporter(
 
             val visibleMinX = ranges.minX + xStep * (scroll - layerDimensions.startPadding) / xSpacing
             val visibleWidth = xStep * layerBounds.width / xSpacing
-            holder.value = visibleMinX to (visibleMinX + visibleWidth)
+            holder.report(visibleMinX to (visibleMinX + visibleWidth))
         }
     }
 
@@ -515,4 +565,83 @@ fun zeroFloorNiceRange(dataMin: Double, dataMax: Double, maxTickCount: Int = 5, 
     } else {
         niceScale(dataMin, dataMax, maxTickCount)
     }
+}
+
+// =========================================================================
+// Activity overlay scaling
+// =========================================================================
+
+/**
+ * Fraction of the space above the zero line that the activity overlay's positive peak may use.
+ *
+ * The activity curve is never the primary series of a graph — it is always drawn on top of another
+ * series (BG or IOB), inside that host's own axis, and its own axis is never shown. So it only
+ * needs to stay inside the frame and keep a readable height; it deliberately does not fill the
+ * host's full range.
+ */
+const val ACTIVITY_HEIGHT_FRACTION = 0.8
+
+/**
+ * Linear map of an activity curve into a host graph's Y coordinates: activity 0 is drawn at
+ * [zeroLevel], and one unit of activity is [scale] host units. See [activityOverlayScale].
+ */
+data class ActivityOverlayScale(val zeroLevel: Double, val scale: Double) {
+
+    /** Host-axis Y coordinate for an activity [value]. */
+    fun map(value: Double) = zeroLevel + value * scale
+}
+
+/**
+ * Scale factor for drawing the insulin activity curve inside a host graph's axis.
+ *
+ * The activity overlay has no axis of its own — Vico only has a start and an end vertical axis and
+ * both are already taken on every graph that shows activity, so the points must be converted into
+ * the host axis' own units before they reach the model. This computes that conversion.
+ *
+ * The host scale is never modified to fit the activity. The caller passes the room that already
+ * exists on each side of [zeroLevel] and the result is sized to fit inside it:
+ * - positive side: the nice-ified activity max plots at [heightFraction] of [roomAbove], leaving a
+ *   margin below the top of the host graph.
+ * - negative side: the nice-ified activity min plots at most at [roomBelow] below [zeroLevel]. No
+ *   margin here — [roomBelow] is already small, and a negative excursion is the rare case.
+ *
+ * One single factor is used for both sides, so the curve stays linear. The smaller of the two
+ * limits wins — meaning a deep negative excursion shrinks the whole curve rather than clipping it.
+ * A window holding only negative activity is scaled by its negative side alone.
+ *
+ * When [roomBelow] is 0 the negative side is ignored and the positive side keeps its full scale;
+ * the negative tail is then clipped at the host's floor. This is reachable on the BG graph: the BG
+ * axis floor is `floor(dataMin / step) * step` and `dataMin` is itself floored at the low mark, so
+ * a low mark that is an exact multiple of the step (80/90/100 mg/dL, 4.0/5.0 mmol/L) lands the axis
+ * floor exactly on the low mark whenever the visible window holds no BG below it. Accepted: the
+ * alternative would move the BG scale, which must stay untouched.
+ *
+ * [activityMin] and [activityMax] are taken from the visible window only, like every other scale in
+ * these graphs. They are nice-ified ([zeroFloorNiceRange]) even though no label is ever drawn from
+ * them, so the curve's height steps in discrete jumps instead of wobbling on every scroll tick.
+ *
+ * A window whose activity is zero everywhere returns a zero scale, so the caller draws nothing.
+ */
+fun activityOverlayScale(
+    activityMin: Double,
+    activityMax: Double,
+    zeroLevel: Double,
+    roomAbove: Double,
+    roomBelow: Double,
+    heightFraction: Double = ACTIVITY_HEIGHT_FRACTION
+): ActivityOverlayScale {
+    // Activity is zero across the whole window (no insulin on board) — there is no curve to draw.
+    // This has to be caught before the nice-ification: zeroFloorNiceRange(0.0, 0.0) comes back as
+    // 0..1, because niceScale widens a zero-width range by 1 so that it always has a usable tick
+    // step. That would give a positive scale and draw a flat line on [zeroLevel] — on the BG graph
+    // that is the low mark, the bottom edge of the in-range belt, where it reads as a second
+    // target line.
+    if (activityMin == 0.0 && activityMax == 0.0) return ActivityOverlayScale(zeroLevel, 0.0)
+    val nice = zeroFloorNiceRange(activityMin, activityMax, SECONDARY_GRAPH_TICK_COUNT)
+    val positiveLimit = if (nice.max > 0.0) roomAbove * heightFraction / nice.max else Double.MAX_VALUE
+    val negativeLimit = if (nice.min < 0.0 && roomBelow > 0.0) roomBelow / -nice.min else Double.MAX_VALUE
+    val scale = minOf(positiveLimit, negativeLimit)
+    // Both sides unconstrained means there is nothing to draw (no data, or no room at all on the
+    // only side that has data) — a zero scale makes the caller skip the series.
+    return ActivityOverlayScale(zeroLevel, if (scale == Double.MAX_VALUE) 0.0 else maxOf(scale, 0.0))
 }

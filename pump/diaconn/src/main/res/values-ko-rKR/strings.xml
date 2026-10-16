@@ -19,7 +19,6 @@
     <string name="updatingbasalrates">Basal 패턴 반영</string>
     <string name="description_pump_diaconn_g8">G2e에서 만든 Diaconn G8 펌프</string>
     <string name="diaconn_g8_pump">디아콘 G8</string>
-    <string name="diaconn_g8_pump_shortname">디아콘 G8</string>
     <string name="maxbolusviolation">최대 bolus 초과</string>
     <string name="commanderror">명령 오류</string>
     <string name="speederror">속도 에러</string>

@@ -10,7 +10,7 @@
     <string name="diaconn_g8_history_suspend">Suspender</string>
     <string name="gettingpumpsettings">Recibiendo configuración de la bomba</string>
     <string name="gettingpumptime">Recibiendo hora de la bomba</string>
-    <string name="largetimediff">Gran diferencia de tiempo: \nLa bomba esta desincronizada más de 1,5 horas. \nPor favor, ajusta la hora manualmente en la bomba y asegúrate de que la lectura en el historial de la bomba no causa un comportamiento inesperado. \nSi es posible, borra el historial de la bomba antes de cambiar la hora o desactiva el bucle cerrado durante el periodo DIA (Duración Insulina Activa) después del último registro erróneo, con un mínimo del valor de DIA a partir de ahora</string>
+    <string name="largetimediff">Gran diferencia horaria:\nLa hora de la bomba difiere en más de 1.5 horas.\nAjusta la hora manualmente en la bomba y asegúrate de que la lectura del historial de la bomba no provoque un comportamiento inesperado.\nSi es posible, elimina el historial de la bomba antes de cambiar la hora o desactiva el lazo cerrado durante un DIA después de la última entrada de historial errónea, pero al menos un DIA a partir de ahora</string>
     <string name="largetimedifftitle">Gran diferencia horaria</string>
     <string name="approachingdailylimit">Alcanzando el limite de insulina diario</string>
     <string name="startingbolus">Iniciando entrega del bolo</string>
@@ -23,7 +23,6 @@
     <string name="updatingbasalrates">Actualizando tasa basal</string>
     <string name="description_pump_diaconn_g8">Integración de la bomba para bombas Diaconn G8</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Vulneración del bolo máximo</string>
     <string name="commanderror">Error del comando</string>
     <string name="speederror">Error de velocidad</string>

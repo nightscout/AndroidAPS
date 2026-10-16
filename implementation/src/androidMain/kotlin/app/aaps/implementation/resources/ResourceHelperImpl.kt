@@ -8,21 +8,23 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.CoreUiStringIds
-import app.aaps.implementation.ImplementationStringIds
 import app.aaps.core.ui.locale.LocaleHelper
+import app.aaps.implementation.ImplementationStringIds
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import java.util.Locale
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by adrian on 2019-12-23.
@@ -47,8 +49,17 @@ class ResourceHelperImpl(
     @Volatile
     private var localizedContextOrNull: Context? = null
 
+    // Guards building-and-storing against dropping, so a change of language cannot be overwritten by a
+    // build that started before it. The preference is stored before the flow below emits, so a builder
+    // either enters this lock before the drop - and is then dropped by it - or after, and reads the new
+    // value. Without the lock a builder could store an old-language context after the drop and keep it
+    // for the rest of the process. The fast path stays a plain volatile read, so `gs()` pays nothing.
+    private val lock = Any()
+
     private val localizedContext: Context
-        get() = localizedContextOrNull ?: buildLocalizedContext().also { localizedContextOrNull = it }
+        get() = localizedContextOrNull ?: synchronized(lock) {
+            localizedContextOrNull ?: buildLocalizedContext().also { localizedContextOrNull = it }
+        }
 
     /**
      * Registers the string owners this class is responsible for, and starts following the locale.
@@ -71,20 +82,41 @@ class ResourceHelperImpl(
         // cannot see ImplementationStringIds from :core:interfaces either.
         TextRefIdRegistry.register("implementation") { name -> ImplementationStringIds.idOf(name) }
 
-        // GeneralLanguage changes trigger Activity.recreate() which rebuilds the context
-        // via attachBaseContext/LocaleHelper.wrap — no need to rebuild here and race on Main.
-        preferences.observe(BooleanKey.GeneralSimpleMode).drop(1).onEach {
-            localizedContextOrNull = buildLocalizedContext()
+        // Both keys decide the language, because Simple mode forces it to "default". A recreate() of the
+        // activity does not cover this class: it re-runs attachBaseContext/LocaleHelper.wrap for the
+        // activity only, while the context cached here is built from the Application and would keep the
+        // old language for the rest of the process.
+        //
+        // Only drop the cache; the getter builds it again on the next `gs()`, on the thread that asks,
+        // after the new value is stored. That is why there is nothing to race on Main any more.
+        //
+        // Each flow is dropped on its own. `observe()` returns a StateFlow, so `merge(a, b).drop(1)`
+        // would drop one initial value and let the other one through as if it were a change.
+        merge(
+            preferences.observe(StringKey.GeneralLanguage).drop(1),
+            preferences.observe(BooleanKey.GeneralSimpleMode).drop(1)
+        ).onEach {
+            synchronized(lock) { localizedContextOrNull = null }
         }.launchIn(scope)
     }
 
-    private fun buildLocalizedContext(): Context {
-        val locale = LocaleHelper.currentLocale(context)
-        return if (locale == Locale.getDefault()) context
+    /**
+     * A context whose resources are in the selected language.
+     *
+     * Never compare the selected locale with [Locale.getDefault] to decide this. `LocaleHelper.update()`
+     * (from `MainApp.doInit`) and `LocaleHelper.wrap()` (from every `attachBaseContext`) both move the
+     * default locale to the selected language, while the Application resources stay in the phone
+     * language - `MainApp` does not wrap its own context. So after either of them has run, that
+     * comparison matches and hands back phone-language text for an explicitly picked language.
+     */
+    private fun buildLocalizedContext(): Context =
+        // The plain context is right for "default" only, and it is also the better answer there: it
+        // follows a later change of the phone language, while a copied Configuration would not.
+        if (LocaleHelper.isSystemDefault(context)) context
         else context.createConfigurationContext(
-            Configuration(context.resources.configuration).apply { setLocale(locale) }
+            Configuration(context.resources.configuration)
+                .apply { setLocale(LocaleHelper.currentLocale(context)) }
         )
-    }
 
     override fun gs(@StringRes id: Int): String =
         localizedContext.resources.getString(id)
@@ -108,8 +140,11 @@ class ResourceHelperImpl(
         }
     }
 
+    // Goes through localizedContext like gs(). It used the plain context from the start (2019), so
+    // plurals - "x hours ago" in DateUtilAndroid, the objectives duration, the Omnipod alert count -
+    // were in the phone language even after a restart.
     override fun gq(@PluralsRes id: Int, quantity: Int, vararg args: Any?): String =
-        context.resources.getQuantityString(id, quantity, *args)
+        localizedContext.resources.getQuantityString(id, quantity, *args)
 
     override fun gsNotLocalised(@StringRes id: Int, vararg args: Any?): String =
         with(Configuration(context.resources.configuration)) {

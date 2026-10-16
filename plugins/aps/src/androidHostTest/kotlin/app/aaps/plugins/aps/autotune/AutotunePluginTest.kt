@@ -10,7 +10,6 @@ import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
@@ -157,5 +156,18 @@ class AutotunePluginTest : TestBaseWithProfile() {
             anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), captor.capture()
         )
         assertThat(captor.firstValue).isEqualTo(inForceICfg)
+    }
+
+    // A refused switch (here: the pump cannot take the tuned basal) left the tuned profile stored but not in force,
+    // with no button and nothing said. Like the skipped switch above, say why and bring the button back.
+    @Test fun `a refused auto switch says why and restores the update button`() = runBlocking {
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(inForceICfg)
+        // createProfileSwitch is not stubbed, so it refuses (null).
+        whenever(profileFunction.profileSwitchRefusal(any(), any(), any(), any(), any(), any())).thenReturn("The pump cannot take it")
+
+        runOneTunedDay(autoSwitch = true)
+
+        assertThat(autotunePlugin.result).isEqualTo("The pump cannot take it")
+        assertThat(autotunePlugin.updateButtonVisibility).isEqualTo(View.VISIBLE)
     }
 }

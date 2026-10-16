@@ -1,10 +1,8 @@
 package app.aaps.ui.compose.insulinDialog
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -29,7 +26,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -42,7 +38,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -53,12 +48,14 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.InsulinSelector
+import app.aaps.core.ui.compose.LabeledSwitch
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.TimeOffsetRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
@@ -73,6 +70,7 @@ import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
 import app.aaps.ui.compose.components.DialogStatusBar
+import app.aaps.ui.compose.components.RecordOnlyBanner
 import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
@@ -180,7 +178,7 @@ fun InsulinDialogScreen(
         cob = cob,
         dateString = viewModel.dateUtil.dateString(uiState.eventTime),
         timeString = viewModel.dateUtil.timeString(uiState.eventTime),
-        bolusFormat = viewModel.decimalFormatter.pumpSupportedBolusFormat(uiState.bolusStep),
+        bolusFormat = viewModel.decimalFormatter.pumpSupportedBolusFormat(uiState.displayStep),
         formatAmount = { viewModel.decimalFormatter.toPumpSupportedBolus(it, uiState.bolusStep) },
         onEatingSoonChange = viewModel::updateEatingSoonTt,
         onRecordOnlyChange = viewModel::updateRecordOnly,
@@ -229,28 +227,33 @@ internal fun InsulinDialogContent(
 
     Scaffold(
         topBar = {
-            AapsTopAppBar(
-                title = { Text((stringResourceOrNull(ElementType.INSULIN.label()) ?: "")) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(CoreUiStrings.close)
-                        )
-                    }
-                },
-                actions = {
-                    if (onSettingsClick != null) {
-                        IconButton(onClick = onSettingsClick) {
+            Column {
+                AapsTopAppBar(
+                    title = { Text((stringResourceOrNull(ElementType.INSULIN.label()) ?: "")) },
+                    navigationIcon = {
+                        IconButton(onClick = onNavigateBack) {
                             Icon(
-                                imageVector = Icons.Default.Settings,
-                                contentDescription = stringResource(CoreUiStrings.settings),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = stringResource(CoreUiStrings.close)
                             )
                         }
+                    },
+                    actions = {
+                        if (onSettingsClick != null) {
+                            IconButton(onClick = onSettingsClick) {
+                                Icon(
+                                    imageVector = Icons.Default.Settings,
+                                    contentDescription = stringResource(CoreUiStrings.settings),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
                     }
-                }
-            )
+                )
+                // Same as the treatment dialog. Here it was only a red label, so a screen reader user
+                // was never told that this insulin will be recorded and NOT given by the pump.
+                if (uiState.forcedRecordOnly) RecordOnlyBanner()
+            }
         },
         bottomBar = {
             // One text for both the visible label and the screen reader, so the two cannot drift apart.
@@ -282,12 +285,6 @@ internal fun InsulinDialogContent(
             }
         }
     ) { paddingValues ->
-        Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(4.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainer)
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -310,45 +307,19 @@ internal fun InsulinDialogContent(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    // Eating Soon TT
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onEatingSoonChange(!uiState.eatingSoonTtChecked) },
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = stringResource(UiStrings.start_eating_soon_tt),
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Switch(checked = uiState.eatingSoonTtChecked, onCheckedChange = { onEatingSoonChange(it) })
-                    }
-
-                    // Record Only
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable(enabled = uiState.recordOnlyEnabled) {
-                                onRecordOnlyChange(!uiState.recordOnlyChecked)
-                            },
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = stringResource(InterfacesStrings.bolus_recorded_only),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = if (uiState.forcedRecordOnly) MaterialTheme.colorScheme.error
-                            else MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Switch(
-                            checked = uiState.recordOnlyChecked,
-                            onCheckedChange = { onRecordOnlyChange(it) },
-                            enabled = uiState.recordOnlyEnabled
-                        )
-                    }
+                    LabeledSwitch(
+                        label = stringResource(UiStrings.start_eating_soon_tt),
+                        checked = uiState.eatingSoonTtChecked,
+                        onCheckedChange = onEatingSoonChange
+                    )
+                    LabeledSwitch(
+                        label = stringResource(InterfacesStrings.bolus_recorded_only),
+                        checked = uiState.recordOnlyChecked,
+                        onCheckedChange = onRecordOnlyChange,
+                        enabled = uiState.recordOnlyEnabled,
+                        labelColor = if (uiState.forcedRecordOnly) MaterialTheme.colorScheme.error
+                        else MaterialTheme.colorScheme.onSurface
+                    )
                 }
             }
 
@@ -400,28 +371,29 @@ internal fun InsulinDialogContent(
             }
 
             // --- Card 4: Time Selection (visible when recordOnly) ---
+            // Folded at "Now" like the carb time: most doses are recorded when they are given.
             if (uiState.timeLayoutVisible) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
                 ) {
-                    Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                        NumberInputRow(
-                            labelRef = CoreUiStrings.time,
-                            value = uiState.timeOffsetMinutes.toDouble(),
-                            onValueChange = onTimeOffsetChange,
-                            valueRange = -12.0 * 60..12.0 * 60,
-                            step = 5.0,
-                            unitLabel = CoreUiStrings.units_min
-                        )
-                        DateTimeSection(
-                            dateString = dateString,
-                            timeString = timeString,
-                            eventTimeChanged = uiState.eventTimeChanged,
-                            onDateClick = onDateClick,
-                            onTimeClick = onTimeClick
-                        )
-                    }
+                    TimeOffsetRow(
+                        labelRef = CoreUiStrings.time,
+                        offsetMinutes = uiState.timeOffsetMinutes,
+                        onOffsetChange = { onTimeOffsetChange(it.toDouble()) },
+                        resolvedTimeText = if (uiState.timeOffsetMinutes != 0) timeString else null,
+                        offsetRange = -12 * 60..12 * 60,
+                        dateTimeContent = {
+                            DateTimeSection(
+                                dateString = dateString,
+                                timeString = timeString,
+                                eventTimeChanged = uiState.eventTimeChanged,
+                                onDateClick = onDateClick,
+                                onTimeClick = onTimeClick
+                            )
+                        },
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
                 }
             }
 
@@ -462,14 +434,16 @@ private fun InsulinQuickAddButtons(
 
     val focusManager = LocalFocusManager.current
 
-    Row(
+    // A FlowRow, so that with a big font a button that does not fit moves to the next line
+    // instead of being squeezed until its text breaks.
+    FlowRow(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-        verticalAlignment = Alignment.CenterVertically
+        horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium, Alignment.CenterHorizontally),
+        itemVerticalAlignment = Alignment.CenterVertically
     ) {
         increments.forEach { amount ->
             val formatted = formatAmount(amount)
-            val label = if (amount > 0) "+$formatted" else formatted
+            val label = if (amount > 0) stringResource(CoreUiStrings.value_with_plus_sign, formatted) else formatted
             FilledTonalButton(onClick = {
                 focusManager.clearFocus()
                 onAddInsulin(amount)

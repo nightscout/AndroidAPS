@@ -31,10 +31,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.pump.carelevo.R
 import kotlinx.coroutines.launch
+import app.aaps.core.ui.R as CoreUiR
 
 private data class RefillStep(@DrawableRes val image: Int, @StringRes val text: Int)
 

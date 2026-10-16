@@ -42,6 +42,9 @@ import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoPatchRptInfusio
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoCreateUserSettingInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUserSettingInfoMonitorUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.model.CarelevoUserSettingInfoRequestModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -51,15 +54,12 @@ import java.time.LocalDateTime
 import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.TimeUnit
-import kotlin.time.Clock
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.abs
 import kotlin.math.min
+import kotlin.time.Clock
 
 @OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
@@ -307,7 +307,11 @@ class CarelevoPatch @Inject constructor(
      * the ViewModel force-discard fallback), the second caller is skipped. Self-contained: swallows
      * teardown errors, so callers report the already-decided discard result unaffected.
      */
-    fun discardTeardown() {
+    /**
+     * Callers that delete the stored patch first must pass the [address] they read before the delete:
+     * the in-memory patch info is cleared on another thread and may already be gone here.
+     */
+    fun discardTeardown(address: String? = getPatchInfoAddress()) {
         if (!discardInProgress.compareAndSet(false, true)) {
             aapsLogger.debug(LTag.PUMPCOMM, "discardTeardown skipped (already in progress)")
             return
@@ -316,7 +320,7 @@ class CarelevoPatch @Inject constructor(
         // must never leave the discarded patch's cached info behind — a stale record would keep
         // patchState at ConnectedBooted and re-latch the wizard's check screens.
         try {
-            getPatchInfoAddress()?.let { transport.adapter.removeBond(it.uppercase()) }
+            address?.let { transport.adapter.removeBond(it.uppercase()) }
         } catch (e: Exception) {
             aapsLogger.error(LTag.PUMPCOMM, "discardTeardown unbond error", e)
         }

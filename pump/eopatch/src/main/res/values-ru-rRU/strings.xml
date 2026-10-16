@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Интеграция помпы для EOPatch2 / GlucoMen Day</string>
     <string name="low_reservoir">Оповещения о низком уровне инсулина в резервуаре</string>
     <string name="patch_expiration_reminders">Напоминание об истечении срока патча</string>
@@ -80,5 +79,4 @@
     <string name="string_resumed_insulin_delivery_message">Подача инсулина возобновлена.</string>
     <string name="string_temp_basal_remained_hhmm">оставшееся время: %1$s:%2$s</string>
     <string name="string_resume_failed">Возобновление не состоялось.</string>
-    <!-- Permission rationales -->
 </resources>

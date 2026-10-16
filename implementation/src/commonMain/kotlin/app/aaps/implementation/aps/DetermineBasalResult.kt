@@ -34,11 +34,11 @@ import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import kotlin.math.abs
-import kotlin.math.max
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
+import kotlin.math.abs
+import kotlin.math.max
 import kotlin.time.Clock
 
 // Deliberately NOT @SingleIn: the @Binds this replaces had no scope. It is a result object, built
@@ -326,8 +326,8 @@ class DetermineBasalResult(
             }
             // always report high temp
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT) {
-                val pumpLimit = pump.pumpDescription.pumpType.tbrSettings()?.maxDose ?: 0.0
-                if (percent.toDouble() == pumpLimit) {
+                val pumpLimit = pump.pumpDescription.maxTempPercent
+                if (percent == pumpLimit) {
                     aapsLogger.debug(LTag.APS, "TRUE: Pump limit")
                     return true
                 }
@@ -362,7 +362,9 @@ class DetermineBasalResult(
             }
             // always report high temp
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-                val pumpLimit = pump.pumpDescription.pumpType.tbrSettings()?.maxDose ?: 0.0
+                // The description, not the pump type: a driver can change the limit (Medtronic sets the
+                // user's max basal), and through the concentration wrapper it is in insulin units like rate.
+                val pumpLimit = pump.pumpDescription.maxTempAbsolute
                 if (rate == pumpLimit) {
                     aapsLogger.debug(LTag.APS, "TRUE: Pump limit")
                     return true

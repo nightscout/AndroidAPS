@@ -3,6 +3,7 @@ package app.aaps.pump.carelevo.compose.dialog
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -15,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import app.aaps.pump.carelevo.R
 
 @Composable
@@ -33,14 +35,15 @@ internal fun CarelevoPumpStopDurationDialog(
         text = {
             Column {
                 labels.forEachIndexed { index, label ->
+                    // One radio button per duration, named by its label (it was "Radio button,
+                    // not checked" with the label read separately).
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(selected = selectedIndex == index, role = Role.RadioButton, onClick = { selectedIndex = index }),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        RadioButton(
-                            selected = selectedIndex == index,
-                            onClick = { selectedIndex = index }
-                        )
+                        RadioButton(selected = selectedIndex == index, onClick = null)
                         Text(text = label)
                     }
                 }

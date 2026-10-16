@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.Dana
 import app.aaps.core.interfaces.pump.Diaconn
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.ui.CoreUiStrings
@@ -17,8 +16,7 @@ class CommandLoadHistory(
     private val activePlugin: ActivePlugin,
     override val pumpEnactResultProvider: () -> PumpEnactResult,
     private val type: Byte,
-    override val callback: Callback?,
-) : Command {
+) : Command() {
 
     override val commandType: Command.CommandType = Command.CommandType.LOAD_HISTORY
 

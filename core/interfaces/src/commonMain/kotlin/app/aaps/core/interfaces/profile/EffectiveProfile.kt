@@ -23,6 +23,15 @@ interface EffectiveProfile : Profile {
     fun toPump(): PumpProfile
 
     /**
+     * True when [running] is the profile AAPS made from this one when it was set in the pump.
+     *
+     * Do not compare the values for this: the pump can round the basal, and the running profile then holds the
+     * rates the pump really gives (#2454). The values would never match again, and AAPS would set the same
+     * profile again and again. This default compares the values; a profile that knows its link overrides it.
+     */
+    fun isAppliedAs(running: Profile): Boolean = isEqual(running)
+
+    /**
      * Active insulin concentration used
      * @return Insulin concentration (0.2 for U20, 2.0 for U200 insulin)
      * @See [app.aaps.core.interfaces.pump.PumpRate]

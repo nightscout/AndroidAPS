@@ -23,7 +23,6 @@
     <string name="updatingbasalrates">Aktualizuji bazály</string>
     <string name="description_pump_diaconn_g8">Integrace pumpy pro pumpy Diaconn G8</string>
     <string name="diaconn_g8_pump">Diakonn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diakonn G8</string>
     <string name="maxbolusviolation">Překročen maximální bolus</string>
     <string name="commanderror">Chyba příkazu</string>
     <string name="speederror">Chyba rychlosti</string>

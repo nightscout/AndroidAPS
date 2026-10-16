@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.keys.BooleanKey
@@ -28,7 +29,6 @@ import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.objectives.Objective0
-import app.aaps.plugins.constraints.objectives.objectives.PlainDurationText
 import app.aaps.plugins.constraints.objectives.objectives.Objective1
 import app.aaps.plugins.constraints.objectives.objectives.Objective2
 import app.aaps.plugins.constraints.objectives.objectives.Objective3
@@ -38,6 +38,7 @@ import app.aaps.plugins.constraints.objectives.objectives.Objective6
 import app.aaps.plugins.constraints.objectives.objectives.Objective7
 import app.aaps.plugins.constraints.objectives.objectives.Objective8
 import app.aaps.plugins.constraints.objectives.objectives.Objective9
+import app.aaps.plugins.constraints.objectives.objectives.PlainDurationText
 import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -62,6 +63,17 @@ import org.mockito.kotlin.whenever
 private class CappedPumpPlugin(private val maxBasal: Double) : Pump by mock(), PumpPluginConstraints {
 
     override fun applyBasalConstraints(absoluteRate: PumpRate): PumpRate = PumpRate(absoluteRate.cU.coerceAtMost(maxBasal))
+}
+
+/**
+ * A pump with bolus limits of its own, in its units, like Insight: a max, and a min below which it gives
+ * nothing. Its step is 0.05.
+ */
+private class LimitedBolusPump(private val min: Double, private val max: Double) : Pump by mock(), PumpPluginConstraints {
+
+    override fun bolusStepSize(amount: Double): Double = 0.05
+    override fun applyBolusConstraints(insulin: PumpInsulin): PumpInsulin =
+        PumpInsulin(insulin.cU.coerceAtMost(max).let { if (it < min) 0.0 else it })
 }
 
 /**
@@ -101,6 +113,9 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
 
         whenever(activePlugin.activePump).thenReturn(pumpWithConcentration)
         whenever(pumpWithConcentration.pumpDescription).thenReturn(PumpDescription())
+        // SafetyPlugin floors a bolus to this step (insulin units). The step of an unfilled description; a plain
+        // mock would answer 0.0.
+        whenever(pumpWithConcentration.bolusStepSize(any())).thenReturn(0.1)
 
         //SafetyPlugin
         constraintChecker = ConstraintsCheckerImpl(activePlugin, aapsLogger, ch, text)
@@ -252,8 +267,9 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         val i = constraintChecker.getMaxBasalPercentAllowed(validProfile)
         assertThat(i.value()).isEqualTo(200)
         // Pump plugins no longer contribute percent reasons — their percent cap was redundant with SafetyPlugin,
-        // which still caps to the same value (tbrSettings.maxDose); remaining reasons are all from SafetyPlugin.
-        assertThat(i.reasonList).hasSize(4)
+        // which caps to maxTempPercent of the pump description; remaining reasons are all from SafetyPlugin.
+        // The pump's percent cap equals the value here, so it adds no second reason of its own.
+        assertThat(i.reasonList).hasSize(3)
         assertThat(i.getMostLimitedReasons()).isEqualTo("Safety: Limiting max percent rate to 200% because of pump limit")
     }
 
@@ -274,6 +290,41 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         // pump here is the virtual pump, which has none.
         assertThat(d.reasonList).hasSize(2)
         assertThat(d.getMostLimitedReasons()).isEqualTo("Safety: Limiting bolus to 3.0 U because of max value in preferences")
+    }
+
+    // applyPrimingConstraints tests
+
+    /**
+     * A prime is in pump units. The max bolus is used as a plain number of pump units, as before
+     * concentrations: at U200 it is not halved. The amount is floored to the step of the pump itself, not to
+     * the step of the concentration wrapper.
+     */
+    @Test
+    fun primingIsLimitedByTheMaxBolusAsAPlainNumber() {
+        whenever(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(3.0)
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
+        // U200. A prime must not be converted with it.
+        whenever(ch.toPump(any<Double>())).thenAnswer { PumpInsulin(it.getArgument<Double>(0) / 2.0) }
+        // The pump itself (activePumpInternal) steps by 0.05, the wrapper (stubbed in prepare) by 0.1.
+        testPumpPlugin.pumpDescription.bolusStep = 0.05
+
+        assertThat(constraintChecker.applyPrimingConstraints(PumpInsulin(5.0)).cU).isWithin(1e-9).of(3.0)
+        assertThat(constraintChecker.applyPrimingConstraints(PumpInsulin(1.27)).cU).isWithin(1e-9).of(1.25)
+        assertThat(constraintChecker.applyPrimingConstraints(PumpInsulin(-1.0)).cU).isEqualTo(0.0)
+    }
+
+    /** The pump's own limits are in its units, so they apply to a prime as they are: a max, and a min. */
+    @Test
+    fun primingKeepsTheLimitsOfThePump() {
+        whenever(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(3.0)
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
+        whenever(activePlugin.activePumpInternal).thenReturn(LimitedBolusPump(min = 0.5, max = 2.0))
+
+        assertThat(constraintChecker.applyPrimingConstraints(PumpInsulin(5.0)).cU).isWithin(1e-9).of(2.0)
+        assertThat(constraintChecker.applyPrimingConstraints(PumpInsulin(1.27)).cU).isWithin(1e-9).of(1.25)
+        assertThat(constraintChecker.applyPrimingConstraints(PumpInsulin(0.3)).cU).isEqualTo(0.0)
+        // The max the fill dialog asks for.
+        assertThat(constraintChecker.applyPrimingConstraints(PumpInsulin(Double.MAX_VALUE)).cU).isWithin(1e-9).of(2.0)
     }
 
     // applyCarbsConstraints tests

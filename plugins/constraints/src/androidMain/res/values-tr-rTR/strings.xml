@@ -20,6 +20,7 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">%2$s\'den dolayı yayma bolus %1$.1f Ü ile sınırlandırılıyor</string>
     <string name="limitingcarbs">%2$s\'den dolayı karbonhidratlar %1$d g ile sınırlandırılıyor</string>
+    <string name="safety">Güvenlik</string>
     <string name="pumpisnottempbasalcapable">Pompa geçici bazal özellikli değil</string>
     <string name="closed_loop_disabled_on_dev_branch">Geliştirici sürümü çalışıyor. Kapalı Döngü devre dışı.</string>
     <string name="closed_loop_disabled_with_eb">Yayma bolus çalıştığı için kapalı döngü devre dışı bırakıldı</string>
@@ -36,7 +37,6 @@
     <string name="loopenabled">Döngü etkin</string>
     <string name="apsselected">APS Seçildi</string>
     <string name="closedmodeenabled">Kapalı mod etkin</string>
-    <string name="objectives_shortname">GRV</string>
     <string name="description_objectives">Eğitim programı</string>
     <string name="doyouwantresetstart">Görevleri sıfırlamak istiyor musunuz? Tüm yaptıklarınızı kaybedeceksiniz.</string>
     <string name="objectives_button_unfinish">Bitmiş durumu sıfırla</string>

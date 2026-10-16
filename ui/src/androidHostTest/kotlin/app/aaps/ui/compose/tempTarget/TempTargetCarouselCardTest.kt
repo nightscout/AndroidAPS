@@ -115,7 +115,6 @@ class TempTargetCarouselCardTest {
                     TempTargetCarouselCard(
                         preset = preset,
                         activeTT = activeTT,
-                        remainingTimeMs = null,
                         isSelected = isSelected,
                         units = GlucoseUnit.MMOL,
                         onExpired = onExpired

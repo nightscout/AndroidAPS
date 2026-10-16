@@ -1,7 +1,9 @@
 package app.aaps.ui.compose.treatmentDialog
 
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
@@ -18,6 +20,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -27,7 +30,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -50,27 +57,40 @@ internal class TreatmentDialogViewModelTest {
     private val maxBolus: Constraint<Double> = mock()
     private val maxCarbs: Constraint<Int> = mock()
 
+    private val mainDispatcher = StandardTestDispatcher()
     private lateinit var sut: TreatmentDialogViewModel
 
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(mainDispatcher)
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.pumpDescription).thenReturn(pumpDescription)
         whenever(pumpDescription.bolusStep).thenReturn(0.1)
+        whenever(ch.bolusStep(any())).thenReturn(0.1)
         whenever(maxBolus.value()).thenReturn(10.0)
         whenever(constraintChecker.getMaxBolusAllowed()).thenReturn(maxBolus)
         whenever(maxCarbs.value()).thenReturn(100)
         whenever(constraintChecker.getMaxCarbsAllowed()).thenReturn(maxCarbs)
-        sut = TreatmentDialogViewModel(
-            constraintChecker, activePlugin, ch, config, decimalFormatter, rh,
-            profileFunction, hardLimits, loop, batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher())
-        )
+        runBlocking { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
+        sut = createSut()
     }
+
+    private fun createSut() = TreatmentDialogViewModel(
+        constraintChecker, activePlugin, ch, config, decimalFormatter, rh,
+        profileFunction, hardLimits, loop, batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher())
+    )
 
     @AfterEach
     fun tearDown() = Dispatchers.resetMain()
+
+    /** The insulin of the one bolus the dialog asks the master to prepare. */
+    private suspend fun preparedInsulin(): Double {
+        sut.prepareAndConfirm()
+        val actions = argumentCaptor<List<BatchAction>>()
+        verify(batchExecutor).prepare(actions.capture(), any(), anyOrNull())
+        return (actions.firstValue.single() as BatchAction.Bolus).insulin
+    }
 
     @Test
     fun `updateInsulin and updateCarbs update the state`() {
@@ -79,5 +99,29 @@ internal class TreatmentDialogViewModelTest {
 
         assertThat(sut.uiState.value.insulin).isEqualTo(2.5)
         assertThat(sut.uiState.value.carbs).isEqualTo(30)
+    }
+
+    // The pump is not initialized here, so the dose is only recorded. The pump does not give it, so its step
+    // does not apply: a pen can give 1.33 U.
+    @Test
+    fun `a forced record-only dose is kept as typed`() = runBlocking<Unit> {
+        mainDispatcher.scheduler.advanceUntilIdle()
+        assertThat(sut.uiState.value.forcedRecordOnly).isTrue() // the premise
+
+        sut.updateInsulin(1.33)
+
+        assertThat(preparedInsulin()).isEqualTo(1.33)
+    }
+
+    @Test
+    fun `a dose the pump gives is floored to its step`() = runBlocking<Unit> {
+        whenever(pump.isInitialized()).thenReturn(true)
+        sut = createSut()
+        mainDispatcher.scheduler.advanceUntilIdle()
+        assertThat(sut.uiState.value.forcedRecordOnly).isFalse() // the premise
+
+        sut.updateInsulin(1.33)
+
+        assertThat(preparedInsulin()).isWithin(1e-9).of(1.3)
     }
 }

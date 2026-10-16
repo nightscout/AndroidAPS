@@ -1,8 +1,8 @@
 package app.aaps.pump.medtrum.comm.packets
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.pump.medtrum.comm.enums.CommandType.SET_BOLUS
 import app.aaps.pump.medtrum.extension.toByteArray
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlin.math.round
 
 class SetBolusPacket(injector: MetroMemberInjector, private val insulin: Double) : MedtrumPacket(injector) {

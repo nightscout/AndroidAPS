@@ -1,9 +1,9 @@
 package app.aaps.plugins.constraints.versionChecker
 
-import app.aaps.plugins.constraints.ConstraintsStringsValues
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.plugins.constraints.ConstraintsStringsValues
 import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat

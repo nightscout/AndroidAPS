@@ -69,6 +69,10 @@ interface NotificationManager {
 
     companion object {
 
+        /**
+         * Do not change: Android keeps the user's settings of a channel (sound, importance, Do Not Disturb)
+         * by its ID. A new ID is a new channel with default settings, and the old one stays in the system.
+         */
         const val CHANNEL_ID = "AndroidAPS-Overview"
         const val DISMISS_ACTION = "app.aaps.plugins.main.general.overview.notifications.receivers.DismissNotificationReceiver"
     }

@@ -2,6 +2,7 @@ package app.aaps.core.nssdk.networking
 
 import app.aaps.core.nssdk.exceptions.DateHeaderOutOfToleranceException
 import app.aaps.core.nssdk.exceptions.InvalidAccessTokenException
+import app.aaps.core.nssdk.networking.NsAuth.REFRESHABLE
 import app.aaps.core.nssdk.networking.Status.MESSAGE_DATE_HEADER_OUT_OF_TOLERANCE
 import app.aaps.core.nssdk.nsSdkJson
 import app.aaps.core.nssdk.remotemodel.RemoteAuthResponse

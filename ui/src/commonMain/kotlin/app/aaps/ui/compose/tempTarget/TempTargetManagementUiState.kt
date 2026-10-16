@@ -1,8 +1,6 @@
 package app.aaps.ui.compose.tempTarget
 
 import androidx.compose.runtime.Immutable
-
-import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.ui.compose.ScreenMode
@@ -14,9 +12,6 @@ import app.aaps.core.ui.compose.ScreenMode
 data class TempTargetManagementUiState(
     /** Currently active temporary target (if any) */
     val activeTT: TT? = null,
-
-    /** Remaining time in milliseconds for active TT */
-    val remainingTimeMs: Long? = null,
 
     /** List of user-defined presets (minimum 3 default presets) */
     val presets: List<TTPreset> = emptyList(),

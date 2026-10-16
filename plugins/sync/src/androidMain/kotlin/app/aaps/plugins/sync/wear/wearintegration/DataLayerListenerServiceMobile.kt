@@ -1,7 +1,5 @@
 package app.aaps.plugins.sync.wear.wearintegration
 
-import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.plugins.sync.SyncStrings
 import android.os.Binder
 import android.os.Handler
 import android.os.HandlerThread
@@ -168,7 +166,9 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     }
 
     private fun sendMessage(path: String, data: String?) {
-        aapsLogger.debug(LTag.WEAR, "sendMessage: $path $data")
+        // Size only, like the ByteArray overload: the full GraphData payload copied into a log string
+        // on every resend was a cost of its own.
+        aapsLogger.debug(LTag.WEAR, "sendMessage: $path ${data?.length ?: 0}")
         transcriptionNodeId?.also { nodeId ->
             messageClient
                 .sendMessage(nodeId, path, data?.toByteArray() ?: byteArrayOf()).apply {

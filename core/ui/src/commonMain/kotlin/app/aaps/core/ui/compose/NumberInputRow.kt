@@ -58,7 +58,7 @@ import kotlin.math.roundToInt
  * @param valueRange The range of values the input can represent
  * @param step Step increment for +/- buttons
  * @param unitLabel Unit label shown after the value
- * @param asDuration Render the value as "Xh Ym" instead of a plain number
+ * @param asDuration Show the value as "X h Y min" under the field. On by default for a minutes [unitLabel].
  * @param valueFormat Resource ID for formatting value with unit (e.g., "%1$.1f U")
  * @param formatAsInt If true, value is formatted as Int for stringResource (use with %d format strings)
  * @param valueFormat Custom NumberFormat (overrides auto-created from decimalPlaces)
@@ -81,7 +81,7 @@ fun NumberInputRow(
     step: Double,
     modifier: Modifier = Modifier,
     unitLabel: TextRef? = null,
-    asDuration: Boolean = false,
+    asDuration: Boolean = unitLabel.isMinutesUnit(),
     valueFormatRef: TextRef? = null,
     formatAsInt: Boolean = false,
     valueFormat: NumberFormat? = null,
@@ -320,27 +320,15 @@ fun NumberInputRow(
             }
         }
 
-        // +/- filled buttons with long-press repeat
-        RepeatingIconButton(
-            onClick = { stepValue(-1) },
-            enabled = enabled && value > valueRange.start
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Remove,
-                contentDescription = decreaseDescription,
-                modifier = Modifier.size(20.dp)
-            )
-        }
-        RepeatingIconButton(
-            onClick = { stepValue(1) },
-            enabled = enabled && value < valueRange.endInclusive
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Add,
-                contentDescription = increaseDescription,
-                modifier = Modifier.size(20.dp)
-            )
-        }
+        // +/- filled buttons with long-press repeat. Stepping stays here rather than in
+        // [StepButtons]: it reads the field's own text, which a row without a field cannot do.
+        StepButtons(
+            decreaseDescription = decreaseDescription,
+            increaseDescription = increaseDescription,
+            canDecrease = enabled && value > valueRange.start,
+            canIncrease = enabled && value < valueRange.endInclusive,
+            onStep = { direction -> stepValue(direction) }
+        )
     }
 }
 
@@ -357,7 +345,7 @@ fun NumberInputRow(
     step: Double,
     modifier: Modifier = Modifier,
     unitLabel: TextRef? = null,
-    asDuration: Boolean = false,
+    asDuration: Boolean = unitLabel.isMinutesUnit(),
     valueFormatRef: TextRef? = null,
     formatAsInt: Boolean = false,
     valueFormat: NumberFormat? = null,

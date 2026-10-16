@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
@@ -14,9 +14,9 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventNsClientStatusUpdated
-import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -31,23 +31,33 @@ import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.ui.compose.pump.tickerFlow
-import app.aaps.ui.UiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
+@OptIn(ExperimentalCoroutinesApi::class)
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
@@ -70,27 +80,55 @@ class StatusViewModel(
     val uiState: StateFlow<StatusUiState> = _uiState.asStateFlow()
 
     init {
-        setupEventListeners()
-        refreshState()
+        // Refresh only while a screen shows the status lights. Every screen collects uiState with
+        // collectAsStateWithLifecycle, so in the background there is no subscriber and nothing here runs.
+        // The ticker emits at once, so a screen that starts collecting gets a fresh state straight away.
+        _uiState.subscriptionCount
+            .map { it > 0 }
+            .distinctUntilChanged()
+            .flatMapLatest { visible -> if (visible) refreshTriggers() else emptyFlow() }
+            .onEach { refreshState() }
+            .launchIn(viewModelScope)
     }
 
-    private fun setupEventListeners() {
-        rxBus.toFlow(EventInitializationChanged::class)
-            .onEach { refreshState() }.launchIn(viewModelScope)
-        persistenceLayer.observeChanges(TE::class)
-            .onEach { refreshState() }.launchIn(viewModelScope)
-        persistenceLayer.databaseClearedFlow
-            .onEach { refreshState() }.launchIn(viewModelScope)
-        rxBus.toFlow(EventPumpStatusChanged::class)
-            .onEach { refreshState() }.launchIn(viewModelScope)
-        rxBus.toFlow(EventNsClientStatusUpdated::class)
-            .onEach { refreshState() }.launchIn(viewModelScope)
-        tickerFlow(60_000L)
-            .onEach { refreshState() }.launchIn(viewModelScope)
-    }
+    private fun refreshTriggers(): Flow<Unit> = merge(
+        // The ages move with time, and the cannula usage grows with every bolus and temp basal
+        tickerFlow(60_000L),
+        rxBus.toFlow(EventInitializationChanged::class).map { },
+        rxBus.toFlow(EventConfigBuilderChange::class).map { },
+        persistenceLayer.observeChanges(TE::class).map { },
+        persistenceLayer.databaseClearedFlow.map { },
+        // AAPSCLIENT: the reservoir comes from the NS device status
+        rxBus.toFlow(EventNsClientStatusUpdated::class).map { },
+        pumpLevelChanges()
+    )
 
-    fun refreshState() {
-        viewModelScope.launch {
+    /**
+     * Reservoir and battery level are the only values here that come from the pump. Both are StateFlows,
+     * so they emit only when the value really changes. Pump status events were used before, and they came
+     * many times per connection with nothing changed (#5246). Selecting another pump gives other flows,
+     * so the collection starts again on [EventConfigBuilderChange].
+     */
+    private fun pumpLevelChanges(): Flow<Unit> =
+        rxBus.toFlow(EventConfigBuilderChange::class)
+            .map { }
+            .onStart { emit(Unit) }
+            .flatMapLatest {
+                val pump = activePlugin.activePump
+                // drop(1): a StateFlow sends its current value first, which is not a change
+                merge(pump.reservoirLevel.drop(1), pump.batteryLevel.drop(1)).map { }
+            }
+
+    /** The refresh that is still running, if any. */
+    private var refreshJob: Job? = null
+
+    private fun refreshState() {
+        // Several triggers can come close together. Each call used to start its own cannula usage
+        // calculation and none was ever cancelled, so they piled up on the database until the IOB
+        // calculation and the pump status read stalled. Only the newest refresh matters, so the one
+        // still running is cancelled.
+        refreshJob?.cancel()
+        refreshJob = viewModelScope.launch {
             val pump = activePlugin.activePump
             val pumpDescription = pump.pumpDescription
             val isInitialized = pump.isInitialized()
@@ -99,7 +137,10 @@ class StatusViewModel(
             // Build status items (without expensive TDD calculation)
             val sensorStatus = buildSensorStatus()
             val insulinStatus = buildInsulinStatus(isPatchPump, pumpDescription.maxReservoirReading.toDouble())
-            val cannulaStatus = buildCannulaStatus(isPatchPump, includeTddCalculation = false)
+            val cannulaChange = withContext(aapsIoDispatcher) {
+                persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)
+            }
+            val cannulaStatus = buildCannulaStatus(cannulaChange, isPatchPump, includeTddCalculation = false)
             val batteryStatus = if (!isPatchPump || pumpDescription.useHardwareLink) {
                 buildBatteryStatus()
             } else null
@@ -123,12 +164,11 @@ class StatusViewModel(
                 )
             }
 
-            // Calculate cannula usage in background (expensive operation)
-            viewModelScope.launch {
-                val cannulaStatusWithUsage = buildCannulaStatus(isPatchPump, includeTddCalculation = true)
-                _uiState.update { state ->
-                    state.copy(cannulaStatus = cannulaStatusWithUsage)
-                }
+            // Calculate cannula usage (expensive operation). The items above are already shown, and the
+            // usage is part of this job, so a newer refresh cancels it too.
+            val cannulaStatusWithUsage = buildCannulaStatus(cannulaChange, isPatchPump, includeTddCalculation = true)
+            _uiState.update { state ->
+                state.copy(cannulaStatus = cannulaStatusWithUsage)
             }
         }
     }
@@ -193,16 +233,13 @@ class StatusViewModel(
         )
     }
 
-    private suspend fun buildCannulaStatus(isPatchPump: Boolean, includeTddCalculation: Boolean = true): StatusItem {
-        val event = withContext(aapsIoDispatcher) {
-            persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)
-        }
+    private suspend fun buildCannulaStatus(event: TE?, isPatchPump: Boolean, includeTddCalculation: Boolean): StatusItem {
         val insulinUnit = rh.gs(CoreUiStrings.insulin_unit_shortname)
 
         // Calculate usage since last cannula change (expensive - can be deferred)
         val usage = if (includeTddCalculation && event != null) {
             withContext(aapsIoDispatcher) {
-                tddCalculator.calculateInterval(event.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
+                tddCalculator.calculateIntervalWithCachedDays(event.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
             }
         } else 0.0
 

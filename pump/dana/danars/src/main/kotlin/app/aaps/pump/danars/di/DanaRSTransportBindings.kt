@@ -57,7 +57,7 @@ object DanaRSTransportBindings {
                     }
                     name
                 }
-            )
+            ).also { it.pumpState.rejectTempBasal = config.isEnabled(ExternalOptions.EMULATE_DANA_RS_REJECT_TBR) }
         } else {
             bleTransportImpl
         }

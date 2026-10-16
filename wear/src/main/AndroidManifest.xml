@@ -224,7 +224,12 @@
 
         <!-- Same reading as SgvComplication, but a tap opens the menu. Used only by the ambient
              layer of the pushed Watch Face Format face, whose slots are invisible while the watch
-             is awake yet still answer taps - see CwfAmbientBgComplication. -->
+             is awake yet still answer taps - see CwfAmbientBgComplication.
+
+             Both ambient sources are HIDDEN, like the picture sources further down: the face
+             names them as default providers, so the chooser is the wrong place for them, and
+             "ambient" entries there only look like a mistake. HIDDEN stops new choices only; a
+             face that names a hidden source still binds it. -->
         <service
             android:name=".complications.CwfAmbientBgComplication"
             android:exported="true"
@@ -244,6 +249,9 @@
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
                 android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
+            <meta-data
+                android:name="android.support.wearable.complications.HIDDEN"
+                android:value="true" />
         </service>
 
         <service
@@ -265,6 +273,9 @@
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
                 android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
+            <meta-data
+                android:name="android.support.wearable.complications.HIDDEN"
+                android:value="true" />
         </service>
 
         <!-- Publishes the whole Custom watch face as a full-screen image, for Watch Face Format

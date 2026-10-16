@@ -30,10 +30,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.ProgressBarRangeInfo
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.progressBarRangeInfo
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.setProgress
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.dialogs.ValueInputDialog
@@ -56,9 +66,12 @@ import kotlin.math.roundToLong
  * @param formatAsInt If true, value is formatted as Int for stringResource (use with %d format strings)
  * @param valueFormat Format for the value (used for dialog and fallback)
  * @param unitLabel Unit label, shown after the value and as the dialog input suffix
- * @param asDuration Render the value as "Xh Ym" instead of a plain number
+ * @param asDuration Render the value as "X h Y min" instead of a plain number. On by default for a minutes [unitLabel].
  * @param dialogLabel Label for the input dialog
  * @param dialogSummary Summary/description for the input dialog
+ * @param commitOnRelease If true, a slider drag only shows the new value and calls [onValueChange]
+ *   once, when the finger is lifted. Use it where every change has a cost (a preference on a client
+ *   is sent to the master). The +/- buttons and the dialog still call [onValueChange] right away.
  * @param modifier Modifier for the Row container
  *
  * @see SliderWithButtonsPreview
@@ -78,15 +91,19 @@ fun SliderWithButtons(
     formatAsInt: Boolean = false,
     valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
     unitLabel: TextRef? = null,
-    asDuration: Boolean = false,
+    asDuration: Boolean = unitLabel.isMinutesUnit(),
     dialogLabel: String? = null,
     dialogSummary: String? = null,
     enabled: Boolean = true,
+    commitOnRelease: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val minValue = valueRange.start
     val maxValue = valueRange.endInclusive
     var showDialog by remember { mutableStateOf(false) }
+    // Value under the finger while a drag is running with commitOnRelease, null otherwise
+    var dragValue by remember { mutableStateOf<Double?>(null) }
+    val shownValue = dragValue ?: value
 
     // Normalise ControlPoints to ensure % and values are consistent with min & maxValue
     val normalizedControlPoints by remember(controlPoints, minValue, maxValue) {
@@ -163,7 +180,7 @@ fun SliderWithButtons(
 
     // Use shared formatting function for display text
     val displayText = if (showValue) formatSliderDisplayValue(
-        value = value,
+        value = shownValue,
         unitLabel = unitLabel,
         valueFormatRef = valueFormatRef,
         formatAsInt = formatAsInt,
@@ -181,6 +198,18 @@ fun SliderWithButtons(
         valueFormat = valueFormat,
         asDuration = asDuration
     )
+    // What a screen reader says for the slider. The Slider itself runs on a 0..1 position (it has to,
+    // for the non-linear control points), so on its own TalkBack read "37 percent" - where the thumb
+    // is, not the value - and had no name for it. The real value is spoken instead.
+    val spokenValue = formatSliderDisplayValue(
+        value = shownValue,
+        unitLabel = unitLabel,
+        valueFormatRef = valueFormatRef,
+        formatAsInt = formatAsInt,
+        valueFormat = valueFormat,
+        asDuration = asDuration
+    )
+    val labelledValueText = dialogLabel?.let { stringResource(InterfacesStrings.confirmation_line, it, displayText) }
     val minusDescription = dialogLabel
         ?.let { stringResource(CoreUiStrings.a11y_min_button_description, it, stepText) }
         ?: stringResource(CoreUiStrings.decrement)
@@ -215,15 +244,41 @@ fun SliderWithButtons(
             if (showSlider) {
                 // Non-Linear Slider
                 Slider(
-                    value = currentPosition,
+                    value = dragValue?.let { valueToPosition(it) } ?: currentPosition,
                     onValueChange = { newPos ->
                         val newValue = positionToValue(newPos)
-                        val rounded = roundToStep(newValue, step)
-                        onValueChange(rounded.coerceIn(minValue, maxValue))
+                        val rounded = roundToStep(newValue, step).coerceIn(minValue, maxValue)
+                        if (commitOnRelease) dragValue = rounded
+                        else onValueChange(rounded)
+                    },
+                    onValueChangeFinished = {
+                        dragValue?.let { onValueChange(it) }
+                        dragValue = null
                     },
                     enabled = enabled,
                     valueRange = 0f..1f,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        // Replaces the Slider's own semantics with one node. Adding a name with
+                        // `semantics` did not work: on a device the name landed on a separate node
+                        // next to the SeekBar, merged or not, and TalkBack focused the bare SeekBar
+                        // ("37 percent"). A Robolectric test did not show that.
+                        // The progress action uses the same 0..1 position as a drag, mapped to a
+                        // value through the control points and rounded to the step.
+                        .clearAndSetSemantics {
+                            dialogLabel?.let { contentDescription = it }
+                            stateDescription = spokenValue
+                            progressBarRangeInfo = ProgressBarRangeInfo(
+                                current = dragValue?.let { valueToPosition(it) } ?: currentPosition,
+                                range = 0f..1f
+                            )
+                            if (enabled) {
+                                setProgress { targetPosition ->
+                                    onValueChange(roundToStep(positionToValue(targetPosition), step).coerceIn(minValue, maxValue))
+                                    true
+                                }
+                            } else disabled()
+                        }
                 )
             } else {
                 Spacer(modifier = Modifier.weight(1f))
@@ -257,7 +312,12 @@ fun SliderWithButtons(
                     textAlign = TextAlign.End,
                     modifier = Modifier
                         .widthIn(min = if (asDuration || valueFormat != null || resolvedUnitLabel.isNotEmpty()) 70.dp else 40.dp)
-                        .then(if (enabled) Modifier.clickable { showDialog = true } else Modifier)
+                        // Opens the input dialog. Said as "Max bolus: 3 U, button" rather than a bare "3 U".
+                        .then(if (enabled) Modifier.clickable(role = Role.Button) { showDialog = true } else Modifier)
+                        .then(
+                            if (labelledValueText != null) Modifier.semantics { contentDescription = labelledValueText }
+                            else Modifier
+                        )
                         .padding(start = 4.dp)
                 )
             }

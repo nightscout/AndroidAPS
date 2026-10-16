@@ -2,13 +2,13 @@ package app.aaps.pump.carelevo.domain.usecase.alarm
 
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.repository.CarelevoAlarmInfoRepository
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import java.util.Optional
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
 
 /** Domain seam over [CarelevoAlarmInfoRepository]: the persisted set of ACTIVE patch alarms. */
 // App-scoped: a view model injects this, and ViewModelOwnershipTest requires every concrete class

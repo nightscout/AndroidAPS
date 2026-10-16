@@ -94,6 +94,26 @@ class InsertOrUpdateProfileSwitchTransactionTest {
         assertThat(result.inserted[0].timeshift).isEqualTo(2)
     }
 
+    @Test
+    fun `writes every profile switch of a list in the same run`() = runTest {
+        val permanent = createProfileSwitch(id = 0, percentage = 100)
+        val temporary = createProfileSwitch(id = 0, percentage = 90)
+        val later = createProfileSwitch(id = 7, percentage = 80)
+
+        whenever(profileSwitchDao.findById(0)).thenReturn(null)
+        whenever(profileSwitchDao.findById(7)).thenReturn(later)
+
+        val transaction = InsertOrUpdateProfileSwitchTransaction(listOf(permanent, temporary, later))
+        transaction.database = database
+        val result = transaction.run()
+
+        assertThat(result.inserted).containsExactly(permanent, temporary).inOrder()
+        assertThat(result.updated).containsExactly(later)
+        verify(profileSwitchDao).insertNewEntry(permanent)
+        verify(profileSwitchDao).insertNewEntry(temporary)
+        verify(profileSwitchDao).updateExistingEntry(later)
+    }
+
     private fun createProfileSwitch(
         id: Long,
         percentage: Int,

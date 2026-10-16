@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.formatMinutesAsDuration
+import app.aaps.core.ui.compose.isMinutesUnit
 import app.aaps.core.ui.compose.stringResource
 import kotlin.math.roundToInt
 
@@ -44,7 +45,7 @@ import kotlin.math.roundToInt
  * @param label Optional label for the input field
  * @param summary Optional summary/description text to show below the label
  * @param unitLabel Optional unit label to show after value
- * @param asDuration Show a "= Xh Ym" preview under the field
+ * @param asDuration Show a "= X h Y min" preview under the field. On by default for a minutes [unitLabel].
  * @param valueFormat Format for displaying/parsing the value
  * @param onValueConfirm Called when user confirms with a valid value
  * @param onDismiss Called when dialog is dismissed
@@ -59,7 +60,7 @@ fun ValueInputDialog(
     label: String? = null,
     summary: String? = null,
     unitLabel: TextRef? = null,
-    asDuration: Boolean = false,
+    asDuration: Boolean = unitLabel.isMinutesUnit(),
     valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
     onValueConfirm: (Double) -> Unit,
     onDismiss: () -> Unit

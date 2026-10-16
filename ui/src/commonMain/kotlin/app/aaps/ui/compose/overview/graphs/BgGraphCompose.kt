@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlin.concurrent.Volatile
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.graph.vico.Square
 import app.aaps.core.interfaces.overview.graph.ActivityGraphData
@@ -26,8 +25,8 @@ import app.aaps.core.interfaces.overview.graph.BgType
 import app.aaps.core.interfaces.overview.graph.EpsGraphPoint
 import app.aaps.core.interfaces.overview.graph.SeriesType
 import app.aaps.core.interfaces.overview.graph.TargetLineData
-import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.icons.IcProfile
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.VicoScrollState
@@ -39,6 +38,7 @@ import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProdu
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
 import com.patrykandpatrick.vico.compose.cartesian.decoration.HorizontalBox
+import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarkerController
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
@@ -48,6 +48,7 @@ import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.data.ExtraStore
+import kotlin.concurrent.Volatile
 
 /** Series identifiers */
 /** Basal on BG graph — deprecated, now shown as flipped overlay on IOB graph. Set to true to restore. */
@@ -105,6 +106,9 @@ private class MutableYRangeProvider(
  *
  * Basal Y-axis is scaled so maxBasal occupies [BASAL_HEIGHT_FRACTION] of the chart height (maxY = maxBasal / BASAL_HEIGHT_FRACTION).
  *
+ * The insulin activity overlay has no axis of its own: it is mapped into the BG axis' units with
+ * zero at the low mark (see [activityOverlayScale]), and never changes the BG scale.
+ *
  * Scroll/Zoom:
  * - Accepts external scroll/zoom states for synchronization with secondary graphs
  * - This is the primary interactive graph - user controls scroll/zoom here
@@ -118,6 +122,8 @@ fun BgGraphCompose(
     derivedTimeRange: Pair<Long, Long>?,
     nowTimestamp: Long,
     visibleTimeRange: Pair<Long, Long>? = null,
+    /** Press and hold to see the values at a reading. Null turns it off. */
+    inspect: GraphInspectState? = null,
     modifier: Modifier = Modifier
 ) {
     val dateUtil = LocalDateUtil.current
@@ -194,6 +200,7 @@ fun BgGraphCompose(
         currentTargetData: TargetLineData,
         currentEpsPoints: List<EpsGraphPoint>,
         currentActivityData: ActivityGraphData,
+        currentActivityScale: ActivityOverlayScale,
         currentMinBgY: Double,
         currentMaxBgY: Double,
         currentVisibleTimeRange: Pair<Long, Long>?
@@ -297,27 +304,27 @@ fun BgGraphCompose(
                 }
             }
 
-            // Block 5 → Activity layer (layer 4, start axis — Y-values normalized to BG coordinate space)
-            // Scale so maxActivity maps to 80% of the BG axis height (same as legacy: maxY * 0.8 /
-            // maxIAValue), anchored at currentMinBgY for the same reason as the EPS layer above.
+            // Block 5 → Activity layer (layer 4, start axis — Y-values mapped into BG coordinate space)
+            // Zero activity is drawn at the low mark, the bottom edge of the green in-range belt:
+            // a natural horizontal reference, with the room between it and the BG axis floor left
+            // for the rare negative excursion. Scale comes from the visible window only — see
+            // activityOverlayScale and the LaunchedEffect below.
             lineModel {
-                val maxAct = currentActivityData.maxActivity
-                if (!showActivity || maxAct <= 0.0 || currentActivityData.activity.size < 2) {
+                if (!showActivity || currentActivityScale.scale <= 0.0 || currentActivityData.activity.size < 2) {
                     // Activity disabled or no data — emit dummy series (history + prediction)
                     series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
                     series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
                     return@lineModel
                 }
-                val scaleFactor = (currentMaxBgY - currentMinBgY) * 0.8 / maxAct
 
                 val pts = currentActivityData.activity
-                    .map { timestampToX(it.timestamp, minTimestamp) to (currentMinBgY + it.value * scaleFactor) }
+                    .map { timestampToX(it.timestamp, minTimestamp) to currentActivityScale.map(it.value) }
                     .sortedBy { it.first }
                 series(x = pts.map { it.first }, y = pts.map { it.second })
 
                 if (currentActivityData.activityPrediction.size >= 2) {
                     val predPts = currentActivityData.activityPrediction
-                        .map { timestampToX(it.timestamp, minTimestamp) to (currentMinBgY + it.value * scaleFactor) }
+                        .map { timestampToX(it.timestamp, minTimestamp) to currentActivityScale.map(it.value) }
                         .sortedBy { it.first }
                     series(x = predPts.map { it.first }, y = predPts.map { it.second })
                 } else {
@@ -352,8 +359,8 @@ fun BgGraphCompose(
             seriesRegistry[key] = points
         }
         // maxBgY/minBgY clamped against highMark/lowMark (same as legacy GraphData.maxY logic) —
-        // used only for EPS baseline / Activity overlay proportional scaling, NOT the axis range
-        // itself (see below for that — windowed, unlike these full-range values).
+        // used only for the EPS baseline, NOT the axis range itself (see below for that — windowed,
+        // unlike these full-range values).
         val allBgValues = (bgReadings + bucketedData).map { it.value }
         val maxBgY = if (allBgValues.isNotEmpty()) maxOf(allBgValues.max(), chartConfig.highMark) else chartConfig.highMark
         val minBgY = if (allBgValues.isNotEmpty()) minOf(allBgValues.min(), chartConfig.lowMark) else chartConfig.lowMark
@@ -383,7 +390,23 @@ fun BgGraphCompose(
         startAxisRangeProvider.maxY = niceBgScale.max
         startAxisRangeProvider.yStep = niceBgScale.step
 
-        rebuildChart(basalData, targetData, epsPoints, activityData, minBgY, maxBgY, visibleTimeRange)
+        // Activity overlay: zero anchored on the low mark (bottom edge of the green in-range belt),
+        // scaled from the visible window like every other curve. The BG axis above is never changed
+        // to fit it — the activity is fitted into the room the BG axis already leaves on each side
+        // of the low mark. Prediction points count too, same reason as for the BG values above.
+        val windowedActivity = (activityData.activity + activityData.activityPrediction)
+            .filter { inWindow(it.timestamp) }
+            .map { it.value }
+            .ifEmpty { (activityData.activity + activityData.activityPrediction).map { it.value } }
+        val activityScale = activityOverlayScale(
+            activityMin = windowedActivity.minOrNull() ?: 0.0,
+            activityMax = windowedActivity.maxOrNull() ?: 0.0,
+            zeroLevel = chartConfig.lowMark,
+            roomAbove = niceBgScale.max - chartConfig.lowMark,
+            roomBelow = chartConfig.lowMark - niceBgScale.min
+        )
+
+        rebuildChart(basalData, targetData, epsPoints, activityData, activityScale, minBgY, maxBgY, visibleTimeRange)
     }
 
     // Build lookup map for BUCKETED points: x-value -> BgDataPoint (for PointProvider)
@@ -574,7 +597,12 @@ fun BgGraphCompose(
         )
     }
 
-    val decorations = remember(inRangeBox, nowLine) { listOf(inRangeBox, nowLine) }
+    val inspectMarker = remember(inspect) { inspect?.let { GraphInspectMarker(it) } }
+    // Always called, so the composable calls do not depend on inspect
+    val defaultMarkerController = CartesianMarkerController.rememberShowOnPress()
+    val inspectLine = rememberInspectLine(inspect)
+
+    val decorations = remember(inRangeBox, nowLine, inspectLine) { listOfNotNull(inRangeBox, nowLine, inspectLine) }
 
     // =========================================================================
     // Range providers — hoisted out of rememberCartesianChart so keys are re-evaluated on recomposition
@@ -639,7 +667,10 @@ fun BgGraphCompose(
                 guideline = LineComponent(fill = Fill(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)))
             ),
             decorations = decorations,
-            getXStep = { _, _, _ -> 1.0 }
+            getXStep = { _, _, _ -> 1.0 },
+            marker = inspectMarker,
+            markerVisibilityListener = inspect?.visibilityListener,
+            markerController = inspect?.controller ?: defaultMarkerController
         ),
         modelProducer = modelProducer,
         modifier = modifier.fillMaxWidth(),

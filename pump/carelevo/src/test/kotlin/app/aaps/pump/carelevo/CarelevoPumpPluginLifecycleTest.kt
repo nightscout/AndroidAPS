@@ -1,17 +1,17 @@
 package app.aaps.pump.carelevo
 
+// Aliased: the simple name collides with Robolectric's @Config annotation used below.
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
-import app.aaps.core.interfaces.configuration.ExternalOptions
-// Aliased: the simple name collides with Robolectric's @Config annotation used below.
-import app.aaps.core.interfaces.configuration.Config as AapsConfig
 import android.content.Context
 import android.content.Intent
 import android.os.Looper
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.ProcessLifecycleOwner
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -24,10 +24,10 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -73,10 +73,12 @@ import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartExtendBolusInfus
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartImmeBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoDeleteUserSettingInfoUseCase
 import com.google.common.truth.Truth.assertThat
+import dev.zacsweers.metro.Provider
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -84,8 +86,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.hours
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -97,8 +97,8 @@ import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
-import org.mockito.kotlin.times
 import org.mockito.kotlin.timeout
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
@@ -107,7 +107,9 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 import java.util.Optional
-import dev.zacsweers.metro.Provider
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
+import app.aaps.core.interfaces.configuration.Config as AapsConfig
 
 /**
  * Robolectric unit tests for the LIFECYCLE half of [CarelevoPumpPlugin] — everything `onStart()`
@@ -140,6 +142,10 @@ import dev.zacsweers.metro.Provider
 @Config(sdk = [35])
 @OptIn(ExperimentalCoroutinesApi::class)
 class CarelevoPumpPluginLifecycleTest {
+
+    private val decimalFormatter: DecimalFormatter = mock<DecimalFormatter>().also {
+        whenever(it.to2Decimal(any<Double>())).thenAnswer { inv -> "%.2f".format(Locale.US, inv.getArgument<Double>(0)) }
+    }
 
     // REAL application context: getSystemService(BLUETOOTH_SERVICE) and registerReceiver must work.
     private val context: Context = RuntimeEnvironment.getApplication()
@@ -309,7 +315,8 @@ class CarelevoPumpPluginLifecycleTest {
                 finishImmeBolusInfusionUseCase = finishImmeBolusInfusionUseCase,
                 cancelImmeBolusInfusionUseCase = cancelImmeBolusInfusionUseCase,
                 startExtendBolusInfusionUseCase = startExtendBolusInfusionUseCase,
-                cancelExtendBolusInfusionUseCase = cancelExtendBolusInfusionUseCase
+                cancelExtendBolusInfusionUseCase = cancelExtendBolusInfusionUseCase,
+                decimalFormatter = decimalFormatter
             ),
             tempBasalCoordinator = CarelevoTempBasalCoordinator(
                 aapsLogger = aapsLogger,

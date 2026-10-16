@@ -24,7 +24,6 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.implementation.maintenance.PeriodicMaintenance
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Command
@@ -34,11 +33,11 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.objects.workflow.MetroWorkerCreator
+import app.aaps.implementation.maintenance.PeriodicMaintenance
 import com.google.common.util.concurrent.ListenableFuture
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -160,6 +159,8 @@ class KeepAliveWorker(
         // the WorkManager telemetry below.
         periodicMaintenance.runOnce()
         checkPump()
+        // Retries a missing zero TBR while the pump is disconnected - nothing else does, as the loop is paused
+        loop.verifyZeroDelivery()
         checkAPS()
         workerDbStatus()
         workerActiveStatus()
@@ -247,7 +248,10 @@ class KeepAliveWorker(
         val lastConnection = pump.lastDataTime.value
         val now = dateUtil.now()
         val isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < now
-        val isBasalOutdated = abs(requestedProfile.getBasal() - ch.fromPump(pump.baseBasalRate)) > pump.pumpDescription.basalStep
+        // Against the running profile: it holds the rate the pump really gives, which can be rounded to its step
+        // (#2454). The requested one differed by up to a step, and a pump that rounds was read every 5 minutes.
+        // A requested profile that is not running yet is caught first, by the profile check below.
+        val isBasalOutdated = abs((runningProfile ?: requestedProfile).getBasal() - ch.fromPump(pump.baseBasalRate)) > pump.pumpDescription.basalStep
         aapsLogger.debug(LTag.CORE, "Last connection: " + dateUtil.dateAndTimeString(lastConnection))
         // Sometimes it can happen that keepalive is not triggered every 5 minutes as it should.
         // In some cases, it may not even have been started at all.
@@ -270,7 +274,7 @@ class KeepAliveWorker(
             runningProfile == null ||
             (
                 (!pump.isThisProfileSet(requestedProfile) ||
-                    !requestedProfile.isEqual(runningProfile) ||
+                    !requestedProfile.isAppliedAs(runningProfile) ||
                     (runningProfile is ProfileSealed.EPS && runningProfile.value.originalEnd < dateUtil.now() && runningProfile.value.originalDuration != 0L)
                     )
                     && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)

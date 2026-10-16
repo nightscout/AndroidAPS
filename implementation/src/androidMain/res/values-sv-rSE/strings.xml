@@ -6,6 +6,7 @@
     <string name="carbs_short" comment="max 6 characters">KH</string>
     <!--    PumpStatusGenerator-->
     <!--    Permissions-->
+    <!--    Notification channels, shown in the Android settings-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <!-- Maintenance strings (moved from plugins/configuration) -->
 </resources>

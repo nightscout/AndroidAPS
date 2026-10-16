@@ -6,10 +6,10 @@ import app.aaps.core.keys.KeysStrings
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.ImplementationStrings
+import app.aaps.implementation.resources.GeneratedTextResolver
 import app.aaps.plugins.aps.ApsStrings
 import app.aaps.plugins.main.MainStrings
 import app.aaps.plugins.sync.SyncStrings
-import app.aaps.implementation.resources.GeneratedTextResolver
 import app.aaps.ui.UiStrings
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest

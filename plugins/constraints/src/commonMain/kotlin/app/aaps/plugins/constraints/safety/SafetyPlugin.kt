@@ -19,7 +19,6 @@ import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -140,8 +139,11 @@ class SafetyPlugin(
                 .toInt() else Round.floorTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble()).toInt()
         percentRate.set(percentRateAfterConst, rh.gs(CoreUiStrings.limitingpercentrate, percentRateAfterConst, rh.gs(CoreUiStrings.pumplimit)), this)
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT) {
-            val pumpLimit = pump.pumpDescription.pumpType.tbrSettings()?.maxDose ?: 0.0
-            percentRate.setIfSmaller(pumpLimit.toInt(), rh.gs(CoreUiStrings.limitingbasalratio, pumpLimit, rh.gs(CoreUiStrings.pumplimit)), this)
+            val pumpLimit = pump.pumpDescription.maxTempPercent
+            // Only when it really lowers the value: the line above already said "Limiting max percent rate to ..."
+            // for the value it set, and a percent limit is not a U/h rate.
+            if (pumpLimit < percentRate.value())
+                percentRate.setIfSmaller(pumpLimit, rh.gs(CoreUiStrings.limitingpercentrate, pumpLimit, rh.gs(CoreUiStrings.pumplimit)), this)
         }
         return percentRate
     }
@@ -151,13 +153,11 @@ class SafetyPlugin(
         val maxBolus = preferences.get(DoubleKey.SafetyMaxBolus)
         insulin.setIfSmaller(maxBolus, rh.gs(CoreUiStrings.limitingbolus, maxBolus, rh.gs(ConstraintsStrings.maxvalueinpreferences)), this)
         insulin.setIfSmaller(hardLimits.maxBolus(), rh.gs(CoreUiStrings.limitingbolus, hardLimits.maxBolus(), rh.gs(ConstraintsStrings.hardlimit)), this)
-        // Floor to the pump's NATIVE step (not round-to-nearest): a max-constrained bolus must never be
-        // rounded back UP past SafetyMaxBolus / the hard limit, and we must not deliver more than asked.
-        // Native (not concentration-adjusted) on purpose: applyBolusConstraints is also called with cU values
-        // (e.g. FillDialog priming, entered in pump units), so it must floor on the pump-unit pulse grid. The
-        // IU-deliverable grid for a normal bolus is handled by the dialog snap + the PumpWithConcentration
-        // boundary, which floors the converted cU to the native pulse step.
-        val stepSize = activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulin.value())
+        // Floor (not round-to-nearest) so a max-constrained bolus is never rounded back UP past SafetyMaxBolus or
+        // the hard limit, and no more is given than asked. The amount is in insulin units, so the step is asked of
+        // the active pump, whose concentration wrapper converts the pump's step: the wizard and QuickWizard checks
+        // compare with the same step. Priming is in pump units and has its own ConstraintsChecker.applyPrimingConstraints.
+        val stepSize = activePlugin.activePump.bolusStepSize(insulin.value())
         val rounded = Round.floorTo(insulin.value(), stepSize)
         insulin.setIfDifferent(rounded, rh.gs(CoreUiStrings.pumplimit), this)
         return insulin
@@ -168,13 +168,12 @@ class SafetyPlugin(
         val maxBolus = preferences.get(DoubleKey.SafetyMaxBolus)
         insulin.setIfSmaller(maxBolus, rh.gs(ConstraintsStrings.limitingextendedbolus, maxBolus, rh.gs(ConstraintsStrings.maxvalueinpreferences)), this)
         insulin.setIfSmaller(hardLimits.maxBolus(), rh.gs(ConstraintsStrings.limitingextendedbolus, hardLimits.maxBolus(), rh.gs(ConstraintsStrings.hardlimit)), this)
-        val pump = activePlugin.activePump
+        // The description of the active pump, not its pump type: a driver can change the values, and through
+        // the concentration wrapper they are in insulin units like the amount here. The pump type was in pump units.
+        val description = activePlugin.activePump.pumpDescription
         // Floor to the extended-bolus step (not round-to-nearest) so a max-constrained amount is not
         // rounded back UP above the limit.
-        val ebSettings = pump.pumpDescription.pumpType.extendedBolusSettings()
-        val rounded =
-            if (ebSettings != null) Round.floorTo(insulin.value().coerceAtMost(ebSettings.maxDose), ebSettings.step)
-            else insulin.value()
+        val rounded = Round.floorTo(insulin.value().coerceAtMost(description.extendedBolusMaxAmount), description.extendedBolusStep)
         insulin.setIfDifferent(rounded, rh.gs(CoreUiStrings.pumplimit), this)
         return insulin
     }

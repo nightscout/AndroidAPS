@@ -1416,6 +1416,19 @@ One small change: the runners are `() -> T` lambdas rather than `Provider<T>`, s
 no dependency on a DI library. Each shell passes `{ provider() }`. The KDoc explaining the cycle is
 yours, kept as it was.
 
+**Update 2026-10-13: Android uses this executor too.** On Android 16 the system stopped the
+WorkManager calculation jobs once the app had used its job time quota, so the loop did not run for
+long periods. Android now binds `AndroidCalculationExecutor` (`:workflow` androidMain), which is
+`LazyCalculationExecutor` plus a partial wake lock per run, and the WorkManager executor and its two
+workers are deleted. What reaches iOS and desktop:
+
+- `CoroutineCalculationExecutor` catches a throw in a phase and logs it as a failed phase, instead of
+  letting it reach the scope.
+- The post phase (the loop) runs only after a prepare phase that reported `Success` or `Skipped`.
+- `start` and `startPostOnly` are `suspend` now and register the run before they return, so starts
+  replace each other in call order.
+- `ClientGraphBindings` passes `wakeLock = null`.
+
 Desktop now depends on the same 26 modules `:ios:shell` lists, so the plugin bindings are in its
 graph too, and `DesktopMainPluginsBindings` is a near copy of `IosMainPluginsBindings`. If that pair
 starts to drift it should become one container in a shared module that both graphs `@Includes` -

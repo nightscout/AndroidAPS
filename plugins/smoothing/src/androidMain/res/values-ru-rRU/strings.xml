@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="smoothing_shortname">СГЛАЖИВАНИЕ</string>
     <string name="exponential_smoothing_name">Простое экспоненциальное сглаживание</string>
     <string name="description_exponential_smoothing">"Двойное экспоненциальное сглаживание"</string>
     <string name="avg_smoothing_name">Среднее сглаживание</string>

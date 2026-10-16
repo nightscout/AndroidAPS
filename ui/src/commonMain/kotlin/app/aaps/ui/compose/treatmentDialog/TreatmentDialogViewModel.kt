@@ -30,7 +30,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import kotlin.concurrent.Volatile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -41,6 +40,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.concurrent.Volatile
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -183,10 +183,12 @@ class TreatmentDialogViewModel(
      */
     private suspend fun buildActions(state: TreatmentDialogUiState): List<BatchAction> {
         val iCfg = if (state.forcedRecordOnly) profileFunction.getRunningOrRequestedICfg() else null
-        // Floor to the deliverable bolus step so the confirmed amount equals what the pump delivers (the
-        // concentration boundary floors the converted cU to the native pulse grid). ch.bolusStep is
-        // amount-aware (Insight) + concentration-adjusted.
-        val deliverableInsulin = Round.floorTo(state.insulin, ch.bolusStep(state.insulin))
+        // A record-only dose is not given by this pump, so it is kept as typed (a pen can give 1.33 U). Otherwise
+        // floor to the bolus step so the confirmed amount equals what the pump gives. ch.bolusStep is the step of
+        // the pump, converted by the concentration.
+        val deliverableInsulin =
+            if (state.forcedRecordOnly) state.insulin
+            else Round.floorTo(state.insulin, ch.bolusStep(state.insulin))
         return buildList {
             if (deliverableInsulin > 0.0 || state.carbs > 0)
                 add(

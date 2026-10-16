@@ -1,9 +1,8 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
-import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.elements.InputProfileName
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
@@ -15,6 +14,7 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -80,6 +80,20 @@ class ActionProfileSwitchTest : ActionsTestBase() {
             assertThat(it.comment).isEqualTo("OK")
         }
         verify(profileFunction, times(1)).createProfileSwitch(anyOrNull(), anyString(), anyInt(), anyInt(), anyInt(), anyLong(), any(), any(), any(), any(), any())
+    }
+
+    /** A refused switch says why in the automation log, not "OK" next to a failure. */
+    @Test fun aRefusedSwitchSaysWhy() = runTest {
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+        whenever(profileFunction.getProfileName()).thenReturn("Active")
+        // createProfileSwitch is not stubbed, so it refuses (null).
+        whenever(profileFunction.profileSwitchRefusal(any(), eq(TESTPROFILENAME), eq(0), eq(100), eq(0), any())).thenReturn("The pump cannot take it")
+        sut.inputProfileName = InputProfileName(TESTPROFILENAME)
+
+        sut.doAction().let {
+            assertThat(it.success).isFalse()
+            assertThat(it.comment).isEqualTo("The pump cannot take it")
+        }
     }
 
     @Test fun hasDialogTest() = runTest {

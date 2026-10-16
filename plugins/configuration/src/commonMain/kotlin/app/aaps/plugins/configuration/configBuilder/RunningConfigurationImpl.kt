@@ -1,6 +1,5 @@
 package app.aaps.plugins.configuration.configBuilder
 
-import app.aaps.plugins.configuration.ConfigurationStrings
 import app.aaps.core.data.model.SceneLifecycle
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.configuration.Config
@@ -28,20 +27,20 @@ import app.aaps.core.keys.interfaces.NonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.keys.interfaces.SyncChannel
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.localmodel.configuration.NSActiveScene
 import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
+import app.aaps.plugins.configuration.ConfigurationStrings
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.SingleIn
-import dev.zacsweers.metro.binding
 
 @ContributesBinding(AppScope::class, binding = binding<RunningConfiguration>())
 @ContributesBinding(AppScope::class, binding = binding<RunningConfigurationKeys>())
@@ -190,7 +189,9 @@ class RunningConfigurationImpl(
         configuration.pump?.let {
             if (preferences.get(StringKey.VirtualPumpType) != it) {
                 preferences.put(StringKey.VirtualPumpType, it)
-                activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(it))
+                // The driver's own description: through the concentration wrapper it is a copy when the
+                // insulin is not U100, and the change would be lost.
+                activePlugin.activePumpInternal.pumpDescription.fillFor(PumpType.getByDescription(it))
                 pumpSync.connectNewPump(endRunning = false) // do not end running TBRs, we call this only to accept data properly
                 aapsLogger.debug(LTag.CORE, "Changing pump type to $it")
             }

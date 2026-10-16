@@ -8,6 +8,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
@@ -18,7 +19,6 @@ import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.maintenance.Maintenance
-import app.aaps.implementation.maintenance.PeriodicMaintenance
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.Command
@@ -26,6 +26,8 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.keys.LongNonKey
+import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.implementation.maintenance.PeriodicMaintenance
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import com.google.common.util.concurrent.ListenableFuture
@@ -233,6 +235,77 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         verify(mockedRxBus).send(any<EventProfileChangeRequested>())
     }
 
+    /** #2454: the pump rounded the basal, so the running profile holds other rates than the requested one. */
+    private suspend fun requestedPsRunningFrom(psId: Long) {
+        whenever(loop.runningMode()).thenReturn(RM.Mode.OPEN_LOOP)
+        whenever(profileFunction.getRequestedProfile()).thenReturn(profileSwitch.copy(id = 140))
+        // Built before whenever(): the constructor reads activePlugin, a mock.
+        val running = ProfileSealed.EPS(effectiveProfileSwitch.copy(originalPsId = psId, basalBlocks = listOf(Block(T.hours(24).msecs(), 0.95))), activePlugin)
+        whenever(profileFunction.getProfile()).thenReturn(running)
+        whenever(rh.gs(app.aaps.core.ui.R.string.keepalive_basal_outdated)).thenReturn("basal outdated")
+        testPumpPlugin.isProfileSet = true
+        testPumpPlugin.lastData = now
+    }
+
+    @Test
+    fun `checkPump does not set a profile again because the pump rounded its basal`() = runTest {
+        worker = createWorker()
+        requestedPsRunningFrom(140)
+
+        worker.checkPump()
+
+        verify(mockedRxBus, never()).send(any<EventProfileChangeRequested>())
+    }
+
+    @Test
+    fun `checkPump sets the profile when the running one was made from another switch`() = runTest {
+        worker = createWorker()
+        requestedPsRunningFrom(139)
+
+        worker.checkPump()
+
+        verify(mockedRxBus).send(any<EventProfileChangeRequested>())
+    }
+
+    /**
+     * #2454: the Combo gives 1.10 for 1.116, and its step is 0.01. Compared with the requested profile, the basal
+     * looked outdated at every run and the pump was read every 5 minutes. The running profile holds the 1.10.
+     */
+    @Test
+    fun `checkPump does not read the status when the pump gives the rounded rate of the running profile`() = runTest {
+        worker = createWorker()
+        whenever(loop.runningMode()).thenReturn(RM.Mode.OPEN_LOOP)
+        whenever(profileFunction.getRequestedProfile()).thenReturn(profileSwitch.copy(id = 140, basalBlocks = listOf(Block(T.hours(24).msecs(), 1.116))))
+        // Built before whenever(): the constructor reads activePlugin, a mock.
+        val running = ProfileSealed.EPS(effectiveProfileSwitch.copy(originalPsId = 140, basalBlocks = listOf(Block(T.hours(24).msecs(), 1.10))), activePlugin)
+        whenever(profileFunction.getProfile()).thenReturn(running)
+        whenever(ch.fromPump(any<PumpRate>())).thenReturn(1.10)
+        testPumpPlugin.isProfileSet = true
+        testPumpPlugin.lastData = now
+
+        worker.checkPump()
+
+        verify(commandQueue, never()).readStatus(any())
+        verify(mockedRxBus, never()).send(any<EventProfileChangeRequested>())
+    }
+
+    @Test
+    fun `checkPump still reads the status when the pump gives another rate than the running profile`() = runTest {
+        worker = createWorker()
+        whenever(loop.runningMode()).thenReturn(RM.Mode.OPEN_LOOP)
+        whenever(profileFunction.getRequestedProfile()).thenReturn(profileSwitch.copy(id = 140))
+        val running = ProfileSealed.EPS(effectiveProfileSwitch.copy(originalPsId = 140, basalBlocks = listOf(Block(T.hours(24).msecs(), 1.10))), activePlugin)
+        whenever(profileFunction.getProfile()).thenReturn(running)
+        whenever(ch.fromPump(any<PumpRate>())).thenReturn(0.9)
+        whenever(rh.gs(app.aaps.core.ui.R.string.keepalive_basal_outdated)).thenReturn("basal outdated")
+        testPumpPlugin.isProfileSet = true
+        testPumpPlugin.lastData = now
+
+        worker.checkPump()
+
+        verify(commandQueue).readStatus("basal outdated")
+    }
+
     @Test
     fun `checkPump does nothing if mode is DISCONNECTED_PUMP`() = runTest {
         // Arrange
@@ -386,7 +459,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         worker.doWorkAndLog()
 
         // Assert – keeps ~6 months and stamps the run time
-        verify(persistenceLayer).cleanupDatabase(6 * 31, false)
+        verify(persistenceLayer).cleanupDatabase(now - T.days(6 * 31).msecs(), false)
         verify(preferences).put(LongNonKey.LastCleanupRun, now)
     }
 

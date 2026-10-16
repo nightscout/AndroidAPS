@@ -1,12 +1,12 @@
 package app.aaps.plugins.source
 
-import org.mockito.kotlin.mock
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
+import org.mockito.kotlin.mock
 
 class MM640GPluginTest : TestBase() {
 

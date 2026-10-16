@@ -3,6 +3,7 @@ package app.aaps.ui.widget.glance
 import android.content.Context
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.di.injectMetroMembers
+import app.aaps.ui.widget.glance.WidgetDependencies.Companion.from
 import dev.zacsweers.metro.Inject
 
 /**

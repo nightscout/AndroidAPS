@@ -9,7 +9,6 @@
     <string name="dynisf_shortname">DynISF</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">En serie med %1$d tal.\nVärde:</string>
-    <string name="oaps_shortname">OAPS</string>
     <string name="description_ama">Så som algoritmen var definierad år 2017</string>
     <string name="description_smb">Den senaste algoritmen för avancerade användare</string>
     <string name="description_smb_dynamic_isf">Senaste algoritm för avancerade användare med dynamisk / automatisk ISF</string>
@@ -39,7 +38,6 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">En bolus gavs för mindre än 3 min sedan. Hoppar över SMB</string>
     <string name="pump_not_initialized">Pump ej initierad!</string>
-    <string name="loop_shortname">Loop</string>
     <string name="description_loop">Aktivera eller inaktivera implementationen som kör loopen.</string>
     <string name="no_aps_selected">INGEN APS VALD ELLER HAR LEVERERAT RESULTAT</string>
     <string name="ignore5m">Ignorera 5 min</string>
@@ -59,7 +57,6 @@
     <string name="loop_smb_execution_time_label">SMB körtid</string>
     <string name="loop_smb_set_by_pump_label">SMB påbörjad av pump</string>
     <!-- Autotune -->
-    <string name="autotune_shortname">AT</string>
     <string name="autotune_default_tune_days_title">Antal dagar med data</string>
     <string name="autotune_tunedprofile_name">Justerad</string>
     <string name="autotune_profile">Profil :</string>

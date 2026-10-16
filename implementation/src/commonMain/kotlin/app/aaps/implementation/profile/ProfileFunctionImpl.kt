@@ -8,6 +8,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.configuration.Config
@@ -17,6 +18,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.EffectiveProfile
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileStore
@@ -79,7 +81,7 @@ class ProfileFunctionImpl(
 
     init {
         // Populate the mirror off the main thread so the synchronous readers never block on the DB.
-        appScope.launch { _runningICfg.value = getProfile()?.iCfg?.takeIf { it.isUsable } }
+        appScope.launch { _runningICfg.value = readRunningICfg() }
         persistenceLayer.observeChanges(EPS::class)
             .collectResilient(appScope, aapsLogger, LTag.PROFILE) { epsList ->
                 epsList.minOfOrNull { it.timestamp }?.let { timestamp ->
@@ -99,9 +101,25 @@ class ProfileFunctionImpl(
                 // Refresh the mirror in the SAME subscription, after the invalidation above — a separate
                 // collector on this flow has no ordering guarantee against it and could re-read the stale
                 // cache, pinning the mirror to the previous insulin until the next profile change.
-                _runningICfg.value = getProfile()?.iCfg?.takeIf { it.isUsable }
+                _runningICfg.value = readRunningICfg()
             }
     }
+
+    /**
+     * The insulin of the running profile, read straight from the database.
+     *
+     * Not through [getProfile], because that answers null until app init completes, and the pump needs
+     * the concentration before that: `PumpWithConcentrationImpl` falls back to 1.0 without it, which is
+     * wrong for any other insulin. This is the same value `ProfileSealed.EPS` exposes as `iCfg`.
+     */
+    private suspend fun readRunningICfg(): ICfg? =
+        persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())?.iCfg?.takeIf { it.isUsable }
+
+    // Same rule as the interface default, requested first, but the running insulin is read from the database
+    // rather than through getProfile(): the data migrations in MainApp ask for it before app init completes,
+    // and with a null profile there they would stamp old records with a substitute insulin.
+    override suspend fun getRunningOrRequestedICfg(): ICfg? =
+        getRequestedProfile()?.iCfg?.takeIf { it.isUsable } ?: readRunningICfg()
 
     override suspend fun getProfileName(): String =
         getProfileName(dateUtil.now(), customized = true, showRemainingTime = false)
@@ -136,13 +154,18 @@ class ProfileFunctionImpl(
             cache.clear()
             canonicalEps.clear()
         }
-        _runningICfg.value = getProfile()?.iCfg?.takeIf { it.isUsable }
+        _runningICfg.value = readRunningICfg()
     }
 
     override suspend fun getProfile(): EffectiveProfile? =
         getProfile(dateUtil.now())
 
     override suspend fun getProfile(time: Long): EffectiveProfile? {
+        // No profile until app init completes, and none while a settings import rebuilds plugin state.
+        // Until then activePlugin.activeAPS is null, and ProfileSealed takes the APS when it is built, so
+        // a profile from that time keeps aps = null for good. The cache below then handed it out after
+        // init too, and a wizard calculation with it crashed on "APS not defined" at start.
+        if (!config.appInitialized) return null
         val rounded = time - time % 1000
         // Clear cache after longer use
         cacheLock.withLock {
@@ -198,7 +221,11 @@ class ProfileFunctionImpl(
     override suspend fun isProfileChangePending(): Boolean {
         val requested = getRequestedProfile() ?: return false
         val running = getProfile() ?: return true
-        return !ProfileSealed.PS(requested, activePlugin).isEqual(running)
+        // On AAPSClient the running profile comes from the master: its originalPsId is the master's id, and the pump
+        // there can have rounded the basal (#2454). The master has applied this PS when it wrote the EPS after it.
+        if (config.AAPSCLIENT && running is ProfileSealed.EPS)
+            return running.value.timestamp < requested.timestamp && !ProfileSealed.PS(requested, activePlugin).isEqual(running)
+        return !ProfileSealed.PS(requested, activePlugin).isAppliedAs(running)
     }
 
     override fun getUnits(): GlucoseUnit =
@@ -227,73 +254,237 @@ class ProfileFunctionImpl(
         action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>, iCfg: ICfg
     ): PS? {
         val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp, iCfg) ?: return null
-        val validity = ProfileSealed.PS(ps, activePlugin).isValid(
-            rh.gs(CoreUiStrings.careportal_profileswitch),
-            activePlugin.activePump,
-            config,
-            rh,
-            notificationManager,
-            hardLimits,
-            false
-        )
-        if (!validity.isValid) return null
+        refusal(ps)?.let {
+            aapsLogger.warn(LTag.PROFILE, "Profile switch to $profileName refused: $it")
+            return null
+        }
         val result = persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues)
         return result.inserted.firstOrNull() ?: result.updated.firstOrNull()
     }
 
     override suspend fun createProfileSwitch(
         durationInMinutes: Int, percentage: Int, timeShiftInHours: Int,
-        action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>
+        action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>, timestamp: Long
     ): PS? {
-        val profile = persistenceLayer.getPermanentProfileSwitchActiveAt(dateUtil.now()) ?: return null
-        val profileStore = profileRepository.profile.value ?: return null
-        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now(), profile.iCfg) ?: return null
-        val validity = ProfileSealed.PS(ps, activePlugin).isValid(
-            rh.gs(CoreUiStrings.careportal_profileswitch),
-            activePlugin.activePump,
-            config,
-            rh,
-            notificationManager,
-            hardLimits,
-            false
-        )
-        if (validity.isValid) {
-            val result = persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues)
-            return result.inserted.firstOrNull() ?: result.updated.firstOrNull()
+        val ps = activeProfileSwitch(durationInMinutes, percentage, timeShiftInHours, timestamp) { aapsLogger.warn(LTag.PROFILE, "Profile switch refused: $it") }
+            ?: return null
+        refusal(ps)?.let {
+            aapsLogger.warn(LTag.PROFILE, "Profile switch to ${ps.profileName} refused: $it")
+            return null
         }
+        val result = persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues)
+        return result.inserted.firstOrNull() ?: result.updated.firstOrNull()
+    }
+
+    override suspend fun profileSwitchRefusal(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, iCfg: ICfg): String? {
+        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now(), iCfg)
+            ?: return rh.gs(CoreUiStrings.notexists)
+        return refusal(ps)
+    }
+
+    override suspend fun profileSwitchRefusal(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): String? {
+        var whyNot: String? = null
+        val ps = activeProfileSwitch(durationInMinutes, percentage, timeShiftInHours, timestamp) { whyNot = it } ?: return whyNot
+        return refusal(ps)
+    }
+
+    /**
+     * A switch at [timestamp] (0 means now) of the profile in force at that time to these values. A back-dated
+     * switch so changes the profile that was really running then. When there is none to change, [whyNot] gets
+     * the sentence for the user, and the result is null.
+     */
+    private suspend fun activeProfileSwitch(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long, whyNot: (String) -> Unit): PS? {
+        val at = timestamp.takeIf { it > 0L } ?: dateUtil.now()
+        val profile = persistenceLayer.getPermanentProfileSwitchActiveAt(at)
+        if (profile == null) {
+            whyNot(rh.gs(CoreUiStrings.no_profile_set))
+            return null
+        }
+        val profileStore = profileRepository.profile.value
+        if (profileStore == null) {
+            whyNot(rh.gs(CoreUiStrings.noprofile))
+            return null
+        }
+        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, timeShiftInHours, at, profile.iCfg)
+        if (ps == null) whyNot(rh.gs(CoreUiStrings.scene_profile_not_found, profile.profileName))
+        return ps
+    }
+
+    /**
+     * Why [ps] cannot be activated, or null when it can. The pump first, with a sentence for each cause the
+     * check reports. Its own reasons are not used: they say a value "was replaced", from the time the check
+     * still changed values, and that is not true any more. Then the hard limits, which say which value is
+     * out of range. Then the insulin, unless [checkInsulin] is false: an insulin change gives all the
+     * switches it writes the same new insulin, see [insulinChange].
+     */
+    private suspend fun refusal(ps: PS, checkInsulin: Boolean = true): String? {
+        val profile = ProfileSealed.PS(ps, activePlugin)
+        val from = rh.gs(CoreUiStrings.careportal_profileswitch)
+        val pumpCheck = profile.validatePump(from, activePlugin.activePump, config, rh, notificationManager, false)
+        if (!pumpCheck.isValid) return when (pumpCheck.basalProblem) {
+            Profile.BasalProblem.NOT_ALIGNED_TO_HOURS -> rh.gs(InterfacesStrings.basalprofilenotaligned, from)
+            Profile.BasalProblem.BELOW_PUMP_MINIMUM   -> rh.gs(CoreUiStrings.profile_basal_below_pump_minimum)
+            Profile.BasalProblem.ABOVE_PUMP_MAXIMUM,
+            null                                      -> rh.gs(CoreUiStrings.profile_basal_not_compatible_with_pump)
+        }
+        val semantic = profile.validateSemantic(rh, hardLimits)
+        if (!semantic.isValid) return semantic.reasons.firstOrNull() ?: rh.gs(CoreUiStrings.invalid_profile)
+        if (checkInsulin) insulinRefusal(ps)?.let { return it }
         return null
     }
 
+    /**
+     * A temporary switch must have the insulin of the permanent switch under it. The insulin is what is in the
+     * pump. When only a temporary switch had the new one, the old insulin came back when it ended, and every
+     * switch made from the running profile after that took the old insulin over (#5081). The name may differ,
+     * the curve may not: the insulin list builds its names again at every start.
+     */
+    private suspend fun insulinRefusal(ps: PS): String? {
+        if (ps.duration == 0L) return null
+        val permanent = persistenceLayer.getPermanentProfileSwitchActiveAt(ps.timestamp)?.iCfg?.takeIf { it.isUsable } ?: return null
+        if (ps.iCfg.hasSameCurve(permanent)) return null
+        return rh.gs(CoreUiStrings.profile_switch_insulin_not_permanent, ps.iCfg.insulinLabel, permanent.insulinLabel)
+    }
+
     override suspend fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean {
-        val profile = getProfile()
-        val eps = (profile as? ProfileSealed.EPS)?.value ?: return false
-        val profileStore = profileRepository.profile.value ?: return false
-        val profileName = eps.originalProfileName
-        val percentage = eps.originalPercentage
-        val timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt()
-        val now = dateUtil.now()
-
-        val durationMinutes = if (eps.originalDuration > 0) {
-            ((eps.originalDuration - (now - eps.timestamp)) / 60_000L).coerceAtLeast(0).toInt()
-        } else 0
-
-        return createProfileSwitch(
-            profileStore = profileStore,
-            profileName = profileName,
-            durationInMinutes = durationMinutes,
-            percentage = percentage,
-            timeShiftInHours = timeshiftHours,
-            timestamp = now,
+        val change = insulinChange(iCfg) { aapsLogger.warn(LTag.PROFILE, "Insulin switch to ${iCfg.insulinLabel} refused: $it") } ?: return false
+        val shown = change.shown
+        val timeshiftHours = T.msecs(shown.timeshift).hours().toInt()
+        val durationMinutes = T.msecs(shown.duration).mins().toInt()
+        val result = persistenceLayer.insertOrUpdateProfileSwitches(
+            profileSwitches = change.switches,
             action = Action.PROFILE_SWITCH,
             source = source,
             listValues = listOfNotNull(
-                ValueWithUnit.SimpleString(profileName),
+                ValueWithUnit.SimpleString(shown.profileName),
                 ValueWithUnit.SimpleString(iCfg.insulinLabel),
-                ValueWithUnit.Percent(percentage),
+                ValueWithUnit.Percent(shown.percentage),
                 ValueWithUnit.Hour(timeshiftHours).takeIf { timeshiftHours != 0 },
                 ValueWithUnit.Minute(durationMinutes).takeIf { durationMinutes != 0 }
-            ),
+            )
+        )
+        return result.inserted.isNotEmpty() || result.updated.isNotEmpty()
+    }
+
+    override suspend fun insulinSwitchRefusal(iCfg: ICfg): String? {
+        var whyNot: String? = null
+        insulinChange(iCfg) { whyNot = it }
+        return whyNot
+    }
+
+    /** What an insulin change writes, in one transaction. [shown] is the switch in force after it, for the user entry. */
+    private class InsulinChange(val switches: List<PS>, val shown: PS)
+
+    /**
+     * The switches that give the profile in force the insulin [iCfg]. When there is no profile to change, or one
+     * of the switches would be refused, [whyNot] gets the sentence for the user, and the result is null.
+     *
+     * The insulin is what is in the pump, so it goes on the permanent switch. A temporary switch that is running
+     * gets a copy with the new insulin, which ends when it would have ended. Before, only that copy was written,
+     * and the old insulin came back when it ended (#5081). The copy is newer than the permanent switch, so it stays
+     * in force, and each record has its own time in Nightscout. With less than a minute left the temporary switch
+     * is not copied, and the permanent one takes over now. Switches set to start later get the new insulin too, or
+     * they would bring the old one back.
+     *
+     * The new switches copy the records, only the insulin changes. They were built from the profile store before,
+     * so a profile renamed since refused the whole insulin change, and changes saved in the store but never
+     * activated became active with it.
+     *
+     * The switch in force is the requested one. It differs from the running profile only while the pump has not set
+     * a newer switch yet, and a copy of the running one would undo that switch. A pump wizard on a new pump also
+     * needs it: the gate switches the profile, but it runs only after the activation, when the wizard has already
+     * switched the insulin. Only with no switch at all is the running profile used, built from the profile store.
+     */
+    private suspend fun insulinChange(iCfg: ICfg, whyNot: (String) -> Unit): InsulinChange? {
+        val now = dateUtil.now()
+        val requested = getRequestedProfile()
+        val written = mutableListOf<PS>()
+        if (requested != null) {
+            val remaining = requested.timestamp + requested.duration - now
+            val copyTemporary = requested.duration > 0 && remaining >= MIN_REMAINING_TO_COPY
+            // With no permanent switch at all, a temporary one about to end becomes the permanent switch, as before.
+            val permanent = if (requested.duration == 0L) requested
+            else persistenceLayer.getPermanentProfileSwitchActiveAt(now) ?: requested.takeIf { !copyTemporary }
+            permanent?.let { written += newSwitchLike(it, if (copyTemporary) permanentTime(requested.timestamp, now) else now, 0L, iCfg) }
+            if (copyTemporary) written += newSwitchLike(requested, now, remaining, iCfg)
+        } else {
+            val running = (getProfile() as? ProfileSealed.EPS)?.value
+            if (running == null) {
+                whyNot(rh.gs(CoreUiStrings.no_profile_set))
+                return null
+            }
+            val profileStore = profileRepository.profile.value
+            if (profileStore == null) {
+                whyNot(rh.gs(CoreUiStrings.noprofile))
+                return null
+            }
+            // The running profile holds the basal with its percentage applied, so the switch is built from the store.
+            val remaining = if (running.originalDuration > 0) running.timestamp + running.originalDuration - now else 0L
+            written += buildProfileSwitch(
+                profileStore, running.originalProfileName, 0, running.originalPercentage, T.msecs(running.originalTimeshift).hours().toInt(), now, iCfg
+            )?.copy(duration = remaining.takeIf { it >= MIN_REMAINING_TO_COPY } ?: 0L)
+                ?: run {
+                    whyNot(rh.gs(CoreUiStrings.notexists))
+                    return null
+                }
+        }
+        val shown = written.last()
+        written += persistenceLayer.getProfileSwitchesFromTime(now + 1, true)
+            .filterNot { it.iCfg.isEqual(iCfg) }
+            .map { it.copy(iCfg = iCfg) }
+        for (switch in written) refusal(switch, checkInsulin = false)?.let {
+            whyNot(it)
+            return null
+        }
+        return InsulinChange(written, shown)
+    }
+
+    /**
+     * When the permanent switch of an insulin change starts: one second before the copy of the temporary switch,
+     * but after the temporary switch itself. Older than that, the temporary switch would be newer than it, and it
+     * would come back with the old insulin when its copy is cut.
+     */
+    private fun permanentTime(temporaryStart: Long, now: Long): Long =
+        (now - PERMANENT_BEFORE_COPY).coerceAtLeast(temporaryStart + 1).coerceAtMost(now - 1)
+
+    /** A new record with the profile of [original] (its blocks, name, percentage and time shift), at another time and with [iCfg]. */
+    private fun newSwitchLike(original: PS, timestamp: Long, duration: Long, iCfg: ICfg): PS =
+        PS(
+            timestamp = timestamp,
+            basalBlocks = original.basalBlocks,
+            isfBlocks = original.isfBlocks,
+            icBlocks = original.icBlocks,
+            targetBlocks = original.targetBlocks,
+            glucoseUnit = original.glucoseUnit,
+            profileName = original.profileName,
+            timeshift = original.timeshift,
+            percentage = original.percentage,
+            duration = duration,
             iCfg = iCfg
-        ) != null
+        )
+
+    override suspend fun createProfileSwitchLike(
+        original: PS, timestamp: Long, duration: Long, iCfg: ICfg,
+        action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>
+    ): PS? {
+        val ps = newSwitchLike(original, timestamp, duration, iCfg)
+        refusal(ps)?.let {
+            aapsLogger.warn(LTag.PROFILE, "Profile switch like ${original.profileName} refused: $it")
+            return null
+        }
+        val result = persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues)
+        return result.inserted.firstOrNull() ?: result.updated.firstOrNull()
+    }
+
+    override suspend fun profileSwitchLikeRefusal(original: PS, timestamp: Long, duration: Long, iCfg: ICfg): String? =
+        refusal(newSwitchLike(original, timestamp, duration, iCfg))
+
+    private companion object {
+
+        /** A temporary switch with less time left is not copied: the pump would only set two profiles a minute apart. */
+        const val MIN_REMAINING_TO_COPY = 60_000L
+
+        /** How much older the permanent switch of an insulin change is than the copy of the temporary one. */
+        const val PERMANENT_BEFORE_COPY = 1_000L
     }
 }

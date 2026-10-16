@@ -43,13 +43,13 @@
     <string name="pref_title_aps_use_autosens">Sử dụng Autosens</string>
     <string name="pref_title_aps_use_smb">Kích hoạt SMB</string>
     <string name="pref_summary_aps_use_smb">Bật Super Micro Bolus. SMB cung cấp insulin ngay lập tức để đáp ứng khi đường huyết tăng.</string>
-    <string name="pref_title_aps_use_smb_with_high_tt">Bật SMB với mục tiêu tạm thời cao</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Bật SMB với mục tiêu tạm thời Cao</string>
     <string name="pref_summary_aps_use_smb_with_high_tt">Cho phép SMB khi mục tiêu tạm thời cao đang hoạt động.</string>
     <string name="pref_title_aps_use_smb_always">Luôn bật SMB</string>
     <string name="pref_summary_aps_use_smb_always">Bật SMB trong mọi điều kiện, bất kể bolus hoặc COB.</string>
     <string name="pref_title_aps_use_smb_with_cob">Kích hoạt SMB với COB</string>
     <string name="pref_summary_aps_use_smb_with_cob">Cho phép SMB khi đang có COB.</string>
-    <string name="pref_title_aps_use_smb_with_low_tt">Bật SMB với mục tiêu tạm thời cao</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Bật SMB với mục tiêu tạm thời Thấp</string>
     <string name="pref_summary_aps_use_smb_with_low_tt">Cho phép SMB khi mục tiêu tạm thời thấp đang hoạt động.</string>
     <string name="pref_title_aps_use_smb_after_carbs">Kích hoạt SMB sau Carbs</string>
     <string name="pref_summary_aps_use_smb_after_carbs">Cho phép SMB trong một khoảng thời gian sau khi nhập carbs.</string>
@@ -145,6 +145,9 @@
     <string name="pref_title_wear_wizard_cob">Bao gồm COB trong wizard</string>
     <string name="pref_title_wear_wizard_iob">Bao gồm IOB trong wizard</string>
     <string name="pref_title_wear_custom_watchface_authorization">Cho phép mặt đồng hồ tùy chỉnh</string>
+    <string name="pref_title_wear_pushed_watchface">Đã cài mặt đồng hồ trên Watch</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Mặt đồng hồ tích hợp Tiện ích</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Mặt đồng hồ tùy chỉnh</string>
     <string name="pref_title_wear_notify_on_smb">Thông báo khi có SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Gửi thông báo đến đồng hồ khi SMB được thực hiện.</string>
     <string name="pref_title_wear_broadcast_data">Gửi dữ liệu tới đồng hồ</string>
@@ -264,8 +267,8 @@
     <string name="lang_tr">Tiếng Thổ Nhĩ Kỳ</string>
     <string name="lang_zh_tw">Tiếng Trung Phồn Thể</string>
     <string name="lang_zh_cn">Tiếng Trung, Giản thể</string>
-    <string name="pref_title_patient_name">Tên</string>
-    <string name="pref_summary_patient_name">Tên để nhận diện phiên bản AAPS này (hiển thị trong báo cáo và đồng bộ)</string>
+    <string name="pref_title_patient_name">Tên người dùng</string>
+    <string name="pref_summary_patient_name">Tên người sử dụng điện thoại này. Tên này giúp phân biệt phiên bản AAPS trên thiết bị trong các báo cáo và quá trình đồng bộ hóa.</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">Thư mục AAPS</string>
     <!-- StringKey: Protection preferences -->

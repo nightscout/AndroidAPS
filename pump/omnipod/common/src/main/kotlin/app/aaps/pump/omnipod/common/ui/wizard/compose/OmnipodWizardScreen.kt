@@ -2,9 +2,13 @@ package app.aaps.pump.omnipod.common.ui.wizard.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
 import app.aaps.core.ui.compose.pump.ProfileGateWizardStep
 import app.aaps.core.ui.compose.pump.WizardScreen
@@ -117,12 +121,28 @@ fun OmnipodWizardScreen(
             )
 
             // Deactivation info steps
-            OmnipodWizardStep.START_POD_DEACTIVATION -> InfoStep(
-                textResId = textResId,
-                isFinishStep = false,
-                onNext = { viewModel.moveToNext() },
-                onCancel = onCancel
-            )
+            OmnipodWizardStep.START_POD_DEACTIVATION -> {
+                // The next step deactivates the Pod as soon as it opens and that can not be undone,
+                // so Next asks first. Discard already asks; a mis-tap here is the more costly one.
+                var showConfirm by remember { mutableStateOf(false) }
+                if (showConfirm) {
+                    OkCancelDialog(
+                        title = stringResource(R.string.omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title),
+                        message = stringResource(R.string.omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation),
+                        onConfirm = {
+                            showConfirm = false
+                            viewModel.moveToNext()
+                        },
+                        onDismiss = { showConfirm = false }
+                    )
+                }
+                InfoStep(
+                    textResId = textResId,
+                    isFinishStep = false,
+                    onNext = { showConfirm = true },
+                    onCancel = onCancel
+                )
+            }
 
             // Deactivation action step
             OmnipodWizardStep.DEACTIVATE_POD         -> DeactivatePodStep(

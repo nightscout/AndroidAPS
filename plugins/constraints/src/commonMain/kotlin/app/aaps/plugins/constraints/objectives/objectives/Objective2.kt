@@ -1,10 +1,10 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.constraints.ConstraintsStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -285,12 +285,13 @@ class Objective2(
                 .learned(Learned(ConstraintsStrings.objectives_exam_learned_ecarbs))
         )
         tasks.add(
-            ExamTask(this, ConstraintsStrings.nsclient_label, ConstraintsStrings.nsclient_howcanyou, "nsclient")
+            ExamTask(this, ConstraintsStrings.nsclient_label, ConstraintsStrings.nsclient_howcanyou, "nsclient2")
                 .option(Option(ConstraintsStrings.nsclient_nightscout, true))
                 .option(Option(ConstraintsStrings.nsclient_dexcomfollow, true))
                 .option(Option(ConstraintsStrings.nsclient_data, true))
-                .option(Option(ConstraintsStrings.nsclient_fullcontrol, false))
+                .option(Option(ConstraintsStrings.nsclient_fullcontrol, true))
                 .hint(Hint(ConstraintsStrings.nsclient_hint1))
+                .hint(Hint(ConstraintsStrings.nsclient_hint2))
                 .learned(Learned(ConstraintsStrings.objectives_exam_learned_nsclient))
         )
         tasks.add(

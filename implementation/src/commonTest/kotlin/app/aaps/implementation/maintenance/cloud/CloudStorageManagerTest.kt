@@ -1,5 +1,8 @@
 package app.aaps.implementation.maintenance.cloud
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cloud
+import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.CloudFile
@@ -8,9 +11,6 @@ import app.aaps.core.interfaces.maintenance.CloudFolder
 import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.implementation.maintenance.formats.FakeKeyValueStore
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cloud
-import androidx.compose.ui.graphics.vector.ImageVector
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

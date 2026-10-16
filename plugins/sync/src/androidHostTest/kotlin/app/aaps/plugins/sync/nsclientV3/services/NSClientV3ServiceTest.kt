@@ -15,7 +15,6 @@ import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.plugins.sync.nsclientV3.ws.ServiceNsConnection
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -158,7 +157,7 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
 
         assertThat(sut.storageSocket).isSameInstanceAs(firstSocket)
         val logs = nsClientMvvmRepository.logList.value
-        assertThat(logs.any { it.action == "● WS" && it.logText?.contains("already initialized, skip Second") ?: false }).isTrue()
+        assertThat(logs.any { it.action == "● WS" && it.text?.contains("already initialized, skip Second") ?: false }).isTrue()
         sut.shutdownWebsockets()
     }
 
@@ -172,7 +171,7 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
         sut.initializeWebSockets("Test")
 
         val logs = nsClientMvvmRepository.logList.value
-        assertThat(logs.any { it.action == "● WS" && it.logText == "paused" }).isTrue()
+        assertThat(logs.any { it.action == "● WS" && it.text == "paused" }).isTrue()
         assertThat(sut.storageSocket).isNull()
         assertThat(sut.alarmSocket).isNull()
     }
@@ -187,7 +186,7 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
         sut.initializeWebSockets("Test")
 
         val logs = nsClientMvvmRepository.logList.value
-        assertThat(logs.any { it.action == "● WS" && it.logText == "No network connection" }).isTrue()
+        assertThat(logs.any { it.action == "● WS" && it.text == "No network connection" }).isTrue()
         assertThat(sut.storageSocket).isNull()
         assertThat(sut.alarmSocket).isNull()
     }
@@ -309,7 +308,7 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
 
         assertThat(sut.storageSocket).isSameInstanceAs(originalSocket)
         val logs = nsClientMvvmRepository.logList.value
-        assertThat(logs.any { it.action == "● WS" && it.logText?.contains("already initialized, skip serviceConnected") ?: false }).isTrue()
+        assertThat(logs.any { it.action == "● WS" && it.text?.contains("already initialized, skip serviceConnected") ?: false }).isTrue()
         sut.shutdownWebsockets()
     }
 
@@ -349,8 +348,8 @@ class NSClientV3ServiceTest : TestBaseWithProfile() {
         sut.initializeWebSockets("TestReason")
 
         val logs = nsClientMvvmRepository.logList.value
-        assertThat(logs.any { it.action == "► WS" && it.logText?.contains("do connect storage TestReason") ?: false }).isTrue()
-        assertThat(logs.any { it.action == "► WS" && it.logText?.contains("do connect alarm TestReason") ?: false }).isTrue()
+        assertThat(logs.any { it.action == "► WS" && it.text?.contains("do connect storage TestReason") ?: false }).isTrue()
+        assertThat(logs.any { it.action == "► WS" && it.text?.contains("do connect alarm TestReason") ?: false }).isTrue()
         sut.shutdownWebsockets()
     }
 }

@@ -12,26 +12,85 @@ It does **not** wipe the store first. A key that exists on this phone but is mis
 keeps its value. So an import is a **merge**, not a replace. See
 [What an import does not do](#what-an-import-does-not-do).
 
-The whole job is five steps:
+The whole job is six steps:
 
 1. Read the file into a plain `Map<String, String>`.
-2. Work out, for every name in that map, which key it is and what type it holds.
-3. Drop everything that must not be applied.
-4. Write what is left, in one batch, and refresh the caches once.
-5. Restart the plugins whose enabled state changed.
+2. Run the preference migrations over it, so a backup from an older AAPS is brought up to date.
+3. Work out, for every name in that map, which key it is and what type it holds.
+4. Drop everything that must not be applied.
+5. Write what is left, in one batch, and refresh the caches once.
+6. Restart the plugins whose enabled state changed.
 
-Nothing is written until the user has confirmed. Steps 3 and 4 are also run in a "do not write" mode
-to produce the counts shown on the confirm screen.
+Nothing is written until the user has confirmed. Steps 4 and 5 are also run in a "do not write" mode
+to produce the counts shown on the confirm screen — step 2 is not, so those counts are computed from
+the file's original names. For a backup old enough to need migrating they understate what changes.
 
 ## Reading the file
 
 The file is a flat list of `name = value` pairs, all values stored as text. It may be encrypted with
 the master password, and it may come from an older AAPS with older key names.
 
-The map stays a plain map on purpose. It is never wrapped in a `Preferences` or a `KeyValueStore`.
-That is a safety boundary: code that writes to a store, stamps a sync key, or touches the database
-cannot even be expressed against a map, so it cannot accidentally run against a file that the user
-has not accepted yet.
+## Migrating the file
+
+The preference migrations are plain functions, in a fixed order, and each takes **the store to work
+on**. That parameter is the whole design: start-up hands them this device's store, an import hands
+them `FileKeyValueStore`, which is the imported file. One copy of the functions, so the two paths
+cannot drift.
+
+```kotlin
+val migrated = FileKeyValueStore(prefs.values)
+migrations.migrate(migrated)
+return run(migrated.asTextMap(), keepPumpSettings, write = true)
+```
+
+They are needed because AAPS 3.3 exported **everything** — its exporter was
+`for ((key, value) in sp.getAll()) entries[key] = value.toString()`, with no filter — and used
+different names: `LocalProfile_0_isf`, `ConfigBuilder_PUMP_DanaRSPlugin_Enabled`. Those resolve to
+nothing here, so without this step the import drops them and the user loses their profiles, their
+plugin selection, their objectives and their loop mode. The `isExportableKey` filter is in 3.4.0.0
+but not in 3.3.2.0 or 3.3.2.1, so this is what a backup from anywhere in the 3.3 line looks like.
+
+It used to work by accident: the old import wrote every name into the store raw, and
+`MainApp.doMigrations()` converted them on the next start. Once the import began dropping names it
+could not resolve, those names stopped reaching the store at all.
+
+**A migration is a function, not a rename.** It does whatever that migration needs. The loop-mode one
+consumes `aps_mode` *and* writes a `RunningMode` row, because on a 3.3 backup that row is the
+setting — without it the loop comes back off, `RM.DEFAULT_MODE` being `DISABLED_LOOP`.
+
+**They run once, on apply, never during preview.** A function that writes a database row must not do
+it while the user is still looking at the confirm dialog. The cost is that the preview's counts are
+computed from the file's original names, so for a backup old enough to need migrating they understate
+what will change.
+
+**Order is the list order, and the list is a chain.** Each function reads the store as the ones before
+it left it, so the order is simply the order the code changes happened in, and every function writes
+the names of **its own version** and leaves the later ones to carry them forward. The DynamicISF
+retirement is the example: it retired a plugin in January 2024, so it writes the
+`ConfigBuilder_<TYPE>_<Class>_Enabled` name that build used, and the ConfigBuilder rename — which came
+later — turns it into the composed name like any other row of that era. Writing the composed name
+there directly would jump ahead of the chain, and the rename would then arrive with the old value and
+overwrite it.
+
+So **a new migration goes at the end of the list** and writes whatever the build it belongs to wrote.
+Every function is guarded by its own data — it does nothing when its names are absent — so running all
+of them every time is correct and there is nothing to record or skip.
+
+Three things stay in `MainApp`, each because it would misbehave against a file rather than because of
+any rule about what a migration may touch:
+
+- the simple-mode seed, which invents a value rather than moving one. `simple_mode` feeds
+  `PreferencesImpl.calculatedDefaultValue`, so a wrong guess changes the effective value of a whole
+  family of settings.
+- `seedTempTargetPresets()`, which **seeds** three default presets when it finds none — right on a
+  device, where it doubles as new-install bootstrap, and wrong over a file, where it would write
+  invented presets over the user's real ones.
+- the insulin label and peak derivation and the `LocalProfile_<n>_name` / `_dia` harvest, which fill
+  `MainApp` fields that `dataMigrations()` reads much later. The profile migration writes the new
+  `_name` key but deliberately leaves the raw one so that harvest still works.
+
+A value that will not convert is logged and **left exactly where it is**, so the next run tries again
+— see `LegacyPreferenceValue`, which answers null rather than guessing.
 
 ## Working out what a name means
 
@@ -175,7 +234,7 @@ same phone and the same pump needs no thought, and replacing a pump's configurat
 deliberate tick. It sits with the other inputs rather than inside the confirm dialog, because a
 destructive option in a modal that people dismiss reflexively is easy to mis-tick.
 
-Cancelling at any point before step 4 changes nothing on disk.
+Cancelling at any point before step 5 changes nothing on disk.
 
 ## What an import does not do
 
@@ -185,9 +244,10 @@ Cancelling at any point before step 4 changes nothing on disk.
   nothing, and prefix matching over-counts, because every dead composed argument still matches a live
   prefix. A rule that is wrong in either direction either destroys real settings or misses most of
   the rubbish.
-- **It does not migrate the file.** Key-name migrations run at start-up, against the live store, in
-  `MainApp.doMigrations`. A file with old key names therefore imports its old names, which then do
-  not resolve and are left alone.
+- **It does not migrate everything an old file carries.** The migrations above fix what they cover.
+  They do not cover a setting whose feature no longer exists, and `graphconfig` needs a format
+  converter rather than a rename. What each one does and does not do is in its own KDoc in
+  `PreferenceMigrations`.
 - **It does not reach preferences that bypass `Preferences`.** ComboV2 and Insight's
   `PairingDataStorage` keep some state in raw keys or their own file. `RawPreferenceStoreScanTest`
   lists what is left.
@@ -196,6 +256,7 @@ Cancelling at any point before step 4 changes nothing on disk.
 
 | What | Where |
 | --- | --- |
+| Old names → current, on either store | `implementation` `PreferenceMigrations`, `FileKeyValueStore` |
 | Name → key + argument + category | `core/keys` `PreferenceKeyResolver` |
 | Which plugin owns which key | `implementation` `PreferenceKeyResolverFactory` |
 | Filter, diff, write, refresh, stamp | `implementation` `PreferenceImportApplier` |
@@ -207,7 +268,7 @@ Cancelling at any point before step 4 changes nothing on disk.
 
 - **`ComposedKeyPrefixTest`** — no composed key prefix may swallow another. It found a real one:
   `appwidget_use_black_<id>` sat inside `appwidget_<id>`, so a Boolean could be read as an Int. The
-  key is now `widget_use_black_` and `MainApp.doMigrations` moves the old values across.
+  key is now `widget_use_black_` and `PreferenceMigrations.widgetUseBlack` moves the old values across.
 - **`PreferenceKeyRoundTripTest`** — every key in the build composes to a stored name and resolves
   back to the same key. This is what catches a key added next month in a module nobody thought about.
 - **`PreferenceKeySnapshotTest`** — a recorded snapshot of every key, its type, default and

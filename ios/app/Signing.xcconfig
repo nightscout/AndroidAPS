@@ -12,8 +12,13 @@
 // exist until you do that.
 //
 // The include below is optional, the `?` is what makes it so. A clone without that
-// file still builds for the simulator, which does not sign at all. Only a device
-// build needs a team, and without one it stops with "requires a development team".
+// file still builds for the simulator: a simulator build is signed ad hoc, which
+// needs no team. Only a device build needs one, and without it the build stops with
+// "requires a development team".
+//
+// A simulator build gets its entitlements from Simulator.entitlements rather than
+// from a profile, because the Keychain refuses to work without them. That file says
+// why.
 //
 // This file itself must stay committed. Xcode treats a missing base configuration
 // as an error, not a warning, so pointing the project straight at an ignored file

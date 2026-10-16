@@ -1,20 +1,38 @@
 package app.aaps.pump.danarkorean
 
+import android.content.ComponentName
+import android.content.Intent
+import android.content.ServiceConnection
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.keys.DanaBooleanKey
+import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
+import app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 class DanaRKoreanPluginTest : TestBaseWithProfile() {
@@ -24,6 +42,8 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
     @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
 
     lateinit var danaPump: DanaPump
+
+    private val bolusProgressData by lazy { BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined)) }
 
     private lateinit var danaRPlugin: DanaRKoreanPlugin
 
@@ -38,7 +58,7 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
         danaRPlugin = DanaRKoreanPlugin(
             aapsLogger, rxBus, context, rh, activePlugin, commandQueue, danaPump, dateUtil,
-            pumpSync, preferences, config, notificationManager, danaHistoryDatabase, decimalFormatter, BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined)), pumpEnactResultProvider
+            pumpSync, preferences, config, notificationManager, danaHistoryDatabase, decimalFormatter, bolusProgressData, pumpEnactResultProvider
         )
     }
 
@@ -51,4 +71,65 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
         Assertions.assertEquals(0.8, result.cU, 0.01)
     }
 
+    @Test
+    fun theDescriptionIsForTheDanaRKorean() {
+        assertThat(danaRPlugin.pumpDescription.pumpType).isEqualTo(PumpType.DANA_R_KOREAN)
+    }
+
+    /** #2454: AAPS keeps the rates the pump reports as the running basal, one per hour. */
+    @Test
+    fun deliveredBasalIsWhatThePumpReports() {
+        whenever(preferences.get(DanaStringNonKey.RName)).thenReturn("DAN12345AB")
+        whenever(preferences.get(DanaIntNonKey.Password)).thenReturn(1234)
+        danaPump.password = 1234
+        danaPump.lastConnection = 1
+        danaPump.maxBasal = 3.0
+        danaPump.isExtendedBolusEnabled = true
+        danaPump.pumpProfiles = Array(4) { Array(48) { 0.0 } }.also { profiles -> for (hour in 0..23) profiles[0][hour] = if (hour < 6) 0.56 else 0.84 }
+
+        val delivered = danaRPlugin.deliveredBasal()!!
+
+        assertThat(delivered.map { it.timeAsSeconds }).containsExactlyElementsIn((0..23).map { it * 3600 }).inOrder()
+        assertThat(delivered.map { it.value }).containsExactlyElementsIn((0..23).map { if (it < 6) 0.56 else 0.84 }).inOrder()
+    }
+
+    @Test
+    fun deliveredBasalIsUnknownWhileNotInitialized() {
+        danaPump.pumpProfiles = Array(4) { Array(48) { 0.5 } }
+        assertThat(danaRPlugin.deliveredBasal()).isNull()
+    }
+
+    /** Binds a mocked service the way Android would. Its bolus() returns [connectionOk] and reports [delivered] U. */
+    private fun bindBolusService(connectionOk: Boolean, delivered: Double) {
+        whenever(preferences.observe(DanaBooleanKey.UseExtended)).thenReturn(MutableStateFlow(false))
+        runBlocking { danaRPlugin.onStart() }
+        val connection = argumentCaptor<ServiceConnection>()
+        verify(context).bindService(any<Intent>(), connection.capture(), any<Int>())
+        val service = mock<DanaRKoreanExecutionService>()
+        whenever(service.bolus(any())).thenAnswer {
+            bolusProgressData.start(1.0, isSMB = false)
+            bolusProgressData.updateProgress(delivered = PumpInsulin(delivered))
+            connectionOk
+        }
+        val binder = mock<DanaRKoreanExecutionService.LocalBinder>()
+        whenever(binder.serviceInstance).thenReturn(service)
+        connection.firstValue.onServiceConnected(mock<ComponentName>(), binder)
+    }
+
+    @Test
+    fun deliveredBolusIsEnacted() {
+        bindBolusService(connectionOk = true, delivered = 1.0)
+        val result = runBlocking { danaRPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 }) }
+        assertThat(result.success).isTrue()
+        assertThat(result.enacted).isTrue()
+    }
+
+    @Test
+    fun failedBolusIsNotEnacted() {
+        whenever(rh.gs(eq(app.aaps.pump.dana.R.string.boluserrorcode), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("bolus error")
+        bindBolusService(connectionOk = false, delivered = 0.4)
+        val result = runBlocking { danaRPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 }) }
+        assertThat(result.success).isFalse()
+        assertThat(result.enacted).isFalse()
+    }
 }

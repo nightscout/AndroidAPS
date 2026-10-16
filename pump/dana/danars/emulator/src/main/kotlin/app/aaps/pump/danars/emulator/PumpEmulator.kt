@@ -197,6 +197,7 @@ class PumpEmulator(val state: PumpState = PumpState()) {
     }
 
     private fun processSetTemporaryBasal(params: ByteArray): ByteArray {
+        if (state.rejectTempBasal) return byteArrayOf(0x01) // refused
         if (params.size >= 2) {
             val percent = params[0].toInt() and 0xFF
             val durationHours = params[1].toInt() and 0xFF
@@ -220,6 +221,7 @@ class PumpEmulator(val state: PumpState = PumpState()) {
     }
 
     private fun processApsSetTemporaryBasal(params: ByteArray): ByteArray {
+        if (state.rejectTempBasal) return byteArrayOf(0x01) // refused
         if (params.size >= 3) {
             val percent = (params[0].toInt() and 0xFF) or ((params[1].toInt() and 0xFF) shl 8)
             val durationMinutes = if (params[2].toInt() and 0xFF == 150) 15 else 30
@@ -516,7 +518,7 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             for (i in 1 until events.size) {
                 if (historyEventDelayMs > 0) Thread.sleep(historyEventDelayMs)
                 if (Thread.currentThread().isInterrupted) return@launchTracked
-                val data = buildHistoryEventData(events[i], (i + 1).toShort())
+                val data = buildHistoryEventData(events[i])
                 onSpontaneousMessage?.invoke(
                     BleEncryption.DANAR_PACKET__TYPE_RESPONSE,
                     BleEncryption.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS,
@@ -532,15 +534,15 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             )
         }
 
-        return buildHistoryEventData(events[0], 1)
+        return buildHistoryEventData(events[0])
     }
 
     /**
      * Build a history event data payload in the format matching the pump's time mode.
      */
-    private fun buildHistoryEventData(event: HistoryEvent, id: Short): ByteArray {
+    private fun buildHistoryEventData(event: HistoryEvent): ByteArray {
         return if (state.usingUTC) {
-            state.historyStore.buildEventDataUtc(event, id)
+            state.historyStore.buildEventDataUtc(event)
         } else {
             state.historyStore.buildEventData(event)
         }

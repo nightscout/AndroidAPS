@@ -115,6 +115,35 @@ reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused w
     - Don't explore same directories multiple times
     - Combine related searches when possible
 
+## Verify Before You Push
+
+- **A rename or a signature change is never local.** Run the suite **CI** runs, not the modules you
+  edited. The command is in `.github/workflows/unit-tests.yml`:
+  ```
+  ./gradlew.bat --console=plain --no-daemon --continue -PfirebaseDisable \
+    testFullDebugUnitTest testDebugUnitTest jvmTest testAndroidHostTest :desktop:shell:test
+  ```
+  Add `--continue` yourself. Without it gradle stops scheduling after the first failing module, so
+  you fix one thing, push, and CI goes red on the next one. (Learned the slow way on 2026-10-13:
+  three red CI rounds for a single commit, each a different module of the same change.)
+- **After renaming anything, grep case-insensitively.** `grep -rni oldname` — renaming a class also
+  renames the lowercase DI property, and `grep -rn OldName` silently misses `oldName`. Two files
+  hold names as a golden list, so they do not fail to compile, they fail a test:
+    - `app/src/testFull/kotlin/app/aaps/di/metro/GraphScopeStabilityTest.kt` — the root graph
+      accessor names.
+    - `app/src/testFull/resources/prefs-schema.txt` — the preference schema.
+- **Adding a parameter breaks Mockito matcher counts.** A `verify(...)` / `whenever(...)` with N
+  matchers now needs N+1 (`InvalidUseOfMatchersException: 8 matchers expected, 7 recorded`). A
+  default value does not spare the test: Kotlin passes the default explicitly at the call site, so
+  give the new slot a real matcher — prefer `eq(<default>)` over `any()`, it documents the intent.
+- **Never run two gradle builds at once.** They contend on the build cache (`Timeout waiting to
+  lock Build cache … Owner PID`) and fail tasks that are otherwise fine, and the extra load makes
+  real-time tests (`withTimeout`, cancellation races) flake. Run them one after the other.
+- **In a coroutine test, do not `advanceUntilIdle()` on anything that can re-arm itself.** A
+  scheduler that re-schedules from a mocked, frozen `dateUtil.now()` never goes idle, and the test
+  hangs instead of failing — it ate a whole test run before anyone noticed. Use `advanceTimeBy(d)`
+  over a bounded window and assert the event count, so a regression fails on the number.
+
 ## User Preferences
 
 - **NEVER make code changes without user confirmation** — When the user describes a problem or
@@ -201,9 +230,10 @@ reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused w
     - Remove unused functions, parameters, and extensions
     - Delete deprecated code and escape hatches
     - Compile frequently to verify nothing breaks
-- **Remove dead code when you find it**, in the same change, including unreferenced resources (delete
-  those from every locale). Do not ship a generator, an interface or a registration that nothing uses
-  yet - add it when the thing that consumes it lands.
+- **Remove dead code when you find it**, in the same change, including unreferenced resources. For
+  strings, delete them from the English `values/strings.xml` only (see the strings rule below). Do not
+  ship a generator, an interface or a registration that nothing uses yet - add it when the thing that
+  consumes it lands.
     - **But check first whether the dead code is hiding a bug.** A private function with no callers,
       or a parameter that is always the default, can mean a caller was lost rather than that the code
       is obsolete. `TriggerBTDevice.devicesPaired()` looked like dead code and was in fact a
@@ -229,7 +259,9 @@ reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused w
   imports, API changes, type changes, new files) could cause errors.
 - Avoid duplication while writing new code and resources. Prefer moving to another module. Elaborate
   if you think, it's necessary
-- When resource strings are affected, change only english version. Ignore translations
+- **Strings: touch the English `values/strings.xml` only.** This applies when you add, change or
+  remove a string, also when you delete an unused one. Never edit the translated `values-xx/strings.xml`
+  files: translations come from Crowdin (`crowdin.yml`) and are updated from there.
 - **Never manipulate localized strings programmatically** - Using patterns like
   `.replace(",", ".")`,
   `.removeSuffix(":")`, or stripping characters from resource strings breaks localization. Different
@@ -379,6 +411,10 @@ its own permission (it wipes the app). When asked:
 
 - Master runs the `full` flavor, a client runs an `aapsclient` flavor — build the needed APK(s) and
   `adb install -r` (keep data; **never uninstall/wipe** the setup). Find devices via `adb devices -l`.
+- **Never install a build that is older than the app on the device.** Update the branch first
+  (`git status -sb` must not say "behind"), and check that `DATABASE_VERSION` in
+  `database/impl/.../AppDatabase.kt` is not lower than the installed build's. A lower version is a
+  downgrade, and Room's destructive fallback then drops the whole database, even with `install -r`.
 - Drive the UI with **`uiautomator`** (dump hierarchy → tap by element `bounds`), not screenshots.
 - Verify behaviour from **`logcat`** (clear before the action, dump after, grep the relevant markers).
 - Use redirect-not-pipe for any gradle build/test so the real exit code shows (see caveat above).

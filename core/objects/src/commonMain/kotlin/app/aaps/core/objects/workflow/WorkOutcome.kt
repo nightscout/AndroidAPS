@@ -7,8 +7,9 @@ package app.aaps.core.objects.workflow
  * Kotlin and can live in commonMain; the Android worker maps it to a `Result` and is the only thing
  * that needs to know WorkManager exists.
  *
- * See `RunnerWorker` for the Android side, and `PrepareGraphDataRunner` in `:workflow` for the first
- * body written this way.
+ * See `RunnerWorker` for the Android side, and the Nightscout loaders in `:plugins:sync` for bodies
+ * written this way. The calculation runners in `:workflow` report it too, but no worker runs them any
+ * more: the coroutine executor there reads the outcome itself.
  */
 sealed interface WorkOutcome {
 

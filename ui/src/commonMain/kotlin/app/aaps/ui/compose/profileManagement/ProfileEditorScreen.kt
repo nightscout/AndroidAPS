@@ -3,7 +3,6 @@ package app.aaps.ui.compose.profileManagement
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -61,7 +60,6 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileEditorViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileUiState
 import app.aaps.ui.compose.profileManagement.viewmodels.SingleProfileState
@@ -150,145 +148,131 @@ fun ProfileEditorScreen(
         },
         containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
     ) { paddingValues ->
-        if (state.isLocked) {
-            // Locked state - show unlock button
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentAlignment = Alignment.Center
-            ) {
-                FilledTonalButton(onClick = { /* Unlock handled by activity */ }) {
-                    Text(stringResource(CoreUiStrings.unlock_settings))
-                }
-            }
-        } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .clearFocusOnTap(focusManager)
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            ) {
-                // Profile name header with edit capability
-                ProfileNameHeader(
-                    profileName = state.currentProfile?.name ?: "",
-                    onProfileNameChange = { viewModel.updateProfileName(it) },
-                    units = state.units
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .clearFocusOnTap(focusManager)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+            // Profile name header with edit capability
+            ProfileNameHeader(
+                profileName = state.currentProfile?.name ?: "",
+                onProfileNameChange = { viewModel.updateProfileName(it) },
+                units = state.units
+            )
+
+            Spacer(Modifier.height(12.dp))
+
+            // Tab layout with error indication
+            val icHasError = state.tabErrors.containsKey(ProfileErrorType.IC)
+            val isfHasError = state.tabErrors.containsKey(ProfileErrorType.ISF)
+            val basalHasError = state.tabErrors.containsKey(ProfileErrorType.BASAL)
+            val targetHasError = state.tabErrors.containsKey(ProfileErrorType.TARGET)
+
+            PrimaryTabRow(selectedTabIndex = state.selectedTab) {
+                Tab(
+                    selected = state.selectedTab == 0,
+                    onClick = { viewModel.selectTab(0) },
+                    modifier = Modifier.background(
+                        if (icHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
+                    ),
+                    text = { Text(stringResource(CoreUiStrings.ic_short)) }
                 )
-
-                Spacer(Modifier.height(12.dp))
-
-                // Tab layout with error indication
-                val icHasError = state.tabErrors.containsKey(ProfileErrorType.IC)
-                val isfHasError = state.tabErrors.containsKey(ProfileErrorType.ISF)
-                val basalHasError = state.tabErrors.containsKey(ProfileErrorType.BASAL)
-                val targetHasError = state.tabErrors.containsKey(ProfileErrorType.TARGET)
-
-                PrimaryTabRow(selectedTabIndex = state.selectedTab) {
-                    Tab(
-                        selected = state.selectedTab == 0,
-                        onClick = { viewModel.selectTab(0) },
-                        modifier = Modifier.background(
-                            if (icHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
-                        ),
-                        text = { Text(stringResource(CoreUiStrings.ic_short)) }
-                    )
-                    Tab(
-                        selected = state.selectedTab == 1,
-                        onClick = { viewModel.selectTab(1) },
-                        modifier = Modifier.background(
-                            if (isfHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
-                        ),
-                        text = { Text(stringResource(CoreUiStrings.isf_short)) }
-                    )
-                    Tab(
-                        selected = state.selectedTab == 2,
-                        onClick = { viewModel.selectTab(2) },
-                        modifier = Modifier.background(
-                            if (basalHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
-                        ),
-                        text = { Text(stringResource(CoreUiStrings.basal_short)) }
-                    )
-                    Tab(
-                        selected = state.selectedTab == 3,
-                        onClick = { viewModel.selectTab(3) },
-                        modifier = Modifier.background(
-                            if (targetHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
-                        ),
-                        text = { Text(stringResource(CoreUiStrings.target_short)) }
-                    )
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                // Tab content with error display
-                state.currentProfile?.let { profile ->
-                    // Get error message for current tab — tabs are 0=IC, 1=ISF, 2=BASAL, 3=TARGET
-                    val currentTabError = when (state.selectedTab) {
-                        0 -> state.tabErrors[ProfileErrorType.IC]
-                        1 -> state.tabErrors[ProfileErrorType.ISF]
-                        2 -> state.tabErrors[ProfileErrorType.BASAL]
-                        3 -> state.tabErrors[ProfileErrorType.TARGET]
-                        else -> null
-                    }
-
-                    // Show error message if present
-                    currentTabError?.let { error ->
-                        Text(
-                            text = error,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                    }
-
-                    // Non-blocking pump-compatibility warning, shown on the basal tab only (basal is
-                    // the only pump-dependent value). Distinct from the red blocking errors above:
-                    // the profile can still be saved and synced — it just can't be activated on the
-                    // current pump until the basal fits the pump's limits.
-                    if (state.pumpIncompatible && state.selectedTab == 2) {
-                        Text(
-                            text = stringResource(CoreUiStrings.profile_basal_not_compatible_with_pump),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.tertiary,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                    }
-
-                    when (state.selectedTab) {
-
-                        0 -> IcContent(
-                            viewModel = viewModel,
-                            profile = profile,
-                            state = state,
-                            supportsDynamic = state.usingDynamicIc
-                        )
-
-                        1 -> IsfContent(
-                            viewModel = viewModel,
-                            profile = profile,
-                            state = state,
-                            supportsDynamic = state.usingDynamicIsf
-                        )
-
-                        2 -> BasalContent(
-                            viewModel = viewModel,
-                            profile = profile,
-                            state = state
-                        )
-
-                        3 -> TargetContent(
-                            viewModel = viewModel,
-                            profile = profile,
-                            state = state
-                        )
-                    }
-                }
-
-                Spacer(Modifier.height(16.dp))
+                Tab(
+                    selected = state.selectedTab == 1,
+                    onClick = { viewModel.selectTab(1) },
+                    modifier = Modifier.background(
+                        if (isfHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
+                    ),
+                    text = { Text(stringResource(CoreUiStrings.isf_short)) }
+                )
+                Tab(
+                    selected = state.selectedTab == 2,
+                    onClick = { viewModel.selectTab(2) },
+                    modifier = Modifier.background(
+                        if (basalHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
+                    ),
+                    text = { Text(stringResource(CoreUiStrings.basal_short)) }
+                )
+                Tab(
+                    selected = state.selectedTab == 3,
+                    onClick = { viewModel.selectTab(3) },
+                    modifier = Modifier.background(
+                        if (targetHasError) MaterialTheme.colorScheme.errorContainer else Color.Transparent
+                    ),
+                    text = { Text(stringResource(CoreUiStrings.target_short)) }
+                )
             }
+
+            Spacer(Modifier.height(16.dp))
+
+            // Tab content with error display
+            state.currentProfile?.let { profile ->
+                // Get error message for current tab — tabs are 0=IC, 1=ISF, 2=BASAL, 3=TARGET
+                val currentTabError = when (state.selectedTab) {
+                    0 -> state.tabErrors[ProfileErrorType.IC]
+                    1 -> state.tabErrors[ProfileErrorType.ISF]
+                    2 -> state.tabErrors[ProfileErrorType.BASAL]
+                    3 -> state.tabErrors[ProfileErrorType.TARGET]
+                    else -> null
+                }
+
+                // Show error message if present
+                currentTabError?.let { error ->
+                    Text(
+                        text = error,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+
+                // Non-blocking pump-compatibility warning, shown on the basal tab only (basal is
+                // the only pump-dependent value). Distinct from the red blocking errors above:
+                // the profile can still be saved and synced — it just can't be activated on the
+                // current pump until the basal fits the pump's limits.
+                if (state.pumpIncompatible && state.selectedTab == 2) {
+                    Text(
+                        text = stringResource(CoreUiStrings.profile_basal_not_compatible_with_pump),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+
+                when (state.selectedTab) {
+
+                    0 -> IcContent(
+                        viewModel = viewModel,
+                        profile = profile,
+                        state = state,
+                        supportsDynamic = state.usingDynamicIc
+                    )
+
+                    1 -> IsfContent(
+                        viewModel = viewModel,
+                        profile = profile,
+                        state = state,
+                        supportsDynamic = state.usingDynamicIsf
+                    )
+
+                    2 -> BasalContent(
+                        viewModel = viewModel,
+                        profile = profile,
+                        state = state
+                    )
+
+                    3 -> TargetContent(
+                        viewModel = viewModel,
+                        profile = profile,
+                        state = state
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
         }
     }
 }

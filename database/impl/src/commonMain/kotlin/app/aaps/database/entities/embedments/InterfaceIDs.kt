@@ -30,6 +30,7 @@ data class InterfaceIDs @Ignore constructor(
         DANA_R_KOREAN,
         DANA_RV2,
         DANA_I,
+        DANA_I2,
         DANA_RS,
         DANA_RS_KOREAN,
         OMNIPOD_EROS,

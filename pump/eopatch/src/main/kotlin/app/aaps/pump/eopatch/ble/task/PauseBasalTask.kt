@@ -1,6 +1,5 @@
 package app.aaps.pump.eopatch.ble.task
 
-import android.os.SystemClock
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.di.ApplicationScope
@@ -13,19 +12,16 @@ import app.aaps.pump.eopatch.alarm.AlarmCode
 import app.aaps.pump.eopatch.alarm.IAlarmRegistry
 import app.aaps.pump.eopatch.core.api.BasalPause
 import app.aaps.pump.eopatch.core.response.PatchBooleanResponse
-import io.reactivex.rxjava3.core.Observable
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import io.reactivex.rxjava3.functions.Function3
-import io.reactivex.rxjava3.functions.Predicate
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 import kotlin.time.Duration.Companion.minutes
 
 @SingleIn(AppScope::class)
@@ -40,65 +36,49 @@ class PauseBasalTask(
 
     @Inject lateinit var basalPause: BasalPause
 
-    private val bolusCheckSubject = BehaviorSubject.create<Boolean>()
-    private val extendedBolusCheckSubject = BehaviorSubject.create<Boolean>()
-    private val basalCheckSubject = BehaviorSubject.create<Boolean>()
+    /**
+     * Stops what delivers insulin, then pauses the basal. Built when subscribed, so nothing runs on the caller's thread.
+     *
+     * It used to signal "ready" through subjects of this singleton. They kept their `true` from the previous pause, so
+     * a second pause did not wait for the temp basal cancel. A running SMB was not stopped, and the pause waited for
+     * it within the command timeout: a suspend during an SMB failed.
+     */
+    fun pause(pauseDurationHour: Float, alarmCode: AlarmCode?): Single<PatchBooleanResponse> =
+        Single.defer {
+            if (pm.patchState.isNormalBasalPaused) return@defer Single.just(PatchBooleanResponse(true))
 
-    private fun getBolusSubject(): Observable<Boolean> {
-        return bolusCheckSubject.hide()
-    }
+            enqueue(TaskFunc.UPDATE_CONNECTION)
 
-    private fun getExtendedBolusSubject(): Observable<Boolean> {
-        return extendedBolusCheckSubject.hide()
-    }
-
-    private fun getBasalSubject(): Observable<Boolean> {
-        return basalCheckSubject.hide()
-    }
-
-    fun pause(pauseDurationHour: Float, pausedTimestamp: Long, alarmCode: AlarmCode?): Single<PatchBooleanResponse> {
-        val patchState = pm.patchState
-
-        if (patchState.isNormalBasalPaused) return Single.just(PatchBooleanResponse(true))
-
-        enqueue(TaskFunc.UPDATE_CONNECTION)
-
-        if (commandQueue.isRunning(Command.CommandType.BOLUS)) {
-            uel.log(Action.CANCEL_BOLUS, Sources.EOPatch2, "", ArrayList())
-            commandQueue.cancelAllBoluses(null)
-            SystemClock.sleep(650)
+            stopDelivery().toObservable()
+                .flatMap(Function { isReady() })
+                // The time limit is for the pause command only, not for the waiting above.
+                .concatMapSingle(Function { pauseBasal(pauseDurationHour, alarmCode).timeout(PAUSE_TIME_OUT, TimeUnit.SECONDS) })
+                .firstOrError()
+                .doOnError(Consumer { e: Throwable -> aapsLogger.error(LTag.PUMPCOMM, e.message ?: "PauseBasalTask error") })
         }
-        bolusCheckSubject.onNext(true)
 
+    /** Stops a bolus or an SMB, an extended bolus and a temp basal, and waits until the queue has done it. */
+    private fun stopDelivery(): Single<Boolean> = Single.create { emitter ->
         appScope.launch {
-            if (pumpSync.expectedPumpState().extendedBolus != null) {
-                uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.EOPatch2, "", ArrayList())
-                commandQueue.cancelExtended()
+            try {
+                if (commandQueue.isRunning(Command.CommandType.BOLUS) || commandQueue.isRunning(Command.CommandType.SMB_BOLUS)) {
+                    uel.log(Action.CANCEL_BOLUS, Sources.EOPatch2, "", ArrayList())
+                    commandQueue.cancelAllBoluses(null)
+                    delay(650)
+                }
+                if (pumpSync.expectedPumpState().extendedBolus != null) {
+                    uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.EOPatch2, "", ArrayList())
+                    commandQueue.cancelExtended()
+                }
+                if (pumpSync.expectedPumpState().temporaryBasal != null) {
+                    uel.log(Action.CANCEL_TEMP_BASAL, Sources.EOPatch2, "", ArrayList())
+                    commandQueue.cancelTempBasal(enforceNew = true)
+                }
+                emitter.onSuccess(true)
+            } catch (e: Exception) {
+                emitter.tryOnError(e)
             }
-            extendedBolusCheckSubject.onNext(true)
         }
-
-        appScope.launch {
-            if (pumpSync.expectedPumpState().temporaryBasal != null) {
-                uel.log(Action.CANCEL_TEMP_BASAL, Sources.EOPatch2, "", ArrayList())
-                commandQueue.cancelTempBasal(enforceNew = true)
-            }
-            basalCheckSubject.onNext(true)
-        }
-
-        return Observable.zip(
-            getBolusSubject(), getExtendedBolusSubject(), getBasalSubject(),
-            Function3 { bolusReady: Boolean, extendedBolusReady: Boolean, basalReady: Boolean -> (bolusReady && extendedBolusReady && basalReady) })
-            .filter(Predicate { ready: Boolean -> ready })
-            .flatMap(Function { isReady() })
-            .concatMapSingle(Function { getSuspendedTime(pausedTimestamp) })
-            .concatMapSingle(Function { pauseBasal(pauseDurationHour, alarmCode) })
-            .firstOrError()
-            .doOnError(Consumer { e: Throwable -> aapsLogger.error(LTag.PUMPCOMM, e.message ?: "PauseBasalTask error") })
-    }
-
-    private fun getSuspendedTime(pausedTimestamp: Long): Single<Long> {
-        return Single.just(pausedTimestamp)
     }
 
     private fun pauseBasal(pauseDurationHour: Float, alarmCode: AlarmCode?): Single<PatchBooleanResponse> {
@@ -132,17 +112,9 @@ class PauseBasalTask(
         enqueue(TaskFunc.UPDATE_CONNECTION)
     }
 
-    @Synchronized fun enqueue(pauseDurationHour: Float, pausedTime: Long, alarmCode: AlarmCode) {
-        val ready = (disposable == null || disposable?.isDisposed == true)
+    companion object {
 
-        if (ready) {
-            disposable = pause(pauseDurationHour, pausedTime, alarmCode)
-                .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
-                .subscribe(Consumer {
-                    bolusCheckSubject.onNext(false)
-                    extendedBolusCheckSubject.onNext(false)
-                    basalCheckSubject.onNext(false)
-                })
-        }
+        /** The time the patch has to answer the pause command. */
+        private const val PAUSE_TIME_OUT = 10L
     }
 }

@@ -26,7 +26,6 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.pump.StepProgressIndicator
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 
 @Composable
 fun SceneWizardScreen(
@@ -58,18 +57,10 @@ fun SceneWizardScreen(
                 .padding(paddingValues)
         ) {
             // Step progress indicator
-            if (state.currentStep >= SceneWizardViewModel.STEP_PROFILE) {
-                val editOffset = if (viewModel.isEditMode) SceneWizardViewModel.STEP_PROFILE else SceneWizardViewModel.STEP_INFO
-                val totalSteps = SceneWizardViewModel.TOTAL_STEPS - editOffset
+            viewModel.progress(state)?.let { progress ->
                 StepProgressIndicator(
-                    totalSteps = totalSteps,
-                    currentStep = state.currentStep - editOffset, // 0-indexed for the shared indicator
-                    modifier = Modifier.padding(horizontal = AapsSpacing.extraLarge)
-                )
-            } else if (state.currentStep == SceneWizardViewModel.STEP_INFO) {
-                StepProgressIndicator(
-                    totalSteps = SceneWizardViewModel.TOTAL_STEPS,
-                    currentStep = 0,
+                    totalSteps = progress.total,
+                    currentStep = progress.step, // 0-indexed for the shared indicator
                     modifier = Modifier.padding(horizontal = AapsSpacing.extraLarge)
                 )
             }

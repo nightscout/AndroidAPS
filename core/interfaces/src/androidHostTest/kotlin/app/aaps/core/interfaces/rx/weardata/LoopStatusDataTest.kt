@@ -44,6 +44,39 @@ class LoopStatusDataTest {
     }
 
     @Test
+    fun profileAndSceneMarksRoundTrip() {
+        val data = LoopStatusData(
+            timestamp = 0L,
+            loopMode = LoopStatusData.LoopMode.CLOSED,
+            apsName = null,
+            lastRun = null,
+            lastEnact = null,
+            tempTarget = TempTargetInfo(targetDisplay = "100 mg/dl", endTime = 5000L, durationMinutes = 30, units = "mg/dl", fromScene = true),
+            defaultRange = TargetRange("70", "180", "110", "mg/dl"),
+            oapsResult = null,
+            activeScene = ActiveSceneInfo(name = "Sleep", endTime = 9000L, chainTargetName = null),
+            profile = ProfileInfo(name = "Night", percentage = 120, timeshiftHours = -2, endTime = 9000L, returnsTo = "Default", fromScene = true),
+            modeFromScene = true,
+            sensitivity = listOf("Autosens Value: 95%", "ISF (profile): 3.5")
+        )
+        val restored = json.decodeFromString(LoopStatusData.serializer(), json.encodeToString(LoopStatusData.serializer(), data))
+        assertThat(restored).isEqualTo(data)
+    }
+
+    @Test
+    fun missingProfileAndSceneMarksDecodeAsAbsent() {
+        // payload shape from a phone older than the profile card and the scene marks
+        val legacy = """{"timestamp":0,"loopMode":"CLOSED","apsName":null,"lastRun":null,"lastEnact":null,""" +
+            """"tempTarget":{"targetDisplay":"100","endTime":5000,"durationMinutes":30,"units":"mg/dl"},""" +
+            """"defaultRange":{"lowDisplay":"a","highDisplay":"b","targetDisplay":"c","units":"u"},"oapsResult":null}"""
+        val decoded = json.decodeFromString(LoopStatusData.serializer(), legacy)
+        assertThat(decoded.profile).isNull()
+        assertThat(decoded.tempTarget?.fromScene).isFalse()
+        assertThat(decoded.modeFromScene).isFalse()
+        assertThat(decoded.sensitivity).isEmpty()
+    }
+
+    @Test
     fun roundTrip_withNullableFieldsNull() {
         val data = LoopStatusData(
             timestamp = 0L,

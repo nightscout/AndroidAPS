@@ -15,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -62,7 +64,10 @@ fun OkCancelDialog(
             {
                 Text(
                     text = title,
-                    modifier = Modifier.fillMaxWidth(),
+                    // A heading, so a screen reader can jump to it and says what the dialog is.
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .semantics { heading() },
                     textAlign = TextAlign.Center
                 )
             }
@@ -132,7 +137,10 @@ fun OkCancelDialog(
             {
                 Text(
                     text = title,
-                    modifier = Modifier.fillMaxWidth(),
+                    // A heading, so a screen reader can jump to it and says what the dialog is.
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .semantics { heading() },
                     textAlign = TextAlign.Center
                 )
             }

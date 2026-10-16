@@ -54,7 +54,7 @@
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
     <string name="time_remaining_h_m">Zbývá %1$dh %2$dm</string>
-    <string name="time_remaining_m">Zbývá %1$dhm</string>
+    <string name="time_remaining_m">Zbývá %1$dm</string>
     <string name="later_today">Později během dneška</string>
     <string name="tomorrow">Zítra</string>
     <string name="today">Dnes</string>
@@ -93,6 +93,11 @@
     <string name="pref_show_week_number">Zobrazit číslo týdne</string>
     <string name="pref_show_date">Zobrazit datum</string>
     <string name="pref_show_seconds">Zobrazovat sekundy</string>
+    <string name="pref_show_complication1">Zobrazit komplikaci 1</string>
+    <string name="pref_show_complication2">Zobrazit komplikaci 2</string>
+    <string name="pref_show_complication3">Zobrazit komplikaci 3</string>
+    <string name="pref_show_complication4">Zobrazit komplikaci 4</string>
+    <string name="pref_show_complication5">Zobrazit komplikaci 5</string>
     <string name="default_custom_watchface_comment">Výchozí ciferník. Můžete kliknout na tlačítko EXPORTOVAT CIFERNÍK pro vygenerování šablony</string>
     <string name="default_custom_watchface_external_comment">Výchozí ciferník včetně externích zobrazení pro sledující, chcete-li vygenerovat šablonu, můžete kliknout na tlačítko EXPORTOVAT CIFERNÍK</string>
     <string name="wear_default_watchface">Výchozí ciferník</string>
@@ -115,6 +120,7 @@
     <string name="insulin_peak_time">Čas vrcholu [min]</string>
     <!-- Concentration -->
     <string name="u10">U10</string>
+    <string name="u20">U20</string>
     <string name="u40">U40</string>
     <string name="u50">U50</string>
     <string name="u100">U100</string>
@@ -152,6 +158,8 @@
     <string name="bolus_constraint_applied_warn">Použito omezení bolusu: %1$.2f U na %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus nebude pumpou vydán, pouze zaznamenán</string>
     <string name="advisoralarm">Spustit alarm, když je čas na jídlo</string>
-    <string name="wizard_ecarbs">eSach %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eSacharidy %1$d g / %2$d h (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Plugin %1$s se nepodařilo spustit a nemusí fungovat. Prosím restartujte AAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">U pluginu %1$s došlo k chybě a jeho část byla zastavena. Prosím restartujte AAPS.</string>
 </resources>

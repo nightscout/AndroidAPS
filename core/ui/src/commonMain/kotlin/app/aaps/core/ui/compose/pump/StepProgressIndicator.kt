@@ -17,8 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.stringResource
 
 @Composable
 fun StepProgressIndicator(
@@ -28,12 +34,20 @@ fun StepProgressIndicator(
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
     val outlineColor = MaterialTheme.colorScheme.outline
+    // The dots are drawn only, so a screen reader said nothing about where the user is. Said as
+    // "Step 3 of 7", and as a live region it is said again on every new step - the wizard swaps
+    // the whole page, including the button the user just pressed, and nothing else announces it.
+    val spoken = stringResource(CoreUiStrings.a11y_wizard_step, currentStep + 1, totalSteps)
 
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = AapsSpacing.extraLarge)
-            .height(40.dp),
+            .height(40.dp)
+            .clearAndSetSemantics {
+                contentDescription = spoken
+                liveRegion = LiveRegionMode.Polite
+            },
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {

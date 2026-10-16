@@ -1,6 +1,5 @@
 package app.aaps
 
-import app.aaps.di.GeneratedStringOwners
 import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
@@ -15,55 +14,42 @@ import androidx.work.Configuration
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
-import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.ExternalOptions
+import app.aaps.core.interfaces.db.VacuumResult
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.tempTargets.toJson
-import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
-import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.LongNonKey
-import app.aaps.core.keys.ProfileComposedBooleanKey
-import app.aaps.core.keys.ProfileComposedStringKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
-import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.locale.LocaleHelper
-import app.aaps.di.metro.MetroGraphs
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.ExternalOptionsOverride
+import app.aaps.di.GeneratedStringOwners
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.di.metro.MetroWorkerFactory
+import app.aaps.implementation.maintenance.migration.LegacyPreferenceValue
+import app.aaps.implementation.maintenance.migration.PreferenceMigrations
 import app.aaps.implementation.receivers.BTReceiver
 import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
-import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
-import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.utils.configureLeakCanary
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
@@ -132,7 +118,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
 
     private val pluginStore get() = metroGraphs.pluginStore
     private val aapsLogger get() = metroGraphs.aapsLogger
-    private val activityMonitor get() = metroGraphs.activityMonitor
     private val versionCheckersUtils get() = metroGraphs.versionCheckerUtils
     private val sp get() = metroGraphs.sp
     private val preferences get() = metroGraphs.preferences
@@ -169,7 +154,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private val widgetUpdater get() = metroGraphs.widgetUpdater
     private val runningModeReconciler get() = metroGraphs.runningModeReconciler
     private val runningModeExpiryScheduler get() = metroGraphs.runningModeExpiryScheduler
-    private val profileSwitchExpiryScheduler get() = metroGraphs.profileSwitchExpiryScheduler
+    private val profileSwitchScheduler get() = metroGraphs.profileSwitchScheduler
     private val automationRuntime get() = metroGraphs.automationRuntime
     private val snackbarNotificationFallback get() = metroGraphs.snackbarNotificationFallback
     private val appScope get() = metroGraphs.applicationScope
@@ -269,7 +254,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 runningModeExpiryScheduler.start()
                 // Fires a profile change at the exact end of a temporary ProfileSwitch (master-only),
                 // removing the up-to-5-min KeepAlive latency. KeepAlive remains the backstop.
-                profileSwitchExpiryScheduler.start()
+                profileSwitchScheduler.start()
 
                 // Standalone automation runtime (no longer a plugin). Loads definitions on all
                 // flavors; the processing loop + location service are master-only (gated internally).
@@ -330,13 +315,26 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
             // Commit the marker synchronously BEFORE running: a plain put() uses apply() and may not
             // reach disk before an early native abort (e.g. during the wal_checkpoint VACUUM starts with).
             sp.edit(commit = true) { putBoolean(BooleanNonKey.VacuumInProgress.key, true) }
-            persistenceLayer.vacuumDatabase()
-            // Only advance the timestamp on success, so a transient failure (e.g. DB busy because a
-            // persisted worker is running) is retried on a future launch instead of suppressed for a month.
+            val result = persistenceLayer.vacuumDatabase()
+            // Advance the timestamp on every result here, and only here: a thrown failure (e.g. DB busy
+            // because a persisted worker is running) is retried on a future launch instead of suppressed
+            // for a month. OUT_OF_MEMORY is not one of those: the next launch would fail the same way, so
+            // it waits a month too.
             preferences.put(LongNonKey.LastVacuumRun, dateUtil.now())
-            aapsLogger.debug(LTag.CORE, "Startup VACUUM done")
-            // Fleet overview of DB size / cleanup backlog / change-row volume across users.
-            fabricPrivacy.logCustom("db_vacuum_ok", mapOf("db_mb" to dbMb, "deletable" to info.deletableRows, "changes" to info.changeRows))
+            when (result) {
+                VacuumResult.DONE, VacuumResult.DONE_AFTER_TRIM -> {
+                    aapsLogger.debug(LTag.CORE, "Startup VACUUM done: $result")
+                    // Fleet overview of DB size / cleanup backlog / change-row volume across users.
+                    fabricPrivacy.logCustom("db_vacuum_ok", mapOf("db_mb" to dbMb, "deletable" to info.deletableRows, "changes" to info.changeRows))
+                    // How many databases only fit after the old APS results and device statuses were deleted.
+                    if (result == VacuumResult.DONE_AFTER_TRIM) fabricPrivacy.logCustom("db_vacuum_trimmed", mapOf("db_mb" to dbMb))
+                }
+
+                VacuumResult.OUT_OF_MEMORY                      -> {
+                    aapsLogger.error(LTag.CORE, "Startup VACUUM ran out of memory, even after trimming. Next try in 30 days.")
+                    fabricPrivacy.logCustom("db_vacuum_out_of_memory", mapOf("db_mb" to dbMb))
+                }
+            }
         } catch (e: Throwable) {
             // Throwable, not just Exception: a JVM OutOfMemoryError here must not abort app init.
             aapsLogger.error(LTag.CORE, "Startup VACUUM failed", e)
@@ -359,7 +357,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
             gitRemote = null
             commitHash = null
         }
-        registerActivityLifecycleCallbacks(activityMonitor)
         aapsLogger.debug("Version: " + config.VERSION_NAME)
         aapsLogger.debug("BuildVersion: " + config.BUILD_VERSION)
         aapsLogger.debug("Remote: " + config.REMOTE)
@@ -562,164 +559,72 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     }
 
     private suspend fun doMigrations() {
-        // set values for different builds
-        // 3.3
-        if (preferences.get(UnitDoubleKey.OverviewLowMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewLowMark)
-        if (preferences.get(UnitDoubleKey.OverviewHighMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewHighMark)
-        // These three migrate bidirectionally-synced keys. Skip on a client: it adopts the value from
-        // the master via sync, and a local put here would now trigger a client→master round-trip (modal)
-        // at startup. The master migrates and publishes; the client follows.
+        // Which insulin curve the old records were delivered with, for the database migration in
+        // dataMigrations(). Read BEFORE the migrations, because the migration that deletes these dead
+        // ConfigBuilder rows is one of them now.
+        readInsulinForDataMigration()
+
+        // The preference migrations, in order, against this device's store.
+        //
+        // They live in :implementation and take the store to work on, because the settings IMPORT runs
+        // exactly the same functions over the imported file. An old backup's names never reach this
+        // store any more - PreferenceImportApplier drops what it cannot resolve - so a start-up only
+        // pass can no longer see them, and the user loses their profiles, plugin selection, objectives
+        // and loop mode. See PreferenceMigrations for what is in the list and what is deliberately not.
+        PreferenceMigrations(aapsLogger, config, persistenceLayer, dateUtil, profileUtil).migrate(sp)
+        // Those writes go below Preferences, so the cached flows have not seen them.
+        preferences.reloadFromStore()
+
+        // Seeds simple mode for an install that predates the key.
+        //
+        // NOT a migration and deliberately not in the list above: it invents a value rather than moving
+        // one, and `simple_mode` feeds PreferencesImpl.calculatedDefaultValue, so a wrong guess changes
+        // the effective value of a whole family of settings. Skipped on a client, which adopts the
+        // value from the master via sync - a local put here would trigger a client→master round-trip
+        // (modal) at startup. The master seeds and publishes; the client follows.
         if (!config.AAPSCLIENT && preferences.getIfExists(BooleanKey.GeneralSimpleMode) == null)
             preferences.put(BooleanKey.GeneralSimpleMode, !preferences.get(BooleanNonKey.GeneralSetupWizardProcessed))
-        // Migrate from OpenAPSSMBDynamicISFPlugin
-        if (sp.getBoolean("ConfigBuilder_APS_OpenAPSSMBDynamicISFPlugin_Enabled", false)) {
-            sp.remove("ConfigBuilder_APS_OpenAPSSMBDynamicISFPlugin_Enabled")
-            sp.remove("ConfigBuilder_APS_OpenAPSSMBDynamicISFPlugin_Visible")
-            // The point of this branch: the plugin the user had is gone, so turn its replacement on.
-            //
-            // It wrote the raw key "ConfigBuilder_APS_OpenAPSSMB_Enabled", which the loop below turns
-            // into the composed name "APS_OpenAPSSMB" - while `ConfigBuilderImpl.composedKeyFor`
-            // builds "APS_OpenAPSSMBPlugin", from `PluginType.name + "_" + the class simple name`.
-            // The names never met, so nothing ever read it and this migration has done nothing since
-            // January 2024: someone coming from a pre-2024 install with DynamicISF enabled was left
-            // with no APS plugin turned on at all.
-            //
-            // Written as the typed key directly, so it no longer depends on the raw loop below
-            // parsing the name back the same way it was spelled here. The gating is left exactly as
-            // it was - the plugin is enabled for everyone, the dynamic sensitivity flag only off a
-            // client - because whether a client should carry an APS plugin is a separate question
-            // and not one to settle inside a bug fix.
-            preferences.put(BooleanComposedKey.ConfigBuilderEnabled, "APS_OpenAPSSMBPlugin", value = true)
-            if (!config.AAPSCLIENT) preferences.put(BooleanKey.ApsUseDynamicSensitivity, true)
-        }
-        // convert Double to Int
-        try {
-            val dynIsf = sp.getDouble("DynISFAdjust", 0.0)
-            if (!config.AAPSCLIENT && dynIsf != 0.0 && dynIsf.toInt() != preferences.get(IntKey.ApsDynIsfAdjustmentFactor))
-                preferences.put(IntKey.ApsDynIsfAdjustmentFactor, dynIsf.toInt())
-        } catch (_: Exception) { /* ignore */
-        }
-        // Clear SmsOtpPassword if wrongly replaced
-        if (preferences.get(StringKey.SmsOtpPassword).length > 10) preferences.put(StringKey.SmsOtpPassword, "")
 
         val keys: Map<String, *> = sp.getAll()
-        // Migrate ActivityMonitor
-        for ((key, value) in keys) {
-            val parts = key.split("_")
-            if (key.startsWith("Monitor") && key.endsWith("total"))
-                migrateLong(key, value, parts.getOrNull(1)) { activity, total ->
-                    preferences.put(LongComposedKey.ActivityMonitorTotal, activity, value = total)
-                }
-            if (key.startsWith("Monitor") && key.endsWith("resumed"))
-                migrateLong(key, value, parts.getOrNull(1)) { activity, resumed ->
-                    preferences.put(LongComposedKey.ActivityMonitorResumed, activity, value = resumed)
-                }
-            if (key.startsWith("Monitor") && key.endsWith("start"))
-                migrateLong(key, value, parts.getOrNull(1)) { activity, start ->
-                    preferences.put(LongComposedKey.ActivityMonitorStart, activity, value = start)
-                }
-        }
-        // Move the widget "use black background" flag off the appwidget_ prefix.
+        // Harvest the DIA each old profile was using, for the database migration in dataMigrations().
         //
-        // It was `appwidget_use_black_<id>`, which sits INSIDE `IntComposedKey.WidgetOpacity`'s
-        // `appwidget_` prefix, so a prefix lookup could resolve it to the opacity key and read a
-        // Boolean as an Int. See ComposedKeyPrefixTest, which now fails if that can happen again.
-        //
-        // The match is anchored on purpose: a bare startsWith("appwidget_") would also take
-        // `appwidget_<id>`, which is the opacity itself and must be left exactly where it is.
-        for ((key, value) in keys) {
-            val id = key.removePrefix("appwidget_use_black_").toIntOrNull()
-            if (key.startsWith("appwidget_use_black_") && id != null) {
-                LegacyPreferenceValue.asBoolean(value)?.let { useBlack ->
-                    preferences.put(BooleanComposedKey.WidgetUseBlack, id, value = useBlack)
-                } ?: skipLegacyKey(key, "expected true or false, found ${describeType(value)}")
-                sp.remove(key)
-            }
-        }
-        // Migrate Objectives
-        for ((key, value) in keys) {
-            val parts = key.split("_")
-            if (key.startsWith("Objectives_") && key.endsWith("_started"))
-                migrateLong(key, value, parts.getOrNull(1)) { objective, started ->
-                    preferences.put(ObjectivesLongComposedKey.Started, objective, value = started)
-                }
-            if (key.startsWith("Objectives_") && key.endsWith("_accomplished"))
-                migrateLong(key, value, parts.getOrNull(1)) { objective, accomplished ->
-                    preferences.put(ObjectivesLongComposedKey.Accomplished, objective, value = accomplished)
-                }
-        }
-        // Migrate ConfigBuilder
-        for ((key, value) in keys) {
-            val parts = key.split("_")
-            if (key.startsWith("ConfigBuilder_") && key.endsWith("_Enabled")) {
-                // The plugin name is two parts, so a key with fewer is not one of ours.
-                val plugin = if (parts.size > 2) parts[1] + "_" + parts[2] else null
-                migrateBoolean(key, value, plugin) { name, enabled ->
-                    preferences.put(BooleanComposedKey.ConfigBuilderEnabled, name, value = enabled)
-                }
-            }
-            if (key.startsWith("ConfigBuilder_") && key.endsWith("_Visible")) {
-                // Legacy fragment-visibility pref — no longer tracked; drop during migration.
-                sp.remove(key)
-            }
-        }
-        // Migrate Profile
+        // NOT a key migration and deliberately not in PreferenceMigrations: it fills fields this class
+        // reads much later. The migration writes the new `_name` key but leaves the raw one, exactly so
+        // this can still pair a profile with its DIA - see legacyProfileKeysToRemove, which collects
+        // those names here and drops them there, once the values they carry are safely in the insulin
+        // list.
         val indexToName = mutableMapOf<Int, String>()
         val indexToDia = mutableMapOf<Int, Double>()
-        // See legacyProfileKeysToRemove: these are collected, not removed, and dataMigrations() drops
-        // them once it has used the DIA values they carry.
         val stillNeeded = mutableListOf<String>()
         for ((key, value) in keys) {
             val parts = key.split("_")
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_mgdl"))
-                migrateBoolean(key, value, parts.getOrNull(1)) { number, mgdl ->
-                    preferences.put(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, SafeParse.stringToInt(number), value = mgdl)
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_name"))
+                parts.getOrNull(1)?.toIntOrNull()?.let { number ->
+                    LegacyPreferenceValue.asString(value)?.let { name ->
+                        indexToName[number] = name
+                        stillNeeded += key
+                    }
                 }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_isf"))
-                migrateString(key, value, parts.getOrNull(1)) { number, isf ->
-                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedIsf, SafeParse.stringToInt(number), value = isf)
-                }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_ic"))
-                migrateString(key, value, parts.getOrNull(1)) { number, ic ->
-                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, SafeParse.stringToInt(number), value = ic)
-                }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_basal"))
-                migrateString(key, value, parts.getOrNull(1)) { number, basal ->
-                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedBasal, SafeParse.stringToInt(number), value = basal)
-                }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_targetlow"))
-                migrateString(key, value, parts.getOrNull(1)) { number, low ->
-                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetLow, SafeParse.stringToInt(number), value = low)
-                }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_targethigh"))
-                migrateString(key, value, parts.getOrNull(1)) { number, high ->
-                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, SafeParse.stringToInt(number), value = high)
-                }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_name")) {
-                val number = parts.getOrNull(1)
-                val name = LegacyPreferenceValue.asString(value)
-                if (number == null || name == null) skipLegacyKey(key, "expected a name, found ${describeType(value)}")
-                else {
-                    indexToName[SafeParse.stringToInt(number)] = name
-                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, SafeParse.stringToInt(number), value = name)
-                    // The new store has the name now, but the raw key stays until the DIA values are
-                    // consumed: a retry has to be able to rebuild the name-to-index pairing.
-                    stillNeeded += key
-                }
-            }
             if (key.startsWith(Constants.LOCAL_PROFILE + "_name_"))
-                parts.getOrNull(2)?.let { number ->
-                    LegacyPreferenceValue.asString(value)?.let { indexToName[SafeParse.stringToInt(number)] = it }
+                parts.getOrNull(2)?.toIntOrNull()?.let { number ->
+                    LegacyPreferenceValue.asString(value)?.let { indexToName[number] = it }
                 }
             if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_dia"))
-                parts.getOrNull(1)?.let { number ->
-                    indexToDia[SafeParse.stringToInt(number)] = SafeParse.stringToDouble(value.toString())
-                    stillNeeded += key
+                parts.getOrNull(1)?.toIntOrNull()?.let { number ->
+                    LegacyPreferenceValue.asDouble(value)?.let { dia ->
+                        indexToDia[number] = dia
+                        stillNeeded += key
+                    }
                 }
+            // The later spelling of the same thing. No key in this build owns it any more - the DIA
+            // belongs to the insulin now - so it is collected for removal exactly like the raw one
+            // above, and for the same reason: only once dataMigrations() has used the value.
             if (key.startsWith(Constants.LOCAL_PROFILE + "_dia_"))
-                parts.getOrNull(2)?.let { number ->
-                    indexToDia[SafeParse.stringToInt(number)] = SafeParse.stringToDouble(value.toString())
-                    stillNeeded += key
+                parts.getOrNull(2)?.toIntOrNull()?.let { number ->
+                    LegacyPreferenceValue.asDouble(value)?.let { dia ->
+                        indexToDia[number] = dia
+                        stillNeeded += key
+                    }
                 }
         }
         profileNameToDia = indexToDia.mapNotNull { (index, dia) ->
@@ -727,215 +632,81 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         }.toMap()
         legacyProfileKeysToRemove = stillNeeded
 
-        // Migrate Tidepool from username/password to OAuth2
-        if (sp.contains("tidepool_username") || sp.contains("tidepool_password")) {
-            sp.remove("tidepool_username")
-            sp.remove("tidepool_password")
-            sp.remove("tidepool_test_login")
-            // Clear OAuth2 state to force re-authentication
-            sp.remove("tidepool_auth_state")
-            sp.remove("tidepool_service_configuration")
-            sp.remove("tidepool_subscription_id")
-        }
+        // Rebuilding them from the old keys is a migration and has already run above. This only fills
+        // in the three factory presets for an install that has none.
+        seedTempTargetPresets()
+    }
 
-        // Migrate loop mode
-        if (config.APS && sp.contains("aps_mode")) {
-            val mode = when (sp.getString("aps_mode", "CLOSED")) {
-                "OPEN"   -> RM.Mode.OPEN_LOOP
-                "CLOSED" -> RM.Mode.CLOSED_LOOP
-                "LGS"    -> RM.Mode.CLOSED_LOOP_LGS
-                else     -> RM.Mode.CLOSED_LOOP
-            }
-            persistenceLayer.insertOrUpdateRunningMode(
-                runningMode = RM(
-                    timestamp = dateUtil.now(),
-                    mode = mode,
-                    autoForced = false,
-                    duration = 0
-                ),
-                action = Action.CLOSED_LOOP_MODE,
-                source = Sources.Aaps,
-                listValues = listOf(ValueWithUnit.SimpleString("Migration"))
-            )
-            sp.remove("aps_mode")
-        }
+    /**
+     * Which insulin curve the old records were delivered with, for the database migration.
+     *
+     * Checks BOTH spellings - the legacy `ConfigBuilder_INSULIN_<X>_Enabled` and the
+     * `ConfigBuilder_Enabled_INSULIN_<X>` the rename produces - so it no longer matters whether the
+     * migrations have been past yet. That used to be an unwritten order dependency inside
+     * doMigrations: the rename had to run before this, and the sweep after it.
+     *
+     * Not a migration itself. It fills fields this class reads much later, and an import has no legacy
+     * database rows to stamp - there is no database import in AAPS.
+     */
+    private fun readInsulinForDataMigration() {
+        fun selected(plugin: String) =
+            sp.getBoolean("ConfigBuilder_Enabled_INSULIN_$plugin", false) || sp.getBoolean("ConfigBuilder_INSULIN_${plugin}_Enabled", false)
 
-        // Migrate temp target presets from old preference keys to JSON array
-        migrateTempTargetPresets()
-
-        // Get Insulin plugin information for database migration
         insulinLabel = rh.gs(
             when {
-                sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefRapidActingPlugin", false)      -> InsulinType.OREF_RAPID_ACTING.label
-                sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefUltraRapidActingPlugin", false) -> InsulinType.OREF_ULTRA_RAPID_ACTING.label
-                sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefFreePeakPlugin", false)         -> InsulinType.OREF_FREE_PEAK.label
-                sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinLyumjevPlugin", false)              -> InsulinType.OREF_LYUMJEV.label
-                else                                                                                    -> InsulinType.OREF_RAPID_ACTING.label
+                selected("InsulinOrefRapidActingPlugin")      -> InsulinType.OREF_RAPID_ACTING.label
+                selected("InsulinOrefUltraRapidActingPlugin") -> InsulinType.OREF_ULTRA_RAPID_ACTING.label
+                selected("InsulinOrefFreePeakPlugin")         -> InsulinType.OREF_FREE_PEAK.label
+                selected("InsulinLyumjevPlugin")              -> InsulinType.OREF_LYUMJEV.label
+                else                                          -> InsulinType.OREF_RAPID_ACTING.label
             }
         )
         insulinPeakTime = when {
-            sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefRapidActingPlugin", false)      -> InsulinType.OREF_RAPID_ACTING.insulinPeakTime
-            sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefUltraRapidActingPlugin", false) -> InsulinType.OREF_ULTRA_RAPID_ACTING.insulinPeakTime
-            sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefFreePeakPlugin", false)         -> (sp.getInt("insulin_oref_peak", 75) * 60 * 1000).toLong()
-            sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinLyumjevPlugin", false)              -> InsulinType.OREF_LYUMJEV.insulinPeakTime
-            else                                                                                    -> InsulinType.OREF_RAPID_ACTING.insulinPeakTime
-        }
-        // Migrate Insulin Plugins
-        if (sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Enabled", false) || sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefRapidActingPlugin", false) ||
-            sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled", false) || sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefUltraRapidActingPlugin", false) ||
-            sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled", false) || sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefFreePeakPlugin", false) ||
-            sp.getBoolean("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled", false) || sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinLyumjevPlugin", false)
-        ) {
-            sp.remove("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Enabled")
-            sp.remove("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Visible")
-            sp.remove("ConfigBuilder_Enabled_INSULIN_InsulinOrefRapidActingPlugin")
-            sp.remove("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled")
-            sp.remove("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Visible")
-            sp.remove("ConfigBuilder_Enabled_INSULIN_InsulinOrefUltraRapidActingPlugin")
-            sp.remove("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled")
-            sp.remove("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Visible")
-            sp.remove("ConfigBuilder_Enabled_INSULIN_InsulinOrefFreePeakPlugin")
-            sp.remove("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled")
-            sp.remove("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Visible")
-            sp.remove("ConfigBuilder_Enabled_INSULIN_InsulinLyumjevPlugin")
-            sp.remove("insulin_oref_peak")
+            selected("InsulinOrefRapidActingPlugin")      -> InsulinType.OREF_RAPID_ACTING.insulinPeakTime
+            selected("InsulinOrefUltraRapidActingPlugin") -> InsulinType.OREF_ULTRA_RAPID_ACTING.insulinPeakTime
+            selected("InsulinOrefFreePeakPlugin")         -> (sp.getInt("insulin_oref_peak", 75) * 60 * 1000).toLong()
+            selected("InsulinLyumjevPlugin")              -> InsulinType.OREF_LYUMJEV.insulinPeakTime
+            else                                          -> InsulinType.OREF_RAPID_ACTING.insulinPeakTime
         }
     }
 
     /**
-     * Moves one legacy raw key into the typed store, or leaves it exactly where it is.
+     * Creates the three factory temp target presets for an install that has none.
      *
-     * Every loop in [doMigrations] used to cast the raw value (`value as Long`, `as Boolean`,
-     * `as String`) and index the key parts directly. Both throw, and `doMigrations` runs inside the
-     * start-up `try` in `onCreate`, so anything thrown there is caught as "Fatal initialization
-     * error" and the app does not start at all - for one odd value in a key nobody has read since
-     * 2023. The raw store holds whatever any AAPS version, any import file or any third party ever
-     * wrote, so "the name says Long, therefore it is a Long" is not something we can rely on.
+     * New-install bootstrap only. Rebuilding the presets from an older AAPS's keys is a migration and
+     * lives in `PreferenceMigrations`; this half cannot, because it INVENTS values, and over an
+     * imported file it would write factory presets on top of the ones the user actually has.
      *
-     * So a value that will not convert, or a key that is not shaped the way its prefix suggests, is
-     * logged and SKIPPED, and the raw key is LEFT IN PLACE. Leaving it is deliberate: the value is
-     * still there to look at, the migration runs again on the next start, and the trash sweep owns
-     * whatever is left over. Guessing a replacement would silently write a wrong number into a
-     * profile.
-     *
-     * [part] is the piece of the key that names the thing being migrated, for example the activity
-     * in `Monitor_Foo_total`; null means the key did not have it.
+     * Skipped on a client, which adopts the presets from the master over the sync channel - a local
+     * put here would trigger a client-to-master round trip at startup.
      */
-    private fun migrateLong(key: String, value: Any?, part: String?, put: (String, Long) -> Unit) {
-        if (part == null) return skipLegacyKey(key, "the key does not have the part that names what it belongs to")
-        val number = LegacyPreferenceValue.asLong(value)
-            ?: return skipLegacyKey(key, "expected a whole number, found ${describeType(value)}")
-        put(part, number)
-        sp.remove(key)
-    }
-
-    /** Boolean half of [migrateLong]; the same rules apply. */
-    private fun migrateBoolean(key: String, value: Any?, part: String?, put: (String, Boolean) -> Unit) {
-        if (part == null) return skipLegacyKey(key, "the key does not have the part that names what it belongs to")
-        val flag = LegacyPreferenceValue.asBoolean(value)
-            ?: return skipLegacyKey(key, "expected true or false, found ${describeType(value)}")
-        put(part, flag)
-        sp.remove(key)
-    }
-
-    /** String half of [migrateLong]; the same rules apply. */
-    private fun migrateString(key: String, value: Any?, part: String?, put: (String, String) -> Unit) {
-        if (part == null) return skipLegacyKey(key, "the key does not have the part that names what it belongs to")
-        val text = LegacyPreferenceValue.asString(value)
-            ?: return skipLegacyKey(key, "expected text, found ${describeType(value)}")
-        put(part, text)
-        sp.remove(key)
-    }
-
-    private fun skipLegacyKey(key: String, reason: String) {
-        aapsLogger.warn(LTag.CORE, "Not migrating '$key': $reason. Left in the old store.")
-    }
-
-    /** The type only. The value itself may be profile data, and this line goes to the log. */
-    private fun describeType(value: Any?): String = value?.javaClass?.simpleName ?: "nothing"
-
-    /**
-     * Migrates temp target presets from old individual preference keys to unified JSON storage.
-     * Creates 3 default presets (Eating Soon, Activity, Hypo) for new installations.
-     * For existing installations, migrates values from old keys.
-     * Old keys are kept for backward compatibility during migration period.
-     */
-    private fun migrateTempTargetPresets() {
-        // Clean up zero-value old preferences (3.3 migration)
-        if (sp.getInt("eatingsoon_duration", 45) == 0) sp.remove("eatingsoon_duration")
-        if (sp.getDouble("eatingsoon_target", 90.0) == 0.0) sp.remove("eatingsoon_target")
-        if (sp.getInt("activity_duration", 90) == 0) sp.remove("activity_duration")
-        if (sp.getDouble("activity_target", 140.0) == 0.0) sp.remove("activity_target")
-        if (sp.getInt("hypo_duration", 60) == 0) sp.remove("hypo_duration")
-        if (sp.getDouble("hypo_target", 160.0) == 0.0) sp.remove("hypo_target")
-
-        // Seeds the bidirectionally-synced TempTargetPresets. Skip on a client: it adopts the presets
-        // from the master via sync, and a local put here would trigger a client→master round-trip
-        // (modal) at startup. The master seeds and publishes; the client follows.
+    private fun seedTempTargetPresets() {
         if (config.AAPSCLIENT) return
-
-        // Check if migration already completed
         val existing = preferences.get(StringNonKey.TempTargetPresets)
-        if (existing != "[]" && existing.isNotEmpty()) {
-            return // Already migrated
-        }
+        if (existing != "[]" && existing.isNotEmpty()) return
+        // Only when there is nothing to migrate from. PreferenceMigrations has already run and would
+        // have written the document if the old keys were there.
+        if (sp.contains("eatingsoon_target")) return
 
-        // Check if old preferences exist (existing installation vs new installation)
-        val hasOldPreferences = sp.contains("eatingsoon_target")
-
-        // Create 3 default presets - values always stored in mg/dL
         val presets = listOf(
             TTPreset(
-                id = "eatingsoon",
-                reason = TT.Reason.EATING_SOON,
-                targetValue = if (hasOldPreferences) {
-                    profileUtil.convertToMgdlDetect(sp.getDouble("eatingsoon_target", 90.0))
-                } else {
-                    Constants.DEFAULT_TT_EATING_SOON_TARGET
-                },
-                duration = if (hasOldPreferences) {
-                    sp.getInt("eatingsoon_duration", 45) * 60L * 1000L
-                } else {
-                    Constants.DEFAULT_TT_EATING_SOON_DURATION * 60L * 1000L
-                },
-                isDeletable = false
+                id = "eatingsoon", reason = TT.Reason.EATING_SOON,
+                targetValue = Constants.DEFAULT_TT_EATING_SOON_TARGET,
+                duration = Constants.DEFAULT_TT_EATING_SOON_DURATION * 60L * 1000L, isDeletable = false
             ),
             TTPreset(
-                id = "activity",
-                reason = TT.Reason.ACTIVITY,
-                targetValue = if (hasOldPreferences) {
-                    profileUtil.convertToMgdlDetect(sp.getDouble("activity_target", 140.0))
-                } else {
-                    Constants.DEFAULT_TT_ACTIVITY_TARGET
-                },
-                duration = if (hasOldPreferences) {
-                    sp.getInt("activity_duration", 90) * 60L * 1000L
-                } else {
-                    Constants.DEFAULT_TT_ACTIVITY_DURATION * 60L * 1000L
-                },
-                isDeletable = false
+                id = "activity", reason = TT.Reason.ACTIVITY,
+                targetValue = Constants.DEFAULT_TT_ACTIVITY_TARGET,
+                duration = Constants.DEFAULT_TT_ACTIVITY_DURATION * 60L * 1000L, isDeletable = false
             ),
             TTPreset(
-                id = "hypo",
-                reason = TT.Reason.HYPOGLYCEMIA,
-                targetValue = if (hasOldPreferences) {
-                    profileUtil.convertToMgdlDetect(sp.getDouble("hypo_target", 160.0))
-                } else {
-                    Constants.DEFAULT_TT_HYPO_TARGET
-                },
-                duration = if (hasOldPreferences) {
-                    sp.getInt("hypo_duration", 60) * 60L * 1000L
-                } else {
-                    Constants.DEFAULT_TT_HYPO_DURATION * 60L * 1000L
-                },
-                isDeletable = false
+                id = "hypo", reason = TT.Reason.HYPOGLYCEMIA,
+                targetValue = Constants.DEFAULT_TT_HYPO_TARGET,
+                duration = Constants.DEFAULT_TT_HYPO_DURATION * 60L * 1000L, isDeletable = false
             )
         )
-
-        // Save to new JSON format
         preferences.put(StringNonKey.TempTargetPresets, presets.toJson())
-
-        aapsLogger.debug(LTag.CORE, "Migrated temp target presets to JSON storage")
+        aapsLogger.debug(LTag.CORE, "Seeded default temp target presets")
     }
 
     private suspend fun dataMigrations() {
@@ -954,7 +725,9 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         val runningICfg = if (profileNameToDia.isEmpty())
             profileFunction.getRunningOrRequestedICfg() ?: substituteICfgForMigration()
         else {
-            val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
+            // The record, not profileFunction.getProfile(): this runs before app init completes, and no
+            // profile is handed out until then. ProfileSealed.EPS.profileName is this same field.
+            val dia = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())?.originalProfileName?.let { profileName ->
                 profileNameToDia[profileName]
             }
             val insulinEndTime = ((dia ?: hardLimits.diaRange().endInclusive) * 3600 * 1000).toLong()
@@ -964,7 +737,10 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
             }
         }
 
-        if (!localInsulinManager.insulinAlreadyExists(runningICfg))
+        // Runs at every start, so it must match by curve, not by label. The running profile keeps the label it
+        // was made with, and the list rebuilds every label at start. A label match failed every time for a
+        // profile with an older label, and added one more copy of the same insulin at each start.
+        if (!localInsulinManager.insulinWithSameCurveExists(runningICfg))
             localInsulinManager.addNewInsulin(runningICfg, keepName = true)
 
         // The DIA these keys carry is now in the insulin list, so the old copies can go. This is the
@@ -1104,7 +880,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         handler.removeCallbacksAndMessages(null)
         handler.looper.quitSafely()
         unregisterReceivers()
-        unregisterActivityLifecycleCallbacks(activityMonitor)
         uiInteraction.stopAlarm("onTerminate")
         super.onTerminate()
     }
@@ -1116,7 +891,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
      * `:core:ui` are resolved directly because `:core:ui` sits above them, but a plugin or pump
      * module sits ABOVE `:core:ui`, so it can only be reached from here - `:app` is the one place
      * that depends on all of them.
-     * Without this the lookup answers null and the raw name is drawn: `virtual_pump_shortname`
-     * instead of "Virtual Pump".
+     * Without this the lookup answers null and the raw name is drawn: `virtualpump_settings`
+     * instead of "Virtual pump settings".
      */
 }

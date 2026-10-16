@@ -3,8 +3,6 @@ package app.aaps.implementation.queue.commands
 import app.aaps.core.interfaces.pump.Dana
 import app.aaps.core.interfaces.pump.Diaconn
 import app.aaps.core.interfaces.pump.Pump
-import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.cancel
 import app.aaps.implementation.pump.PumpEnactResultObject
@@ -18,8 +16,8 @@ import org.mockito.kotlin.whenever
 
 class CommandLoadHistoryTest : TestBaseWithProfile() {
 
-    private fun newCommand(type: Byte = 0, callback: Callback? = null) =
-        CommandLoadHistory(aapsLogger, rh, activePlugin, pumpEnactResultProvider::invoke, type, callback)
+    private fun newCommand(type: Byte = 0) =
+        CommandLoadHistory(aapsLogger, rh, activePlugin, pumpEnactResultProvider::invoke, type)
 
     @Test
     fun `execute on Dana pump returns pump's loadHistory result and passes type`() = runTest {
@@ -57,52 +55,36 @@ class CommandLoadHistoryTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `executeWithCallback forwards execute result to callback`() = runTest {
+    fun `executeAndComplete completes with execute result`() = runTest {
         whenever(activePlugin.activePumpInternal).thenReturn(testPumpPlugin)
-        var received: PumpEnactResult? = null
-        val callback = object : Callback() {
-            override fun run() { received = result }
-        }
+        val command = newCommand()
 
-        newCommand(callback = callback).executeWithCallback()
+        command.executeAndComplete()
 
-        assertThat(received).isNotNull()
-        assertThat(received!!.success).isTrue()
+        val received = command.completion.await()
+        assertThat(received.success).isTrue()
     }
 
     @Test
-    fun `executeWithCallback with null callback does not crash`() = runTest {
-        whenever(activePlugin.activePumpInternal).thenReturn(testPumpPlugin)
-
-        newCommand(callback = null).executeWithCallback()
-    }
-
-    @Test
-    fun `cancel invokes callback with success by default`() {
+    fun `cancel completes with success by default`() = runTest {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
-        var received: PumpEnactResult? = null
-        val callback = object : Callback() {
-            override fun run() { received = result }
-        }
+        val command = newCommand()
 
-        newCommand(callback = callback).cancel(app.aaps.core.ui.R.string.command_replaced)
+        command.cancel(app.aaps.core.ui.R.string.command_replaced)
 
-        assertThat(received).isNotNull()
-        assertThat(received!!.success).isTrue()
+        val received = command.completion.await()
+        assertThat(received.success).isTrue()
     }
 
     @Test
-    fun `cancel invokes callback with failure when success=false`() {
+    fun `cancel completes with failure when success=false`() = runTest {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
-        var received: PumpEnactResult? = null
-        val callback = object : Callback() {
-            override fun run() { received = result }
-        }
+        val command = newCommand()
 
-        newCommand(callback = callback).cancel(app.aaps.core.ui.R.string.command_replaced, success = false)
+        command.cancel(app.aaps.core.ui.R.string.command_replaced, success = false)
 
-        assertThat(received).isNotNull()
-        assertThat(received!!.success).isFalse()
+        val received = command.completion.await()
+        assertThat(received.success).isFalse()
     }
 
     @Test

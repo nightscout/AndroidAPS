@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.EffectiveProfile
+import app.aaps.core.interfaces.profile.Profile.ProfileValue
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
@@ -22,15 +23,14 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
-import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.objects.constraints.ConstraintObject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.json.JsonObject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.ContributesBinding
 
 // Deliberately NOT @SingleIn: the @Binds this replaces had no scope, so every injection site got its
 // own. Scoping it now would be a silent behaviour change in a class that talks to the pump.
@@ -123,30 +123,42 @@ class PumpWithConcentrationImpl(
     override fun isThisProfileSet(profile: PumpProfile): Boolean = error("Must no be called directly. Use: isThisProfileSet(profile: EffectiveProfile)")
     override fun isThisProfileSet(profile: EffectiveProfile): Boolean = activePumpInternal.isThisProfileSet(profile.toPump())
 
+    /**
+     * Still in pump units. The caller converts it with the concentration of the profile it set: the running one,
+     * used everywhere else in this class, is still the old profile at that moment.
+     */
+    override fun deliveredBasal(): List<ProfileValue>? = activePumpInternal.deliveredBasal()
+
     override val baseBasalRate: PumpRate get() = activePumpInternal.baseBasalRate
 
     override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        if (detailedBolusInfo.bolusType != BS.Type.PRIMING) {
-            // IU -> cU. The max limit is applied in IU by ConstraintsChecker (it folds the pump's own cU cap
-            // into the scan); here we (1) last-resort guard against the overall cU max [defense-in-depth, the
-            // queue already applied it] and (2) floor to the pump's native pulse step so a concentration-unaware
-            // driver never gets an off-grid amount (e.g. U200 0.25 IU -> 0.125 cU -> 0.10 cU). Reasons are logged.
-            val requestedIu = detailedBolusInfo.insulin
-            val converted = requestedIu / concentration
-            val guarded = converted.coerceAtMost(constraintsChecker.getMaxBolusAllowed().value() / concentration)
-            val result = Round.floorTo(guarded, activePumpInternal.pumpDescription.pumpType.determineCorrectBolusStepSize(guarded))
-            if (result != converted)
-                aapsLogger.warn(LTag.PUMP, "Concentration boundary adjusted bolus: requested $requestedIu IU -> $converted cU -> $result cU (concentration $concentration)")
-            detailedBolusInfo.insulin = result
-            // A bolus below the pump's native pulse step floors to 0.0 cU (e.g. U200 sub-0.10 IU SMB -> < 0.05 cU).
-            // Sending 0.0 to a driver that requires insulin > 0 (Medtrum) crashes with IllegalArgumentException.
-            // Short-circuit to a clean "processed, nothing delivered" result instead of calling the pump.
-            if (result <= 0.0) {
-                aapsLogger.warn(LTag.PUMP, "Bolus rounds to 0 under concentration $concentration (requested $requestedIu IU, below pump step) → not delivered")
-                return pumpEnactResultProvider().success(true).enacted(false).bolusDelivered(0.0)
-            }
+        // Priming is in pump units already: it goes to the pump as it is, and its result comes back as it is.
+        if (detailedBolusInfo.bolusType == BS.Type.PRIMING) return activePumpInternal.deliverTreatment(detailedBolusInfo)
+        // Read once, so the way back uses the same factor as the way in.
+        val concentration = concentration
+        // IU -> cU. The max limit is applied in IU by ConstraintsChecker (it folds the pump's own cU cap
+        // into the scan); here we (1) last-resort guard against the overall cU max [defense-in-depth, the
+        // queue already applied it] and (2) floor to the pump's native pulse step so a concentration-unaware
+        // driver never gets an off-grid amount (e.g. U200 0.25 IU -> 0.125 cU -> 0.10 cU). Reasons are logged.
+        val requestedIu = detailedBolusInfo.insulin
+        val converted = requestedIu / concentration
+        val guarded = converted.coerceAtMost(constraintsChecker.getMaxBolusAllowed().value() / concentration)
+        val result = Round.floorTo(guarded, activePumpInternal.bolusStepSize(guarded))
+        if (result != converted)
+            aapsLogger.warn(LTag.PUMP, "Concentration boundary adjusted bolus: requested $requestedIu IU -> $converted cU -> $result cU (concentration $concentration)")
+        detailedBolusInfo.insulin = result
+        // A bolus below the pump's native pulse step floors to 0.0 cU (e.g. U200 sub-0.10 IU SMB -> < 0.05 cU).
+        // Sending 0.0 to a driver that requires insulin > 0 (Medtrum) crashes with IllegalArgumentException.
+        // Short-circuit to a clean "processed, nothing delivered" result instead of calling the pump.
+        if (result <= 0.0) {
+            aapsLogger.warn(LTag.PUMP, "Bolus rounds to 0 under concentration $concentration (requested $requestedIu IU, below pump step) → not delivered")
+            return pumpEnactResultProvider().success(true).enacted(false).bolusDelivered(0.0)
         }
-        return activePumpInternal.deliverTreatment(detailedBolusInfo)
+        // cU -> IU. The driver answers in the units it was given, but every reader of bolusDelivered (SMS
+        // reply, Nightscout device status, loop screen) expects IU. Under U200 it showed half the dose (#5191).
+        return activePumpInternal.deliverTreatment(detailedBolusInfo).also {
+            it.bolusDelivered = PumpInsulin(it.bolusDelivered).iU(concentration)
+        }
     }
 
     override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
@@ -178,13 +190,23 @@ class PumpWithConcentrationImpl(
     override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         // Same boundary as deliverTreatment: last-resort guard against the overall cU max, then floor to the
         // pump's native extended-bolus step.
+        val concentration = concentration
         val converted = insulin / concentration
         val guarded = converted.coerceAtMost(constraintsChecker.getMaxExtendedBolusAllowed().value() / concentration)
         val step = activePumpInternal.pumpDescription.extendedBolusStep
         val result = if (step > 0.0) Round.floorTo(guarded, step) else guarded
         if (result != converted)
             aapsLogger.warn(LTag.PUMP, "Concentration boundary adjusted extended bolus: requested $insulin IU -> $converted cU -> $result cU (concentration $concentration)")
-        return activePumpInternal.setExtendedBolus(result, durationInMinutes)
+        // cU -> IU, as in deliverTreatment.
+        return activePumpInternal.setExtendedBolus(result, durationInMinutes).also {
+            it.bolusDelivered = PumpInsulin(it.bolusDelivered).iU(concentration)
+        }
+    }
+
+    /** In insulin units: the driver's step for the same amount in pump units, converted back. */
+    override fun bolusStepSize(amount: Double): Double {
+        val conc = concentration
+        return toInsulinUnits(activePumpInternal.bolusStepSize(amount / conc), conc)
     }
 
     /** PumpWithConcentration.pumpDescription should be used instead of Pump.pumpDescription outside Pump Driver to have corrected values */
@@ -193,16 +215,24 @@ class PumpWithConcentrationImpl(
             val conc = concentration
             return if (conc != 1.0) {
                 activePumpInternal.pumpDescription.clone().also {
-                    it.bolusStep *= conc
-                    it.extendedBolusStep *= conc
-                    it.extendedBolusMinAmount *= conc
-                    it.maxTempAbsolute *= conc
-                    it.tempAbsoluteStep *= conc
-                    it.basalStep *= conc
-                    it.basalMinimumRate *= conc
-                    it.basalMaximumRate *= conc
+                    it.bolusStep = toInsulinUnits(it.bolusStep, conc)
+                    it.extendedBolusStep = toInsulinUnits(it.extendedBolusStep, conc)
+                    it.extendedBolusMinAmount = toInsulinUnits(it.extendedBolusMinAmount, conc)
+                    // No limit stays no limit (Double.MAX_VALUE times 2 would be infinity).
+                    if (it.extendedBolusMaxAmount < Double.MAX_VALUE) it.extendedBolusMaxAmount = toInsulinUnits(it.extendedBolusMaxAmount, conc)
+                    it.maxTempAbsolute = toInsulinUnits(it.maxTempAbsolute, conc)
+                    it.tempAbsoluteStep = toInsulinUnits(it.tempAbsoluteStep, conc)
+                    it.basalStep = toInsulinUnits(it.basalStep, conc)
+                    it.basalMinimumRate = toInsulinUnits(it.basalMinimumRate, conc)
+                    it.basalMaximumRate = toInsulinUnits(it.basalMaximumRate, conc)
                     it.maxReservoirReading = (it.maxReservoirReading * conc).toInt()
                 }
             } else activePumpInternal.pumpDescription
         }
+
+    /**
+     * A value in pump units times the concentration, without the float tail: 0.05 * 0.2 is 0.010000000000000002,
+     * and a step like that made Round overflow. 9 decimal places are far below any step or limit of a pump.
+     */
+    private fun toInsulinUnits(value: Double, conc: Double): Double = Round.roundTo(value * conc, 1e-9)
 }

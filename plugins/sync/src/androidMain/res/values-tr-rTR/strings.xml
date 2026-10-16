@@ -25,7 +25,6 @@
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">Entegrasyon (test) sunucularını kullanın</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Tidepool\'a veri yükler</string>
     <string name="upload_now">Şimdi yükle</string>
     <string name="not_connected">Bağlantı yok</string>
@@ -33,7 +32,6 @@
     <string name="working">İşleniyor</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">xDrip+\'a verileri gönder</string>
     <string name="xdrip_status_settings">xDrip+ Durum Satırı Gelişmiş</string>
     <string name="xdrip_not_installed">xDrip+ yüklenmemiş</string>
@@ -47,7 +45,6 @@
     <string name="garmin_local_http_server_port">Yerel HTTP sunucusu bağlantı noktası</string>
     <string name="garmin_local_http_server">Yerel HTTP sunucusu</string>
     <!--    Wear-->
-    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">WearOS saatinizi kullanarak AAPS\'yi izleyin ve kontrol edin.</string>
     <string name="no_watch_connected">(Saat Bağlı Değil)</string>
     <string name="pump_status">Pompa durumu</string>
@@ -65,7 +62,7 @@
     <string name="wear_infos_watchface">Saat arayüzü bilgisi</string>
     <string name="wear_export_watchface">Şablonu Dışarı Aktar</string>
     <string name="wear_new_custom_watchface_exported">Saat arayüzü şablonu dışa aktarıldı</string>
-    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/tr/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Tüm verileri yeniden gönderin</string>
     <string name="open_settings_on_wear">Wear\'de ayarları aç</string>
     <string name="cwf_infos_pref_locked">Saat arayüzü tarafından kilitlenen tercihlerin listesi</string>
@@ -92,7 +89,7 @@
     <string name="aps">APS (YPS)</string>
     <string name="last_run">Son Çalıştırma</string>
     <string name="last_enact">Son sahne</string>
-    <string name="tdd_line">%1$.2fÜ %1$.0f%%</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fÜ %2$.0f%%</string>
     <string name="today">Bugün</string>
     <string name="weighted">ağırlıklı</string>
     <string name="full_xdrip_sync_comment">Tam senkronizasyon? Biraz zaman alabilir ve tamamlanana kadar xDrip+\'ta yeni verileri göremezsiniz.</string>
@@ -101,7 +98,6 @@
     <string name="garmin_request_key">Anahtar talebi</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS Kominikatör</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">SMS komutlarını kullanarak AAPS\'yi uzaktan kontrol edin.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">authenticator (kimlik doğrulama) uygulamasından %1$s için PIN girin</string>
     <string name="smscommunicator_tab_otp_label">Authenticator (kimlik doğrulama) kurulumu</string>
@@ -144,6 +140,7 @@
     <string name="smscommunicator_pump_disconnected">Pompa bağlantısı kesildi</string>
     <string name="smscommunicator_reconnect">Pompa yeniden bağlandı</string>
     <string name="smscommunicator_remote_command_not_allowed">Uzaktan komuta izin verilmez</string>
+    <string name="smscommunicator_remote_command_not_possible">Uzaktan komuta izin verilmez</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Uzaktan bolus gönderilemiyor. Daha sonra tekrar deneyin.</string>
     <string name="smscommunicator_basal_reply_with_code">%2$d dk boyunca bazalı %1$.2f Ü/sa yapmak için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_profile_reply_with_code">Profili %1$s %2$d%% olarak değiştirmek için %3$s koduyla yanıtlayın</string>

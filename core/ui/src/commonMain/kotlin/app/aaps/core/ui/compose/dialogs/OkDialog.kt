@@ -8,6 +8,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
@@ -38,7 +40,10 @@ fun OkDialog(
         title = {
             Text(
                 text = title,
-                modifier = Modifier.fillMaxWidth(),
+                // A heading, so a screen reader can jump to it and says what the dialog is.
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { heading() },
                 textAlign = TextAlign.Center
             )
         },
@@ -70,7 +75,10 @@ fun OkDialog(
         title = {
             Text(
                 text = title,
-                modifier = Modifier.fillMaxWidth(),
+                // A heading, so a screen reader can jump to it and says what the dialog is.
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { heading() },
                 textAlign = TextAlign.Center
             )
         },

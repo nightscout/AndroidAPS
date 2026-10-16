@@ -2,10 +2,7 @@ package app.aaps
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import app.aaps.di.newStaticInjector
-import app.aaps.di.testGraphs
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
@@ -15,21 +12,25 @@ import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.OapsProfileAutoIsf
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.utils.JsonHelper
+import app.aaps.di.newStaticInjector
+import app.aaps.di.testGraphs
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAdapterAMAJS
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
-import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.aps.openAPSSMBAutoISF.DetermineBasalAdapterAutoISFJS
 import app.aaps.plugins.aps.openAPSSMBDynamicISF.DetermineBasalAdapterSMBDynamicISFJS
 import app.aaps.plugins.aps.utils.ScriptReader
+import app.aaps.plugins.aps.utils.StaticInjector
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.skyscreamer.jsonassert.Customization
@@ -46,7 +47,7 @@ class ReplayApsResultsTest : AapsInstrumentedTest() {
     private val fileListProvider get() = testGraphs.fileListProvider
     private val storage get() = testGraphs.storage
     private val aapsLogger get() = testGraphs.aapsLogger
-    private val injector by lazy { newStaticInjector() }
+    private lateinit var injector: StaticInjector
     private val determineBasalAMA get() = testGraphs.determineBasalAMA
     private val determineBasalSMBDynamicISF get() = testGraphs.determineBasalSMB
     private val determineBasalAutoISF get() = testGraphs.determineBasalAutoISF
@@ -55,6 +56,12 @@ class ReplayApsResultsTest : AapsInstrumentedTest() {
 
     private var ktTime = 0L
     private var jsTime = 0L
+
+    @Before
+    fun setUp() {
+        // Per attempt: a retry runs on a new graph, see newRxHelper
+        injector = newStaticInjector()
+    }
 
     @Test
     fun replayTest() {

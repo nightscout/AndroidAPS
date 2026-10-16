@@ -1,7 +1,6 @@
 package app.aaps.plugins.automation.actions
 
 import app.aaps.plugins.automation.AutomationStrings
-import app.aaps.plugins.automation.R
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach

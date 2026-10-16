@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -14,18 +13,19 @@ import app.aaps.core.keys.interfaces.NonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
+import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlin.concurrent.Volatile
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlin.concurrent.Volatile
 
 /**
  * Generic client-side publisher for bidirectionally-synced preference edits (plain values AND the
@@ -40,7 +40,8 @@ import kotlinx.coroutines.launch
  * until the modal resolves), so edits made meanwhile accumulate in [pending] and ship in the next
  * round-trip. That sidesteps the single-in-flight contention and the shared `preferences_update`
  * identifier — there is never more than one pref round-trip outstanding. The settle window also lets a
- * slider drag finish before the modal appears.
+ * few taps on the +/- buttons ship as one round-trip. A slider drag is saved only when the finger is
+ * lifted (`PreferenceSliderWithButtons`), so a pause in the middle of a drag does not start one.
  *
  * No echo: applied-from-sync writes go through `Preferences.putRemote`, never emitted on
  * [Preferences.syncedLocalChanges]. Only genuine user edits reach here (programmatic synced-key writes
@@ -131,8 +132,8 @@ class PreferencesClientPublisher(
 
     private companion object {
 
-        // Settle window before a round-trip fires: collapses a slider drag / a burst of edits into one
-        // batched, confirmed round-trip (one modal), short enough to still feel responsive.
-        private const val SETTLE_MS = 500L
+        // Settle window before a round-trip fires: collapses a burst of edits (e.g. slow taps on +/-)
+        // into one batched, confirmed round-trip (one modal), short enough to still feel responsive.
+        private const val SETTLE_MS = 1500L
     }
 }

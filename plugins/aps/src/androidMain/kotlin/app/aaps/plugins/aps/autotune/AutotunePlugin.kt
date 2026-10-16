@@ -104,7 +104,6 @@ class AutotunePlugin(
         .mainType(PluginType.GENERAL)
         .icon(IcPluginAutotune)
         .pluginName(TextRef.AndroidRes(app.aaps.core.ui.R.string.autotune))
-        .shortName(TextRef.AndroidRes(R.string.autotune_shortname))
         .composeContent { plugin ->
             AutotuneComposeContent(
                 autotunePlugin = plugin as AutotunePlugin,
@@ -325,6 +324,15 @@ class AutotunePlugin(
                         iCfg = iCfg
                     )
                     if (psResult != null) log("Profile Switch succeed ${tunedP.profileName}")
+                    else {
+                        // The tuned profile is stored but not in force. Say why and keep the button, like the
+                        // skipped switch above, so the user is not left with a switch that never happened.
+                        val reason = profileFunction.profileSwitchRefusal(profileStore, tunedP.profileName, 0, 100, 0, iCfg)
+                            ?: rh.gs(app.aaps.core.ui.R.string.invalid_profile)
+                        log("Profile Switch failed: $reason")
+                        result = reason
+                        updateButtonVisibility = View.VISIBLE
+                    }
                 }
             }
         }

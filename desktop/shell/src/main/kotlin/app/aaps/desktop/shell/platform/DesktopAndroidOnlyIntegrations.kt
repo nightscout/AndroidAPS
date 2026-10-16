@@ -7,8 +7,6 @@ import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.sync.XDripBroadcast
-import app.aaps.ui.activityMonitor.ActivityStats
-import app.aaps.ui.activityMonitor.ActivityStatsProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -110,26 +108,5 @@ class DesktopDataSyncSelectorXdrip(
 
     override fun profileReceived(timestamp: Long) {
         aapsLogger.debug(LTag.CORE, "No xDrip sync on desktop; profile at $timestamp ignored")
-    }
-}
-
-/**
- * How long each screen was looked at, which is an Android usage feature.
- *
- * Empty is truthful rather than convenient: nothing on desktop collects these, so there are no stats
- * to report - as opposed to stats existing and being withheld. The screen shows an empty list, which
- * is what "nothing recorded" should look like.
- */
-@ContributesBinding(AppScope::class)
-@SingleIn(AppScope::class)
-@Inject
-class DesktopActivityStatsProvider(
-    private val aapsLogger: AAPSLogger
-) : ActivityStatsProvider {
-
-    override fun getActivityStats(): List<ActivityStats> = emptyList()
-
-    override fun reset() {
-        aapsLogger.debug(LTag.CORE, "No activity stats are collected on desktop; nothing to reset")
     }
 }

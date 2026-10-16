@@ -1,5 +1,6 @@
 package app.aaps.desktop.shell
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -8,80 +9,79 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.Image
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.application
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.navigation.compose.NavHost
 import app.aaps.appshell.AapsAppRoot
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.filter
-import app.aaps.core.interfaces.configuration.ExternalOptions
-import app.aaps.core.interfaces.resources.LanguageTag
-import app.aaps.core.interfaces.resources.TextRefValueRegistry
-import app.aaps.core.keys.StringKey
-import java.io.File
-import java.io.RandomAccessFile
-import java.nio.channels.FileChannel
-import java.nio.channels.FileLock
-import java.util.Locale
 import app.aaps.appshell.navigation.AppRoute
-import app.aaps.appshell.navigation.appNavGraph
 import app.aaps.appshell.navigation.ElementNavigator
+import app.aaps.appshell.navigation.appNavGraph
 import app.aaps.appshell.navigation.handleNotificationAction
 import app.aaps.appshell.navigation.handleQuickLaunchAction
 import app.aaps.appshell.navigation.handleSearchResultClick
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.resources.LanguageTag
+import app.aaps.core.interfaces.resources.TextRefValueRegistry
+import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.di.CoreObjectsGraph
-import app.aaps.shared.clientbindings.ClientGraphBindings
+import app.aaps.core.ui.compose.LocalMetroViewModelFactory
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.desktop.shell.config.GeneratedBuildInfo
 import app.aaps.desktop.shell.di.DesktopAppGraph
 import app.aaps.desktop.shell.di.GeneratedStringOwners
 import app.aaps.implementation.logging.AAPSLoggerDesktop
+import app.aaps.desktop.shell.platform.openFolder
 import app.aaps.implementation.maintenance.DesktopFolders
+import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.shared.clientbindings.ClientViewModelFactory
+import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
 import app.aaps.ui.compose.main.MainViewModel
 import app.aaps.ui.compose.main.OverviewScreen
+import app.aaps.ui.compose.maintenance.ImportViewModel
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel
 import app.aaps.ui.compose.manageSheet.ManageViewModel
-import app.aaps.ui.compose.overview.statusLights.StatusViewModel
-import app.aaps.ui.compose.permissionsSheet.PermissionsViewModel
-import app.aaps.ui.compose.scenesSheet.ScenesViewModel
-import app.aaps.ui.compose.treatmentsSheet.TreatmentViewModel
-import app.aaps.ui.search.SearchViewModel
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
+import app.aaps.ui.compose.overview.statusLights.StatusViewModel
+import app.aaps.ui.compose.permissionsSheet.PermissionsViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileEditorViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileHelperViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileManagementViewModel
 import app.aaps.ui.compose.quickWizard.viewmodels.QuickWizardManagementViewModel
 import app.aaps.ui.compose.runningMode.RunningModeManagementViewModel
+import app.aaps.ui.compose.scenesSheet.ScenesViewModel
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
 import app.aaps.ui.compose.stats.viewmodels.StatsViewModel
 import app.aaps.ui.compose.tempTarget.TempTargetManagementViewModel
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentsViewModel
-import app.aaps.ui.compose.configuration.ConfigurationViewModel
-import app.aaps.ui.compose.maintenance.ImportViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import app.aaps.ui.compose.treatmentsSheet.TreatmentViewModel
+import app.aaps.ui.search.SearchViewModel
 import dev.zacsweers.metro.createGraphFactory
-import app.aaps.core.ui.compose.LocalMetroViewModelFactory
-import app.aaps.core.ui.compose.metroViewModel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
+import java.io.File
+import java.io.RandomAccessFile
+import java.nio.channels.FileChannel
+import java.nio.channels.FileLock
+import java.util.Locale
 
 /**
  * Starts the desktop app.
@@ -202,13 +202,16 @@ private fun startPlugins(graph: DesktopAppGraph) {
     // "dk" is a country code where a language code belongs, and "pt_BR"/"zh_TW"/"zh_CN" use the Java
     // underscore form. Passing those on raw matched no translation, so four of the offered languages
     // showed a fully English app here while Android translated.
-    TextRefValueRegistry.locale =
-        LanguageTag.of(graph.preferences.get(StringKey.GeneralLanguage)) ?: Locale.getDefault().toLanguageTag()
+    TextRefValueRegistry.locale = languageTag(graph.preferences.get(StringKey.GeneralLanguage))
     graph.logger.debug(LTag.CORE, "Language: ${TextRefValueRegistry.locale}")
     // Which marker files were found, so the answer is in the log rather than only in whether a
     // preference row happens to be drawn. An option that is switched off and a marker file that is
     // looked for in the wrong folder produce exactly the same silence, which is how desktop went a
     // long time reading these from the data directory while Android reads them from AAPS/extra.
+    // Created up front so the user finds the folder to put a marker file in (#5250). Nothing else
+    // creates it: only Config reads it.
+    if (!DesktopFolders.extra.isDirectory && !DesktopFolders.extra.mkdirs())
+        graph.logger.error(LTag.CORE, "Cannot create ${DesktopFolders.extra.path}")
     val enabledOptions = ExternalOptions.entries.filter { graph.config.isEnabled(it) }
     graph.logger.debug(
         LTag.CORE,
@@ -228,6 +231,9 @@ private fun startPlugins(graph: DesktopAppGraph) {
     graph.snackbarNotificationFallback.start()
     graph.logger.debug(LTag.CORE, "Registered ${plugins.size} plugins and verified selections")
 }
+
+/** The language tag for the stored language setting, or the machine's language when it follows the device. */
+internal fun languageTag(stored: String): String = LanguageTag.of(stored) ?: Locale.getDefault().toLanguageTag()
 
 /**
  * The shared AAPS Compose root, with the shared navigation graph inside it.
@@ -251,8 +257,10 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
     // here: the registry is repointed and the composition rebuilt, which is the same outcome.
     LaunchedEffect(Unit) {
         graph.preferences.observe(StringKey.GeneralLanguage).drop(1).collect {
-            val chosen = graph.preferences.get(StringKey.GeneralLanguage)
-            TextRefValueRegistry.locale = if (chosen == "default") Locale.getDefault().toLanguageTag() else chosen
+            // Through the same fix-up as at start. This used the stored value as it was, so choosing
+            // Danish, Brazilian Portuguese or either Chinese while the app ran gave English text until
+            // the next start.
+            TextRefValueRegistry.locale = languageTag(graph.preferences.get(StringKey.GeneralLanguage))
             logger.debug(LTag.CORE, "Language changed to ${TextRefValueRegistry.locale}")
             graph.uiRestart.request()
         }
@@ -294,6 +302,9 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
             rxBus = graph.rxBus,
             snackbarHostPresence = graph.snackbarHostPresence,
             clientControlActionDispatcher = graph.clientControlActionDispatcher,
+            bolusProgressData = graph.bolusProgressData,
+            commandQueue = graph.commandQueue,
+            pumpCommunicationStatus = graph.pumpCommunicationStatus,
             // Image rather than Icon: Icon paints its vector in a single tint, which flattens a logo
             // to one colour. Android passes the launcher bitmap here and this is the same file.
             appIcon = { modifier -> Image(appIcon, contentDescription = null, modifier = modifier) },
@@ -437,7 +448,7 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
                             onNotificationActionClick = { n -> navigator.handleNotificationAction(n.id) },
                             onQuickLaunchActionClick = { action -> navigator.handleQuickLaunchAction(action) },
                             onImportSettingsNavigate = { source -> navController.navigate(AppRoute.ImportSettings.createRoute(source.name)) },
-                            onDirectoryClick = { logger.debug(LTag.CORE, "Desktop reads its own folder") },
+                            onDirectoryClick = { openFolder(DesktopFolders.root, logger) },
                             // authBrowser, not urlOpener: the sign in ends at a port this app is
                             // listening on, and DesktopAuthBrowser has the fallback launcher an
                             // ordinary link opener does not. See AuthBrowser.

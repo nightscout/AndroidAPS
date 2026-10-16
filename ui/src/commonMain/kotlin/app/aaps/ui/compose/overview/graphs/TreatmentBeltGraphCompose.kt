@@ -23,19 +23,19 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.endOf
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.overview.graph.TherapyEventGraphPoint
 import app.aaps.core.interfaces.overview.graph.TherapyEventType
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.ui.compose.icons.IcAnnouncement
 import app.aaps.core.ui.compose.icons.IcBgCheck
 import app.aaps.core.ui.compose.icons.IcClinicalNotes
 import app.aaps.core.ui.compose.icons.IcNote
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.VicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.VicoZoomState
@@ -97,6 +97,8 @@ fun TreatmentBeltGraphCompose(
     zoomState: VicoZoomState,
     derivedTimeRange: Pair<Long, Long>?,
     nowTimestamp: Long,
+    /** While holding the BG graph, a line at the inspected time. Null turns it off. */
+    inspect: GraphInspectState? = null,
     modifier: Modifier = Modifier
 ) {
     val dateUtil = LocalDateUtil.current
@@ -220,7 +222,7 @@ fun TreatmentBeltGraphCompose(
             .filter { it.eventType == TherapyEventType.EXERCISE && it.duration > 0 }
             .mapNotNull { event ->
                 val startX = timestampToX(event.timestamp, minTimestamp)
-                val endX = timestampToX(event.timestamp + event.duration, minTimestamp)
+                val endX = timestampToX(endOf(event.timestamp, event.duration), minTimestamp)
                 if (endX < minX || startX > maxX) return@mapNotNull null
                 val cStart = startX.coerceIn(minX, maxX)
                 val cEnd = endX.coerceIn(minX, maxX)
@@ -231,7 +233,7 @@ fun TreatmentBeltGraphCompose(
             .filter { it.eventType == TherapyEventType.GENERAL_WITH_DURATION && it.duration > 0 }
             .mapNotNull { event ->
                 val startX = timestampToX(event.timestamp, minTimestamp)
-                val endX = timestampToX(event.timestamp + event.duration, minTimestamp)
+                val endX = timestampToX(endOf(event.timestamp, event.duration), minTimestamp)
                 if (endX < minX || startX > maxX) return@mapNotNull null
                 val cStart = startX.coerceIn(minX, maxX)
                 val cEnd = endX.coerceIn(minX, maxX)
@@ -296,7 +298,7 @@ fun TreatmentBeltGraphCompose(
                         val x = timestampToX(event.timestamp, minTimestamp)
                         put(x, event)
                         if (event.duration > 0) {
-                            put(timestampToX(event.timestamp + event.duration, minTimestamp), event)
+                            put(timestampToX(endOf(event.timestamp, event.duration), minTimestamp), event)
                         }
                     }
                 }
@@ -477,7 +479,8 @@ fun TreatmentBeltGraphCompose(
     // Now line decoration
     val nowLineColor = MaterialTheme.colorScheme.onSurface
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
-    val beltDecorations = remember(nowLine) { listOf(nowLine) }
+    val inspectLine = rememberInspectLine(inspect)
+    val beltDecorations = remember(nowLine, inspectLine) { listOfNotNull(nowLine, inspectLine) }
 
     val rangeProvider = remember(maxX) {
         CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = 1.0)

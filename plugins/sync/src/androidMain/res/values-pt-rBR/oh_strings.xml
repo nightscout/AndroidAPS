@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="open_humans">Open Humans</string>
-    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Open Humans permite que você envie os dados do seu tratamento para doação a projetos científicos.</string>
     <string name="logout">Sair da sua conta</string>
     <string name="setup">Configuração</string>

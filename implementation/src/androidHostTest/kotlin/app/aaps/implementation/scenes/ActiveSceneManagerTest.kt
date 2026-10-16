@@ -2,6 +2,8 @@ package app.aaps.implementation.scenes
 
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.ActiveSceneState.ScopedRecords
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.Scene
@@ -15,6 +17,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.argumentCaptor
@@ -213,6 +216,101 @@ class ActiveSceneManagerTest : TestBase() {
         m.setActive(state())
         m.applyActiveScene(ActiveSceneSnapshot(sceneId = "unknown", activatedAt = 0L, durationMs = 0L))
         assertThat(m.isActive()).isFalse()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // An insulin change while the scene runs puts a copy of the scene's switch in force (#5081).
+    // The copy is the scene's switch then, or ending the scene left its percentage running.
+    // ---------------------------------------------------------------------------------------------
+
+    private fun ps(id: Long, timestamp: Long, duration: Long, percentage: Int = 90, insulin: String = "Novorapid") = PS(
+        id = id, timestamp = timestamp, basalBlocks = emptyList(), isfBlocks = emptyList(), icBlocks = emptyList(), targetBlocks = emptyList(),
+        glucoseUnit = GlucoseUnit.MGDL, profileName = "Base", timeshift = 0, percentage = percentage, duration = duration,
+        iCfg = ICfg(insulinLabel = insulin, insulinEndTime = 8 * 3600 * 1000L, insulinPeakTime = 75 * 60 * 1000L, concentration = 1.0)
+    )
+
+    /**
+     * A manager running a scene with the profile switch 22, and [sinceStart] as the switches from the scene's start on.
+     *
+     * Stubbed BEFORE the manager exists, on purpose. Its collectors start on an IO thread at once and call the same
+     * mock, and Mockito stubbing is not thread safe: a call from that thread in the middle of `whenever` takes the
+     * stub, and the test then got null. It failed only in a full run.
+     */
+    private suspend fun runningWithProfileSwitch(sinceStart: List<PS>, durationMs: Long = 3_600_000L): ActiveSceneManager {
+        whenever(persistenceLayer.getProfileSwitchesFromTime(1000L, true)).thenReturn(sinceStart)
+        return manager().also { it.setActive(state().copy(durationMs = durationMs, scopedRecords = ScopedRecords(psId = 22L, psNsId = "ps-ns"))) }
+    }
+
+    @Test
+    fun followInsulinCopy_makesTheCopyTheScenesSwitch() = runBlocking {
+        val sceneSwitch = ps(id = 22, timestamp = 1000L, duration = 3_600_000L)
+        // The insulin change writes the permanent switch with the new insulin and the copy, which ends with the original.
+        val permanent = ps(id = 29, timestamp = 4000L, duration = 0L, percentage = 95, insulin = "Fiasp")
+        val copy = ps(id = 30, timestamp = 5000L, duration = 3_600_000L - 4000L, insulin = "Fiasp")
+        val m = runningWithProfileSwitch(listOf(sceneSwitch, permanent, copy))
+
+        m.followInsulinCopy(listOf(permanent, copy))
+
+        assertThat(m.getActiveState()!!.scopedRecords.psId).isEqualTo(30L)
+        // The copy has no Nightscout id yet: it is filled in when the copy is uploaded.
+        assertThat(m.getActiveState()!!.scopedRecords.psNsId).isNull()
+    }
+
+    @Test
+    fun followInsulinCopy_followsTheCopyOfAnIndefiniteScenesSwitch() = runBlocking {
+        val sceneSwitch = ps(id = 22, timestamp = 1000L, duration = 0L)
+        val copy = ps(id = 31, timestamp = 5000L, duration = 0L, insulin = "Fiasp")
+        val m = runningWithProfileSwitch(listOf(sceneSwitch, copy), durationMs = 0L)
+
+        m.followInsulinCopy(listOf(copy))
+
+        assertThat(m.getActiveState()!!.scopedRecords.psId).isEqualTo(31L)
+    }
+
+    // A copy written while the app was not running came with no change event. The scene end and the app start ask.
+    @Test
+    fun followInsulinCopyNow_followsACopyThatCameWithNoEvent() = runBlocking {
+        val sceneSwitch = ps(id = 22, timestamp = 1000L, duration = 3_600_000L)
+        val copy = ps(id = 30, timestamp = 5000L, duration = 3_600_000L - 4000L, insulin = "Fiasp")
+        val m = runningWithProfileSwitch(listOf(sceneSwitch, copy))
+
+        assertThat(m.followInsulinCopyNow()).isEqualTo(30L)
+        assertThat(m.getActiveState()!!.scopedRecords.psId).isEqualTo(30L)
+    }
+
+    // The database read takes a while. When another scene started meanwhile, the follow must not write the old
+    // scene's records onto it: its temp target id would be lost, and its end would leave the temp target running.
+    @Test
+    fun followInsulinCopy_doesNotWriteOntoASceneThatStartedMeanwhile() = runBlocking {
+        val sceneSwitch = ps(id = 22, timestamp = 1000L, duration = 3_600_000L)
+        val copy = ps(id = 30, timestamp = 5000L, duration = 3_600_000L - 4000L, insulin = "Fiasp")
+        val next = state().copy(scene = Scene(id = "s2", name = "Cooldown"), activatedAt = 9000L, scopedRecords = ScopedRecords(ttId = 77L, psId = 40L))
+        var manager: ActiveSceneManager? = null
+        // Stubbed before the manager exists, as in runningWithProfileSwitch
+        whenever(persistenceLayer.getProfileSwitchesFromTime(1000L, true)).thenAnswer {
+            manager!!.setActive(next)
+            listOf(sceneSwitch, copy)
+        }
+        val m = manager().also { manager = it }
+        m.setActive(state().copy(scopedRecords = ScopedRecords(psId = 22L, psNsId = "ps-ns")))
+
+        m.followInsulinCopy(listOf(copy))
+
+        assertThat(m.getActiveState()).isEqualTo(next)
+    }
+
+    // A switch the user made during the scene is not a copy: the scene's end has to leave it alone.
+    @Test
+    fun followInsulinCopy_ignoresASwitchTheUserMade() = runBlocking {
+        val sceneSwitch = ps(id = 22, timestamp = 1000L, duration = 3_600_000L)
+        val otherEnd = ps(id = 30, timestamp = 5000L, duration = 1_800_000L)
+        val otherPercentage = ps(id = 32, timestamp = 6000L, duration = 3_600_000L - 5000L, percentage = 80)
+        val m = runningWithProfileSwitch(listOf(sceneSwitch, otherEnd, otherPercentage))
+
+        m.followInsulinCopy(listOf(otherEnd, otherPercentage))
+
+        assertThat(m.getActiveState()!!.scopedRecords.psId).isEqualTo(22L)
+        assertThat(m.getActiveState()!!.scopedRecords.psNsId).isEqualTo("ps-ns")
     }
 
     @Test

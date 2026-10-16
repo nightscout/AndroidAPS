@@ -19,6 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.ui.CoreUiStrings
@@ -49,6 +52,12 @@ fun MainNavigationBar(
     bgQualityBadgeDescription: String? = null,
     objectivesSetupPlugin: PluginBase? = null,
     objectivesProgressText: String? = null,
+    /**
+     * What [objectivesProgressText] means, in words. The badge glyph "9/10" cannot be spoken (see
+     * [badgeState]), so the progress has to arrive here already worded by the caller that owns the
+     * two counts.
+     */
+    objectivesProgressDescription: String? = null,
     onNavigate: (NavigationRequest) -> Unit = {},
     permissionsMissing: Boolean = false,
     onPermissionsClick: () -> Unit = {},
@@ -74,6 +83,9 @@ fun MainNavigationBar(
         if (masterOrPairedClient) {
             NavigationBarItem(
                 selected = false,
+                modifier = Modifier.badgeState(
+                    if (quickWizardCount > 0) stringResource(UiStrings.a11y_badge_available, quickWizardCount) else null
+                ),
                 onClick = onTreatmentClick,
                 icon = {
                     BadgedBox(
@@ -92,7 +104,7 @@ fun MainNavigationBar(
                         )
                     }
                 },
-                label = { Text(text = stringResource(CoreUiStrings.treatments)) },
+                label = { Text(text = stringResource(CoreUiStrings.treatments), textAlign = TextAlign.Center) },
                 colors = navColors
             )
         }
@@ -103,6 +115,9 @@ fun MainNavigationBar(
         if (masterOrPairedClient && automationTotal > 0) {
             NavigationBarItem(
                 selected = false,
+                modifier = Modifier.badgeState(
+                    if (automationCount > 0) stringResource(UiStrings.a11y_badge_available, automationCount) else null
+                ),
                 onClick = onAutomationClick,
                 icon = {
                     BadgedBox(
@@ -121,7 +136,7 @@ fun MainNavigationBar(
                         )
                     }
                 },
-                label = { Text(text = stringResource(CoreUiStrings.scenes)) },
+                label = { Text(text = stringResource(CoreUiStrings.scenes), textAlign = TextAlign.Center) },
                 colors = navColors
             )
         }
@@ -136,7 +151,7 @@ fun MainNavigationBar(
                     contentDescription = stringResource(CoreUiStrings.manage)
                 )
             },
-            label = { Text(text = stringResource(CoreUiStrings.manage)) },
+            label = { Text(text = stringResource(CoreUiStrings.manage), textAlign = TextAlign.Center) },
             colors = navColors
         )
 
@@ -145,6 +160,7 @@ fun MainNavigationBar(
             val label = pumpSetupPlugin.pluginDescription.pluginName?.let { stringResource(it) } ?: pumpSetupPlugin.name
             NavigationBarItem(
                 selected = false,
+                modifier = Modifier.badgeState(stringResource(UiStrings.a11y_badge_attention)),
                 onClick = { onNavigate(NavigationRequest.Plugin(pumpSetupPlugin::class.simpleName.orEmpty())) },
                 icon = {
                     BadgedBox(
@@ -157,7 +173,7 @@ fun MainNavigationBar(
                         )
                     }
                 },
-                label = { Text(text = label) },
+                label = { Text(text = label, textAlign = TextAlign.Center) },
                 colors = navColors
             )
         }
@@ -168,6 +184,10 @@ fun MainNavigationBar(
             val label = bgSetupPlugin.pluginDescription.pluginName?.let { stringResource(it) } ?: bgSetupPlugin.name
             NavigationBarItem(
                 selected = false,
+                // The quality problem, or a bare "action needed" when the badge is only an exclamation
+                // mark. bgQualityBadgeDescription used to sit on the Icon below, inside the slot
+                // Material3 clears, so it was never spoken.
+                modifier = Modifier.badgeState(bgQualityBadgeDescription ?: stringResource(UiStrings.a11y_badge_attention)),
                 onClick = { onNavigate(NavigationRequest.Plugin(bgSetupPlugin::class.simpleName.orEmpty())) },
                 icon = {
                     BadgedBox(
@@ -176,7 +196,8 @@ fun MainNavigationBar(
                                 Badge(containerColor = Color.Transparent) {
                                     Icon(
                                         imageVector = bgQualityBadgeIcon,
-                                        contentDescription = bgQualityBadgeDescription,
+                                        // Decorative here: its meaning is on the item as a state above.
+                                        contentDescription = null,
                                         tint = bgQualityBadgeTint,
                                         modifier = Modifier.size(16.dp)
                                     )
@@ -193,7 +214,7 @@ fun MainNavigationBar(
                         )
                     }
                 },
-                label = { Text(text = label) },
+                label = { Text(text = label, textAlign = TextAlign.Center) },
                 colors = navColors
             )
         }
@@ -204,6 +225,8 @@ fun MainNavigationBar(
             val label = objectivesSetupPlugin.pluginDescription.pluginName?.let { stringResource(it) } ?: objectivesSetupPlugin.name
             NavigationBarItem(
                 selected = false,
+                // "9 of 10 done", so a blind user hears why this button is on her screen at all.
+                modifier = Modifier.badgeState(objectivesProgressDescription ?: stringResource(UiStrings.a11y_badge_attention)),
                 onClick = { onNavigate(NavigationRequest.Plugin(objectivesSetupPlugin::class.simpleName.orEmpty())) },
                 icon = {
                     BadgedBox(
@@ -228,7 +251,7 @@ fun MainNavigationBar(
                         )
                     }
                 },
-                label = { Text(text = label) },
+                label = { Text(text = label, textAlign = TextAlign.Center) },
                 colors = navColors
             )
         }
@@ -237,6 +260,8 @@ fun MainNavigationBar(
         if (loopActionAvailable) {
             NavigationBarItem(
                 selected = false,
+                // The badge is a constant "1": one suggestion is waiting. Spoken so it matches.
+                modifier = Modifier.badgeState(stringResource(UiStrings.a11y_badge_available, 1)),
                 onClick = onLoopActionClick,
                 icon = {
                     BadgedBox(
@@ -253,7 +278,7 @@ fun MainNavigationBar(
                         )
                     }
                 },
-                label = { Text(text = stringResource(UiStrings.loop_accept_nav_label)) },
+                label = { Text(text = stringResource(UiStrings.loop_accept_nav_label), textAlign = TextAlign.Center) },
                 colors = navColors
             )
         }
@@ -262,6 +287,8 @@ fun MainNavigationBar(
         if (permissionsMissing) {
             NavigationBarItem(
                 selected = false,
+                // The badge is a bare dot, so there is nothing to read even in the unmerged tree.
+                modifier = Modifier.badgeState(stringResource(UiStrings.a11y_badge_attention)),
                 onClick = onPermissionsClick,
                 icon = {
                     BadgedBox(badge = { Badge() }) {
@@ -271,7 +298,7 @@ fun MainNavigationBar(
                         )
                     }
                 },
-                label = { Text(text = stringResource(UiStrings.permission_nav_label)) },
+                label = { Text(text = stringResource(UiStrings.permission_nav_label), textAlign = TextAlign.Center) },
                 colors = navColors.copy(
                     unselectedIconColor = MaterialTheme.colorScheme.error,
                     unselectedTextColor = MaterialTheme.colorScheme.error,
@@ -280,3 +307,23 @@ fun MainNavigationBar(
         }
     }
 }
+
+/**
+ * Speaks what a navigation button's badge shows, or changes nothing when there is no badge.
+ *
+ * None of the badges in this bar can be read by a screen reader. Material3's `NavigationBarItem`
+ * wraps its whole icon slot in `clearAndSetSemantics {}` whenever a label is shown, and every item
+ * here has a label, so the badge - the count, the progress, the dot - is dropped from the semantics
+ * tree before it ever reaches the user. A blind user heard "Objectives" with no idea why it was
+ * there, and the quality badge beside the glucose source was silent in the same way even though
+ * someone had already given it a description.
+ *
+ * [stateDescription] rather than a content description, because this modifier lands on the
+ * selectable node outside the cleared slot: a content description there is announced *before* the
+ * item's own name instead of replacing it, which stutters the name, and clearing semantics would
+ * take the click with it. Every item in this bar is `selected = false`, so nothing is given up by
+ * setting a state - on a genuinely selectable item this would need to keep the framework's
+ * "Selected" as well.
+ */
+private fun Modifier.badgeState(state: String?): Modifier =
+    if (state != null) semantics { stateDescription = state } else this

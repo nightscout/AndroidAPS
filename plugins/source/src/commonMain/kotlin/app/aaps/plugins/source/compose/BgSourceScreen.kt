@@ -33,9 +33,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.source.SourceStrings
-import app.aaps.core.ui.compose.stringResource
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -43,14 +43,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.GV
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.Ns
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.extensions.directionToDescription
 import app.aaps.core.ui.extensions.directionToIcon
+import app.aaps.plugins.source.SourceStrings
 import app.aaps.ui.compose.components.ContentContainer
 import kotlinx.coroutines.flow.distinctUntilChanged
 
@@ -241,14 +244,22 @@ private fun GlucoseValueItem(
         else -> MaterialTheme.colorScheme.surface
     }
 
+    // A duplicate and a selected reading were only a background colour; both are said. The long
+    // press is the only way into remove mode, so it is named too.
+    val duplicateState = if (isDuplicate) stringResource(SourceStrings.a11y_bg_duplicate) else null
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = AapsSpacing.extraSmall)
             .combinedClickable(
                 onClick = onClick,
-                onLongClick = onLongPress
-            ),
+                onLongClick = onLongPress,
+                onLongClickLabel = stringResource(CoreUiStrings.remove)
+            )
+            .semantics {
+                if (isSelected) selected = true
+                duplicateState?.let { stateDescription = it }
+            },
         colors = CardDefaults.cardColors(
             containerColor = backgroundColor
         )

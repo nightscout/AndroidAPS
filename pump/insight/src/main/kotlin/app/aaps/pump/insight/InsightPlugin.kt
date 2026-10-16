@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.SystemClock
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -14,17 +15,17 @@ import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.constraints.PumpPluginConstraints
 import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -40,6 +41,7 @@ import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.PumpState.TemporaryBasal
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
+import app.aaps.core.interfaces.pump.comment
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -72,7 +74,9 @@ import app.aaps.pump.insight.app_layer.history.history_events.TubeFilledEvent
 import app.aaps.pump.insight.app_layer.parameter_blocks.ActiveBRProfileBlock
 import app.aaps.pump.insight.app_layer.parameter_blocks.BRProfile1Block
 import app.aaps.pump.insight.app_layer.parameter_blocks.BRProfileBlock
+import app.aaps.pump.insight.app_layer.parameter_blocks.FactoryMinBasalAmountBlock
 import app.aaps.pump.insight.app_layer.parameter_blocks.FactoryMinBolusAmountBlock
+import app.aaps.pump.insight.app_layer.parameter_blocks.MaxBasalAmountBlock
 import app.aaps.pump.insight.app_layer.parameter_blocks.MaxBolusAmountBlock
 import app.aaps.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock
 import app.aaps.pump.insight.app_layer.remote_control.CancelBolusMessage
@@ -123,25 +127,27 @@ import app.aaps.pump.insight.keys.InsightIntKey
 import app.aaps.pump.insight.keys.InsightLongNonKey
 import app.aaps.pump.insight.utils.ExceptionTranslator
 import app.aaps.pump.insight.utils.ParameterBlockUtil
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.IntKey
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import android.app.NotificationManager as AndroidNotificationManager
-import app.aaps.core.interfaces.pump.comment
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver
@@ -170,7 +176,6 @@ class InsightPlugin(
     pluginDescription = PluginDescription()
         .icon(IcPluginInsight)
         .pluginName(TextRef.AndroidRes(R.string.insight_local))
-        .shortName(TextRef.AndroidRes(R.string.insightpump_shortname))
         .mainType(PluginType.PUMP)
         .description(TextRef.AndroidRes(R.string.description_pump_insight_local))
         .composeContent { plugin ->
@@ -207,12 +212,21 @@ class InsightPlugin(
         private set
     private var alertService: InsightAlertService? = null
     var connectionService: InsightConnectionService? = null
-        private set
+        // internal rather than private so a test can stand in a fake connection service. Still not
+        // settable from outside the module - only the service connection below assigns it for real.
+        internal set
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
             if (binder is InsightConnectionService.LocalBinder) {
                 connectionService = binder.service
                 connectionService?.registerStateCallback(this@InsightPlugin)
+                // Follow the connection service, which stamps this every time the pump answers
+                // anything. Reading it only while fetching the pump status left it standing still
+                // between status reads, and the "pump unreachable" alarm is timed off it.
+                lastDataTimeJob?.cancel()
+                lastDataTimeJob = connectionService?.let { service ->
+                    appScope.launch { service.lastDataTimeFlow.collect { _lastDataTime.value = it } }
+                }
             } else if (binder is InsightAlertService.LocalBinder) {
                 alertService = binder.service
             }
@@ -222,7 +236,13 @@ class InsightPlugin(
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
+            lastDataTimeJob?.cancel()
+            lastDataTimeJob = null
             connectionService = null
+            // Without a service there is nothing to report. Say "just now" rather than leave an old
+            // stamp behind, so a pump that is merely unbound does not raise the unreachable alarm -
+            // that is what the previous getter did.
+            _lastDataTime.value = dateUtil.now()
         }
     }
     private var timeOffset: Long = 0
@@ -276,7 +296,16 @@ class InsightPlugin(
 
     override suspend fun onStop() {
         super.onStop()
+        // Cancel before unbinding. onServiceDisconnected is only called when the service process
+        // dies unexpectedly, never by unbindService, so a plugin stop - a settings import, a config
+        // change, switching pumps - would otherwise leave the collector running on appScope for the
+        // life of the process, still writing the value the pump unreachable alarm is timed from.
+        lastDataTimeJob?.cancel()
+        lastDataTimeJob = null
         context.unbindService(serviceConnection)
+        // For the same reason the services have to be dropped here, or the destroyed ones stay alive.
+        connectionService = null
+        alertService = null
     }
 
     override fun isConfigured(): Boolean =
@@ -337,7 +366,6 @@ class InsightPlugin(
                 aapsLogger.error("Exception while fetching status", e)
             }
         }
-        _lastDataTime.value = if (connectionService == null || alertService == null) dateUtil.now() else connectionService?.lastDataTime ?: 0
     }
 
     @Throws(Exception::class) private fun updatePumpTimeIfNeeded() {
@@ -438,14 +466,22 @@ class InsightPlugin(
         rxBus.send(EventRefreshOverview("LocalInsightPlugin::fetchStatus", false))
     }
 
-    @Throws(Exception::class) private fun fetchLimitations() {
+    @VisibleForTesting
+    @Throws(Exception::class) internal fun fetchLimitations() {
         connectionService?.let { service ->
             ParameterBlockUtil.readParameterBlock(service, Service.CONFIGURATION, MaxBolusAmountBlock::class.java)?.let {
                 maximumBolusAmount = it.amountLimitation
-                pumpDescription.basalMaximumRate = it.amountLimitation
             }
             ParameterBlockUtil.readParameterBlock(service, Service.CONFIGURATION, FactoryMinBolusAmountBlock::class.java)?.let {
                 minimumBolusAmount = it.amountLimitation
+            }
+            // The basal limits have blocks of their own. The bolus limits were used here by mistake,
+            // so a basal above the max basal of the pump passed the profile check and a basal below
+            // the min bolus failed it.
+            ParameterBlockUtil.readParameterBlock(service, Service.CONFIGURATION, MaxBasalAmountBlock::class.java)?.let {
+                pumpDescription.basalMaximumRate = it.amountLimitation
+            }
+            ParameterBlockUtil.readParameterBlock(service, Service.CONFIGURATION, FactoryMinBasalAmountBlock::class.java)?.let {
                 pumpDescription.basalMinimumRate = it.amountLimitation
             }
             limitsFetched = true
@@ -466,18 +502,37 @@ class InsightPlugin(
         }
         connectionService?.let { service ->
             try {
-                val activeBRProfileBlock = ActiveBRProfileBlock()
-                activeBRProfileBlock.activeBasalProfile = BasalProfile.PROFILE_1
-                ParameterBlockUtil.writeConfigurationBlock(service, activeBRProfileBlock)
-                activeBasalProfile = BasalProfile.PROFILE_1
+                // Both blocks go into ONE write session, rates first and activation second.
+                //
+                // The pump only applies a write session when it is closed, so nothing at all is
+                // committed until both blocks have been written. A connection lost anywhere in
+                // between leaves the pump exactly as it was, instead of switched to PROFILE_1 while
+                // PROFILE_1 still holds the old rates - which is what the previous two-session
+                // version did, with nothing to warn the user.
+                //
+                // The order still matters as a second line of defence: if the pump ever rejects the
+                // second write while the link is up, the close is still sent, so the rates must be
+                // the block that is already in.
                 val profileBlock: BRProfileBlock = BRProfile1Block()
                 profileBlock.profileBlocks = profileBlocks
-                ParameterBlockUtil.writeConfigurationBlock(service, profileBlock)
+                val activeBRProfileBlock = ActiveBRProfileBlock()
+                activeBRProfileBlock.activeBasalProfile = BasalProfile.PROFILE_1
+                ParameterBlockUtil.writeConfigurationBlocks(service, profileBlock, activeBRProfileBlock)
+                activeBasalProfile = BasalProfile.PROFILE_1
                 // PROFILE_SET_OK posted (and FAILED cleared) centrally on the return value.
                 result.success(true)
                     .enacted(true)
                     .comment(app.aaps.core.ui.R.string.virtualpump_resultok)
                 this.profileBlocks = profileBlocks
+                // Read back what the pump keeps now: the running profile is built from it (#2454). When the read
+                // fails, the blocks as they were sent stay.
+                try {
+                    connectionService?.let { readService ->
+                        ParameterBlockUtil.readParameterBlock(readService, Service.CONFIGURATION, BRProfile1Block::class.java)?.profileBlocks?.let { this.profileBlocks = it }
+                    }
+                } catch (e: Exception) {
+                    aapsLogger.warn(LTag.PUMP, "The basal profile could not be read after it was set: ${e.message}")
+                }
                 try {
                     fetchStatus()
                 } catch (_: Exception) {
@@ -521,7 +576,29 @@ class InsightPlugin(
         return true
     }
 
-    private val _lastDataTime = MutableStateFlow(0L)
+    /**
+     * The 24 hourly rates the pump runs: its profile 1 as it was read back after the set, in 0.01 U/h steps (0.1 U/h
+     * above 5 U/h) (#2454). An hour with two blocks counts each one for its minutes. null without a paired pump, before
+     * it was read, or while it runs another profile: the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? {
+        if (!isConfigured() || activeBasalProfile != BasalProfile.PROFILE_1) return null
+        val blocks = profileBlocks ?: return null
+        if (blocks.sumOf { it.duration } != MINUTES_PER_DAY) return null
+        return (0 until 24).map { hour ->
+            var insulin = BigDecimal.ZERO // U/h x minutes
+            var start = 0
+            for (block in blocks) {
+                val overlap = minOf(start + block.duration, (hour + 1) * 60) - maxOf(start, hour * 60)
+                if (overlap > 0) insulin += BigDecimal(block.basalAmount.toString()).multiply(BigDecimal(overlap))
+                start += block.duration
+            }
+            Profile.ProfileValue(hour * 3600, insulin.divide(BigDecimal(60), 4, RoundingMode.HALF_UP).toDouble())
+        }
+    }
+
+    private var lastDataTimeJob: Job? = null
+    private val _lastDataTime = MutableStateFlow(dateUtil.now())
     override val lastDataTime: StateFlow<Long> = _lastDataTime
 
     private val _lastBolusTime = MutableStateFlow<Long?>(null)
@@ -1623,6 +1700,7 @@ class InsightPlugin(
     companion object {
 
         const val ALERT_CHANNEL_ID = "AAPS-InsightAlert"
+        private const val MINUTES_PER_DAY = 24 * 60
     }
 
 }

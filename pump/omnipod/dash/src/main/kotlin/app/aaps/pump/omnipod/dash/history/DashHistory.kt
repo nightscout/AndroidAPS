@@ -12,19 +12,20 @@ import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManag
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType.SET_BOLUS
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType.SET_TEMPORARY_BASAL
-import app.aaps.pump.omnipod.dash.history.data.BasalValuesRecord
-import app.aaps.pump.omnipod.dash.history.data.BolusRecord
-import app.aaps.pump.omnipod.dash.history.data.HistoryRecord
-import app.aaps.pump.omnipod.dash.history.data.InitialResult
-import app.aaps.pump.omnipod.dash.history.data.ResolvedResult
-import app.aaps.pump.omnipod.dash.history.data.TempBasalRecord
+import app.aaps.pump.omnipod.common.history.data.BasalValuesRecord
+import app.aaps.pump.omnipod.common.history.data.BolusRecord
+import app.aaps.pump.omnipod.common.history.data.HistoryRecord
+import app.aaps.pump.omnipod.common.history.data.InitialResult
+import app.aaps.pump.omnipod.common.history.data.ResolvedResult
+import app.aaps.pump.omnipod.common.history.data.TempBasalRecord
+import app.aaps.pump.omnipod.dash.history.database.DashBolusRecord
 import app.aaps.pump.omnipod.dash.history.database.HistoryRecordDao
 import app.aaps.pump.omnipod.dash.history.database.HistoryRecordEntity
 import app.aaps.pump.omnipod.dash.history.mapper.HistoryMapper
+import dev.zacsweers.metro.Inject
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import java.lang.System.currentTimeMillis
-import dev.zacsweers.metro.Inject
 
 @Inject
 class DashHistory(
@@ -82,7 +83,7 @@ class DashHistory(
                         createdAt = currentTimeMillis(),
                         commandType = commandType,
                         tempBasalRecord = tempBasalRecord,
-                        bolusRecord = bolusRecord,
+                        bolusRecord = bolusRecord?.let(DashBolusRecord::fromDomain),
                         basalProfileRecord = basalProfileRecord,
                         totalAmountDelivered = totalAmountDeliveredRecord,
                         initialResult = initialResult,

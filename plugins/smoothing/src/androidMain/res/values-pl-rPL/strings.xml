@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="smoothing_shortname">WYGŁADZANIE</string>
     <string name="exponential_smoothing_name">Wygładzanie wykładnicze</string>
     <string name="description_exponential_smoothing">"Algorytm wygładzania wykładniczego drugiego rzędu"</string>
     <string name="avg_smoothing_name">Wygładzanie uśredniające</string>
     <string name="description_avg_smoothing">"Uśredniający algorytm wygładzania, najnowsza wartość nie ulega zmianie"</string>
     <string name="no_smoothing_name">Bez wygładzania</string>
+    <string name="description_no_smoothing">"Użyj tej opcji, gdy masz już przefiltrowane dane, np. z BYODA G6."</string>
+    <string name="UKF_name">Bezśladowy filtr Kalmana (UKF)</string>
+    <string name="description_UKF">"Zaawansowany algorytm z automatycznym dostrajaniem szumu i wygładzaniem RTS (metodą Raucha–Tunga–Striebla)."</string>
 </resources>

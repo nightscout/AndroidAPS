@@ -13,7 +13,6 @@
     <string name="clear_log">Napló törlése</string>
     <!-- Tidepool -->
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="upload_now">Feltöltés most</string>
     <!-- Xdrip StatusLine -->
     <!--    DataBroadcast-->
@@ -31,7 +30,7 @@
     <string name="rate_duration">Ráta: %1$.2fU/ó (%2$.2f%%) \nIdőtartam %3$d perc</string>
     <string name="aps">APS</string>
     <string name="last_run">Legutóbbi futás</string>
-    <string name="tdd_line">%1$.2fE %1$.0f%%</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fE %2$.0f%%</string>
     <string name="today">Ma</string>
     <string name="weighted">súlyozott</string>
     <!-- SMS Communicator & OTP Authenticator -->

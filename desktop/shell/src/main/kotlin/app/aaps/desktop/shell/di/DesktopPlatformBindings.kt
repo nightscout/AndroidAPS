@@ -4,13 +4,13 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
-import app.aaps.desktop.shell.appIconResource
-import app.aaps.desktop.shell.loadAwtAppIcon
-import app.aaps.desktop.shell.platform.DesktopSystemNotificationPlatform
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.desktop.shell.appIconResource
 import app.aaps.desktop.shell.config.DesktopClientConfig
+import app.aaps.desktop.shell.loadAwtAppIcon
+import app.aaps.desktop.shell.platform.DesktopSystemNotificationPlatform
 import app.aaps.desktop.shell.prefs.DesktopSp
 import app.aaps.implementation.logging.AAPSLoggerDesktop
 import app.aaps.shared.impl.utils.DateUtilImpl

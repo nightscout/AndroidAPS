@@ -24,7 +24,6 @@
     <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Catetere sostituito</string>
-    <string name="insightpump_shortname">Sight</string>
     <string name="insight_alert_notification_channel">Avvisi micro Insight</string>
     <string name="disable_vibration">Erogazione bolo manuale: disabilita vibrazioni</string>
     <string name="disable_vibration_summary">Per bolo e bolo esteso (disponibile solo con firmware Insight 3.x)</string>

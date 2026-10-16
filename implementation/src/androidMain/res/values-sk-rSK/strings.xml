@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Príkaz sa práve vykonáva</string>
+    <string name="smb_being_delivered">Práve prebieha podávanie SMB. Skúste to znova po jeho dokončení.</string>
     <string name="basal_value_below_minimum">Hodnota bazálu pod povoleným minimom. Profil nenastavený!</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Bazálny profil v pumpe bol aktualizovaný. Pumpa zaokrúhľuje bazál podľa vlastného kroku dávkovania: namiesto %2$s podáva %1$s denne.</string>
+    <string name="basal_reported_far_from_profile">Pumpa hlási bazálnu dávku, ktorá sa výrazne líši od hodnoty v profile. AAPS ponecháva bazálnu dávku podľa profilu. Skontrolujte bazálne dávky v pumpe.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">Sach</string>
     <!--    PumpStatusGenerator-->
@@ -17,8 +20,21 @@
     <string name="permission_directory_description">Vyber priečinok pre nastavenia aplikácie a log súbory</string>
     <string name="permission_notifications_title">Notifikácie</string>
     <string name="permission_notifications_description">Požadované pre zobrazovanie upozornení, alarmov a zmien stavov pumpy</string>
-    <string name="permission_fsi_title">Upozornenie na celú obrazovku</string>
-    <string name="permission_fsi_description">Požadované preto, aby upozornenia mohli prebudiť obrazovku a zobraziť sa na celú obrazovku, keď je telefón uzamknutý</string>
+    <string name="permission_schedule_exact_alarm_title">Alarmy a pripomienky</string>
+    <string name="permission_schedule_exact_alarm_description">Vyžaduje sa, aby alarmy mohli prebudiť obrazovku, keď AAPS beží na pozadí a aby pripomienky zazneli načas</string>
+    <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">AAPS alarmy</string>
+    <string name="alarm_channel_standard">Štandardný alarm</string>
+    <string name="alarm_channel_bolus_error">Chyba bolusu</string>
+    <string name="alarm_channel_error">Všeobecná chyba</string>
+    <string name="alarm_channel_urgent">Urgentný alarm</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (obísť režim Nerušiť)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (zachovať režim Nerušiť)</string>
+    <string name="alarm_channel_silent_urgent">Urgentný alarm (režim postupného zvyšovania hlasitosti)</string>
+    <string name="alarm_channel_silent">Alarm (režim postupného zvyšovania hlasitosti)</string>
+    <string name="alarm_channel_silent_description">Používa sa pri zapnutej možnosti „Postupne zvyšovať hlasitosť upozornení“. Zobrazený alarm potom prehráva zvuk.</string>
+    <string name="ongoing_channel_name">Aktuálny stav</string>
+    <string name="notifications_channel_name">AAPS notifikácie</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>

@@ -57,6 +57,17 @@ class RoundTest {
         assertThat(Round.isSame(0.54, 0.54)).isTrue()
     }
 
+    /** A limit that cuts exactly one step is a limit, not rounding. 1.2 - 1.1 is 0.0999... as a Double. */
+    @Test
+    fun isMoreThanRoundingTest() {
+        assertThat(1.2 - 1.1).isLessThan(0.1) // the premise
+        assertThat(Round.isMoreThanRounding(1.2, 1.1, 0.1)).isTrue()
+        assertThat(Round.isMoreThanRounding(1.27, 1.1, 0.1)).isTrue()
+        // Only rounded down to the step.
+        assertThat(Round.isMoreThanRounding(1.27, 1.2, 0.1)).isFalse()
+        assertThat(Round.isMoreThanRounding(1.2, 1.2, 0.1)).isFalse()
+    }
+
     /**
      * NaN reaching a dose rounding function means an upstream calculation already went wrong, so it
      * has to be rejected rather than rounded into a number. The throw had no test at all.
@@ -152,4 +163,22 @@ class RoundTest {
     }
 
     // endregion
+
+    /**
+     * A step with a float tail (0.05 * 0.2, a pump step at U20) is an 18 digit number. Above about 9.2 the
+     * integer product overflowed Long and the result came out negative: the max extended bolus became -8.45 U.
+     */
+    @Test
+    fun `a step with a float tail does not overflow`() {
+        val step = 0.05 * 0.2
+        assertThat(step.toString()).isEqualTo("0.010000000000000002") // the premise
+        assertThat(Round.floorTo(10.0, step)).isWithin(1e-9).of(10.0)
+        assertThat(Round.roundTo(9.3, 0.1 * 0.2)).isWithin(1e-9).of(9.3)
+        assertThat(Round.ceilTo(12.345, step)).isWithin(1e-9).of(12.35)
+        // Past the exact range the plain product is used. It must not end above x for a floor, nor below x for a
+        // ceil: 1000 * 0.010000000000000002 is 10.000000000000002, and 50 * (0.3 - 0.1) is 9.999999999999998.
+        assertThat(Round.floorTo(10.0, step)).isAtMost(10.0)
+        assertThat(Round.ceilTo(10.0, 0.3 - 0.1)).isAtLeast(10.0)
+        assertThat(Round.ceilTo(10.0, 0.3 - 0.1)).isWithin(1e-9).of(10.0)
+    }
 }

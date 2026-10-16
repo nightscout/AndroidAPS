@@ -11,6 +11,7 @@ fun PumpType.Source.toUeSource(): Sources =
         PumpType.Source.DanaRv2     -> Sources.DanaRv2
         PumpType.Source.DanaRS      -> Sources.DanaRS
         PumpType.Source.DanaI       -> Sources.DanaI
+        PumpType.Source.DanaI2      -> Sources.DanaI2
         PumpType.Source.DiaconnG8   -> Sources.DiaconnG8
         PumpType.Source.Insight     -> Sources.Insight
         PumpType.Source.Combo       -> Sources.Combo

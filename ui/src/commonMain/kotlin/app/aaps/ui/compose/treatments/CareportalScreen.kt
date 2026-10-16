@@ -197,7 +197,9 @@ private fun TherapyEventItem(
             .padding(horizontal = 2.dp)
             .combinedClickable(
                 onClick = onClick,
-                onLongClick = onLongPress
+                onLongClick = onLongPress,
+                // Long press is the only way into remove mode; TalkBack says "double-tap and hold to Remove".
+                onLongClickLabel = stringResource(CoreUiStrings.remove)
             ),
         selected = isSelected
     ) {
@@ -259,8 +261,8 @@ private fun TherapyEventItem(
                     .padding(start = 8.dp, top = 1.dp, end = 8.dp, bottom = 2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Duration
-                if (therapyEvent.duration != 0L) {
+                // Duration. An event without an end (a scene without a duration) has none to show.
+                if (therapyEvent.duration != 0L && therapyEvent.hasEnd) {
                     Text(
                         text = dateUtil.niceTimeScalar(therapyEvent.duration, rh),
                         modifier = Modifier.padding(start = 16.dp),

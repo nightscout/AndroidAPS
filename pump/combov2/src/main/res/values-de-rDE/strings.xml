@@ -99,7 +99,7 @@ Schaltflächen gleichzeitig, um das Paar abzubrechen)\n
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Absolute TBR kann nicht gesetzt werden, wenn die Basisbasalrate 0 ist</string>
     <string name="combov2_unpair_pump_summary">Trenne AndroidAPS und Android von der aktuell verbundenen Accu-Chek Combo Pumpe</string>
     <string name="combov2_unknown_tbr_detected">Unbekannte TBR wurde erkannt und gestoppt; Prozentsatz: %1$d%%; verbleibende Dauer: %2$s</string>
-    <string name="combov2_connection_error">Verbindungsfehler :%1$</string>
+    <string name="combov2_connection_error">Verbindungsfehler: %1$s</string>
     <string name="combov2_short_status_alert">Alarm: %s</string>
     <string name="combov2_automatic_reservoir_entry">Insulinreservoirwechsel automatisch erkennen und eingeben</string>
     <string name="combov2_automatic_battery_entry">Akkuwechsel automatisch erkennen und eingeben</string>

@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.loop
 
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.DS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
@@ -7,6 +8,7 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
@@ -27,6 +29,7 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CompletableDeferred
@@ -48,6 +51,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
@@ -70,6 +74,7 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
     @Mock lateinit var loopNotifier: LoopNotifier
+    @Mock lateinit var runningModeReconciler: RunningModeReconciler
 
     private lateinit var loopPlugin: LoopPlugin
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
@@ -94,7 +99,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         // The shared test base still hands out a javax Provider, which other tests rely on;
         // LoopPlugin takes Metro's now, so it is adapted here rather than flipping the base.
         persistenceLayer, notificationManager, { pumpEnactResultProvider() },
-        processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, loopNotifier, testScope
+        processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, loopNotifier, runningModeReconciler, testScope
     )
 
     /**
@@ -113,13 +118,11 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Test
     fun testPluginInterface() {
         whenever(rh.gs(TextRef.AndroidRes(app.aaps.core.ui.R.string.loop))).thenReturn("Loop")
-        whenever(rh.gs(TextRef.AndroidRes(app.aaps.plugins.aps.R.string.loop_shortname))).thenReturn("LOOP")
 //        whenever(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.CLOSED.name)
         val pumpDescription = PumpDescription()
         whenever(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         assertThat(loopPlugin.getType()).isEqualTo(PluginType.LOOP)
         assertThat(loopPlugin.name).isEqualTo("Loop")
-        assertThat(loopPlugin.nameShort).isEqualTo("LOOP")
         assertThat(loopPlugin.showInList()).isTrue()
 
         // Plugin is enabled by default
@@ -329,6 +332,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         mockCurrentMode(RM.Mode.SUSPENDED_BY_USER)
         val expectedModes = listOf(
             RM.Mode.DISCONNECTED_PUMP,
+            RM.Mode.SUSPENDED_BY_USER, // extend
             RM.Mode.RESUME
         )
 
@@ -347,6 +351,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(constraintChecker.isClosedLoopAllowed()).thenReturn(ConstraintObject(true, aapsLogger))
         mockCurrentMode(RM.Mode.DISCONNECTED_PUMP)
         val expectedModes = listOf(
+            RM.Mode.DISCONNECTED_PUMP, // extend
             RM.Mode.RESUME
         )
 
@@ -355,6 +360,53 @@ class LoopPluginTest : TestBaseWithProfile() {
 
         // Assert
         assertThat(result).isEqualTo(expectedModes)
+    }
+
+    @Test
+    fun `handleRunningModeChange with the active temporary mode inserts a new row and ends the old one`() = runTest {
+        // Arrange: pump disconnected 20 min ago for 1 h, user picks 2 h again (extend)
+        val now = 1672531200000L
+        val current = RM(id = 7, mode = RM.Mode.DISCONNECTED_PUMP, timestamp = now - T.mins(20).msecs(), duration = T.hours(1).msecs())
+        whenever(dateUtil.now()).thenReturn(now)
+        whenever(persistenceLayer.getRunningModeActiveAt(now)).thenReturn(current)
+        whenever(persistenceLayer.insertOrUpdateRunningMode(any(), any(), any(), anyOrNull(), any())).thenReturn(PersistenceLayer.TransactionResult())
+        whenever(persistenceLayer.cancelRunningMode(any(), any(), any(), any(), anyOrNull(), any())).thenReturn(PersistenceLayer.TransactionResult())
+
+        // Act
+        val result = loopPlugin.handleRunningModeChange(
+            newRM = RM.Mode.DISCONNECTED_PUMP, action = Action.DISCONNECT, source = Sources.LoopDialog,
+            listValues = emptyList(), durationInMinutes = 120, profile = validProfile
+        )
+
+        // Assert: the new row is inserted with the new duration from now ...
+        assertThat(result).isTrue()
+        val modeCaptor = argumentCaptor<RM>()
+        verify(persistenceLayer).insertOrUpdateRunningMode(modeCaptor.capture(), eq(Action.DISCONNECT), eq(Sources.LoopDialog), anyOrNull(), any())
+        assertThat(modeCaptor.firstValue.mode).isEqualTo(RM.Mode.DISCONNECTED_PUMP)
+        assertThat(modeCaptor.firstValue.timestamp).isEqualTo(now)
+        assertThat(modeCaptor.firstValue.duration).isEqualTo(T.mins(120).msecs())
+        // ... and the old row is ended at now, so the two do not overlap in history
+        verify(persistenceLayer).cancelRunningMode(eq(7L), eq(now), eq(Action.DISCONNECT), eq(Sources.LoopDialog), anyOrNull(), any())
+    }
+
+    @Test
+    fun `handleRunningModeChange from a permanent mode does not end any row`() = runTest {
+        // Arrange: closed loop (permanent), user suspends for 1 h
+        val now = 1672531200000L
+        val current = RM(id = 3, mode = RM.Mode.CLOSED_LOOP, timestamp = now - T.hours(5).msecs(), duration = 0)
+        whenever(dateUtil.now()).thenReturn(now)
+        whenever(persistenceLayer.getRunningModeActiveAt(now)).thenReturn(current)
+        whenever(persistenceLayer.insertOrUpdateRunningMode(any(), any(), any(), anyOrNull(), any())).thenReturn(PersistenceLayer.TransactionResult())
+
+        // Act
+        loopPlugin.handleRunningModeChange(
+            newRM = RM.Mode.SUSPENDED_BY_USER, action = Action.SUSPEND, source = Sources.LoopDialog,
+            listValues = emptyList(), durationInMinutes = 60, profile = validProfile
+        )
+
+        // Assert
+        verify(persistenceLayer).insertOrUpdateRunningMode(any(), eq(Action.SUSPEND), eq(Sources.LoopDialog), anyOrNull(), any())
+        verify(persistenceLayer, never()).cancelRunningMode(any(), any(), any(), any(), anyOrNull(), any())
     }
 
     @Test
@@ -817,6 +869,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         val releaseCommand = CompletableDeferred<Unit>()
         val enacted = pumpEnactResultProvider().enacted(true).success(true)
 
+        whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(RM(mode = RM.Mode.OPEN_LOOP, timestamp = 0L, duration = 0L))
         whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
         whenever(virtualPumpPlugin.isInitialized()).thenReturn(true)
         whenever(virtualPumpPlugin.isSuspended()).thenReturn(false)
@@ -892,6 +945,77 @@ class LoopPluginTest : TestBaseWithProfile() {
         verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any())
         verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any())
         assertThat(loopPlugin.lastRun?.lastOpenModeAccept).isEqualTo(0L)
+    }
+
+    /**
+     * Sets up everything so that accepting WOULD enact a 2 U/h temp basal: an initialized pump that is
+     * not suspended, a base rate, no running temp basal, and an open loop. Each test then breaks one
+     * thing. Without this the early returns in applyTBRRequest pass the tests on their own.
+     */
+    private suspend fun prepareAcceptableRequest(mode: RM.Mode = RM.Mode.OPEN_LOOP, suggestionAge: Long = 0L) {
+        whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
+        whenever(virtualPumpPlugin.isInitialized()).thenReturn(true)
+        whenever(virtualPumpPlugin.isSuspended()).thenReturn(false) // a software pause does not suspend the pump
+        whenever(virtualPumpPlugin.pumpDescription).thenReturn(PumpDescription().apply { basalStep = 0.05 })
+        whenever(virtualPumpPlugin.baseBasalRate).thenReturn(PumpRate(1.0))
+        whenever(ch.fromPump(any<PumpRate>())).thenReturn(1.0)
+        whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong())).thenReturn(null)
+        whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(RM(mode = mode, timestamp = 0L, duration = 0L))
+        // doReturn, not whenever(rh.gs(..)): the latter calls the default answer, which throws for an unknown ref.
+        // This module's own strings (ApsStrings) resolve to the real English text without a stub.
+        doReturn("Loop suspended").whenever(rh).gs(InterfacesStrings.loopsuspended)
+
+        val request = mock<APSResult>()
+        whenever(request.isTempBasalRequested).thenReturn(true)
+        whenever(request.rate).thenReturn(2.0)
+        whenever(request.duration).thenReturn(30)
+        whenever(request.usePercent).thenReturn(false)
+        loopPlugin.lastRun = Loop.LastRun().apply {
+            this.constraintsProcessed = request
+            this.lastAPSRun = dateUtil.now() - suggestionAge
+        }
+    }
+
+    /** Issue #5192: the suggestion can wait on the watch after the user paused the loop. */
+    @Test
+    fun `acceptChangeRequest does not enact while the loop is suspended by the user`() = runTest {
+        prepareAcceptableRequest(mode = RM.Mode.SUSPENDED_BY_USER)
+
+        val refused = loopPlugin.acceptChangeRequest()
+
+        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any())
+        assertThat(refused).isEqualTo("Loop suspended")
+        // The stale prompt is taken back, so it is not offered again.
+        verify(loopNotifier).dismiss()
+    }
+
+    /** In SUPER_BOLUS the accepted temp basal would replace the zero temp basal of the super bolus. */
+    @Test
+    fun `acceptChangeRequest does not enact during a super bolus`() = runTest {
+        prepareAcceptableRequest(mode = RM.Mode.SUPER_BOLUS)
+
+        assertThat(loopPlugin.acceptChangeRequest()).isEqualTo("Loop suspended")
+        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any())
+    }
+
+    /** A suggestion older than an old BG was calculated from data that is not actual any more. */
+    @Test
+    fun `acceptChangeRequest does not enact a suggestion older than an old BG`() = runTest {
+        prepareAcceptableRequest(suggestionAge = T.mins(Constants.OLD_BG_MINUTES).msecs() + 1)
+
+        assertThat(loopPlugin.acceptChangeRequest()).isEqualTo("This suggestion is too old. Nothing was sent to the pump. Wait for the next one.")
+        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any())
+        verify(loopNotifier).dismiss()
+    }
+
+    /** The control case: the same setup, in open loop and fresh, does enact. */
+    @Test
+    fun `acceptChangeRequest enacts a fresh suggestion in open loop`() = runTest {
+        prepareAcceptableRequest(suggestionAge = T.mins(Constants.OLD_BG_MINUTES).msecs() - 1000)
+        whenever(commandQueue.tempBasalAbsolute(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider().enacted(true).success(true))
+
+        assertThat(loopPlugin.acceptChangeRequest()).isNull()
+        verify(commandQueue).tempBasalAbsolute(any(), any(), any(), any(), any())
     }
 
     /**

@@ -12,8 +12,6 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import app.aaps.core.data.model.ICfg
-import app.aaps.core.interfaces.R as CoreInterfacesR
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectionFlowViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Before
@@ -28,6 +26,8 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import app.aaps.core.interfaces.R as CoreInterfacesR
+import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Render + interaction tests for [CarelevoSelectInsulinStep].
@@ -115,6 +115,17 @@ class CarelevoSelectInsulinStepTest {
     }
 
     @Test
+    fun headerSaysWillBeActivated_whenTheSelectedInsulinIsNotTheActiveOne() {
+        seedThreeInsulins()
+        selectedInsulin.value = novoRapid
+        render()
+
+        // The header names the picked insulin, which is not active yet. Only the Fiasp row says "Currently active".
+        compose.onNodeWithText(app.getString(CoreUiR.string.insulin_will_be_activated)).performScrollTo().assertIsDisplayed()
+        compose.onAllNodesWithText(currentInsulinLabel).assertCountEquals(1)
+    }
+
+    @Test
     fun listsInsulinsOfSelectedConcentration_andFiltersOthersOut() {
         seedThreeInsulins()
         render()
@@ -160,6 +171,7 @@ class CarelevoSelectInsulinStepTest {
         activeInsulinLabel.value = null
         render()
 
+        compose.onNodeWithText(app.getString(CoreUiR.string.select_insulin)).assertIsDisplayed()
         compose.onNodeWithText(nextLabel).assertIsDisplayed().assertIsNotEnabled()
 
         compose.onNodeWithText(nextLabel).performClick()

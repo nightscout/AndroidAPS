@@ -1,5 +1,6 @@
 package app.aaps.pump.danarkorean.comm
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.pump.danar.comm.MessageBase
 import app.aaps.pump.danar.comm.MessageHashTableBase
 import app.aaps.pump.danar.comm.MsgBolusProgress
@@ -31,9 +32,8 @@ import app.aaps.pump.danar.comm.MsgSettingShippingInfo
 import app.aaps.pump.danar.comm.MsgStatusBolusExtended
 import app.aaps.pump.danar.comm.MsgStatusProfile
 import app.aaps.pump.danar.comm.MsgStatusTempBasal
-import app.aaps.core.interfaces.di.MetroMemberInjector
-import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)

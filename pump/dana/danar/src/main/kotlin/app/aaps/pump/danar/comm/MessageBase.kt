@@ -2,6 +2,7 @@ package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -23,15 +24,14 @@ import app.aaps.pump.danar.comm.MessageOriginalNames.getName
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.utils.CRC.getCrc16
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import dev.zacsweers.metro.HasMemberInjections
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import org.joda.time.DateTime
 import org.joda.time.IllegalInstantException
 import java.nio.charset.StandardCharsets
 import java.util.Calendar
 import java.util.GregorianCalendar
-import dev.zacsweers.metro.Inject
 
 /*
  *  00  01   02  03   04   05  06
@@ -63,6 +63,12 @@ open class MessageBase(injector: MetroMemberInjector) {
     @Inject lateinit var ch: ConcentrationHelper
     @Inject lateinit var bolusProgressData: BolusProgressData
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
+
+    /**
+     * True for a message whose payload holds the pump password. The serial log then shows only its length,
+     * not its bytes: the debug log is what "Send logs" shares for support (#5205).
+     */
+    open val containsSecret: Boolean = false
 
     var injector: MetroMemberInjector
     var buffer = ByteArray(512)

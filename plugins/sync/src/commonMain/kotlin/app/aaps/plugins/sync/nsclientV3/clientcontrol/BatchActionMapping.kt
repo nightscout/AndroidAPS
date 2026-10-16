@@ -34,7 +34,10 @@ internal fun BatchAction.toDto(): BatchActionDto = when (this) {
         profileName = profileName, notes = notes ?: "",
         // Only set when the client already asked the user (fill/prime, activation). Null → the master
         // resolves the insulin in force itself, or refuses the batch when there is none.
-        iCfgJson = iCfg?.toJsonObject()?.toString()
+        iCfgJson = iCfg?.toJsonObject()?.toString(),
+        // The time the user picked on the client; 0 → the master stamps now. The master bounds it
+        // against its own clock, so a client with a wrong clock cannot place a switch days away.
+        timestamp = timestamp
     )
 
     is BatchAction.RunningMode         -> BatchActionDto(
@@ -86,7 +89,7 @@ internal fun BatchActionDto.toDomain(): BatchAction? = when (type) {
     BatchActionDto.TYPE_TEMP_TARGET           -> reason?.let { BatchAction.TempTarget(it, lowMgdl, highMgdl, durationMinutes, startOffsetMinutes, notes.ifEmpty { null }) }
     // An unparseable iCfg degrades to null (the master then resolves the in-force insulin or refuses) rather
     // than dropping the action — unlike INSULIN_ACTIVATE, the switch is still meaningful without it.
-    BatchActionDto.TYPE_PROFILE_SWITCH        -> BatchAction.ProfileSwitch(percentage, timeShiftHours, durationMinutes, profileName, notes.ifEmpty { null }, iCfgJson.toICfgOrNull())
+    BatchActionDto.TYPE_PROFILE_SWITCH        -> BatchAction.ProfileSwitch(percentage, timeShiftHours, durationMinutes, profileName, notes.ifEmpty { null }, iCfgJson.toICfgOrNull(), timestamp)
     BatchActionDto.TYPE_RUNNING_MODE          -> runningMode?.let { name -> runCatching { RM.Mode.valueOf(name) }.getOrNull()?.let { BatchAction.RunningMode(it, durationMinutes) } }
     BatchActionDto.TYPE_TEMP_BASAL            -> BatchAction.TempBasal(rate, isPercent, durationMinutes)
     BatchActionDto.TYPE_EXTENDED_BOLUS        -> BatchAction.ExtendedBolus(insulin, durationMinutes)

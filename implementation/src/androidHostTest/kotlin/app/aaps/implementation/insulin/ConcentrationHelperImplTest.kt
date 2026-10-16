@@ -1,14 +1,16 @@
 package app.aaps.implementation.insulin
 
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
+import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
 import app.aaps.shared.tests.stubTextRefResolution
 import com.google.common.truth.Truth.assertThat
@@ -18,13 +20,14 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
-import org.mockito.kotlin.any
 import org.mockito.kotlin.anyVararg
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
  * Covers [ConcentrationHelperImpl] concentration conversions (pump⇄internal units, U100 detection)
- * and the rh/dateUtil-backed string builders. The activePump-dependent bolus-step paths are out of scope.
+ * and the rh/dateUtil-backed string builders.
  */
 class ConcentrationHelperImplTest : TestBase() {
 
@@ -60,6 +63,33 @@ class ConcentrationHelperImplTest : TestBase() {
         assertThat(sut.isU100()).isTrue()
         assertThat(sut.toPump(10.0).cU).isEqualTo(10.0)
         assertThat(sut.fromPump(PumpInsulin(10.0), isPriming = false)).isEqualTo(10.0)
+    }
+
+    // The active pump is the concentration wrapper: it already answers in insulin units, so the step is
+    // passed on as it is, not converted a second time.
+    @Test
+    fun bolusStepIsTheStepTheActivePumpReports() {
+        val pump = mock<PumpWithConcentration>()
+        whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(pump.bolusStepSize(1.55)).thenReturn(0.2)
+
+        assertThat(sut(2.0).bolusStep(1.55)).isEqualTo(0.2)
+    }
+
+    // A prime is in pump units, so its amount is formatted with the step of the pump itself (0.05 here), not
+    // with the step of the concentration wrapper (0.1 at U200).
+    @Test
+    fun bolusWithVolumeUsesTheStepOfThePumpItself() {
+        val wrapper = mock<PumpWithConcentration>()
+        val driver = mock<Pump>()
+        whenever(activePlugin.activePump).thenReturn(wrapper)
+        whenever(activePlugin.activePumpInternal).thenReturn(driver)
+        whenever(wrapper.pumpDescription).thenReturn(PumpDescription().also { it.bolusStep = 0.1 })
+        whenever(driver.pumpDescription).thenReturn(PumpDescription().also { it.bolusStep = 0.05 })
+
+        sut(2.0).bolusWithVolume(0.75)
+
+        verify(decimalFormatter).toPumpSupportedBolus(0.75, 0.05)
     }
 
     @Test

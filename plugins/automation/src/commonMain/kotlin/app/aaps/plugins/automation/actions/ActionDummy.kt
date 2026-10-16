@@ -1,9 +1,9 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.keys.interfaces.TextRef
 
 // Used for instantiation of other actions only
 class ActionDummy(

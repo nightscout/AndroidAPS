@@ -1,5 +1,6 @@
 package app.aaps.pump.danar.di
 
+import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.pump.danar.comm.MessageBase
 import app.aaps.pump.danar.comm.MsgBolusProgress
 import app.aaps.pump.danar.comm.MsgBolusStart
@@ -69,7 +70,6 @@ import app.aaps.pump.danarv2.comm.MsgSetAPSTempBasalStartV2
 import app.aaps.pump.danarv2.comm.MsgSetHistoryEntryV2
 import app.aaps.pump.danarv2.comm.MsgStatusAPSV2
 import app.aaps.pump.danarv2.services.DanaRv2ExecutionService
-import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ClassKey

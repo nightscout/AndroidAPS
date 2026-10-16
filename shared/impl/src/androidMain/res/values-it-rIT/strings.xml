@@ -3,6 +3,7 @@
     <string name="cwf_comment_background">Immagine di sfondo</string>
     <string name="cwf_comment_chart">Grafici (BG, basale, linee di previsione...)</string>
     <string name="cwf_comment_cover_chart">Immagine davanti al grafico e dietro i campi di testo</string>
+    <string name="cwf_comment_complication">Contenitore per complicazioni</string>
     <string name="cwf_comment_freetext1">Testo libero 1</string>
     <string name="cwf_comment_freetext2">Testo libero 2</string>
     <string name="cwf_comment_freetext3">Testo libero 3</string>

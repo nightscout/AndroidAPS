@@ -117,6 +117,49 @@ internal class ConfigurationViewModelTest {
         verify(configBuilder, never()).requestPluginSwitch(any(), any(), any())
     }
 
+    private fun plugins(vararg names: String): ArrayList<PluginBase> = ArrayList(names.map { name ->
+        mock<PluginBase>().also {
+            whenever(it.pluginDescription).thenReturn(PluginDescription())
+            whenever(it.name).thenReturn(name)
+        }
+    })
+
+    private fun namesIn(type: PluginType) = sut.uiState.value.categories.first { it.type == type }.plugins.map { it.name }
+
+    @Test
+    fun `pumps are listed in alphabetical order ignoring case`() {
+        // Built before the stubbing below: mocks stubbed inside another whenever() leave it unfinished.
+        val pumps = plugins("Virtual pump", "Medtronic", "eopatch2", "Accu-Chek Combo", "Dana-i/RS")
+        whenever(activePlugin.getSpecificPluginsVisibleInList(any())).thenReturn(ArrayList<PluginBase>())
+        whenever(activePlugin.getSpecificPluginsVisibleInList(PluginType.PUMP)).thenReturn(pumps)
+
+        sut.dismissHardwarePumpDialog()
+
+        assertThat(namesIn(PluginType.PUMP)).containsExactly("Accu-Chek Combo", "Dana-i/RS", "eopatch2", "Medtronic", "Virtual pump").inOrder()
+    }
+
+    @Test
+    fun `BG sources are listed in alphabetical order ignoring case`() {
+        val sources = plugins("xDrip+", "Dexcom", "Random BG", "eversense", "Glimp")
+        whenever(activePlugin.getSpecificPluginsVisibleInList(any())).thenReturn(ArrayList<PluginBase>())
+        whenever(activePlugin.getSpecificPluginsVisibleInList(PluginType.BGSOURCE)).thenReturn(sources)
+
+        sut.dismissHardwarePumpDialog()
+
+        assertThat(namesIn(PluginType.BGSOURCE)).containsExactly("Dexcom", "eversense", "Glimp", "Random BG", "xDrip+").inOrder()
+    }
+
+    @Test
+    fun `other categories keep the order of the plugins`() {
+        val general = plugins("Wear", "Automation", "Food")
+        whenever(activePlugin.getSpecificPluginsVisibleInList(any())).thenReturn(ArrayList<PluginBase>())
+        whenever(activePlugin.getSpecificPluginsVisibleInList(PluginType.GENERAL)).thenReturn(general)
+
+        sut.dismissHardwarePumpDialog()
+
+        assertThat(namesIn(PluginType.GENERAL)).containsExactly("Wear", "Automation", "Food").inOrder()
+    }
+
     @Test
     fun `toggling a multi-select plugin does not open the swap confirmation`() {
         val target = mock<PluginBase>()

@@ -1,8 +1,11 @@
 package app.aaps.pump.danars.comm
 
 import app.aaps.pump.danars.DanaRSTestBase
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.whenever
 import java.util.Calendar
 
 class DanaRsPacketBolusGetStepBolusInformationTest : DanaRSTestBase() {
@@ -32,5 +35,46 @@ class DanaRsPacketBolusGetStepBolusInformationTest : DanaRSTestBase() {
         Assertions.assertEquals(25.0, danaPump.maxBolus, 0.01)
         Assertions.assertEquals(1.0, danaPump.bolusStep, 0.01)
         Assertions.assertEquals("BOLUS__GET_STEP_BOLUS_INFORMATION", packet.friendlyName)
+    }
+
+    // The pump sends only the time of day of the last bolus
+
+    private fun lastBolusAt(hours: Int, minutes: Int, now: DateTime): Long? {
+        whenever(dateUtil.now()).thenReturn(now.millis)
+        val array = createArray(13, 0.toByte())
+        putByteToArray(array, 4, hours.toByte())
+        putByteToArray(array, 5, minutes.toByte())
+        putIntToArray(array, 6, 25) // 0.25 U
+        DanaRSPacketBolusGetStepBolusInformation(aapsLogger, dateUtil, danaPump).handleMessage(array)
+        return danaPump.lastBolusTime
+    }
+
+    @Test
+    fun `a bolus from yesterday evening is not shown later today`() {
+        val now = DateTime(2026, 10, 13, 10, 0)
+
+        Assertions.assertEquals(DateTime(2026, 10, 12, 22, 35).millis, lastBolusAt(22, 35, now))
+    }
+
+    @Test
+    fun `a bolus from earlier today stays today`() {
+        val now = DateTime(2026, 10, 13, 10, 0)
+
+        Assertions.assertEquals(DateTime(2026, 10, 13, 9, 58).millis, lastBolusAt(9, 58, now))
+    }
+
+    @Test
+    fun `a pump clock a few minutes ahead still means today`() {
+        val now = DateTime(2026, 10, 13, 10, 0)
+
+        Assertions.assertEquals(DateTime(2026, 10, 13, 10, 3).millis, lastBolusAt(10, 3, now))
+    }
+
+    @Test
+    fun `a pump in UTC reads the time in UTC`() {
+        danaPump.hwModel = 7 // Dana-i and newer use UTC
+        val now = DateTime(2026, 10, 13, 10, 0, DateTimeZone.UTC)
+
+        Assertions.assertEquals(DateTime(2026, 10, 12, 22, 35, DateTimeZone.UTC).millis, lastBolusAt(22, 35, now))
     }
 }

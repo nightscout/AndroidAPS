@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="open_humans">Open Humans</string>
-    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Open Humans, diyabet verilerinizi yüklemenize ve bilimsel projelere bağış yapmanıza olanak tanır.</string>
     <string name="logout">Çıkış</string>
     <string name="setup">Kurulum</string>
@@ -26,7 +25,7 @@
     <string name="extended_boluses">Yayma Bolus</string>
     <string name="carbohydrates">Karbonhidrat</string>
     <string name="careportal_events">Bakım Portalı etkinlikleri (notlar hariç)</string>
-    <string name="profile_switches">Profil Değişimleri</string>
+    <string name="profile_switches">Profil Geçişleri</string>
     <string name="total_daily_doses">Günlük Toplam Doz</string>
     <string name="temporary_basal_rates">Geçici Bazal Oranları</string>
     <string name="temporary_targets">Geçici Hedefler</string>

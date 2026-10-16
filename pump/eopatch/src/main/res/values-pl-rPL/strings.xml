@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Integracja z pompą EOPatch2 / GlucoMen Day</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Patch nie potwierdził zakończenia bolusa. %1$s jest zapisane, ale patch mógł podać więcej. Sprawdź patch, zanim podasz więcej insuliny.</string>
     <string name="low_reservoir">Alarmy niskiego poziomu zbiornika</string>
     <string name="patch_expiration_reminders">Przypomnienie o wygaśnięciu Patcha</string>
     <string name="patch_buzzer_reminders">Alarmy akustyczne pompy</string>
     <string name="eopatch_ble_status">Status Bluetooth Low Energy</string>
     <string name="eopatch_serial_number">Numer seryjny</string>
     <string name="eopatch_expiration_time">Czas wygaśnięcia</string>
+    <string name="eopatch_not_activated">Nieaktywowany</string>
     <string name="eopatch_base_basal_rate">Podstawowa dawka bazowa</string>
     <string name="eopatch_temp_basal_rate">Tymczasowa dawka bazowa</string>
     <string name="invalid_basal_rate">Dawka bazowa w profilu jest mniejsza niż 0,05 U/godz. Minimalna pojemność iniekcji na pompie EOPatch wynosi 0.05 U. Skoryguj profil używając dawek bazy większych niż minimalne możliwe do wstrzyknięcia i spróbuj ponownie.</string>
-    <string name="symbol_day">dzień</string>
+    <string name="no_profile_selected_try_again">Nie wybrano profilu. Wybierz profil i spróbuj ponownie.</string>
+    <string name="symbol_day">dni</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
     <string name="time_30min">30 min</string>
@@ -36,17 +38,21 @@
     <string name="patch_wake_up">Napełnianie Insuliny</string>
     <string name="patch_wake_up_desc_1">Napełnij nowy Patch insuliną w temperaturze pokojowej. Sprawdź kąt strzykawki.</string>
     <string name="patch_wake_up_desc_2">Odczekaj jeden sygnał.</string>
+    <string name="patch_wake_up_pairing_info">Podczas parowania pojawią się dwa systemowe okna Androida. Musisz potwierdzić oba, aby zakończyć parowanie Bluetooth.</string>
     <string name="patch_start_pairing">Rozpocznij parowanie</string>
     <string name="patch_connect_new">Parowanie Patcha</string>
     <string name="patch_connect_new_desc">Nowy Patch jest parowany.\nUtrzymuj urządzenie tak blisko telefonu jak to tylko możliwe</string>
     <string name="patch_remove_needle_cap">Przygotuj się do założenia Patcha</string>
     <string name="patch_remove_needle_cap_desc_1">Usuń taśmę samoprzylepną, a następnie naciśnij \"Dalej\".</string>
+    <string name="patch_remove_needle_cap_desc_2">Jeśli igła wystaje, naciśnij \"Odrzuć\".</string>
+    <string name="patch_remove_needle_cap_desc_3">Jeśli Patch jest mokry lub brudny albo jego taśma klejąca jest zagięta, naciśnij \"Odrzuć\".</string>
     <string name="patch_remove_protection_tape">Zakładanie Patcha</string>
     <string name="patch_remove_protection_tape_desc_1">Oczyść i wysusz miejsce naklejenia, a następnie przymocuj Patch do skóry.</string>
     <string name="patch_remove_protection_tape_desc_2">Sprawdź miejsce wkłucia, a następnie kliknij \"Rozpocznij kontrolę bezpieczeństwa\".</string>
     <string name="patch_start_safety_check">Rozpocznij kontrolę bezpieczeństwa</string>
     <string name="patch_safety_check">Kontrola bezpieczeństwa…</string>
     <string name="patch_safety_check_desc_1">To zajmuje około 30 sekund.</string>
+    <string name="patch_safety_check_desc_2">Dla bezpiecznego użytkowania nie usuwaj dźwigni akcji igły, dopóki kontrola bezpieczeństwa nie zostanie zakończona!</string>
     <string name="patch_rotate_knob">Wbijanie igły</string>
     <string name="patch_rotate_knob_desc_1">Obrócić dźwignię igły o więcej niż 100°, aby wbić igłę, a następnie całkowicie obróć dźwignię, aby ją wyjąć.</string>
     <string name="patch_rotate_knob_desc_2">Odczekaj jeden sygnał, a następnie naciśnij \'Dalej\'.</string>
@@ -58,6 +64,7 @@
     <string name="patch_activate_reminder_desc">Aktywacja Patcha nie została zakończona.\n Kontynuuj.</string>
     <string name="patch_communication_check_helper_1">Przybliż telefon do Patcha.</string>
     <string name="patch_communication_check_helper_2">Przenieś się do innej lokalizacji i spróbuj ponownie.</string>
+    <string name="patch_safety_check_failed_desc">Sprawdzenie bezpieczeństwa nie powiodło się. Spróbuj ponownie.</string>
     <string name="patch_communication_failed">Błąd komunikacji</string>
     <string name="patch_communication_succeed">Komunikacja udana</string>
     <string name="patch_communication_succeed_message">Połączony z Patchem.</string>
@@ -76,9 +83,14 @@
     <string name="needle_insertion_error_3">Naciśnij \"Odrzuć\", aby dezaktywować Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Czas zawieszenia bazy</string>
     <string name="string_resume_insulin_delivery_title">Wznów podawanie insuliny</string>
+    <string name="string_resume_insulin_delivery_message">Koniec zawieszenia insuliny.\nNaciśnij „Potwierdź”, aby wznowić podawanie insuliny.\n\nPodawanie insuliny nie wznowi się, dopóki nie naciśniesz „Potwierdź”.\nJeśli nie naciśniesz „Potwierdź”, możesz doświadczyć hiperglikemii.</string>
     <string name="string_suspended_insulin_delivery_message">Podawanie insuliny zawieszone.</string>
     <string name="string_resumed_insulin_delivery_message">Podawanie insuliny zostało wznowione.</string>
     <string name="string_temp_basal_remained_hhmm">pozostały czas: %1$s:%2$s</string>
+    <string name="string_pause_failed">Wstrzymanie podawania insuliny nie powiodło się.</string>
     <string name="string_resume_failed">Wznowienie nie powiodło się.</string>
-    <!-- Permission rationales -->
+    <string name="wizard_exit_activation_warning">Wyjść z kreatora aktywacji? Patch może pozostać w niedokończonym stanie i wymagać nowego patcha.</string>
+    <string name="wizard_exit_deactivation_warning">Wyjść z kreatora dezaktywacji? Patch może pozostać aktywny i nadal podawać insulinę.</string>
+    <string name="patch_force_reset">Wymuś reset</string>
+    <string name="patch_force_reset_confirm">To wyczyści stan patcha lokalnie, bez wysyłania poleceń do Patcha. Używaj tylko wtedy, gdy normalna deaktywacja się nie powiedzie. Patch będzie nadal podawać insulinę, dopóki nie zabraknie baterii lub nie zostanie ręcznie wyłączony.</string>
 </resources>

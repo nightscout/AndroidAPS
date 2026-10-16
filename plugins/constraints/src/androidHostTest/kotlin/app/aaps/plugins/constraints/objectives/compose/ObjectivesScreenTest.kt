@@ -1,7 +1,5 @@
 package app.aaps.plugins.constraints.objectives.compose
 
-import app.aaps.core.interfaces.resources.TextRefIdRegistry
-import app.aaps.plugins.constraints.ConstraintsStringIds
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
@@ -9,6 +7,8 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.plugins.constraints.ConstraintsStringIds
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule

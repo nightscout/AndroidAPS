@@ -2,9 +2,6 @@ package app.aaps
 
 import android.annotation.SuppressLint
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import app.aaps.di.newIntegrationWaits
-import app.aaps.di.newRxHelper
-import app.aaps.di.testGraphs
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.ICfg
@@ -17,6 +14,11 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
+import app.aaps.di.newIntegrationWaits
+import app.aaps.di.newRxHelper
+import app.aaps.di.testGraphs
+import app.aaps.helpers.IntegrationWaits
+import app.aaps.helpers.RxHelper
 import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
@@ -25,6 +27,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -43,8 +46,8 @@ class CobExtendedCarbsTest : AapsInstrumentedTest() {
     private val nsIncomingDataProcessor get() = testGraphs.nsIncomingDataProcessor
     private val profileRepository get() = testGraphs.profileRepository
     private val dateUtil get() = testGraphs.dateUtil
-    private val rxHelper by lazy { newRxHelper() }
-    private val waits by lazy { newIntegrationWaits() }
+    private lateinit var rxHelper: RxHelper
+    private lateinit var waits: IntegrationWaits
     private val aapsLogger get() = testGraphs.aapsLogger
     private val l get() = testGraphs.l
     private val config get() = testGraphs.config
@@ -54,6 +57,13 @@ class CobExtendedCarbsTest : AapsInstrumentedTest() {
 
     private val profileData = "{\"_id\":\"653f90bc89f99714b4635b33\",\"defaultProfile\":\"U200_32\",\"date\":1695655201449,\"created_at\":\"2023-09-25T15:20:01.449Z\"," +
         "\"startDate\":\"2023-09-25T15:20:01.4490000Z\",\"store\":{\"U200_32\":{\"dia\":8,\"carbratio\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":10}],\"sens\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":5.5}],\"basal\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0.3}],\"target_low\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":5.5}],\"target_high\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":5.5}],\"units\":\"mmol\",\"timezone\":\"GMT\"}},\"app\":\"AAPS\",\"utcOffset\":0}"
+
+    @Before
+    fun setUp() {
+        // Per attempt: a retry runs on a new graph, see newRxHelper
+        rxHelper = newRxHelper()
+        waits = newIntegrationWaits()
+    }
 
     @After
     fun tearDown() {

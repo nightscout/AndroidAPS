@@ -50,6 +50,7 @@ class EquilEmulatorBleTransport(
     // Packet reassembly buffer
     private var receiveBuffer = EquilResponse(System.currentTimeMillis())
     private var pumpReqIndex = 0 // pump-side response index
+    private var lastResponseIndex = 0
     @Volatile private var connectionGeneration = 0 // incremented on connect() to detect stale responses after reconnect
 
     // Track background threads so tests can wait for them to finish
@@ -78,6 +79,7 @@ class EquilEmulatorBleTransport(
 
     override var scanAddress: String? = null
     override var onGattError133: (() -> Unit)? = null
+    override var onDescriptorWriteFailed: (() -> Unit)? = null
 
     // --- BleTransport ---
 
@@ -288,15 +290,17 @@ class EquilEmulatorBleTransport(
                     responsePort = emulator.getPairResponsePort()
                 } else {
                     val password = emulator.getCurrentPassword()
-                    responseModel = emulator.processMessage(incomingModel, password)
+                    responseModel = emulator.processMessage(incomingModel, password, incomingPort)
                     responsePort = emulator.getResponsePort()
                 }
 
                 if (responseModel == null) return
 
                 responseModel.code = responsePort.substring(4)
-                val responsePackets = EquilPacketCodec.buildPackets(responseModel, responsePort, pumpReqIndex, System.currentTimeMillis())
-                pumpReqIndex++
+                // The ack of a confirmation repeats the index of the answer it confirms, see lastResponseWasConfirmationAck.
+                val index = if (!isPairing && emulator.lastResponseWasConfirmationAck) lastResponseIndex else pumpReqIndex++
+                lastResponseIndex = index
+                val responsePackets = EquilPacketCodec.buildPackets(responseModel, responsePort, index, System.currentTimeMillis())
 
                 deliverResponse(gen, responsePackets)
             } catch (e: Exception) {

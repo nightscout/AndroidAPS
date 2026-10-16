@@ -64,8 +64,8 @@
     <string name="combov2_executing_command">Выполнение команды</string>
     <string name="combov2_getting_basal_profile_cmddesc">Получение базального профиля</string>
     <string name="combov2_setting_basal_profile_cmddesc">Установка базального профиля</string>
-    <string name="combov2_setting_tbr_cmddesc">Установка %1$d%% врем базала TBR на %2$d минут</string>
-    <string name="combov2_cancelling_tbr">Отмена текущего врем базала TBR</string>
+    <string name="combov2_setting_tbr_cmddesc">Установка %1$d%% ВБС на %2$d минут</string>
+    <string name="combov2_cancelling_tbr">Отмена текущей ВБС</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Получение суточной истории дозировок TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Обновление даты и времени помпы</string>
     <string name="combov2_updating_pump_status_cmddesc">Обновление статуса помпы</string>
@@ -96,7 +96,7 @@
     <string name="combov2_battery_low_warning">Низкий заряд батареи помпы</string>
     <string name="combov2_reservoir_low_warning">Низкий уровень инсулина в картридже помпы</string>
     <string name="combov2_setting_tbr_succeeded">Настройки TBR выполнены</string>
-    <string name="combov2_setting_tbr_failed">Не удалось установить TBR</string>
+    <string name="combov2_setting_tbr_failed">Не удалось установить ВБС</string>
     <string name="combov2_set_emulated_100_tbr">Установить эмуляцию. временного базала TBR 100%</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Позволить завершиться текущей эмуляции временного базала 100% TBR</string>
     <string name="combov2_ignoring_redundant_100_tbr">Игнорирование избыточного запроса на 100% TBR</string>

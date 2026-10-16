@@ -12,8 +12,8 @@ import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.compose.NSClientRepositoryImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -117,7 +117,7 @@ internal class DataSyncWorkerTest : TestBase() {
 
         verify(nsClientV3Plugin).endFullSync()
         val logs = nsClientMvvmRepository.logList.value
-        assertThat(logs.any { it.action == "● RUN" && it.logText == "Full sync finished" }).isTrue()
+        assertThat(logs.any { it.action == "● RUN" && it.text == "Full sync finished" }).isTrue()
         assertIs<Success>(result)
     }
 
@@ -129,8 +129,8 @@ internal class DataSyncWorkerTest : TestBase() {
         sut.doWorkAndLog()
 
         val logs = nsClientMvvmRepository.logList.value
-        assertThat(logs.any { it.action == "► UPL" && it.logText == "Start" }).isTrue()
-        assertThat(logs.any { it.action == "► UPL" && it.logText == "End" }).isTrue()
+        assertThat(logs.any { it.action == "► UPL" && it.text == "Start" }).isTrue()
+        assertThat(logs.any { it.action == "► UPL" && it.text == "End" }).isTrue()
     }
 
     @Test

@@ -5,11 +5,11 @@ import app.aaps.pump.carelevo.data.mapper.transformToCarelevoPatchInfoDomainMode
 import app.aaps.pump.carelevo.data.mapper.transformToCarelevoPatchInfoEntity
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
-import io.reactivex.rxjava3.core.Observable
-import java.util.Optional
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import io.reactivex.rxjava3.core.Observable
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 @ContributesBinding(AppScope::class)

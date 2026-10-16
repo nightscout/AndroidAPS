@@ -7,8 +7,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import app.aaps.appshell.navigation.AppRoute
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
@@ -40,11 +41,15 @@ import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.PasswordHasher
 import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.protection.ProtectionResult
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.ui.CoreUiStrings
@@ -58,16 +63,18 @@ import app.aaps.core.ui.compose.LocalMasterReachable
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.LocalSnackbarHostState
+import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.dialogs.GlobalDialogHost
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
-import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.dialogs.PasswordCheckHost
 import app.aaps.core.ui.compose.preference.LocalCheckPassword
 import app.aaps.core.ui.compose.preference.LocalClearExportPasswordStore
 import app.aaps.core.ui.compose.preference.LocalHashPassword
 import app.aaps.core.ui.compose.preference.LocalVisibilityContext
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.compose.clientcontrol.ClientControlPendingDialog
+import kotlinx.coroutines.flow.first
 
 /**
  * The app's Compose root: everything that is on screen before any particular screen is.
@@ -110,15 +117,30 @@ fun AapsAppRoot(
     rxBus: RxBus,
     snackbarHostPresence: SnackbarHostPresence,
     clientControlActionDispatcher: ClientControlActionDispatcher,
+    bolusProgressData: BolusProgressData,
+    commandQueue: CommandQueue,
+    pumpCommunicationStatus: PumpCommunicationStatus,
     appIcon: @Composable (Modifier) -> Unit,
     splashLogo: @Composable (Modifier) -> Unit,
     onNavControllerReady: (NavHostController) -> Unit,
     onClose: () -> Unit,
+    /**
+     * Keeps the setup wizard shut on a first run that is not a real first run.
+     *
+     * Only Android passes anything: its instrumented pump tests start with an empty preference store,
+     * so without this every one of them would open the wizard instead of the screen under test. The
+     * test it asks - `isRunningRealPumpTest` - is in `core:utils` androidMain and cannot be seen from
+     * here, which is why this is a parameter rather than a check.
+     */
+    suppressSetupWizard: Boolean = false,
     content: @Composable (NavHostController) -> Unit
 ) {
     val navController = rememberNavController().also(onNavControllerReady)
     val masterReachable by nsClient.masterReachable.collectAsStateWithLifecycle()
     val masterControlAllowed by nsClient.masterControlAllowed.collectAsStateWithLifecycle()
+    val bolusState by bolusProgressData.state.collectAsStateWithLifecycle()
+    val pumpStatusBanner by pumpCommunicationStatus.statusBannerFlow.collectAsStateWithLifecycle()
+    val pumpQueueStatus by pumpCommunicationStatus.queueStatusFlow.collectAsStateWithLifecycle()
 
     // Global self-heal — event-driven, NOT a poll (a timer would keep the CPU awake). Probe once when
     // we go offline, and again on each navigation while offline, so any screen/dialog the user opens
@@ -155,6 +177,25 @@ fun AapsAppRoot(
             CompositionLocalProvider(LocalSnackbarHostState provides rootSnackbarHostState) {
                 val initProgress by config.initProgressFlow.collectAsStateWithLifecycle()
 
+                // A first run opens the setup wizard. This lived in `ComposeMainActivity`, so only
+                // Android did it: a fresh desktop or iOS install came up on an overview with no
+                // Nightscout configured and nothing saying what to do next (found on 2026-10-14 while
+                // running a desktop client through its first start). Every shell calls this function
+                // and the nav controller is made here, so this is the one place all three share.
+                //
+                // Waiting for the graph is not optional. `content` - and with it the NavHost - is only
+                // composed once `initProgress.done`, so navigating any earlier throws "navigation
+                // graph has not been set". `currentBackStackEntryFlow.first()` returns as soon as the
+                // NavHost has installed its graph, which is the condition that actually matters.
+                LaunchedEffect(initProgress.done) {
+                    if (!initProgress.done) return@LaunchedEffect
+                    if (suppressSetupWizard || preferences.get(BooleanNonKey.GeneralSetupWizardProcessed)) return@LaunchedEffect
+                    navController.currentBackStackEntryFlow.first()
+                    protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
+                        if (result == ProtectionResult.GRANTED) navController.navigate(AppRoute.SetupWizard.route)
+                    }
+                }
+
                 Box(modifier = Modifier.fillMaxSize()) {
                     AnimatedVisibility(
                         visible = !initProgress.done,
@@ -174,6 +215,25 @@ fun AapsAppRoot(
                     ) {
                         content(navController)
                     }
+
+                    BolusProgressOverlay(
+                        bolusState = bolusState,
+                        pumpStatus = pumpStatusBanner?.text ?: "",
+                        queueStatus = pumpQueueStatus,
+                        onStop = {
+                            // A client does not own the pump: ask the master to abort and show the press
+                            // locally. Only a master talks to its own queue.
+                            if (config.AAPSCLIENT) {
+                                clientControlActionDispatcher.stopBolus()
+                                bolusProgressData.stopPressed()
+                            } else {
+                                commandQueue.cancelAllBoluses(null)
+                            }
+                        },
+                        // Only reachable from the stalled-state Dismiss button on a client: hides the
+                        // local mirror. Delivery belongs to the master, so this touches no pump.
+                        onDismiss = { bolusProgressData.clear() }
+                    )
 
                     // Root-level snackbar host — subscribes to EventShowSnackbar
                     // and is the single visible SnackbarHost across every screen.

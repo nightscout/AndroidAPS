@@ -8,10 +8,10 @@ import app.aaps.pump.eopatch.core.code.PatchBleResultCode
 import app.aaps.pump.eopatch.core.response.TempBasalScheduleSetResponse
 import app.aaps.pump.eopatch.core.scan.IBleDevice
 import app.aaps.pump.eopatch.core.util.FloatAdjusters
-import io.reactivex.rxjava3.core.Single
-import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import io.reactivex.rxjava3.core.Single
 
 @SingleIn(AppScope::class)
 @Inject

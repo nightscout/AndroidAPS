@@ -10,11 +10,10 @@
     <string name="configure">Configurar la opacidad</string>
     <string name="widget_description">Widget de AAPS</string>
     <string name="widget_bg_graph_description">Gráfico de glucemia AAPS</string>
+    <string name="widget_glucose_circle_description">Círculo de glucosa de AAPS</string>
     <string name="widget_compact_bg_description">AAPS Glucosa + IOB + COB (compacta)</string>
     <string name="widget_small_description">AAPS pequeño</string>
     <!--     Activities-->
-    <string name="activity_monitor">Monitor de actividad</string>
-    <string name="time_range">Rango de tiempo</string>
     <string name="dexcom_tir">TIR de Dexcom</string>
     <string name="cgp_title">Pentágono de glucosa (CGP) — 14 días</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
@@ -30,7 +29,6 @@
     <string name="cgp_pgr_moderate">Riesgo moderado</string>
     <string name="cgp_pgr_high">Riesgo alto</string>
     <string name="cgp_pgr_extremely_high">Riesgo extremadamente alto</string>
-    <string name="do_you_want_reset_stats">¿Desea restablecer las estadísticas de actividad?</string>
     <string name="do_you_want_recalculate_tdd_stats">¿Quieres recalcular las estadísticas de TDD?</string>
     <string name="calculation_in_progress">Cálculo en curso</string>
     <string name="age">Edad</string>
@@ -41,6 +39,7 @@
     <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
+    <string name="edit_site">Editar</string>
     <string name="record_site_location">Ubicación del sitio: %1$s</string>
     <string name="record_site_arrow">Flecha del sitio: %1$s</string>
     <string name="record_site_note">Nota: %1$s</string>
@@ -152,6 +151,7 @@
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="percentage_label">Porcentaje</string>
     <!-- LoopDialog -->
+    <string name="disconnectpump">Desconectar bomba</string>
     <string name="resume">Resumir</string>
     <string name="reconnect">Vuelva a conectar la bomba</string>
     <string name="duration15m">15 min</string>
@@ -162,8 +162,12 @@
     <string name="duration10h">10 horas</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">Faltan %1$d g</string>
+    <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
+    <string name="wizard_calc_with_isf" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin sensitivity factor used. Example: BG (ISF: 3.0)">%1$s (ISF: %2$s)</string>
+    <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
+    <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
     <string name="wizard_carbs_type_bread_desc">100% carbohidratos inmediatos, sin carbohidratos de absorción lenta</string>
-    <string name="wizard_carbs_type_desc">Carbohidratos reducidos en un %1$d%%, añadidos eCarbs %2$d%% con retraso de %3$d min durante %4$d h</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Carbohidratos reducidos un %1$d%%, eCarbs añadidos un %2$d%% pospuestos %3$d min durante  %4$d h</string>
     <string name="wizard_include_info">Toca para incluir/excluir del cálculo:\n• BG — glucemia capilar/sensor (activado al inicio)\n• TT — objetivo temporal (activado al inicio)\n• Trend — tendencia de la glucemia (recuerda el último estado)\n• IOB — insulina activa (activado al inicio)\n• COB — carbohidratos activos (recuerda el último estado)</string>
     <!-- Treatments -->
     <string name="no_records_available">No hay registros disponibles</string>
@@ -174,6 +178,29 @@
     <string name="careportal_remove_started_events">Eliminar registros de inicio de AAPS</string>
     <string name="user_entry">Entrada de usuario</string>
     <string name="clone_label">Duplicar</string>
+    <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Gráfico de glucosa. Valores recientes %1$s. %2$s. %3$s</string>
+    <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Mostrar controles</string>
+    <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Notificaciones: %1$d</string>
+    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">sin objetivo temporal, objetivo del perfil</string>
+    <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">ajustado por el lazo</string>
+    <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s a las %2$s</string>
+    <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">delta %1$s</string>
+    <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">lectura antigua</string>
+    <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s, %2$s</string>
+    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Gráfico de glucosa. Valores recientes %1$s</string>
+    <string name="a11y_predictions" comment="Screen-reader description of the predicted glucose curves, which are drawn on the graph and cannot be read otherwise. %1$s=one sentence per prediction, already joined. Example: Predictions. COB prediction rises to 11.2 mmol/l. IOB prediction falls to 4.8 mmol/l.">Predicciones: %1$s</string>
+    <string name="a11y_prediction_rises" comment="One predicted curve that ends higher than the current glucose. %1$s=the name of the prediction, %2$s=the highest value it reaches, with its unit. Example: COB prediction rises to 11.2 mmol/l">%1$s sube a %2$s.</string>
+    <string name="a11y_prediction_falls" comment="One predicted curve that ends lower than the current glucose. %1$s=the name of the prediction, %2$s=the lowest value it reaches, with its unit. Example: IOB prediction falls to 4.8 mmol/l">%1$s baja a %2$s.</string>
+    <string name="a11y_prediction_flat" comment="One predicted curve that stays level. %1$s=the name of the prediction, %2$s=the value it holds, with its unit. Example: Zero temp prediction stays at 6.1 mmol/l">%1$s se mantiene en %2$s.</string>
+    <string name="a11y_prediction_name_iob" comment="Spoken name of the prediction from insulin on board. IOB is the term AAPS users know.">Predicción por IOB</string>
+    <string name="a11y_prediction_name_cob" comment="Spoken name of the prediction from carbs on board. COB is the term AAPS users know.">Predicción por COB</string>
+    <string name="a11y_prediction_name_acob" comment="Spoken name of the prediction from already absorbed carbs, shown by the AMA algorithm only.">Predicción por COB absorbidos</string>
+    <string name="a11y_prediction_name_uam" comment="Spoken name of the prediction for a meal the user did not enter. UAM is the term AAPS users know.">Predicción por UAM</string>
+    <string name="a11y_prediction_name_zt" comment="Spoken name of the prediction for what happens with no insulin at all, the zero-temp curve.">Predicción con basal a cero</string>
+    <string name="a11y_badge_attention" comment="Screen-reader state of a navigation button that carries a warning badge. On screen the badge is a dot or an exclamation mark, which a screen reader cannot see at all.">acción requerida</string>
+    <string name="a11y_badge_available" comment="Screen-reader state of a navigation button whose badge counts what the user can start right now. %1$d=the count. Example: 3 available">%1$d disponibles</string>
+    <string name="a11y_objectives_progress" comment="Screen-reader state of the Objectives navigation button, whose badge shows progress. %1$d=objectives finished, %2$d=objectives in total. Example: 9 of 10 done">%1$d de %2$d completados</string>
+    <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Ejecutar</string>
     <string name="add_new_profile">Añadir nuevo perfil</string>
     <string name="edit_label">Editar</string>
     <string name="activate_label">Activar</string>
@@ -270,6 +297,8 @@
     </string-array>
     <!-- Toolbar configuration -->
     <string name="quick_launch_selected_actions">Acciones seleccionadas</string>
+    <string name="a11y_quick_launch_add" comment="Screen-reader label of the button that adds an action to the QuickLaunch bar. %1$s=the action name. Example: Add Bolus wizard">Añadir %1$s</string>
+    <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">Eliminar %1$s</string>
     <string name="quick_launch_no_dynamic_items">No hay elementos disponibles</string>
     <string name="quick_launch_category_treatment">Tratamiento</string>
     <string name="quick_launch_category_care">Portal de cuidados</string>
@@ -304,4 +333,5 @@
     <string name="cal_precheck_no_pair">Sin lecturas del MCG en los últimos 10 minutos. Comprueba la conexión del sensor</string>
     <string name="cal_precheck_delta_too_high">La glucosa está cambiando demasiado rápido (Δ %1$s %3$s por cada 5 min, límite %2$s). Espera a que se estabilice</string>
     <string name="cal_precheck_mark_sensor_change">Registrar cambio de sensor</string>
+    <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
 </resources>

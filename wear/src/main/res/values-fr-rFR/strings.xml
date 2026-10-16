@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS (Cercle)</string>
     <string name="label_watchface_digital_style">AAPS (Digital)</string>
     <string name="label_watchface_custom">AAPS (perso)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (Personnalisé) toujours visible</string>
     <string name="label_actions_tile">Actions</string>
     <string name="label_temp_target_tile">Cible Temp</string>
     <string name="label_quick_wizard_tile">Assistant</string>
@@ -96,6 +97,7 @@
     <string name="action_user_action_confirmation">Action de l\'utilisateur demandée</string>
     <string name="action_scene_confirmation">Scenario demandé</string>
     <string name="scene_end">Fin</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Ignorer</string>
     <string name="action_treatment_confirmation">Traitement demandé</string>
     <string name="action_bolus_confirmation">Bolus demandé</string>
     <string name="action_wizard_confirmation">Calcul demandé</string>
@@ -159,6 +161,21 @@
     <string name="pref_simplify_ui">Interface simplifiée</string>
     <string name="pref_vibrate_hourly">Vibrer à l\'heure</string>
     <string name="pref_show_weeknumber">Afficher numéro semaine</string>
+    <string name="pref_complication_1">Complication 1</string>
+    <string name="pref_complication_2">Complication 2</string>
+    <string name="pref_complication_3">Complication 3</string>
+    <string name="pref_complication_4">Complication 4</string>
+    <string name="pref_complication_5">Complication 5</string>
+    <string name="complication_summary_none">Appuyez pour sélectionner une complication</string>
+    <string name="pref_complication_type_priority">Priorité du type de complication</string>
+    <string name="pref_complication_type_priority_all">Par défaut pour tous</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Un changement ici s\'applique la prochaine fois que vous choisissez une source de données. Choisir le même ne suffit pas : choisir une source de données différente, puis choisir celle que vous voulez.</string>
+    <string name="complication_type_priority_value">Valeur ou jauge</string>
+    <string name="complication_type_priority_text">Texte</string>
+    <string name="complication_type_priority_icon">Icône</string>
+    <string name="complication_type_priority_use_default">Choix par défaut</string>
+    <string name="cwf_complication_layout">Mise en page des complications</string>
+    <string name="cwf_complication_layout_description">Position et taille des complications, prises à partir du cadran de montre chargé.</string>
     <string name="pref_include_external">Inclure les vues externes dans le modèle</string>
     <string name="pref_switch_external">Intervertir les données externes sur le cadran</string>
     <string name="custom_pref_show_seconds">Afficher les secondes</string>
@@ -174,6 +191,8 @@
     <string name="bolus_progress_silent_channel_name">Progression Bolus silencieuse</string>
     <string name="bolus_progress_channel_description">Progression et annulation Bolus</string>
     <string name="bolus_progress_silent_channel_description">Progression et annulation Bolus avec moins de vibrations</string>
+    <string name="open_loop_channel_name">Boucle ouverte AAPS</string>
+    <string name="open_loop_channel_description">Notification de demande d\'ouverture de la boucle</string>
     <string name="simple_ui_off">Désactivé</string>
     <string name="simple_ui_charging">Pendant la charge</string>
     <string name="simple_ui_always_on">Toujours allumé</string>
@@ -231,6 +250,10 @@
     <string name="complication_blood_glucose_ext1">Glycémie Ext1</string>
     <string name="complication_blood_glucose_ext2">Glycémie Ext2</string>
     <string name="complication_bg_graph">Graphique Gly</string>
+    <string name="complication_cwf_image">Cadran personnalisé</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Arrière-plan du cadran personnalisé</string>
+    <string name="complication_cwf_upper">Horloge du cadran personnalisé</string>
     <string name="complication_br_cob_iob">DB, GA &amp; IA</string>
     <string name="complication_br_cob_iob_ext1">DB, GA &amp; IA Ext1</string>
     <string name="complication_br_cob_iob_ext2">DB, GA &amp; IA Ext2</string>
@@ -244,6 +267,8 @@
     <string name="complication_iob_icon">Icône IA</string>
     <string name="complication_iob_detailed">IA détaillée</string>
     <string name="complication_uploader_phone_battery">Batterie téléphone</string>
+    <string name="running_mode_resume">Reprendre la boucle</string>
+    <string name="running_mode_reconnect">Reconnecter la pompe</string>
     <string name="label_running_mode_title">Mode</string>
     <string name="label_bg_graph_tile">Graphique Glycémie</string>
     <string name="tile_tap_action">Action du clic</string>
@@ -293,6 +318,18 @@
     <string name="loop_status_target_range">Plage</string>
     <string name="loop_status_target">Cible</string>
     <string name="loop_status_adjusted_target">Cible ajustée</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Jusqu\'à l\'arrêt</string>
+    <string name="loop_status_scene_ended">Terminée</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Suivi</string>
+    <string name="loop_status_profile">Profil</string>
+    <string name="loop_status_no_profile">Aucun profil séléctionné</string>
+    <string name="loop_status_profile_percentage">Pourcentage</string>
+    <string name="loop_status_profile_timeshift">Décalage horaire</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Retourner à</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+d h</string>
+    <string name="loop_status_sensitivity">Sensibilité</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Défini par la scène active</string>
     <string name="loop_status">État de la boucle</string>
     <string name="loop_status_refresh">Actualiser</string>
     <string name="confirm">Confirmer</string>

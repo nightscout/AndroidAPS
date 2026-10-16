@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
-import androidx.core.text.HtmlCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -27,13 +26,13 @@ import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.AlarmType.Companion.isCritical
 import app.aaps.pump.carelevo.ext.transformNotificationStringResources
 import app.aaps.pump.carelevo.presentation.model.AlarmEvent
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 
 /**
  * Presentation half of the alarm pipeline: observes the persisted active-alarm set (via
@@ -126,7 +125,7 @@ class CarelevoAlarmNotifier @Inject constructor(
             val critical = newAlarm.alarmType.isCritical()
             notificationManager.post(
                 id = NotificationId.CARELEVO_PATCH_ALERT,
-                text = context.getString(titleRes) + "\n" + HtmlCompat.fromHtml(desc, HtmlCompat.FROM_HTML_MODE_LEGACY),
+                text = context.getString(titleRes) + "\n" + desc,
                 level = if (critical) NotificationLevel.IMPORTANT else NotificationLevel.NORMAL,
                 actions = listOf(
                     NotificationAction(TextRef.AndroidRes(btnRes)) {

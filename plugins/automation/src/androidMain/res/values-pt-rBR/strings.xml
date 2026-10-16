@@ -1,9 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Automação</string>
+    <string name="automation_enabled">Ativado</string>
+    <string name="automation_read_only">Somente leitura</string>
+    <string name="automation_new_rule">Nova regra</string>
+    <string name="automation_empty_desc">Crie uma regra para automatizar ações com base em gatilhos.</string>
+    <string name="automation_edit_rule">Editar regra</string>
+    <string name="automation_discard_title">Descartar alterações?</string>
+    <string name="automation_discard_message">A regra está incompleta e não pode ser salva. Descartar suas alterações?</string>
+    <string name="automation_discard_confirm">Descartar</string>
+    <string name="automation_category_time">Horário &amp; programação</string>
+    <string name="automation_category_glucose">Glicose &amp; tratamento</string>
+    <string name="automation_category_device">Estado do dispositivo</string>
+    <string name="automation_category_sensors">Sensores &amp; conectividade</string>
+    <string name="automation_category_other">Outro</string>
+    <string name="automation_choose_trigger">Adicionar gatilho</string>
+    <string name="automation_add_group">Grupo</string>
+    <string name="automation_choose_action">Adicionar ação</string>
+    <string name="automation_category_targets">Alvos</string>
+    <string name="automation_category_profile">Perfil</string>
+    <string name="automation_category_loop">Loop &amp; insulina</string>
+    <string name="automation_category_alerts">Alertas</string>
+    <string name="automation_category_system">Sistema</string>
+    <string name="automation_category_scenes">Cenários</string>
+    <string name="action_run_scene">Executar cenário</string>
+    <string name="action_run_scene_short">Executar cenário: %1$s</string>
+    <string name="action_enable_scene">Ativar cenário</string>
+    <string name="action_enable_scene_short">Ativar cenário: %1$s</string>
+    <string name="action_disable_scene">Desativar cenário</string>
+    <string name="action_disable_scene_short">Desativar cenário: %1$s</string>
+    <string name="action_scene_label">Cenário</string>
+    <string name="trigger_scene_active">Cenário</string>
+    <string name="trigger_scene_active_compared">Cenário %1$s</string>
+    <string name="action_scene_not_found">Cenário não encontrado</string>
+    <string name="action_scene_disabled">O cenário está desativado</string>
     <string name="automation_missing_task_name">Insira um nome da tarefa.</string>
     <string name="automation_missing_trigger">Especifique pelo menos um gatilho.</string>
     <string name="automation_missing_action">Especifique pelo menos uma acção.</string>
+    <string name="exportsettings_message">Exportação de configurações: %1$s</string>
+    <string name="export_settings_short">Texto nos tratamentos:</string>
     <string name="alarm_message">Alarme: %1$s</string>
     <string name="alarm_short">Alarme:</string>
     <string name="message_short">Mnsg:</string>
@@ -65,6 +100,20 @@
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Frequência cardíaca</string>
     <string name="triggerHeartRateDesc">FC %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">Idade do sensor</string>
+    <string name="triggerSensorAgeDesc">Idade do sensor %1$s %2$.1f horas</string>
+    <string name="triggerCannulaAgeLabel">Idade da cânula</string>
+    <string name="triggerCannulaAgeDesc">Idade da cânula %1$s %2$.1f horas</string>
+    <string name="triggerPodChangeLabel">Ativação do Pod</string>
+    <string name="triggerPodChangeDesc">Pod ativado</string>
+    <string name="triggerInsulinAgeLabel">Idade da insulina</string>
+    <string name="triggerInsulinAgeDesc">Idade da insulina %1$s %2$.1f horas</string>
+    <string name="triggerPumpBatteryAgeLabel">Idade da bateria da bomba</string>
+    <string name="triggerPumpBatteryAgeDesc">Idade da bateria da bomba %1$s %2$.1f horas</string>
+    <string name="triggerReservoirLevelLabel">Nível do reservatório</string>
+    <string name="triggerReservoirLevelDesc">Nível do reservatório %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Nível da bateria da bomba</string>
+    <string name="triggerPumpBatteryLevelDesc">Nível da bateria da bomba %1$s %2$.0f</string>
     <string name="recurringTime">Tempo recorrente</string>
     <string name="every">Todo</string>
     <string name="never">Nunca</string>
@@ -83,14 +132,34 @@
     <string name="time_to_bolus">Hora do bolus!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
     <string name="error_setting_reminder">Erro ao definir alarme futuro</string>
     <!--    Autotune-->
+    <string name="autotune_profile_name">Perfil do Autotune %1$s</string>
     <string name="autotune_run">Executar Autotune</string>
     <string name="autotune_run_without_autoswitch">Autotune executado sem troca de perfil</string>
     <string name="autotune_run_with_autoswitch">Autotune executado e perfil alterado automaticamente</string>
     <string name="autotune_run_with_error">Erro durante a última execução do Autotune</string>
     <string name="autotune_run_cancelled">Outra execução de Autotune foi detectada, execução cancelada</string>
     <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Contagem de passos</string>
+    <string name="triggerStepsCountDesc">Contagem de passos a cada %1$s minutos %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Duração da medição</string>
     <!--    SMB mode-->
+    <string name="changeSmbState">Ativar/desativar SMB</string>
+    <string name="changeSmbTo">Alterar SMB para %1$s</string>
+    <string name="newSmbMode">Novo modo SMB:</string>
+    <string name="on">ATIVADO</string>
+    <string name="off">DESATIVADO</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">Alterar suavização</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Alterar suavização para %1$s</string>
+    <string name="smoothing_label">Suavização</string>
+    <string name="precondition_smoothing_not_active_name">Suavização inativa</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">A suavização %1$s não está ativa</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Escolher no mapa</string>
+    <string name="tap_to_select_location">Toque no mapa para selecionar um local</string>
+    <string name="selected_coords">Selecionado: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">Localização</string>
+    <string name="permission_location_description">Necessária para gatilhos de automação baseados em localização e identificação de redes Wi‑Fi</string>
+    <string name="permission_background_location_description">Necessária para que os gatilhos de automação funcionem quando o app estiver em segundo plano</string>
 </resources>

@@ -30,6 +30,16 @@ interface IobCobCalculator {
     fun clearCache()
 
     /**
+     * The BG data was loaded again, normally for a new BG.
+     *
+     * The cached IOB of the past stays: it depends only on boluses, temporary basals, extended boluses,
+     * the profile switches in force at their times and the time zone. A change of one of those clears the
+     * cache from its time on (history change) or completely (time zone, configuration, import). Only
+     * entries older than anything the calculation asks for are dropped.
+     */
+    fun bgDataReloaded()
+
+    /**
      *  Calculate CobInfo to now()
      *
      *  @param reason caller identification

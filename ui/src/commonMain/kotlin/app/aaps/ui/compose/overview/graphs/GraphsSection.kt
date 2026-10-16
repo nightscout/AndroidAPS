@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -41,13 +42,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.overview.graph.BgDataPoint
+import app.aaps.core.interfaces.overview.graph.BgType
 import app.aaps.core.interfaces.overview.graph.GraphConfig
 import app.aaps.core.interfaces.overview.graph.SecondaryGraph
 import app.aaps.core.interfaces.overview.graph.SeriesType
@@ -57,16 +62,17 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.rowAction
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 import com.patrykandpatrick.vico.compose.cartesian.Scroll
 import com.patrykandpatrick.vico.compose.cartesian.Zoom
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
-import kotlin.math.abs
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.debounce
+import kotlin.math.abs
 
 /**
  * Overview graphs section using Vico charts.
@@ -79,7 +85,7 @@ import kotlinx.coroutines.flow.debounce
  *
  * Synchronization Implementation:
  * - snapshotFlow observes scroll/zoom values from BG graph
- * - debounce(30) waits for gesture to settle
+ * - conflate() takes the newest position on every frame
  * - zoomState.zoom() and scrollState.scroll() copy state to secondary graphs
  *
  * Secondary graphs are config-driven via [GraphConfig.secondaryGraphs].
@@ -100,6 +106,91 @@ private val SIMPLE_MODE_CONFIG = GraphConfig(
  * turning the description into a list nobody will sit through.
  */
 private const val RECENT_VALUES_SPOKEN = 5
+
+/** Moves the pill up over the treatment belt (48 dp, of which 16 dp overlap the BG graph). */
+private val INSPECT_PILL_OFFSET = (-32).dp
+
+/**
+ * The space the time labels took under each graph below BG, before they were removed (measured: the plot
+ * grew by 27 px at 420 dpi). These graphs are drawn this much shorter than their height setting, so the
+ * plot keeps its size and the whole section gets shorter.
+ */
+private val REMOVED_TIME_LABELS_HEIGHT = 10.dp
+
+/** Size of the edit button (pencil) on a graph. The icon in it is 16 dp. */
+private val GRAPH_EDIT_BUTTON_SIZE = 28.dp
+
+/**
+ * Puts the name and the pencil of a graph below BG just above the bottom line of its plot, in the bottom right
+ * corner. The line is about 12 dp above the bottom of the graph (room for half of the lowest Y-axis label). The
+ * row is 28 dp tall and the text and icon are 16 dp in its middle, so they end 8 + 6 = 14 dp above the bottom.
+ */
+private val GRAPH_NAME_BOTTOM_PADDING = 8.dp
+
+/**
+ * How far the IOB graph is pulled up towards BG. The BG graph is drawn 16 dp higher than its place (over the
+ * treatment belt), so the same 16 dp puts the IOB graph right below it, without an empty band in between.
+ */
+private val IOB_GRAPH_PULL_UP = 16.dp
+
+/**
+ * How much each further graph overlaps the one above it. Vico keeps half a label height free above and below
+ * each plot, for labels on its top and bottom lines. 5 dp of these two free bands can overlap, and two such
+ * labels still do not touch.
+ */
+private val GRAPH_OVERLAP = 5.dp
+
+/**
+ * Draws the content [amount] higher and makes it take [amount] less height, so everything below it moves up
+ * too. Modifier.offset only moves the drawing and leaves the space empty.
+ */
+private fun Modifier.pullUp(amount: Dp): Modifier = layout { measurable, constraints ->
+    val placeable = measurable.measure(constraints)
+    val pull = amount.roundToPx()
+    layout(placeable.width, (placeable.height - pull).coerceAtLeast(0)) {
+        placeable.place(0, -pull)
+    }
+}
+
+/** Which way a predicted curve is travelling, which decides the sentence spoken for it. */
+internal enum class PredictionDirection { UP, DOWN, FLAT }
+
+/**
+ * The point of a predicted curve worth saying out loud, and which way it lies from [current].
+ *
+ * The furthest excursion from the current glucose, not the last point: a curve that dips to 3.2
+ * before settling at 6.0 matters for the dip, and "heading down to" is how a user describes it.
+ * A curve that only rises therefore reports its peak, one that only falls reports its trough, and
+ * one that goes nowhere reports the value it holds.
+ *
+ * [values] must already be in the user's units. Returns null for an empty curve.
+ */
+internal fun predictionExtreme(values: List<Double>, current: Double): Pair<Double, PredictionDirection>? {
+    if (values.isEmpty()) return null
+    val highest = values.max()
+    val lowest = values.min()
+    val up = highest - current
+    val down = current - lowest
+    return when {
+        up > down -> highest to PredictionDirection.UP
+        down > up -> lowest to PredictionDirection.DOWN
+        else      -> current to PredictionDirection.FLAT
+    }
+}
+
+/**
+ * The predicted curves in the order they are spoken, with the name each is spoken by.
+ *
+ * Carbs first because a meal is what a user is most often checking on, then insulin, then the two
+ * that only appear in some setups. Absorbed COB exists on AMA only and is simply absent otherwise.
+ */
+private val PREDICTION_SPOKEN_ORDER = listOf(
+    BgType.COB_PREDICTION to UiStrings.a11y_prediction_name_cob,
+    BgType.IOB_PREDICTION to UiStrings.a11y_prediction_name_iob,
+    BgType.A_COB_PREDICTION to UiStrings.a11y_prediction_name_acob,
+    BgType.UAM_PREDICTION to UiStrings.a11y_prediction_name_uam,
+    BgType.ZT_PREDICTION to UiStrings.a11y_prediction_name_zt
+)
 
 /** Series types available as BG graph overlays */
 private val BG_OVERLAY_SERIES = listOf(SeriesType.ACTIVITY, SeriesType.PREDICTIONS)
@@ -259,21 +350,27 @@ fun GraphsSection(
         sec2scroll, sec2zoom, sec3scroll, sec3zoom,
         sec4scroll, sec4zoom
     ) {
-        var initialValue = true
+        // Do not report a user interaction from here: the scroll/zoom values also change without the user
+        // (viewport reset on a new BG, the prediction nudge, Vico's initial scroll to the end). Real gestures
+        // are reported by onScrollOrZoomGesture on the BG chart.
+        var syncedZoom: Float? = null
+        var syncedCount = -1
         snapshotFlow { bgScrollState.value to bgZoomState.value }
-            .debounce(30) // Wait for gesture to settle
+            .conflate()
             .collect { (scroll, zoom) ->
-                if (initialValue) {
-                    initialValue = false
-                } else {
-                    graphViewModel.onGraphInteraction()
-                }
                 val count = activeCount
-                // Sync zoom first, then scroll (order matters for proper positioning)
-                beltZoomState.zoom(Zoom.fixed(zoom))
-                iobZoomState.zoom(Zoom.fixed(zoom))
-                for (i in 0 until count) secZoomStates[i].zoom(Zoom.fixed(zoom))
-                delay(10)
+                // Zoom first, then scroll, with no wait in between. Vico's zoom() also scrolls the graph,
+                // around its own centre and starting from the scroll it last drew, and that scroll is done
+                // when zoom() returns. Our scroll corrects it before the next frame is drawn. A wait here
+                // let a frame be drawn with Vico's scroll, the next zoom() started from that wrong value,
+                // and during a pinch the graphs drifted sideways (up to an hour near the edge).
+                if (zoom != syncedZoom || count != syncedCount) {
+                    beltZoomState.zoom(Zoom.fixed(zoom))
+                    iobZoomState.zoom(Zoom.fixed(zoom))
+                    for (i in 0 until count) secZoomStates[i].zoom(Zoom.fixed(zoom))
+                    syncedZoom = zoom
+                    syncedCount = count
+                }
                 beltScrollState.scroll(Scroll.Absolute.pixels(scroll))
                 iobScrollState.scroll(Scroll.Absolute.pixels(scroll))
                 for (i in 0 until count) secScrollStates[i].scroll(Scroll.Absolute.pixels(scroll))
@@ -350,7 +447,7 @@ fun GraphsSection(
                     beltZoomState.zoom(Zoom.fixed(bgZoom))
                     iobZoomState.zoom(Zoom.fixed(bgZoom))
                     for (i in 0 until count) secZoomStates[i].zoom(Zoom.fixed(bgZoom))
-                    delay(10)
+                    // No wait between zoom and scroll, see the sync above
                     beltScrollState.scroll(Scroll.Absolute.pixels(bgScroll))
                     iobScrollState.scroll(Scroll.Absolute.pixels(bgScroll))
                     for (i in 0 until count) secScrollStates[i].scroll(Scroll.Absolute.pixels(bgScroll))
@@ -358,6 +455,9 @@ fun GraphsSection(
             }
     }
 
+
+    // Set by the BG graph, read by every graph
+    val inspect = remember { GraphInspectState() }
 
     Column(
         modifier = modifier
@@ -367,6 +467,7 @@ fun GraphsSection(
         // Treatment Belt Graph - running mode background + therapy events
         TreatmentBeltGraphCompose(
             viewModel = graphViewModel,
+            inspect = inspect,
             scrollState = beltScrollState,
             zoomState = beltZoomState,
             derivedTimeRange = derivedTimeRange,
@@ -388,8 +489,7 @@ fun GraphsSection(
             // BgDataPoint.value is ALREADY in the user's units, so it must not be converted again -
             // only formatted. The unit decides the decimals; the "detect" helpers guess that from
             // the magnitude and would read a very high mmol/l reading as mg/dl.
-            bgReadings.takeLast(RECENT_VALUES_SPOKEN)
-                .asReversed()
+            newestReadings(bgReadings, RECENT_VALUES_SPOKEN)
                 .joinToString(", ") {
                     if (profileUtil.units == GlucoseUnit.MGDL) decimalFormatter.to0Decimal(it.value)
                     else decimalFormatter.to1Decimal(it.value)
@@ -407,7 +507,47 @@ fun GraphsSection(
             else                                   -> stringResource(UiStrings.a11y_bg_graph_summary_values_only, recentValues)
         }
 
-        Box(modifier = Modifier.offset(y = (-16).dp)) {
+        // The predicted curves are drawn and nothing else on the screen states them, so they were
+        // out of reach entirely. Each curve gets one sentence naming where it is heading, which is
+        // what a listener can actually hold in their head - reading a whole series of points back
+        // would be unusable. Reported as the biggest excursion from the current glucose rather than
+        // the final point, because a curve that dips to 3.2 before settling at 6.0 matters for the
+        // dip, and that is the reading of "heading up to" or "down to" a user means.
+        val currentValue = remember(bgReadings) { newestReadings(bgReadings, 1).firstOrNull()?.value }
+        val unitLabel = if (profileUtil.units == GlucoseUnit.MMOL) stringResource(CoreUiStrings.mmol) else stringResource(CoreUiStrings.mgdl)
+        // Nothing is said about curves the user has switched off the graph.
+        val predictionsVisible = SeriesType.PREDICTIONS in graphConfig.bgOverlays
+        val predictionExtremes = remember(predictions, currentValue, predictionsVisible) {
+            if (!predictionsVisible || currentValue == null) emptyList()
+            else PREDICTION_SPOKEN_ORDER.mapNotNull { (type, name) ->
+                predictionExtreme(predictions.filter { it.type == type }.map { it.value }, currentValue)
+                    ?.let { (value, direction) -> Triple(name, value, direction) }
+            }
+        }
+        // map, not joinToString: the latter is not inline, so a @Composable call cannot sit in its
+        // lambda. The finished sentences are joined afterwards, as the graph summary joins its values.
+        val predictionSentences = predictionExtremes.map { (name, value, direction) ->
+            // BgDataPoint.value is ALREADY in the user's units, as above: format, never convert.
+            val shown = stringResource(
+                CoreUiStrings.value_with_unit,
+                if (profileUtil.units == GlucoseUnit.MGDL) decimalFormatter.to0Decimal(value) else decimalFormatter.to1Decimal(value),
+                unitLabel
+            )
+            when (direction) {
+                PredictionDirection.UP   -> stringResource(UiStrings.a11y_prediction_rises, stringResource(name), shown)
+                PredictionDirection.DOWN -> stringResource(UiStrings.a11y_prediction_falls, stringResource(name), shown)
+                PredictionDirection.FLAT -> stringResource(UiStrings.a11y_prediction_flat, stringResource(name), shown)
+            }
+        }
+        val predictionDescription =
+            if (predictionSentences.isEmpty()) null
+            else stringResource(UiStrings.a11y_predictions, predictionSentences.joinToString(" "))
+
+        Box(
+            modifier = Modifier
+                .offset(y = (-16).dp)
+                .graphInspectTouch(inspect)
+        ) {
             BgGraphCompose(
                 viewModel = graphViewModel,
                 bgOverlays = graphConfig.bgOverlays,
@@ -416,22 +556,56 @@ fun GraphsSection(
                 derivedTimeRange = derivedTimeRange,
                 nowTimestamp = nowTimestamp,
                 visibleTimeRange = bgVisibleTimeRange,
+                inspect = inspect,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(graphConfig.bgHeight.dp)
+                    .onScrollOrZoomGesture(graphViewModel::onGraphInteraction)
                     .then(
-                        if (graphDescription != null) Modifier.semantics { contentDescription = graphDescription }
+                        // Merging, not a bare semantics block: a described node is reached by linear
+                        // screen-reader navigation only when it is a leaf or a merging parent. This one
+                        // has a child (the chart's own node, which carries no text), so unmerged it was
+                        // skipped in both directions and could be reached only as the first step from
+                        // the glucose circle or at the wrap point after the last tab - measured with
+                        // TalkBack on a phone. Merging absorbs that empty child, so the words do not
+                        // change and no action comes with it; the edit button is a clickable sibling and
+                        // stays its own stop.
+                        if (graphDescription != null) Modifier.semantics(mergeDescendants = true) { contentDescription = graphDescription }
                         else Modifier
                     )
             )
             if (!isSimpleMode) {
                 GraphEditButton(
                     onClick = { editingBgOverlays = true },
+                    graphName = stringResource(CoreUiStrings.glucose),
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(end = 4.dp, top = 2.dp)
                 )
             }
+            // Own composable, so a finger move does not recompose this section
+            GraphInspectOverlay(
+                inspect = inspect,
+                graphViewModel = graphViewModel,
+                bgReadings = bgReadings,
+                minTimestamp = derivedTimeRange?.first,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .offset(y = INSPECT_PILL_OFFSET)
+                    .padding(top = 2.dp, start = 36.dp, end = 36.dp)
+            )
+        }
+        // A node of its own rather than more text on the graph above, so a listener reaches the
+        // readings first and swipes once to decide whether she wants the forecast, instead of having
+        // to sit through it every time. It needs real bounds to be reachable at all, hence a 1 dp
+        // strip: invisible on screen, present in the accessibility tree.
+        predictionDescription?.let { description ->
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .semantics { contentDescription = description }
+            )
         }
         if (editingBgOverlays) {
             GraphSeriesBottomSheet(
@@ -452,7 +626,7 @@ fun GraphsSection(
         }
         // Fixed IOB graph (Graph 1) with optional Activity overlay
         var editingIobOverlays by remember { mutableStateOf(false) }
-        Box(modifier = Modifier.offset(y = (-8).dp)) {
+        Box(modifier = Modifier.pullUp(IOB_GRAPH_PULL_UP)) {
             SecondaryGraphCompose(
                 viewModel = graphViewModel,
                 seriesTypes = listOf(SeriesType.IOB),
@@ -462,26 +636,19 @@ fun GraphsSection(
                 nowTimestamp = nowTimestamp,
                 activityOverlay = SeriesType.ACTIVITY in graphConfig.iobOverlays,
                 onVisibleRangeChanged = { iobVisibleRange = it },
+                inspect = inspect,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(graphConfig.iobHeight.dp)
+                    .height(graphConfig.iobHeight.dp - REMOVED_TIME_LABELS_HEIGHT)
             )
-            Text(
-                text = stringResource(CoreUiStrings.iob) + " / " + stringResource(CoreUiStrings.basal_shortname),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+            GraphNameRow(
+                name = stringResource(CoreUiStrings.iob) + " / " + stringResource(CoreUiStrings.basal_shortname),
+                editName = stringResource(CoreUiStrings.iob),
+                onEdit = if (isSimpleMode) null else ({ editingIobOverlays = true }),
                 modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(start = 36.dp, top = 2.dp)
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 4.dp, bottom = GRAPH_NAME_BOTTOM_PADDING)
             )
-            if (!isSimpleMode) {
-                GraphEditButton(
-                    onClick = { editingIobOverlays = true },
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(end = 4.dp, top = 2.dp)
-                )
-            }
         }
         if (editingIobOverlays) {
             GraphSeriesBottomSheet(
@@ -505,9 +672,10 @@ fun GraphsSection(
         var editingGraphIndex by remember { mutableIntStateOf(-1) }
         for (i in 0 until activeCount) {
             val secondary = graphConfig.secondaryGraphs[i]
-            Box(modifier = Modifier.offset(y = (-8).dp)) {
+            Box(modifier = Modifier.pullUp(GRAPH_OVERLAP)) {
                 SecondaryGraphCompose(
                     viewModel = graphViewModel,
+                    inspect = inspect,
                     seriesTypes = secondary.series,
                     scrollState = secScrollStates[i],
                     zoomState = secZoomStates[i],
@@ -515,41 +683,37 @@ fun GraphsSection(
                     nowTimestamp = nowTimestamp,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(secondary.height.dp)
+                        .height(secondary.height.dp - REMOVED_TIME_LABELS_HEIGHT)
                 )
-                Text(
-                    text = seriesListLabel(secondary.series),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                GraphNameRow(
+                    name = seriesListLabel(secondary.series),
+                    editName = seriesListLabel(secondary.series),
+                    onEdit = if (isSimpleMode) null else ({ editingGraphIndex = i }),
                     modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(start = 36.dp, top = 2.dp)
+                        .align(Alignment.BottomEnd)
+                        .padding(end = 4.dp, bottom = GRAPH_NAME_BOTTOM_PADDING)
                 )
-                if (!isSimpleMode) {
-                    GraphEditButton(
-                        onClick = { editingGraphIndex = i },
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(end = 4.dp, top = 2.dp)
-                    )
-                }
             }
         }
         if (editingGraphIndex >= 0 && editingGraphIndex < activeCount) {
-            val editing = graphConfig.secondaryGraphs[editingGraphIndex]
+            // Read once. The lambdas below can run after the sheet has closed and the index is
+            // already -1: NumberInputRow saves a focused field when it leaves the screen.
+            val index = editingGraphIndex
+            val editing = graphConfig.secondaryGraphs[index]
             GraphSeriesBottomSheet(
-                title = stringResource(CoreUiStrings.graph_number, editingGraphIndex + 2),
+                title = stringResource(CoreUiStrings.graph_number, index + 2),
                 selectedSeries = editing.series,
                 availableSeries = CONFIGURABLE_SERIES,
                 height = editing.height,
                 onHeightChange = { h ->
-                    val graphs = graphConfig.secondaryGraphs.toMutableList()
-                    graphs[editingGraphIndex] = graphs[editingGraphIndex].copy(height = h)
-                    graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
+                    // The current config, not the captured one: after "Remove graph" the captured
+                    // config still holds the removed graph, and writing it back would restore it.
+                    withSecondaryGraphHeight(graphViewModel.graphConfigFlow.value, index, editing.series, h)
+                        ?.let { graphViewModel.updateGraphConfig(it) }
                 },
                 onToggle = { type ->
                     val graphs = graphConfig.secondaryGraphs.toMutableList()
-                    val current = graphs[editingGraphIndex].series.toMutableList()
+                    val current = graphs[index].series.toMutableList()
                     if (type in current) {
                         current.remove(type)
                     } else {
@@ -558,16 +722,16 @@ fun GraphsSection(
                     }
                     if (current.isEmpty()) {
                         // Auto-remove graph when all series deselected
-                        graphs.removeAt(editingGraphIndex)
+                        graphs.removeAt(index)
                         editingGraphIndex = -1
                     } else {
-                        graphs[editingGraphIndex] = graphs[editingGraphIndex].copy(series = current)
+                        graphs[index] = graphs[index].copy(series = current)
                     }
                     graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
                 },
                 onRemoveGraph = {
                     val graphs = graphConfig.secondaryGraphs.toMutableList()
-                    graphs.removeAt(editingGraphIndex)
+                    graphs.removeAt(index)
                     editingGraphIndex = -1
                     graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
                 },
@@ -622,6 +786,33 @@ fun GraphsSection(
     }
 }
 
+/**
+ * The [count] newest readings, newest first.
+ *
+ * Sorted here rather than trusted: the graph data comes newest first, and reading it as oldest
+ * first made the screen reader speak the readings from 24 hours ago instead of the current ones.
+ */
+internal fun newestReadings(readings: List<BgDataPoint>, count: Int): List<BgDataPoint> =
+    readings.sortedByDescending { it.timestamp }.take(count)
+
+/**
+ * [config] with the height of secondary graph [index] set to [height], or null when that graph no
+ * longer shows [expectedSeries].
+ *
+ * The height field saves its text when the settings sheet closes, so this can run after the graph
+ * was removed. Then [index] points to another graph, or to nothing, and nothing may be written.
+ * Graphs have no id, so the graph is recognised by its series. The height is not compared: quick
+ * taps on the +/- buttons can arrive before the screen has caught up with the previous one.
+ * With two graphs showing the same series, the other one could get the height. That is harmless.
+ */
+internal fun withSecondaryGraphHeight(config: GraphConfig, index: Int, expectedSeries: List<SeriesType>, height: Int): GraphConfig? {
+    val graph = config.secondaryGraphs.getOrNull(index) ?: return null
+    if (graph.series != expectedSeries) return null
+    val graphs = config.secondaryGraphs.toMutableList()
+    graphs[index] = graph.copy(height = height)
+    return config.copy(secondaryGraphs = graphs)
+}
+
 // =========================================================================
 // Graph label generation
 // =========================================================================
@@ -653,22 +844,49 @@ private fun seriesShortNameId(type: SeriesType): TextRef = when (type) {
 // Graph edit button + series picker bottom sheet
 // =========================================================================
 
+/**
+ * Name of a graph below BG, with its edit button (pencil) to the right of it. [onEdit] is null in simple mode,
+ * where graphs cannot be edited. The row is at least as tall as the edit button, also without it, so the name
+ * stays at the same height in both modes.
+ */
+@Composable
+private fun GraphNameRow(
+    name: String,
+    editName: String,
+    onEdit: (() -> Unit)?,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier.heightIn(min = GRAPH_EDIT_BUTTON_SIZE)
+    ) {
+        Text(
+            text = name,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+        )
+        if (onEdit != null) GraphEditButton(onClick = onEdit, graphName = editName)
+    }
+}
+
 /** Small pencil icon button overlaid on a graph */
 @Composable
 private fun GraphEditButton(
     onClick: () -> Unit,
+    graphName: String,
     modifier: Modifier = Modifier
 ) {
     IconButton(
         onClick = onClick,
-        modifier = modifier.size(28.dp),
+        modifier = modifier.size(GRAPH_EDIT_BUTTON_SIZE),
         colors = IconButtonDefaults.iconButtonColors(
             contentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
         )
     ) {
         Icon(
             imageVector = Icons.Filled.Edit,
-            contentDescription = stringResource(CoreUiStrings.switch_to_edit),
+            // One per graph, so it names its graph: "Edit: COB", not "Edit" four times.
+            contentDescription = rowAction(CoreUiStrings.switch_to_edit, graphName),
             modifier = Modifier.size(16.dp)
         )
     }

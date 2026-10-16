@@ -35,6 +35,8 @@ class PumpState {
     var basalStep: Double = 0.01
 
     // Temp basal
+    /** Test fault: refuse every "set temp basal" command and keep the TBR state as it is. */
+    var rejectTempBasal: Boolean = false
     var isTempBasalRunning: Boolean = false
     var tempBasalPercent: Int = 0
     var tempBasalDurationMinutes: Int = 0

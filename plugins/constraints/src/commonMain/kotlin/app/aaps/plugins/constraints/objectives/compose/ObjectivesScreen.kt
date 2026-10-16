@@ -1,7 +1,5 @@
 package app.aaps.plugins.constraints.objectives.compose
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.plugins.constraints.ConstraintsStrings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
@@ -55,10 +53,16 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.constraints.ConstraintsStrings
 
 @Composable
 fun ObjectivesScreen(
@@ -199,7 +203,15 @@ private fun ObjectiveTimelineItem(
             isAccomplished = objective.state == ObjectiveState.ACCOMPLISHED,
             isActive = objective.state == ObjectiveState.STARTED,
             isLast = isLast,
-            lineColor = if (objective.state == ObjectiveState.ACCOMPLISHED) accomplishedColor else lockedColor
+            lineColor = if (objective.state == ObjectiveState.ACCOMPLISHED) accomplishedColor else lockedColor,
+            stateLabel = stringResource(
+                when (objective.state) {
+                    ObjectiveState.ACCOMPLISHED -> ConstraintsStrings.objectives_state_done
+                    ObjectiveState.STARTED      -> ConstraintsStrings.objectives_state_in_progress
+                    ObjectiveState.NOT_STARTED  -> ConstraintsStrings.objectives_state_not_started
+                    ObjectiveState.LOCKED       -> ConstraintsStrings.objectives_state_locked
+                }
+            )
         )
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -244,13 +256,17 @@ private fun TimelineIndicator(
     isAccomplished: Boolean,
     isActive: Boolean,
     isLast: Boolean,
-    lineColor: Color
+    lineColor: Color,
+    stateLabel: String
 ) {
     val checkColor = MaterialTheme.colorScheme.onPrimary
+    // The circle and tick are drawn, so done / in progress / locked was colour only. Said before the
+    // objective's content, in the order the timeline is read.
     Box(
         modifier = Modifier
             .width(32.dp)
-            .fillMaxHeight(),
+            .fillMaxHeight()
+            .semantics { contentDescription = stateLabel },
         contentAlignment = Alignment.TopCenter
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
@@ -541,8 +557,17 @@ private fun TaskRow(
         Modifier.fillMaxWidth()
     }
 
+    // Whether a task is finished shows as a tick against a chevron and nothing else, on a screen
+    // whose entire purpose is tracking what is still left to do. Only the finished case speaks: a
+    // list where every remaining task announces "not completed" buries the ones that are done.
+    val completedState = if (task.isCompleted) stringResource(CoreUiStrings.state_completed) else null
+
     Row(
-        modifier = rowModifier,
+        modifier = if (completedState != null) {
+            rowModifier.semantics { stateDescription = completedState }
+        } else {
+            rowModifier
+        },
         verticalAlignment = Alignment.Top
     ) {
         // Status icon

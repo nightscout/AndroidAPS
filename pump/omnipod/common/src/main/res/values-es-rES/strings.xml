@@ -67,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Desactivar Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">\nPulsa <b>Siguiente</b> para desactivar el Pod.\n\n<b>Nota:</b> Esto suspenderá toda la entrega de insulina y desactivará el Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">Un POD desactivado no se puede volver a utilizar. ¿Desea desactivar este POD ahora?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Desactivando el Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Desactivando el Pod.\n\nCuándo la desactivación se haya completado correctamente, puede pulsar <b>Siguiente</b></string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod desactivado</string>
@@ -99,7 +100,8 @@
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sonido de notificaciones de SMB inciertos habilitado</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Sonido para notificaciones de bolo incierto activadas</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Sonido cuando la notificación de entrega suspendida está activada</string>
-    <string name="omnipod_dash_use_bonding">Dispositivo bluetooth vinculado en Android 15</string>
+    <string name="omnipod_dash_use_bonding">Vinculación Bluetooth</string>
+    <string name="omnipod_dash_use_bonding_summary">Pruébalo solo si el POD no puede mantener una conexión estable. El teléfono mostrará solicitudes de emparejamiento que debes aceptar. Desactívalo si el POD se conecta correctamente. No tiene efecto por debajo de Android 15</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Ningún Pod activo</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Configuración en curso (esperando para activar el Pod)</string>
@@ -109,6 +111,22 @@
     <string name="omnipod_common_pod_status_pod_fault">Error del Pod</string>
     <string name="omnipod_common_pod_status_inactive">Inactivo</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Error del Pod: %1$03d %2$s</string>
+    <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">Notificación del PDM</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
+    <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
+         to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
+         AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Depósito vacío</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Administración de insulina detenida. Cambia el POD ahora</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Apagado automático</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Administración de insulina detenida. El PDM y el POD no se han comunicado en las últimas 4 horas. Para reanudar la administración de insulina, cambia el POD ahora</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">POD caducado</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">Administración de insulina detenida. Cambia el POD ahora</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Oclusión detectada</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Administración de insulina detenida. Cambia el POD ahora. Comprueba tu glucemia</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Error del POD</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Administración de insulina detenida. Cambia el POD ahora</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod a punto de caducar</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod a punto de caducar</string>
@@ -166,4 +184,16 @@
         <item quantity="other">Alertas Pod: %1$s</item>
     </plurals>
     <string name="omnipod_common_overview_pod_hard_end_date">Fin de vida del Pod</string>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minutos</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Corrección basal</string>
+    <string name="omnipod_common_bolus_type_priming">Purgando</string>
+    <string name="omnipod_common_history_total_delivered">Total entregado: %1$.2f U</string>
+    <string name="omnipod_common_failed_to_send">Error al enviar el comando</string>
+    <string name="omnipod_common_command_not_sent">Comando no enviado</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">El POD no ha recibido el comando</string>
+    <string name="omnipod_common_unknown">Estado desconocido del comando</string>
 </resources>

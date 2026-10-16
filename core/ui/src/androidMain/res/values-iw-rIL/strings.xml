@@ -2,25 +2,52 @@
 <resources>
     <string name="error_field_must_not_be_empty">שדה זה לא יכול להיות ריק</string>
     <string name="error_mustbe4hexadidits">חייב להיות באורך 4 תוים, מהתוים הבאים: ABCDEF0123456789</string>
+    <string name="authorized_clients_manage_label">לקוחות מורשים</string>
+    <string name="authorized_clients_manage_desc">ניהול מכשירי לקוח מצומדים השולטים במכשיר הראשי הזה.</string>
+    <string name="pair_with_master_manage_label">צימוד למכשיר ראשי</string>
+    <string name="pair_with_master_manage_desc">הזינו את קוד ה־PIN לצימוד של המכשיר הראשי כדי לאפשר ללקוח הזה לשלוח פקודות חתומות.</string>
     <!--    General-->
+    <string name="treatments">טיפולים</string>
+    <string name="treatments_history">היסטוריית טיפולים</string>
+    <string name="treatments_desc">הצגה וניהול של היסטוריית הטיפולים</string>
+    <string name="nav_configuration">הגדרות תצורה</string>
+    <string name="nav_configuration_desc">הגדירו את התצורה שלכם (CGM, משאבה ועוד) והפעילו תכונות</string>
     <string name="count_selected">%1$d נבחרו</string>
+    <string name="delete">מחיקה</string>
     <string name="show_invalidated">הצג פסולים</string>
     <string name="hide_invalidated">הסתר פסולים</string>
+    <string name="more_options">אפשרויות נוספות</string>
     <string name="refresh">רענן</string>
+    <string name="no_history_records">לא נמצאו רשומות</string>
+    <string name="error">שגיאה</string>
+    <string name="navigation_error_screen_not_found">לא ניתן לפתוח את המסך (הוא אינו זמין בתצורה הנוכחית)</string>
     <string name="profile_set_ok">הפרופיל הבזאלי עודכן במשאבה</string>
     <string name="invalid_input">קלט לא חוקי</string>
+    <string name="invalid_number">מספר לא תקין</string>
     <string name="constraint_applied">מגבלה הוחלה!</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">המשאבה אינה זמינה</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">מנהל התקן המשאבה אינו מגיב. הפעולה \"%1$s\" מתבצעת כבר %2$d דקות ואין פקודה אחרת שיכולה להגיע למשאבה. נא לבדוק את המשאבה ולאחר מכן הפעילו מחדש את AAPS.</string>
     <string name="insulin_unit_shortname">יחידות</string>
     <string name="pump_base_basal_rate">%1$.2f יח\' לשעה</string>
+    <string name="pump_base_basal_rate_dynamic">%1$s יח׳/שעה</string>
     <string name="pump_not_initialized_profile_not_set">משאבה לא אותחלה! לא נקבע פרופיל!</string>
     <string name="failed_update_basal_profile">עדכון הפרופיל הבזאלי נכשל</string>
     <string name="no_valid_basal_rate">לא התקבל מינון בזאלי תקף מהמשאבה</string>
     <string name="limiting_iob">הגבלת IOB ל-%1$.1f יח\' בגלל %2$s</string>
+    <string name="loop_disabled_by_user">הלולאה הושבתה על ידי המשתמש</string>
     <string name="event_type">סוג האירוע</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/L</string>
+    <string name="bg_mgdl">%1$d mg/dL</string>
+    <string name="bg_mmol">%1$.1f mmol/L</string>
     <string name="save">שמירה</string>
+    <string name="skip">דילוג</string>
+    <string name="switch_to_edit">עריכה</string>
     <string name="snooze">נודניק</string>
+    <string name="snooze_15m">נודניק ל־15 דקות</string>
+    <string name="snooze_30m">נודניק ל־30 דקות</string>
+    <string name="snooze_60m">נודניק ל־60 דקות</string>
     <string name="virtual_pump">משאבה וירטואלית</string>
     <string name="constraints">מגבלות</string>
     <string name="superbolus">סופר בולוס</string>
@@ -29,14 +56,31 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">משתמש</string>
     <string name="result">תוצאה</string>
     <string name="settings">הגדרות</string>
+    <string name="open_plugin">פתיחת תוסף</string>
+    <string name="configbuilder_pick_one_hint">בחרו אפשרות אחת. רק אפשרות אחת יכולה להיות פעילה בכל פעם.</string>
+    <string name="configbuilder_pick_many_hint">בחרו את כל האפשרויות המתאימות.</string>
+    <string name="configbuilder_no_selection_warning">לא נבחר תוסף בקטגוריה זו.</string>
+    <string name="configbuilder_switch_confirmation_title">להחליף תוסף?</string>
+    <string name="configbuilder_switch_confirmation">פעולה זו תשבית את %1$s ותפעיל את %2$s.</string>
+    <string name="expand">הרחבה</string>
+    <string name="collapse">כיווץ</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">הושלם</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">מורחב</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">מכווץ</string>
+    <string name="no_compose_preferences">אין הגדרות זמינות עבור תוסף זה</string>
+    <string name="confirm_password_hint">אישור הסיסמה</string>
+    <string name="confirm_pin_hint">אישור קוד PIN</string>
+    <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">אורות חיווי</string>
     <string name="configbuilder_insulin">אינסולין</string>
     <string name="configbuilder_bgsource">מקור ערכי הסוכר</string>
     <string name="configbuilder_smoothing">החלקה</string>
+    <string name="configbuilder_calibration">כיול</string>
     <string name="configbuilder_pump">משאבה</string>
     <string name="configbuilder_sensitivity">זיהוי רגישות</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_loop">לולאה</string>
+    <string name="configbuilder_sync">תקשורת</string>
     <string name="configbuilder_general">כללי</string>
     <string name="protection">הגנה בסיסמאות</string>
     <string name="value_unavailable_short">לא זמין</string>
@@ -44,6 +88,7 @@
     <string name="ue_export_to_csv">יצוא ערכי משתמש לאקסל (csv)</string>
     <string name="confirm">אישור</string>
     <string name="pump">משאבה</string>
+    <string name="pump_management">משאבה</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader">מעלה</string>
@@ -56,19 +101,37 @@
     <string name="advanced_settings_title">הגדרות מתקדמות</string>
     <string name="extended_bolus">בולוס ממושך</string>
     <string name="paused">מושהה</string>
+    <string name="running">פועל</string>
     <string name="tdd_total">מינון יומי מצטבר כולל</string>
     <string name="tdd_old_data">נתונים ישנים</string>
     <string name="goingtodeliver">עומד להזריק %1$.2f יח\'</string>
+    <string name="carbs_not_saved_after_bolus">הבולוס ניתן, אך לא ניתן היה לשמור את הפחמימות. נא להזין שוב את הפחמימות.</string>
     <string name="androidaps_start">הופעל AndroidAPS</string>
+    <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d גר׳</string>
     <string name="format_hours">%1$.2f ש\'</string>
+    <string name="format_mins">%1$d דקות</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
+    <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
     <string name="objectives">משימות</string>
     <string name="please_wait">נא להמתין…</string>
     <string name="stop">עצור</string>
+    <string name="stop_pressed">עצור נלחץ</string>
     <string name="invalid_profile">פרופיל לא חוקי!</string>
     <string name="no_profile_set">לא הוגדר פרופיל</string>
+    <string name="profile_switch_no_insulin">לא ניתן להחליף פרופיל: אין אינסולין פעיל ולא נבחר אינסולין.</string>
+    <string name="profile_switch_select_insulin_hint">עדיין אין אינסולין פעיל. בחרו את האינסולין שבו אתם משתמשים כדי שהחלפת הפרופיל תוכל לרשום אותו.</string>
+    <string name="insulin_activation_failed">האינסולין לא הוחלף. האינסולין הקודם עדיין פעיל.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">האינסולין לא הוחלף: %1$s האינסולין הקודם עדיין פעיל.</string>
+    <string name="insulin_activation_unconfirmed">לא ניתן היה לאשר את החלפת האינסולין. בדקו איזה אינסולין פעיל בפרופיל לפני מתן מינון.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nגם האינסולין לא הוחלף.</string>
     <string name="active"><![CDATA[<פועל>]]></string>
     <string name="date">תאריך</string>
     <string name="units_label">יחידות</string>
+    <string name="insulin_nickname_label">כינוי לאינסולין</string>
+    <string name="concentration_label">ריכוז</string>
+    <string name="peak_label">שיא</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
@@ -87,7 +150,9 @@
     <string name="removerecord">מחיקת רשומה</string>
     <string name="loopisdisabled">הלולאה מושבתת</string>
     <string name="alarm">התראה</string>
+    <string name="exportsettings">יצוא הגדרות</string>
     <string name="disableloop">השבתת לולאה</string>
+    <string name="disabled_loop">הלולאה משבתת</string>
     <string name="resumeloop">חידוש לולאה</string>
     <string name="suspendloop">השהיית הלולאה</string>
     <string name="notification">התראה</string>
@@ -100,15 +165,23 @@
     <string name="name_short">שם:</string>
     <string name="time">זמן</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">טוען…</string>
+    <string name="waiting_for_pump">ממתין למשאבה…</string>
+    <string name="initialization_failed">האתחול נכשל</string>
     <string name="notes_label">הערות</string>
     <string name="wrong_pump_data">הנתונים מגיעים ממשאבה אחרת. בחרו מחדש את סוג המשאבה כדי לאפס את מצב המשאבה.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">כיול</string>
     <string name="cgm">סנסור</string>
+    <string name="treatmentdeliveryerror">דווחה שגיאה בבולוס. נא לבדוק את הכמות שהוזרקה באופן ידני</string>
+    <string name="bolus_reminder">תזכורת לבולוס כאשר רמת הסוכר תתאושש</string>
     <string name="duration_label">משך</string>
     <string name="shortgramm">גר\'</string>
+    <string name="pump_running">המשאבה פעילה</string>
     <string name="notconfigured">לא מוגדר</string>
+    <string name="loop_suspended_by_dst">הלולאה הושהתה עקב שינוי שעון קיץ</string>
     <string name="required">נדרשים</string>
+    <string name="a11y_arrow_triple_down">ירידה מהירה מאוד</string>
     <string name="a11y_arrow_double_down">ירידה מהירה</string>
     <string name="a11y_arrow_single_down">ירידה</string>
     <string name="a11y_arrow_forty_five_down">ירידה איטית</string>
@@ -116,12 +189,26 @@
     <string name="a11y_arrow_forty_five_up">עלייה איטית</string>
     <string name="a11y_arrow_single_up">עלייה</string>
     <string name="a11y_arrow_double_up">עלייה מהירה</string>
+    <string name="a11y_arrow_triple_up">עלייה מהירה מאוד</string>
     <string name="a11y_arrow_none">ללא</string>
     <string name="a11y_arrow_unknown">לא ידוע</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">הפחתת %1$s ב־%2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">הגדלת %1$s ב־%2$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">הזזה למעלה</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">הזזה למטה</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">שלב %1$d מתוך %2$d</string>
+    <string name="decrement">הפחתה</string>
+    <string name="increment">תוספת</string>
     <string name="a11y_high">גבוה</string>
     <string name="a11y_inrange">בטווח</string>
     <string name="a11y_low">נמוך</string>
+    <string name="remove_label">הסרה</string>
     <string name="activate_profile">הפעלת פרופיל</string>
+    <string name="activate_insulin">הפעלת אינסולין</string>
+    <string name="pump_wizard_profile_gate_title">נדרש פרופיל</string>
+    <string name="pump_wizard_profile_gate_pick">בחרו את הפרופיל שיוחל בעת ההפעלה.</string>
+    <string name="pump_wizard_profile_gate_no_store">לא הוגדר פרופיל. פתחו את ניהול הפרופילים, צרו פרופיל ולאחר מכן התחילו שוב את ההפעלה.</string>
+    <string name="reset">איפוס</string>
     <string name="profileswitch_ismissing">שינוי פרופיל חסר. אנא החליפו פרופיל או לחצו על \"הפעל פרופיל\" בפרופיל המקומי.</string>
     <string name="profile">פרופיל</string>
     <string name="percentage_label">אחוזים</string>
@@ -129,17 +216,33 @@
     <string name="confirm_remove_multiple_items">האם אתם בטוחים שברצונכם להסיר %1$d פריטים? </string>
     <string name="overview_treatment_label">טיפול</string>
     <string name="copytolocalprofile">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
+    <string name="wear_wizard_settings">הגדרות אשף Wear</string>
     <string name="bolus_iob_label">בולוס פעיל</string>
     <string name="treatments_wizard_basaliob_label">בזאלי פעיל</string>
     <string name="invalid">לא חוקי</string>
     <string name="login">התחברות</string>
     <string name="logout">התנתקות</string>
     <string name="prime_fill">תיחול\\מילוי</string>
+    <string name="prime_not_available">משאבה זו מתמלאת ומתחלת את עצמה במהלך ההפעלה. תיחול או מילוי באמצעות AAPS אינם זמינים.</string>
+    <string name="site_rotation">סבב אתרי עירוי</string>
+    <string name="edit_site">עריכה</string>
+    <string name="select_arrow">בחירת חץ</string>
+    <string name="site_filter_info">בחרו את סוג אירוע הטיפול שברצונכם לראות: החלפת קנולה ו/או החלפת חיישן</string>
+    <string name="selected_location">נבחר: %1$s</string>
+    <string name="last_site_location">האתר האחרון: %1$s</string>
+    <string name="pick_site">בחירת אתר</string>
+    <string name="select_site_location">בחירת מיקום האתר</string>
+    <string name="site_location">מיקום האתר</string>
     <string name="overview_insulin_label">אינסולין</string>
     <string name="stoptemptarget">הפסקת ערך מטרה זמני</string>
     <string name="closedloop">לולאה סגורה</string>
     <string name="openloop">לולאה פתוחה</string>
     <string name="lowglucosesuspend">השהיה עקב ערך סוכר נמוך</string>
+    <string name="pump_suspended">המשאבה מושהית</string>
+    <string name="pump_suspend">השהיית המשאבה</string>
+    <string name="pump_resume">חידוש פעולת המשאבה</string>
+    <string name="mode_reverted">המצב הוחזר</string>
+    <string name="select_insulin">בחירת אינסולין</string>
     <string name="dia">משך פעילות אינסולין</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
@@ -149,11 +252,22 @@
     <string name="iob_label">אינסולין פעיל בגוף (IOB)</string>
     <string name="loopstatus_targets">ערכי מטרה:</string>
     <string name="loopstatus_OAPS_result">תוצאות OAPS:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f יח׳ ( %2$.2f יח׳/שעה )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f יח׳/שעה (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f יח׳/שעה @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f יח׳/שעה @%2$s %3$s/%4$s דקה</string>
+    <string name="extended_bolus_medium">%1$.2f יח׳/שעה %2$s/%3$s׳</string>
     <string name="nav_export">ייצוא הגדרות</string>
+    <string name="location_permission_not_granted">הרשאות מיקום לא ניתנו. אנא אפשרו אותן בהגדרות הטלפון או האפליקציה.</string>
     <string name="configbuilder_nightscoutversion_label">גירסת נייטסקאוט:</string>
     <string name="not_available_full">לא זמין</string>
+    <string name="not_implemented_yet">תכונה זו עדיין אינה מוכנה בפלטפורמה זו</string>
+    <string name="not_available_on_platform">תכונה זו אינה זמינה בפלטפורמה זו</string>
     <string name="engineering_mode_enabled">מצב הנדסה מופעל</string>
+    <string name="back">חזרה</string>
     <string name="next">הבא</string>
+    <string name="pref_syncs_with_main_phone">מסתנכרן עם הטלפון הראשי</string>
     <string name="show_hide_records">החבא רשומות לולאה</string>
     <!--    Protection-->
     <string name="wrongpassword">סיסמה שגויה</string>
@@ -162,6 +276,7 @@
     <string name="pin_dont_match">קודי PIN אינם תואמים</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">הפעלת פרופיל %1$d%% למשך %2$d דקות</string>
     <!--    APSResult-->
     <string name="cancel_temp">ביטול בזאלי זמני</string>
     <string name="let_temp_basal_run">אפשר לבזאלי זמני לרוץ</string>
@@ -170,10 +285,20 @@
     <string name="reason">סיבה</string>
     <string name="nochangerequested">אין בקשות החלפה</string>
     <!--    Insulin / Concentration-->
+    <string name="ins_concentration_confirmed">האינסולין %1$s אושר</string>
+    <string name="current_insulin">פעיל כעת</string>
+    <string name="change_insulin">שינוי</string>
+    <string name="select_insulin_description">בחרו את האינסולין שבו אתם ממלאים את המשאבה. לאחר ההפעלה/התיחול תוחל החלפת פרופיל.</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
+    <string name="selected_insulin">האינסולין שנבחר: %1$s</string>
+    <string name="record_insulin_hint">אם מזינים אינסולין שניתן בעט, בחרו למטה את סוג האינסולין הנכון. המינון תמיד נרשם ביחידות בינלאומיות.</string>
     <!--       Stats -->
     <string name="average">ממוצע</string>
+    <string name="tir">זמן בטווח</string>
     <string name="below" comment="below &quot;in range&quot;">מתחת</string>
     <string name="in_range">בטווח</string>
+    <string name="veryLow" comment="below 3.1">נמוך מאוד</string>
     <string name="low" comment="3.1-3.9">נמוך</string>
     <string name="high" comment="10.0-13.9">גבוה</string>
     <string name="veryHigh" comment="above 13.9">גבוה מאוד</string>
@@ -183,12 +308,15 @@
     <string name="night_tir">זמן בטווח בלילה</string>
     <string name="hba1c">HbA1c: </string>
     <string name="std_deviation">סטיית תקן: %1$s</string>
+    <string name="seven_days_short">7d</string>
+    <string name="thirty_days_short">30d</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
     <string name="careportal_bgcheck">בדיקת רמת סוכר בדם</string>
     <string name="careportal_mbg">רמת סוכר ידנית או כיול</string>
     <string name="careportal_announcement">הכרזה</string>
+    <string name="careportal_settings_export">ייצוא הגדרות פורטל טיפולים</string>
     <string name="careportal_note">הערה</string>
     <string name="careportal_question">שאלה</string>
     <string name="careportal_exercise">פעילות גופנית</string>
@@ -197,9 +325,15 @@
     <string name="careportal_question_message">שאלה: %1$s</string>
     <string name="careportal_exercise_message">פעילות גופנית: %1$s</string>
     <string name="careportal_pump_site_change">החלפת צינורית משאבה</string>
+    <string name="cgm_sensor_insert">הכנסת חיישן</string>
+    <string name="careportal_pump_site_management">אתרי משאבה</string>
+    <string name="careportal_cgm_site_management">אתרי CGM</string>
+    <string name="careportal_cgmsensorstart">הפעלת חיישן</string>
+    <string name="careportal_cgm_sensor_stop">הפסקת חיישן</string>
     <string name="careportal_dad_alert">התראת D.A.D</string>
     <string name="careportal_insulin_cartridge_change">החלפת מכל אינסולין</string>
     <string name="careportal_profileswitch">החלפת פרופיל</string>
+    <string name="profile_management">פרופיל</string>
     <string name="careportal_snackbolus">בולוס חטיף</string>
     <string name="careportal_mealbolus">בולוס ארוחה</string>
     <string name="careportal_correctionbolus">בולוס תיקון</string>
@@ -210,25 +344,197 @@
     <string name="careportal_openapsoffline">OpenAPS במצב לא מקוון</string>
     <string name="pump_battery_change">החלפת סוללת משאבה</string>
     <string name="temporary_target">ערך מטרה זמני</string>
+    <string name="temporary_targets">ערכי מטרה זמניים</string>
+    <string name="running_mode">מצב הפעלה</string>
+    <string name="running_mode_change_not_allowed">שינוי מצב ההפעלה אינו זמין</string>
+    <string name="pump_reconnect">חיבור המשאבה מחדש</string>
+    <string name="scene">תרחיש</string>
+    <string name="scenes">תרחישים</string>
+    <string name="scene_desc">הגדרות מוכנות למצבים שונים — הפעלת כמה פעולות בבת אחת</string>
+    <string name="scene_activate">הפעלה</string>
+    <string name="scene_deactivate">סיום תרחיש</string>
+    <string name="scene_active">פעיל</string>
+    <string name="scene_ended">התרחיש הסתיים</string>
+    <string name="scene_end_active">סיום התרחיש הפעיל</string>
+    <string name="scene_confirm_activate">להפעיל את התרחיש \"%1$s\"?</string>
+    <string name="scene_confirm_deactivate">לסיים את התרחיש \"%1$s\" ולהחזיר את השינויים?</string>
+    <string name="scene_conflict_active_tt">ערך המטרה הזמני הפעיל יוחלף</string>
+    <string name="scene_conflict_active_profile">החלפת הפרופיל הפעילה יוחלף</string>
+    <string name="scene_conflict_active_running_mode">מצב ההפעלה הפעיל יוחלף</string>
+    <string name="scene_conflict_active_scene">התרחיש הפעיל \"%1$s\" יסתיים תחילה</string>
+    <string name="scene_action_tt">ערך מטרה זמני: %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">פרופיל: %1$s %2$d%%</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">פרופיל: %1$d%%</string>
+    <string name="scene_action_smb_on">הפעלת SMB</string>
+    <string name="scene_action_smb_off">השבתת SMB</string>
+    <string name="scene_action_running_mode">מצב הפעלה: %1$s</string>
+    <string name="scene_action_careportal">רישום: %1$s</string>
+    <string name="scene_management">תרחישים</string>
+    <string name="scene_management_desc">יצירה, עריכה וניהול של תרחישים</string>
+    <string name="scene_start_from_template">התחלה מתבנית</string>
+    <string name="scene_editor_target">ערך מטרה</string>
+    <string name="scene_editor_tt_preset">הגדרה מוכנה של ערך מטרה זמני</string>
+    <string name="scene_editor_no_tt_presets">לא הוגדרו ערכי מטרה זמניים מוכנים</string>
+    <string name="scene_editor_select_tt_preset">בחירת הגדרה מוכנה</string>
+    <string name="scene_editor_percentage">אחוז</string>
+    <string name="scene_editor_profile">פרופיל</string>
+    <string name="scene_editor_keep_current_profile">-- השארת הפרופיל הנוכחי --</string>
+    <string name="scene_editor_mode">מצב</string>
+    <string name="scene_editor_event_type">סוג אירוע</string>
+    <string name="scene_editor_note">הערה</string>
+    <string name="scene_icon">סמל</string>
+    <string name="scene_editor_enabled">מופעל</string>
+    <string name="scene_editor_disabled">מושבת</string>
+    <string name="scene_summary">%1$d פעולות, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="scene_duration_indefinite">ללא הגבלת זמן (סיום ידני)</string>
+    <string name="scene_some_actions_failed">חלק מהפעולות נכשלו</string>
+    <string name="scene_no_active">אין תרחיש פעיל</string>
+    <string name="scene_some_reverts_failed">חלק מפעולות ההחזרה נכשלו</string>
+    <string name="scene_no_profile_store">אין מאגר פרופילים זמין</string>
+    <string name="scene_no_actions">לתרחיש אין פעולות</string>
+    <string name="scene_profile_not_found">הפרופיל \"%1$s\" לא נמצא</string>
+    <string name="scene_lock_banner_master_offline">המכשיר הראשי אינו זמין. השליטה בתרחישים תחזור כאשר החיבור ישוחזר.</string>
+    <string name="scene_lock_banner_control_disabled">השליטה מרחוק הושבתה במכשיר הראשי. השליטה בתרחישים תחזור כאשר היא תופעל מחדש במכשיר הראשי.</string>
+    <string name="master_offline_banner">המכשיר הראשי אינו זמין. העריכה מושבתת עד שהחיבור ישוחזר.</string>
+    <string name="master_control_disabled_banner">השליטה מרחוק הושבתה במכשיר הראשי. העריכה מושבתת עד שהיא תופעל מחדש במכשיר הראשי.</string>
+    <string name="scene_lock_reason_master_offline">המכשיר הראשי מנותק</string>
+    <string name="scene_lock_reason_control_disabled">השליטה מרחוק מושבתת</string>
+    <string name="scene_lock_reason_scene_active">יש לסיים תחילה את התרחיש הפעיל</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">הגדרת ערך מטרה זמני</string>
+    <string name="clientcontrol_action_cancel_temp_target">ביטול ערך מטרה זמני</string>
+    <string name="clientcontrol_action_activate_scene">הפעלת התרחיש %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">סיום תרחיש</string>
+    <string name="clientcontrol_action_update_settings">עדכון הגדרות</string>
+    <string name="clientcontrol_action_deliver_bolus">מתן בולוס</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">מכשיר זה אינו מצומד למכשיר ראשי.</string>
+    <string name="clientcontrol_fail_not_reachable">המכשיר הראשי אינו מקוון.</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">תצורת המשאבה אינה מסונכרנת עם המכשיר הראשי. נא לנסות שוב.</string>
+    <string name="clientcontrol_fail_no_reply">לא התקבלה תגובה מהמכשיר הראשי בזמן.</string>
+    <string name="clientcontrol_fail_expired">תוקף הפקודה פג לפני שהמכשיר הראשי החיל אותה.</string>
+    <string name="clientcontrol_fail_busy">פעולה אחרת כבר מתבצעת.</string>
+    <string name="clientcontrol_fail_send_failed">לא ניתן להתחבר ל־Nightscout.</string>
+    <string name="clientcontrol_fail_no_active_profile">במכשיר הראשי אין פרופיל פעיל שעליו ניתן להחיל את הפעולה.</string>
+    <string name="clientcontrol_fail_scene_not_found">התרחיש כבר אינו קיים.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">רשומת האתר כבר אינה קיימת.</string>
+    <string name="clientcontrol_fail_scene_disabled">התרחיש מושבת.</string>
+    <string name="clientcontrol_fail_partial">לא ניתן היה להחיל חלק מהפעולות.</string>
+    <string name="clientcontrol_fail_execution">המכשיר הראשי לא הצליח להחיל את הפעולה.</string>
+    <string name="clientcontrol_fail_cancelled">הפקודה בוטלה לפני שמולאה. לא נשלח דבר אל המשאבה.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">הבולוס בוטל. לא הוזרק אינסולין.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">בוטל</string>
+    <string name="clientcontrol_fail_control_disabled">השליטה מרחוק כבויה במכשיר הראשי.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">תוקף הבולוס המוכן פג או שהוא הוחלף. הקישו שוב על הכפתור.</string>
+    <string name="clientcontrol_fail_bolus_compute">המכשיר הראשי לא הצליח לחשב את הבולוס (חסר גלוקוז/פרופיל או שהמשאבה אינה מוכנה).</string>
+    <string name="clientcontrol_fail_internal">משהו השתבש.</string>
+    <string name="clientcontrol_fail_unknown">הפקודה נכשלה.</string>
+    <string name="clientcontrol_unconfirmed_wear">המצב אינו ידוע — בדקו בטלפון/Nightscout לפני מתן בולוס נוסף.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">החיבור אבד - סטטוס ההזרקה לא ידוע</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">מכשיר זה הפסיק לקבל עדכונים מהמכשיר הראשי. ייתכן שהבולוס במהלך הזרקה או שכבר סיים. סגירה כאן רק מחביאה את המידע מבלי לעצור את המשאבה. בדקו במכשיר הראשי את המינון שהוזרק בפועל.</string>
+    <string name="scene_revert_tt">ביטול ערך מטרה זמני</string>
+    <string name="scene_revert_profile">החזרת שינוי הפרופיל</string>
+    <string name="scene_revert_smb_on">הפעלה מחדש של SMB</string>
+    <string name="scene_revert_smb_off">השבתת SMB</string>
+    <string name="scene_revert_loop_mode">ביטול עקיפת מצב ההפעלה</string>
+    <string name="careportal_sickness">מחלה</string>
+    <string name="careportal_stress">לחץ</string>
+    <string name="careportal_pre_period">לפני וסת</string>
+    <string name="careportal_alcohol">אלכוהול</string>
+    <string name="careportal_cortisone">קורטיזון</string>
+    <string name="careportal_feeling_low">תחושת סוכר נמוך</string>
+    <string name="careportal_feeling_high">תחושת סוכר גבוה</string>
+    <string name="careportal_falling_asleep">הירדמות</string>
+    <string name="careportal_waking_up">התעוררות</string>
     <string name="careportal_temporarytargetvalue">ערך המטרה הזמני</string>
     <string name="careportal_temporarytargetcancel">ביטול ערך מטרה זמני</string>
     <string name="boluswizard">אשף בולוס</string>
+    <string name="treatment_desc">רישום אינסולין ופחמימות יחד</string>
+    <string name="treatment_insulin_desc">מתן בולוס ידני</string>
+    <string name="treatment_carbs_desc">רישום פחמימות ללא אינסולין</string>
+    <string name="treatment_calculator_desc">חישוב בולוס</string>
+    <string name="manage_insulin_desc">ניהול והפעלה של הגדרות אינסולין</string>
+    <string name="concentration_disable_blocked">לא ניתן להשבית תמיכה בריכוזים כל עוד קיימים סוגי אינסולין שאינם U100. הסירו את כל הגדרות האינסולין שאינן U100 ועברו תחילה לפרופיל U100.</string>
+    <string name="simple_mode_blocked_by_concentration">לא ניתן להפעיל מצב פשוט בעת שימוש באינסולין שאינו U100. עברו תחילה לאינסולין U100.</string>
+    <string name="manage_profile_desc">ניהול והפעלת פרופילים</string>
+    <string name="manage_temp_target_desc">ניהול והגדרת ערכי מטרה זמניים</string>
+    <string name="manage_temp_basal_desc">הפעלת בזאלי זמני</string>
+    <string name="manage_extended_bolus_desc">התחלת מתן בולוס ממושך</string>
+    <string name="manage_site_rotation_desc">מעקב וסבב של אתרי עירוי</string>
+    <string name="manage_quickwizard_desc">ניהול הגדרות מוכנות של האשף המהיר</string>
+    <string name="treatment_note_desc">הוספת הערה לרשומות</string>
+    <string name="treatment_question_desc">רישום שאלה לצוות המטפל</string>
+    <string name="treatment_cgm_desc">פתיחת אפליקציית CGM</string>
+    <string name="treatment_calibration_desc">כיול חיישן CGM</string>
+    <string name="treatment_bg_check_desc">רישום בדיקת סוכר בדם</string>
+    <string name="treatment_exercise_desc">רישום פעילות גופנית</string>
+    <string name="treatment_announcement_desc">פרסום הכרזה</string>
+    <string name="treatment_sensor_insert_desc">רישום הכנסת חיישן CGM</string>
+    <string name="treatment_battery_change_desc">רישום החלפת סוללת המשאבה</string>
+    <string name="treatment_cannula_change_desc">רישום החלפת קנולה/ערכת עירוי</string>
+    <string name="treatment_fill_desc">תיחול ומילוי הקנולה</string>
+    <string name="temp_basal">בזאלי זמני</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">ללא</string>
     <string name="user_entry">קלט המשתמש</string>
+    <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">אצבע</string>
     <string name="glucosetype_sensor">חיישן</string>
     <string name="manual">ידני</string>
+    <string name="unknown">לא ידוע</string>
     <string name="eatingsoon">אכילה בקרוב</string>
     <string name="hypo">היפוגליקמיה</string>
     <string name="activity">פעילות</string>
     <string name="wear">Wear</string>
     <string name="automation">אוטומציה</string>
+    <string name="automation_management_desc">יצירת כללים שמבצעים פעולות אוטומטית בהתאם לטריגרים</string>
+    <string name="settingsexport">ייצוא הגדרות</string>
     <string name="custom">מותאם אישית</string>
+    <string name="preset_settings">הגדרות מוכנות</string>
+    <string name="activation">הפעלה</string>
+    <string name="temp_target_management">ערך מטרה זמני</string>
+    <string name="revert_to_defaults">חזרה לברירות המחדל</string>
     <string name="loop">לולאה</string>
     <string name="ns">נייטסקאוט</string>
+    <string name="location_front_right_upper_chest">חזה ימני</string>
+    <string name="location_front_left_upper_chest">חזה שמאלי</string>
+    <string name="location_side_right_upper_arm">החלק החיצוני העליון של זרוע ימין</string>
+    <string name="location_side_left_upper_arm">החלק החיצוני העליון של זרוע שמאל</string>
+    <string name="location_back_right_upper_arm">החלק האחורי העליון של זרוע ימין</string>
+    <string name="location_back_left_upper_arm">החלק האחורי העליון של זרוע שמאל</string>
+    <string name="location_side_right_upper_abdomen">החלק החיצוני העליון הימני של הבטן</string>
+    <string name="location_side_left_upper_abdomen">החלק החיצוני העליון השמאלי של הבטן</string>
+    <string name="location_side_right_lower_abdomen">החלק החיצוני התחתון הימני של הבטן</string>
+    <string name="location_side_left_lower_abdomen">החלק החיצוני התחתון השמאלי של הבטן</string>
+    <string name="location_front_right_upper_abdomen">החלק הקדמי העליון הימני של הבטן</string>
+    <string name="location_front_left_upper_abdomen">החלק הקדמי העליון השמאלי של הבטן</string>
+    <string name="location_front_right_lower_abdomen">החלק הקדמי התחתון הימני של הבטן</string>
+    <string name="location_front_left_lower_abdomen">החלק הקדמי התחתון השמאלי של הבטן</string>
+    <string name="location_back_right_buttock">עכוז ימין</string>
+    <string name="location_back_left_buttock">עכוז שמאל</string>
+    <string name="location_back_right_lower_back">גב תחתון ימני</string>
+    <string name="location_back_left_lower_back">גב תחתון שמאלי</string>
+    <string name="location_side_right_upper_thigh">החלק החיצוני העליון של ירך ימין</string>
+    <string name="location_side_left_upper_thigh">החלק החיצוני העליון של ירך שמאל</string>
+    <string name="location_side_right_lower_thigh">החלק החיצוני התחתון של ירך ימין</string>
+    <string name="location_side_left_lower_thigh">החלק החיצוני התחתון של ירך שמאל</string>
+    <string name="location_front_right_upper_thigh">החלק הקדמי העליון של ירך ימין</string>
+    <string name="location_front_left_upper_thigh">החלק הקדמי העליון של ירך שמאל</string>
+    <string name="location_front_right_lower_thigh">החלק הקדמי התחתון של ירך ימין</string>
+    <string name="location_front_left_lower_thigh">החלק הקדמי התחתון של ירך שמאל</string>
+    <string name="arrow_up">למעלה</string>
+    <string name="arrow_up_right">למעלה ימינה</string>
+    <string name="arrow_right">ימינה</string>
+    <string name="arrow_down_right">למטה ימינה</string>
+    <string name="arrow_down">למטה</string>
+    <string name="arrow_down_left">למטה שמאלה</string>
+    <string name="arrow_left">שמאלה</string>
+    <string name="arrow_up_left">למעלה שמאלה</string>
+    <string name="arrow_center">מרכז</string>
     <!--    Command-->
     <string name="connectiontimedout">החיבור חרג ממגבלת הזמן</string>
+    <string name="command_replaced">הוחלפה בפקודה חדשה יותר</string>
+    <string name="pump_not_configured">המשאבה אינה מוגדרת</string>
     <!--    PumpEnactResult-->
     <string name="enacted">נקבע</string>
     <string name="comment">תגובה</string>
@@ -239,6 +545,8 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d גר\' פחמימות דרושות ב-%2$d הדקות הקרובות</string>
     <string name="basalrate">בזאלי</string>
+    <string name="tdd_short">TDD</string>
+    <string name="tdd">מינון יומי כולל</string>
     <!--    Ntp-->
     <string name="timedetection">זיהוי שעה</string>
     <!-- User Entry -->
@@ -259,6 +567,8 @@
     <string name="uel_lgs_loop_mode">מצב השהיה עקב סוכר נמוך</string>
     <string name="uel_open_loop_mode">מצב לולאה פתוחה</string>
     <string name="uel_loop_disabled">לולאה מושבתת</string>
+    <string name="uel_loop_resumed">הלולאה חודשה</string>
+    <string name="uel_pump_running">המשאבה פעילה</string>
     <string name="uel_reconnect">חיבור מחדש</string>
     <string name="uel_disconnect">ניתוק</string>
     <string name="uel_resume">חידוש</string>
@@ -271,7 +581,9 @@
     <string name="uel_cancel_extended_bolus">ביטול בולוס ממושך</string>
     <string name="uel_cancel_tt">ביטול ערך מטרה זמני</string>
     <string name="uel_careportal">פורטל הטיפולים</string>
+    <string name="uel_sensor_location">מיקום החיישן</string>
     <string name="uel_site_change">שינוי אתר עירוי</string>
+    <string name="uel_site_location">מיקום האתר</string>
     <string name="uel_reservoir_change">החלפת מכל</string>
     <string name="uel_calibration">כיול</string>
     <string name="uel_prime_bolus">בולוס תיחול</string>
@@ -282,6 +594,7 @@
     <string name="uel_tt_ns_refresh">רענון מטרה זמנית מנייטסקאוט</string>
     <string name="uel_automation_removed">האוטומציה הוסרה</string>
     <string name="uel_bg_removed">ערך סוכר נמחק</string>
+    <string name="uel_calibration_removed">הכיול הוסר</string>
     <string name="uel_careportal_removed">פורטל הטיפולים הוסר</string>
     <string name="uel_bolus_removed">בולוס נמחק</string>
     <string name="uel_carbs_removed">פחמימות סולקו</string>
@@ -331,15 +644,33 @@
     <string name="ue_none">ללא יחידה</string>
     <string name="uel_loop_change">הלולאה שונתה</string>
     <string name="uel_loop_removed">הלולאה הוסרה</string>
+    <string name="uel_new_insulin">אינסולין חדש</string>
+    <string name="uel_change_pump_insulin">החלפת אינסולין במשאבה</string>
+    <string name="uel_store_insulin">שמירת אינסולין</string>
+    <string name="uel_change_insulin_concentration">שינוי ריכוז האינסולין</string>
+    <string name="uel_insulin_removed">האינסולין הוסר</string>
+    <string name="uel_running_mode">מצב הפעלה</string>
+    <string name="uel_running_mode_removed">מצב ההפעלה הוסר</string>
+    <string name="uel_running_mode_updarted">מצב ההפעלה עודכן</string>
+    <string name="uel_scene_activated">התרחיש הופעל</string>
+    <string name="uel_scene_deactivated">התרחיש הסתיים</string>
+    <string name="uel_remote_config_changed">התצורה מרחוק שונתה</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">הערך התחתון של המטרה הזמנית</string>
     <string name="temp_target_high_target">ערך עליון של המטרה הזמנית</string>
     <string name="temp_target_value">ערך המטרה הזמני</string>
+    <string name="insulin_dia">ערך DIA של האינסולין</string>
+    <string name="insulin_peak">ערך שיא האינסולין</string>
     <string name="profile_max_daily_basal_value">מינון בזאלי מרבי של הפרופיל</string>
     <string name="current_basal_value">מינון בזאלי נוכחי</string>
     <string name="valuelimitedto">%1$.2f מוגבל ל- %2$.2f</string>
     <string name="valueoutofrange">»הערך %1$s« מחוץ לתחום הקשיח</string>
     <!-- Profile validation -->
+    <string name="no_profile_selected">לא נבחר פרופיל</string>
     <string name="missing_profile_name">חסר שם לפרופיל</string>
+    <string name="profile_not_saved_activate">הפרופיל לא נשמר. יש לשמור אותו לפני ההפעלה.</string>
+    <string name="profile_basal_not_compatible_with_pump">הקצב הבזאלי אינו תואם למשאבה הנוכחית ולא ניתן להפעיל אותו. הפחיתו את האחוז או התאימו את הקצב הבזאלי.</string>
+    <string name="profile_pump_incompatible_label">מגבלת המשאבה</string>
     <string name="error_in_ic_values">שגיאה בערכי יחס הפחמימות</string>
     <string name="error_in_isf_values">שגיאה בערכי יחס התיקון</string>
     <string name="error_in_basal_values">שגיאה בערכי המינון הבזאלי</string>
@@ -373,7 +704,13 @@
     <string name="basal">בזאלי</string>
     <string name="basalpct">בזאלי %</string>
     <string name="sensitivity">רגישות</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens כבוי</string>
+    <string name="isf_for_carbs">ISF ממוצע למחשבון ולספיגת פחמימות: %1$.1f</string>
+    <string name="isf_profile">ISF של הפרופיל: %1$.1f</string>
+    <string name="isf_variable">ISF משתנה: %1$.1f</string>
+    <string name="isf_effective">ISF אפקטיבי: %1$.1f</string>
     <string name="autosens_long">ערך Autosens: %.0f%%</string>
+    <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">ערך Autosens באלגוריתם: %.0f%%</string>
     <!-- Autotune -->
     <string name="autotune">כוונון אוטומטי</string>
@@ -385,14 +722,36 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">יועץ הבולוסים</string>
     <string name="bolus_advisor_message">יש לכם היפרגליקמיה. במקום לאכול עכשיו מומלץ לחכות לרמת סוכר נמוכה יותר. האם תרצו לעשות בולוס תיקון עכשיו ולאחר מכן תופעל תזכורת לאכול? במקרה זה, לא יירשמו פחמימות ויהיה עליכם להשתמש באשף מחדש כאשר תגשו לאכול.</string>
+    <string name="wizard_bg_label">BG</string>
+    <string name="wizard_correction">תיקון</string>
+    <string name="wizard_subtotal">סכום ביניים</string>
+    <string name="carbs_type_bread">לחם, מאפים מלוחים, יוגורט, פירות (תפוח, בננה, אגס), תפוחי אדמה, אורז, כוסמת, שיבולת שועל, מזונות עם פחמימות איטיות ונמוכות וירקות</string>
+    <string name="carbs_type_cake">כיסונים, פסטה, מטבח אסייתי עשיר בפחמימות ושומן, מאפים מתוקים ומאפי שמרים, דגני בוקר, דייסות דגנים, דבש וריבה</string>
+    <string name="carbs_type_pizza">לזניה, פיצה, המבורגרים, צ׳יפס, תפוחי אדמה אפויים, חטיפים דמויי צ׳יפס וכדומה</string>
+    <string name="wizard_total">סה״כ</string>
+    <string name="wizard_carb_time">זמן הפחמימות</string>
+    <string name="carb_time_now">עכשיו</string>
+    <string name="change">שינוי</string>
+    <string name="grant">מתן הרשאה</string>
     <string name="set">הגדר</string>
-    <string name="no_action_selected">לא נבחרה פעולה, דבר לא יתבצע.</string>
+    <string name="wizard_set_alarm">הגדרת התראה</string>
+    <string name="wizard_use_percentage">שימוש באחוזים</string>
+    <string name="wizard_include_bg">כלול BG</string>
+    <string name="wizard_include_tt">כלול ערך מטרה זמני</string>
+    <string name="wizard_include_trend">כלול מגמה</string>
+    <string name="wizard_include_iob">כלול IOB</string>
+    <string name="wizard_include_cob">כלול COB</string>
+    <string name="wizard_calculation">תחשיב</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">הסרה מרבית: %1$d גר׳ (פחמימות פעילות)</string>
+    <string name="wizard_no_insulin_required">לא נדרש אינסולין</string>
     <string name="wizard_no_actual_bg">אין נתוני סוכר לביסוס חישוב!</string>
     <string name="wizard_no_active_profile">לא הופעל פרופיל!</string>
     <string name="wizard_carbs_constraint">הפרת מגבלות פחמימה!</string>
+    <string name="wizard_trend_detail">מגמה של 15 דקות (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">הופעלה מגבלת אינסולין!\nלא ניתן להזריק %1$.2f יח\'</string>
     <string name="wizard_pump_not_available">המשאבה אינה זמינה!</string>
     <string name="quick_wizard_not_available">האשף המהיר שנבחר אינו זמין, נא לרענן את האריח</string>
+    <string name="quickwizard_managemnt">אשף מהיר</string>
     <!--    Preferences-->
     <string name="child">ילד\\ה צעיר\\ה</string>
     <string name="teenage">מתבגר\\ת</string>
@@ -404,7 +763,6 @@
     <string name="max_carbs_title">מקסימום פחמימות מותר [גר\']</string>
     <string name="patient_type">סוג המטופל\\ת</string>
     <!--    Protection-->
-    <string name="unlock_settings">שחרור נעילת הגדרות</string>
     <!--    Pumps -->
     <string name="battery_label">סוללה</string>
     <string name="reservoir_label">מכל</string>
@@ -418,6 +776,7 @@
     <string name="connecting">מתחבר</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">התחבר למשאבה נלחץ</string>
     <string name="daily_units">יחידות יומיות</string>
+    <string name="max_daily_units">מספר יחידות מרבי ליום</string>
     <string name="pump_history">היסטוריית המשאבה</string>
     <string name="pump_driver_change" comment="26 characters max for translation">שינוי במנהל התקן המשאבה.</string>
     <string name="device_changed" comment="26 characters max for translation">התקן שונה</string>
@@ -429,7 +788,17 @@
     <string name="reading_pump_history">קורא היסטוריית משאבה</string>
     <string name="password_cleared">סיסמה נמחקה!</string>
     <string name="pairing">מצמד</string>
+    <string name="initializing">מאתחל…</string>
     <string name="secs" comment="second short">%1$d שניות</string>
+    <string name="warning" comment="Generic warning dialog title">אזהרה</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">קריטי</string>
+    <string name="alert" comment="Generic alert dialog title">התראה</string>
+    <string name="retry" comment="Button label to retry a failed operation">ניסיון חוזר</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">Finish</string>
+    <string name="firmware" comment="Pump firmware version label">קושחה</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">מהירות הזרקת הבולוס</string>
+    <string name="history" comment="Tab/screen title for viewing past events">היסטוריה</string>
+    <string name="overview_reservoir_concentration_value_over">נותרו יותר מ־%1$s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
     <string name="pumplimit">מגבלת משאבה</string>
@@ -437,27 +806,76 @@
     <string name="itmustbepositivevalue">זה חייב להיות ערך חיובי</string>
     <string name="limitingbolus">מגביל בולוס ל-%1$.1f יח\' בגלל %2$s</string>
     <!--    Dialogs-->
+    <string name="confirmation">אישור</string>
     <string name="message">הודעה</string>
     <string name="ok">אישור</string>
     <string name="cancel">ביטול</string>
+    <string name="dismiss">סגירה</string>
     <string name="yes">כן</string>
     <string name="no">לא</string>
     <string name="close">סגור</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">אישור</string>
+    <string name="export_warning">אזהרה</string>
+    <string name="export_expired">פג תוקף</string>
+    <string name="export_disabled">מושבת</string>
+    <string name="export_failed">נכשל</string>
+    <string name="export_alert">התראה</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">לא הוגדרה סיסמה ראשית!\n\nיש להגדיר תחילה סיסמה ראשית ולאחר מכן לנסות שוב.</string>
     <string name="export_to">ייצא הגדרות ל-</string>
     <string name="password_preferences_encrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש להצפנת ההעדפות המיוצאות.</string>
     <string name="preferences_export_canceled">ייצוא בוטל! ההגדרות לא יוצאו!</string>
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">הגדרות יוצאו</string>
     <string name="export_result_message_failed">יצוא ההגדרות נכשל!</string>
+    <string name="export_result_message_about_to_expire">ההגדרות יוצאו: תוקף הסיסמה עומד לפוג בקרוב. בצעו ייצוא ידני והזינו מחדש את הסיסמה.</string>
+    <string name="export_result_message_expired">ייצוא ההגדרות בוטל: תוקף הסיסמה פג. בצעו ייצוא ידני והזינו מחדש את הסיסמה.</string>
+    <string name="export_result_message_disabled">אזהרה (אוטומציה): ייצוא הגדרות אינו מופעל!</string>
     <!-- Cloud export -->
+    <string name="export_cloud_success">הייצוא לענן הצליח</string>
+    <string name="export_cloud_failed">הייצוא לענן נכשל!</string>
+    <string name="csv_exported">רשומות המשתמש יוצאו</string>
+    <string name="csv_export_failed">ייצוא רשומות המשתמש נכשל!</string>
+    <string name="logs_sent">יומני הרישום נשלחו בדוא״ל</string>
+    <string name="logs_send_failed">שליחת יומני הרישום נכשלה</string>
+    <string name="cloud_directory">תיקיית ענן</string>
+    <string name="cloud_token_expired_or_invalid">הרשאת האחסון בענן פגה או אינה תקפה. יש לאשר מחדש.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_local">מקומי</string>
+    <string name="chip_cloud">ענן</string>
+    <string name="chip_email">דוא״ל</string>
+    <string name="send_logs">שליחת יומני רישום</string>
+    <string name="file_management">ניהול קבצים</string>
+    <string name="database_management">ניהול מסדי נתונים</string>
     <string name="data_choices">אפשרויות נתונים</string>
+    <string name="unattended_settings_export">ייצוא הגדרות ללא השגחה</string>
     <!-- Maintenance bottom sheet descriptions -->
+    <string name="maintenance_log_settings_desc">הגדרת רמת הפירוט של יומני הרישום</string>
+    <string name="maintenance_send_logs_desc">שיתוף קובצי יומן לצורך פתרון תקלות</string>
+    <string name="maintenance_delete_logs_desc">הסרת קובצי יומן ישנים</string>
+    <string name="maintenance_aaps_directory_desc">בחירת תיקיית אחסון מקומית</string>
+    <string name="maintenance_cloud_directory_desc">הגדרת אחסון בענן (Google Drive)</string>
+    <string name="maintenance_export_desc">שמירת גיבוי מוצפן של ההגדרות</string>
+    <string name="maintenance_import_desc">שחזור הגדרות מגיבוי</string>
+    <string name="maintenance_export_csv_desc">ייצוא היסטוריית טיפולים כגיליון נתונים</string>
+    <string name="maintenance_cleanup_db_desc">הסרת רשומות ישנות ממסד הנתונים</string>
+    <string name="maintenance_reset_aps_results_desc">מחיקת תוצאות האלגוריתם השמורות</string>
+    <string name="maintenance_reset_db_desc">מחיקת כל מסדי הנתונים וטעינה מחדש</string>
     <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">בחירת סוג אחסון</string>
+    <string name="clear_cloud_action">ניקוי הגדרות</string>
+    <string name="clear_cloud_settings">ניקוי הגדרות ענן</string>
+    <string name="clear_cloud_settings_message">פעולה זו תעבור לאחסון מקומי ותנקה את ההרשאה. להמשיך?</string>
     <string name="cloud_revoke_incomplete">הגדרות הענן נמחקו מהמכשיר הזה, אך לא ניתן היה להגיע לחשבון כדי לבטל את הגישה באופן מלא. מומלץ להסיר אותה ידנית בהגדרות החשבון שלכם.</string>
+    <string name="cloud_connection_failed">החיבור לאחסון בענן נכשל</string>
+    <string name="cloud_reauthorize_message">החיבור לאחסון בענן נכשל. לבצע אימות מחדש?</string>
+    <string name="reauthorize">אימות מחדש</string>
+    <string name="cloud_auth_success">האימות לאחסון בענן הצליח</string>
+    <string name="authorization_status">מצב הרשאה</string>
+    <string name="format_hour_minute" comment="%1$d=hours, %2$d=minutes. Example: 1 h 23 min">%1$d שעות %2$d דקות</string>
+    <string name="format_hours_only" comment="%1$d=hours, when minutes are zero. Example: 4 h">%1$d שעות</string>
     <!-- datetime layout -->
     <string name="event_time_label">שעת אירוע</string>
     <!-- BluetoothDevicePreference -->
@@ -465,28 +883,63 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">בקשת משתמש</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">צימוד</string>
+    <string name="pump_unpair">ביטול צימוד</string>
+    <string name="pump_unpair_confirm_title">לבטל את צימוד המשאבה?</string>
     <string name="pump_paired" comment="26 characters max for translation">המשאבה צומדה</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">בלוטות\' באנרגיה נמוכה לא נתמך.</string>
     <string name="ble_not_supported_or_not_paired">בלוטות\' באנרגיה נמוכה (BLE) לא נתמך או שהמכשיר אינו מצומד.</string>
+    <string name="ble_not_enabled">בלוטות אינו מופעל.</string>
+    <string name="ble_permissions_missing">לא ניתנו הרשאות בלוטות . יש לאפשר אותן בהגדרות האפליקציה.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">העדפות תוסף</string>
     <!-- Navigation -->
+    <string name="nav_about">אודות</string>
+    <string name="nav_about_desc">הצגת גרסת האפליקציה ומידע עליה</string>
     <string name="nav_exit">יציאה</string>
     <string name="open_navigation">פתח ניווט</string>
     <string name="nav_history_browser">דפדפן היסטוריה</string>
+    <string name="nav_history_browser_desc">עיון בגרפים היסטוריים</string>
+    <string name="appearance">מראה</string>
+    <string name="manage">ניהול</string>
+    <string name="localprofile">פרופיל</string>
     <string name="nav_setupwizard">אשף ההתקנה</string>
+    <string name="nav_setupwizard_desc">הגדרת AAPS שלב אחר שלב</string>
     <string name="statistics">סטטיסטיקה</string>
+    <string name="statistics_desc">הצגת סטטיסטיקות ודוחות</string>
+    <string name="tdd_cycle_pattern">דפוס מחזורי TDD</string>
+    <string name="tdd_cycle_pattern_desc">הצגת סך האינסולין היומי במחזורים של 28 ימים כדי לזהות דפוסים חוזרים</string>
     <string name="nav_profile_helper">עוזר הפרופילים</string>
+    <string name="nav_profile_helper_desc">בניית הפרופיל לפי משקל או TDD</string>
+    <string name="quick_launch_configure">הגדרת הפעלה מהירה</string>
+    <string name="quick_launch_configure_desc">התאמת כפתורי הפעולה המהירה במסך הראשי</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">התראות מקומיות</string>
     <!-- Actions Screen -->
+    <string name="add">הוספה</string>
+    <string name="remove">הסרה</string>
+    <string name="reorder">שינוי סדר</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">הזזה מוקדם יותר</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">הזזה מאוחר יותר</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">הצגת פרטים</string>
+    <string name="presets_changed_reorder_aborted">ההגדרות המוכנות שונו במקום אחר. הסדר החדש לא נשמר.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">מיקום %1$d מתוך %2$d</string>
+    <string name="status">מצב</string>
+    <string name="pump_actions">פעולות משאבה</string>
+    <string name="tempbasal_button">בזאלי זמני</string>
     <string name="extended_bolus_button">בולוס ממושך</string>
+    <string name="device_maintenance">תחזוקת מכשיר</string>
+    <string name="from_label">מ־</string>
+    <string name="to_label">עד</string>
     <string name="sensor_label">חיישן</string>
     <string name="insulin_label">אינסולין</string>
     <string name="pb_label">סוללת המשאבה</string>
     <string name="cannula">צינורית</string>
     <string name="patch_pump">משאבה ללא צינורית</string>
     <!-- Site Rotation -->
+    <string name="select_location">לחצו למטה כדי לבחור אתר</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">איך לא להשבית את האפליקציה שלי?</string>
     <string name="fabric_upload_disabled">העלאת רשומות קריסה מושבתת!</string>
@@ -511,6 +964,7 @@
     <string name="cleanup_db_confirm_sync">האם ברצונכם לנקות את מסד הנתונים?\nשינויים הנמצאים במעקב ונתונים היסטוריים הישנים מ-3 חודשים יימחקו.\nפעולה זו תזרז משמעותית את מהירות הסינכרון המלא.</string>
     <string name="cleared_entries">רשומות שנמחקו</string>
     <string name="reset_db_confirm">אתם בטוחים שאתם רוצים לאפס את מסדי הנתונים?</string>
+    <string name="reset_aps_results_confirm">האם באמת לאפס את תוצאות ה־APS השמורות?</string>
     <!--    Weekday-->
     <string name="weekday_sunday_short">א׳</string>
     <string name="weekday_saturday_short">ש\'</string>
@@ -521,29 +975,155 @@
     <string name="weekday_monday_short">ב\'</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f יח\'</string>
+    <string name="format_insulin_units_signed">%1$+.2f יח׳</string>
+    <string name="percent_rate_duration">קצב: %1$.2f%% (%2$.2f יח׳/שעה) משך: %3$d דקות</string>
+    <string name="rate_percent_duration">קצב: %1$.2f יח׳/שעה (%2$.2f%%) משך: %3$d דקות</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>קצב</b>: %1$.2f%% (%2$.2f יח׳/שעה)<br><b>משך</b>: %3$d דקות<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>קצב</b>: %1$.2f יח׳/שעה (%2$.2f%%) <br><b>משך</b>: %3$d דקות<br>]]></string>
     <!--    Playback-->
+    <string name="audio_playback_attribution">"AAPS משמיע שמע"</string>
     <!-- ProfileEditor -->
+    <string name="basal_short">בזאלי</string>
     <string name="target_short">ע\' מטרה</string>
     <string name="profile_name">שם הפרופיל:</string>
+    <string name="edit_profile_name">עריכת שם הפרופיל</string>
     <string name="units_colon">יחידות:</string>
+    <string name="unsaved_changes">שינויים שלא נשמרו</string>
+    <string name="unsaved_changes_message">יש שינויים שלא נשמרו. מה ברצונכם לעשות?</string>
+    <string name="discard">ביטול השינויים</string>
+    <string name="ic_dynamic_label_warning">האלגוריתם יכול לחשב IC באופן דינמי. הערכים שלמטה ישמשו רק כגיבוי כאשר חסרים נתונים או כערכי ייחוס</string>
+    <string name="isf_dynamic_label_warning">האלגוריתם יכול לחשב ISF באופן דינמי. הערכים שלמטה ישמשו רק כגיבוי כאשר חסרים נתונים או כערכי ייחוס</string>
+    <string name="add_time_block">הוספת מקטע זמן</string>
+    <string name="remove_entry">הסרת רשומה</string>
+    <string name="target_low_label">נמוך</string>
+    <string name="target_high_label">גבוה</string>
     <!--    Search-->
+    <string name="search">חיפוש</string>
+    <string name="clear">ניקוי</string>
+    <string name="search_category_categories">קטגוריות הגדרות</string>
+    <string name="search_category_preferences">העדפות</string>
+    <string name="search_category_plugins">תוספים</string>
+    <string name="search_category_wiki">תיעוד</string>
+    <string name="wiki_search_offline">חיפוש בתיעוד דורש חיבור לאינטרנט</string>
+    <string name="no_search_results">לא נמצאו תוצאות</string>
+    <string name="search_plugin_disabled">התוסף %1$s מושבת</string>
     <!--    Food Management -->
+    <string name="food_management">מזון</string>
+    <string name="food_deleted">המזון נמחק</string>
+    <string name="edit_food">עריכת מזון</string>
+    <string name="add_food">הוספת מזון</string>
+    <string name="name">שם</string>
     <string name="category">קטגוריה</string>
     <string name="subcategory">תת קטגוריה</string>
+    <string name="portion">מנה</string>
+    <string name="unit_label">יחידה</string>
+    <string name="label_carbs_g">פחמימות (גר\')</string>
+    <string name="label_fat_g">שומן (גר\')</string>
+    <string name="label_protein_g">חלבון (גר\')</string>
+    <string name="label_energy_kj">אנרגיה (kJ)</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">הגדרות יומן</string>
     <string name="resettodefaults">אפס לברירת המחדל</string>
     <!--    Maintenance-->
     <string name="maintenance">תחזוקה</string>
     <string name="description_maintenance">מספק מספר פונקציות של תחזוקה (כגון משלוח יומן, מחיקת יומן).</string>
     <string name="log_files">קבצי יומן</string>
     <string name="delete_logs">מחק רישומים</string>
+    <string name="logs_deleted">יומני הרישום נמחקו</string>
     <string name="aaps_directory">תיקיית AAPS</string>
     <string name="import_setting">ייבוא הגדרות</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">פענוח &amp;ובדיקה</string>
+    <string name="import_decrypt">פענח</string>
+    <string name="import_master_password">סיסמה ראשית</string>
+    <string name="import_decryption_password">סיסמת פענוח</string>
+    <string name="import_wrong_password">סיסמה שגויה</string>
+    <string name="import_apply_title">להחיל הגדרות מיובאות?</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
+    <string name="import_applying">מחיל הגדרות…</string>
+    <string name="import_replace_pump_settings">גם החלף את הגדרות המשאבה</string>
+    <string name="import_replace_pump_settings_summary">השאירו אפשרות זו כבויה כדי לשמור על המשאבה המצומדת לטלפון זה. הפעילו אותה בעת שחזור בטלפון חדש עם אותה משאבה.</string>
+    <string name="import_apply_waiting">ממתין למשאבה…</string>
+    <string name="import_apply_pump_busy">המשאבה עדיין עסוקה, ולכן ההגדרות לא הוחלו.</string>
+    <string name="import_apply_retry_question">לנסות שוב עכשיו?</string>
+    <string name="import_applied_title">ההגדרות הוחלו</string>
+    <string name="import_applied_message">ההגדרות שיובאו נמצאות כעת בשימוש.</string>
+    <string name="import_apply_pump_changed">בוטל: המשאבה שונתה על ידי ייבוא ההגדרות</string>
+    <string name="import_source_local">מקומי</string>
+    <string name="import_source_cloud">ענן</string>
+    <string name="import_load_more">טעינת עוד</string>
+    <string name="import_no_files">לא נמצאו קובצי הגדרות</string>
+    <string name="import_decrypt_ok">הפענוח הצליח. מוכן לייבוא.</string>
+    <string name="import_decrypt_warn">הפענוח הצליח, אך קיימות אזהרות.</string>
+    <string name="import_decrypt_error">הפענוח הצליח, אך לא ניתן לבצע ייבוא.</string>
+    <string name="reset_aps_results">Reset APS results</string>
     <string name="database_cleanup">ניקיון מסד הנתונים</string>
     <string name="nav_resetdb">איפוס מסדי נתונים</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">מציאת משאבה</string>
+    <string name="ble_scan_select_pump">בחרו את המשאבה שלכם מהרשימה שלמטה</string>
+    <string name="ble_scan_scanning">סורק מכשירים…</string>
     <!-- Graph configuration -->
+    <string name="graph_add">הוספת גרף</string>
+    <string name="graph_new">גרף חדש</string>
+    <string name="graph_number">גרף %1$d</string>
+    <string name="graph_bg">גרף BG</string>
+    <string name="graph_height">גובה הגרף [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">חיזוי</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">בזאלי</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">סטייה</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">פעילות</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">HR</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">רגישות%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">רג\' משתנה</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">צעדים</string>
+    <string name="units_days">ימים</string>
+    <string name="units_format_days">%1$d ימים</string>
+    <string name="units_format_days_range">%1$d ימים (%2$d - %3$d)</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="units_format_double_3">%1$.3f</string>
+    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d גר׳</string>
+    <string name="units_format_grams_range">%1$d גר׳ (%2$d - %3$d)</string>
+    <string name="units_format_hours">%1$d שעות</string>
+    <string name="units_format_hours_double">%1$.1f שעות</string>
+    <string name="units_format_hours_double_range">%1$.1f שעות (%2$.1f - %3$.1f)</string>
+    <string name="units_format_hours_range">%1$d שעות (%2$d - %3$d)</string>
+    <string name="units_format_insulin">%1$.1f יח׳</string>
+    <string name="units_format_insulin_int">%1$d יח׳</string>
+    <string name="units_format_insulin_int_range">%1$d יח׳ (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f יח׳ (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate">%1$.1f יח׳/שעה</string>
+    <string name="units_format_insulin_rate_range">%1$.1f יח׳/שעה (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl">%1$s mg/dL</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_min">%1$d דקות</string>
+    <string name="units_format_min_range">%1$d דקות (%2$d - %3$d)</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_sec">%1$d שניות</string>
+    <string name="units_format_sec_range">%1$d שניות (%2$d - %3$d)</string>
+    <string name="units_grams">גר׳</string>
+    <string name="units_hours">ש׳</string>
+    <string name="units_insulin">יח׳</string>
+    <string name="units_insulin_rate">יח׳/שעה</string>
+    <string name="units_kg">ק״ג</string>
+    <string name="units_mgdl">mg/dL</string>
+    <string name="units_min">דק׳</string>
+    <string name="units_mmol">mmol/L</string>
+    <string name="units_percent">%</string>
+    <string name="units_sec">שנ׳</string>
+    <string name="units_years">שנים</string>
     <string name="prefs_range_title">טווח להצגה</string>
 </resources>

@@ -41,8 +41,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import kotlin.math.max
-import kotlin.concurrent.Volatile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -53,6 +51,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.concurrent.Volatile
+import kotlin.math.max
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -179,10 +179,11 @@ class InsulinDialogViewModel(
     fun addInsulin(increment: Double) {
         val state = uiState.value
         // Snap to the deliverable bolus step so a preset increment that isn't a step multiple (e.g. a 0.25 U
-        // button on U200, step 0.10) lands on a deliverable value. ch.bolusStep is amount-aware (Insight) and
-        // concentration-adjusted; evaluated at the target so it matches the pump's grid there. Floor, never up.
+        // button on U200, step 0.10) lands on a deliverable value. ch.bolusStep is the step of the pump, converted
+        // by the concentration; asked at the target, in case a pump steps by amount. Floor, never up.
+        // A record-only dose (a pen) never reaches the pump, so it is not put on the pump's grid.
         val target = max(0.0, state.insulin + increment).coerceAtMost(state.maxInsulin)
-        val newValue = Round.floorTo(target, ch.bolusStep(target))
+        val newValue = if (state.recordOnlyChecked) target else Round.floorTo(target, ch.bolusStep(target))
         _uiState.update { it.copy(insulin = newValue) }
     }
 
@@ -301,13 +302,15 @@ class InsulinDialogViewModel(
                 add(BatchAction.TempTarget(reason = TT.Reason.EATING_SOON.text, lowMgdl = mgdl, highMgdl = mgdl, durationMinutes = state.eatingSoonTtDuration, startOffsetMinutes = 0))
             }
             // Floor to the deliverable bolus step so the confirmed amount equals what the pump delivers (the
-            // concentration boundary floors the converted cU to the native pulse grid). ch.bolusStep is
-            // amount-aware (Insight) + concentration-adjusted. Covers typed entry too.
-            val deliverableInsulin = Round.floorTo(state.insulin, ch.bolusStep(state.insulin))
-            if (deliverableInsulin > 0)
+            // concentration boundary floors the converted cU to the native pulse grid). ch.bolusStep is the
+            // step of the pump, converted by the concentration. Covers typed entry too.
+            // A record-only dose (a pen) is not given by the pump, so it is recorded as typed: floored, a 1.5 U
+            // pen dose at U200 (step 0.2 U) was saved as 1.4 U and IOB was too low.
+            val insulin = if (state.recordOnlyChecked) state.insulin else Round.floorTo(state.insulin, ch.bolusStep(state.insulin))
+            if (insulin > 0)
                 add(
                     BatchAction.Bolus(
-                        insulin = deliverableInsulin, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0,
+                        insulin = insulin, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0,
                         recordOnly = state.recordOnlyChecked, notes = state.notes, timestamp = state.eventTime, iCfg = iCfg
                     )
                 )

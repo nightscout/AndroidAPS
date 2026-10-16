@@ -25,6 +25,8 @@ import app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
+import app.aaps.implementation.maintenance.migration.FileKeyValueStore
+import app.aaps.implementation.maintenance.migration.PreferenceMigrations
 import app.aaps.implementation.sharedPreferences.PreferenceKeyResolverFactory
 import dev.zacsweers.metro.Inject
 import kotlin.math.max
@@ -64,18 +66,32 @@ class PreferenceImportApplier(
     private val resolverFactory: PreferenceKeyResolverFactory,
     private val config: Config,
     private val aapsLogger: AAPSLogger,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val migrations: PreferenceMigrations
 ) {
 
     /** Works out what would change, and writes nothing. For the confirm screen. */
     fun preview(prefs: Prefs, keepPumpSettings: Boolean): ImportExportPrefs.ImportOutcome =
-        run(prefs, keepPumpSettings, write = false)
+        run(prefs.values, keepPumpSettings, write = false)
 
-    /** Applies the file. Writes once, then publishes once. */
-    fun apply(prefs: Prefs, keepPumpSettings: Boolean): ImportExportPrefs.ImportOutcome =
-        run(prefs, keepPumpSettings, write = true)
+    /**
+     * Applies the file. Migrates it, writes once, then publishes once.
+     *
+     * The migrations run HERE and not in [preview], once per import. They are the same functions
+     * start-up runs, and a function is free to do more than move a key - the loop mode one writes a
+     * `RunningMode` row - so running them while the user is still looking at the confirm dialog would
+     * change the device before they agreed to anything.
+     *
+     * The price is that [preview]'s counts are computed from the file's original names, so for a
+     * backup old enough to need migrating they understate what will change.
+     */
+    suspend fun apply(prefs: Prefs, keepPumpSettings: Boolean): ImportExportPrefs.ImportOutcome {
+        val migrated = FileKeyValueStore(prefs.values)
+        migrations.migrate(migrated)
+        return run(migrated.asTextMap(), keepPumpSettings, write = true)
+    }
 
-    private fun run(prefs: Prefs, keepPumpSettings: Boolean, write: Boolean): ImportExportPrefs.ImportOutcome {
+    private fun run(values: Map<String, String>, keepPumpSettings: Boolean, write: Boolean): ImportExportPrefs.ImportOutcome {
         val resolver = resolverFactory.create()
         val edits = mutableListOf<KeyValueStore.Editor.() -> Unit>()
 
@@ -88,7 +104,7 @@ class PreferenceImportApplier(
         val unreadable = mutableListOf<String>()
         val syncedWritten = mutableListOf<NonPreferenceKey>()
 
-        for ((name, value) in prefs.values) {
+        for ((name, value) in values) {
             val resolved = resolver.resolve(name)
             if (resolved == null) {
                 // Not an error. A file from a newer AAPS carries keys this build never had, and a

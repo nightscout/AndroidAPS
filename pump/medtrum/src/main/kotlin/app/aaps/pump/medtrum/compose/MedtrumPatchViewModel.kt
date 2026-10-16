@@ -6,10 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.labelOfInsulin
 import app.aaps.core.data.time.T
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -18,10 +17,14 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.pump.ProfileGateStepHost
+import app.aaps.core.ui.compose.pump.activateProfileFromGate
+import app.aaps.core.ui.compose.pump.switchToWizardInsulin
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.medtrum.MedtrumPlugin
@@ -36,6 +39,7 @@ import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import app.aaps.pump.medtrum.services.MedtrumService
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineScope
@@ -50,12 +54,10 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import dev.zacsweers.metro.Inject
 import app.aaps.core.ui.R as CoreUiR
 
 sealed class PatchEvent {
     data object Finish : PatchEvent()
-    data class ShowError(val message: String) : PatchEvent()
 }
 
 enum class WizardPage {
@@ -80,7 +82,9 @@ class MedtrumPatchViewModel(
     private val profileRepository: ProfileRepository,
     private val preferences: Preferences,
     private val persistenceLayer: PersistenceLayer,
-    private val bleTransport: MedtrumBleTransport
+    private val bleTransport: MedtrumBleTransport,
+    private val rh: ResourceHelper,
+    private val rxBus: RxBus
 ) : ViewModel(), SiteLocationStepHost, ProfileGateStepHost {
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
@@ -489,7 +493,7 @@ class MedtrumPatchViewModel(
         if (_availableInsulins.value.isNotEmpty()) return
         viewModelScope.launch {
             val insulins = insulinManager.insulins.map { it.deepClone() }
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val activeLabel = insulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
             val current = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
             _availableInsulins.value = insulins
             _selectedInsulin.value = current
@@ -524,27 +528,12 @@ class MedtrumPatchViewModel(
         val store = profileRepository.profile.value ?: return
         val iCfg = insulinManager.insulins.firstOrNull() ?: return
         scope.launch {
-            val result = profileFunction.createProfileSwitch(
-                profileStore = store,
-                profileName = name,
-                durationInMinutes = 0,
-                percentage = 100,
-                timeShiftInHours = 0,
-                timestamp = System.currentTimeMillis(),
-                action = Action.PROFILE_SWITCH,
-                source = Sources.Medtrum,
-                note = null,
-                listValues = listOf(ValueWithUnit.SimpleString(name)),
-                iCfg = iCfg
-            )
-            if (result == null) {
-                aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
-                _events.tryEmit(PatchEvent.ShowError(name))
-            } else {
+            // A refused switch says why and keeps the gate on screen.
+            if (activateProfileFromGate(profileFunction, rh, rxBus, store, name, iCfg, Sources.Medtrum, System.currentTimeMillis())) {
                 val nextStep = if (medtrumPump.pumpSN == 0L) PatchStep.BLE_SCAN else PatchStep.PREPARE_PATCH
                 aapsLogger.info(LTag.PUMP, "ProfileGate: profile activated, advancing to $nextStep")
                 moveStep(nextStep)
-            }
+            } else aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
         }
     }
 
@@ -654,16 +643,19 @@ class MedtrumPatchViewModel(
         moveStep(PatchStep.COMPLETE)
     }
 
-    /** Execute profile switch if user selected a different insulin. Called after activation completes. */
+    /**
+     * Execute profile switch if user selected a different insulin. Called after activation completes, so the
+     * patch is running by then: a refused switch cannot stop the wizard, but it says why.
+     */
     fun executeInsulinProfileSwitch() {
         val selected = _selectedInsulin.value ?: return
         viewModelScope.launch {
             // Recompute from the currently active profile instead of trusting the cached value,
             // which is captured during initializePatchStep — before PROFILE_GATE selection has
             // produced an EffectiveProfileSwitch — and is not refreshed across activation sessions.
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val activeLabel = insulinManager.insulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
             if (selected.insulinLabel == activeLabel) return@launch
-            profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.Medtrum)
+            switchToWizardInsulin(profileFunction, rh, rxBus, selected, Sources.Medtrum)
         }
     }
 

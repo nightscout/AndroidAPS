@@ -5,8 +5,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
-import org.joda.time.DateTime
 import dev.zacsweers.metro.Inject
+import org.joda.time.LocalDateTime
 
 @Inject
 class DanaRSPacketOptionGetPumpTime(
@@ -27,9 +27,10 @@ class DanaRSPacketOptionGetPumpTime(
         val hour = byteArrayToInt(getBytes(data, DATA_START + 3, 1))
         val min = byteArrayToInt(getBytes(data, DATA_START + 4, 1))
         val sec = byteArrayToInt(getBytes(data, DATA_START + 5, 1))
-        val time = DateTime(2000 + year, month, day, hour, min, sec)
-        danaPump.pumpTime = time.millis
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + dateUtil.dateAndTimeAndSecondsString(time.millis))
+        // Not DateTime(...): in the daylight saving gap it threw, the reply counted as not received and the pump was reset (#449)
+        val time = localTimeToMillis(LocalDateTime(2000 + year, month, day, hour, min, sec))
+        danaPump.pumpTime = time
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + dateUtil.dateAndTimeAndSecondsString(time))
     }
 
     override fun handleMessageNotReceived() {

@@ -59,6 +59,8 @@ class PluginLifetimeWorkScanTest {
         "OmnipodErosPumpPlugin#pumpDescription" to "the statusChecker chain it re-posts is removed in onStop",
         "OmnipodErosPumpPlugin#onStart" to "the statusChecker it posts is removed in onStop",
         "LoopPlugin#onStart" to "the two appScope collectors are kept in `collectors` and cancelled in onStop",
+        "InsightPlugin#serviceConnection" to
+            "the lastDataTime collector is held in lastDataTimeJob and cancelled in onStop and on service disconnect",
     )
 
     /**

@@ -2,11 +2,8 @@ package app.aaps.database.persistence.converters
 
 import app.aaps.core.data.ue.Action
 import app.aaps.database.entities.UserEntry
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 internal class ActionExtensionTest {
 

@@ -2,7 +2,6 @@
 <resources>
     <string name="danars_pairingtimedout">Koppeling verlopen</string>
     <string name="danarspump">Dana-i/RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Pomp integratie voor DANA RS en Dana-i pompen</string>
     <string name="maxbolusviolation">Max bolus overschrijding</string>
     <string name="commanderror">Opdracht fout</string>
@@ -74,7 +73,6 @@
     <string name="description_pump_dana_r">Pomp integratie voor DANA Diabecare R pompen</string>
     <string name="description_pump_dana_r_korean">Pomp integratie voor Koreaanse DANA Diabecare R pompen</string>
     <string name="description_pump_dana_r_v2">Pomp integratie voor DANA Diabecare R pompen met geupgrade firmware</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">Geselecteerd toestel niet gevonden</string>
     <string name="danar_switchtouhmode">Wijzig de modus E/dag naar E/uur op de pomp</string>
     <string name="danarkoreanpump">DanaR Koreaans</string>

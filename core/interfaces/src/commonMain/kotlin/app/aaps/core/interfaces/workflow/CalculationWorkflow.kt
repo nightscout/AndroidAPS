@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.HISTORY_CALCULATION
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
+import kotlin.time.Duration
 
 interface CalculationWorkflow {
     companion object {
@@ -43,6 +44,32 @@ interface CalculationWorkflow {
      * @param reason for logging
      */
     suspend fun waitForCalculationFinish(job: String, reason: String)
+
+    /**
+     * Wait until no run of [job] is going, the post stage included, or until [timeout].
+     *
+     * For a history change that arrives while a calculation runs: stopping that run throws away all
+     * of its work, and when a full recalculation takes longer than the time between two glucose values
+     * it then never finishes. Waiting for it and calculating the change afterwards always ends.
+     *
+     * Do not call it from the post stage of [job] (the loop): it would wait for itself until [timeout].
+     *
+     * A run that was started a moment ago can still be missing here, because starting is asynchronous.
+     *
+     * @param job [MAIN_CALCULATION] or [HISTORY_CALCULATION]
+     * @return true when nothing is running, false when [timeout] ran out first
+     */
+    suspend fun awaitCalculationIdle(job: String, timeout: Duration): Boolean
+
+    /**
+     * Keeps the device awake until the returned handle is released, but never longer than [timeout].
+     * Null when the platform has no wake lock.
+     *
+     * For the waits between a new BG and the start of its calculation run, which holds a lock of its
+     * own once it is started. Without this the CPU can sleep in such a wait with the screen off, and
+     * the loop for that BG then runs only when something else wakes the device, often the next BG.
+     */
+    fun keepAwake(timeout: Duration): CalculationWakeLock.Held?
 
     /**
      * Start calculation of data needed for displaying graphs

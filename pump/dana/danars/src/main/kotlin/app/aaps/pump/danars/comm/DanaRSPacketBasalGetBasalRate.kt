@@ -7,8 +7,8 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
-import java.util.Locale
 import dev.zacsweers.metro.Inject
+import java.util.Locale
 
 @Inject
 class DanaRSPacketBasalGetBasalRate(

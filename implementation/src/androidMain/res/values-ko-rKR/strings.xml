@@ -6,6 +6,7 @@
     <string name="carbs_short" comment="max 6 characters">탄수화물</string>
     <!--    PumpStatusGenerator-->
     <!--    Permissions-->
+    <!--    Notification channels, shown in the Android settings-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported">설정이 저장되었습니다</string>

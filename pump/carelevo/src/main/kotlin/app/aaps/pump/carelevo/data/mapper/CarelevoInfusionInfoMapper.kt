@@ -1,6 +1,5 @@
 package app.aaps.pump.carelevo.data.mapper
 
-import app.aaps.pump.carelevo.ext.parseIsoInstant
 import app.aaps.pump.carelevo.data.model.entities.CarelevoBasalInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoBasalSegmentInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoExtendBolusInfusionInfoEntity
@@ -13,6 +12,7 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoExtendBolusInfusionI
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoTempBasalInfusionInfoDomainModel
+import app.aaps.pump.carelevo.ext.parseIsoInstant
 
 internal fun CarelevoBasalSegmentInfusionInfoEntity.transformToCarelevoBasalSegmentInfusionInfoDomainModel() = CarelevoBasalSegmentInfusionInfoDomainModel(
     createdAt = parseIsoInstant(createdAt),
@@ -79,7 +79,10 @@ internal fun CarelevoImmeBolusInfusionInfoEntity.transformToCarelevoImmeBolusInf
     createdAt = parseIsoInstant(createdAt),
     updatedAt = parseIsoInstant(updatedAt),
     volume = volume,
-    infusionDurationSeconds = infusionDurationSeconds
+    infusionDurationSeconds = infusionDurationSeconds,
+    pumpId = pumpId,
+    bolusTotalBefore = bolusTotalBefore,
+    bolusType = bolusType
 )
 
 internal fun CarelevoImmeBolusInfusionInfoDomainModel.transformToCarelevoImmeBolusInfusionInfoEntity() = CarelevoImmeBolusInfusionInfoEntity(
@@ -89,7 +92,10 @@ internal fun CarelevoImmeBolusInfusionInfoDomainModel.transformToCarelevoImmeBol
     createdAt = createdAt.toString(),
     updatedAt = updatedAt.toString(),
     volume = volume,
-    infusionDurationSeconds = infusionDurationSeconds
+    infusionDurationSeconds = infusionDurationSeconds,
+    pumpId = pumpId,
+    bolusTotalBefore = bolusTotalBefore,
+    bolusType = bolusType
 )
 
 internal fun CarelevoExtendBolusInfusionInfoEntity.transformToCarelevoExtendBolusInfusionInfoDomainModel() = CarelevoExtendBolusInfusionInfoDomainModel(

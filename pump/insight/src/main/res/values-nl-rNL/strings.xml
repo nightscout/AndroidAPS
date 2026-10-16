@@ -24,7 +24,6 @@
     <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Slang vervangen</string>
-    <string name="insightpump_shortname">Insight</string>
     <string name="insight_alert_notification_channel">Insight pomp waarschuwingen</string>
     <string name="disable_vibration">Trillen uitschakelen bij handmatige bolus toediening</string>
     <string name="disable_vibration_summary">Voor bolus en verlengde bolus (alleen mogelijk voor Insight firmware 3.x)</string>

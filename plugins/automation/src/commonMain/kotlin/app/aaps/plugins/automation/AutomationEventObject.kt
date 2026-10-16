@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.icons.IcUserOptions
 import app.aaps.core.utils.lenientBoolean
 import app.aaps.core.utils.lenientString
+import app.aaps.core.utils.lenientStringOrNull
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionFactory
 import app.aaps.plugins.automation.actions.ActionStopProcessing
@@ -142,7 +143,15 @@ class AutomationEventObject(private val factory: AutomationEventFactory) : Autom
         readOnly = d.lenientBoolean("readOnly", false)
         autoRemove = d.lenientBoolean("autoRemove", false)
         userAction = d.lenientBoolean("userAction", false)
-        trigger = triggerFactory.instantiate(jsonOf(d.lenientString("trigger", "{}"))) as TriggerConnector
+        // The stored top level is always a connector. Anything else - a type this version does not
+        // know, or data that does not parse - is put inside one. The rule still loads, and the
+        // unknown part keeps it from firing. No trigger at all stays an empty connector, as before.
+        trigger = d.lenientStringOrNull("trigger")?.let { stored ->
+            when (val t = triggerFactory.instantiate(jsonOf(stored))) {
+                is TriggerConnector -> t
+                else                -> TriggerConnector(triggerDeps, TriggerConnector.Type.AND).also { it.list.add(t) }
+            }
+        } ?: TriggerConnector(triggerDeps)
         val array = d["actions"] as? JsonArray ?: JsonArray(emptyList())
         actions.clear()
         for (element in array) {

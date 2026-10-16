@@ -5,9 +5,9 @@ import app.aaps.core.interfaces.logging.LTag
 import platform.Foundation.NSNotificationCenter
 import platform.Foundation.NSOperationQueue
 import platform.UIKit.UIApplication
-import platform.UIKit.UIApplicationState
 import platform.UIKit.UIApplicationDidBecomeActiveNotification
 import platform.UIKit.UIApplicationDidEnterBackgroundNotification
+import platform.UIKit.UIApplicationState
 import platform.darwin.NSObject
 
 /**

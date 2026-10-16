@@ -15,6 +15,7 @@
     <string name="high_mark">Valor de hiperglucemia</string>
     <string name="low_mark_comment">Valor de glucosa baja (sólo visualización)</string>
     <string name="high_mark_comment">Valor de glucosa alta (sólo visualización)</string>
+    <string name="storedsettingsfound">Configuración guardada encontrada</string>
     <string name="master_password_summary">La contraseña maestra se utiliza para cifrar la copia de seguridad y para desbloquear la seguridad de la aplicación. Recuérdala o guárdala en un lugar seguro.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Usa los valores de la comida más grande que sueles comer\n</string>
@@ -45,6 +46,7 @@
     <string name="setupwizard_pairing_status_master_none">Ningún cliente emparejado todavía</string>
     <string name="setupwizard_pairing_status_client_paired">Vinculado con un máster</string>
     <string name="setupwizard_pairing_status_client_not_paired">No emparejado todavía</string>
+    <string name="setupwizard_instance_name_title">¿Quién usa este teléfono?</string>
     <string name="readstatus">Leer estado</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo no parece soportar la optimización de la batería por medio de los ajustes - pueden ocurrir problemas de rendimiento.</string>

@@ -12,6 +12,10 @@
     <!-- Omnipod - Preferences -->
     <string name="omnipod_common_preferences_category_other">Egyéb</string>
     <!-- Omnipod - Pod Status -->
+    <!-- Omnipod - PDM Notification -->
+    <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
+         to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
+         AlarmType.pdmFaultCategory / PdmFaultCategory). -->
     <!-- Omnipod - Alerts -->
     <!-- Omnipod - Commands -->
     <string name="omnipod_common_cmd_set_bolus">Bólus beállítása</string>
@@ -26,4 +30,6 @@
         <item quantity="one">%1$d nap</item>
         <item quantity="other">%1$d nap</item>
     </plurals>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_bolus_value">%1$.2f E</string>
 </resources>

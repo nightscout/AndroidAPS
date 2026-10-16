@@ -20,7 +20,6 @@
     <string name="objectives_maxiob_gate">Utilizar por alguns dias e pelo menos uma noite sem alarmes de GLIC baixa, antes de baixar GLIC</string>
     <string name="objectives_autosens_objective">Ajuste as basais e os rácios, se necessário, e, em seguida, active o auto-sens</string>
     <string name="objectives_autosens_gate">1 semana de looping durante o dia com sucesso com entrada regular de hidratos de carbono</string>
-    <string name="objectives_autosens_learned">Se o resultado do seu autosens não oscila à volta de 100% do seu perfil, então provavelmente está errado.</string>
     <string name="objectives_smb_objective">Activando recursos adicionais para uso durante o dia, como SMB</string>
     <string name="objectives_smb_gate">Deverá ler a wiki e aumentar a maxIA para que os SMBs funcionem devidamente! Inicialmente poderá considerar maxIA=média dos bólus + 3 x a basal diária máxima</string>
     <string name="objectives_smb_learned">Usar SMB é o seu objetivo. O algoritmo Oref1 foi projetado para ajudá-lo também com seus bólus. Não deve dar o bólus completo para o que come, mas apenas parte dela e deixar a AAPS dar o resto, se necessário. Desta forma, você margem para hidratos de carbono mal calculados. Sabia que pode definir uma percentagem do resultado da calculadora de bólus para reduzir o tamanho do bólus?</string>
@@ -30,14 +29,12 @@
     <string name="objectives_usereconnectpump">... e volte a ligar de volta da mesma forma</string>
     <string name="objectives_useloop">Mostrar conteúdo do plugin Loop</string>
     <string name="objectives_exam_objective">Prove seu conhecimento</string>
-    <string name="objectives_exam_gate">Estude as perguntas.  Recebe quatro respostas possíveis para cada pergunta. Talvez haja mais do que uma resposta correcta. Por favor, marque todas ass que estão correctas e seleccione VERIFICAR.</string>
     <string name="answerdisabledto">Responder desactivado até: %1$s</string>
     <string name="wronganswer">Resposta errada!</string>
     <string name="unfinshed_button">Seguinte inacabado</string>
     <string name="requestcode">Pedir Código: %1$s</string>
     <string name="objectives_hint">(marque todas as respostas correctas)</string>
     <string name="notconnected">Não está ligado à internet</string>
-    <string name="failedretrievetime">Falha ao recuperar tempo</string>
     <string name="requirementnotmet">Requisitos de objectivo não cumpridos</string>
     <string name="what_i_ve_learned">O que eu aprendi:</string>
 </resources>

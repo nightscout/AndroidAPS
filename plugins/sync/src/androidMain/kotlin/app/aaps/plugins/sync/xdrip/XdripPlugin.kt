@@ -1,8 +1,5 @@
 package app.aaps.plugins.sync.xdrip
 
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.sync.SyncStrings
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -24,6 +21,7 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -47,13 +45,14 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.extensions.generateCOBString
 import app.aaps.core.ui.extensions.toStringShort
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.xdrip.compose.XdripComposeContent
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.plugins.sync.xdrip.extensions.toJson
@@ -69,19 +68,23 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.json.JSONArray
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.json.JSONArray
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 // Also the app-wide XDripBroadcast. It was a second @Binds in SyncModule to this same class, so one
@@ -123,7 +126,6 @@ class XdripPlugin(
         }
         .icon(IcXDrip)
         .pluginName(SyncStrings.xdrip)
-        .shortName(SyncStrings.xdrip_shortname)
         .description(SyncStrings.description_xdrip),
     ownPreferences = XdripLongKey.entries + XdripIntentKey.entries,
     aapsLogger, rh, preferences, notificationManager
@@ -140,21 +142,28 @@ class XdripPlugin(
     override val connected: Boolean = true
     override val status: String = ""
 
+    @OptIn(FlowPreview::class)
     override suspend fun onStart() {
         super.onStart()
         handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         // scope is Dispatchers.IO, which is what observeOn(aapsSchedulers.io) gave these before.
         rxBus.toFlow(EventAppExit::class)
             .collectResilient(scope, aapsLogger, LTag.XDRIP, start = CoroutineStart.UNDISPATCHED) { WorkManager.getInstance(context).cancelUniqueWork(XDRIP_JOB_NAME) }
-        persistenceLayer.observeAnyChange()
+        val dbChanges = persistenceLayer.observeAnyChange()
             // HR/SC writes come from the watch; this plugin doesn't broadcast them — skip to avoid reconnect-flush storm.
             .filter { types -> types.any { it != HR::class && it != SC::class } }
-            .collectResilient(scope, aapsLogger, LTag.XDRIP) { types ->
-                sendStatusLine()
-                delayAndScheduleExecution("DB_CHANGED(${types.joinToString { it.simpleName ?: "?" }})")
-            }
-        rxBus.toFlow(EventAutosensCalculationFinished::class)
-            .collectResilient(scope, aapsLogger, LTag.XDRIP, start = CoroutineStart.UNDISPATCHED) { sendStatusLine() }
+        dbChanges.collectResilient(scope, aapsLogger, LTag.XDRIP) { types ->
+            delayAndScheduleExecution("DB_CHANGED(${types.joinToString { it.simpleName ?: "?" }})")
+        }
+        // One BG gives several database changes (BG, temp basal or SMB, device status, user entries, NS ids)
+        // and an autosens run. Each one built the status line again and woke xDrip+. Debounced, one burst
+        // gives one status line (#5248).
+        merge(
+            dbChanges.map { },
+            rxBus.toFlow(EventAutosensCalculationFinished::class).map { }
+        )
+            .debounce(STATUS_LINE_DEBOUNCE_MS)
+            .collectResilient(scope, aapsLogger, LTag.XDRIP) { sendStatusLine() }
         rxBus.toFlow(EventAppInitialized::class)
             .collectResilient(scope, aapsLogger, LTag.XDRIP, start = CoroutineStart.UNDISPATCHED) { sendStatusLine() }
         eventWorker = Executors.newSingleThreadScheduledExecutor()
@@ -421,4 +430,11 @@ class XdripPlugin(
         icon = pluginDescription.icon
     )
 
+    private companion object {
+
+        // Merges changes that come close together, like the writes after a BG and the autosens run that
+        // follows. A pump command takes longer, so one BG can still give two or three lines, not one per
+        // change. Short enough that the line still follows a treatment almost at once.
+        const val STATUS_LINE_DEBOUNCE_MS = 2_000L
+    }
 }

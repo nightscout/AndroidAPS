@@ -114,7 +114,7 @@ interface ImportExportPrefs {
      *        restore onto a new phone with the same pump wants.
      * @return what changed, for the log and for what the user is told afterwards
      */
-    fun executeImport(prefs: Prefs, keepPumpSettings: Boolean): ImportOutcome
+    suspend fun executeImport(prefs: Prefs, keepPumpSettings: Boolean): ImportOutcome
 
     /** What [executeImport] did, or what [previewImport] says it would do. */
     data class ImportOutcome(

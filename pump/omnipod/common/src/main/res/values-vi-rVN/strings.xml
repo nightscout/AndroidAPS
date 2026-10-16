@@ -67,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Hủy kích hoạt Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Nhấn <b>Tiếp theo</b> để hủy kích hoạt Pod.\n\n<b>Lưu ý:</b> Thao tác này sẽ tạm dừng toàn bộ việc truyền insulin và hủy kích hoạt Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">Pod sau khi bị hủy kích hoạt sẽ không thể sử dụng lại. Bạn có muốn hủy kích hoạt Pod này ngay bây giờ không?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Đang hủy kích hoạt Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Đang hủy kích hoạt Pod.\n\nKhi quá trình hủy kích hoạt hoàn tất thành công, bạn có thể nhấn <b>Tiếp theo</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Đã hủy kích hoạt Pod</string>
@@ -99,7 +100,8 @@
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Đã bật âm thanh thông báo SMB không chắc chắn</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Đã bật âm thanh thông báo Bolus không chắc chắn</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Âm thanh khi thông báo tạm dừng tiêm được bật</string>
-    <string name="omnipod_dash_use_bonding">Thiết bị Bond BT trên Android 15</string>
+    <string name="omnipod_dash_use_bonding">Ghép nối Bluetooth</string>
+    <string name="omnipod_dash_use_bonding_summary">Chỉ thử tùy chọn này nếu pod không thể duy trì kết nối ổn định. Điện thoại sẽ hiển thị các yêu cầu ghép nối mà bạn phải chấp nhận. Để tắt nếu pod kết nối bình thường. Không có tác dụng trên Android dưới phiên bản 15.</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Không có Pod hoạt động</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Đang thiết lập (đang chờ kích hoạt Pod)</string>
@@ -109,6 +111,22 @@
     <string name="omnipod_common_pod_status_pod_fault">Sự cố Pod</string>
     <string name="omnipod_common_pod_status_inactive">Không hoạt động</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Sự cố Pod: %1$03d %2$s</string>
+    <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">Thông báo từ PDM</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Tham chiếu: %1$s</string>
+    <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
+         to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
+         AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Hết insulin</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Đã dừng phân phối insulin. Hãy thay Pod ngay.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Tự động tắt</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Đã dừng phân phối insulin. PDM và Pod không liên lạc với nhau trong 4 giờ qua. Hãy thay Pod ngay để tiếp tục phân phối insulin.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Pod đã hết hạn</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">Đã dừng phân phối insulin. Hãy thay Pod ngay.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Phát hiện tắc nghẽn</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Đã dừng phân phối insulin. Hãy thay Pod ngay. Kiểm tra đường huyết</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Pod lỗi</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Đã dừng phân phối insulin. Hãy thay Pod ngay.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod sẽ sớm hết hạn</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod sẽ sớm hết hạn</string>
@@ -162,4 +180,16 @@
         <item quantity="other">Cảnh báo Pod: %1$s</item>
     </plurals>
     <string name="omnipod_common_overview_pod_hard_end_date">Pod hết hạn sử dụng</string>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/giờ, %2$d phút</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Điều chỉnh liều nền</string>
+    <string name="omnipod_common_bolus_type_priming">Đang mồi</string>
+    <string name="omnipod_common_history_total_delivered">Tổng lượng đã tiêm: %1$.2f U</string>
+    <string name="omnipod_common_failed_to_send">Không gửi được lệnh</string>
+    <string name="omnipod_common_command_not_sent">Lệnh chưa được gửi</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">Pod chưa nhận được lệnh</string>
+    <string name="omnipod_common_unknown">Trạng thái lệnh không xác định</string>
 </resources>

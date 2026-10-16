@@ -1,3 +1,5 @@
+import GenerateVersionXcconfigTask.Companion.EPOCH_DESCRIPTION
+import GenerateVersionXcconfigTask.Companion.EPOCH_MILLIS
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property

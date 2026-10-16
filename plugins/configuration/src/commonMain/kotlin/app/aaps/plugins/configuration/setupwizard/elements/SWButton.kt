@@ -1,7 +1,5 @@
 package app.aaps.plugins.configuration.setupwizard.elements
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -9,6 +7,8 @@ import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.compose.stringResource
 import dev.zacsweers.metro.Inject
 
 @Inject

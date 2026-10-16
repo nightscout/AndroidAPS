@@ -2,6 +2,8 @@ package app.aaps.pump.carelevo.ble.commands
 
 import app.aaps.pump.carelevo.ble.BleCommand
 import app.aaps.pump.carelevo.ble.BleResponse
+import app.aaps.pump.carelevo.ble.commands.NoticeThresholdCommand.Companion.TYPE_EXPIRY
+import app.aaps.pump.carelevo.ble.commands.NoticeThresholdCommand.Companion.TYPE_LOW_INSULIN
 
 /**
  * `CMD_NOTICE_THRESHOLD_REQ` (0x15) → `CMD_NOTICE_THRESHOLD_RES` (0x75). Sets a reminder threshold —

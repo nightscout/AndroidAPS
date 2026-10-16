@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.os.SystemClock
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -28,6 +30,7 @@ import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.objects.workflow.MetroService
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.comm.RecordTypes
@@ -47,16 +50,14 @@ import app.aaps.pump.danar.comm.MsgHistoryRefill
 import app.aaps.pump.danar.comm.MsgHistorySuspend
 import app.aaps.pump.danar.comm.MsgPCCommStart
 import app.aaps.pump.danar.comm.MsgPCCommStop
-import app.aaps.core.objects.workflow.MetroService
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import dev.zacsweers.metro.HasMemberInjections
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import java.io.IOException
-import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -95,6 +96,9 @@ abstract class AbstractDanaRExecutionService : MetroService() {
         protected set
     @Volatile protected var mHandshakeInProgress = false
     @Volatile protected var mSerialIOThread: SerialIOThread? = null
+    // "Device not found" is shown once, then not again until the device has been found. The queue tries
+    // to connect about every second, and a message for every try covered the screen.
+    @Volatile private var deviceNotFoundShown = false
     protected var mBinder: IBinder? = null
     abstract fun messageHashTable(): MessageHashTableBase
 
@@ -198,8 +202,9 @@ abstract class AbstractDanaRExecutionService : MetroService() {
         val deviceName = preferences.get(DanaStringNonKey.RName)
         mRfcommSocket = rfcommTransport.getSocketForDevice(deviceName)
         if (mRfcommSocket == null) {
-            rxBus.send(EventShowSnackbar(rh.gs(R.string.devicenotfound), EventShowSnackbar.Type.Error))
-        }
+            if (!deviceNotFoundShown) rxBus.send(EventShowSnackbar(rh.gs(R.string.devicenotfound), EventShowSnackbar.Type.Error))
+            deviceNotFoundShown = true
+        } else deviceNotFoundShown = false
     }
 
     fun bolusStop() {
@@ -244,13 +249,32 @@ abstract class AbstractDanaRExecutionService : MetroService() {
         mSerialIOThread?.sendMessage(MsgPCCommStart(injector))
         SystemClock.sleep(400)
         mSerialIOThread?.sendMessage(msg)
-        while (!danaPump.historyDoneReceived && mRfcommSocket?.isConnected == true) {
-            SystemClock.sleep(100)
-        }
+        val completed = waitForHistoryDone()
         SystemClock.sleep(200)
         mSerialIOThread?.sendMessage(MsgPCCommStop(injector))
-        result.success(true).comment("OK")
+        if (completed) result.success(true).comment("OK")
+        else result.success(false).comment("Timeout waiting for history")
         return result
+    }
+
+    /**
+     * Waits until the pump says the history upload is done, or the link is gone.
+     *
+     * Capped at 5 minutes, like DanaRS. Without the cap, a lost "history done" message on a link that
+     * still reported connected kept this loop, and so the whole command queue, busy forever (#5209).
+     *
+     * @return false only when it gave up because of the time limit
+     */
+    protected fun waitForHistoryDone(): Boolean {
+        val startWait = System.currentTimeMillis()
+        while (!danaPump.historyDoneReceived && mRfcommSocket?.isConnected == true) {
+            if (System.currentTimeMillis() - startWait > T.mins(5).msecs()) {
+                aapsLogger.error(LTag.PUMPCOMM, "Timeout waiting for history done")
+                return false
+            }
+            SystemClock.sleep(100)
+        }
+        return true
     }
 
     fun waitForWholeMinute() {

@@ -1,11 +1,11 @@
 package app.aaps.pump.medtrum.comm.packets
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.comm.enums.AlarmSetting
 import app.aaps.pump.medtrum.comm.enums.CommandType.SET_PATCH
 import app.aaps.pump.medtrum.extension.toByte
 import app.aaps.pump.medtrum.extension.toByteArray
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import dev.zacsweers.metro.Inject
 import kotlin.math.round
 

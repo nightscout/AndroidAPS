@@ -27,6 +27,7 @@
     <string name="constraint_applied">Begrensning brukt!</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Pumpe er utilgjengelig</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Pumpedriveren svarer ikke. \"%1$s\" har pågått i %2$d min, og ingen andre kommandoer får kontakt med pumpen. Kontroller pumpen og start deretter AAPS på nytt.</string>
     <string name="insulin_unit_shortname">E</string>
     <string name="pump_base_basal_rate">%1$.2f E/t</string>
     <string name="pump_base_basal_rate_dynamic">%1$s E/t</string>
@@ -63,6 +64,9 @@
     <string name="configbuilder_switch_confirmation">Dette vil deaktivere %1$s og aktivere %2$s.</string>
     <string name="expand">Utvid</string>
     <string name="collapse">Kollaps</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Fullført</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Utvidet</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Kollapset</string>
     <string name="no_compose_preferences">Ingen innstillinger tilgjengelig for denne plugin</string>
     <string name="confirm_password_hint">Bekreft passord</string>
     <string name="confirm_pin_hint">Bekreft PIN</string>
@@ -107,6 +111,9 @@
     <string name="format_hours">%1$.2f t</string>
     <string name="format_mins">%1$d min</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
+    <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
     <string name="objectives">Opplæringsmål</string>
     <string name="please_wait">Vennligst vent…</string>
     <string name="stop">Stopp</string>
@@ -114,10 +121,16 @@
     <string name="invalid_profile">Ugyldig profil!</string>
     <string name="no_profile_set">INGEN PROFIL VALGT</string>
     <string name="profile_switch_no_insulin">Kan ikke bytte profil: Ingen insulin er i bruk, og ingen er valgt.</string>
+    <string name="scene_no_profile_before">Ingen profil var aktiv før scenen startet.</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">Scene %1$s er avsluttet, men profilen er fortsatt aktiv. %2$s Aktiver en profil manuelt.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Dette midlertidige profilbyttet har %1$s, men den permanente profilen under har %2$s. Aktiver insulinet som er i pumpen, i insulininnstillingene først.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Tidspunktet for profilbyttet må være innenfor %1$d timer fra nå.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Det midlertidige målet må starte innenfor %1$d timer fra nå.</string>
     <string name="profile_switch_select_insulin_hint">Ingen insulin er i bruk ennå. Velg insulinet du bruker, slik at dette profilbyttet kan registrere det.</string>
     <string name="insulin_activation_failed">Insulinet ble ikke byttet. Det forrige insulinet er fortsatt i bruk.</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Insulinet ble ikke byttet: %1$s. Det forrige insulinet er fortsatt i bruk.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulinet ble ikke byttet: %1$s. Det forrige insulinet er fortsatt i bruk.</string>
     <string name="insulin_activation_unconfirmed">Kunne ikke bekrefte insulinbyttet. Kontroller hvilket insulin som er aktivt i profilen før du doserer.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Insulinet ble ikke byttet. Det forrige insulinet ditt er fortsatt i bruk.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinet ble heller ikke byttet.</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Dato</string>
@@ -174,6 +187,7 @@
     <string name="notconfigured">Ikke konfigurert</string>
     <string name="loop_suspended_by_dst">Loop suspendert av DST (Sommertid)</string>
     <string name="required">nødv</string>
+    <string name="a11y_arrow_triple_down">faller svært raskt</string>
     <string name="a11y_arrow_double_down">synker raskt</string>
     <string name="a11y_arrow_single_down">synkende</string>
     <string name="a11y_arrow_forty_five_down">synker sakte</string>
@@ -181,8 +195,18 @@
     <string name="a11y_arrow_forty_five_up">stiger raskt</string>
     <string name="a11y_arrow_single_up">stiger</string>
     <string name="a11y_arrow_double_up">stiger raskt</string>
+    <string name="a11y_arrow_triple_up">stiger svært raskt</string>
     <string name="a11y_arrow_none">ingen</string>
     <string name="a11y_arrow_unknown">ukjent</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">reduser %1$s med %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">øk %1$s med %2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">åpne %1$s for skrive</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">lukk %1$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Flytt opp</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Flytt ned</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Steg %1$d av %2$d</string>
+    <string name="decrement">reduksjon</string>
+    <string name="increment">økning</string>
     <string name="a11y_high">høyt</string>
     <string name="a11y_inrange">i målområdet</string>
     <string name="a11y_low">lavt</string>
@@ -207,6 +231,9 @@
     <string name="login">Login</string>
     <string name="logout">Logg ut</string>
     <string name="prime_fill">Prime/fylling</string>
+    <string name="prime_not_available">Denne pumpen fyller og primer seg selv under aktivering. Funksjonen for prime/fylling fra AAPS er ikke tilgjengelig.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Endre</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Fyll</string>
     <string name="site_rotation">Rotasjon av sted</string>
     <string name="edit_site">Rediger</string>
     <string name="select_arrow">Velg pil</string>
@@ -270,6 +297,7 @@
     <!--    Insulin / Concentration-->
     <string name="ins_concentration_confirmed">Insulin %1$s bekreftet</string>
     <string name="current_insulin">Aktiv for øyeblikket</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Vil bli aktivert</string>
     <string name="change_insulin">Endre</string>
     <string name="select_insulin_description">Velg insulinet du fyller pumpen med. Et profilbytte vil bli brukt etter aktivering/priming.</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
@@ -308,7 +336,8 @@
     <string name="careportal_note_message">Notat: %1$s</string>
     <string name="careportal_question_message">Spørsmål: %1$s</string>
     <string name="careportal_exercise_message">Aktivitet: %1$s</string>
-    <string name="careportal_pump_site_change">Bytte av pumpens kanyle</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Bytte av pumpested: %1$s</string>
+    <string name="careportal_pump_site_change">Bytte av pumpested</string>
     <string name="cgm_sensor_insert">Sensorbytte</string>
     <string name="careportal_pump_site_management">Pumpeområder</string>
     <string name="careportal_cgm_site_management">Sensor-områder</string>
@@ -330,6 +359,7 @@
     <string name="temporary_target">Midlertidig mål</string>
     <string name="temporary_targets">Midlertidige mål</string>
     <string name="running_mode">Kjøremodus</string>
+    <string name="running_mode_desc">Lukk eller åpne loopen, sett den på pause eller koble fra pumpen</string>
     <string name="running_mode_change_not_allowed">Endring av kjøremodus er ikke tilgjengelig</string>
     <string name="pump_reconnect">Koble til pumpen på nytt</string>
     <string name="scene">Scene</string>
@@ -340,6 +370,8 @@
     <string name="scene_active">Aktiv</string>
     <string name="scene_ended">Scene avsluttet</string>
     <string name="scene_end_active">Avslutt aktiv scene</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Hopp over til</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Oppfølgingsscenen %1$s vil ikke starte</string>
     <string name="scene_confirm_activate">Aktivere scene \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">Avslutte scene \"%1$s\" og tilbakestille endringer?</string>
     <string name="scene_conflict_active_tt">Dette vil erstatte et aktivt midlertidig mål</string>
@@ -355,7 +387,6 @@
     <string name="scene_action_careportal">Logg: %1$s</string>
     <string name="scene_management">Scener</string>
     <string name="scene_management_desc">Lage, endre og håndtere scener</string>
-    <string name="scene_action_count">%1$d handlinger</string>
     <string name="scene_start_from_template">Start fra mal</string>
     <string name="scene_editor_target">Mål</string>
     <string name="scene_editor_tt_preset">Forhåndsinnstilt mål</string>
@@ -371,6 +402,8 @@
     <string name="scene_editor_enabled">Aktivert</string>
     <string name="scene_editor_disabled">Deaktivert</string>
     <string name="scene_summary">%1$d handlinger, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_duration_indefinite">Ubestemt (manuell slutt)</string>
     <string name="scene_some_actions_failed">Noen handlinger mislyktes</string>
     <string name="scene_no_active">Ingen aktiv scene</string>
@@ -406,6 +439,9 @@
     <string name="clientcontrol_fail_scene_disabled">Scenen er deaktivert.</string>
     <string name="clientcontrol_fail_partial">Noen handlinger kunne ikke utføres.</string>
     <string name="clientcontrol_fail_execution">Hovedenheten kunne ikke utføre handlingen.</string>
+    <string name="clientcontrol_fail_cancelled">Kommandoen ble avbrutt før den ble kjørt. Ingenting ble sendt til pumpen.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus avbrutt. Ingen insulin ble gitt.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Avbrutt</string>
     <string name="clientcontrol_fail_control_disabled">Fjernstyring er slått av på hovedenheten.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Den forberedte bolusen utløp eller ble erstattet. Trykk på knappen igjen.</string>
     <string name="clientcontrol_fail_bolus_compute">Hovedenheten kunne ikke beregne bolusen (mangler glukoseverdi/profil, eller pumpen er ikke klar).</string>
@@ -436,7 +472,7 @@
     <string name="treatment_insulin_desc">Lever bolus manuelt</string>
     <string name="treatment_carbs_desc">Registrer karbo uten insulin</string>
     <string name="treatment_calculator_desc">Beregn bolus</string>
-    <string name="insulin_management">Insulin</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Insulininnstillinger</string>
     <string name="manage_insulin_desc">Administrer og aktiver insulinkonfigurasjoner</string>
     <string name="concentration_disable_blocked">Kan ikke deaktivere konsentrasjonsstøtte mens ikke-U100-insuliner finnes. Fjern alle ikke-U100-insulinkonfigurasjoner og bytt til en U100-profil først.</string>
     <string name="simple_mode_blocked_by_concentration">Kan ikke aktivere Enkelmodus når du bruker insulin som ikke er U100. Bytt til U100-insulin først.</string>
@@ -458,6 +494,9 @@
     <string name="treatment_cannula_change_desc">Registrer bytte av kanyle/infusjonssett</string>
     <string name="treatment_fill_desc">Prime og fylle kanylen</string>
     <string name="temp_basal">Midlertidig basal</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Over profilen</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Under profilen</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Ingen</string>
     <string name="user_entry">Brukeroppføring</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Finger</string>
@@ -472,7 +511,7 @@
     <string name="automation_management_desc">Opprett regler som automatisk utfører handlinger basert på utløsere</string>
     <string name="settingsexport">Eksporter innstillinger</string>
     <string name="custom">Egendefinert</string>
-    <string name="preset_settings">Forhåndsinnstilte innstillinger</string>
+    <string name="preset_settings">Forhåndsinnstillinger</string>
     <string name="activation">Aktivering</string>
     <string name="temp_target_management">Midlertidig mål</string>
     <string name="revert_to_defaults">Tilbakestill til standardinnstillinger</string>
@@ -652,6 +691,7 @@
     <string name="missing_profile_name">Mangler profilnavn</string>
     <string name="profile_not_saved_activate">Profilen er ikke lagret. Vennligst lagre profilen før aktivering.</string>
     <string name="profile_basal_not_compatible_with_pump">Basaldosen er ikke kompatibel med den aktuelle pumpen og kan ikke aktiveres. Reduser prosenten eller juster basaldosen.</string>
+    <string name="profile_basal_below_pump_minimum">Basaldosen er lavere enn minimumsverdien for den aktuelle pumpen og kan ikke aktiveres. Øk prosentverdien eller juster basaldosen.</string>
     <string name="profile_pump_incompatible_label">Pumpegrense</string>
     <string name="error_in_ic_values">Feil i IK-forholdstallet</string>
     <string name="error_in_isf_values">Feil i ISF-verdien</string>
@@ -686,6 +726,7 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensitivitet</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens av</string>
     <string name="isf_for_carbs">Gjennomsnittlig ISF for kalkulator og karboabsorpsjon: %1$.1f</string>
     <string name="isf_profile">Profil ISF: %1$.1f</string>
     <string name="isf_variable">Dynamisk ISF: %1$.1f</string>
@@ -713,6 +754,7 @@
     <string name="wizard_carb_time">Karbotid</string>
     <string name="carb_time_now">Nå</string>
     <string name="change">Endre</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
     <string name="grant">Tillat</string>
     <string name="set">Angi</string>
     <string name="wizard_set_alarm">Sett alarm</string>
@@ -723,7 +765,7 @@
     <string name="wizard_include_iob">Inkluder IOB</string>
     <string name="wizard_include_cob">Inkluder COB</string>
     <string name="wizard_calculation">Beregning</string>
-    <string name="no_action_selected">Ingen handling valgt. Ingenting endres</string>
+    <string name="no_action_selected">Ingen handling er valgt, ingenting vil skje.</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Maks fjerning: %1$d g (karbo ombord)</string>
     <string name="wizard_no_insulin_required">Insulin er ikke nødvendig</string>
     <string name="wizard_no_actual_bg">Mangler nylige BS-verdier til å gjøre beregninger!</string>
@@ -745,7 +787,6 @@
     <string name="max_carbs_title">Maks tillatt karbohydrater [g]</string>
     <string name="patient_type">Pasienttype</string>
     <!--    Protection-->
-    <string name="unlock_settings">Lås opp innstillinger</string>
     <!--    Pumps -->
     <string name="battery_label">Batteri</string>
     <string name="reservoir_label">Reservoar</string>
@@ -774,6 +815,7 @@
     <string name="initializing">Initialiserer…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Advarsel</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Kritisk</string>
     <string name="alert" comment="Generic alert dialog title">Varsel</string>
     <string name="retry" comment="Button label to retry a failed operation">Prøv på nytt</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Fullfør</string>
@@ -904,7 +946,7 @@
     <string name="reorder">Endre rekkefølge</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Flytt tidligere</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Flytt senere</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Vis detaljer</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Vis detaljer</string>
     <string name="presets_changed_reorder_aborted">Forhåndsinnstillingene ble endret et annet sted. Den nye rekkefølgen ble ikke lagret.</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Posisjon %1$d av %2$d</string>
@@ -1024,8 +1066,18 @@
     <string name="import_wrong_password">Feil passord</string>
     <string name="import_btn">Import</string>
     <string name="import_anyway_btn">Importer uansett</string>
-    <string name="import_apply_title">Innstillinger importert</string>
-    <string name="import_apply_message">De importerte innstillingene vil nå bli tatt i bruk. Tillegg som er endret, vil bli startet på nytt.</string>
+    <string name="import_apply_title">Bruk importerte innstillinger?</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Innstillinger som endres: %1$d. Plugin som er endret, startes på nytt.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Innstillinger som endres: %1$d. Pumpeinnstillinger beholdt: %2$d, slik at pumpen fortsetter å fungere.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">De importerte innstillingene valgte ingen pumpe som finnes på denne telefonen. %1$s er nå aktiv – kontroller pumpeinnstillingene.</string>
+    <string name="import_applying">Aktiverer innstillinger…</string>
+    <string name="import_replace_pump_settings">Bytt også ut pumpeinnstillingene</string>
+    <string name="import_replace_pump_settings_summary">La dette være avslått for å beholde pumpen som denne telefonen er paret med. Slå det på når du gjenoppretter innstillinger på en ny telefon med samme pumpe.</string>
     <string name="import_apply_waiting">Venter på pumpen…</string>
     <string name="import_apply_pump_busy">Pumpen er fortsatt opptatt, så innstillingene ble ikke tatt i bruk.</string>
     <string name="import_apply_retry_question">Prøve på nytt nå?</string>

@@ -37,7 +37,6 @@
     <string name="loopenabled">Loop abilitato</string>
     <string name="apsselected">APS selezionato</string>
     <string name="closedmodeenabled">Modalità chiusa abilitata</string>
-    <string name="objectives_shortname">OBT</string>
     <string name="description_objectives">Programma di apprendimento</string>
     <string name="doyouwantresetstart">Vuoi resettare l\'avvio dell\'obiettivo? Potresti perdere i tuoi progressi.</string>
     <string name="objectives_button_unfinish">Reset stato completato</string>

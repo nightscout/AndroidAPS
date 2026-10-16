@@ -33,7 +33,9 @@ object ReconcilerDecision {
         val prevBucket = bucketOf(prev)
         val nextBucket = bucketOf(next)
 
-        // Precheck owns SUSPENDED_BY_PUMP entry and exit.
+        // Precheck owns SUSPENDED_BY_PUMP entry and exit. On exit the reconciler does not pass
+        // SUSPENDED_BY_PUMP as prev but the mode that was active before the pump suspend, so leaving it is
+        // decided like any other change (see RunningModeReconciler.modeBeforePumpSuspend, #4486).
         if (nextBucket == Bucket.PumpReported) return Action.NoOp
         if (prevBucket == Bucket.PumpReported) return Action.NoOp
 
@@ -42,6 +44,11 @@ object ReconcilerDecision {
         if (nextBucket == Bucket.ZeroDelivery) {
             return Action.IssueZeroTbr(cancelExtendedBolus = true)
         }
+
+        // The same stopped mode again (the user extends a suspend): the entry already cancelled the
+        // APS TBR and the loop has not run since, so a TBR active now was set by the user by hand.
+        // Leave it alone.
+        if (prev == next && nextBucket == Bucket.Stopped) return Action.NoOp
 
         // Entry to suspended-no-tbr or stopped: cancel any active TBR.
         if (nextBucket == Bucket.SuspendedNoTbr || nextBucket == Bucket.Stopped) return Action.CancelTbr

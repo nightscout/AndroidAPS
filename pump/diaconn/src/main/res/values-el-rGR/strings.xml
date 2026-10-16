@@ -19,7 +19,6 @@
     <string name="updatingbasalrates">Ενημέρωση Βασικού ρυθμού</string>
     <string name="description_pump_diaconn_g8">Ενσωμάτωση Αντλιών Diaconn G8</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Υπέρβαση μέγιστου bolus</string>
     <string name="commanderror">Σφάλμα εντολής</string>
     <string name="speederror">Σφάλμα ταχύτητας</string>

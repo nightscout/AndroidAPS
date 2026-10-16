@@ -28,7 +28,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.CoreUiStrings
@@ -58,6 +57,9 @@ class PumpSyncImplementation(
                 expectedPumpState().extendedBolus?.let {
                     syncStopExtendedBolusWithPumpId(dateUtil.now(), dateUtil.now(), it.pumpType, it.pumpSerial)
                 }
+                // No pump confirms them any more: a pump that comes back is read only from its new registration.
+                val kept = persistenceLayer.confirmTemporaryIds()
+                if (kept > 0) aapsLogger.debug(LTag.PUMP, "Pump change: $kept records kept with their temporary id as pump id")
             }
         }
         preferences.remove(StringNonKey.ActivePumpType)
@@ -105,11 +107,16 @@ class PumpSyncImplementation(
 
         // If no value stored assume we start using new pump from now
         if (storedType.isEmpty() || storedSerial.isEmpty()) {
+            // Allow data up to 1 min older than the registration, and ignore older history. The same limit is
+            // stored for the records that follow: a driver can write several records with the same time in one
+            // go (the Equil wizard writes a cannula change and then an insulin change). With "now" stored here,
+            // the first record registered the pump and the second one was dropped as too old.
+            val allowedFrom = dateUtil.now() - T.mins(1).msecs()
             aapsLogger.debug(LTag.PUMP, "Registering new pump ${type.description} $serialNumber")
             preferences.put(StringNonKey.ActivePumpType, type.description)
             preferences.put(StringNonKey.ActivePumpSerialNumber, serialNumber)
-            preferences.put(LongNonKey.ActivePumpChangeTimestamp, dateUtil.now()) // allow only data newer than register time (ie. ignore older history)
-            return timestamp > dateUtil.now() - T.mins(1).msecs() // allow first record to be 1 min old
+            preferences.put(LongNonKey.ActivePumpChangeTimestamp, allowedFrom)
+            return timestamp >= allowedFrom
         }
 
         if (activePlugin.activePump.selectedActivePump() is VirtualPump || (type.description == storedType && serialNumber == storedSerial && timestamp >= storedTimestamp)) {
@@ -126,6 +133,47 @@ class PumpSyncImplementation(
             } ${type.description} $serialNumber"
         )
         return false
+    }
+
+    private fun isRegisteredPump(type: PumpType, serialNumber: String): Boolean =
+        type.description == preferences.get(StringNonKey.ActivePumpType) && serialNumber == preferences.get(StringNonKey.ActivePumpSerialNumber)
+
+    /**
+     * When a temporary basal or an extended bolus of the active pump starts in AAPS, or null when it is not taken.
+     *
+     * One that began before the pump was registered, and still ran then, starts at the registration. AAPS first
+     * talked to the pump then; what it gave before is not known, it may not even have been on the body yet. It used
+     * to be dropped, and AAPS showed no temp basal while the pump ran one.
+     *
+     * [recordedBefore] tells if this pump id already has an entry that starts in a time range. Such an entry was
+     * recorded under an earlier registration: this pump was used, then another one, and now this one again. It ended
+     * at that change of pump. Moving it to the registration would lose what was given before, so it is left as it is.
+     */
+    private suspend fun startInAaps(timestamp: Long, duration: Long, type: PumpType, serialNumber: String, recordedBefore: suspend (from: Long, to: Long) -> Boolean): Long? {
+        if (confirmActivePump(timestamp, type, serialNumber)) return timestamp
+        val registeredFrom = preferences.get(LongNonKey.ActivePumpChangeTimestamp)
+        if (!isRegisteredPump(type, serialNumber) || timestamp >= registeredFrom || timestamp + duration <= registeredFrom) return null
+        if (recordedBefore(timestamp, registeredFrom - 1)) {
+            aapsLogger.debug(LTag.PUMP, "Still running when the pump was registered, but recorded before: left as it is")
+            return null
+        }
+        aapsLogger.debug(LTag.PUMP, "Still running when the pump was registered: taken from ${dateUtil.dateAndTimeAndSecondsString(registeredFrom)}")
+        return registeredFrom
+    }
+
+    /**
+     * When a stop of the active pump is taken, or null when it is not.
+     *
+     * A stop from before the registration still ends what [startInAaps] took from the registration on: a pump that
+     * reads its history sends the start of a temp basal with its whole length, and its stop as another record.
+     * [startedAt] is when the entry of this pump that runs at a time started, or null when none runs.
+     */
+    private suspend fun stopInAaps(timestamp: Long, type: PumpType, serialNumber: String, startedAt: suspend (Long) -> Long?): Long? {
+        if (confirmActivePump(timestamp, type, serialNumber)) return timestamp
+        val registeredFrom = preferences.get(LongNonKey.ActivePumpChangeTimestamp)
+        if (!isRegisteredPump(type, serialNumber) || timestamp >= registeredFrom || startedAt(registeredFrom) != registeredFrom) return null
+        aapsLogger.debug(LTag.PUMP, "Stopped before the pump was registered: ends what was taken from ${dateUtil.dateAndTimeAndSecondsString(registeredFrom)}")
+        return registeredFrom
     }
 
     override suspend fun expectedPumpState(): PumpSync.PumpState {
@@ -334,12 +382,14 @@ class PumpSyncImplementation(
         pumpType: PumpType,
         pumpSerial: String
     ): Boolean {
-        if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        val temporaryBasal = profileFunction.getProfile(timestamp)?.let { profile ->
+        val start = startInAaps(timestamp, duration, pumpType, pumpSerial) { from, to ->
+            persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(from, to, true).any { it.ids.pumpId == pumpId && it.ids.pumpType == pumpType && it.ids.pumpSerial == pumpSerial }
+        } ?: return false
+        val temporaryBasal = profileFunction.getProfile(start)?.let { profile ->
             TB(
-                timestamp = timestamp,
+                timestamp = start,
                 rate = rate.iU(concentration = profile.insulinConcentration(), isAbsolute = isAbsolute),
-                duration = duration,
+                duration = duration - (start - timestamp),
                 type = type?.toDbType() ?: TB.Type.NORMAL,
                 isAbsolute = isAbsolute,
                 ids = IDs(
@@ -357,8 +407,11 @@ class PumpSyncImplementation(
     }
 
     override suspend fun syncStopTemporaryBasalWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String, ignorePumpIds: Boolean): Boolean {
-        if (!ignorePumpIds && !confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        val result = persistenceLayer.syncPumpCancelTemporaryBasalIfAny(timestamp, endPumpId, pumpType, pumpSerial)
+        val at = if (ignorePumpIds) timestamp
+        else stopInAaps(timestamp, pumpType, pumpSerial) { time ->
+            persistenceLayer.getTemporaryBasalActiveAt(time)?.takeIf { it.ids.pumpType == pumpType && it.ids.pumpSerial == pumpSerial }?.timestamp
+        } ?: return false
+        val result = persistenceLayer.syncPumpCancelTemporaryBasalIfAny(at, endPumpId, pumpType, pumpSerial)
         return result.updated.isNotEmpty()
     }
 
@@ -450,12 +503,16 @@ class PumpSyncImplementation(
     }
 
     override suspend fun syncExtendedBolusWithPumpId(timestamp: Long, rate: PumpRate, duration: Long, isEmulatingTB: Boolean, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
-        if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        val extendedBolus = profileFunction.getProfile(timestamp)?.let { profile ->
+        val start = startInAaps(timestamp, duration, pumpType, pumpSerial) { from, to ->
+            persistenceLayer.getExtendedBolusesStartingFromTimeToTime(from, to, true).any { it.ids.pumpId == pumpId && it.ids.pumpType == pumpType && it.ids.pumpSerial == pumpSerial }
+        } ?: return false
+        // Taken from the registration: only the part that is still to come.
+        val part = if (start == timestamp) 1.0 else (duration - (start - timestamp)) / duration.toDouble()
+        val extendedBolus = profileFunction.getProfile(start)?.let { profile ->
             EB(
-                timestamp = timestamp,
-                amount = rate.iU(concentration = profile.insulinConcentration(), isAbsolute = true),
-                duration = duration,
+                timestamp = start,
+                amount = rate.iU(concentration = profile.insulinConcentration(), isAbsolute = true) * part,
+                duration = duration - (start - timestamp),
                 isEmulatingTempBasal = isEmulatingTB,
                 ids = IDs(
                     pumpId = pumpId,
@@ -472,8 +529,10 @@ class PumpSyncImplementation(
     }
 
     override suspend fun syncStopExtendedBolusWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
-        if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        val result = persistenceLayer.syncPumpStopExtendedBolusWithPumpId(timestamp, endPumpId, pumpType, pumpSerial)
+        val at = stopInAaps(timestamp, pumpType, pumpSerial) { time ->
+            persistenceLayer.getExtendedBolusActiveAt(time)?.takeIf { it.ids.pumpType == pumpType && it.ids.pumpSerial == pumpSerial }?.timestamp
+        } ?: return false
+        val result = persistenceLayer.syncPumpStopExtendedBolusWithPumpId(at, endPumpId, pumpType, pumpSerial)
         return result.updated.isNotEmpty()
     }
 

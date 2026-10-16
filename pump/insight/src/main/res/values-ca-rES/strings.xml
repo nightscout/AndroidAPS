@@ -20,7 +20,6 @@
     <string name="code_compare">Coincideixen els codis que es mostren en aquest dispositiu i la bomba?</string>
     <string name="insight_pairing">Sincronització Insight</string>
     <string name="tube_changed">Tub canviat</string>
-    <string name="insightpump_shortname">Insight</string>
     <string name="insight_alert_notification_channel">Alertes Insight</string>
     <string name="disable_vibration">Desactivar vibracions en lliurar bolus manual</string>
     <string name="disable_vibration_summary">Per bolus i bolus estès (només disponible amb Insight firmware 3.x)</string>

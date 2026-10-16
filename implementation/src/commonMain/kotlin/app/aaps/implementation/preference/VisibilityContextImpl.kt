@@ -16,11 +16,11 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlin.concurrent.Volatile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
+import kotlin.concurrent.Volatile
 
 /**
  * Implementation of [VisibilityContext] that provides runtime context
@@ -81,6 +81,9 @@ class VisibilityContextImpl(
 
     override val isBatteryChangeLoggingEnabled: Boolean
         get() = activePlugin.activePump.isBatteryChangeLoggingEnabled()
+
+    override val isRefillingCapable: Boolean
+        get() = activePlugin.activePump.pumpDescription.isRefillingCapable
 
     override val advancedFilteringSupported: Boolean
         get() = cachedAdvancedFiltering

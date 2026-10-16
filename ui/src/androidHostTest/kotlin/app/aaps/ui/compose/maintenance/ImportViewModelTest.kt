@@ -1,48 +1,50 @@
 package app.aaps.ui.compose.maintenance
 
+import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
-import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.overview.graph.OverviewDataCache
-import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.pump.PumpWithConcentration
-import app.aaps.core.data.pump.defs.PumpDescription
-import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationAction
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.VirtualPump
-import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.ui.UiRestartImpl
-import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportDecryptResult
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.core.interfaces.maintenance.PrefsFile
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.PumpWithConcentration
+import app.aaps.core.interfaces.pump.VirtualPump
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.ui.UiRestartImpl
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import app.aaps.core.data.ue.Action
-import app.aaps.core.data.ue.Sources
-import app.aaps.shared.tests.generatedTextResolver
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.runTest
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
@@ -52,8 +54,11 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
-/** A pump that is also the virtual one, which is what the fallback check looks for. */
-internal interface VirtualPumpForTest : PumpWithConcentration, VirtualPump
+/**
+ * The virtual pump driver, which is what the fallback check looks for. A driver: the concentration wrapper
+ * (`activePump`) is never a [VirtualPump], so the check has to ask `activePumpInternal`.
+ */
+internal interface VirtualPumpForTest : Pump, VirtualPump
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class ImportViewModelTest {
@@ -71,8 +76,10 @@ internal class ImportViewModelTest {
     @Mock private lateinit var overviewDataCache: OverviewDataCache
     @Mock private lateinit var iobCobCalculator: IobCobCalculator
     @Mock private lateinit var pump: PumpWithConcentration
+    @Mock private lateinit var driver: Pump
     @Mock private lateinit var ads: AutosensDataStore
     @Mock private lateinit var notificationManager: NotificationManager
+    @Mock private lateinit var profileRepository: ProfileRepository
     @Mock private lateinit var virtualPump: VirtualPumpForTest
     private val uiRestart = UiRestartImpl()
 
@@ -87,13 +94,14 @@ internal class ImportViewModelTest {
         testDispatcher = StandardTestDispatcher()
         Dispatchers.setMain(testDispatcher)
         whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(activePlugin.activePumpInternal).thenReturn(driver)
         whenever(pump.serialNumber()).thenReturn("sn")
         whenever(pump.pumpDescription).thenReturn(PumpDescription())
         whenever(iobCobCalculator.ads).thenReturn(ads)
         sut = ImportViewModel(
             aapsLogger, importExportPrefs, prefFileList, configBuilder, config, rh, uel,
             commandQueue, pumpSync, activePlugin, overviewDataCache, iobCobCalculator, uiRestart,
-            notificationManager
+            notificationManager, profileRepository
         )
         // Production hands the apply to the IO dispatcher, which a test cannot advance or observe.
         // Unconfined runs it inline instead, so `advanceUntilIdle` really does mean "the apply is done".
@@ -354,10 +362,9 @@ internal class ImportViewModelTest {
     @Test
     fun `an import that leaves no pump selected says which pump is active`() = runTest(testDispatcher) {
         queueGrantsHold(true)
-        // Consecutive returns, because the apply reads the active pump three times: once to remember
-        // what it was, once for the identity check inside applySettings, and once afterwards to see
-        // what it ended up as.
-        whenever(activePlugin.activePump).thenReturn(pump, pump, virtualPump)
+        // Consecutive returns, because the apply reads the driver twice: once to remember what it was,
+        // and once afterwards to see what it ended up as. The wrapper (activePump) stays what it is.
+        whenever(activePlugin.activePumpInternal).thenReturn(driver, virtualPump)
         whenever(virtualPump.pumpDescription).thenReturn(PumpDescription())
 
         sut.onApplyConfirmed()

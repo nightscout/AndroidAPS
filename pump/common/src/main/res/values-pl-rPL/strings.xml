@@ -11,6 +11,24 @@
     <string name="pump_status_suspended">Wstrzymany</string>
     <string name="pump_status_executing_command">Wykonywanie polecenia</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Pobierz ustawienia</string>
+    <string name="pump_cmd_desc_get_firmware">Pobierz oprogramowanie pompy</string>
+    <string name="pump_cmd_desc_get_basal_profile">Pobierz profil bazowy</string>
+    <string name="pump_cmd_desc_set_basal_profile">Ustaw profil bazowy</string>
+    <string name="pump_cmd_desc_get_tbr">Pobierz tymczasową dawkę bazową</string>
+    <string name="pump_cmd_desc_cancel_tbr">Anuluj tymczasową dawkę bazową</string>
+    <string name="pump_cmd_desc_set_tbr">Ustaw tymczasową dawkę bazową</string>
+    <string name="pump_cmd_desc_set_bolus">Ustaw bolus</string>
+    <string name="pump_cmd_desc_get_bolus">Pobierz bolusa</string>
+    <string name="pump_cmd_desc_cancel_bolus">Anuluj bolusa</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Pobierz ile pozostało insuliny</string>
+    <string name="pump_cmd_desc_get_battery_status">Pobierz stan baterii</string>
+    <string name="pump_cmd_desc_get_time">Pobierz czas</string>
+    <string name="pump_cmd_desc_set_time">Ustaw czas</string>
+    <string name="pump_cmd_desc_get_pump_status">Pobierz status pompy</string>
+    <string name="pump_cmd_desc_get_history">Pobierz historię</string>
+    <string name="pump_cmd_desc_get_history_params">Pobierz historię %s</string>
+    <string name="pump_cmd_desc_custom">Niestandardowe polecenie</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Dawki Bazowe</string>
     <string name="history_group_configuration">Ustawienia</string>
@@ -32,6 +50,7 @@
     <string name="time_last_3_hours">Ostatnie 3 godziny</string>
     <string name="time_last_6_hours">Ostatnie 6 godzin</string>
     <string name="time_last_12_hours">Ostatnie 12 godzin</string>
+    <string name="time_last_24_hours">Ostatnie 24 godziny</string>
     <string name="time_last_2_days">Ostatnie 2 dni</string>
     <string name="time_last_4_days">Ostatnie 4 dni</string>
     <string name="time_last_week">Ostatni tydzień</string>

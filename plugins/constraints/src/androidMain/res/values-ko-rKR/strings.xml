@@ -35,7 +35,6 @@
     <string name="loopenabled">Loop 활성화됨</string>
     <string name="apsselected">APS 선택됨</string>
     <string name="closedmodeenabled">Closed 모드가 활성화됨</string>
-    <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">프로그램 배우기</string>
     <string name="doyouwantresetstart">목표를 초기화하시겠습니까? 진행상황이 삭제됩니다.</string>
     <string name="objectives_button_unfinish">재설정 완료 상태</string>

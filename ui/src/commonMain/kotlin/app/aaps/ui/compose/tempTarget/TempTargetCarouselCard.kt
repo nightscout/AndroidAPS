@@ -36,8 +36,8 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.formatMinutesAsDuration
 import app.aaps.core.ui.compose.icons.IcTtActivity
@@ -45,7 +45,6 @@ import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHypo
 import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 import kotlinx.coroutines.delay
 
 /**
@@ -55,7 +54,6 @@ import kotlinx.coroutines.delay
  *
  * @param preset The preset to display (null for active TT card)
  * @param activeTT The currently active temp target (null if none)
- * @param remainingTimeMs Remaining time in milliseconds for active TT
  * @param isSelected Whether this card is currently selected
  * @param units Current glucose units (mg/dL or mmol/L)
  * @param modifier Modifier for the card
@@ -64,7 +62,6 @@ import kotlinx.coroutines.delay
 fun TempTargetCarouselCard(
     preset: TTPreset?,
     activeTT: TT?,
-    remainingTimeMs: Long?,
     isSelected: Boolean,
     units: GlucoseUnit,
     onExpired: () -> Unit = {},
@@ -177,14 +174,16 @@ fun TempTargetCarouselCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Duration (formatted as "Xh Ym" when >= 60 minutes)
-                val durationMs = preset?.duration ?: activeTT?.duration ?: 0L
-                val durationMinutes = (durationMs / 60000L).toInt()
-                Text(
-                    text = formatMinutesAsDuration(durationMinutes),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = contentColor
-                )
+                // Duration (formatted as "Xh Ym" when >= 60 minutes). A target without an end has none to show.
+                val durationMs = preset?.duration ?: activeTT?.takeIf { it.hasEnd }?.duration
+                if (durationMs != null) {
+                    val durationMinutes = (durationMs / 60000L).toInt()
+                    Text(
+                        text = formatMinutesAsDuration(durationMinutes),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = contentColor
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(6.dp))
 

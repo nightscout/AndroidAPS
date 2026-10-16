@@ -7,8 +7,6 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Completable
-import kotlin.time.Clock
-import kotlin.time.Instant
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -23,6 +21,8 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 /**
  * Covers [AlarmClearPatchDiscardUseCase.persistAlarmDiscarded]: the happy path plus every
@@ -76,15 +76,16 @@ internal class AlarmClearPatchDiscardUseCaseTest {
         assertThat(sut.persistAlarmDiscarded("alarm-1")).isTrue()
     }
 
+    /** The patch record goes before its infusion record: a patch with its needle in and no infusion record is an activation to finish. */
     @Test
-    fun persistAlarmDiscarded_acks_alarm_then_clears_settings_then_deletes_records_in_order() {
+    fun persistAlarmDiscarded_acks_alarm_then_clears_settings_then_deletes_patch_before_infusion() {
         sut.persistAlarmDiscarded("alarm-1")
 
         inOrder(alarmRepository, userSettingInfoRepository, infusionInfoRepository, patchInfoRepository) {
             verify(alarmRepository).removeAlarm(eq("alarm-1"))
             verify(userSettingInfoRepository).updateUserSettingInfo(any())
-            verify(infusionInfoRepository).deleteInfusionInfo()
             verify(patchInfoRepository).deletePatchInfo()
+            verify(infusionInfoRepository).deleteInfusionInfo()
         }
     }
 
@@ -184,12 +185,12 @@ internal class AlarmClearPatchDiscardUseCaseTest {
     }
 
     @Test
-    fun persistAlarmDiscarded_does_not_delete_patch_when_infusion_delete_fails() {
-        whenever(infusionInfoRepository.deleteInfusionInfo()).thenReturn(false)
+    fun persistAlarmDiscarded_does_not_delete_infusion_when_patch_delete_fails() {
+        whenever(patchInfoRepository.deletePatchInfo()).thenReturn(false)
 
         sut.persistAlarmDiscarded("alarm-1")
 
-        verify(patchInfoRepository, never()).deletePatchInfo()
+        verify(infusionInfoRepository, never()).deleteInfusionInfo()
     }
 
     @Test
@@ -200,7 +201,7 @@ internal class AlarmClearPatchDiscardUseCaseTest {
 
         // The alarm ack and the earlier writes already ran: the failure is reported, not rolled back.
         verify(alarmRepository).removeAlarm(eq("alarm-1"))
-        verify(infusionInfoRepository).deleteInfusionInfo()
+        verify(userSettingInfoRepository).updateUserSettingInfo(any())
     }
 
     @Test

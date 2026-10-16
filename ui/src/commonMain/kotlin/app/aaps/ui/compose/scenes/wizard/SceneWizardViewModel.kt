@@ -32,9 +32,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactoryKey
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
-import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -42,6 +39,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlin.reflect.KClass
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Stable
 @AssistedInject
@@ -68,7 +68,21 @@ class SceneWizardViewModel(
         const val STEP_DURATION = 7
         const val STEP_CHAIN = 8
         const val STEP_NAME_ICON = 9
-        const val TOTAL_STEPS = 9 // steps 1-9 (step 0 is template picker, not counted in progress)
+    }
+
+    /** What the step dots show: [step] of [total], 0-based, counted from the first step that has dots. */
+    data class Progress(val step: Int, val total: Int)
+
+    /**
+     * The step dots for [state], or null on the template picker, which is not a step. The info step is one only for
+     * a new scene from a template: editing starts at the profile step, and a blank scene has no info to show. Before,
+     * the dots counted the info step on that step and left it out of the total after it, so a new scene ended on
+     * "Step 9 of 8", and an edited one on "Step 8 of 7".
+     */
+    fun progress(state: WizardState): Progress? {
+        val first = if (isEditMode || state.template == SceneTemplate.BLANK) STEP_PROFILE else STEP_INFO
+        if (state.currentStep < first) return null
+        return Progress(step = state.currentStep - first, total = STEP_NAME_ICON - first + 1)
     }
 
     data class WizardState(

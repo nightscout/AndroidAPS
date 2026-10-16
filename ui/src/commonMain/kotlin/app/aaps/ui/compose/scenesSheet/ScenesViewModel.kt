@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.compose.scenes.sceneSummaryWithChain
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -52,7 +53,8 @@ data class AutomationActionItem(
 data class SceneSheetItem(
     val id: String,
     val name: String,
-    val actionCount: Int,
+    /** "3 actions, 2 h → Cooldown", the same line as Manage → Scenes. */
+    val summary: String,
     val iconKey: String,
     /** Localized reason why this scene is currently not activatable, or null if it is. */
     val activationReason: String? = null
@@ -138,7 +140,7 @@ class ScenesViewModel(
                 SceneSheetItem(
                     id = scene.id,
                     name = scene.name,
-                    actionCount = scene.actions.size,
+                    summary = sceneSummaryWithChain(scene, rh, sceneRepository::getScene),
                     iconKey = scene.icon,
                     activationReason = masterOfflineReason ?: sceneActions.validateActivation(scene)
                 )

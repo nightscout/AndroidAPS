@@ -26,11 +26,18 @@ class ElementAvailability(
 ) {
 
     fun isAvailable(elementType: ElementType): Boolean = when (elementType) {
-        ElementType.CALIBRATION -> xDripSource.isEnabled() || isCalibrationOverrideActive()
-        ElementType.CGM_XDRIP   -> xDripSource.isEnabled()
-        ElementType.CGM_DEX     -> dexcomBoyda.isEnabled()
+        ElementType.CALIBRATION    -> xDripSource.isEnabled() || isCalibrationOverrideActive()
+        ElementType.CGM_XDRIP      -> xDripSource.isEnabled()
+        ElementType.CGM_DEX        -> dexcomBoyda.isEnabled()
 
-        else                    -> true
+        // Patch pumps fill and change the battery in their own activation wizard, so they have no
+        // Refill / ReplaceBattery capability. Same rule as the Manage sheet, but without its
+        // isInitialized check: this is a capability, not a connection state, and QuickLaunch removes
+        // unavailable entries from the saved toolbar for good.
+        ElementType.FILL           -> activePlugin.activePump.pumpDescription.isRefillingCapable
+        ElementType.BATTERY_CHANGE -> activePlugin.activePump.let { it.pumpDescription.isBatteryReplaceable || it.isBatteryChangeLoggingEnabled() }
+
+        else                       -> true
     }
 
     /**

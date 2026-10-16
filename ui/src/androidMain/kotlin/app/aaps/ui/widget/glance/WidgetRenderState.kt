@@ -2,12 +2,15 @@ package app.aaps.ui.widget.glance
 
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import app.aaps.core.data.model.TrendArrow
 
 data class WidgetRenderState(
     val bgText: String,
     @ColorInt val bgColor: Int,
     val strikeThrough: Boolean,
     @DrawableRes val arrowResId: Int?,
+    /** Null without a reading. */
+    val trendArrow: TrendArrow?,
     val deltaText: String,
     val timeAgoText: String,
     val iobText: String,
@@ -41,5 +44,8 @@ data class WidgetRenderState(
     val arrowDescription: String?,
     val tbrDescription: String,
     val iobLabel: String,
-    val cobLabel: String
+    val cobLabel: String,
+    // The glucose value as spoken. An old reading is only struck through on screen, so a screen
+    // reader read it as if it were current; this adds "old reading" in that case.
+    val bgSpoken: String
 )

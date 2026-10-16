@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS(Cerc)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS (Personalizat)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(personalizat) Mereu aprins</string>
     <string name="label_actions_tile">Acțiuni</string>
     <string name="label_temp_target_tile">Țintă temporară</string>
     <string name="label_quick_wizard_tile">Asistent rapid</string>
@@ -96,6 +97,7 @@
     <string name="action_user_action_confirmation">Acțiune Utilizator Solicitată</string>
     <string name="action_scene_confirmation">Scena solicitată</string>
     <string name="scene_end">Sfârșit</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Omiteți</string>
     <string name="action_treatment_confirmation">Tratament solicitat</string>
     <string name="action_bolus_confirmation">Bolus solicitat</string>
     <string name="action_wizard_confirmation">Calcul solicitat</string>
@@ -159,6 +161,20 @@
     <string name="pref_simplify_ui">Simplificare interfață</string>
     <string name="pref_vibrate_hourly">Vibrați la fiecare oră</string>
     <string name="pref_show_weeknumber">Afișați număr săptămână</string>
+    <string name="pref_complication_1">Complicație 1</string>
+    <string name="pref_complication_2">Complicație 2</string>
+    <string name="pref_complication_3">Complicație 3</string>
+    <string name="pref_complication_4">Complicație 4</string>
+    <string name="pref_complication_5">Complicație 5</string>
+    <string name="complication_summary_none">Atingeți pentru a selecta o sursă de date</string>
+    <string name="pref_complication_type_priority">Prioritate tip complicație</string>
+    <string name="pref_complication_type_priority_all">Implicit pentru toate intrările</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">O schimbare aici se aplică data viitoare când alegeți o sursă de date. Alegerea din nou a aceleiași surse nu este suficient: mai întâi alegeți o sursă de date diferită și apoi alegeți pe cea care o doriți.</string>
+    <string name="complication_type_priority_value">Valoare sau indicator</string>
+    <string name="complication_type_priority_text">Text</string>
+    <string name="complication_type_priority_icon">Pictogramă</string>
+    <string name="complication_type_priority_use_default">Utilizați implicit</string>
+    <string name="cwf_complication_layout">Aranjament complicații</string>
     <string name="pref_include_external">Includeți vizualizări externe în șablon</string>
     <string name="pref_switch_external">Comutați date externe în cadranul ceasului</string>
     <string name="custom_pref_show_seconds">Afișați secunde</string>
@@ -174,6 +190,8 @@
     <string name="bolus_progress_silent_channel_name">Progres bolus AAPS silențios</string>
     <string name="bolus_progress_channel_description">Progres bolus și anulare</string>
     <string name="bolus_progress_silent_channel_description">Progres bolus și anulare cu mai puține vibrații</string>
+    <string name="open_loop_channel_name">Buclă deschisă AAPS</string>
+    <string name="open_loop_channel_description">Notificare cerere buclă deschisă</string>
     <string name="simple_ui_off">Oprit</string>
     <string name="simple_ui_charging">În timpul încărcării</string>
     <string name="simple_ui_always_on">Modul mereu activ</string>
@@ -231,6 +249,12 @@
     <string name="complication_blood_glucose_ext1">Glicemie Ext1</string>
     <string name="complication_blood_glucose_ext2">Glicemie Ext2</string>
     <string name="complication_bg_graph">Grafic glicemie</string>
+    <string name="complication_cwf_image">Față de ceas personalizată</string>
+    <string name="complication_cwf_ambient_bg">Glicemie ambientală a feței personalizate de ceas</string>
+    <string name="complication_cwf_ambient_status">Starea ambientală a feței personalizate de ceas</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s U %2$s</string>
+    <string name="complication_cwf_lower">Fundal personalizat pentru fața de ceas</string>
+    <string name="complication_cwf_upper">Ceas personalizat pentru fața de ceas</string>
     <string name="complication_br_cob_iob">RB, CoB &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">RB, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">RB, CoB &amp; IoB Ext2</string>
@@ -295,6 +319,18 @@
     <string name="loop_status_target_range">Interval</string>
     <string name="loop_status_target">Țintă</string>
     <string name="loop_status_adjusted_target">Ținta ajustată</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Până este încheiat</string>
+    <string name="loop_status_scene_ended">Încheiat</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Urmărire</string>
+    <string name="loop_status_profile">Profil</string>
+    <string name="loop_status_no_profile">Niciun profil setat</string>
+    <string name="loop_status_profile_percentage">Procentaj</string>
+    <string name="loop_status_profile_timeshift">Decalaj</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Revenire la</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dh</string>
+    <string name="loop_status_sensitivity">Sensibilitate</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Setat de scena activă</string>
     <string name="loop_status">Stare buclă</string>
     <string name="loop_status_refresh">Reîncărcați</string>
     <string name="confirm">Confirmați</string>

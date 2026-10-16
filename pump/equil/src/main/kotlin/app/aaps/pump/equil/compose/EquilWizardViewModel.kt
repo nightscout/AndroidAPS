@@ -7,11 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.labelOfInsulin
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
@@ -28,6 +27,8 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.pump.ProfileGateStepHost
+import app.aaps.core.ui.compose.pump.activateProfileFromGate
+import app.aaps.core.ui.compose.pump.switchToWizardInsulin
 import app.aaps.core.ui.compose.siteRotation.BodyType
 import app.aaps.core.ui.compose.siteRotation.SiteLocationStepHost
 import app.aaps.pump.equil.EquilConst
@@ -61,6 +62,7 @@ import app.aaps.pump.equil.manager.command.CmdTimeSet
 import app.aaps.pump.equil.manager.command.CmdUnPair
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.Dispatchers
@@ -72,7 +74,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import dev.zacsweers.metro.Inject
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -140,6 +141,13 @@ class EquilWizardViewModel(
     // Air step state
     private val _airRemovalDone = MutableStateFlow(false)
     val airRemovalDone: StateFlow<Boolean> = _airRemovalDone.asStateFlow()
+
+    /**
+     * CHANGE_INSULIN: whether the user also put on a new infusion set (base and cannula). Null until
+     * answered on the first step, which cannot be left before that. PAIR is always a new set.
+     */
+    private val _newInfusionSet = MutableStateFlow<Boolean?>(null)
+    val newInfusionSet: StateFlow<Boolean?> = _newInfusionSet.asStateFlow()
 
     // Unpair result (shown as OkDialog after unpair completes)
     private val _unpairResultMessage = MutableStateFlow<String?>(null)
@@ -210,6 +218,18 @@ class EquilWizardViewModel(
 
     private var workflowSteps: List<EquilWizardStep> = emptyList()
 
+    // Kept so the step list can be built again when the new-infusion-set answer changes it.
+    private var siteRotationEnabled = false
+    private var needsProfileGate = false
+
+    private fun buildSteps(): List<EquilWizardStep> =
+        _workflow.value.steps(
+            siteRotationEnabled,
+            insulinSelectionEnabled = showInsulinStep,
+            needsProfileGate = needsProfileGate,
+            newInfusionSet = _newInfusionSet.value != false
+        )
+
     fun initializeWorkflow(workflow: EquilWorkflow) {
         // Synchronously clear step state so a reopened wizard never flashes the previous
         // session's last step while the async PS lookup below is still running.
@@ -220,7 +240,8 @@ class EquilWizardViewModel(
 
         _workflow.value = workflow
         loadInsulins()
-        val siteRotationEnabled = preferences.get(BooleanKey.SiteRotationManagePump)
+        siteRotationEnabled = preferences.get(BooleanKey.SiteRotationManagePump)
+        _newInfusionSet.value = if (workflow == EquilWorkflow.PAIR) true else null
         _errorMessage.value = null
         _isLoading.value = false
         _fillComplete.value = false
@@ -240,12 +261,23 @@ class EquilWizardViewModel(
 
             // PS lookup is async; resolve it before building the page list so PROFILE_GATE
             // is included only when needed and only on the PAIR workflow.
-            val needsProfileGate = workflow == EquilWorkflow.PAIR && profileFunction.getRequestedProfile() == null
+            needsProfileGate = workflow == EquilWorkflow.PAIR && profileFunction.getRequestedProfile() == null
             if (needsProfileGate) loadAvailableProfiles()
-            workflowSteps = workflow.steps(siteRotationEnabled, insulinSelectionEnabled = showInsulinStep, needsProfileGate = needsProfileGate)
+            workflowSteps = buildSteps()
             _totalSteps.value = workflowSteps.size
             moveStep(workflowSteps.first())
         }
+    }
+
+    /**
+     * CHANGE_INSULIN: the answer to "did you also put on a new infusion set?". Without a new set the
+     * site location and prime cannula steps are dropped, and only an insulin change is logged (#5199).
+     */
+    fun selectNewInfusionSet(newSet: Boolean) {
+        _newInfusionSet.value = newSet
+        workflowSteps = buildSteps()
+        _totalSteps.value = workflowSteps.size
+        _wizardStep.value?.let { updateStepProgress(it) }
     }
 
     // region ProfileGateStepHost
@@ -270,24 +302,10 @@ class EquilWizardViewModel(
         val store = profileRepository.profile.value ?: return
         val iCfg = insulinManager.insulins.firstOrNull() ?: return
         viewModelScope.launch {
-            val result = profileFunction.createProfileSwitch(
-                profileStore = store,
-                profileName = name,
-                durationInMinutes = 0,
-                percentage = 100,
-                timeShiftInHours = 0,
-                timestamp = System.currentTimeMillis(),
-                action = Action.PROFILE_SWITCH,
-                source = Sources.Equil,
-                note = null,
-                listValues = listOf(ValueWithUnit.SimpleString(name)),
-                iCfg = iCfg
-            )
-            if (result == null) {
-                aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
-            } else {
+            // A refused switch says why and keeps the gate on screen.
+            if (activateProfileFromGate(profileFunction, rh, rxBus, store, name, iCfg, Sources.Equil, System.currentTimeMillis()))
                 moveToNextStep(EquilWizardStep.PROFILE_GATE)
-            }
+            else aapsLogger.error(LTag.PUMP, "ProfileGate: createProfileSwitch failed for $name")
         }
     }
 
@@ -655,6 +673,20 @@ class EquilWizardViewModel(
         }
     }
 
+    /**
+     * Next on the Attach step. With a new infusion set the cannula is primed next (Air step), which
+     * then finishes the pump setup. Without one there is no prime, so the setup runs from here.
+     */
+    fun finishAttachStep() {
+        if (EquilWizardStep.AIR in workflowSteps) moveStep(EquilWizardStep.AIR)
+        else finishAirStep()
+    }
+
+    /** After the pump setup: the step that follows the prime, or Attach when the prime was skipped. */
+    private fun moveToStepAfterPriming() {
+        moveToNextStep(if (EquilWizardStep.AIR in workflowSteps) EquilWizardStep.AIR else EquilWizardStep.ATTACH)
+    }
+
     fun finishAirStep() {
         _isLoading.value = true
         _errorMessage.value = null
@@ -710,7 +742,7 @@ class EquilWizardViewModel(
             if (_workflow.value == EquilWorkflow.PAIR) readFirmware()
             else {
                 _isLoading.value = false
-                moveToNextStep(EquilWizardStep.AIR)
+                moveToStepAfterPriming()
             }
         } else {
             _isLoading.value = false
@@ -722,7 +754,7 @@ class EquilWizardViewModel(
         val r = commandQueue.customCommand(CmdDevicesGet(aapsLogger, preferences, equilManager))
         _isLoading.value = false
         if (r.success) {
-            moveToNextStep(EquilWizardStep.AIR)
+            moveToStepAfterPriming()
         } else {
             _errorMessage.value = rh.gs(R.string.equil_error)
         }
@@ -782,16 +814,12 @@ class EquilWizardViewModel(
             pumpSync.connectNewPump()
         }
         val time = activationTimestamp
-        if (_workflow.value == EquilWorkflow.PAIR || _workflow.value == EquilWorkflow.CHANGE_INSULIN) {
+        // A cannula change only with a new infusion set; a reservoir or battery change alone keeps
+        // the cannula age (#5199). Not answered counts as a new set, the behaviour before the question.
+        for (type in _workflow.value.therapyEvents(newInfusionSet = _newInfusionSet.value != false)) {
             pumpSync.insertTherapyEventIfNewWithTimestamp(
                 timestamp = time,
-                type = TE.Type.CANNULA_CHANGE,
-                pumpType = PumpType.EQUIL,
-                pumpSerial = equilPumpPlugin.serialNumber()
-            )
-            pumpSync.insertTherapyEventIfNewWithTimestamp(
-                timestamp = time,
-                type = TE.Type.INSULIN_CHANGE,
+                type = type,
                 pumpType = PumpType.EQUIL,
                 pumpSerial = equilPumpPlugin.serialNumber()
             )
@@ -811,20 +839,23 @@ class EquilWizardViewModel(
                 }
             }
         }
-        val record = EquilHistoryRecord(
-            id = time,
-            type = EquilHistoryRecord.EventType.INSERT_CANNULA,
-            timestamp = time,
-            serialNumber = equilPumpPlugin.serialNumber(),
-            resolvedAt = System.currentTimeMillis(),
-            resolvedStatus = ResolvedResult.SUCCESS
-        )
-        // Was posted to the pump plugin's Handler. viewModelScope ties the write to the wizard that
-        // caused it, and the insert is a blocking Room call so it still needs a background
-        // dispatcher. The old form also dropped the record silently whenever the plugin was not
-        // started, because the handler was null then.
-        viewModelScope.launch(Dispatchers.IO) {
-            equilHistoryRecordDao.insert(record)
+        // The pump history entry says "insert cannula", so only write it when a cannula was inserted.
+        if (_newInfusionSet.value != false) {
+            val record = EquilHistoryRecord(
+                id = time,
+                type = EquilHistoryRecord.EventType.INSERT_CANNULA,
+                timestamp = time,
+                serialNumber = equilPumpPlugin.serialNumber(),
+                resolvedAt = System.currentTimeMillis(),
+                resolvedStatus = ResolvedResult.SUCCESS
+            )
+            // Was posted to the pump plugin's Handler. viewModelScope ties the write to the wizard that
+            // caused it, and the insert is a blocking Room call so it still needs a background
+            // dispatcher. The old form also dropped the record silently whenever the plugin was not
+            // started, because the handler was null then.
+            viewModelScope.launch(Dispatchers.IO) {
+                equilHistoryRecordDao.insert(record)
+            }
         }
         equilManager.setLastDataTime(System.currentTimeMillis())
         equilManager.setActivationProgress(ActivationProgress.COMPLETED)
@@ -864,7 +895,7 @@ class EquilWizardViewModel(
         if (_availableInsulins.value.isNotEmpty()) return
         viewModelScope.launch {
             val insulins = insulinManager.insulins.map { it.deepClone() }
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val activeLabel = insulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
             val current = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
             _availableInsulins.value = insulins
             _selectedInsulin.value = current
@@ -876,13 +907,16 @@ class EquilWizardViewModel(
         _selectedInsulin.value = iCfg
     }
 
-    /** Execute profile switch if user selected a different insulin. Called after activation completes. */
+    /**
+     * Execute profile switch if user selected a different insulin. Called after activation completes, so the
+     * pump is running by then: a refused switch cannot stop the wizard, but it says why.
+     */
     fun executeInsulinProfileSwitch() {
         val selected = _selectedInsulin.value ?: return
         val activeLabel = _activeInsulinLabel.value
         if (selected.insulinLabel == activeLabel) return
         viewModelScope.launch {
-            profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.Equil)
+            switchToWizardInsulin(profileFunction, rh, rxBus, selected, Sources.Equil)
         }
     }
 
@@ -899,6 +933,9 @@ class EquilWizardViewModel(
             if (r.success) {
                 equilPumpPlugin.resetData()
                 equilManager.setRunMode(RunMode.STOP)
+                // The battery can be swapped now. The pump sends the new level only in its advertisement,
+                // which is read at the next new connection, so show "unknown" until then, not the old level.
+                equilManager.setBattery(null)
                 equilManager.setActivationProgress(ActivationProgress.CANNULA_CHANGE)
                 moveStep(EquilWizardStep.ASSEMBLE)
             } else {
@@ -959,13 +996,6 @@ class EquilWizardViewModel(
     val serialNumberDisplay: StateFlow<String> = _serialNumberDisplay.asStateFlow()
 
     // endregion
-
-    // region Attach step
-
-    fun getAttachNextStep(): EquilWizardStep {
-        val index = workflowSteps.indexOf(EquilWizardStep.ATTACH)
-        return workflowSteps[index + 1]
-    }
 
     // endregion
 

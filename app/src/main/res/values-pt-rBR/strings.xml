@@ -2,4 +2,14 @@
 <resources>
     <string name="authorizationfailed">Falha na autorização</string>
     <string name="identification_not_set">Identificação não definida no modo de desenvolvimento</string>
+    <string name="select">Selecionar</string>
+    <string name="set">Definir</string>
+    <string name="migrating_preferences">Migrando preferências…</string>
+    <string name="optimizing_database">Otimizando banco de dados…</string>
+    <string name="initializing_plugins">Inicializando plugins…</string>
+    <string name="initializing">Inicializando…</string>
+    <string name="migrating_profile_switches">Migrando trocas de perfil…</string>
+    <string name="migrating_effective_profile_switches">Migrando trocas de perfil efetivas…</string>
+    <string name="migrating_boluses">Migrando bolus…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Registros antigos não tinham configuração de insulina e nenhum perfil estava ativo, então %1$s foi usado para eles. Verifique suas configurações de insulina — os registros já migrados não serão atualizados depois.</string>
 </resources>

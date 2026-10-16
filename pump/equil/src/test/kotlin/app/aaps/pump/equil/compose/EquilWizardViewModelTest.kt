@@ -3,6 +3,7 @@ package app.aaps.pump.equil.compose
 import android.content.Context
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
@@ -10,12 +11,17 @@ import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.profile.ProfileStore
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.Event
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.ble.EquilBleTransport
 import app.aaps.pump.equil.database.EquilHistoryRecordDao
@@ -23,6 +29,8 @@ import app.aaps.pump.equil.manager.EquilManager
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -31,7 +39,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
+import org.mockito.kotlin.whenever
 
 /**
  * Unit test for the SYNCHRONOUS state logic of [EquilWizardViewModel].
@@ -39,8 +54,8 @@ import org.mockito.kotlin.mock
  * The VM has no `init {}` block; every asynchronous action runs through `viewModelScope.launch`,
  * so a StandardTestDispatcher on Main defers all of them (no `advanceUntilIdle` is called). That
  * leaves the default state and the pure setter/navigation methods to assert deterministically.
- * `initializeWorkflow(...)` and the BLE/command flows are intentionally NOT exercised (they need a
- * real dispatcher to drain and stubbed pump-command round-trips).
+ * `initializeWorkflow(...)` and most BLE/command flows are NOT exercised (they need stubbed
+ * pump-command round-trips). Where one is, the test drains the dispatcher itself.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class EquilWizardViewModelTest {
@@ -67,13 +82,15 @@ internal class EquilWizardViewModelTest {
     private val bleTransport: EquilBleTransport = mock()
 
     private lateinit var sut: EquilWizardViewModel
+    private val mainDispatcher = StandardTestDispatcher()
 
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         // StandardTestDispatcher never auto-runs the viewModelScope.launch bodies, so construction
-        // stays clean and we assert against the default state + synchronous methods.
-        Dispatchers.setMain(StandardTestDispatcher())
+        // stays clean and we assert against the default state + synchronous methods. A test that needs
+        // a launched body runs it with mainDispatcher.scheduler.advanceUntilIdle().
+        Dispatchers.setMain(mainDispatcher)
         sut = EquilWizardViewModel(
             context, rh, aapsLogger, preferences, commandQueue, equilPumpPlugin, equilManager,
             pumpSync, persistenceLayer, equilHistoryRecordDao, constraintsChecker, ch, profileFunction,
@@ -83,6 +100,47 @@ internal class EquilWizardViewModelTest {
 
     @AfterEach
     fun tearDown() = Dispatchers.resetMain()
+
+    /** The message of the one dialog the wizard sent. */
+    private fun dialogMessage(): String {
+        val sent = argumentCaptor<Event>()
+        verify(rxBus).send(sent.capture())
+        return (sent.firstValue as EventShowDialog.Ok).message
+    }
+
+    // A refused switch was only logged: the gate did nothing and did not say why.
+    @Test
+    fun `a profile the gate cannot activate says why and stays on the gate`() = runBlocking<Unit> {
+        val insulin = ICfg("Fiasp", peak = 55, dia = 7.0, concentration = 1.0)
+        whenever(rh.gs(any<TextRef>())).thenReturn("text")
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mock<ProfileStore>()))
+        whenever(insulinManager.insulins).thenReturn(arrayListOf(insulin))
+        // createProfileSwitch is not stubbed, so it refuses (null).
+        whenever(profileFunction.profileSwitchRefusal(any(), eq("Night"), any(), any(), any(), eq(insulin))).thenReturn("The pump cannot take it")
+        sut.selectProfile("Night")
+
+        sut.activateSelectedProfile()
+        mainDispatcher.scheduler.advanceUntilIdle()
+
+        assertThat(dialogMessage()).isEqualTo("The pump cannot take it")
+        assertThat(sut.wizardStep.value).isNull()
+    }
+
+    // The pump is running by then, so the wizard goes on, but the user must know the old insulin is still in use.
+    @Test
+    fun `an insulin that is not switched says so`() = runBlocking<Unit> {
+        val chosen = ICfg("Lyumjev", peak = 45, dia = 7.0, concentration = 1.0)
+        whenever(rh.gs(any<TextRef>())).thenReturn("The insulin was not switched.")
+        // A mocked suspend Boolean answers null, so the refusal is stubbed.
+        whenever(profileFunction.createProfileSwitchWithNewInsulin(chosen, Sources.Equil)).thenReturn(false)
+        sut.selectInsulin(chosen)
+
+        sut.executeInsulinProfileSwitch()
+        mainDispatcher.scheduler.advanceUntilIdle()
+
+        assertThat(dialogMessage()).isEqualTo("The insulin was not switched.")
+        verifyBlocking(profileFunction) { createProfileSwitchWithNewInsulin(chosen, Sources.Equil) }
+    }
 
     @Test
     fun `default state exposes the PAIR workflow and cleared progress`() {
@@ -112,6 +170,30 @@ internal class EquilWizardViewModelTest {
         // workflowSteps is still empty before a workflow is initialized -> index coerced to 0
         assertThat(sut.currentStepIndex.value).isEqualTo(0)
         assertThat(sut.titleResId.value).isEqualTo(EquilWizardStep.FILL.titleResId)
+    }
+
+    @Test
+    fun `starting a reservoir change clears the battery level, the battery may be swapped (#4477)`() {
+        val success = mock<PumpEnactResult> { on { success } doReturn true }
+        runBlocking { whenever(commandQueue.customCommand(any())).thenReturn(success) }
+
+        sut.startChangeInsulin()
+        mainDispatcher.scheduler.advanceUntilIdle()
+
+        // The old level would stay until the next advertisement; "unknown" is honest until then.
+        verify(equilManager).setBattery(null)
+        assertThat(sut.wizardStep.value).isEqualTo(EquilWizardStep.ASSEMBLE)
+    }
+
+    @Test
+    fun `the new infusion set answer starts unanswered and follows the user`() {
+        assertThat(sut.newInfusionSet.value).isNull()
+
+        sut.selectNewInfusionSet(false)
+        assertThat(sut.newInfusionSet.value).isFalse()
+
+        sut.selectNewInfusionSet(true)
+        assertThat(sut.newInfusionSet.value).isTrue()
     }
 
     @Test

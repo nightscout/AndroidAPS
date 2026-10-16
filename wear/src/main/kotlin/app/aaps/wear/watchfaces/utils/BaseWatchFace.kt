@@ -31,15 +31,12 @@ import app.aaps.wear.data.ComplicationData
 import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.data.bgDataArray
 import app.aaps.wear.data.statusDataArray
-import app.aaps.wear.di.WearMetroService
 import app.aaps.wear.events.EventWearPreferenceChange
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.utils.toVisibility
 import app.aaps.wear.utils.toVisibilityKeepSpace
 import dev.zacsweers.metro.HasMemberInjections
 import dev.zacsweers.metro.Inject
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import kotlin.math.floor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -48,6 +45,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlin.math.floor
 
 @SuppressLint("Deprecated")
 @HasMemberInjections

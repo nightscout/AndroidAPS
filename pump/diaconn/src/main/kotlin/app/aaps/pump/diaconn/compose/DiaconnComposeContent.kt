@@ -134,29 +134,35 @@ class DiaconnComposeContent(
             DiaconnScreen.PAIR_WIZARD  -> {
                 KeepScreenOnEffect()
 
-                BlePreCheckHost(
-                    blePreCheck = blePreCheck,
-                    onFailed = { currentScreen = DiaconnScreen.OVERVIEW }
-                )
+                // The wizard starts a BLE scan as soon as it is shown. Without the Bluetooth
+                // permissions that scan crashes the app, so show the wizard only after the check.
+                var bleReady by remember { mutableStateOf(false) }
+                if (!bleReady) {
+                    BlePreCheckHost(
+                        blePreCheck = blePreCheck,
+                        onReady = { bleReady = true },
+                        onFailed = { currentScreen = DiaconnScreen.OVERVIEW }
+                    )
+                } else {
+                    val wizardViewModel: DiaconnPairWizardViewModel = metroViewModel()
 
-                val wizardViewModel: DiaconnPairWizardViewModel = metroViewModel()
-
-                LaunchedEffect(wizardViewModel) {
-                    wizardViewModel.events.collect { event ->
-                        when (event) {
-                            is DiaconnPairWizardEvent.Finish -> currentScreen = DiaconnScreen.OVERVIEW
+                    LaunchedEffect(wizardViewModel) {
+                        wizardViewModel.events.collect { event ->
+                            when (event) {
+                                is DiaconnPairWizardEvent.Finish -> currentScreen = DiaconnScreen.OVERVIEW
+                            }
                         }
                     }
-                }
 
-                DiaconnPairWizardScreen(
-                    viewModel = wizardViewModel,
-                    onFinish = { currentScreen = DiaconnScreen.OVERVIEW },
-                    onCancel = {
-                        wizardViewModel.cancel()
-                        currentScreen = DiaconnScreen.OVERVIEW
-                    }
-                )
+                    DiaconnPairWizardScreen(
+                        viewModel = wizardViewModel,
+                        onFinish = { currentScreen = DiaconnScreen.OVERVIEW },
+                        onCancel = {
+                            wizardViewModel.cancel()
+                            currentScreen = DiaconnScreen.OVERVIEW
+                        }
+                    )
+                }
             }
 
             DiaconnScreen.HISTORY      -> {

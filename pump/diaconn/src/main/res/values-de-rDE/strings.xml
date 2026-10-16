@@ -19,7 +19,6 @@
     <string name="updatingbasalrates">Basalrate wird aktualisiert</string>
     <string name="description_pump_diaconn_g8">Pumpenintegration für Diaconn G8 Pumpen</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Max. Bolus überschritten</string>
     <string name="commanderror">Fehler bei Befehlsausführung</string>
     <string name="speederror">Geschwindigkeits-Fehler</string>

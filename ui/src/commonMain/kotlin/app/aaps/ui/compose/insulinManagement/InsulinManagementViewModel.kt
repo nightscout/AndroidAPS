@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.labelOfInsulin
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.InterfacesStrings
@@ -39,8 +40,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import kotlin.concurrent.atomics.AtomicBoolean
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -54,6 +53,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -122,7 +123,6 @@ class InsulinManagementViewModel(
             if (reload) insulinManager.loadSettings()
             val insulins = insulinManager.insulins.map { it.deepClone() }
             val activeICfg = profileFunction.getProfile()?.iCfg
-            val activeLabel = activeICfg?.insulinLabel
             // Only insulin with the currently-active concentration can be activated from Insulin Management.
             // null = no/unknown active profile → never matches a real concentration (avoids a defaulted 1.0
             // masquerading as U100 and lighting the Activate FAB for a just-saved U100 card).
@@ -139,7 +139,7 @@ class InsulinManagementViewModel(
                 it.copy(
                     insulins = insulins,
                     currentCardIndex = currentIndex,
-                    activeInsulinLabel = activeLabel,
+                    activeInsulinLabel = insulins.labelOfInsulin(activeICfg),
                     activeConcentration = activeConcentration,
                     editorNickname = editorNickname,
                     editorTemplate = template,
@@ -179,7 +179,7 @@ class InsulinManagementViewModel(
         val activeIcfg = persistenceLayer.getEffectiveProfileSwitchActiveAt(now)?.iCfg
         _uiState.update {
             it.copy(
-                activeInsulinLabel = activeIcfg?.insulinLabel,
+                activeInsulinLabel = it.insulins.labelOfInsulin(activeIcfg),
                 activeConcentration = activeIcfg?.concentration
             )
         }
@@ -246,7 +246,7 @@ class InsulinManagementViewModel(
             _uiState.update {
                 it.copy(
                     insulins = insulins,
-                    activeInsulinLabel = activeICfg?.insulinLabel,
+                    activeInsulinLabel = insulins.labelOfInsulin(activeICfg),
                     activeConcentration = activeICfg?.concentration
                 )
             }

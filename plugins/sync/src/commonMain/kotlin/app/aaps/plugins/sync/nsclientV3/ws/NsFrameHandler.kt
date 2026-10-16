@@ -87,7 +87,10 @@ class NsFrameHandler(
         val collection = response.str("colName") ?: return drop("create/update", raw)
         val doc = NsWsPayload.document(response) ?: return drop("create/update", raw)
         val docString = doc.toString()
-        aapsLogger.debug(LTag.NSCLIENT, "onDataCreateUpdate: $response")
+        // Identity on the default log. A device status frame carries the whole APS result twice, so the
+        // full frame (several KB, every few minutes) goes only to NSCLIENT_SYNC, which is off by default.
+        aapsLogger.debug(LTag.NSCLIENT, "onDataCreateUpdate: $collection identifier=${doc.str("identifier")} srvModified=${doc.long("srvModified")}")
+        aapsLogger.debug(LTag.NSCLIENT_SYNC) { "onDataCreateUpdate: $response" }
         nsClientRepository.addLog("◄ WS CREATE/UPDATE", collection, doc)
 
         // Mandatory in a Nightscout v3 document. Defaulting it to 0 invents a value for a field that

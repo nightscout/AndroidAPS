@@ -1,8 +1,8 @@
 package app.aaps.pump.danarkorean.comm
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.danar.comm.MessageBase
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import java.util.Locale
 
 /**

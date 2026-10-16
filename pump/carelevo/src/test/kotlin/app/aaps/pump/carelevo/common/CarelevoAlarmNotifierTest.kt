@@ -1,10 +1,8 @@
 package app.aaps.pump.carelevo.common
 
-import android.app.NotificationManager as AndroidNotificationManager
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
@@ -40,13 +38,14 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowNotificationManager
+import android.app.NotificationManager as AndroidNotificationManager
 
 /**
  * Robolectric unit tests for [CarelevoAlarmNotifier].
  *
  * [CarelevoAlarmNotifier] takes a real [Context] and calls into the Android framework directly —
  * `context.getString(...)`, `PendingIntent.getActivity(...)`, `NotificationCompat.Builder(...)`,
- * `HtmlCompat.fromHtml(...)`, `ProcessLifecycleOwner`, and the system [AndroidNotificationManager]
+ * `ProcessLifecycleOwner`, and the system [AndroidNotificationManager]
  * (via `getSystemService`). Under a plain JVM Mockito test those calls returned defaulted/null
  * values (e.g. `getString` → null → NPE), so this suite runs under [RobolectricTestRunner] with a
  * REAL application [Context]: string formatting, HTML parsing, PendingIntents and system
@@ -226,7 +225,7 @@ class CarelevoAlarmNotifierTest {
     fun `showTopNotification builds a non-blank card text from real resources`() {
         sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_LGS_START)))
 
-        // With a real Context, getString + HtmlCompat resolve to actual text (no more NPE / "Stub!").
+        // With a real Context, getString resolves to actual text (no more NPE / "Stub!").
         assertThat(capturePostedText()).isNotEmpty()
     }
 

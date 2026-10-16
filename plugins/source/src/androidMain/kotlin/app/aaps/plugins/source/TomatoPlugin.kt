@@ -55,7 +55,6 @@ class TomatoPlugin(
         }
         .icon(IcPluginTomato)
         .pluginName(TextRef.AndroidRes(R.string.tomato))
-        .shortName(TextRef.AndroidRes(R.string.tomato_short))
         .preferencesVisibleInSimpleMode(false)
         .description(TextRef.AndroidRes(R.string.description_source_tomato)),
     ownPreferences = emptyList(),
@@ -96,7 +95,7 @@ class TomatoPlugin(
                 raw = null,
                 noise = null,
                 trendArrow = TrendArrow.NONE,
-                sourceSensor = SourceSensor.LIBRE_1_TOMATO
+                sourceSensor = SourceSensor.LIBRE_1
             )
             try {
                 persistenceLayer.insertCgmSourceData(Sources.Tomato, glucoseValues, emptyList(), null)

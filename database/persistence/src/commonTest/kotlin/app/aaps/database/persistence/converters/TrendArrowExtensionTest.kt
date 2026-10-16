@@ -2,11 +2,8 @@ package app.aaps.database.persistence.converters
 
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.database.entities.GlucoseValue
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 internal class TrendArrowExtensionTest {
 

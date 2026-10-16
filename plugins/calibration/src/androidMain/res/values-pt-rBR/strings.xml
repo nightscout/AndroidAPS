@@ -1,4 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_calibration_name">Sem calibração</string>
+    <string name="description_no_calibration">"Nenhuma substituição de calibração aplicada. Os valores do sensor são usados como estão. Use isto quando o sensor já tiver calibração de fábrica e estiver preciso."</string>
+    <string name="linear_calibration_name">Calibração linear</string>
+    <string name="description_linear_calibration">"Substituição de calibração linear por sensor (inclinação e deslocamento), calculada a partir das suas medições capilares. Entradas recentes têm peso maior. A substituição é aplicada após o início da sessão atual do sensor; as primeiras 2 horas são ignoradas como aquecimento."</string>
+    <string name="sensor_change_detected_text">Possível troca de sensor detectada em %1$s. Marcar como novo sensor?</string>
+    <string name="sensor_change_detected_action">Marcar troca de sensor</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Registre uma troca de sensor para ativar a calibração.</string>
+    <string name="cal_status_warmup">Aquecimento do sensor — calibração ativa após %1$s.</string>
+    <string name="cal_status_need_more_entries">São necessárias pelo menos 2 medições capilares (atualmente %1$d).</string>
+    <string name="cal_status_unsafe_fit">Ajuste fora da faixa segura — calibração não aplicada.</string>
+    <string name="cal_status_applied">Calibração aplicada.</string>
+    <string name="cal_status_applied_offset_only">Calibração somente de deslocamento aplicada — faixa do sensor estreita demais para calcular a inclinação.</string>
+    <string name="cal_status_applied_slope_clamped">Calibração aplicada — inclinação limitada à faixa segura. Adicione mais entradas para ampliar a faixa.</string>
+    <string name="cal_slope_offset">Inclinação %1$.2f, correção do ponto médio %2$s</string>
+    <string name="cal_session_started">Sessão iniciada: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Registrar troca de sensor</string>
+    <string name="cal_add_calibration">Adicionar calibração</string>
+    <string name="cal_entries_header">Entradas de medição capilar (%1$d)</string>
+    <string name="cal_no_entries">Ainda não há medições capilares.</string>
+    <string name="cal_entry_pair">Medição capilar %1$s → sensor %2$s (Δ %3$s)</string>
+    <string name="cal_remove_entry_title">Remover entrada?</string>
+    <string name="cal_remove_entry_message">Isso invalidará a entrada. O ajuste será recalculado.</string>
+    <string name="cal_chart_entry_readout">Leitura do gráfico: entrada %1$d/%2$d · %3$s · sensor %4$s → glicemia %5$s</string>
 </resources>

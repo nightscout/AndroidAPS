@@ -6,6 +6,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.overview.graph.AapsClientLevel
@@ -30,7 +32,13 @@ fun AapsClientDetailRow(
         AapsClientLevel.URGENT -> AapsTheme.generalColors.statusCritical
     }
 
-    Column(modifier = modifier.padding(vertical = 4.dp)) {
+    // Warning / urgent was only the colour of the title; said as the state of the row.
+    val levelState = item.level.toSpokenLevel()
+    Column(
+        modifier = modifier
+            .padding(vertical = 4.dp)
+            .then(if (levelState != null) Modifier.semantics(mergeDescendants = true) { stateDescription = levelState } else Modifier)
+    ) {
         Text(
             text = item.dialogTitle,
             style = MaterialTheme.typography.bodyMedium,

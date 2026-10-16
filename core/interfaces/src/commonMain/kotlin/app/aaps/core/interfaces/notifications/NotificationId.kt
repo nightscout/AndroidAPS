@@ -228,7 +228,27 @@ enum class NotificationId(
     // Work the plugin launched itself ended with an error. Separate from PLUGIN_START_FAILED because the
     // plugin did start - it is a polling loop or a queued command that died, so the text has to say
     // something else. Same reasons for allowMultiple.
-    PLUGIN_WORK_FAILED(URGENT, SYSTEM, allowMultiple = true);
+    PLUGIN_WORK_FAILED(URGENT, SYSTEM, allowMultiple = true),
+
+    // The pump is disconnected (or a super bolus runs) in AAPS, but the zero temp basal that stops the
+    // insulin is not on the pump, and sending it again did not help. The pump may still give basal
+    // while the user believes it does not. Appended at the END for the same reason as above.
+    ZERO_DELIVERY_NOT_SET(URGENT, PUMP),
+
+    // One command has been running in the queue for too long, so nothing else reaches the pump (#5209).
+    // Appended at the END for the same reason as above.
+    PUMP_DRIVER_NOT_RESPONDING(URGENT, PUMP),
+
+    // The Combo reported an error, so the driver does not connect until the user has handled it. Its own
+    // id, so that this hint does not replace the card that names the error (COMBO_PUMP_ALARM) (#5263).
+    // Appended at the END for the same reason as above.
+    COMBO_PUMP_ERROR_LOCKOUT(NORMAL, PUMP),
+
+    // A scene ended, but its profile switch could not be undone, so the scene's percentage is still in force.
+    // The End Scene dialog does not show the result, so without this nothing said so. IMPORTANT: it changes
+    // insulin delivery until the user activates a profile, but nothing is delivered wrongly now.
+    // Appended at the END for the same reason as above.
+    SCENE_PROFILE_NOT_RESTORED(IMPORTANT, AUTOMATION);
 
     companion object {
 

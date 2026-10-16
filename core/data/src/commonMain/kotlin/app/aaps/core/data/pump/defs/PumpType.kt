@@ -73,7 +73,8 @@ enum class PumpType(
         pumpTempBasalType = PumpTempBasalType.Percent,
         tbrSettings = DoseSettings(10.0, 15, 12 * 60, 0.0, 500.0),
         specialBasalDurations = arrayOf(Capability.BasalRate_Duration15minAllowed, Capability.BasalRate_Duration30minAllowed),
-        baseBasalMinValue = 0.01,
+        // Below 0.05 U/h the Combo takes only 0 or 0.05, and the driver rounds 0.01 - 0.024 U/h to 0: no basal at all.
+        baseBasalMinValue = 0.05,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = DoseStepSize.ComboBasal,
         pumpCapability = PumpCapability.ComboCapabilities,
@@ -211,6 +212,7 @@ enum class PumpType(
     ),
     DANA_RS_KOREAN(description = "DanaRSKorean", model = "DanaRSKorean", parent = DANA_RS),
     DANA_I(description = "DanaI", model = "DanaI", parent = DANA_RS, source = Source.DanaI),
+    DANA_I2(description = "DanaI2", model = "DanaI2", parent = DANA_RS, source = Source.DanaI2),
     DANA_RV2(description = "DanaRv2", model = "DanaRv2", parent = DANA_RS, source = Source.DanaRv2),
     OMNIPOD_EROS(
         description = "Omnipod Eros",
@@ -494,7 +496,9 @@ enum class PumpType(
         baseBasalMaxValue = 3.0,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
-        pumpCapability = PumpCapability.DiaconnCapabilities,
+        pumpCapability = PumpCapability.EquilCapabilities,
+        isPatchPump = true,
+        maxReservoirReading = 200,
         source = Source.EQuil,
         useHardwareLink = true,
     );
@@ -522,6 +526,7 @@ enum class PumpType(
         DanaRv2,
         DanaRS,
         DanaI,
+        DanaI2,
         DiaconnG8,
         Insight,
         Combo,
@@ -540,8 +545,20 @@ enum class PumpType(
 
     companion object {
 
+        /**
+         * Types that only tag records, a user entry or a cached value. They are not pumps, so a list of pumps
+         * does not offer them and [getByDescription] does not return them.
+         */
+        val RECORD_TAGS: Set<PumpType> = setOf(USER, CACHE)
+
+        /**
+         * The pump type with this description. ACCU_CHEK_INSIGHT and ACCU_CHEK_INSIGHT_VIRTUAL (the old
+         * database type) are both "Accu-Chek Insight", so the one the real driver uses wins: a client of an
+         * Insight master must step like the pump, not by the table of the old type. A description of one of
+         * the [RECORD_TAGS] gives GENERIC_AAPS, the same as an unknown one.
+         */
         fun getByDescription(desc: String): PumpType =
-            entries.firstOrNull { it.description == desc } ?: GENERIC_AAPS
+            entries.firstOrNull { it.description == desc && it != ACCU_CHEK_INSIGHT_VIRTUAL && it !in RECORD_TAGS } ?: GENERIC_AAPS
 
         fun fromString(name: String?) = entries.firstOrNull { it.name == name }
     }

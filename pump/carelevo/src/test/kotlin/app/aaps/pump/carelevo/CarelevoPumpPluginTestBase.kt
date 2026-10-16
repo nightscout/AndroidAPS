@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -60,28 +61,34 @@ import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoFinishImmeBolusInfusi
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartExtendBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartImmeBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoDeleteUserSettingInfoUseCase
+import dev.zacsweers.metro.Provider
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.hours
+import java.util.Locale
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.isA
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
 import java.util.Optional
-import dev.zacsweers.metro.Provider
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 abstract class CarelevoPumpPluginTestBase {
+
+    private val decimalFormatter: DecimalFormatter = mock<DecimalFormatter>().also {
+        whenever(it.to2Decimal(any<Double>())).thenAnswer { inv -> "%.2f".format(Locale.US, inv.getArgument<Double>(0)) }
+    }
 
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var rh: ResourceHelper
@@ -172,7 +179,9 @@ abstract class CarelevoPumpPluginTestBase {
         whenever { bleSession.runBasalProgram(any(), any(), any()) }.thenReturn(true)
         whenever(startTempBasalInfusionUseCase.persistTempBasalStarted(any())).thenReturn(true)
         whenever(cancelTempBasalInfusionUseCase.persistTempBasalCancelled()).thenReturn(true)
-        whenever(startImmeBolusInfusionUseCase.persistImmeBolusStarted(any(), any(), any())).thenReturn(true)
+        whenever(startImmeBolusInfusionUseCase.persistImmeBolusStarted(any(), any(), any(), any(), any(), anyOrNull())).thenReturn(true)
+        // An unstubbed suspend mock answers null; false = the record of this pump id existed and was updated.
+        whenever { pumpSync.syncBolusWithPumpId(any(), any(), anyOrNull(), any(), any(), any()) }.thenReturn(false)
         whenever(cancelImmeBolusInfusionUseCase.persistImmeBolusCancelled()).thenReturn(true)
         whenever(startExtendBolusInfusionUseCase.persistExtendBolusStarted(any(), any(), any())).thenReturn(true)
         whenever(cancelExtendBolusInfusionUseCase.persistExtendBolusCancelled()).thenReturn(true)
@@ -204,7 +213,8 @@ abstract class CarelevoPumpPluginTestBase {
             finishImmeBolusInfusionUseCase = finishImmeBolusInfusionUseCase,
             cancelImmeBolusInfusionUseCase = cancelImmeBolusInfusionUseCase,
             startExtendBolusInfusionUseCase = startExtendBolusInfusionUseCase,
-            cancelExtendBolusInfusionUseCase = cancelExtendBolusInfusionUseCase
+            cancelExtendBolusInfusionUseCase = cancelExtendBolusInfusionUseCase,
+            decimalFormatter = decimalFormatter
         )
         val tempBasalCoordinator = CarelevoTempBasalCoordinator(
             aapsLogger = aapsLogger,

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 import java.util.TimeZone
 
 /**
- * Covers the one thing this store gets to decide: which zone a request's "from" fields are in.
+ * Covers what this store decides: which zone a request's "from" fields are in, and the number each record keeps.
  *
  * Every test runs under a forced non-UTC default zone. That is the whole point — the bug these
  * pin was invisible in UTC, so a test that inherits the machine's zone proves nothing on a CI box
@@ -84,6 +84,34 @@ class HistoryEventStoreTest {
         assertThat(record[4].toInt() and 0xFF).isEqualTo(12)
     }
 
+    /**
+     * The driver makes a record's pump id from its number. A number from the place in the reply changed when a later
+     * read started after the first record, and AAPS stored the same event again as a new one.
+     */
+    @Test
+    fun aRecordKeepsItsNumberInEveryRead() {
+        val first = utcMillis(2026, 1, 15, 12, 0, 0)
+        val second = utcMillis(2026, 1, 15, 12, 5, 0)
+        store.addEvent(code = 0x01, timestamp = first, param1 = 0, param2 = 60)
+        store.addEvent(code = 0x01, timestamp = second, param1 = 200, param2 = 15)
+
+        val fromStart = store.getEventsAfter(0).map { recordNumber(store.buildEventDataUtc(it)) }
+        val fromLater = store.getEventsAfter(first).map { recordNumber(store.buildEventDataUtc(it)) }
+
+        assertThat(fromStart).containsExactly(1, 2).inOrder()
+        assertThat(fromLater).containsExactly(2)
+    }
+
+    @Test
+    fun recordNumbersStartAgainAfterTheLast() {
+        repeat(HistoryEventStore.MAX_RECORD_ID + 1) { store.addEvent(code = 0x02, timestamp = it * 1000L + 1, param1 = 0, param2 = 0) }
+
+        val numbers = store.getEventsAfter(0).map { it.id }
+
+        assertThat(numbers[HistoryEventStore.MAX_RECORD_ID - 1]).isEqualTo(HistoryEventStore.MAX_RECORD_ID)
+        assertThat(numbers.last()).isEqualTo(1)
+    }
+
     @Test
     fun theLoadEverythingSentinelReadsAsZero() {
         // What DanaRSPacketAPSHistoryEvents sends for from == 0...
@@ -91,6 +119,8 @@ class HistoryEventStoreTest {
         // ...and what DanaRSService.loadHistory sends, having never called with(from) at all.
         assertThat(store.parseFromTimestamp(ByteArray(6), usingUtc = false)).isEqualTo(0L)
     }
+
+    private fun recordNumber(data: ByteArray) = ((data[0].toInt() and 0xFF) shl 8) or (data[1].toInt() and 0xFF)
 
     private fun params(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int) =
         byteArrayOf(year.toByte(), month.toByte(), day.toByte(), hour.toByte(), minute.toByte(), second.toByte())

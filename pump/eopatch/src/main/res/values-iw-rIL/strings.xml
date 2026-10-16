@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">אינטגרציית משאבה עבור EOPatch2 / GlucoMen Day</string>
     <string name="low_reservoir">התראות על כמות אינסולין נמוכה</string>
     <string name="patch_expiration_reminders">תזכורת תפוגת ה-Patch</string>
@@ -9,9 +8,11 @@
     <string name="eopatch_ble_status">סטטוס BLE</string>
     <string name="eopatch_serial_number">מספר סידורי</string>
     <string name="eopatch_expiration_time">מועד תפוגה</string>
+    <string name="eopatch_not_activated">לא הופעל</string>
     <string name="eopatch_base_basal_rate">ערך בזאלי בסיסי</string>
     <string name="eopatch_temp_basal_rate">מינון בזאלי זמני</string>
     <string name="invalid_basal_rate">הבאזלי של הפרופיל קטן מ-0.05 U/hr. ל-EOPatch יש יחידת הזרקה מינימלית של 0.05U. נא לנסות שוב לאחר הגדרת פרופיל ליותר מיחידת ההזרקה המינימלית.</string>
+    <string name="no_profile_selected_try_again">לא נבחר פרופיל. נא לבחור פרופיל ולנסות שוב.</string>
     <string name="symbol_day">יום</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
@@ -38,11 +39,15 @@
     <string name="patch_connect_new_desc">ה-Patch החדש מבצע צימוד.\nשמרו על המרחק קרוב ככל האפשר בין ה-Patch למכשיר החכם</string>
     <string name="patch_remove_needle_cap">מתכונן לחיבור ה-Patch</string>
     <string name="patch_remove_needle_cap_desc_1">הורידו את כיסוי הדבק ולאחר מכן הקישו \'הבא\'.</string>
+    <string name="patch_remove_needle_cap_desc_2">אם מחט בולטת, לחצו על \'הסר\'.</string>
+    <string name="patch_remove_needle_cap_desc_3">אם המדבקה רטובה או מלוכלכת, או שהדבק שלו מקופל, לחצו על \'הסר\'.</string>
     <string name="patch_remove_protection_tape">מצמיד את ה-Patch</string>
     <string name="patch_safety_check_desc_1">זה לוקח כ-30 שניות.</string>
+    <string name="patch_safety_check_desc_2">לבטיחותכם, על תסירו את מנוף החדרת המחט עד שבדיקת הבטיחות הושלמה!</string>
     <string name="patch_rotate_knob">מחדיר את המחט</string>
     <string name="patch_rotate_knob_desc_1">סובבו את מנוף החדרת המחט ליותר מ-100° על מנת להחדיר את המחט ולאחר מכן סובבו עד הסוף בכדי להסיר את המנוף</string>
     <string name="patch_rotate_knob_desc_2">חכו לצפצוף יחיד ולאחר מכן הקישו \'הבא\'.</string>
+    <string name="patch_rotate_knob_desc_2_needle_insertion_error">חכו לצפצוף אחד ולאחר מכן לחצו על \'נסה שוב\'.</string>
     <string name="patch_communication_check_helper_1">הביאו את המכשיר החכם קרוב יותר ל-Patch.</string>
     <string name="patch_communication_check_helper_2">נא עברו למקום אחר ונסו שנית.</string>
     <string name="patch_communication_failed">שגיאת תקשורת</string>
@@ -61,9 +66,14 @@
     <string name="needle_insertion_error_3">לחצו על \'ניתוק\' בכדי לנתק את ה-Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">זמן השעיית הבאזלי</string>
     <string name="string_resume_insulin_delivery_title">חידוש הזרקת האינסולין</string>
+    <string name="string_resume_insulin_delivery_message">סוף השהיית\n האינסולין.\n לחצו על \'אשר\' כדי לחדש את מתן האינסולין.\n\n[Caution]\n מתן האינסולין לא יחודש עד שתלחצו על \'אשר\'.\n אם לא תלחצו על \'אשר\', הסוכר עלול לעלות ותגיעו לכדי היפרגליקמיה.</string>
     <string name="string_suspended_insulin_delivery_message">הזרקת האינסולין מופסקת.</string>
     <string name="string_resumed_insulin_delivery_message">הזרקת האינסולין התחדשה.</string>
     <string name="string_temp_basal_remained_hhmm">זמן נותר: %1$s:%2$s</string>
+    <string name="string_pause_failed">ההשעיה נכשלה.</string>
     <string name="string_resume_failed">חידוש ההזרקה נכשל.</string>
-    <!-- Permission rationales -->
+    <string name="wizard_exit_activation_warning">לצאת מאשף ההפעלה? ייתכן שההשלמה נותר במצב לא מושלם ודורש השלמה חדש.</string>
+    <string name="wizard_exit_deactivation_warning">לצאת מאשף הביטול? ייתכן שהמשאבה תישאר פעילה ותמשיך לספק אינסולין.</string>
+    <string name="patch_force_reset">איפוס כפוי</string>
+    <string name="patch_force_reset_confirm">פעולה זו תמחק את מצב התיקון באופן מקומי מבלי לשלוח פקודות לתיקון. יש להשתמש רק אם הביטול הרגיל נכשל. התיקון ימשיך לספק שירות עד שייגמר הסוללה שלו או שייכבה ידנית.</string>
 </resources>

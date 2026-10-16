@@ -31,14 +31,14 @@ import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.pump.carelevo.config.BleEnvConfig
 import app.aaps.pump.carelevo.ext.convertBytesToHex
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.UUID
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 
 /**
  * Production [CarelevoBleTransport] over Android's `BluetoothGatt`.
@@ -321,14 +321,17 @@ class CarelevoBleTransportImpl @Inject constructor(
             // setValue-then-write is NOT atomic on the shared characteristic object; it is safe only
             // because BleTransportGattConnection.gattMutex serializes all suspend GATT ops. Do not
             // decouple this transport from that serialization without adding one here.
-            val writeStarted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                gatt.writeCharacteristic(chara, data, chara.writeType) == BluetoothStatusCodes.SUCCESS
-            } else {
-                chara.value = data
-                gatt.writeCharacteristic(chara)
+            val waited = startWriteWithRetry(sleep = SystemClock::sleep) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    gatt.writeCharacteristic(chara, data, chara.writeType) == BluetoothStatusCodes.SUCCESS
+                } else {
+                    chara.value = data
+                    gatt.writeCharacteristic(chara)
+                }
             }
-            if (!writeStarted) {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "writeCharacteristic: writeCharacteristic could not start")
+            when {
+                waited == null -> aapsLogger.error(LTag.PUMPBTCOMM, "writeCharacteristic: writeCharacteristic could not start, the GATT stayed busy")
+                waited > 0     -> aapsLogger.debug(LTag.PUMPBTCOMM, "writeCharacteristic: started after the GATT was busy for $waited ms")
             }
         }
 
@@ -347,4 +350,27 @@ class CarelevoBleTransportImpl @Inject constructor(
         private val RX_CHAR_UUID: UUID = UUID.fromString(BleEnvConfig.BLE_RX_CHAR_UUID)
         private val CCCD_UUID: UUID = UUID.fromString(BleEnvConfig.BLE_CCC_DESCRIPTOR)
     }
+}
+
+/** How long a write waits for a busy GATT, and the step between tries. */
+internal const val WRITE_BUSY_WAIT_MS = 2_000L
+internal const val WRITE_BUSY_STEP_MS = 50L
+
+/**
+ * Starts a write, and tries again while Android refuses it. Android runs one GATT operation at a time and refuses a
+ * write while another is still pending, for example the write of a request that just timed out and whose
+ * acknowledgement has not come yet. Seen on a real patch: the activation basal program came 4 ms after the alarm
+ * snapshot read gave up, the write did not start, and the caller waited 30 s for an answer to a command the patch never
+ * got. [start] returns true when the write started.
+ *
+ * @return the time waited in ms, or null when the write did not start within [WRITE_BUSY_WAIT_MS]
+ */
+internal fun startWriteWithRetry(sleep: (Long) -> Unit, start: () -> Boolean): Long? {
+    var waited = 0L
+    while (!start()) {
+        if (waited >= WRITE_BUSY_WAIT_MS) return null
+        sleep(WRITE_BUSY_STEP_MS)
+        waited += WRITE_BUSY_STEP_MS
+    }
+    return waited
 }

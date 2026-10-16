@@ -4,13 +4,13 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.danars.encryption.BleEncryption
-import org.joda.time.DateTime
 import dev.zacsweers.metro.Inject
+import org.joda.time.DateTime
 
 @Inject
 class DanaRSPacketOptionSetPumpTime(
     private val aapsLogger: AAPSLogger,
-    dateUtil: DateUtil
+    private val dateUtil: DateUtil
 ) : DanaRSPacket() {
 
     private var time: Long = 0
@@ -18,10 +18,13 @@ class DanaRSPacketOptionSetPumpTime(
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_OPTION__SET_PUMP_TIME
-        aapsLogger.debug(LTag.PUMPCOMM, "Setting pump time " + dateUtil.dateAndTimeAndSecondsString(time))
     }
 
-    fun with(time: Long) = this.also { this.time = time }
+    // Logged here, not in init: there the time is not set yet
+    fun with(time: Long) = this.also {
+        this.time = time
+        aapsLogger.debug(LTag.PUMPCOMM, "Setting pump time " + dateUtil.dateAndTimeAndSecondsString(time))
+    }
 
     override fun getRequestParams(): ByteArray {
         val date = DateTime(time)

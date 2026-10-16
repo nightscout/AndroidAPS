@@ -31,6 +31,7 @@ class SceneSourceTest {
     private val sp: SP = mock()
 
     private val endText = "End scene"
+    private val skipText = "Skip"
     private val confirmationText = "Run this scene?"
 
     // In-memory backing store for tile_scene_N slot prefs, so getString/putString/contains behave
@@ -64,6 +65,7 @@ class SceneSourceTest {
     fun setup() {
         whenever(context.resources).thenReturn(resources)
         whenever(resources.getString(R.string.scene_end)).thenReturn(endText)
+        whenever(resources.getString(R.string.scene_skip)).thenReturn(skipText)
         whenever(resources.getString(R.string.action_scene_confirmation)).thenReturn(confirmationText)
 
         // sp backed by the in-memory map for String-keyed slot prefs — an unset key falls through
@@ -92,10 +94,40 @@ class SceneSourceTest {
         assertThat(actions).hasSize(1)
         val end = actions.single()
         assertThat(end.buttonText).isEqualTo(endText)
-        assertThat(end.iconRes).isEqualTo(R.drawable.ic_cancel_red)
+        // A phone from before the follow-up fields sends only the flag: no name under the button
+        assertThat(end.buttonTextSub).isNull()
+        assertThat(end.iconRes).isEqualTo(R.drawable.ic_scene_end)
         assertThat(end.activityClass).isEqualTo(BackgroundActionActivity::class.java.name)
-        assertThat(end.action).isInstanceOf(EventData.ActionSceneStopPreCheck::class.java)
+        assertThat(end.action).isEqualTo(EventData.ActionSceneStopPreCheck(triggerChain = false))
         assertThat(end.message).isNull()
+    }
+
+    @Test
+    fun activeSceneShowsItsNameUnderEnd() {
+        stubActiveSceneState(EventData.ActiveSceneState(active = true, sceneName = "Sleep", endTime = 1_000L).serialize())
+
+        val actions = sceneSource.getSelectedActions()
+
+        assertThat(actions).hasSize(1)
+        assertThat(actions.single().buttonTextSub).isEqualTo("Sleep")
+    }
+
+    @Test
+    fun activeSceneWithFollowUpOffersSkipBesideEnd() {
+        stubActiveSceneState(EventData.ActiveSceneState(active = true, sceneName = "Sleep", endTime = 1_000L, chainTargetName = "Wake up").serialize())
+
+        val actions = sceneSource.getSelectedActions()
+
+        assertThat(actions).hasSize(2)
+        val (end, skip) = actions
+        assertThat(end.buttonText).isEqualTo(endText)
+        assertThat(end.action).isEqualTo(EventData.ActionSceneStopPreCheck(triggerChain = false))
+        assertThat(skip.buttonText).isEqualTo(skipText)
+        assertThat(skip.buttonTextSub).isEqualTo("Wake up")
+        assertThat(skip.iconRes).isEqualTo(R.drawable.ic_scene_skip)
+        assertThat(skip.activityClass).isEqualTo(BackgroundActionActivity::class.java.name)
+        assertThat(skip.action).isEqualTo(EventData.ActionSceneStopPreCheck(triggerChain = true))
+        assertThat(skip.message).isNull()
     }
 
     @Test
@@ -231,9 +263,10 @@ class SceneSourceTest {
     }
 
     @Test
-    fun getResourceReferencesContainsBothDrawables() {
+    fun getResourceReferencesContainsEveryDrawableTheTileCanShow() {
+        // A drawable missing here renders as a blank button, so the list must name all three
         val refs = sceneSource.getResourceReferences(resources)
 
-        assertThat(refs).containsExactly(R.drawable.ic_scene_purple, R.drawable.ic_cancel_red)
+        assertThat(refs).containsExactly(R.drawable.ic_scene_purple, R.drawable.ic_scene_end, R.drawable.ic_scene_skip)
     }
 }

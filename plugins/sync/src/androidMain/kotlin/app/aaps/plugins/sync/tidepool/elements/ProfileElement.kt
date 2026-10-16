@@ -5,7 +5,6 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import com.google.gson.annotations.Expose
 import java.util.UUID
 
@@ -30,9 +29,6 @@ class ProfileElement(ps: EPS, serialNumber: String, dateUtil: DateUtil, profileU
 
     @Expose
     internal var insulinSensitivities: IsfProfile = IsfProfile()
-
-    @Expose
-    internal var deviceId: String? = TidepoolUploader.PUMP_TYPE + ":" + serialNumber
 
     @Expose
     internal var deviceSerialNumber: String = serialNumber

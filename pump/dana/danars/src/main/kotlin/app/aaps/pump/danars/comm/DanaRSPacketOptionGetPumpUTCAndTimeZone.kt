@@ -5,8 +5,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
-import org.joda.time.DateTime
 import dev.zacsweers.metro.Inject
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 
 @Inject
 class DanaRSPacketOptionGetPumpUTCAndTimeZone(
@@ -29,7 +30,10 @@ class DanaRSPacketOptionGetPumpUTCAndTimeZone(
         val min = byteArrayToInt(getBytes(data, DATA_START + 4, 1))
         val sec = byteArrayToInt(getBytes(data, DATA_START + 5, 1))
         val zoneOffset = getBytes(data, DATA_START + 6, 1)[0].toInt()
-        val time = DateTime(2000 + year, month, day, hour, min, sec)
+        // The pump clock is UTC, AAPS sets it so (DanaRSPacketOptionSetPumpUTCAndTimeZone). It was read as local
+        // time and moved by the offset of now: around a daylight saving change the time was an hour off, and a UTC
+        // time that falls in the local gap threw, so the pump was reset (#449).
+        val time = DateTime(2000 + year, month, day, hour, min, sec, DateTimeZone.UTC)
         danaPump.setPumpTime(time.millis, zoneOffset)
         aapsLogger.debug(LTag.PUMPCOMM, "Pump time ${dateUtil.dateAndTimeAndSecondsString(danaPump.pumpTime)} ZoneOffset: $zoneOffset")
     }

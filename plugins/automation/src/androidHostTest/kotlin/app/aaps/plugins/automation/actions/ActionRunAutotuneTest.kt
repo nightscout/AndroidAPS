@@ -1,9 +1,8 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.IntKey
-import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.AutomationStrings
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach

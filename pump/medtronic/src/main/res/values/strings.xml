@@ -2,7 +2,6 @@
 <resources>
     <!-- Medtronic (MDT) - Base -->
     <string name="medtronic_name" translatable="false">Medtronic</string>
-    <string name="medtronic_name_short" translatable="false">MDT</string>
     <string name="description_pump_medtronic">Pump integration for Medtronic, requires RileyLink device and specific Pump Model</string>
 
     <!-- MDT Configuration -->

@@ -38,6 +38,11 @@ import kotlin.math.abs
 private const val VISIBLE_ITEMS = 5
 private const val ITEM_HEIGHT_DP = 44
 
+/**
+ * A popup wheel of whole hours, anchored to the composable that emits it: the wheel is centered
+ * vertically on that composable, so the current hour sits right over it. Emit it next to the control
+ * the user tapped (inside the same [Box]), or the wheel opens somewhere else on the screen.
+ */
 @Composable
 fun HourWheelPicker(
     selectedHour: Int,
@@ -92,6 +97,7 @@ fun HourWheelPicker(
     }
 
     Popup(
+        alignment = Alignment.CenterStart,
         onDismissRequest = onDismiss,
         properties = PopupProperties(focusable = true)
     ) {
@@ -181,25 +187,4 @@ fun HourWheelPicker(
             }
         }
     }
-}
-
-@Composable
-fun HourWheelPickerDialog(
-    selectedHour: Int,
-    minHour: Int = 0,
-    maxHour: Int = 23,
-    excludeHour: Int? = null,
-    onHourSelected: (Int) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val availableHours = remember(minHour, maxHour, excludeHour) {
-        (minHour..maxHour).filter { it != excludeHour }
-    }
-
-    HourWheelPicker(
-        selectedHour = selectedHour,
-        availableHours = availableHours,
-        onHourSelected = onHourSelected,
-        onDismiss = onDismiss
-    )
 }

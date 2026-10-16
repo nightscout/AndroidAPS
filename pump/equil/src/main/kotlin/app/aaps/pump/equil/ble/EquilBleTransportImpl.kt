@@ -27,14 +27,14 @@ import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.utils.extensions.connectGattCompat
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.UUID
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
-import dev.zacsweers.metro.Inject
 
 @SuppressLint("MissingPermission")
 @SingleIn(AppScope::class)
@@ -54,6 +54,7 @@ class EquilBleTransportImpl(
 
     override var scanAddress: String? = null
     override var onGattError133: (() -> Unit)? = null
+    override var onDescriptorWriteFailed: (() -> Unit)? = null
 
     @Suppress("deprecation", "OVERRIDE_DEPRECATION")
     private val gattCallback = object : BluetoothGattCallback() {
@@ -103,6 +104,8 @@ class EquilBleTransportImpl(
             aapsLogger.debug(LTag.PUMPBTCOMM, "onDescriptorWrite received: $status")
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 listener?.onDescriptorWritten()
+            } else {
+                onDescriptorWriteFailed?.invoke()
             }
         }
     }

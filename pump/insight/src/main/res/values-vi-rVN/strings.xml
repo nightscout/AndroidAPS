@@ -24,7 +24,6 @@
     <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Ống dẫn insulin đã được thay</string>
-    <string name="insightpump_shortname">Sight</string>
     <string name="insight_alert_notification_channel">Cảnh báo bơm Insight</string>
     <string name="disable_vibration">Tắt rung khi tiêm bolus thủ công</string>
     <string name="disable_vibration_summary">Dành cho bolus và bolus kéo dài (chỉ khả dụng với firmware Insight 3.x)</string>

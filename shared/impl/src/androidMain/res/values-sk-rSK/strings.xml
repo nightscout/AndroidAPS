@@ -3,6 +3,7 @@
     <string name="cwf_comment_background">Obrázok pozadia</string>
     <string name="cwf_comment_chart">Grafy (glykémie, bazály, krivky predpovedí...)</string>
     <string name="cwf_comment_cover_chart">Obrázok pred grafom a za textovými poliami</string>
+    <string name="cwf_comment_complication">Kontajner pre komplikáciu</string>
     <string name="cwf_comment_freetext1">Voľný text 1</string>
     <string name="cwf_comment_freetext2">Voľný text 2</string>
     <string name="cwf_comment_freetext3">Voľný text 3</string>

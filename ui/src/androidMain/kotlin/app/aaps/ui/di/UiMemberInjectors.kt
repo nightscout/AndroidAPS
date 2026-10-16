@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.ui.activities.ErrorActivity
 import app.aaps.ui.widget.BgGraphWidget
 import app.aaps.ui.widget.CompactBgWidget
+import app.aaps.ui.widget.GlucoseCircleWidget
 import app.aaps.ui.widget.SmallWidget
 import app.aaps.ui.widget.Widget
 import app.aaps.ui.widget.WidgetConfigureActivity
@@ -58,6 +59,12 @@ object UiMemberInjectors {
     @IntoMap
     @ClassKey(CompactBgWidget::class)
     fun bindCompactBgWidget(injector: MembersInjector<CompactBgWidget>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(GlucoseCircleWidget::class)
+    fun bindGlucoseCircleWidget(injector: MembersInjector<GlucoseCircleWidget>): MembersInjector<*> = injector
 
     @Provides
     @FeatureMemberInjectors

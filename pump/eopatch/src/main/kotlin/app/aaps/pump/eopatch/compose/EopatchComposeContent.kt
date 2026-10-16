@@ -1,28 +1,25 @@
 package app.aaps.pump.eopatch.compose
 
-import android.content.pm.ActivityInfo
-import android.view.WindowManager
-import androidx.activity.compose.LocalActivity
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
+import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
 import app.aaps.pump.eopatch.R
 import app.aaps.pump.eopatch.code.PatchStep
 
@@ -91,57 +88,50 @@ class EopatchComposeContent(
 
         if (showPatchWorkflow) {
             // Keep screen on and lock orientation during patch workflow.
-            // LocalActivity, not a cast of LocalContext: that context is usually a ContextWrapper,
-            // where `as? Activity` is null and the screen would time out mid patch activation.
-            val activity = LocalActivity.current
-            DisposableEffect(Unit) {
-                activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                val previousOrientation = activity?.requestedOrientation
-                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
-                onDispose {
-                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                    previousOrientation?.let { activity.requestedOrientation = it }
-                }
-            }
+            KeepScreenOnEffect()
 
-            // BLE pre-check
+            // BLE pre-check. The workflow uses Bluetooth, so it starts only after the check has passed.
+            var bleReady by remember { mutableStateOf(false) }
             BlePreCheckHost(
                 blePreCheck = blePreCheck,
+                onReady = { bleReady = true },
                 onFailed = {
                     showPatchWorkflow = false
                     startPatchStep = null
                 }
             )
 
-            // Create PatchViewModel scoped to the workflow
-            val patchViewModel: EopatchPatchViewModel = metroViewModel()
+            if (bleReady) {
+                // Create PatchViewModel scoped to the workflow
+                val patchViewModel: EopatchPatchViewModel = metroViewModel()
 
-            // Reset and initialize with the start step
-            LaunchedEffect(startPatchStep) {
-                startPatchStep?.let { step ->
-                    patchViewModel.reset()
-                    patchViewModel.forceDiscard = forceDiscard
-                    patchViewModel.isInAlarmHandling = isAlarmHandling
-                    patchViewModel.initializePatchStep(step)
+                // Reset and initialize with the start step
+                LaunchedEffect(startPatchStep) {
+                    startPatchStep?.let { step ->
+                        patchViewModel.reset()
+                        patchViewModel.forceDiscard = forceDiscard
+                        patchViewModel.isInAlarmHandling = isAlarmHandling
+                        patchViewModel.initializePatchStep(step)
+                    }
                 }
-            }
 
-            // Observe finish events
-            LaunchedEffect(patchViewModel) {
-                patchViewModel.events.collect { event ->
-                    when (event) {
-                        is PatchEvent.Finish -> {
-                            showPatchWorkflow = false
-                            startPatchStep = null
-                        }
+                // Observe finish events
+                LaunchedEffect(patchViewModel) {
+                    patchViewModel.events.collect { event ->
+                        when (event) {
+                            is PatchEvent.Finish -> {
+                                showPatchWorkflow = false
+                                startPatchStep = null
+                            }
 
-                        else                 -> { /* handled by step composables */
+                            else                 -> { /* handled by step composables */
+                            }
                         }
                     }
                 }
-            }
 
-            EopatchPatchScreen(viewModel = patchViewModel, setToolbarConfig = setToolbarConfig)
+                EopatchPatchScreen(viewModel = patchViewModel, setToolbarConfig = setToolbarConfig)
+            }
         } else {
             EopatchOverviewScreen(viewModel = overviewViewModel)
         }

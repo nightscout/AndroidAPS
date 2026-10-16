@@ -213,18 +213,43 @@ class ProfileRepositoryImplTest : TestBaseWithProfile() {
      */
     private fun givenRealisticLegacyProfile(name: String) {
         whenever(preferences.get(ProfileIntKey.AmountOfProfiles)).thenReturn(1)
-        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, 0)).thenReturn(name)
-        whenever(preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, 0)).thenReturn(false)
-        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, 0))
-            .thenReturn(legacySchedule(0 to 8.1, 7 to 6.0, 10 to 8.0))
-        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, 0))
-            .thenReturn(legacySchedule(0 to 9.523809523809524))
-        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, 0))
-            .thenReturn(legacySchedule(0 to 1.0, 6 to 1.27, 11 to 1.6300000000000001))
-        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, 0))
-            .thenReturn(legacySchedule(0 to 5.5, 11 to 6.6000000000000005))
-        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, 0))
-            .thenReturn(legacySchedule(0 to 5.5, 11 to 7.7))
+        givenLegacyProfileFields(
+            index = 0,
+            name = name,
+            mgdl = false,
+            ic = legacySchedule(0 to 8.1, 7 to 6.0, 10 to 8.0),
+            isf = legacySchedule(0 to 9.523809523809524),
+            basal = legacySchedule(0 to 1.0, 6 to 1.27, 11 to 1.6300000000000001),
+            low = legacySchedule(0 to 5.5, 11 to 6.6000000000000005),
+            high = legacySchedule(0 to 5.5, 11 to 7.7)
+        )
+    }
+
+    /**
+     * One profile present in the pre-JSON keys, stubbed the way a real store answers.
+     *
+     * Every field is stubbed on BOTH accessors on purpose. The loader reads each one with
+     * `getIfExists`, because a profile is a group and a missing field drops it; the `get` stubs say
+     * the same thing and keep the helper honest if a caller ever reads a field the other way.
+     */
+    @Suppress("LongParameterList")
+    private fun givenLegacyProfileFields(
+        index: Int, name: String, mgdl: Boolean, ic: String, isf: String, basal: String, low: String, high: String
+    ) {
+        whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, index)).thenReturn(name)
+        whenever(preferences.getIfExists(ProfileComposedStringKey.LocalProfileNumberedName, index)).thenReturn(name)
+        whenever(preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, index)).thenReturn(mgdl)
+        whenever(preferences.getIfExists(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, index)).thenReturn(mgdl)
+        listOf(
+            ProfileComposedStringKey.LocalProfileNumberedIc to ic,
+            ProfileComposedStringKey.LocalProfileNumberedIsf to isf,
+            ProfileComposedStringKey.LocalProfileNumberedBasal to basal,
+            ProfileComposedStringKey.LocalProfileNumberedTargetLow to low,
+            ProfileComposedStringKey.LocalProfileNumberedTargetHigh to high
+        ).forEach { (key, value) ->
+            whenever(preferences.get(key, index)).thenReturn(value)
+            whenever(preferences.getIfExists(key, index)).thenReturn(value)
+        }
     }
 
     /**
@@ -277,17 +302,108 @@ class ProfileRepositoryImplTest : TestBaseWithProfile() {
         assertThat(profile.basal.last().amount).isEqualTo(1.6300000000000001)
     }
 
+    /**
+     * The store a 3.3 backup leaves behind: the profile COUNT arrives, the content does not.
+     *
+     * `ProfileIntKey.AmountOfProfiles` is `LocalProfile_profiles`, a registered exportable key, so an
+     * import writes it. The per-profile names 3.3 actually wrote - `LocalProfile_0_isf` and friends -
+     * are not keys this build knows (it uses `LocalProfile_isf_0`), so `PreferenceKeyResolver` returns
+     * null for them, `PreferenceImportApplier` counts them in `unresolved`, and they are never written.
+     *
+     * Every content read therefore falls back to the key's `defaultValue`, which is what
+     * `PreferencesImpl.get` returns for an absent key. The defaults are used here rather than their
+     * literal text so this stays honest if a default ever changes.
+     */
+    private fun givenProfileCountWithoutContent(count: Int) {
+        whenever(preferences.get(ProfileIntKey.AmountOfProfiles)).thenReturn(count)
+        repeat(count) { i ->
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, i))
+                .thenReturn(ProfileComposedStringKey.LocalProfileNumberedName.defaultValue)
+            whenever(preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i))
+                .thenReturn(ProfileComposedBooleanKey.LocalProfileNumberedMgdl.defaultValue)
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i))
+                .thenReturn(ProfileComposedStringKey.LocalProfileNumberedIc.defaultValue)
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i))
+                .thenReturn(ProfileComposedStringKey.LocalProfileNumberedIsf.defaultValue)
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, i))
+                .thenReturn(ProfileComposedStringKey.LocalProfileNumberedBasal.defaultValue)
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i))
+                .thenReturn(ProfileComposedStringKey.LocalProfileNumberedTargetLow.defaultValue)
+            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i))
+                .thenReturn(ProfileComposedStringKey.LocalProfileNumberedTargetHigh.defaultValue)
+        }
+    }
+
+    /**
+     * A profile count with no content behind it must produce NO profile.
+     *
+     * Without this, the defaults do the talking: the name default is the CONSTANT "LocalProfile0", so
+     * every index answers the same name and `loadFromLegacyKeysInternal`'s duplicate-name skip folds
+     * however many profiles the file claimed into one; and the schedule defaults are all `value: 0`,
+     * so that one profile carries zero ISF, zero IC, zero basal and zero targets. It does not look
+     * empty to the user, it looks like a real profile.
+     *
+     * On a master it is worse than a local mess: `loadSettingsInternal` follows the legacy read with
+     * `if (profilesList.isNotEmpty() && config.APS) storeSettingsInternal(...)`, which writes the
+     * fabricated profile into [StringNonKey.LocalProfileData] as a LOCAL write - so it is published on
+     * the sync channel to every paired client. The repository already carries a note that a
+     * zero-seeded profile "would silently block the whole profile-store sync until edited (see #4872)".
+     *
+     * The trigger is not only an import. Any partial arrival of the group does it - a truncated file,
+     * a hand-edited one, or the next key rename - which is why the guard belongs here and not in the
+     * import.
+     */
+    @Test
+    fun `a profile count with no content must not fabricate a profile`() = runTest {
+        givenProfileCountWithoutContent(count = 2)
+        whenever(config.APS).thenReturn(true)
+
+        val sut = createSut()
+
+        assertThat(sut.names()).isEmpty()
+        assertThat(localWrites()).isEmpty()
+    }
+
     private fun givenLegacyProfiles(vararg names: String) {
         whenever(preferences.get(ProfileIntKey.AmountOfProfiles)).thenReturn(names.size)
         names.forEachIndexed { i, name ->
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, i)).thenReturn(name)
-            whenever(preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i)).thenReturn(true)
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)).thenReturn(singleBlock(15.0).asJSONArray().toString())
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)).thenReturn(singleBlock(100.0).asJSONArray().toString())
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, i)).thenReturn(singleBlock(0.1).asJSONArray().toString())
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i)).thenReturn(singleBlock(110.0).asJSONArray().toString())
-            whenever(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i)).thenReturn(singleBlock(120.0).asJSONArray().toString())
+            givenLegacyProfileFields(
+                index = i,
+                name = name,
+                mgdl = true,
+                ic = singleBlock(15.0).asJSONArray().toString(),
+                isf = singleBlock(100.0).asJSONArray().toString(),
+                basal = singleBlock(0.1).asJSONArray().toString(),
+                low = singleBlock(110.0).asJSONArray().toString(),
+                high = singleBlock(120.0).asJSONArray().toString()
+            )
         }
+    }
+
+    /**
+     * A profile missing ONE field must be dropped, not completed from defaults.
+     *
+     * This is the dangerous half of the same bug as the test above, and the harder one to spot. There
+     * the profile was obviously junk - one entry, a default name, every schedule zero. Here the user
+     * gets a profile with the name they recognise, the carb ratio they set, the basal they set, the
+     * targets they set, and an ISF of zero, because `ProfileComposedStringKey`'s default is
+     * `[{"time":"00:00","timeAsSeconds":0,"value":0}]`. Nothing is logged by the parser, because that
+     * default parses perfectly well.
+     *
+     * Any partial write reaches it: an import that could rename six of a profile's seven names, a
+     * truncated file, a store edited by hand. The keys have always been written together, so a missing
+     * one means the group is broken.
+     */
+    @Test
+    fun `a legacy profile missing one schedule is dropped, not zero-filled`() = runTest {
+        givenLegacyProfiles("Adult")
+        whenever(preferences.getIfExists(ProfileComposedStringKey.LocalProfileNumberedIsf, 0)).thenReturn(null)
+        whenever(config.APS).thenReturn(true)
+
+        val sut = createSut()
+
+        assertThat(sut.names()).isEmpty()
+        assertThat(localWrites()).isEmpty()
     }
 
     @Test

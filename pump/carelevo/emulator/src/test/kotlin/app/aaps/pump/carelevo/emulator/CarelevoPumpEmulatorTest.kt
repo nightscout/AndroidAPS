@@ -33,10 +33,10 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-import kotlin.time.Instant
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.experimental.xor
+import kotlin.time.Instant
 
 /**
  * Wire-compatibility tests for [CarelevoPumpEmulator], driven end-to-end through the **production**

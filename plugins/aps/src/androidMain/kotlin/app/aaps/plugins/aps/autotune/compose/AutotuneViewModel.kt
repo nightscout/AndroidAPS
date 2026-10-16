@@ -34,8 +34,6 @@ import app.aaps.plugins.aps.autotune.AutotuneFS
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.events.EventAutotuneUpdateGui
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -328,7 +326,7 @@ class AutotuneViewModel(
                         )
                         return@launch
                     }
-                    profileFunction.createProfileSwitch(
+                    val switched = profileFunction.createProfileSwitch(
                         profileStore = profileStore,
                         profileName = tunedP.profileName,
                         durationInMinutes = 0,
@@ -341,6 +339,15 @@ class AutotuneViewModel(
                         listValues = listOf(ValueWithUnit.SimpleString(tunedP.profileName)),
                         iCfg = iCfg
                     )
+                    // A refused switch must not look like a done one: say why.
+                    if (switched == null)
+                        rxBus.send(
+                            EventShowDialog.Ok(
+                                title = rh.gs(app.aaps.core.ui.R.string.autotune),
+                                message = profileFunction.profileSwitchRefusal(profileStore, tunedP.profileName, 0, 100, 0, iCfg)
+                                    ?: rh.gs(app.aaps.core.ui.R.string.invalid_profile)
+                            )
+                        )
                 }
             }
         }

@@ -23,7 +23,6 @@
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">Integrations (Test) Server verwenden</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Daten zu Tidepool hochladen</string>
     <string name="upload_now">Jetzt hochladen</string>
     <string name="not_connected">Nicht verbunden</string>
@@ -31,7 +30,6 @@
     <string name="working">Arbeitet</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Sende Daten an xDrip+</string>
     <string name="xdrip_status_settings">Erweiterte xDrip+ Statuszeile</string>
     <string name="xdrip_not_installed">xDrip+ nicht installiert</string>
@@ -41,7 +39,6 @@
     <!--    DataBroadcast-->
     <!-- GarminPlugin -->
     <!--    Wear-->
-    <string name="wear_shortname">UHR</string>
     <string name="description_wear">Überwache und steuere AndroidAPS mit Deiner WearOS-Smartwatch.</string>
     <string name="no_watch_connected">(keine Uhr verbunden)</string>
     <string name="pump_status">Status der Pumpe</string>
@@ -57,6 +54,7 @@
     <string name="wear_infos_watchface">Infos Watchface</string>
     <string name="wear_export_watchface">Vorlage exportieren</string>
     <string name="wear_new_custom_watchface_exported">Benutzerdefinierte Watchface Vorlage exportiert</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/de/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Alle Daten erneut senden</string>
     <string name="open_settings_on_wear">Öffne Einstellungen auf der Uhr</string>
     <string name="cwf_infos_pref_locked">Liste der von der Watchface gesperrten Prefs</string>
@@ -83,12 +81,11 @@
     <string name="aps">APS</string>
     <string name="last_run">Letzte Ausführung</string>
     <string name="last_enact">Letzte Abgabe</string>
-    <string name="tdd_line">%1$.2fE %1$.0f%%</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fE %2$.0f%%</string>
     <string name="today">Heute</string>
     <string name="weighted">gewichtet</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS-Kommunikator</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">AndroidAPS mit SMS-Befehlen fernsteuern.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">von der Authenticator App für: %1$s gefolgt von der PIN</string>
     <string name="smscommunicator_tab_otp_label">Konfiguration der Authenticator App</string>

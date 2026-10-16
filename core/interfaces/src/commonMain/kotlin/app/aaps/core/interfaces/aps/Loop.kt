@@ -69,6 +69,14 @@ interface Loop {
     suspend fun handleRunningModeChange(newRM: RM.Mode, action: Action, source: Sources, listValues: List<ValueWithUnit> = emptyList(), durationInMinutes: Int = 0, profile: Profile): Boolean
 
     /**
+     * Periodic check that the pump really gives no insulin while the pump is disconnected or a super
+     * bolus runs. Sends the zero temp basal again when it is missing or ends soon, and raises an alarm
+     * when it stays missing. Never changes the running mode. Does nothing on a device that does not
+     * drive the pump.
+     */
+    suspend fun verifyZeroDelivery()
+
+    /**
      * Timestamp of last loop run triggered by new BG
      */
     var lastBgTriggeredRun: Long
@@ -83,9 +91,14 @@ interface Loop {
     suspend fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean = false)
 
     /**
-     * Open loop mode trigger
+     * Open loop mode trigger: enact the last calculated suggestion.
+     *
+     * Refused while the running mode pauses the loop, and when the suggestion is older than an old BG.
+     * A suggestion can wait on the watch long after it was sent.
+     *
+     * @return why it was refused, as text for the user, or null when it was not refused
      */
-    suspend fun acceptChangeRequest()
+    suspend fun acceptChangeRequest(): String?
 
     /**
      * Returns minutes to end of suspended loop

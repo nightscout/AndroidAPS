@@ -2,7 +2,6 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
-    <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Интеграция за помпи Medtrum Nano и Medtrum 300U</string>
     <string name="medtrum_pump_setting">Настройки за помпа Medtrum</string>
     <string name="pump_error">Грешка в помпа: %1$s !! </string>
@@ -13,7 +12,6 @@
     <string name="patch_not_active">Пач помпата не е активирана</string>
     <string name="pump_setting_failed">Неуспешно зареждане на потребителските настройки в помпата!</string>
     <string name="pump_sync_error">Грешка при синхронизацията с историята на помпата. Някой записи са игнорирани. Проверете в Лечения дали болусите са правилни. Отложете и при нова такава грешла сменете базата на пач помпата.</string>
-    <string name="patch_reset_after_primed_error">Нулиране на пач е открито след пълненето! Махнете пача и стартирайте нов.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Активен болус</string>
     <string name="pump_state_label">Състояние на помпата</string>

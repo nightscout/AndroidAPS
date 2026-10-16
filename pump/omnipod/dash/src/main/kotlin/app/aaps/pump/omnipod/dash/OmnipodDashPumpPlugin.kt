@@ -2,6 +2,7 @@ package app.aaps.pump.omnipod.dash
 
 import android.os.Handler
 import android.os.HandlerThread
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -16,8 +17,8 @@ import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -31,6 +32,7 @@ import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.fillFor
+import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
@@ -52,6 +54,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertTrigger
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BeepRepetitionType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BeepType
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants.Companion.POD_EXPIRATION_IMMINENT_ALERT_HOURS_REMAINING
@@ -71,16 +74,21 @@ import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration
+import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
-import app.aaps.pump.omnipod.dash.history.data.BasalValuesRecord
-import app.aaps.pump.omnipod.dash.history.data.BolusRecord
-import app.aaps.pump.omnipod.dash.history.data.BolusType
-import app.aaps.pump.omnipod.dash.history.data.TempBasalRecord
+import app.aaps.pump.omnipod.common.history.data.BasalValuesRecord
+import app.aaps.pump.omnipod.common.history.data.BolusRecord
+import app.aaps.pump.omnipod.common.history.data.TempBasalRecord
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
 import app.aaps.pump.omnipod.dash.ui.compose.OmnipodDashComposeContent
 import app.aaps.pump.omnipod.dash.util.Constants
-import app.aaps.pump.omnipod.dash.util.mapProfileToBasalProgram
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.CoroutineScope
@@ -99,15 +107,10 @@ import kotlinx.coroutines.rx3.rxCompletable
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.concurrent.CountDownLatch
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.IntKey
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
 import kotlin.concurrent.thread
 import kotlin.math.ceil
 import kotlin.time.Duration.Companion.hours
+import app.aaps.pump.omnipod.common.R as CommonR
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver
@@ -144,7 +147,6 @@ class OmnipodDashPumpPlugin(
         }
         .icon(IcPluginOmnipod)
         .pluginName(TextRef.AndroidRes(R.string.omnipod_dash_name))
-        .shortName(TextRef.AndroidRes(R.string.omnipod_dash_name_short))
         .description(TextRef.AndroidRes(R.string.omnipod_dash_pump_description)),
     ownPreferences = OmnipodBooleanPreferenceKey.entries + OmnipodIntPreferenceKey.entries + DashBooleanPreferenceKey.entries +
         DashStringNonPreferenceKey.entries,
@@ -258,8 +260,11 @@ class OmnipodDashPumpPlugin(
 
     override fun isBusy(): Boolean {
         // prevents the queue from executing commands
-        return podStateManager.activationProgress != ActivationProgress.NOT_STARTED &&
-            podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)
+        // The progress alone does not cover pairing: it is still NOT_STARTED until the first step is done,
+        // and the queue then ran and disconnected in the middle of the pairing (#5219).
+        return omnipodManager.isActivationRunning ||
+            (podStateManager.activationProgress != ActivationProgress.NOT_STARTED &&
+                podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED))
     }
 
     override fun isConnected(): Boolean {
@@ -313,6 +318,11 @@ class OmnipodDashPumpPlugin(
 
     override fun disconnect(reason: String) {
         aapsLogger.info(LTag.PUMP, "disconnect reason=$reason")
+        if (omnipodManager.isActivationRunning) {
+            // The activation uses the BLE link outside the queue. Closing it here broke the pairing (#5219).
+            aapsLogger.info(LTag.PUMP, "disconnect ignored, pod activation is running")
+            return
+        }
         stopConnecting?.countDown()
         omnipodManager.disconnect(false)
     }
@@ -381,29 +391,33 @@ class OmnipodDashPumpPlugin(
                 if (!deliveryComplete) {
                     val deliveredUnits = markComplete()
                     deliveryComplete = true
-                    val bolusHistoryEntry = history.getById(historyId)
-                    val sync = pumpSync.syncBolusWithPumpId(
-                        timestamp = bolusHistoryEntry.createdAt,
-                        amount = PumpInsulin(deliveredUnits),
-                        pumpId = bolusHistoryEntry.pumpId(),
-                        pumpType = PumpType.OMNIPOD_DASH,
-                        pumpSerial = serialNumber(),
-                        type = bolusType
-                    )
-                    aapsLogger.info(LTag.PUMP, "syncBolusWithPumpId on CANCEL_BOLUS returned: $sync")
+                    bolusType.toBolusInfoBolusType()?.let { bolusInfoType ->
+                        val bolusHistoryEntry = history.getById(historyId)
+                        val sync = pumpSync.syncBolusWithPumpId(
+                            timestamp = bolusHistoryEntry.createdAt,
+                            amount = PumpInsulin(deliveredUnits),
+                            pumpId = bolusHistoryEntry.pumpId(),
+                            pumpType = PumpType.OMNIPOD_DASH,
+                            pumpSerial = serialNumber(),
+                            type = bolusInfoType
+                        )
+                        aapsLogger.info(LTag.PUMP, "syncBolusWithPumpId on CANCEL_BOLUS returned: $sync")
+                    } ?: aapsLogger.info(LTag.PUMP, "Pod kaput interrupted $bolusType bolus, not synced (no BS.Type equivalent)")
                 }
             }
             if (!podStateManager.alarmSynced) {
                 podStateManager.alarmType?.let {
+                    val faultText = rh.gs(CommonR.string.omnipod_common_pod_status_pod_fault_description, it.code, it.toString()) +
+                        (podStateManager.pdmRef?.let { ref -> "\n" + rh.gs(CommonR.string.omnipod_common_pdm_ref, ref) } ?: "")
                     if (!commandQueue.isCustomCommandInQueue(CommandDeactivatePod::class)) {
                         showNotification(
                             NotificationId.OMNIPOD_POD_FAULT,
-                            it.toString(),
+                            faultText,
                             AlarmSound.BOLUS_ERROR
                         )
                     }
                     pumpSync.insertAnnouncement(
-                        error = it.toString(),
+                        error = faultText,
                         pumpId = System.currentTimeMillis(),
                         pumpType = PumpType.OMNIPOD_DASH,
                         pumpSerial = serialNumber()
@@ -425,7 +439,7 @@ class OmnipodDashPumpPlugin(
 
     private fun setNewBasalProfile(profile: Profile, historyType: OmnipodCommandType): PumpEnactResult {
         var deliverySuspended = false
-        val basalProgram = mapProfileToBasalProgram(profile)
+        val basalProgram = mapProfileToBasalProgram(profile, PumpType.OMNIPOD_DASH)
         return executeProgrammingCommand(
             pre = suspendDeliveryIfActive().doOnComplete {
                 if (podStateManager.activeCommand == null) {
@@ -545,12 +559,13 @@ class OmnipodDashPumpPlugin(
             podStateManager.basalCorrectionInProgress = true
             aapsLogger.info(LTag.PUMP, "Delivering basal correction")
 
+            val bolusType = BolusType.BASAL_CORRECTION
             return executeProgrammingCommand(
                 historyEntry = history.createRecord(
                     commandType = OmnipodCommandType.SET_BOLUS,
                     bolusRecord = BolusRecord(
                         requestedInsulinAmount,
-                        BolusType.DEFAULT
+                        bolusType
                     )
                 ),
                 activeCommandEntry = { historyId ->
@@ -565,7 +580,7 @@ class OmnipodDashPumpPlugin(
                     completionBeeps = false
                 ).filter { podEvent -> podEvent.isCommandSent() }
                     .ignoreElements(),
-                post = waitForBolusDeliveryToComplete(requestedInsulinAmount, BS.Type.NORMAL)
+                post = waitForBolusDeliveryToComplete(requestedInsulinAmount, bolusType)
                     .doOnSuccess { delivered ->
                         aapsLogger.info(LTag.PUMP, "Basal correction delivered: $delivered U")
                     }
@@ -597,10 +612,18 @@ class OmnipodDashPumpPlugin(
             return false
         }
         val running = podStateManager.basalProgram
-        val equal = (mapProfileToBasalProgram(profile) == running)
+        val equal = (mapProfileToBasalProgram(profile, PumpType.OMNIPOD_DASH) == running)
         aapsLogger.info(LTag.PUMP, "set: $equal. profile=$profile, running=$running")
         return equal
     }
+
+    /**
+     * The 24 hourly rates the pod runs: the program it confirmed, each rate rounded to the nearest 0.05 U/h (#2454).
+     * null without an activated pod or a confirmed program: the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? =
+        if (!podStateManager.isActivationCompleted) null
+        else podStateManager.basalProgram?.hourlyRates()?.mapIndexed { hour, rate -> Profile.ProfileValue(T.hours(hour.toLong()).secs().toInt(), rate) }
 
     private val _lastDataTime = MutableStateFlow(0L)
     override val lastDataTime: StateFlow<Long> = _lastDataTime
@@ -676,7 +699,8 @@ class OmnipodDashPumpPlugin(
 
             var deliveredBolusAmount = 0.0
 
-            val beepsConfigurationKey = if (detailedBolusInfo.bolusType == BS.Type.SMB)
+            val bolusType = BolusType.fromBolusInfoBolusType(detailedBolusInfo.bolusType)
+            val beepsConfigurationKey = if (bolusType == BolusType.SMB)
                 OmnipodBooleanPreferenceKey.SmbBeepsEnabled
             else
                 OmnipodBooleanPreferenceKey.BolusBeepsEnabled
@@ -691,7 +715,7 @@ class OmnipodDashPumpPlugin(
                     commandType = OmnipodCommandType.SET_BOLUS,
                     bolusRecord = BolusRecord(
                         requestedBolusAmount,
-                        BolusType.fromBolusInfoBolusType(detailedBolusInfo.bolusType)
+                        bolusType
                     )
                 ),
                 activeCommandEntry = { historyId ->
@@ -706,14 +730,14 @@ class OmnipodDashPumpPlugin(
                     bolusBeeps
                 ).filter { podEvent -> podEvent.isCommandSent() }
                     .concatMapCompletable { rxCompletable(Dispatchers.IO) { pumpSyncBolusStart(requestedBolusAmount, detailedBolusInfo.bolusType) } },
-                post = waitForBolusDeliveryToComplete(requestedBolusAmount, detailedBolusInfo.bolusType)
+                post = waitForBolusDeliveryToComplete(requestedBolusAmount, bolusType)
                     .map {
                         deliveredBolusAmount = it
                         aapsLogger.info(LTag.PUMP, "deliverTreatment: deliveredBolusAmount=$deliveredBolusAmount")
                     }
                     .ignoreElement()
             ).doFinally {
-                if (detailedBolusInfo.bolusType == BS.Type.SMB) {
+                if (bolusType == BolusType.SMB) {
                     notifyOnUnconfirmed(
                         NotificationId.OMNIPOD_UNCERTAIN_SMB,
                         "Unable to verify whether SMB bolus ($requestedBolusAmount U) succeeded. " +
@@ -761,7 +785,7 @@ class OmnipodDashPumpPlugin(
 
     private fun waitForBolusDeliveryToComplete(
         requestedBolusAmount: Double,
-        bolusType: BS.Type
+        bolusType: BolusType
     ): Single<Double> = Single.defer {
 
         if (bolusCanceled && podStateManager.activeCommand != null) {
@@ -789,11 +813,17 @@ class OmnipodDashPumpPlugin(
         while (waited < estimatedDeliveryTimeSeconds && !bolusCanceled) {
             waited += 1
             Thread.sleep(1000)
-            if (bolusType == BS.Type.SMB) {
+            if (bolusType == BolusType.SMB) {
                 continue
             }
-            val percent = (waited.toFloat() / estimatedDeliveryTimeSeconds) * 100
-            bolusProgressData.updateProgress(percent = percent.toInt())
+            bolusProgressData.updateProgress(
+                delivered = PumpInsulin(
+                    Round.roundTo(
+                        (waited.toFloat() / estimatedDeliveryTimeSeconds) * requestedBolusAmount,
+                        PodConstants.POD_PULSE_BOLUS_UNITS
+                    )
+                )
+            )
         }
 
         (1..BOLUS_RETRIES).forEach { tryNumber ->
@@ -810,7 +840,7 @@ class OmnipodDashPumpPlugin(
             } catch (e: Exception) {
                 errorGettingStatus = e
                 aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$errorGettingStatus")
-                Thread.sleep(BOLUS_RETRY_INTERVAL_MS) // retry every 3 sec
+                Thread.sleep(BOLUS_RETRY_INTERVAL_MS) // retry every 2 sec
             }
             if (errorGettingStatus != null) {
                 return@forEach
@@ -820,14 +850,13 @@ class OmnipodDashPumpPlugin(
             if (bolusDeliveringActive) {
                 // delivery not complete yet
                 val remainingUnits = podStateManager.lastBolus!!.bolusUnitsRemaining
-                val percent = ((requestedBolusAmount - remainingUnits) / requestedBolusAmount) * 100
-                bolusProgressData.updateProgress(percent = percent.toInt())
+                bolusProgressData.updateProgress(delivered = PumpInsulin(requestedBolusAmount - remainingUnits))
 
-                val sleepSeconds = if (bolusCanceled)
+                val sleepMillis = if (bolusCanceled)
                     BOLUS_RETRY_INTERVAL_MS
                 else
-                    estimateBolusDeliverySeconds(remainingUnits)
-                Thread.sleep(sleepSeconds * 1000.toLong())
+                    estimateBolusDeliverySeconds(remainingUnits) * 1000L
+                Thread.sleep(sleepMillis)
             } else {
                 // delivery is complete. If pod is Kaput, we are handling this in getPodStatus
                 return@defer Single.just(podStateManager.lastBolus!!.deliveredUnits()!!)
@@ -849,6 +878,8 @@ class OmnipodDashPumpPlugin(
         return ceil(requestedBolusAmount / PodConstants.POD_PULSE_BOLUS_UNITS).toLong() * 2 + 3
     }
 
+    // Takes BS.Type, not BolusType: a BASAL_CORRECTION has no BS.Type and must never be synced as a
+    // bolus, and a null type here would be stored as NORMAL.
     private suspend fun pumpSyncBolusStart(
         requestedBolusAmount: Double,
         bolusType: BS.Type
@@ -1140,7 +1171,7 @@ class OmnipodDashPumpPlugin(
             executeProgrammingCommand(
                 pre = observeDeliverySuspended(),
                 historyEntry = history.createRecord(OmnipodCommandType.RESUME_DELIVERY, basalProfileRecord = BasalValuesRecord(it.getBasalValues().toList())),
-                command = omnipodManager.setBasalProgram(mapProfileToBasalProgram(it), hasBasalBeepEnabled())
+                command = omnipodManager.setBasalProgram(mapProfileToBasalProgram(it, PumpType.OMNIPOD_DASH), hasBasalBeepEnabled())
                     .ignoreElements()
             ).doFinally {
                 notifyOnUnconfirmed(
@@ -1345,7 +1376,8 @@ class OmnipodDashPumpPlugin(
         Completable.complete()
     }
 
-    private suspend fun handleCommandConfirmation(confirmation: CommandConfirmed) {
+    @VisibleForTesting
+    internal suspend fun handleCommandConfirmation(confirmation: CommandConfirmed) {
         val command = confirmation.command
         val historyEntry = history.getById(command.historyId)
         aapsLogger.debug(LTag.PUMPCOMM, "handling command confirmation: $confirmation ${historyEntry.commandType}")
@@ -1390,13 +1422,18 @@ class OmnipodDashPumpPlugin(
                 }
             }
 
-            OmnipodCommandType.SET_BASAL_PROFILE      -> {
+            // Setting the time is the same pod command as a profile change: suspend, then a new basal program.
+            // The suspend also starts a "pump suspended" temp basal and the pod's "delivery suspended" alert
+            // (20 min), so both must be ended here too. Without SET_TIME the pod beeped about 20 min after
+            // every time change while basal was running again (#2982).
+            OmnipodCommandType.SET_BASAL_PROFILE,
+            OmnipodCommandType.SET_TIME               -> {
                 if (confirmation.success) {
                     podStateManager.basalProgram = command.basalProgram
                     if (podStateManager.basalProgram == null) {
                         aapsLogger.warn(LTag.PUMP, "Saving null basal profile")
                     }
-                    if (!commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
+                    if (historyEntry.commandType == OmnipodCommandType.SET_BASAL_PROFILE && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
                         // we are late-confirming this command. before that, we answered with success:false
                         rxBus.send(EventProfileChangeRequested())
                     }
@@ -1466,19 +1503,24 @@ class OmnipodDashPumpPlugin(
                     record as BolusRecord
 
                     podStateManager.createLastBolus(
-                        record.amout,
+                        record.amount,
                         command.historyId,
-                        record.bolusType.toBolusInfoBolusType()
+                        record.bolusType
                     )
                 } else {
-                    pumpSync.syncBolusWithPumpId(
-                        timestamp = historyEntry.createdAt,
-                        amount = PumpInsulin(0.0),
-                        pumpId = historyEntry.pumpId(),
-                        pumpType = PumpType.OMNIPOD_DASH,
-                        pumpSerial = serialNumber(),
-                        type = null
-                    )
+                    // A basal correction is never announced to AAPS as a started bolus (no pumpSyncBolusStart),
+                    // so do not report its denial as one either.
+                    val record = historyEntry.record as? BolusRecord
+                    if (record?.bolusType?.toBolusInfoBolusType() != null) {
+                        pumpSync.syncBolusWithPumpId(
+                            timestamp = historyEntry.createdAt,
+                            amount = PumpInsulin(0.0),
+                            pumpId = historyEntry.pumpId(),
+                            pumpType = PumpType.OMNIPOD_DASH,
+                            pumpSerial = serialNumber(),
+                            type = null // denied before delivery
+                        )
+                    }
                 }
                 notificationManager.dismiss(NotificationId.OMNIPOD_UNCERTAIN_SMB)
             }
@@ -1491,16 +1533,18 @@ class OmnipodDashPumpPlugin(
                             aapsLogger.error(LTag.PUMP, "Negative delivered units!!! $deliveredUnits")
                             return
                         }
-                        val bolusHistoryEntry = history.getById(historyId)
-                        val sync = pumpSync.syncBolusWithPumpId(
-                            timestamp = bolusHistoryEntry.createdAt,
-                            amount = PumpInsulin(deliveredUnits),
-                            pumpId = bolusHistoryEntry.pumpId(),
-                            pumpType = PumpType.OMNIPOD_DASH,
-                            pumpSerial = serialNumber(),
-                            type = bolusType
-                        )
-                        aapsLogger.info(LTag.PUMP, "syncBolusWithPumpId on CANCEL_BOLUS returned: $sync")
+                        bolusType.toBolusInfoBolusType()?.let { bolusInfoType ->
+                            val bolusHistoryEntry = history.getById(historyId)
+                            val sync = pumpSync.syncBolusWithPumpId(
+                                timestamp = bolusHistoryEntry.createdAt,
+                                amount = PumpInsulin(deliveredUnits),
+                                pumpId = bolusHistoryEntry.pumpId(),
+                                pumpType = PumpType.OMNIPOD_DASH,
+                                pumpSerial = serialNumber(),
+                                type = bolusInfoType
+                            )
+                            aapsLogger.info(LTag.PUMP, "syncBolusWithPumpId on CANCEL_BOLUS returned: $sync")
+                        } ?: aapsLogger.info(LTag.PUMP, "Cancelled $bolusType bolus, not synced (no BS.Type equivalent)")
                     } ?: aapsLogger.error(LTag.PUMP, "Cancelled bolus that does not exist")
                 }
             }
@@ -1583,8 +1627,7 @@ class OmnipodDashPumpPlugin(
                     OmnipodBooleanPreferenceKey.BolusBeepsEnabled,
                     OmnipodBooleanPreferenceKey.BasalBeepsEnabled,
                     OmnipodBooleanPreferenceKey.SmbBeepsEnabled,
-                    OmnipodBooleanPreferenceKey.TbrBeepsEnabled,
-                    DashBooleanPreferenceKey.UseBonding
+                    OmnipodBooleanPreferenceKey.TbrBeepsEnabled
                 )
             ),
             // Alerts subscreen
@@ -1609,6 +1652,14 @@ class OmnipodDashPumpPlugin(
                     OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification,
                     OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification,
                     DashBooleanPreferenceKey.SoundDeliverySuspendedNotification
+                )
+            ),
+            // Advanced subscreen
+            PreferenceSubScreenDef(
+                key = "omnipod_dash_advanced",
+                titleResId = app.aaps.core.ui.R.string.advanced_settings_title,
+                items = listOf(
+                    DashBooleanPreferenceKey.UseBonding
                 )
             )
         ),

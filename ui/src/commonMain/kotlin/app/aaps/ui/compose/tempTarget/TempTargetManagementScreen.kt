@@ -75,10 +75,10 @@ import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.components.CarouselReorderConfig
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.components.ManagementCarousel
-import kotlin.time.Instant
+import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.coroutines.launch
+import kotlin.time.Instant
 
 /**
  * Screen for managing temporary target presets and activating TTs.
@@ -440,7 +440,6 @@ fun TempTargetManagementScreen(
                                 TempTargetCarouselCard(
                                     preset = preset,
                                     activeTT = if (isStandaloneActiveCard || isActivePreset) uiState.activeTT else null,
-                                    remainingTimeMs = uiState.remainingTimeMs,
                                     isSelected = itemState.isSelected,
                                     units = viewModel.units,
                                     onExpired = { viewModel.refreshData() },

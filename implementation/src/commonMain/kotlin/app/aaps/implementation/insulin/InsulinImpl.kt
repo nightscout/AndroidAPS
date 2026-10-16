@@ -1,6 +1,7 @@
 package app.aaps.implementation.insulin
 
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.indexOfInsulin
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -25,7 +26,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlin.concurrent.Volatile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
@@ -35,6 +35,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
+import kotlin.concurrent.Volatile
 
 /**
  * Created by Philoul on 29.12.2024.
@@ -118,6 +119,7 @@ class InsulinImpl(
 
     override fun concentrationList(): List<ConcentrationType> = listOf(
         ConcentrationType.U10,
+        ConcentrationType.U20,
         ConcentrationType.U50,
         ConcentrationType.U100,
         ConcentrationType.U200
@@ -211,27 +213,9 @@ class InsulinImpl(
         return fullName.removePrefix(nickname).trim()
     }
 
-    override fun insulinAlreadyExists(iCfg: ICfg, excludeIndex: Int): Boolean = containsEqual(insulins, iCfg, excludeIndex)
+    override fun insulinWithSameCurveExists(iCfg: ICfg): Boolean = insulins.any { it.hasSameCurve(iCfg) }
 
-    private fun containsEqual(list: List<ICfg>, iCfg: ICfg, excludeIndex: Int): Boolean {
-        list.forEachIndexed { index, insulin ->
-            if (index != excludeIndex) {
-                if (iCfg.isEqual(insulin)) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-
-    override fun insulinIndex(iCfg: ICfg?): Int {
-        insulins.forEachIndexed { index, insulin ->
-            if (insulin.isEqual(iCfg)) {
-                return index
-            }
-        }
-        return -1
-    }
+    override fun insulinIndex(iCfg: ICfg?): Int = insulins.indexOfInsulin(iCfg)
 
     // Verbatim mirror of the persisted config — parse only, NO normalization, NO store. Normalization
     // happens in bootstrap (at init, and on the master when someone else wrote the value) and at edit time
@@ -328,8 +312,11 @@ class InsulinImpl(
                     val template = InsulinType.fromPeak(newICfg.insulinPeakTime)
                     newICfg.insulinNickname = rh.gs(template.label)
                 }
-                if (!containsEqual(loaded, newICfg, excludeIndex = -1)) // No Duplicated Insulin Allowed
-                    addTo(loaded, newICfg, ue = newICfg.insulinLabel.isEmpty())
+                // No duplicates. The same nickname with the same curve is the same insulin, even when the
+                // labels differ: older versions added a copy at every start, numbered "Name (1)", "Name (2)"
+                // and so on, and this removes those copies. A different nickname is kept on purpose.
+                val duplicate = loaded.any { it.insulinNickname == newICfg.insulinNickname && it.hasSameCurve(newICfg) }
+                if (!duplicate) addTo(loaded, newICfg, ue = newICfg.insulinLabel.isEmpty())
             } catch (_: Exception) {
                 //
             }

@@ -45,16 +45,18 @@ interface ConcentrationHelper {
     fun toPumpRate(rate: Double): PumpRate
 
     /**
-     * Deliverable bolus step in IU for a given IU amount, honouring BOTH the pump's amount-dependent
-     * native step (e.g. Accu-Chek Insight: 0.05 / 0.1 / 0.2 / 0.5 by bolus size) AND the current
-     * concentration: = nativeStep(amount / concentration) * concentration.
+     * The bolus step in insulin units for an amount in insulin units. It is the step of the pump itself,
+     * converted by the concentration: the same as `ActivePlugin.activePump.bolusStepSize(amount)`, see
+     * [app.aaps.core.interfaces.pump.Pump.bolusStepSize].
      *
-     * Use for IU-domain UI snapping / warnings (bolus & treatment dialogs, wizard) so the value shown
-     * to the user matches what the pump will actually deliver. NOT for the fill/prime dialog (works in
-     * cU) nor SafetyPlugin / the PumpWithConcentration boundary (they floor the raw native cU step).
+     * Use it for every amount in insulin units: the bolus and treatment dialogs, the wizard, and SafetyPlugin.
+     * They all round to this one step, so their checks agree with each other. Do NOT use it for a prime, which
+     * is in pump units (see [app.aaps.core.interfaces.constraints.ConstraintsChecker.applyPrimingConstraints]).
+     * When the bolus is given, the concentration wrapper rounds it down once more, to the step of the pump in
+     * pump units.
      *
      * @param amount bolus amount in IU
-     * @return deliverable IU step at that amount
+     * @return the step in IU at that amount
      */
     fun bolusStep(amount: Double): Double
 
@@ -126,6 +128,7 @@ interface ConcentrationHelper {
     /** show bolus with volume in µl
      * Dedicated to Prime/Fill Dialog (to show volume of fluid delivered)
      * i.e. "0.7 U (7.0 µl)"
+     * The amount is formatted with the step of the pump itself, because it is in pump units.
      *
      * @param amount insulin amount in CU
      */

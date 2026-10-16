@@ -16,11 +16,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
@@ -74,17 +77,24 @@ fun InsulinCarouselCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Peak / DIA summary
+            // Peak / DIA summary. On screen the place says which is which; a screen reader only got
+            // the bare numbers ("45 min", "5 h"), so it is told the name of each value as well.
+            val peakText = stringResource(CoreUiStrings.format_mins, iCfg.peak)
+            val diaText = stringResource(CoreUiStrings.format_hours, iCfg.dia)
+            val peakSpoken = stringResource(InterfacesStrings.confirmation_line, stringResource(CoreUiStrings.peak_label), peakText)
+            val diaSpoken = stringResource(InterfacesStrings.confirmation_line, stringResource(CoreUiStrings.dia_label), diaText)
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    text = stringResource(CoreUiStrings.format_mins, iCfg.peak),
+                    text = peakText,
                     style = MaterialTheme.typography.bodySmall,
-                    color = contentColor
+                    color = contentColor,
+                    modifier = Modifier.semantics { contentDescription = peakSpoken }
                 )
                 Text(
-                    text = stringResource(CoreUiStrings.format_hours, iCfg.dia),
+                    text = diaText,
                     style = MaterialTheme.typography.bodySmall,
-                    color = contentColor
+                    color = contentColor,
+                    modifier = Modifier.semantics { contentDescription = diaSpoken }
                 )
             }
 
@@ -92,6 +102,11 @@ fun InsulinCarouselCard(
 
             // Concentration badge
             val concentration = ConcentrationType.fromDouble(iCfg.concentration)
+            val concentrationSpoken = stringResource(
+                InterfacesStrings.confirmation_line,
+                stringResource(CoreUiStrings.concentration_label),
+                stringResource(concentration.label)
+            )
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = if (concentration != ConcentrationType.U100)
@@ -108,7 +123,9 @@ fun InsulinCarouselCard(
                     else
                         MaterialTheme.colorScheme.onPrimary,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp, vertical = 4.dp)
+                        .semantics { contentDescription = concentrationSpoken }
                 )
             }
 

@@ -13,7 +13,6 @@
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">Koristite integracijske (testne) poslužitelje</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Učitava podatke u Tidepool</string>
     <string name="upload_now">Pošalji sada</string>
     <!-- Xdrip StatusLine -->
@@ -32,7 +31,6 @@
     <string name="units_short">J</string>
     <string name="hour_short">h</string>
     <string name="rate_duration">Stopa: %1$.2fU/h (%2$.2f%%) \nTrajanje %3$d min</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Danas</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="description_sms_communicator">Daljinsko upravljanje AndroidAPS-om pomoću SMS naredbi.</string>

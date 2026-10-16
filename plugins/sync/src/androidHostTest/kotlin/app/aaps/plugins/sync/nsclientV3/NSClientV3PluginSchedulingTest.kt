@@ -3,11 +3,11 @@ package app.aaps.plugins.sync.nsclientV3
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.nsclient.NSClientRepository
+import app.aaps.plugins.sync.SyncStringsValues
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.plugins.sync.nsclientV3.ws.NsConnection
 import app.aaps.plugins.sync.nsclientV3.ws.NsLoadExecutor
 import app.aaps.plugins.sync.nsclientV3.ws.NsLoadStep
-import app.aaps.plugins.sync.SyncStringsValues
 import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
@@ -52,7 +52,7 @@ class NSClientV3PluginSchedulingTest : TestBaseWithProfile() {
         whenever(nsLoadExecutor.idle).thenReturn(emptyFlow())
         whenever(nsConnection.connected).thenReturn(MutableStateFlow(false))
         whenever(receiverDelegate.connectivityStatusFlow)
-            .thenReturn(MutableStateFlow(ReceiverDelegate.ConnectivityStatus("", allowed = true, connected = true)))
+            .thenReturn(MutableStateFlow(ConnectivityGate.ConnectivityStatus("", allowed = true, connected = true)))
         whenever(receiverDelegate.allowed).thenReturn(true)
         whenever(persistenceLayer.observeChanges(any<kotlin.reflect.KClass<*>>())).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())

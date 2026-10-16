@@ -63,7 +63,6 @@ class LinearCalibrationPlugin(
         .mainType(PluginType.CALIBRATION)
         .icon(IcCalibration)
         .pluginName(CalibrationStrings.linear_calibration_name)
-        .shortName(CalibrationStrings.calibration_shortname)
         .description(CalibrationStrings.description_linear_calibration)
         .composeContent { CalibrationComposeContent(persistenceLayer, profileUtil, aapsLogger, dateUtil) },
     aapsLogger, rh, notificationManager

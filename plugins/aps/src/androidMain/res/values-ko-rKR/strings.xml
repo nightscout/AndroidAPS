@@ -9,7 +9,6 @@
     <string name="dynisf_shortname">DYNISF</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d 요소의 배열.\n실제 값:</string>
-    <string name="oaps_shortname">OAPS</string>
     <string name="description_ama">2017년의 알고리즘</string>
     <string name="description_smb">고급사용자를 위한 가장 최신의 알고리즘</string>
     <string name="description_smb_dynamic_isf">동적/자동 ISF를 사용하는 고급 사용자를 위한 최신 알고리즘</string>
@@ -39,7 +38,6 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">최근 3분 이내에 Bolus가 주입되었습니다. SMB를 건너뜁니다.</string>
     <string name="pump_not_initialized">펌프가 초기화 되지 않았습니다!</string>
-    <string name="loop_shortname">LOOP</string>
     <string name="description_loop">Loop를 활성화 혹은 비활성화합니다.</string>
     <string name="no_aps_selected">APS가 선택되지 않았거나 제공된 결과가 없습니다.</string>
     <string name="ignore5m">5분간 무시하기</string>
@@ -60,7 +58,6 @@
     <string name="loop_smb_set_by_pump_label">펌프에 의한 SMB 설정</string>
     <string name="fallback_smb_no_tdd">SMB로 폴백. TDD 데이터가 충분하지 않습니다.</string>
     <!-- Autotune -->
-    <string name="autotune_shortname">AT</string>
     <string name="autotune_default_tune_days_title">데이터 일 수</string>
     <string name="autotune_tunedprofile_name">조정된</string>
     <string name="autotune_profile">프로파일 :</string>

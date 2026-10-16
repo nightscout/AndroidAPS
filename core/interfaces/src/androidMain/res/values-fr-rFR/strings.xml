@@ -87,6 +87,11 @@
     <string name="pref_show_week_number">Afficher numéro semaine</string>
     <string name="pref_show_date">Afficher la date</string>
     <string name="pref_show_seconds">Afficher les secondes</string>
+    <string name="pref_show_complication1">Afficher Complication 1</string>
+    <string name="pref_show_complication2">Afficher Complication 2</string>
+    <string name="pref_show_complication3">Afficher Complication 3</string>
+    <string name="pref_show_complication4">Afficher Complication 4</string>
+    <string name="pref_show_complication5">Afficher Complication 5</string>
     <string name="default_custom_watchface_comment">Cadran par défaut, vous pouvez cliquer sur le bouton EXPORTER WATCHFACE pour générer un modèle</string>
     <string name="default_custom_watchface_external_comment">Cadran par défaut incluant les vues externes pour les suiveurs, vous pouvez cliquer sur le bouton EXPORTER LE MODÈLE pour générer un modèle</string>
     <string name="wear_default_watchface">Cadran par défaut</string>
@@ -109,6 +114,7 @@
     <string name="insulin_peak_time">Délai du pic [min]</string>
     <!-- Concentration -->
     <string name="u10">U10</string>
+    <string name="u20">U20</string>
     <string name="u40">U40</string>
     <string name="u50">U50</string>
     <string name="u100">U100</string>
@@ -125,13 +131,16 @@
     <string name="pumpsuspended">Pompe arrêtée</string>
     <string name="loopsuspended">La Boucle est suspendue</string>
     <string name="pump_disconnected">Pompe déconnectée</string>
+    <string name="basalprofilenotaligned">Valeurs des débits de basal non alignées sur des heures: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valeur de basal remplacée par la valeur minimale autorisée : %1$s</string>
     <string name="maximumbasalvaluereplaced">Valeur de basal remplacée par la valeur maximale autorisée : %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
     <string name="record">Enregistrement</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">GLUCIDES ÉTENDUS</string>
+    <string name="profile_low_target">Cible basse du profil</string>
     <string name="profile_high_target">Cible haute du profil</string>
     <string name="profile_dia">Valeur DAI du profil</string>
     <string name="profile_sensitivity_value">Valeur de sensibilité du profil</string>
@@ -143,6 +152,8 @@
     <string name="bolus_constraint_applied_warn">Contrainte de Bolus appliquée : %1$.2f U vers %2$.2f U</string>
     <string name="bolus_recorded_only">Les bolus seront seulement enregistrés (pas délivrés par la pompe)</string>
     <string name="advisoralarm">Alerter quand il est temps de manger</string>
-    <string name="wizard_ecarbs">eGlucides %1$d g / %2$d h (+%3$d min)</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eGlucides %1$d g / %2$d h (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Le plugin %1$s n\'a pas pu démarrer et pourrait ne pas fonctionner. Veuillez redémarrer AAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Le plugin %1$s a rencontré une erreur et une partie de celui-ci s\'est arrêtée. Veuillez redémarrer AAPS.</string>
 </resources>

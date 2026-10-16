@@ -8,8 +8,10 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.CoreUiStrings
@@ -156,16 +158,22 @@ class ConstraintsCheckerImpl(
     }
 
     override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
+        applyPluginBolusConstraints(insulin)
+        // Fold the active pump's own cU bolus cap into the IU result (single cU<->IU conversion point via ch).
+        (activePlugin.activePumpInternal as? PumpPluginConstraints)?.let { pump ->
+            val capIu = ch.fromPump(pump.applyBolusConstraints(ch.toPump(insulin.value())))
+            insulin.setIfSmaller(capIu, rh.gs(CoreUiStrings.limitingbolus.withArgs(capIu, rh.gs(CoreUiStrings.pumplimit))), pump)
+        }
+        return insulin
+    }
+
+    /** The bolus limits of the constraint plugins only, without the cap of the pump. */
+    private fun applyPluginBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class)
         for (p in constraintsPlugins) {
             val constrain = p as PluginConstraints
             if (!p.isEnabled()) continue
             constrain.applyBolusConstraints(insulin)
-        }
-        // Fold the active pump's own cU bolus cap into the IU result (single cU<->IU conversion point via ch).
-        (activePlugin.activePumpInternal as? PumpPluginConstraints)?.let { pump ->
-            val capIu = ch.fromPump(pump.applyBolusConstraints(ch.toPump(insulin.value())))
-            insulin.setIfSmaller(capIu, rh.gs(CoreUiStrings.limitingbolus.withArgs(capIu, rh.gs(CoreUiStrings.pumplimit))), pump)
         }
         return insulin
     }
@@ -246,4 +254,16 @@ class ConstraintsCheckerImpl(
 
     override suspend fun getMaxIOBAllowed(): Constraint<Double> =
         applyMaxIOBConstraints(ConstraintObject(Double.MAX_VALUE, aapsLogger))
+
+    override fun applyPrimingConstraints(amount: PumpInsulin): PumpInsulin {
+        // The limit is the max bolus as a plain number of pump units, not converted by the concentration. This is
+        // how priming was limited before. A prime fills the tube and the cannula, it does not go into the body.
+        val max = applyPluginBolusConstraints(ConstraintObject(Double.MAX_VALUE, aapsLogger)).value()
+        val pump = activePlugin.activePumpInternal
+        var capped = amount.cU.coerceIn(0.0, max)
+        // The pump's own limits are in its units already: its max, and for Insight also its min.
+        (pump as? PumpPluginConstraints)?.let { capped = it.applyBolusConstraints(PumpInsulin(capped)).cU }
+        // Rounded down to the step of the pump itself, because the amount is in its units.
+        return PumpInsulin(Round.floorTo(capped, pump.bolusStepSize(capped)))
+    }
 }

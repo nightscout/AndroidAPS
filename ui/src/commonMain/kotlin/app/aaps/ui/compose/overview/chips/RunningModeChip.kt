@@ -26,9 +26,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.RM
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcLoopClosed
@@ -40,7 +43,9 @@ import app.aaps.core.ui.compose.icons.IcLoopPaused
 import app.aaps.core.ui.compose.icons.IcLoopPausedDst
 import app.aaps.core.ui.compose.icons.IcLoopPausedPump
 import app.aaps.core.ui.compose.icons.IcLoopSuperbolus
+import app.aaps.core.ui.compose.icons.IcQuestion
 import app.aaps.core.ui.compose.loopColor
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.compose.overview.graphs.TriangleShape
 
 /**
@@ -49,9 +54,15 @@ import app.aaps.ui.compose.overview.graphs.TriangleShape
  * @see RunningModeChipClosedLoopSmbPreview
  * @see RunningModeChipOpenLoopSmbPreview
  */
+/**
+ * [mode] is null when no running mode is known for now - a client that has never synced a permanent
+ * record, or a database that has just been reset. That is drawn as a question mark rather than as
+ * [RM.Mode.DISABLED_LOOP], which would tell the user the loop is off when nothing of the sort is
+ * known.
+ */
 @Composable
 fun RunningModeChip(
-    mode: RM.Mode,
+    mode: RM.Mode?,
     text: String,
     progress: Float,
     modifier: Modifier = Modifier,
@@ -61,8 +72,8 @@ fun RunningModeChip(
     enabled: Boolean = true,
     onClick: () -> Unit = {}
 ) {
-    val isTemporary = mode.mustBeTemporary()
-    val iconColor = mode.toColor()
+    val isTemporary = mode?.mustBeTemporary() == true
+    val iconColor = mode?.toColor() ?: MaterialTheme.colorScheme.onSurfaceVariant
     val containerColor = if (isTemporary) iconColor.copy(alpha = 0.2f) else Color.Transparent
     val haptic = LocalHapticFeedback.current
 
@@ -91,18 +102,21 @@ fun RunningModeChip(
                 ) {
                     Box(modifier = Modifier.size(AapsSpacing.chipIconSize)) {
                         Icon(
-                            imageVector = mode.toIcon(),
+                            imageVector = mode?.toIcon() ?: IcQuestion,
                             contentDescription = text,
                             tint = iconColor,
                             modifier = Modifier.fillMaxSize()
                         )
                         if (smbEnabled) {
+                            // Only a small drawn triangle; named so the chip reads "Closed Loop, SMB".
+                            val smbLabel = stringResource(CoreUiStrings.smb_shortname)
                             Box(
                                 modifier = Modifier
                                     .align(Alignment.BottomEnd)
                                     .offset(x = 4.dp, y = 4.dp)
                                     .size(13.dp)
                                     .background(AapsTheme.elementColors.insulin, TriangleShape)
+                                    .semantics { contentDescription = smbLabel }
                             )
                         }
                     }

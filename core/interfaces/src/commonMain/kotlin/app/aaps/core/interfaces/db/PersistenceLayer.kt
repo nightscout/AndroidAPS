@@ -49,6 +49,19 @@ data class DatabaseMaintenanceInfo(
     val report: String
 )
 
+/** How a [PersistenceLayer.vacuumDatabase] ended. Any other failure is thrown. */
+enum class VacuumResult {
+
+    /** The database was compacted. */
+    DONE,
+
+    /** It did not fit in memory at first, so old APS results and device statuses were deleted, and then it was compacted. */
+    DONE_AFTER_TRIM,
+
+    /** It did not fit in memory even after that. Trying again soon would only fail the same way. */
+    OUT_OF_MEMORY
+}
+
 interface PersistenceLayer {
 
     /**
@@ -63,17 +76,21 @@ interface PersistenceLayer {
 
     /**
      * Perform database maintenance
-     * @param keepDays remove all records older than
+     * @param olderThan remove all records with a timestamp before this time (epoch ms). The caller
+     *   decides the time, so it can check the clock before anything is deleted.
      * @param deleteTrackedChanges delete tracked changes from all tables
      */
-    suspend fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String
+    suspend fun cleanupDatabase(olderThan: Long, deleteTrackedChanges: Boolean): String
 
     /**
      * Full VACUUM of the database: defragments the file and returns free pages to the OS.
      * Heavy and memory intensive — only call when nothing else is using the DB (e.g. on startup
      * before plugins/loop/sync start). May throw if the DB is busy/locked.
+     *
+     * When the database does not fit in memory, APS results and device statuses older than a few days
+     * are deleted and it is tried once more - see [VacuumResult].
      */
-    suspend fun vacuumDatabase()
+    suspend fun vacuumDatabase(): VacuumResult
 
     /**
      * Collect DB size, free space and per-table row counts (total, older-than-retention, tracked
@@ -713,6 +730,21 @@ interface PersistenceLayer {
     suspend fun insertOrUpdateProfileSwitch(profileSwitch: PS, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): TransactionResult<PS>
 
     /**
+     * Insert or update several records in one database transaction, so an observer sees all of them or none.
+     * An insulin change writes the permanent switch and a copy of the running temporary one. Written one by one,
+     * the pump queue could set the permanent profile first and drop the temporary percentage for a moment.
+     * One user entry is logged for the whole call.
+     *
+     * @param profileSwitches records
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of inserted/updated records
+     */
+    suspend fun insertOrUpdateProfileSwitches(profileSwitches: List<PS>, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): TransactionResult<PS>
+
+    /**
      * Invalidate record with id
      *
      * @param id record id
@@ -761,6 +793,19 @@ interface PersistenceLayer {
      * @return running running mode or default
      */
     suspend fun getRunningModeActiveAt(timestamp: Long): RM
+
+    /**
+     * Get the running mode at a time, or null when none is known.
+     *
+     * [getRunningModeActiveAt] answers with [RM.DEFAULT_MODE] when nothing is stored, which reads as
+     * "the loop is disabled" rather than "nothing is known". A follower that has never synced a
+     * permanent record - a fresh install, or one whose Nightscout pruned it - would then be told the
+     * loop is off. Display code uses this instead and shows the difference.
+     *
+     * @param timestamp time
+     * @return running mode, or null when none applies at that time
+     */
+    suspend fun getRunningModeActiveAtOrNull(timestamp: Long): RM?
 
     /**
      *  Get running mode by NS id
@@ -899,6 +944,17 @@ interface PersistenceLayer {
     suspend fun getTemporaryBasalActiveAt(timestamp: Long): TB?
 
     /**
+     * Get every temporary basal running at time, also those that overlap
+     *
+     * For code that looks up many times of a range from one read: these together with the ones starting
+     * inside the range are every entry [getTemporaryBasalActiveAt] can return for a time of the range.
+     *
+     * @param timestamp time
+     * @return running temporary basals, oldest first
+     */
+    suspend fun getTemporaryBasalsActiveAt(timestamp: Long): List<TB>
+
+    /**
      * Get latest temporary basal
      *
      * @return temporary basal or null if none in db
@@ -916,15 +972,6 @@ interface PersistenceLayer {
      *  @return temporary basal
      */
     suspend fun getTemporaryBasalByNSId(nsId: String): TB?
-
-    /**
-     * Get running temporary basal in time interval
-     *
-     * @param startTime from
-     * @param endTime to
-     * @return List of temporary basals
-     */
-    suspend fun getTemporaryBasalsActiveBetweenTimeAndTime(startTime: Long, endTime: Long): List<TB>
 
     /**
      * Get running temporary basal starting in time interval
@@ -1046,6 +1093,15 @@ interface PersistenceLayer {
      */
     suspend fun insertTemporaryBasalWithTempId(temporaryBasal: TB): TransactionResult<TB>
 
+    /**
+     * Keeps the temp basals and boluses with only a temporary id (set by AAPS, not found in the pump history yet)
+     * as they were set: each is stored again with its temporary id as pump id, so it is uploaded to Nightscout, and
+     * the old entry is invalidated. For a pump change, after which no pump confirms them any more.
+     *
+     * @return how many records were kept
+     */
+    suspend fun confirmTemporaryIds(): Int
+
     // EB
     /**
      * Get running extended bolus at time
@@ -1054,6 +1110,17 @@ interface PersistenceLayer {
      * @return running extended bolus or null if none is running
      */
     suspend fun getExtendedBolusActiveAt(timestamp: Long): EB?
+
+    /**
+     * Get every extended bolus running at time, also those that overlap
+     *
+     * For code that looks up many times of a range from one read: these together with the ones starting
+     * inside the range are every entry [getExtendedBolusActiveAt] can return for a time of the range.
+     *
+     * @param timestamp time
+     * @return running extended boluses, oldest first
+     */
+    suspend fun getExtendedBolusesActiveAt(timestamp: Long): List<EB>
 
     /**
      * Get latest extended bolus
@@ -1166,6 +1233,17 @@ interface PersistenceLayer {
      * @return running temporary target or null if none is running
      */
     suspend fun getTemporaryTargetActiveAt(timestamp: Long): TT?
+
+    /**
+     * Get every temporary target running at time, also those that overlap
+     *
+     * For code that looks up many times of a range from one read: these together with the ones starting
+     * inside the range are every entry [getTemporaryTargetActiveAt] can return for a time of the range.
+     *
+     * @param timestamp time
+     * @return running temporary targets, oldest first
+     */
+    suspend fun getTemporaryTargetsActiveAt(timestamp: Long): List<TT>
 
     /**
      *  Get highest id in database
@@ -1613,6 +1691,23 @@ interface PersistenceLayer {
      * @return List of APSResult
      */
     suspend fun getApsResults(start: Long, end: Long): List<APSResult>
+
+    /**
+     * Get the variable sensitivity of every APSResult in an interval, oldest first
+     *
+     * Reads only the time and the value, not the whole result, so it is cheap enough to run on every
+     * calculation. Results without a value, or with NaN, are left out.
+     *
+     * @param start from
+     * @param end to
+     * @return list of values in mg/dL
+     */
+    suspend fun getVariableSensitivities(start: Long, end: Long): List<VariableSensitivity>
+
+    data class VariableSensitivity(
+        val timestamp: Long,
+        val valueMgdl: Double
+    )
 
     /**
      * Insert or update ApsResult record

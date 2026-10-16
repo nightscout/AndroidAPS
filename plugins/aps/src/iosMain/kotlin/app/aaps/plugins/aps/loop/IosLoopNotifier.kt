@@ -3,8 +3,8 @@ package app.aaps.plugins.aps.loop
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.notifications.IosNotificationDelegate
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.plugins.aps.ApsStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -96,7 +96,7 @@ class IosLoopNotifier(
      * same behaviour the Android side gets from reusing one notification id.
      *
      * The sound is not decoration. `AndroidLoopNotifier` posts both of these on an `IMPORTANCE_HIGH`
-     * channel and calls `setVibrate` on each, so on Android they alert. This posted silently, which
+     * channel that vibrates, so on Android they alert. This posted silently, which
      * made "the loop wants carbs" and "there is a suggestion waiting" easy to miss entirely - and
      * unlike `IosSystemNotificationPlatform` there is no separate `AlarmSoundPlayer` path here to
      * carry the audio instead. The interface says a silent implementation of this is a safety

@@ -66,6 +66,9 @@ import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.PatchState
 import app.aaps.pump.eopatch.vo.PatchState.Companion.create
 import app.aaps.pump.eopatch.vo.TempBasal
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -94,9 +97,6 @@ import java.util.Arrays
 import java.util.concurrent.Callable
 import java.util.concurrent.TimeUnit
 import javax.crypto.KeyAgreement
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 import kotlin.Any
 import kotlin.Boolean
 import kotlin.ByteArray
@@ -215,7 +215,7 @@ class PatchManagerExecutor(
                 .filter(Predicate { patch.connectionState.isConnected })
                 .concatMapIterable<AlarmCode>(EventEoPatchAlarm::alarmCodes)
                 .filter(AlarmCode::isPatchOccurrenceAlarm)
-                .flatMap(Function { it: AlarmCode -> pauseBasalImpl(0.0f, System.currentTimeMillis(), it).toObservable() })
+                .flatMap(Function { it: AlarmCode -> pauseBasalImpl(0.0f, it).toObservable() })
                 .subscribe()
         )
 
@@ -403,9 +403,11 @@ class PatchManagerExecutor(
     }
 
     fun pauseBasal(pauseDurationHour: Float): Single<out BaseResponse> {
-        return pauseBasalImpl(pauseDurationHour, 0, null)
+        return pauseBasalImpl(pauseDurationHour, null)
             .observeOn(SS)
-            .timeout(DEFAULT_API_TIME_OUT, TimeUnit.SECONDS)
+            // Longer than the other commands: the pause first waits until a bolus, an SMB and a temp basal are
+            // stopped. With 10 s for all of it, a suspend during an SMB timed out and failed.
+            .timeout(PAUSE_API_TIME_OUT, TimeUnit.SECONDS)
     }
 
     //==============================================================================================
@@ -413,8 +415,8 @@ class PatchManagerExecutor(
     //==============================================================================================
     @Inject lateinit var pauseBasalTask: PauseBasalTask
 
-    private fun pauseBasalImpl(pauseDurationHour: Float, alarmOccurredTime: Long, alarmCode: AlarmCode?): Single<out BaseResponse> {
-        return pauseBasalTask.pause(pauseDurationHour, alarmOccurredTime, alarmCode)
+    private fun pauseBasalImpl(pauseDurationHour: Float, alarmCode: AlarmCode?): Single<out BaseResponse> {
+        return pauseBasalTask.pause(pauseDurationHour, alarmCode)
     }
 
     //==============================================================================================
@@ -642,6 +644,9 @@ class PatchManagerExecutor(
     companion object {
 
         private const val DEFAULT_API_TIME_OUT: Long = 10 // SECONDS
+
+        /** A pause waits for queued commands that stop delivery before it is sent, see [pauseBasal]. */
+        private const val PAUSE_API_TIME_OUT: Long = 60 // SECONDS
 
         //==============================================================================================
         // Security
