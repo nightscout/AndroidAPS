@@ -48,4 +48,7 @@ object AapsSpacing {
     val chipHeight = 35.dp
     val chipIconSize = 24.dp
     val chipProgressHeight = 3.dp
+
+    // Bottom padding of a list under a FloatingActionButton
+    val fabClearance = 96.dp
 }
