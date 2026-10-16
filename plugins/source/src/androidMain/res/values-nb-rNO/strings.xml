@@ -22,7 +22,6 @@
     <string name="random_bg">Vilkårlig BS</string>
     <string name="description_source_random_bg">Generer vilkårlige BS-data (kun demo formål)</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Motta blodsukkerverdier fra Syai/Ottai App.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">SI app</string>
