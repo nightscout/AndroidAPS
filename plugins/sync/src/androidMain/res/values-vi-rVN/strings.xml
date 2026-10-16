@@ -127,6 +127,7 @@
     <string name="wear_infos_watchface">Mặt đồng hồ thông tin</string>
     <string name="wear_export_watchface">Xuất mẫu</string>
     <string name="wear_new_custom_watchface_exported">Mẫu mặt đồng hồ tùy chỉnh đã được xuất</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Gửi lại toàn bộ dữ liệu</string>
     <string name="open_settings_on_wear">Mở Cài đặt trên Wear</string>
     <string name="wear_import_custom_watchface_title">Chọn mặt đồng hồ</string>
@@ -157,6 +158,7 @@
     <string name="aps">APS</string>
     <string name="last_run">Lần chạy gần nhất</string>
     <string name="last_enact">Lần thực hiện cuối</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fU %2$.0f%%</string>
     <string name="today">Hôm nay</string>
     <string name="weighted">weighted</string>
     <string name="full_xdrip_sync_comment">Đồng bộ đầy đủ? Quá trình này có thể mất một thời gian và cho đến khi hoàn tất, bạn sẽ không thấy dữ liệu mới trong xDrip+.</string>
