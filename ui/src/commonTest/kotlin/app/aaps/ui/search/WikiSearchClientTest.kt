@@ -53,7 +53,7 @@ class WikiSearchClientTest {
     private fun List<SearchIndexEntry>.urls() = map { (it.item as SearchableItem.Wiki).url }
 
     @Test
-    fun `pages in the app language come first, then the english pages it does not have`() = runTest {
+    fun `pages in the app language come first and then the english pages it does not have`() = runTest {
         answers["androidaps-de"] = results(page("de", "ExtendedCarbs.html"), page("de", "CobCalculation.html"))
         answers["androidaps"] = results(page("en", "ExtendedCarbs.html"), page("en", "Autosens.html"))
 
@@ -91,7 +91,7 @@ class WikiSearchClientTest {
     }
 
     @Test
-    fun `the translations list is read once, for the english wiki`() = runTest {
+    fun `the translations list is read once for the english wiki`() = runTest {
         val client = client("de")
 
         client.search("carbs")
@@ -101,7 +101,7 @@ class WikiSearchClientTest {
     }
 
     @Test
-    fun `a failed translations list still finds english, and is asked again next time`() = runTest {
+    fun `a failed translations list still finds english and is asked again next time`() = runTest {
         answers["androidaps-de"] = results(page("de", "ExtendedCarbs.html"))
         answers["androidaps"] = results(page("en", "Autosens.html"))
         val client = client("de")
@@ -123,7 +123,7 @@ class WikiSearchClientTest {
     }
 
     @Test
-    fun `every section of a page is its own result, linked by its anchor`() = runTest {
+    fun `every section of a page is its own result linked by its anchor`() = runTest {
         answers["androidaps"] = results(
             """{"domain":"$DOMAIN","path":"/en/latest/Autosens.html","title":"Autosens","blocks":[
                 {"id":"how-it-works","title":"How it works","highlights":{"content":["uses <span>carbs</span> too"]}},
