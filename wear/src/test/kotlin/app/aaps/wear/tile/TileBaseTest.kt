@@ -128,6 +128,17 @@ internal class TileBaseTest {
         }
     }
 
+    /** Five QuickWizard entries valid at the same time matched no arrangement, and the tile came out blank. */
+    @Test fun `enabled with more than 4 actions draws the first four`() {
+        enabled()
+        whenever(source.getValidFor()).thenReturn(null)
+        whenever(source.getSelectedActions()).thenReturn((1..6).map { action(text = "A$it") })
+        val column = contentOf(service())
+        assertThat(column).isInstanceOf(Column::class.java)
+        // The shape of four actions: a row, the spacer, a row.
+        assertThat((column as Column).contents).hasSize(3)
+    }
+
     @Test fun `square screen with icon-only and long-label actions still builds a column`() {
         enabled()
         whenever(source.getValidFor()).thenReturn(null)

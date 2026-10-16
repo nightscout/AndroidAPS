@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -49,11 +50,12 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.CarbTimeRow
 import app.aaps.core.ui.compose.DateTimeSection
+import app.aaps.core.ui.compose.ExpandableNumberInputRow
 import app.aaps.core.ui.compose.LabeledSwitch
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.QuickAddButtons
+import app.aaps.core.ui.compose.TimeOffsetRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
@@ -62,6 +64,7 @@ import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.UiStrings
@@ -350,8 +353,11 @@ internal fun CarbsDialogContent(
                         )
                     }
 
-                    // Duration
-                    NumberInputRow(
+                    // Duration. Folded: only extended carbs use it, and an open field right under
+                    // the carbs invites the grams into it.
+                    var durationExpanded by rememberSaveable { mutableStateOf(false) }
+                    val durationExpandRequester = rememberBringIntoViewOnExpand(durationExpanded)
+                    ExpandableNumberInputRow(
                         labelRef = CoreUiStrings.duration_label,
                         value = uiState.durationHours.toDouble(),
                         onValueChange = onDurationChange,
@@ -359,7 +365,9 @@ internal fun CarbsDialogContent(
                         step = 1.0,
                         valueFormat = NumberFormat.INTEGER,
                         unitLabel = InterfacesStrings.shorthour,
-                        modifier = itemModifier
+                        expanded = durationExpanded,
+                        onExpandedChange = { durationExpanded = it },
+                        modifier = itemModifier.bringIntoViewRequester(durationExpandRequester)
                     )
 
                     // Bolus Reminder (conditional)
@@ -373,10 +381,11 @@ internal fun CarbsDialogContent(
                     }
 
                     // Carb time (at bottom)
-                    CarbTimeRow(
+                    TimeOffsetRow(
+                        labelRef = CoreUiStrings.wizard_carb_time,
                         offsetMinutes = uiState.timeOffsetMinutes,
-                        alarmChecked = uiState.alarmChecked,
                         onOffsetChange = { onTimeOffsetChange(it.toDouble()) },
+                        alarmChecked = uiState.alarmChecked,
                         onAlarmChange = onAlarmChange,
                         resolvedTimeText = if (uiState.timeOffsetMinutes != 0) timeString else null,
                         // Negative carbs (COB removal) can't be future-dated — cap the forward range at 0 (now).

@@ -215,6 +215,15 @@ class CommandQueueImplementation(
             // Central profile-set notification lifecycle (unified across all pump drivers). Returns true on a
             // successful write, in which case we persist the EffectiveProfileSwitch below.
             if (postProfileWriteResult(result)) {
+                // The switches can have changed while the pump was busy, which took 40 s on a Medtronic: a scene
+                // ended and cut this one, or an insulin change wrote a newer one. The event for that change waits
+                // behind this one and sets the switch then in force. An EPS for this one now put the old profile in
+                // force until that next pump write: the percentage of the scene that had ended, or the insulin from
+                // before the change. So it gets no EPS and no notice.
+                if (profileFunction.getRequestedProfile()?.id != it.id) {
+                    aapsLogger.debug(LTag.PROFILE, "PS id=${it.id} is no longer the requested switch after the pump set it, no EPS for it")
+                    return@let
+                }
                 val requested = ProfileSealed.PS(it, activePlugin)
                 // Pump may return enacted == false if basal profile is the same, but IC/ISF can be different
                 val nonCustomized = requested.convertToNonCustomizedProfile(dateUtil)
@@ -223,7 +232,10 @@ class CommandQueueImplementation(
                 val basalBlocks = (report as? BasalReport.Given)?.blocks ?: nonCustomized.basalBlocks
                 // One notice for a real write that is not internal (a Scene reverting its own ProfileSwitch, #4959).
                 // A write the pump did not need (enacted == false) stays silent, and a rejected report has its alarm.
-                if (result?.enacted == true && !silent && report != BasalReport.Rejected)
+                // Internal also when a scene marked this switch: while the pump was busy the events queued up, and
+                // the one that led here can be an unrelated one, a Nightscout id arriving, with no silent flag.
+                val silentWrite = silent || profileSwitchSilentGate.isSilent(it.id, dateUtil.now())
+                if (result?.enacted == true && !silentWrite && report != BasalReport.Rejected)
                     notifyProfileSet(asked = nonCustomized.basalBlocks, given = basalBlocks)
                 // A PS that is already effective only had to be set in the pump again. It gets no second EPS,
                 // unless this pump gives another basal than the EPS holds, e.g. a new pump with another step.

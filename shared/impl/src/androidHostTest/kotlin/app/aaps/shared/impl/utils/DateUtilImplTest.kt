@@ -523,7 +523,7 @@ class DateUtilImplTest {
         val rh = FakeResourceHelper()
         val now = System.currentTimeMillis()
         val twoHoursAgo = now - (2 * 60 * 60 * 1000L)
-        val expected = "2 hours ago"
+        val expected = "2.0h ago"
 
         // ACT
         val newResult = dateUtilImpl.hourAgo(twoHoursAgo, rh)
@@ -539,7 +539,7 @@ class DateUtilImplTest {
         // ARRANGE
         val rh = FakeResourceHelper()
         val twoHoursAgo = fixedInstant.minus(2, java.time.temporal.ChronoUnit.HOURS).toEpochMilli()
-        val expected = "2 hours ago"
+        val expected = "2.0h ago"
 
         // ACT
         val newResult = dateUtilImplDeter.hourAgo(twoHoursAgo, rh)
@@ -554,7 +554,7 @@ class DateUtilImplTest {
         val rh = FakeResourceHelper()
         val now = System.currentTimeMillis()
         val threeDaysAgo = now - (3 * 24 * 60 * 60 * 1000L)
-        val expected = "3 days ago"
+        val expected = "3.0 days ago"
 
         // ACT
         val newResult = dateUtilImpl.dayAgo(threeDaysAgo, rh)
@@ -570,7 +570,7 @@ class DateUtilImplTest {
         // ARRANGE
         val rh = FakeResourceHelper()
         val threeDaysAgo = fixedInstant.minus(3, java.time.temporal.ChronoUnit.DAYS).toEpochMilli()
-        val expected = "3 days ago"
+        val expected = "3.0 days ago"
 
         // ACT
         // We test the non-rounding case here for simplicity
@@ -1492,24 +1492,10 @@ class DateUtilImplTest {
                 app.aaps.core.interfaces.R.string.minago_long -> "${args.firstOrNull() ?: ""} minutes ago"
                 app.aaps.core.interfaces.R.string.secago      -> "${args.firstOrNull() ?: ""} sec ago"
 
-                app.aaps.core.interfaces.R.string.hoursago    -> {
-                    val hours = when (val arg = args.firstOrNull()) {
-                        is Double -> arg.toLong()
-                        is Long   -> arg
-                        else      -> 0L
-                    }
-                    "${hours} hours ago"
-                }
-
-                app.aaps.core.interfaces.R.string.days_ago_round,
-                app.aaps.core.interfaces.R.string.days_ago    -> {
-                    val days = when (val arg = args.firstOrNull()) {
-                        is Double -> arg.toLong()
-                        is Long   -> arg
-                        else      -> 0L
-                    }
-                    "${days} days ago"
-                }
+                // The English patterns, formatted for real: a Long passed to %1$.1f throws here like it does on a phone
+                app.aaps.core.interfaces.R.string.hoursago       -> String.format(Locale.US, "%1$.1fh ago", *args)
+                app.aaps.core.interfaces.R.string.days_ago       -> String.format(Locale.US, "%1$.1f days ago", *args)
+                app.aaps.core.interfaces.R.string.days_ago_round -> String.format(Locale.US, "%1$.0f days ago", *args)
                 // Add more formatted strings here as needed by other tests
                 else                                          -> getStringForId(id)
             }

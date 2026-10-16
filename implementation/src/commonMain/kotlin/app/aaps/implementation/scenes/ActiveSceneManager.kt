@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.scenes.ActiveSceneSnapshot
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.keys.StringNonKey
@@ -25,6 +26,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNull
@@ -72,9 +74,19 @@ class ActiveSceneManager(
         // records change. Symmetric: on master we have Room ids and watch for NS ids
         // to land; on client we have NS ids and watch for matching Room ids to appear.
         scope.launch { persistenceLayer.observeChanges<TT>().collect { reconcileTt(it) } }
-        scope.launch { persistenceLayer.observeChanges<PS>().collect { reconcilePs(it) } }
+        // Resilient: following an insulin copy reads the database, and an exception there must neither crash the
+        // app (this scope has no handler) nor stop the collector for good.
+        persistenceLayer.observeChanges<PS>().collectResilient(scope, aapsLogger, LTag.UI) { reconcilePs(it) }
         scope.launch { persistenceLayer.observeChanges<RM>().collect { reconcileRm(it) } }
         scope.launch { persistenceLayer.observeChanges<TE>().collect { reconcileTe(it) } }
+        // A copy written while the app was not running, or just before it was killed, came with no change event.
+        scope.launch {
+            try {
+                followInsulinCopyNow()
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.UI, "Following the insulin copy of the scene's profile switch failed", e)
+            }
+        }
     }
 
     /** Set the active scene state (called by SceneExecutor on activation) */
@@ -189,10 +201,56 @@ class ActiveSceneManager(
         updateScopedRecords(sr.copy(ttId = id, ttNsId = nsId))
     }
 
-    private fun reconcilePs(records: List<PS>) {
+    private suspend fun reconcilePs(records: List<PS>) {
+        followInsulinCopy(records)
         val sr = _activeSceneState.value?.scopedRecords ?: return
         val (id, nsId) = pickPair(records, sr.psId, sr.psNsId) { it.id to it.ids.nightscoutId } ?: return
         updateScopedRecords(sr.copy(psId = id, psNsId = nsId))
+    }
+
+    /**
+     * An insulin change while the scene runs puts a copy of the scene's profile switch in force: the same profile,
+     * percentage and time shift, and the same end, with the new insulin. From then on the copy is the scene's switch.
+     * Before, the scene lost track of it: ending the scene left its percentage running, and the profile chip and the
+     * watch no longer showed it as the scene's. Called for each change of profile switches.
+     */
+    internal suspend fun followInsulinCopy(records: List<PS>) {
+        val state = _activeSceneState.value ?: return
+        val psId = state.scopedRecords.psId ?: return
+        if (records.none { it.id != psId && it.timestamp > state.activatedAt }) return
+        follow(state, persistenceLayer.getProfileSwitchesFromTime(state.activatedAt, true))
+    }
+
+    /**
+     * Follows a copy the database already has, and returns the scene's profile switch id after it. For the end of
+     * the scene, which must not depend on the change event having run first, and for the start of the app.
+     */
+    suspend fun followInsulinCopyNow(): Long? {
+        val state = _activeSceneState.value ?: return null
+        if (state.scopedRecords.psId == null) return null
+        follow(state, persistenceLayer.getProfileSwitchesFromTime(state.activatedAt, true))
+        return _activeSceneState.value?.scopedRecords?.psId
+    }
+
+    /** Makes the newest copy of the scene's switch in [sinceStart], the switches from the scene's start on, the scene's switch. */
+    private fun follow(state: ActiveSceneState, sinceStart: List<PS>) {
+        val psId = state.scopedRecords.psId ?: return
+        val current = sinceStart.firstOrNull { it.id == psId } ?: return
+        val copy = sinceStart.filter { it.id != psId && it.isValid && it.referenceId == null && it.isInsulinCopyOf(current) }
+            .maxByOrNull { it.timestamp } ?: return
+        // Only while the same scene still has the same switch. The database read took a while, and another scene may
+        // have started meanwhile: writing the records read before it would put this scene's temp target and running
+        // mode ids onto that scene, whose end would then leave them running.
+        var followed: ActiveSceneState? = null
+        _activeSceneState.update { now ->
+            followed = null
+            if (now == null || now.scene.id != state.scene.id || now.activatedAt != state.activatedAt || now.scopedRecords.psId != psId) now
+            else now.copy(scopedRecords = now.scopedRecords.copy(psId = copy.id, psNsId = copy.ids.nightscoutId)).also { followed = it }
+        }
+        followed?.let {
+            aapsLogger.info(LTag.UI, "Scene '${state.scene.name}': profile switch ${current.id} replaced by ${copy.id} with the insulin ${copy.iCfg.insulinLabel}")
+            persistActiveState(it)
+        }
     }
 
     private fun reconcileRm(records: List<RM>) {
@@ -274,6 +332,14 @@ class ActiveSceneManager(
         }
     }
 }
+
+/**
+ * Whether this switch is a copy an insulin change made of [original]: newer, with the same profile, percentage and time
+ * shift, and the same end. A copy of a permanent switch is permanent as well.
+ */
+private fun PS.isInsulinCopyOf(original: PS): Boolean =
+    timestamp > original.timestamp && profileName == original.profileName && percentage == original.percentage && timeshift == original.timeshift &&
+        (if (original.duration == 0L) duration == 0L else duration > 0L && timestamp + duration == original.timestamp + original.duration)
 
 // --- ScopedRecords serialization ---
 

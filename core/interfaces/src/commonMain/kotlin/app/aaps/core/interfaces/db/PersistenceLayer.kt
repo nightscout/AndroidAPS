@@ -730,6 +730,21 @@ interface PersistenceLayer {
     suspend fun insertOrUpdateProfileSwitch(profileSwitch: PS, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): TransactionResult<PS>
 
     /**
+     * Insert or update several records in one database transaction, so an observer sees all of them or none.
+     * An insulin change writes the permanent switch and a copy of the running temporary one. Written one by one,
+     * the pump queue could set the permanent profile first and drop the temporary percentage for a moment.
+     * One user entry is logged for the whole call.
+     *
+     * @param profileSwitches records
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of inserted/updated records
+     */
+    suspend fun insertOrUpdateProfileSwitches(profileSwitches: List<PS>, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): TransactionResult<PS>
+
+    /**
      * Invalidate record with id
      *
      * @param id record id

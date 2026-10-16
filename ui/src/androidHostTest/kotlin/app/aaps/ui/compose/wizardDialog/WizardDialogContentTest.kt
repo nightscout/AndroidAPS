@@ -5,14 +5,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasScrollAction
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isSelected
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeUp
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
@@ -49,6 +54,7 @@ class WizardDialogContentTest {
 
     /** Screen reader name of the plus button of the BG input. It exists only while the BG input is open. */
     private lateinit var bgPlusButton: String
+    private lateinit var bgExpandButton: String
 
     /** Result extras for 71% and a +1 U correction, built from the same templates as the screen. */
     private lateinit var percentageAndCorrection: String
@@ -67,6 +73,10 @@ class WizardDialogContentTest {
             ctx.getString(CoreUiR.string.wizard_bg_label),
             ctx.getString(CoreUiR.string.value_with_unit, "1", UNITS)
         )
+        // The chevron is what tells the two states apart, by which way it points. The +/- are in
+        // both: the row can be nudged while closed, and the open field has its own pair with the
+        // same spoken names.
+        bgExpandButton = ctx.getString(CoreUiR.string.a11y_expand_button_description, ctx.getString(CoreUiR.string.wizard_bg_label))
         percentageAndCorrection = ctx.getString(
             CoreUiR.string.value_in_parentheses,
             ctx.getString(
@@ -92,12 +102,15 @@ class WizardDialogContentTest {
         var state by mutableStateOf(WizardDialogUiState())
         setWizard(uiState = { state })
         compose.runOnIdle { state = loaded(bgAgeMinutes = 2) }
-        compose.onNodeWithContentDescription(bgPlusButton).assertDoesNotExist()
+        // Closed means the pencil is still offered, not that the row has no controls.
+        compose.onNodeWithContentDescription(bgExpandButton).assertExists()
     }
 
     @Test
     fun bgInputOpensByItselfWhenThereIsNoBg() {
         setWizard(uiState = { loaded(hasBgData = false) })
+        // Open: the field is there instead of the pencil, and the +/- belong to the field.
+        compose.onNodeWithContentDescription(bgExpandButton).assertDoesNotExist()
         compose.onNodeWithContentDescription(bgPlusButton).assertExists()
     }
 
@@ -114,6 +127,26 @@ class WizardDialogContentTest {
     fun resultShowsPercentageAndCorrectionInOneText() {
         setWizard(uiState = { loaded().copy(hasResult = true, totalInsulin = 2.0, percentage = 71, directCorrection = 1.0) })
         compose.onNodeWithText(percentageAndCorrection).assertIsDisplayed()
+    }
+
+    /** A tap on the profile row opens the list straight away, and one tap on a name picks it. Before, the list needed a tap more. */
+    @Test
+    fun profileRowOpensTheListAndOneTapPicksAProfile() {
+        var picked = -1
+        setWizard(uiState = { loaded().copy(profileNames = listOf(DAY, NIGHT)) }, onProfileSelect = { picked = it })
+        // The row is one node with the current name in it. Closed, it offers to expand, which is
+        // how a screen reader knows that the list is closed.
+        compose.onNodeWithText(DAY)
+            .performScrollTo()
+            .assert(SemanticsMatcher.keyIsDefined(SemanticsActions.Expand))
+            .performClick()
+        // The current profile is marked in the list, also for a screen reader.
+        compose.onNode(hasText(DAY) and isSelected()).assertExists()
+        compose.onNode(hasText(NIGHT) and isSelected()).assertDoesNotExist()
+        compose.onNodeWithText(NIGHT).performClick()
+        assertThat(picked).isEqualTo(1)
+        // The pick closes the list. The row still shows Day, because this state does not change.
+        compose.onNodeWithText(NIGHT).assertDoesNotExist()
     }
 
     @Test
@@ -135,7 +168,7 @@ class WizardDialogContentTest {
         )
 
     /** [uiState] is read inside the composition, so a test can change the state after the first frame. */
-    private fun setWizard(uiState: () -> WizardDialogUiState, onNavigateBack: () -> Unit = {}) {
+    private fun setWizard(uiState: () -> WizardDialogUiState, onNavigateBack: () -> Unit = {}, onProfileSelect: (Int) -> Unit = {}) {
         compose.setContent {
             MaterialTheme {
                 WizardDialogContent(
@@ -150,7 +183,7 @@ class WizardDialogContentTest {
                     onDirectCorrectionChange = {},
                     onCarbTimeChange = {},
                     onNotesChange = {},
-                    onProfileSelect = {},
+                    onProfileSelect = onProfileSelect,
                     onBgToggle = {},
                     onTTToggle = {},
                     onTrendToggle = {},
@@ -169,5 +202,7 @@ class WizardDialogContentTest {
     private companion object {
 
         const val UNITS = "mg/dl"
+        const val DAY = "Day"
+        const val NIGHT = "Night"
     }
 }

@@ -4,7 +4,7 @@
     <string name="dia_label_exam">Duration of Insulin Action (DIA)</string>
     <string name="dia_profile">You should set the value for DIA in Insulin settings (Manage → Insulin settings), not in the profile.</string>
     <string name="dia_minimumis5h">The minimum allowed value is 5 hours.</string>
-    <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">If you are satisfied that the value for DIA that you used in your pump before AAPS worked well, there is no need to change this when you start looping.</string>
     <string name="dia_valuemustbedetermined">You should determine for yourself the appropriate value for DIA.</string>
     <string name="hypott_label">Hypo Temp-Target</string>
@@ -19,7 +19,7 @@
     <string name="pumpdisconnect_missinginsulin">It prevents AAPS from accounting for insulin that was not delivered whilst the pump is physically disconnected.</string>
     <string name="pumpdisconnect_notstop">It will not stop insulin delivery if the pump remains connected to your body.</string>
     <string name="pumpdisconnect_openloop">It will send AAPS into open loop mode.</string>
-    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#loop-status</string>
+    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-loop-status</string>
     <string name="objectives_label">AAPS Settings</string>
     <string name="objectives2_label">AAPS Settings</string>
     <string name="objectives_howtosave">What are the best practices for backing up your settings?</string>
@@ -32,7 +32,7 @@
     <string name="objectives2_cloud">Copy your preferences file to a safe location outside of your phone (e.g. by using a cloud drive, connecting a cable to a computer, email, etc.)</string>
     <string name="objectives2_easyrestore">If your phone is damaged or lost, there are easy ways to remotely recover your settings without a backup.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/en/latest/Maintenance/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#faq-emergency-equipment</string>
     <string name="noisycgm_label">Noisy CGM Readings</string>
     <string name="noisycgm_whattodo">What should be done if CGM data is noisy?</string>
     <string name="noisycgm_nothing">Do nothing - AAPS will deal with it.</string>
@@ -98,14 +98,14 @@
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
     <string name="insulin_actrapid">Actrapid®/Humulin R®/"regular" human insulin.</string>
-    <string name="insulin_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="insulin_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="sensitivity_label">Sensitivity Plugins</string>
     <string name="sensitivity_adjust">Sensitivity plugins allow AAPS to adjust for temporary or short-lived changes in insulin sensitivity (for example hormonal changes or issues with absorption at the infusion site).</string>
     <string name="sensitivity_edit">Sensitivity plugins provide the user with suggested changes to basal rates, I:C ratios, and ISF that can be used to edit profile.</string>
     <string name="sensitivity_cannula">Logging a cannula change will reset the Autosens ratio back to 100%.</string>
     <string name="sensitivity_time">Some of the plugin options have configurable time ranges and the user can set them.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="sensitivity_hint2">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/KeyAapsFeatures.html#autosens</string>
+    <string name="sensitivity_hint2">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/KeyAapsFeatures.html#open-aps-features-autosens</string>
     <string name="wrongcarbs_label">Carb Entry Errors</string>
     <string name="wrongcarbs_whattodo">What should you do if you’ve made an incorrect carb entry?</string>
     <string name="wrongcarbs_treatmentstab">Delete the incorrect entry in Treatments history and enter the correct carb value.</string>
@@ -140,7 +140,7 @@
     <string name="breadgrams_exchange">Carbohydrates consumed can be recorded using an appropriate exchange system (e.g. DAFNE "CHO" exchanges or European "Bread Units").</string>
     <string name="breadgrams_decay">AAPS uses a dynamic model to estimate carb absorption and calculate COB.</string>
     <string name="breadgrams_calc">If blood glucose levels are outside acceptable values (too low or too high) the bolus calculator can be used to provide suggestions for carb or insulin corrections.</string>
-    <string name="breadgrams_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#bolus-wizard</string>
+    <string name="breadgrams_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#aaps-screens-bolus-wizard</string>
     <string name="breadgrams_hint2">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="extendedcarbs_label">e-carbs</string>
     <string name="extendedcarbs_handling">What could you use e-carbs (extended carbs) for?</string>

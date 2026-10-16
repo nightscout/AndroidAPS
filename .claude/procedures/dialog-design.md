@@ -26,23 +26,43 @@
 - No `HorizontalDivider` — the 2dp gap shows `surface` color through
 - Define `itemModifier` once and reuse across items
 
-### Collapsible "Change" Pattern
-- For secondary/rarely-changed values (BG, carb time, percentage, profile)
-- **Collapsed**: `Label: Value [Change]` — single compact row
-- **Expanded**: shows NumberInputRow or other editor below the header
-- `[Change]` is a `FilledTonalButton`, only visible when collapsed
-- **No close button** — once expanded, stays expanded (user already decided to edit)
-- **Auto-expand** when value needs attention (e.g., BG older than 9 min, no BG data)
+### Primary and secondary inputs
+- **Primary** = the number the screen is about. It stays an open `NumberInputRow`: carbs, insulin,
+  temp basal rate and duration, extended bolus insulin and duration, calibration BG, fill amount,
+  temp target and its duration, profile percentage and duration.
+- **Secondary** = everything else. It is folded (see below): wizard BG, correction, percentage and
+  carb time, carbs dialog duration and carb time, insulin dialog record-only time, profile timeshift,
+  care dialog duration, and care dialog BG for Question and Announcement (open for BG check).
+- Why: a second open field that looks like the primary one invites the primary's number into it.
+  In the wizard, grams were typed into the correction and bolused as units.
+- Settings-style editors (quick wizard editor, automation, scenes, pump options) are not dialogs in
+  this sense. Every field there is set on purpose, so they stay open.
+
+### Folded rows
+- **A number**: `ExpandableNumberInputRow` (core/ui/compose).
+  - Collapsed: `Label: value  (-) (+) (chevron)`. The +/- work without opening.
+  - Expanded: the full `NumberInputRow`. The chevron closes it again.
+  - `valueContent` when the row must say more than the number (BG age, meter type).
+- **A pick from a list** (wizard profile): `Label: value  (chevron)`, chevron in the same column as
+  on the number rows. The whole row is the `menuAnchor` of an `ExposedDropdownMenuBox`, so a tap
+  anywhere on it opens the list, as wide as the row. The chevron is a plain icon, not a button: a
+  second click target inside the anchor toggles the list twice. Do not put a dropdown field behind
+  a "Change" button: that is one tap more, and the button breaks the column of chevrons.
+- **A date/time only**: `EventTimeRow` (`Label: value [Change]`).
+- **Auto-expand** when the value needs attention (wizard: BG older than 9 min, no BG data). Only a
+  user's tap scrolls the row into view (`rememberBringIntoViewOnExpand`), not an auto-expand.
 - Text styles: label = `labelLarge` + `onSurfaceVariant`, value = `titleMedium` + `onSurface`
 - Use `rememberSaveable` for expanded state to survive rotation
 - This is different from the arrow expand/collapse pattern (used for "show more info" like calculation details)
 
-### CarbTimeRow (shared component in core/ui/compose)
-- Expand/collapse inline (not a popup dialog) — no local state, all changes go directly to parent
+### TimeOffsetRow (shared component in core/ui/compose)
+- A time as minutes from now, folded at "Now". Built on `ExpandableNumberInputRow`.
+- The caller gives the label: "Carb time" (wizard, carbs dialog) or "Time" (insulin record-only).
+- Alarm is optional: pass `onAlarmChange` for carb time, leave it null where there is no alarm.
 - Shows alarm bell icon when alarm is set and offset > 0
 - Alarm toggle disabled (grayed out) when offset <= 0
-- Supports `dateTimeContent` slot for date/time pickers (Carbs dialog only)
-- No clock icon — just text label
+- Supports `dateTimeContent` slot for date/time pickers (carbs and insulin dialogs)
+- No local state — all changes go directly to parent
 - Value format: "Now" when offset=0, or "17:55\n(+15 min)" with resolved time
 
 ### NumberInputRow Usage
