@@ -151,18 +151,23 @@ class CarelevoComposeContent(
                 }
 
                 CarelevoScreenType.CONNECTION_FLOW_START -> {
+                    // The flow scans for the patch, so it starts only after the check has passed.
+                    var bleReady by remember { mutableStateOf(isEmulating) }
                     if (!isEmulating) {
                         BlePreCheckHost(
                             blePreCheck = blePreCheck,
+                            onReady = { bleReady = true },
                             onFailed = { manualWorkflowScreen = null }
                         )
                     }
-                    CarelevoPatchFlowScreen(
-                        screenType = activeWorkflowScreen,
-                        setToolbarConfig = setToolbarConfig,
-                        snackbarHostState = snackbarHostState,
-                        onExitFlow = dismissWorkflow
-                    )
+                    if (bleReady) {
+                        CarelevoPatchFlowScreen(
+                            screenType = activeWorkflowScreen,
+                            setToolbarConfig = setToolbarConfig,
+                            snackbarHostState = snackbarHostState,
+                            onExitFlow = dismissWorkflow
+                        )
+                    }
                 }
 
                 else -> {

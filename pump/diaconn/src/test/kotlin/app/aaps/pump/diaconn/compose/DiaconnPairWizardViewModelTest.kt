@@ -1,7 +1,10 @@
 package app.aaps.pump.diaconn.compose
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
@@ -19,7 +22,10 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 /**
  * Unit test for the synchronous state logic of [DiaconnPairWizardViewModel]. The VM has no init{}
@@ -68,5 +74,26 @@ internal class DiaconnPairWizardViewModelTest {
         verify(preferences).put(DiaconnStringNonKey.Address, "AA:BB:CC:DD:EE:FF")
         verify(preferences).put(DiaconnStringNonKey.Name, "Diaconn G8")
         verify(rxBus).send(any<EventDiaconnG8DeviceChange>())
+    }
+
+    // Without BLUETOOTH_SCAN, startScan throws a SecurityException and the app ends
+    @Test
+    fun startScan_withoutScanPermission_doesNotTouchBluetooth() {
+        whenever(context.checkPermission(eq(Manifest.permission.BLUETOOTH_SCAN), any(), any())).thenReturn(PackageManager.PERMISSION_DENIED)
+
+        sut.startScan()
+
+        verify(context, never()).getSystemService(Context.BLUETOOTH_SERVICE)
+    }
+
+    @Test
+    fun startScan_withScanPermission_goesOnToTheScan() {
+        whenever(context.checkPermission(eq(Manifest.permission.BLUETOOTH_SCAN), any(), any())).thenReturn(PackageManager.PERMISSION_GRANTED)
+
+        // The Android stubs of a JVM test return null from ScanFilter.Builder, so the call ends
+        // there with a NullPointerException. It got past the permission check if nothing was logged.
+        runCatching { sut.startScan() }
+
+        verify(aapsLogger, never()).error(any<LTag>(), any<String>())
     }
 }
