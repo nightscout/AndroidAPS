@@ -85,7 +85,7 @@ class DexcomG7DirectPluginTest : TestBase() {
         verify(persistenceLayer).insertCgmSourceData(eq(Sources.Dexcom), captor.capture(), eq(emptyList()), isNull())
         assertThat(captor.firstValue.map { it.value }).containsExactly(120.0, 400.0).inOrder()
         assertThat(captor.firstValue.map { it.trendArrow }).containsExactly(TrendArrow.FLAT, TrendArrow.DOUBLE_UP).inOrder()
-        assertThat(captor.firstValue.all { it.sourceSensor == SourceSensor.DEXCOM_G7_NATIVE }).isTrue()
+        assertThat(captor.firstValue.all { it.sourceSensor == SourceSensor.DEXCOM_G7 }).isTrue()
     }
 
     @Test

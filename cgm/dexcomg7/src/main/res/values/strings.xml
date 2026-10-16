@@ -2,7 +2,6 @@
 <resources>
     <!-- Plugin -->
     <string name="dexcom_g7_direct">Dexcom G7 Direct</string>
-    <string name="dexcom_g7_direct_short">G7D</string>
     <string name="description_dexcom_g7_direct">Get readings straight from a Dexcom G7 or ONE+ sensor over Bluetooth. No Dexcom app or xDrip is needed. Pair the sensor with the code on its applicator.</string>
     <string name="dexcom_g7_permission_bluetooth_title">Bluetooth</string>
     <string name="dexcom_g7_permission_bluetooth_description">Needed to find the sensor and to receive its readings.</string>
