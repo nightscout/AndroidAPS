@@ -31,7 +31,7 @@
     <string name="direction">direzione</string>
     <string name="bg_generation_interval_minutes">Minuti intervallo generazione glicemia</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai</string>
+    <string name="syai_tag_app">Syai/Ottai</string>
     <string name="description_source_patched_syai_tag_app">Ricevi dati della glicemia dall\'app Ottai.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">App SI</string>

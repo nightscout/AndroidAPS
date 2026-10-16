@@ -31,7 +31,7 @@
     <string name="direction">smer</string>
     <string name="bg_generation_interval_minutes">Interval generovania glykémie v minútach</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai</string>
+    <string name="syai_tag_app">Syai/Ottai</string>
     <string name="description_source_patched_syai_tag_app">Prijímať glykémie z aplikáce Syai/Ottai.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">Aplikácia SI</string>

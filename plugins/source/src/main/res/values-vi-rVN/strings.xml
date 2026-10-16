@@ -31,7 +31,7 @@
     <string name="direction">direction</string>
     <string name="bg_generation_interval_minutes">Chu kỳ tạo đường huyết (phút)</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai</string>
+    <string name="syai_tag_app">Syai/Ottai</string>
     <string name="description_source_patched_syai_tag_app">Nhận dữ liệu đường huyết từ ứng dụng Syai/Ottai.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">Ứng dụng SI</string>

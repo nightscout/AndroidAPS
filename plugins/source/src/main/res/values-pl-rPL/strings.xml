@@ -31,7 +31,7 @@
     <string name="direction">kierunek</string>
     <string name="bg_generation_interval_minutes">Interwał generowania glikemii w minutach</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai</string>
+    <string name="syai_tag_app">Syai/Ottai</string>
     <string name="description_source_patched_syai_tag_app">Otrzymuj glikemię z aplikacji Syai/Ottai.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">SI App</string>
