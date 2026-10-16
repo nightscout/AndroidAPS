@@ -115,6 +115,9 @@ interface ProfileFunction {
      * Why [createProfileSwitch] would refuse a switch to [profileName] with these values, as a sentence for the
      * user, or null when it would accept it. It runs the same check and writes nothing, so a caller can refuse
      * before it asks the user to confirm, and can say why when the switch failed.
+     *
+     * Besides the pump and the hard limits, a temporary switch is refused when its insulin is not the insulin of
+     * the permanent switch under it. The old insulin would come back when it ends, see [createProfileSwitchWithNewInsulin].
      */
     suspend fun profileSwitchRefusal(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, iCfg: ICfg): String?
 
@@ -124,23 +127,51 @@ interface ProfileFunction {
      */
     suspend fun profileSwitchRefusal(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long = 0L): String?
 
-    /** The same as [profileSwitchRefusal], for the switch [createProfileSwitchWithNewInsulin] would create. */
+    /** The same as [profileSwitchRefusal], for the switches [createProfileSwitchWithNewInsulin] would write. */
     suspend fun insulinSwitchRefusal(iCfg: ICfg): String?
 
     /**
-     * Re-apply the currently active profile switch with a different insulin configuration.
-     * Preserves the original profile name, percentage, timeshift, and remaining duration.
+     * Give the profile in force a different insulin, because another insulin is now in the pump.
+     *
+     * The permanent switch gets the new insulin. A temporary switch that is running gets a copy with the new
+     * insulin that ends when it would have ended (not with less than a minute left), and switches set to start
+     * later get the new insulin too. The copies are of the switches themselves, only the insulin changes, so a
+     * profile renamed or edited in the profile store since does not matter. All of them are written in one
+     * transaction. Before, only the copy of a temporary switch had the new insulin, and the old insulin came
+     * back when the copy ended (#5081).
      *
      * @param iCfg new insulin configuration to apply
      * @param source Source for UserEntry logging
-     * @return true if profile switch was created
+     * @return true if the switches were written
      */
     suspend fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean
 
     /**
+     * Write a new switch with the profile of [original]: its own basal, ISF, IC and targets, its percentage and
+     * time shift, not the profile store's version of it. With the same checks as [createProfileSwitch]. For
+     * putting back a profile that ran before, with the insulin that is in the pump now.
+     *
+     * @param duration in milliseconds, 0 for a permanent switch
+     * @return the switch written, or null when it was refused
+     */
+    suspend fun createProfileSwitchLike(
+        original: PS, timestamp: Long, duration: Long, iCfg: ICfg,
+        action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>
+    ): PS?
+
+    /** The same as [profileSwitchRefusal], for the switch [createProfileSwitchLike] would write. */
+    suspend fun profileSwitchLikeRefusal(original: PS, timestamp: Long, duration: Long, iCfg: ICfg): String?
+
+    /**
      * Insulin configuration currently in force, resolved in precedence order:
-     *  1. the running [EffectiveProfile] — authoritative
-     *  2. a [PS] the user has requested that has not become effective yet — still a real user choice
+     *  1. the requested [PS], the newest switch in force in the database
+     *  2. the running [EffectiveProfile], when there is no switch at all
+     *
+     * The requested switch comes first, though the name says otherwise. It is never older than the running
+     * profile: after an insulin change the database has the new insulin at once, but the running profile has
+     * it only when the pump has set the new switch, which can take a minute or longer with a pump out of
+     * reach. Every caller writes a new switch or a record, or needs the insulin that is physically in the pump,
+     * so the running one first gave them the OLD insulin in that time (#5081).
      *
      * Both tiers are values the user actually selected: insulin is chosen when filling/priming the pump and
      * carried into the resulting profile switch. There is deliberately **no** third tier — the insulin list
@@ -155,7 +186,7 @@ interface ProfileFunction {
      *   is unusable
      */
     suspend fun getRunningOrRequestedICfg(): ICfg? =
-        getProfile()?.iCfg?.takeIf { it.isUsable } ?: getRequestedProfile()?.iCfg?.takeIf { it.isUsable }
+        getRequestedProfile()?.iCfg?.takeIf { it.isUsable } ?: getProfile()?.iCfg?.takeIf { it.isUsable }
 
     /**
      * Drop every cached effective profile and rebuild the synchronous [runningICfg] mirror from the DB.

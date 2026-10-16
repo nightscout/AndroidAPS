@@ -148,14 +148,54 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/
 - **Crowdin QA can block Save for a correct text**, e.g. the Korean grammar marker `(으)로` is
   reported as "extra symbol". Use "Save Anyway".
 
+## Wiki links in strings
+
+The objectives and exam hints (and a few other strings) link to the wiki. Each language should
+open the wiki in its own language when there is one.
+
+- **Wiki languages:** cs de el en es fr he ko lt nl ru tr zh-cn zh-tw, as
+  `https://wiki.aaps.app/<code>/latest/...`. The translated docs have no `dev` build, so a
+  translation always points to `latest`. A page that exists only in English `dev` gets no
+  translations at all.
+- **In Crowdin:** for a wiki language the translation is the English link with that language's
+  code, approved. Slovak gets the Czech wiki (close language, better than English). Every other
+  language has **no translation**, so the app falls back to the English link. A plain copy of
+  the English link is not harmless: it stops a later fix from reaching that language.
+- **Language ids:** Crowdin `es-ES` → `es`, `zh-CN` → `zh-cn`, `zh-TW` → `zh-tw`, `sk` → `cs`;
+  the others are the same.
+- **Anchors: use the fixed label, never the heading anchor.** `#the-homescreen` is made from the
+  heading text, so on a translated page it is `#die-startseite` or `#id2` and the link opens the
+  top of the page. The docs source has labels such as `(AapsScreens-the-homescreen)=` before a
+  heading; they are not translated and become `#aapsscreens-the-homescreen` (lower case) in every
+  language. Check the label on the translated pages before using it.
+- **A section with no label:** add one in AndroidAPSdocs (`docs/EN/...`, `(Page-name)=` on the
+  line before the heading). In the AndroidAPSdocs Crowdin project, mark the new label string
+  **hidden**, like the existing ones, so translators never see it. The translated pages get the
+  label only with the next docs Crowdin export.
+- **Changing an English link drops all its translations on Crowdin.** After the sync, set the
+  wiki languages again. Handy when anchors change: there is nothing old left to delete.
+- **Many links × 30 languages is not a job for the web editor.** Use API v2 with a small script:
+  list the strings of the file, `DELETE /translations?stringId=&languageId=`,
+  `POST /translations`, `POST /approvals`. Run it as a dry run first, and again after applying,
+  until it reports nothing left to change.
+
 ## Fixing one string in the web editor
 
 Without an API token, the editor is the only way, and every click has to be confirmed in the
 browser extension, so it suits a handful of strings at most.
 
-- Open `https://crowdin.com/editor/androidaps/all/en-<lang>?search_scope=everything` and type the
-  string **key** in "Search strings" (the search matches keys too). `<lang>` is the editor slug:
-  `cs`, `sk`, `ko`, `zhtw`… Changing only `#q=` in the URL does not search again.
+- **Fastest: a direct link to the string.** `https://crowdin.com/editor/androidaps/<fileId>/en-<lang>#<stringId>`
+  opens the string already selected, in any language. Find both ids once: open the file in the
+  editor, and the string's list item has the id `phrase_<stringId>`. Example: `tdd_line` in
+  `plugins/sync` is file `5835`, string `216755`.
+- Otherwise open `https://crowdin.com/editor/androidaps/all/en-<lang>?search_scope=everything` and
+  type the string **key** in "Search strings" (the search matches keys too). Changing only `#q=` in
+  the URL does not search again.
+- `<lang>` is the editor slug, not the Android code and not always the Crowdin code: `es-ES` is `es`,
+  `pt-PT` is `pt`, `zh-TW` is `zhtw`, `he` is `he`. A wrong slug shows a language picker. The
+  language page `https://crowdin.com/project/androidaps/<Crowdin code>` links to the right slug.
+- With the browser extension, the first search or typing after a page load is often lost. Check
+  with a screenshot and type again.
 - Saving adds a new translation next to the old one. Approve the new one - that removes approval
   from the old one. Only approved text is exported.
 - After Save the editor moves on to the next search result, so check which string is selected

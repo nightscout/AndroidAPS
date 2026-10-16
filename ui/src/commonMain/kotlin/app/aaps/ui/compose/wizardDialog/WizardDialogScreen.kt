@@ -6,6 +6,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -45,7 +46,6 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.MultiChoiceSegmentedButtonRow
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
@@ -56,6 +56,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
@@ -71,7 +72,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.collapse
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.expand
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -89,11 +93,11 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.CarbTimeRow
 import app.aaps.core.ui.compose.ExpandableNumberInputRow
 import app.aaps.core.ui.compose.ExpandableRowHeader
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.QuickAddButtons
+import app.aaps.core.ui.compose.TimeOffsetRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
@@ -757,10 +761,11 @@ internal fun WizardDialogContent(
                     )
 
                     // Carb Time (compact row with popup dialog)
-                    CarbTimeRow(
+                    TimeOffsetRow(
+                        labelRef = CoreUiStrings.wizard_carb_time,
                         offsetMinutes = uiState.carbTime,
-                        alarmChecked = uiState.alarmChecked,
                         onOffsetChange = { onCarbTimeChange(it.toDouble()) },
+                        alarmChecked = uiState.alarmChecked,
                         onAlarmChange = onAlarmToggle,
                         modifier = itemModifier
                     )
@@ -833,36 +838,14 @@ internal fun WizardDialogContent(
                         }
                     )
 
-                    // Profile (collapsible, hidden in simple mode)
+                    // Profile (hidden in simple mode)
                     if (!uiState.simpleMode) {
-                        val currentProfile = uiState.profileNames.getOrElse(uiState.selectedProfileIndex) { "" }
-                        var profileExpanded by rememberSaveable { mutableStateOf(false) }
-                        val profileExpandRequester = rememberBringIntoViewOnExpand(profileExpanded)
-
-                        Column(modifier = itemModifier.bringIntoViewRequester(profileExpandRequester)) {
-                            ExpandableRowHeader(
-                                label = stringResource(CoreUiStrings.profile),
-                                expanded = profileExpanded,
-                                onExpand = { profileExpanded = true }
-                            ) {
-                                Text(
-                                    text = currentProfile,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                            AnimatedVisibility(
-                                visible = profileExpanded,
-                                enter = expandVertically(),
-                                exit = shrinkVertically()
-                            ) {
-                                ProfileDropdown(
-                                    profileNames = uiState.profileNames,
-                                    selectedIndex = uiState.selectedProfileIndex,
-                                    onSelect = onProfileSelect
-                                )
-                            }
-                        }
+                        ProfileRow(
+                            profileNames = uiState.profileNames,
+                            selectedIndex = uiState.selectedProfileIndex,
+                            onSelect = onProfileSelect,
+                            modifier = itemModifier
+                        )
                     }
                     // Notes
                     if (uiState.showNotes) {
@@ -931,43 +914,78 @@ private fun WizardSettingsSheet(
     }
 }
 
+/**
+ * `Profile: name   (chevron)`, with the chevron in the same column as on the number rows above it.
+ * A tap anywhere on the row opens the list of profiles, as wide as the row, and a tap on a name
+ * picks it and closes the list. So a change is two taps.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ProfileDropdown(
+private fun ProfileRow(
     profileNames: List<String>,
     selectedIndex: Int,
-    onSelect: (Int) -> Unit
+    onSelect: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    val selectedText = profileNames.getOrElse(selectedIndex) { "" }
+    var menuOpen by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded }
+        expanded = menuOpen,
+        onExpandedChange = { menuOpen = it },
+        modifier = modifier
     ) {
-        OutlinedTextField(
-            value = selectedText,
-            onValueChange = {},
-            readOnly = true,
-            label = { Text(stringResource(CoreUiStrings.profile)) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+        // The whole row is the anchor: a tap on it opens the list, and the list takes its width.
+        ExpandableRowHeader(
+            label = stringResource(CoreUiStrings.profile),
+            expanded = menuOpen,
+            onExpand = { menuOpen = true },
             modifier = Modifier
-                .fillMaxWidth()
-                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
-        )
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                // One node for a screen reader ("Profile: name, drop-down list"). The expand and
+                // collapse actions let it say whether the list is open.
+                .semantics(mergeDescendants = true) {
+                    if (menuOpen) collapse { menuOpen = false; true }
+                    else expand { menuOpen = true; true }
+                },
+            // Only an icon, not a button: the row already takes the tap, and a second click
+            // target inside it would toggle the list twice. Sized like the IconButton of the
+            // number rows, so the chevrons line up.
+            actions = {
+                Box(
+                    modifier = Modifier.minimumInteractiveComponentSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = if (menuOpen) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                        contentDescription = null
+                    )
+                }
+            }
+        ) {
+            Text(
+                text = profileNames.getOrElse(selectedIndex) { "" },
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
         ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
+            expanded = menuOpen,
+            onDismissRequest = { menuOpen = false }
         ) {
             profileNames.forEachIndexed { index, name ->
+                val isSelected = index == selectedIndex
                 DropdownMenuItem(
                     text = { Text(name) },
                     onClick = {
                         onSelect(index)
-                        expanded = false
+                        menuOpen = false
                     },
-                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                    // The check is for the eye. A screen reader gets "selected" from the semantics.
+                    trailingIcon = if (isSelected) {
+                        { Icon(imageVector = Icons.Filled.Check, contentDescription = null) }
+                    } else null,
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    modifier = Modifier.semantics { selected = isSelected }
                 )
             }
         }

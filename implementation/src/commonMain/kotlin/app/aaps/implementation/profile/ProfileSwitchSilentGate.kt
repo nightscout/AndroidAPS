@@ -1,5 +1,7 @@
 package app.aaps.implementation.profile
 
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -32,6 +34,10 @@ class ProfileSwitchSilentGate() {
 
     private val silentNext = AtomicBoolean(false)
 
+    // Profile switch id -> until when a write of it is silent. Guarded by [lock].
+    private val lock = AapsLock()
+    private val silentSwitches = mutableMapOf<Long, Long>()
+
     /** Mark the next profile write (the one this caller is about to trigger) as silent. */
     fun markNextSilent() {
         silentNext.store(true)
@@ -39,4 +45,31 @@ class ProfileSwitchSilentGate() {
 
     /** Read and clear the flag. Returns true exactly once after a [markNextSilent]. */
     fun consumeSilent(): Boolean = silentNext.exchange(false)
+
+    /**
+     * A write of the profile switch [psId] is silent for [SILENT_FOR] from [now], whichever change event leads to
+     * it. The flag above rides on one event only. While the pump is busy, the events queue up, and the write that
+     * follows can be made for an unrelated one, a Nightscout id arriving for example: on a Medtronic a scene that
+     * ended during a 38 s write was announced so. The queue asks [isSilent] only after the pump write, and the scene
+     * marks the switch right after writing it. For the event that the scene's own write causes, the flag above still
+     * answers, so a pump that writes at once is covered too.
+     */
+    fun markSilent(psId: Long, now: Long) {
+        lock.withLock {
+            silentSwitches.entries.removeAll { it.value < now }
+            silentSwitches[psId] = now + SILENT_FOR
+        }
+    }
+
+    /** Whether a write of [psId] at [now] was marked silent with [markSilent]. */
+    fun isSilent(psId: Long, now: Long): Boolean = lock.withLock {
+        silentSwitches.entries.removeAll { it.value < now }
+        silentSwitches.containsKey(psId)
+    }
+
+    companion object {
+
+        /** As long as the queue waits for one profile write, so a mark cannot silence a later, unrelated write. */
+        const val SILENT_FOR = 10L * 60L * 1000L
+    }
 }
