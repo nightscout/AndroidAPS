@@ -22,6 +22,7 @@
     <string name="random_bg">Random BG</string>
     <string name="description_source_random_bg">Tạo dữ liệu đường huyết ngẫu nhiên (chỉ dùng cho chế độ Demo)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
     <string name="description_source_patched_syai_tag_app">Nhận dữ liệu đường huyết từ ứng dụng Syai/Ottai.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">Ứng dụng SI</string>
@@ -50,4 +51,5 @@
     <string name="aidex_sensor_stabilizing">Cảm biến đang ổn định, vui lòng chờ…</string>
     <string name="aidex_sensor_replace">Cần thay cảm biến, vui lòng thay cảm biến mới sớm nhất có thể</string>
     <string name="aidex_signal_lost">Mất tín hiệu cảm biến, vui lòng kiểm tra kết nối</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">bản ghi trùng lặp</string>
 </resources>
