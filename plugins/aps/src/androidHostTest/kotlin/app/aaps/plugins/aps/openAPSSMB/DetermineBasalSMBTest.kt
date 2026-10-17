@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.openAPSSMB
 
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
@@ -263,5 +264,49 @@ class DetermineBasalSMBTest : TestBaseWithProfile() {
             flatBGsDetected = false,
             dynIsfMode = false
         )
+    }
+
+    // --- enable_smb and the temp target thresholds ---------------------------------------------
+
+    private fun noMeal() = MealData(
+        carbs = 0.0,
+        mealCOB = 0.0,
+        slopeFromMaxDeviation = 0.0,
+        slopeFromMinDeviation = 0.0,
+        lastBolusTime = currentTime - 3600000L,
+        lastCarbTime = currentTime - 4 * 3600000L
+    )
+
+    /** "Enable SMB with temp targets" on, "with high temp targets" off: the common setup for an eating soon target. */
+    private fun enableSmbWithTempTarget(targetMgdl: Double): Boolean =
+        sut.enable_smb(
+            profile = profile().copy(temptargetSet = true, enableSMB_with_temptarget = true, allowSMB_with_high_temptarget = false),
+            microBolusAllowed = true,
+            meal_data = noMeal(),
+            target_bg = targetMgdl
+        )
+
+    /**
+     * 5.5 mmol/L is 99.09 mg/dL with the 18.01559 factor. It is the normal target, not a high one, and
+     * it was 99.0 with the old factor, so it enabled SMB. 5.6 mmol/L is above the normal target and
+     * disables SMB, as before.
+     */
+    @Test
+    fun `a 5_5 mmol temp target keeps SMB and 5_6 disables it`() {
+        assertThat(enableSmbWithTempTarget(5.5 * Constants.MMOLL_TO_MGDL)).isTrue()
+        assertThat(enableSmbWithTempTarget(5.6 * Constants.MMOLL_TO_MGDL)).isFalse()
+    }
+
+    /** A 5.5 mmol/L row stored by 3.4, with the 18.0 factor, reads 99.0 and must behave the same. */
+    @Test
+    fun `a temp target stored with the old factor behaves like the new one`() {
+        assertThat(enableSmbWithTempTarget(5.5 * 18.0)).isTrue()
+        assertThat(enableSmbWithTempTarget(5.6 * 18.0)).isFalse()
+    }
+
+    @Test
+    fun `99 mg_dL keeps SMB and 100 disables it`() {
+        assertThat(enableSmbWithTempTarget(99.0)).isTrue()
+        assertThat(enableSmbWithTempTarget(100.0)).isFalse()
     }
 }
