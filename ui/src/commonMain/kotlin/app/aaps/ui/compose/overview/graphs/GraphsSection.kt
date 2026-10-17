@@ -73,6 +73,7 @@ import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.first
 import kotlin.math.abs
 
 /**
@@ -419,6 +420,12 @@ fun GraphsSection(
         val showPredictions = SeriesType.PREDICTIONS in graphConfig.bgOverlays
         val timeRange = derivedTimeRange
         if (showPredictions && predictions.isNotEmpty() && timeRange != null) {
+            // Vico drops a scroll on a state the chart has not measured yet, with no error. That is
+            // the case on return from another screen with a new reading waiting: the model producer
+            // is new, the chart shows its placeholder until the first model is built, and the reading
+            // bumps the trigger inside that window. The fresh state then stayed at the end of the axis,
+            // "now" in the middle. maxValue is set by the first measurement, so wait for it.
+            snapshotFlow { bgScrollState.maxValue }.first { it > 0f }
             val (minTimestamp, _) = timeRange
             val nowX = timestampToX(dateUtil.now(), minTimestamp)
             bgScrollState.animateScroll(Scroll.Absolute.x(nowX + 120.0, bias = 1f))
