@@ -38,6 +38,7 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -72,6 +73,7 @@ import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.first
 import kotlin.math.abs
 
 /**
@@ -252,7 +254,12 @@ fun GraphsSection(
     // objects forever, comparing live secondary-graph state against a frozen stale value and
     // firing wrong corrections (this caused the secondary graphs to visibly "dance"/flash on the
     // first attempt at this).
-    var bgViewportResetTrigger by remember { mutableIntStateOf(0) }
+    // Saved, not only remembered. The overview leaves the composition behind every other screen,
+    // and Vico saves the scroll under the key of the state that is alive then, key(N). With a plain
+    // remember the trigger came back as 0, key(0) had nothing saved, the scroll started at the end
+    // of the axis again, and with the predictions already loaded that end is hours in the future:
+    // "now" sat in the middle of the graph after every trip to the wizard, until the next reading.
+    var bgViewportResetTrigger by rememberSaveable { mutableIntStateOf(0) }
     val (bgScrollState, bgZoomState) = key(bgViewportResetTrigger) {
         rememberVicoScrollState(
             scrollEnabled = true,
@@ -403,11 +410,22 @@ fun GraphsSection(
     // are visible, nudge it further so "now + 2h" sits at the right edge instead, leaving room to
     // see the forecast — same positioning as before, reapplied once the fresh scrollState (a new
     // instance, since it's keyed on bgViewportResetTrigger too) is composed and ready.
+    // Once per reset: the trigger survives a trip to another screen (see above), and so must the
+    // fact that this reset was handled, or coming back would nudge the restored scroll away from
+    // where the user left it.
+    var nudgedResetTrigger by rememberSaveable { mutableIntStateOf(0) }
     LaunchedEffect(bgViewportResetTrigger, bgScrollState) {
-        if (bgViewportResetTrigger == 0) return@LaunchedEffect
+        if (bgViewportResetTrigger == nudgedResetTrigger) return@LaunchedEffect
+        nudgedResetTrigger = bgViewportResetTrigger
         val showPredictions = SeriesType.PREDICTIONS in graphConfig.bgOverlays
         val timeRange = derivedTimeRange
         if (showPredictions && predictions.isNotEmpty() && timeRange != null) {
+            // Vico drops a scroll on a state the chart has not measured yet, with no error. That is
+            // the case on return from another screen with a new reading waiting: the model producer
+            // is new, the chart shows its placeholder until the first model is built, and the reading
+            // bumps the trigger inside that window. The fresh state then stayed at the end of the axis,
+            // "now" in the middle. maxValue is set by the first measurement, so wait for it.
+            snapshotFlow { bgScrollState.maxValue }.first { it > 0f }
             val (minTimestamp, _) = timeRange
             val nowX = timestampToX(dateUtil.now(), minTimestamp)
             bgScrollState.animateScroll(Scroll.Absolute.x(nowX + 120.0, bias = 1f))
