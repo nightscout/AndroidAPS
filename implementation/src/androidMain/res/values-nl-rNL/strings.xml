@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Opdracht wordt nu uitgevoerd</string>
+    <string name="smb_being_delivered">Er wordt nu een SMB geleverd. Probeer het opnieuw wanneer die klaar is.</string>
     <string name="basal_value_below_minimum">Basaalwaarde onder minimum. Profiel niet ingesteld!</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Basaal profiel in de pomp is bijgewerkt. De pomp rondt het basaal af op zijn eigen stapgrootte: het geeft %1$s per dag in plaats van %2$s.</string>
+    <string name="basal_reported_far_from_profile">De pomp rapporteert een basaal ver van het profiel. AAPS houdt het profielbasaal aan. Controleer de basaalstanden in de pomp.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">Koolhydraten</string>
     <!--    PumpStatusGenerator-->
@@ -17,10 +20,30 @@
     <string name="permission_directory_description">Selecteer een map voor applicatie-instellingen en log bestanden</string>
     <string name="permission_notifications_title">Notificaties</string>
     <string name="permission_notifications_description">Vereist voor het weergeven van waarschuwingen, alarmen en pomp status updates</string>
+    <string name="permission_schedule_exact_alarm_title">Alarmen en herinneringen</string>
+    <string name="permission_schedule_exact_alarm_description">Vereist zodat alarmen het scherm kunnen activeren als AAPS in de achtergrond draait, zodat herinneringen op tijd tevoorschijn komen</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">AAPS alarmen</string>
+    <string name="alarm_channel_standard">Standaard alarm</string>
+    <string name="alarm_channel_bolus_error">Bolus fout</string>
+    <string name="alarm_channel_error">Algemene fout</string>
+    <string name="alarm_channel_urgent">Dringend alarm</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (negeer \'Niet storen\')</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (houdt rekening met \'Niet storen\')</string>
+    <string name="alarm_channel_silent_urgent">Dringend alarm (met oplopend volume)</string>
+    <string name="alarm_channel_silent">Alarm (oplopend volume modus)</string>
+    <string name="alarm_channel_silent_description">Wordt gebruikt wanneer \'Meldingsvolume geleidelijk verhogen\' is ingeschakeld. Het alarmscherm speelt het geluid af.</string>
+    <string name="ongoing_channel_name">Lopende status</string>
+    <string name="notifications_channel_name">AAPS meldingen</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0E (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>
     <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">U %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported_to_cloud">Instellingen succesvol geëxporteerd naar cloudopslag</string>
     <string name="export_to_cloud_failed">Exporteren naar cloudopslag is mislukt</string>
@@ -65,6 +88,7 @@
     <string name="csv_upload_error">Fout opgetreden tijdens het uploaden van CSV naar de cloud</string>
     <string name="uploading_to_cloud">Uploaden naar cloud...</string>
     <string name="cloud_directory_path">Cloud map: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Kan Google Drive toegangstoken niet vernieuwen</string>
     <string name="google_drive_token_refresh_error">Kan Google Drive toegangstoken niet vernieuwen: %1$s</string>
     <string name="google_drive_connection_test_failed">Google Drive verbindingstest is mislukt</string>
     <string name="google_drive_connect_error">Kan geen verbinding maken met Google Drive: %1$s</string>
