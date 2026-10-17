@@ -411,12 +411,15 @@ private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: In
 
     // Scrolls in both states: a warning line under the total makes the summary card taller, and the
     // "New IOB" line of the collapsed calculation card then sits under the round edge of the screen.
+    // The big bottom margin is what makes that case scrollable. Without a warning the closed page
+    // fits, and the margin would only add an empty scroll, so it stays small there.
+    val bottomPadding = if (isExpanded || warnings.isNotEmpty()) 36.dp else 10.dp
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
             .padding(horizontal = 10.dp)
-            .padding(top = 10.dp, bottom = 36.dp),
+            .padding(top = 10.dp, bottom = bottomPadding),
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
