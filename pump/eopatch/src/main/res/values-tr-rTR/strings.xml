@@ -25,7 +25,7 @@
     <string name="patch_change_confirm_temp_basal_is_active_desc">Şu anda geçici bir bazal teslim ediliyor. İnsülin iletimini iptal etmek ve pompayı çıkarmak istiyor musunuz?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Şu anda bolus ve geçici bazal veriliyor. İnsülin iletimini iptal etmek ve pompayı çıkarmak istiyor musunuz?</string>
     <string name="patch_change_confirm_desc">Pompayı çıkarmak istediğinize emin misiniz?</string>
-    <string name="patch_forced_discard">Vazgeç</string>
+    <string name="patch_forced_discard">Çıkar</string>
     <string name="patch_comm_error_during_discard_desc_2">Tek taraflı devre dışı bırakma için \'Çıkar\'a dokunun.</string>
     <string name="patch_manually_turning_off_alarm_title">Pompanın alarmını manuel olarak kapatma</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Pompa bir iletişim hatası sırasında tek taraflı olarak devre dışı bırakılırsa, Alarm bip sesi durmayabilir.</string>
@@ -67,7 +67,7 @@
     <string name="insulin_suspend_msg3">Askıya alındığında, şu anda iletilen Geçici Bazal iptal edilecek. \n\nOran : %1$s Ü/sa\nKalan süre : %2$s</string>
     <string name="insulin_suspend_msg4">İnsülin iletimi askıya alındı.</string>
     <string name="string_activate_patch">Pompa Etkinleştirme</string>
-    <string name="string_discard_patch">Pompa Çıkarma</string>
+    <string name="string_discard_patch">Pompayı Çıkar</string>
     <string name="string_running">Çalışıyor</string>
     <string name="retry">Tekrar dene</string>
     <string name="string_are_you_sure_to_discard_current_patch">Mevcut pompayı çıkarmak istediğinizden emin misiniz?</string>

@@ -127,6 +127,7 @@
     <string name="wear_infos_watchface">O tarczy</string>
     <string name="wear_export_watchface">Eksportuj szablon</string>
     <string name="wear_new_custom_watchface_exported">Szablon tarczy niestandardowej wyeksportowany</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Prześlij ponownie wszystkie dane</string>
     <string name="open_settings_on_wear">Otwórz ustawienia dla Wear</string>
     <string name="wear_import_custom_watchface_title">Wybierz niestandardową tarczę zegarka</string>
@@ -157,6 +158,7 @@
     <string name="aps">APS</string>
     <string name="last_run">Ostatnie uruchomienie</string>
     <string name="last_enact">Ostatnie działanie</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fU %2$.0f%%</string>
     <string name="today">Dziś</string>
     <string name="weighted">ważone</string>
     <string name="full_xdrip_sync_comment">Wykonać pełną synchronizację? Może ona trochę potrwać i aż do jej zakończenia nie zobaczysz nowych danych w xDrip+.</string>

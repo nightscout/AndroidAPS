@@ -40,6 +40,8 @@ knoppen tegelijkertijd om koppelen te annuleren)\n
 Probeer opnieuw te koppelen</string>
     <string name="combov2_enter_pin">PIN Invoeren</string>
     <string name="combov2_cancel_pairing">Koppeling annuleren</string>
+    <string name="combov2_confirm_cancel_pairing_message">Wil je echt het koppelen annuleren?</string>
+    <string name="combov2_confirm_unpair_message">Wil je echt de pomp ontkoppelen?</string>
     <string name="combov2_pin_hint">10-cijferige PIN-code</string>
     <string name="combov2_pairing_finished_successfully">Met succes gekoppeld aan Combo</string>
     <string name="combov2_pairing_cancelled">Koppelen met Combo geannuleerd door de gebruiker</string>
@@ -88,6 +90,9 @@ Probeer opnieuw te koppelen</string>
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (minder dan 1 min. resterend)</string>
     <string name="combov2_load_tdds_cancelled">TDD\'s laden geannuleerd</string>
     <string name="combov2_retrieving_tdds_failed">Ophalen van TDD\'s is mislukt</string>
+    <string name="combov2_battery_empty">Leeg</string>
+    <string name="combov2_battery_low">Laag</string>
+    <string name="combov2_battery_full">Vol</string>
     <string name="combov2_battery_low_warning">Batterij pomp is bijna leeg</string>
     <string name="combov2_reservoir_low_warning">Reservoir pomp is laag</string>
     <string name="combov2_setting_tbr_succeeded">Instellen TBR geslaagd</string>
