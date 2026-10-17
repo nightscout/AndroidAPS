@@ -24,6 +24,7 @@
     <string name="maxiobset">最大活性胰岛素（IOB）设置正确（简易模式下无需设置）</string>
     <string name="objectives_autosens_objective">必要时调整胰岛素基础率和比率，然后再启用auto-sens胰岛素敏感系数自动调整功能</string>
     <string name="objectives_autosens_gate">规律的进行碳水记录，成功在一个星期的白天开启闭环</string>
+    <string name="objectives_autosens_learned">如果您的 Autosens 结果没有在 100% 附近波动，那么您的配置文件可能是错误的。</string>
     <string name="objectives_smb_objective">在白天启用额外的功能，例如微型大剂量 SMB</string>
     <string name="objectives_smb_gate">你必须阅读wiki并提高maxIOB以使SMB正常工作！一个好的开始是maxIOB=平均餐前注射+3倍的每日最大基础速率。在简单模式下，这个值根据wiki中的建议计算，不需要设置。</string>
     <string name="objectives_smb_learned">使用 SMB（超级微剂量） 是你的目标。Oref1 算法同样可以帮你更好地管理大剂量。
@@ -38,6 +39,7 @@
     <string name="accomplished">已完成: %1$s</string>
     <string name="objectives_usage_objective">学习如何控制 AAPS</string>
     <string name="objectives_usage_gate">在 AAPS 中执行不同的操作</string>
+    <string name="objectives_usage_learned">您已学习了 AAPS 的基础知识。大多数控件都在‘概览’屏幕上。更多操作位于屏幕底部的‘治疗’和‘管理’菜单中，以及侧边菜单里。</string>
     <string name="objectives_useprofileswitch">将配置方案设为90%，持续10 分钟</string>
     <string name="objectives_usedisconnectpump">模拟淋浴：断开泵连接 1 小时</string>
     <string name="objectives_usereconnectpump">... 然后以同样的方式重新连接</string>
@@ -45,6 +47,8 @@
     <string name="objectives_useloop">显示闭环插件的内容</string>
     <string name="objectives_usescale">在血糖图表上滑动或缩放查看</string>
     <string name="objectives_exam_objective">证明你的知识</string>
+    <string name="objectives_exam_gate">请仔细阅读题目。每道题有多个可能的答案，且可能不止一个正确答案。勾选所有正确答案，然后选择‘验证’。</string>
+    <string name="objectives_exam_learned_prerequisites">您不需要是开发者。您需要 Nightscout 或 Tidepool 来通过目标，需要一台兼容的泵，以及一种构建 AAPS 的方式（在网页浏览器中或使用 Android Studio），用于首次安装和每次更新。</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS 可以离线运行。</string>
     <string name="objectives_exam_learned_basaltest">应该回顾和更新配置文件。更好的配置文件=更好的结果。</string>
     <string name="objectives_exam_learned_dia">闭环中的DIA意义不同（所有胰岛素吸收的时间）与经典胰岛素泵治疗（大部分胰岛素吸收的时间）。</string>
@@ -58,12 +62,17 @@
     <string name="objectives_exam_learned_exercise2">在运动前至少1小时设置更高的临时目标有助于减少体内的胰岛素量。</string>
     <string name="objectives_exam_learned_noisycgm">当你不能信任CGM 值时，不应该启用闭环。</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS 必须知道泵未连接以正确计算 IOB。</string>
+    <string name="objectives_exam_learned_insulin">AAPS 必须知道泵中使用的是哪种胰岛素，因为这会影响 IOB 的计算。</string>
     <string name="objectives_exam_learned_sensitivity">灵敏度检测是算法的一部分，允许胰岛素剂量适应不同的情况。</string>
     <string name="objectives_exam_learned_objectives">您的目标进度与其他设置一起保存，您应该对其进行备份。</string>
     <string name="objectives_exam_learned_objectives2">始终将导出的配置和生成的APK存储在手机之外的地方。手机可能遗失、损坏等。好的存放地点可以是任何手机可查看的云端。在这种情况下，您可以在另一个设备上几分钟内恢复AAPS。好的做法是将使用的主密码存放在安全的地方。没有它，您的备份无用。这同样适用于签名密钥(.jsk 文件)和构建AAPS所用的密码。其余的并不重要，它们可以随时互联网上下载。</string>
     <string name="objectives_exam_learned_wrongcarbs">如果你向AAPS输入了错误的信息或与现实不符，尽快解决。这可能导致注射过量。应该尽可能告知AAPS碳水化合物、胰岛素等的最佳方式。</string>
+    <string name="objectives_exam_learned_iob">如果您想分析 AAPS 是否对您运作良好，查看 IOB 图表可以提供很多有用的信息。</string>
+    <string name="objectives_exam_learned_cob">COB 计算取决于 ISF 与 IC 之间的关系。增加 ISF 或降低 IC 会导致吸收时间延长。但使用百分比进行配置文件切换会同时改变这两个值，因此吸收时间不受影响。</string>
     <string name="objectives_exam_learned_breadgrams">碳水化合物仅允许以克为单位输入。</string>
     <string name="objectives_exam_learned_ecarbs">扩展碳水化合物是胰岛素泵领域中方波大剂量功能的替代方案。</string>
+    <string name="objectives_exam_learned_nsclient">您可以通过 AAPSClient 或 Nightscout 远程查看 AAPS。当 AAPSClient 与主机手机配对后，您还可以远程控制 AAPS。</string>
+    <string name="objectives_exam_learned_concentration1">使用 U200 胰岛素并将配置文件设为 50% 将需要永久换算：使用注射笔进行外部大剂量时，以及 AAPS 或 NS 提供的所有标准报告都将变得不正确，必须换算为 IU 才能供医疗团队使用。</string>
     <string name="objectives_exam_learned_concentration2" formatted="false">从U200 + 50% 配置方案切换到U200 + 胰岛素浓度功能，需要创建一份新的更强效的配置方案、禁用 DynISF 一周，并让自己习惯以国际单位（IU）来计算剂量。</string>
     <string name="objectives_exam_learned_concentration3">胰岛素浓度仅可在更换胰岛素或贴片时进行修改。
 但最重要的一点是 —— 尤其对于导管式胰岛素泵 ——切勿直接通过泵体操作界面推注大剂量。</string>
@@ -77,6 +86,7 @@
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/zh-cn/latest/SettingUpAaps/ConfigBuilder.html</string>
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/zh-cn/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">未连接到网络</string>
+    <string name="failedretrievetime">获取时间失败</string>
     <string name="requirementnotmet">未满足目标要求。</string>
     <string name="what_i_ve_learned">我学到的：</string>
     <string name="verify_master_password">验证您的主密码</string>
@@ -86,6 +96,10 @@
     <string name="objectives_open_exam">开启测验</string>
     <string name="objectives_exam_question_progress">问题 %1$d / %2$d</string>
     <string name="objectives_exam_reset">重置</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">完成</string>
+    <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">进行中</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">未开始</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">已锁定</string>
     <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">正确答案</string>
     <string name="objectives_exam_previous">上一个</string>
     <string name="objectives_exam_next">下一个</string>
