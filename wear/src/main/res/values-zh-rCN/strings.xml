@@ -191,6 +191,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS大剂量输注禁音</string>
     <string name="bolus_progress_channel_description">大剂量输注与取消</string>
     <string name="bolus_progress_silent_channel_description">大剂量输注与取消时较少振动</string>
+    <string name="open_loop_channel_name">AAPS 开环</string>
+    <string name="open_loop_channel_description">开环请求通知</string>
     <string name="simple_ui_off">关闭</string>
     <string name="simple_ui_charging">充电中</string>
     <string name="simple_ui_always_on">总是打开模式</string>
