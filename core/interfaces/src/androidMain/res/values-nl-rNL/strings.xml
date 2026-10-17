@@ -87,6 +87,11 @@
     <string name="pref_show_week_number">Weeknummer weergeven</string>
     <string name="pref_show_date">Toon datum</string>
     <string name="pref_show_seconds">Seconden weergeven</string>
+    <string name="pref_show_complication1">Toon Complicatie 1</string>
+    <string name="pref_show_complication2">Toon Complicatie 2</string>
+    <string name="pref_show_complication3">Toon Complicatie 3</string>
+    <string name="pref_show_complication4">Toon Complicatie 4</string>
+    <string name="pref_show_complication5">Toon Complicatie 5</string>
     <string name="default_custom_watchface_comment">Standaard watchface, u kunt op de EXPORT WATCHFACE knop klikken om een sjabloon te genereren</string>
     <string name="default_custom_watchface_external_comment">Standaard watchface inclusief externe weergaven voor volgers, u kunt klikken op EXPORT WATCHFACE knop om een sjabloon te genereren</string>
     <string name="wear_default_watchface">Standaard watchface</string>
@@ -109,6 +114,7 @@
     <string name="insulin_peak_time">Piek tijd [min]</string>
     <!-- Concentration -->
     <string name="u10">U10</string>
+    <string name="u20">U20</string>
     <string name="u40">U40</string>
     <string name="u50">U50</string>
     <string name="u100">U100</string>
@@ -146,5 +152,8 @@
     <string name="bolus_constraint_applied_warn">Bolusbeperking toegepast: %1$.2f E naar %2$.2f E</string>
     <string name="bolus_recorded_only">Bolus wordt alleen geregistreerd (niet toegediend door pomp)</string>
     <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs: %1$d g / %2$d h (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f E</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Plugin %1$s kon niet worden gestart en werkt mogelijk niet. Start AAPS opnieuw op.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Er is een fout opgetreden in plugin %1$s en een deel ervan is gestopt. Start AAPS opnieuw op.</string>
 </resources>
