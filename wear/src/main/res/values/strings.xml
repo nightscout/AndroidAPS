@@ -61,6 +61,7 @@
     <string name="pref_prime_in_menu">Prime in Menu</string>
     <string name="pref_single_target">Single Target</string>
     <string name="pref_wizard_percentage">Calculator Percentage</string>
+    <string name="pref_wizard_carbs_type">Calculator Meal Type</string>
     <string name="pref_complication_tap_action">Complication Tap Action</string>
     <string name="pref_complication_bg_graph_hours">BG graph time range</string>
     <string name="duration_1_hour">1 hour</string>
@@ -220,6 +221,7 @@
     <string name="key_show_wizard" translatable="false">showWizard</string>
     <string name="key_single_target" translatable="false">singletarget</string>
     <string name="key_wizard_percentage" translatable="false">wizardpercentage</string>
+    <string name="key_wizard_carbs_type" translatable="false">wizardcarbstype</string>
     <string name="key_show_graph_basal" translatable="false">show_graph_basal</string>
     <string name="key_show_graph_temp_basal" translatable="false">show_graph_temp_basal</string>
     <string name="key_show_graph_carbs" translatable="false">show_graph_carbs</string>
@@ -360,6 +362,11 @@
     <string name="title_activity_disconnect_pump">Disconnect pump</string>
     <string name="title_activity_suspend_loop">Suspend Loop</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="wizard_carbs_type">Meal type</string>
+    <string name="wizard_carbs_type_bread">Bread</string>
+    <string name="wizard_carbs_type_cake">Cake</string>
+    <string name="wizard_carbs_type_pizza">Pizza</string>
+    <string name="wizard_ecarbs_short" comment="Wizard confirm page, the extended carbs part of a cake or pizza meal. %1$d=grams, %2$d=hours they are spread over. Example: eCarbs 22 g / 3 h">eCarbs %1$d g / %2$d h</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>

@@ -1,4 +1,5 @@
 package app.aaps.plugins.sync.wear.wearintegration
+import app.aaps.core.data.model.CarbsType
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
@@ -343,6 +344,24 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
         val sent = capturedConfirm { sut.handleWizardPreCheck(EventData.ActionWizardPreCheck(carbs = 0, percentage = 100)) }
         assertThat(sent.returnCommand).isInstanceOf(EventData.Error::class.java)
         verifyBlocking(wizardExecutor, never()) { prepare(any(), any()) }
+    }
+    @Test fun `wizard precheck with a meal type splits the grams into carbs now and eCarbs`() = runTest {
+        // The watch sends the total and the type. The phone splits like its own wizard: pizza = 80 % now,
+        // 35 % as eCarbs after 60 min over 3 h. A watch without the type sends none, and bread keeps all carbs now.
+        val ads = mock<AutosensDataStore>()
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(mock())
+        whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
+        whenever(preferences.get(any<BooleanKey>())).thenReturn(true)
+        stubWizardPrepared(555L, lines = emptyList())
+        capturedConfirm { sut.handleWizardPreCheck(EventData.ActionWizardPreCheck(carbs = 65, percentage = 100, carbsType = CarbsType.PIZZA)) }
+        val captor = argumentCaptor<WizardExecutor.WizardSource>()
+        verifyBlocking(wizardExecutor) { prepare(captor.capture(), any()) }
+        val inputs = (captor.firstValue as WizardExecutor.WizardSource.Manual).inputs
+        assertThat(inputs.carbs).isEqualTo(52)
+        assertThat(inputs.eCarbsGrams).isEqualTo(22)
+        assertThat(inputs.eCarbsDelayMinutes).isEqualTo(60)
+        assertThat(inputs.eCarbsDurationHours).isEqualTo(3)
     }
     // --- QuickWizard tile modes (branch on entry.mode() exactly like the phone's MainViewModel) -----------
     //

@@ -698,7 +698,8 @@ class DataHandlerMobile(
         }
         val inputs = WizardBolusExecutor.WizardInputs(
             bg = bgReading.valueToUnits(profileFunction.getUnits()),
-            carbs = command.carbs,
+            // The meal type splits the grams like the phone wizard does: part now, part as eCarbs.
+            carbs = command.carbsType.carbsNow(command.carbs),
             percentage = command.percentage,
             directCorrection = 0.0,
             carbTime = 0,
@@ -709,6 +710,9 @@ class DataHandlerMobile(
             useTrend = preferences.get(BooleanKey.WearWizardTrend),
             alarm = false,
             notes = "",
+            eCarbsGrams = command.carbsType.eCarbs(command.carbs),
+            eCarbsDelayMinutes = command.carbsType.eCarbsDelayMinutes,
+            eCarbsDurationHours = command.carbsType.eCarbsDurationHours,
             source = Sources.Wear
         )
         contacting()
