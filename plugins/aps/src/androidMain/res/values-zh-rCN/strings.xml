@@ -50,6 +50,7 @@
     <string name="ignore30m">忽略30分钟</string>
     <string name="carbs_suggestion">碳水建议</string>
     <string name="open_loop_new_suggestion">新的建议可用</string>
+    <string name="loop_notification_channel_name">闭环建议</string>
     <string name="open_loop_suggestion_too_old">此建议已过时。未向泵发送任何指令。请等待下一条建议。</string>
     <string name="basal_set_correctly">正确地设置基础率</string>
     <string name="last_run_label">上次运行</string>
