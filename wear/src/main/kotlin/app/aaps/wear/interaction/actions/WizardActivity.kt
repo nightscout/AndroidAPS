@@ -260,19 +260,13 @@ private fun WizardConfirmScreen(carbs: Int, carbsType: CarbsType?, percentage: I
             )
         }
         Spacer(Modifier.height(4.dp))
+        // One line like the phone wizard, "52+22 g". The result page shows the eCarbs time.
         Text(
-            text = stringResource(R.string.wizard_carbs_short, carbsNow),
+            text = if (eCarbs > 0) stringResource(R.string.wizard_carbs_split, carbsNow, eCarbs) else stringResource(R.string.wizard_carbs_short, carbsNow),
             color = CarbsOrange,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
-        if (carbsType != null && eCarbs > 0) {
-            Text(
-                text = stringResource(R.string.wizard_ecarbs_short, eCarbs, carbsType.eCarbsDurationHours),
-                color = WearSecondaryText,
-                fontSize = 14.sp
-            )
-        }
         if (percentage != null) {
             Text(
                 text = "$percentage%",

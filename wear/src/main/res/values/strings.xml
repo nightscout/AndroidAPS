@@ -366,7 +366,7 @@
     <string name="wizard_carbs_type_bread">Bread</string>
     <string name="wizard_carbs_type_cake">Cake</string>
     <string name="wizard_carbs_type_pizza">Pizza</string>
-    <string name="wizard_ecarbs_short" comment="Wizard confirm page, the extended carbs part of a cake or pizza meal. %1$d=grams, %2$d=hours they are spread over. Example: eCarbs 22 g / 3 h">eCarbs %1$d g / %2$d h</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
