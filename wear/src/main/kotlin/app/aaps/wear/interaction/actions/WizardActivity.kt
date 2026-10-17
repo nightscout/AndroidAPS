@@ -105,6 +105,7 @@ class WizardActivity : WearMetroActivity() {
                                 title = stringResource(R.string.menu_wizard),
                             )
                             Page.CARBS_TYPE -> CarbsTypeScreen(
+                                carbs = carbs.toInt(),
                                 selected = carbsType,
                                 onSelect = { carbsType = it },
                                 enabled = !pagerState.isScrollInProgress,
@@ -152,11 +153,13 @@ class WizardActivity : WearMetroActivity() {
 }
 
 /**
- * One tap picks the meal type, the page does not move on by itself. The phone splits the grams by
- * the type, so the watch only has to send it. The picked one is drawn as a filled circle.
+ * One tap picks the meal type, the page does not move on by itself. The grams line shows what the type does
+ * with the carbs from the page before, "52+22 g", so the user sees the result before the request page.
  */
 @Composable
-private fun CarbsTypeScreen(selected: CarbsType, onSelect: (CarbsType) -> Unit, enabled: Boolean) {
+private fun CarbsTypeScreen(carbs: Int, selected: CarbsType, onSelect: (CarbsType) -> Unit, enabled: Boolean) {
+    val carbsNow = selected.carbsNow(carbs)
+    val eCarbs = selected.eCarbs(carbs)
     val haptic = LocalHapticFeedback.current
 
     Column(
@@ -202,6 +205,13 @@ private fun CarbsTypeScreen(selected: CarbsType, onSelect: (CarbsType) -> Unit, 
             text = stringResource(selected.nameRes()),
             color = Color.White,
             fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = if (eCarbs > 0) stringResource(R.string.wizard_carbs_split, carbsNow, eCarbs) else stringResource(R.string.wizard_carbs_short, carbsNow),
+            color = CarbsOrange,
+            fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )
     }
