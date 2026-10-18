@@ -47,6 +47,7 @@
     <string name="patch_rotate_knob">מחדיר את המחט</string>
     <string name="patch_rotate_knob_desc_1">סובבו את מנוף החדרת המחט ליותר מ-100° על מנת להחדיר את המחט ולאחר מכן סובבו עד הסוף בכדי להסיר את המנוף</string>
     <string name="patch_rotate_knob_desc_2">חכו לצפצוף יחיד ולאחר מכן הקישו \'הבא\'.</string>
+    <string name="patch_rotate_knob_desc_2_needle_insertion_error">חכו לצפצוף אחד ולאחר מכן לחצו על \'נסה שוב\'.</string>
     <string name="patch_communication_check_helper_1">הביאו את המכשיר החכם קרוב יותר ל-Patch.</string>
     <string name="patch_communication_check_helper_2">נא עברו למקום אחר ונסו שנית.</string>
     <string name="patch_communication_failed">שגיאת תקשורת</string>

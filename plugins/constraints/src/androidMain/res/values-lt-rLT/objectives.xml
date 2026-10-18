@@ -28,7 +28,7 @@
     <string name="objectives_smb_gate">Kad SMB veiktų tinkamai, perskaitykite wiki ir padidinkite maks AIO. Gera pradinė reikšmė: vidutinis valgio boliusas + 3 × didžiausia valandinė bazė. Paprastajame režime ši reikšmė apskaičiuojama automatiškai pagal wiki rekomendacijas, todėl jos nustatyti nereikia.</string>
     <string name="objectives_smb_learned">Jūsų tikslas – pradėti naudoti SMB. Oref1 algoritmas sukurtas taip, kad padėtų ir apskaičiuojant bolusus. Su maistu nebūtina suleisti viso apskaičiuoto boluso iš karto – galite suleisti tik jo dalį, o likusią dalį, jei jos prireiks, palikti AAPS. Taip lieka daugiau atsargos, jei angliavandenių kiekį įvertinote netiksliai. Ar žinojote, kad galite nustatyti, kokį procentą boluso skaičiuoklės rezultato suleisti, ir taip sumažinti boluso dydį?</string>
     <string name="objectives_auto_objective">Automatizacijos įjungimas</string>
-    <string name="objectives_auto_gate">Perskaitykite dokumentaciją apie tai, kaip veikia automatizacija. Nustatykite savo pirmąsias paprastas taisykles. Vietoje veiksmo leiskite AAPS rodyti tik pranešimą. Kai būsite tikri, kad automatizacija suveikia tinkamu laiku, pakeiskite pranešimą realiu veiksmu. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
+    <string name="objectives_auto_gate">Perskaitykite dokumentaciją apie tai, kaip veikia automatizacija. Nustatykite savo pirmąsias paprastas taisykles. Vietoje veiksmo leiskite AAPS rodyti tik pranešimą. Kai būsite tikri, kad automatizacija suveikia tinkamu laiku, pakeiskite pranešimą realiu veiksmu. (https://wiki.aaps.app/lt/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">Automatizacija gali būti lazda su dviem galais. Nepiktnaudžiaukite. Nebandykite keisti ją aprašančių algoritmų. Prieš įgalindami veiksmą, išbandykite rezultatą su pranešimu. Rezultatas labai priklauso nuo sąlygų eiliškumo.</string>
     <string name="objectives_bgavailableinns">Glikemija matoma NS arba Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Pompos būsena matoma NS arba Tidepool</string>
@@ -49,7 +49,7 @@
     <string name="objectives_exam_learned_isf">Sužinojote, kas yra JIF ir kaip jo dydis lemia insulino kiekio, naudojamo glikemijos korekcijoms, apskaičiavimus.</string>
     <string name="objectives_exam_learned_ic">Sužinojote, kas yra IA ir kaip jo dydis lemia insulino kiekio, naudojamo angliavandeniams padengti, apskaičiavimus.</string>
     <string name="objectives_exam_learned_hypott">Hipo laikinas tikslas naudojamas tam, kad sistema nepradėtų agresyviai koreguoti greitai kylančios glikemijos suvalgius AV hipoglikemijos metu, kai įprastai AIO būna minusinis. Tam, kad šios situacijos būtų išvengta ateityje, reikalingi papildomi veiksmai.</string>
-    <string name="objectives_exam_learned_profileswitch">Profilio procentas nekeičia glikemijos tikslo, tačiau bazė, JIF ir IA perskaičiuojami taip, kad, nustačius daugiau nei 100 %, insulino būtų suleidžiama daugiau, o mažiau nei 100 % – mažiau.</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">Profilio procentas nekeičia glikemijos tikslo, tačiau bazė, JIF ir IA perskaičiuojami taip, kad, nustačius daugiau nei 100 %, insulino būtų suleidžiama daugiau, o mažiau nei 100 % – mažiau.</string>
     <string name="objectives_exam_learned_profileswitchtime">Laiko perstūmimas keičiant profilį padeda prisitaikyti prie cirkadinių ritmų pokyčių, pvz.: vėlyvo atsikėlimo.</string>
     <string name="objectives_exam_learned_profileswitch4">Vien pakeisti profilio reikšmių nepakanka, kad profilis įsigaliotų. Po bet kokių pakeitimų būtina aktyvuoti profilį.</string>
     <string name="objectives_exam_learned_exercise">Reikėtų sumažinti aktyvaus insulino kiekį organizme. Tam reikia bent 1 val. iki fizinio aktyvumo pakeisti profilį į mažesnį nei 100%.</string>
@@ -62,17 +62,17 @@
     <string name="objectives_exam_learned_wrongcarbs">Jei į AAPS įvedėte neteisingus duomenis arba jie neatitinka tikrosios situacijos, kuo greičiau juos ištaisykite. Priešingu atveju gali būti suleista per daug insulino. AAPS visada turėtų turėti kuo tikslesnę informaciją apie angliavandenius, insuliną ir kitus svarbius duomenis.</string>
     <string name="objectives_exam_learned_breadgrams">Angliavandeniai įvedami tik gramais.</string>
     <string name="objectives_exam_learned_ecarbs">Ištęsti AV pakeičia pompose įprastai naudojamus ištęstus bolusus.</string>
-    <string name="objectives_exam_learned_concentration2">Pereinant nuo U200 insulino su 50 % profiliu prie U200 insulino naudojant insulino koncentracijos funkciją, reikės sukurti naują, stipresnį profilį, savaitei išjungti DynamicISF ir priprasti visas insulino dozes vertinti tarptautiniais vienetais (V).</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">Pereinant nuo U200 insulino su 50 % profiliu prie U200 insulino naudojant insulino koncentracijos funkciją, reikės sukurti naują, stipresnį profilį, savaitei išjungti DynamicISF ir priprasti visas insulino dozes vertinti tarptautiniais vienetais (V).</string>
     <string name="objectives_exam_learned_concentration3">Insulino koncentraciją galima keisti tik keičiant rezervuarą. Svarbiausia – ypač naudojant pompas su vamzdeliais, – bolusų niekada neleiskite tiesiogiai per pačios pompos valdymo ekraną.</string>
     <string name="answerdisabledto">Atsakyti negalima iki: %1$s</string>
     <string name="wronganswer">Neteisingas atsakymas!</string>
     <string name="unfinshed_button">Kitas neužbaigtas</string>
     <string name="requestcode">Kodo užklausa: %1$s</string>
     <string name="objectives_hint">(pasirinkite visus teisingus atsakymus)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/lt/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/lt/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/lt/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/lt/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Nėra interneto ryšio</string>
     <string name="requirementnotmet">Etapo reikalavimai neįvykdyti</string>
     <string name="what_i_ve_learned">Ką išmokote:</string>

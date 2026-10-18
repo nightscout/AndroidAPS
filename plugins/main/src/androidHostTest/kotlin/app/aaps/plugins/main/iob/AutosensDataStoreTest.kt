@@ -1790,20 +1790,133 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
         assertThat(bucketed[0].value).isEqualTo(100.0)
     }
 
+    private fun readingsAt(vararg timesNewestFirst: Long): List<GV> =
+        timesNewestFirst.mapIndexed { i, time ->
+            GV(raw = 0.0, noise = 0.0, value = 200.0 - i, timestamp = time, sourceSensor = SourceSensor.UNKNOWN, trendArrow = TrendArrow.FLAT)
+        }
+
+    private fun cachedEntryAt(time: Long) =
+        autosensDataStore.autosensDataTable.append(time, AutosensDataObject(aapsLogger, preferences, dateUtil).apply { this.time = time })
+
     @Test
-    fun anchorFurtherOutOfPhaseThanJitterStillStepsBack() {
-        val newest = T.mins(48).msecs()
+    fun aSingleLateReadingStillStepsBack() {
+        // Only the newest reading is out of phase, the one before it is on the grid. One reading can be
+        // jitter, so the grid stays and the newest grid point steps back below the newest reading.
         val tolerance = T.secs(AutosensDataStoreObject.IRREGULAR_DATA_SEC).msecs()
-        autosensDataStore.bgReadings = readingsForRecalculatedPath(newest)
-        // One millisecond past the tolerance. That is a real phase mismatch, not jitter, so the newest
-        // grid point stays below the newest reading and no bucket is placed after the data.
-        autosensDataStore.referenceTime = newest - T.mins(5).msecs() + tolerance + 1
+        val anchor = T.mins(5).msecs()
+        // One millisecond more than the tolerance before the 50 minute grid point
+        val newest = T.mins(50).msecs() - tolerance - 1
+        autosensDataStore.bgReadings = readingsAt(newest, T.mins(45).msecs(), T.mins(40).msecs(), T.mins(33).msecs())
+        autosensDataStore.referenceTime = anchor
+        cachedEntryAt(T.mins(40).msecs())
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
 
         autosensDataStore.createBucketedData(aapsLogger, dateUtil)
 
+        assertThat(autosensDataStore.referenceTime).isEqualTo(anchor)
+        assertThat(autosensDataStore.autosensDataTable.size()).isEqualTo(1)
+        assertThat(autosensDataStore.bucketedData!![0].timestamp).isEqualTo(T.mins(45).msecs())
+    }
+
+    @Test
+    fun aSourceThatDriftsOffTheGridMovesTheGridToItsNewestReading() {
+        // Olorin's xDrip+ log (2026-10-16): a reading every 302 seconds. The anchor has the phase the
+        // readings had 2 hours ago, and they drifted 2 seconds a reading since. Before, bucketedData[0],
+        // which the overview, the loop and wear read, fell further behind with every reading - 4.4
+        // minutes at the end of that log - until AAPS was restarted.
+        val start = T.hours(10).msecs()
+        val times = (0 until 24).map { start + it * T.secs(302).msecs() }
+        val newest = times.last()
+        autosensDataStore.bgReadings = readingsAt(*times.reversed().toLongArray())
+        autosensDataStore.referenceTime = start
+        cachedEntryAt(start)
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
+
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+
+        assertThat(autosensDataStore.referenceTime).isEqualTo(newest)
         val bucketed = autosensDataStore.bucketedData!!
-        assertThat(bucketed).hasSize(3)
-        assertThat(bucketed[0].timestamp).isEqualTo(newest - T.mins(5).msecs() + tolerance + 1)
+        assertThat(bucketed[0].timestamp).isEqualTo(newest)
+        assertThat(bucketed[0].value).isEqualTo(200.0)
+        assertThat(bucketed[0].filledGap).isFalse()
+        // The cached data was keyed by the old grid, so it is calculated again, as after a restart
+        assertThat(autosensDataStore.autosensDataTable.size()).isEqualTo(0)
+    }
+
+    @Test
+    fun aSmallDriftLeavesTheGridAndTheCachedDataAlone() {
+        // The same source 9 readings in: 18 seconds off the grid, still inside the tolerance
+        val start = T.hours(10).msecs()
+        val times = (0 until 10).map { start + it * T.secs(302).msecs() }
+        autosensDataStore.bgReadings = readingsAt(*times.reversed().toLongArray())
+        autosensDataStore.referenceTime = start
+        cachedEntryAt(start)
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
+
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+
+        assertThat(autosensDataStore.referenceTime).isEqualTo(start)
+        assertThat(autosensDataStore.autosensDataTable.size()).isEqualTo(1)
+    }
+
+    /**
+     * Readings every 5 minutes on the grid of an anchor at minute 40, then a missed reading and an 8
+     * minute gap, so that the readings after it are 3 minutes off the grid - the shape from the comment
+     * on issue #5148.
+     */
+    private fun readingsAfterAGap(readingsAfterTheGap: Int): List<GV> {
+        val before = (0..8).map { T.mins(5L * it).msecs() }
+        val after = (0 until readingsAfterTheGap).map { T.mins(48L + 5L * it).msecs() }
+        return readingsAt(*(before + after).reversed().toLongArray())
+    }
+
+    @Test
+    fun oneReadingAfterAGapDoesNotMoveTheGrid() {
+        autosensDataStore.bgReadings = readingsAfterAGap(1)
+        autosensDataStore.referenceTime = T.mins(40).msecs()
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
+
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+
+        assertThat(autosensDataStore.referenceTime).isEqualTo(T.mins(40).msecs())
+    }
+
+    @Test
+    fun twoReadingsAfterAGapMoveTheGridToTheNewPhase() {
+        autosensDataStore.bgReadings = readingsAfterAGap(2)
+        autosensDataStore.referenceTime = T.mins(40).msecs()
+        cachedEntryAt(T.mins(40).msecs())
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
+
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+
+        // Before, the grid stayed at minute 40 and the newest bucket was 3 minutes behind until a restart
+        assertThat(autosensDataStore.referenceTime).isEqualTo(T.mins(53).msecs())
+        assertThat(autosensDataStore.bucketedData!![0].timestamp).isEqualTo(T.mins(53).msecs())
+        assertThat(autosensDataStore.bucketedData!![0].value).isEqualTo(200.0)
+        assertThat(autosensDataStore.autosensDataTable.size()).isEqualTo(0)
+    }
+
+    @Test
+    fun aSourceFasterThanFiveMinutesKeepsItsGrid() {
+        // A 1 or 3 minute source is off the 5 minute grid most of the time. Its two newest readings are
+        // never in one 5 minute phase, so it must never move the grid: every move throws away the cached
+        // autosens data (issue #5066).
+        for (stepSeconds in listOf(60L, 180L)) {
+            val anchor = T.mins(45).msecs()
+            // The newest reading 2 minutes off the grid, the one before it off too
+            val newest = T.mins(47).msecs()
+            autosensDataStore.bgReadings = readingsAt(*(0 until 20).map { newest - it * T.secs(stepSeconds).msecs() }.toLongArray())
+            autosensDataStore.referenceTime = anchor
+            autosensDataStore.autosensDataTable = LongSparseArray()
+            cachedEntryAt(anchor)
+            assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
+
+            autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+
+            assertThat(autosensDataStore.referenceTime).isEqualTo(anchor)
+            assertThat(autosensDataStore.autosensDataTable.size()).isEqualTo(1)
+        }
     }
 
     /**
@@ -1979,7 +2092,9 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
     @Test
     fun anAnchorAlreadySetIsNotReSeeded() {
         // Seeding runs only when there is no anchor yet. Once set it stays for the life of the process,
-        // because autosens keys, the COB chain and carb slotting all depend on the grid not moving.
+        // because autosens keys, the COB chain and carb slotting all depend on the grid not moving. The one
+        // exception is the temporary re-anchor when the two newest readings left the grid, and here the
+        // newest reading is on it.
         autosensDataStore.bgReadings = readingsWithLateNewest()
         val existing = T.mins(46).msecs()
         autosensDataStore.referenceTime = existing

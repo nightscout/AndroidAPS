@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +32,11 @@ import app.aaps.core.ui.compose.stringResourceOrNull
 
 @Composable
 fun MainDrawer(
+    /**
+     * The drawer's state. With it the sheet closes the drawer on Back. Without it nothing took Back while
+     * the drawer was open, and Back left the app.
+     */
+    drawerState: DrawerState,
     versionName: String,
     onNavigate: (NavigationRequest) -> Unit,
     isTreatmentsEnabled: Boolean,
@@ -39,6 +45,7 @@ fun MainDrawer(
     modifier: Modifier = Modifier
 ) {
     ModalDrawerSheet(
+        drawerState = drawerState,
         modifier = modifier.width(320.dp)
     ) {
         Spacer(modifier = Modifier.height(16.dp))

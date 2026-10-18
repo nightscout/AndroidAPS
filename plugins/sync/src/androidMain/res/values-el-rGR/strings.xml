@@ -54,6 +54,7 @@
     <string name="wear_infos_watchface">Πληροφορίες Watchface</string>
     <string name="wear_export_watchface">Εξαγωγή Προτύπου</string>
     <string name="wear_new_custom_watchface_exported">Εξήχθη προσαρμοσμένο πρότυπο watchface</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/el/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Ξαναστείλτε όλα τα Δεδομένα</string>
     <string name="open_settings_on_wear">Ρυθμίσεις στο Wear</string>
     <string name="cwf_infos_pref_locked">Λίστα προτιμήσεων που κλειδώθηκαν από το Watchface</string>
@@ -80,7 +81,6 @@
     <string name="aps">APS</string>
     <string name="last_run">Τελευταία εκτέλεση</string>
     <string name="last_enact">Τελευταία Ενέργεια</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Σήμερα</string>
     <string name="weighted">σταθμισμένο</string>
     <!-- SMS Communicator & OTP Authenticator -->

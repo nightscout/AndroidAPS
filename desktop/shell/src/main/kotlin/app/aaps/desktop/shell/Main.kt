@@ -202,8 +202,7 @@ private fun startPlugins(graph: DesktopAppGraph) {
     // "dk" is a country code where a language code belongs, and "pt_BR"/"zh_TW"/"zh_CN" use the Java
     // underscore form. Passing those on raw matched no translation, so four of the offered languages
     // showed a fully English app here while Android translated.
-    TextRefValueRegistry.locale =
-        LanguageTag.of(graph.preferences.get(StringKey.GeneralLanguage)) ?: Locale.getDefault().toLanguageTag()
+    TextRefValueRegistry.locale = languageTag(graph.preferences.get(StringKey.GeneralLanguage))
     graph.logger.debug(LTag.CORE, "Language: ${TextRefValueRegistry.locale}")
     // Which marker files were found, so the answer is in the log rather than only in whether a
     // preference row happens to be drawn. An option that is switched off and a marker file that is
@@ -233,6 +232,9 @@ private fun startPlugins(graph: DesktopAppGraph) {
     graph.logger.debug(LTag.CORE, "Registered ${plugins.size} plugins and verified selections")
 }
 
+/** The language tag for the stored language setting, or the machine's language when it follows the device. */
+internal fun languageTag(stored: String): String = LanguageTag.of(stored) ?: Locale.getDefault().toLanguageTag()
+
 /**
  * The shared AAPS Compose root, with the shared navigation graph inside it.
  *
@@ -255,8 +257,10 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
     // here: the registry is repointed and the composition rebuilt, which is the same outcome.
     LaunchedEffect(Unit) {
         graph.preferences.observe(StringKey.GeneralLanguage).drop(1).collect {
-            val chosen = graph.preferences.get(StringKey.GeneralLanguage)
-            TextRefValueRegistry.locale = if (chosen == "default") Locale.getDefault().toLanguageTag() else chosen
+            // Through the same fix-up as at start. This used the stored value as it was, so choosing
+            // Danish, Brazilian Portuguese or either Chinese while the app ran gave English text until
+            // the next start.
+            TextRefValueRegistry.locale = languageTag(graph.preferences.get(StringKey.GeneralLanguage))
             logger.debug(LTag.CORE, "Language changed to ${TextRefValueRegistry.locale}")
             graph.uiRestart.request()
         }

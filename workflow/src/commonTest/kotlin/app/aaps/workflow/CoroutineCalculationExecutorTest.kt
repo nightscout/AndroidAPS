@@ -134,9 +134,13 @@ class CoroutineCalculationExecutorTest {
     @Volatile private var postBody: suspend () -> WorkOutcome = { WorkOutcome.Success }
 
     private val prepare = CalculationPhase { _, generation, isStopped ->
+        // The body first, then the record that awaitRuns waits for. A test sets the next run's body once
+        // awaitRuns has seen this run. Read after the record, a slow thread could take that new body: on CI
+        // the first run took the empty one, ended at once, and the test waited 5 s for it to be cancelled.
+        val body = prepareBody
         checks.add(isStopped)
         checksByGeneration.add(generation to isStopped)
-        prepareBody(generation)
+        body(generation)
         prepareOutcome
     }
 

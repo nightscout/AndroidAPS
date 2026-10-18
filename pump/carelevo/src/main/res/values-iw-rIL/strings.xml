@@ -73,9 +73,14 @@
     <!-- Safety Check -->
     <!-- Warning Titles -->
     <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_battery">סוללה חלשה</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">טמפרטורה גבוהה/נמוכה</string>
+    <string name="alarm_feat_title_alert_not_used_app">כיבוי אוטומטי</string>
     <!-- Notice Titles -->
     <string name="alarm_feat_title_notice_check_bg">בדיקת סוכר בדם</string>
     <!-- Action Buttons -->
     <!-- General Messages -->
     <!--    notification -->
+    <string name="alarm_notification_desc_notice_lgs_error">נא לבדוק את החיבור לפאץ\' ול־CGM.</string>
+    <string name="carelevo_profile_update_skip_comment">דולג: העדכון הקודם בוצע לפני זמן קצר מדי.</string>
 </resources>

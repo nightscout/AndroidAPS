@@ -121,6 +121,9 @@
     <string name="invalid_profile">Perfil inválido</string>
     <string name="no_profile_set">NINGÚN PERFIL ACTIVO</string>
     <string name="profile_switch_no_insulin">No se puede cambiar de perfil: no hay ninguna insulina en uso y no se ha seleccionado ninguna</string>
+    <string name="scene_no_profile_before">No se estaba utilizando ningún perfil antes de que comenzara la escena</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">La escena %1$s ha finalizado, pero su perfil se sigue utilizando. %2$s Active un perfil manualmente</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Este cambio temporal tiene %1$s, pero el perfil permanente inferior tiene %2$s. Active primero en los ajustes de insulina la insulina que está en la bomba</string>
     <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">La hora del cambio de perfil debe estar dentro de las %1$d horas posteriores a la actual</string>
     <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">El objetivo temporal debe comenzar dentro de las %1$d horas posteriores a la actual</string>
     <string name="profile_switch_select_insulin_hint">Todavía no hay ninguna insulina en uso. Selecciona la insulina que estás utilizando para que este cambio de perfil pueda registrarla</string>
@@ -197,6 +200,8 @@
     <string name="a11y_arrow_unknown">desconocido</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">disminuir %1$s en \%2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">incrementar %1$s en \%2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">abra %1$s para escribir</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">cierre %1$s</string>
     <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Subir</string>
     <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Bajar</string>
     <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Paso %1$d de %2$d</string>
@@ -354,6 +359,7 @@
     <string name="temporary_target">Objetivo temporal</string>
     <string name="temporary_targets">Objetivos temporales</string>
     <string name="running_mode">Modo de funcionamiento</string>
+    <string name="running_mode_desc">Cierre o abra el lazo, suspéndalo o desconecte la bomba</string>
     <string name="running_mode_change_not_allowed">El cambio de modo de funcionamiento no está disponible</string>
     <string name="pump_reconnect">Reconectar bomba</string>
     <string name="scene">Escena</string>

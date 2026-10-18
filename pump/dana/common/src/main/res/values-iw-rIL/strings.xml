@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">הצימוד חרג ממגבלת הזמן</string>
+    <string name="danars_bonding_failed">צימוד הבלוטות\' למשאבה נכשל או בוטל. נא לנסות שוב ולהזין את קוד ה־PIN שמוצג במשאבה.</string>
     <string name="danarspump">Dana-i / RS</string>
     <string name="description_pump_dana_rs">חיבור משאבות DANA RS/i</string>
     <string name="maxbolusviolation">בולוס גבוה מדי</string>
@@ -8,6 +9,11 @@
     <string name="speederror">שגיאת מהירות</string>
     <string name="insulinlimitviolation">כמות אינסולין גבוהה מדי</string>
     <string name="boluserrorcode">התבקש: %1$.2f יח\' הוזרק: %2$.2f יח\' קוד שגיאה: %3$s</string>
+    <string name="danai2_bolus_error_not_enough_insulin">אין מספיק אינסולין במכל</string>
+    <string name="danai2_bolus_error_easy_sleep">מצב Easy sleep מופעל במשאבה</string>
+    <string name="danai2_pump_check_error">שגיאה בבדיקת המשאבה</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">מצב Easy</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">נעילה אוטומטית</string>
     <string name="danar_valuenotsetproperly">ערך לא מוגדר כראוי</string>
     <string name="danar_setbasalstep001">הגדר מינון באזלי ל-0.01 יח\'\\שעה</string>
     <string name="resetpairing">לאפס את נתוני הצימוד?</string>
@@ -17,6 +23,7 @@
     <string name="danar_disablebolusblock">חסימת הבולוס מופעלת במשאבה. AAPS אינו יכול להזריק אינסולין כאשר הוא פעיל. יש להשבית את חסימת הבולוס בהגדרות המשאבה.</string>
     <string name="overview_bolusprogress_stoped">נעצר</string>
     <string name="unsupportedfirmware">קושחת משאבה לא נתמכת</string>
+    <string name="danars_unsupported_model">דגם משאבה לא נתמך (קוד %1$s)</string>
     <string name="pumperror">תקלת משאבה</string>
     <string name="lowbattery">סוללה חלשה</string>
     <string name="basalcompare">מספק כמות פחותה מהמינון הבזאלי שהוגדר מראש</string>

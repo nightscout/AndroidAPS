@@ -10,6 +10,7 @@
     <string name="pref_display_settings">Ekran</string>
     <string name="pref_graph_settings">Grafik</string>
     <string name="pref_interface_settings">Arayüz</string>
+    <string name="pref_tile_settings">Paneller</string>
     <string name="pref_others_settings">Diğer</string>
     <string name="pref_complication_settings">Komplikasyon</string>
     <string name="pref_show_date">Tarihi Göster</string>

@@ -17,6 +17,7 @@ import app.aaps.di.newIntegrationWaits
 import app.aaps.di.newRxHelper
 import app.aaps.di.testGraphs
 import app.aaps.helpers.IntegrationWaits
+import app.aaps.helpers.RxHelper
 import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryWorker
 import app.aaps.testcategories.ShardB
@@ -63,8 +64,8 @@ class RunningModeReconcilerIntegrationTest : AapsInstrumentedTest() {
     private val runningModeReconciler get() = testGraphs.runningModeReconciler
     private val runningModeExpiryScheduler get() = testGraphs.runningModeExpiryScheduler
     private val dateUtil get() = testGraphs.dateUtil
-    private val rxHelper by lazy { newRxHelper() }
-    private val integrationWaits by lazy { newIntegrationWaits() }
+    private lateinit var rxHelper: RxHelper
+    private lateinit var integrationWaits: IntegrationWaits
     private val loop get() = testGraphs.loop
     private val profileFunction get() = testGraphs.profileFunction
     private val profileRepository get() = testGraphs.profileRepository
@@ -85,6 +86,9 @@ class RunningModeReconcilerIntegrationTest : AapsInstrumentedTest() {
 
     @Before
     fun setUp() {
+        // Per attempt: a retry runs on a new graph, see newRxHelper
+        rxHelper = newRxHelper()
+        integrationWaits = newIntegrationWaits()
         WorkManager.getInstance(context).cancelAllWork()
         runBlocking { persistenceLayer.clearDatabases() }
         (profileFunction as ProfileFunctionImpl).cache.clear()

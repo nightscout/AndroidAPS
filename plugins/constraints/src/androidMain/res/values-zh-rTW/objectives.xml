@@ -29,7 +29,7 @@
     <string name="objectives_smb_gate">您必須閱讀Wiki並提高MaxIOB以使SMB正常工作！一個好的開始是MaxIOB=平均餐前注射+3倍的每日最大基礎速率。在簡單模式下，這個值根據Wiki中的建議計算，不需要設置。</string>
     <string name="objectives_smb_learned">使用 SMB 是你的目標，Oref1 演算法也是為了幫助你進行注射設計的。你不應該為食物注射全部的劑量，只要打一部分，剩下的由 AAPS 來補足。這樣可以留出更多空間，避免碳水估算錯誤。另外，你知道嗎？你可以設定注射計算器的百分比，來減少注射的劑量。</string>
     <string name="objectives_auto_objective">啟用自動化</string>
-    <string name="objectives_auto_gate">閱讀有關自動化運作方式的文件。設定您的第一個簡單規則。一開始使用時，請讓 AAPS 僅顯示通知，而不是執行動作。當您確定自動化在正確的時間觸發後，將通知替換為實際動作。（https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html）</string>
+    <string name="objectives_auto_gate">閱讀有關自動化運作方式的文件。設定您的第一個簡單規則。一開始使用時，請讓 AAPS 僅顯示通知，而不是執行動作。當您確定自動化在正確的時間觸發後，將通知替換為實際動作。（https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/Automations.html）</string>
     <string name="objectives_auto_learned">自動化可以是好的僕人，但壞的主人。不要過度使用它。不要試圖替代基本算法。使用僅訊息測試規則，然後再使用它。這取決於順序。</string>
     <string name="objectives_bgavailableinns">血糖在Nightscout或Tidepool中可用</string>
     <string name="objectives_pumpstatusavailableinns">幫浦狀態在Nightscout或Tidepool中可用</string>
@@ -53,7 +53,7 @@
     <string name="objectives_exam_learned_isf">您已學會ISF值的含義及其如何影響用於血糖修正的胰島素量。</string>
     <string name="objectives_exam_learned_ic">您已學會IC值的含義及其如何影響覆蓋碳水化合物所需的胰島素量。</string>
     <string name="objectives_exam_learned_hypott">低血糖臨時目標僅用於防止低血糖後的過度修正，通常這時有疊加的負IOB。應評估額外措施以防止未來再次發生這種情況。</string>
-    <string name="objectives_exam_learned_profileswitch">使用百分比不會影響目標血糖值，但會調整基礎率、 ISF 與 IC，使在超過 100% 時給予較多胰島素，低於 100% 時給予較少胰島素。</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">使用百分比不會影響目標血糖值，但會調整基礎率、 ISF 與 IC，使在超過 100% 時給予較多胰島素，低於 100% 時給予較少胰島素。</string>
     <string name="objectives_exam_learned_profileswitchtime">通過在設定檔切換中使用時間偏移，您可以將日夜節律設定檔適應不規則情況，如晚起床。</string>
     <string name="objectives_exam_learned_profileswitch4">編輯設定檔本身不足以進行更改。您仍然需要進行設定檔切換以啟用更改。</string>
     <string name="objectives_exam_learned_exercise">您應該在運動開始前至少1小時減少體內的胰島素量，選擇低於100%的設定檔。</string>
@@ -71,17 +71,17 @@
     <string name="objectives_exam_learned_ecarbs">延長碳水化合物是幫浦世界中延長注射的替代品。</string>
     <string name="objectives_exam_learned_nsclient">您可以透過 AAPSClient 或 Nightscout 遠端追蹤 AAPS。當 AAPSClient 與主手機配對後，您也可以遠端控制 AAPS。</string>
     <string name="objectives_exam_learned_concentration1">使用 U200 胰島素並將設定檔設為 50% 將需要持續進行換算：對於使用筆進行的外部注射，以及 AAPS 或 NS 提供的所有標準報表都會變得不正確，且必須換算為 IU 提供給醫療團隊。</string>
-    <string name="objectives_exam_learned_concentration2">從使用 50% 設定檔的 U200 切換到使用胰島素濃度功能的 U200，將需要建立更強的設定檔、停用 DynISF 一週，並訓練自己以國際單位來思考。</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">從使用 50% 設定檔的 U200 切換到使用胰島素濃度功能的 U200，將需要建立更強的設定檔、停用 DynISF 一週，並訓練自己以國際單位來思考。</string>
     <string name="objectives_exam_learned_concentration3">只有在更換胰島素或貼片時，才能變更胰島素濃度。但更重要的是，尤其對管路型幫浦，切勿透過幫浦本身的操作介面直接進行注射。</string>
     <string name="answerdisabledto">回答停用至：%1$s</string>
     <string name="wronganswer">答案錯誤！</string>
     <string name="unfinshed_button">下一個未完成</string>
     <string name="requestcode">請求代碼：%1$s</string>
     <string name="objectives_hint">(檢查所有正確答案)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/zh-tw/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/zh-tw/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/zh-tw/latest/SettingUpAaps/ConfigBuilder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">未連線到互聯網</string>
     <string name="failedretrievetime">無法取得時間</string>
     <string name="requirementnotmet">未滿足目標要求</string>

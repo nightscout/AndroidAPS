@@ -177,6 +177,8 @@
     <string name="alarm_feat_btn_resume_infusion">開始輸注</string>
     <!-- General Messages -->
     <string name="alarm_feat_msg_check_patch_connect">請檢查貼片連線。</string>
+    <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">無法進行注射。可用注射量：%1$s</string>
+    <string name="carelevo_bolus_rejected_exceed_limit_none">無法進行注射。剩餘胰島素不足。</string>
     <!--    notification -->
     <string name="alarm_notification_desc_warning_low_insulin">剩餘胰島素少於 10 U；已停止輸注。請點選 [停用貼片] 按鈕，並立即更換貼片。</string>
     <string name="alarm_notification_desc_warning_expired_patch">貼片已過期；已停止輸注。請點選 [停用貼片] 按鈕，並立即更換貼片。</string>
@@ -210,4 +212,7 @@
     <string name="alarm_notification_desc_notice_lgs_ended_unknown">因未知原因，LGS 已結束。</string>
     <string name="alarm_notification_desc_notice_lgs_error">請檢查貼片與 CGM 的連線。</string>
     <string name="carelevo_profile_update_skip_comment">已略過：更新時機過早。</string>
+    <string name="carelevo_bolus_stop_not_confirmed">貼片幫浦未確認停止。正在等待注射結束…</string>
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">先前未記錄的一筆注射已於現在補上。請檢查 IOB（活性胰島素），然後再試一次。</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">貼片幫浦未確認停止。已記錄完整的 %1$s 注射量。</string>
 </resources>

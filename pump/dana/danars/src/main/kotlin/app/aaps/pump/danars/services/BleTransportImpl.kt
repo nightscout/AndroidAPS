@@ -179,6 +179,11 @@ class BleTransportImpl(
 
         @SuppressLint("MissingPermission")
         override fun startScan() {
+            // Without the permission Android throws a SecurityException, and the app ends
+            if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN)) {
+                aapsLogger.error(LTag.PUMPBTCOMM, "BLUETOOTH_SCAN permission missing, no scan")
+                return
+            }
             scanCallback = object : ScanCallback() {
                 override fun onScanResult(callbackType: Int, result: ScanResult) {
                     val device = result.device ?: return
@@ -290,6 +295,6 @@ class BleTransportImpl(
         }
     }
 
-    private fun hasPermission(): Boolean =
-        ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+    private fun hasPermission(permission: String = Manifest.permission.BLUETOOTH_CONNECT): Boolean =
+        ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
 }

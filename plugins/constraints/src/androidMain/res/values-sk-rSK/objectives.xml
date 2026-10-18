@@ -53,7 +53,7 @@
     <string name="objectives_exam_learned_isf">Naučili ste sa význam hodnoty ISF (citlivosti) a ako ovplyvňuje množstvo inzulínu, použitého pre korekcie glykémie.</string>
     <string name="objectives_exam_learned_ic">Naučili ste sa význam hodnoty IC (sacharidovo-inzulínový prevod) a ako ovplyvňuje množstvo inzulínu, potrebného k pokrytiu sacharidov.</string>
     <string name="objectives_exam_learned_hypott">Dočasný cieľ Hypoglykémia je používaný iba na zabránenie nadmernej korekcii po hype, kedy sa zväčša nakumuluje negatívne IOB.</string>
-    <string name="objectives_exam_learned_profileswitch">Používanie percenta neovplyvňuje cieľovú glykémiu, ale bazál, citlivosť a sacharidovo-inzulínové prevody sú prispôsobené, aby bolo použitého viac inzulínu (nad 100%), alebo menej inzulínu (pod 100%).</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">Používanie percenta neovplyvňuje cieľovú glykémiu, ale bazál, citlivosť a sacharidovo-inzulínové prevody sú prispôsobené, aby bolo použitého viac inzulínu (nad 100%), alebo menej inzulínu (pod 100%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Pri používani posunu času pri prepínaní profilu, môžete prispôsobiť cirkadiánny profil na nezrovnalosti, ako napríklad neskoršie zobudenie.</string>
     <string name="objectives_exam_learned_profileswitch4">Úprava samotného profilu na vykonanie zmien nepostačuje. Pre aktiváciu zmien, potrebujete stále urobiť prepnutie profilu.</string>
     <string name="objectives_exam_learned_exercise">Množstvo inzulínu v tele, by ste mali znížiť aspoň 1 hodinu pred začiatkom cvičenia, výberom profilu pod 100%.</string>
@@ -71,17 +71,17 @@
     <string name="objectives_exam_learned_ecarbs">E-Carbs je náhrada za predĺžený bolus vo svete pumpy.</string>
     <string name="objectives_exam_learned_nsclient">AAPS môžete vzdialene sledovať pomocou AAPSClienta alebo Nightscoutu. Keď je AAPSClient spárovaný s hlavným telefónom (master), môžete AAPS aj vzdialene ovládať.</string>
     <string name="objectives_exam_learned_concentration1">Používanie inzulínu U200 s profilom na 50 % vyžaduje neustály prepočet: týka sa to externých bolusov podávaných perom a rovnako aj všetkých štandardných reportov z AAPS alebo Nightscoutu, ktoré budú skreslené a bude potrebné ich prerátať na jednotky (IU).</string>
-    <string name="objectives_exam_learned_concentration2">Prechod z U200 s profilom 50% na U200 s funkciou koncentrácie inzulínu bude vyžadovať vytvorenie nového silnejšieho profilu, vypnutie DynISF na jeden týždeň a natrénovanie mozgu myslieť v medzinárodných jednotkách.</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">Prechod z U200 s profilom 50% na U200 s funkciou koncentrácie inzulínu bude vyžadovať vytvorenie nového silnejšieho profilu, vypnutie DynISF na jeden týždeň a natrénovanie mozgu myslieť v medzinárodných jednotkách.</string>
     <string name="objectives_exam_learned_concentration3">Koncentráciu inzulínu je možné meniť iba pri výmene inzulínu alebo Patchu. Ale predovšetkým, hlavne pri pumpách s hadičkou, nikdy nepoužívajte uživateľské rozhranie pumpy k podávaniu bolusov priamo z pumpy.</string>
     <string name="answerdisabledto">Odpovedanie zakázané do: %1$s</string>
     <string name="wronganswer">Nesprávna odpoveď!</string>
     <string name="unfinshed_button">Ďalšia nedokončená</string>
     <string name="requestcode">Kód žiadosti: %1$s</string>
     <string name="objectives_hint">(zaškrtnite všetky správne odpovede)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/cs/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/cs/latest/UsefulLinks/FAQ.html#faq-disconnect-pump</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/cs/latest/SettingUpAaps/ConfigBuilder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Nie ste pripojený k internetu</string>
     <string name="failedretrievetime">Nepodarilo sa načítať čas</string>
     <string name="requirementnotmet">Požiadavky cieľa nie sú splnené</string>
