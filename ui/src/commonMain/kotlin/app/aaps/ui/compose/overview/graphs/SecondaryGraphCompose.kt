@@ -51,6 +51,7 @@ import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.data.ExtraStore
+import kotlin.math.abs
 import kotlinx.coroutines.delay
 
 /**
@@ -61,6 +62,9 @@ import kotlinx.coroutines.delay
  * transaction instead of silently dropping it.
  */
 private val AXIS_SCALE_KEY = ExtraStore.Key<AxisScale>()
+
+/** The lift of the lifted bolus markers, so their label formatter can take it off again. See [BOLUS_LIFT_FRACTION]. */
+private val BOLUS_LIFT_KEY = ExtraStore.Key<Double>()
 
 /** The axis setup that a scroll or zoom can change. Equal values mean the axes did not change. */
 private data class AxisScale(
@@ -334,9 +338,10 @@ fun SecondaryGraphCompose(
     }
 
     // IOB treatment overlays processing
-    val processedIobTreatments = remember(lastTreatmentData.value, stableTimeRange) {
+    val bolusLift = remember(processedIob) { (processedIob.maxOfOrNull { it.second } ?: 0.0) * BOLUS_LIFT_FRACTION }
+    val processedIobTreatments = remember(lastTreatmentData.value, bolusLift, stableTimeRange) {
         if (!hasRealTimeRange || !hasIob) return@remember ProcessedIobOverlays.EMPTY
-        processIobOverlays(lastTreatmentData.value, minTimestamp, minX, maxX)
+        processIobOverlays(lastTreatmentData.value, minTimestamp, minX, maxX, bolusLift)
     }
 
     // COB line processing
@@ -520,6 +525,8 @@ fun SecondaryGraphCompose(
                 add(PrimarySeriesSpec(processedIobTreatments.largeSmbs.map { it.first }, processedIobTreatments.largeSmbs.map { it.second }, SeriesSlot.LargeSmb))
             if (processedIobTreatments.normalBoluses.isNotEmpty())
                 add(PrimarySeriesSpec(processedIobTreatments.normalBoluses.map { it.first }, processedIobTreatments.normalBoluses.map { it.second }, SeriesSlot.NormalBolus))
+            if (processedIobTreatments.liftedBoluses.isNotEmpty())
+                add(PrimarySeriesSpec(processedIobTreatments.liftedBoluses.map { it.first }, processedIobTreatments.liftedBoluses.map { it.second }, SeriesSlot.LiftedBolus))
             processedIobTreatments.extBoluses.forEach { (start, end, amount) ->
                 add(PrimarySeriesSpec(listOf(start, end), listOf(amount, amount), SeriesSlot.ExtBolus))
             }
@@ -569,6 +576,7 @@ fun SecondaryGraphCompose(
                         SeriesSlot.MediumSmb        -> iobLineStyle.mediumSmbLine
                         SeriesSlot.LargeSmb         -> iobLineStyle.largeSmbLine
                         SeriesSlot.NormalBolus      -> iobLineStyle.bolusLine
+                        SeriesSlot.LiftedBolus      -> iobLineStyle.liftedBolusLine
                         SeriesSlot.ExtBolus         -> iobLineStyle.extBolusLine
                         SeriesSlot.CobLine          -> cobLineStyle.cobLine
                         SeriesSlot.FailoverDots     -> cobLineStyle.failoverDotsLine
@@ -882,7 +890,10 @@ fun SecondaryGraphCompose(
             // identical to last time (see AXIS_SCALE_KEY doc) — otherwise scrolling/zooming
             // would re-submit the same partials and get silently skipped, never picking up the
             // updated primaryRangeProvider.
-            extras { it[AXIS_SCALE_KEY] = axisScale }
+            extras {
+                it[AXIS_SCALE_KEY] = axisScale
+                it[BOLUS_LIFT_KEY] = bolusLift
+            }
         }
     }
 
@@ -963,6 +974,7 @@ private sealed class SeriesSlot {
     data object MediumSmb : SeriesSlot()
     data object LargeSmb : SeriesSlot()
     data object NormalBolus : SeriesSlot()
+    data object LiftedBolus : SeriesSlot()
     data object ExtBolus : SeriesSlot()
     data object CobLine : SeriesSlot()
     data object FailoverDots : SeriesSlot()
@@ -1080,9 +1092,22 @@ internal fun processStepPoints(points: List<GraphDataPoint>, minTimestamp: Long,
     return inRange + (maxX to edgeValue)
 }
 
-/** Process IOB treatment overlays: split SMBs by size, extract boluses and extended boluses */
+/**
+ * A bolus marker hangs with its apex at y = amount. The SMB triangles stand on the zero line, so a
+ * small bolus between SMBs drowns in them. A bolus with an SMB this close in time goes into the
+ * lifted series instead, at y = amount + lift, where the lift is this share of the visible IOB
+ * maximum. The lifted series has its own label formatter that takes the lift off again, because
+ * Vico hands a label formatter only the y value, so the label says the amount either way.
+ */
+private const val SMB_NEAR_BOLUS_MS = 15 * 60_000L
+private const val BOLUS_LIFT_FRACTION = 0.25
+
+/**
+ * Process IOB treatment overlays: split SMBs by size, extract boluses and extended boluses.
+ * [bolusLift] is added to the y of a bolus that has an SMB within [SMB_NEAR_BOLUS_MS], see there.
+ */
 @Suppress("SameParameterValue")
-private fun processIobOverlays(data: TreatmentGraphData, minTimestamp: Long, minX: Double, maxX: Double): ProcessedIobOverlays {
+private fun processIobOverlays(data: TreatmentGraphData, minTimestamp: Long, minX: Double, maxX: Double, bolusLift: Double = 0.0): ProcessedIobOverlays {
     // Filter SMBs to visible range before computing size thresholds (prevents off-screen outliers from distorting buckets)
     val smbs = data.boluses.filter { it.bolusType == BolusType.SMB && timestampToX(it.timestamp, minTimestamp) in minX..maxX }
 
@@ -1118,9 +1143,11 @@ private fun processIobOverlays(data: TreatmentGraphData, minTimestamp: Long, min
     }
 
     val normalBoluses = data.boluses.filter { it.bolusType == BolusType.NORMAL }
-    val bolusFiltered = if (normalBoluses.isNotEmpty()) {
-        filterToRange(normalBoluses.map { timestampToX(it.timestamp, minTimestamp) to it.amount }, minX, maxX)
-    } else emptyList()
+    val (liftedBoluses, plainBoluses) = normalBoluses.partition { bolus ->
+        bolusLift > 0.0 && smbs.any { abs(it.timestamp - bolus.timestamp) <= SMB_NEAR_BOLUS_MS }
+    }
+    val bolusFiltered = filterToRange(plainBoluses.map { timestampToX(it.timestamp, minTimestamp) to it.amount }, minX, maxX)
+    val liftedFiltered = filterToRange(liftedBoluses.map { timestampToX(it.timestamp, minTimestamp) to it.amount + bolusLift }, minX, maxX)
 
     val extBoluses = data.extendedBoluses.mapNotNull { eb ->
         val startX = timestampToX(eb.timestamp, minTimestamp)
@@ -1136,7 +1163,7 @@ private fun processIobOverlays(data: TreatmentGraphData, minTimestamp: Long, min
         filterToRange(smallSmbs, minX, maxX),
         filterToRange(mediumSmbs, minX, maxX),
         filterToRange(largeSmbs, minX, maxX),
-        bolusFiltered, extBoluses
+        bolusFiltered, liftedFiltered, extBoluses
     )
 }
 
@@ -1145,12 +1172,14 @@ private data class ProcessedIobOverlays(
     val mediumSmbs: List<Pair<Double, Double>>,
     val largeSmbs: List<Pair<Double, Double>>,
     val normalBoluses: List<Pair<Double, Double>>,
+    /** Boluses with an SMB nearby, at y = amount + lift. See [BOLUS_LIFT_FRACTION]. */
+    val liftedBoluses: List<Pair<Double, Double>>,
     val extBoluses: List<Triple<Double, Double, Double>>
 ) {
 
     companion object {
 
-        val EMPTY = ProcessedIobOverlays(emptyList(), emptyList(), emptyList(), emptyList(), emptyList())
+        val EMPTY = ProcessedIobOverlays(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList())
     }
 }
 
@@ -1267,6 +1296,7 @@ data class IobLineStyles(
     val mediumSmbLine: LineCartesianLayer.Line,
     val largeSmbLine: LineCartesianLayer.Line,
     val bolusLine: LineCartesianLayer.Line,
+    val liftedBolusLine: LineCartesianLayer.Line,
     val extBolusLine: LineCartesianLayer.Line
 )
 
@@ -1282,6 +1312,12 @@ fun rememberIobLineStyles(): IobLineStyles {
     }
     val bolusValueFormatter = remember {
         CartesianValueFormatter { _, value, _ -> formatBolusLabel(value, decimalFormatter) }
+    }
+    // The lifted markers sit at amount + lift; the label must say the amount.
+    val liftedBolusValueFormatter = remember {
+        CartesianValueFormatter { context, value, _ ->
+            formatBolusLabel(value - (context.model.extraStore.getOrNull(BOLUS_LIFT_KEY) ?: 0.0), decimalFormatter)
+        }
     }
     val extBolusLabelComponent = remember(extBolusColor) {
         TextComponent(textStyle = TextStyle(color = extBolusColor, fontSize = 16.sp))
@@ -1329,6 +1365,16 @@ fun rememberIobLineStyles(): IobLineStyles {
                 dataLabel = bolusLabelComponent,
                 dataLabelPosition = Position.Vertical.Top,
                 dataLabelValueFormatter = bolusValueFormatter
+            ),
+            liftedBolusLine = LineCartesianLayer.Line(
+                fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
+                areaFill = null,
+                pointProvider = LineCartesianLayer.PointProvider.single(
+                    LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(smbColor), shape = InvertedTriangleShape), size = 22.dp)
+                ),
+                dataLabel = bolusLabelComponent,
+                dataLabelPosition = Position.Vertical.Top,
+                dataLabelValueFormatter = liftedBolusValueFormatter
             ),
             extBolusLine = LineCartesianLayer.Line(
                 fill = LineCartesianLayer.LineFill.single(Fill(extBolusColor)),
