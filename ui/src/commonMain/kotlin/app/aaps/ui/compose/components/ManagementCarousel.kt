@@ -1,7 +1,14 @@
 package app.aaps.ui.compose.components
 
+import androidx.compose.foundation.MutatePriority
+import androidx.compose.foundation.gestures.TargetedFlingBehavior
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.awaitHorizontalTouchSlopOrCancellation
+import androidx.compose.foundation.gestures.horizontalDrag
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -10,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -27,14 +35,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.PointerType
+import androidx.compose.ui.input.pointer.isPrimaryPressed
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
+import androidx.compose.ui.input.pointer.util.VelocityTracker
+import androidx.compose.ui.input.pointer.util.addPointerInputChange
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import app.aaps.core.ui.compose.AapsSpacing
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
@@ -47,8 +66,15 @@ object CarouselDefaults {
     /** Height of a carousel card. Most screens use this; profile management uses a shorter card. */
     val CardHeight: Dp = 200.dp
 
-    /** Horizontal peek so the neighbouring cards stay partially visible. */
+    /** Smallest horizontal padding on each side, so the neighbouring cards stay partially visible. */
     val ContentPadding: Dp = 64.dp
+
+    /**
+     * Widest a card may get. Without a limit a card fills a wide window (desktop, tablet, phone in
+     * landscape), and its neighbours, shrunk by [MIN_SCALE], move completely out of view. A neighbour
+     * is the only thing a mouse user can click to change card, so it must stay visible.
+     */
+    val MaxCardWidth: Dp = 480.dp
 
     /** Gap between adjacent cards. */
     val PageSpacing: Dp = 16.dp
@@ -126,6 +152,10 @@ data class CarouselReorderConfig(
  * The scale/alpha de-emphasis of off-centre cards is applied by this composable, so card
  * composables do not need to know they live in a carousel.
  *
+ * Cards are at most [CarouselDefaults.MaxCardWidth] wide, so the neighbours stay visible on a wide
+ * window, and a mouse can change card by dragging, as a finger does. Both matter on desktop: the
+ * pager ignores a mouse drag, and a neighbour that is out of view cannot be clicked.
+ *
  * [state] is hoisted rather than created here: each screen drives page changes with its own
  * side effects (unsaved-changes vetoes, pinned cards, programmatic scrolls), and those are too
  * screen-specific to generalise. Callers that pass a non-null [reorder] must suspend the effects
@@ -152,36 +182,44 @@ fun ManagementCarousel(
     card: @Composable (CarouselItemState) -> Unit
 ) {
     val isReordering = reorder != null && reorder.isActive
+    // One fling behaviour for both the pager's own swipe and the mouse drag, so they settle the same way.
+    val flingBehavior = PagerDefaults.flingBehavior(state = state)
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
 
     Column(modifier = modifier.fillMaxWidth()) {
-        HorizontalPager(
-            state = state,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(cardHeight),
-            contentPadding = PaddingValues(horizontal = CarouselDefaults.ContentPadding),
-            pageSpacing = CarouselDefaults.PageSpacing,
-            userScrollEnabled = userScrollEnabled
-        ) { page ->
-            Box(
+        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+            val sidePadding = ((maxWidth - CarouselDefaults.MaxCardWidth) / 2).coerceAtLeast(CarouselDefaults.ContentPadding)
+            HorizontalPager(
+                state = state,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .graphicsLayer {
-                        val pageOffset = ((state.currentPage - page) + state.currentPageOffsetFraction).absoluteValue
-                        val fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                        val scale = lerp(CarouselDefaults.MIN_SCALE, 1f, fraction)
-                        scaleX = scale
-                        scaleY = scale
-                        alpha = lerp(CarouselDefaults.MIN_ALPHA, 1f, fraction)
-                    }
-            ) {
-                card(
-                    CarouselItemState(
-                        page = page,
-                        isSelected = state.currentPage == page,
-                        isReordering = isReordering
+                    .fillMaxWidth()
+                    .height(cardHeight)
+                    .mouseDragPaging(state = state, flingBehavior = flingBehavior, enabled = userScrollEnabled, isRtl = isRtl),
+                contentPadding = PaddingValues(horizontal = sidePadding),
+                pageSpacing = CarouselDefaults.PageSpacing,
+                userScrollEnabled = userScrollEnabled,
+                flingBehavior = flingBehavior
+            ) { page ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer {
+                            val pageOffset = ((state.currentPage - page) + state.currentPageOffsetFraction).absoluteValue
+                            val fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                            val scale = lerp(CarouselDefaults.MIN_SCALE, 1f, fraction)
+                            scaleX = scale
+                            scaleY = scale
+                            alpha = lerp(CarouselDefaults.MIN_ALPHA, 1f, fraction)
+                        }
+                ) {
+                    card(
+                        CarouselItemState(
+                            page = page,
+                            isSelected = state.currentPage == page,
+                            isReordering = isReordering
+                        )
                     )
-                )
+                }
             }
         }
 
@@ -196,6 +234,61 @@ fun ManagementCarousel(
                 pageCount = state.pageCount,
                 currentPage = state.currentPage
             )
+        }
+    }
+}
+
+/**
+ * Lets a mouse change card by dragging, as a finger does.
+ *
+ * Compose scrollables, the pager included, ignore a mouse drag on purpose, because on desktop a list
+ * is scrolled with the wheel. A carousel has no wheel gesture that people know, so without this a
+ * mouse user could not swipe at all. Touch and pen are left to the pager.
+ *
+ * The drag runs inside [PagerState.scroll], so [PagerState.isScrollInProgress] stays true until the
+ * card has settled, exactly as for a swipe. The screens depend on that: they load the centred card
+ * into their editor only once the scroll is over.
+ */
+private fun Modifier.mouseDragPaging(
+    state: PagerState,
+    flingBehavior: TargetedFlingBehavior,
+    enabled: Boolean,
+    isRtl: Boolean
+): Modifier = if (!enabled) this else pointerInput(state, flingBehavior, isRtl) {
+    // The content follows the pointer, so a drag to the left shows the next card. In a right-to-left
+    // layout the next card is on the left side, so the sign turns around.
+    val toScroll = if (isRtl) 1f else -1f
+    coroutineScope {
+        awaitEachGesture {
+            // The card's own click handler has already consumed the press, so do not require it unconsumed.
+            val down = awaitFirstDown(requireUnconsumed = false)
+            if (down.type != PointerType.Mouse || !currentEvent.buttons.isPrimaryPressed) return@awaitEachGesture
+            val velocityTracker = VelocityTracker()
+            velocityTracker.addPointerInputChange(down)
+            val deltas = Channel<Float>(Channel.UNLIMITED)
+            var releaseVelocity = 0f
+            // Null when the button is released before the pointer moved far enough: that is a click,
+            // and it stays with the card.
+            val dragStart = awaitHorizontalTouchSlopOrCancellation(down.id) { change, overSlop ->
+                change.consume()
+                velocityTracker.addPointerInputChange(change)
+                deltas.trySend(overSlop * toScroll)
+            } ?: return@awaitEachGesture
+            launch {
+                state.scroll(MutatePriority.UserInput) {
+                    for (delta in deltas) scrollBy(delta)
+                    with(flingBehavior) { performFling(releaseVelocity) }
+                }
+            }
+            horizontalDrag(dragStart.id) { change ->
+                // Read before consuming: a consumed change reports no movement.
+                deltas.trySend(change.positionChange().x * toScroll)
+                velocityTracker.addPointerInputChange(change)
+                change.consume()
+            }
+            // Set before the channel closes, so the scroll above reads it only after the last delta.
+            releaseVelocity = velocityTracker.calculateVelocity().x * toScroll
+            deltas.close()
         }
     }
 }
