@@ -22,7 +22,8 @@ import org.mockito.kotlin.whenever
  *
  * Focuses on TempTargetSource-specific outputs (the five [StaticAction]s and their
  * [EventData.ActionTempTargetPreCheck] payloads, the manual action carrying a null action,
- * the default-config keys, and getValidFor()==null) while also exercising the shared
+ * the default-config keys, the Cancel slot shown only while a temp target runs, and
+ * getValidFor()==null) while also exercising the shared
  * [StaticTileSource] flow (default seeding + preference lookup + fallback) end-to-end.
  */
 class TempTargetSourceTest {
@@ -163,6 +164,8 @@ class TempTargetSourceTest {
 
     @Test
     fun getSelectedActionsHonoursExistingPreferencesWithoutReseeding() {
+        // a temp target runs, so the cancel slot is kept
+        whenever(sp.getBoolean(R.string.key_temp_target_active, false)).thenReturn(true)
         // first key already present -> defaults are NOT applied, values are read as-is
         store["tile_tempt_1"] = "cancel"
         store["tile_tempt_2"] = "hypo"
@@ -182,6 +185,37 @@ class TempTargetSourceTest {
                 EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_HYPO,
                 null // manual
             ).inOrder()
+    }
+
+    @Test
+    fun getSelectedActionsHidesCancelWhileNoTempTargetRuns() {
+        whenever(sp.getBoolean(R.string.key_temp_target_active, false)).thenReturn(false)
+        store["tile_tempt_1"] = "cancel"
+        store["tile_tempt_2"] = "hypo"
+        store["tile_tempt_3"] = "activity"
+        store["tile_tempt_4"] = "manual"
+
+        val selected = source.getSelectedActions().filterIsInstance<StaticAction>()
+
+        // the cancel slot is dropped, the other three keep their order
+        assertThat(selected.map { it.settingName })
+            .containsExactly("hypo", "activity", "manual")
+            .inOrder()
+    }
+
+    @Test
+    fun getSelectedActionsShowsCancelWhileATempTargetRuns() {
+        whenever(sp.getBoolean(R.string.key_temp_target_active, false)).thenReturn(true)
+        store["tile_tempt_1"] = "cancel"
+        store["tile_tempt_2"] = "hypo"
+        store["tile_tempt_3"] = "activity"
+        store["tile_tempt_4"] = "manual"
+
+        val selected = source.getSelectedActions().filterIsInstance<StaticAction>()
+
+        assertThat(selected.map { it.settingName })
+            .containsExactly("cancel", "hypo", "activity", "manual")
+            .inOrder()
     }
 
     @Test
