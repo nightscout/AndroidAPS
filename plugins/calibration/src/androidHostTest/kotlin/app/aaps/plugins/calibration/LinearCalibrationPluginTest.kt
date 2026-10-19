@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
 import app.aaps.shared.tests.generatedTextResolver
@@ -41,7 +40,6 @@ class LinearCalibrationPluginTest : TestBase() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
-    @Mock lateinit var profileUtil: ProfileUtil
 
     private lateinit var plugin: LinearCalibrationPlugin
 
@@ -58,7 +56,7 @@ class LinearCalibrationPluginTest : TestBase() {
         whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(emptyList())
         whenever(persistenceLayer.getValidCalibrationEntriesSince(any())).thenReturn(emptyList())
         plugin = LinearCalibrationPlugin(
-            aapsLogger, rh, dateUtil, persistenceLayer, notificationManager, glucoseStatusProvider, rxBus, profileUtil
+            aapsLogger, rh, dateUtil, persistenceLayer, notificationManager, glucoseStatusProvider, rxBus
         )
     }
 

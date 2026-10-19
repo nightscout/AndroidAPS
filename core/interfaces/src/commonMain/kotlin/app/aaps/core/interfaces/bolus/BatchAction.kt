@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.bolus
 
+import app.aaps.core.data.model.HasIDs
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TE
@@ -152,4 +153,49 @@ sealed interface BatchAction {
         // See [TherapyEvent.source]: audit source on the sending device; a relayed edit is logged by the master.
         val source: Sources
     ) : BatchAction
+
+    /**
+     * Remove existing records of one [kind]. The master is the only writer: a client never removes a record itself,
+     * because the master would keep using it. Only the Nightscout ids go on the wire; they are the ids every instance
+     * shares. The master finds its own copies by them, describes them in the confirmation and removes them, and the
+     * change comes back to every client through Nightscout. A record the master does not have (for example one
+     * entered in Nightscout that the master never took) is not removed, and the confirmation says so.
+     *
+     * List-handled: one action per kind, any number per batch.
+     */
+    data class Remove(val kind: Kind, val records: List<Ref>) : BatchAction {
+
+        /** The record types a list screen can remove. */
+        enum class Kind {
+            BOLUS, CARBS, BOLUS_CALCULATOR_RESULT, TEMPORARY_TARGET, TEMPORARY_BASAL, EXTENDED_BOLUS,
+            PROFILE_SWITCH, RUNNING_MODE, THERAPY_EVENT, GLUCOSE_VALUE, CALIBRATION
+        }
+
+        /**
+         * One record. [nsId] is what the master looks it up by. [localId] is the database id on the device that
+         * built the action: the master uses it for its own screens (a master without Nightscout has no Nightscout
+         * ids). It never goes on the wire.
+         */
+        data class Ref(val nsId: String?, val localId: Long? = null)
+
+        companion object {
+
+            /** The removal of [records] of [kind] as stored on this device, or null when there are none. */
+            fun of(kind: Kind, records: Collection<HasIDs>): Remove? =
+                records.takeIf { it.isNotEmpty() }?.let { list -> Remove(kind, list.map { Ref(nsId = it.ids.nightscoutId, localId = it.id) }) }
+        }
+    }
+
+    /**
+     * Remove every "AndroidAPS started" event. The events carry the text in the language of the device that wrote
+     * them, so each device matches its own text instead of a list of records. ≤1 per batch.
+     */
+    data object RemoveStartEvents : BatchAction
+
+    /**
+     * A calibration: the fingerstick [glucoseMgdl] (mg/dL) taken now. The master pairs it with ITS latest sensor
+     * reading and checks the conditions (sensor session, warm-up, BG changing too fast) itself, so the loop's BG
+     * is calibrated on the device that doses. ≤1 per batch.
+     */
+    data class Calibration(val glucoseMgdl: Double) : BatchAction
 }

@@ -206,7 +206,7 @@ All confirmation builders live on the master in `WizardBolusExecutorImpl`: `buil
 
 ## 4. Entity coverage
 
-`BatchAction` (`core/interfaces/.../bolus/BatchAction.kt`) is the domain union (at most one of each per batch): `Bolus`, `TempTarget`, `ProfileSwitch`, `RunningMode`, `TempBasal`, `ExtendedBolus`, `CancelTempBasal`, `CancelExtendedBolus`, `InsulinActivate`. `BatchActionDto` (`plugins/sync/.../clientcontrol/BatchActionMapping.kt`) is the flat type-tagged wire form (`TYPE_*` constants).
+`BatchAction` (`core/interfaces/.../bolus/BatchAction.kt`) is the domain union: `Bolus`, `TempTarget`, `ProfileSwitch`, `RunningMode`, `TempBasal`, `ExtendedBolus`, `CancelTempBasal`, `CancelExtendedBolus`, `InsulinActivate`, `RemoveStartEvents` and `Calibration` (at most one of each per batch), plus `TherapyEvent`, `TherapyEventEdit` and `Remove` (any number). `BatchActionDto` (`plugins/sync/.../clientcontrol/BatchActionMapping.kt`) is the flat type-tagged wire form (`TYPE_*` constants).
 
 | User action | Command / route | Pattern | Note |
 |---|---|---|---|
@@ -227,8 +227,12 @@ All confirmation builders live on the master in `WizardBolusExecutorImpl`: `buil
 | **Preference edit** (bidirectional key) | `PreferenceEdit(prefs)` | single-step | pessimistic round-trip + republish (§5.2); locally-built modal copy |
 | **Fill / prime** | — | off-relay | local-only; `rejectIfAapsClient()`; PRIMING bolus + profile-switch chaining, no relay command |
 | **SMS** | — | off-relay | not on the client-control channel |
-| Calibration | — | off-relay | local `activeCalibration.addEntry`, NS-synced |
-| CarePortal | — | off-relay | additive `persistenceLayer.insert` + NS sync |
+| CarePortal / sensor change | `BatchAction.TherapyEvent` | two-step | the master stores it (insert-if-new by timestamp); the calibration dialog's "sensor change" button too |
+| Site location edit | `BatchAction.TherapyEventEdit` | two-step | the master finds the event by timestamp + type; a missing one is an error |
+| Calibration | `BatchAction.Calibration(glucoseMgdl)` | two-step | the master checks the conditions and pairs the value with **its** latest sensor reading, so the loop's BG is calibrated; refusal texts are built on the master |
+| **Remove records** (every list screen: treatments tabs, BG, calibration) | `BatchAction.Remove(kind, refs)` | two-step | only **Nightscout ids** travel; the master finds, describes and removes its own copies and the change comes back through NS. The client never removes anything itself. A record the master does not have is not removed and the confirmation says so (all missing → refused). Known limit: when xDrip uploads BG and AAPS on the master does not, the master's BG has no NS id, so a client cannot remove BG |
+| Remove "AndroidAPS started" events | `BatchAction.RemoveStartEvents` | two-step | matched by the master's own text (the events carry it in the master's language) |
+| Food | — | off-relay | not uploaded by NSCv3 on any role |
 
 ---
 

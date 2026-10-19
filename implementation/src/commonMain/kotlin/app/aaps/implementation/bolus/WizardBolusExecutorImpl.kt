@@ -96,7 +96,8 @@ class WizardBolusExecutorImpl(
     private val bolusProgressData: BolusProgressData,
     // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
     // commonMain. AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
-    private val appScope: CoroutineScope
+    private val appScope: CoroutineScope,
+    private val masterRecordWriter: MasterRecordWriter
 ) : WizardBolusExecutor {
 
     /**
@@ -140,6 +141,10 @@ class WizardBolusExecutorImpl(
         val therapyEvents: List<BatchAction.TherapyEvent> = emptyList(),
         // Edits of existing therapy events (location/arrow/note) — likewise list-handled; the master updates in place.
         val therapyEventEdits: List<BatchAction.TherapyEventEdit> = emptyList(),
+        // Removals of stored records (one per record type) and of the "AndroidAPS started" events; a calibration.
+        val removals: List<BatchAction.Remove> = emptyList(),
+        val removeStartEvents: Boolean = false,
+        val calibration: BatchAction.Calibration? = null,
         val recordOnly: Boolean = false,
         val iCfg: ICfg? = null,
         val bolusTimestamp: Long? = null
@@ -379,6 +384,9 @@ class WizardBolusExecutorImpl(
         val ia = actions.filterIsInstance<BatchAction.InsulinActivate>().firstOrNull() // ≤1 by construction
         val tes = actions.filterIsInstance<BatchAction.TherapyEvent>() // ≥0; handled as a list (defensive — clients currently send one per batch)
         val teEdits = actions.filterIsInstance<BatchAction.TherapyEventEdit>() // ≥0; existing-event metadata edits (location/arrow/note)
+        val removals = actions.filterIsInstance<BatchAction.Remove>() // ≥0; one per record type
+        val rse = actions.filterIsInstance<BatchAction.RemoveStartEvents>().firstOrNull() // ≤1 by construction
+        val cal = actions.filterIsInstance<BatchAction.Calibration>().firstOrNull() // ≤1 by construction
         val recordOnly = bolus?.recordOnly == true
         // Originating QuickWizard (INSULIN/CARBS mode), resolved on the MASTER's own store so confirm() can mark it used
         // (lastUsed cooldown) here — the master is SOT and republishes the pref; the client never writes it. Null for a
@@ -500,7 +508,18 @@ class WizardBolusExecutorImpl(
         // client gets an error instead of a silent no-op at confirm (the batch confirm path has no per-action failure channel).
         if (ia != null && profileFunction.getProfile() !is ProfileSealed.EPS)
             return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.no_profile_set))
-        if (insulin <= 0.0 && carbs == 0 && tt == null && ps == null && rm == null && tb == null && eb == null && ctb == null && ceb == null && ia == null && tes.isEmpty() && teEdits.isEmpty())
+        // A calibration is checked on the MASTER's sensor data (session, warm-up, BG changing too fast): that is the
+        // BG the loop doses on. Refused here, before the user confirms; checked again when it is stored.
+        if (cal != null) masterRecordWriter.calibrationRefusal()?.let { return WizardBolusExecutor.PrepareResult.Error(it) }
+        // Removals: the master finds its own copies by Nightscout id. With none of them here there is nothing to
+        // confirm — refused with the reason, or a plain no-op when the master's own records were removed meanwhile.
+        val removalPlan = if (removals.isNotEmpty()) masterRecordWriter.planRemovals(removals) else null
+        if (removalPlan != null && removalPlan.found == 0)
+            return if (removalPlan.notHave > 0) WizardBolusExecutor.PrepareResult.Error(masterRecordWriter.notHaveText(removalPlan.notHave))
+            else WizardBolusExecutor.PrepareResult.NoAction
+        if (insulin <= 0.0 && carbs == 0 && tt == null && ps == null && rm == null && tb == null && eb == null && ctb == null && ceb == null && ia == null && tes.isEmpty() && teEdits.isEmpty() &&
+            removals.isEmpty() && rse == null && cal == null
+        )
         // Nothing to do after caps/clamps (e.g. negative carbs with no COB to remove): a no-op, NOT a delivery
         // error — the caller renders the neutral "no action selected" message, never the bolus-error title.
             return WizardBolusExecutor.PrepareResult.NoAction
@@ -515,12 +534,14 @@ class WizardBolusExecutorImpl(
                 eCarbsGrams = bolus?.eCarbsGrams ?: 0, eCarbsDelayMinutes = bolus?.eCarbsDelayMinutes ?: 0, eCarbsDurationHours = bolus?.eCarbsDurationHours ?: 0,
                 tempTarget = tt, profileSwitch = ps, runningMode = rm, recordOnly = recordOnly, iCfg = bolus?.iCfg, bolusTimestamp = bolus?.timestamp?.takeIf { it > 0L },
                 tempBasal = cappedTb, extendedBolus = cappedEb, cancelTempBasal = ctb != null, cancelExtendedBolus = ceb != null,
-                insulinActivate = ia, therapyEvents = tes, therapyEventEdits = teEdits
+                insulinActivate = ia, therapyEvents = tes, therapyEventEdits = teEdits,
+                removals = removals, removeStartEvents = rse != null, calibration = cal
             )
         )
         // The master is the SOLE author of the confirmation: build the MERGED lines for the whole batch here, so the
         // client renders the master's exact string and a master-local dialog renders the identical one (decision 1).
-        val isTtOnly = bolus == null && ps == null && rm == null && cappedTb == null && cappedEb == null && ctb == null && ceb == null && ia == null && tes.isEmpty() && teEdits.isEmpty()
+        val isTtOnly = bolus == null && ps == null && rm == null && cappedTb == null && cappedEb == null && ctb == null && ceb == null && ia == null && tes.isEmpty() && teEdits.isEmpty() &&
+            removals.isEmpty() && rse == null && cal == null
         val lines = buildFixedLines(bolus, insulin, carbs, recordOnly) +
             (tt?.let { buildTtLine(it, isTtOnly) } ?: emptyList()) +
             (ps?.let { buildPsLine(it) } ?: emptyList()) +
@@ -531,7 +552,9 @@ class WizardBolusExecutorImpl(
             (ceb?.let { buildCancelLine(CoreUiStrings.extended_bolus) } ?: emptyList()) +
             (ia?.let { buildInsulinActivateLine(it) } ?: emptyList()) +
             tes.flatMap { buildTherapyEventLine(it) } +
-            teEdits.flatMap { buildTherapyEventEditLine(it) }
+            teEdits.flatMap { buildTherapyEventEditLine(it) } +
+            (removalPlan?.lines ?: emptyList()) +
+            listOfNotNull(rse?.let { masterRecordWriter.removeStartEventsLine() }, cal?.let { masterRecordWriter.calibrationLine(it) })
         return WizardBolusExecutor.PrepareResult.Preview(insulin, carbs, bolusId, lines = lines, advisorApplies = false, advisorLines = emptyList())
     }
 
@@ -620,6 +643,11 @@ class WizardBolusExecutorImpl(
             // Edits of existing therapy events (≥0) — the master updates its own copy in place (sole writer); a
             // not-found target surfaces via onError → the commit reports Rejected/Failed (not a silent success).
             p.therapyEventEdits.forEach { applyTherapyEventEdit(it, source, onError) }
+            // Removals of stored records — the master removes its own copies (sole writer); a record it does not have
+            // is skipped. Then the "AndroidAPS started" cleanup and a calibration (a refusal surfaces via onError).
+            if (p.removals.isNotEmpty()) masterRecordWriter.remove(p.removals, source)
+            if (p.removeStartEvents) masterRecordWriter.removeStartEvents(source)
+            p.calibration?.let { masterRecordWriter.addCalibration(it, source, onError) }
             // A profile switch isn't gated on a dose (a PS-only batch funnels through here with a no-op deliver(0,0)).
             p.profileSwitch?.let { applyProfileSwitch(it, source, onError) }
             // A running-mode change is likewise independent of any dose (an RM-only batch no-ops the deliver(0,0)).

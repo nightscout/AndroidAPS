@@ -22,7 +22,6 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventCalibrationChanged
@@ -56,15 +55,14 @@ class LinearCalibrationPlugin(
     private val persistenceLayer: PersistenceLayer,
     notificationManager: NotificationManager,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val rxBus: RxBus,
-    private val profileUtil: ProfileUtil
+    private val rxBus: RxBus
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CALIBRATION)
         .icon(IcCalibration)
         .pluginName(CalibrationStrings.linear_calibration_name)
         .description(CalibrationStrings.description_linear_calibration)
-        .composeContent { CalibrationComposeContent(persistenceLayer, profileUtil, aapsLogger, dateUtil) },
+        .composeContent { CalibrationComposeContent() },
     aapsLogger, rh, notificationManager
 ), Calibration {
 

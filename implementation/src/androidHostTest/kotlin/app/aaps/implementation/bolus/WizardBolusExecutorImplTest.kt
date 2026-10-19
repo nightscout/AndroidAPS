@@ -13,6 +13,7 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -81,11 +82,12 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Mock lateinit var loop: Loop
     @Mock lateinit var automation: Automation
     @Mock lateinit var bolusProgressData: BolusProgressData
+    @Mock lateinit var masterRecordWriter: MasterRecordWriter
 
     private fun create() = WizardBolusExecutorImpl(
         aapsLogger, baseText, config, quickWizard, bolusWizardProvider, profileFunction, profileRepository, iobCobCalculator, constraintsChecker, activePlugin,
         runningModeGuard, commandQueue, persistenceLayer, uel, loop, dateUtil, decimalFormatter, profileUtil, automation, notificationManager, bolusProgressData,
-        CoroutineScope(Dispatchers.Unconfined)
+        CoroutineScope(Dispatchers.Unconfined), masterRecordWriter
     )
 
     // The base mocks ConstraintsChecker without a default answer; the FIXED/batch cap path needs a passthrough.
@@ -1650,5 +1652,83 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         assertThat(succeeded).isFalse()
         verify(commandQueue, never()).bolus(anyOrNull())
         verify(uel, never()).log(any<Action>(), any(), anyOrNull(), any<List<ValueWithUnit>>())
+    }
+
+    // ----- Removing records and calibrations: the master does them, whoever asked -----
+
+    private val bolusRemoval = BatchAction.Remove(BatchAction.Remove.Kind.BOLUS, listOf(BatchAction.Remove.Ref(nsId = "ns1")))
+
+    @Test
+    fun prepareBatch_remove_showsTheMastersLinesAndConfirmRemovesWithoutAnyDose() = runTest {
+        stubPassthroughConstraints()
+        val line = ConfirmationLine(ConfirmationRole.PRIMARY, "Insulin: 2.00 U")
+        whenever(masterRecordWriter.planRemovals(listOf(bolusRemoval))).thenReturn(MasterRecordWriter.RemovalPlan(listOf(line), found = 1, notHave = 0))
+        val executor = create()
+
+        val prepared = executor.prepareBatch(listOf(bolusRemoval)) as WizardBolusExecutor.PrepareResult.Preview
+        val result = executor.confirm(prepared.bolusId, Sources.NSClient, { })
+
+        assertThat(prepared.lines).containsExactly(line)
+        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        verify(masterRecordWriter).remove(listOf(bolusRemoval), Sources.NSClient)
+        verify(commandQueue, never()).bolus(anyOrNull())
+    }
+
+    @Test
+    fun prepareBatch_remove_removesNothingUntilTheUserConfirms() = runTest {
+        stubPassthroughConstraints()
+        whenever(masterRecordWriter.planRemovals(any())).thenReturn(MasterRecordWriter.RemovalPlan(emptyList(), found = 1, notHave = 0))
+
+        create().prepareBatch(listOf(bolusRemoval))
+
+        verify(masterRecordWriter, never()).remove(any(), any())
+    }
+
+    @Test
+    fun prepareBatch_remove_ofRecordsTheMasterDoesNotHave_isRefusedWithTheReason() = runTest {
+        stubPassthroughConstraints()
+        whenever(masterRecordWriter.planRemovals(any())).thenReturn(MasterRecordWriter.RemovalPlan(emptyList(), found = 0, notHave = 2))
+        whenever(masterRecordWriter.notHaveText(2)).thenReturn("not here")
+
+        val result = create().prepareBatch(listOf(bolusRemoval))
+
+        assertThat(result).isEqualTo(WizardBolusExecutor.PrepareResult.Error("not here"))
+    }
+
+    @Test
+    fun prepareBatch_removeStartEvents_confirmRemovesThemOnTheMaster() = runTest {
+        stubPassthroughConstraints()
+        val line = ConfirmationLine(ConfirmationRole.PRIMARY, "Remove record: AndroidAPS started")
+        whenever(masterRecordWriter.removeStartEventsLine()).thenReturn(line)
+        val executor = create()
+
+        val prepared = executor.prepareBatch(listOf(BatchAction.RemoveStartEvents)) as WizardBolusExecutor.PrepareResult.Preview
+        executor.confirm(prepared.bolusId, Sources.NSClient, { })
+
+        assertThat(prepared.lines).containsExactly(line)
+        verify(masterRecordWriter).removeStartEvents(Sources.NSClient)
+    }
+
+    @Test
+    fun prepareBatch_calibration_isRefusedWithTheMastersReason() = runTest {
+        stubPassthroughConstraints()
+        whenever(masterRecordWriter.calibrationRefusal()).thenReturn("no session")
+
+        val result = create().prepareBatch(listOf(BatchAction.Calibration(120.0)))
+
+        assertThat(result).isEqualTo(WizardBolusExecutor.PrepareResult.Error("no session"))
+    }
+
+    @Test
+    fun prepareBatch_calibration_confirmStoresItOnTheMaster() = runTest {
+        stubPassthroughConstraints()
+        whenever(masterRecordWriter.calibrationRefusal()).thenReturn(null)
+        whenever(masterRecordWriter.calibrationLine(BatchAction.Calibration(120.0))).thenReturn(ConfirmationLine(ConfirmationRole.PRIMARY, "Calibration: 120"))
+        val executor = create()
+
+        val prepared = executor.prepareBatch(listOf(BatchAction.Calibration(120.0))) as WizardBolusExecutor.PrepareResult.Preview
+        executor.confirm(prepared.bolusId, Sources.NSClient, { })
+
+        verify(masterRecordWriter).addCalibration(eq(BatchAction.Calibration(120.0)), eq(Sources.NSClient), any())
     }
 }

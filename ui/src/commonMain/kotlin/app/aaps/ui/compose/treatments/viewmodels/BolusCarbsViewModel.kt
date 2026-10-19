@@ -8,11 +8,10 @@ import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.time.T
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -23,7 +22,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.clientcontrol.RecordRemoval
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.MealLink
@@ -52,7 +51,9 @@ class BolusCarbsViewModel(
     val dateUtil: DateUtil,
     val decimalFormatter: DecimalFormatter,
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    batchExecutor: BatchExecutor,
+    config: Config
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(BolusCarbsUiState())
@@ -187,79 +188,25 @@ class BolusCarbsViewModel(
      */
     suspend fun getProfile() = profileFunction.getProfile()
 
-    /**
-     * Prepare delete confirmation message
-     */
-    fun getDeleteConfirmationMessage(): String {
-        val selected = uiState.value.selectedItems
-        if (selected.isEmpty()) return ""
+    /** Removing the selected items: the master describes and removes them, on every role. */
+    val removal = RecordRemoval(batchExecutor, rh, rxBus, config, viewModelScope, Sources.Treatments)
 
-        return if (selected.size == 1) {
-            val ml = selected.first()
-            val bolus = ml.bolus
-            if (bolus != null) {
-                "${rh.gs(CoreUiStrings.configbuilder_insulin)}: ${rh.gs(InterfacesStrings.format_insulin_units, bolus.amount)}\n${rh.gs(CoreUiStrings.date)}: ${dateUtil.dateAndTimeString(bolus.timestamp)}"
-            } else {
-                val carbs = ml.carbs
-                if (carbs != null) {
-                    "${rh.gs(InterfacesStrings.carbs)}: ${rh.gs(InterfacesStrings.format_carbs, carbs.amount.toInt())}\n${rh.gs(CoreUiStrings.date)}: ${dateUtil.dateAndTimeString(carbs.timestamp)}"
-                } else {
-                    rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
-                }
-            }
-        } else {
-            rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
-        }
+    /** Ask the master to describe removing the selected items; the screen then shows its confirmation. */
+    fun requestDelete() {
+        val selected = uiState.value.selectedItems
+        removal.request(
+            listOfNotNull(
+                BatchAction.Remove.of(BatchAction.Remove.Kind.BOLUS, selected.mapNotNull { it.bolus }),
+                BatchAction.Remove.of(BatchAction.Remove.Kind.CARBS, selected.mapNotNull { it.carbs }),
+                BatchAction.Remove.of(BatchAction.Remove.Kind.BOLUS_CALCULATOR_RESULT, selected.mapNotNull { it.bolusCalculatorResult })
+            )
+        )
     }
 
-    /**
-     * Delete selected items
-     */
-    fun deleteSelected() {
-        val selected = uiState.value.selectedItems
-        if (selected.isEmpty()) return
-
-        viewModelScope.launch(aapsIoDispatcher) {
-            try {
-                selected.forEach { ml ->
-                    ml.bolus?.let { bolus ->
-                        persistenceLayer.invalidateBolus(
-                            bolus.id,
-                            action = Action.BOLUS_REMOVED,
-                            source = Sources.Treatments,
-                            listValues = listOf(
-                                ValueWithUnit.Timestamp(bolus.timestamp),
-                                ValueWithUnit.Insulin(bolus.amount)
-                            )
-                        )
-                    }
-                    ml.carbs?.let { carb ->
-                        persistenceLayer.invalidateCarbs(
-                            carb.id,
-                            action = Action.CARBS_REMOVED,
-                            source = Sources.Treatments,
-                            listValues = listOf(
-                                ValueWithUnit.Timestamp(carb.timestamp),
-                                ValueWithUnit.Gram(carb.amount.toInt())
-                            )
-                        )
-                    }
-                    ml.bolusCalculatorResult?.let { bolusCalculatorResult ->
-                        persistenceLayer.invalidateBolusCalculatorResult(
-                            bolusCalculatorResult.id,
-                            action = Action.BOLUS_CALCULATOR_RESULT_REMOVED,
-                            source = Sources.Treatments,
-                            listValues = listOf(ValueWithUnit.Timestamp(bolusCalculatorResult.timestamp))
-                        )
-                    }
-                }
-                exitSelectionMode()
-                loadData()
-            } catch (e: Exception) {
-                aapsLogger.error(LTag.UI, "Failed to delete treatments", e)
-                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting treatments", EventShowSnackbar.Type.Error))
-            }
-        }
+    /** The master removed them. */
+    fun onRemoved() {
+        exitSelectionMode()
+        loadData()
     }
 
     /**
