@@ -221,6 +221,80 @@ class InsulinImplMigrationTest : TestBase() {
         assertThat(sut.insulinWithSameCurveExists(running)).isTrue()
     }
 
+    // ── seedFromMigration: a v3 upgrade must not end up with an insulin the user never had ──────────
+
+    @Test
+    fun seedFromMigrationReplacesTheInventedDefault() {
+        // A v3 install has no stored catalogue, so the first load invents a default to have something to
+        // offer the pickers. The migration then knows the real insulin, and it used to be ADDED BESIDE that
+        // default - so the user came out of the upgrade with an insulin they never had, at insulins[0],
+        // which is what an activation wizard offers first.
+        val sut = create("{}")
+        assertThat(sut.insulins).hasSize(1)
+        val invented = sut.insulins[0]
+
+        val seeded = sut.seedFromMigration(ICfg(insulinLabel = "", insulinEndTime = 21_600_000, insulinPeakTime = lyumjevPeakMs, concentration = 1.0))
+
+        assertThat(sut.insulins).hasSize(1)
+        assertThat(sut.insulins[0].insulinPeakTime).isEqualTo(lyumjevPeakMs)
+        assertThat(sut.insulins[0]).isNotEqualTo(invented)
+        assertThat(seeded.insulinLabel).isNotEmpty() // the caller stamps the records with it
+        assertThat(storedInsulinCount()).isEqualTo(1)
+    }
+
+    @Test
+    fun seedFromMigrationKeepsARealCatalogueAndAddsToIt() {
+        val sut = create(cfg(ins(peak = rapidPeakMs, endTime = rapidEndMs)))
+
+        sut.seedFromMigration(ICfg(insulinLabel = "", insulinEndTime = rapidEndMs, insulinPeakTime = lyumjevPeakMs, concentration = 1.0))
+
+        // Nothing was invented here, so the stored insulin stays and the migrated one joins it.
+        assertThat(sut.insulins).hasSize(2)
+        assertThat(sut.insulins[0].insulinPeakTime).isEqualTo(rapidPeakMs)
+        assertThat(sut.insulins[1].insulinPeakTime).isEqualTo(lyumjevPeakMs)
+    }
+
+    @Test
+    fun seedFromMigrationAddsNothingOnASecondStart() {
+        // It runs at every start for as long as any record carries the v33 sentinel, so it has to be
+        // idempotent. By curve, not by label: a migrated record keeps the name v3 gave it, which the label
+        // rebuild never produces, and a label match added one more copy of the same insulin at each start.
+        val running = ICfg(insulinLabel = "Novorapid", insulinEndTime = 21_600_000, insulinPeakTime = rapidPeakMs, concentration = 1.0)
+        var sut = create("{}")
+
+        repeat(5) {
+            sut.seedFromMigration(running.deepClone())
+            sut = create(storedConfig) // next start
+        }
+
+        assertThat(sut.insulins).hasSize(1)
+        assertThat(sut.insulins[0].insulinPeakTime).isEqualTo(rapidPeakMs)
+        assertThat(sut.insulins[0].dia).isEqualTo(6.0)
+    }
+
+    @Test
+    fun seedFromMigrationDoesNotRenameTheCallersInsulin() {
+        // The caller passes the running profile's own iCfg, which ProfileFunction handed it. Filling the
+        // label and the nickname in place would rename an insulin this class does not own.
+        val sut = create("{}")
+        val running = ICfg(insulinLabel = "", insulinEndTime = 21_600_000, insulinPeakTime = rapidPeakMs, concentration = 1.0)
+
+        sut.seedFromMigration(running)
+
+        assertThat(running.insulinLabel).isEmpty()
+        assertThat(running.insulinNickname).isEmpty()
+    }
+
+    @Test
+    fun seedFromMigrationKeepsTheLabelARecordAlreadyCarries() {
+        // The insulin that came off a profile switch row keeps the name v3 gave it, suffix and all.
+        val sut = create("{}")
+
+        val seeded = sut.seedFromMigration(ICfg(insulinLabel = "Rapid-Acting Oref", insulinEndTime = 21_600_000, insulinPeakTime = rapidPeakMs, concentration = 1.0))
+
+        assertThat(seeded.insulinLabel).isEqualTo("Rapid-Acting Oref")
+    }
+
     @Test
     fun duplicateOfNormalizedEntryCollapsesAtInit() {
         // Dedup now happens once at the init normalize, NOT on every load (load is verbatim). Construct

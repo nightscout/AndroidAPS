@@ -84,6 +84,25 @@ interface InsulinManager {
     fun insulinWithSameCurveExists(iCfg: ICfg): Boolean
 
     /**
+     * Puts the insulin the v3 to v4 migration worked out into the catalogue, and returns the stored copy
+     * (with its label, which the caller stamps onto the historical records).
+     *
+     * This exists because of the order the two run in. A v3 install has no stored catalogue, so the first
+     * load has nothing to show the insulin pickers and invents a default - and the migration, which knows
+     * the real insulin, then added it BESIDE that default. The user came out of the upgrade with an insulin
+     * they never had, sitting at `insulins[0]`, which is what an activation wizard offers first.
+     *
+     * So an invented default is REPLACED here rather than kept. A catalogue that was really stored is left
+     * alone and [iCfg] is only added to it when its curve is missing, which is what makes this safe to call
+     * at every start: the migration runs again on every launch for as long as any record still carries the
+     * v33 sentinel.
+     *
+     * A blank label is built from the nickname and the curve, like any other entry; a label that is already
+     * set is kept, because a record migrated by `migration32to33` carries the name v3 gave it.
+     */
+    fun seedFromMigration(iCfg: ICfg): ICfg
+
+    /**
      * Index of the list entry for [iCfg], or -1. Same label and curve first, then the first entry with
      * the same curve. See [app.aaps.core.data.model.indexOfInsulin].
      */
