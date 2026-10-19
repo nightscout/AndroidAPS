@@ -57,6 +57,8 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
@@ -107,6 +109,8 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(R.string.omnipod_5_error_no_active_profile)).thenReturn("No active profile")
         whenever(rh.gs(R.string.omnipod_5_error_no_active_alerts)).thenReturn("No active alerts")
         whenever(rh.gs(R.string.omnipod_5_error_unresolved_dose_pending)).thenReturn("Earlier dose unconfirmed")
+        whenever(rh.gs(R.string.omnipod_common_pod_status_pod_fault_description)).thenReturn("Pod Fault: %1\$03d %2\$s")
+        whenever(rh.gs(R.string.omnipod_common_pdm_ref)).thenReturn("Ref: %1\$s")
         whenever(history.createRecord(any(), any(), any(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(Single.just(1L))
         whenever(history.markSent(any())).thenReturn(Completable.complete())
         whenever(history.markSuccess(any())).thenReturn(Completable.complete())
@@ -741,6 +745,28 @@ class O5PumpPluginTest : TestBaseWithProfile() {
             verify(pumpSync).insertAnnouncement(any<String>(), any<Long>(), eq(PumpType.OMNIPOD_5), eq("9999"))
         }
         verify(podStateManager).alarmSynced = true
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun `fault notification and announcement include the unsigned code and available reference`(hasRef: Boolean) = runBlocking {
+        val alarm = AlarmType.ALARM_SYNC_WITHOUT_CLOSED_LOOP
+        val fault = "Pod Fault: 152 $alarm"
+        val ref = "19-00006-02251-152"
+        whenever(podStateManager.alarmType).thenReturn(alarm)
+        whenever(podStateManager.pdmRef).thenReturn(ref.takeIf { hasRef })
+        whenever(podStateManager.podId).thenReturn(9999L)
+        whenever(rh.gs(R.string.omnipod_common_pod_status_pod_fault_description, 152, alarm.toString())).thenReturn(fault)
+        whenever(rh.gs(R.string.omnipod_common_pdm_ref, ref)).thenReturn("Ref: $ref")
+
+        plugin.checkPodFault()
+
+        val expected = if (hasRef) "$fault\nRef: $ref" else fault
+        verify(notificationManager).post(
+            eq(NotificationId.OMNIPOD_POD_FAULT), eq(expected), level = any(), validMinutes = any(),
+            sound = eq(AlarmSound.BOLUS_ERROR), actions = any(), validityCheck = anyOrNull()
+        )
+        verify(pumpSync).insertAnnouncement(eq(expected), any<Long>(), eq(PumpType.OMNIPOD_5), eq("9999"))
     }
 
     @Test

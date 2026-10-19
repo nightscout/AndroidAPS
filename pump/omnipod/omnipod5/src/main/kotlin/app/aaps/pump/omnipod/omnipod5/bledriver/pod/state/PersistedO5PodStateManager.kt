@@ -261,6 +261,7 @@ class PersistedO5PodStateManager @Inject constructor(
     override val lastStatusResponseReceived: Long? get() = podState.lastStatusResponseReceived
 
     override val alarmType: AlarmType? get() = podState.alarmType
+    override val pdmRef: String? get() = podState.pdmRef
     override val alarmTime: Short? get() = podState.alarmTime
     override val occlusionAlarm: Boolean? get() = podState.occlusionAlarm
     override val podStatusWhenAlarmOccurred: PodStatus? get() = podState.podStatusWhenAlarmOccurred
@@ -438,6 +439,8 @@ class PersistedO5PodStateManager @Inject constructor(
         }
         podState.alarmType = response.alarmType
         podState.alarmTime = response.alarmTime
+        // Keep the first fault snapshot, including across app restarts.
+        if (podState.pdmRef == null) podState.pdmRef = response.pdmRef
         podState.occlusionAlarm = response.occlusionAlarm
         podState.podStatusWhenAlarmOccurred = response.podStatusWhenAlarmOccurred
         podState.rssi = response.rssi
@@ -569,6 +572,7 @@ class PersistedO5PodStateManager @Inject constructor(
         var sequenceNumberOfLastProgrammingCommand: Short? = null,
         var lastStatusResponseReceived: Long? = null,
         var alarmType: AlarmType? = null,
+        var pdmRef: String? = null,
         var alarmTime: Short? = null,
         var occlusionAlarm: Boolean? = null,
         var podStatusWhenAlarmOccurred: PodStatus? = null,

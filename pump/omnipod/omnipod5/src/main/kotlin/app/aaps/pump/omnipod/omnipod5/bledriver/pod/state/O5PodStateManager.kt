@@ -267,6 +267,8 @@ interface O5PodStateManager {
 
 
     val alarmType: AlarmType?
+    /** Dash-style fault reference captured from the first detailed fault response. */
+    val pdmRef: String?
     /** Pod-clock minutes-since-activation timestamp of when the alarm occurred (not a
      *  wall-clock time - the pod has no wall clock of its own). */
     val alarmTime: Short?
@@ -463,6 +465,8 @@ class InMemoryO5PodStateManager : O5PodStateManager {
 
     @Volatile override var alarmType: AlarmType? = null
         private set
+    @Volatile override var pdmRef: String? = null
+        private set
     @Volatile override var alarmTime: Short? = null
         private set
     @Volatile override var occlusionAlarm: Boolean? = null
@@ -544,6 +548,8 @@ class InMemoryO5PodStateManager : O5PodStateManager {
         updatePendingBolus(response.sequenceNumberOfLastProgrammingCommand, response.deliveryStatus, response.bolusPulsesRemaining)
         alarmType = response.alarmType
         alarmTime = response.alarmTime
+        // Later responses can change the diagnostic snapshot used in the reference.
+        if (pdmRef == null) pdmRef = response.pdmRef
         occlusionAlarm = response.occlusionAlarm
         podStatusWhenAlarmOccurred = response.podStatusWhenAlarmOccurred
         rssi = response.rssi
@@ -645,6 +651,7 @@ class InMemoryO5PodStateManager : O5PodStateManager {
         sequenceNumberOfLastProgrammingCommand = null
         lastStatusResponseReceived = null
         alarmType = null
+        pdmRef = null
         alarmTime = null
         occlusionAlarm = null
         podStatusWhenAlarmOccurred = null

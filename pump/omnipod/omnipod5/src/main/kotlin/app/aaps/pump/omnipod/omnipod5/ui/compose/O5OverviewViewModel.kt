@@ -34,6 +34,7 @@ import app.aaps.core.ui.compose.pump.tickerFlow
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants
+import app.aaps.pump.omnipod.common.ui.compose.notificationText
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.expiry
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.time
@@ -71,7 +72,7 @@ import app.aaps.pump.omnipod.common.R as CommonR
 
 /**
  * O5's pod-status display screen, mirroring
- * [app.aaps.pump.omnipod.dash.ui.compose.DashOverviewViewModel]'s structure. O5's
+ * `DashOverviewViewModel`'s structure. O5's
  * [O5PodStateManager] is flatter than Dash's state manager (no computed derived
  * properties, no `activeCommand`/`lastBolus`/`tempBasal` value objects, no per-retry
  * connection-quality counters, no timezone-drift tracking) - those are approximated here
@@ -253,12 +254,17 @@ class O5OverviewViewModel @Inject constructor(
 
             val errors = buildList {
                 podStateManager.alarmType?.let { alarm ->
-                    add(rh.gs(CommonR.string.omnipod_common_pod_status_pod_fault_description, alarm.value, alarm.toString()))
+                    add(rh.gs(CommonR.string.omnipod_common_pod_status_pod_fault_description, alarm.code, alarm.toString()))
                     faultTimeText()?.let { add(rh.gs(CommonR.string.omnipod_common_two_strings_concatenated_by_colon, rh.gs(CommonR.string.omnipod_common_pod_fault_time_label), it)) }
                 }
             }
             val errorsText = if (errors.isEmpty()) PLACEHOLDER else errors.joinToString("\n")
             add(PumpInfoRow(label = rh.gs(CoreUiR.string.errors), value = errorsText, level = if (errors.isEmpty()) StatusLevel.NORMAL else StatusLevel.CRITICAL))
+            podStateManager.alarmType?.pdmFaultCategory?.let { category ->
+                podStateManager.pdmRef?.let { ref ->
+                    add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_pdm_notification_label), value = category.notificationText(rh, ref)))
+                }
+            }
         }
     }
 

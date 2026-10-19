@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -542,6 +543,57 @@ class PersistedO5PodStateManagerTest : TestBase() {
         assertThat(reader.occlusionAlarm).isEqualTo(response.occlusionAlarm)
         assertThat(reader.podStatusWhenAlarmOccurred).isEqualTo(response.podStatusWhenAlarmOccurred)
         assertThat(reader.rssi).isEqualTo(response.rssi)
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun `fault reference keeps the first snapshot until reset`(persisted: Boolean) {
+        var state: O5PodStateManager = if (persisted) newManager() else InMemoryO5PodStateManager()
+        val bytes = hexToBytes("021602080100000501BD00000003FF01950000000000670A")
+        state.updateFromAlarmStatusResponse(AlarmStatusResponse(bytes))
+        assertThat(state.pdmRef).isNull()
+
+        bytes[10] = AlarmType.ALARM_SYNC_WITHOUT_CLOSED_LOOP.value
+        state.updateFromAlarmStatusResponse(AlarmStatusResponse(bytes))
+        assertThat(state.pdmRef).isEqualTo("19-00006-02251-152")
+
+        if (persisted) state = newManager()
+        assertThat(state.pdmRef).isEqualTo("19-00006-02251-152")
+
+        bytes[19] = 31
+        state.updateFromAlarmStatusResponse(AlarmStatusResponse(bytes))
+        state.updateFromDefaultStatusResponse(DefaultStatusResponse(hexToBytes("1D1800A02800000463FF")))
+        assertThat(state.pdmRef).isEqualTo("19-00006-02251-152")
+        if (persisted) assertThat(newManager().pdmRef).isEqualTo("19-00006-02251-152")
+
+        state.reset()
+        assertThat(state.pdmRef).isNull()
+        if (persisted) assertThat(newManager().pdmRef).isNull()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun `unknown faults do not create a reference`(persisted: Boolean) {
+        val state = if (persisted) newManager() else InMemoryO5PodStateManager()
+        val bytes = hexToBytes("021602080100000501BD00000003FF01950000000000670A")
+        bytes[10] = 0xb0.toByte()
+
+        state.updateFromAlarmStatusResponse(AlarmStatusResponse(bytes))
+
+        assertThat(state.alarmType).isEqualTo(AlarmType.UNKNOWN)
+        assertThat(state.pdmRef).isNull()
+        if (persisted) assertThat(newManager().pdmRef).isNull()
+    }
+
+    @Test
+    fun `old state without a fault reference still loads`() {
+        backingStore = """{"alarmType":"ALARM_OCCLUDED","alarmTime":125}"""
+
+        val state = newManager()
+
+        assertThat(state.alarmType).isEqualTo(AlarmType.ALARM_OCCLUDED)
+        assertThat(state.alarmTime).isEqualTo(125.toShort())
+        assertThat(state.pdmRef).isNull()
     }
 
     @Test

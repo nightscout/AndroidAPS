@@ -518,7 +518,12 @@ class O5PumpPlugin @Inject constructor(
             }
         }
 
-        val description = podStateManager.alarmType?.toString()
+        val description = podStateManager.alarmType?.let { alarm ->
+            listOfNotNull(
+                rh.gs(R.string.omnipod_common_pod_status_pod_fault_description, alarm.code, alarm.toString()),
+                podStateManager.pdmRef?.let { rh.gs(R.string.omnipod_common_pdm_ref, it) }
+            ).joinToString("\n")
+        }
             ?: if (podStateManager.isPodActivationTimeExceeded) {
                 rh.gs(R.string.omnipod_common_error_pod_fault_activation_time_exceeded)
             } else {
