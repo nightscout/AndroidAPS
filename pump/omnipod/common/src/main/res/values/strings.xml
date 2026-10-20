@@ -209,7 +209,7 @@
     <string name="omnipod_5_name">Omnipod 5</string>
     <string name="omnipod_5_name_short">O5</string>
     <string name="omnipod_5_unconfirmed_command" comment="Reason shown when a status read is triggered to reconcile an unconfirmed command. 26 characters max for translation.">Unconfirmed command</string>
-    <string name="omnipod_5_pump_description">Omnipod 5 patch pump, running as a manual pod under AAPS\'s control.</string>
+    <string name="omnipod_5_pump_description">Pump integration for Omnipod 5.</string>
     <string name="omnipod_5_certificate_store">Certificate store</string>
     <string name="omnipod_5_certificate_store_summary">Import and manage the Omnipod 5 pairing certificate.</string>
     <string name="omnipod_5_certificate_store_import">Import certificate</string>

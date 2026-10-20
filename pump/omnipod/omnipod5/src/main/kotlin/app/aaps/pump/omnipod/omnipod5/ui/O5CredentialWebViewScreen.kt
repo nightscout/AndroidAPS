@@ -8,39 +8,25 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.pullToRefresh
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.webkit.WebMessageCompat
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
-import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.pump.omnipod.common.R
-import com.google.android.material.progressindicator.CircularProgressIndicator
+import kotlin.math.max
 
 /**
  * Name the web page uses to reach the app bridge: the page calls
@@ -83,43 +69,54 @@ fun O5CredentialWebViewScreen(
     }
 
     var progress by remember { mutableIntStateOf(0) }
+    var maxProgress by remember { mutableIntStateOf(0) }
     Column(modifier = modifier.fillMaxSize()) {
         LinearProgressIndicator(
             progress = { progress.coerceIn(0, 100) / 100f },
             modifier = Modifier.fillMaxWidth(),
             trackColor = MaterialTheme.colorScheme.surface,
         )
-        AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = { context ->
-                WebView(context).apply {
-                    settings.javaScriptEnabled = true
-                    settings.domStorageEnabled = true
-                    webChromeClient = object : WebChromeClient() {
-                        override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                            progress = newProgress
-                        }
-                    }
-                    webViewClient = WebViewClient()
-                    if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_LISTENER)) {
-                        WebViewCompat.addWebMessageListener(
-                            this,
-                            BRIDGE_NAME,
-                            ALLOWED_ORIGIN_RULES
-                        ) { _, message, _, _, _ ->
-                            if (message.type == WebMessageCompat.TYPE_STRING) {
-                                message.data?.let { currentOnCredentialReceived(it) }
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            AndroidView(
+                modifier = Modifier.fillMaxSize(),
+                factory = { context ->
+                    WebView(context).apply {
+                        settings.javaScriptEnabled = true
+                        settings.domStorageEnabled = true
+                        webChromeClient = object : WebChromeClient() {
+                            override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                                progress = newProgress
+                                maxProgress = max(maxProgress, newProgress)
                             }
                         }
-                    } else {
-                        currentOnCredentialError(UnsupportedOperationException("WebView WebMessageListener feature not supported"))
+                        webViewClient = WebViewClient()
+                        if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_LISTENER)) {
+                            WebViewCompat.addWebMessageListener(
+                                this,
+                                BRIDGE_NAME,
+                                ALLOWED_ORIGIN_RULES
+                            ) { _, message, _, _, _ ->
+                                if (message.type == WebMessageCompat.TYPE_STRING) {
+                                    message.data?.let { currentOnCredentialReceived(it) }
+                                }
+                            }
+                        } else {
+                            currentOnCredentialError(UnsupportedOperationException("WebView WebMessageListener feature not supported"))
+                        }
+                        loadUrl(url)
                     }
-                    loadUrl(url)
+                },
+                update = {
+                    it.loadUrl(url)
                 }
-            },
-            update = {
-                it.loadUrl(url)
+            )
+            if (maxProgress <= 50) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
-        )
+        }
     }
 }

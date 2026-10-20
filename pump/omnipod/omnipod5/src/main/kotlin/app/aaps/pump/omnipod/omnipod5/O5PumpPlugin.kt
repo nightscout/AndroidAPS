@@ -4,8 +4,6 @@ import app.aaps.pump.omnipod.common.R
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.VisibleForTesting
-import androidx.compose.runtime.getValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -98,12 +96,10 @@ import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandSuspendDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration
-import app.aaps.pump.omnipod.common.ui.compose.OmnipodPodHistoryScreen
 import app.aaps.pump.omnipod.omnipod5.keys.O5IntentKey
 import app.aaps.pump.omnipod.omnipod5.ui.O5CertificateStoreScreen
 import app.aaps.pump.omnipod.omnipod5.ui.compose.OmnipodO5ComposeContent
 import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
-import app.aaps.pump.omnipod.omnipod5.ui.compose.O5PodHistoryViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.CoroutineScope
@@ -1767,20 +1763,7 @@ class O5PumpPlugin @Inject constructor(
                 )
             } else {
                 null
-            },
-            O5IntentKey.PodHistory.withCompose(
-                ComposeScreenContent { onBack ->
-                    val historyViewModel: O5PodHistoryViewModel = metroViewModel()
-                    val records by historyViewModel.records.collectAsStateWithLifecycle()
-                    OmnipodPodHistoryScreen(
-                        records = records,
-                        rh = historyViewModel.rh,
-                        profileUtil = historyViewModel.profileUtil,
-                        pumpType = PumpType.OMNIPOD_5,
-                        onBack = onBack,
-                    )
-                }
-            )
+            }
         ),
         icon = pluginDescription.icon
     )

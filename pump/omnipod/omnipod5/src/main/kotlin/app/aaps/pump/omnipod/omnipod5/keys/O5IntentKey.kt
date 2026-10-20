@@ -26,19 +26,13 @@ enum class O5IntentKey(
         key = "omnipod_5_certificate_store",
         title = TextRef.AndroidRes(R.string.omnipod_5_certificate_store),
         summary = TextRef.AndroidRes(R.string.omnipod_5_certificate_store_summary)
-    ),
-
-    PodHistory(
-        key = "omnipod_5_history",
-        title = TextRef.AndroidRes(R.string.omnipod_common_pod_management_button_pod_history),
     );
 
     companion object {
-
         fun ConfigEnabledEntries(config: Config): List<O5IntentKey> = if (config.isEngineeringMode()) {
-            listOf(CertificateStore, PodHistory)
+            listOf(CertificateStore)
         } else {
-            listOf(PodHistory)
+            emptyList()
         }
     }
 }
