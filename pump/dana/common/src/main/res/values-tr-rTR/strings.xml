@@ -99,4 +99,6 @@
     <string name="num1pin">1: (12 basamak)</string>
     <string name="num2pin">2: (8 basamak)</string>
     <string name="basal_bolus_step">Bazal/bolus adımı</string>
+    <string name="password_ok">Parola başarıyla doğrulandı!</string>
+    <string name="password_wrong">Yanlış parola. Geri dönün ve düzeltin.</string>
 </resources>
