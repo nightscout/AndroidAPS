@@ -2,15 +2,18 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day için Pompa Entegrasyonu</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Patch, bolusun sonlandığını doğrulamadı. %1$s miktarı kaydedildi ancak daha fazla verilmiş olabilir. İnsülin vermeden önce patch\'i kontrol edin.</string>
     <string name="low_reservoir">Düşük rezervuar Uyarısı</string>
     <string name="patch_expiration_reminders">Pompa Süre Sonu Hatırlatıcısı</string>
     <string name="patch_buzzer_reminders">Pompa sesli Hatırlatıcılar</string>
     <string name="eopatch_ble_status">BLE Durumu</string>
     <string name="eopatch_serial_number">Seri Numarası</string>
     <string name="eopatch_expiration_time">Bitiş süresi</string>
+    <string name="eopatch_not_activated">Etkinleştirilmedi</string>
     <string name="eopatch_base_basal_rate">Temel Bazal Oranı</string>
     <string name="eopatch_temp_basal_rate">Geçici Bazal Oranı</string>
     <string name="invalid_basal_rate">Profilin bazal değeri 0,05 Ü/sa\'ten azdır. EOPatch, minimum 0,05Ü enjeksiyon ünitesine sahiptir. Profili minimum enjeksiyon ünitesinden daha fazlasına ayarladıktan sonra lütfen tekrar deneyin.</string>
+    <string name="no_profile_selected_try_again">Profil seçilmedi. Lütfen bir profil seçin ve tekrar deneyin.</string>
     <string name="symbol_day">gün</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
@@ -35,17 +38,21 @@
     <string name="patch_wake_up">İnsülin Doldurma</string>
     <string name="patch_wake_up_desc_1">Yeni bir Pompayı oda sıcaklığında insülin ile doldurun. Şırınga açısını kontrol edin.</string>
     <string name="patch_wake_up_desc_2">1 bip sesini kontrol edin.</string>
+    <string name="patch_wake_up_pairing_info">Eşleştirme sırasında iki adet Android sistem açılır penceresi belirecektir. Bluetooth eşleştirmesini tamamlamak için her ikisini de onaylamanız gerekir.</string>
     <string name="patch_start_pairing">Eşleştirmeye başla</string>
     <string name="patch_connect_new">Pompa eşleştirme</string>
     <string name="patch_connect_new_desc">Yeni Pompa eşleştiriliyor.\nPompa ile cihaz arasındaki mesafeyi mümkün olduğunca yakın tutun</string>
     <string name="patch_remove_needle_cap">Pompayı takmak için hazırlayın</string>
     <string name="patch_remove_needle_cap_desc_1">Yapışkan bandı çıkarın ve ardından \'İleri\'ye dokunun.</string>
+    <string name="patch_remove_needle_cap_desc_2">Eğer iğne dışarı çıkmışsa, \'Çıkar\' seçeneğine dokunun.</string>
+    <string name="patch_remove_needle_cap_desc_3">Patch ıslak veya kirliyse ya da yapışkan bandı katlanmışsa \'Çıkar\' seçeneğine dokunun.</string>
     <string name="patch_remove_protection_tape">Pompayı takın</string>
     <string name="patch_remove_protection_tape_desc_1">İnfüzyon bölgesini temizleyin ve kurulayın, ardından Pompayı cilde yapıştırın.</string>
     <string name="patch_remove_protection_tape_desc_2">İnfüzyon bölgesini kontrol edin ve ardından \'Güvenlik kontrolünü başlat\'a dokunun.</string>
     <string name="patch_start_safety_check">Güvenlik kontrolünü başlat</string>
     <string name="patch_safety_check">Güvenlik kontrolü…</string>
     <string name="patch_safety_check_desc_1">Yaklaşık 30 saniye sürer.</string>
+    <string name="patch_safety_check_desc_2">Güvenli kullanım için, güvenlik kontrolü tamamlanana dek iğne hareket kolunu çıkarmayın!</string>
     <string name="patch_rotate_knob">İğneyi yerleştirme</string>
     <string name="patch_rotate_knob_desc_1">İğneyi yerleştirmek için İğne hareket kolunu 100°\'den fazla çevirin ve ardından çıkarmak için tamamen döndürün</string>
     <string name="patch_rotate_knob_desc_2">1 bip sesini kontrol edin ve ardından \'İleri\'ye dokunun.</string>
@@ -57,6 +64,7 @@
     <string name="patch_activate_reminder_desc">Pompa aktivasyonu tamamlanmadı.\n Devam edin.</string>
     <string name="patch_communication_check_helper_1">Cihazınızı Pompaya yaklaştırın.</string>
     <string name="patch_communication_check_helper_2">Lütfen başka bir konuma geçin ve tekrar deneyin.</string>
+    <string name="patch_safety_check_failed_desc">Güvenlik kontrolü başarısız oldu. Lütfen tekrar deneyin.</string>
     <string name="patch_communication_failed">Bağlantı Hatası</string>
     <string name="patch_communication_succeed">Bağlantı başarılı</string>
     <string name="patch_communication_succeed_message">Pompaya bağlandı.</string>
@@ -75,8 +83,14 @@
     <string name="needle_insertion_error_3">Pompayı devre dışı bırakmak için \'Çıkar\'a dokunun.</string>
     <string name="string_suspend_time_insulin_delivery_title">Bazal Askıya Alma Süresi</string>
     <string name="string_resume_insulin_delivery_title">İnsülin iletimini devam ettir</string>
+    <string name="string_resume_insulin_delivery_message">İnsülin duraklatma sona erdi. İnsülin iletimini yeniden başlatmak için \n\'Onayla\'ya dokunun. \n\n\'Onayla\'ya dokunmadığınız sürece insülin iletimi yeniden başlamayacaktır ve hiperglisemi gelişebilir.</string>
     <string name="string_suspended_insulin_delivery_message">İnsülin iletimi askıya alındı.</string>
     <string name="string_resumed_insulin_delivery_message">İnsülin iletimi yeniden başladı.</string>
     <string name="string_temp_basal_remained_hhmm">kalan süre: %1$s:%2$s</string>
+    <string name="string_pause_failed">Askıya alma başarısız oldu.</string>
     <string name="string_resume_failed">Devam başarısız oldu.</string>
+    <string name="wizard_exit_activation_warning">Etkinleştirme sihirbazından çıkılsın mı? Patch kurulumu tamamlanmamış olabilir ve yeni bir patch gerekebilir.</string>
+    <string name="wizard_exit_deactivation_warning">Devre dışı bırakma sihirbazından çıkılsın mı? Patch aktif kalabilir ve insülin vermeye devam edebilir.</string>
+    <string name="patch_force_reset">Zorla yeniden başlat</string>
+    <string name="patch_force_reset_confirm">Bu işlem, patch\'e herhangi bir komut göndermeksizin patch durumunu yerel olarak temizleyecektir. Yalnızca normal devre dışı bırakma işlemi başarısız olduğunda kullanın. Patch, pili bitene veya manuel olarak kapatılana kadar insülin iletimine devam edecektir.</string>
 </resources>
