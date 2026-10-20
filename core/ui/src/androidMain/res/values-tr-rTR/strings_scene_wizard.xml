@@ -4,6 +4,8 @@
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">Hastalık— Kusma</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">LGS ile azaltılmış profil- yiyecek sindiremediğiniz standart hastalık gününün tam tersidir.</string>
     <string name="scene_wizard_info_sick_day_vomiting">Yiyecekleri midenizde tutamadığınızda, standart hastalık günü yaklaşımı olan insülin dozunu artırmak tehlikeli olabilir. Kusma, karbonhidratların emilmediği anlamına gelir, bu nedenle kan şekeri yükselmek yerine düşebilir. Azaltılmış profil (%60) insülin dozunu düşürür ve LGS modu, glikoz düştüğünde insülini durdurarak ek bir güvenlik ağı sağlar. SMB\'yi devre dışı bırakmak, ek bolus dozlarını önler. Sık sık izleyin — kan şekerini her 1-2 saatte bir ve ketonları her 2-4 saatte bir kontrol edin. Kusma birkaç saatten fazla sürerse veya ketonlar 1,5 mmol/L\'nin üzerine çıkarsa tıbbi yardım alın.</string>
     <!-- Sleep: no default actions — 8h -->
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
