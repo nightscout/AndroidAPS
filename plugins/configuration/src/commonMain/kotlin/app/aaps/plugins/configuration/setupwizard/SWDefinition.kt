@@ -235,10 +235,14 @@ class SWDefinition(
             )
             .add(swInfoTextProvider().label(ConfigurationStrings.setupwizard_pairing_ws_warning).visibility { !preferences.get(BooleanKey.NsClient3UseWs) })
             .add(swBreakProvider())
-            .add(swInfoTextProvider().label(ConfigurationStrings.setupwizard_ns_receive_info))
+            // In hardened mode the "accept from Nightscout" settings are hidden, so the button would open an empty
+            // screen. Explain hardened mode instead.
+            .add(swInfoTextProvider().label(CoreUiStrings.hardened_mode_info).visibility { preferences.hardenedMode })
+            .add(swInfoTextProvider().label(ConfigurationStrings.setupwizard_ns_receive_info).visibility { !preferences.hardenedMode })
             .add(
                 swButtonProvider()
                     .text(ConfigurationStrings.setupwizard_open_ns_receive_settings)
+                    .visibility { !preferences.hardenedMode }
                     .action { onOpenNsReceiveSettings?.invoke() }
             )
 

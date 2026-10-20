@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.observeEffective
 import app.aaps.core.nssdk.localmodel.clientcontrol.AuthorizedClient
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
@@ -26,7 +27,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -61,32 +61,23 @@ class AuthorizedClientsViewModel(
 
     /**
      * Whether client-control communication is on — the master-wide stop/allow switch, now hosted on this screen.
-     * Shows the EFFECTIVE value (the master's operative state, applying the simple-mode computed default), not the
-     * raw stored value — so an unset switch in simple mode reads ON, matching what the command gate actually does,
-     * instead of a misleading OFF. Re-read whenever the raw value or simple mode changes.
+     * On the master this is also hardened mode ([Preferences.hardenedMode]).
+     * Shows the EFFECTIVE value (the master's operative state, applying the simple-mode rule), not the
+     * raw stored value — so the switch in simple mode reads ON, matching what the command gate actually does,
+     * instead of a misleading OFF.
      */
     val clientControlEnabled: StateFlow<Boolean> =
-        combine(
-            preferences.observe(BooleanKey.NsClientAllowClientControl),
-            preferences.observe(BooleanKey.GeneralSimpleMode)
-        ) { _, _ -> preferences.get(BooleanKey.NsClientAllowClientControl) }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), preferences.get(BooleanKey.NsClientAllowClientControl))
+        preferences.observeEffective(BooleanKey.HardenedMode)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), preferences.get(BooleanKey.HardenedMode))
 
     /**
-     * True when the switch above says "allowed" but the WebSocket it rides is off, so nothing can
-     * actually be served: a command reaches this master only on the 5-minute poll, long past its
-     * validity. The switch keeps showing what the user chose — this drives the warning next to it, and
-     * clients are told the truth separately (the published value is masked; see clientControlOperational).
+     * Simple mode forces the switch on, so the screen does not offer it there: it would be a switch that
+     * cannot be turned off.
      */
-    val clientControlBlockedByWebsocket: StateFlow<Boolean> =
-        combine(
-            clientControlEnabled,
-            preferences.observe(BooleanKey.NsClient3UseWs)
-        ) { enabled, useWs -> enabled && !useWs }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+    val simpleMode: StateFlow<Boolean> = preferences.observe(BooleanKey.GeneralSimpleMode)
 
     /** Flip the stop/allow-communication switch. OFF keeps paired clients listed but stops the master accepting anything. */
-    fun setClientControlEnabled(enabled: Boolean) = preferences.put(BooleanKey.NsClientAllowClientControl, enabled)
+    fun setClientControlEnabled(enabled: Boolean) = preferences.put(BooleanKey.HardenedMode, enabled)
 
     private val _dialogState = MutableStateFlow<DialogState?>(null)
     val dialogState: StateFlow<DialogState?> = _dialogState.asStateFlow()

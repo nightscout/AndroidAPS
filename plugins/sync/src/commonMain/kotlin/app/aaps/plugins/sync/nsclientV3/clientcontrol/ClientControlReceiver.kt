@@ -1,7 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
 import app.aaps.core.data.json.OrgJsonCompat.optJsonObjectCompat
-import app.aaps.core.data.json.OrgJsonCompat.optStringCompat
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
@@ -67,12 +66,9 @@ import kotlin.concurrent.atomics.ExperimentalAtomicApi
 /**
  * Master-side receiver for inbound client-control envelopes.
  *
- * Two entry points feed the same verify-and-ack pipeline:
- * - [onSettingsDocChanged] — primary, low-latency. Called from the WS create/update
- *   listener with the doc already in hand.
- * - [processPending] — polling fallback. Probes the deterministic hello + cmd
- *   identifiers per authorized client to catch anything WS missed during a
- *   disconnect window.
+ * One entry point feeds the verify-and-ack pipeline: [onSettingsDocChanged], called from the WS
+ * create/update listener with the doc already in hand. There is no polling path: client control is
+ * on only in hardened mode, and hardened mode keeps the WebSocket on.
  *
  * Replay protection sits between parse and dispatch, in this order:
  * 1. HMAC signature against the stored secret for the envelope's clientId
@@ -89,8 +85,8 @@ import kotlin.concurrent.atomics.ExperimentalAtomicApi
  *   the identifier, so a later legitimate PUT to that same per-type slot gets HTTP 410 — and in
  *   a multi-device setup another master may legitimately own that command. Stray docs simply
  *   linger until NS auto-prunes them.
- * - Sig / counter / skew failures → likewise leave the doc in place. The next tick (poll or
- *   WS update) re-verifies. Counter regression in particular often just means "we already
+ * - Sig / counter / skew failures → likewise leave the doc in place. The next WS update
+ *   re-verifies. Counter regression in particular often just means "we already
  *   processed this" — harmless because the counter check still gates state mutation.
  *
  * On verified envelope: dispatch by [SignedEnvelope.type]; the doc is not deleted afterwards
@@ -128,7 +124,7 @@ class ClientControlReceiver(
 
     // Serialize the whole verify→dispatch→counter-bump pipeline. The replay gate reads counterReceived and the
     // handler advances it (bumpLastSeen) — a check-then-act gap: two coroutines handling the SAME doc concurrently
-    // (a WS re-notify, or WS+poll overlap) could both pass the gate and both execute → double bolus / double record.
+    // (a WS re-notify) could both pass the gate and both execute → double bolus / double record.
     // One command in flight at a time closes that window (the executor's atomic slot is the second line of defense).
     private val commandMutex = Mutex()
 
@@ -237,35 +233,6 @@ class ClientControlReceiver(
     }
 
     /**
-     * Polling fallback. Lists NS settings, filters to client-control identifiers, and
-     * dispatches each through [verifyAndAck]. Safe to call repeatedly — the per-client counter
-     * check rejects anything already accepted; docs are not deleted and simply linger until the
-     * next command overwrites the slot or NS auto-prunes them.
-     *
-     * Using `searchSettings` instead of probing per-identifier means we don't need to know
-     * in advance which clients exist or which command types they're using. New variants
-     * land here with no polling-loop changes.
-     */
-    suspend fun processPending() {
-        val client = nsClientV3Plugin().nsAndroidClient ?: return
-        val now = dateUtil.now()
-        val resp = runCatching { client.searchSettings(limit = 100) }.getOrNull() ?: return
-        for (doc in resp.values) {
-            val identifier = doc.optStringCompat("identifier")
-            if (!identifier.startsWith(ClientControlPublisher.IDENTIFIER_PREFIX)) continue
-            // Skip our own pairing offers — they share the prefix but are not signed envelopes,
-            // so verifyAndAck would (harmlessly) log them as "malformed envelope, ignoring". We
-            // skip to avoid that noise and a needless re-parse on every poll tick.
-            if (identifier.startsWith(ClientControlPublisher.IDENTIFIER_OFFER_PREFIX)) continue
-            // Skip our own command ACKs (master-written, for clients). Same reason as offers.
-            if (identifier.startsWith(ClientControlPublisher.IDENTIFIER_ACK_PREFIX)) continue
-            // Skip our own bolus-progress docs (master-written, for clients).
-            if (identifier.startsWith(ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX)) continue
-            verifyAndAck(identifier, doc, now)
-        }
-    }
-
-    /**
      * WS-push entry. NSClientV3Service routes settings-collection create/update events
      * to here for any identifier with the [ClientControlPublisher.IDENTIFIER_PREFIX].
      */
@@ -344,13 +311,13 @@ class ClientControlReceiver(
         // typically. Treat it the same as an unknown type: advance the counter so the next
         // envelope can be processed.
         val message = runCatching { json.decodeFromString(ClientControlMessage.serializer(), envelope.payload) }.getOrNull()
-        // Master policy gate: when client control is not operational (switch off, or the WebSocket it rides
-        // turned off — see clientControlOperational), reject mutating commands cleanly (signed Done/Failed ACK)
+        // Master policy gate: when client control is off (hardened mode off — on the master it is the switch, and
+        // while it is on the WebSocket is kept on too), reject mutating commands cleanly (signed Done/Failed ACK)
         // instead of silently dropping them — a silent drop times the client out → Unconfirmed → a false "master
         // offline" alarm in the toggle-propagation race window. Exempts Hello (pairing must still work while disabled)
         // and Ping (a liveness probe). Placed BEFORE the Hello branch so that branch stays adjacent to (and keeps
-        // exhaustive) the when(message) below. Covers the WS push AND the poll fallback; consume the counter like expiry.
-        if (message !is ClientControlMessage.Hello && message !is ClientControlMessage.Ping && !preferences.clientControlOperational()) {
+        // exhaustive) the when(message) below. Consume the counter like expiry.
+        if (message !is ClientControlMessage.Hello && message !is ClientControlMessage.Ping && !preferences.hardenedMode) {
             authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
             nsClientRepository.addLog("◄ CLIENTCTL", "control disabled, rejecting ${envelope.type} from ${entry.name}")
             aapsLogger.warn(LTag.NSCLIENT, "ClientControl: $identifier rejected — client control disabled on master")
@@ -401,6 +368,8 @@ class ClientControlReceiver(
         when (entry.state) {
             ClientState.Pending -> {
                 authorizedRepository.markActive(entry.clientId, envelope.counter, now)
+                // Keep client control as it is now, also after leaving simple mode later.
+                preferences.storeClientControlSwitchIfUnset()
                 // Pair-complete: drop the wrapped offer doc so the brute-force window closes the moment
                 // the secret is no longer needed for fetching. Without this, the offer would linger up
                 // to pairExpiresAt giving an attacker the full window even though pairing already

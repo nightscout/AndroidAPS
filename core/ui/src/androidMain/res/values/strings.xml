@@ -431,6 +431,10 @@
     <string name="scene_lock_banner_control_disabled">Master has disabled remote control. Scene controls will resume when it is re-enabled on the master.</string>
     <string name="master_offline_banner">Master device unreachable. Editing is disabled until the connection is restored.</string>
     <string name="master_control_disabled_banner">Master has disabled remote control. Editing is disabled until it is re-enabled on the master.</string>
+    <string name="hardened_mode_on">Hardened mode on</string>
+    <string name="hardened_mode_title">Hardened mode</string>
+    <string name="hardened_mode_info_open">About hardened mode</string>
+    <string name="hardened_mode_info">The main phone takes changes only from paired clients. It does not take treatments, temp targets, profile changes, running mode changes or deletes that are made directly in Nightscout, for example on the website or in other apps. The settings for accepting data from Nightscout are hidden while hardened mode is on. SMS commands are not affected.\n\nThe main phone still uploads all data to Nightscout, BG included. If it gets its BG from Nightscout, it still takes BG from there.\n\nTo load the history on a new main phone, use Full sync in NSClient. Full sync takes everything that is in Nightscout, profiles included.\n\nRemote control from clients needs a working WebSocket connection to Nightscout, on the main phone and on paired clients. Simple mode always turns hardened mode on. To turn it off, leave simple mode and turn off client control on the main phone.</string>
     <string name="scene_lock_reason_master_offline">Master disconnected</string>
     <string name="scene_lock_reason_control_disabled">Remote control disabled</string>
     <string name="scene_lock_reason_scene_active">Stop the running scene first</string>

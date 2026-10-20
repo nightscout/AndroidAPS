@@ -68,7 +68,7 @@ Independent gates on the master (`ClientControlReceiver`), in order:
 
 | Identifier prefix | Direction | Semantics |
 |---|---|---|
-| `aaps_clientcontrol_` | — | shared prefix; gates WS routing + polling fallback |
+| `aaps_clientcontrol_` | — | shared prefix; gates WS routing |
 | `aaps_clientcontrol_hello_<…>` | client→master | first message, Pending → Active |
 | `aaps_clientcontrol_cmd_<type>_<clientId>` | client→master | **per-type** command slot, **latest-wins** overwrite |
 | `aaps_clientcontrol_ack_<clientId>` | master→client | one ACK doc per client, overwritten in place |
@@ -126,6 +126,7 @@ masterReachable = AAPSCLIENT
                && fresh liveness signal (≤ 9 min)
                && paired
                && authorized (in roster, not orphan)
+               && master's client-control switch on (read with the master's rule, see §2.9)
 ```
 
 Freshness is fed by **any** authenticated master signal (`_lastMasterSignalAt` bumped by): (1) a devicestatus heartbeat, (2) a **PING pong**, or (3) a live config republish. The `freshness(thresholdMs = 9 min, tickMs = 60s, pristine = false)` term re-evaluates ~every minute so a stale timestamp flips `fresh → false` within ~1 min of crossing the threshold. `pristine = false` means it **fails closed at boot** (offline until a signal arrives). The flow is shared via `stateIn(WhileSubscribed(5000))`.
@@ -150,6 +151,19 @@ The client maps the round-trip to exactly three outcomes:
 | **Unconfirmed** | sent but no `Done` ack before the deadline, or connection lost mid-wait | **state unknown** — the client flips `masterReachable` offline (`forceOfflineProbe`), pings/re-pulls, and reconciles real state via sync-back |
 
 > `masterReachable` is observed as `.drop(1).filter { !it }` during a round-trip — the wait **early-aborts** to `Unconfirmed` only on a *transition* to false (connection loss), not on an initial-false (the timeout/poll path covers that).
+
+### 2.9 Hardened mode
+
+The master's client-control switch (`BooleanKey.HardenedMode`, still stored as `ns_allow_client_control`) is also **hardened mode**: while it is on, the master takes changes only through this signed channel, never directly from Nightscout.
+
+- **One rule, `Preferences.hardenedMode`.** On the master it is the switch, read with `get()`, so simple mode turns it on (`defaultedBySM`). On a client it is the master's synced value of the switch, read with the same rule (simple mode is synced too), and only while the client is paired. An unpaired client is a viewer and keeps its own settings. Both phones get the same answer because they apply the same rule to the same values.
+- **Forced keys (`defaultedByHardenedMode`).** While hardened mode is on, `PreferencesImpl.get()` returns the key's default and `PreferenceState` hides its row: the nine `NsClientAccept*` keys (off), `NsClientUploadData` and `BgSourceUploadToNs` (on), and `NsClient3UseWs` (on). The code that reads these keys does not change. The Synchronization screen disappears with them (`hideParentScreenIfHidden`).
+- **What still comes from Nightscout:** BG when Nightscout is the BG source (`NsIncomingDataProcessor.acceptsGlucose`), Full sync (the way to load the history, profiles included, on a new master), and food. SMS commands are not affected.
+- **WebSocket.** Simple mode keeps `NsClient3UseWs` on for every phone; hardened mode keeps it on for the master and for paired clients. So "switch on" always means the master can serve commands. That is why the published switch is no longer rewritten (it travels like every other cold key) and why there is no poll fallback for commands.
+- **Listeners.** `observe(key)` emits only the stored value, so it misses a change forced by simple mode or hardened mode. Code that must follow the value in use takes `Preferences.observeEffective(key)` or `observeHardenedMode()`: the WebSocket restart, `masterReachable`, `masterControlAllowed`, the Authorized clients switch.
+- **Stored at pairing.** Unset, the switch is on only in simple mode. On Pending → Active the master stores the value in use, so leaving simple mode later does not silently turn client control off. At master start the same is done once for clients paired before this existed (`storeClientControlSwitchIfUnset`).
+- **A WebSocket that does not work.** Data still arrives: the 5-minute tick polls whenever the socket is not connected (`NSClientV3Plugin.needsPolling`), not only when the setting is off. Client control itself needs a working WebSocket (a command is valid for seconds, a poll comes minutes later). The way out for such a host: leave simple mode, turn the switch off, then turn the WebSocket off.
+- **UI.** "Hardened mode on" with an (i) explanation on the Authorized clients screen (master, every mode; the switch row itself is hidden in simple mode) and on the client's pairing screen. The setup wizard shows the explanation instead of the button to the "accept from Nightscout" settings.
 
 ---
 
@@ -258,7 +272,7 @@ Kept separate so a cold-doc apply (which has no `activeScene` block) **never cle
 - **Hot** → pass the active-scene snapshot (or null) to `ActiveSceneSync.applyActiveScene()` and put `usedAutosensOnMainPhone`.
 
 Notable invariants:
-- **Raw value, not mode-adjusted.** `syncedPrefs` serializes the **raw** persisted value, not `preferences.get()`'s mode-adjusted effective value. Simple/Expert mode is per-device presentation; each device re-applies its own mode on read. Master in Simple + client in Expert both sync the raw setting.
+- **Raw value, not mode-adjusted.** `syncedPrefs` serializes the **raw** persisted value (or the computed default when unset), not `preferences.get()`'s mode-adjusted effective value. Each device re-applies the mode rules on read. Simple mode itself is synced, so both phones apply the same rules. The client-control switch is no exception (see §2.9).
 - **Flat map.** A new bidirectional setting needs **zero** publisher changes — it auto-appears as another map entry.
 - **Roster appended at publish time.** `AuthorizedClientsRepository` is in `:plugins:sync` but `RunningConfigurationImpl` is in `:plugins:configuration`; to avoid an inter-module dep, the roster is appended to the JSON in `RunningConfigurationPublisher.publishCold` *after* `configuration()`. Block absence is a backward-compat marker — clients must **not** infer orphan from `null`, only from "block present + clientId missing". Pending entries are deliberately omitted (a pairing client would otherwise wrongly think it isn't paired yet).
 - **Self-healing republish.** On WS reconnect (debounced 3 s, `WS_RECONNECT_DEBOUNCE_MS`) the master republishes its **entire** config (not just changes), recovering: an offline edit that failed to publish, an auto-pruned doc, or a `start()`-before-NS-ready initial publish. `LoadSettingsWorker` unconditionally GETs both docs on every loop, pulling any missed WS push. Republishing unchanged config is idempotent (per-key LWW no-ops → no echo storm).

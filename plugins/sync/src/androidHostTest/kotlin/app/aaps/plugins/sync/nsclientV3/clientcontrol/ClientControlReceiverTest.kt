@@ -135,11 +135,9 @@ internal class ClientControlReceiverTest {
         storage.clear()
         storage[StringNonKey.SceneDefinitions.key] = "[]"
         whenever(preferences.get(StringNonKey.NsClientControlAuthorizedClients)).thenAnswer { stored }
-        // Client control ON by default — the receiver now gates on this (rejects commands when off); see controlDisabled test.
-        // The WebSocket is part of that gate (a master without it cannot answer inside a command's validity),
-        // so it has to be on for the normal cases too.
-        whenever(preferences.get(BooleanKey.NsClientAllowClientControl)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
+        // Client control ON by default — the receiver gates on hardened mode (on the master it is the switch) and
+        // rejects commands when it is off; see the controlOff tests.
+        whenever(preferences.hardenedMode).thenReturn(true)
         whenever(preferences.get(StringNonKey.SceneDefinitions)).thenAnswer {
             storage[StringNonKey.SceneDefinitions.key] ?: "[]"
         }
@@ -261,6 +259,29 @@ internal class ClientControlReceiverTest {
         // …but the offer doc IS dropped on the Pending → Active transition so the wrapped secret
         // does not linger on NS past pairing-complete.
         verify(offerPublisher).deleteOffer(clientId)
+    }
+
+    @Test
+    fun pairingStoresTheClientControlSwitchWhenItIsNotStored() = runTest {
+        // Unset, the switch is on only in simple mode. Storing the value in use at pairing keeps client
+        // control on when the user leaves simple mode later.
+        val (clientId, secret) = pair()
+        whenever(preferences.getIfExists(BooleanKey.HardenedMode)).thenReturn(null)
+        whenever(preferences.get(BooleanKey.HardenedMode)).thenReturn(true)
+
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_HELLO_PREFIX + clientId, wrap(envelope(clientId, secret, counter = 1L)))
+
+        verify(preferences).put(BooleanKey.HardenedMode, true)
+    }
+
+    @Test
+    fun pairingKeepsAStoredClientControlSwitch() = runTest {
+        val (clientId, secret) = pair()
+        whenever(preferences.getIfExists(BooleanKey.HardenedMode)).thenReturn(false)
+
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_HELLO_PREFIX + clientId, wrap(envelope(clientId, secret, counter = 1L)))
+
+        verify(preferences, never()).put(eq(BooleanKey.HardenedMode), any<Boolean>())
     }
 
     @Test
@@ -759,7 +780,7 @@ internal class ClientControlReceiverTest {
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
         // Master turned client control OFF → reject cleanly with a signed ACK (NOT a silent drop, which would
         // time the client out into a false "master offline" alarm) and do NOT execute the command.
-        whenever(preferences.get(BooleanKey.NsClientAllowClientControl)).thenReturn(false)
+        whenever(preferences.hardenedMode).thenReturn(false)
         val acks = captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
 
@@ -772,29 +793,10 @@ internal class ClientControlReceiverTest {
     }
 
     @Test
-    fun websocketOffRejectsCommandTheSameWayAsControlOff() = runTest {
+    fun controlOffStillAnswersLiveness() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        // Control is allowed, but the transport it rides is off: this master would only see the command on
-        // its 5-minute poll, long past the ~8 s validity. Reject it now with a reason instead of letting it
-        // expire — an expiry looks like "master offline" to the client.
-        whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(false)
-        val acks = captureAcks(clientId)
-        val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
-
-        sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = ClientControlMessage.BolusCommit(42L), counter = 5L, wantsAck = true)))
-
-        val done = acks.last()
-        assertThat(done.status.name).isEqualTo("Failed")
-        assertThat(done.reason).isEqualTo(FailureReason.ControlDisabled.name)
-        verify(masterActionExecutor, never()).confirm(any(), any(), any(), any(), any(), any())
-    }
-
-    @Test
-    fun websocketOffStillAcceptsPairingAndLiveness() = runTest {
-        val (clientId, secret) = pair()
-        authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(false)
+        whenever(preferences.hardenedMode).thenReturn(false)
         val acks = captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}ping_$clientId"
 
@@ -879,80 +881,11 @@ internal class ClientControlReceiverTest {
     }
 
     @Test
-    fun pollingListsSettingsAndDispatchesEachClientControlDoc() = runTest {
-        val (clientId, secret) = pair()
-        authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        val cmdIdentifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}scene_stop_$clientId"
-        // kotlinx JsonObject is immutable, so the identifier goes on via a copy.
-        val cmdDoc = JsonObject(
-            wrap(envelope(clientId, secret, message = ClientControlMessage.SceneStop(false), counter = 5L)) + ("identifier" to JsonPrimitive(cmdIdentifier))
-        )
-        // Mix in a non-clientcontrol doc that polling should ignore.
-        val unrelatedDoc = buildJsonObject {
-            put("identifier", "aaps")
-            put("date", now)
-        }
-        whenever(nsAndroidClient.searchSettings(limit = 100)).thenReturn(
-            NSAndroidClient.ReadResponse(code = 200, lastServerModified = null, values = listOf(cmdDoc, unrelatedDoc))
-        )
-        whenever(sceneAutomationApi.stopActiveScene()).thenReturn(SceneAutomationResult.Success)
-
-        sut.processPending()
-
-        verify(nsAndroidClient).searchSettings(limit = 100)
-        verify(sceneAutomationApi).stopActiveScene()
-        // Success path no longer deletes — counter dedup handles replay; leaving the doc avoids
-        // tombstoning the slot. Unrelated doc is also untouched.
-        verify(nsAndroidClient, never()).deleteSettings(any())
-    }
-
-    @Test
-    fun pollingSkipsOfferDocsWithoutDeleting() = runTest {
-        // Master writes its own pairing-offer docs under IDENTIFIER_OFFER_PREFIX. Without an
-        // explicit skip, verifyAndAck would treat them as envelopes, find no `envelope` field,
-        // and delete a still-live offer mid-pairing — leaving the client unable to fetch it.
-        val offerDoc = buildJsonObject {
-            put("identifier", "${ClientControlPublisher.IDENTIFIER_OFFER_PREFIX}any-client-id")
-            put("date", now)
-            put("offer", buildJsonObject { put("clientId", "any-client-id") })
-        }
-        whenever(nsAndroidClient.searchSettings(limit = 100)).thenReturn(
-            NSAndroidClient.ReadResponse(code = 200, lastServerModified = null, values = listOf(offerDoc))
-        )
-
-        sut.processPending()
-
-        verify(nsAndroidClient, never()).deleteSettings(any())
-    }
-
-    @Test
     fun wsPushSkipsOfferDocs() = runTest {
         val identifier = "${ClientControlPublisher.IDENTIFIER_OFFER_PREFIX}any-client-id"
         val doc = buildJsonObject { put("identifier", identifier); put("date", now) }
         sut.onSettingsDocChanged(identifier, doc)
         verify(nsAndroidClient, never()).deleteSettings(any())
-    }
-
-    @Test
-    fun pollingLeavesUnknownClientDocUntouchedAndDoesNotExecute() = runTest {
-        // A known client is paired, but the doc below carries a DIFFERENT clientId the master never
-        // paired. On every poll the master re-lists it and must leave it completely alone — never
-        // delete (soft OR permanent: a tombstone would 410 the rightful owner's next command) and
-        // never execute it. This locks in the fix against re-delivery via the poll fallback.
-        pair()
-        val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}scene_stop_stranger-uuid"
-        val doc = JsonObject(
-            wrap(envelope("stranger-uuid", ByteArray(32) { 0x11 }, message = ClientControlMessage.SceneStop(false), counter = 5L)) + ("identifier" to JsonPrimitive(identifier))
-        )
-        whenever(nsAndroidClient.searchSettings(limit = 100)).thenReturn(
-            NSAndroidClient.ReadResponse(code = 200, lastServerModified = null, values = listOf(doc))
-        )
-
-        sut.processPending()
-
-        verify(nsAndroidClient, never()).deleteSettings(any())
-        verify(nsAndroidClient, never()).deleteSettingsPermanent(any())
-        verify(sceneAutomationApi, never()).stopActiveScene()
     }
 
     // -- two-step ACK -----------------------------------------------------------------------

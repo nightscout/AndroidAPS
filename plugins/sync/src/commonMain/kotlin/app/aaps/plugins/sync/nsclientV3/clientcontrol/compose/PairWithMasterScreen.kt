@@ -53,6 +53,7 @@ fun PairWithMasterScreen(
     viewModel: PairWithMasterViewModel = metroViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val hardenedMode by viewModel.hardenedMode.collectAsStateWithLifecycle()
 
     // While the hello upload is in flight, swallow Back to keep the ViewModel (and therefore
     // viewModelScope) alive until publishHello() completes — otherwise the master never sees
@@ -96,6 +97,7 @@ fun PairWithMasterScreen(
             when (val s = state) {
                 is PairWithMasterViewModel.UiState.AlreadyPaired -> AlreadyPairedContent(
                     masterInstallId = s.pairing.masterInstallId,
+                    hardenedMode = hardenedMode,
                     onUnpair = viewModel::unpair,
                     onCancel = onNavigateBack
                 )
@@ -297,6 +299,7 @@ private fun ErrorContent(
 @Composable
 private fun AlreadyPairedContent(
     masterInstallId: String,
+    hardenedMode: Boolean,
     onUnpair: () -> Unit,
     onCancel: () -> Unit
 ) {
@@ -317,6 +320,7 @@ private fun AlreadyPairedContent(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = AapsSpacing.medium)
         )
+        if (hardenedMode) HardenedModeInfoRow(modifier = Modifier.padding(top = AapsSpacing.medium))
         Button(
             onClick = onUnpair,
             modifier = Modifier

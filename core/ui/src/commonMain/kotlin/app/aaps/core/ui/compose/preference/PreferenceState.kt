@@ -15,6 +15,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.format.NumberFormatPlatform
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.DoubleNonPreferenceKey
@@ -30,6 +31,7 @@ import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.keys.interfaces.observeHardenedMode
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalMasterReachable
 import app.aaps.core.ui.compose.LocalPreferences
@@ -111,7 +113,7 @@ fun calculatePreferenceVisibility(
     val config = LocalConfig.current
     val sharedStates = LocalSharedPreferenceStates.current
     // Use reactive state for simpleMode - this triggers recomposition when it changes
-    val simpleModeState = rememberPreferenceBooleanState(app.aaps.core.keys.BooleanKey.GeneralSimpleMode)
+    val simpleModeState = rememberPreferenceBooleanState(BooleanKey.GeneralSimpleMode)
 
     // Use reactive state for dependency checks
     val dependencyState = preferenceKey.dependency?.let {
@@ -126,6 +128,11 @@ fun calculatePreferenceVisibility(
 
     // Check simple mode - now reactive
     if (simpleModeState.value && preferenceKey.defaultedBySM) {
+        visible = false
+    }
+
+    // Check hardened mode: the value is forced to its default, so the row would be a switch that does nothing.
+    if (preferenceKey is BooleanPreferenceKey && preferenceKey.defaultedByHardenedMode && hardenedModeState()) {
         visible = false
     }
 
@@ -198,6 +205,21 @@ fun calculatePreferenceVisibility(
 }
 
 /**
+ * [Preferences.hardenedMode], read so that the row recomposes when it can change.
+ *
+ * The switch and simple mode are read through the shared state map first only to subscribe to them:
+ * the map is what changes when the user flips the switch on this screen, or when sync writes it. The
+ * rule itself stays in one place, [Preferences.hardenedMode]. A flow is not used here on purpose: many
+ * Compose tests run with a mocked [Preferences], and a mocked `observe` returns null.
+ */
+@Composable
+private fun hardenedModeState(): Boolean {
+    rememberPreferenceBooleanState(BooleanKey.HardenedMode).value
+    rememberPreferenceBooleanState(BooleanKey.GeneralSimpleMode).value
+    return LocalPreferences.current.hardenedMode
+}
+
+/**
  * Calculates visibility and enabled state for an intent preference based on mode settings and dependencies.
  * This is a @Composable function to enable reactive updates when dependency preferences change.
  * Uses reactive state for simpleMode and dependencies so UI recomposes automatically on changes.
@@ -210,7 +232,7 @@ fun calculateIntentPreferenceVisibility(
     val preferences = LocalPreferences.current
     val sharedStates = LocalSharedPreferenceStates.current
     // Use reactive state for simpleMode - this triggers recomposition when it changes
-    val simpleModeState = rememberPreferenceBooleanState(app.aaps.core.keys.BooleanKey.GeneralSimpleMode)
+    val simpleModeState = rememberPreferenceBooleanState(BooleanKey.GeneralSimpleMode)
 
     // Use reactive state for dependency checks
     val dependencyState = intentKey.dependency?.let {
@@ -300,6 +322,11 @@ private fun setSharedBooleanState(map: SnapshotStateMap<String, Any?>, key: Stri
     map["boolean:$key"] = value
 }
 
+/** Forgets a cached boolean so the next read seeds it again from the preference. See [clearSharedStringState]. */
+private fun clearSharedBooleanState(map: SnapshotStateMap<String, Any?>, key: String) {
+    map.remove("boolean:$key")
+}
+
 private fun getSharedStringState(map: SnapshotStateMap<String, Any?>, key: String, initialValue: String): String {
     return map.getOrPut("string:$key") { initialValue } as String
 }
@@ -352,6 +379,15 @@ internal suspend fun observeSyncedKeysIntoState(
 ): Unit = coroutineScope {
     preferences.getSyncKeys().forEach { key ->
         sharedStateUpdaterFor(key, preferences, sharedStates)?.let { updater -> launch { updater() } }
+    }
+    // A row that hardened mode forces caches the forced value. Forget the cached values when hardened mode
+    // changes, so a row that shows again reads its stored value, not the one it was forced to. Example: the
+    // WebSocket row would still say "on" after hardened mode is turned off on this same screen.
+    val hardenedKeys = preferences.getAllPreferenceKeys().filter { it is BooleanPreferenceKey && it.defaultedByHardenedMode }
+    if (hardenedKeys.isNotEmpty()) launch {
+        preferences.observeHardenedMode().drop(1).collect {
+            hardenedKeys.forEach { key -> clearSharedBooleanState(sharedStates, key.key) }
+        }
     }
 }
 
