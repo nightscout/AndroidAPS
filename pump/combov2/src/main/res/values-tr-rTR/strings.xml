@@ -39,6 +39,8 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
 3. Tekrar eşleştirmeyi deneyin</string>
     <string name="combov2_enter_pin">PIN\'i girin</string>
     <string name="combov2_cancel_pairing">Eşleştirmeyi iptal et</string>
+    <string name="combov2_confirm_cancel_pairing_message">Eşleştirmeyi iptal etmek istiyor musunuz?</string>
+    <string name="combov2_confirm_unpair_message">Pompa eşleştirmesini kaldırmak istiyor musunuz?</string>
     <string name="combov2_pin_hint">10-haneli PIN</string>
     <string name="combov2_pairing_finished_successfully">Combo ile başarıyla eşlendi</string>
     <string name="combov2_pairing_cancelled">Combo ile eşleştirme kullanıcı tarafından iptal edildi</string>
@@ -88,6 +90,9 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (1 dakikadan az kaldı)</string>
     <string name="combov2_load_tdds_cancelled">GTD yüklenmesi iptal edildi</string>
     <string name="combov2_retrieving_tdds_failed">GTD alınamadı</string>
+    <string name="combov2_battery_empty">Boş</string>
+    <string name="combov2_battery_low">Düşük</string>
+    <string name="combov2_battery_full">Dolu</string>
     <string name="combov2_battery_low_warning">Pompa pili düşük</string>
     <string name="combov2_reservoir_low_warning">Pompa rezervuar seviyesi düşük</string>
     <string name="combov2_setting_tbr_succeeded">GBO ayarlandı</string>
