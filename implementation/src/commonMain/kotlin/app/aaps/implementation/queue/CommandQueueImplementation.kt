@@ -875,6 +875,11 @@ class CommandQueueImplementation(
         }
     }
 
+    override fun cancelReadStatus(): Boolean {
+        removeAll(CommandType.READSTATUS)
+        return true
+    }
+
     override suspend fun loadHistory(type: Byte): PumpEnactResult {
         if (isRunning(CommandType.LOAD_HISTORY)) return executingNowError()
         removeAll(CommandType.LOAD_HISTORY)

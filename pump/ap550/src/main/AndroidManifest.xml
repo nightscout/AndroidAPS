@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- Required on Android 14+ because AP550ExecutionService runs as a
+         connectedDevice foreground service. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+
+    <!-- Pairing can also be done by reading the QR code on the pump, which needs the camera. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <application>
+        <service
+            android:name="app.aaps.pump.ap550s.service.AP550ExecutionService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
+
+        <receiver
+            android:name="app.aaps.pump.ap550s.BLEStateReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <!-- 15 s wakeup chain for the driver. Started and cancelled by AP550PumpPlugin. -->
+        <receiver
+            android:name="app.aaps.pump.ap550s.receiver.AP550KeepAliveReceiver"
+            android:enabled="true"
+            android:exported="false" />
+    </application>
+
+</manifest>

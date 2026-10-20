@@ -1004,6 +1004,13 @@ interface PersistenceLayer {
     suspend fun getOldestTemporaryBasalRecord(): TB?
 
     /**
+     * Get last temporary basal
+     *
+     * @return temporary basal or null if none in db
+     */
+    suspend fun getLastTemporaryBasalRecord(): TB?
+
+    /**
      *  Get highest id in database
      *  @return id
      */
@@ -1184,6 +1191,13 @@ interface PersistenceLayer {
     suspend fun getLastExtendedBolusId(): Long?
 
     /**
+     * Get newest extended bolus
+     *
+     * @return extended bolus or null if none in db
+     */
+    suspend fun getNewestExtendedBolus(): EB?
+
+    /**
      *  Get extended bolus by NS id
      *  @return extended bolus
      */
@@ -1204,6 +1218,16 @@ interface PersistenceLayer {
      * @return List of extended boluses
      */
     suspend fun getExtendedBolusesStartingFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<EB>
+
+    /**
+     * Get extended boluses after time by endtime
+     *
+     * @param startTime from
+     * @param oldest oldest time
+     * @param ascending sort order
+     * @return List of extended boluses
+     */
+    suspend fun getExtendedBolusesAfterTimeByEndTime(startTime: Long, oldest: Long, ascending: Boolean): List<EB>
 
     /**
      * Get running extended boluses starting from time (suspend variant)

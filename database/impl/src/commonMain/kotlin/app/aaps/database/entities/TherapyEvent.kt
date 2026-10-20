@@ -105,6 +105,10 @@ data class TherapyEvent(
         FEELING_HIGH,
         LEAKING_INFUSION_SET,
 
+        PUMP_VENT,
+        PUMP_SUSPENDED,
+        PUMP_RESUMED,
+
         // Default
         NONE
         ;

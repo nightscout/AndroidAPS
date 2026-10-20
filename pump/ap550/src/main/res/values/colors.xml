@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--    Fragments-->
+    <color name="colorInitializingBorder">#00695c</color>
+    <color name="listdelimiter">#01695c</color>
+
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="viewfinder_frame">#7F1FB3E2</color>
+    <color name="viewfinder_corner">#FF1FB3E2</color>
+    <color name="viewfinder_laser">#FF1FB3E2</color>
+    <color name="viewfinder_point">#FF1FB3E2</color>
+    <color name="viewfinder_point_stroke">#FFFFFFFF</color>
+    <color name="viewfinder_label_text">#FFC0C0C0</color>
+
+    <!--    Pump connection status (moved from core/ui to keep ap550 self-contained)-->
+    <color name="pump_disconnected">#F44336</color>
+    <color name="pump_connected">#4CAF50</color>
+    <color name="pump_connecting">#FF9800</color>
+    <color name="pump_disconnecting">#FF9800</color>
+
+</resources>

@@ -1583,6 +1583,10 @@ class PersistenceLayerImpl(
         repository.getOldestTemporaryBasalRecord()?.fromDb()
     }
 
+    override suspend fun getLastTemporaryBasalRecord(): TB? = withContext(aapsIoDispatcher) {
+        repository.getLastTemporaryBasalRecord()?.fromDb()
+    }
+
     override suspend fun getLastTemporaryBasalId(): Long? = withContext(aapsIoDispatcher) {
         repository.getLastTemporaryBasalId()
     }
@@ -1837,6 +1841,10 @@ class PersistenceLayerImpl(
         repository.getOldestExtendedBolusRecord()?.fromDb()
     }
 
+    override suspend fun getNewestExtendedBolus(): EB? = withContext(aapsIoDispatcher) {
+        repository.getNewestExtendedBolus()?.fromDb()
+    }
+
     override suspend fun getLastExtendedBolusId(): Long? = withContext(aapsIoDispatcher) {
         repository.getLastExtendedBolusId()
     }
@@ -1855,6 +1863,11 @@ class PersistenceLayerImpl(
 
     override suspend fun getExtendedBolusesStartingFromTime(startTime: Long, ascending: Boolean): List<EB> = withContext(aapsIoDispatcher) {
         repository.getExtendedBolusesStartingFromTime(startTime, ascending)
+            .map { it.fromDb() }
+    }
+
+    override suspend fun getExtendedBolusesAfterTimeByEndTime(startTime: Long, oldest: Long, ascending: Boolean): List<EB> = withContext(aapsIoDispatcher) {
+        repository.getExtendedBolusesAfterTimeByEndTime(startTime, oldest, ascending)
             .map { it.fromDb() }
     }
 

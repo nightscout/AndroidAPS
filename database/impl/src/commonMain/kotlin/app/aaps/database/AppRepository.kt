@@ -892,6 +892,9 @@ class AppRepository internal constructor(
     suspend fun getOldestTemporaryBasalRecord(): TemporaryBasal? =
         database.temporaryBasalDao.getOldestRecord()
 
+    suspend fun getLastTemporaryBasalRecord(): TemporaryBasal? =
+        database.temporaryBasalDao.getLastRecord()
+
     suspend fun getLastTemporaryBasalId(): Long? =
         database.temporaryBasalDao.getLastId()
 
@@ -930,6 +933,9 @@ class AppRepository internal constructor(
     suspend fun getExtendedBolusesStartingFromTime(timestamp: Long, ascending: Boolean): List<ExtendedBolus> =
         database.extendedBolusDao.getExtendedBolusesStartingFromTime(timestamp).reversedIf(!ascending)
 
+    suspend fun getExtendedBolusesAfterTimeByEndTime(startTime: Long, oldest: Long, ascending: Boolean): List<ExtendedBolus> =
+        database.extendedBolusDao.getExtendedBolusesAfterTimeByEndTime(startTime, oldest).reversedIf(!ascending)
+
     suspend fun getExtendedBolusesStartingFromTimeToTime(start: Long, end: Long, ascending: Boolean): List<ExtendedBolus> =
         database.extendedBolusDao.getExtendedBolusDataFromTimeToTime(start, end).reversedIf(!ascending)
 
@@ -938,6 +944,9 @@ class AppRepository internal constructor(
 
     suspend fun getOldestExtendedBolusRecord(): ExtendedBolus? =
         database.extendedBolusDao.getOldestRecord()
+
+    suspend fun getNewestExtendedBolus(): ExtendedBolus? =
+        database.extendedBolusDao.getLastExtendedBolusRecord()
 
     suspend fun getLastExtendedBolusId(): Long? =
         database.extendedBolusDao.getLastId()

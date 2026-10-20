@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="112dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="576">
+
+    <group
+        android:scaleX="0.95"
+        android:scaleY="1"
+        android:pivotX="512"
+        android:pivotY="288">
+
+        <!-- Battery outline, without the positive terminal -->
+        <path
+            android:fillColor="@android:color/transparent"
+            android:strokeColor="#e6e6e6"
+            android:strokeWidth="50"
+            android:pathData="
+                    M 75,75
+                    L 924,75
+                    Q 974,75 974,125
+                    L 974,451
+                    Q 974,501 924,501
+                    L 75,501
+                    Q 25,501 25,451
+                    L 25,125
+                    Q 25,75 75,75
+                    Z"/>
+
+        <!-- The small ear on the right, which marks the positive terminal -->
+        <path
+            android:fillColor="#e6e6e6"
+            android:strokeColor="#e6e6e6"
+            android:strokeWidth="50"
+            android:pathData="
+                    M 974,206
+                    L 1054,206
+                    L 1054,370
+                    L 974,370
+                    Z"/>
+
+        <path
+            android:fillColor="#FF0000"
+            android:pathData="M129,128.6h150v318.8L129,447.4L129,128.6z"/>
+    </group>
+
+</vector>
