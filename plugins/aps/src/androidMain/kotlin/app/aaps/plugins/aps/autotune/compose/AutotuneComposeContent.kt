@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
@@ -32,6 +33,7 @@ class AutotuneComposeContent(
     private val rxBus: RxBus,
     private val uel: UserEntryLogger,
     private val loop: Loop,
+    private val config: Config,
     private val profileStoreProvider: () -> ProfileStore,
     private val atProfileProvider: () -> ATProfile
 ) : ComposablePluginContent {
@@ -57,6 +59,7 @@ class AutotuneComposeContent(
                 rxBus = rxBus,
                 uel = uel,
                 loop = loop,
+                config = config,
                 profileStoreProvider = profileStoreProvider,
                 atProfileProvider = atProfileProvider,
                 scope = scope

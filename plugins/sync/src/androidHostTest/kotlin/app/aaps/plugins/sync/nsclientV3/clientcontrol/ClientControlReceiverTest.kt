@@ -3,7 +3,7 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -84,7 +84,7 @@ internal class ClientControlReceiverTest {
     @Mock private lateinit var uel: UserEntryLogger
     @Mock private lateinit var runningConfigurationPublisher: RunningConfigurationPublisher
     @Mock private lateinit var persistenceLayer: PersistenceLayer
-    @Mock private lateinit var wizardBolusExecutor: WizardBolusExecutor
+    @Mock private lateinit var masterActionExecutor: MasterActionExecutor
     @Mock private lateinit var notificationManager: NotificationManager
     @Mock private lateinit var config: Config
     @Mock private lateinit var bolusProgressData: BolusProgressData
@@ -170,7 +170,7 @@ internal class ClientControlReceiverTest {
             uel,
             runningConfigurationPublisher,
             persistenceLayer,
-            wizardBolusExecutor,
+            masterActionExecutor,
             notificationManager,
             config,
             bolusProgressData,
@@ -441,7 +441,7 @@ internal class ClientControlReceiverTest {
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}scene_prepare_$clientId"
         val msg = ClientControlMessage.ScenePrepare(sceneId = "sleep", durationMinutes = 30)
         whenever(sceneAutomationApi.prepareScene("sleep", 30))
-            .thenReturn(WizardBolusExecutor.PrepareResult.Preview(0.0, 0, 77L, emptyList(), false, emptyList()))
+            .thenReturn(MasterActionExecutor.PrepareResult.Preview(0.0, 0, 77L, emptyList(), false, emptyList()))
 
         sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = msg, counter = 5L)))
 
@@ -457,7 +457,7 @@ internal class ClientControlReceiverTest {
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}scene_commit_$clientId"
         val msg = ClientControlMessage.SceneCommit(bolusId = 77L)
-        whenever(sceneAutomationApi.commitScene(eq(77L), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
+        whenever(sceneAutomationApi.commitScene(eq(77L), any())).thenReturn(MasterActionExecutor.ConfirmResult.Delivered)
 
         sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = msg, counter = 5L)))
 
@@ -561,7 +561,7 @@ internal class ClientControlReceiverTest {
     fun masterMirrorsProgressToArmedClientThenDisarmsOnTerminal() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), any())).thenReturn(MasterActionExecutor.ConfirmResult.Delivered)
         val progressId = "${ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX}$clientId"
         val cmdId = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
 
@@ -584,7 +584,7 @@ internal class ClientControlReceiverTest {
     fun masterDoesNotMirrorAnAlreadyRunningBolusToTheCommittingClient() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), any())).thenReturn(MasterActionExecutor.ConfirmResult.Delivered)
         val progressId = "${ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX}$clientId"
         val cmdId = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
 
@@ -607,10 +607,10 @@ internal class ClientControlReceiverTest {
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
         // confirm() consumed the parked dose (Delivered) but delivery fails via onError before any frame streams
         // (e.g. the master was already bolusing → queue-rejected this one). The arm must be cleared right away.
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenAnswer { inv ->
-            @Suppress("UNCHECKED_CAST") val onError = inv.arguments[2] as (WizardBolusExecutor.Failure) -> Unit
-            onError(WizardBolusExecutor.Failure("executing right now"))
-            WizardBolusExecutor.ConfirmResult.Delivered
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), any())).thenAnswer { inv ->
+            @Suppress("UNCHECKED_CAST") val onError = inv.arguments[2] as (MasterActionExecutor.Failure) -> Unit
+            onError(MasterActionExecutor.Failure("executing right now"))
+            MasterActionExecutor.ConfirmResult.Delivered
         }
         val progressId = "${ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX}$clientId"
         val cmdId = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
@@ -634,8 +634,8 @@ internal class ClientControlReceiverTest {
     fun bolusPrepareAcksOkWithSignedPreviewPayload() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.prepareQuickWizard(any())).thenReturn(
-            WizardBolusExecutor.PrepareResult.Preview(
+        whenever(masterActionExecutor.prepareQuickWizard(any())).thenReturn(
+            MasterActionExecutor.PrepareResult.Preview(
                 insulin = 2.0, carbs = 30, bolusId = 42L,
                 lines = listOf(ConfirmationLine(ConfirmationRole.BOLUS, "2 U")),
                 advisorApplies = true,
@@ -660,7 +660,7 @@ internal class ClientControlReceiverTest {
     fun bolusPrepareErrorAcksBolusComputeFailedWithReasonInPayload() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.prepareQuickWizard(any())).thenReturn(WizardBolusExecutor.PrepareResult.Error("no bg"))
+        whenever(masterActionExecutor.prepareQuickWizard(any())).thenReturn(MasterActionExecutor.PrepareResult.Error("no bg"))
         val acks = captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_prepare_$clientId"
 
@@ -676,13 +676,13 @@ internal class ClientControlReceiverTest {
     fun bolusCommitDeliversAndAcksOk() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), any())).thenReturn(MasterActionExecutor.ConfirmResult.Delivered)
         val acks = captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
 
         sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = ClientControlMessage.BolusCommit(42L, asAdvisor = false), counter = 5L, wantsAck = true)))
 
-        verify(wizardBolusExecutor).confirm(eq(42L), eq(Sources.NSClient), any(), eq(false), any(), any())
+        verify(masterActionExecutor).confirm(eq(42L), eq(Sources.NSClient), any(), eq(false), any(), any())
         assertThat(acks.last().status.name).isEqualTo("Ok")
     }
 
@@ -698,17 +698,17 @@ internal class ClientControlReceiverTest {
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
         // Capture the callback instead of calling it inside confirm(): the real failure arrives AFTER confirm
         // returned, which is exactly what makes it a late Delivery ack rather than part of the Done ack.
-        var report: ((WizardBolusExecutor.Failure) -> Unit)? = null
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenAnswer {
+        var report: ((MasterActionExecutor.Failure) -> Unit)? = null
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), any())).thenAnswer {
             report = it.getArgument(2)
-            WizardBolusExecutor.ConfirmResult.Delivered
+            MasterActionExecutor.ConfirmResult.Delivered
         }
         val acks = captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
         sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = ClientControlMessage.BolusCommit(42L), counter = 5L, wantsAck = true)))
         assertThat(acks.last().status.name).isEqualTo("Ok")
 
-        report!!(WizardBolusExecutor.Failure("settings import", cancelled = true))
+        report!!(MasterActionExecutor.Failure("settings import", cancelled = true))
 
         val delivery = acks.last()
         assertThat(delivery.phase.name).isEqualTo("Delivery")
@@ -722,16 +722,16 @@ internal class ClientControlReceiverTest {
     fun lateDeliveryFailureAcksExecutionFailedWhenThePumpFailed() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        var report: ((WizardBolusExecutor.Failure) -> Unit)? = null
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenAnswer {
+        var report: ((MasterActionExecutor.Failure) -> Unit)? = null
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), any())).thenAnswer {
             report = it.getArgument(2)
-            WizardBolusExecutor.ConfirmResult.Delivered
+            MasterActionExecutor.ConfirmResult.Delivered
         }
         val acks = captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
         sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = ClientControlMessage.BolusCommit(42L), counter = 5L, wantsAck = true)))
 
-        report!!(WizardBolusExecutor.Failure("pump said no"))
+        report!!(MasterActionExecutor.Failure("pump said no"))
 
         val delivery = acks.last()
         assertThat(delivery.phase.name).isEqualTo("Delivery")
@@ -742,7 +742,7 @@ internal class ClientControlReceiverTest {
     fun bolusCommitNoPendingAcksNoPendingBolus() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.NoPending)
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), any())).thenReturn(MasterActionExecutor.ConfirmResult.NoPending)
         val acks = captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
 
@@ -768,7 +768,7 @@ internal class ClientControlReceiverTest {
         val done = acks.last()
         assertThat(done.status.name).isEqualTo("Failed")
         assertThat(done.reason).isEqualTo(FailureReason.ControlDisabled.name)
-        verify(wizardBolusExecutor, never()).confirm(any(), any(), any(), any(), any(), any())
+        verify(masterActionExecutor, never()).confirm(any(), any(), any(), any(), any(), any())
     }
 
     @Test
@@ -787,7 +787,7 @@ internal class ClientControlReceiverTest {
         val done = acks.last()
         assertThat(done.status.name).isEqualTo("Failed")
         assertThat(done.reason).isEqualTo(FailureReason.ControlDisabled.name)
-        verify(wizardBolusExecutor, never()).confirm(any(), any(), any(), any(), any(), any())
+        verify(masterActionExecutor, never()).confirm(any(), any(), any(), any(), any(), any())
     }
 
     @Test
@@ -808,21 +808,21 @@ internal class ClientControlReceiverTest {
     fun bolusCommitAsAdvisorDeliversAdvisorVariant() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), any())).thenReturn(MasterActionExecutor.ConfirmResult.Delivered)
         captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
 
         sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = ClientControlMessage.BolusCommit(42L, asAdvisor = true), counter = 5L, wantsAck = true)))
 
-        verify(wizardBolusExecutor).confirm(eq(42L), eq(Sources.NSClient), any(), eq(true), any(), any())
+        verify(masterActionExecutor).confirm(eq(42L), eq(Sources.NSClient), any(), eq(true), any(), any())
     }
 
     @Test
     fun wizardPrepareAcksOkWithSignedPreviewPayload() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.prepareWizard(any())).thenReturn(
-            WizardBolusExecutor.PrepareResult.Preview(
+        whenever(masterActionExecutor.prepareWizard(any())).thenReturn(
+            MasterActionExecutor.PrepareResult.Preview(
                 insulin = 2.0, carbs = 30, bolusId = 77L,
                 lines = listOf(ConfirmationLine(ConfirmationRole.BOLUS, "2 U")),
                 advisorApplies = false, advisorLines = emptyList()
@@ -856,8 +856,8 @@ internal class ClientControlReceiverTest {
     fun batchPrepareAcksOkWithSignedPreviewPayload() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.prepareBatch(any())).thenReturn(
-            WizardBolusExecutor.PrepareResult.Preview(
+        whenever(masterActionExecutor.prepareBatch(any())).thenReturn(
+            MasterActionExecutor.PrepareResult.Preview(
                 insulin = 1.5, carbs = 0, bolusId = 99L,
                 lines = listOf(ConfirmationLine(ConfirmationRole.BOLUS, "1.5 U")),
                 advisorApplies = false, advisorLines = emptyList()

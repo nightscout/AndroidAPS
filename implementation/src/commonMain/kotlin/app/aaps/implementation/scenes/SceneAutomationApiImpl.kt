@@ -2,7 +2,7 @@ package app.aaps.implementation.scenes
 
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneEndAction
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.TextResolver
@@ -70,13 +70,13 @@ class SceneAutomationApiImpl(
         else SceneAutomationResult.Failed(result.errorMessage)
     }
 
-    override suspend fun prepareScene(id: String, durationMinutes: Int?): WizardBolusExecutor.PrepareResult {
-        val scene = sceneRepository.getScene(id) ?: return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_fail_scene_not_found))
-        if (!scene.isEnabled) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_fail_scene_disabled))
+    override suspend fun prepareScene(id: String, durationMinutes: Int?): MasterActionExecutor.PrepareResult {
+        val scene = sceneRepository.getScene(id) ?: return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_fail_scene_not_found))
+        if (!scene.isEnabled) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_fail_scene_disabled))
         return sceneExecutor.prepareScene(scene, durationMinutes)
     }
 
-    override suspend fun commitScene(bolusId: Long, onError: (WizardBolusExecutor.Failure) -> Unit): WizardBolusExecutor.ConfirmResult =
+    override suspend fun commitScene(bolusId: Long, onError: (MasterActionExecutor.Failure) -> Unit): MasterActionExecutor.ConfirmResult =
         sceneExecutor.commitScene(bolusId, onError)
 
     override suspend fun stopActiveSceneAndStartScene(targetSceneId: String): SceneAutomationResult {

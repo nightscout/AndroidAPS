@@ -20,7 +20,7 @@ import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.bolus.BatchAction
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.calibration.AddEntryResult
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -370,7 +370,7 @@ class MasterRecordWriter(
      * Store a calibration on the master, paired with its own latest sensor reading. The conditions are checked
      * again here (time has passed since the prepare); a refusal goes to [onError] so the user is told.
      */
-    suspend fun addCalibration(calibration: BatchAction.Calibration, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit) {
+    suspend fun addCalibration(calibration: BatchAction.Calibration, source: Sources, onError: (MasterActionExecutor.Failure) -> Unit) {
         val value = ValueWithUnit.fromGlucoseUnit(profileUtil.fromMgdlToUnits(calibration.glucoseMgdl), profileUtil.units)
         when (val result = activePlugin.activeCalibration.addEntry(calibration.glucoseMgdl, dateUtil.now())) {
             AddEntryResult.Accepted    -> {
@@ -382,7 +382,7 @@ class MasterRecordWriter(
             is AddEntryResult.Rejected -> {
                 val message = rejectionMessage(result)
                 uel.log(action = Action.CALIBRATION, source = source, note = "rejected: $message", value = value)
-                onError(WizardBolusExecutor.Failure(message))
+                onError(MasterActionExecutor.Failure(message))
             }
         }
     }

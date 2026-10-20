@@ -187,15 +187,15 @@ suspend fun prepare(label, clientCommand, masterPrepare): ActionProgress {
 
 ### 3.3 Consume-once, parked-by-id
 
-`WizardBolusExecutorImpl` keeps a `ConcurrentHashMap<Long, PendingBolus>` keyed by `bolusId` (the master timestamp at park time; TTL **10 min**, trimmed on the next prepare). On commit, `pending.remove(bolusId)` is **atomic** — two concurrent commits of the same id can't both deliver (the loser gets `null` → `ConfirmResult.NoPending` → `Rejected(NoPendingBolus)`). This is the **single point** where a parked dose leaves the slot. Triple-redundant against a double-dose: atomic `remove` + receiver `commandMutex` + the per-client counter gate.
+`MasterActionExecutorImpl` keeps a `ConcurrentHashMap<Long, PendingBolus>` keyed by `bolusId` (the master timestamp at park time; TTL **10 min**, trimmed on the next prepare). On commit, `pending.remove(bolusId)` is **atomic** — two concurrent commits of the same id can't both deliver (the loser gets `null` → `ConfirmResult.NoPending` → `Rejected(NoPendingBolus)`). This is the **single point** where a parked dose leaves the slot. Triple-redundant against a double-dose: atomic `remove` + receiver `commandMutex` + the per-client counter gate.
 
 The **scene executor uses a separate `pendingScenes` map** (own id-space, shorter `PARK_TTL_MS` = 2 min — no long round-trip window needed), so a `SceneCommit` and a `BolusCommit` can never drain each other's parked state. This is exactly why `SceneCommit` is a distinct wire type from `BolusCommit`.
 
 ### 3.4 The master authors the confirmation
 
-All confirmation builders live on the master in `WizardBolusExecutorImpl`: `buildConfirmationLines` (manual wizard) and, for batches, `buildFixedLines` + `buildTtLine` + `buildPsLine` + `buildRmLine` + `buildTempBasalLine` + `buildExtendedBolusLine` + `buildCancelLine` + `buildInsulinActivateLine`. Each line carries a `ConfirmationRole` (`BOLUS`, `CARBS`, `PRIMARY`, `NORMAL`, `WARNING`) → mapped to a theme color in the UI layer. The client/watch render the list verbatim.
+All confirmation builders live on the master in `MasterActionExecutorImpl`: `buildConfirmationLines` (manual wizard) and, for batches, `buildFixedLines` + `buildTtLine` + `buildPsLine` + `buildRmLine` + `buildTempBasalLine` + `buildExtendedBolusLine` + `buildCancelLine` + `buildInsulinActivateLine`. Removing records, removing start events and adding a calibration get their lines from `MasterRecordWriter`, which also applies them. Each line carries a `ConfirmationRole` (`BOLUS`, `CARBS`, `PRIMARY`, `NORMAL`, `WARNING`) → mapped to a theme color in the UI layer. The client/watch render the list verbatim.
 
-**Decision-B bundle order at commit** (`WizardBolusExecutorImpl` confirm path) — the safety net survives an async pump failure:
+**Decision-B bundle order at commit** (`MasterActionExecutorImpl` confirm path) — the safety net survives an async pump failure:
 
 1. **TempTarget** if target-**raising** (hypo/activity) — unconditional, first;
 2. **Bolus / Carbs** delivery;
@@ -233,6 +233,9 @@ All confirmation builders live on the master in `WizardBolusExecutorImpl`: `buil
 | **Remove records** (every list screen: treatments tabs, BG, calibration) | `BatchAction.Remove(kind, refs)` | two-step | only **Nightscout ids** travel; the master finds, describes and removes its own copies and the change comes back through NS. The client never removes anything itself. A record the master does not have is not removed and the confirmation says so (all missing → refused). Known limit: when xDrip uploads BG and AAPS on the master does not, the master's BG has no NS id, so a client cannot remove BG |
 | Remove "AndroidAPS started" events | `BatchAction.RemoveStartEvents` | two-step | matched by the master's own text (the events carry it in the master's language) |
 | Food | — | off-relay | not uploaded by NSCv3 on any role |
+| "Sensor change detected" notice (calibration) | — | master only | its button writes a sensor change, so a client does not post the notice; the master sees the same BG gap |
+| Autotune profile switch | — | master only | the button is hidden on a client; copying the tuned profile into the (synced) profile store still works |
+| **Garmin** carbs, pump connect / disconnect | — | master only | a client only shows values on the watch; it refuses these and says so in a phone notification (the watch cannot show why). Heart rate is still stored locally, like Wear |
 
 ---
 
@@ -339,7 +342,7 @@ To add a new master-authored two-step action (e.g. a new therapy command):
 
 1. **Domain type.** Add a `BatchAction` subtype (if it fits the batch bundle) *or* a new `ClientControlMessage` variant + matching `ClientControlActionDispatcher.Command`. If a `ClientControlMessage`, give it a **stable `@SerialName`** (the wire contract — never rename later) and add it to the `when` in `ClientControlReceiver.onVerifiedEnvelope`.
 2. **Wire mapping.** If it's a `BatchAction`, add a `TYPE_*` constant + fields to `BatchActionDto` and the to/from mapping in `BatchActionMapping.kt`.
-3. **Master execution + confirmation.** Add the prepare logic (cap/validate against the master's live state, park by `bolusId`) and a `buildXxxLine` confirmation builder in `WizardBolusExecutorImpl`. Re-validate anything that could be stale (TOCTOU). Return `PrepareResult.Preview(bolusId, lines, …)`.
+3. **Master execution + confirmation.** Add the prepare logic (cap/validate against the master's live state, park by `bolusId`) and a `buildXxxLine` confirmation builder in `MasterActionExecutorImpl`. Re-validate anything that could be stale (TOCTOU). Return `PrepareResult.Preview(bolusId, lines, …)`.
 4. **Receiver handler.** Add `onVerifiedXxx` that calls the executor's prepare/confirm and returns an `AckOutcome`.
 5. **Route through `RoleBranch`.** Call `batchExecutor.prepare(...)` / `commit(bolusId, ...)` (or `wizardExecutor` for recompute) from the dialog/screen/wear handler. **Do not** add a role check in the caller — `RoleBranch` already handles client-vs-master, the offline gate, and the `ActionProgress` mapping.
 6. **Wear (optional).** Add a `handleXxxPreCheck` in `DataHandlerMobile` that calls `contacting()` + `shipPrepared(...)`, and an `onEvent<ActionXxxConfirmed>` that calls `commit(bolusId)`. The watch renders the master's lines automatically.

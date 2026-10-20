@@ -7,7 +7,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Sources
 
 /**
- * One action in a multi-action batch ([WizardBolusExecutor.prepareBatch]) — the dose/carbs a dialog submits
+ * One action in a multi-action batch ([MasterActionExecutor.prepareBatch]) — the dose/carbs a dialog submits
  * alongside a temp target, applied by the master in one transaction. Domain form; the wire form is
  * `BatchActionDto` in `:core:nssdk`. A batch carries **at most one** [Bolus], **at most one** [TempTarget],
  * and **at most one** [ProfileSwitch].
@@ -120,7 +120,7 @@ sealed interface BatchAction {
     /**
      * A careportal therapy event (BG check, note, exercise, sensor/site/cartridge change, …): metadata the
      * master persists (it is the SOLE writer) and that syncs back to the client via NS treatments. Carries no
-     * dose; applied independently in [WizardBolusExecutor.prepareBatch]/confirm. [glucoseMgdl] is canonical
+     * dose; applied independently in [MasterActionExecutor.prepareBatch]/confirm. [glucoseMgdl] is canonical
      * mg/dL (the master sanity-clamps it). Unlike the ≤1 action types, the executor handles these as a list
      * (defensive — clients currently send one event per batch).
      */

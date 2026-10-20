@@ -8,7 +8,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.bolus.BatchAction
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.calibration.AddEntryResult
 import app.aaps.core.interfaces.calibration.Calibration
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -166,7 +166,7 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
     fun `a stored calibration is logged and also sent to xDrip when xDrip is the BG source`() = runTest {
         whenever(calibration.addEntry(eq(120.0), any())).thenReturn(AddEntryResult.Accepted)
         whenever(xDripSource.isEnabled()).thenReturn(true)
-        var failure: WizardBolusExecutor.Failure? = null
+        var failure: MasterActionExecutor.Failure? = null
 
         sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
 
@@ -178,7 +178,7 @@ class MasterRecordWriterTest : TestBaseWithProfile() {
     @Test
     fun `a calibration refused when it is stored reports the reason`() = runTest {
         whenever(calibration.addEntry(eq(120.0), any())).thenReturn(AddEntryResult.Rejected.NoSensorPair)
-        var failure: WizardBolusExecutor.Failure? = null
+        var failure: MasterActionExecutor.Failure? = null
 
         sut.addCalibration(BatchAction.Calibration(120.0), Sources.NSClient) { failure = it }
 

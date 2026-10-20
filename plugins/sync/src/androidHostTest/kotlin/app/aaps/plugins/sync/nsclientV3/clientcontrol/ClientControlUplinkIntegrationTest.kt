@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -107,7 +107,7 @@ class ClientControlUplinkIntegrationTest {
     @Mock private lateinit var offerPublisher: PairingOfferPublisher
     @Mock private lateinit var runningConfigurationPublisher: RunningConfigurationPublisher
     @Mock private lateinit var persistenceLayer: PersistenceLayer
-    @Mock private lateinit var wizardBolusExecutor: WizardBolusExecutor
+    @Mock private lateinit var masterActionExecutor: MasterActionExecutor
     @Mock private lateinit var notificationManager: NotificationManager
     private val rh = generatedTextResolver("sync" to SyncStringsValues::textOf)
     @Mock private lateinit var masterConfig: Config
@@ -211,7 +211,7 @@ class ClientControlUplinkIntegrationTest {
         masterScope = CoroutineScope(Dispatchers.Unconfined)
         masterReceiver = ClientControlReceiver(
             masterAuthorizedRepository, { nsClientV3Plugin }, nsClientRepository, sceneAutomationApi,
-            offerPublisher, masterPrefs, dateUtil, uel, runningConfigurationPublisher, persistenceLayer, wizardBolusExecutor, notificationManager, masterConfig, bolusProgressData, commandQueue, rh, aapsLogger,
+            offerPublisher, masterPrefs, dateUtil, uel, runningConfigurationPublisher, persistenceLayer, masterActionExecutor, notificationManager, masterConfig, bolusProgressData, commandQueue, rh, aapsLogger,
             masterScope
         )
 

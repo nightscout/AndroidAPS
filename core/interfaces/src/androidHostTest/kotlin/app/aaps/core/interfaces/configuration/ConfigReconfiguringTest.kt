@@ -138,7 +138,7 @@ class ConfigReconfiguringTest {
      * The one that matters most. Neither `executeImport` implementation has a `try/finally` of its
      * own, so a throw part-way through rewriting the preferences must still close the window here. A
      * window left open means `appInitialized` stays false for the rest of the process, and
-     * `WizardBolusExecutorImpl` refuses on it in two places - the user could not bolus. That is a
+     * `MasterActionExecutorImpl` refuses on it in two places - the user could not bolus. That is a
      * worse outcome than the crash this whole change exists to prevent.
      */
     @Test

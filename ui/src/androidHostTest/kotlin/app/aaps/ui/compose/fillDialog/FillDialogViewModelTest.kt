@@ -5,7 +5,7 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.bolus.BatchExecutor
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
@@ -69,7 +69,7 @@ internal class FillDialogViewModelTest {
     @Mock private lateinit var ch: ConcentrationHelper
     @Mock private lateinit var insulinManager: InsulinManager
     @Mock private lateinit var profileFunction: ProfileFunction
-    @Mock private lateinit var wizardBolusExecutor: WizardBolusExecutor
+    @Mock private lateinit var masterActionExecutor: MasterActionExecutor
     @Mock private lateinit var batchExecutor: BatchExecutor
     @Mock private lateinit var rxBus: RxBus
 
@@ -107,7 +107,7 @@ internal class FillDialogViewModelTest {
     private fun buildSut() = FillDialogViewModel(
         SavedStateHandle(), constraintChecker, activePlugin, persistenceLayer, preferences, config,
         decimalFormatter, rh, dateUtil, translator, aapsLogger, ch, insulinManager, profileFunction,
-        wizardBolusExecutor, batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher())
+        masterActionExecutor, batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher())
     )
 
     @AfterEach
@@ -181,8 +181,8 @@ internal class FillDialogViewModelTest {
      */
     private suspend fun runFailingPrime(changeInsulin: Boolean, cancelled: Boolean = false): List<String> {
         // A non-zero constrained amount makes hasPrimeBolus true, so the switch is chained to the prime.
-        whenever(wizardBolusExecutor.deliverFillBolus(any(), anyOrNull(), any(), any(), any())).thenAnswer { inv ->
-            inv.getArgument<(WizardBolusExecutor.Failure) -> Unit>(3).invoke(WizardBolusExecutor.Failure("pump error", cancelled))
+        whenever(masterActionExecutor.deliverFillBolus(any(), anyOrNull(), any(), any(), any())).thenAnswer { inv ->
+            inv.getArgument<(MasterActionExecutor.Failure) -> Unit>(3).invoke(MasterActionExecutor.Failure("pump error", cancelled))
         }
         if (changeInsulin) sut.selectInsulin(ICfg(insulinLabel = "Fiasp", insulinEndTime = 480, insulinPeakTime = 55, concentration = 1.0))
         sut.updateCartridgeChange(true)
@@ -247,7 +247,7 @@ internal class FillDialogViewModelTest {
         // No prime amount line and no prime warning in the confirmation.
         assertThat(lines.map { it.role }).doesNotContain(ConfirmationRole.BOLUS)
         assertThat(lines.map { it.role }).doesNotContain(ConfirmationRole.WARNING)
-        verify(wizardBolusExecutor, never()).deliverFillBolus(any(), anyOrNull(), any(), any(), any())
+        verify(masterActionExecutor, never()).deliverFillBolus(any(), anyOrNull(), any(), any(), any())
         // The site change is still recorded.
         verify(batchExecutor).prepare(any(), any(), any())
     }

@@ -8,20 +8,22 @@ import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.rx.weardata.EventData
 
 /**
- * Transport-neutral spine for wizard / quick-wizard bolus **prepare → confirm → deliver**. Owns the
- * single consume-once "pending bolus" slot shared by the full-wizard and quick-wizard prechecks, computes
- * the dose on the master's own current state, and delivers via the command queue (which re-applies bolus
- * constraints — the safety cap holds regardless of caller).
+ * The master's side of every user action: **prepare → confirm → apply**. It runs only on the master. A client
+ * reaches it through [BatchExecutor] or [WizardExecutor], which send the request to the master.
  *
- * One audited path a bolus reaches the pump from any trigger (wear today, client-control + the local UI
- * next): callers adapt only the transport — render the [PrepareResult.Preview], surface errors via the
- * [onError] sink, and tag the user entry with a [Sources].
+ * Boluses and carbs (wizard, quick wizard, fixed amounts) are the main part. A batch ([prepareBatch]) can also hold
+ * other actions, for example a temp target, a profile switch, removing records or a calibration ([BatchAction]). Owns the single consume-once "pending" slot shared by all prechecks, computes the dose on the
+ * master's own current state, and delivers via the command queue (which re-applies bolus constraints — the safety cap
+ * holds regardless of caller).
+ *
+ * One audited path for every trigger (local UI, client, watch, SMS, Garmin): callers adapt only the transport —
+ * render the [PrepareResult.Preview], surface errors via the `onError` sink, and tag the user entry with a [Sources].
  *
  * Declared here (interfaces only — no `core:objects` dependency, so it exposes primitives, not the
  * `BolusWizard` compute object); impl lives in `:implementation`. Idempotency: [confirm] drains the slot
  * and requires the bolusId to match, so a re-sent confirm finds it empty → never a double-bolus.
  */
-interface WizardBolusExecutor {
+interface MasterActionExecutor {
 
     /**
      * Park a pending bolus directly. **Test-only seeding seam** for the consume-once [confirm] contract — there is

@@ -11,7 +11,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.AlarmSound
@@ -173,14 +173,14 @@ class SceneExecutorTest : TestBaseWithProfile() {
     @Test fun `prepare names the follow-up scene in the confirmation`() = runBlocking {
         whenever(sceneChainResolver.resolveCatalogChainTarget(smbScene)).thenReturn(Scene(id = "s3", name = "Cooldown"))
 
-        val result = sut.prepareScene(smbScene, durationMinutes = 0) as WizardBolusExecutor.PrepareResult.Preview
+        val result = sut.prepareScene(smbScene, durationMinutes = 0) as MasterActionExecutor.PrepareResult.Preview
 
         // Last, and in the scene colour like the name above it
         assertThat(result.lines.last()).isEqualTo(ConfirmationLine(ConfirmationRole.SCENE, "→ Cooldown"))
     }
 
     @Test fun `prepare says nothing about a follow-up when there is none`() = runBlocking {
-        val result = sut.prepareScene(smbScene, durationMinutes = 0) as WizardBolusExecutor.PrepareResult.Preview
+        val result = sut.prepareScene(smbScene, durationMinutes = 0) as MasterActionExecutor.PrepareResult.Preview
 
         // The scene's name is the only scene-coloured line
         assertThat(result.lines.count { it.role == ConfirmationRole.SCENE }).isEqualTo(1)

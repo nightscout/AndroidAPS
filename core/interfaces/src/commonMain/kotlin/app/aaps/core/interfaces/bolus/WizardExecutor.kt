@@ -40,6 +40,6 @@ interface WizardExecutor {
         data class QuickWizard(val guid: String) : WizardSource
 
         /** The manual Bolus Wizard; the master recomputes from the user's raw [inputs] (incl. the profile selection). */
-        data class Manual(val inputs: WizardBolusExecutor.WizardInputs) : WizardSource
+        data class Manual(val inputs: MasterActionExecutor.WizardInputs) : WizardSource
     }
 }

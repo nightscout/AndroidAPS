@@ -1,6 +1,6 @@
 package app.aaps.implementation.bolus
 
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.clientcontrol.FailureReason
@@ -33,7 +33,7 @@ class RoleBranchTest : TestBase() {
 
     @Test fun prepare_masterPreview_returnsPrepared() = runTest {
         val result = roleBranch(client = false).prepare("l", command) {
-            WizardBolusExecutor.PrepareResult.Preview(insulin = 1.0, carbs = 0, bolusId = 42L)
+            MasterActionExecutor.PrepareResult.Preview(insulin = 1.0, carbs = 0, bolusId = 42L)
         }
         assertThat(result).isInstanceOf(ActionProgress.Prepared::class.java)
         assertThat((result as ActionProgress.Prepared).id).isEqualTo(42L)
@@ -41,14 +41,14 @@ class RoleBranchTest : TestBase() {
 
     @Test fun prepare_masterError_returnsRejectedExecutionFailed() = runTest {
         val result = roleBranch(client = false).prepare("l", command) {
-            WizardBolusExecutor.PrepareResult.Error("boom")
+            MasterActionExecutor.PrepareResult.Error("boom")
         }
         assertThat(result).isEqualTo(ActionProgress.Rejected(FailureReason.ExecutionFailed, "boom"))
     }
 
     @Test fun prepare_masterNoAction_returnsRejectedNoAction() = runTest {
         val result = roleBranch(client = false).prepare("l", command) {
-            WizardBolusExecutor.PrepareResult.NoAction
+            MasterActionExecutor.PrepareResult.NoAction
         }
         assertThat(result).isEqualTo(ActionProgress.Rejected(FailureReason.NoAction))
     }
@@ -79,18 +79,18 @@ class RoleBranchTest : TestBase() {
     // ---- master (commit) ----
 
     @Test fun commit_masterDelivered_returnsApplied() = runTest {
-        val result = roleBranch(client = false).commit("l", command) { WizardBolusExecutor.ConfirmResult.Delivered }
+        val result = roleBranch(client = false).commit("l", command) { MasterActionExecutor.ConfirmResult.Delivered }
         assertThat(result).isEqualTo(ActionProgress.Applied)
     }
 
     @Test fun commit_masterNoPending_returnsRejected() = runTest {
-        val result = roleBranch(client = false).commit("l", command) { WizardBolusExecutor.ConfirmResult.NoPending }
+        val result = roleBranch(client = false).commit("l", command) { MasterActionExecutor.ConfirmResult.NoPending }
         assertThat((result as ActionProgress.Rejected).reason).isEqualTo(FailureReason.NoPendingBolus)
     }
 
     @Test fun commit_masterSyncError_returnsRejectedExecutionFailed() = runTest {
         val result = roleBranch(client = false).commit("l", command) { onError ->
-            onError(WizardBolusExecutor.Failure("fail")); WizardBolusExecutor.ConfirmResult.Delivered
+            onError(MasterActionExecutor.Failure("fail")); MasterActionExecutor.ConfirmResult.Delivered
         }
         assertThat((result as ActionProgress.Rejected).reason).isEqualTo(FailureReason.ExecutionFailed)
         assertThat(result.detail).isEqualTo("fail")
@@ -98,13 +98,13 @@ class RoleBranchTest : TestBase() {
 
     /**
      * A command dropped from the queue on purpose fills the same `onError` comment as a real failure, so without
-     * the [WizardBolusExecutor.ConfirmResult.Cancelled] check first, the dialog would raise the full screen
+     * the [MasterActionExecutor.ConfirmResult.Cancelled] check first, the dialog would raise the full screen
      * BOLUS_ERROR alarm for something that never reached the pump.
      */
     @Test fun commit_masterCancelled_returnsRejectedCancelledNotExecutionFailed() = runTest {
         val result = roleBranch(client = false).commit("l", command) { onError ->
-            onError(WizardBolusExecutor.Failure("cancelled by import", cancelled = true))
-            WizardBolusExecutor.ConfirmResult.Cancelled
+            onError(MasterActionExecutor.Failure("cancelled by import", cancelled = true))
+            MasterActionExecutor.ConfirmResult.Cancelled
         }
         assertThat((result as ActionProgress.Rejected).reason).isEqualTo(FailureReason.Cancelled)
         assertThat(result.detail).isEqualTo("cancelled by import")

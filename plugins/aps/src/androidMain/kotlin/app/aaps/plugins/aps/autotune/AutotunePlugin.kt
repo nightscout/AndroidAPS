@@ -117,6 +117,7 @@ class AutotunePlugin(
                 rxBus = rxBus,
                 uel = uel,
                 loop = loop,
+                config = config,
                 profileStoreProvider = profileStoreProvider,
                 atProfileProvider = atProfileProvider
             )
