@@ -260,6 +260,9 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
 
     @Test
     fun `deleted entry is queued for removal`() = runTest {
+        // Only a phone that takes BG from Nightscout takes BG deletes from there (see NsFrameHandlerTest).
+        whenever(nsIncomingDataProcessor.acceptsGlucose(false)).thenReturn(true)
+
         sut.onDataDelete("""{"colName":"entries","identifier":"e1"}""")
 
         verify(storeDataForDb).addToDeleteGlucoseValue("e1")

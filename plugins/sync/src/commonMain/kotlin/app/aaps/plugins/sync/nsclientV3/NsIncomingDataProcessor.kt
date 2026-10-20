@@ -92,6 +92,14 @@ class NsIncomingDataProcessor(
     private fun fallbackICfg(): ICfg = profileFunction.runningICfg.value ?: InsulinType.OREF_RAPID_ACTING.iCfg
 
     /**
+     * Whether BG from Nightscout is taken: when Nightscout is the BG source, when the user accepts CGM data
+     * from Nightscout, or during a Full sync. A removed reading follows the same rule as a new one, so a
+     * phone that does not take BG from Nightscout cannot lose its readings to a delete made there.
+     */
+    fun acceptsGlucose(doFullSync: Boolean): Boolean =
+        nsClientSource.isEnabled() || preferences.get(BooleanKey.NsClientAcceptCgmData) || doFullSync
+
+    /**
      * Preprocess list of SGVs
      *
      * @return true if there was an accepted SGV
@@ -100,7 +108,7 @@ class NsIncomingDataProcessor(
         // Objective0
         preferences.put(BooleanNonKey.ObjectivesBgIsAvailableInNs, true)
 
-        if (!nsClientSource.isEnabled() && !preferences.get(BooleanKey.NsClientAcceptCgmData) && !doFullSync) return false
+        if (!acceptsGlucose(doFullSync)) return false
 
         var latestDateInReceivedData: Long = 0
         aapsLogger.debug(LTag.NSCLIENT, "Received NS Data: $sgvs")
@@ -199,10 +207,12 @@ class NsIncomingDataProcessor(
                             }
                         }
 
+                    // A bolus wizard result belongs to its bolus, so it follows the insulin setting.
                     is NSBolusWizard            ->
-                        treatment.toBolusCalculatorResult()?.let { bolusCalculatorResult ->
-                            storeDataForDb.addToBolusCalculatorResults(bolusCalculatorResult)
-                        }
+                        if (preferences.get(BooleanKey.NsClientAcceptInsulin) || config.AAPSCLIENT || doFullSync)
+                            treatment.toBolusCalculatorResult()?.let { bolusCalculatorResult ->
+                                storeDataForDb.addToBolusCalculatorResults(bolusCalculatorResult)
+                            }
 
                     is NSTherapyEvent           ->
                         if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.AAPSCLIENT || doFullSync)

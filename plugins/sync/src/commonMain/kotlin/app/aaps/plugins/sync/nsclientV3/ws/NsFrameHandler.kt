@@ -195,7 +195,9 @@ class NsFrameHandler(
                 storeDataForDb.requestUpdateDeletedTreatments()
             }
 
-            "entries"    -> {
+            // Only when BG is taken from Nightscout at all: otherwise anyone who can write there could remove
+            // this phone's readings.
+            "entries"    -> if (nsIncomingDataProcessor().acceptsGlucose(doFullSync = false)) {
                 storeDataForDb.addToDeleteGlucoseValue(identifier)
                 storeDataForDb.requestUpdateDeletedGlucoseValues()
             }
