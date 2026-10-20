@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.overview.graph.CarbsGraphPoint
 import app.aaps.core.interfaces.overview.graph.GraphDataPoint
 import app.aaps.core.interfaces.overview.graph.TbrState
 import com.google.common.truth.Truth.assertThat
+import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarker
 import org.junit.jupiter.api.Test
 
 /** The values shown when holding the BG graph. */
@@ -27,6 +28,7 @@ class GraphInspectTest {
         val data = inspectDataAt(
             timestamp = t0 + 6 * minute,
             bgReadings = readings,
+            predictions = emptyList(),
             iob = listOf(point(0, 1.0), point(5, 1.2), point(10, 1.4)),
             cob = listOf(point(5, 0.0)),
             actualBasal = listOf(point(-30, 0.8), point(4, 1.5), point(20, 0.0)),
@@ -50,6 +52,7 @@ class GraphInspectTest {
         val data = inspectDataAt(
             timestamp = t0 + 30 * minute,
             bgReadings = readings,
+            predictions = emptyList(),
             iob = listOf(point(30, 0.3)),
             cob = emptyList(),
             actualBasal = emptyList(),
@@ -66,6 +69,44 @@ class GraphInspectTest {
     }
 
     @Test
+    fun `after the last reading the time snaps to a prediction point, without glucose`() {
+        val predictions = listOf(15, 20, 25).map { BgDataPoint(t0 + it * minute, 7.0, BgRange.HIGH, BgType.IOB_PREDICTION) }
+
+        val data = inspectDataAt(
+            timestamp = t0 + 19 * minute,
+            bgReadings = readings,
+            predictions = predictions,
+            iob = listOf(point(20, 0.9)),
+            cob = emptyList(),
+            actualBasal = emptyList(),
+            profileBasal = emptyList(),
+            boluses = emptyList(),
+            carbs = emptyList()
+        )
+
+        assertThat(data.timestamp).isEqualTo(t0 + 20 * minute)
+        assertThat(data.bg).isNull()
+        assertThat(data.iob).isEqualTo(0.9)
+    }
+
+    @Test
+    fun `the finger's x comes from its distance to the nearest point, clamped to the graph`() {
+        val state = GraphInspectState().apply { pxPerX = 2f; minX = 0.0; maxX = 100.0 }
+        // Vico snaps to the last point of the held graph, here at x = 60, drawn at 120 px
+        val lastPoint = object : CartesianMarker.Target {
+            override val x = 60.0
+            override val canvasX = 120f
+        }
+
+        assertThat(state.fingerX(130f, lastPoint)).isEqualTo(65.0)
+        assertThat(state.fingerX(300f, lastPoint)).isEqualTo(100.0)
+        assertThat(state.fingerX(-500f, lastPoint)).isEqualTo(0.0)
+        assertThat(state.fingerX(130f, null)).isNull()
+        // Nothing drawn yet: the point itself, as before
+        assertThat(GraphInspectState().fingerX(130f, lastPoint)).isEqualTo(60.0)
+    }
+
+    @Test
     fun `only valid treatments within half a reading interval belong to the reading`() {
         val near = BolusGraphPoint(t0 + 5 * minute + 60_000, 0.4, BolusType.SMB, isValid = true, label = "0.40 U")
         val far = BolusGraphPoint(t0 + 5 * minute + 4 * minute, 1.0, BolusType.NORMAL, isValid = true, label = "1.00 U")
@@ -75,6 +116,7 @@ class GraphInspectTest {
         val data = inspectDataAt(
             timestamp = t0 + 5 * minute,
             bgReadings = readings,
+            predictions = emptyList(),
             iob = emptyList(),
             cob = emptyList(),
             actualBasal = emptyList(),
@@ -100,7 +142,7 @@ class GraphInspectTest {
     @Test
     fun `leaving the plotted area with the finger down keeps inspecting, lifting it ends`() {
         val state = GraphInspectState()
-        val marker = GraphInspectMarker(state)
+        val marker = SilentInspectMarker
         state.fingerDown = true
         state.pointerDown = true
 

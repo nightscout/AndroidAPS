@@ -626,7 +626,7 @@ fun GraphsSection(
         }
         // Fixed IOB graph (Graph 1) with optional Activity overlay
         var editingIobOverlays by remember { mutableStateOf(false) }
-        Box(modifier = Modifier.pullUp(IOB_GRAPH_PULL_UP)) {
+        Box(modifier = Modifier.pullUp(IOB_GRAPH_PULL_UP).graphInspectTouch(inspect)) {
             SecondaryGraphCompose(
                 viewModel = graphViewModel,
                 seriesTypes = listOf(SeriesType.IOB),
@@ -672,7 +672,7 @@ fun GraphsSection(
         var editingGraphIndex by remember { mutableIntStateOf(-1) }
         for (i in 0 until activeCount) {
             val secondary = graphConfig.secondaryGraphs[i]
-            Box(modifier = Modifier.pullUp(GRAPH_OVERLAP)) {
+            Box(modifier = Modifier.pullUp(GRAPH_OVERLAP).graphInspectTouch(inspect)) {
                 SecondaryGraphCompose(
                     viewModel = graphViewModel,
                     inspect = inspect,

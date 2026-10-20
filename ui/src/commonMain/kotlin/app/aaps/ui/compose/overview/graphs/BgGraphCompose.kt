@@ -597,10 +597,10 @@ fun BgGraphCompose(
         )
     }
 
-    val inspectMarker = remember(inspect) { inspect?.let { GraphInspectMarker(it) } }
+    val inspectMarker = remember(inspect) { inspect?.let { SilentInspectMarker } }
     // Always called, so the composable calls do not depend on inspect
     val defaultMarkerController = CartesianMarkerController.rememberShowOnPress()
-    val inspectLine = rememberInspectLine(inspect)
+    val inspectLine = rememberInspectLine(inspect, dotOnReading = true)
 
     val decorations = remember(inRangeBox, nowLine, inspectLine) { listOfNotNull(inRangeBox, nowLine, inspectLine) }
 
