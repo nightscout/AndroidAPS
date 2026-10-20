@@ -85,6 +85,7 @@
     <string name="last_aps_result_na">Son sonuç mevcut değil!</string>
     <string name="loop_status_closed">KAPALI DÖNGÜ</string>
     <string name="loop_status_open">AÇIK DÖNGÜ</string>
+    <string name="loop_status_lgs">LGS</string>
     <string name="loop_status_disabled">DÖNGÜ DEVRE DIŞI</string>
     <string name="aps">APS (YPS)</string>
     <string name="last_run">Son Çalıştırma</string>
