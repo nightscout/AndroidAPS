@@ -15,7 +15,6 @@
     <string name="authorized_clients_add">Dodaj urządzenie opiekuna</string>
     <string name="authorized_clients_comm_switch_title">Zezwalaj na sterowanie z urządzenia opiekuna</string>
     <string name="authorized_clients_comm_switch_summary">Pozwól sparowanym klientom wysyłać podpisane polecenia przez Nightscout. Wyłącz, aby zatrzymać komunikację bez usuwania ich.</string>
-    <string name="authorized_clients_needs_websocket">Websockety są wyłączone, więc polecenia z urządzeń opiekunów nie mogą zostać odebrane. Urządzenia opiekunów widzą telefon pacjenta jako nieakceptujący poleceń, dopóki nie włączysz websocketów.</string>
     <string name="authorized_clients_state_active">Aktywny</string>
     <string name="authorized_clients_state_pending">Oczekujący</string>
     <string name="authorized_clients_last_seen">Ostatnio widziany %1$s</string>
