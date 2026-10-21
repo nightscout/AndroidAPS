@@ -10,6 +10,7 @@
     <!-- AAPSClient -->
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <!-- Pair with master (client side PIN entry) -->
+    <!-- Client set-up from the master's QR code -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client_url">URL:</string>
     <string name="deliver_now">Synkronisera nu</string>
