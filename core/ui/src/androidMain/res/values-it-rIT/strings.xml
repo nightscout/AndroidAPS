@@ -179,6 +179,7 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Calibrazione</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Calibrazione non salvata: la glicemia sta cambiando troppo velocemente (Δ %1$s %3$s per 5 minuti, limite %2$s). Riprova quando il glucosio è stabile.</string>
     <string name="cal_reject_no_pair">Calibrazione non salvata: nessuna lettura CGM trovata nei 10 minuti precedenti.</string>
     <string name="cal_reject_warmup">Calibrazione non salvata: il sensore è ancora nella finestra di riscaldamento di 2 ore.</string>
     <string name="cal_reject_no_session">Calibrazione non salvata: nessuna sessione del sensore è attiva. Segna prima un cambio del sensore.</string>
@@ -226,6 +227,7 @@
     <string name="percentage_label">Percentuale</string>
     <string name="timeshift_label">Sfasamento temporale</string>
     <string name="confirm_remove_multiple_items">Sicuro di voler eliminare %1$d elementi</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Il master non ha %1$d di queste voci. Queste non sono state rimosse.</string>
     <string name="overview_treatment_label">Trattamento</string>
     <string name="copytolocalprofile">Creare un nuovo profilo da questo profilo?</string>
     <string name="wear_wizard_settings">Impostazioni Rapide Orologio</string>
@@ -419,6 +421,19 @@
     <string name="scene_lock_banner_control_disabled">Il master ha disabilitato il controllo remoto. I controlli delle scene riprenderanno quando saranno riattivati sul master.</string>
     <string name="master_offline_banner">Dispositivo master irraggiungibile. La modifica è disabilitata fino al ripristino della connessione.</string>
     <string name="master_control_disabled_banner">Il Master ha disabilitato il controllo remoto. La modifica è disabilitata fino a quando non viene riattivata sul master.</string>
+    <string name="hardened_mode_on">Hardened mode on</string>
+    <string name="hardened_mode_title">Hardened mode</string>
+    <string name="hardened_mode_info_open">Circa la hardened mode</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Sola lettura</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Pasti</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Caregiver</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Amministratore</string>
+    <string name="client_role_title">Ruolo</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Ruolo: %1$s</string>
+    <string name="client_roles_info_open">Info sui ruoli</string>
+    <string name="client_roles_info">Ogni telefono associato ha un ruolo. Il telefono principale lo controlla per ogni comando, e il telefono mostra solo ciò che il suo ruolo consente. Un nuovo ruolo ha effetto in una volta, senza accoppiarsi di nuovo.\n\nSolo lettura: il telefono rimane accoppiato, ma mostra solo dati.\n\nPasti: bolo, procedura guidata bolus, QuickWizard e carboidrati. Può anche fermare un bolo in esecuzione. Le carote inserite qui possono rendere il ciclo dare più insulina.\n\nCaregiver: tutto ciò che un utente fa in AAPS, come obiettivi temp, profilo e interruttori di insulina, modalità loop, basale temp, bolo esteso, scene, eventi portale, calibrazioni e rimozione dei record.\n\nAdmin: tutto, impostazioni e preset inclusi (QuickWizard, preset target temp, scene, profili, automazione, insulina).</string>
+    <string name="client_read_only_banner">Questo telefono è in modalità di sola lettura sul telefono principale.</string>
+    <string name="hardened_mode_info">Il telefono principale prende le modifiche solo dai client accoppiati. Non richiede trattamenti, obiettivi di temperatura, cambiamenti del profilo, modifiche o eliminazioni della modalità in esecuzione effettuate direttamente in Nightscout, ad esempio sul sito web o in altre applicazioni. Le impostazioni per accettare i dati da Nightscout sono nascoste mentre la modalità indurita è attiva. I comandi SMS non sono influenzati.\n\nIl telefono principale carica ancora tutti i dati su Nightscout, BG incluso. Se ottiene la sua glicemia da Nightscout, prende ancora glicemia da lì.\n\nPer caricare la cronologia su un nuovo telefono principale, utilizzare la sincronizzazione completa in NSClient. La sincronizzazione completa prende tutto ciò che è in Nightscout, profili inclusi.\n\nIl telecomando dei client ha bisogno di una connessione WebSocket funzionante a Nightscout, sul telefono principale e sui client accoppiati. La modalità semplice attiva sempre la modalità indurita. Per disattivarla, lascia la modalità semplice e disattiva il controllo client sul telefono principale.</string>
     <string name="scene_lock_reason_master_offline">Master disconnesso</string>
     <string name="scene_lock_reason_control_disabled">Controllo remoto disabilitato</string>
     <string name="scene_lock_reason_scene_active">Ferma prima la scena in esecuzione</string>
@@ -447,6 +462,7 @@
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolo annullato. Non è stata somministrata insulina.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Annullato</string>
     <string name="clientcontrol_fail_control_disabled">Il controllo remoto sul master è spento.</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">Il ruolo di questo telefono sul master non lo consente.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Il bolo preparato è scaduto o è stato sostituito. Tocca nuovamente il pulsante.</string>
     <string name="clientcontrol_fail_bolus_compute">Il master non è riuscito a calcolare il bolo (mancanza di glucosio / profilo, o pompa non pronta).</string>
     <string name="clientcontrol_fail_internal">Qualcosa è andato storto.</string>
