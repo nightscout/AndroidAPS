@@ -56,6 +56,7 @@
     <string name="pair_with_master_already_paired_master">Attualmente accoppiato con il master %1$s. Disaccoppiati prima per inserire un nuovo PIN.</string>
     <string name="pair_with_master_unpair">Disaccoppia</string>
     <string name="pair_with_master_sending">Invio del messaggio di accoppiamento…</string>
+    <!-- Client set-up from the master's QR code -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">Master AAPS non riconosce più questo dispositivo. Apri Gestisci foglio → Coppia con master per ri-coppiare.</string>
     <string name="ns_client">NSClient</string>
