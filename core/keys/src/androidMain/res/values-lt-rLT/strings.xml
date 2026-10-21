@@ -126,7 +126,6 @@
     <string name="pref_title_ns_use_ws">Naudoti WebSocket</string>
     <string name="pref_summary_ns_use_ws">Naudoti WebSocket realiojo laiko ryšiui su Nightscout.</string>
     <string name="pref_title_ns_allow_client_control">Leisti valdyti iš kliento</string>
-    <string name="pref_summary_ns_allow_client_control">Leisti susietiems kliento įrenginiams per Nightscout siųsti pasirašytas komandas (pvz., paleisti ar sustabdyti scenarijus).</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Tik per Wi‑Fi</string>
     <string name="pref_title_openhumans_charging_only">Tik įkraunant</string>
