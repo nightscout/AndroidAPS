@@ -88,6 +88,7 @@
     <string name="wrong_pump_data">Daten kommen von einer anderen Pumpe. Wechsle den Pumpentreiber.</string>
     <string name="bg_label">BZ</string>
     <string name="calibration">Kalibrierung</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="duration_label">Dauer</string>
     <string name="shortgramm">g</string>
     <string name="notconfigured">Nicht konfiguriert</string>
