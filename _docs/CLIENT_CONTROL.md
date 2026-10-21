@@ -43,7 +43,7 @@ The master generates a `clientId` (UUID) and a **32-byte** secret and stores a P
 Then:
 
 1. The client stores the secret wrapped via `SecureEncrypt` (`ClientPairingRepository.pair()`, all keys or none).
-2. It sends **`Hello`** under `aaps_clientcontrol_hello_<clientId>`, promoting the master's entry **Pending → Active**. After a PIN this is at once. After a QR code the phone had no working Nightscout connection yet, so `BooleanNonKey.NsClientControlHelloPending` holds the hello until the websocket connects (`NSClientV3Plugin`, before the ping: the master takes counters in order).
+2. It sends **`Hello`** under `aaps_clientcontrol_hello_<clientId>`, promoting the master's entry **Pending → Active**. The hello carries a key exchange that replaces the secret at once (2.12). After a PIN it is sent right away. After a QR code the phone had no working Nightscout connection yet, so it goes out when the websocket connects: `ClientControlRoundTrip.sendHelloIfDue`, before the ping, because the master takes counters in order.
 3. **Revocation:** delete on the master removes the entry; later envelopes from that `clientId` get an "unknown clientId" log. The docs are not deleted (a soft delete would block the identifier with HTTP 410). The client's own Nightscout token is deleted too (2.11), so the phone loses Nightscout as well.
 4. **Orphan detection:** the master publishes an `authorizedClients.clientIds` roster (Active entries only) in the cold config doc; a client checks itself in, guarded by a race window (`docSrvModified ≥ pairedAt + 60s`, so a doc in flight from before `Hello` isn't mistaken for an orphan signal).
 
@@ -221,7 +221,22 @@ The "Add client" dialog has three ways:
 - **Drawing it** is shared code (`QrCodeImage`, black on white also in the dark theme), the squares come from ZXing in `jvmSharedMain`, so Android and the desktop. iOS has none yet: it runs only as a client, and the options are hidden where `qrModules` returns null.
 - **Reading it** is `ScanMasterQrScreen`, opened from the client wizard's first Nightscout step ("Set up from the master") and from Pair with master. Android uses CameraX and ZXing, no Play services; the camera permission is asked only when scanning. Applying a code stores the pairing and its waiting hello first, then switches NSClient on and writes the address, the token and the websocket switch. **iOS still needs its own scanner** (AVFoundation reads QR codes without a library); until then the scan buttons are hidden there, and on the desktop, which has no camera.
 
-Not built yet: a PIN-paired client still writes with the token it had, often the user's admin token. The plan is that the master sends it its own token through the channel (encrypted, kept in `settings` only briefly), that the secret is replaced right after pairing by a key exchange in the hello and its ACK, that the master signs the cold and hot docs (a client token can write to `settings`, so it could write them too), and that the master then refuses a client's commands written with another token than its own.
+A PIN-paired client gets its own token through the key exchange (2.12).
+
+Not built yet: the master signing the cold and hot docs (a client token can write to `settings`, so it could write them too), and the master refusing a client's commands written with another token than its own.
+
+### 2.12 The key exchange: a new secret, and the client's own token
+
+The pairing secret has been where others could see it: wrapped with an 8-digit PIN in a Nightscout document (crackable offline with enough time) or in a QR code on a screen. So the hello replaces it (`ClientControlKeyExchangeCrypto`):
+
+1. **Client:** `ClientPairingRepository.startKeyExchange` makes a one-time P-256 key pair and keeps the private key wrapped with `SecureEncrypt`. The hello carries the public key (`Hello.publicKey`), signed with the old secret.
+2. **Master** (`ClientControlReceiver.answerKeyExchange`): makes its own key pair. ECDH gives both sides the same value, and HKDF-SHA256 turns it into the new secret and a key for the token. The old secret is the HKDF salt and the info names the client and both keys. The new secret waits in `AuthorizedClient.pendingSecret`; the old one still works. If the client wrote the hello with a token that is not a client token, and the master can make tokens, the master makes or reuses the client's own token (2.11) and puts it in the answer, AES-256-GCM encrypted with the token key. The answer (`KeyExchangeEnvelope`, signed with the old secret) goes to `aaps_clientcontrol_key_<clientId>`.
+3. **Client** (`ClientKeyExchange.onKeyDoc`): takes only the answer to its own last key, checks the master's signature, derives the same keys and signs with the new secret from now on. It keeps the old one only to check answers the master signed before it switched (`verificationSecrets`, dropped at the first answer signed with the new one). A token in the answer is used only after a login with it shows the rights a client needs; otherwise the phone keeps its token. Then it pings.
+4. **Master:** the first message that verifies with the pending secret makes it the only one (`promotePendingSecret`), and the answer is deleted permanently, so the encrypted token stays in Nightscout for seconds. Without the client's private key it could not be read anyway.
+
+- **Who sends the hello:** every pairing whose secret was not replaced yet (`BooleanNonKey.NsClientControlSecretReplaced`) sends it on each websocket connect, which is also how a client paired before this existed gets a new secret and its own token after the update. While an exchange waits for its answer (10 min, `KEY_EXCHANGE_WAIT_MS`) no second one starts: otherwise the master could end on the second key while the phone took the first, and the two would not reach each other again.
+- **What it does not stop:** someone who has the old secret and sends a hello of their own before the real client. That is no worse than what the old secret already allowed. Someone who only reads Nightscout learns nothing: the private keys never leave the phones.
+- **Platforms:** P-256 ECDH and HKDF are in the JDK provider (Android, desktop) and CryptoKit (iOS). `ClientControlKeyExchangeCryptoTest` is in commonTest, so the simulator run checks that CryptoKit comes to the same keys.
 
 ---
 

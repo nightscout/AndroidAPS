@@ -109,6 +109,29 @@ class AuthorizedClientsRepository(
     }
 
     /**
+     * Keeps [secret] from a key exchange next to the current one, replacing an earlier one that the client never used.
+     * Returns false when it cannot be wrapped (then the exchange is not answered).
+     */
+    suspend fun setPendingSecret(clientId: String, secret: ByteArray): Boolean = mutex.withLock {
+        val wrapped = secureEncrypt.encrypt(ClientControlCrypto.bytesToHex(secret), SECURE_ENCRYPT_ALIAS)
+        if (wrapped.isEmpty()) return@withLock false
+        val list = decode()
+        if (list.none { it.clientId == clientId }) return@withLock false
+        write(list.map { if (it.clientId == clientId) it.copy(pendingSecret = wrapped) else it })
+        true
+    }
+
+    /** The client signs with the secret from the key exchange: from now on it is the only one. */
+    suspend fun promotePendingSecret(clientId: String): Unit = mutex.withLock {
+        val list = decode()
+        val updated = list.map { client ->
+            val pending = client.pendingSecret
+            if (client.clientId == clientId && pending != null) client.copy(encryptedSecret = pending, pendingSecret = null) else client
+        }
+        if (updated != list) write(updated)
+    }
+
+    /**
      * Keep the name of the Nightscout token [clientId] writes with. Called for each verified message, so it writes only
      * when the name changed (the client was set up with another token).
      */
@@ -196,7 +219,13 @@ class AuthorizedClientsRepository(
             aapsLogger.error(LTag.NSCLIENT, "ClientControl: secret hex for $clientId is malformed")
             return@withLock null
         }
-        SecretLookup(bytes, entry.counterReceived)
+        // The waiting secret is optional: one that cannot be read only means the exchange has to be done again.
+        val pending = entry.pendingSecret
+            ?.takeIf { secureEncrypt.isValidDataString(it) }
+            ?.let { secureEncrypt.decrypt(it) }
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { runCatching { ClientControlCrypto.hexToBytes(it) }.getOrNull() }
+        SecretLookup(bytes, entry.counterReceived, pending)
     }
 
     private fun decode(raw: String = preferences.get(StringNonKey.NsClientControlAuthorizedClients)): List<AuthorizedClient> =
@@ -207,11 +236,13 @@ class AuthorizedClientsRepository(
     }
 
     data class PendingResult(val entry: AuthorizedClient, val secretHex: String)
-    data class SecretLookup(val secretBytes: ByteArray, val counterReceived: Long) {
+    /** [pendingSecretBytes]: the secret from the client's last key exchange, not used by the client yet. */
+    data class SecretLookup(val secretBytes: ByteArray, val counterReceived: Long, val pendingSecretBytes: ByteArray? = null) {
 
         override fun equals(other: Any?): Boolean =
-            other is SecretLookup && secretBytes.contentEquals(other.secretBytes) && counterReceived == other.counterReceived
+            other is SecretLookup && secretBytes.contentEquals(other.secretBytes) && counterReceived == other.counterReceived &&
+                (pendingSecretBytes?.contentEquals(other.pendingSecretBytes) ?: (other.pendingSecretBytes == null))
 
-        override fun hashCode(): Int = secretBytes.contentHashCode() * 31 + counterReceived.hashCode()
+        override fun hashCode(): Int = (secretBytes.contentHashCode() * 31 + counterReceived.hashCode()) * 31 + (pendingSecretBytes?.contentHashCode() ?: 0)
     }
 }

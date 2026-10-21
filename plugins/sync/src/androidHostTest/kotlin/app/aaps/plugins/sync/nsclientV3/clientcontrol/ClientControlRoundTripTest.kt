@@ -103,7 +103,7 @@ internal class ClientControlRoundTripTest {
         reachable = MutableStateFlow(true)
         whenever(dateUtil.now()).thenReturn(now)
         runBlocking { whenever(pairingRepository.currentPairing()).thenReturn(MasterPairing(masterInstallId = "m", clientId = clientId, masterSecretEnc = "enc")) }
-        runBlocking { whenever(pairingRepository.secretBytesOrNull()).thenReturn(secret) }
+        runBlocking { whenever(pairingRepository.verificationSecrets()).thenReturn(listOf(secret)) }
         whenever(nsClientV3Plugin.masterReachable).thenReturn(reachable)
         whenever(nsClientV3Plugin.nsAndroidClient).thenReturn(nsAndroidClient)
         whenever(config.AAPSCLIENT).thenReturn(true)
@@ -321,6 +321,44 @@ internal class ClientControlRoundTripTest {
     fun forgedAckDoesNotBumpMasterSignal() = runTest {
         sut.onAckDoc(ackDoc(AckPhase.Done, AckStatus.Ok, signSecret = ByteArray(32) { 0x42 }))
         verify(nsClientV3Plugin, never()).bumpMasterSignal(any())
+    }
+
+    /**
+     * Right after the key exchange the master may still sign with the old secret: it takes the new one only when it
+     * has seen this phone use it. Such an answer is still the master's.
+     */
+    @Test
+    fun anAckSignedWithThePreviousSecretIsAccepted() = runTest {
+        val newSecret = ByteArray(32) { 0x11 }
+        whenever(pairingRepository.verificationSecrets()).thenReturn(listOf(newSecret, secret))
+
+        sut.onAckDoc(ackDoc(AckPhase.Done, AckStatus.Ok, signSecret = secret))
+
+        verify(nsClientV3Plugin).bumpMasterSignal(now)
+        verify(pairingRepository, never()).forgetPreviousSecret()
+    }
+
+    /** The first answer signed with the new secret shows the master has switched: the old one is dropped. */
+    @Test
+    fun anAckSignedWithTheNewSecretDropsThePreviousOne() = runTest {
+        val newSecret = ByteArray(32) { 0x11 }
+        whenever(pairingRepository.verificationSecrets()).thenReturn(listOf(newSecret, secret))
+
+        sut.onAckDoc(ackDoc(AckPhase.Done, AckStatus.Ok, signSecret = newSecret))
+
+        verify(nsClientV3Plugin).bumpMasterSignal(now)
+        verify(pairingRepository).forgetPreviousSecret()
+    }
+
+    @Test
+    fun aHelloIsSentOnlyWhenTheSecretIsStillToBeReplaced() = runTest {
+        whenever(pairingRepository.needsKeyExchange(now)).thenReturn(false)
+        assertThat(sut.sendHelloIfDue()).isNull()
+        verify(publisher, never()).publishHello()
+
+        whenever(pairingRepository.needsKeyExchange(now)).thenReturn(true)
+        whenever(publisher.publishHello()).thenReturn(ClientControlSendResult.Success)
+        assertThat(sut.sendHelloIfDue()).isEqualTo(ClientControlSendResult.Success)
     }
 
     // ---- run() drives the single app-level modal (pendingAction) ----

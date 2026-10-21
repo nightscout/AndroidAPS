@@ -63,6 +63,10 @@ class ClientControlPublisher(
         // The master writes here; the client reads here. Shares IDENTIFIER_PREFIX, so the master receiver MUST
         // skip it (it is not an inbound command envelope) — see ClientControlReceiver.
         const val IDENTIFIER_PROGRESS_PREFIX = "${IDENTIFIER_PREFIX}progress_"
+
+        // Master→client answer to the key exchange in a hello (KeyExchangeEnvelope), one per client. The master writes
+        // and deletes it; the client reads it. Shares IDENTIFIER_PREFIX, so the master receiver MUST skip it.
+        const val IDENTIFIER_KEY_PREFIX = "${IDENTIFIER_PREFIX}key_"
         const val SCHEMA_VERSION = 1
 
         // Fire-and-forget commands keep the historical ±5 min skew window as their validity, so adding
@@ -103,6 +107,13 @@ class ClientControlPublisher(
      */
     suspend fun publish(message: ClientControlMessage): ClientControlSendResult =
         publishTracked(message, dateUtil.now() + FIRE_AND_FORGET_TTL_MS, wantsAck = false).result
+
+    /**
+     * The hello, with the public key of a new key exchange: the master answers with a key doc and the pairing secret
+     * is replaced (`ClientPairingRepository.completeKeyExchange`).
+     */
+    suspend fun publishHello(): ClientControlSendResult =
+        publish(ClientControlMessage.Hello(publicKey = pairingRepository.startKeyExchange(dateUtil.now())))
 
     /**
      * Like [publish], but carries an explicit [validUntil] (command expiry the master enforces) and

@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientSetupCode
@@ -64,20 +63,18 @@ class ScanMasterQrViewModel(
     }
 
     /**
-     * Uses the code. The pairing is stored first and its hello waits for the connection: the Nightscout settings change
-     * after it, and the connection that follows is the first one that can send the hello.
+     * Uses the code. The pairing is stored first, then the Nightscout settings change: the connection that change
+     * starts is the first that can send the hello, and it does, because a new pairing's secret is still to be replaced
+     * (`ClientPairingRepository.needsKeyExchange`).
      */
     fun confirm() {
         val code = (_state.value as? UiState.Confirming)?.code ?: return
         _state.value = UiState.Applying
         viewModelScope.launch {
             val pairing = code.pairing
-            if (pairing != null) {
-                if (!pairingRepository.pair(pairing, dateUtil.now())) {
-                    _state.value = UiState.Error(ErrorReason.SecretStoreFailed)
-                    return@launch
-                }
-                preferences.put(BooleanNonKey.NsClientControlHelloPending, true)
+            if (pairing != null && !pairingRepository.pair(pairing, dateUtil.now())) {
+                _state.value = UiState.Error(ErrorReason.SecretStoreFailed)
+                return@launch
             }
             val plugin = nsClientV3Plugin()
             if (!plugin.isEnabled()) configBuilder.performPluginSwitch(plugin, true, PluginType.SYNC)

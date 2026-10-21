@@ -121,6 +121,9 @@ import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import dev.zacsweers.metro.IntKey as MetroIntKey
 
+/** The Nightscout address as the setting holds it, in the form `NSAndroidClientImpl` takes: no scheme, no last slash. */
+internal fun nsClientBaseUrl(url: String): String = url.lowercase().replace("https://", "").replace(Regex("/$"), "")
+
 // The new atomics are still experimental; pendingLoop/pendingUpload use load/store/compareAndSet.
 @OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
@@ -268,10 +271,14 @@ class NSClientV3Plugin(
             scope.launch {
                 wsConnectedFlow.collect { connected ->
                     if (!connected) return@collect
-                    // Paired from the master's QR code before Nightscout was set up: the hello goes out now. Before the
+                    // A pairing secret still to be replaced: the hello with a key exchange goes out now. Before the
                     // probe, and awaited: the master takes the counters in order, so a hello signed before a ping it
                     // has already taken would be refused as a replay.
-                    if (preferences.get(BooleanNonKey.NsClientControlHelloPending)) sendPendingHello()
+                    when (clientControlRoundTrip.sendHelloIfDue()) {
+                        null                              -> Unit
+                        ClientControlSendResult.Success -> nsClientRepository.addLog("► CLIENTCTL", "hello with a new key")
+                        else                              -> aapsLogger.warn(LTag.NSCLIENT, "ClientControl: hello not sent, trying on the next connect")
+                    }
                     requestMasterProbe()
                 }
             }
@@ -442,23 +449,6 @@ class NSClientV3Plugin(
         }
         // Pull any config we missed while disconnected (the worker no-ops on master / GETs both docs on client).
         nsLoadExecutor.runDetached(NsLoadStep.SETTINGS)
-    }
-
-    /**
-     * Sends the hello of a pairing made from the master's QR code. The flag stays until the hello is out, so a failure
-     * (the first connection can still use the old token while the settings change) is tried again on the next connect.
-     */
-    private suspend fun sendPendingHello() {
-        // No try here: the publisher already turns a failed upload into PublishFailed.
-        when (clientControlRoundTrip.sendHello()) {
-            ClientControlSendResult.Success   -> {
-                preferences.put(BooleanNonKey.NsClientControlHelloPending, false)
-                nsClientRepository.addLog("► CLIENTCTL", "hello after the set-up from the QR code")
-            }
-
-            ClientControlSendResult.NotPaired -> preferences.put(BooleanNonKey.NsClientControlHelloPending, false)
-            else                              -> aapsLogger.warn(LTag.NSCLIENT, "ClientControl: hello after the QR set-up not sent, trying on the next connect")
-        }
     }
 
     fun scheduleIrregularExecution(refreshToken: Boolean = false) {
@@ -674,7 +664,7 @@ class NSClientV3Plugin(
     private fun setClient() {
         if (nsAndroidClient == null)
             nsAndroidClient = NSAndroidClientImpl(
-                baseUrl = preferences.get(StringKey.NsClientUrl).lowercase().replace("https://", "").replace(Regex("/$"), ""),
+                baseUrl = nsClientBaseUrl(preferences.get(StringKey.NsClientUrl)),
                 accessToken = preferences.get(StringKey.NsClientAccessToken),
                 logging = l.findByName(LTag.NSCLIENT.tag).enabled && (config.isEngineeringMode() || config.isDev()),
                 logger = { msg -> aapsLogger.debug(LTag.HTTP, msg) }

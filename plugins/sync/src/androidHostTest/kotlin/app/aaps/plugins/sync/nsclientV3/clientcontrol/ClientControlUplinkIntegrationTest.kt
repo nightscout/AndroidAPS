@@ -13,9 +13,11 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
+import app.aaps.core.interfaces.scenes.ClientControlSendResult
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongComposedKey
+import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 import app.aaps.core.keys.interfaces.NonPreferenceKey
@@ -23,6 +25,7 @@ import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
+import app.aaps.core.nssdk.localmodel.authorization.NSAuthSubject
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import app.aaps.plugins.sync.SyncStringsValues
@@ -43,6 +46,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -119,6 +123,8 @@ class ClientControlUplinkIntegrationTest {
     private var masterAppliedVersion: Long? = null
     private lateinit var masterAuthorizedRepository: AuthorizedClientsRepository
     private lateinit var masterReceiver: ClientControlReceiver
+    @Mock private lateinit var clientTokens: ClientTokens
+    private lateinit var clientKeyExchange: ClientKeyExchange
 
     // Scopes injected into the round-trip (client watchdog) and receiver (master progress-mirror + heartbeat).
     // Both host long-lived coroutines; cancelled in tearDown() so they can't fire after the test and touch a
@@ -211,8 +217,10 @@ class ClientControlUplinkIntegrationTest {
         masterReceiver = ClientControlReceiver(
             masterAuthorizedRepository, { nsClientV3Plugin }, nsClientRepository, sceneAutomationApi,
             offerPublisher, masterPrefs, dateUtil, uel, runningConfigurationPublisher, persistenceLayer, masterActionExecutor, notificationManager, masterConfig, bolusProgressData, commandQueue, rh, aapsLogger,
-            masterScope
+            masterScope, clientTokens
         )
+        clientKeyExchange = ClientKeyExchange(clientPairingRepository, { clientControlRoundTrip }, clientPrefs, nsClientRepository, aapsLogger)
+            .also { it.tokenWorks = { _, _ -> true } }
 
         // ---------- pairing: same secret on both sides ----------
         val (entry, secretHex) = masterAuthorizedRepository.addPending("phone", ClientRole.Admin, pairTtlMs = 60_000L, now = now - 10_000L)
@@ -265,6 +273,39 @@ class ClientControlUplinkIntegrationTest {
         verify(masterPrefs, never()).putRemote(eq(StringNonKey.AutomationEvents), any<String>(), any<Long>())
 
         scope.cancel()
+    }
+
+    /**
+     * The key exchange across the bridge, real crypto on both sides: the hello carries the client's key, the master
+     * answers, the client takes the new secret and its own token, and the master takes the new secret when the client
+     * first uses it.
+     */
+    @Test
+    fun theKeyExchangeReplacesTheSecretAndHandsOverTheToken() = runTest {
+        whenever(clientPrefs.get(StringKey.NsClientUrl)).thenReturn("https://ns.example")
+        whenever(clientPrefs.get(StringKey.NsClientAccessToken)).thenReturn("usersadmintoken-0123456789abcdef")
+        whenever(clientTokens.subjects()).thenReturn(ClientTokens.Result.Ok(listOf(NSAuthSubject(id = "s0", name = "users-admin", roles = listOf("admin")))))
+        whenever(clientTokens.tokenFor("phone"))
+            .thenReturn(ClientTokens.Result.Ok(NSAuthSubject(id = "s1", name = "aaps-phone", roles = listOf(ClientTokens.ROLE_NAME), accessToken = "aapsphone-0123456789abcdef")))
+        val secretBefore = masterAuthorizedRepository.secretLookup(clientId())!!.secretBytes
+
+        // Client: hello with a key. Master: answers into the key doc.
+        assertThat(clientControlPublisher.publishHello()).isEqualTo(ClientControlSendResult.Success)
+        masterReceiver.onSettingsDocChanged(bridgeIdentifier!!, JsonObject(bridgeDoc!! + ("subject" to JsonPrimitive("users-admin"))))
+        assertThat(bridgeIdentifier).isEqualTo(ClientControlPublisher.IDENTIFIER_KEY_PREFIX + clientId())
+
+        // Client: takes the answer, switches, uses the token and pings with the new secret.
+        clientKeyExchange.onKeyDoc(bridgeDoc!!)
+        verify(clientPrefs).put(StringKey.NsClientAccessToken, "aapsphone-0123456789abcdef")
+        assertThat(bridgeIdentifier).isEqualTo("${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}ping_${clientId()}")
+
+        // Master: the ping verifies with the new secret, which is now the only one, and the answer is deleted.
+        masterReceiver.onSettingsDocChanged(bridgeIdentifier!!, bridgeDoc!!)
+        val lookup = masterAuthorizedRepository.secretLookup(clientId())!!
+        assertThat(lookup.pendingSecretBytes).isNull()
+        assertThat(lookup.secretBytes).isNotEqualTo(secretBefore)
+        assertThat(lookup.secretBytes).isEqualTo(clientPairingRepository.verificationSecrets().first())
+        verify(offerPublisher).deleteKeyExchange(clientId())
     }
 
     private fun clientId(): String = clientStrings[StringNonKey.NsClientControlClientId.key] ?: error("not paired")

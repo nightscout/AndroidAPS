@@ -51,7 +51,14 @@ data class AuthorizedClient(
      * client writes, so the master learns it from each verified message; for a token the master made, it is known from
      * the start. Null until then. Removing the client also deletes this token, if it is a client token.
      */
-    val nsSubject: String? = null
+    val nsSubject: String? = null,
+
+    /**
+     * The secret from the key exchange in the client's last hello, wrapped like [encryptedSecret]. It becomes the
+     * only secret when the client first signs with it; until then the client may not have the answer yet, so both
+     * are accepted.
+     */
+    val pendingSecret: String? = null
 )
 
 @Serializable

@@ -171,8 +171,7 @@ class ClientControlRoundTrip(
         }
         val clientId = pairingRepository.currentPairing()?.clientId ?: return
         if (ack.clientId != clientId) return // ack for a different client sharing this NS
-        val secret = pairingRepository.secretBytesOrNull() ?: return
-        if (!ClientControlCrypto.verifyAck(secret, ack)) {
+        if (!signedByMaster { ClientControlCrypto.verifyAck(it, ack) }) {
             aapsLogger.error(LTag.NSCLIENT, "ClientControl: ACK signature invalid (counter=${ack.commandCounter})")
             return
         }
@@ -214,8 +213,7 @@ class ClientControlRoundTrip(
         }
         val clientId = pairingRepository.currentPairing()?.clientId ?: return
         if (env.clientId != clientId) return // progress for a different client sharing this NS
-        val secret = pairingRepository.secretBytesOrNull() ?: return
-        if (!ClientControlCrypto.verifyProgress(secret, env)) {
+        if (!signedByMaster { ClientControlCrypto.verifyProgress(it, env) }) {
             aapsLogger.error(LTag.NSCLIENT, "ClientControl: progress signature invalid")
             return
         }
@@ -281,8 +279,13 @@ class ClientControlRoundTrip(
         publisher.publishTracked(ClientControlMessage.Ping, dateUtil.now() + PING_TTL_MS, wantsAck = true)
     }
 
-    /** The pairing hello, for a phone paired from the master's QR code before it could reach Nightscout. No ACK. */
-    suspend fun sendHello(): ClientControlSendResult = publisher.publish(ClientControlMessage.Hello())
+    /**
+     * The hello with a key exchange, when this pairing's secret is still to be replaced and no exchange is waiting for
+     * its answer: a new pairing (from a QR code too, which could not say hello before it reached Nightscout), or one
+     * made before the key exchange existed. Answered by a key doc, no ACK. Null when none was due.
+     */
+    suspend fun sendHelloIfDue(): ClientControlSendResult? =
+        if (pairingRepository.needsKeyExchange(dateUtil.now())) publisher.publishHello() else null
 
     // The single app-level modal signal (progress + label), fed by every run()/execute() regardless of
     // feature. Hosted once in ComposeMainActivity; round-trips are single-in-flight so at most one shows.
@@ -457,9 +460,23 @@ class ClientControlRoundTrip(
         val ackObj = doc.optJsonObjectCompat("ack") ?: return null
         val ack = runCatching { json.decodeFromJsonElement(AckEnvelope.serializer(), ackObj) }.getOrNull() ?: return null
         if (ack.clientId != clientId || ack.commandCounter != counter || ack.phase != AckPhase.Done) return null
-        val secret = pairingRepository.secretBytesOrNull() ?: return null
-        if (!ClientControlCrypto.verifyAck(secret, ack)) return null
+        if (!signedByMaster { ClientControlCrypto.verifyAck(it, ack) }) return null
         return doneOutcome(ack)
+    }
+
+    /**
+     * True when [verify] passes with the pairing secret, or with the one before the key exchange replaced it: the
+     * master signs with the old one until it has seen this phone use the new one. The first answer signed with the new
+     * secret ends that.
+     */
+    private suspend fun signedByMaster(verify: (ByteArray) -> Boolean): Boolean {
+        val secrets = pairingRepository.verificationSecrets()
+        val current = secrets.firstOrNull() ?: return false
+        if (verify(current)) {
+            if (secrets.size > 1) pairingRepository.forgetPreviousSecret()
+            return true
+        }
+        return secrets.drop(1).any(verify)
     }
 }
 

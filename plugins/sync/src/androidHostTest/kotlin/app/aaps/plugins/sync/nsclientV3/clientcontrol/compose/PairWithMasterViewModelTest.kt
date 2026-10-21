@@ -177,7 +177,8 @@ internal class PairWithMasterViewModelTest {
         sut.confirmPair()
         advanceUntilIdle()
 
-        verify(publisher).publish(any())
+        // The hello with a key exchange: the PIN-offer secret is replaced right after pairing.
+        verify(publisher).publishHello()
         assertThat(sut.state.value).isEqualTo(PairWithMasterViewModel.UiState.Success)
     }
 
@@ -197,6 +198,7 @@ internal class PairWithMasterViewModelTest {
         sut.confirmPair()
         advanceUntilIdle()
 
+        verify(publisher, never()).publishHello()
         verify(publisher, never()).publish(any())
         assertThat(sut.state.value).isEqualTo(PairWithMasterViewModel.UiState.Error(PairWithMasterViewModel.ErrorReason.SecretStoreFailed))
     }

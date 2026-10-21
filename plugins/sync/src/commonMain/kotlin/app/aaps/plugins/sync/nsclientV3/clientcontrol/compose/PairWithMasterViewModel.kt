@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.observeHardenedMode
-import app.aaps.core.nssdk.localmodel.clientcontrol.ClientControlMessage
 import app.aaps.core.nssdk.localmodel.clientcontrol.MasterPairing
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
@@ -113,7 +112,8 @@ class PairWithMasterViewModel(
                 return@launch
             }
             _state.value = UiState.Sending
-            publisher.publish(ClientControlMessage.Hello())
+            // With a key exchange: the master answers with the secret that replaces the one from the PIN offer.
+            publisher.publishHello()
             _state.value = UiState.Success
         }
     }

@@ -391,6 +391,8 @@ class AuthorizedClientsViewModel(
             // requestDelete and confirmDelete the entry may have flipped Pending → Active (offer doc
             // already deleted by the receiver) or already pruned.
             offerPublisher.deleteOffer(client.clientId)
+            // And an answer to its key exchange still waiting in Nightscout.
+            offerPublisher.deleteKeyExchange(client.clientId)
             // Its token goes too, so the phone cannot read Nightscout any more. Only a client token: a token with
             // other roles is the user's own. If Nightscout cannot be reached now, the token stays and is listed as a
             // token without a client, to delete later.

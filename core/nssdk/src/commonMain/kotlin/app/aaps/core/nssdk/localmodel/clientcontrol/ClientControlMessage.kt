@@ -27,11 +27,16 @@ sealed class ClientControlMessage {
      * counter = 1 (the first envelope after pairing).
      *
      * `protocolVersion` lets either side reject a peer it cannot speak to.
+     *
+     * [publicKey] starts the key exchange that replaces the pairing secret (`ClientControlKeyExchangeCrypto`): the
+     * master answers with a [KeyExchangeEnvelope]. A paired client whose secret was not replaced yet sends a hello again
+     * on each connection until it is, so a client paired before this existed gets a new secret too.
      */
     @Serializable
     @SerialName("hello")
     data class Hello(
-        val protocolVersion: Int = 1
+        val protocolVersion: Int = 1,
+        val publicKey: String? = null
     ) : ClientControlMessage()
 
     /**

@@ -7,6 +7,7 @@ import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientKeyExchange
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.compose.NSClientRepositoryImpl
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
@@ -44,6 +45,7 @@ class NsFrameHandlerSettingsRoutingTest : TestBaseWithProfile() {
     @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Mock lateinit var runningConfiguration: RunningConfiguration
     @Mock lateinit var orphanDetector: OrphanDetector
+    @Mock lateinit var clientKeyExchange: ClientKeyExchange
 
     private lateinit var sut: NsFrameHandler
 
@@ -58,6 +60,7 @@ class NsFrameHandlerSettingsRoutingTest : TestBaseWithProfile() {
             nsIncomingDataProcessor = { nsIncomingDataProcessor },
             runningConfiguration = { runningConfiguration },
             orphanDetector = { orphanDetector },
+            clientKeyExchange = { clientKeyExchange },
             storeDataForDb = storeDataForDb,
             notificationManager = notificationManager,
             nsClientRepository = NSClientRepositoryImpl(rxBus, aapsLogger),
@@ -96,6 +99,18 @@ class NsFrameHandlerSettingsRoutingTest : TestBaseWithProfile() {
         sut.onDataCreateUpdate(envelope("settings", """{"identifier":"$identifier","srvModified":1000}"""))
 
         verify(nsClientV3Plugin).handleClientControlProgressEvent(any())
+        verify(nsClientV3Plugin, never()).handleClientControlSettingsEvent(any(), any())
+    }
+
+    /** The master's answer to the key exchange: same prefix as a command, same ordering rule as the ACK. */
+    @Test
+    fun `client routes a key exchange answer to the key exchange`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        val identifier = ClientControlPublisher.IDENTIFIER_KEY_PREFIX + "c1"
+
+        sut.onDataCreateUpdate(envelope("settings", """{"identifier":"$identifier","srvModified":1000}"""))
+
+        verify(clientKeyExchange).onKeyDoc(any())
         verify(nsClientV3Plugin, never()).handleClientControlSettingsEvent(any(), any())
     }
 

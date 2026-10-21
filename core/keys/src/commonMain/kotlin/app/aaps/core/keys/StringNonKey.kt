@@ -101,5 +101,11 @@ enum class StringNonKey(
     // Client: this phone's role on the master (ClientRole name), read from the master's roster. Empty = not known
     // yet (just paired); the client then shows as little as ReadOnly until the roster arrives. Cleared on unpair.
     NsClientControlRole(key = "nsclient_control_role", defaultValue = "", exportable = false),
+    // Client: the secret before the key exchange replaced it, wrapped like the current one. Kept only to check answers
+    // the master signed before it took the new secret; dropped at the first answer signed with the new one.
+    NsClientControlPreviousSecretEnc(key = "nsclient_control_previous_secret_enc", defaultValue = "", exportable = false),
+    // Client: the key exchange started by the last hello. The public key (not secret) and the private key, wrapped.
+    NsClientControlKeyExchangePublic(key = "nsclient_control_key_exchange_public", defaultValue = "", exportable = false),
+    NsClientControlKeyExchangePrivateEnc(key = "nsclient_control_key_exchange_private_enc", defaultValue = "", exportable = false),
 
 }

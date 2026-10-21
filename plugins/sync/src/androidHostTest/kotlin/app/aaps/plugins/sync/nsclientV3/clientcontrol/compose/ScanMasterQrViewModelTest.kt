@@ -5,7 +5,6 @@ import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientSetupCode
@@ -119,13 +118,12 @@ internal class ScanMasterQrViewModelTest {
         verify(preferences).put(StringKey.NsClientAccessToken, "aapstablet-0123456789abcdef")
         verify(preferences).put(BooleanKey.NsClient3UseWs, true)
         verify(pairingRepository, never()).pair(any(), any())
-        verify(preferences, never()).put(eq(BooleanNonKey.NsClientControlHelloPending), any<Boolean>())
         assertThat(sut.state.value).isEqualTo(ScanMasterQrViewModel.UiState.Done(paired = false))
     }
 
     /**
-     * The pairing and its waiting hello are stored before the Nightscout settings change: the connection that the
-     * change starts is the one that sends the hello, so the pairing must be there by then.
+     * The pairing is stored before the Nightscout settings change: the connection that the change starts is the one
+     * that sends the hello, so the pairing must be there by then.
      */
     @Test
     fun `a code that pairs stores the pairing before Nightscout changes`() = runTest {
@@ -136,7 +134,6 @@ internal class ScanMasterQrViewModelTest {
 
         val order = inOrder(pairingRepository, preferences)
         order.verify(pairingRepository).pair(pairing, now)
-        order.verify(preferences).put(BooleanNonKey.NsClientControlHelloPending, true)
         order.verify(preferences).put(StringKey.NsClientUrl, "https://ns.example")
         order.verify(preferences).put(StringKey.NsClientAccessToken, "aapstablet-0123456789abcdef")
         assertThat(sut.state.value).isEqualTo(ScanMasterQrViewModel.UiState.Done(paired = true))
@@ -151,7 +148,6 @@ internal class ScanMasterQrViewModelTest {
         sut.confirm()
 
         verify(preferences, never()).put(eq(StringKey.NsClientUrl), any<String>())
-        verify(preferences, never()).put(eq(BooleanNonKey.NsClientControlHelloPending), any<Boolean>())
         assertThat(sut.state.value).isEqualTo(ScanMasterQrViewModel.UiState.Error(ScanMasterQrViewModel.ErrorReason.SecretStoreFailed))
     }
 
