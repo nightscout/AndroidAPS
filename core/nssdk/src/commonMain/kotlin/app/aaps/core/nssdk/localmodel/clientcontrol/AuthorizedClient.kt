@@ -44,7 +44,14 @@ data class AuthorizedClient(
      * build does not know can never fail to decode: a decode failure would read the whole stored list as
      * empty. Null - a client stored before roles existed - means Admin, the full control it had.
      */
-    val role: String? = null
+    val role: String? = null,
+
+    /**
+     * Name of the Nightscout token (the subject) this client writes with. Nightscout puts it on every document the
+     * client writes, so the master learns it from each verified message; for a token the master made, it is known from
+     * the start. Null until then. Removing the client also deletes this token, if it is a client token.
+     */
+    val nsSubject: String? = null
 )
 
 @Serializable

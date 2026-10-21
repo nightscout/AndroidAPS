@@ -8,17 +8,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Devices
+import androidx.compose.material.icons.filled.Key
+import androidx.compose.material.icons.filled.QrCode2
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -26,6 +33,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -71,6 +79,10 @@ fun AuthorizedClientsScreen(
     val pairingOffer by viewModel.pairingOffer.collectAsStateWithLifecycle()
     val featureEnabled by viewModel.clientControlEnabled.collectAsStateWithLifecycle()
     val simpleMode by viewModel.simpleMode.collectAsStateWithLifecycle()
+    val tokens by viewModel.tokens.collectAsStateWithLifecycle()
+    val unpairedTokens by viewModel.unpairedTokens.collectAsStateWithLifecycle()
+    val tokenKinds by viewModel.tokenKinds.collectAsStateWithLifecycle()
+    val qrDialog by viewModel.qrDialog.collectAsStateWithLifecycle()
 
     // The newest client is first in the list, but a LazyColumn stays on the card that was first in view, so a
     // client added while the list is open would be above the screen. Scroll to a card when it is added.
@@ -87,27 +99,41 @@ fun AuthorizedClientsScreen(
 
     // Re-prune expired pending entries every second while any are pending,
     // so the countdown ticks down and expired ones drop without a manual refresh.
+    // The tick is read where the countdown text is made: without it the card kept the seconds of its first drawing,
+    // because nothing else changes while the client is pending.
     val anyPending = clients.any { it.state == ClientState.Pending }
+    var tick by remember { mutableLongStateOf(0L) }
     LaunchedEffect(anyPending) {
         while (anyPending) {
             delay(1_000L)
+            tick++
             viewModel.pruneExpired()
         }
     }
 
     when (val state = dialogState) {
-        AuthorizedClientsViewModel.DialogState.EnterName        -> EnterNameDialog(
+        AuthorizedClientsViewModel.DialogState.EnterName             -> EnterNameDialog(
+            // Known before the user picks a QR code option: better said here than after the name is typed.
+            qrProblem = (tokens as? AuthorizedClientsViewModel.TokensState.Unavailable)?.problem
+                ?.takeIf { it == AuthorizedClientsViewModel.TokenProblem.NotAllowed || it == AuthorizedClientsViewModel.TokenProblem.NotConnected },
             onConfirm = viewModel::confirmAdd,
             onDismiss = viewModel::dismissDialog
         )
 
-        is AuthorizedClientsViewModel.DialogState.ConfirmDelete -> ConfirmDeleteDialog(
+        is AuthorizedClientsViewModel.DialogState.ConfirmDelete      -> ConfirmDeleteDialog(
             clientName = state.client.name,
+            deletesToken = tokenKinds[state.client.clientId] == AuthorizedClientsViewModel.TokenKind.ClientToken,
             onConfirm = viewModel::confirmDelete,
             onDismiss = viewModel::dismissDialog
         )
 
-        null                                                    -> Unit
+        is AuthorizedClientsViewModel.DialogState.ConfirmDeleteToken -> ConfirmDeleteTokenDialog(
+            clientName = viewModel.displayName(state.subject),
+            onConfirm = viewModel::confirmDelete,
+            onDismiss = viewModel::dismissDialog
+        )
+
+        null                                                         -> Unit
     }
 
     pairingOffer?.let { offer ->
@@ -117,6 +143,8 @@ fun AuthorizedClientsScreen(
             onDismiss = viewModel::dismissPairing
         )
     }
+
+    qrDialog?.let { dialog -> ClientQrDialog(dialog = dialog, onDismiss = viewModel::dismissQr) }
 
     Scaffold(
         topBar = {
@@ -151,7 +179,7 @@ fun AuthorizedClientsScreen(
             // On the master, client control on is hardened mode on. Said here in every mode, because in simple
             // mode the NSClient settings that would explain it are hidden.
             if (featureEnabled) HardenedModeInfoRow(modifier = Modifier.padding(horizontal = AapsSpacing.large))
-            if (clients.isEmpty()) {
+            if (clients.isEmpty() && unpairedTokens.isEmpty()) {
                 EmptyState(modifier = Modifier.fillMaxSize())
             } else {
                 LazyColumn(
@@ -165,14 +193,34 @@ fun AuthorizedClientsScreen(
                         // string — the card/badge stay state-down, events-up with no viewModel handle.
                         val timeLabel = when (client.state) {
                             ClientState.Active  -> viewModel.lastSeenLabel(client)
-                            ClientState.Pending -> viewModel.pendingExpiresLabel(client)
+                            ClientState.Pending -> tick.let { viewModel.pendingExpiresLabel(client) }
                         }
                         AuthorizedClientCard(
                             client = client,
                             timeLabel = timeLabel,
+                            tokenKind = tokenKinds[client.clientId] ?: AuthorizedClientsViewModel.TokenKind.Unknown,
                             onRoleChange = { viewModel.setRole(client, it) },
                             onDelete = { viewModel.requestDelete(client) }
                         )
+                    }
+                    // Below the clients, so the indexes the scroll above uses stay the clients' own.
+                    if (unpairedTokens.isNotEmpty()) {
+                        item(key = "unpaired_tokens_header") {
+                            Text(
+                                text = stringResource(SyncStrings.authorized_clients_tokens_header),
+                                style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(top = AapsSpacing.medium)
+                            )
+                        }
+                        items(unpairedTokens, key = { "token_" + (it.id ?: it.name) }) { subject ->
+                            UnpairedTokenCard(
+                                clientName = viewModel.displayName(subject),
+                                showQr = qrCodeAvailable,
+                                onShowQr = { viewModel.showTokenQr(subject) },
+                                onDelete = { viewModel.requestDeleteToken(subject) }
+                            )
+                        }
                     }
                 }
             }
@@ -184,6 +232,7 @@ fun AuthorizedClientsScreen(
 private fun AuthorizedClientCard(
     client: AuthorizedClient,
     timeLabel: String,
+    tokenKind: AuthorizedClientsViewModel.TokenKind,
     onRoleChange: (ClientRole) -> Unit,
     onDelete: () -> Unit
 ) {
@@ -211,6 +260,22 @@ private fun AuthorizedClientCard(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 StateBadgeAndTimeRow(client = client, timeLabel = timeLabel)
+                // Which Nightscout token the phone writes with: its own client token, or one with more rights.
+                when (tokenKind) {
+                    AuthorizedClientsViewModel.TokenKind.ClientToken -> Text(
+                        text = stringResource(SyncStrings.authorized_clients_uses_client_token),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    AuthorizedClientsViewModel.TokenKind.OtherToken  -> Text(
+                        text = stringResource(SyncStrings.authorized_clients_uses_other_token, client.nsSubject.orEmpty()),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+
+                    AuthorizedClientsViewModel.TokenKind.Unknown     -> Unit
+                }
             }
             IconButton(onClick = onDelete) {
                 Icon(Icons.Default.Delete, contentDescription = stringResource(CoreUiStrings.delete))
@@ -296,41 +361,133 @@ private fun EmptyState(modifier: Modifier = Modifier) {
     }
 }
 
+/** A phone with its own client token and no pairing: it reads Nightscout. */
+@Composable
+private fun UnpairedTokenCard(
+    clientName: String,
+    showQr: Boolean,
+    onShowQr: () -> Unit,
+    onDelete: () -> Unit
+) {
+    ElevatedCard(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(AapsSpacing.large),
+            horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.Key,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.size(28.dp)
+            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = clientName, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
+                Text(
+                    text = stringResource(SyncStrings.authorized_clients_token_unpaired),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            if (showQr) IconButton(onClick = onShowQr) {
+                Icon(Icons.Default.QrCode2, contentDescription = stringResource(SyncStrings.authorized_clients_token_show_qr))
+            }
+            IconButton(onClick = onDelete) {
+                Icon(Icons.Default.Delete, contentDescription = stringResource(CoreUiStrings.delete))
+            }
+        }
+    }
+}
+
+/**
+ * Name, way of adding and role of a new client. The QR code options are offered only where the platform can draw a
+ * code; [qrProblem] tells why they cannot work now (no admin token, no Nightscout), so they are shown but cannot be
+ * chosen.
+ */
 @Composable
 private fun EnterNameDialog(
-    onConfirm: (String, ClientRole) -> Unit,
+    qrProblem: AuthorizedClientsViewModel.TokenProblem?,
+    onConfirm: (String, ClientRole?, AuthorizedClientsViewModel.AddMethod) -> Unit,
     onDismiss: () -> Unit
 ) {
     var name by remember { mutableStateOf("") }
+    val qrPossible = qrCodeAvailable && qrProblem == null
+    var method by remember {
+        mutableStateOf(if (qrPossible) AuthorizedClientsViewModel.AddMethod.QrWithPairing else AuthorizedClientsViewModel.AddMethod.Pin)
+    }
     // Nothing preselected: any default is wrong for someone (an own second phone wants Admin, a school phone Meals).
     var role by remember { mutableStateOf<ClientRole?>(null) }
+    val needsRole = method != AuthorizedClientsViewModel.AddMethod.QrNightscoutOnly
     val focusManager = LocalFocusManager.current
-    val canConfirm = name.isNotBlank() && role != null
+    val canConfirm = name.isNotBlank() && (role != null || !needsRole)
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(SyncStrings.authorized_clients_name_dialog_title)) },
         text = {
-            Column(modifier = Modifier.clearFocusOnTap(focusManager)) {
+            // A long dialog with three ways and the roles: it scrolls on a small screen or with a large font.
+            Column(modifier = Modifier
+                .clearFocusOnTap(focusManager)
+                .verticalScroll(rememberScrollState())) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it.take(48) },
                     singleLine = true,
                     placeholder = { Text(stringResource(SyncStrings.authorized_clients_name_placeholder)) }
                 )
-                Row(modifier = Modifier.padding(top = AapsSpacing.medium), verticalAlignment = Alignment.CenterVertically) {
+                if (qrCodeAvailable) {
                     Text(
-                        text = stringResource(CoreUiStrings.client_role_title),
+                        text = stringResource(SyncStrings.authorized_clients_method_title),
                         style = MaterialTheme.typography.titleSmall,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.padding(top = AapsSpacing.large, bottom = AapsSpacing.small)
                     )
-                    ClientRolesInfoButton()
+                    AddMethodOption(
+                        title = stringResource(SyncStrings.authorized_clients_method_qr_pair),
+                        summary = stringResource(SyncStrings.authorized_clients_method_qr_pair_summary),
+                        selected = method == AuthorizedClientsViewModel.AddMethod.QrWithPairing,
+                        enabled = qrPossible,
+                        onSelect = { method = AuthorizedClientsViewModel.AddMethod.QrWithPairing }
+                    )
+                    AddMethodOption(
+                        title = stringResource(SyncStrings.authorized_clients_method_qr_ns),
+                        summary = stringResource(SyncStrings.authorized_clients_method_qr_ns_summary),
+                        selected = method == AuthorizedClientsViewModel.AddMethod.QrNightscoutOnly,
+                        enabled = qrPossible,
+                        onSelect = { method = AuthorizedClientsViewModel.AddMethod.QrNightscoutOnly }
+                    )
+                    AddMethodOption(
+                        title = stringResource(SyncStrings.authorized_clients_method_pin),
+                        summary = stringResource(SyncStrings.authorized_clients_method_pin_summary),
+                        selected = method == AuthorizedClientsViewModel.AddMethod.Pin,
+                        enabled = true,
+                        onSelect = { method = AuthorizedClientsViewModel.AddMethod.Pin }
+                    )
+                    qrProblem?.let {
+                        Text(
+                            text = tokenProblemText(it),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(top = AapsSpacing.small)
+                        )
+                    }
                 }
-                ClientRoleSelector(selected = role, onSelect = { role = it })
+                if (needsRole) {
+                    Row(modifier = Modifier.padding(top = AapsSpacing.medium), verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = stringResource(CoreUiStrings.client_role_title),
+                            style = MaterialTheme.typography.titleSmall,
+                            modifier = Modifier.weight(1f)
+                        )
+                        ClientRolesInfoButton()
+                    }
+                    ClientRoleSelector(selected = role, onSelect = { role = it })
+                }
             }
         },
         confirmButton = {
             TextButton(
-                onClick = { role?.let { if (name.isNotBlank()) onConfirm(name, it) } },
+                onClick = { if (canConfirm) onConfirm(name, if (needsRole) role else null, method) },
                 enabled = canConfirm
             ) {
                 Text(stringResource(CoreUiStrings.ok))
@@ -343,15 +500,59 @@ private fun EnterNameDialog(
 }
 
 @Composable
+private fun AddMethodOption(
+    title: String,
+    summary: String,
+    selected: Boolean,
+    enabled: Boolean,
+    onSelect: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .selectable(selected = selected, enabled = enabled, role = Role.RadioButton, onClick = onSelect)
+            .padding(vertical = AapsSpacing.small),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(selected = selected, onClick = null, enabled = enabled)
+        Column(modifier = Modifier
+            .weight(1f)
+            .padding(start = AapsSpacing.medium)) {
+            val color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = DISABLED_ALPHA)
+            Text(text = title, style = MaterialTheme.typography.bodyLarge, color = color)
+            Text(text = summary, style = MaterialTheme.typography.bodySmall, color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else color)
+        }
+    }
+}
+
+/** The Material 3 alpha of disabled content. */
+private const val DISABLED_ALPHA = 0.38f
+
+@Composable
+private fun tokenProblemText(problem: AuthorizedClientsViewModel.TokenProblem): String = when (problem) {
+    AuthorizedClientsViewModel.TokenProblem.NotConnected -> stringResource(SyncStrings.authorized_clients_token_problem_not_connected)
+    AuthorizedClientsViewModel.TokenProblem.NotAllowed   -> stringResource(SyncStrings.authorized_clients_token_problem_not_allowed)
+    AuthorizedClientsViewModel.TokenProblem.NameTaken    -> stringResource(SyncStrings.authorized_clients_token_problem_name_taken)
+    AuthorizedClientsViewModel.TokenProblem.NameInUse    -> stringResource(SyncStrings.authorized_clients_token_problem_name_in_use)
+    AuthorizedClientsViewModel.TokenProblem.Failed       -> stringResource(SyncStrings.authorized_clients_token_problem_failed)
+}
+
+@Composable
 private fun ConfirmDeleteDialog(
     clientName: String,
+    deletesToken: Boolean,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(SyncStrings.authorized_clients_delete_dialog_title)) },
-        text = { Text(stringResource(SyncStrings.authorized_clients_delete_dialog_message, clientName)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
+                Text(stringResource(SyncStrings.authorized_clients_delete_dialog_message, clientName))
+                if (deletesToken) Text(stringResource(SyncStrings.authorized_clients_delete_dialog_token))
+            }
+        },
         confirmButton = {
             TextButton(onClick = onConfirm) { Text(stringResource(CoreUiStrings.delete)) }
         },
@@ -360,6 +561,129 @@ private fun ConfirmDeleteDialog(
         }
     )
 }
+
+@Composable
+private fun ConfirmDeleteTokenDialog(
+    clientName: String,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(SyncStrings.authorized_clients_token_delete_title)) },
+        text = { Text(stringResource(SyncStrings.authorized_clients_token_delete_message, clientName)) },
+        confirmButton = {
+            TextButton(onClick = onConfirm) { Text(stringResource(CoreUiStrings.delete)) }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.cancel)) }
+        }
+    )
+}
+
+/** Making the token, why it could not be made, or the QR code itself. */
+@Composable
+private fun ClientQrDialog(
+    dialog: AuthorizedClientsViewModel.QrDialog,
+    onDismiss: () -> Unit
+) {
+    when (dialog) {
+        AuthorizedClientsViewModel.QrDialog.Working    -> AlertDialog(
+            onDismissRequest = {},
+            text = {
+                Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large), verticalAlignment = Alignment.CenterVertically) {
+                    CircularProgressIndicator()
+                    Text(stringResource(SyncStrings.authorized_clients_qr_working))
+                }
+            },
+            confirmButton = {},
+            dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.cancel)) } }
+        )
+
+        is AuthorizedClientsViewModel.QrDialog.Problem -> AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text(stringResource(SyncStrings.authorized_clients_token_problem_title)) },
+            text = { Text(tokenProblemText(dialog.problem)) },
+            confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.ok)) } }
+        )
+
+        is AuthorizedClientsViewModel.QrDialog.Shown   -> ClientQrCodeDialog(dialog = dialog, onDismiss = onDismiss)
+    }
+}
+
+@Composable
+private fun ClientQrCodeDialog(
+    dialog: AuthorizedClientsViewModel.QrDialog.Shown,
+    onDismiss: () -> Unit
+) {
+    // The code is a working Nightscout token, and with the pairing the right to send commands: no screenshots.
+    @Suppress("UNUSED_VARIABLE")
+    val screenshotsBlocked = blockScreenshotsWhileVisible()
+    val modules = remember(dialog.text) { qrModules(dialog.text) }
+
+    var msLeft by remember(dialog.expiresAt) { mutableLongStateOf(dialog.expiresAt?.let { it - Clock.System.now().toEpochMilliseconds() } ?: 0L) }
+    if (dialog.expiresAt != null) LaunchedEffect(dialog.expiresAt) {
+        while (true) {
+            msLeft = dialog.expiresAt - Clock.System.now().toEpochMilliseconds()
+            if (msLeft <= 0L) {
+                onDismiss()
+                break
+            }
+            delay(1_000L)
+        }
+    }
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false, dismissOnClickOutside = false)
+    ) {
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surface) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(AapsSpacing.large),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
+            ) {
+                Text(
+                    text = stringResource(SyncStrings.authorized_clients_qr_title, dialog.clientName),
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = stringResource(if (dialog.pairs) SyncStrings.authorized_clients_qr_pair_instructions else SyncStrings.authorized_clients_qr_ns_instructions),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                modules?.let {
+                    QrCodeImage(
+                        modules = it,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .widthIn(max = QR_MAX_SIZE)
+                    )
+                }
+                Text(
+                    text = stringResource(SyncStrings.authorized_clients_qr_keep_private),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
+                if (dialog.expiresAt != null) Text(
+                    text = stringResource(SyncStrings.authorized_clients_pin_expires_in, (msLeft / 1000L).coerceAtLeast(0L).toString()),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(SyncStrings.authorized_clients_pin_done))
+                }
+            }
+        }
+    }
+}
+
+/** Large enough to scan from a hand's length, small enough to fit a phone in landscape with the text around it. */
+private val QR_MAX_SIZE = 360.dp
 
 @Composable
 private fun PairingPinDialog(

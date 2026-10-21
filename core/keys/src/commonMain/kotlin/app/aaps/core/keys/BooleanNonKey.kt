@@ -46,4 +46,8 @@ enum class BooleanNonKey(
     // set on the next launch, the previous VACUUM died below the JVM (native abort / OOM) — used to
     // break the boot-crash loop. Transient device state, not a user setting → not exportable.
     VacuumInProgress("vacuum_in_progress", false, exportable = false),
+
+    // Client: paired from the master's QR code and the hello not sent yet. The phone had no working Nightscout
+    // connection when it was paired, so the hello goes out when it first connects. Belongs to the pairing.
+    NsClientControlHelloPending("nsclient_control_hello_pending", false, exportable = false),
 }

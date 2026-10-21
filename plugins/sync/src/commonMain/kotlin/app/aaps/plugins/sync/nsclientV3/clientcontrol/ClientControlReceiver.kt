@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
 import app.aaps.core.data.json.OrgJsonCompat.optJsonObjectCompat
+import app.aaps.core.data.json.OrgJsonCompat.optStringCompat
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
@@ -299,6 +300,10 @@ class ClientControlReceiver(
             aapsLogger.error(LTag.NSCLIENT, "ClientControl: $identifier timestamp outside skew window")
             return
         }
+        // The name of the Nightscout token this was written with. Nightscout sets it; a client cannot choose it. Kept
+        // only now that the message is known to come from this client.
+        val subject = doc.optStringCompat("subject")
+        if (subject.isNotEmpty() && subject != entry.nsSubject) authorizedRepository.noteSubject(entry.clientId, subject)
         // Hard expiry: a command that sat past its validity must NOT fire late (e.g. a profile switch
         // requested 15 min ago and only now picked up). Consume the counter so it can't replay, and
         // tell the client definitively rather than leaving it to time out.

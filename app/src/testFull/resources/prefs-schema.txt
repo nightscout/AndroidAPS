@@ -341,6 +341,7 @@ ns_wifi|BooleanKey|true
 nsclient_control_authorized_clients|StringNonKey|false
 nsclient_control_client_id|StringNonKey|false
 nsclient_control_counter_sent|LongNonKey|false
+nsclient_control_hello_pending|BooleanNonKey|false
 nsclient_control_master_install_id|StringNonKey|false
 nsclient_control_master_secret_enc|StringNonKey|false
 nsclient_control_own_install_id|StringNonKey|false

@@ -281,6 +281,9 @@ class ClientControlRoundTrip(
         publisher.publishTracked(ClientControlMessage.Ping, dateUtil.now() + PING_TTL_MS, wantsAck = true)
     }
 
+    /** The pairing hello, for a phone paired from the master's QR code before it could reach Nightscout. No ACK. */
+    suspend fun sendHello(): ClientControlSendResult = publisher.publish(ClientControlMessage.Hello())
+
     // The single app-level modal signal (progress + label), fed by every run()/execute() regardless of
     // feature. Hosted once in ComposeMainActivity; round-trips are single-in-flight so at most one shows.
     private val _pending = MutableStateFlow<PendingAction?>(null)

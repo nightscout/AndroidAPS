@@ -118,6 +118,18 @@ class PairWithMasterViewModel(
         }
     }
 
+    /**
+     * Shows the pairing made meanwhile somewhere else: from this screen the user can open the QR code scanner, which
+     * pairs the phone when the code carries a pairing.
+     */
+    fun refreshPairing() {
+        if (_state.value != UiState.PinEntry) return
+        viewModelScope.launch {
+            val pairing = repository.currentPairing() ?: return@launch
+            if (_state.value == UiState.PinEntry) _state.value = UiState.AlreadyPaired(pairing)
+        }
+    }
+
     /** User cancelled the confirmation dialog. */
     fun cancelConfirmation() {
         if (_state.value is UiState.Confirming) _state.value = UiState.PinEntry

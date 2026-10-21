@@ -35,6 +35,7 @@ import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.scenes.ClientControlSendResult
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
@@ -210,7 +211,7 @@ class NSClientV3Plugin(
                 lastOperationError != null                                                            -> rh.gs(CoreUiStrings.error)
                 nsAndroidClient?.lastStatus == null                                                   -> rh.gs(SyncStrings.not_connected)
                 nsLoadExecutor.isRunning                                                                       -> rh.gs(SyncStrings.working)
-                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                         -> rh.gs(InterfacesStrings.authorized)
+                hasWritePermission                                                                    -> rh.gs(InterfacesStrings.authorized)
                 nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                         -> rh.gs(SyncStrings.read_only)
                 else                                                                                  -> rh.gs(CoreUiStrings.unknown)
             }
@@ -265,7 +266,14 @@ class NSClientV3Plugin(
         // fast, and the bundled config re-fetch picks up anything missed while disconnected.
         if (config.AAPSCLIENT) {
             scope.launch {
-                wsConnectedFlow.collect { connected -> if (connected) requestMasterProbe() }
+                wsConnectedFlow.collect { connected ->
+                    if (!connected) return@collect
+                    // Paired from the master's QR code before Nightscout was set up: the hello goes out now. Before the
+                    // probe, and awaited: the master takes the counters in order, so a hello signed before a ping it
+                    // has already taken would be refused as a replay.
+                    if (preferences.get(BooleanNonKey.NsClientControlHelloPending)) sendPendingHello()
+                    requestMasterProbe()
+                }
             }
         }
         rxBus.toFlow(EventAppExit::class)
@@ -436,6 +444,23 @@ class NSClientV3Plugin(
         nsLoadExecutor.runDetached(NsLoadStep.SETTINGS)
     }
 
+    /**
+     * Sends the hello of a pairing made from the master's QR code. The flag stays until the hello is out, so a failure
+     * (the first connection can still use the old token while the settings change) is tried again on the next connect.
+     */
+    private suspend fun sendPendingHello() {
+        // No try here: the publisher already turns a failed upload into PublishFailed.
+        when (clientControlRoundTrip.sendHello()) {
+            ClientControlSendResult.Success   -> {
+                preferences.put(BooleanNonKey.NsClientControlHelloPending, false)
+                nsClientRepository.addLog("► CLIENTCTL", "hello after the set-up from the QR code")
+            }
+
+            ClientControlSendResult.NotPaired -> preferences.put(BooleanNonKey.NsClientControlHelloPending, false)
+            else                              -> aapsLogger.warn(LTag.NSCLIENT, "ClientControl: hello after the QR set-up not sent, trying on the next connect")
+        }
+    }
+
     fun scheduleIrregularExecution(refreshToken: Boolean = false) {
         if (refreshToken) {
             scope.launch { executeLoop("REFRESH TOKEN") }
@@ -495,7 +520,9 @@ class NSClientV3Plugin(
         }
     }
 
-    override val hasWritePermission: Boolean get() = nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true
+    // The rights this phone needs: a master writes every collection, a client only reads and writes to settings.
+    override val hasWritePermission: Boolean
+        get() = nsAndroidClient?.lastStatus?.apiPermissions?.let { if (config.AAPSCLIENT) it.isClient() else it.isFull() } == true
     override val connected: Boolean get() = nsAndroidClient?.lastStatus != null
 
     // Canonical WS-state holder. It lives on NsConnection, the singleton that survives service

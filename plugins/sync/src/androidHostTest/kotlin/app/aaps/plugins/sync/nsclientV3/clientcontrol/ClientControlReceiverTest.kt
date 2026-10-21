@@ -263,6 +263,28 @@ internal class ClientControlReceiverTest {
         verify(offerPublisher).deleteOffer(clientId)
     }
 
+    /** Nightscout puts the name of the token that wrote a doc in `subject`; the master keeps it for a verified message. */
+    @Test
+    fun theTokenNameOfAVerifiedMessageIsKept() = runTest {
+        val (clientId, secret) = pair()
+        val doc = JsonObject(wrap(envelope(clientId, secret, counter = 1L)) + ("subject" to JsonPrimitive("aaps-phone")))
+
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_HELLO_PREFIX + clientId, doc)
+
+        assertThat(authorizedRepository.current(now).single { it.clientId == clientId }.nsSubject).isEqualTo("aaps-phone")
+    }
+
+    /** A doc that does not verify says nothing about the client, so its `subject` is not kept. */
+    @Test
+    fun theTokenNameOfAForgedMessageIsNotKept() = runTest {
+        val (clientId, _) = pair()
+        val forged = JsonObject(wrap(envelope(clientId, ByteArray(32) { 7 }, counter = 1L)) + ("subject" to JsonPrimitive("someone-else")))
+
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_HELLO_PREFIX + clientId, forged)
+
+        assertThat(authorizedRepository.current(now).single { it.clientId == clientId }.nsSubject).isNull()
+    }
+
     @Test
     fun pairingStoresTheClientControlSwitchWhenItIsNotStored() = runTest {
         // Unset, the switch is on only in simple mode. Storing the value in use at pairing keeps client

@@ -41,6 +41,9 @@
     <string name="setupwizard_ns_receive_info">Accepting treatments and data directly from Nightscout (less secure way) is now turned off by default. Open the settings below only if you still need it. Necessary if you need to enter data through NS or 3rd party apps.</string>
     <string name="setupwizard_open_ns_receive_settings">Nightscout data acceptance</string>
     <string name="setupwizard_pair_with_master_info">Pair this client with your master AAPS so it can send commands over a secure channel.</string>
+    <string name="setupwizard_setup_from_master_title">Set up from the master</string>
+    <string name="setupwizard_setup_from_master_info">On the master, open Authorized clients and add this phone with a QR code. Scanning it sets up Nightscout with a token of its own, and can pair the phone too. Without a QR code, skip this step and set up Nightscout yourself.</string>
+    <string name="setupwizard_scan_master_qr">Scan the QR code</string>
     <string name="setupwizard_pairing_ws_warning">The Nightscout WebSocket connection is required for pairing. Go back to the previous step and enable it first.</string>
     <string name="setupwizard_pairing_status_master">Paired clients: %1$d</string>
     <string name="setupwizard_pairing_status_master_none">No clients paired yet</string>

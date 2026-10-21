@@ -31,15 +31,21 @@ A client never pushes state directly. It sends a command; the master processes i
 
 ## 2. Transport — the signed NS `settings` round-trip
 
-Everything travels as documents in the Nightscout APIv3 `settings` collection, keyed by deterministic identifiers. No secrets ever transit NS — only HMAC signatures.
+Everything travels as documents in the Nightscout APIv3 `settings` collection, keyed by deterministic identifiers. Commands carry only HMAC signatures. The secret itself goes through NS at most once: wrapped with the PIN in the offer doc, or not at all when the master shows it in a QR code.
 
-### 2.1 Pairing & PIN exchange (QR-based)
+### 2.1 Pairing: PIN or QR code
 
-1. Master generates a `clientId` (UUID) + a **32-byte** secret, wraps the secret in a user PIN, and publishes a `PairingPayload` QR (`masterInstallId`, `clientId`, `secretHex`, `expiresAt`) under `aaps_clientcontrol_offer_<…>`.
-2. Client scans, the user confirms, and `ClientPairingRepository.pair()` stores the secret wrapped via `SecureEncrypt` (AES/GCM, AndroidKeyStore-backed).
-3. Client sends **`Hello`** (`counter = 1`) under `aaps_clientcontrol_hello_<…>`, promoting the master's entry **Pending → Active**.
-4. **Revocation:** swipe-to-delete on the master removes the entry; later envelopes from that `clientId` get an "unknown clientId" log and the doc is deleted.
-5. **Orphan detection:** the master publishes an `authorizedClients.clientIds` roster (Active entries only) in the cold config doc; a client checks itself in, guarded by a race window (`docSrvModified ≥ pairedAt + 60s`, so a doc in flight from before `Hello` isn't mistaken for an orphan signal).
+The master generates a `clientId` (UUID) and a **32-byte** secret and stores a Pending entry (`AuthorizedClientsRepository.addPending`, 2 min, `PAIR_TTL_MS`). The secret reaches the client as a `PairingPayload` (`masterInstallId`, `clientId`, `secretHex`, `expiresAt`) in one of two ways, chosen in the "Add client" dialog:
+
+- **PIN**, for a phone without a camera that is connected to Nightscout already. The payload is wrapped with an 8-digit PIN (PBKDF2-HMAC-SHA256, 200 000 rounds, then AES-256-GCM, `ClientControlPairingCrypto`) and published as `aaps_clientcontrol_offer_<clientId>`. The client finds it with `searchSettings` and the typed PIN. The offer doc is deleted permanently when the dialog closes and when the client says hello.
+- **QR code**, which also sets up Nightscout: see 2.11. The payload is inside the code; nothing is published.
+
+Then:
+
+1. The client stores the secret wrapped via `SecureEncrypt` (`ClientPairingRepository.pair()`, all keys or none).
+2. It sends **`Hello`** under `aaps_clientcontrol_hello_<clientId>`, promoting the master's entry **Pending → Active**. After a PIN this is at once. After a QR code the phone had no working Nightscout connection yet, so `BooleanNonKey.NsClientControlHelloPending` holds the hello until the websocket connects (`NSClientV3Plugin`, before the ping: the master takes counters in order).
+3. **Revocation:** delete on the master removes the entry; later envelopes from that `clientId` get an "unknown clientId" log. The docs are not deleted (a soft delete would block the identifier with HTTP 410). The client's own Nightscout token is deleted too (2.11), so the phone loses Nightscout as well.
+4. **Orphan detection:** the master publishes an `authorizedClients.clientIds` roster (Active entries only) in the cold config doc; a client checks itself in, guarded by a race window (`docSrvModified ≥ pairedAt + 60s`, so a doc in flight from before `Hello` isn't mistaken for an orphan signal).
 
 ### 2.2 Signed envelope, counter, validity
 
@@ -190,6 +196,32 @@ Not covered yet:
 - Food is written to the local database, not through the master.
 - Three watch paths still write locally on the client, and the watch does not know the role (the master still refuses, so the user sees the refusal, not a hidden button).
 - Going back to a build without roles makes the master stop checking them (fail open). A role only exists in builds that check it.
+
+### 2.11 A Nightscout token for each client, and the QR code
+
+A client needs much less from Nightscout than an admin token gives: it uploads nothing (`DataSyncSelectorV3.doUpload` does not run on a client) and sends everything to the master through `settings`. So the master makes each client its own token (`ClientTokens`) through the same API the Nightscout admin tools page uses (`/api/v2/authorization/roles` and `/subjects`, `NSAndroidClient.getAuthRoles` and the others). The master's own token must be an admin token for this; without one the QR code options say so and the PIN still works.
+
+- **The role `aaps-client`**: `*:*:read`, `api:settings:admin`, `api:settings:create`, `api:settings:update`, `notifications:*:ack`. `api:settings:admin` is not more rights: Nightscout asks for it to list `settings` (`searchSettings`, the PIN lookup) and to follow it over the websocket. The last one lets a client snooze a Nightscout alarm. The name is lowercase because the admin tools page lowercases role names when it saves a subject.
+- **The master keeps the role as it is.** `ClientTokens.ensureRole` puts the permissions back if somebody changed them, every time a token is made and every time the Authorized clients screen opens. It stores the role only when it first makes a token.
+- **A client token** is a subject named `aaps-<client name>` with this one role and nothing else. The same name again gets the same token back (the same phone set up again). A subject of that name with other roles is the user's own token: it is never given out, changed or deleted (`NameTaken`). Names are not unique in Nightscout, so the master looks a subject up by `_id` and never trusts a name alone.
+- **The token a client really uses** is in the `subject` field Nightscout writes on every document (the subject's name, not the token; a client cannot choose it). The receiver keeps it in `AuthorizedClient.nsSubject` for each verified message, and the card shows "Own Nightscout token" or, in red, a token with more rights than a client needs.
+- **Removing a client** also deletes the client tokens named `nsSubject`. Tokens of other roles stay. If Nightscout cannot be reached then, the token stays and shows under "Read Nightscout only", to delete later.
+- **The permission check** (`Sync.hasWritePermission`) is `ApiPermissions.isClient()` on a client (read everything, create and update in `settings`) and `isFull()` on a master. With the client role a client now shows "authorized", not "read only".
+- **`v3/status` is wrong for one collection** (Nightscout 15, `lib/api3/specific/status.js`: `for (let col in cols)` hands the collection's name to `permsForCol`, which reads `col.colName`, so it checks `api:undefined:create` and so on). Only wildcard rights show, and the client role is reported as read-only in `settings`, measured on a live server, while its writes there work. So `NSAndroidClientImpl.getStatus` asks `/api/v2/authorization/debug/check/api:settings:create` and `…:update` when status does not show full rights. Measured with a client token: entries read 200, settings list 200, settings write 201, settings delete 403, treatment delete 403, token list 401.
+
+The "Add client" dialog has three ways:
+
+| Way | What the client gets | Pairs |
+|---|---|---|
+| QR code: Nightscout and pairing | address + own token + `PairingPayload` | yes, the code works 2 min |
+| QR code: Nightscout only | address + own token | no: a phone that only reads Nightscout. Listed under "Read Nightscout only", where the code can be shown again or the token deleted |
+| PIN | nothing new: it keeps the token it has | yes (2.1) |
+
+- **The code** is `ClientSetupCode` as JSON (`type = "aaps-client-setup"`, `v`, `url`, `token`, optional `pairing`). A code of another `v` is refused: master and client must run the same version. Its `toString` hides the token and the secret. The dialog blocks screenshots.
+- **Drawing it** is shared code (`QrCodeImage`, black on white also in the dark theme), the squares come from ZXing in `jvmSharedMain`, so Android and the desktop. iOS has none yet: it runs only as a client, and the options are hidden where `qrModules` returns null.
+- **Reading it** is `ScanMasterQrScreen`, opened from the client wizard's first Nightscout step ("Set up from the master") and from Pair with master. Android uses CameraX and ZXing, no Play services; the camera permission is asked only when scanning. Applying a code stores the pairing and its waiting hello first, then switches NSClient on and writes the address, the token and the websocket switch. **iOS still needs its own scanner** (AVFoundation reads QR codes without a library); until then the scan buttons are hidden there, and on the desktop, which has no camera.
+
+Not built yet: a PIN-paired client still writes with the token it had, often the user's admin token. The plan is that the master sends it its own token through the channel (encrypted, kept in `settings` only briefly), that the secret is replaced right after pairing by a key exchange in the hello and its ACK, that the master signs the cold and hot docs (a client token can write to `settings`, so it could write them too), and that the master then refuses a client's commands written with another token than its own.
 
 ---
 

@@ -91,7 +91,7 @@ class AuthorizedClientsRepository(
      * for caller-side wrapping (PIN-based pairing offer) — caller must not persist it. The
      * encrypted form is stored on the entry.
      */
-    suspend fun addPending(name: String, role: ClientRole, pairTtlMs: Long, now: Long): PendingResult = mutex.withLock {
+    suspend fun addPending(name: String, role: ClientRole, pairTtlMs: Long, now: Long, nsSubject: String? = null): PendingResult = mutex.withLock {
         val secretBytes = ClientControlCrypto.newSecretBytes()
         val secretHex = ClientControlCrypto.bytesToHex(secretBytes)
         val entry = AuthorizedClient(
@@ -101,10 +101,21 @@ class AuthorizedClientsRepository(
             state = ClientState.Pending,
             createdAt = now,
             pairExpiresAt = now + pairTtlMs,
-            role = role.name
+            role = role.name,
+            nsSubject = nsSubject
         )
         write(decode() + entry)
         PendingResult(entry, secretHex)
+    }
+
+    /**
+     * Keep the name of the Nightscout token [clientId] writes with. Called for each verified message, so it writes only
+     * when the name changed (the client was set up with another token).
+     */
+    suspend fun noteSubject(clientId: String, nsSubject: String): Unit = mutex.withLock {
+        val list = decode()
+        val updated = list.map { if (it.clientId == clientId) it.copy(nsSubject = nsSubject) else it }
+        if (updated != list) write(updated)
     }
 
     suspend fun delete(clientId: String): Unit = mutex.withLock {

@@ -126,4 +126,5 @@ sealed class AppRoute(val route: String) {
     data object SetupWizard : AppRoute("setup_wizard")
     data object AuthorizedClients : AppRoute("authorized_clients")
     data object PairWithMaster : AppRoute("pair_with_master")
+    data object ScanMasterQr : AppRoute("scan_master_qr")
 }

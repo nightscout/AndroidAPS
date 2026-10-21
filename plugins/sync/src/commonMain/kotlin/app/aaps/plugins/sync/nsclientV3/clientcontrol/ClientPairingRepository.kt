@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.protection.SecureEncrypt
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -117,6 +118,7 @@ class ClientPairingRepository(
         preferences.put(LongNonKey.NsClientControlPairedAt, 0L)
         // The role belongs to this pairing; a new pairing learns its own from the master's roster.
         preferences.put(StringNonKey.NsClientControlRole, "")
+        preferences.put(BooleanNonKey.NsClientControlHelloPending, false)
     }
 
     /**

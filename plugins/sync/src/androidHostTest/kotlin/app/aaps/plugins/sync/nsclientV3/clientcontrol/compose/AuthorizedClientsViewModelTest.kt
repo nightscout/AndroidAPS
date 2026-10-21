@@ -8,6 +8,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.AuthorizedClient
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientTokens
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferPublisher
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +40,7 @@ internal class AuthorizedClientsViewModelTest {
 
     @Mock private lateinit var repository: AuthorizedClientsRepository
     @Mock private lateinit var offerPublisher: PairingOfferPublisher
+    @Mock private lateinit var clientTokens: ClientTokens
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var preferences: Preferences
@@ -55,7 +57,7 @@ internal class AuthorizedClientsViewModelTest {
         whenever(preferences.observe(BooleanKey.GeneralSimpleMode)).thenReturn(MutableStateFlow(false))
         whenever(preferences.observe(StringNonKey.NsClientControlClientId)).thenReturn(MutableStateFlow(""))
         whenever(preferences.get(BooleanKey.HardenedMode)).thenReturn(false)
-        sut = AuthorizedClientsViewModel(repository, offerPublisher, dateUtil, rh, preferences)
+        sut = AuthorizedClientsViewModel(repository, offerPublisher, clientTokens, dateUtil, rh, preferences)
     }
 
     @AfterEach

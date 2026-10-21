@@ -73,6 +73,7 @@ import app.aaps.plugins.configuration.setupwizard.SetupWizardScreen
 import app.aaps.plugins.main.MainStrings
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.compose.AuthorizedClientsScreen
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.compose.PairWithMasterScreen
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.compose.ScanMasterQrScreen
 import app.aaps.ui.compose.calibrationDialog.CalibrationDialogScreen
 import app.aaps.ui.compose.carbsDialog.CarbsDialogScreen
 import app.aaps.ui.compose.careDialog.CareDialogScreen
@@ -607,6 +608,13 @@ fun NavGraphBuilder.appNavGraph(
 
     composable(AppRoute.PairWithMaster.route) {
         PairWithMasterScreen(
+            onNavigateBack = { navController.popBackStack() },
+            onScanQr = { navController.navigate(AppRoute.ScanMasterQr.route) }
+        )
+    }
+
+    composable(AppRoute.ScanMasterQr.route) {
+        ScanMasterQrScreen(
             onNavigateBack = { navController.popBackStack() }
         )
     }
@@ -780,6 +788,7 @@ fun NavGraphBuilder.appNavGraph(
             onProfileSwitch = { navController.navigate(AppRoute.ProfileActivation.createRoute(0)) },
             onOpenAuthorizedClients = { navController.navigate(AppRoute.AuthorizedClients.route) },
             onPairWithMaster = { navController.navigate(AppRoute.PairWithMaster.route) },
+            onScanMasterQr = { navController.navigate(AppRoute.ScanMasterQr.route) },
             onOpenNsReceiveSettings = { navController.navigate(AppRoute.PreferenceScreen.createRoute("ns_client_synchronization")) },
             onRunObjectives = {
                 val index = activePlugin.getPluginsList().indexOfFirst { it is Objectives }
