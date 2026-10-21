@@ -99,6 +99,8 @@
     <string name="garmin_description">Connessione al dispositivo Garmin (Fenix, Edge, …)</string>
     <string name="garmin_local_http_server_port">Porta server HTTP locale</string>
     <string name="garmin_local_http_server">Server HTTP locale</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">L\'orologio Garmin ha inviato %1$s di carboidrati. Questo telefono è un client, quindi non sono stati inseriti. Inseriscili in AAPS.</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">L\'orologio Garmin ha chiesto di connettere o disconnettere la pompa. Questo telefono è un client, quindi non è stato cambiato nulla.</string>
     <!--    Wear-->
     <string name="description_wear">Monitora e controlla AAPS usando il tuo smartwatch WearOS.</string>
     <string name="no_watch_connected">(Nessuno smartwatch connesso)</string>
