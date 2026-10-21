@@ -108,6 +108,8 @@
     <string name="triggerCannulaAgeDesc">Kaniulės laikas %1$s %2$.1f val.</string>
     <string name="triggerPodChangeLabel">Pod aktyvavimas</string>
     <string name="triggerPodChangeDesc">Pod aktyvuotas</string>
+    <string name="triggerUnknownLabel">Nežinoma sąlyga</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Nežinoma sąlyga %1$s – niekada netenkinama</string>
     <string name="triggerInsulinAgeLabel">Insulino laikas</string>
     <string name="triggerInsulinAgeDesc">Insulino laikas %1$s %2$.1f val.</string>
     <string name="triggerPumpBatteryAgeLabel">Pompos baterijos laikas</string>
