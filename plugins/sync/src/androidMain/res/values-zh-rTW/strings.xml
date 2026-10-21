@@ -56,6 +56,7 @@
     <string name="pair_with_master_already_paired_master">目前已與主裝置 %1$s 配對。請先取消配對後再輸入新的 PIN。</string>
     <string name="pair_with_master_unpair">取消配對</string>
     <string name="pair_with_master_sending">正在傳送配對訊息…</string>
+    <!-- Client set-up from the master's QR code -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">AAPS 主裝置已無法辨識此裝置。請開啟 管理頁面 → 與主裝置配對 以重新配對。</string>
     <string name="ns_client">NSClient</string>
