@@ -34,6 +34,32 @@
     <string name="authorized_clients_pin_published">Sammenkoblingstilbud klart på Nightscout.</string>
     <string name="authorized_clients_pin_publish_failed">Kunne ikke laste opp sammenkoblingstilbud til Nightscout.</string>
     <string name="authorized_clients_pin_retry">Prøv igjen</string>
+    <string name="authorized_clients_method_title">Hvordan skal telefonen konfigureres?</string>
+    <string name="authorized_clients_method_qr_pair">QR-kode: Nightscout og sammenkobling</string>
+    <string name="authorized_clients_method_qr_pair_summary">Skann koden én gang på den nye telefonen. Den får sitt eget Nightscout-token og blir sammenkoblet.</string>
+    <string name="authorized_clients_method_qr_ns">QR-kode: Bare Nightscout</string>
+    <string name="authorized_clients_method_qr_ns_summary">Telefonen får sitt eget Nightscout-token og kan lese dataene. Den er ikke sammenkoblet og kan ikke sende kommandoer.</string>
+    <string name="authorized_clients_method_pin">PIN-kode</string>
+    <string name="authorized_clients_method_pin_summary">For en telefon uten kamera. Den må allerede være koblet til Nightscout.</string>
+    <string name="authorized_clients_qr_working">Oppretter Nightscout-token…</string>
+    <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Sett opp %1$s</string>
+    <string name="authorized_clients_qr_pair_instructions">Skann denne koden på den nye telefonen, enten i oppsettsveiviseren eller under Koble til hovedenhet. Den konfigurerer Nightscout og sammenkobler telefonen.</string>
+    <string name="authorized_clients_qr_ns_instructions">Skann denne koden på den nye telefonen, enten i oppsettsveiviseren eller under Koble til hovedenhet. Den konfigurerer Nightscout. Telefonen blir ikke sammenkoblet.</string>
+    <string name="authorized_clients_qr_keep_private">Alle som ser denne koden, kan lese dataene dine i Nightscout. Vis den bare til den nye telefonen.</string>
+    <string name="authorized_clients_token_problem_title">Ingen QR-kode</string>
+    <string name="authorized_clients_token_problem_not_connected">Denne telefonen er ikke koblet til Nightscout og kan derfor ikke opprette et token for klienten.</string>
+    <string name="authorized_clients_token_problem_not_allowed">Nightscout-tokenet på denne telefonen er ikke et administratortoken og kan derfor ikke opprette et token for klienten. Bruk et administratortoken her, eller legg til klienten med PIN-koden.</string>
+    <string name="authorized_clients_token_problem_name_taken">Nightscout har allerede et token med dette navnet og andre rettigheter. Velg et annet navn.</string>
+    <string name="authorized_clients_token_problem_name_in_use">En klient med dette navnet finnes allerede i listen. Velg et annet navn, eller fjern klienten først.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout opprettet ikke tokenet. Kontroller tilkoblingen og prøv igjen.</string>
+    <string name="authorized_clients_tokens_header">Bare lesetilgang til Nightscout</string>
+    <string name="authorized_clients_token_unpaired">Eget Nightscout-token, ikke sammenkoblet</string>
+    <string name="authorized_clients_token_show_qr">Vis QR-kode</string>
+    <string name="authorized_clients_token_delete_title">Slette tokenet?</string>
+    <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s kan ikke lenger lese Nightscout.</string>
+    <string name="authorized_clients_delete_dialog_token">Nightscout-tokenet slettes også, slik at enheten ikke lenger kan lese Nightscout.</string>
+    <string name="authorized_clients_uses_client_token">Eget Nightscout-token</string>
+    <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Bruker Nightscout-tokenet %1$s, som har flere rettigheter enn en klient trenger</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Koble til hovedenhet</string>
     <string name="pair_with_master_pin_entry_title">Skriv inn sammenkoblings-PIN</string>
@@ -57,6 +83,22 @@
     <string name="pair_with_master_unpair">Koble fra</string>
     <string name="pair_with_master_sending">Sender sammenkoblingsmelding…</string>
     <!-- Client set-up from the master's QR code -->
+    <string name="client_setup_scan_button">Skann QR-kode</string>
+    <string name="client_setup_scan_title">Skann hovedenhetens QR-kode</string>
+    <string name="client_setup_scan_instructions">Åpne Autoriserte klienter på hovedenheten, og legg til denne telefonen ved hjelp av en QR-kode. Rett kameraet mot koden.</string>
+    <string name="client_setup_scan_camera_refused">Kameraet kreves for å lese QR-koden. Gi tilgang til kameraet, eller bruk PIN-koden for å sammenkoble telefonen.</string>
+    <string name="client_setup_scan_not_a_code">Dette er ikke en QR-kode fra AAPS.</string>
+    <string name="client_setup_scan_other_version">Denne koden er fra en annen AAPS-versjon. Hovedenheten og denne telefonen må bruke samme versjon.</string>
+    <string name="client_setup_scan_expired">Denne koden har utløpt. Opprett en ny kode på hovedenheten.</string>
+    <string name="client_setup_scan_already_paired">Denne telefonen er allerede sammenkoblet. Fjern sammenkoblingen før du bruker en kode som sammenkobler telefonen.</string>
+    <string name="client_setup_confirm_title">Vil du bruke denne koden?</string>
+    <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nightscout: %1$s</string>
+    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">Den sammenkobler også denne telefonen med hovedenheten %1$s.</string>
+    <string name="client_setup_confirm_replaces">Den erstatter Nightscout-adressen og tokenet på denne telefonen.</string>
+    <string name="client_setup_confirm_apply">Bruk</string>
+    <string name="client_setup_done_title">Ferdig</string>
+    <string name="client_setup_done_paired">Nightscout er konfigurert, og telefonen er sammenkoblet. Hovedenheten viser telefonen som aktiv når den har koblet seg til.</string>
+    <string name="client_setup_done_ns_only">Nightscout er konfigurert. For å fjernstyre hovedenheten fra denne telefonen må du også sammenkoble den.</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">Hovedenheten i AAPS gjenkjenner ikke lenger denne enheten. Åpne Administrer → Koble til hovedenhet for å koble til på nytt.</string>
     <string name="ns_client">NSClient</string>
@@ -100,6 +142,8 @@
     <string name="garmin_description">Tilkobling til Garmin-enheter (Fenix, Edge,…)</string>
     <string name="garmin_local_http_server_port">Lokal HTTP-serverport</string>
     <string name="garmin_local_http_server">Lokal HTTP-server</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">Garmin-klokken sendte %1$s karbohydrater. Denne telefonen er en klient, så karbohydratene ble ikke registrert. Registrer dem i AAPS.</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">Garmin-klokken ba om å koble til eller fra pumpen. Denne telefonen er en klient, så ingenting ble endret. Gjør dette i AAPS.</string>
     <!--    Wear-->
     <string name="description_wear">Overvåke og kontrollere AAPS ved hjelp av WearOS-klokken.</string>
     <string name="no_watch_connected">(Ingen klokke tilkoblet)</string>
