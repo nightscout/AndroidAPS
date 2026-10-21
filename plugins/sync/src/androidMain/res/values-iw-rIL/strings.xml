@@ -15,7 +15,6 @@
     <string name="authorized_clients_add">הוספת משתמש</string>
     <string name="authorized_clients_comm_switch_title">אפשר שליטה ממכשיר לקוח</string>
     <string name="authorized_clients_comm_switch_summary">אפשר ללקוחות משויכים לשלוח פקודות חתומות דרך Nightscout. כבה כדי להפסיק את התקשורת מבלי להסיר אותם.</string>
-    <string name="authorized_clients_needs_websocket">WebSockets כבויים, ולכן לא ניתן לקבל פקודות ממכשירי לקוח. מכשירי הלקוח יראו שמכשיר ראשי זה אינו מקבל פקודות עד שתפעילו את WebSockets.</string>
     <string name="authorized_clients_state_active">פעיל</string>
     <string name="authorized_clients_state_pending">בהמתנה</string>
     <string name="authorized_clients_last_seen">נראה לאחרונה %1$s</string>
