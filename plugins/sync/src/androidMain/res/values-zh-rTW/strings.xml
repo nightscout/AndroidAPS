@@ -100,6 +100,8 @@
     <string name="garmin_description">連線到 Garmin 設備（Fenix，Edge 等）</string>
     <string name="garmin_local_http_server_port">本地 HTTP 伺服器端口</string>
     <string name="garmin_local_http_server">本地 HTTP 伺服器</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">Garmin 手錶傳送了 %1$s 碳水化合物。這部手機是用戶端，因此未輸入這些碳水化合物。請在 AAPS 中輸入。</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">Garmin 手錶要求連線或中斷幫浦連線。這部手機是用戶端，因此未進行任何變更。請在 AAPS 中操作。</string>
     <!--    Wear-->
     <string name="description_wear">使用您的 WearOS 手錶監控和控制 AAPS。</string>
     <string name="no_watch_connected">（無手錶連線）</string>
