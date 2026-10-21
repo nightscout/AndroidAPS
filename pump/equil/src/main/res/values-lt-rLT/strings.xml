@@ -24,6 +24,12 @@
     <string name="equil_title_unpair_detach">Atjungti pompą</string>
     <string name="equil_title_history_events">Istorijos įrašai</string>
     <string name="equil_tone">Perspėjimo tonas</string>
+    <string name="equil_bolus_speed">Boluso greitis</string>
+    <string name="equil_bolus_speed_summary">Greitesni bolusai gali sukelti daugiau užsikimšimo aliarmų.</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1.5 V/min (standartinis)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 V/min</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 V/min</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 V/min</string>
     <string name="equil_tone_mode_mute">Nutildyti</string>
     <string name="equil_tone_mode_shake">Tik vibravimas</string>
     <string name="equil_tone_mode_tone">Tik garsas</string>
