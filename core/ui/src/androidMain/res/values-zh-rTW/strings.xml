@@ -178,6 +178,10 @@
     <string name="wrong_pump_data">資料來自不同的幫浦。更換幫浦驅動程式以重置幫浦狀態。</string>
     <string name="bg_label">BG</string>
     <string name="calibration">校正</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">校正未儲存：在過去 10 分鐘內未找到 CGM 讀取值。</string>
+    <string name="cal_reject_warmup">校正未儲存：傳感器仍在 2 小時預熱時間內。</string>
+    <string name="cal_reject_no_session">校正未儲存：目前沒有啟動任何傳感器工作階段。請先標記傳感器更換。</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">注射錯誤報告。請檢查實際注射的胰島素和碳水化合物量</string>
     <string name="bolus_reminder">當血糖恢復時提醒注射</string>
