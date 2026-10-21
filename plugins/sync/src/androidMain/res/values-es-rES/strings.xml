@@ -56,6 +56,7 @@
     <string name="pair_with_master_already_paired_master">Actualmente emparejado con el máster %1$s. Desempareja primero para introducir un nuevo PIN</string>
     <string name="pair_with_master_unpair">Desvincular</string>
     <string name="pair_with_master_sending">Enviando mensaje de emparejamiento…</string>
+    <!-- Client set-up from the master's QR code -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">El máster de AAPS ya no reconoce este dispositivo. Abre la pantalla Administrar → Emparejar con el máster para volver a emparejar</string>
     <string name="ns_client">NSClient</string>
