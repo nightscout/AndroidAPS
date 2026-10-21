@@ -168,6 +168,10 @@
     <string name="wrong_pump_data">Duomenys gaunami iš kitos pompos. Pakeiskite pompos valdiklį.</string>
     <string name="bg_label">Glikemija</string>
     <string name="calibration">Kalibravimas</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">Kalibravimas neįrašytas: per pastarąsias 10 minučių nerastas nė vienas jutiklio rodmuo.</string>
+    <string name="cal_reject_warmup">Kalibravimas neįrašytas: jutiklis vis dar šyla.</string>
+    <string name="cal_reject_no_session">Kalibravimas neįrašytas: nėra aktyvaus jutiklio. Pirmiausia pažymėkite jutiklio pakeitimą.</string>
     <string name="cgm">NGJ</string>
     <string name="treatmentdeliveryerror">Boluso suleidimo klaida. Patikrinkite faktiškai suleistą insulino kiekį ir įvestą angliavandenių skaičių</string>
     <string name="bolus_reminder">Priminti apie bolusą, kai glikemija atsistato</string>
