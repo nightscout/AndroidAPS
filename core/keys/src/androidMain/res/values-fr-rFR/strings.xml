@@ -126,7 +126,6 @@
     <string name="pref_title_ns_use_ws">Utiliser les websockets</string>
     <string name="pref_summary_ns_use_ws">Utiliser les websockets pour communiquer en temps réel avec Nightscout.</string>
     <string name="pref_title_ns_allow_client_control">Autoriser le contrôle client</string>
-    <string name="pref_summary_ns_allow_client_control">Laisser les appareils clients appariés envoyer des commandes signées (par exemple des scénarii de démarrage/arrêt) sur Nightscout.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">WiFi uniquement</string>
     <string name="pref_title_openhumans_charging_only">Charge uniquement</string>
