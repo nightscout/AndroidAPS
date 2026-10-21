@@ -179,6 +179,7 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Hiệu chuẩn</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Không lưu được hiệu chuẩn: Đường huyết đang thay đổi quá nhanh (Δ %1$s %3$s mỗi 5 phút, giới hạn %2$s). Hãy thử lại khi đường huyết ổn định.</string>
     <string name="cal_reject_no_pair">Hiệu chuẩn chưa được lưu: không tìm thấy giá trị CGM trong 10 phút gần đây.</string>
     <string name="cal_reject_warmup">Hiệu chuẩn chưa được lưu: cảm biến vẫn đang trong giai đoạn khởi động 2 giờ.</string>
     <string name="cal_reject_no_session">Hiệu chuẩn chưa được lưu: không có phiên cảm biến nào đang hoạt động. Hãy thay cảm biến trước.</string>
@@ -226,6 +227,7 @@
     <string name="percentage_label">Phần trăm</string>
     <string name="timeshift_label">Dịch chuyển thời gian</string>
     <string name="confirm_remove_multiple_items">Bạn có chắc chắn muốn xóa %1$d mục không</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Thiết bị chính không có %1$d mục trong số này. Các mục đó sẽ không bị xóa.</string>
     <string name="overview_treatment_label">Điều trị</string>
     <string name="copytolocalprofile">Tạo cấu hình mới từ cấu hình này không?</string>
     <string name="wear_wizard_settings">Cài đặt Wizard trên Wear OS</string>
@@ -419,6 +421,19 @@
     <string name="scene_lock_banner_control_disabled">Thiết bị chính đã tắt điều khiển từ xa. Chức năng điều khiển ngữ cảnh sẽ hoạt động trở lại khi tính năng này được bật lại trên thiết bị chính.</string>
     <string name="master_offline_banner">Không thể kết nối với thiết bị chính. Không thể chỉnh sửa cho đến khi kết nối được khôi phục.</string>
     <string name="master_control_disabled_banner">Thiết bị chính đã tắt điều khiển từ xa. Việc chỉnh sửa bị vô hiệu hóa cho đến khi tính năng này được bật lại trên thiết bị chính.</string>
+    <string name="hardened_mode_on">Đã bật chế độ tăng cường bảo mật</string>
+    <string name="hardened_mode_title">Chế độ tăng cường bảo mật</string>
+    <string name="hardened_mode_info_open">Giới thiệu về chế độ tăng cường bảo mật</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Chỉ đọc</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Bữa ăn</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Người chăm sóc</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Quản trị viên</string>
+    <string name="client_role_title">Vai trò</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Vai trò: %1$s</string>
+    <string name="client_roles_info_open">Về các vai trò</string>
+    <string name="client_roles_info">Mỗi điện thoại đã ghép đôi đều có một vai trò. Điện thoại chính kiểm tra vai trò này đối với từng lệnh, và điện thoại chỉ hiển thị những chức năng được phép theo vai trò của mình. Vai trò mới có hiệu lực ngay lập tức mà không cần ghép đôi lại.\n\nChỉ đọc: Điện thoại vẫn được ghép đôi nhưng chỉ hiển thị dữ liệu.\n\nBữa ăn: Bolus, công cụ tính toán liều bolus, QuickWizard và lượng carb. Ngoài ra, có thể dừng liều bolus đang chạy. Lượng carb được nhập tại đây có thể khiến vòng lặp phân phối thêm insulin.\n\nNgười chăm sóc: Có thể thực hiện mọi thao tác mà người dùng thực hiện trên AAPS, chẳng hạn như thiết lập mục tiêu tạm thời, chuyển đổi cấu hình và insulin, thay đổi chế độ vòng lặp, liều nền tạm thời, liều bolus kéo dài, ngữ cảnh, sự kiện CarePortal, hiệu chuẩn và xóa bản ghi. Không thể thay đổi cài đặt hoặc các cấu hình thiết lập sẵn.\n\nQuản trị viên: Có toàn quyền, bao gồm cả cài đặt và các cấu hình thiết lập sẵn (QuickWizard, cài đặt sẵn mục tiêu tạm thời, ngữ cảnh, cấu hình, tự động hóa và insulin).</string>
+    <string name="client_read_only_banner">Điện thoại này đang ở chế độ chỉ đọc trên điện thoại chính.</string>
+    <string name="hardened_mode_info">Điện thoại chính chỉ chấp nhận các thay đổi từ những thiết bị phụ đã ghép đôi. Điện thoại không tiếp nhận các bản ghi điều trị, mục tiêu tạm thời, thay đổi cấu hình, thay đổi chế độ hoạt động hoặc thao tác xóa được thực hiện trực tiếp trên Nightscout, chẳng hạn như trên trang web hoặc trong các ứng dụng khác. Các cài đặt cho phép tiếp nhận dữ liệu từ Nightscout sẽ bị ẩn khi chế độ tăng cường bảo mật được bật. Các lệnh SMS không bị ảnh hưởng.\n\nĐiện thoại chính vẫn tải toàn bộ dữ liệu lên Nightscout, bao gồm cả đường huyết. Nếu điện thoại chính lấy dữ liệu đường huyết từ Nightscout, nó vẫn tiếp tục nhận dữ liệu đường huyết từ đó.\n\nĐể tải lịch sử sang một điện thoại chính mới, hãy sử dụng chức năng Full sync trong NSClient. Full sync sẽ tải tất cả dữ liệu hiện có trên Nightscout, bao gồm cả các cấu hình.\n\nViệc điều khiển từ xa bằng thiết bị phụ yêu cầu kết nối WebSocket với Nightscout hoạt động bình thường trên cả điện thoại chính và các thiết bị phụ đã ghép đôi. Chế độ đơn giản (Simple mode) luôn bật chế độ tăng cường bảo mật. Để tắt chế độ này, hãy thoát Simple mode rồi tắt chức năng điều khiển từ thiết bị phụ trên điện thoại chính.</string>
     <string name="scene_lock_reason_master_offline">Thiết bị chính đã ngắt kết nối</string>
     <string name="scene_lock_reason_control_disabled">Điều khiển từ xa đã bị tắt</string>
     <string name="scene_lock_reason_scene_active">Hãy dừng ngữ cảnh đang chạy trước</string>
@@ -447,6 +462,7 @@
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Liều bolus đã bị hủy. Không có insulin nào được cấp.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Đã Hủy</string>
     <string name="clientcontrol_fail_control_disabled">Điều khiển từ xa đang bị tắt trên thiết bị chính.</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">Vai trò của điện thoại này trên thiết bị chính không cho phép thực hiện thao tác này.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Liều Bolus đã chuẩn bị đã hết hiệu lực hoặc bị thay thế. Hãy nhấn nút lại.</string>
     <string name="clientcontrol_fail_bolus_compute">Thiết bị chính không thể tính toán bolus (thiếu dữ liệu đường huyết, cấu hình hoặc bơm chưa sẵn sàng).</string>
     <string name="clientcontrol_fail_internal">Đã xảy ra lỗi.</string>
