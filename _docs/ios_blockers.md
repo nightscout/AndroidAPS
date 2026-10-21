@@ -141,7 +141,7 @@ anything they do. Nine need no other change at all:
 | `ProtectionCheckImpl` | `java.util.concurrent.atomic.AtomicLong` -> `kotlin.concurrent.atomics` |
 | `AutosensDataObject` | `java.util.Locale` |
 | `ActiveSceneManager` | `org.json.JSONObject` -> kotlinx, as `ProfileRepositoryImpl` did |
-| `WizardBolusExecutorImpl` | still `javax.inject`; also `ConcurrentHashMap` and `AtomicLong` |
+| `MasterActionExecutorImpl` | still `javax.inject`; also `ConcurrentHashMap` and `AtomicLong` |
 
 Left for the kmp session because it is a sweep across one module rather than iOS work. Worth doing
 mostly because each one that moves is one less thing an iOS graph cannot build - `ProtectionCheck`

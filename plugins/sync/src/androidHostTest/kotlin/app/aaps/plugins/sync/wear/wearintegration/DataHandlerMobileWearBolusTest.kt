@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
@@ -48,6 +48,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
@@ -89,7 +90,7 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
     @Mock private lateinit var importExportPrefs: ImportExportPrefs
     @Mock private lateinit var pumpStatusProvider: PumpStatusProvider
     @Mock private lateinit var runningModeGuard: RunningModeGuard
-    @Mock private lateinit var wizardBolusExecutor: WizardBolusExecutor
+    @Mock private lateinit var masterActionExecutor: MasterActionExecutor
     @Mock private lateinit var batchExecutor: BatchExecutor
     @Mock private lateinit var wizardExecutor: WizardExecutor
     @Mock private lateinit var pump: PumpWithConcentration
@@ -102,7 +103,7 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
             loop, processedDeviceStatusData, receiverStatusStore, quickWizard, trendCalculator, dateUtil,
             constraintsChecker, activePlugin, commandQueue, fabricPrivacy, uiInteraction,
             persistenceLayer, importExportPrefs, decimalFormatter, pumpStatusProvider,
-            ch, runningModeGuard, wizardBolusExecutor, batchExecutor, wizardExecutor
+            ch, runningModeGuard, masterActionExecutor, batchExecutor, wizardExecutor
         )
         sut.automation = automation
         // Confirm-title + error-title + client-reject string all go through the single-arg gs().
@@ -161,7 +162,7 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
         assertThat(bolus.carbsDurationHours).isEqualTo(0)
         assertThat(bolus.recordOnly).isFalse()
         // Insulin no longer goes through the LOCAL executor — it relays.
-        verifyBlocking(wizardBolusExecutor, never()) { prepareBatch(any()) }
+        verifyBlocking(masterActionExecutor, never()) { prepareBatch(any(), anyOrNull()) }
         // The round-trip carries only the parked bolusId + the master's lines — no echoed amount, no concatenated message.
         assertThat(confirm.returnCommand).isEqualTo(EventData.ActionBolusConfirmed(4242L))
         assertThat(confirm.message).isEmpty()
@@ -183,7 +184,7 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
         val sent = capturedConfirm { sut.handleBolusPreCheck(EventData.ActionBolusPreCheck(insulin = 1.0, carbs = 0)) }
         // No blanket local refusal any more — the handler attempts the relay; it did NOT go to the local executor.
         verifyBlocking(batchExecutor) { prepare(any(), any(), any()) }
-        verifyBlocking(wizardBolusExecutor, never()) { prepareBatch(any()) }
+        verifyBlocking(masterActionExecutor, never()) { prepareBatch(any(), anyOrNull()) }
         assertThat(sent.returnCommand).isInstanceOf(EventData.Error::class.java)
     }
     @Test fun `carbs-only bolus also relays through the role-transparent executor`() = runTest {

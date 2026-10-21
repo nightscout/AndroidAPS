@@ -3,7 +3,8 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
+import app.aaps.core.interfaces.bolus.RemoteCaller
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -27,6 +28,7 @@ import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
@@ -84,7 +86,7 @@ internal class ClientControlReceiverTest {
     @Mock private lateinit var uel: UserEntryLogger
     @Mock private lateinit var runningConfigurationPublisher: RunningConfigurationPublisher
     @Mock private lateinit var persistenceLayer: PersistenceLayer
-    @Mock private lateinit var wizardBolusExecutor: WizardBolusExecutor
+    @Mock private lateinit var masterActionExecutor: MasterActionExecutor
     @Mock private lateinit var notificationManager: NotificationManager
     @Mock private lateinit var config: Config
     @Mock private lateinit var bolusProgressData: BolusProgressData
@@ -135,11 +137,9 @@ internal class ClientControlReceiverTest {
         storage.clear()
         storage[StringNonKey.SceneDefinitions.key] = "[]"
         whenever(preferences.get(StringNonKey.NsClientControlAuthorizedClients)).thenAnswer { stored }
-        // Client control ON by default — the receiver now gates on this (rejects commands when off); see controlDisabled test.
-        // The WebSocket is part of that gate (a master without it cannot answer inside a command's validity),
-        // so it has to be on for the normal cases too.
-        whenever(preferences.get(BooleanKey.NsClientAllowClientControl)).thenReturn(true)
-        whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
+        // Client control ON by default — the receiver gates on hardened mode (on the master it is the switch) and
+        // rejects commands when it is off; see the controlOff tests.
+        whenever(preferences.hardenedMode).thenReturn(true)
         whenever(preferences.get(StringNonKey.SceneDefinitions)).thenAnswer {
             storage[StringNonKey.SceneDefinitions.key] ?: "[]"
         }
@@ -170,7 +170,7 @@ internal class ClientControlReceiverTest {
             uel,
             runningConfigurationPublisher,
             persistenceLayer,
-            wizardBolusExecutor,
+            masterActionExecutor,
             notificationManager,
             config,
             bolusProgressData,
@@ -181,9 +181,9 @@ internal class ClientControlReceiverTest {
         )
     }
 
-    /** Adds a pending client and returns (clientId, secretBytes). */
-    private suspend fun pair(name: String = "phone"): Pair<String, ByteArray> {
-        val (entry, secretHex) = authorizedRepository.addPending(name, pairTtlMs = 60_000L, now = now - 10_000L)
+    /** Adds a pending client with [role] and returns (clientId, secretBytes). */
+    private suspend fun pair(name: String = "phone", role: ClientRole = ClientRole.Admin): Pair<String, ByteArray> {
+        val (entry, secretHex) = authorizedRepository.addPending(name, role, pairTtlMs = 60_000L, now = now - 10_000L)
         val secretBytes = secretHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
         return entry.clientId to secretBytes
     }
@@ -193,7 +193,7 @@ internal class ClientControlReceiverTest {
      * Created 2h ago with a 5-min TTL, so pairExpiresAt is well in the past.
      */
     private suspend fun pairExpired(name: String = "phone"): Pair<String, ByteArray> {
-        val (entry, secretHex) = authorizedRepository.addPending(name, pairTtlMs = 5 * 60_000L, now = now - 2 * 60 * 60 * 1000L)
+        val (entry, secretHex) = authorizedRepository.addPending(name, ClientRole.Admin, pairTtlMs = 5 * 60_000L, now = now - 2 * 60 * 60 * 1000L)
         val secretBytes = secretHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
         return entry.clientId to secretBytes
     }
@@ -261,6 +261,29 @@ internal class ClientControlReceiverTest {
         // …but the offer doc IS dropped on the Pending → Active transition so the wrapped secret
         // does not linger on NS past pairing-complete.
         verify(offerPublisher).deleteOffer(clientId)
+    }
+
+    @Test
+    fun pairingStoresTheClientControlSwitchWhenItIsNotStored() = runTest {
+        // Unset, the switch is on only in simple mode. Storing the value in use at pairing keeps client
+        // control on when the user leaves simple mode later.
+        val (clientId, secret) = pair()
+        whenever(preferences.getIfExists(BooleanKey.HardenedMode)).thenReturn(null)
+        whenever(preferences.get(BooleanKey.HardenedMode)).thenReturn(true)
+
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_HELLO_PREFIX + clientId, wrap(envelope(clientId, secret, counter = 1L)))
+
+        verify(preferences).put(BooleanKey.HardenedMode, true)
+    }
+
+    @Test
+    fun pairingKeepsAStoredClientControlSwitch() = runTest {
+        val (clientId, secret) = pair()
+        whenever(preferences.getIfExists(BooleanKey.HardenedMode)).thenReturn(false)
+
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_HELLO_PREFIX + clientId, wrap(envelope(clientId, secret, counter = 1L)))
+
+        verify(preferences, never()).put(eq(BooleanKey.HardenedMode), any<Boolean>())
     }
 
     @Test
@@ -440,13 +463,13 @@ internal class ClientControlReceiverTest {
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}scene_prepare_$clientId"
         val msg = ClientControlMessage.ScenePrepare(sceneId = "sleep", durationMinutes = 30)
-        whenever(sceneAutomationApi.prepareScene("sleep", 30))
-            .thenReturn(WizardBolusExecutor.PrepareResult.Preview(0.0, 0, 77L, emptyList(), false, emptyList()))
+        whenever(sceneAutomationApi.prepareScene(eq("sleep"), eq(30), anyOrNull()))
+            .thenReturn(MasterActionExecutor.PrepareResult.Preview(0.0, 0, 77L, emptyList(), false, emptyList()))
 
         sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = msg, counter = 5L)))
 
         // Prepare only authors the confirmation + parks — it must NOT activate the scene.
-        verify(sceneAutomationApi).prepareScene("sleep", 30)
+        verify(sceneAutomationApi).prepareScene(eq("sleep"), eq(30), anyOrNull())
         verify(sceneAutomationApi, never()).runScene(any(), anyOrNull())
         verify(nsAndroidClient, never()).deleteSettings(identifier)
     }
@@ -457,11 +480,11 @@ internal class ClientControlReceiverTest {
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}scene_commit_$clientId"
         val msg = ClientControlMessage.SceneCommit(bolusId = 77L)
-        whenever(sceneAutomationApi.commitScene(eq(77L), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
+        whenever(sceneAutomationApi.commitScene(eq(77L), any(), anyOrNull())).thenReturn(MasterActionExecutor.ConfirmResult.Delivered)
 
         sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = msg, counter = 5L)))
 
-        verify(sceneAutomationApi).commitScene(eq(77L), any())
+        verify(sceneAutomationApi).commitScene(eq(77L), any(), anyOrNull())
     }
 
     @Test
@@ -561,7 +584,7 @@ internal class ClientControlReceiverTest {
     fun masterMirrorsProgressToArmedClientThenDisarmsOnTerminal() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), anyOrNull(), any())).thenReturn(MasterActionExecutor.ConfirmResult.Delivered)
         val progressId = "${ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX}$clientId"
         val cmdId = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
 
@@ -584,7 +607,7 @@ internal class ClientControlReceiverTest {
     fun masterDoesNotMirrorAnAlreadyRunningBolusToTheCommittingClient() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), anyOrNull(), any())).thenReturn(MasterActionExecutor.ConfirmResult.Delivered)
         val progressId = "${ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX}$clientId"
         val cmdId = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
 
@@ -607,10 +630,10 @@ internal class ClientControlReceiverTest {
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
         // confirm() consumed the parked dose (Delivered) but delivery fails via onError before any frame streams
         // (e.g. the master was already bolusing → queue-rejected this one). The arm must be cleared right away.
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenAnswer { inv ->
-            @Suppress("UNCHECKED_CAST") val onError = inv.arguments[2] as (WizardBolusExecutor.Failure) -> Unit
-            onError(WizardBolusExecutor.Failure("executing right now"))
-            WizardBolusExecutor.ConfirmResult.Delivered
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), anyOrNull(), any())).thenAnswer { inv ->
+            @Suppress("UNCHECKED_CAST") val onError = inv.arguments[2] as (MasterActionExecutor.Failure) -> Unit
+            onError(MasterActionExecutor.Failure("executing right now"))
+            MasterActionExecutor.ConfirmResult.Delivered
         }
         val progressId = "${ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX}$clientId"
         val cmdId = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
@@ -634,8 +657,8 @@ internal class ClientControlReceiverTest {
     fun bolusPrepareAcksOkWithSignedPreviewPayload() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.prepareQuickWizard(any())).thenReturn(
-            WizardBolusExecutor.PrepareResult.Preview(
+        whenever(masterActionExecutor.prepareQuickWizard(any(), anyOrNull())).thenReturn(
+            MasterActionExecutor.PrepareResult.Preview(
                 insulin = 2.0, carbs = 30, bolusId = 42L,
                 lines = listOf(ConfirmationLine(ConfirmationRole.BOLUS, "2 U")),
                 advisorApplies = true,
@@ -660,7 +683,7 @@ internal class ClientControlReceiverTest {
     fun bolusPrepareErrorAcksBolusComputeFailedWithReasonInPayload() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.prepareQuickWizard(any())).thenReturn(WizardBolusExecutor.PrepareResult.Error("no bg"))
+        whenever(masterActionExecutor.prepareQuickWizard(any(), anyOrNull())).thenReturn(MasterActionExecutor.PrepareResult.Error("no bg"))
         val acks = captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_prepare_$clientId"
 
@@ -676,13 +699,13 @@ internal class ClientControlReceiverTest {
     fun bolusCommitDeliversAndAcksOk() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), anyOrNull(), any())).thenReturn(MasterActionExecutor.ConfirmResult.Delivered)
         val acks = captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
 
         sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = ClientControlMessage.BolusCommit(42L, asAdvisor = false), counter = 5L, wantsAck = true)))
 
-        verify(wizardBolusExecutor).confirm(eq(42L), eq(Sources.NSClient), any(), eq(false), any(), any())
+        verify(masterActionExecutor).confirm(eq(42L), eq(Sources.NSClient), any(), eq(false), any(), anyOrNull(), any())
         assertThat(acks.last().status.name).isEqualTo("Ok")
     }
 
@@ -698,17 +721,17 @@ internal class ClientControlReceiverTest {
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
         // Capture the callback instead of calling it inside confirm(): the real failure arrives AFTER confirm
         // returned, which is exactly what makes it a late Delivery ack rather than part of the Done ack.
-        var report: ((WizardBolusExecutor.Failure) -> Unit)? = null
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenAnswer {
+        var report: ((MasterActionExecutor.Failure) -> Unit)? = null
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), anyOrNull(), any())).thenAnswer {
             report = it.getArgument(2)
-            WizardBolusExecutor.ConfirmResult.Delivered
+            MasterActionExecutor.ConfirmResult.Delivered
         }
         val acks = captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
         sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = ClientControlMessage.BolusCommit(42L), counter = 5L, wantsAck = true)))
         assertThat(acks.last().status.name).isEqualTo("Ok")
 
-        report!!(WizardBolusExecutor.Failure("settings import", cancelled = true))
+        report!!(MasterActionExecutor.Failure("settings import", cancelled = true))
 
         val delivery = acks.last()
         assertThat(delivery.phase.name).isEqualTo("Delivery")
@@ -722,16 +745,16 @@ internal class ClientControlReceiverTest {
     fun lateDeliveryFailureAcksExecutionFailedWhenThePumpFailed() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        var report: ((WizardBolusExecutor.Failure) -> Unit)? = null
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenAnswer {
+        var report: ((MasterActionExecutor.Failure) -> Unit)? = null
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), anyOrNull(), any())).thenAnswer {
             report = it.getArgument(2)
-            WizardBolusExecutor.ConfirmResult.Delivered
+            MasterActionExecutor.ConfirmResult.Delivered
         }
         val acks = captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
         sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = ClientControlMessage.BolusCommit(42L), counter = 5L, wantsAck = true)))
 
-        report!!(WizardBolusExecutor.Failure("pump said no"))
+        report!!(MasterActionExecutor.Failure("pump said no"))
 
         val delivery = acks.last()
         assertThat(delivery.phase.name).isEqualTo("Delivery")
@@ -742,7 +765,7 @@ internal class ClientControlReceiverTest {
     fun bolusCommitNoPendingAcksNoPendingBolus() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.NoPending)
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), anyOrNull(), any())).thenReturn(MasterActionExecutor.ConfirmResult.NoPending)
         val acks = captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
 
@@ -759,7 +782,7 @@ internal class ClientControlReceiverTest {
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
         // Master turned client control OFF → reject cleanly with a signed ACK (NOT a silent drop, which would
         // time the client out into a false "master offline" alarm) and do NOT execute the command.
-        whenever(preferences.get(BooleanKey.NsClientAllowClientControl)).thenReturn(false)
+        whenever(preferences.hardenedMode).thenReturn(false)
         val acks = captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
 
@@ -768,33 +791,14 @@ internal class ClientControlReceiverTest {
         val done = acks.last()
         assertThat(done.status.name).isEqualTo("Failed")
         assertThat(done.reason).isEqualTo(FailureReason.ControlDisabled.name)
-        verify(wizardBolusExecutor, never()).confirm(any(), any(), any(), any(), any(), any())
+        verify(masterActionExecutor, never()).confirm(any(), any(), any(), any(), any(), anyOrNull(), any())
     }
 
     @Test
-    fun websocketOffRejectsCommandTheSameWayAsControlOff() = runTest {
+    fun controlOffStillAnswersLiveness() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        // Control is allowed, but the transport it rides is off: this master would only see the command on
-        // its 5-minute poll, long past the ~8 s validity. Reject it now with a reason instead of letting it
-        // expire — an expiry looks like "master offline" to the client.
-        whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(false)
-        val acks = captureAcks(clientId)
-        val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
-
-        sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = ClientControlMessage.BolusCommit(42L), counter = 5L, wantsAck = true)))
-
-        val done = acks.last()
-        assertThat(done.status.name).isEqualTo("Failed")
-        assertThat(done.reason).isEqualTo(FailureReason.ControlDisabled.name)
-        verify(wizardBolusExecutor, never()).confirm(any(), any(), any(), any(), any(), any())
-    }
-
-    @Test
-    fun websocketOffStillAcceptsPairingAndLiveness() = runTest {
-        val (clientId, secret) = pair()
-        authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(false)
+        whenever(preferences.hardenedMode).thenReturn(false)
         val acks = captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}ping_$clientId"
 
@@ -808,21 +812,21 @@ internal class ClientControlReceiverTest {
     fun bolusCommitAsAdvisorDeliversAdvisorVariant() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), anyOrNull(), any())).thenReturn(MasterActionExecutor.ConfirmResult.Delivered)
         captureAcks(clientId)
         val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
 
         sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = ClientControlMessage.BolusCommit(42L, asAdvisor = true), counter = 5L, wantsAck = true)))
 
-        verify(wizardBolusExecutor).confirm(eq(42L), eq(Sources.NSClient), any(), eq(true), any(), any())
+        verify(masterActionExecutor).confirm(eq(42L), eq(Sources.NSClient), any(), eq(true), any(), anyOrNull(), any())
     }
 
     @Test
     fun wizardPrepareAcksOkWithSignedPreviewPayload() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.prepareWizard(any())).thenReturn(
-            WizardBolusExecutor.PrepareResult.Preview(
+        whenever(masterActionExecutor.prepareWizard(any(), anyOrNull())).thenReturn(
+            MasterActionExecutor.PrepareResult.Preview(
                 insulin = 2.0, carbs = 30, bolusId = 77L,
                 lines = listOf(ConfirmationLine(ConfirmationRole.BOLUS, "2 U")),
                 advisorApplies = false, advisorLines = emptyList()
@@ -856,8 +860,8 @@ internal class ClientControlReceiverTest {
     fun batchPrepareAcksOkWithSignedPreviewPayload() = runTest {
         val (clientId, secret) = pair()
         authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        whenever(wizardBolusExecutor.prepareBatch(any())).thenReturn(
-            WizardBolusExecutor.PrepareResult.Preview(
+        whenever(masterActionExecutor.prepareBatch(any(), anyOrNull())).thenReturn(
+            MasterActionExecutor.PrepareResult.Preview(
                 insulin = 1.5, carbs = 0, bolusId = 99L,
                 lines = listOf(ConfirmationLine(ConfirmationRole.BOLUS, "1.5 U")),
                 advisorApplies = false, advisorLines = emptyList()
@@ -879,80 +883,11 @@ internal class ClientControlReceiverTest {
     }
 
     @Test
-    fun pollingListsSettingsAndDispatchesEachClientControlDoc() = runTest {
-        val (clientId, secret) = pair()
-        authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
-        val cmdIdentifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}scene_stop_$clientId"
-        // kotlinx JsonObject is immutable, so the identifier goes on via a copy.
-        val cmdDoc = JsonObject(
-            wrap(envelope(clientId, secret, message = ClientControlMessage.SceneStop(false), counter = 5L)) + ("identifier" to JsonPrimitive(cmdIdentifier))
-        )
-        // Mix in a non-clientcontrol doc that polling should ignore.
-        val unrelatedDoc = buildJsonObject {
-            put("identifier", "aaps")
-            put("date", now)
-        }
-        whenever(nsAndroidClient.searchSettings(limit = 100)).thenReturn(
-            NSAndroidClient.ReadResponse(code = 200, lastServerModified = null, values = listOf(cmdDoc, unrelatedDoc))
-        )
-        whenever(sceneAutomationApi.stopActiveScene()).thenReturn(SceneAutomationResult.Success)
-
-        sut.processPending()
-
-        verify(nsAndroidClient).searchSettings(limit = 100)
-        verify(sceneAutomationApi).stopActiveScene()
-        // Success path no longer deletes — counter dedup handles replay; leaving the doc avoids
-        // tombstoning the slot. Unrelated doc is also untouched.
-        verify(nsAndroidClient, never()).deleteSettings(any())
-    }
-
-    @Test
-    fun pollingSkipsOfferDocsWithoutDeleting() = runTest {
-        // Master writes its own pairing-offer docs under IDENTIFIER_OFFER_PREFIX. Without an
-        // explicit skip, verifyAndAck would treat them as envelopes, find no `envelope` field,
-        // and delete a still-live offer mid-pairing — leaving the client unable to fetch it.
-        val offerDoc = buildJsonObject {
-            put("identifier", "${ClientControlPublisher.IDENTIFIER_OFFER_PREFIX}any-client-id")
-            put("date", now)
-            put("offer", buildJsonObject { put("clientId", "any-client-id") })
-        }
-        whenever(nsAndroidClient.searchSettings(limit = 100)).thenReturn(
-            NSAndroidClient.ReadResponse(code = 200, lastServerModified = null, values = listOf(offerDoc))
-        )
-
-        sut.processPending()
-
-        verify(nsAndroidClient, never()).deleteSettings(any())
-    }
-
-    @Test
     fun wsPushSkipsOfferDocs() = runTest {
         val identifier = "${ClientControlPublisher.IDENTIFIER_OFFER_PREFIX}any-client-id"
         val doc = buildJsonObject { put("identifier", identifier); put("date", now) }
         sut.onSettingsDocChanged(identifier, doc)
         verify(nsAndroidClient, never()).deleteSettings(any())
-    }
-
-    @Test
-    fun pollingLeavesUnknownClientDocUntouchedAndDoesNotExecute() = runTest {
-        // A known client is paired, but the doc below carries a DIFFERENT clientId the master never
-        // paired. On every poll the master re-lists it and must leave it completely alone — never
-        // delete (soft OR permanent: a tombstone would 410 the rightful owner's next command) and
-        // never execute it. This locks in the fix against re-delivery via the poll fallback.
-        pair()
-        val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}scene_stop_stranger-uuid"
-        val doc = JsonObject(
-            wrap(envelope("stranger-uuid", ByteArray(32) { 0x11 }, message = ClientControlMessage.SceneStop(false), counter = 5L)) + ("identifier" to JsonPrimitive(identifier))
-        )
-        whenever(nsAndroidClient.searchSettings(limit = 100)).thenReturn(
-            NSAndroidClient.ReadResponse(code = 200, lastServerModified = null, values = listOf(doc))
-        )
-
-        sut.processPending()
-
-        verify(nsAndroidClient, never()).deleteSettings(any())
-        verify(nsAndroidClient, never()).deleteSettingsPermanent(any())
-        verify(sceneAutomationApi, never()).stopActiveScene()
     }
 
     // -- two-step ACK -----------------------------------------------------------------------
@@ -1092,5 +1027,149 @@ internal class ClientControlReceiverTest {
         sendPreferencesUpdate(clientId, secret, mapOf("not_a_synced_key" to PrefEntry("true", 9_000L)))
 
         verify(preferences, never()).putRemote(any<BooleanNonPreferenceKey>(), any(), any())
+    }
+
+    // -- client roles -------------------------------------------------------------------------
+
+    /** A paired, active client with [role]; returns (clientId, secret). */
+    private suspend fun activeClient(role: ClientRole): Pair<String, ByteArray> =
+        pair(role = role).also { (clientId, _) -> authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L) }
+
+    private suspend fun sendBatch(clientId: String, secret: ByteArray, actions: List<BatchActionDto>) =
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}batch_prepare_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.BatchPrepare(actions), counter = 5L, wantsAck = true))
+        )
+
+    private val bolusAction = BatchActionDto(type = BatchActionDto.TYPE_BOLUS, insulin = 1.5)
+    private val tempTargetAction = BatchActionDto(type = BatchActionDto.TYPE_TEMP_TARGET, reason = "EATING_SOON", lowMgdl = 90.0, highMgdl = 90.0, durationMinutes = 30)
+
+    @Test
+    fun readOnlyClientIsRefusedABolusCommitWithNotAllowedForRole() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.ReadOnly)
+        val acks = captureAcks(clientId)
+
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.BolusCommit(42L), counter = 5L, wantsAck = true))
+        )
+
+        assertThat(acks.last().reason).isEqualTo(FailureReason.NotAllowedForRole.name)
+        verify(masterActionExecutor, never()).confirm(any(), any(), any(), any(), any(), anyOrNull(), any())
+    }
+
+    @Test
+    fun readOnlyClientStillAnswersLiveness() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.ReadOnly)
+        val acks = captureAcks(clientId)
+
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}ping_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.Ping, counter = 5L, wantsAck = true))
+        )
+
+        assertThat(acks.last().status.name).isEqualTo("Ok")
+    }
+
+    @Test
+    fun mealAssistantMayPrepareABolusAndItIsParkedForThatClient() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.MealAssistant)
+        captureAcks(clientId)
+        whenever(masterActionExecutor.prepareBatch(any(), anyOrNull())).thenReturn(MasterActionExecutor.PrepareResult.NoAction)
+
+        sendBatch(clientId, secret, listOf(bolusAction))
+
+        // The caller travels with the prepare, so only this client can commit it, and with its role re-checked.
+        verify(masterActionExecutor).prepareBatch(any(), eq(RemoteCaller(clientId, ClientRole.MealAssistant)))
+    }
+
+    @Test
+    fun mealAssistantCannotCarryATempTargetInWithABolus() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.MealAssistant)
+        val acks = captureAcks(clientId)
+
+        sendBatch(clientId, secret, listOf(bolusAction, tempTargetAction))
+
+        assertThat(acks.last().reason).isEqualTo(FailureReason.NotAllowedForRole.name)
+        verify(masterActionExecutor, never()).prepareBatch(any(), anyOrNull())
+    }
+
+    @Test
+    fun caregiverMayUseEverythingButNotChangeSettings() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.Caregiver)
+        captureAcks(clientId)
+        whenever(masterActionExecutor.prepareBatch(any(), anyOrNull())).thenReturn(MasterActionExecutor.PrepareResult.NoAction)
+        whenever(preferences.get(concentrationKey)).thenReturn(BooleanKey.GeneralInsulinConcentration)
+        whenever(preferences.get(LongComposedKey.SyncedPrefModified, concentrationKey)).thenReturn(1_000L)
+
+        sendBatch(clientId, secret, listOf(bolusAction, tempTargetAction))
+        // The same update, with the same stubs, is written for an admin in preferencesUpdateAppliesStrictlyNewerBidirectionalKey.
+        sendPreferencesUpdate(clientId, secret, mapOf(concentrationKey to PrefEntry("true", 2_000L)), counter = 6L)
+
+        verify(masterActionExecutor).prepareBatch(any(), anyOrNull())
+        verify(preferences, never()).putRemote(any<BooleanNonPreferenceKey>(), any(), any())
+    }
+
+    @Test
+    fun readOnlyClientCannotStopABolusOrClearTheAlarm() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.ReadOnly)
+        captureAcks(clientId)
+
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}stop_bolus_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.StopBolus, counter = 5L))
+        )
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}dismiss_alarm_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.DismissAlarm, counter = 6L))
+        )
+
+        verify(commandQueue, never()).cancelAllBoluses(anyOrNull())
+        verify(notificationManager, never()).dismiss(NotificationId.BOLUS_DELIVERY_FAILED)
+    }
+
+    @Test
+    fun mealAssistantMayStopABolus() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.MealAssistant)
+        captureAcks(clientId)
+
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}stop_bolus_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.StopBolus, counter = 5L))
+        )
+
+        verify(commandQueue).cancelAllBoluses(anyOrNull())
+    }
+
+    @Test
+    fun mealAssistantCannotEndASceneOrChangeSettings() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.MealAssistant)
+        captureAcks(clientId)
+        whenever(preferences.get(concentrationKey)).thenReturn(BooleanKey.GeneralInsulinConcentration)
+        whenever(preferences.get(LongComposedKey.SyncedPrefModified, concentrationKey)).thenReturn(1_000L)
+
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}scene_stop_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.SceneStop(false), counter = 5L))
+        )
+        sendPreferencesUpdate(clientId, secret, mapOf(concentrationKey to PrefEntry("true", 2_000L)), counter = 6L)
+
+        verify(sceneAutomationApi, never()).stopActiveScene()
+        verify(preferences, never()).putRemote(any<BooleanNonPreferenceKey>(), any(), any())
+    }
+
+    @Test
+    fun commitThatTheExecutorRefusesForTheRoleIsReportedAsNotAllowedForRole() = runTest {
+        // The role was lowered between prepare and commit: confirm() says so, and the client is told the reason.
+        val (clientId, secret) = activeClient(ClientRole.MealAssistant)
+        val acks = captureAcks(clientId)
+        whenever(masterActionExecutor.confirm(any(), any(), any(), any(), any(), anyOrNull(), any())).thenReturn(MasterActionExecutor.ConfirmResult.NotAllowed)
+
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.BolusCommit(42L), counter = 5L, wantsAck = true))
+        )
+
+        assertThat(acks.last().reason).isEqualTo(FailureReason.NotAllowedForRole.name)
     }
 }

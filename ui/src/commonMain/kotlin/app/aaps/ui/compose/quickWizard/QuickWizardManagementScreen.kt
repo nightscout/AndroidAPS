@@ -56,8 +56,11 @@ import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsFab
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.keys.interfaces.ClientRole
+import app.aaps.core.ui.compose.LocalClientRole
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.clearFocusOnTap
@@ -97,7 +100,10 @@ fun QuickWizardManagementScreen(
     // at startup and flips the instant reachability changes. Master is never gated. Both edits AND the
     // master-bound Execute FAB are gated by this on a client.
     val editingEnabled = masterEditingEnabled()
-    val isPlayMode = uiState.screenMode == ScreenMode.PLAY || !editingEnabled
+    // Running a QuickWizard is a caregiver's here (this screen needs one to open); changing the entries is an admin's.
+    // Below admin the screen stays VIEW-ONLY, like an unreachable master.
+    val canDefine = LocalClientRole.current.allows(ClientRole.Admin)
+    val isPlayMode = uiState.screenMode == ScreenMode.PLAY || !editingEnabled || !canDefine
 
     // Set initial screen mode
     LaunchedEffect(initialMode) {
@@ -245,8 +251,8 @@ fun QuickWizardManagementScreen(
                         },
                         actions = {
                             if (isPlayMode) {
-                                // Edit mode button (shown in PLAY mode)
-                                IconButton(onClick = onRequestEditMode, enabled = editingEnabled) {
+                                // Edit mode button (shown in PLAY mode, to a role that may change the entries)
+                                if (canDefine) IconButton(onClick = onRequestEditMode, enabled = editingEnabled) {
                                     Icon(
                                         imageVector = Icons.Filled.Edit,
                                         contentDescription = stringResource(CoreUiStrings.switch_to_edit)
@@ -470,7 +476,7 @@ fun QuickWizardManagementScreen(
                                     )
                                 }
                                 // Extra space for floating toolbar
-                                Spacer(modifier = Modifier.height(80.dp))
+                                Spacer(modifier = Modifier.height(AapsSpacing.fabClearance))
                             }
                         }
                     }

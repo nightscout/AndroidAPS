@@ -41,11 +41,13 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneEndAction
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.LocalClientRole
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.dialogs.ThreeButtonDialog
@@ -129,8 +131,9 @@ fun SceneListScreen(
         floatingActionButton = {
             // FAB is hidden when the master is unreachable on AAPSCLIENT — same reasoning as
             // the per-card lock: a new scene definition would need to sync to master to be
-            // useful, so don't surface the affordance when sync can't happen.
-            if (masterOfflineBanner == null) {
+            // useful, so don't surface the affordance when sync can't happen. A new scene is a preset, so it is
+            // also hidden from a role below admin.
+            if (masterOfflineBanner == null && LocalClientRole.current.allows(ClientRole.Admin)) {
                 FloatingActionButton(onClick = onNavigateToWizard) {
                     Icon(Icons.Default.Add, contentDescription = stringResource(CoreUiStrings.scene))
                 }
@@ -168,7 +171,7 @@ fun SceneListScreen(
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(AapsSpacing.medium),
+                    contentPadding = PaddingValues(start = AapsSpacing.medium, top = AapsSpacing.medium, end = AapsSpacing.medium, bottom = AapsSpacing.fabClearance),
                     verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
                 ) {
                     items(scenes, key = { it.id }) { scene ->

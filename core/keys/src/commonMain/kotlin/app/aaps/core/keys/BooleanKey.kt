@@ -26,7 +26,8 @@ enum class BooleanKey(
     override val engineeringModeOnly: Boolean = false,
     override val visibility: ElementVisibility = ElementVisibility.ALWAYS,
     override val enabledCondition: PreferenceEnabledCondition = PreferenceEnabledCondition.ALWAYS,
-    override val sync: SyncSpec? = null
+    override val sync: SyncSpec? = null,
+    override val defaultedByHardenedMode: Boolean = false
 ) : BooleanPreferenceKey {
 
     GeneralSimpleMode(key = "simple_mode", defaultValue = true, title = KeysStrings.pref_title_simple_mode, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
@@ -83,7 +84,7 @@ enum class BooleanKey(
     AlertIncreaseVolume("gradually_increase_notification_volume", true, KeysStrings.pref_title_alert_increase_volume),
     AlertOverrideDoNotDisturb("alert_override_dnd", true, KeysStrings.pref_title_alert_override_dnd, KeysStrings.pref_summary_alert_override_dnd, defaultedBySM = true),
 
-    BgSourceUploadToNs("dexcomg5_nsupload", true, KeysStrings.pref_title_bg_source_upload_to_ns, defaultedBySM = true, hideParentScreenIfHidden = true),
+    BgSourceUploadToNs("dexcomg5_nsupload", true, KeysStrings.pref_title_bg_source_upload_to_ns, defaultedBySM = true, hideParentScreenIfHidden = true, defaultedByHardenedMode = true),
     BgSourceCreateSensorChange("dexcom_lognssensorchange", true, KeysStrings.pref_title_bg_source_create_sensor_change, KeysStrings.pref_summary_bg_source_create_sensor_change, defaultedBySM = true),
     BgSourceRandomBgRandomize("randombg_randomize", true, KeysStrings.pref_title_random_bg_randomize, KeysStrings.pref_summary_random_bg_randomize, defaultedBySM = true),
 
@@ -218,16 +219,18 @@ enum class BooleanKey(
     SmsReportPumpUnreachable("smscommunicator_report_pump_unreachable", true, KeysStrings.pref_title_sms_report_pump_unreachable, KeysStrings.pref_summary_sms_report_pump_unreachable),
 
     VirtualPumpStatusUpload("virtualpump_uploadstatus", false, KeysStrings.pref_title_virtual_pump_status_upload, showInNsClientMode = false),
-    NsClientUploadData("ns_upload", true, KeysStrings.pref_title_ns_upload_data, KeysStrings.pref_summary_ns_upload_data, showInNsClientMode = false, hideParentScreenIfHidden = true),
-    NsClientAcceptCgmData("ns_receive_cgm", false, KeysStrings.pref_title_ns_receive_cgm, KeysStrings.pref_summary_ns_receive_cgm, showInNsClientMode = false, hideParentScreenIfHidden = true),
-    NsClientAcceptProfileStore("ns_receive_profile_store", false, KeysStrings.pref_title_ns_receive_profile_store, KeysStrings.pref_summary_ns_receive_profile_store, showInNsClientMode = false, hideParentScreenIfHidden = true),
-    NsClientAcceptTempTarget("ns_receive_temp_target", false, KeysStrings.pref_title_ns_receive_temp_target, KeysStrings.pref_summary_ns_receive_temp_target, showInNsClientMode = false, hideParentScreenIfHidden = true),
-    NsClientAcceptProfileSwitch("ns_receive_profile_switch", false, KeysStrings.pref_title_ns_receive_profile_switch, KeysStrings.pref_summary_ns_receive_profile_switch, showInNsClientMode = false, hideParentScreenIfHidden = true),
-    NsClientAcceptInsulin("ns_receive_insulin", false, KeysStrings.pref_title_ns_receive_insulin, KeysStrings.pref_summary_ns_receive_insulin, showInNsClientMode = false, hideParentScreenIfHidden = true),
-    NsClientAcceptCarbs("ns_receive_carbs", false, KeysStrings.pref_title_ns_receive_carbs, KeysStrings.pref_summary_ns_receive_carbs, showInNsClientMode = false, hideParentScreenIfHidden = true),
-    NsClientAcceptTherapyEvent("ns_receive_therapy_events", false, KeysStrings.pref_title_ns_receive_therapy_event, KeysStrings.pref_summary_ns_receive_therapy_event, showInNsClientMode = false, hideParentScreenIfHidden = true),
-    NsClientAcceptRunningMode("ns_receive_running_mode", false, KeysStrings.pref_title_ns_receive_running_mode, KeysStrings.pref_summary_ns_receive_running_mode, showInNsClientMode = false, hideParentScreenIfHidden = true),
-    NsClientAcceptTbrEb("ns_receive_tbr_eb", false, KeysStrings.pref_title_ns_receive_tbr_eb, KeysStrings.pref_summary_ns_receive_tbr_eb, showInNsClientMode = false, engineeringModeOnly = true),
+    // Hardened mode forces the upload and accept settings to their defaults (upload on, accept off) and hides them,
+    // so the whole Synchronization screen disappears with them (hideParentScreenIfHidden).
+    NsClientUploadData("ns_upload", true, KeysStrings.pref_title_ns_upload_data, KeysStrings.pref_summary_ns_upload_data, showInNsClientMode = false, hideParentScreenIfHidden = true, defaultedByHardenedMode = true),
+    NsClientAcceptCgmData("ns_receive_cgm", false, KeysStrings.pref_title_ns_receive_cgm, KeysStrings.pref_summary_ns_receive_cgm, showInNsClientMode = false, hideParentScreenIfHidden = true, defaultedByHardenedMode = true),
+    NsClientAcceptProfileStore("ns_receive_profile_store", false, KeysStrings.pref_title_ns_receive_profile_store, KeysStrings.pref_summary_ns_receive_profile_store, showInNsClientMode = false, hideParentScreenIfHidden = true, defaultedByHardenedMode = true),
+    NsClientAcceptTempTarget("ns_receive_temp_target", false, KeysStrings.pref_title_ns_receive_temp_target, KeysStrings.pref_summary_ns_receive_temp_target, showInNsClientMode = false, hideParentScreenIfHidden = true, defaultedByHardenedMode = true),
+    NsClientAcceptProfileSwitch("ns_receive_profile_switch", false, KeysStrings.pref_title_ns_receive_profile_switch, KeysStrings.pref_summary_ns_receive_profile_switch, showInNsClientMode = false, hideParentScreenIfHidden = true, defaultedByHardenedMode = true),
+    NsClientAcceptInsulin("ns_receive_insulin", false, KeysStrings.pref_title_ns_receive_insulin, KeysStrings.pref_summary_ns_receive_insulin, showInNsClientMode = false, hideParentScreenIfHidden = true, defaultedByHardenedMode = true),
+    NsClientAcceptCarbs("ns_receive_carbs", false, KeysStrings.pref_title_ns_receive_carbs, KeysStrings.pref_summary_ns_receive_carbs, showInNsClientMode = false, hideParentScreenIfHidden = true, defaultedByHardenedMode = true),
+    NsClientAcceptTherapyEvent("ns_receive_therapy_events", false, KeysStrings.pref_title_ns_receive_therapy_event, KeysStrings.pref_summary_ns_receive_therapy_event, showInNsClientMode = false, hideParentScreenIfHidden = true, defaultedByHardenedMode = true),
+    NsClientAcceptRunningMode("ns_receive_running_mode", false, KeysStrings.pref_title_ns_receive_running_mode, KeysStrings.pref_summary_ns_receive_running_mode, showInNsClientMode = false, hideParentScreenIfHidden = true, defaultedByHardenedMode = true),
+    NsClientAcceptTbrEb("ns_receive_tbr_eb", false, KeysStrings.pref_title_ns_receive_tbr_eb, KeysStrings.pref_summary_ns_receive_tbr_eb, showInNsClientMode = false, engineeringModeOnly = true, defaultedByHardenedMode = true),
     NsClientNotificationsFromAlarms("ns_alarms", false, KeysStrings.pref_title_ns_notifications_from_alarms, calculatedDefaultValue = true),
     NsClientNotificationsFromAnnouncements("ns_announcements", false, KeysStrings.pref_title_ns_notifications_from_announcements, calculatedDefaultValue = true),
     NsClientUseCellular("ns_cellular", true, KeysStrings.pref_title_ns_use_cellular),
@@ -243,20 +246,25 @@ enum class BooleanKey(
     NsClientCreateAnnouncementsFromErrors("ns_create_announcements_from_errors", false, KeysStrings.pref_title_ns_create_announcements_from_errors, calculatedDefaultValue = true, showInNsClientMode = false),
     NsClientCreateAnnouncementsFromCarbsReq("ns_create_announcements_from_carbs_req", false, KeysStrings.pref_title_ns_create_announcements_from_carbs_req, calculatedDefaultValue = true, showInNsClientMode = false),
     NsClientSlowSync("ns_sync_slow", false, KeysStrings.pref_title_ns_slow_sync),
-    NsClient3UseWs("ns_use_ws", true, KeysStrings.pref_title_ns_use_ws, KeysStrings.pref_summary_ns_use_ws),
-    NsClientAllowClientControl(
+    // Client control and hardened mode both ride the WebSocket, so simple mode and hardened mode keep it on.
+    NsClient3UseWs("ns_use_ws", true, KeysStrings.pref_title_ns_use_ws, KeysStrings.pref_summary_ns_use_ws, defaultedBySM = true, defaultedByHardenedMode = true),
+    // The master's "allow client control" switch, and with it hardened mode (see Preferences.hardenedMode).
+    // The stored name is still ns_allow_client_control, so stored values, the sync wire and older clients do not change.
+    HardenedMode(
         "ns_allow_client_control", false,
         KeysStrings.pref_title_ns_allow_client_control, KeysStrings.pref_summary_ns_allow_client_control,
         // The rich stop/allow-communication switch lives on the Authorized clients screen; it is ALSO exposed in a
         // "Remote control" category on the NSCv3 settings screen (NSClientV3Plugin.getPreferenceScreenContent) so it
-        // is reachable from search. Default OFF, but ON in simple mode (resolved in PreferencesImpl.calculatedDefaultValue). Hidden on a client.
-        calculatedDefaultValue = true, showInNsClientMode = false,
+        // is reachable from search. Default OFF, but ON in simple mode (resolved in PreferencesImpl.calculatedDefaultValue).
+        // Simple mode forces it on (defaultedBySM), so the switch is hidden there. Hidden on a client.
+        calculatedDefaultValue = true, defaultedBySM = true, showInNsClientMode = false,
         // Remote control rides the WebSocket — hide the toggle (and its single-item "Remote control" parent category)
         // when WS is off, and on a client where the key is already hidden (so the category never shows empty).
         dependency = NsClient3UseWs, hideParentScreenIfHidden = true,
         // Synced master→client (MasterOnly — the client mirrors, never pushes back) so a paired client knows
-        // whether the master is accepting commands and can gate its UI. buildSyncedPrefs publishes the EFFECTIVE
-        // value for this key (see RunningConfigurationImpl), not the raw default.
+        // whether the master is accepting commands and can gate its UI. Published like every other cold key:
+        // the stored value, else the computed default. Simple mode is synced too, so the client applies the same
+        // simple-mode rule and gets the same answer as the master.
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.MasterOnly)
     ),
     OpenHumansWifiOnly("oh_wifi_only", true, KeysStrings.pref_title_openhumans_wifi_only),

@@ -231,7 +231,11 @@ class ClientControlRoundTrip(
             }
 
             ProgressPhase.Complete -> {
-                cancelProgressWatchdog(); bolusProgressData.completeAndAutoClear()
+                cancelProgressWatchdog()
+                // The master's last values. The Active frames are throttled to one per second, so the last
+                // delivered amount often comes only here; without it the dialog ends on the amount before.
+                bolusProgressData.updateProgress(env.percent, TextRef.Literal(env.status), PumpInsulin(env.delivered))
+                bolusProgressData.completeAndAutoClear()
             }
 
             ProgressPhase.Cleared  -> {

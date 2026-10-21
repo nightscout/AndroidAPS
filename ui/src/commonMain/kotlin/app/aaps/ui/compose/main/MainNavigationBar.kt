@@ -25,7 +25,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalClientRole
 import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.core.ui.compose.icons.Pump
 import app.aaps.core.ui.compose.navigation.NavigationRequest
@@ -72,6 +74,8 @@ fun MainNavigationBar(
         unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
     )
 
+    // A client whose role cannot use what a button opens does not get the button: the master would refuse it.
+    val role = LocalClientRole.current
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
@@ -80,7 +84,7 @@ fun MainNavigationBar(
     ) {
         // Treatment action button (opens bottom sheet) — hidden on an unpaired client (its bolus/carbs
         // ride the Client-Control channel and would be dropped); always shown on a master.
-        if (masterOrPairedClient) {
+        if (masterOrPairedClient && role.allows(ElementType.TREATMENT.role)) {
             NavigationBarItem(
                 selected = false,
                 modifier = Modifier.badgeState(
@@ -112,7 +116,7 @@ fun MainNavigationBar(
         // Scenes/automation button — visible whenever scenes or automation items exist on a paired
         // client (regardless of pump/loop/profile state). The badge counts only items the user can act
         // on right now; gated items are visible inside the sheet, dimmed with reason.
-        if (masterOrPairedClient && automationTotal > 0) {
+        if (masterOrPairedClient && role.allows(ElementType.SCENE.role) && automationTotal > 0) {
             NavigationBarItem(
                 selected = false,
                 modifier = Modifier.badgeState(

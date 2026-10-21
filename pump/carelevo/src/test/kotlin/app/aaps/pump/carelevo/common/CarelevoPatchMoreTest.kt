@@ -125,10 +125,13 @@ internal class CarelevoPatchMoreTest {
             mode = 1
         )
 
-    /** A CRITICAL-tier snapshot with only `outOfInsulin` toggled — everything else unused/false. */
-    private fun outOfInsulinSnapshot(active: Boolean): ActiveAlarmSnapshotResponse =
+    /** A snapshot (CRITICAL tier by default) with only `outOfInsulin` toggled — everything else unused/false. */
+    private fun outOfInsulinSnapshot(
+        active: Boolean,
+        tier: ActiveAlarmSnapshotTier = ActiveAlarmSnapshotTier.CRITICAL
+    ): ActiveAlarmSnapshotResponse =
         ActiveAlarmSnapshotResponse(
-            tier = ActiveAlarmSnapshotTier.CRITICAL,
+            tier = tier,
             infusing = true,
             flags = ActiveAlarmSnapshotFlags(
                 outOfInsulin = active,
@@ -559,6 +562,24 @@ internal class CarelevoPatchMoreTest {
         // condition still true and must NOT resurrect an alarm the user may have already confirmed —
         // this is the "확인을 눌렀는데 클리어가 안되네" regression.
         verify(carelevoAlarmInfoUseCase, times(1)).upsertAlarm(any())
+    }
+
+    @Test
+    fun `applyActiveAlarmSnapshots re-raises a cause that was only removed locally after a failed patch clear`() {
+        fakeSnapshotCauseStore()
+        sut.initPatch()
+
+        val advisory = ActiveAlarmSnapshotTier.ADVISORY
+        sut.applyActiveAlarmSnapshots(listOf(outOfInsulinSnapshot(active = true, tier = advisory)))
+        // User confirms, AlarmClear fails on the patch, handler falls back to a local-only remove.
+        // The patch never cleared it, so the next poll still reports it and it must show again.
+        sut.forgetSnapshotAlarmCause(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)
+        sut.applyActiveAlarmSnapshots(listOf(outOfInsulinSnapshot(active = true, tier = advisory)))
+
+        val captor = argumentCaptor<CarelevoAlarmInfo>()
+        verify(carelevoAlarmInfoUseCase, times(2)).upsertAlarm(captor.capture())
+        assertThat(captor.allValues.map { it.cause })
+            .containsExactly(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN, AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)
     }
 
     @Test

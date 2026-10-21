@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.time.T
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -22,10 +22,9 @@ import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.extensions.toTemporaryBasal
-import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.clientcontrol.RecordRemoval
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.core.ui.extensions.toStringFull
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.FlowPreview
@@ -37,7 +36,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * ViewModel for TempBasalScreen managing temporary basal state and business logic.
@@ -52,7 +50,9 @@ class TempBasalViewModel(
     val dateUtil: DateUtil,
     val decimalFormatter: DecimalFormatter,
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    batchExecutor: BatchExecutor,
+    config: Config
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TempBasalUiState())
@@ -178,77 +178,30 @@ class TempBasalViewModel(
         }
     }
 
-    /**
-     * Prepare delete confirmation message
-     */
-    suspend fun getDeleteConfirmationMessage(): String {
-        val selected = uiState.value.selectedItems
-        if (selected.isEmpty()) return ""
+    /** Removing the selected items: the master describes and removes them, on every role. */
+    val removal = RecordRemoval(batchExecutor, rh, rxBus, config, viewModelScope, Sources.Treatments)
 
-        return if (selected.size == 1) {
-            val tempBasal = selected.first()
-            val isFakeExtended = tempBasal.type == TB.Type.FAKE_EXTENDED
-            val profile = profileFunction.getProfile(dateUtil.now())
-            if (profile != null) {
-                "${if (isFakeExtended) rh.gs(CoreUiStrings.extended_bolus) else rh.gs(CoreUiStrings.tempbasal_label)}: ${
-                    tempBasal.toStringFull(profile, dateUtil, rh)
-                }\n${rh.gs(CoreUiStrings.date)}: ${dateUtil.dateAndTimeString(tempBasal.timestamp)}"
-            } else {
-                rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
-            }
-        } else {
-            rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
+    /** Ask the master to describe removing the selected items; the screen then shows its confirmation. */
+    fun requestDelete() {
+        val selected = uiState.value.selectedItems
+        viewModelScope.launch {
+            // An extended bolus that stands in for a temp basal is listed here as one; removing it removes the
+            // extended bolus behind it.
+            val (faked, regular) = selected.partition { it.type == TB.Type.FAKE_EXTENDED }
+            val extended = faked.mapNotNull { persistenceLayer.getExtendedBolusActiveAt(it.timestamp) }
+            removal.request(
+                listOfNotNull(
+                    BatchAction.Remove.of(BatchAction.Remove.Kind.TEMPORARY_BASAL, regular),
+                    BatchAction.Remove.of(BatchAction.Remove.Kind.EXTENDED_BOLUS, extended)
+                )
+            )
         }
     }
 
-    /**
-     * Delete selected items
-     */
-    fun deleteSelected() {
-        val selected = uiState.value.selectedItems
-        if (selected.isEmpty()) return
-
-        viewModelScope.launch(aapsIoDispatcher) {
-            try {
-                selected.forEach { tempBasal ->
-                    val isFakeExtended = tempBasal.type == TB.Type.FAKE_EXTENDED
-                    if (isFakeExtended) {
-                        // For fake extended boluses, delete the underlying extended bolus
-                        val extendedBolus = persistenceLayer.getExtendedBolusActiveAt(tempBasal.timestamp)
-                        if (extendedBolus != null) {
-                            persistenceLayer.invalidateExtendedBolus(
-                                id = extendedBolus.id,
-                                action = Action.EXTENDED_BOLUS_REMOVED,
-                                source = Sources.Treatments,
-                                listValues = listOf(
-                                    ValueWithUnit.Timestamp(extendedBolus.timestamp),
-                                    ValueWithUnit.Insulin(extendedBolus.amount),
-                                    ValueWithUnit.UnitPerHour(extendedBolus.rate),
-                                    ValueWithUnit.Minute(extendedBolus.duration.milliseconds.inWholeMinutes.toInt())
-                                )
-                            )
-                        }
-                    } else {
-                        // Delete regular temp basal
-                        persistenceLayer.invalidateTemporaryBasal(
-                            id = tempBasal.id,
-                            action = Action.TEMP_BASAL_REMOVED,
-                            source = Sources.Treatments,
-                            listValues = listOf(
-                                ValueWithUnit.Timestamp(tempBasal.timestamp),
-                                if (tempBasal.isAbsolute) ValueWithUnit.UnitPerHour(tempBasal.rate) else ValueWithUnit.Percent(tempBasal.rate.toInt()),
-                                ValueWithUnit.Minute(T.msecs(tempBasal.duration).mins().toInt())
-                            )
-                        )
-                    }
-                }
-                exitSelectionMode()
-                loadData()
-            } catch (e: Exception) {
-                aapsLogger.error(LTag.UI, "Failed to delete temp basals", e)
-                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting temp basals", EventShowSnackbar.Type.Error))
-            }
-        }
+    /** The master removed them. */
+    fun onRemoved() {
+        exitSelectionMode()
+        loadData()
     }
 
     /**

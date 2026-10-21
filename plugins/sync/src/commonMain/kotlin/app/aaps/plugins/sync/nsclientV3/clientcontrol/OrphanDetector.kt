@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
 import app.aaps.plugins.sync.SyncStrings
@@ -92,8 +93,9 @@ class OrphanDetector(
      */
     suspend fun onSettingsDoc(configuration: NSRunningConfiguration, docSrvModified: Long) {
         if (!config.AAPSCLIENT) return
-        val roster = configuration.authorizedClients ?: return
         val pairing = pairingRepository.currentPairing() ?: return
+        storeOwnRole(configuration.authorizedClients?.roles, pairing.clientId)
+        val roster = configuration.authorizedClients ?: return
         if (pairing.clientId in roster.clientIds) {
             _authorized.value = true
             notificationManager.dismiss(NotificationId.NSCLIENT_PAIRING_ORPHAN)
@@ -113,6 +115,18 @@ class OrphanDetector(
         _authorized.value = false
         aapsLogger.warn(LTag.NSCLIENT, "ClientControl: clientId=${pairing.clientId} not in master's authorizedClients — orphan")
         notificationManager.post(NotificationId.NSCLIENT_PAIRING_ORPHAN, SyncStrings.clientcontrol_orphan_notification)
+    }
+
+    /**
+     * Keep this phone's role as the master publishes it. No roles at all is an older master without roles: full
+     * control, as before. Roles without this phone (not Active yet, or removed) means read-only.
+     */
+    private fun storeOwnRole(roles: Map<String, String>?, clientId: String) {
+        val role = if (roles == null) ClientRole.Admin else roles[clientId]?.let { ClientRole.of(it) } ?: ClientRole.ReadOnly
+        if (preferences.get(StringNonKey.NsClientControlRole) != role.name) {
+            aapsLogger.debug(LTag.NSCLIENT, "ClientControl: role on master is now $role")
+            preferences.put(StringNonKey.NsClientControlRole, role.name)
+        }
     }
 
     companion object {

@@ -8,20 +8,22 @@ import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.rx.weardata.EventData
 
 /**
- * Transport-neutral spine for wizard / quick-wizard bolus **prepare → confirm → deliver**. Owns the
- * single consume-once "pending bolus" slot shared by the full-wizard and quick-wizard prechecks, computes
- * the dose on the master's own current state, and delivers via the command queue (which re-applies bolus
- * constraints — the safety cap holds regardless of caller).
+ * The master's side of every user action: **prepare → confirm → apply**. It runs only on the master. A client
+ * reaches it through [BatchExecutor] or [WizardExecutor], which send the request to the master.
  *
- * One audited path a bolus reaches the pump from any trigger (wear today, client-control + the local UI
- * next): callers adapt only the transport — render the [PrepareResult.Preview], surface errors via the
- * [onError] sink, and tag the user entry with a [Sources].
+ * Boluses and carbs (wizard, quick wizard, fixed amounts) are the main part. A batch ([prepareBatch]) can also hold
+ * other actions, for example a temp target, a profile switch, removing records or a calibration ([BatchAction]). Owns the single consume-once "pending" slot shared by all prechecks, computes the dose on the
+ * master's own current state, and delivers via the command queue (which re-applies bolus constraints — the safety cap
+ * holds regardless of caller).
+ *
+ * One audited path for every trigger (local UI, client, watch, SMS, Garmin): callers adapt only the transport —
+ * render the [PrepareResult.Preview], surface errors via the `onError` sink, and tag the user entry with a [Sources].
  *
  * Declared here (interfaces only — no `core:objects` dependency, so it exposes primitives, not the
  * `BolusWizard` compute object); impl lives in `:implementation`. Idempotency: [confirm] drains the slot
  * and requires the bolusId to match, so a re-sent confirm finds it empty → never a double-bolus.
  */
-interface WizardBolusExecutor {
+interface MasterActionExecutor {
 
     /**
      * Park a pending bolus directly. **Test-only seeding seam** for the consume-once [confirm] contract — there is
@@ -36,8 +38,10 @@ interface WizardBolusExecutor {
      * Quick-wizard prepare: gate → compute on current state → constraint-cap → park in the slot.
      * Returns the computed [PrepareResult.Preview] (or an [PrepareResult.Error]); the caller renders it
      * and, on the user's OK, calls [confirm] with the preview's `bolusId`.
+     *
+     * Every prepare parks for its [caller] only (null: the master itself); see [RemoteCaller].
      */
-    suspend fun prepareQuickWizard(guid: String): PrepareResult
+    suspend fun prepareQuickWizard(guid: String, caller: RemoteCaller? = null): PrepareResult
 
     /**
      * Manual-wizard prepare: recompute the dose on the master's own profile / temp target / COB / IOB from the
@@ -45,7 +49,7 @@ interface WizardBolusExecutor {
      * but driven by inputs rather than a synced QuickWizard entry — so the master is authoritative for a
      * client's manual wizard bolus too.
      */
-    suspend fun prepareWizard(inputs: WizardInputs): PrepareResult
+    suspend fun prepareWizard(inputs: WizardInputs, caller: RemoteCaller? = null): PrepareResult
 
     /**
      * Multi-action prepare (the unified Insulin / Carbs / Treatment path): cap a FIXED bolus/carbs (or keep a
@@ -54,7 +58,7 @@ interface WizardBolusExecutor {
      * [confirm] then delivers + applies the TT in decision-B order (raising TT first, bolus, lowering TT only if
      * accepted). At most one [BatchAction.Bolus] and one [BatchAction.TempTarget].
      */
-    suspend fun prepareBatch(actions: List<BatchAction>): PrepareResult
+    suspend fun prepareBatch(actions: List<BatchAction>, caller: RemoteCaller? = null): PrepareResult
 
     /**
      * Drain the slot, verify [bolusId] matches the parked bolus, and deliver. Idempotent (consume-once): a second
@@ -71,6 +75,10 @@ interface WizardBolusExecutor {
      * record-only entry). That happens after [confirm] has returned, because the delivery is asynchronous. An entry
      * with no bolus and no carbs never calls it: its steps are awaited, so the return value and [onError] already
      * tell the whole story. A dose that was started is followed by [onSuccess] or by [onError].
+     *
+     * [caller] must be the one the entry was prepared for (null: the master itself); anyone else gets
+     * [ConfirmResult.NoPending] and the entry stays for its owner. If the caller's role no longer allows what was
+     * prepared, the entry is dropped and [ConfirmResult.NotAllowed] is returned.
      */
     suspend fun confirm(
         bolusId: Long,
@@ -78,6 +86,7 @@ interface WizardBolusExecutor {
         onError: (Failure) -> Unit,
         asAdvisor: Boolean = false,
         correctionU: Double = 0.0,
+        caller: RemoteCaller? = null,
         onSuccess: () -> Unit = {}
     ): ConfirmResult
 
@@ -219,8 +228,11 @@ interface WizardBolusExecutor {
         /** Bolus started (async). Its end is reported through `onSuccess` or `onError` of [confirm]. */
         data object Delivered : ConfirmResult
 
-        /** Slot empty or id mismatch — nothing delivered (idempotent retry / stale confirm). */
+        /** Slot empty, id mismatch, or prepared for another caller — nothing delivered (idempotent retry / stale confirm). */
         data object NoPending : ConfirmResult
+
+        /** The caller's role does not allow what was prepared (it was lowered after the prepare). Nothing delivered. */
+        data object NotAllowed : ConfirmResult
 
         /**
          * A pump command of the batch was dropped from the command queue on purpose — the queue was cleared,

@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -18,8 +18,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.Translator
-import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.clientcontrol.RecordRemoval
 import app.aaps.core.ui.compose.MenuItemData
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -43,10 +42,11 @@ import kotlinx.coroutines.launch
 class CareportalViewModel(
     private val persistenceLayer: PersistenceLayer,
     val rh: TextResolver,
-    private val translator: Translator,
     val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    batchExecutor: BatchExecutor,
+    config: Config
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CareportalUiState())
@@ -150,51 +150,23 @@ class CareportalViewModel(
         }
     }
 
-    /**
-     * Prepare delete confirmation message
-     */
-    fun getDeleteConfirmationMessage(): String {
-        val selected = uiState.value.selectedItems
-        if (selected.isEmpty()) return ""
+    /** Removing the selected items: the master describes and removes them, on every role. */
+    val removal = RecordRemoval(batchExecutor, rh, rxBus, config, viewModelScope, Sources.Treatments)
 
-        return if (selected.size == 1) {
-            val te = selected.first()
-            "${rh.gs(CoreUiStrings.event_type)}: ${translator.translate(te.type)}\n" +
-                "${rh.gs(CoreUiStrings.notes_label)}: ${te.note ?: ""}\n" +
-                "${rh.gs(CoreUiStrings.date)}: ${dateUtil.dateAndTimeString(te.timestamp)}"
-        } else {
-            rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
-        }
+    /** Ask the master to describe removing the selected items; the screen then shows its confirmation. */
+    fun requestDelete() {
+        removal.request(listOfNotNull(BatchAction.Remove.of(BatchAction.Remove.Kind.THERAPY_EVENT, uiState.value.selectedItems)))
     }
 
-    /**
-     * Delete selected items
-     */
-    fun deleteSelected() {
-        val selected = uiState.value.selectedItems
-        if (selected.isEmpty()) return
+    /** Ask the master to describe removing every "AndroidAPS started" event. */
+    fun requestRemoveStartEvents() {
+        removal.request(listOf(BatchAction.RemoveStartEvents))
+    }
 
-        viewModelScope.launch(aapsIoDispatcher) {
-            try {
-                selected.forEach { te ->
-                    persistenceLayer.invalidateTherapyEvent(
-                        id = te.id,
-                        action = Action.CAREPORTAL_REMOVED,
-                        source = Sources.Treatments,
-                        note = te.note,
-                        listValues = listOf(
-                            ValueWithUnit.Timestamp(te.timestamp),
-                            ValueWithUnit.TEType(te.type)
-                        )
-                    )
-                }
-                exitSelectionMode()
-                loadData()
-            } catch (e: Exception) {
-                aapsLogger.error(LTag.UI, "Failed to delete therapy events", e)
-                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting therapy events", EventShowSnackbar.Type.Error))
-            }
-        }
+    /** The master removed them. */
+    fun onRemoved() {
+        exitSelectionMode()
+        loadData()
     }
 
     /**

@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.UiMode
 import app.aaps.core.ui.compose.navigation.DarkElementColors
@@ -112,6 +113,20 @@ val LocalMasterControlAllowed = compositionLocalOf { true }
 @Composable
 fun masterEditingEnabled(): Boolean =
     LocalInspectionMode.current || !(LocalConfig.current.AAPSCLIENT && !LocalMasterReachable.current)
+
+/**
+ * This phone's role on the master ([ClientRole], see `NsClient.clientRole`). Defaults to [ClientRole.Admin]: a master,
+ * previews and tests are never limited; the main activity provides the live value on a client.
+ */
+val LocalClientRole = compositionLocalOf { ClientRole.Admin }
+
+/**
+ * [masterEditingEnabled], and this phone's role allows [role]. For controls inside a screen that both uses and defines
+ * presets: "activate" needs the screen's role, "edit" needs [ClientRole.Admin]. Always `true` on a master.
+ */
+@Composable
+fun masterEditingEnabled(role: ClientRole): Boolean =
+    masterEditingEnabled() && (LocalInspectionMode.current || LocalClientRole.current.allows(role))
 
 /**
  * CompositionLocal providing access to ProfileUtil for glucose unit conversions.

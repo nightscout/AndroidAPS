@@ -13,6 +13,7 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -21,7 +22,8 @@ import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchAction
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
+import app.aaps.core.interfaces.bolus.RemoteCaller
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -37,6 +39,7 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.objects.runningMode.RunningModeGuard
@@ -65,12 +68,12 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
- * Focused tests for the canonical [WizardBolusExecutorImpl.deliverWizardBolus] entry point — the shared
+ * Focused tests for the canonical [MasterActionExecutorImpl.deliverWizardBolus] entry point — the shared
  * end state that the phone wizard dialog and the watch quick-wizard both funnel into. Asserts the
  * recorded [DetailedBolusInfo] fields, the user-entry log values, and that the BCR is persisted exactly
  * once. `appScope` is `Unconfined` so the bolus coroutine runs synchronously within the call.
  */
-class WizardBolusExecutorImplTest : TestBaseWithProfile() {
+class MasterActionExecutorImplTest : TestBaseWithProfile() {
 
     @Mock lateinit var quickWizard: QuickWizard
     @Mock lateinit var bolusWizardProvider: () -> BolusWizard
@@ -81,11 +84,12 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Mock lateinit var loop: Loop
     @Mock lateinit var automation: Automation
     @Mock lateinit var bolusProgressData: BolusProgressData
+    @Mock lateinit var masterRecordWriter: MasterRecordWriter
 
-    private fun create() = WizardBolusExecutorImpl(
+    private fun create() = MasterActionExecutorImpl(
         aapsLogger, baseText, config, quickWizard, bolusWizardProvider, profileFunction, profileRepository, iobCobCalculator, constraintsChecker, activePlugin,
         runningModeGuard, commandQueue, persistenceLayer, uel, loop, dateUtil, decimalFormatter, profileUtil, automation, notificationManager, bolusProgressData,
-        CoroutineScope(Dispatchers.Unconfined)
+        CoroutineScope(Dispatchers.Unconfined), masterRecordWriter
     )
 
     // The base mocks ConstraintsChecker without a default answer; the FIXED/batch cap path needs a passthrough.
@@ -240,8 +244,8 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         val first = executor.confirm(999L, Sources.NSClient, { })
         val second = executor.confirm(999L, Sources.NSClient, { })
 
-        assertThat(first).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
-        assertThat(second).isEqualTo(WizardBolusExecutor.ConfirmResult.NoPending)
+        assertThat(first).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+        assertThat(second).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
         // The consume-once slot guarantees the pump fires EXACTLY once — no double-dose on a re-sent commit.
         verify(commandQueue, times(1)).bolus(anyOrNull())
     }
@@ -253,7 +257,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         val result = executor.confirm(123L, Sources.NSClient, { })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.NoPending)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
         verify(commandQueue, never()).bolus(anyOrNull())
     }
 
@@ -271,11 +275,78 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         executor.setPending(insulin = 2.0, carbs = 0, bolusCalculatorResult = null, bolusId = now - 1000)
 
         // The first parked dose still delivers (not overwritten), and a re-sent commit of it finds the slot drained.
-        assertThat(executor.confirm(now, Sources.NSClient, { })).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
-        assertThat(executor.confirm(now, Sources.NSClient, { })).isEqualTo(WizardBolusExecutor.ConfirmResult.NoPending)
+        assertThat(executor.confirm(now, Sources.NSClient, { })).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+        assertThat(executor.confirm(now, Sources.NSClient, { })).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
         // The second parked dose is intact and delivers on its own commit.
-        assertThat(executor.confirm(now - 1000, Sources.NSClient, { })).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(executor.confirm(now - 1000, Sources.NSClient, { })).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         verify(commandQueue, times(2)).bolus(anyOrNull())
+    }
+
+    // ---- confirm(): a parked action belongs to the one who prepared it, and needs its role at commit ----
+
+    private val bolusAction = BatchAction.Bolus(insulin = 1.0, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = "", timestamp = 0L, iCfg = null)
+    private val targetAction = BatchAction.TempTarget(reason = TT.Reason.ACTIVITY.text, lowMgdl = 140.0, highMgdl = 140.0, durationMinutes = 60, startOffsetMinutes = 0)
+
+    @Test
+    fun confirm_byAnotherClient_isNoPending_andKeepsTheParkForItsOwner() = runTest {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        stubPassthroughConstraints()
+        val executor = create()
+        val prepared = executor.prepareBatch(listOf(bolusAction), RemoteCaller("a", ClientRole.Caregiver)) as MasterActionExecutor.PrepareResult.Preview
+
+        // Client b knows the id (it is in the cold doc), but the dose is not its own.
+        val stranger = executor.confirm(prepared.bolusId, Sources.NSClient, { }, caller = RemoteCaller("b", ClientRole.Admin))
+        verify(commandQueue, never()).bolus(anyOrNull())
+        // The owner's commit still finds it.
+        val owner = executor.confirm(prepared.bolusId, Sources.NSClient, { }, caller = RemoteCaller("a", ClientRole.Caregiver))
+
+        assertThat(stranger).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
+        assertThat(owner).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+        verify(commandQueue, times(1)).bolus(anyOrNull())
+    }
+
+    @Test
+    fun confirm_byAClient_ofAParkMadeOnTheMaster_isNoPending() = runTest {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        stubPassthroughConstraints()
+        val executor = create()
+        val prepared = executor.prepareBatch(listOf(bolusAction)) as MasterActionExecutor.PrepareResult.Preview
+
+        val remote = executor.confirm(prepared.bolusId, Sources.NSClient, { }, caller = RemoteCaller("a", ClientRole.Admin))
+        val local = executor.confirm(prepared.bolusId, Sources.NSClient, { })
+
+        assertThat(remote).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
+        assertThat(local).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+    }
+
+    @Test
+    fun confirm_aBolusOnlyBatch_byAMealAssistant_isDelivered() = runTest {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        stubPassthroughConstraints()
+        val executor = create()
+        val caller = RemoteCaller("a", ClientRole.MealAssistant)
+        val prepared = executor.prepareBatch(listOf(bolusAction), caller) as MasterActionExecutor.PrepareResult.Preview
+
+        assertThat(executor.confirm(prepared.bolusId, Sources.NSClient, { }, caller = caller)).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+    }
+
+    @Test
+    fun confirm_afterTheRoleWasLowered_isNotAllowed_andAppliesNothing() = runTest {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        stubPassthroughConstraints()
+        val executor = create()
+        // A temp target needs Caregiver. The master lowers the client to Meals between prepare and commit.
+        val prepared = executor.prepareBatch(listOf(targetAction, bolusAction), RemoteCaller("a", ClientRole.Caregiver)) as MasterActionExecutor.PrepareResult.Preview
+
+        val result = executor.confirm(prepared.bolusId, Sources.NSClient, { }, caller = RemoteCaller("a", ClientRole.MealAssistant))
+
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.NotAllowed)
+        verify(commandQueue, never()).bolus(anyOrNull())
+        verify(persistenceLayer, never()).insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any())
     }
 
     // ---- prepareBatch() → confirm(): the two-step multi-action transaction (decision-B ordering) ----
@@ -291,10 +362,10 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
             BatchAction.Bolus(insulin = 1.0, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = "", timestamp = 0L, iCfg = null)
         )
 
-        val prepared = executor.prepareBatch(actions) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(actions) as MasterActionExecutor.PrepareResult.Preview
         val result = executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         verify(persistenceLayer).insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any()) // target-raising TT applied unconditionally
         verify(commandQueue).bolus(anyOrNull()) // bolus delivered
     }
@@ -313,12 +384,12 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
             BatchAction.Bolus(insulin = 0.5, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = "Pre-bolus", timestamp = 0L, iCfg = null, quickWizardGuid = "qw-1")
         )
 
-        val prepared = executor.prepareBatch(actions) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(actions) as MasterActionExecutor.PrepareResult.Preview
         verify(entry, never()).markAsUsed() // NOT marked at prepare time (consume-once: only a real delivery counts)
 
         val result = executor.confirm(prepared.bolusId, Sources.QuickWizard, { })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         verify(entry).markAsUsed() // marked HERE on the master after the bolus is delivered
     }
 
@@ -333,7 +404,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
             BatchAction.Bolus(insulin = 0.5, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = "", timestamp = 0L, iCfg = null)
         )
 
-        val prepared = executor.prepareBatch(actions) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(actions) as MasterActionExecutor.PrepareResult.Preview
         executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
         verify(quickWizard, never()).get(any<String>())
@@ -342,17 +413,17 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     // ---- #946: the "constraint applied" warning compares with the step the pump reported ----
 
     /** A Dana RS set to a 0.1 U step: its pump type says 0.05 U, the description the driver fills says 0.1 U. */
-    private suspend fun preparedBolusOnA01StepPump(requested: Double, delivered: Double): WizardBolusExecutor.PrepareResult.Preview {
+    private suspend fun preparedBolusOnA01StepPump(requested: Double, delivered: Double): MasterActionExecutor.PrepareResult.Preview {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
         stubPassthroughConstraints()
         whenever(constraintsChecker.applyBolusConstraints(any())).thenReturn(ConstraintObject(delivered, aapsLogger))
         testPumpPlugin.pumpDescription = PumpDescription().fillFor(PumpType.DANA_RS).also { it.bolusStep = 0.1 }
         val bolus = BatchAction.Bolus(insulin = requested, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = "", timestamp = 0L, iCfg = null)
-        return create().prepareBatch(listOf(bolus)) as WizardBolusExecutor.PrepareResult.Preview
+        return create().prepareBatch(listOf(bolus)) as MasterActionExecutor.PrepareResult.Preview
     }
 
     /** A QuickWizard that calculates [calculated] U, of which the constraints leave [afterConstraints] U. */
-    private suspend fun preparedQuickWizardOnA01StepPump(calculated: Double, afterConstraints: Double): WizardBolusExecutor.PrepareResult {
+    private suspend fun preparedQuickWizardOnA01StepPump(calculated: Double, afterConstraints: Double): MasterActionExecutor.PrepareResult {
         whenever(config.appInitialized).thenReturn(true)
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
         val ads = mock<AutosensDataStore>()
@@ -387,16 +458,16 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         // 1.58 -> 1.5 is only the rounding of this pump. With the pump type step (0.05 U) it was refused.
         val result = preparedQuickWizardOnA01StepPump(calculated = 1.58, afterConstraints = 1.5)
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Preview::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Preview::class.java)
         // The step sent on to the confirmation (client, watch) is the one the pump reported too.
-        assertThat((result as WizardBolusExecutor.PrepareResult.Preview).wizardDetail?.bolusStep).isEqualTo(0.1)
+        assertThat((result as MasterActionExecutor.PrepareResult.Preview).wizardDetail?.bolusStep).isEqualTo(0.1)
     }
 
     @Test
     fun prepareQuickWizard_cutByMoreThanThePumpStep_isAConstraintError() = runTest {
         val result = preparedQuickWizardOnA01StepPump(calculated = 1.65, afterConstraints = 1.5)
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
     }
 
     @Test
@@ -426,7 +497,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     fun prepareQuickWizard_cutByExactlyOneStep_isAConstraintError() = runTest {
         val result = preparedQuickWizardOnA01StepPump(calculated = 1.2, afterConstraints = 1.1)
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
     }
 
     // ---- manual wizard above the max bolus: capped with a warning, not refused (as the phone wizard did in v3) ----
@@ -436,8 +507,8 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         calculated: Double,
         afterConstraints: Double,
         carbs: Int = 20,
-        executor: WizardBolusExecutorImpl = create()
-    ): WizardBolusExecutor.PrepareResult {
+        executor: MasterActionExecutorImpl = create()
+    ): MasterActionExecutor.PrepareResult {
         whenever(config.appInitialized).thenReturn(true)
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
         whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
@@ -468,7 +539,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
                 tempTargetLabel = null, ic = 10.0, sens = 50.0
             )
         )
-        val inputs = WizardBolusExecutor.WizardInputs(
+        val inputs = MasterActionExecutor.WizardInputs(
             bg = 0.0, carbs = carbs, percentage = 100, directCorrection = 0.0, carbTime = 0, useBg = false, useCob = false, useIob = false,
             useTt = false, useTrend = false, alarm = false, notes = ""
         )
@@ -479,9 +550,9 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     fun prepareWizard_aboveMaxBolus_isCappedNotRefused() = runTest {
         val result = preparedManualWizard(calculated = 13.9, afterConstraints = 12.0)
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Preview::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Preview::class.java)
         // The watch adds its +/- steps to this base, so the total it shows is the capped dose that is given.
-        assertThat((result as WizardBolusExecutor.PrepareResult.Preview).wizardDetail?.unclampedInsulin).isEqualTo(12.0)
+        assertThat((result as MasterActionExecutor.PrepareResult.Preview).wizardDetail?.unclampedInsulin).isEqualTo(12.0)
     }
 
     @Test
@@ -491,7 +562,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
             ConstraintObject(it.getArgument<Constraint<Double>>(0).value().coerceAtMost(12.0), aapsLogger)
         }
         val executor = create()
-        val prepared = preparedManualWizard(calculated = 13.9, afterConstraints = 12.0, executor = executor) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = preparedManualWizard(calculated = 13.9, afterConstraints = 12.0, executor = executor) as MasterActionExecutor.PrepareResult.Preview
 
         executor.confirm(prepared.bolusId, Sources.WizardDialog, { })
 
@@ -508,7 +579,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
             ConstraintObject(it.getArgument<Constraint<Double>>(0).value().coerceAtMost(12.0), aapsLogger)
         }
         val executor = create()
-        val prepared = preparedManualWizard(calculated = 13.9, afterConstraints = 12.0, executor = executor) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = preparedManualWizard(calculated = 13.9, afterConstraints = 12.0, executor = executor) as MasterActionExecutor.PrepareResult.Preview
         val shownOnWatch = prepared.wizardDetail!!.unclampedInsulin + -0.5
 
         executor.confirm(prepared.bolusId, Sources.Wear, { }, correctionU = -0.5)
@@ -523,17 +594,17 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     fun prepareWizard_flooredWithinThePumpStep_keepsTheCalculatedBase() = runTest {
         val result = preparedManualWizard(calculated = 1.58, afterConstraints = 1.5)
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Preview::class.java)
-        assertThat((result as WizardBolusExecutor.PrepareResult.Preview).wizardDetail?.unclampedInsulin).isEqualTo(1.58)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Preview::class.java)
+        assertThat((result as MasterActionExecutor.PrepareResult.Preview).wizardDetail?.unclampedInsulin).isEqualTo(1.58)
     }
 
     @Test
     fun prepareWizard_limitLeavesNoInsulinAndNoCarbs_isRefused() = runTest {
         val result = preparedManualWizard(calculated = 2.0, afterConstraints = 0.0, carbs = 0)
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
         // The constraint message, not "no insulin required": the calculation did ask for insulin.
-        assertThat((result as WizardBolusExecutor.PrepareResult.Error).message).contains("Cannot deliver 2.00")
+        assertThat((result as MasterActionExecutor.PrepareResult.Error).message).contains("Cannot deliver 2.00")
     }
 
     // A record-only dose is kept as typed, so the confirmation shows all of it, not the 1.3 U of a 0.1 U pump.
@@ -546,7 +617,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
             iCfg = ICfg("Pen", 75, 6.0, 1.0)
         )
 
-        val prepared = create().prepareBatch(listOf(bolus)) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = create().prepareBatch(listOf(bolus)) as MasterActionExecutor.PrepareResult.Preview
 
         assertThat(prepared.lines.first { it.role == ConfirmationRole.BOLUS }.text).containsMatch("1[.,]33 U")
     }
@@ -560,10 +631,10 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         stubPassthroughConstraints()
         val executor = create()
         val bolus = BatchAction.Bolus(insulin = 1.0, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = "", timestamp = 0L, iCfg = null)
-        val prepared = executor.prepareBatch(listOf(bolus)) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(bolus)) as MasterActionExecutor.PrepareResult.Preview
 
         var successes = 0
-        var error: WizardBolusExecutor.Failure? = null
+        var error: MasterActionExecutor.Failure? = null
         executor.confirm(prepared.bolusId, Sources.SMS, { error = it }, onSuccess = { successes++ })
 
         assertThat(successes).isEqualTo(1)
@@ -577,14 +648,14 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         stubPassthroughConstraints()
         val executor = create()
         val bolus = BatchAction.Bolus(insulin = 1.0, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = "", timestamp = 0L, iCfg = null)
-        val prepared = executor.prepareBatch(listOf(bolus)) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(bolus)) as MasterActionExecutor.PrepareResult.Preview
 
         var successes = 0
-        var error: WizardBolusExecutor.Failure? = null
+        var error: MasterActionExecutor.Failure? = null
         val result = executor.confirm(prepared.bolusId, Sources.SMS, { error = it }, onSuccess = { successes++ })
 
         // confirm only started the bolus; the failure comes afterwards, through onError alone.
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         assertThat(error).isNotNull()
         assertThat(successes).isEqualTo(0)
     }
@@ -595,7 +666,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         stubPassthroughConstraints()
         val executor = create()
         val carbs = BatchAction.Bolus(insulin = 0.0, carbs = 20, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = "", timestamp = 0L, iCfg = null)
-        val prepared = executor.prepareBatch(listOf(carbs)) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(carbs)) as MasterActionExecutor.PrepareResult.Preview
 
         var successes = 0
         executor.confirm(prepared.bolusId, Sources.SMS, { }, onSuccess = { successes++ })
@@ -609,12 +680,12 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         stubPassthroughConstraints()
         val executor = create()
         val target = BatchAction.TempTarget(reason = TT.Reason.ACTIVITY.text, lowMgdl = 140.0, highMgdl = 140.0, durationMinutes = 60, startOffsetMinutes = 0)
-        val prepared = executor.prepareBatch(listOf(target)) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(target)) as MasterActionExecutor.PrepareResult.Preview
 
         var successes = 0
         val result = executor.confirm(prepared.bolusId, Sources.SMS, { }, onSuccess = { successes++ })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         assertThat(successes).isEqualTo(0)
     }
 
@@ -627,7 +698,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
             BatchAction.TempTarget(reason = TT.Reason.EATING_SOON.text, lowMgdl = 90.0, highMgdl = 90.0, durationMinutes = 30, startOffsetMinutes = 0),
             BatchAction.Bolus(insulin = 2.0, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = "", timestamp = 0L, iCfg = null)
         )
-        val prepared = executor.prepareBatch(actions) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(actions) as MasterActionExecutor.PrepareResult.Preview
 
         // The loop suspends between prepare and commit → the bolus is mode-rejected at delivery.
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn("loop suspended")
@@ -648,10 +719,10 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), anyOrNull(), any(), any())).thenReturn(mock<PS>())
         val executor = create()
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(percentage = 120, timeShiftHours = 2, durationMinutes = 60))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(percentage = 120, timeShiftHours = 2, durationMinutes = 60))) as MasterActionExecutor.PrepareResult.Preview
         val result = executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         // PS-only batch: no pump bolus, no TT — only the dialog-free profile switch applied with the parked values.
         verify(commandQueue, never()).bolus(anyOrNull())
         // timestamp 0 = now: this batch carries no picked time, so the master stamps its own clock.
@@ -666,7 +737,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         val result = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(percentage = 9999, timeShiftHours = 0, durationMinutes = 30)))
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
         verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), anyOrNull(), any(), any())
     }
 
@@ -682,7 +753,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         // never reported anything, so the user's target silently did not happen.
         val result = executor.prepareBatch(listOf(BatchAction.TempTarget(TT.Reason.EATING_SOON.text, 90.0, 90.0, 45, -29_860_000)))
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
         verify(persistenceLayer, never()).insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any())
     }
 
@@ -694,7 +765,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         val twoDaysMinutes = (T.days(2).msecs() / 60_000L).toInt()
         val result = executor.prepareBatch(listOf(BatchAction.TempTarget(TT.Reason.ACTIVITY.text, 90.0, 90.0, 45, twoDaysMinutes)))
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
         verify(persistenceLayer, never()).insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any())
     }
 
@@ -708,8 +779,8 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         // "one line more than the same target starting now", because the mocked rh.gs returns a fixed string,
         // so matching the formatted date would only test the mock. Offset 0 must stay clean: a Time line there
         // would be noise on every temp target.
-        val movedBack = executor.prepareBatch(listOf(BatchAction.TempTarget(TT.Reason.ACTIVITY.text, 90.0, 90.0, 45, -90))) as WizardBolusExecutor.PrepareResult.Preview
-        val startingNow = executor.prepareBatch(listOf(BatchAction.TempTarget(TT.Reason.ACTIVITY.text, 90.0, 90.0, 45, 0))) as WizardBolusExecutor.PrepareResult.Preview
+        val movedBack = executor.prepareBatch(listOf(BatchAction.TempTarget(TT.Reason.ACTIVITY.text, 90.0, 90.0, 45, -90))) as MasterActionExecutor.PrepareResult.Preview
+        val startingNow = executor.prepareBatch(listOf(BatchAction.TempTarget(TT.Reason.ACTIVITY.text, 90.0, 90.0, 45, 0))) as MasterActionExecutor.PrepareResult.Preview
 
         assertThat(movedBack.lines).hasSize(startingNow.lines.size + 1)
     }
@@ -726,7 +797,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         val picked = dateUtil.now() + T.hours(2).msecs()
         val executor = create()
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(100, 0, 0, profileName = "Lunch", timestamp = picked))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(100, 0, 0, profileName = "Lunch", timestamp = picked))) as MasterActionExecutor.PrepareResult.Preview
         executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
         // The switch is stored at the picked time, not at now — ProfileSwitchScheduler then arms its start.
@@ -743,7 +814,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         val executor = create()
 
         val before = dateUtil.now()
-        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(100, 0, 0, profileName = "Lunch"))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(100, 0, 0, profileName = "Lunch"))) as MasterActionExecutor.PrepareResult.Preview
         executor.confirm(prepared.bolusId, Sources.NSClient, { })
         val after = dateUtil.now()
 
@@ -766,7 +837,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         // switch there, and it is refused rather than quietly moved to a time the user did not pick.
         val result = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(100, 0, 0, profileName = "Lunch", timestamp = dateUtil.now() + T.days(2).msecs())))
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
         verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any())
     }
 
@@ -781,7 +852,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         val result = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(100, 0, 0, profileName = "Lunch", timestamp = dateUtil.now() - T.days(2).msecs())))
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
         verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any())
     }
 
@@ -797,7 +868,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         // The bound is inclusive; a whole day ahead is a legitimate "tomorrow at this time".
         val result = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(100, 0, 0, profileName = "Lunch", timestamp = dateUtil.now() + Constants.PROFILE_SWITCH_TIME_OFFSET.last)))
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Preview::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Preview::class.java)
     }
 
     /**
@@ -813,7 +884,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         val result = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(percentage = 150, timeShiftHours = 0, durationMinutes = 60)))
 
-        assertThat((result as WizardBolusExecutor.PrepareResult.Error).message).isEqualTo("The pump cannot take it")
+        assertThat((result as MasterActionExecutor.PrepareResult.Error).message).isEqualTo("The pump cannot take it")
         verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), anyOrNull(), any(), any())
     }
 
@@ -825,9 +896,9 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(profileFunction.getOriginalProfileName()).thenReturn("Test")
         whenever(profileFunction.profileSwitchRefusal(eq(60), eq(150), eq(0), any())).thenReturn(null, "The pump cannot take it")
         val executor = create()
-        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(percentage = 150, timeShiftHours = 0, durationMinutes = 60))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(percentage = 150, timeShiftHours = 0, durationMinutes = 60))) as MasterActionExecutor.PrepareResult.Preview
 
-        var failure: WizardBolusExecutor.Failure? = null
+        var failure: MasterActionExecutor.Failure? = null
         executor.confirm(prepared.bolusId, Sources.NSClient, { failure = it })
 
         assertThat(failure?.comment).isEqualTo("The pump cannot take it")
@@ -846,8 +917,8 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         )
 
         // A removal within COB is a real action — NOT a no-op — and is parked verbatim.
-        assertThat(prepared).isInstanceOf(WizardBolusExecutor.PrepareResult.Preview::class.java)
-        assertThat((prepared as WizardBolusExecutor.PrepareResult.Preview).carbs).isEqualTo(-10)
+        assertThat(prepared).isInstanceOf(MasterActionExecutor.PrepareResult.Preview::class.java)
+        assertThat((prepared as MasterActionExecutor.PrepareResult.Preview).carbs).isEqualTo(-10)
     }
 
     @Test
@@ -861,7 +932,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         )
 
         // Can't remove more than the 5 g on board → clamped to -5, still a real action.
-        assertThat((prepared as WizardBolusExecutor.PrepareResult.Preview).carbs).isEqualTo(-5)
+        assertThat((prepared as MasterActionExecutor.PrepareResult.Preview).carbs).isEqualTo(-5)
     }
 
     @Test
@@ -875,7 +946,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         )
 
         // Nothing on board to remove → a genuine no-op, surfaced as NoAction (neutral), never the bolus-error path.
-        assertThat(prepared).isEqualTo(WizardBolusExecutor.PrepareResult.NoAction)
+        assertThat(prepared).isEqualTo(MasterActionExecutor.PrepareResult.NoAction)
     }
 
     @Test
@@ -889,7 +960,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         )
 
         // A future-dated removal is dropped (you can't pre-remove carbs not yet on board) → NoAction.
-        assertThat(prepared).isEqualTo(WizardBolusExecutor.PrepareResult.NoAction)
+        assertThat(prepared).isEqualTo(MasterActionExecutor.PrepareResult.NoAction)
     }
 
     @Test
@@ -901,10 +972,10 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         val executor = create()
         val iCfg = ICfg(insulinLabel = "Rapid", insulinEndTime = 360, insulinPeakTime = 75, concentration = 1.0)
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.InsulinActivate(iCfg))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.InsulinActivate(iCfg))) as MasterActionExecutor.PrepareResult.Preview
         val result = executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         // InsulinActivate-only batch: no pump bolus — only the master re-applies its active profile with the new insulin.
         verify(commandQueue, never()).bolus(anyOrNull())
         verify(profileFunction).createProfileSwitchWithNewInsulin(argThat { insulinLabel == "Rapid" }, eq(Sources.NSClient))
@@ -919,7 +990,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         val result = executor.prepareBatch(listOf(BatchAction.InsulinActivate(iCfg)))
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
         verify(profileFunction, never()).createProfileSwitchWithNewInsulin(any(), any())
     }
 
@@ -934,13 +1005,13 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         val cannula = BatchAction.TherapyEvent(teType = TE.Type.CANNULA_CHANGE, timestamp = 1_000L, source = Sources.FillDialog)
         val cartridge = BatchAction.TherapyEvent(teType = TE.Type.INSULIN_CHANGE, timestamp = 2_000L, source = Sources.FillDialog)
 
-        val first = executor.prepareBatch(listOf(cannula)) as WizardBolusExecutor.PrepareResult.Preview
-        val second = executor.prepareBatch(listOf(cartridge)) as WizardBolusExecutor.PrepareResult.Preview
+        val first = executor.prepareBatch(listOf(cannula)) as MasterActionExecutor.PrepareResult.Preview
+        val second = executor.prepareBatch(listOf(cartridge)) as MasterActionExecutor.PrepareResult.Preview
 
         assertThat(first.bolusId).isNotEqualTo(second.bolusId)
         // Both parked batches must survive independently — neither may consume or evict the other.
-        assertThat(executor.confirm(first.bolusId, Sources.FillDialog, { })).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
-        assertThat(executor.confirm(second.bolusId, Sources.FillDialog, { })).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(executor.confirm(first.bolusId, Sources.FillDialog, { })).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+        assertThat(executor.confirm(second.bolusId, Sources.FillDialog, { })).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
     }
 
     @Test
@@ -954,10 +1025,10 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any())).thenReturn(mock<PS>())
         val executor = create()
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(110, 0, 60, profileName = "Lunch"))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(110, 0, 60, profileName = "Lunch"))) as MasterActionExecutor.PrepareResult.Preview
         val result = executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         // The named overload resolves the target from the MASTER's store (a client may relay a name the master owns).
         verify(profileFunction).createProfileSwitch(eq(store), eq("Lunch"), eq(60), eq(110), eq(0), any(), eq(Action.PROFILE_SWITCH), eq(Sources.NSClient), anyOrNull(), any(), eq(someICfg))
     }
@@ -973,7 +1044,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         val chosen = ICfg(insulinLabel = "Chosen", insulinEndTime = 420, insulinPeakTime = 55, concentration = 1.0)
         val executor = create()
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(110, 0, 60, profileName = "Lunch", iCfg = chosen))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(110, 0, 60, profileName = "Lunch", iCfg = chosen))) as MasterActionExecutor.PrepareResult.Preview
         executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
         // The user's choice wins over the (absent) in-force insulin and is what gets recorded.
@@ -992,7 +1063,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         val result = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(110, 0, 60, profileName = "Lunch")))
 
         // Refuse rather than substitute an arbitrary insulin from the catalogue.
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
         verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any())
     }
 
@@ -1009,7 +1080,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         val result = executor.prepareBatch(listOf(BatchAction.ProfileSwitch(100, 0, 0, profileName = "Ghost")))
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
     }
 
     // ---- prepareBatch() → confirm(): running-mode changes (the shared path for the phone screen, a client, and wear) ----
@@ -1021,10 +1092,10 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
         val executor = create()
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.RunningMode(RM.Mode.CLOSED_LOOP))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.RunningMode(RM.Mode.CLOSED_LOOP))) as MasterActionExecutor.PrepareResult.Preview
         val result = executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         // RM-only batch: no pump bolus, no TT — only the dialog-free running-mode change with the mode-derived action.
         verify(commandQueue, never()).bolus(anyOrNull())
         verify(loop).handleRunningModeChange(eq(RM.Mode.CLOSED_LOOP), eq(Action.CLOSED_LOOP_MODE), eq(Sources.NSClient), any(), eq(0), any())
@@ -1038,7 +1109,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         val result = executor.prepareBatch(listOf(BatchAction.RunningMode(RM.Mode.OPEN_LOOP)))
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
         verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
     }
 
@@ -1050,7 +1121,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         val result = executor.prepareBatch(listOf(BatchAction.RunningMode(RM.Mode.SUSPENDED_BY_USER, durationMinutes = 0)))
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
         verify(loop, never()).handleRunningModeChange(any(), any(), any(), any(), any(), any())
     }
 
@@ -1061,10 +1132,10 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
         val executor = create()
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.RunningMode(RM.Mode.DISCONNECTED_PUMP, durationMinutes = 60))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.RunningMode(RM.Mode.DISCONNECTED_PUMP, durationMinutes = 60))) as MasterActionExecutor.PrepareResult.Preview
         val result = executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         verify(loop).handleRunningModeChange(eq(RM.Mode.DISCONNECTED_PUMP), eq(Action.DISCONNECT), eq(Sources.NSClient), any(), eq(60), any())
     }
 
@@ -1076,10 +1147,10 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
         val executor = create()
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.RunningMode(RM.Mode.RESUME))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.RunningMode(RM.Mode.RESUME))) as MasterActionExecutor.PrepareResult.Preview
         val result = executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         // RESUME resolves to RECONNECT (not RESUME) because the current mode is DISCONNECTED_PUMP — the UEL action differs.
         verify(loop).handleRunningModeChange(eq(RM.Mode.RESUME), eq(Action.RECONNECT), eq(Sources.NSClient), any(), eq(0), any())
     }
@@ -1099,10 +1170,10 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(commandQueue.tempBasalPercent(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 150.0, isPercent = true, durationMinutes = 30))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 150.0, isPercent = true, durationMinutes = 30))) as MasterActionExecutor.PrepareResult.Preview
         val result = executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         verify(commandQueue, never()).bolus(anyOrNull())
         verify(commandQueue).tempBasalPercent(eq(150), eq(30), eq(true), any(), any())
     }
@@ -1110,7 +1181,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     /**
      * A temp basal dropped from the queue (an import clears it) reports `success = false` like a pump failure, and
      * the dialog would raise the full screen BOLUS_ERROR alarm for it. `cancelled` rides back on the result, so
-     * confirm answers [WizardBolusExecutor.ConfirmResult.Cancelled] — the comment still reaches onError, or the
+     * confirm answers [MasterActionExecutor.ConfirmResult.Cancelled] — the comment still reaches onError, or the
      * caller would be told the rate was set.
      */
     @Test
@@ -1127,11 +1198,11 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
             .thenReturn(pumpEnactResultProvider().success(false).cancelled(true).comment("dropped by import"))
         val executor = create()
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 150.0, isPercent = true, durationMinutes = 30))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 150.0, isPercent = true, durationMinutes = 30))) as MasterActionExecutor.PrepareResult.Preview
         var err: String? = null
         val result = executor.confirm(prepared.bolusId, Sources.NSClient, { err = it.comment })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Cancelled)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Cancelled)
         assertThat(err).isEqualTo("dropped by import")
     }
 
@@ -1150,11 +1221,11 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
             .thenReturn(pumpEnactResultProvider().success(false).comment("pump said no"))
         val executor = create()
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 150.0, isPercent = true, durationMinutes = 30))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 150.0, isPercent = true, durationMinutes = 30))) as MasterActionExecutor.PrepareResult.Preview
         var err: String? = null
         val result = executor.confirm(prepared.bolusId, Sources.NSClient, { err = it.comment })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         assertThat(err).isEqualTo("pump said no")
     }
 
@@ -1171,7 +1242,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         val result = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 150.0, isPercent = true, durationMinutes = 30)))
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
         verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any())
         verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any())
     }
@@ -1188,10 +1259,10 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(commandQueue.extendedBolus(any(), any())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.ExtendedBolus(insulin = 1.5, durationMinutes = 120))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.ExtendedBolus(insulin = 1.5, durationMinutes = 120))) as MasterActionExecutor.PrepareResult.Preview
         val result = executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         verify(commandQueue, never()).bolus(anyOrNull())
         verify(commandQueue).extendedBolus(eq(1.5), eq(120))
     }
@@ -1209,10 +1280,10 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(commandQueue.tempBasalAbsolute(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 1.25, isPercent = false, durationMinutes = 45))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 1.25, isPercent = false, durationMinutes = 45))) as MasterActionExecutor.PrepareResult.Preview
         val result = executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         verify(commandQueue).tempBasalAbsolute(eq(1.25), eq(45), eq(true), any(), any())
         verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any())
     }
@@ -1231,7 +1302,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(commandQueue.tempBasalPercent(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 0.0, isPercent = true, durationMinutes = 30))) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 0.0, isPercent = true, durationMinutes = 30))) as MasterActionExecutor.PrepareResult.Preview
         executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
         verify(commandQueue).tempBasalPercent(eq(0), eq(30), eq(true), any(), any())
@@ -1253,7 +1324,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         val result = executor.prepareBatch(listOf(BatchAction.ExtendedBolus(insulin = 1.0, durationMinutes = 30)))
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
         verify(commandQueue, never()).extendedBolus(any(), any())
     }
 
@@ -1267,10 +1338,10 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(commandQueue.cancelTempBasal(any(), any())).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.CancelTempBasal)) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.CancelTempBasal)) as MasterActionExecutor.PrepareResult.Preview
         val result = executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         verify(commandQueue, never()).bolus(anyOrNull())
         verify(commandQueue).cancelTempBasal(eq(true), any())
     }
@@ -1285,10 +1356,10 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(commandQueue.cancelExtended()).thenReturn(pumpEnactResultProvider().success(true))
         val executor = create()
 
-        val prepared = executor.prepareBatch(listOf(BatchAction.CancelExtendedBolus)) as WizardBolusExecutor.PrepareResult.Preview
+        val prepared = executor.prepareBatch(listOf(BatchAction.CancelExtendedBolus)) as MasterActionExecutor.PrepareResult.Preview
         val result = executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         verify(commandQueue, never()).bolus(anyOrNull())
         verify(commandQueue).cancelExtended()
     }
@@ -1326,8 +1397,8 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         val result = executor.prepareQuickWizard("g")
 
         // The guard is the SAME two lines in prepareWizard, so this covers the manual-wizard path too.
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
-        assertThat((result as WizardBolusExecutor.PrepareResult.Error).message).isEqualTo("No insulin required")
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
+        assertThat((result as MasterActionExecutor.PrepareResult.Error).message).isEqualTo("No insulin required")
         // Nothing parked → a confirm of the wizard timestamp finds no pending dose (no phantom delivery).
         verify(commandQueue, never()).bolus(anyOrNull())
     }
@@ -1343,8 +1414,8 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         val result = executor.prepareQuickWizard("g")
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
-        assertThat((result as WizardBolusExecutor.PrepareResult.Error).message).isEqualTo("Initializing…")
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
+        assertThat((result as MasterActionExecutor.PrepareResult.Error).message).isEqualTo("Initializing…")
         verify(runningModeGuard, never()).rejectionMessage(any())
         verify(quickWizard, never()).get(any<String>())
     }
@@ -1385,9 +1456,9 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         val result = executor.prepareQuickWizard("g")
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
         // The SAME message an over-limit `carbs` produces — the two fields now fail identically.
-        assertThat((result as WizardBolusExecutor.PrepareResult.Error).message).isEqualTo(baseText.gs(CoreUiStrings.wizard_carbs_constraint))
+        assertThat((result as MasterActionExecutor.PrepareResult.Error).message).isEqualTo(baseText.gs(CoreUiStrings.wizard_carbs_constraint))
         verify(commandQueue, never()).bolus(anyOrNull())
     }
 
@@ -1407,8 +1478,8 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         val result = executor.prepareBatch(actions)
 
-        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
-        assertThat((result as WizardBolusExecutor.PrepareResult.Error).message).isEqualTo(baseText.gs(CoreUiStrings.wizard_carbs_constraint))
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
+        assertThat((result as MasterActionExecutor.PrepareResult.Error).message).isEqualTo(baseText.gs(CoreUiStrings.wizard_carbs_constraint))
     }
 
     @Test
@@ -1425,7 +1496,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
             )
         )
 
-        assertThat(executor.prepareBatch(actions)).isInstanceOf(WizardBolusExecutor.PrepareResult.Preview::class.java)
+        assertThat(executor.prepareBatch(actions)).isInstanceOf(MasterActionExecutor.PrepareResult.Preview::class.java)
     }
 
     @Test
@@ -1442,7 +1513,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
             )
         )
 
-        assertThat(executor.prepareBatch(actions)).isInstanceOf(WizardBolusExecutor.PrepareResult.Preview::class.java)
+        assertThat(executor.prepareBatch(actions)).isInstanceOf(MasterActionExecutor.PrepareResult.Preview::class.java)
         verify(quickWizard, never()).get(any<String>())
     }
 
@@ -1456,7 +1527,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         val result = executor.confirm(999L, Sources.NSClient, { }, asAdvisor = true)
 
-        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         val dbiCaptor = argumentCaptor<DetailedBolusInfo>()
         verify(commandQueue).bolus(dbiCaptor.capture())
         val dbi = dbiCaptor.firstValue
@@ -1561,7 +1632,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(false).cancelled(true).comment("import"))
         val executor = create()
 
-        var failure: WizardBolusExecutor.Failure? = null
+        var failure: MasterActionExecutor.Failure? = null
         executor.deliverWizardBolus(
             insulin = 1.0, carbs = 0, carbTimeMinutes = 0, mgdlGlucose = null,
             bolusCalculatorResult = null, notes = null, source = Sources.QuickWizard, onError = { failure = it }
@@ -1578,7 +1649,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(false).comment("pump said no"))
         val executor = create()
 
-        var failure: WizardBolusExecutor.Failure? = null
+        var failure: MasterActionExecutor.Failure? = null
         executor.deliverWizardBolus(
             insulin = 1.0, carbs = 0, carbTimeMinutes = 0, mgdlGlucose = null,
             bolusCalculatorResult = null, notes = null, source = Sources.QuickWizard, onError = { failure = it }
@@ -1641,7 +1712,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     fun deliverFillBolus_onPumpThatPrimesItself_refusesAndSendsNothing() = runTest {
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
         testPumpPlugin.pumpDescription.isRefillingCapable = false
-        var failure: WizardBolusExecutor.Failure? = null
+        var failure: MasterActionExecutor.Failure? = null
         var succeeded = false
 
         create().deliverFillBolus(0.5, null, Sources.Wear, onError = { failure = it }, onSuccess = { succeeded = true })
@@ -1650,5 +1721,83 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         assertThat(succeeded).isFalse()
         verify(commandQueue, never()).bolus(anyOrNull())
         verify(uel, never()).log(any<Action>(), any(), anyOrNull(), any<List<ValueWithUnit>>())
+    }
+
+    // ----- Removing records and calibrations: the master does them, whoever asked -----
+
+    private val bolusRemoval = BatchAction.Remove(BatchAction.Remove.Kind.BOLUS, listOf(BatchAction.Remove.Ref(nsId = "ns1")))
+
+    @Test
+    fun prepareBatch_remove_showsTheMastersLinesAndConfirmRemovesWithoutAnyDose() = runTest {
+        stubPassthroughConstraints()
+        val line = ConfirmationLine(ConfirmationRole.PRIMARY, "Insulin: 2.00 U")
+        whenever(masterRecordWriter.planRemovals(listOf(bolusRemoval))).thenReturn(MasterRecordWriter.RemovalPlan(listOf(line), found = 1, notHave = 0))
+        val executor = create()
+
+        val prepared = executor.prepareBatch(listOf(bolusRemoval)) as MasterActionExecutor.PrepareResult.Preview
+        val result = executor.confirm(prepared.bolusId, Sources.NSClient, { })
+
+        assertThat(prepared.lines).containsExactly(line)
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+        verify(masterRecordWriter).remove(listOf(bolusRemoval), Sources.NSClient)
+        verify(commandQueue, never()).bolus(anyOrNull())
+    }
+
+    @Test
+    fun prepareBatch_remove_removesNothingUntilTheUserConfirms() = runTest {
+        stubPassthroughConstraints()
+        whenever(masterRecordWriter.planRemovals(any())).thenReturn(MasterRecordWriter.RemovalPlan(emptyList(), found = 1, notHave = 0))
+
+        create().prepareBatch(listOf(bolusRemoval))
+
+        verify(masterRecordWriter, never()).remove(any(), any())
+    }
+
+    @Test
+    fun prepareBatch_remove_ofRecordsTheMasterDoesNotHave_isRefusedWithTheReason() = runTest {
+        stubPassthroughConstraints()
+        whenever(masterRecordWriter.planRemovals(any())).thenReturn(MasterRecordWriter.RemovalPlan(emptyList(), found = 0, notHave = 2))
+        whenever(masterRecordWriter.notHaveText(2)).thenReturn("not here")
+
+        val result = create().prepareBatch(listOf(bolusRemoval))
+
+        assertThat(result).isEqualTo(MasterActionExecutor.PrepareResult.Error("not here"))
+    }
+
+    @Test
+    fun prepareBatch_removeStartEvents_confirmRemovesThemOnTheMaster() = runTest {
+        stubPassthroughConstraints()
+        val line = ConfirmationLine(ConfirmationRole.PRIMARY, "Remove record: AndroidAPS started")
+        whenever(masterRecordWriter.removeStartEventsLine()).thenReturn(line)
+        val executor = create()
+
+        val prepared = executor.prepareBatch(listOf(BatchAction.RemoveStartEvents)) as MasterActionExecutor.PrepareResult.Preview
+        executor.confirm(prepared.bolusId, Sources.NSClient, { })
+
+        assertThat(prepared.lines).containsExactly(line)
+        verify(masterRecordWriter).removeStartEvents(Sources.NSClient)
+    }
+
+    @Test
+    fun prepareBatch_calibration_isRefusedWithTheMastersReason() = runTest {
+        stubPassthroughConstraints()
+        whenever(masterRecordWriter.calibrationRefusal()).thenReturn("no session")
+
+        val result = create().prepareBatch(listOf(BatchAction.Calibration(120.0)))
+
+        assertThat(result).isEqualTo(MasterActionExecutor.PrepareResult.Error("no session"))
+    }
+
+    @Test
+    fun prepareBatch_calibration_confirmStoresItOnTheMaster() = runTest {
+        stubPassthroughConstraints()
+        whenever(masterRecordWriter.calibrationRefusal()).thenReturn(null)
+        whenever(masterRecordWriter.calibrationLine(BatchAction.Calibration(120.0))).thenReturn(ConfirmationLine(ConfirmationRole.PRIMARY, "Calibration: 120"))
+        val executor = create()
+
+        val prepared = executor.prepareBatch(listOf(BatchAction.Calibration(120.0))) as MasterActionExecutor.PrepareResult.Preview
+        executor.confirm(prepared.bolusId, Sources.NSClient, { })
+
+        verify(masterRecordWriter).addCalibration(eq(BatchAction.Calibration(120.0)), eq(Sources.NSClient), any())
     }
 }

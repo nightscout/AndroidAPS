@@ -103,6 +103,8 @@ class ClientPairingRepository(
         preferences.put(StringNonKey.NsClientControlMasterSecretEnc, secretEnc)
         preferences.put(LongNonKey.NsClientControlCounterSent, 0L)
         preferences.put(LongNonKey.NsClientControlPairedAt, now)
+        // Not known until the master's roster lists this pairing; until then the client shows as little as ReadOnly.
+        preferences.put(StringNonKey.NsClientControlRole, "")
         true
     }
 
@@ -113,6 +115,8 @@ class ClientPairingRepository(
         preferences.put(StringNonKey.NsClientControlMasterSecretEnc, "")
         preferences.put(LongNonKey.NsClientControlCounterSent, 0L)
         preferences.put(LongNonKey.NsClientControlPairedAt, 0L)
+        // The role belongs to this pairing; a new pairing learns its own from the master's roster.
+        preferences.put(StringNonKey.NsClientControlRole, "")
     }
 
     /**

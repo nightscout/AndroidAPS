@@ -173,7 +173,7 @@ interface Config {
      *
      * Prefer [whileReconfiguring] - it pairs this with [endReconfiguring] in a `finally`. Calling this
      * without a guaranteed matching end leaves [appInitialized] false for the rest of the process, and
-     * `WizardBolusExecutorImpl` refuses on that in two places: the user could not bolus. That is worse
+     * `MasterActionExecutorImpl` refuses on that in two places: the user could not bolus. That is worse
      * than the window this closes.
      */
     fun beginReconfiguring()

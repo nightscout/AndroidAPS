@@ -24,6 +24,7 @@ fun FailureReason.failText(): TextRef = when (this) {
     FailureReason.ExecutionFailed    -> CoreUiStrings.clientcontrol_fail_execution
     FailureReason.Cancelled          -> CoreUiStrings.clientcontrol_fail_cancelled
     FailureReason.ControlDisabled    -> CoreUiStrings.clientcontrol_fail_control_disabled
+    FailureReason.NotAllowedForRole  -> CoreUiStrings.clientcontrol_fail_not_allowed_for_role
     FailureReason.NoAction           -> CoreUiStrings.no_action_selected
     FailureReason.NoPendingBolus     -> CoreUiStrings.clientcontrol_fail_no_pending_bolus
     FailureReason.BolusComputeFailed -> CoreUiStrings.clientcontrol_fail_bolus_compute

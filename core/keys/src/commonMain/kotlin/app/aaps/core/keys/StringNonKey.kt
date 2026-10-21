@@ -98,5 +98,8 @@ enum class StringNonKey(
     NsClientControlMasterInstallId(key = "nsclient_control_master_install_id", defaultValue = "", exportable = false),
     NsClientControlClientId(key = "nsclient_control_client_id", defaultValue = "", exportable = false),
     NsClientControlMasterSecretEnc(key = "nsclient_control_master_secret_enc", defaultValue = "", exportable = false),
+    // Client: this phone's role on the master (ClientRole name), read from the master's roster. Empty = not known
+    // yet (just paired); the client then shows as little as ReadOnly until the roster arrives. Cleared on unpair.
+    NsClientControlRole(key = "nsclient_control_role", defaultValue = "", exportable = false),
 
 }

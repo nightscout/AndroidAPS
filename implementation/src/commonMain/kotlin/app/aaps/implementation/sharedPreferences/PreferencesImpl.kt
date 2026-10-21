@@ -166,6 +166,8 @@ class PreferencesImpl(
     override fun get(key: BooleanPreferenceKey): Boolean =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
         else if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
+        // The switch itself is never defaultedByHardenedMode (PreferencesImplTest checks it), so reading hardenedMode here cannot loop.
+        else if (key.defaultedByHardenedMode && hardenedMode) calculatedDefaultValue(key)
         // Recompute-when-hidden is for LOCAL values only; a synced key is remote-authoritative, so its stored value wins (visibility ≠ value).
         else if (key.calculatedDefaultValue && isHidden(key) && key.sync == null) calculatedDefaultValue(key)
         else sp.getBoolean(key.key, calculatedDefaultValue(key))
@@ -495,7 +497,7 @@ class PreferencesImpl(
                 BooleanKey.NsClientLogAppStart                     -> config.APS
                 BooleanKey.NsClientCreateAnnouncementsFromErrors   -> config.APS
                 BooleanKey.NsClientCreateAnnouncementsFromCarbsReq -> config.APS
-                BooleanKey.NsClientAllowClientControl              -> simpleMode // client control on by default in simple mode, opt-in otherwise
+                BooleanKey.HardenedMode                            -> simpleMode // client control on by default in simple mode, opt-in otherwise
                 else                                               -> error("Unsupported default value calculation")
             }
         else key.defaultValue

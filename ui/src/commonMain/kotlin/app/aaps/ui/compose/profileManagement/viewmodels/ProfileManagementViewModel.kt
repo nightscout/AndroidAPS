@@ -39,6 +39,7 @@ import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.toPureProfile
 import app.aaps.core.objects.profile.ProfileSealed
@@ -135,13 +136,19 @@ class ProfileManagementViewModel(
      *
      * Fail closed until the flows settle, and read it where the state is built rather than where the
      * mode is requested, so a change while the screen is open takes effect at once.
+     *
+     * The client's role splits it in two: activating a profile is a caregiver's, editing profiles (presets)
+     * is an admin's. A master is always both.
      */
-    private val editingAllowed: Boolean get() = editingAllowedFlow.value
+    private val access: ProfileAccess get() = accessFlow.value
 
-    private val editingAllowedFlow: StateFlow<Boolean> =
-        combine(nsClient.masterOrPairedClientFlow, nsClient.masterReachable) { paired, reachable ->
-            !config.AAPSCLIENT || (paired && reachable)
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), !config.AAPSCLIENT)
+    private data class ProfileAccess(val activate: Boolean, val edit: Boolean)
+
+    private val accessFlow: StateFlow<ProfileAccess> =
+        combine(nsClient.masterOrPairedClientFlow, nsClient.masterReachable, nsClient.clientRole) { paired, reachable, role ->
+            val canSend = !config.AAPSCLIENT || (paired && reachable)
+            ProfileAccess(activate = canSend && role.allows(ClientRole.Caregiver), edit = canSend && role.allows(ClientRole.Admin))
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ProfileAccess(!config.AAPSCLIENT, !config.AAPSCLIENT))
 
     fun setScreenMode(mode: ScreenMode) {
         _screenMode.value = mode
@@ -201,9 +208,9 @@ class ProfileManagementViewModel(
         _selectedIndex,
         persistenceLayer.observeChanges(EPS::class).compensateForClockSkew(config, dateUtil).onStart { emit(emptyList()) },
         _screenMode,
-        // An input, not a snapshot: pairing/unpairing or the master going away while this screen is
-        // open has to move it between editable and read-only right away.
-        editingAllowedFlow
+        // An input, not a snapshot: pairing/unpairing, a new role or the master going away while this
+        // screen is open has to move it between editable and read-only right away.
+        accessFlow
     ) { profiles, requestedIdx, _, screenMode, _ ->
         UiInputs(profiles, requestedIdx, screenMode)
     }.mapLatest { inputs ->
@@ -211,8 +218,9 @@ class ProfileManagementViewModel(
             aapsLogger.error(LTag.UI, "Failed to compute uiState", e)
             ProfileManagementUiState(
                 isLoading = false,
-                screenMode = if (editingAllowed) inputs.screenMode else ScreenMode.PLAY,
-                commandsAllowed = editingAllowed
+                screenMode = if (access.edit) inputs.screenMode else ScreenMode.PLAY,
+                commandsAllowed = access.activate,
+                editAllowed = access.edit
             )
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ProfileManagementUiState())
@@ -285,9 +293,10 @@ class ProfileManagementViewModel(
             pumpWarnings = pumpWarnings,
             selectedProfile = selectedProfile,
             compareData = compareData,
-            // An unpaired client cannot leave PLAY, whatever mode was requested.
-            screenMode = if (editingAllowed) screenMode else ScreenMode.PLAY,
-            commandsAllowed = editingAllowed,
+            // An unpaired client, or one whose role may not edit profiles, cannot leave PLAY, whatever mode was requested.
+            screenMode = if (access.edit) screenMode else ScreenMode.PLAY,
+            commandsAllowed = access.activate,
+            editAllowed = access.edit,
             isLoading = false
         )
     }
@@ -771,10 +780,12 @@ data class ProfileManagementUiState(
     val compareData: ProfileCompareData? = null,
     val screenMode: ScreenMode = ScreenMode.EDIT,
     /**
-     * False on an unpaired client: editing and activating are both commands for the master, and there
-     * is no master to send them to. The profile list itself stays visible — only the affordances go
-     * away. Same axis as `commandsAllowed` on the overview chips.
+     * Whether a profile may be activated. False on an unpaired client: activating is a command for the master,
+     * and there is no master to send it to; false too below a caregiver's role. The profile list itself stays
+     * visible — only the affordance goes away. Same axis as `commandsAllowed` on the overview chips.
      */
     val commandsAllowed: Boolean = true,
+    /** Whether profiles may be edited: like [commandsAllowed], but only for an admin role (profiles are presets). */
+    val editAllowed: Boolean = true,
     val isLoading: Boolean = true
 )
