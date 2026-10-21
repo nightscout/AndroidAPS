@@ -30,6 +30,8 @@ import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodStatus
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import app.aaps.pump.omnipod.common.bledriver.pod.command.StopDeliveryCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.SuspendDeliveryCommand
+import app.aaps.pump.omnipod.common.bledriver.pod.command.GetStatusCommand
+import app.aaps.pump.omnipod.common.bledriver.pod.response.AlarmStatusResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramBasalCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramBolusCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.ProgramTempBasalCommand
@@ -692,7 +694,7 @@ class O5PumpPluginTest : TestBaseWithProfile() {
 
 
     @Test
-    fun `a faulted pod is reported even when the fault code was never read`() {
+    fun `an unread fault warns the user but leaves the announcement pending`() {
         whenever(podStateManager.alarmSynced).thenReturn(false)
         whenever(podStateManager.isPodKaput).thenReturn(true)
         whenever(podStateManager.alarmType).thenReturn(null)
@@ -708,8 +710,101 @@ class O5PumpPluginTest : TestBaseWithProfile() {
                 eq(NotificationId.OMNIPOD_POD_FAULT), any<String>(), level = any(), validMinutes = any(),
                 sound = anyOrNull(), actions = any(), validityCheck = anyOrNull()
             )
-            verify(pumpSync).insertAnnouncement(any<String>(), any<Long>(), eq(PumpType.OMNIPOD_5), eq("9999"))
+            verify(pumpSync, never()).insertAnnouncement(any(), anyOrNull(), any(), any())
         }
+        verify(podStateManager, never()).alarmSynced = true
+    }
+
+    @Test
+    fun `an unread fault is saved with its code and reference on a later status check`() = runBlocking {
+        val alarm = AlarmType.ALARM_OCCLUDED
+        val fault = "Pod Fault: 020 $alarm"
+        val ref = "17-00003-02251-020"
+        whenever(podStateManager.isPodKaput).thenReturn(true)
+        whenever(podStateManager.podStatus).thenReturn(PodStatus.ALARM)
+        whenever(podStateManager.podId).thenReturn(9999L)
+        whenever(pumpSync.expectedPumpState()).thenReturn(pumpState())
+        whenever(bleManager.sendCommand(any(), any())).thenReturn(Observable.error(RuntimeException("pod unreachable")))
+
+        plugin.checkPodKaput()
+
+        verify(pumpSync, never()).insertAnnouncement(any(), anyOrNull(), any(), any())
+        verify(podStateManager, never()).alarmSynced = true
+
+        whenever(podStateManager.alarmType).thenReturn(alarm)
+        whenever(podStateManager.pdmRef).thenReturn(ref)
+        whenever(rh.gs(R.string.omnipod_common_pod_status_pod_fault_description, alarm.code, alarm.toString())).thenReturn(fault)
+        whenever(rh.gs(R.string.omnipod_common_pdm_ref, ref)).thenReturn("Ref: $ref")
+
+        plugin.checkPodKaput()
+
+        verify(pumpSync).insertAnnouncement(eq("$fault\nRef: $ref"), any<Long>(), eq(PumpType.OMNIPOD_5), eq("9999"))
+        verify(podStateManager).alarmSynced = true
+    }
+
+    @Test
+    fun `status polling saves a stopped pod fault once through stopped-pod handling`() = runBlocking {
+        val alarm = AlarmType.ALARM_OCCLUDED
+        val fault = "Pod Fault: 020 $alarm"
+        var alarmSynced = false
+        whenever(podStateManager.ltk).thenReturn(ByteArray(16))
+        whenever(podStateManager.podId).thenReturn(9999L)
+        whenever(podStateManager.isPodKaput).thenReturn(true)
+        whenever(podStateManager.alarmType).thenReturn(alarm)
+        whenever(podStateManager.podActivatedAt).thenReturn(1L)
+        whenever(podStateManager.alarmSynced).thenAnswer { alarmSynced }
+        doAnswer {
+            alarmSynced = it.getArgument(0)
+            null
+        }.whenever(podStateManager).alarmSynced = any()
+        whenever(pumpSync.expectedPumpState()).thenReturn(pumpState())
+        whenever(bleManager.connect()).thenReturn(Observable.empty())
+        whenever(bleManager.sendCommand(any(), any())).thenReturn(Observable.empty())
+        whenever(rh.gs(R.string.omnipod_common_pod_status_pod_fault_description, alarm.code, alarm.toString())).thenReturn(fault)
+
+        plugin.getPumpStatus("Fault")
+        plugin.getPumpStatus("Fault")
+
+        val order = inOrder(pumpSync, podStateManager)
+        order.verify(pumpSync).insertAnnouncement(eq(fault), any<Long>(), eq(PumpType.OMNIPOD_5), eq("9999"))
+        order.verify(podStateManager).alarmSynced = true
+        verify(pumpSync, times(1)).insertAnnouncement(any(), anyOrNull(), any(), any())
+    }
+
+    @Test
+    fun `a failed announcement write leaves the fault pending for retry`() = runBlocking {
+        whenever(podStateManager.alarmType).thenReturn(AlarmType.ALARM_OCCLUDED)
+        whenever(podStateManager.podId).thenReturn(9999L)
+        whenever(pumpSync.insertAnnouncement(any(), anyOrNull(), any(), any()))
+            .thenThrow(IllegalStateException("Database unavailable"))
+            .thenAnswer { Unit }
+
+        assertThrows(IllegalStateException::class.java) {
+            runBlocking { plugin.checkPodFault() }
+        }
+
+        verify(podStateManager, never()).alarmSynced = true
+
+        plugin.checkPodFault()
+
+        verify(pumpSync, times(2)).insertAnnouncement(any(), anyOrNull(), any(), any())
+        verify(podStateManager).alarmSynced = true
+    }
+
+    @Test
+    fun `activation timeout is saved without a fault code`() = runBlocking {
+        val description = "Pod activation time exceeded"
+        whenever(podStateManager.isPodKaput).thenReturn(true)
+        whenever(podStateManager.isPodActivationTimeExceeded).thenReturn(true)
+        whenever(podStateManager.podStatus).thenReturn(PodStatus.LUMP_OF_COAL)
+        whenever(podStateManager.podId).thenReturn(9999L)
+        whenever(pumpSync.expectedPumpState()).thenReturn(pumpState())
+        whenever(bleManager.sendCommand(any(), any())).thenReturn(Observable.empty())
+        whenever(rh.gs(R.string.omnipod_common_error_pod_fault_activation_time_exceeded)).thenReturn(description)
+
+        plugin.checkPodKaput()
+
+        verify(pumpSync).insertAnnouncement(eq(description), any<Long>(), eq(PumpType.OMNIPOD_5), eq("9999"))
         verify(podStateManager).alarmSynced = true
     }
 
@@ -1103,6 +1198,63 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         // The stop must reach the pod, and only after a (re)connect.
         verify(bleManager).connect()
         verify(bleManager).sendCommand(argThat { this is StopDeliveryCommand }, any())
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun `bolus status and cancellation checks save a newly reported fault`(cancel: Boolean) = runBlocking {
+        var pending: O5PodStateManager.PendingDoseCommand? = null
+        var faulted = false
+        var alarm: AlarmType? = null
+        val fault = "Pod Fault: 020 ALARM_OCCLUDED"
+        val ref = "17-00003-02251-020"
+        whenever(podStateManager.pendingDoseCommand).thenAnswer { pending }
+        doAnswer {
+            pending = it.getArgument(0)
+            null
+        }.whenever(podStateManager).pendingDoseCommand = anyOrNull()
+        whenever(podStateManager.isPodKaput).thenAnswer { faulted }
+        whenever(podStateManager.alarmType).thenAnswer { alarm }
+        whenever(podStateManager.pdmRef).thenAnswer { ref.takeIf { alarm != null } }
+        whenever(podStateManager.podStatus).thenAnswer { if (faulted) PodStatus.ALARM else PodStatus.RUNNING_ABOVE_MIN_VOLUME }
+        whenever(podStateManager.deliveryStatus).thenAnswer { if (faulted) DeliveryStatus.SUSPENDED else DeliveryStatus.BASAL_ACTIVE }
+        whenever(podStateManager.sequenceNumberOfLastProgrammingCommand).thenReturn(0)
+        whenever(podStateManager.bolusPulsesRemaining).thenReturn(0)
+        whenever(podStateManager.reservoirPulsesRemaining).thenReturn(2000)
+        whenever(podStateManager.podId).thenReturn(12345L)
+        whenever(pumpSync.expectedPumpState()).thenReturn(pumpState())
+        whenever(bleManager.connect()).thenReturn(Observable.empty())
+        whenever(rh.gs(R.string.omnipod_common_pod_status_pod_fault_description, AlarmType.ALARM_OCCLUDED.code, AlarmType.ALARM_OCCLUDED.toString()))
+            .thenReturn(fault)
+        whenever(rh.gs(R.string.omnipod_common_pdm_ref, ref)).thenReturn("Ref: $ref")
+        whenever(bleManager.sendCommand(any(), any())).thenAnswer {
+            val command = it.getArgument<Command>(0)
+            val alarmResponse = it.arguments[1] == AlarmStatusResponse::class
+            Observable.defer {
+                when {
+                    command is ProgramBolusCommand -> {
+                        pending = pending?.copy(confirmedByStatus = true)
+                        if (cancel) plugin.stopBolusDelivering()
+                    }
+                    alarmResponse -> alarm = AlarmType.ALARM_OCCLUDED
+                    command is GetStatusCommand || command is StopDeliveryCommand -> faulted = true
+                }
+                Observable.empty<PodEvent>()
+            }
+        }
+
+        val result = plugin.deliverTreatment(DetailedBolusInfo().also { it.carbs = 0.0; it.insulin = 0.05 })
+
+        assertThat(result.success).isTrue()
+        assertThat(result.bolusDelivered).isEqualTo(0.05)
+        verifyZeroTempBasalSynced("12345")
+        verify(pumpSync).insertAnnouncement(eq("$fault\nRef: $ref"), any<Long>(), eq(PumpType.OMNIPOD_5), eq("12345"))
+        verify(podStateManager).alarmSynced = true
+        verify(notificationManager).post(
+            eq(NotificationId.OMNIPOD_POD_FAULT), eq("$fault\nRef: $ref"), level = any(), validMinutes = any(),
+            sound = eq(AlarmSound.BOLUS_ERROR), actions = any(), validityCheck = anyOrNull()
+        )
+        if (cancel) verify(bleManager).sendCommand(argThat { this is StopDeliveryCommand }, any())
     }
 
     private fun pumpState(temporaryBasal: PumpSync.PumpState.TemporaryBasal? = null, serial: String = "", profile: PumpProfile? = null) =

@@ -332,8 +332,10 @@ class O5PumpPlugin @Inject constructor(
      * Internal (rather than private) to allow unit testing within this module.
      */
     internal suspend fun checkPodKaput() {
-        if (!podStateManager.isPodKaput) return
-        recordNoDelivery(pumpSync.expectedPumpState(), serialNumber())
+        if (podStateManager.isPodKaput) {
+            recordNoDelivery(pumpSync.expectedPumpState(), serialNumber())
+        }
+        checkPodFault()
     }
 
     /**
@@ -479,7 +481,6 @@ class O5PumpPlugin @Inject constructor(
                 fetchStatus().blockingAwait()
                 reconcilePendingDoseLocked()
                 checkPodKaput()
-                checkPodFault()
                 updateAlertConfiguration()
             }
         } catch (e: Exception) {
@@ -495,8 +496,13 @@ class O5PumpPlugin @Inject constructor(
      * without this, a faulted O5 pod only shows CRITICAL status on
      * the Omnipod overview screen with no system notification/sound, so a fault could go
      * unnoticed if the user isn't actively looking at that screen. [O5PodStateManager
-     * .alarmSynced] makes this idempotent across repeated status polls of the same fault;
-     * the notification is skipped (but the announcement/sync flag are not) if a pod
+     * .alarmSynced] makes this idempotent across repeated status polls of the same fault.
+     * If the fault code cannot be read, the notification still warns the user, but the
+     * announcement stays pending until a later status read provides the fault details.
+     * Activation timeout can be recorded directly from the pod status.
+     *
+     * Called by [checkPodKaput], like Dash's stopped-pod handling. The
+     * notification is skipped (but the announcement/sync flag are not) if a pod
      * deactivation is already queued, since the user is already acting on the fault.
      *
      * Internal (rather than private) to allow unit testing within this module, without
@@ -510,7 +516,7 @@ class O5PumpPlugin @Inject constructor(
             try {
                 fetchAlarmStatus().blockingAwait()
             } catch (e: Exception) {
-                aapsLogger.debug(LTag.PUMP, "O5 could not read the alarm status page: ${e.message}")
+                aapsLogger.warn(LTag.PUMP, "O5 could not read the alarm status page; fault announcement remains pending: ${e.message}")
             }
         }
 
@@ -535,6 +541,7 @@ class O5PumpPlugin @Inject constructor(
                 sound = AlarmSound.BOLUS_ERROR
             )
         }
+        if (podStateManager.alarmType == null && !podStateManager.isPodActivationTimeExceeded) return
         pumpSync.insertAnnouncement(
             error = description,
             pumpId = System.currentTimeMillis(),
@@ -1049,6 +1056,7 @@ class O5PumpPlugin @Inject constructor(
                     if (bolusCanceled) {
                         try {
                             cancelBolus().blockingAwait()
+                            checkPodKaput()
                         } catch (e: Exception) {
                             aapsLogger.warn(LTag.PUMP, "O5 bolus stop outcome is unknown: ${e.message}")
                         }
@@ -1091,7 +1099,7 @@ class O5PumpPlugin @Inject constructor(
         repeat(BOLUS_RETRIES) {
             val cmd = if (bolusCanceled) cancelBolus() else fetchStatus()
             try {
-                cmd.blockingAwait()
+                cmd.andThen(rxCompletable(Dispatchers.IO) { checkPodKaput() }).blockingAwait()
             } catch (e: Exception) {
                 aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$e")
                 Thread.sleep(BOLUS_RETRY_INTERVAL_MS)
