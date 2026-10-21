@@ -178,6 +178,10 @@
     <string name="wrong_pump_data">Phát hiện dữ liệu từ bơm khác. Hãy chọn lại loại bơm để khởi tạo lại.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Hiệu chuẩn</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">Hiệu chuẩn chưa được lưu: không tìm thấy giá trị CGM trong 10 phút gần đây.</string>
+    <string name="cal_reject_warmup">Hiệu chuẩn chưa được lưu: cảm biến vẫn đang trong giai đoạn khởi động 2 giờ.</string>
+    <string name="cal_reject_no_session">Hiệu chuẩn chưa được lưu: không có phiên cảm biến nào đang hoạt động. Hãy thay cảm biến trước.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Bolus gặp lỗi. Hãy kiểm tra thủ công lượng carb và insulin đã bơm</string>
     <string name="bolus_reminder">Nhắc tiêm bolus khi đường huyết hồi phục</string>
