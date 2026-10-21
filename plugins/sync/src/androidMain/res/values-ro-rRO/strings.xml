@@ -54,6 +54,7 @@
     <string name="pair_with_master_already_paired_master">Momentan asociat cu dispozitivul principal %1$s. Pentru a introduce un PIN nou, opriți mai întâi asocierea curentă.</string>
     <string name="pair_with_master_unpair">Dezasociați</string>
     <string name="pair_with_master_sending">Se trimite mesajul de asociere…</string>
+    <!-- Client set-up from the master's QR code -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">Dispozitivul principal AAPS nu mai recunoaște acest dispozitiv. Deschideți pagina Gestionare → Asociați cu dispozitivul principal pentru a re-asocia.</string>
     <string name="ns_client">NSClient</string>
