@@ -34,6 +34,8 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.authorization.NSAuthSubject
 import app.aaps.core.nssdk.localmodel.clientcontrol.AckEnvelope
+import app.aaps.core.nssdk.localmodel.clientcontrol.AckPhase
+import app.aaps.core.nssdk.localmodel.clientcontrol.PongPayload
 import app.aaps.core.nssdk.localmodel.clientcontrol.BatchActionDto
 import app.aaps.core.nssdk.localmodel.clientcontrol.BolusPreview
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientControlMessage
@@ -70,6 +72,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -96,6 +99,7 @@ internal class ClientControlReceiverTest {
     @Mock private lateinit var config: Config
     @Mock private lateinit var bolusProgressData: BolusProgressData
     @Mock private lateinit var commandQueue: CommandQueue
+    @Mock private lateinit var masterSigningKey: MasterSigningKey
 
     // Same deterministic fake as the repository tests — encrypt/decrypt round-trip via reverse,
     // so the persisted form does not contain the original plaintext.
@@ -183,7 +187,8 @@ internal class ClientControlReceiverTest {
             rh,
             aapsLogger,
             appScope,
-            clientTokens
+            clientTokens,
+            masterSigningKey
         )
     }
 
@@ -285,6 +290,26 @@ internal class ClientControlReceiverTest {
 
     private fun clientSideKeys(answer: KeyExchangeEnvelope, clientKeys: ClientControlKeyExchangeCrypto.KeyPair, oldSecret: ByteArray, clientId: String) =
         ClientControlKeyExchangeCrypto.deriveKeys(clientKeys.privateKey, answer.masterPublicKey, oldSecret, clientId, clientKeys.publicKey, answer.masterPublicKey)
+
+    /**
+     * The pong carries the master's key for its settings docs, inside the ACK the pairing secret signs: every client
+     * pings on each connect, so this is how a paired client learns the key.
+     */
+    @Test
+    fun thePongCarriesTheKeyTheSettingsDocsAreSignedWith() = runTest {
+        whenever(masterSigningKey.publicKey()).thenReturn("master-key")
+        whenever(nsAndroidClient.updateSettings(any(), any())).thenReturn(writeOk)
+        val (clientId, secret) = pair()
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_HELLO_PREFIX + clientId, wrap(envelope(clientId, secret, counter = 1L)))
+
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_CMD_PREFIX + "ping_" + clientId, wrap(envelope(clientId, secret, ClientControlMessage.Ping, counter = 2L, wantsAck = true)))
+
+        val written = argumentCaptor<JsonObject>()
+        verify(nsAndroidClient, atLeastOnce()).updateSettings(eq(ClientControlPublisher.IDENTIFIER_ACK_PREFIX + clientId), written.capture())
+        val done = written.allValues.map { Json.decodeFromJsonElement(AckEnvelope.serializer(), it["ack"]!!) }.single { it.phase == AckPhase.Done }
+        assertThat(ClientControlCrypto.verifyAck(secret, done)).isTrue()
+        assertThat(Json.decodeFromString(PongPayload.serializer(), done.payload!!).signingKey).isEqualTo("master-key")
+    }
 
     @Test
     fun aHelloWithAKeyIsAnsweredWithAKeyExchange() = runTest {

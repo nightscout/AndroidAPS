@@ -24,6 +24,7 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.AckPhase
 import app.aaps.core.nssdk.localmodel.clientcontrol.AckStatus
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientControlMessage
 import app.aaps.core.nssdk.localmodel.clientcontrol.MasterPairing
+import app.aaps.core.nssdk.localmodel.clientcontrol.PongPayload
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressPhase
 import app.aaps.core.nssdk.utils.ClientControlCrypto
@@ -74,6 +75,7 @@ internal class ClientControlRoundTripTest {
     @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var bolusProgressData: BolusProgressData
     @Mock private lateinit var aapsLogger: AAPSLogger
+    @Mock private lateinit var masterDocVerifier: MasterDocVerifier
 
     private val now = 1_700_000_000_000L
     private val counter = 5L
@@ -110,7 +112,7 @@ internal class ClientControlRoundTripTest {
         whenever(notificationManager.notifications).thenReturn(notifications)
         whenever(bolusProgressData.state).thenReturn(MutableStateFlow(null))
         appScope = CoroutineScope(Dispatchers.Unconfined)
-        sut = ClientControlRoundTrip(publisher, pairingRepository, { nsClientV3Plugin }, nsClientRepository, config, dateUtil, notificationManager, rh, bolusProgressData, aapsLogger, appScope)
+        sut = ClientControlRoundTrip(publisher, pairingRepository, { nsClientV3Plugin }, nsClientRepository, config, dateUtil, notificationManager, rh, bolusProgressData, aapsLogger, masterDocVerifier, appScope)
     }
 
     @Test
@@ -123,6 +125,32 @@ internal class ClientControlRoundTripTest {
             eq(NotificationId.BOLUS_DELIVERY_FAILED), any<String>(), any<NotificationLevel>(), any<Int>(),
             anyOrNull<AlarmSound>(), any<List<NotificationAction>>(), anyOrNull<() -> Boolean>()
         )
+    }
+
+    /** A pong signed with the pairing secret carries the master's key for its settings docs: the client keeps it. */
+    @Test
+    fun onAckDoc_pongWithTheSigningKey_keepsTheKey() = runTest {
+        sut.onAckDoc(ackDoc(AckPhase.Done, AckStatus.Ok, payload = json.encodeToString(PongPayload.serializer(), PongPayload(signingKey = "master-key"))))
+
+        verify(masterDocVerifier).keepKey("master-key")
+    }
+
+    /** The same key in an ACK the pairing secret did not sign is not the master's. */
+    @Test
+    fun onAckDoc_pongNotSignedByTheMaster_keepsNoKey() = runTest {
+        val payload = json.encodeToString(PongPayload.serializer(), PongPayload(signingKey = "forged-key"))
+
+        sut.onAckDoc(ackDoc(AckPhase.Done, AckStatus.Ok, payload = payload, signSecret = ByteArray(32) { 0x42 }))
+
+        verify(masterDocVerifier, never()).keepKey(any())
+    }
+
+    /** Other payloads (a prepared bolus, a failure text) carry no key and are not taken for one. */
+    @Test
+    fun onAckDoc_otherPayload_keepsNoKey() = runTest {
+        sut.onAckDoc(ackDoc(AckPhase.Done, AckStatus.Ok, payload = "not json"))
+
+        verify(masterDocVerifier, never()).keepKey(any())
     }
 
     @Test

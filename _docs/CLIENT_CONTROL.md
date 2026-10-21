@@ -223,7 +223,7 @@ The "Add client" dialog has three ways:
 
 A PIN-paired client gets its own token through the key exchange (2.12).
 
-Not built yet: the master signing the cold and hot docs (a client token can write to `settings`, so it could write them too), and the master refusing a client's commands written with another token than its own.
+The master signs the cold and hot docs (2.13), since a client token can write to `settings` too. Not built yet: the master refusing a client's commands written with another token than its own.
 
 ### 2.12 The key exchange: a new secret, and the client's own token
 
@@ -238,6 +238,17 @@ The pairing secret has been where others could see it: wrapped with an 8-digit P
 - **NSClient is switched on after its settings.** Applying a QR code writes the address, the token and the websocket switch first and switches NSClientV3 on last. The plugin also compares the address and token with the ones its client was made with, not `drop(1)`: on a fresh client the plugin started with no address, the new address was written before its watcher subscribed, `drop(1)` threw that first value away, and every HTTP call went to `https://` + "" + `/api/v3/…`, which is the host "api", until the next start. The websocket worked meanwhile, since it reads the address on each connect.
 - **What it does not stop:** someone who has the old secret and sends a hello of their own before the real client. That is no worse than what the old secret already allowed. Someone who only reads Nightscout learns nothing: the private keys never leave the phones.
 - **Platforms:** P-256 ECDH and HKDF are in the JDK provider (Android, desktop) and CryptoKit (iOS). `ClientControlKeyExchangeCryptoTest` is in commonTest, so the simulator run checks that CryptoKit comes to the same keys.
+
+### 2.13 The master signs its settings docs
+
+A client token may write to `settings` (2.11), so without a signature anybody with one could overwrite the cold and the hot doc for every client: settings, plugin selection, definitions, the active scene, the client list with the roles, and the "master is alive" sign (a cold or hot doc feeds `bumpMasterSignal`). The master signs both docs with a key of its own (`MasterDocSigning`, ECDSA P-256 with SHA-256), so one signature serves every reader, also a phone that only reads Nightscout.
+
+- **The master's key** (`MasterSigningKey`): made on first use, the private key wrapped with `SecureEncrypt` like the pairing secrets, not exported. A key that cannot be read any more is replaced; paired clients take the new one with their next pong.
+- **The doc** (`schemaVersion` 2): `signed` is the text `{ signedAt, runningConfig }` and `signature` is the signature of `aaps-settings-v1|<identifier>|<text>`. Text, not an object: Nightscout keeps a string as it is, a JSON object may come back with numbers or key order changed. The identifier is in what is signed, so a hot doc cannot pass for a cold one. `signedAt` is always later than the last one (`LongNonKey.NsClientControlSignedAt`), also when the clock went back.
+- **How a client gets the public key:** in every pong (`PongPayload.signingKey` in the ACK payload, which the pairing secret signs), so a client paired before the docs were signed gets it on its next connect; and in the QR code (`ClientSetupCode.signingKey`), the only way for a phone that only reads Nightscout. `MasterDocVerifier.keepKey` keeps it with the Nightscout address it belongs to: with another address it is not used (another Nightscout, another master). A new key resets the replay order.
+- **What a client takes** (`MasterDocVerifier.open`, used by `NsFrameHandler` and `LoadSettingsRunner`): with a key, only a doc whose signature fits and whose `signedAt` is not older than the last one taken for that doc (`NsClientControlColdSignedAt` / `HotSignedAt`; the same doc again is fine, the catch-up load re-reads it). A refused doc is ignored and written to the NSClient log ("✕ SETTINGS … refused"). Without a key (a phone set up by hand that only reads Nightscout, or before the first pong) a doc is taken as before, the old unsigned shape too.
+- **Liveness** comes from `signedAt`, not from Nightscout's `srvModified`: a genuine doc put back later gets a new `srvModified`, so with that it would make a master that is gone look alive.
+- **Platforms:** the iOS client only checks signatures, through CryptoKit. `MasterDocSigningTest` is in commonTest.
 
 ---
 

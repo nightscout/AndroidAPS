@@ -16,6 +16,8 @@ import app.aaps.core.objects.extensions.observeChange
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.MasterDocVerifier
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.MasterSigningKey
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.clientRole
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher.Companion.COLD_DEBOUNCE_MS
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher.Companion.HOT_DEBOUNCE_MS
@@ -52,7 +54,8 @@ import kotlin.concurrent.Volatile
  *  - Hot ([SettingsIdentifiers.STATE]): active scene + computed runtime flags. Triggered by
  *    [RunningConfigurationKeys.hotKeys] (scene lifecycle); debounced [HOT_DEBOUNCE_MS].
  *
- * Document shape (both): `{ schemaVersion: 1, runningConfig: <…> }`, upserted via `updateSettings`.
+ * Document shape (both): `{ schemaVersion: 2, signed: "<{ signedAt, runningConfig } as text>", signature: <…> }`,
+ * signed by [MasterSigningKey] and opened on a client by [MasterDocVerifier], upserted via `updateSettings`.
  *
  * Started by [NSClientV3Plugin.onStart] and stopped by `onStop`.
  * Only active when `config.APS` is true (master role); no-op on aapsclient.
@@ -71,6 +74,7 @@ class RunningConfigurationPublisher(
     private val config: Config,
     private val dateUtil: DateUtil,
     private val authorizedRepository: AuthorizedClientsRepository,
+    private val masterSigningKey: MasterSigningKey,
 ) {
 
     private var job: Job? = null
@@ -165,12 +169,15 @@ class RunningConfigurationPublisher(
      * roster with its role. Each failure in a row doubles the wait, up to [COLD_RETRY_MAX_MS].
      */
     private suspend fun CoroutineScope.publishColdOrRetry() {
-        coldRetry?.cancel()
-        coldRetry = null
         if (publishCold()) {
+            coldRetry?.cancel()
+            coldRetry = null
             coldRetryDelayMs = COLD_RETRY_FIRST_MS
             return
         }
+        // One retry waits already (two publishes failed close together, like the start and the WS connect): keep it.
+        // Doubling for each of them pushed the first retry back to a minute on the phone.
+        if (coldRetry?.isActive == true) return
         val wait = coldRetryDelayMs
         coldRetryDelayMs = (wait * 2).coerceAtMost(COLD_RETRY_MAX_MS)
         aapsLogger.debug(LTag.NSCLIENT, "Running configuration not published, trying again in ${wait / 1000} s")
@@ -221,6 +228,14 @@ class RunningConfigurationPublisher(
             aapsLogger.debug(LTag.NSCLIENT, "updateSettings($identifier) skipped: no Nightscout client yet")
             return false
         }
+        // Signed by the master (MasterSigningKey), as text: Nightscout keeps a string as it is, a JSON object it may
+        // change. The text carries the time of signing, so a client can refuse an older doc put back by somebody else.
+        val signed = masterSigningKey.sign(identifier) { signedAt ->
+            buildJsonObject {
+                put(MasterDocVerifier.SIGNED_AT, signedAt)
+                put(MasterDocVerifier.RUNNING_CONFIG, runningConfig)
+            }.toString()
+        }
         val doc = buildJsonObject {
             // NS APIv3 validateCommon requires date / utcOffset / app on UPDATE; all three are
             // immutable after first create, so pick stable constants — the doc represents a
@@ -229,7 +244,8 @@ class RunningConfigurationPublisher(
             put("utcOffset", 0)
             put("app", "AAPS")
             put("schemaVersion", SCHEMA_VERSION)
-            put("runningConfig", runningConfig)
+            put(MasterDocVerifier.SIGNED, signed.text)
+            signed.signature?.let { put(MasterDocVerifier.SIGNATURE, it) }
         }
         return runCatching { client.updateSettings(identifier, doc) }
             .onSuccess { resp ->
@@ -250,7 +266,8 @@ class RunningConfigurationPublisher(
 
     companion object {
 
-        private const val SCHEMA_VERSION = 1
+        // 2: the configuration travels signed, as text (MasterDocVerifier); 1 had it as an object, unsigned.
+        private const val SCHEMA_VERSION = 2
         private const val COLD_DEBOUNCE_MS = 5_000L
         private const val HOT_DEBOUNCE_MS = 1_000L
         private const val WS_RECONNECT_DEBOUNCE_MS = 3_000L

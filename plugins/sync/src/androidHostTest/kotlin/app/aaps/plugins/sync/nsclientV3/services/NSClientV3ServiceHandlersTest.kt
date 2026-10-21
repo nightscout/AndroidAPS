@@ -5,11 +5,13 @@ import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.MasterDocVerifier
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.compose.NSClientRepositoryImpl
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
@@ -47,6 +49,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Mock lateinit var runningConfiguration: RunningConfiguration
     @Mock lateinit var orphanDetector: OrphanDetector
+    @Mock lateinit var masterDocVerifier: MasterDocVerifier
 
     private lateinit var sut: NSClientV3Service
     private val wsConnectedState = MutableStateFlow(false)
@@ -57,6 +60,8 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
         lastModified = LastModified(LastModified.Collections())
         whenever(nsClientV3Plugin.wsConnectedFlow).thenReturn(wsConnectedState)
         whenever(nsClientV3Plugin.lastLoadedSrvModified).thenReturn(lastModified)
+        // Opens every settings doc as an unsigned one is opened today; MasterDocVerifierTest has the checks.
+        whenever(masterDocVerifier.open(any(), any())).thenReturn(MasterDocVerifier.Opened(NSRunningConfiguration(version = "1.0"), null))
         sut = NSClientV3Service().also {
             it.aapsLogger = aapsLogger
             it.preferences = preferences
@@ -83,6 +88,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
                 runningConfiguration = { runningConfiguration },
                 orphanDetector = { orphanDetector },
                 clientKeyExchange = { mock() },
+                masterDocVerifier = { masterDocVerifier },
                 storeDataForDb = storeDataForDb,
                 notificationManager = notificationManager,
                 nsClientRepository = NSClientRepositoryImpl(rxBus, aapsLogger),

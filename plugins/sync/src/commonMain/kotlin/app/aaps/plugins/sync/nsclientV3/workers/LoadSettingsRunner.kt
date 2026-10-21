@@ -14,8 +14,8 @@ import app.aaps.core.objects.workflow.WorkOutcome
 
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.MasterDocVerifier
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
-import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
 import dev.zacsweers.metro.Inject
 
 /**
@@ -24,7 +24,7 @@ import dev.zacsweers.metro.Inject
  * Master role (`config.APS`): no-op (master publishes via [RunningConfigurationPublisher],
  * applying our own doc back to ourselves would be a feedback loop).
  *
- * Client role (`config.AAPSCLIENT`): GET the doc, extract `runningConfig`, apply it via
+ * Client role (`config.AAPSCLIENT`): GET the doc, open it with [MasterDocVerifier] (only what the master signed), apply it via
  * [RunningConfiguration.apply], advance the settings high-water-mark. Real-time updates
  * after this initial catch-up arrive via the WS `settings` branch in `NSClientV3Service`.
  */
@@ -38,7 +38,8 @@ class LoadSettingsRunner(
     private val runningConfiguration: RunningConfiguration,
     private val config: Config,
     private val dateUtil: DateUtil,
-    private val orphanDetector: OrphanDetector
+    private val orphanDetector: OrphanDetector,
+    private val masterDocVerifier: MasterDocVerifier
 ) {
 
     suspend fun run(): WorkOutcome {
@@ -86,10 +87,10 @@ class LoadSettingsRunner(
         }
         // ETag isn't set for settings GETs, but srvModified is in the doc body
         val srvModified = doc.optLongCompat("srvModified", 0L).takeIf { it > 0 } ?: response.lastServerModified
-        doc.toString().toRunningConfiguration()?.let { configuration ->
-            apply(configuration, srvModified)
-            val ts = srvModified?.let { dateUtil.dateAndTimeAndSecondsString(it) } ?: "?"
-            nsClientRepository.addLog("◄ SETTINGS", "$identifier applied srvModified=$ts")
-        } ?: nsClientRepository.addLog("◄ SETTINGS", "$identifier present but missing/invalid runningConfig")
+        // Only what the master signed (MasterDocVerifier logs a refused doc itself).
+        val opened = masterDocVerifier.open(identifier, doc) ?: return
+        apply(opened.configuration, srvModified)
+        val ts = srvModified?.let { dateUtil.dateAndTimeAndSecondsString(it) } ?: "?"
+        nsClientRepository.addLog("◄ SETTINGS", "$identifier applied srvModified=$ts")
     }
 }

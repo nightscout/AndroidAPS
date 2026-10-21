@@ -21,6 +21,7 @@ import app.aaps.core.nssdk.utils.ClientControlPairingCrypto
 import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientTokens
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.MasterSigningKey
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferPublisher
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.clientRole
 import dev.zacsweers.metro.AppScope
@@ -50,7 +51,8 @@ class AuthorizedClientsViewModel(
     private val clientTokens: ClientTokens,
     private val dateUtil: DateUtil,
     private val rh: TextResolver,
-    private val preferences: Preferences
+    private val preferences: Preferences,
+    private val masterSigningKey: MasterSigningKey
 ) : ViewModel() {
 
     companion object {
@@ -212,7 +214,7 @@ class AuthorizedClientsViewModel(
             val url = preferences.get(StringKey.NsClientUrl)
             if (role == null) {
                 _qrDialog.value = QrDialog.Shown(
-                    text = ClientSetupCode.encode(ClientSetupCode(url = url, token = token, name = clientName)),
+                    text = ClientSetupCode.encode(ClientSetupCode(url = url, token = token, name = clientName, signingKey = masterSigningKey.publicKey())),
                     clientName = clientName,
                     pairs = false,
                     expiresAt = null,
@@ -228,7 +230,7 @@ class AuthorizedClientsViewModel(
                     role = role.name
                 )
                 _qrDialog.value = QrDialog.Shown(
-                    text = ClientSetupCode.encode(ClientSetupCode(url = url, token = token, pairing = pairing, name = clientName)),
+                    text = ClientSetupCode.encode(ClientSetupCode(url = url, token = token, pairing = pairing, name = clientName, signingKey = masterSigningKey.publicKey())),
                     clientName = clientName,
                     pairs = true,
                     expiresAt = result.entry.pairExpiresAt,
@@ -244,10 +246,11 @@ class AuthorizedClientsViewModel(
         val id = subject.id ?: return
         _qrDialog.value = QrDialog.Working
         qrJob = viewModelScope.launch {
+            val signingKey = masterSigningKey.publicKey()
             _qrDialog.value = when (val result = clientTokens.token(id)) {
                 is ClientTokens.Result.Ok -> result.value.accessToken?.let { token ->
                     QrDialog.Shown(
-                        text = ClientSetupCode.encode(ClientSetupCode(url = preferences.get(StringKey.NsClientUrl), token = token, name = displayName(subject))),
+                        text = ClientSetupCode.encode(ClientSetupCode(url = preferences.get(StringKey.NsClientUrl), token = token, name = displayName(subject), signingKey = signingKey)),
                         clientName = displayName(subject),
                         pairs = false,
                         expiresAt = null,

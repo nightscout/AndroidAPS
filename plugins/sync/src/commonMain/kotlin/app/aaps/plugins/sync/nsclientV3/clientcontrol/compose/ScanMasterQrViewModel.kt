@@ -14,6 +14,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientSetupCode
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientPairingRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.MasterDocVerifier
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.takeInstanceNameFromMaster
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -39,7 +40,8 @@ class ScanMasterQrViewModel(
     private val configBuilder: ConfigBuilder,
     private val nsClientV3Plugin: () -> NSClientV3Plugin,
     private val dateUtil: DateUtil,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val masterDocVerifier: MasterDocVerifier
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<UiState>(UiState.Scanning)
@@ -78,6 +80,8 @@ class ScanMasterQrViewModel(
                 return@launch
             }
             preferences.put(StringKey.NsClientUrl, code.url)
+            // Kept for the address just written, before the connection to it reads the first settings doc.
+            code.signingKey?.let { masterDocVerifier.keepKey(it) }
             preferences.put(StringKey.NsClientAccessToken, code.token)
             // A client talks to its master over the websocket.
             preferences.put(BooleanKey.NsClient3UseWs, true)

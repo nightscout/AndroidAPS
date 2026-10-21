@@ -43,6 +43,7 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.ClientControlMessage
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import app.aaps.core.nssdk.localmodel.clientcontrol.ConfirmationLineDto
 import app.aaps.core.nssdk.localmodel.clientcontrol.KeyExchangeEnvelope
+import app.aaps.core.nssdk.localmodel.clientcontrol.PongPayload
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressPhase
 import app.aaps.core.nssdk.localmodel.clientcontrol.SignedEnvelope
@@ -124,7 +125,8 @@ class ClientControlReceiver(
     // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
     // commonMain. AppCoroutineBindings.unqualifiedAppScope provides the same scope unqualified.
     private val appScope: CoroutineScope,
-    private val clientTokens: ClientTokens
+    private val clientTokens: ClientTokens,
+    private val masterSigningKey: MasterSigningKey
 ) {
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -508,7 +510,10 @@ class ClientControlReceiver(
     private suspend fun onVerifiedPing(entry: AuthorizedClient, envelope: SignedEnvelope, now: Long): AckOutcome {
         authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
         nsClientRepository.addLog("◄ CLIENTCTL", "ping from ${entry.name}")
-        return AckOutcome(AckStatus.Ok, null)
+        // The pong carries the key the settings docs are signed with; the pairing secret signs the pong. Every client
+        // pings on each connect, so this is how a paired client learns the key (MasterDocVerifier).
+        val payload = masterSigningKey.publicKey()?.let { json.encodeToString(PongPayload.serializer(), PongPayload(signingKey = it)) }
+        return AckOutcome(AckStatus.Ok, null, payload)
     }
 
     /**

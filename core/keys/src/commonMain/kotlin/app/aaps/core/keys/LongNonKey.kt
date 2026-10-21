@@ -38,6 +38,11 @@ enum class LongNonKey(
     // When the client sent the hello of its last key exchange. No new one is started for a while after it, so the
     // master's answer is not overtaken by a second exchange (see ClientPairingRepository.needsKeyExchange).
     NsClientControlKeyExchangeAt("nsclient_control_key_exchange_at", 0L, exportable = false),
+    // Master: the "signed at" of its last signed settings doc; the next is always later, also after the clock went back.
+    NsClientControlSignedAt("nsclient_control_signed_at", 0L, exportable = false),
+    // Client: the "signed at" of the last cold and hot doc it took. An older one is a replay and is refused.
+    NsClientControlColdSignedAt("nsclient_control_cold_signed_at", 0L, exportable = false),
+    NsClientControlHotSignedAt("nsclient_control_hot_signed_at", 0L, exportable = false),
     LastVacuumRun("last_vacuum_run", 0L),
 }
 

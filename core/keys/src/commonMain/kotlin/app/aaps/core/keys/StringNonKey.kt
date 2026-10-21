@@ -107,5 +107,13 @@ enum class StringNonKey(
     // Client: the key exchange started by the last hello. The public key (not secret) and the private key, wrapped.
     NsClientControlKeyExchangePublic(key = "nsclient_control_key_exchange_public", defaultValue = "", exportable = false),
     NsClientControlKeyExchangePrivateEnc(key = "nsclient_control_key_exchange_private_enc", defaultValue = "", exportable = false),
+    // Master: its key for signing the settings docs (MasterSigningKey). The public key (not secret) and the private key,
+    // wrapped. Not exported: a new phone makes its own, and its clients pair again anyway.
+    NsClientControlSigningPublic(key = "nsclient_control_signing_public", defaultValue = "", exportable = false),
+    NsClientControlSigningPrivateEnc(key = "nsclient_control_signing_private_enc", defaultValue = "", exportable = false),
+    // Client: the master's public key for its settings docs (MasterDocVerifier), from a pong or the QR code, and the
+    // Nightscout address it belongs to: with another address it is not used.
+    NsClientControlMasterSigningKey(key = "nsclient_control_master_signing_key", defaultValue = "", exportable = false),
+    NsClientControlMasterSigningKeyUrl(key = "nsclient_control_master_signing_key_url", defaultValue = "", exportable = false),
 
 }

@@ -67,6 +67,7 @@ class NsFrameHandlerTest : TestBaseWithProfile() {
             runningConfiguration = { runningConfiguration },
             orphanDetector = { orphanDetector },
             clientKeyExchange = { mock() },
+            masterDocVerifier = { mock() },
             storeDataForDb = storeDataForDb,
             notificationManager = notificationManager,
             nsClientRepository = NSClientRepositoryImpl(rxBus, aapsLogger),

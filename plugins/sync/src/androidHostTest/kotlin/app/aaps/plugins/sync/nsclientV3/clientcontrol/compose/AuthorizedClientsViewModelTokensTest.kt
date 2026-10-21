@@ -13,6 +13,7 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.ClientSetupCode
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientTokens
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.MasterSigningKey
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferPublisher
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -46,6 +47,7 @@ internal class AuthorizedClientsViewModelTokensTest {
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var preferences: Preferences
+    @Mock private lateinit var masterSigningKey: MasterSigningKey
 
     private val now = 1_000_000L
     private val tabletToken = NSAuthSubject(id = "s1", name = "aaps-Tablet", roles = listOf(ClientTokens.ROLE_NAME), accessToken = "aapstablet-0123456789abcdef")
@@ -72,7 +74,8 @@ internal class AuthorizedClientsViewModelTokensTest {
         whenever(clientTokens.ensureRole(false)).thenReturn(ClientTokens.Result.Ok(Unit))
         whenever(clientTokens.subjects()).thenReturn(ClientTokens.Result.Ok(listOf(tabletToken.copy(accessToken = null))))
         whenever(repository.current(now)).thenReturn(emptyList())
-        return AuthorizedClientsViewModel(repository, offerPublisher, clientTokens, dateUtil, rh, preferences)
+        whenever(masterSigningKey.publicKey()).thenReturn("master-key")
+        return AuthorizedClientsViewModel(repository, offerPublisher, clientTokens, dateUtil, rh, preferences, masterSigningKey)
     }
 
     private fun shownCode(sut: AuthorizedClientsViewModel): ClientSetupCode {
@@ -91,6 +94,9 @@ internal class AuthorizedClientsViewModelTokensTest {
         assertThat(code.url).isEqualTo("https://ns.example")
         assertThat(code.token).isEqualTo("aapstablet-0123456789abcdef")
         assertThat(code.pairing).isNull()
+        // A phone that only reads Nightscout has no pong: the code is the only way it gets the master's key.
+        assertThat(code.signingKey).isEqualTo("master-key")
+        assertThat(code.name).isEqualTo("Tablet")
         verify(repository, never()).addPending(any(), any(), any(), any(), anyOrNull())
     }
 

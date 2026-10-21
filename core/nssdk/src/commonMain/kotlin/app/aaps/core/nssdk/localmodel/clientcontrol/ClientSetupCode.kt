@@ -27,7 +27,12 @@ data class ClientSetupCode(
     /** SENSITIVE: the pairing, when the code also pairs the client with the master. */
     val pairing: PairingPayload? = null,
     /** The name this phone was added with on the master. The client takes it as its instance name when it has none. */
-    val name: String? = null
+    val name: String? = null,
+    /**
+     * The master's public key for its settings docs (`MasterDocSigning`). A paired client also gets it in each pong; a
+     * phone that only reads Nightscout gets it only here.
+     */
+    val signingKey: String? = null
 ) {
 
     /** Hides the token and the secret, so a log line that prints a code cannot leak them. */

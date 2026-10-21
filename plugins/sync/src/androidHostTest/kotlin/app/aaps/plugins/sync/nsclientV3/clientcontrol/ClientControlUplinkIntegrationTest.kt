@@ -55,6 +55,7 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -212,6 +213,7 @@ class ClientControlUplinkIntegrationTest {
                 rh,
                 bolusProgressData,
                 aapsLogger,
+                mock<MasterDocVerifier>(),
                 clientScope
             )
         preferencesClientPublisher = PreferencesClientPublisher(clientPrefs, clientControlRoundTrip, clientConfig, rh, aapsLogger)
@@ -221,7 +223,7 @@ class ClientControlUplinkIntegrationTest {
         masterReceiver = ClientControlReceiver(
             masterAuthorizedRepository, { nsClientV3Plugin }, nsClientRepository, sceneAutomationApi,
             offerPublisher, masterPrefs, dateUtil, uel, runningConfigurationPublisher, persistenceLayer, masterActionExecutor, notificationManager, masterConfig, bolusProgressData, commandQueue, rh, aapsLogger,
-            masterScope, clientTokens
+            masterScope, clientTokens, mock<MasterSigningKey>()
         )
         clientKeyExchange = ClientKeyExchange(clientPairingRepository, { clientControlRoundTrip }, clientPrefs, nsClientRepository, aapsLogger)
             .also { it.tokenWorks = { _, _ -> true } }

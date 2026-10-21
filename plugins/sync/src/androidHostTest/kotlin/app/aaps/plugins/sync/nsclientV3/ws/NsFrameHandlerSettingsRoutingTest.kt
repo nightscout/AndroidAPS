@@ -2,12 +2,14 @@ package app.aaps.plugins.sync.nsclientV3.ws
 
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientKeyExchange
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.MasterDocVerifier
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.compose.NSClientRepositoryImpl
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
@@ -46,12 +48,15 @@ class NsFrameHandlerSettingsRoutingTest : TestBaseWithProfile() {
     @Mock lateinit var runningConfiguration: RunningConfiguration
     @Mock lateinit var orphanDetector: OrphanDetector
     @Mock lateinit var clientKeyExchange: ClientKeyExchange
+    @Mock lateinit var masterDocVerifier: MasterDocVerifier
 
     private lateinit var sut: NsFrameHandler
 
     @BeforeEach
     fun init() {
         whenever(nsClientV3Plugin.lastLoadedSrvModified).thenReturn(LastModified(LastModified.Collections()))
+        // Taken without a key, as an unsigned doc is today (MasterDocVerifierTest has the checks themselves).
+        whenever(masterDocVerifier.open(any(), any())).thenReturn(MasterDocVerifier.Opened(NSRunningConfiguration(version = "1.0"), null))
         sut = NsFrameHandler(
             aapsLogger = aapsLogger,
             preferences = preferences,
@@ -61,6 +66,7 @@ class NsFrameHandlerSettingsRoutingTest : TestBaseWithProfile() {
             runningConfiguration = { runningConfiguration },
             orphanDetector = { orphanDetector },
             clientKeyExchange = { clientKeyExchange },
+            masterDocVerifier = { masterDocVerifier },
             storeDataForDb = storeDataForDb,
             notificationManager = notificationManager,
             nsClientRepository = NSClientRepositoryImpl(rxBus, aapsLogger),
@@ -163,6 +169,31 @@ class NsFrameHandlerSettingsRoutingTest : TestBaseWithProfile() {
         verify(runningConfiguration).applyHot(any())
         verify(runningConfiguration, never()).applyCold(any())
         verify(nsClientV3Plugin).bumpMasterSignal(2000L)
+    }
+
+    /** A doc the master did not sign changes nothing and does not make the master look alive. */
+    @Test
+    fun `client ignores a cold config document the verifier refuses`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        whenever(masterDocVerifier.open(any(), any())).thenReturn(null)
+        val doc = """{"identifier":"${SettingsIdentifiers.COLD}","srvModified":1000,"runningConfig":{"version":"9.9"}}"""
+
+        sut.onDataCreateUpdate(envelope("settings", doc))
+
+        verify(runningConfiguration, never()).applyCold(any())
+        verify(nsClientV3Plugin, never()).bumpMasterSignal(any())
+    }
+
+    /** A signed doc feeds the liveness clock with its signing time: one put back later must not look new. */
+    @Test
+    fun `a signed document feeds the liveness clock with its signing time`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        whenever(masterDocVerifier.open(any(), any())).thenReturn(MasterDocVerifier.Opened(NSRunningConfiguration(version = "1.0"), 500L))
+        val doc = """{"identifier":"${SettingsIdentifiers.STATE}","srvModified":2000,"signed":"{}","signature":"x"}"""
+
+        sut.onDataCreateUpdate(envelope("settings", doc))
+
+        verify(nsClientV3Plugin).bumpMasterSignal(500L)
     }
 
     /** A master must not adopt config pushed at it; the cold and hot branches are client-only. */

@@ -28,9 +28,9 @@ import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientKeyExchange
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.MasterDocVerifier
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
-import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -76,6 +76,7 @@ class NsFrameHandler(
     private val runningConfiguration: () -> RunningConfiguration,
     private val orphanDetector: () -> OrphanDetector,
     private val clientKeyExchange: () -> ClientKeyExchange,
+    private val masterDocVerifier: () -> MasterDocVerifier,
     private val storeDataForDb: StoreDataForDb,
     private val notificationManager: NotificationManager,
     private val nsClientRepository: NSClientRepository,
@@ -144,24 +145,26 @@ class NsFrameHandler(
     private fun onSettings(doc: JsonObject, docString: String, srvModified: Long) {
         val identifier = doc.str("identifier") ?: ""
         when {
-            // Client: cold config doc - apply everything except the active scene.
+            // Client: cold config doc - apply everything except the active scene. Only when the master signed it
+            // (MasterDocVerifier): a client token may write to settings too.
             config.AAPSCLIENT && identifier == SettingsIdentifiers.COLD                                   ->
-                docString.toRunningConfiguration()?.let {
-                    runningConfiguration().applyCold(it)
+                masterDocVerifier().open(identifier, doc)?.let { opened ->
+                    runningConfiguration().applyCold(opened.configuration)
                     // Only the orphan bookkeeping is deferred, because onSettingsDoc takes the
                     // repository mutex and this runs on the socket's thread, not in a coroutine.
                     // applyCold and the liveness clock stay inline.
-                    appScope.launch { orphanDetector().onSettingsDoc(it, srvModified) }
-                    // A live config push proves the master is alive now - feed the liveness clock.
-                    nsClientV3Plugin().bumpMasterSignal(srvModified)
+                    appScope.launch { orphanDetector().onSettingsDoc(opened.configuration, srvModified) }
+                    // A live config push proves the master is alive - at the time it signed it, so a doc put back
+                    // later by somebody else does not make a master that is gone look alive.
+                    nsClientV3Plugin().bumpMasterSignal(opened.signedAt ?: srvModified)
                 }
 
             // Client: hot state doc - the active scene and runtime flags only. Kept apart from the
             // cold branch so this can never clear a running scene.
             config.AAPSCLIENT && identifier == SettingsIdentifiers.STATE                                  ->
-                docString.toRunningConfiguration()?.let {
-                    runningConfiguration().applyHot(it)
-                    nsClientV3Plugin().bumpMasterSignal(srvModified)
+                masterDocVerifier().open(identifier, doc)?.let { opened ->
+                    runningConfiguration().applyHot(opened.configuration)
+                    nsClientV3Plugin().bumpMasterSignal(opened.signedAt ?: srvModified)
                 }
 
             // Client: master->client command ACK. Must be tested BEFORE the generic IDENTIFIER_PREFIX
