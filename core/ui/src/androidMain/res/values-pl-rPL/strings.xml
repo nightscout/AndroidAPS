@@ -179,6 +179,7 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibracja</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Kalibracja nie została zapisana: glikemia zmienia się zbyt szybko (Δ %1$s %3$s na 5 min, limit %2$s). Spróbuj ponownie, gdy glikemia będzie stabilna.</string>
     <string name="cal_reject_no_pair">Kalibracja nie została zapisana: nie znaleziono żadnego odczytu CGM w ciągu ostatnich 10 minut.</string>
     <string name="cal_reject_warmup">Kalibracja nie została zapisana: sensor nadal znajduje się w 2-godzinnym okresie rozgrzewania.</string>
     <string name="cal_reject_no_session">Kalibracja nie została zapisana: sesja sensora nie jest aktywna. Najpierw oznacz wymianę sensora.</string>
@@ -226,6 +227,7 @@
     <string name="percentage_label">Procent</string>
     <string name="timeshift_label">Zmiana czasu</string>
     <string name="confirm_remove_multiple_items">Czy na pewno chcesz usunąć %1$d pozycji</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Urządzenie pacjenta nie ma %1$d z tych wpisów. Nie zostały one usunięte.</string>
     <string name="overview_treatment_label">Bolus i węglowodany</string>
     <string name="copytolocalprofile">Utworzyć nowy profil na bazie wybranego profilu?</string>
     <string name="wear_wizard_settings">Ustawienia kreatora Wear</string>
@@ -419,6 +421,19 @@
     <string name="scene_lock_banner_control_disabled">Pacjent wyłączył zdalne sterowanie. Sterowanie scenami zostanie wznowione, gdy zostanie ponownie włączone na urządzeniu pacjenta.</string>
     <string name="master_offline_banner">Urządzenie pacjenta jest niedostępne. Edycja jest wyłączona, dopóki połączenie nie zostanie przywrócone.</string>
     <string name="master_control_disabled_banner">Pacjent urządzenie wyłączyło zdalne sterowanie. Edycja jest zablokowana, dopóki nie zostanie ponownie włączona na urządzeniu pacjenta.</string>
+    <string name="hardened_mode_on">Włączono tryb silniejszych zabezpieczeń</string>
+    <string name="hardened_mode_title">Tryb silniejszych zabezpieczeń</string>
+    <string name="hardened_mode_info_open">O trybie silniejszych zabezpieczeń</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Tylko odczyt</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Posiłki</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Opiekun</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Administrator</string>
+    <string name="client_role_title">Rola</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Rola: %1$s</string>
+    <string name="client_roles_info_open">O rolach</string>
+    <string name="client_roles_info">Każdy sparowany telefon ma przydzieloną rolę. Telefon pacjenta sprawdza ją przy każdym poleceniu, a telefon pokazuje tylko to, na co pozwala jego rola. Nowa rola działa od razu, bez ponownego parowania.\n\nTylko odczyt: telefon pozostaje sparowany, ale tylko pokazuje dane.\n\nPosiłki: bolus, kalkulator bolusa, QuickWizard i węglowodany. Może też zatrzymać trwający bolus. Węglowodany wpisane tutaj mogą sprawić, że pętla poda więcej insuliny.\n\nOpiekun: wszystko, co użytkownik robi w AAPS, na przykład cele tymczasowe, zmiany profilu i insuliny, tryb pętli, tymczasowa dawka bazowa, bolus przedłużony, sceny, zdarzenia portalu opieki, kalibracje i usuwanie wpisów. Nie może zmieniać ustawień ani presetów.\n\nAdministrator: wszystko, łącznie z ustawieniami i presetami (QuickWizard, presety celów tymczasowych, sceny, profile, automatyzacja, insulina).</string>
+    <string name="client_read_only_banner">Ten telefon jest w trybie tylko do odczytu na telefonie pacjenta.</string>
+    <string name="hardened_mode_info">Telefon pacjenta przyjmuje zmiany tylko ze sparowanych urządzeń opiekuna. Nie przyjmuje leczenia, tymczasowych celów, zmian profilu, zmian trybu pracy ani usunięć wykonanych bezpośrednio w Nightscout, na przykład na stronie internetowej lub w innych aplikacjach. Ustawienia przyjmowania danych z Nightscout są ukryte, gdy włączony jest tryb silniejszych zabezpieczeń. Polecenia SMS nie są objęte tym ograniczeniem.\n\nTelefon pacjenta nadal wysyła wszystkie dane do Nightscout, w tym glikemię. Jeśli pobiera glikemię z Nightscout, kontynuuje pobieranie jej stamtąd.\n\nAby wczytać historię na nowym telefonie pacjenta, użyj opcji „Pełna synchronizacja” w NSClient. Pełna synchronizacja pobiera wszystko, co jest w Nightscout, łącznie z profilami.\n\nZdalne sterowanie od opiekunów wymaga działającego połączenia WebSocket z Nightscout, zarówno na telefonie pacjenta, jak i na sparowanych urządzeniach opiekuna. Tryb prosty zawsze włącza tryb silniejszych zabezpieczeń. Aby go wyłączyć, opuść tryb prosty i wyłącz sterowanie przez opiekuna na telefonie pacjenta.</string>
     <string name="scene_lock_reason_master_offline">Telefon pacjenta rozłączony</string>
     <string name="scene_lock_reason_control_disabled">Zdalne sterowanie wyłączone</string>
     <string name="scene_lock_reason_scene_active">Najpierw zatrzymaj działającą scenę</string>
@@ -447,6 +462,7 @@
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus anulowany. Nie podano insuliny.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Anulowano</string>
     <string name="clientcontrol_fail_control_disabled">Zdalne sterowanie jest wyłączone na telefonie pacjenta.</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">Rola tego telefonu na telefonie głównym nie pozwala na to.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Przygotowany wcześniej bolus wygasł lub został zastąpiony nowszym. Naciśnij przycisk ponownie.</string>
     <string name="clientcontrol_fail_bolus_compute">Telefon pacjenta nie mógł obliczyć bolusa (brak glukozy / profilu lub pompa nie jest gotowa).</string>
     <string name="clientcontrol_fail_internal">Coś poszło nie tak.</string>
