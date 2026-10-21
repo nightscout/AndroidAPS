@@ -40,7 +40,9 @@
     <string name="setupwizard_client_control_info">Associa i dispositivi client in modo che possano inviare comandi firmati a questo master su Nightscout. Questo è il nuovo modo consigliato per controllare AAPS da remoto.</string>
     <string name="setupwizard_ns_receive_info">L\'accettazione dei trattamenti e dei dati direttamente da Nightscout (modo meno sicuro) è ora disattivata per impostazione predefinita. Aprire le impostazioni qui sotto solo se ne hai ancora bisogno. Necessario se è necessario inserire dati tramite applicazioni NS o di terze parti.</string>
     <string name="setupwizard_open_ns_receive_settings">Accettazione dati Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">Associa questo client con la tua AAPS master in modo che possa inviare comandi su un canale sicuro. Dopo l\'accoppiamento, la configurazione è terminata.</string>
     <string name="setupwizard_setup_from_master_title">Configura dal master</string>
+    <string name="setupwizard_setup_from_master_info">Sul master, aprire client autorizzati e aggiungere questo telefono con un codice QR. Scansione imposta Nightscout con un token per se stesso, e può abbinare anche il telefono. Senza un codice QR, salta questo passaggio e imposta Nightscout te stesso.</string>
     <string name="setupwizard_scan_master_qr">Scansiona il codice QR</string>
     <string name="setupwizard_pairing_ws_warning">La connessione Nightscout WebSocket è necessaria per l\'accoppiamento. Torna al passaggio precedente e abilitala prima.</string>
     <string name="setupwizard_pairing_status_master">Clienti accoppiati: %1$d</string>
