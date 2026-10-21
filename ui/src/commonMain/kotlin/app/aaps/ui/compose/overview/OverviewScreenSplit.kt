@@ -19,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.ActiveSceneState
@@ -75,6 +76,8 @@ fun OverviewScreenSplit(
     endSceneEnabled: Boolean = true,
     commandsAllowed: Boolean = true,
     formatDuration: (Long) -> String = { ms -> "${(ms / 60000L).toInt()}m" },
+    /** Height of the bars drawn over the content in preview mode; both columns need it as extra space at their end. */
+    overlaidBarsHeight: Dp = 0.dp,
     modifier: Modifier = Modifier
 ) {
     val config = LocalConfig.current
@@ -192,7 +195,7 @@ fun OverviewScreenSplit(
                 }
                 // The QuickLaunch toolbar is centred over both columns, so this one needs space at its end too,
                 // like the graphs column has
-                Spacer(Modifier.height(AapsSpacing.fabClearance))
+                Spacer(Modifier.height(AapsSpacing.fabClearance + overlaidBarsHeight))
             }
 
             // Right column — graphs, own scroll
@@ -203,7 +206,10 @@ fun OverviewScreenSplit(
                     .verticalScroll(rememberScrollState())
                     .padding(start = 4.dp)
             ) {
-                GraphsSection(graphViewModel = graphViewModel, isSimpleMode = isSimpleMode, iobText = iobUiState.text, cobText = cobUiState.text)
+                GraphsSection(
+                    graphViewModel = graphViewModel, isSimpleMode = isSimpleMode, iobText = iobUiState.text, cobText = cobUiState.text,
+                    overlaidBarsHeight = overlaidBarsHeight
+                )
             }
         }
     }

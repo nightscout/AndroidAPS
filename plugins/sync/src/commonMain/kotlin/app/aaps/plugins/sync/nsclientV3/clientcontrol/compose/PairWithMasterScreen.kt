@@ -157,7 +157,7 @@ private fun PinEntryContent(onSubmit: (String) -> Unit) {
         OutlinedTextField(
             value = pin,
             // Filter to digits + cap at PIN_LENGTH up-front so the IME shows a clean count and the
-            // submit gate stays simple — paste of "1234-5678" still produces 8 digits.
+            // submit gate stays simple — paste of "1234 5678" as shown on the master still produces 8 digits.
             onValueChange = { raw -> pin = raw.filter(Char::isDigit).take(PIN_LENGTH) },
             label = { Text(stringResource(SyncStrings.pair_with_master_pin_entry_label)) },
             singleLine = true,

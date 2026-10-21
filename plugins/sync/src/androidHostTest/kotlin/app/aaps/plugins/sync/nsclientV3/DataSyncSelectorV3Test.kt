@@ -266,6 +266,21 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         verify(persistenceLayer, Times(0)).getLastBolusId()
     }
 
+    // A client sends everything through the master; its own records, like the start note, stay on the phone.
+    @Test
+    fun doUploadSendsNothingFromAClientTest() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
+        whenever(preferences.get(BooleanKey.NsClientUploadData)).thenReturn(true)
+        newLocalNoteToSync()
+
+        sut.doUpload()
+
+        verify(persistenceLayer, Times(0)).getNextSyncElementTherapyEvent(any())
+        verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
+        verify(nsClientV3Plugin, Times(0)).nsUpdate(any(), any(), any(), anyOrNull())
+    }
+
     @Test
     fun doUploadCalculatesQueueCountersTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
@@ -581,18 +596,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedTherapyEventsKeepsANewNoteLocalOnAClientTest() = runTest {
-        whenever(config.AAPSCLIENT).thenReturn(true)
-        newLocalNoteToSync()
-
-        sut.processChangedTherapyEvents()
-
-        verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
-        // Skipped, not stuck: the next sync starts after it
-        verify(preferences, Times(1)).put(NsclientLongKey.TherapyEventLastSyncedId, 6L)
-    }
-
-    @Test
     fun processChangedTherapyEventsUploadsANewNoteOnTheMasterTest() = runTest {
         whenever(config.AAPSCLIENT).thenReturn(false)
         newLocalNoteToSync()
@@ -773,20 +776,6 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         verify(nsClientV3Plugin, Times(1)).nsAdd(eq("profile"), any<DataSyncSelector.PairProfileStore>(), any(), anyOrNull())
     }
 
-    @Test
-    fun processChangedProfileStoreNotUploadedByClientTest() = runTest {
-        // The master owns the profile store in Nightscout. A client only mirrors a list it received,
-        // so uploading would either echo the master's own data back or publish a client-side edit
-        // behind its back.
-        whenever(config.AAPSCLIENT).thenReturn(true)
-        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
-        whenever(preferences.get(NsclientLongKey.ProfileStoreLastSyncedId)).thenReturn(0L)
-        whenever(preferences.get(LongNonKey.LocalProfileLastChange)).thenReturn(1000L)
-
-        sut.processChangedProfileStore()
-
-        verify(nsClientV3Plugin, Times(0)).nsAdd(eq("profile"), any<DataSyncSelector.PairProfileStore>(), any(), anyOrNull())
-    }
 
     // Tests for processChangedBoluses with getNextSyncElement returning data
 

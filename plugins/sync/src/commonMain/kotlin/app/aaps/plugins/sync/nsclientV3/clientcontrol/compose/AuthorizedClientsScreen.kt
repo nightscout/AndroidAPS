@@ -388,7 +388,8 @@ private fun PairingPinDialog(
         }
     }
 
-    val formattedPin = remember(offer.pin) { offer.pin.chunked(4).joinToString("-") }
+    // A space, not a dash: a dash read as part of the PIN. The client keeps only the digits anyway.
+    val formattedPin = remember(offer.pin) { offer.pin.chunked(4).joinToString(" ") }
 
     Dialog(
         onDismissRequest = onDismiss,
