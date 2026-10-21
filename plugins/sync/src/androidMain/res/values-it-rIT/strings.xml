@@ -15,7 +15,6 @@
     <string name="authorized_clients_add">Aggiungi client</string>
     <string name="authorized_clients_comm_switch_title">Consenti controllo client</string>
     <string name="authorized_clients_comm_switch_summary">Lascia che i client accoppiati inviino comandi firmati su Nightscout. Disattiva per interrompere la comunicazione senza rimuoverli.</string>
-    <string name="authorized_clients_needs_websocket">I Websocket sono disattivati, quindi i comandi dei client non possono essere ricevuti. I client vedono questo master come non abilitato ad accettare i comandi finché non si riaccendono i websocket.</string>
     <string name="authorized_clients_state_active">Attivo</string>
     <string name="authorized_clients_state_pending">In attesa</string>
     <string name="authorized_clients_last_seen">Ultimo accesso %1$s</string>
