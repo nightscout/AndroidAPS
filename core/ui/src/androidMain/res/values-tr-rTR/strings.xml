@@ -108,6 +108,7 @@
     <string name="wrong_pump_data">Veriler farklı pompadan geliyor. Pompa durumunu sıfırlamak için pompa sürücüsünü değiştirin.</string>
     <string name="bg_label">KŞ</string>
     <string name="calibration">Kalibrasyon</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Bolus bir hata bildirdi. Gerçek iletilen insülin ve karbonhidrat miktarını manuel olarak kontrol edin</string>
     <string name="duration_label">Süre</string>
