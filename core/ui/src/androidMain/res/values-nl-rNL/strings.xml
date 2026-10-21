@@ -91,6 +91,7 @@
     <string name="wrong_pump_data">Data komt van een andere pomp. Wijzig de pomp driver om de pomp status te resetten.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibratie</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Bolus fout geconstateerd. Controleer handmatig de werkelijk toegediende hoeveelheid insuline en koolhydraten</string>
     <string name="duration_label">Tijdsduur</string>
