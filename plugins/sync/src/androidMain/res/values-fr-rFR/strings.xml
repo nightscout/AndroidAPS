@@ -54,6 +54,7 @@
     <string name="pair_with_master_already_paired_master">Actuellement appairé avec le maître %1$s. Dissocier d\'abord pour entrer un nouveau PIN.</string>
     <string name="pair_with_master_unpair">Dissocier</string>
     <string name="pair_with_master_sending">Envoi du message d\'appairage…</string>
+    <!-- Client set-up from the master's QR code -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">Master AAPS ne reconnaît plus ce périphérique. Ouvrez le menu Gestion → Associer avec le maître pour ré-associer.</string>
     <string name="ns_client">NSClient</string>
