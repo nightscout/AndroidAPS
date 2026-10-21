@@ -99,6 +99,8 @@
     <string name="garmin_description">Kết nối với thiết bị Garmin (Fenix, Edge, …)</string>
     <string name="garmin_local_http_server_port">Local HTTP server port</string>
     <string name="garmin_local_http_server">Local HTTP server</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">Đồng hồ Garmin đã gửi %1$s carbs. Điện thoại này là thiết bị phụ nên carbs chưa được ghi nhận. Hãy nhập carbs trong AAPS.</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">Đồng hồ Garmin đã yêu cầu kết nối hoặc ngắt kết nối bơm. Điện thoại này là thiết bị phụ nên không có thay đổi nào được thực hiện. Hãy thao tác trong AAPS.</string>
     <!--    Wear-->
     <string name="description_wear">Theo dõi và điều khiển AAPS từ đồng hồ WearOS.</string>
     <string name="no_watch_connected">(Không có đồng hồ kết nối)</string>
