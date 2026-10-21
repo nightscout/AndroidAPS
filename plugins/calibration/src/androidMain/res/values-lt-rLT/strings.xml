@@ -21,7 +21,5 @@
     <string name="cal_entries_header">Matavimų iš piršto įrašai (%1$d)</string>
     <string name="cal_no_entries">Matavimų iš piršto įrašų dar nėra.</string>
     <string name="cal_entry_pair">Matavimas iš piršto %1$s → jutiklis %2$s (Δ %3$s)</string>
-    <string name="cal_remove_entry_title">Pašalinti įrašą?</string>
-    <string name="cal_remove_entry_message">Šis įrašas bus panaikintas, o kalibravimo kreivė perskaičiuota.</string>
     <string name="cal_chart_entry_readout">Įrašas %1$d/%2$d · %3$s · jutiklis %4$s → KG %5$s</string>
 </resources>
