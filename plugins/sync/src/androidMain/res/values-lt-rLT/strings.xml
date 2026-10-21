@@ -254,6 +254,8 @@
     <string name="sms_read_status_failed">Statuso nuskaityti nepavyko</string>
     <string name="sms_profile_switch_created">Profilio keitimas sukurtas</string>
     <string name="sms_wrong_tbr_duration">Laikinos bazės trukmė turi būti %1$d min kartotinė ir didesnė nei 0.</string>
+    <string name="sms_tbr_percent_only">Ši pompa laikiną bazę nustato procentais, o ne V/val.</string>
+    <string name="sms_tbr_absolute_only">Ši pompa laikiną bazę nustato V/val., o ne procentais.</string>
     <string name="a11y_otp_qr_code">QR kodas vienkartinio slaptažodžio nustatymui</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">Programai reikia SMS leidimo nuotoliniam valdymui tekstinėmis žinutėmis</string>
