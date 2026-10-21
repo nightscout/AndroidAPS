@@ -3,7 +3,9 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.observeHardenedMode
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientControlMessage
@@ -33,12 +35,16 @@ class PairWithMasterViewModel(
     private val publisher: ClientControlPublisher,
     private val fetcher: PairingOfferFetcher,
     private val dateUtil: DateUtil,
-    preferences: Preferences
+    preferences: Preferences,
+    nsClient: NsClient
 ) : ViewModel() {
 
     /** Hardened mode as this paired client follows it: the master's switch, read with the same rule as on the master. */
     val hardenedMode: StateFlow<Boolean> = preferences.observeHardenedMode()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000L), preferences.hardenedMode)
+
+    /** This phone's role on the master, shown on the paired screen. */
+    val clientRole: StateFlow<ClientRole> = nsClient.clientRole
 
     // Starts in Fetching rather than being decided here: currentPairing() suspends now, because it
     // takes the repository mutex across three preference reads. Defaulting to PinEntry instead

@@ -20,6 +20,8 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
+import app.aaps.core.interfaces.bolus.RemoteCaller
+import app.aaps.core.interfaces.bolus.requiredRole
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.configuration.Config
@@ -45,6 +47,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.profile.ProfileSealed
@@ -147,7 +150,11 @@ class MasterActionExecutorImpl(
         val calibration: BatchAction.Calibration? = null,
         val recordOnly: Boolean = false,
         val iCfg: ICfg? = null,
-        val bolusTimestamp: Long? = null
+        val bolusTimestamp: Long? = null,
+        // Who it was prepared for (null: the master itself) and the lowest role its content needs. Only that caller
+        // may commit it, and only while its role still allows it (see RemoteCaller).
+        val caller: RemoteCaller? = null,
+        val requiredRole: ClientRole = ClientRole.MealAssistant
     )
 
     // Consume-once slots keyed by bolusId — a map, NOT a single var, so prepares from different actors (the
@@ -182,7 +189,14 @@ class MasterActionExecutorImpl(
 
         fun park(id: Long, bolus: PendingBolus) = lock.withLock { slots[id] = bolus }
 
-        fun take(id: Long): PendingBolus? = lock.withLock { slots.remove(id) }
+        /**
+         * Takes the dose parked under [id] only for the caller it was prepared for ([owner] = its clientId, null for
+         * the master itself). For anyone else it returns null and leaves the dose in place: ids are guessable
+         * timestamps, so a client must not be able to commit - or throw away - what another one prepared.
+         */
+        fun takeFor(id: Long, owner: String?): PendingBolus? = lock.withLock {
+            if (slots[id]?.caller?.clientId == owner) slots.remove(id) else null
+        }
 
         fun evictOlderThan(cutoff: Long) = lock.withLock { slots.keys.removeAll { it < cutoff } }
 
@@ -220,7 +234,7 @@ class MasterActionExecutorImpl(
         evictStalePending()
     }
 
-    override suspend fun prepareQuickWizard(guid: String): MasterActionExecutor.PrepareResult {
+    override suspend fun prepareQuickWizard(guid: String, caller: RemoteCaller?): MasterActionExecutor.PrepareResult {
         // Reject before plugins are wired up: a remote prepare (client-control) can land while the master is still
         // initializing — before ConfigBuilder.initialize() ran verifySelectionInCategories(). At that point activeAPS
         // is still null (unlike activePump, which has an init-time fallback), so getProfile() builds a profile whose
@@ -257,7 +271,13 @@ class MasterActionExecutorImpl(
             return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_insulin_required))
 
         evictStalePending()
-        pending.park(wizard.timeStamp, PendingBolus(wizard.unclampedCalculatedInsulin, wizard.carbs, wizard.createBolusCalculatorResult(), wizard.timeStamp, entry, carbTimeMinutes = entry.carbTime(), notes = entry.buttonText()))
+        pending.park(
+            wizard.timeStamp,
+            PendingBolus(
+                wizard.unclampedCalculatedInsulin, wizard.carbs, wizard.createBolusCalculatorResult(), wizard.timeStamp, entry,
+                carbTimeMinutes = entry.carbTime(), notes = entry.buttonText(), caller = caller, requiredRole = ClientRole.MealAssistant
+            )
+        )
         // Build the master's color-coded confirmation lines here so the client renders the master's EXACT
         // wizard confirmation (shared builder). advisorApplies offers the high-BG "correct now, eat later" fork.
         val advisorApplies = wizard.needsBolusAdvisor()
@@ -280,7 +300,7 @@ class MasterActionExecutorImpl(
         )
     }
 
-    override suspend fun prepareWizard(inputs: MasterActionExecutor.WizardInputs): MasterActionExecutor.PrepareResult {
+    override suspend fun prepareWizard(inputs: MasterActionExecutor.WizardInputs, caller: RemoteCaller?): MasterActionExecutor.PrepareResult {
         // Same pre-init guard as prepareQuickWizard: doCalc would otherwise hit ProfileSealed's "APS not defined" guard
         // when a remote prepare arrives before verifySelectionInCategories() has populated activeAPS.
         if (!config.appInitialized) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.initializing))
@@ -340,7 +360,9 @@ class MasterActionExecutorImpl(
                 notes = inputs.notes,
                 eCarbsGrams = inputs.eCarbsGrams,
                 eCarbsDelayMinutes = inputs.eCarbsDelayMinutes,
-                eCarbsDurationHours = inputs.eCarbsDurationHours
+                eCarbsDurationHours = inputs.eCarbsDurationHours,
+                caller = caller,
+                requiredRole = ClientRole.MealAssistant
             )
         )
         val advisorApplies = wizard.needsBolusAdvisor()
@@ -372,7 +394,7 @@ class MasterActionExecutorImpl(
         )
     }
 
-    override suspend fun prepareBatch(actions: List<BatchAction>): MasterActionExecutor.PrepareResult {
+    override suspend fun prepareBatch(actions: List<BatchAction>, caller: RemoteCaller?): MasterActionExecutor.PrepareResult {
         val bolus = actions.filterIsInstance<BatchAction.Bolus>().firstOrNull()
         val tt = actions.filterIsInstance<BatchAction.TempTarget>().firstOrNull() // ≤1 by construction
         val ps = actions.filterIsInstance<BatchAction.ProfileSwitch>().firstOrNull() // ≤1 by construction
@@ -535,7 +557,8 @@ class MasterActionExecutorImpl(
                 tempTarget = tt, profileSwitch = ps, runningMode = rm, recordOnly = recordOnly, iCfg = bolus?.iCfg, bolusTimestamp = bolus?.timestamp?.takeIf { it > 0L },
                 tempBasal = cappedTb, extendedBolus = cappedEb, cancelTempBasal = ctb != null, cancelExtendedBolus = ceb != null,
                 insulinActivate = ia, therapyEvents = tes, therapyEventEdits = teEdits,
-                removals = removals, removeStartEvents = rse != null, calibration = cal
+                removals = removals, removeStartEvents = rse != null, calibration = cal,
+                caller = caller, requiredRole = actions.requiredRole
             )
         )
         // The master is the SOLE author of the confirmation: build the MERGED lines for the whole batch here, so the
@@ -564,12 +587,15 @@ class MasterActionExecutorImpl(
         onError: (MasterActionExecutor.Failure) -> Unit,
         asAdvisor: Boolean,
         correctionU: Double,
+        caller: RemoteCaller?,
         onSuccess: () -> Unit
     ): MasterActionExecutor.ConfirmResult {
-        // Atomic consume-once: remove(bolusId) returns the parked dose and removes it in one step, so two
-        // concurrent commits of the same id can't both deliver (the loser gets null → NoPending). A non-matching
-        // id removes nothing, leaving other actors' parked doses intact.
-        val p = pending.take(bolusId) ?: return MasterActionExecutor.ConfirmResult.NoPending
+        // Atomic consume-once: the parked dose is returned and removed in one step, so two concurrent commits of the
+        // same id can't both deliver (the loser gets null → NoPending). A non-matching id, or a dose prepared for
+        // another caller, removes nothing, leaving other actors' parked doses intact.
+        val p = pending.takeFor(bolusId, caller?.clientId) ?: return MasterActionExecutor.ConfirmResult.NoPending
+        // The role is checked again now: it may have been lowered on the master since the prepare.
+        if (caller != null && !caller.role.allows(p.requiredRole)) return MasterActionExecutor.ConfirmResult.NotAllowed
 
         val notes = p.notes
 

@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.observeEffective
 import app.aaps.core.nssdk.localmodel.clientcontrol.AuthorizedClient
@@ -127,7 +128,7 @@ class AuthorizedClientsViewModel(
      * sees something while the publish runs; status flips to Published / Failed when the
      * publish completes so the UI can offer a retry instead of silently showing a non-working PIN.
      */
-    fun confirmAdd(name: String) {
+    fun confirmAdd(name: String, role: ClientRole) {
         _dialogState.value = null
         // One coroutine for the whole thing now that addPending suspends: it takes the repository
         // mutex across preference I/O. This stays a plain function because the screen passes it as a
@@ -135,7 +136,7 @@ class AuthorizedClientsViewModel(
         // on this frame unless the mutex is actually contended.
         publishJob = viewModelScope.launch {
             val now = dateUtil.now()
-            val result = repository.addPending(name.trim(), PAIR_TTL_MS, now)
+            val result = repository.addPending(name.trim(), role, PAIR_TTL_MS, now)
             val payload = PairingPayload(
                 masterInstallId = ownInstallId(),
                 clientId = result.entry.clientId,
@@ -208,6 +209,11 @@ class AuthorizedClientsViewModel(
             pendingPublish?.join()
             offerPublisher.deleteOffer(offer.clientId)
         }
+    }
+
+    /** Give [client] another role. The master enforces it from the next command; the client learns it from the roster. */
+    fun setRole(client: AuthorizedClient, role: ClientRole) {
+        viewModelScope.launch { repository.setRole(client.clientId, role) }
     }
 
     fun requestDelete(client: AuthorizedClient) {

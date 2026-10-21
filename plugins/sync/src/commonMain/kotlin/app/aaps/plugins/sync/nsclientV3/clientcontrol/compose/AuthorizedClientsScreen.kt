@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -45,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.nssdk.localmodel.clientcontrol.AuthorizedClient
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import app.aaps.core.ui.CoreUiStrings
@@ -54,6 +56,7 @@ import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.sync.SyncStrings
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.clientRole
 import kotlinx.coroutines.delay
 import kotlin.time.Clock
 
@@ -69,6 +72,19 @@ fun AuthorizedClientsScreen(
     val featureEnabled by viewModel.clientControlEnabled.collectAsStateWithLifecycle()
     val simpleMode by viewModel.simpleMode.collectAsStateWithLifecycle()
 
+    // The newest client is first in the list, but a LazyColumn stays on the card that was first in view, so a
+    // client added while the list is open would be above the screen. Scroll to a card when it is added.
+    val listState = rememberLazyListState()
+    val clientIds = remember(clients) { clients.map { it.clientId } }
+    var shownIds by remember { mutableStateOf<List<String>?>(null) }
+    LaunchedEffect(clientIds) {
+        val before = shownIds
+        shownIds = clientIds
+        if (before == null) return@LaunchedEffect
+        val added = clientIds.indexOfFirst { it !in before }
+        if (added >= 0) listState.animateScrollToItem(added)
+    }
+
     // Re-prune expired pending entries every second while any are pending,
     // so the countdown ticks down and expired ones drop without a manual refresh.
     val anyPending = clients.any { it.state == ClientState.Pending }
@@ -81,7 +97,7 @@ fun AuthorizedClientsScreen(
 
     when (val state = dialogState) {
         AuthorizedClientsViewModel.DialogState.EnterName        -> EnterNameDialog(
-            onConfirm = { viewModel.confirmAdd(it) },
+            onConfirm = viewModel::confirmAdd,
             onDismiss = viewModel::dismissDialog
         )
 
@@ -110,7 +126,9 @@ fun AuthorizedClientsScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(CoreUiStrings.back))
                     }
-                }
+                },
+                // One explanation of the four roles for the whole list, instead of an (i) on every card.
+                actions = { ClientRolesInfoButton() }
             )
         },
         floatingActionButton = {
@@ -138,7 +156,8 @@ fun AuthorizedClientsScreen(
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(AapsSpacing.medium),
+                    state = listState,
+                    contentPadding = PaddingValues(start = AapsSpacing.medium, top = AapsSpacing.medium, end = AapsSpacing.medium, bottom = AapsSpacing.fabClearance),
                     verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
                 ) {
                     items(clients, key = { it.clientId }) { client ->
@@ -151,6 +170,7 @@ fun AuthorizedClientsScreen(
                         AuthorizedClientCard(
                             client = client,
                             timeLabel = timeLabel,
+                            onRoleChange = { viewModel.setRole(client, it) },
                             onDelete = { viewModel.requestDelete(client) }
                         )
                     }
@@ -164,13 +184,14 @@ fun AuthorizedClientsScreen(
 private fun AuthorizedClientCard(
     client: AuthorizedClient,
     timeLabel: String,
+    onRoleChange: (ClientRole) -> Unit,
     onDelete: () -> Unit
 ) {
     ElevatedCard(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(AapsSpacing.large),
+                .padding(start = AapsSpacing.large, top = AapsSpacing.large, end = AapsSpacing.large),
             horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -195,6 +216,12 @@ private fun AuthorizedClientCard(
                 Icon(Icons.Default.Delete, contentDescription = stringResource(CoreUiStrings.delete))
             }
         }
+        // One tap changes the role: the screen is behind settings protection, and the client follows on the next roster.
+        ClientRoleSelector(
+            selected = client.clientRole,
+            onSelect = onRoleChange,
+            modifier = Modifier.padding(horizontal = AapsSpacing.large, vertical = AapsSpacing.medium)
+        )
     }
 }
 
@@ -271,11 +298,14 @@ private fun EmptyState(modifier: Modifier = Modifier) {
 
 @Composable
 private fun EnterNameDialog(
-    onConfirm: (String) -> Unit,
+    onConfirm: (String, ClientRole) -> Unit,
     onDismiss: () -> Unit
 ) {
     var name by remember { mutableStateOf("") }
+    // Nothing preselected: any default is wrong for someone (an own second phone wants Admin, a school phone Meals).
+    var role by remember { mutableStateOf<ClientRole?>(null) }
     val focusManager = LocalFocusManager.current
+    val canConfirm = name.isNotBlank() && role != null
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(SyncStrings.authorized_clients_name_dialog_title)) },
@@ -287,12 +317,21 @@ private fun EnterNameDialog(
                     singleLine = true,
                     placeholder = { Text(stringResource(SyncStrings.authorized_clients_name_placeholder)) }
                 )
+                Row(modifier = Modifier.padding(top = AapsSpacing.medium), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(CoreUiStrings.client_role_title),
+                        style = MaterialTheme.typography.titleSmall,
+                        modifier = Modifier.weight(1f)
+                    )
+                    ClientRolesInfoButton()
+                }
+                ClientRoleSelector(selected = role, onSelect = { role = it })
             }
         },
         confirmButton = {
             TextButton(
-                onClick = { if (name.isNotBlank()) onConfirm(name) },
-                enabled = name.isNotBlank()
+                onClick = { role?.let { if (name.isNotBlank()) onConfirm(name, it) } },
+                enabled = canConfirm
             ) {
                 Text(stringResource(CoreUiStrings.ok))
             }

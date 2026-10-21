@@ -41,6 +41,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.observeEffective
 import app.aaps.core.nssdk.NSAndroidClientImpl
@@ -619,6 +620,18 @@ class NSClientV3Plugin(
             preferences.observeEffective(BooleanKey.HardenedMode)
         ) { paired, control -> !paired || control }
             .stateIn(reachableScope, SharingStarted.WhileSubscribed(5000), true)
+
+    // See [NsClient.clientRole]. Master: always Admin. Client: the role OrphanDetector stored from the master's
+    // roster; an empty store (just paired, roster not seen yet) reads as ReadOnly, so a new pairing shows as
+    // little as possible until the master says more. Eagerly, because the visibility context reads `.value`
+    // with no collector of its own.
+    override val clientRole: StateFlow<ClientRole> =
+        if (!config.AAPSCLIENT) MutableStateFlow(ClientRole.Admin).asStateFlow()
+        else preferences.observe(StringNonKey.NsClientControlRole)
+            .map { storedClientRole(it) }
+            .stateIn(reachableScope, SharingStarted.Eagerly, storedClientRole(preferences.get(StringNonKey.NsClientControlRole)))
+
+    private fun storedClientRole(name: String): ClientRole = if (name.isEmpty()) ClientRole.ReadOnly else ClientRole.of(name)
 
     override val pairedClientCountFlow: StateFlow<Int> by lazy {
         if (config.AAPSCLIENT) MutableStateFlow(0).asStateFlow()

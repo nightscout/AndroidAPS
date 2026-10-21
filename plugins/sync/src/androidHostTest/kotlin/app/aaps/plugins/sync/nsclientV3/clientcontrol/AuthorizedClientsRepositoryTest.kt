@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import com.google.common.truth.Truth.assertThat
@@ -49,16 +50,49 @@ internal class AuthorizedClientsRepositoryTest {
 
     @Test
     fun addPendingPersistsEncryptedSecretOnly() = runTest {
-        val (entry, secretHex) = sut.addPending("phone", pairTtlMs = 60_000L, now = 1_000L)
+        val (entry, secretHex) = sut.addPending("phone", ClientRole.Admin, pairTtlMs = 60_000L, now = 1_000L)
         assertThat(secretHex).hasLength(64)
         assertThat(entry.encryptedSecret).startsWith("ENC:NsClientControlSecret:")
         assertThat(stored).contains(entry.clientId)
         assertThat(stored).doesNotContain(secretHex) // raw secret never persisted
     }
 
+    // -- roles --------------------------------------------------------------------------------
+
+    @Test
+    fun addPendingStoresTheChosenRole() = runTest {
+        val (entry, _) = sut.addPending("phone", ClientRole.MealAssistant, pairTtlMs = 60_000L, now = 1_000L)
+        assertThat(sut.findRaw(entry.clientId)!!.clientRole).isEqualTo(ClientRole.MealAssistant)
+    }
+
+    @Test
+    fun aClientStoredBeforeRolesExistedKeepsFullControl() = runTest {
+        stored = """[{"clientId":"c1","name":"old","encryptedSecret":"ENC:NsClientControlSecret:00","state":"Active","createdAt":1}]"""
+        assertThat(sut.findRaw("c1")!!.clientRole).isEqualTo(ClientRole.Admin)
+    }
+
+    @Test
+    fun aRoleThisBuildDoesNotKnowIsReadOnlyAndDoesNotEmptyTheList() = runTest {
+        // A role added later, read after going back to an older build: the list must still load.
+        stored = """[{"clientId":"c1","name":"new","encryptedSecret":"ENC:NsClientControlSecret:00","state":"Active","createdAt":1,"role":"Helper"}]"""
+        assertThat(sut.current(1_000L)).hasSize(1)
+        assertThat(sut.findRaw("c1")!!.clientRole).isEqualTo(ClientRole.ReadOnly)
+    }
+
+    @Test
+    fun setRoleChangesOnlyThatClient() = runTest {
+        val (a, _) = sut.addPending("a", ClientRole.Admin, 60_000L, 1_000L)
+        val (b, _) = sut.addPending("b", ClientRole.Admin, 60_000L, 1_000L)
+
+        sut.setRole(a.clientId, ClientRole.ReadOnly)
+
+        assertThat(sut.findRaw(a.clientId)!!.clientRole).isEqualTo(ClientRole.ReadOnly)
+        assertThat(sut.findRaw(b.clientId)!!.clientRole).isEqualTo(ClientRole.Admin)
+    }
+
     @Test
     fun secretLookupRoundtripsAddedSecret() = runTest {
-        val (entry, secretHex) = sut.addPending("phone", pairTtlMs = 60_000L, now = 1_000L)
+        val (entry, secretHex) = sut.addPending("phone", ClientRole.Admin, pairTtlMs = 60_000L, now = 1_000L)
         val lookup = sut.secretLookup(entry.clientId)!!
         assertThat(lookup.secretBytes).hasLength(32)
         assertThat(lookup.counterReceived).isEqualTo(0L) // pending entry, no counter accepted yet
@@ -68,7 +102,7 @@ internal class AuthorizedClientsRepositoryTest {
 
     @Test
     fun secretLookupReturnsCounterAfterMarkActive() = runTest {
-        val (entry, _) = sut.addPending("phone", 60_000L, 1_000L)
+        val (entry, _) = sut.addPending("phone", ClientRole.Admin, 60_000L, 1_000L)
         sut.markActive(entry.clientId, counterReceived = 7L, now = 5_000L)
         assertThat(sut.secretLookup(entry.clientId)!!.counterReceived).isEqualTo(7L)
     }
@@ -86,21 +120,21 @@ internal class AuthorizedClientsRepositoryTest {
 
     @Test
     fun secretLookupReturnsNullWhenBlobValidationFails() = runTest {
-        val (entry, _) = sut.addPending("a", 60_000L, 1_000L)
+        val (entry, _) = sut.addPending("a", ClientRole.Admin, 60_000L, 1_000L)
         rejectsBlobValidation = true // simulate corrupted ciphertext blob
         assertThat(sut.secretLookup(entry.clientId)).isNull()
     }
 
     @Test
     fun deleteRemovesEntry() = runTest {
-        val (entry, _) = sut.addPending("a", 60_000L, 1_000L)
+        val (entry, _) = sut.addPending("a", ClientRole.Admin, 60_000L, 1_000L)
         sut.delete(entry.clientId)
         assertThat(sut.current(2_000L)).isEmpty()
     }
 
     @Test
     fun markActivePromotesPending() = runTest {
-        val (entry, _) = sut.addPending("a", 60_000L, 1_000L)
+        val (entry, _) = sut.addPending("a", ClientRole.Admin, 60_000L, 1_000L)
         sut.markActive(entry.clientId, counterReceived = 1L, now = 5_000L)
         val list = sut.current(5_000L)
         assertThat(list).hasSize(1)
@@ -111,7 +145,7 @@ internal class AuthorizedClientsRepositoryTest {
 
     @Test
     fun markActiveIsNoopForActive() = runTest {
-        val (entry, _) = sut.addPending("a", 60_000L, 1_000L)
+        val (entry, _) = sut.addPending("a", ClientRole.Admin, 60_000L, 1_000L)
         sut.markActive(entry.clientId, 1L, 5_000L)
         val before = stored
         sut.markActive(entry.clientId, 99L, 9_000L) // already active — should be ignored
@@ -120,7 +154,7 @@ internal class AuthorizedClientsRepositoryTest {
 
     @Test
     fun bumpLastSeenUpdatesActiveEntry() = runTest {
-        val (entry, _) = sut.addPending("a", 60_000L, 1_000L)
+        val (entry, _) = sut.addPending("a", ClientRole.Admin, 60_000L, 1_000L)
         sut.markActive(entry.clientId, 1L, 5_000L)
         sut.bumpLastSeen(entry.clientId, counterReceived = 7L, now = 10_000L)
         val list = sut.current(10_000L)
@@ -130,8 +164,8 @@ internal class AuthorizedClientsRepositoryTest {
 
     @Test
     fun currentPrunesExpiredPending() = runTest {
-        sut.addPending("a", pairTtlMs = 60_000L, now = 1_000L)
-        sut.addPending("b", pairTtlMs = 60_000L, now = 1_000L)
+        sut.addPending("a", ClientRole.Admin, pairTtlMs = 60_000L, now = 1_000L)
+        sut.addPending("b", ClientRole.Admin, pairTtlMs = 60_000L, now = 1_000L)
         // Both expire at 61_000
         val list = sut.current(now = 200_000L)
         assertThat(list).isEmpty()
@@ -139,7 +173,7 @@ internal class AuthorizedClientsRepositoryTest {
 
     @Test
     fun currentDoesNotPruneActive() = runTest {
-        val (entry, _) = sut.addPending("a", 60_000L, 1_000L)
+        val (entry, _) = sut.addPending("a", ClientRole.Admin, 60_000L, 1_000L)
         sut.markActive(entry.clientId, 1L, 5_000L)
         // Pretend pairExpiresAt is in the past — Active state must keep the entry
         val list = sut.current(now = 200_000L)
@@ -148,9 +182,9 @@ internal class AuthorizedClientsRepositoryTest {
 
     @Test
     fun pruneExpiredReturnsRemovedClientIds() = runTest {
-        val (a, _) = sut.addPending("a", 60_000L, 1_000L)
-        val (b, _) = sut.addPending("b", 60_000L, 1_000L)
-        val (c, _) = sut.addPending("c", 60_000L, 1_000L)
+        val (a, _) = sut.addPending("a", ClientRole.Admin, 60_000L, 1_000L)
+        val (b, _) = sut.addPending("b", ClientRole.Admin, 60_000L, 1_000L)
+        val (c, _) = sut.addPending("c", ClientRole.Admin, 60_000L, 1_000L)
         sut.markActive(c.clientId, 1L, 5_000L)
         val removed = sut.pruneExpired(now = 200_000L)
         assertThat(removed).containsExactly(a.clientId, b.clientId)
@@ -159,7 +193,7 @@ internal class AuthorizedClientsRepositoryTest {
 
     @Test
     fun pruneExpiredReturnsEmptyWhenNothingRemoved() = runTest {
-        sut.addPending("a", 60_000L, 1_000L)
+        sut.addPending("a", ClientRole.Admin, 60_000L, 1_000L)
         assertThat(sut.pruneExpired(now = 5_000L)).isEmpty()
     }
 
@@ -171,7 +205,7 @@ internal class AuthorizedClientsRepositoryTest {
 
     @Test
     fun currentSkipsPersistWhenNothingPruned() = runTest {
-        sut.addPending("a", 60_000L, 1_000L) // 1 put
+        sut.addPending("a", ClientRole.Admin, 60_000L, 1_000L) // 1 put
         sut.current(now = 5_000L) // not expired — must not write
         sut.current(now = 5_000L) // again — still must not write
         verify(preferences, times(1)).put(any<StringNonKey>(), any<String>())
@@ -179,15 +213,15 @@ internal class AuthorizedClientsRepositoryTest {
 
     @Test
     fun multipleClientsAreUniquelyIdentified() = runTest {
-        val (a, _) = sut.addPending("a", 60_000L, 1_000L)
-        val (b, _) = sut.addPending("b", 60_000L, 1_000L)
+        val (a, _) = sut.addPending("a", ClientRole.Admin, 60_000L, 1_000L)
+        val (b, _) = sut.addPending("b", ClientRole.Admin, 60_000L, 1_000L)
         assertThat(a.clientId).isNotEqualTo(b.clientId)
         assertThat(sut.current(2_000L).map { it.clientId }).containsExactly(a.clientId, b.clientId)
     }
 
     @Test
     fun unknownClientIdInDeleteIsNoOp() = runTest {
-        sut.addPending("a", 60_000L, 1_000L)
+        sut.addPending("a", ClientRole.Admin, 60_000L, 1_000L)
         val before = stored
         sut.delete("missing")
         assertThat(stored).isEqualTo(before)

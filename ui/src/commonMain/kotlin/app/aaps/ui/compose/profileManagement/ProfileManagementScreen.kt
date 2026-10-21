@@ -57,6 +57,7 @@ import app.aaps.core.graph.profile.ProfileSingleContent
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsFab
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ScreenMode
@@ -220,7 +221,7 @@ fun ProfileManagementScreen(
                                 // unpaired client is read-only for a different reason (no master to send
                                 // edits to) and the view model refuses the switch, so it gets no action
                                 // here at all.
-                                if (uiState.commandsAllowed) {
+                                if (uiState.editAllowed) {
                                     IconButton(onClick = onRequestEditMode) {
                                         Icon(
                                             imageVector = Icons.Filled.Edit,
@@ -423,7 +424,7 @@ fun ProfileManagementScreen(
                                         )
                                     }
                                     // Extra space for floating toolbar
-                                    Spacer(modifier = Modifier.height(80.dp))
+                                    Spacer(modifier = Modifier.height(AapsSpacing.fabClearance))
                                 }
                             }
                         }

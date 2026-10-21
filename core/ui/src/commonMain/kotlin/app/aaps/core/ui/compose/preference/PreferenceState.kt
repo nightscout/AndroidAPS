@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.DoubleNonPreferenceKey
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.IntNonPreferenceKey
@@ -32,6 +33,7 @@ import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.keys.interfaces.observeHardenedMode
+import app.aaps.core.ui.compose.LocalClientRole
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalMasterReachable
 import app.aaps.core.ui.compose.LocalPreferences
@@ -67,6 +69,8 @@ private class ReactiveVisibilityContext(
     override val isPumpInitialized: Boolean get() = delegate.isPumpInitialized
     override val isConcentrationEnabled: Boolean get() = delegate.isConcentrationEnabled
     override val isClient: Boolean get() = delegate.isClient
+    override val masterOrPairedClient: Boolean get() = delegate.masterOrPairedClient
+    override val clientRole: ClientRole get() = delegate.clientRole
     override val apsOffersDynamicSensitivity: Boolean get() = delegate.apsOffersDynamicSensitivity
 
     // Return a reactive preferences wrapper
@@ -198,7 +202,10 @@ fun calculatePreferenceVisibility(
     // On a client, a Bidirectional synced key is master-arbitrated — lock the whole row while the
     // master is unreachable, so the user can't make an edit that won't sync now (it would queue
     // silently and could expire past the replay window). Master/previews never gated (default true).
-    if (config.AAPSCLIENT && preferenceKey.sync?.direction == SyncDirection.Bidirectional && !LocalMasterReachable.current)
+    // Changing a synced setting is also an admin's: a lower client role sees the row locked.
+    if (config.AAPSCLIENT && preferenceKey.sync?.direction == SyncDirection.Bidirectional &&
+        (!LocalMasterReachable.current || !LocalClientRole.current.allows(ClientRole.Admin))
+    )
         enabled = false
 
     return PreferenceVisibilityState(visible, enabled)

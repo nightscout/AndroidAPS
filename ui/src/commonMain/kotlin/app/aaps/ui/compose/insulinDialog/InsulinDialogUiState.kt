@@ -10,6 +10,8 @@ data class InsulinDialogUiState(
     val insulin: Double = 0.0,
     val timeOffsetMinutes: Int = 0,
     val eatingSoonTtChecked: Boolean = false,
+    /** False on a client whose role may give insulin but not set a temp target: the switch is not offered. */
+    val canSetTempTarget: Boolean = true,
     val recordOnlyChecked: Boolean = false,
     val notes: String = "",
     val eventTime: Long = 0L,

@@ -57,6 +57,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.isNull
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
@@ -120,14 +121,14 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         // Null-safe on purpose: a test that stubs these again calls the mock once with null matchers, which runs
         // these answers.
         runBlocking {
-            whenever(masterActionExecutor.prepareBatch(anyOrNull())).thenAnswer { invocation ->
+            whenever(masterActionExecutor.prepareBatch(anyOrNull(), isNull())).thenAnswer { invocation ->
                 val actions = invocation.getArgument<List<BatchAction>?>(0).orEmpty()
                 if (actions.isNotEmpty()) batches += actions
                 val bolus = actions.filterIsInstance<BatchAction.Bolus>().firstOrNull()
                 MasterActionExecutor.PrepareResult.Preview(insulin = bolus?.insulin ?: 0.0, carbs = bolus?.carbs ?: 0, bolusId = 42L)
             }
-            whenever(masterActionExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull())).thenAnswer { invocation ->
-                invocation.getArgument<(() -> Unit)?>(5)?.invoke()
+            whenever(masterActionExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull())).thenAnswer { invocation ->
+                invocation.getArgument<(() -> Unit)?>(6)?.invoke()
                 MasterActionExecutor.ConfirmResult.Delivered
             }
         }
@@ -303,7 +304,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         // The reply above only proves an SMS went out. Pin down what reached the executor, so a refactor
         // cannot change the mode or the duration silently. The executor picks the audit action itself.
         assertThat(lastAction()).isEqualTo(BatchAction.RunningMode(RM.Mode.RESUME, 0))
-        verify(masterActionExecutor).confirm(eq(42L), eq(Sources.SMS), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull())
+        verify(masterActionExecutor).confirm(eq(42L), eq(Sources.SMS), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull())
 
         //LOOP SUSPEND 1 2: wrong format
         smsCommunicatorPlugin.messages = ArrayList()
@@ -720,14 +721,14 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         // to the executor: the right profile, the 90 the user sent, and no duration or time shift. What the
         // executor then does with it is covered by its own tests.
         val batchCaptor = argumentCaptor<List<BatchAction>>()
-        verify(masterActionExecutor).prepareBatch(batchCaptor.capture())
+        verify(masterActionExecutor).prepareBatch(batchCaptor.capture(), isNull())
         val switch = batchCaptor.firstValue.single() as BatchAction.ProfileSwitch
         assertThat(switch.profileName).isEqualTo(TESTPROFILENAME)
         assertThat(switch.percentage).isEqualTo(90)
         assertThat(switch.timeShiftHours).isEqualTo(0)
         assertThat(switch.durationMinutes).isEqualTo(0)
         // The parked batch is confirmed by its own id, and the switch is recorded as coming from SMS.
-        verify(masterActionExecutor).confirm(eq(42L), eq(Sources.SMS), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull())
+        verify(masterActionExecutor).confirm(eq(42L), eq(Sources.SMS), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull())
     }
 
     /**
@@ -741,7 +742,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(getValidProfileStore()))
         whenever(profileFunction.getProfileName()).thenReturn(TESTPROFILENAME)
-        whenever(masterActionExecutor.prepareBatch(anyOrNull()))
+        whenever(masterActionExecutor.prepareBatch(anyOrNull(), isNull()))
             .thenReturn(MasterActionExecutor.PrepareResult.Error("Cannot switch profile: no insulin is in use, and none was selected."))
 
         smsCommunicatorPlugin.messages = ArrayList()
@@ -750,7 +751,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
 
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Cannot switch profile: no insulin is in use, and none was selected.")
-        verifyBlocking(masterActionExecutor, never()) { confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull()) }
+        verifyBlocking(masterActionExecutor, never()) { confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull()) }
     }
 
     @Test fun processBasalTest() = runTest {
@@ -893,7 +894,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
         testPumpPlugin.pumpDescription.tempBasalStyle = PumpDescription.ABSOLUTE
         whenever(constraintChecker.applyBasalConstraints(anyOrNull(), anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
-        whenever(masterActionExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull())).thenAnswer { invocation ->
+        whenever(masterActionExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull())).thenAnswer { invocation ->
             invocation.getArgument<((MasterActionExecutor.Failure) -> Unit)?>(2)?.invoke(MasterActionExecutor.Failure("Pump not reachable"))
             MasterActionExecutor.ConfirmResult.Delivered
         }
@@ -1108,7 +1109,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         whenever(preferences.get(IntKey.SmsRemoteBolusDistance)).thenReturn(15)
         whenever(dateUtilMocked.now()).thenReturn(Constants.REMOTE_BOLUS_MIN_DISTANCE + 1002L)
         smsCommunicatorPlugin.lastRemoteBolusTime = 0
-        whenever(masterActionExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull())).thenAnswer { invocation ->
+        whenever(masterActionExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull())).thenAnswer { invocation ->
             invocation.getArgument<((MasterActionExecutor.Failure) -> Unit)?>(2)?.invoke(MasterActionExecutor.Failure("Pump not reachable"))
             MasterActionExecutor.ConfirmResult.Delivered
         }

@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
+import app.aaps.core.interfaces.bolus.RemoteCaller
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -38,6 +39,7 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.objects.runningMode.RunningModeGuard
@@ -278,6 +280,73 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         // The second parked dose is intact and delivers on its own commit.
         assertThat(executor.confirm(now - 1000, Sources.NSClient, { })).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
         verify(commandQueue, times(2)).bolus(anyOrNull())
+    }
+
+    // ---- confirm(): a parked action belongs to the one who prepared it, and needs its role at commit ----
+
+    private val bolusAction = BatchAction.Bolus(insulin = 1.0, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = "", timestamp = 0L, iCfg = null)
+    private val targetAction = BatchAction.TempTarget(reason = TT.Reason.ACTIVITY.text, lowMgdl = 140.0, highMgdl = 140.0, durationMinutes = 60, startOffsetMinutes = 0)
+
+    @Test
+    fun confirm_byAnotherClient_isNoPending_andKeepsTheParkForItsOwner() = runTest {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        stubPassthroughConstraints()
+        val executor = create()
+        val prepared = executor.prepareBatch(listOf(bolusAction), RemoteCaller("a", ClientRole.Caregiver)) as MasterActionExecutor.PrepareResult.Preview
+
+        // Client b knows the id (it is in the cold doc), but the dose is not its own.
+        val stranger = executor.confirm(prepared.bolusId, Sources.NSClient, { }, caller = RemoteCaller("b", ClientRole.Admin))
+        verify(commandQueue, never()).bolus(anyOrNull())
+        // The owner's commit still finds it.
+        val owner = executor.confirm(prepared.bolusId, Sources.NSClient, { }, caller = RemoteCaller("a", ClientRole.Caregiver))
+
+        assertThat(stranger).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
+        assertThat(owner).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+        verify(commandQueue, times(1)).bolus(anyOrNull())
+    }
+
+    @Test
+    fun confirm_byAClient_ofAParkMadeOnTheMaster_isNoPending() = runTest {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        stubPassthroughConstraints()
+        val executor = create()
+        val prepared = executor.prepareBatch(listOf(bolusAction)) as MasterActionExecutor.PrepareResult.Preview
+
+        val remote = executor.confirm(prepared.bolusId, Sources.NSClient, { }, caller = RemoteCaller("a", ClientRole.Admin))
+        val local = executor.confirm(prepared.bolusId, Sources.NSClient, { })
+
+        assertThat(remote).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
+        assertThat(local).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+    }
+
+    @Test
+    fun confirm_aBolusOnlyBatch_byAMealAssistant_isDelivered() = runTest {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        stubPassthroughConstraints()
+        val executor = create()
+        val caller = RemoteCaller("a", ClientRole.MealAssistant)
+        val prepared = executor.prepareBatch(listOf(bolusAction), caller) as MasterActionExecutor.PrepareResult.Preview
+
+        assertThat(executor.confirm(prepared.bolusId, Sources.NSClient, { }, caller = caller)).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+    }
+
+    @Test
+    fun confirm_afterTheRoleWasLowered_isNotAllowed_andAppliesNothing() = runTest {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        stubPassthroughConstraints()
+        val executor = create()
+        // A temp target needs Caregiver. The master lowers the client to Meals between prepare and commit.
+        val prepared = executor.prepareBatch(listOf(targetAction, bolusAction), RemoteCaller("a", ClientRole.Caregiver)) as MasterActionExecutor.PrepareResult.Preview
+
+        val result = executor.confirm(prepared.bolusId, Sources.NSClient, { }, caller = RemoteCaller("a", ClientRole.MealAssistant))
+
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.NotAllowed)
+        verify(commandQueue, never()).bolus(anyOrNull())
+        verify(persistenceLayer, never()).insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any())
     }
 
     // ---- prepareBatch() → confirm(): the two-step multi-action transaction (decision-B ordering) ----

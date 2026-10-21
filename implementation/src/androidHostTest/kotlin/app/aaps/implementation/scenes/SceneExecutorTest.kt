@@ -186,6 +186,27 @@ class SceneExecutorTest : TestBaseWithProfile() {
         assertThat(result.lines.count { it.role == ConfirmationRole.SCENE }).isEqualTo(1)
     }
 
+    // A parked scene belongs to the client that prepared it. Another client that knows the id gets nothing,
+    // and the park stays for its owner.
+    @Test fun `a parked scene is committed only by the client that prepared it`() = runBlocking {
+        val prepared = sut.prepareScene(smbScene, durationMinutes = 0, owner = "a") as MasterActionExecutor.PrepareResult.Preview
+
+        val stranger = sut.commitScene(prepared.bolusId, { }, owner = "b")
+        val local = sut.commitScene(prepared.bolusId, { })
+        val owner = sut.commitScene(prepared.bolusId, { }, owner = "a")
+
+        assertThat(stranger).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
+        assertThat(local).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
+        assertThat(owner).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+    }
+
+    @Test fun `a client cannot commit a scene parked on the master`() = runBlocking {
+        val prepared = sut.prepareScene(smbScene, durationMinutes = 0) as MasterActionExecutor.PrepareResult.Preview
+
+        assertThat(sut.commitScene(prepared.bolusId, { }, owner = "a")).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
+        assertThat(sut.commitScene(prepared.bolusId, { })).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+    }
+
     // Ending a scene early has to drop the pending expiry, or it fires later against whatever is active then.
     @Test fun `deactivate cancels the pending expiry`() = runBlocking {
         whenever(activeSceneManager.getActiveState()).thenReturn(

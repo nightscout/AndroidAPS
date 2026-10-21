@@ -22,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.ui.CoreUiStrings
 
 /**
@@ -73,8 +74,9 @@ fun SelectableListToolbar(
                 }
             },
             actions = {
-                // Delete button. Removing goes through the master, so a client can delete only while it reaches it.
-                val deleteEnabled = masterEditingEnabled()
+                // Delete button. Removing goes through the master, so a client can delete only while it reaches it,
+                // and only with a caregiver's role (removing records is not in a meal assistant's role).
+                val deleteEnabled = masterEditingEnabled(ClientRole.Caregiver)
                 IconButton(onClick = onDelete, enabled = deleteEnabled) {
                     Icon(
                         imageVector = Icons.Default.Delete,

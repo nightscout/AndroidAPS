@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -93,8 +94,9 @@ fun PluginCategoryScreen(
         val noneSelected = !category.isMultiSelect && category.plugins.none { it.isEnabled }
         // Offline-gating applies ONLY to synced categories — those control the master's selection, so they
         // need the master reachable. Non-synced categories (SYNC/GENERAL/pump/etc.) are local config and stay
-        // editable offline (no banner, no gate).
-        val editingEnabled = !category.synced || masterEditingEnabled()
+        // editable offline (no banner, no gate). The master's selection is a setting, so a client also needs the
+        // admin role to change it.
+        val editingEnabled = !category.synced || masterEditingEnabled(ClientRole.Admin)
 
         LazyColumn(
             modifier = Modifier

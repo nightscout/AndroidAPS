@@ -31,11 +31,15 @@ interface SceneAutomationApi {
      * Two-step PREPARE: resolve scene [id], gate it, and author the master's confirmation lines + park it consume-once.
      * Returns the preview ([MasterActionExecutor.PrepareResult.Preview] = bolusId + lines) or an Error; nothing is
      * activated. Commit via [commitScene] with the returned bolusId. The master is the SSOT for the confirmation.
+     * [owner] is the clientId of the paired client that asks (null: the master itself); only it may commit the park.
      */
-    suspend fun prepareScene(id: String, durationMinutes: Int? = null): MasterActionExecutor.PrepareResult
+    suspend fun prepareScene(id: String, durationMinutes: Int? = null, owner: String? = null): MasterActionExecutor.PrepareResult
 
-    /** Two-step COMMIT: activate the parked scene matching [bolusId] EXACTLY once; an activation failure rides [onError]. */
-    suspend fun commitScene(bolusId: Long, onError: (MasterActionExecutor.Failure) -> Unit): MasterActionExecutor.ConfirmResult
+    /**
+     * Two-step COMMIT: activate the parked scene matching [bolusId] EXACTLY once; an activation failure rides [onError].
+     * A park prepared for another [owner] is not touched: [MasterActionExecutor.ConfirmResult.NoPending].
+     */
+    suspend fun commitScene(bolusId: Long, onError: (MasterActionExecutor.Failure) -> Unit, owner: String? = null): MasterActionExecutor.ConfirmResult
 
     /** Set the enabled flag on a scene by id. Fails only if the scene is missing. */
     fun setEnabled(id: String, enabled: Boolean): SceneAutomationResult

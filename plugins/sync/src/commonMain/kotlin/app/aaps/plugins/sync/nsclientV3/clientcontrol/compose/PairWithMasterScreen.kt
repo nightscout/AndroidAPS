@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,7 +37,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.clientcontrol.label
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.clearFocusOnTap
@@ -54,6 +57,7 @@ fun PairWithMasterScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val hardenedMode by viewModel.hardenedMode.collectAsStateWithLifecycle()
+    val clientRole by viewModel.clientRole.collectAsStateWithLifecycle()
 
     // While the hello upload is in flight, swallow Back to keep the ViewModel (and therefore
     // viewModelScope) alive until publishHello() completes — otherwise the master never sees
@@ -98,6 +102,7 @@ fun PairWithMasterScreen(
                 is PairWithMasterViewModel.UiState.AlreadyPaired -> AlreadyPairedContent(
                     masterInstallId = s.pairing.masterInstallId,
                     hardenedMode = hardenedMode,
+                    clientRole = clientRole,
                     onUnpair = viewModel::unpair,
                     onCancel = onNavigateBack
                 )
@@ -300,6 +305,7 @@ private fun ErrorContent(
 private fun AlreadyPairedContent(
     masterInstallId: String,
     hardenedMode: Boolean,
+    clientRole: ClientRole,
     onUnpair: () -> Unit,
     onCancel: () -> Unit
 ) {
@@ -320,6 +326,14 @@ private fun AlreadyPairedContent(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = AapsSpacing.medium)
         )
+        // This phone's role on the master, with the (i) that explains the four roles.
+        Row(modifier = Modifier.padding(top = AapsSpacing.medium), verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = stringResource(CoreUiStrings.client_role_line, stringResource(clientRole.label())),
+                style = MaterialTheme.typography.titleSmall
+            )
+            ClientRolesInfoButton()
+        }
         if (hardenedMode) HardenedModeInfoRow(modifier = Modifier.padding(top = AapsSpacing.medium))
         Button(
             onClick = onUnpair,

@@ -345,6 +345,7 @@ nsclient_control_master_install_id|StringNonKey|false
 nsclient_control_master_secret_enc|StringNonKey|false
 nsclient_control_own_install_id|StringNonKey|false
 nsclient_control_paired_at|LongNonKey|false
+nsclient_control_role|StringNonKey|false
 nsclient_token|StringKey|true
 nsclientinternal_api_secret|StringKey|true
 nsclientinternal_url|StringKey|true

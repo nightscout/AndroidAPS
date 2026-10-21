@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.sync
 
 import app.aaps.core.interfaces.nsclient.NSAlarm
+import app.aaps.core.keys.interfaces.ClientRole
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -78,6 +79,17 @@ interface NsClient : Sync {
      */
     val masterControlAllowed: StateFlow<Boolean>
         get() = MutableStateFlow(true).asStateFlow()
+
+    /**
+     * This phone's role on the master, which decides which controls it shows. Always [ClientRole.Admin] on a
+     * master. On a client it is what the master's roster says ([ClientRole.ReadOnly] until the roster names a
+     * fresh pairing). Only meaningful while paired: an unpaired client hides command UI through
+     * [masterOrPairedClientFlow] anyway. The master enforces the role on every command; this only shapes the UI.
+     *
+     * Default always-[ClientRole.Admin]: impls without client control must never hide UI.
+     */
+    val clientRole: StateFlow<ClientRole>
+        get() = MutableStateFlow(ClientRole.Admin).asStateFlow()
 
     /**
      * Master-side count of ACTIVE paired clients (roster entries that have completed pairing; pending

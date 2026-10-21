@@ -190,15 +190,16 @@ class MainViewModel(
      */
     val quickLaunchItems: StateFlow<List<ResolvedQuickLaunchItem>> =
         combine(
-            _quickLaunchItems, masterReachable, masterOrPairedClient,
+            _quickLaunchItems, masterReachable, combine(masterOrPairedClient, nsClient.clientRole) { paired, role -> paired to role },
             // Re-check the QuickWizard time window every tick, and at once when an entry is used or edited
             // (its cool-down starts on use).
             progressTicker, quickWizard.changes
         ) { items, reachable, _, _, _ ->
             items
-                // (1) Hide mode-gated actions. masterOrPairedClient is combined in only to re-emit on a pairing
-                // flip; the predicate reads the current state through visibilityContext.
-                .filter { it.action.elementType?.visibility?.isVisible(visibilityContext) ?: true }
+                // (1) Hide mode-gated actions and those the client's role cannot use. masterOrPairedClient and the
+                // role are combined in only to re-emit on a change; the predicate reads the current state through
+                // visibilityContext.
+                .filter { it.action.elementType?.isAvailable(visibilityContext) ?: true }
                 // (2) Hide QuickWizard entries that are not active now.
                 .filter { quickLaunchResolver.isShownNow(it.action) }
                 // (3) Scene actions disable while the master is transiently unreachable.

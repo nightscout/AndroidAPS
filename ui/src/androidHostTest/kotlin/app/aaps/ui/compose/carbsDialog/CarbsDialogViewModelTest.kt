@@ -1,9 +1,14 @@
 package app.aaps.ui.compose.carbsDialog
 
+import app.aaps.core.data.iob.CobInfo
+import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -11,13 +16,18 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -27,6 +37,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -46,7 +57,10 @@ internal class CarbsDialogViewModelTest {
     @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var rxBus: RxBus
+    @Mock private lateinit var nsClient: NsClient
 
+    private val main = StandardTestDispatcher()
+    private val role = MutableStateFlow(ClientRole.Admin)
     private lateinit var sut: CarbsDialogViewModel
 
     @BeforeEach
@@ -54,12 +68,48 @@ internal class CarbsDialogViewModelTest {
         MockitoAnnotations.openMocks(this)
         // StandardTestDispatcher does NOT run the init{}-launched initialize() coroutine (no advanceUntilIdle),
         // so construction stays clean and we test the synchronous update methods against the default state.
-        Dispatchers.setMain(StandardTestDispatcher())
-        sut = CarbsDialogViewModel(
-            constraintChecker, profileUtil, iobCobCalculator, glucoseStatusProvider, automation,
-            batchExecutor, persistenceLayer, preferences, config, rh, dateUtil, rxBus,
-            CoroutineScope(UnconfinedTestDispatcher())
-        )
+        Dispatchers.setMain(main)
+        whenever(nsClient.clientRole).thenReturn(role)
+        sut = create()
+    }
+
+    private fun create() = CarbsDialogViewModel(
+        constraintChecker, profileUtil, iobCobCalculator, glucoseStatusProvider, automation,
+        batchExecutor, persistenceLayer, preferences, config, rh, dateUtil, rxBus,
+        CoroutineScope(UnconfinedTestDispatcher()), nsClient
+    )
+
+    /** Opens the dialog with [role] at a BG of 60 mg/dL and no target running: the case where the hypo target is ticked for the user. */
+    private fun openedWhileLow(role: ClientRole): CarbsDialogUiState {
+        this.role.value = role
+        val maxCarbs = mock<Constraint<Int>> { on { value() } doReturn 50 }
+        whenever(constraintChecker.getMaxCarbsAllowed()).thenReturn(maxCarbs)
+        whenever(profileUtil.units).thenReturn(GlucoseUnit.MGDL)
+        val ads = mock<AutosensDataStore> { on { actualBg() } doReturn InMemoryGlucoseValue(value = 60.0) }
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        runBlocking { whenever(iobCobCalculator.getCobInfo(any())).thenReturn(CobInfo(0L, 0.0, 0.0)) }
+        // ttTargetMgdl/ttDurationMinutes parse this preset string; "[]" -> the defaults.
+        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("[]")
+        val opened = create()
+        main.scheduler.advanceUntilIdle()
+        return opened.uiState.value
+    }
+
+    @Test
+    fun `a low ticks the hypo target for a role that may set one`() {
+        val state = openedWhileLow(ClientRole.Caregiver)
+
+        assertThat(state.canSetTempTarget).isTrue()
+        assertThat(state.hypoTtChecked).isTrue()
+    }
+
+    // The carbs for a low are what a meal assistant is for. With the hypo target ticked, the master would refuse both.
+    @Test
+    fun `a meal assistant treating a low is not given a temp target`() {
+        val state = openedWhileLow(ClientRole.MealAssistant)
+
+        assertThat(state.canSetTempTarget).isFalse()
+        assertThat(state.hypoTtChecked).isFalse()
     }
 
     @AfterEach

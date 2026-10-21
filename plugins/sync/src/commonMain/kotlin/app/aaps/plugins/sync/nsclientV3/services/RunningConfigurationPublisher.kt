@@ -16,6 +16,7 @@ import app.aaps.core.objects.extensions.observeChange
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.clientRole
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher.Companion.COLD_DEBOUNCE_MS
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher.Companion.HOT_DEBOUNCE_MS
 import dev.zacsweers.metro.AppScope
@@ -166,16 +167,19 @@ class RunningConfigurationPublisher(
         // canonical RunningConfiguration plugin (in :plugins:configuration) cannot reach
         // AuthorizedClientsRepository without a new inter-module dependency, so we attach
         // this master-local block here instead. Only Active entries are exposed.
-        val activeClientIds = authorizedRepository.current(dateUtil.now())
+        val activeClients = authorizedRepository.current(dateUtil.now())
             .filter { it.state == ClientState.Active }
-            .map { it.clientId }
         // kotlinx JsonObject is immutable, so the doc is rebuilt instead of edited in place: the original
         // keys in their original order, and authorizedClients appended last. The client-control switch
         // travels in syncedPrefs like every other cold key; nothing here changes it. Hardened mode keeps
         // the WebSocket on while the switch is on, so "on" always means the master can serve commands.
         val payload = buildJsonObject {
             base.forEach { (key, value) -> put(key, value) }
-            put("authorizedClients", buildJsonObject { put("clientIds", JsonArray(activeClientIds.map { JsonPrimitive(it) })) })
+            put("authorizedClients", buildJsonObject {
+                put("clientIds", JsonArray(activeClients.map { JsonPrimitive(it.clientId) }))
+                // Each client reads its own role to know which controls to show; the master enforces it anyway.
+                put("roles", buildJsonObject { activeClients.forEach { put(it.clientId, it.clientRole.name) } })
+            })
         }
         putSettings(SettingsIdentifiers.COLD, payload)
         return true

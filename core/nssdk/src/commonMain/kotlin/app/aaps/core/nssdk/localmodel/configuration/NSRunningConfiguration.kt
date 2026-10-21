@@ -42,11 +42,17 @@ data class NSRunningConfiguration(
  * - **Block present with our clientId in [clientIds]**: authorized.
  * - **Block present without our clientId**: orphan (revoked or master-wiped) — surface re-pair UI.
  *
- * Only `clientId` strings are exposed. Names, timestamps, secrets stay master-local.
+ * Only `clientId` strings are exposed, plus each client's role. Names, timestamps, secrets stay master-local.
  */
 @Serializable
 data class NSAuthorizedClients(
-    val clientIds: List<String> = emptyList()
+    val clientIds: List<String> = emptyList(),
+    /**
+     * clientId -> role name (`ClientRole` in core/keys), for the same Active clients as [clientIds]. A client
+     * reads its own entry to know which controls to show; the master enforces the role on every command.
+     * Null: an older master without roles, so every client keeps full control (Admin).
+     */
+    val roles: Map<String, String>? = null
 )
 
 /**

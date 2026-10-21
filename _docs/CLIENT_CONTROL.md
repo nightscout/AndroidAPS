@@ -165,6 +165,32 @@ The master's client-control switch (`BooleanKey.HardenedMode`, still stored as `
 - **A WebSocket that does not work.** Data still arrives: the 5-minute tick polls whenever the socket is not connected (`NSClientV3Plugin.needsPolling`), not only when the setting is off. Client control itself needs a working WebSocket (a command is valid for seconds, a poll comes minutes later). The way out for such a host: leave simple mode, turn the switch off, then turn the WebSocket off.
 - **UI.** "Hardened mode on" with an (i) explanation on the Authorized clients screen (master, every mode; the switch row itself is hidden in simple mode) and on the client's pairing screen. The setup wizard shows the explanation instead of the button to the "accept from Nightscout" settings.
 
+### 2.10 Client roles
+
+Each paired client has a role, set on the master. The roles are a ladder (`ClientRole`, `core/keys`); each one can do everything the one below it can.
+
+| Role | Label | May do |
+|---|---|---|
+| `ReadOnly` | Read-only | nothing; it sees everything, and `Hello`/`Ping` still work, so it stays paired and shows online |
+| `MealAssistant` | Meals | bolus, wizard, QuickWizard, carbs and eCarbs, stop a bolus, dismiss the bolus-failed alarm |
+| `Caregiver` | Caregiver | every command except setting preferences: temp targets, profile switch, running mode, TBR and extended bolus, careportal and device events, scenes, deletes, calibration |
+| `Admin` | Admin | also defines presets and changes synced settings (`PreferencesUpdate`) |
+
+This is a simpler form of the per-permission idea in issue #5348. One thing that issue asks for is not possible: carbs plus temp target without bolus (a meal assistant cannot set a temp target).
+
+- **Stored on the master** in `AuthorizedClient.role` (a `String`, so a role a later build adds never fails decoding, which would empty the whole list). The user picks it in the "Add client" dialog (nothing preselected, OK stays off until one is chosen) and can change it any time with the segmented row under the client's name. A client stored before roles existed has no role and reads as `Admin`, so an update changes nothing for it. An unknown name reads as `ReadOnly`.
+- **The master is the gate.** `ClientControlReceiver.verifyAndAck` checks the role after the signature, counter and control-disabled checks. A refusal is a signed `Done/Failed` ACK with `FailureReason.NotAllowedForRole`, and the counter is used up like for any other answer. For `BatchPrepare` the needed role is the highest one of its actions (`List<BatchAction>.requiredRole`: a bolus needs Meals, anything else Caregiver).
+- **Parked actions belong to their caller.** A prepare parks under an id the client could guess, so the park keeps who made it (`RemoteCaller`, or the owner id for scenes). `PendingSlots.takeFor` and `ParkedScenes.takeFor` hand it out only to that caller and leave it in place for anyone else (`NoPending`). A client cannot commit a dose the master parked for itself, and the master cannot commit one a client parked. At commit the role is checked again against what the park needs, so a role lowered between prepare and commit refuses it (`ConfirmResult.NotAllowed` → `NotAllowedForRole`).
+- **The client learns its role** from the cold doc: `authorizedClients.roles` maps each active clientId to its role. `OrphanDetector.storeOwnRole` stores it in `StringNonKey.NsClientControlRole`; `NsClient.clientRole` is the flow the UI reads. A master is always `Admin`. No `roles` map at all (an older master) means `Admin`, since such a master does not check roles. A paired client missing from the map, and an unpaired client (pair and unpair clear the key), is `ReadOnly`.
+- **The client hides what the master would refuse.** `ElementType.role` is the lowest role for each element and `ElementType.isAvailable(ctx)` checks both its visibility and the role (`VisibilityContext.clientRole`). Compose code reads `LocalClientRole` (provided in `AapsAppRoot`) or `masterEditingEnabled(role)`. Screens that both use and define presets (temp targets, insulins, QuickWizard, profiles, scenes, automation) open in use mode below `Admin`, and synced settings rows are locked below `Admin`. A read-only client shows a banner in the Manage sheet. The Insulin and Carbs dialogs leave out their temp target switches below `Caregiver`, and the Carbs dialog then does not tick the hypo target by itself on a low: the master would refuse the carbs together with the target.
+- **A refusal is shown once.** `NotAllowedForRole` always comes back from the master, so the round-trip modal shows it. It is not in `isNotDeliveryError()`, the list of reasons the screens show again because nothing was sent.
+
+Not covered yet:
+
+- Food is written to the local database, not through the master.
+- Three watch paths still write locally on the client, and the watch does not know the role (the master still refuses, so the user sees the refusal, not a hidden button).
+- Going back to a build without roles makes the master stop checking them (fail open). A role only exists in builds that check it.
+
 ---
 
 ## 3. The two-step execution path (prepare → commit)
@@ -201,7 +227,7 @@ suspend fun prepare(label, clientCommand, masterPrepare): ActionProgress {
 
 ### 3.3 Consume-once, parked-by-id
 
-`MasterActionExecutorImpl` keeps a `ConcurrentHashMap<Long, PendingBolus>` keyed by `bolusId` (the master timestamp at park time; TTL **10 min**, trimmed on the next prepare). On commit, `pending.remove(bolusId)` is **atomic** — two concurrent commits of the same id can't both deliver (the loser gets `null` → `ConfirmResult.NoPending` → `Rejected(NoPendingBolus)`). This is the **single point** where a parked dose leaves the slot. Triple-redundant against a double-dose: atomic `remove` + receiver `commandMutex` + the per-client counter gate.
+`MasterActionExecutorImpl` keeps a `ConcurrentHashMap<Long, PendingBolus>` keyed by `bolusId` (the master timestamp at park time; TTL **10 min**, trimmed on the next prepare). On commit, `pending.remove(bolusId)` is **atomic** — two concurrent commits of the same id can't both deliver (the loser gets `null` → `ConfirmResult.NoPending` → `Rejected(NoPendingBolus)`). This is the **single point** where a parked dose leaves the slot. Triple-redundant against a double-dose: atomic `remove` + receiver `commandMutex` + the per-client counter gate. The slot is taken only by the caller that parked it (`takeFor(id, owner)`, see 2.10); anyone else gets `NoPending` and the slot stays.
 
 The **scene executor uses a separate `pendingScenes` map** (own id-space, shorter `PARK_TTL_MS` = 2 min — no long round-trip window needed), so a `SceneCommit` and a `BolusCommit` can never drain each other's parked state. This is exactly why `SceneCommit` is a distinct wire type from `BolusCommit`.
 

@@ -4,6 +4,8 @@ import app.aaps.core.data.json.OrgJsonCompat.optJsonObjectCompat
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
+import app.aaps.core.interfaces.bolus.RemoteCaller
+import app.aaps.core.interfaces.bolus.requiredRole
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -23,6 +25,7 @@ import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.DoubleNonPreferenceKey
 import app.aaps.core.keys.interfaces.IntNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -324,6 +327,16 @@ class ClientControlReceiver(
             if (envelope.wantsAck) writeAck(client, lookup.secretBytes, envelope.clientId, envelope.counter, AckPhase.Done, AckStatus.Failed, FailureReason.ControlDisabled.name, null, now)
             return
         }
+        // Role gate: this client's role on the master must allow the command (see ClientRole). Same clean refusal as
+        // above. Hello and Ping need no role. A BolusCommit is checked against what it commits, in confirm().
+        val requiredRole = message?.let { requiredRole(it) }
+        if (requiredRole != null && !entry.clientRole.allows(requiredRole)) {
+            authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
+            nsClientRepository.addLog("◄ CLIENTCTL", "role ${entry.clientRole} does not allow ${envelope.type} from ${entry.name}")
+            aapsLogger.warn(LTag.NSCLIENT, "ClientControl: $identifier rejected — ${entry.clientRole} needs $requiredRole")
+            if (envelope.wantsAck) writeAck(client, lookup.secretBytes, envelope.clientId, envelope.counter, AckPhase.Done, AckStatus.Failed, FailureReason.NotAllowedForRole.name, null, now)
+            return
+        }
         // Hello is the pairing handshake, not a user action — no ACK round-trip. Its handling
         // includes the Pending → Active transition + offer-doc cleanup (suspends on deleteOffer).
         if (message is ClientControlMessage.Hello) {
@@ -363,6 +376,34 @@ class ClientControlReceiver(
         // that identifier and hit HTTP 410. Counter dedup (line above) prevents replay; the doc
         // just lingers in the slot until the next overwrite or NS auto-prune.
     }
+
+    /**
+     * The lowest role that may send [message]; null for the pairing hello and the liveness ping, which every paired
+     * client may send. A batch needs the highest role of its actions. A [ClientControlMessage.BolusCommit] only needs a
+     * meal assistant here: what it commits was prepared for this client and is checked again in confirm().
+     */
+    private fun requiredRole(message: ClientControlMessage): ClientRole? = when (message) {
+        is ClientControlMessage.Hello,
+        ClientControlMessage.Ping                 -> null
+
+        is ClientControlMessage.BolusPrepare,
+        is ClientControlMessage.WizardPrepare,
+        is ClientControlMessage.BolusCommit,
+        ClientControlMessage.StopBolus,
+        ClientControlMessage.DismissAlarm         -> ClientRole.MealAssistant
+
+        is ClientControlMessage.BatchPrepare      -> message.actions.mapNotNull { it.toDomain() }.requiredRole
+
+        is ClientControlMessage.ScenePrepare,
+        is ClientControlMessage.SceneCommit,
+        is ClientControlMessage.SceneStop         -> ClientRole.Caregiver
+
+        // Presets and synced settings all travel as this one message, so defining them is what an admin may add.
+        is ClientControlMessage.PreferencesUpdate -> ClientRole.Admin
+    }
+
+    /** This client as a [RemoteCaller]: what it prepares is kept for it only, and its role is checked again at commit. */
+    private val AuthorizedClient.caller: RemoteCaller get() = RemoteCaller(clientId, clientRole)
 
     private suspend fun onVerifiedHello(entry: AuthorizedClient, envelope: SignedEnvelope, now: Long) {
         when (entry.state) {
@@ -421,7 +462,7 @@ class ClientControlReceiver(
      */
     private suspend fun onVerifiedScenePrepare(entry: AuthorizedClient, envelope: SignedEnvelope, message: ClientControlMessage.ScenePrepare, now: Long): AckOutcome {
         authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
-        return when (val result = sceneAutomationApi.prepareScene(message.sceneId, message.durationMinutes)) {
+        return when (val result = sceneAutomationApi.prepareScene(message.sceneId, message.durationMinutes, owner = entry.clientId)) {
             is MasterActionExecutor.PrepareResult.Error   -> {
                 nsClientRepository.addLog("◄ CLIENTCTL", "scene.prepare sceneId=${message.sceneId} from ${entry.name}: ${result.message}")
                 AckOutcome(AckStatus.Failed, FailureReason.ExecutionFailed.name, result.message)
@@ -453,7 +494,7 @@ class ClientControlReceiver(
     private suspend fun onVerifiedSceneCommit(entry: AuthorizedClient, envelope: SignedEnvelope, message: ClientControlMessage.SceneCommit, now: Long): AckOutcome {
         authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
         var err: String? = null
-        val result = sceneAutomationApi.commitScene(message.bolusId) { err = it.comment }
+        val result = sceneAutomationApi.commitScene(message.bolusId, { err = it.comment }, owner = entry.clientId)
         val activated = result is MasterActionExecutor.ConfirmResult.Delivered
         nsClientRepository.addLog("◄ CLIENTCTL", "scene.commit id=${message.bolusId} from ${entry.name}: ${if (activated) "activated" else "no-pending"}")
         return when {
@@ -500,7 +541,7 @@ class ClientControlReceiver(
      */
     private suspend fun onVerifiedBolusPrepare(entry: AuthorizedClient, envelope: SignedEnvelope, message: ClientControlMessage.BolusPrepare, now: Long): AckOutcome {
         authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
-        return when (val result = masterActionExecutor.prepareQuickWizard(message.guid)) {
+        return when (val result = masterActionExecutor.prepareQuickWizard(message.guid, entry.caller)) {
             is MasterActionExecutor.PrepareResult.Error   -> {
                 nsClientRepository.addLog("◄ CLIENTCTL", "bolus.prepare from ${entry.name}: ${result.message}")
                 // Surface the master's specific reason (no BG / profile / pump) to the client via the payload.
@@ -567,19 +608,22 @@ class ClientControlReceiver(
             val reason = if (failure.cancelled) FailureReason.Cancelled else FailureReason.ExecutionFailed
             if (syncDone.load()) appScope.launch { writeDeliveryFailureAck(entry, envelope.counter, failure.comment, reason) }
             else deliverError.store(failure.comment)
-        }, message.asAdvisor, correctionU = message.correctionU)
+        }, message.asAdvisor, correctionU = message.correctionU, caller = entry.caller)
         syncDone.store(true)
         val delivered = result is MasterActionExecutor.ConfirmResult.Delivered
-        if (!delivered) progressClientId.store(null) // NoPending / Cancelled → nothing starts → don't mirror a future bolus to this client
+        if (!delivered) progressClientId.store(null) // NoPending / NotAllowed / Cancelled → nothing starts → don't mirror a future bolus to this client
         val outcome = when (result) {
-            MasterActionExecutor.ConfirmResult.Delivered -> "delivered"
-            MasterActionExecutor.ConfirmResult.NoPending -> "no-pending"
-            MasterActionExecutor.ConfirmResult.Cancelled -> "cancelled"
+            MasterActionExecutor.ConfirmResult.Delivered  -> "delivered"
+            MasterActionExecutor.ConfirmResult.NoPending  -> "no-pending"
+            MasterActionExecutor.ConfirmResult.NotAllowed -> "not allowed for role ${entry.clientRole}"
+            MasterActionExecutor.ConfirmResult.Cancelled  -> "cancelled"
         }
         nsClientRepository.addLog("◄ CLIENTCTL", "bolus.commit id=${message.bolusId}${if (message.asAdvisor) " advisor" else ""} from ${entry.name}: $outcome")
         val err = deliverError.load()
         return when {
             result is MasterActionExecutor.ConfirmResult.NoPending -> AckOutcome(AckStatus.Failed, FailureReason.NoPendingBolus.name)
+            // The role was lowered between prepare and commit: refused, like at the gate.
+            result is MasterActionExecutor.ConfirmResult.NotAllowed -> AckOutcome(AckStatus.Failed, FailureReason.NotAllowedForRole.name)
             // Dropped from the queue on purpose (a settings import on the master). The client must show the plain
             // "cancelled" message, not the delivery alarm — so the reason travels, not the generic failure.
             result is MasterActionExecutor.ConfirmResult.Cancelled -> AckOutcome(AckStatus.Failed, FailureReason.Cancelled.name, err)
@@ -602,7 +646,7 @@ class ClientControlReceiver(
             eCarbsGrams = message.eCarbsGrams, eCarbsDelayMinutes = message.eCarbsDelayMinutes, eCarbsDurationHours = message.eCarbsDurationHours,
             profileName = message.profileName, source = Sources.NSClient
         )
-        return when (val result = masterActionExecutor.prepareWizard(inputs)) {
+        return when (val result = masterActionExecutor.prepareWizard(inputs, entry.caller)) {
             is MasterActionExecutor.PrepareResult.Error   -> {
                 nsClientRepository.addLog("◄ CLIENTCTL", "wizard.prepare from ${entry.name}: ${result.message}")
                 AckOutcome(AckStatus.Failed, FailureReason.BolusComputeFailed.name, result.message)
@@ -635,7 +679,7 @@ class ClientControlReceiver(
     private suspend fun onVerifiedBatchPrepare(entry: AuthorizedClient, envelope: SignedEnvelope, message: ClientControlMessage.BatchPrepare, now: Long): AckOutcome {
         authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
         val actions = message.actions.mapNotNull { it.toDomain() }
-        return when (val result = masterActionExecutor.prepareBatch(actions)) {
+        return when (val result = masterActionExecutor.prepareBatch(actions, entry.caller)) {
             is MasterActionExecutor.PrepareResult.Error   -> {
                 nsClientRepository.addLog("◄ CLIENTCTL", "batch.prepare from ${entry.name}: ${result.message}")
                 AckOutcome(AckStatus.Failed, FailureReason.BolusComputeFailed.name, result.message)

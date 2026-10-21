@@ -303,8 +303,8 @@ internal fun CarbsDialogContent(
             // --- Status Bar ---
             DialogStatusBar(bgInfo = bgInfo, iob = iob, cob = cob)
 
-            // --- Card 1: TT switches ---
-            Card(
+            // --- Card 1: TT switches (left out for a role that may enter carbs but not set a target) ---
+            if (uiState.canSetTempTarget) Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
             ) {

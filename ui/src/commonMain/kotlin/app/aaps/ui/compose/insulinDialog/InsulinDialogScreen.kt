@@ -307,7 +307,7 @@ internal fun InsulinDialogContent(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    LabeledSwitch(
+                    if (uiState.canSetTempTarget) LabeledSwitch(
                         label = stringResource(UiStrings.start_eating_soon_tt),
                         checked = uiState.eatingSoonTtChecked,
                         onCheckedChange = onEatingSoonChange

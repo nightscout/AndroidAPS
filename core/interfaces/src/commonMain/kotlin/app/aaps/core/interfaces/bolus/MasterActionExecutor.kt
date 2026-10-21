@@ -38,8 +38,10 @@ interface MasterActionExecutor {
      * Quick-wizard prepare: gate → compute on current state → constraint-cap → park in the slot.
      * Returns the computed [PrepareResult.Preview] (or an [PrepareResult.Error]); the caller renders it
      * and, on the user's OK, calls [confirm] with the preview's `bolusId`.
+     *
+     * Every prepare parks for its [caller] only (null: the master itself); see [RemoteCaller].
      */
-    suspend fun prepareQuickWizard(guid: String): PrepareResult
+    suspend fun prepareQuickWizard(guid: String, caller: RemoteCaller? = null): PrepareResult
 
     /**
      * Manual-wizard prepare: recompute the dose on the master's own profile / temp target / COB / IOB from the
@@ -47,7 +49,7 @@ interface MasterActionExecutor {
      * but driven by inputs rather than a synced QuickWizard entry — so the master is authoritative for a
      * client's manual wizard bolus too.
      */
-    suspend fun prepareWizard(inputs: WizardInputs): PrepareResult
+    suspend fun prepareWizard(inputs: WizardInputs, caller: RemoteCaller? = null): PrepareResult
 
     /**
      * Multi-action prepare (the unified Insulin / Carbs / Treatment path): cap a FIXED bolus/carbs (or keep a
@@ -56,7 +58,7 @@ interface MasterActionExecutor {
      * [confirm] then delivers + applies the TT in decision-B order (raising TT first, bolus, lowering TT only if
      * accepted). At most one [BatchAction.Bolus] and one [BatchAction.TempTarget].
      */
-    suspend fun prepareBatch(actions: List<BatchAction>): PrepareResult
+    suspend fun prepareBatch(actions: List<BatchAction>, caller: RemoteCaller? = null): PrepareResult
 
     /**
      * Drain the slot, verify [bolusId] matches the parked bolus, and deliver. Idempotent (consume-once): a second
@@ -73,6 +75,10 @@ interface MasterActionExecutor {
      * record-only entry). That happens after [confirm] has returned, because the delivery is asynchronous. An entry
      * with no bolus and no carbs never calls it: its steps are awaited, so the return value and [onError] already
      * tell the whole story. A dose that was started is followed by [onSuccess] or by [onError].
+     *
+     * [caller] must be the one the entry was prepared for (null: the master itself); anyone else gets
+     * [ConfirmResult.NoPending] and the entry stays for its owner. If the caller's role no longer allows what was
+     * prepared, the entry is dropped and [ConfirmResult.NotAllowed] is returned.
      */
     suspend fun confirm(
         bolusId: Long,
@@ -80,6 +86,7 @@ interface MasterActionExecutor {
         onError: (Failure) -> Unit,
         asAdvisor: Boolean = false,
         correctionU: Double = 0.0,
+        caller: RemoteCaller? = null,
         onSuccess: () -> Unit = {}
     ): ConfirmResult
 
@@ -221,8 +228,11 @@ interface MasterActionExecutor {
         /** Bolus started (async). Its end is reported through `onSuccess` or `onError` of [confirm]. */
         data object Delivered : ConfirmResult
 
-        /** Slot empty or id mismatch — nothing delivered (idempotent retry / stale confirm). */
+        /** Slot empty, id mismatch, or prepared for another caller — nothing delivered (idempotent retry / stale confirm). */
         data object NoPending : ConfirmResult
+
+        /** The caller's role does not allow what was prepared (it was lowered after the prepare). Nothing delivered. */
+        data object NotAllowed : ConfirmResult
 
         /**
          * A pump command of the batch was dropped from the command queue on purpose — the queue was cleared,

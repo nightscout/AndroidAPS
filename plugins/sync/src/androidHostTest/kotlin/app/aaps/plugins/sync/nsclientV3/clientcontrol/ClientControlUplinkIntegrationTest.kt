@@ -19,6 +19,7 @@ import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 import app.aaps.core.keys.interfaces.NonPreferenceKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
@@ -214,7 +215,7 @@ class ClientControlUplinkIntegrationTest {
         )
 
         // ---------- pairing: same secret on both sides ----------
-        val (entry, secretHex) = masterAuthorizedRepository.addPending("phone", pairTtlMs = 60_000L, now = now - 10_000L)
+        val (entry, secretHex) = masterAuthorizedRepository.addPending("phone", ClientRole.Admin, pairTtlMs = 60_000L, now = now - 10_000L)
         masterAuthorizedRepository.markActive(entry.clientId, counterReceived = 0L, now = now - 5_000L)
         // check(), not a bare call: pair() refuses when the secret cannot be wrapped, and a test that
         // silently ran unpaired would pass for the wrong reason. It also keeps setUp returning Unit.

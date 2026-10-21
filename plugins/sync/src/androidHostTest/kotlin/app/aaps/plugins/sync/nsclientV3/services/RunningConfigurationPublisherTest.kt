@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
@@ -58,8 +59,8 @@ class RunningConfigurationPublisherTest {
         put(BooleanKey.GeneralSimpleMode.key, "false")
     }
 
-    private fun client(id: String, state: ClientState) =
-        AuthorizedClient(clientId = id, name = id, encryptedSecret = "enc", state = state, createdAt = 1_000L)
+    private fun client(id: String, state: ClientState, role: ClientRole? = null) =
+        AuthorizedClient(clientId = id, name = id, encryptedSecret = "enc", state = state, createdAt = 1_000L, role = role?.name)
 
     private fun publisher(): RunningConfigurationPublisher {
         val plugin = mock<NSClientV3Plugin>()
@@ -86,7 +87,9 @@ class RunningConfigurationPublisherTest {
         whenever(runningConfiguration.configuration()).thenReturn(buildJsonObject { put("syncedPrefs", syncedPrefs) })
         whenever(runningConfiguration.activeSceneConfiguration()).thenReturn(JsonObject(emptyMap()))
         whenever(authorizedRepository.observe()).thenReturn(emptyFlow())
-        whenever(authorizedRepository.current(any())).thenReturn(listOf(client("active", ClientState.Active), client("pending", ClientState.Pending)))
+        whenever(authorizedRepository.current(any())).thenReturn(
+            listOf(client("active", ClientState.Active), client("meals", ClientState.Active, ClientRole.MealAssistant), client("pending", ClientState.Pending))
+        )
         whenever(nsAndroidClient.updateSettings(any(), any()))
             .thenReturn(CreateUpdateResponse(response = 200, identifier = null, isDeduplication = false, deduplicatedIdentifier = null, lastModified = null, errorResponse = null))
         val sut = publisher()
@@ -100,6 +103,9 @@ class RunningConfigurationPublisherTest {
         verify(nsAndroidClient).updateSettings(eq(SettingsIdentifiers.COLD), doc.capture())
         val runningConfig = doc.firstValue["runningConfig"]!!.jsonObject
         assertThat(runningConfig["syncedPrefs"]).isEqualTo(syncedPrefs)
-        assertThat(runningConfig["authorizedClients"]!!.jsonObject["clientIds"]!!.jsonArray).isEqualTo(JsonArray(listOf(JsonPrimitive("active"))))
+        val roster = runningConfig["authorizedClients"]!!.jsonObject
+        assertThat(roster["clientIds"]!!.jsonArray).isEqualTo(JsonArray(listOf(JsonPrimitive("active"), JsonPrimitive("meals"))))
+        // Each active client's role travels too (none stored = Admin); a pending one is not listed.
+        assertThat(roster["roles"]).isEqualTo(buildJsonObject { put("active", "Admin"); put("meals", "MealAssistant") })
     }
 }

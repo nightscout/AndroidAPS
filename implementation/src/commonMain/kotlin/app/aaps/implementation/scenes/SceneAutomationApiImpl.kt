@@ -70,14 +70,14 @@ class SceneAutomationApiImpl(
         else SceneAutomationResult.Failed(result.errorMessage)
     }
 
-    override suspend fun prepareScene(id: String, durationMinutes: Int?): MasterActionExecutor.PrepareResult {
+    override suspend fun prepareScene(id: String, durationMinutes: Int?, owner: String?): MasterActionExecutor.PrepareResult {
         val scene = sceneRepository.getScene(id) ?: return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_fail_scene_not_found))
         if (!scene.isEnabled) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_fail_scene_disabled))
-        return sceneExecutor.prepareScene(scene, durationMinutes)
+        return sceneExecutor.prepareScene(scene, durationMinutes, owner)
     }
 
-    override suspend fun commitScene(bolusId: Long, onError: (MasterActionExecutor.Failure) -> Unit): MasterActionExecutor.ConfirmResult =
-        sceneExecutor.commitScene(bolusId, onError)
+    override suspend fun commitScene(bolusId: Long, onError: (MasterActionExecutor.Failure) -> Unit, owner: String?): MasterActionExecutor.ConfirmResult =
+        sceneExecutor.commitScene(bolusId, onError, owner)
 
     override suspend fun stopActiveSceneAndStartScene(targetSceneId: String): SceneAutomationResult {
         // TOCTOU re-check: caller (dialog or wire command) captured the target id at some earlier

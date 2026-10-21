@@ -1,8 +1,10 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.MasterPairing
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
@@ -47,6 +49,7 @@ internal class PairWithMasterViewModelTest {
     @Mock private lateinit var fetcher: PairingOfferFetcher
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var preferences: Preferences
+    @Mock private lateinit var nsClient: NsClient
 
     @BeforeEach
     fun setUp() {
@@ -55,6 +58,7 @@ internal class PairWithMasterViewModelTest {
         whenever(preferences.observe(BooleanKey.HardenedMode)).thenReturn(MutableStateFlow(false))
         whenever(preferences.observe(BooleanKey.GeneralSimpleMode)).thenReturn(MutableStateFlow(false))
         whenever(preferences.observe(StringNonKey.NsClientControlClientId)).thenReturn(MutableStateFlow(""))
+        whenever(nsClient.clientRole).thenReturn(MutableStateFlow(ClientRole.Admin))
         // StandardTestDispatcher does NOT auto-run viewModelScope.launch bodies (no advanceUntilIdle),
         // so onPinEntered/confirmPair only apply their synchronous prelude.
         Dispatchers.setMain(StandardTestDispatcher())
@@ -76,7 +80,7 @@ internal class PairWithMasterViewModelTest {
      * until the queue is drained, hence the advanceUntilIdle here rather than in every test.
      */
     private fun TestScope.createViewModel() =
-        PairWithMasterViewModel(repository, publisher, fetcher, dateUtil, preferences).also { advanceUntilIdle() }
+        PairWithMasterViewModel(repository, publisher, fetcher, dateUtil, preferences, nsClient).also { advanceUntilIdle() }
 
     @Test
     fun `default state is PinEntry when not paired`() = runTest {

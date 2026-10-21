@@ -37,7 +37,14 @@ data class AuthorizedClient(
     val counterReceived: Long = 0L,
 
     @SerialName("pairExpiresAt")
-    val pairExpiresAt: Long = 0L
+    val pairExpiresAt: Long = 0L,
+
+    /**
+     * Name of the client's role (`ClientRole` in core/keys). Kept as a plain string so that a role this
+     * build does not know can never fail to decode: a decode failure would read the whole stored list as
+     * empty. Null - a client stored before roles existed - means Admin, the full control it had.
+     */
+    val role: String? = null
 )
 
 @Serializable

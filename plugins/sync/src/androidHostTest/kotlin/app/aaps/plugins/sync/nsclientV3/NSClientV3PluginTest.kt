@@ -251,6 +251,9 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         whenever(preferences.observe(BooleanKey.HardenedMode)).thenReturn(controlFlow)
         whenever(preferences.get(BooleanKey.HardenedMode)).thenAnswer { controlFlow.value }
         whenever(preferences.observe(BooleanKey.GeneralSimpleMode)).thenReturn(MutableStateFlow(false))
+        // The client's role (clientRole) is read from the store at construction too.
+        whenever(preferences.observe(StringNonKey.NsClientControlRole)).thenReturn(MutableStateFlow(""))
+        whenever(preferences.get(StringNonKey.NsClientControlRole)).thenReturn("")
 
         val client = buildPlugin(orphanDetector)
         // Heartbeat stays 0L until the first batch — the gate FAILS CLOSED at boot (no optimistic enable).
