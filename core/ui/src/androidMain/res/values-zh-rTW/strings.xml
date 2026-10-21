@@ -179,6 +179,7 @@
     <string name="bg_label">BG</string>
     <string name="calibration">校正</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">未儲存校正：血糖變化太快（每 5 分鐘 Δ %1$s %3$s，限制為 %2$s）。請在血糖穩定時再試一次。</string>
     <string name="cal_reject_no_pair">校正未儲存：在過去 10 分鐘內未找到 CGM 讀取值。</string>
     <string name="cal_reject_warmup">校正未儲存：傳感器仍在 2 小時預熱時間內。</string>
     <string name="cal_reject_no_session">校正未儲存：目前沒有啟動任何傳感器工作階段。請先標記傳感器更換。</string>
@@ -226,6 +227,7 @@
     <string name="percentage_label">百分比</string>
     <string name="timeshift_label">時間偏移</string>
     <string name="confirm_remove_multiple_items">您確定要移除 %1$d 項目嗎</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">主手機沒有這些記錄中的 %1$d 筆，因此不會將其移除。</string>
     <string name="overview_treatment_label">治療</string>
     <string name="copytolocalprofile">從此設定檔建立新設定檔？</string>
     <string name="wear_wizard_settings">Wear 嚮導設定</string>
@@ -419,6 +421,19 @@
     <string name="scene_lock_banner_control_disabled">主控端已停用遠端控制。重新在主控端啟用後，場景控制將會恢復。</string>
     <string name="master_offline_banner">無法連線到主裝置。連線恢復前，編輯功能已停用。</string>
     <string name="master_control_disabled_banner">Master 已停用遠端控制。在 Master 重新啟用之前，無法進行編輯。</string>
+    <string name="hardened_mode_on">強化模式已開啟</string>
+    <string name="hardened_mode_title">強化模式</string>
+    <string name="hardened_mode_info_open">關於強化模式</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">唯讀</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">餐點</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">照護者</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">管理員</string>
+    <string name="client_role_title">角色</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">角色：%1$s</string>
+    <string name="client_roles_info_open">關於角色</string>
+    <string name="client_roles_info">每部配對的手機都有一個角色。主控手機會檢查每個指令的角色，手機只會顯示該角色允許的內容。變更角色後會立即生效，不必重新配對。\n\n唯讀：手機仍保持配對，但只會顯示資料。\n\n餐點：注射、注射嚮導、QuickWizard 和碳水化合物。也可以停止正在進行的注射。在此輸入的碳水化合物可能會使循環增加胰島素注射量。\n\n照護者：可執行 AAPS 使用者能執行的所有操作，例如臨時目標、設定檔和胰島素切換、循環模式、臨時基礎率、延長注射、場景、CarePortal 事件、校正和移除記錄。但無法變更設定或預設值。\n\n管理員：可執行所有操作，包括設定和預設值（QuickWizard、臨時目標預設值、場景、設定檔、自動化、胰島素）。</string>
+    <string name="client_read_only_banner">這部手機在主手機上處於唯讀模式。</string>
+    <string name="hardened_mode_info">主手機只接受來自配對用戶端的變更。它不會接受直接在 Nightscout 中進行的治療、臨時目標、設定檔變更、運作模式變更或刪除，例如在網站或其他 App 中進行的變更。強化模式開啟時，會隱藏接受 Nightscout 資料的設定。SMS 指令不受影響。\n\n主控手機仍會將所有資料上傳至 Nightscout，包括血糖。如果主控手機從 Nightscout 取得血糖，仍會從那裡接收血糖資料。\n\n若要在新的主控手機載入歷史資料，請在 NSClient 中使用完整同步。完整同步會載入 Nightscout 中的所有內容，包括設定檔。\n\n用戶端的遠端控制需要主控手機和配對用戶端都能正常連線至 Nightscout 的 WebSocket。簡易模式一律會開啟強化模式。若要關閉強化模式，請退出簡易模式，並在主控手機上關閉用戶端控制。</string>
     <string name="scene_lock_reason_master_offline">主裝置已中斷連線</string>
     <string name="scene_lock_reason_control_disabled">遠端控制已停用</string>
     <string name="scene_lock_reason_scene_active">請先停止正在執行的情境</string>
@@ -447,6 +462,7 @@
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">大劑量已取消。未注射任何胰島素。\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">已取消</string>
     <string name="clientcontrol_fail_control_disabled">主控端已關閉遠端控制</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">主手機上的角色不允許此操作。</string>
     <string name="clientcontrol_fail_no_pending_bolus">已準備的注射已失效或被取代。請再輕觸按鈕一次。</string>
     <string name="clientcontrol_fail_bolus_compute">主裝置無法計算注射（缺少血糖／設定檔，或幫浦尚未就緒）。</string>
     <string name="clientcontrol_fail_internal">發生錯誤。</string>
