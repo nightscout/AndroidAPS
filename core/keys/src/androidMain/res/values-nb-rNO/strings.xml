@@ -126,7 +126,6 @@
     <string name="pref_title_ns_use_ws">Bruk websockets</string>
     <string name="pref_summary_ns_use_ws">Bruk websockets for sanntidskommunikasjon med Nightscout.</string>
     <string name="pref_title_ns_allow_client_control">Tillat klientstyring</string>
-    <string name="pref_summary_ns_allow_client_control">La tilkoblede klientenheter sende signerte kommandoer (f.eks. starte/stoppe scener) via Nightscout.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Kun WiFi</string>
     <string name="pref_title_openhumans_charging_only">Kun under lading</string>
