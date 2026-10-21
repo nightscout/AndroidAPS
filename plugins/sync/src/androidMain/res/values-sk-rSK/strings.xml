@@ -15,7 +15,6 @@
     <string name="authorized_clients_add">Pridať klienta</string>
     <string name="authorized_clients_comm_switch_title">Povoliť ovládanie klientom</string>
     <string name="authorized_clients_comm_switch_summary">Umožnite spárovaným klientom odosielať podpísané príkazy cez Nightscout. Vypnutím zastavíte komunikáciu bez ich odstránenia.</string>
-    <string name="authorized_clients_needs_websocket">Websockety sú vypnuté, takže príkazy od klientov nie je možné prijímať. Klienti budú tento master vnímať tak, že neprijíma príkazy, kým websockety nezapnete.</string>
     <string name="authorized_clients_state_active">Aktívny</string>
     <string name="authorized_clients_state_pending">Čakajúce</string>
     <string name="authorized_clients_last_seen">Naposledy videný %1$s</string>
