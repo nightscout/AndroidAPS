@@ -590,6 +590,12 @@ class DataSyncSelectorV3(
                         aapsLogger.debug(LTag.NSCLIENT_SYNC, "Ignoring TherapyEvent. Only NS id changed: ${te.second.id}")
                         ignored++
                     }
+                    // A client never creates therapy events in NS: its own go through the master, and the one left
+                    // (the "AndroidAPS started" note) stays on the phone
+                    config.AAPSCLIENT && te.first.ids.nightscoutId == null           -> {
+                        aapsLogger.debug(LTag.NSCLIENT_SYNC, "Ignoring TherapyEvent. Local only on a client: ${te.second.id}")
+                        ignored++
+                    }
                     // without nsId = create new
                     te.first.ids.nightscoutId == null                                -> {
                         cont = nsClientV3Plugin().nsAdd("treatments", DataSyncSelector.PairTherapyEvent(te.first, te.second.id), "$startId/$lastDbId") == true

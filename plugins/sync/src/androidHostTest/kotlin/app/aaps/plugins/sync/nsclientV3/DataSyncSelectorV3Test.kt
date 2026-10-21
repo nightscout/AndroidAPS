@@ -2,7 +2,9 @@ package app.aaps.plugins.sync.nsclientV3
 
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -565,6 +567,40 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
         verify(preferences, Times(1)).put(NsclientLongKey.TherapyEventLastSyncedId, 0)
         verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
+    }
+
+    /** A new "AndroidAPS started" note, made on this phone and not yet in NS, as the next record to sync. */
+    private suspend fun newLocalNoteToSync() {
+        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
+        whenever(persistenceLayer.getLastTherapyEventId()).thenReturn(10L)
+        // firstId, startId, the confirm check, then the next startId
+        whenever(preferences.get(NsclientLongKey.TherapyEventLastSyncedId)).thenReturn(5L, 5L, 5L, 6L)
+        val note = TE(id = 6, timestamp = 1000L, type = TE.Type.NOTE, note = "AndroidAPS started", glucoseUnit = GlucoseUnit.MGDL, ids = IDs())
+        whenever(persistenceLayer.getNextSyncElementTherapyEvent(5L)).thenReturn(Pair(note, note))
+        whenever(persistenceLayer.getNextSyncElementTherapyEvent(6L)).thenReturn(null)
+    }
+
+    @Test
+    fun processChangedTherapyEventsKeepsANewNoteLocalOnAClientTest() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        newLocalNoteToSync()
+
+        sut.processChangedTherapyEvents()
+
+        verify(nsClientV3Plugin, Times(0)).nsAdd(any(), any(), any(), anyOrNull())
+        // Skipped, not stuck: the next sync starts after it
+        verify(preferences, Times(1)).put(NsclientLongKey.TherapyEventLastSyncedId, 6L)
+    }
+
+    @Test
+    fun processChangedTherapyEventsUploadsANewNoteOnTheMasterTest() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(false)
+        newLocalNoteToSync()
+        whenever(nsClientV3Plugin.nsAdd(eq("treatments"), any<DataSyncSelector.PairTherapyEvent>(), any(), anyOrNull())).thenReturn(true)
+
+        sut.processChangedTherapyEvents()
+
+        verify(nsClientV3Plugin, Times(1)).nsAdd(eq("treatments"), any<DataSyncSelector.PairTherapyEvent>(), any(), anyOrNull())
     }
 
     // Tests for processChangedDeviceStatuses
