@@ -56,6 +56,7 @@
     <string name="pair_with_master_already_paired_master">Aktualnie sparowano z urządzeniem pacjenta %1$s. Najpierw odłącz, aby wprowadzić nowy PIN.</string>
     <string name="pair_with_master_unpair">Odłącz</string>
     <string name="pair_with_master_sending">Wysyłanie wiadomości parującej…</string>
+    <!-- Client set-up from the master's QR code -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">Telefon pacjenta z AAPS nie rozpoznaje już tego urządzenia. Otwórz panel Zarządzaj → Paruj z urządzeniem opiekuna, aby sparować ponownie.</string>
     <string name="ns_client">NSClient</string>
@@ -99,6 +100,8 @@
     <string name="garmin_description">Połączenie z urządzeniem Garmin (Fenix, Edge, …)</string>
     <string name="garmin_local_http_server_port">Port lokalnego serwera HTTP</string>
     <string name="garmin_local_http_server">Lokalny serwer HTTP</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">Zegarek Garmin przesłał %1$s węglowodanów. Ten telefon jest telefonem opiekuna, więc węglowodany nie zostały wprowadzone. Wprowadź je w AAPS.</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">Zegarek Garmin poprosił o podłączenie lub odłączenie pompy. Ten telefon jest telefonem opiekuna, więc nic nie zostało zmienione. Wykonaj to w AAPS.</string>
     <!--    Wear-->
     <string name="description_wear">Monitoruj i steruj AAPS używając zegarka z WearOS.</string>
     <string name="no_watch_connected">(Brak połączonego zegarka)</string>
