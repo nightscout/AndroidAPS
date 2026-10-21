@@ -15,7 +15,6 @@
     <string name="authorized_clients_add">Adicionar cliente</string>
     <string name="authorized_clients_comm_switch_title">Permitir controle pelo cliente</string>
     <string name="authorized_clients_comm_switch_summary">Permitir que clientes pareados enviem comandos assinados pelo Nightscout. Desative para interromper a comunicação sem removê-los.</string>
-    <string name="authorized_clients_needs_websocket">Os WebSockets estão desativados, portanto não é possível receber comandos dos clientes. Os clientes veem este dispositivo principal como não aceitando comandos até que você ative os WebSockets.</string>
     <string name="authorized_clients_state_active">Ativo</string>
     <string name="authorized_clients_state_pending">Pendente</string>
     <string name="authorized_clients_last_seen">Visto pela última vez %1$s</string>
