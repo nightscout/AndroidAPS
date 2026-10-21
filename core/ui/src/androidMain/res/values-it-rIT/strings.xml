@@ -178,6 +178,10 @@
     <string name="wrong_pump_data">I dati arrivano da un micro differente. Cambia il driver del micro per resettarne lo stato.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Calibrazione</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">Calibrazione non salvata: nessuna lettura CGM trovata nei 10 minuti precedenti.</string>
+    <string name="cal_reject_warmup">Calibrazione non salvata: il sensore è ancora nella finestra di riscaldamento di 2 ore.</string>
+    <string name="cal_reject_no_session">Calibrazione non salvata: nessuna sessione del sensore è attiva. Segna prima un cambio del sensore.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Segnalato errore sul bolo. Controlla manualmente la reale quantità erogata</string>
     <string name="bolus_reminder">Ricorda il bolo quando la glicemia recupera</string>
