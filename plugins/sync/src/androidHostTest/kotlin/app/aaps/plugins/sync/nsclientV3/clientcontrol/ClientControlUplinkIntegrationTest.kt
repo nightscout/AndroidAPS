@@ -142,6 +142,9 @@ class ClientControlUplinkIntegrationTest {
     private var bridgeIdentifier: String? = null
     private var bridgeDoc: JsonObject? = null
 
+    /** Uploads fail like a wrong address does, with no answer at all. */
+    private var uploadsFail = false
+
     @BeforeEach
     fun setUp() = runBlocking {
         MockitoAnnotations.openMocks(this@ClientControlUplinkIntegrationTest)
@@ -180,6 +183,7 @@ class ClientControlUplinkIntegrationTest {
         // captured + delivered to the master, which is what this uplink test asserts.
         whenever(nsClientV3Plugin.masterReachable).thenReturn(MutableStateFlow(true))
         whenever(nsAndroidClient.updateSettings(any<String>(), any<JsonObject>())).thenAnswer {
+            if (uploadsFail) throw IllegalStateException("Unable to resolve host \"api\"")
             val id = it.getArgument<String>(0)
             // The master now writes two-step ACK docs through this same NS bridge; ignore them here so
             // the capture reflects only the client's command publish (the uplink under test).
@@ -306,6 +310,31 @@ class ClientControlUplinkIntegrationTest {
         assertThat(lookup.secretBytes).isNotEqualTo(secretBefore)
         assertThat(lookup.secretBytes).isEqualTo(clientPairingRepository.verificationSecrets().first())
         verify(offerPublisher).deleteKeyExchange(clientId())
+    }
+
+    /**
+     * A hello that did not reach Nightscout leaves the next one due at once, not after the 10 minutes a sent one waits
+     * for its answer: the pairing offer on the master lives only 2 minutes. The next one is answered.
+     */
+    @Test
+    fun aHelloThatWasNotSentGoesAgainAtOnceAndIsAnswered() = runTest {
+        whenever(clientPrefs.get(StringKey.NsClientUrl)).thenReturn("https://ns.example")
+        whenever(clientPrefs.get(StringKey.NsClientAccessToken)).thenReturn("usersadmintoken-0123456789abcdef")
+        whenever(clientTokens.subjects()).thenReturn(ClientTokens.Result.Ok(listOf(NSAuthSubject(id = "s0", name = "users-admin", roles = listOf("admin")))))
+        whenever(clientTokens.tokenFor("phone"))
+            .thenReturn(ClientTokens.Result.Ok(NSAuthSubject(id = "s1", name = "aaps-phone", roles = listOf(ClientTokens.ROLE_NAME), accessToken = "aapsphone-0123456789abcdef")))
+
+        uploadsFail = true
+        assertThat(clientControlPublisher.publishHello()).isInstanceOf(ClientControlSendResult.PublishFailed::class.java)
+        assertThat(clientPairingRepository.needsKeyExchange(now)).isTrue()
+
+        uploadsFail = false
+        assertThat(clientControlPublisher.publishHello()).isEqualTo(ClientControlSendResult.Success)
+        masterReceiver.onSettingsDocChanged(bridgeIdentifier!!, JsonObject(bridgeDoc!! + ("subject" to JsonPrimitive("users-admin"))))
+        assertThat(bridgeIdentifier).isEqualTo(ClientControlPublisher.IDENTIFIER_KEY_PREFIX + clientId())
+        clientKeyExchange.onKeyDoc(bridgeDoc!!)
+        // Both phones now hold the secret of the second exchange.
+        assertThat(clientPairingRepository.verificationSecrets().first()).isEqualTo(masterAuthorizedRepository.secretLookup(clientId())!!.pendingSecretBytes)
     }
 
     private fun clientId(): String = clientStrings[StringNonKey.NsClientControlClientId.key] ?: error("not paired")

@@ -25,11 +25,13 @@ data class ClientSetupCode(
     /** SENSITIVE: the client's Nightscout token. */
     val token: String,
     /** SENSITIVE: the pairing, when the code also pairs the client with the master. */
-    val pairing: PairingPayload? = null
+    val pairing: PairingPayload? = null,
+    /** The name this phone was added with on the master. The client takes it as its instance name when it has none. */
+    val name: String? = null
 ) {
 
     /** Hides the token and the secret, so a log line that prints a code cannot leak them. */
-    override fun toString(): String = "ClientSetupCode(v=$v, url=$url, token=****, pairing=${if (pairing == null) "none" else "****"})"
+    override fun toString(): String = "ClientSetupCode(v=$v, url=$url, token=****, pairing=${if (pairing == null) "none" else "****"}, name=$name)"
 
     sealed interface Decoded {
         data class Ok(val code: ClientSetupCode) : Decoded

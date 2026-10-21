@@ -43,6 +43,8 @@ import app.aaps.plugins.sync.SyncStrings
 @Composable
 fun ScanMasterQrScreen(
     onNavigateBack: () -> Unit,
+    /** OK after the code was used. From the setup wizard it finishes the wizard. */
+    onDone: () -> Unit = onNavigateBack,
     viewModel: ScanMasterQrViewModel = metroViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -79,7 +81,7 @@ fun ScanMasterQrScreen(
                     message = stringResource(if (s.paired) SyncStrings.client_setup_done_paired else SyncStrings.client_setup_done_ns_only),
                     isError = false,
                     primaryLabel = stringResource(CoreUiStrings.ok),
-                    onPrimary = onNavigateBack,
+                    onPrimary = onDone,
                     onSecondary = null
                 )
 

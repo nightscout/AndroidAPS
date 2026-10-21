@@ -4,6 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
+import kotlin.test.assertNull
 
 /**
  * The text in the master's set-up QR code. In commonTest, so the iOS client that will read it later is held to the
@@ -29,6 +30,35 @@ class ClientSetupCodeTest {
         val decoded = ClientSetupCode.decode(ClientSetupCode.encode(code))
 
         assertEquals(pairing, assertIs<ClientSetupCode.Decoded.Ok>(decoded).code.pairing)
+    }
+
+    @Test
+    fun theRoleOfThePairingReadsBack() {
+        val code = ClientSetupCode(url = "https://ns.example", token = "aapstablet-0123456789abcdef", pairing = pairing.copy(role = "MealAssistant"))
+
+        val decoded = ClientSetupCode.decode(ClientSetupCode.encode(code))
+
+        assertEquals("MealAssistant", assertIs<ClientSetupCode.Decoded.Ok>(decoded).code.pairing?.role)
+    }
+
+    @Test
+    fun theNameThePhoneWasAddedWithReadsBack() {
+        val code = ClientSetupCode(url = "https://ns.example", token = "aapstablet-0123456789abcdef", name = "Miloš")
+
+        val decoded = ClientSetupCode.decode(ClientSetupCode.encode(code))
+
+        assertEquals("Miloš", assertIs<ClientSetupCode.Decoded.Ok>(decoded).code.name)
+    }
+
+    /** A master that does not send the role yet: the code still reads, without one. */
+    @Test
+    fun aPairingWithoutARoleReads() {
+        val text = """{"type":"aaps-client-setup","v":1,"url":"https://ns.example","token":"t-0123456789abcdef",""" +
+            """"pairing":{"v":1,"masterInstallId":"m","clientId":"c","secretHex":"${"ab".repeat(32)}","expiresAt":1000}}"""
+
+        val decoded = ClientSetupCode.decode(text)
+
+        assertNull(assertIs<ClientSetupCode.Decoded.Ok>(decoded).code.pairing?.role)
     }
 
     /** No pairing means no `pairing` key at all, not `"pairing":null`: a shorter code is easier to scan. */

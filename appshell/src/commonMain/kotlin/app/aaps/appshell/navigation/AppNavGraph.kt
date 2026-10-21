@@ -606,16 +606,34 @@ fun NavGraphBuilder.appNavGraph(
         )
     }
 
-    composable(AppRoute.PairWithMaster.route) {
+    // Opened from the setup wizard, a pairing (or a used QR code) finishes the wizard: the steps after it would only
+    // show what it did. Marked processed like the wizard's own Finish, and back to the screen under the wizard.
+    val finishSetupWizard: () -> Unit = {
+        preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, true)
+        navController.popBackStack(AppRoute.SetupWizard.route, inclusive = true)
+    }
+    val goBack: () -> Unit = { navController.popBackStack() }
+
+    composable(
+        AppRoute.PairWithMaster.route,
+        arguments = listOf(navArgument("wizard") { type = NavType.BoolType; defaultValue = false })
+    ) { backStackEntry ->
+        val fromSetupWizard = backStackEntry.booleanArg("wizard")
         PairWithMasterScreen(
-            onNavigateBack = { navController.popBackStack() },
-            onScanQr = { navController.navigate(AppRoute.ScanMasterQr.route) }
+            onNavigateBack = goBack,
+            onPaired = if (fromSetupWizard) finishSetupWizard else goBack,
+            onScanQr = { navController.navigate(AppRoute.ScanMasterQr.createRoute(fromSetupWizard)) }
         )
     }
 
-    composable(AppRoute.ScanMasterQr.route) {
+    composable(
+        AppRoute.ScanMasterQr.route,
+        arguments = listOf(navArgument("wizard") { type = NavType.BoolType; defaultValue = false })
+    ) { backStackEntry ->
+        val fromSetupWizard = backStackEntry.booleanArg("wizard")
         ScanMasterQrScreen(
-            onNavigateBack = { navController.popBackStack() }
+            onNavigateBack = goBack,
+            onDone = if (fromSetupWizard) finishSetupWizard else goBack
         )
     }
 
@@ -787,8 +805,8 @@ fun NavGraphBuilder.appNavGraph(
             onManageProfile = { navController.navigate(AppRoute.Profile.createRoute()) },
             onProfileSwitch = { navController.navigate(AppRoute.ProfileActivation.createRoute(0)) },
             onOpenAuthorizedClients = { navController.navigate(AppRoute.AuthorizedClients.route) },
-            onPairWithMaster = { navController.navigate(AppRoute.PairWithMaster.route) },
-            onScanMasterQr = { navController.navigate(AppRoute.ScanMasterQr.route) },
+            onPairWithMaster = { navController.navigate(AppRoute.PairWithMaster.createRoute(fromSetupWizard = true)) },
+            onScanMasterQr = { navController.navigate(AppRoute.ScanMasterQr.createRoute(fromSetupWizard = true)) },
             onOpenNsReceiveSettings = { navController.navigate(AppRoute.PreferenceScreen.createRoute("ns_client_synchronization")) },
             onRunObjectives = {
                 val index = activePlugin.getPluginsList().indexOfFirst { it is Objectives }
@@ -971,6 +989,9 @@ private fun AutomationContentRoute(
 // reading the way they did.
 private fun NavBackStackEntry.stringArg(key: String): String? =
     arguments?.read { if (contains(key)) getStringOrNull(key) else null }
+
+private fun NavBackStackEntry.booleanArg(key: String): Boolean =
+    arguments?.read { if (contains(key)) getBoolean(key) else false } ?: false
 
 private fun NavBackStackEntry.intArg(key: String, default: Int): Int =
     arguments?.read { if (contains(key)) getInt(key) else default } ?: default

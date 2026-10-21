@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
@@ -180,6 +181,23 @@ internal class PairWithMasterViewModelTest {
         // The hello with a key exchange: the PIN-offer secret is replaced right after pairing.
         verify(publisher).publishHello()
         assertThat(sut.state.value).isEqualTo(PairWithMasterViewModel.UiState.Success)
+    }
+
+    /** The name the phone was added with on the master travels in the PIN offer and becomes the instance name. */
+    @Test
+    fun `confirmPair takes the name from the master as the instance name`() = runTest {
+        val payload = PairingPayload(masterInstallId = "m1", clientId = "c1", secretHex = "00".repeat(32), expiresAt = 99_000L, name = "Babička")
+        whenever(fetcher.findOfferForPin(any())).thenReturn(PairingOfferFetcher.Result.Success(payload))
+        whenever(repository.pair(any(), any())).thenReturn(true)
+        whenever(preferences.get(StringKey.GeneralInstanceName)).thenReturn("")
+        val sut = createViewModel()
+        sut.onPinEntered("1234")
+        advanceUntilIdle()
+
+        sut.confirmPair()
+        advanceUntilIdle()
+
+        verify(preferences).put(StringKey.GeneralInstanceName, "Babicka")
     }
 
     /**

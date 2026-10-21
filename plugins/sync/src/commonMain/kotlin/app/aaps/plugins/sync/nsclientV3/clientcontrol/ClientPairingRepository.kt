@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.KeyExchangeEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.MasterPairing
@@ -109,8 +110,9 @@ class ClientPairingRepository(
         preferences.put(StringNonKey.NsClientControlMasterSecretEnc, secretEnc)
         preferences.put(LongNonKey.NsClientControlCounterSent, 0L)
         preferences.put(LongNonKey.NsClientControlPairedAt, now)
-        // Not known until the master's roster lists this pairing; until then the client shows as little as ReadOnly.
-        preferences.put(StringNonKey.NsClientControlRole, "")
+        // The role the master gave the pairing, until its roster lists it. A master that does not send one: shown as
+        // little as ReadOnly until then.
+        preferences.put(StringNonKey.NsClientControlRole, payload.role?.takeIf { it.isNotBlank() }?.let { ClientRole.of(it).name } ?: "")
         // A new pairing has a secret that travelled: it gets replaced by the key exchange in the hello.
         clearKeyExchangeLocked()
         true
@@ -123,7 +125,7 @@ class ClientPairingRepository(
         preferences.put(StringNonKey.NsClientControlMasterSecretEnc, "")
         preferences.put(LongNonKey.NsClientControlCounterSent, 0L)
         preferences.put(LongNonKey.NsClientControlPairedAt, 0L)
-        // The role belongs to this pairing; a new pairing learns its own from the master's roster.
+        // The role belongs to this pairing; a new pairing brings its own.
         preferences.put(StringNonKey.NsClientControlRole, "")
         clearKeyExchangeLocked()
     }
@@ -161,6 +163,20 @@ class ClientPairingRepository(
         preferences.put(StringNonKey.NsClientControlKeyExchangePrivateEnc, privateEnc)
         preferences.put(LongNonKey.NsClientControlKeyExchangeAt, now)
         pair.publicKey
+    }
+
+    /**
+     * The hello with [publicKey] was not sent, so the master cannot answer it: forget that exchange, and the next hello
+     * starts a new one at once instead of waiting [KEY_EXCHANGE_WAIT_MS] for nothing. The pairing offer on the master
+     * lives only 2 minutes, so that wait lost the whole pairing. Safe also if the hello did arrive after all: this phone
+     * takes only an answer to its current key, and the master refuses an older hello by its counter.
+     */
+    suspend fun abandonKeyExchange(publicKey: String): Unit = mutex.withLock {
+        // A newer exchange started meanwhile is not this one.
+        if (preferences.get(StringNonKey.NsClientControlKeyExchangePublic) != publicKey) return@withLock
+        preferences.put(StringNonKey.NsClientControlKeyExchangePublic, "")
+        preferences.put(StringNonKey.NsClientControlKeyExchangePrivateEnc, "")
+        preferences.put(LongNonKey.NsClientControlKeyExchangeAt, 0L)
     }
 
     sealed interface KeyExchangeResult {

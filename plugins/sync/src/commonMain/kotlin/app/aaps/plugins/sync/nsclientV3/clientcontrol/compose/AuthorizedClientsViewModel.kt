@@ -22,6 +22,7 @@ import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientTokens
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.clientRole
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -211,7 +212,7 @@ class AuthorizedClientsViewModel(
             val url = preferences.get(StringKey.NsClientUrl)
             if (role == null) {
                 _qrDialog.value = QrDialog.Shown(
-                    text = ClientSetupCode.encode(ClientSetupCode(url = url, token = token)),
+                    text = ClientSetupCode.encode(ClientSetupCode(url = url, token = token, name = clientName)),
                     clientName = clientName,
                     pairs = false,
                     expiresAt = null,
@@ -223,10 +224,11 @@ class AuthorizedClientsViewModel(
                     masterInstallId = ownInstallId(),
                     clientId = result.entry.clientId,
                     secretHex = result.secretHex,
-                    expiresAt = result.entry.pairExpiresAt
+                    expiresAt = result.entry.pairExpiresAt,
+                    role = role.name
                 )
                 _qrDialog.value = QrDialog.Shown(
-                    text = ClientSetupCode.encode(ClientSetupCode(url = url, token = token, pairing = pairing)),
+                    text = ClientSetupCode.encode(ClientSetupCode(url = url, token = token, pairing = pairing, name = clientName)),
                     clientName = clientName,
                     pairs = true,
                     expiresAt = result.entry.pairExpiresAt,
@@ -245,7 +247,7 @@ class AuthorizedClientsViewModel(
             _qrDialog.value = when (val result = clientTokens.token(id)) {
                 is ClientTokens.Result.Ok -> result.value.accessToken?.let { token ->
                     QrDialog.Shown(
-                        text = ClientSetupCode.encode(ClientSetupCode(url = preferences.get(StringKey.NsClientUrl), token = token)),
+                        text = ClientSetupCode.encode(ClientSetupCode(url = preferences.get(StringKey.NsClientUrl), token = token, name = displayName(subject))),
                         clientName = displayName(subject),
                         pairs = false,
                         expiresAt = null,
@@ -294,7 +296,9 @@ class AuthorizedClientsViewModel(
                 masterInstallId = ownInstallId(),
                 clientId = result.entry.clientId,
                 secretHex = result.secretHex,
-                expiresAt = result.entry.pairExpiresAt
+                expiresAt = result.entry.pairExpiresAt,
+                role = role.name,
+                name = result.entry.name
             )
             val pin = ClientControlPairingCrypto.newPin()
             _pairingOffer.value = PendingPairingOffer(
@@ -336,7 +340,9 @@ class AuthorizedClientsViewModel(
                 masterInstallId = ownInstallId(),
                 clientId = entry.clientId,
                 secretHex = secretHex,
-                expiresAt = entry.pairExpiresAt
+                expiresAt = entry.pairExpiresAt,
+                role = entry.clientRole.name,
+                name = entry.name
             )
             _pairingOffer.update { it?.copy(publishStatus = PublishStatus.Loading) }
             val ok = offerPublisher.publishOffer(payload, offer.pin)

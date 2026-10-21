@@ -13,6 +13,7 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientPairingRepository
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferFetcher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.takeInstanceNameFromMaster
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -34,7 +35,7 @@ class PairWithMasterViewModel(
     private val publisher: ClientControlPublisher,
     private val fetcher: PairingOfferFetcher,
     private val dateUtil: DateUtil,
-    preferences: Preferences,
+    private val preferences: Preferences,
     nsClient: NsClient
 ) : ViewModel() {
 
@@ -111,6 +112,7 @@ class PairWithMasterViewModel(
                 _state.value = UiState.Error(ErrorReason.SecretStoreFailed)
                 return@launch
             }
+            preferences.takeInstanceNameFromMaster(payload.name)
             _state.value = UiState.Sending
             // With a key exchange: the master answers with the secret that replaces the one from the PIN offer.
             publisher.publishHello()

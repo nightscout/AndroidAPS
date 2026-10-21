@@ -110,10 +110,15 @@ class ClientControlPublisher(
 
     /**
      * The hello, with the public key of a new key exchange: the master answers with a key doc and the pairing secret
-     * is replaced (`ClientPairingRepository.completeKeyExchange`).
+     * is replaced (`ClientPairingRepository.completeKeyExchange`). A hello that was not sent gives the exchange up, so
+     * the next one can go at once.
      */
-    suspend fun publishHello(): ClientControlSendResult =
-        publish(ClientControlMessage.Hello(publicKey = pairingRepository.startKeyExchange(dateUtil.now())))
+    suspend fun publishHello(): ClientControlSendResult {
+        val publicKey = pairingRepository.startKeyExchange(dateUtil.now())
+        val result = publish(ClientControlMessage.Hello(publicKey = publicKey))
+        if (result != ClientControlSendResult.Success && publicKey != null) pairingRepository.abandonKeyExchange(publicKey)
+        return result
+    }
 
     /**
      * Like [publish], but carries an explicit [validUntil] (command expiry the master enforces) and

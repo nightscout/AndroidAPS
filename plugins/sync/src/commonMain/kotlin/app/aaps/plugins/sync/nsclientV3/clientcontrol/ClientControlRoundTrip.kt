@@ -56,6 +56,8 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -282,10 +284,13 @@ class ClientControlRoundTrip(
     /**
      * The hello with a key exchange, when this pairing's secret is still to be replaced and no exchange is waiting for
      * its answer: a new pairing (from a QR code too, which could not say hello before it reached Nightscout), or one
-     * made before the key exchange existed. Answered by a key doc, no ACK. Null when none was due.
+     * made before the key exchange existed. Answered by a key doc, no ACK. Null when none was due. Called on each
+     * connect and before each probe, which can run at the same time: the lock keeps it to one hello.
      */
-    suspend fun sendHelloIfDue(): ClientControlSendResult? =
+    suspend fun sendHelloIfDue(): ClientControlSendResult? = helloMutex.withLock {
         if (pairingRepository.needsKeyExchange(dateUtil.now())) publisher.publishHello() else null
+    }
+    private val helloMutex = Mutex()
 
     // The single app-level modal signal (progress + label), fed by every run()/execute() regardless of
     // feature. Hosted once in ComposeMainActivity; round-trips are single-in-flight so at most one shows.

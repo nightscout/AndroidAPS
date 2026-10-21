@@ -22,6 +22,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonArray
@@ -36,6 +37,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -107,5 +110,60 @@ class RunningConfigurationPublisherTest {
         assertThat(roster["clientIds"]!!.jsonArray).isEqualTo(JsonArray(listOf(JsonPrimitive("active"), JsonPrimitive("meals"))))
         // Each active client's role travels too (none stored = Admin); a pending one is not listed.
         assertThat(roster["roles"]).isEqualTo(buildJsonObject { put("active", "Admin"); put("meals", "MealAssistant") })
+    }
+
+    private fun response(code: Int) =
+        CreateUpdateResponse(response = code, identifier = null, isDeduplication = false, deduplicatedIdentifier = null, lastModified = null, errorResponse = null)
+
+    /** WebSocket off, so start() publishes at once. */
+    private fun stubPollMode() {
+        whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(false)
+        whenever(runningConfiguration.activeSceneConfiguration()).thenReturn(JsonObject(emptyMap()))
+        whenever(authorizedRepository.observe()).thenReturn(emptyFlow())
+    }
+
+    @Test
+    fun `a cold doc skipped while the pump is not ready is published by the retry`() = runTest {
+        stubPollMode()
+        whenever(authorizedRepository.current(any())).thenReturn(listOf(client("new", ClientState.Active)))
+        // Not initialized at start (empty), ready by the retry.
+        whenever(runningConfiguration.configuration()).thenReturn(JsonObject(emptyMap()), buildJsonObject { put("syncedPrefs", syncedPrefs) })
+        whenever(nsAndroidClient.updateSettings(any(), any())).thenReturn(response(200))
+        val sut = publisher()
+
+        sut.start(backgroundScope)
+        runCurrent()
+        verify(nsAndroidClient, never()).updateSettings(eq(SettingsIdentifiers.COLD), any())
+
+        // The retry waits 30 s, then goes through the 5 s cold debounce.
+        advanceTimeBy(35_001L)
+        verify(nsAndroidClient, times(1)).updateSettings(eq(SettingsIdentifiers.COLD), any())
+        sut.stop()
+    }
+
+    @Test
+    fun `a failed upload is tried again, each time waiting twice as long, until it goes through`() = runTest {
+        stubPollMode()
+        whenever(authorizedRepository.current(any())).thenReturn(listOf(client("new", ClientState.Active)))
+        whenever(runningConfiguration.configuration()).thenReturn(buildJsonObject { put("syncedPrefs", syncedPrefs) })
+        whenever(nsAndroidClient.updateSettings(eq(SettingsIdentifiers.COLD), any())).thenReturn(response(500), response(500), response(200))
+        whenever(nsAndroidClient.updateSettings(eq(SettingsIdentifiers.STATE), any())).thenReturn(response(200))
+        val sut = publisher()
+
+        sut.start(backgroundScope)
+        runCurrent()
+        verify(nsAndroidClient, times(1)).updateSettings(eq(SettingsIdentifiers.COLD), any())
+        // Second try after 30 s + debounce.
+        advanceTimeBy(35_001L)
+        verify(nsAndroidClient, times(2)).updateSettings(eq(SettingsIdentifiers.COLD), any())
+        // The third waits 60 s: not yet 4 s before it, then it goes through.
+        advanceTimeBy(61_000L)
+        verify(nsAndroidClient, times(2)).updateSettings(eq(SettingsIdentifiers.COLD), any())
+        advanceTimeBy(4_000L)
+        verify(nsAndroidClient, times(3)).updateSettings(eq(SettingsIdentifiers.COLD), any())
+        // Published: nothing waits any more.
+        advanceTimeBy(20L * 60L * 1000L)
+        verify(nsAndroidClient, times(3)).updateSettings(eq(SettingsIdentifiers.COLD), any())
+        sut.stop()
     }
 }

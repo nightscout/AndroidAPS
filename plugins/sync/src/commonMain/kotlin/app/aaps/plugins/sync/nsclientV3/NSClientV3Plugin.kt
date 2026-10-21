@@ -222,6 +222,10 @@ class NSClientV3Plugin(
 
     internal var nsAndroidClient: NSAndroidClient? = null
 
+    // The address and token nsAndroidClient was made with: a change to either one makes it again.
+    @Volatile private var clientUrl: String? = null
+    @Volatile private var clientAccessToken: String? = null
+
     internal val isAllowed get() = receiverDelegate.allowed
     internal val blockingReason get() = receiverDelegate.blockingReason
 
@@ -277,7 +281,7 @@ class NSClientV3Plugin(
                     when (clientControlRoundTrip.sendHelloIfDue()) {
                         null                              -> Unit
                         ClientControlSendResult.Success -> nsClientRepository.addLog("► CLIENTCTL", "hello with a new key")
-                        else                              -> aapsLogger.warn(LTag.NSCLIENT, "ClientControl: hello not sent, trying on the next connect")
+                        else                              -> aapsLogger.warn(LTag.NSCLIENT, "ClientControl: hello not sent, trying again with the next probe")
                     }
                     requestMasterProbe()
                 }
@@ -335,8 +339,13 @@ class NSClientV3Plugin(
 
         // Resilient collection (from dev). forceNew args dropped: this branch replaced the
         // forceNew mechanism with the WorkManager re-run watchdog above (see executeUpload).
-        preferences.observe(StringKey.NsClientAccessToken).drop(1).collectResilient(scope, aapsLogger, LTag.NSCLIENT, block = restartOnChange)
-        preferences.observe(StringKey.NsClientUrl).drop(1).collectResilient(scope, aapsLogger, LTag.NSCLIENT, block = restartOnChange)
+        // Against the values the client was made with, not drop(1): a value written between setClient() above and this
+        // subscription is the first one seen, and drop(1) lost it. The client then kept the old address until the next
+        // start (a fresh client set up from a QR code sent its hello to "https://api/...").
+        preferences.observe(StringKey.NsClientAccessToken).filter { it != clientAccessToken }
+            .collectResilient(scope, aapsLogger, LTag.NSCLIENT, block = restartOnChange)
+        preferences.observe(StringKey.NsClientUrl).filter { it != clientUrl }
+            .collectResilient(scope, aapsLogger, LTag.NSCLIENT, block = restartOnChange)
         // The value in use, not the stored one: simple mode and hardened mode force the WebSocket on, and turning
         // one of them on must start it now. It fires only on a real change, because a needless restart drops
         // client-control commands sent during the reconnect.
@@ -444,8 +453,12 @@ class NSClientV3Plugin(
         if (now - lastProbeAt < PROBE_MIN_INTERVAL_MS) return
         lastProbeAt = now
         reachableScope.launch {
-            runCatching { clientControlRoundTrip.sendPing() }
-                .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl ping failed: ${it.message}") }
+            // A hello that did not go out is tried again here too, before the ping: a new client stays offline
+            // without it, so the screen asks for this probe again and again.
+            runCatching {
+                clientControlRoundTrip.sendHelloIfDue()
+                clientControlRoundTrip.sendPing()
+            }.onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl ping failed: ${it.message}") }
         }
         // Pull any config we missed while disconnected (the worker no-ops on master / GETs both docs on client).
         nsLoadExecutor.runDetached(NsLoadStep.SETTINGS)
@@ -638,10 +651,10 @@ class NSClientV3Plugin(
         ) { paired, control -> !paired || control }
             .stateIn(reachableScope, SharingStarted.WhileSubscribed(5000), true)
 
-    // See [NsClient.clientRole]. Master: always Admin. Client: the role OrphanDetector stored from the master's
-    // roster; an empty store (just paired, roster not seen yet) reads as ReadOnly, so a new pairing shows as
-    // little as possible until the master says more. Eagerly, because the visibility context reads `.value`
-    // with no collector of its own.
+    // See [NsClient.clientRole]. Master: always Admin. Client: the role the pairing came with, then the one
+    // OrphanDetector stores from the master's roster; an empty store (a pairing without a role, roster not seen
+    // yet) reads as ReadOnly, so it shows as little as possible until the master says more. Eagerly, because the
+    // visibility context reads `.value` with no collector of its own.
     override val clientRole: StateFlow<ClientRole> =
         if (!config.AAPSCLIENT) MutableStateFlow(ClientRole.Admin).asStateFlow()
         else preferences.observe(StringNonKey.NsClientControlRole)
@@ -662,13 +675,18 @@ class NSClientV3Plugin(
     }
 
     private fun setClient() {
-        if (nsAndroidClient == null)
+        if (nsAndroidClient == null) {
+            val url = preferences.get(StringKey.NsClientUrl)
+            val accessToken = preferences.get(StringKey.NsClientAccessToken)
             nsAndroidClient = NSAndroidClientImpl(
-                baseUrl = nsClientBaseUrl(preferences.get(StringKey.NsClientUrl)),
-                accessToken = preferences.get(StringKey.NsClientAccessToken),
+                baseUrl = nsClientBaseUrl(url),
+                accessToken = accessToken,
                 logging = l.findByName(LTag.NSCLIENT.tag).enabled && (config.isEngineeringMode() || config.isDev()),
                 logger = { msg -> aapsLogger.debug(LTag.HTTP, msg) }
             )
+            clientUrl = url
+            clientAccessToken = accessToken
+        }
         // start() is idempotent: it connects if nothing is up, and re-checks the sockets if
         // something already is. It also keeps the NsClient3UseWs check, so this stays one call.
         nsConnection.start("setClient")

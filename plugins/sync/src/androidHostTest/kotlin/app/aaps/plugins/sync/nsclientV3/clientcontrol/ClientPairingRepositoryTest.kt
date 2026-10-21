@@ -44,11 +44,12 @@ internal class ClientPairingRepositoryTest {
     private val stringStore = mutableMapOf<StringNonKey, String>()
     private val longStore = mutableMapOf<LongNonKey, Long>()
 
-    private fun samplePayload(secretHex: String = "00".repeat(32)) = PairingPayload(
+    private fun samplePayload(secretHex: String = "00".repeat(32), role: String? = null) = PairingPayload(
         masterInstallId = "master-uuid",
         clientId = "client-uuid",
         secretHex = secretHex,
-        expiresAt = 99_000L
+        expiresAt = 99_000L,
+        role = role
     )
 
     @BeforeEach
@@ -93,6 +94,64 @@ internal class ClientPairingRepositoryTest {
         val sealed = token?.let { ClientControlKeyExchangeCrypto.encryptToken(keys.tokenKey, it) }
         val draft = KeyExchangeEnvelope("client-uuid", clientPublicKey, master.publicKey, sealed?.first, sealed?.second, now, "")
         return ClientControlCrypto.signKeyExchange(signWith, draft) to keys.secret
+    }
+
+    // ---- the role a pairing comes with ----
+
+    /** The client shows the right controls at once, not only after the master's next roster. */
+    @Test
+    fun aPairingKeepsTheRoleTheMasterGaveIt() = runTest {
+        sut.pair(samplePayload(role = "Caregiver"), now)
+
+        assertThat(stringStore[StringNonKey.NsClientControlRole]).isEqualTo("Caregiver")
+    }
+
+    /** A master that does not send the role: as little as ReadOnly (empty) until its roster says more. */
+    @Test
+    fun aPairingWithoutARoleStoresNone() = runTest {
+        stringStore[StringNonKey.NsClientControlRole] = "Admin" // from an earlier pairing
+        sut.pair(samplePayload(role = null), now)
+
+        assertThat(stringStore[StringNonKey.NsClientControlRole]).isEmpty()
+    }
+
+    /** `ClientRole.of` reads a blank name as Admin (stored before roles); from a pairing it must not mean that. */
+    @Test
+    fun aBlankRoleIsNotAdmin() = runTest {
+        sut.pair(samplePayload(role = " "), now)
+
+        assertThat(stringStore[StringNonKey.NsClientControlRole]).isEmpty()
+    }
+
+    @Test
+    fun anUnknownRoleIsReadOnly() = runTest {
+        sut.pair(samplePayload(role = "Superuser"), now)
+
+        assertThat(stringStore[StringNonKey.NsClientControlRole]).isEqualTo("ReadOnly")
+    }
+
+    /** A hello that was not sent must not hold the next one back: the pairing offer lives only 2 minutes. */
+    @Test
+    fun aKeyExchangeWhoseHelloWasNotSentCanStartAgainAtOnce() = runTest {
+        sut.pair(samplePayload(secretHex = oldSecretHex), now)
+        val publicKey = sut.startKeyExchange(now)!!
+        assertThat(sut.needsKeyExchange(now + 1_000L)).isFalse()
+
+        sut.abandonKeyExchange(publicKey)
+
+        assertThat(sut.needsKeyExchange(now + 1_000L)).isTrue()
+    }
+
+    /** Giving up an older exchange must not cancel the one started after it. */
+    @Test
+    fun givingUpAnOlderKeyExchangeLeavesTheNewOne() = runTest {
+        sut.pair(samplePayload(secretHex = oldSecretHex), now)
+        val older = sut.startKeyExchange(now)!!
+        sut.startKeyExchange(now + 1L)
+
+        sut.abandonKeyExchange(older)
+
+        assertThat(sut.needsKeyExchange(now + 1_000L)).isFalse()
     }
 
     @Test

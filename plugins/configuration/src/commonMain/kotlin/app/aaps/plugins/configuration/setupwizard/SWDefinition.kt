@@ -248,8 +248,9 @@ class SWDefinition(
             )
 
     // Client side, before Nightscout: the master can show a QR code with the Nightscout address and the client's own
-    // token, and the pairing too. One scan then does this step and the next two. Android only: the scanner is not built
-    // for iOS yet, and a desktop has no camera to point at the master.
+    // token, and the pairing too. One scan does this step and the next two, so a used code finishes the wizard
+    // (AppNavGraph). Android only: the scanner is not built for iOS yet, and a desktop has no camera to point at the
+    // master.
     private val screenSetupFromMaster
         get() = swScreenProvider().with(ConfigurationStrings.setupwizard_setup_from_master_title)
             .skippable(true)
@@ -264,7 +265,8 @@ class SWDefinition(
             .add(swPairingStatusProvider())
             .visibility { config.platform in AppPlatform.ANDROID_ONLY }
 
-    // Client side: explain pairing with a master and open the "Pair with master" (PIN entry) screen.
+    // Client side: explain pairing with a master and open the "Pair with master" (PIN entry) screen. After Nightscout,
+    // because the PIN offer comes through Nightscout. A pairing finishes the wizard (AppNavGraph).
     private val screenPairWithMaster
         get() = swScreenProvider().with(CoreUiStrings.pair_with_master_manage_label)
             .skippable(true)
@@ -486,5 +488,7 @@ class SWDefinition(
             .add(screenSetupFromMaster)
             .add(screenNsClient)
             .add(screenPairWithMaster)
+            // Last, so a QR code or a PIN pairing never shows it: they finish the wizard and the client takes the name
+            // it was added with on the master. Only a client set up by hand gets here.
             .add(screenInstanceName)
 }

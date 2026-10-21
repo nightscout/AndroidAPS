@@ -39,6 +39,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import kotlin.concurrent.Volatile
 
 /**
  * Master-side publisher for the NS running-config `settings` documents.
@@ -46,7 +47,8 @@ import kotlinx.serialization.json.put
  * Splits the config across two docs by write-frequency (see [SettingsIdentifiers]):
  *  - Cold ([SettingsIdentifiers.COLD]): plugin config + overview + definitions + authorized
  *    clients. Triggered by [RunningConfigurationKeys.observableKeys] changes, plugin switches
- *    ([EventConfigBuilderChange]) and authorized-client changes; debounced [COLD_DEBOUNCE_MS].
+ *    ([EventConfigBuilderChange]) and authorized-client changes; debounced [COLD_DEBOUNCE_MS]. One that could not be
+ *    published is tried again later (`publishColdOrRetry`).
  *  - Hot ([SettingsIdentifiers.STATE]): active scene + computed runtime flags. Triggered by
  *    [RunningConfigurationKeys.hotKeys] (scene lifecycle); debounced [HOT_DEBOUNCE_MS].
  *
@@ -72,6 +74,11 @@ class RunningConfigurationPublisher(
 ) {
 
     private var job: Job? = null
+
+    // The waiting retry of a cold doc that was not published, and how long the next one waits. Set from the cold
+    // collector and the WS-connect collector, which can run on different threads.
+    @Volatile private var coldRetry: Job? = null
+    @Volatile private var coldRetryDelayMs = COLD_RETRY_FIRST_MS
 
     // Force a cold republish on demand. Used after the master applies an inbound client pref command so
     // the client always gets the authoritative value back — even when LWW dropped the pushed value as a
@@ -103,16 +110,8 @@ class RunningConfigurationPublisher(
             // connected). In poll mode there is no WS connect event to hook, so fall back to a start-time
             // publish there.
             if (!preferences.get(BooleanKey.NsClient3UseWs)) {
-                val coldPublished = publishCold()
+                publishColdOrRetry()
                 publishHot()
-                // Poll-mode race: the pump may not be initialized yet at start, so the initial cold publish
-                // emits an empty payload and is skipped — leaving a poll-mode client config-less (no WS-connect
-                // event to retry on). Schedule one delayed retry via the existing cold collector so it picks up
-                // once the pump is ready.
-                if (!coldPublished) launch {
-                    delay(POLL_INITIAL_RETRY_MS)
-                    requestColdRepublish()
-                }
             }
 
             val switchTrigger: Flow<Unit> = rxBus.toFlow(EventConfigBuilderChange::class).map { }
@@ -128,7 +127,7 @@ class RunningConfigurationPublisher(
             launch {
                 (coldKeyTriggers + switchTrigger + authorizedClientsTrigger + forceColdRepublish).merge()
                     .debounce(COLD_DEBOUNCE_MS)
-                    .collect { publishCold() }
+                    .collect { publishColdOrRetry() }
             }
             // Hot doc: scene lifecycle. Short debounce so a scene shows on clients quickly.
             launch {
@@ -146,7 +145,7 @@ class RunningConfigurationPublisher(
                     .filter { it }
                     .debounce(WS_RECONNECT_DEBOUNCE_MS)
                     .collect {
-                        publishCold()
+                        publishColdOrRetry()
                         publishHot()
                     }
             }
@@ -156,13 +155,40 @@ class RunningConfigurationPublisher(
     fun stop() {
         job?.cancel()
         job = null
+        coldRetry = null
+        coldRetryDelayMs = COLD_RETRY_FIRST_MS
+    }
+
+    /**
+     * Publishes the cold doc, or tries again later when it could not. A cold publish that is lost is not repeated by
+     * anything else until the next change, and that can be much later: a new client then waited minutes for the
+     * roster with its role. Each failure in a row doubles the wait, up to [COLD_RETRY_MAX_MS].
+     */
+    private suspend fun CoroutineScope.publishColdOrRetry() {
+        coldRetry?.cancel()
+        coldRetry = null
+        if (publishCold()) {
+            coldRetryDelayMs = COLD_RETRY_FIRST_MS
+            return
+        }
+        val wait = coldRetryDelayMs
+        coldRetryDelayMs = (wait * 2).coerceAtMost(COLD_RETRY_MAX_MS)
+        aapsLogger.debug(LTag.NSCLIENT, "Running configuration not published, trying again in ${wait / 1000} s")
+        coldRetry = launch {
+            delay(wait)
+            requestColdRepublish()
+        }
     }
 
     // Cold doc: full plugin/overview/definition config + the authorized-clients roster.
-    // Returns true if a doc was published, false if skipped because the pump is not initialized yet.
+    // Returns true if a doc was published, false if it was not (pump not initialized yet, no Nightscout client, or the
+    // upload failed).
     private suspend fun publishCold(): Boolean {
         val base = runningConfiguration.configuration()
-        if (base.isEmpty()) return false // pump not initialized yet
+        if (base.isEmpty()) {
+            aapsLogger.debug(LTag.NSCLIENT, "Running configuration empty: the pump is not initialized yet")
+            return false
+        }
         // Append the authorized-clients roster directly on the runningConfig doc — the
         // canonical RunningConfiguration plugin (in :plugins:configuration) cannot reach
         // AuthorizedClientsRepository without a new inter-module dependency, so we attach
@@ -181,8 +207,7 @@ class RunningConfigurationPublisher(
                 put("roles", buildJsonObject { activeClients.forEach { put(it.clientId, it.clientRole.name) } })
             })
         }
-        putSettings(SettingsIdentifiers.COLD, payload)
-        return true
+        return putSettings(SettingsIdentifiers.COLD, payload)
     }
 
     // Hot doc: active scene + computed runtime flags. Small and frequently republished.
@@ -190,8 +215,12 @@ class RunningConfigurationPublisher(
         putSettings(SettingsIdentifiers.STATE, runningConfiguration.activeSceneConfiguration())
     }
 
-    private suspend fun putSettings(identifier: String, runningConfig: JsonObject) {
-        val client = nsClientV3Plugin().nsAndroidClient ?: return
+    /** True when Nightscout took the doc. */
+    private suspend fun putSettings(identifier: String, runningConfig: JsonObject): Boolean {
+        val client = nsClientV3Plugin().nsAndroidClient ?: run {
+            aapsLogger.debug(LTag.NSCLIENT, "updateSettings($identifier) skipped: no Nightscout client yet")
+            return false
+        }
         val doc = buildJsonObject {
             // NS APIv3 validateCommon requires date / utcOffset / app on UPDATE; all three are
             // immutable after first create, so pick stable constants — the doc represents a
@@ -202,7 +231,7 @@ class RunningConfigurationPublisher(
             put("schemaVersion", SCHEMA_VERSION)
             put("runningConfig", runningConfig)
         }
-        runCatching { client.updateSettings(identifier, doc) }
+        return runCatching { client.updateSettings(identifier, doc) }
             .onSuccess { resp ->
                 if (resp.response in 200..299) {
                     val ts = resp.lastModified?.let { dateUtil.dateAndTimeAndSecondsString(it) } ?: "?"
@@ -216,6 +245,7 @@ class RunningConfigurationPublisher(
                 aapsLogger.error(LTag.NSCLIENT, "updateSettings($identifier) failed", e)
                 nsClientRepository.addLog("✕ SETTINGS", "$identifier ${e.message}")
             }
+            .getOrNull()?.response in 200..299
     }
 
     companion object {
@@ -225,9 +255,10 @@ class RunningConfigurationPublisher(
         private const val HOT_DEBOUNCE_MS = 1_000L
         private const val WS_RECONNECT_DEBOUNCE_MS = 3_000L
 
-        // Poll-mode only: delay before retrying the initial cold publish when the pump was not yet
-        // initialized at start. One shot, fed through the debounced cold collector via requestColdRepublish().
-        private const val POLL_INITIAL_RETRY_MS = 10_000L
+        // Waits before a cold doc that was not published is tried again: the first, and the longest one it doubles to.
+        // The first is short because a new client waits for the roster in it.
+        private const val COLD_RETRY_FIRST_MS = 30_000L
+        private const val COLD_RETRY_MAX_MS = 10L * 60L * 1000L
 
         // 1 ms past NS APIv3 MIN_TIMESTAMP (946684800000 = 2000-01-01 UTC). Required by
         // validateCommon and immutable after create — kept constant so every update matches.

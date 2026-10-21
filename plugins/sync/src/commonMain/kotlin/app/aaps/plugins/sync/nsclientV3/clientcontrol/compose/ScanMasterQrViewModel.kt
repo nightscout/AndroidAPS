@@ -14,6 +14,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientSetupCode
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientPairingRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.takeInstanceNameFromMaster
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -63,9 +64,9 @@ class ScanMasterQrViewModel(
     }
 
     /**
-     * Uses the code. The pairing is stored first, then the Nightscout settings change: the connection that change
-     * starts is the first that can send the hello, and it does, because a new pairing's secret is still to be replaced
-     * (`ClientPairingRepository.needsKeyExchange`).
+     * Uses the code. The pairing is stored first, then the Nightscout settings change, then NSClient is switched on if
+     * it is not: the connection that starts is the first that can send the hello, and it does, because a new
+     * pairing's secret is still to be replaced (`ClientPairingRepository.needsKeyExchange`).
      */
     fun confirm() {
         val code = (_state.value as? UiState.Confirming)?.code ?: return
@@ -76,12 +77,15 @@ class ScanMasterQrViewModel(
                 _state.value = UiState.Error(ErrorReason.SecretStoreFailed)
                 return@launch
             }
-            val plugin = nsClientV3Plugin()
-            if (!plugin.isEnabled()) configBuilder.performPluginSwitch(plugin, true, PluginType.SYNC)
             preferences.put(StringKey.NsClientUrl, code.url)
             preferences.put(StringKey.NsClientAccessToken, code.token)
             // A client talks to its master over the websocket.
             preferences.put(BooleanKey.NsClient3UseWs, true)
+            preferences.takeInstanceNameFromMaster(code.name)
+            // Switched on last, so it starts with the settings above. Switched on first, a fresh client made its
+            // Nightscout client with no address at all and sent the hello to "https://api/...".
+            val plugin = nsClientV3Plugin()
+            if (!plugin.isEnabled()) configBuilder.performPluginSwitch(plugin, true, PluginType.SYNC)
             aapsLogger.info(LTag.NSCLIENT, "ClientControl: set up from the master's QR code, paired=${pairing != null}")
             _state.value = UiState.Done(paired = pairing != null)
         }
