@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.AuthorizedClient
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
@@ -50,9 +51,10 @@ internal class AuthorizedClientsViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher())
         // Field-initializers build StateFlows over these collaborators at construction.
         whenever(repository.observe()).thenReturn(emptyFlow())
-        whenever(preferences.observe(BooleanKey.NsClientAllowClientControl)).thenReturn(MutableStateFlow(false))
+        whenever(preferences.observe(BooleanKey.HardenedMode)).thenReturn(MutableStateFlow(false))
         whenever(preferences.observe(BooleanKey.GeneralSimpleMode)).thenReturn(MutableStateFlow(false))
-        whenever(preferences.get(BooleanKey.NsClientAllowClientControl)).thenReturn(false)
+        whenever(preferences.observe(StringNonKey.NsClientControlClientId)).thenReturn(MutableStateFlow(""))
+        whenever(preferences.get(BooleanKey.HardenedMode)).thenReturn(false)
         sut = AuthorizedClientsViewModel(repository, offerPublisher, dateUtil, rh, preferences)
     }
 
@@ -95,7 +97,7 @@ internal class AuthorizedClientsViewModelTest {
     fun `setClientControlEnabled writes the allow-client-control preference`() {
         sut.setClientControlEnabled(true)
 
-        verify(preferences).put(BooleanKey.NsClientAllowClientControl, true)
+        verify(preferences).put(BooleanKey.HardenedMode, true)
     }
 
     @Test

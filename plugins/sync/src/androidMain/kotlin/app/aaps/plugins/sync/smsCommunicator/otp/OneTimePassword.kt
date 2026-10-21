@@ -42,7 +42,7 @@ class OneTimePassword(
      */
     fun name(): String {
         val defaultUserName = rh.gs(CoreUiStrings.patient_name_default)
-        var userName = preferences.get(StringKey.GeneralPatientName).replace(":", "").trim()
+        var userName = preferences.get(StringKey.GeneralInstanceName).replace(":", "").trim()
         if (userName.isEmpty())
             userName = defaultUserName
         return userName

@@ -2,6 +2,7 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Tích hợp bơm cho EOPatch2 / GlucoMen Day</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Miếng dán không xác nhận đã kết thúc bolus. %1$s đã được ghi nhận, nhưng miếng dán có thể đã phân phối nhiều hơn. Hãy kiểm tra miếng dán trước khi phân phối thêm insulin.</string>
     <string name="low_reservoir">Cảnh báo sắp hết Insulin</string>
     <string name="patch_expiration_reminders">Patch expiration Reminder</string>
     <string name="patch_buzzer_reminders">Nhắc nhở bằng còi Patch</string>
@@ -39,7 +40,7 @@
     <string name="patch_wake_up_desc_2">Kiểm tra xem Patch có phát ra 1 tiếng bíp.</string>
     <string name="patch_wake_up_pairing_info">Trong quá trình ghép nối, hai cửa sổ hệ thống Android sẽ xuất hiện. Bạn phải xác nhận cả hai để hoàn tất ghép nối Bluetooth.</string>
     <string name="patch_start_pairing">Bắt đầu ghép nối</string>
-    <string name="patch_connect_new">Đang ghép đôi Patch</string>
+    <string name="patch_connect_new">Ghép đôi Patch</string>
     <string name="patch_connect_new_desc">Patch mới đang được ghép đôi.\nGiữ Patch và thiết bị thông minh ở khoảng cách gần nhất có thể</string>
     <string name="patch_remove_needle_cap">Chuẩn bị gắn Patch</string>
     <string name="patch_remove_needle_cap_desc_1">Tháo băng dính y tế, sau đó nhấn ‘Tiếp theo’.</string>

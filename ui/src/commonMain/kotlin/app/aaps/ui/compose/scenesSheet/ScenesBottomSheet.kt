@@ -11,9 +11,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
@@ -29,8 +32,11 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.TonalIcon
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcAutomation
+import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.compose.scenes.SceneIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,7 +46,8 @@ fun ScenesBottomSheet(
     automationItems: List<AutomationActionItem>,
     onItemClick: (AutomationActionItem) -> Unit,
     sceneItems: List<SceneSheetItem> = emptyList(),
-    onSceneClick: (String) -> Unit = {}
+    onSceneClick: (String) -> Unit = {},
+    onEditScenesClick: () -> Unit = {}
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -67,6 +74,21 @@ fun ScenesBottomSheet(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1f)
                 )
+                IconButton(
+                    onClick = {
+                        onDismiss()
+                        onEditScenesClick()
+                    },
+                    enabled = masterEditingEnabled(),
+                    colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant),
+                    modifier = Modifier.size(32.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = stringResourceOrNull(ElementType.SCENE_MANAGEMENT.label()),
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
             }
 
             val automationColor = ElementType.AUTOMATION.color()

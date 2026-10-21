@@ -66,8 +66,8 @@ import kotlin.time.Instant
  * IOB/COB autosens (oref1 or oref), and the IOB/autosens graph data pass.
  *
  * [bgDataReload] controls the optional initial DB load+smooth pass.
- * [emitFinalProgress] is set when this worker is the last in the chain (HISTORY);
- * otherwise [PostCalculationWorker] emits the final signal.
+ * [emitFinalProgress] is set when this phase is the last in the chain (HISTORY);
+ * otherwise [PostCalculationRunner] emits the final signal.
  */
 @Inject
 class PrepareGraphDataRunner(
@@ -86,15 +86,15 @@ class PrepareGraphDataRunner(
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val scope: CoroutineScope,
     private val autosensDataProvider: () -> AutosensData
-) {
+) : CalculationPhase {
 
     /**
      * Runs one prepare phase.
      *
-     * [isStopped] is asked between phases so a replaced chain gives up promptly. On Android that is
-     * the worker's own flag; the maths does not need to know what stopped it.
+     * [isStopped] is asked between phases so a replaced chain gives up promptly. It is the executor's
+     * flag for this run; the maths does not need to know what stopped it.
      */
-    suspend fun run(job: String?, generation: Long, isStopped: () -> Boolean): WorkOutcome {
+    override suspend fun run(job: String, generation: Long, isStopped: () -> Boolean): WorkOutcome {
         val data = workflowChainData.prepareFor(job, generation)
             ?: return WorkOutcome.StaleInput
 
@@ -201,10 +201,12 @@ class PrepareGraphDataRunner(
             aapsLogger.debug("No bucketed data.")
             return
         }
-        // Refresh the 24h window so history navigation doesn't inherit a stale range.
+        // Refresh the 24h window so history navigation doesn't inherit a stale range. The horizon is
+        // kept rather than rewritten, see keptEndTime.
         val newToTime = data.overviewData.toTime
         val newFromTime = newToTime - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
-        data.cache.updateTimeRange(TimeRange(fromTime = newFromTime, toTime = newToTime, endTime = newToTime))
+        val newEndTime = keptEndTime(data.cache.timeRangeFlow.value?.endTime, newToTime)
+        data.cache.updateTimeRange(TimeRange(fromTime = newFromTime, toTime = newToTime, endTime = newEndTime))
 
         val highMark = preferences.get(UnitDoubleKey.OverviewHighMark)
         val lowMark = preferences.get(UnitDoubleKey.OverviewLowMark)
@@ -255,7 +257,9 @@ class PrepareGraphDataRunner(
                 )
             }
 
-        data.cache.updateTimeRange(TimeRange(fromTime = fromTime, toTime = toTime, endTime = toTime))
+        // Keeps the horizon the post phase put there, see keptEndTime.
+        val endTime = keptEndTime(data.cache.timeRangeFlow.value?.endTime, toTime)
+        data.cache.updateTimeRange(TimeRange(fromTime = fromTime, toTime = toTime, endTime = endTime))
         data.cache.updateBgReadings(bgDataPoints)
     }
 
@@ -684,12 +688,13 @@ class PrepareGraphDataRunner(
      * Puts the locally computed store back into the live calculator, but only while this run still
      * owns the chain.
      *
-     * The run works on a clone taken at the start of the phase. `stopCalculation()` returns as soon as
-     * WorkManager marks the work as no longer RUNNING, which happens before the running coroutine sees
-     * its own stop flag - the next check sits at the top of the bucket loop, up to one bucket away.
-     * The caller then invalidates the live store and starts a new chain while this run is still alive.
-     * Without the check below this run would write its clone, taken before that invalidation, over the
-     * state the new chain has already prepared: a lost update (issue #5066).
+     * The run works on a clone taken at the start of the phase, and it can outlive the moment it was
+     * replaced. Stopping is cooperative: the run sees its stop flag at its next check, at the top of
+     * the bucket loop, up to one bucket away. `stopCalculation()` waits for that only a few seconds,
+     * and a start that replaces the run does not wait at all. The caller then invalidates the live
+     * store and starts a new chain while this run may still be alive. Without the check below this
+     * run would write its clone, taken before that invalidation, over the state the new chain has
+     * already prepared: a lost update (issue #5066).
      *
      * The check makes the window small but cannot close it completely, because the caller invalidates
      * the store before it registers the new generation.
@@ -713,13 +718,14 @@ class PrepareGraphDataRunner(
     private suspend fun prepareIobAutosensGraphData(data: PrepareGraphData, isStopped: () -> Boolean) {
         val cacheTimeRange = data.cache.timeRangeFlow.value
         val fromTime = cacheTimeRange?.fromTime ?: data.overviewData.fromTime
+        // The cached end already holds the horizon: the two passes before this one keep it instead of
+        // rewriting it, see keptEndTime. Nothing to widen here.
         val endTime = cacheTimeRange?.endTime ?: data.overviewData.endTime
 
         data.signals.emitProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 0)
 
         val now = dateUtil.now().toDouble()
         var time = fromTime
-        var maxActivity = 0.0
 
         val iobListCompose: MutableList<GraphDataPoint> = ArrayList()
         val absIobListCompose: MutableList<GraphDataPoint> = ArrayList()
@@ -781,8 +787,6 @@ class PrepareGraphDataRunner(
 
             if (time <= now) activityListCompose.add(GraphDataPoint(time, iob.activity))
             else activityPredictionListCompose.add(GraphDataPoint(time, iob.activity))
-            if (iob.activity > maxActivity) maxActivity = iob.activity
-            else if (-iob.activity > maxActivity) maxActivity = -iob.activity
 
             time += 5 * 60 * 1000L
         }
@@ -807,8 +811,7 @@ class PrepareGraphDataRunner(
         data.cache.updateActivityGraph(
             ActivityGraphData(
                 activity = activityListCompose,
-                activityPrediction = activityPredictionListCompose,
-                maxActivity = maxActivity
+                activityPrediction = activityPredictionListCompose
             )
         )
         data.cache.updateBgiGraph(BgiGraphData(bgi = bgiListCompose, bgiPrediction = bgiPredictionListCompose))

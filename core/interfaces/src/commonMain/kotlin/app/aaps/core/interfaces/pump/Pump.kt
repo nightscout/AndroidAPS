@@ -4,6 +4,7 @@ import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
 import app.aaps.core.interfaces.queue.CustomCommand
@@ -111,6 +112,19 @@ interface Pump {
      * @return true if pump is running the same profile as in param
      */
     fun isThisProfileSet(profile: PumpProfile): Boolean
+
+    /**
+     * The basal the pump really gives now, read after [setNewBasalProfile] succeeded.
+     *
+     * A pump rounds each rate to its own step, so it can give a little more or less than the profile asks.
+     * AAPS keeps what the pump reports here as the running profile, so IOB, TDD and the screens show the
+     * insulin that is really given (#2454). Rounding must never turn a rate above zero into zero.
+     *
+     * @return the rates from midnight, in pump units like the [PumpProfile] the pump was given, with the first
+     * one at 0 seconds. Hour values only, like the running profile: each time on a full hour, and a rate is the
+     * insulin of that whole hour. null when the pump gives the profile exactly as it was sent.
+     */
+    fun deliveredBasal(): List<Profile.ProfileValue>? = null
 
     /**
      * timestamp of last connection to the pump in milliseconds
@@ -246,6 +260,23 @@ interface Pump {
      * Pump capabilities
      */
     val pumpDescription: PumpDescription
+
+    /**
+     * The step a bolus of [amount] can be given in, in pump units.
+     *
+     * The one place to ask, because the driver knows its exceptions. By default it reads [pumpDescription],
+     * so a step the driver read from the pump wins over the constant [PumpType]: a Dana RS can be set to
+     * 0.1 U while its pump type says 0.05 U, and a 1.55 U bolus was then refused (#946). Only a pump type
+     * whose step depends on the amount (a specialBolusSize) answers from its own table. Today only
+     * ACCU_CHEK_INSIGHT_VIRTUAL has one, and no pump in use has that type: the Insight driver uses
+     * ACCU_CHEK_INSIGHT, and the virtual pump cannot select it. The branch stays so that such a pump type
+     * works without more code. A driver with other exceptions overrides this.
+     *
+     * Outside a driver, ask `ActivePlugin.activePump`: it takes and returns insulin units. Ask the driver
+     * itself (`ActivePlugin.activePumpInternal`) only for an amount in pump units.
+     */
+    fun bolusStepSize(amount: Double): Double =
+        pumpDescription.pumpType.specialBolusSize()?.getStepSizeForAmount(amount) ?: pumpDescription.bolusStep
 
     /**
      * Short info for SMS, Wear etc. specific to the pump driver.

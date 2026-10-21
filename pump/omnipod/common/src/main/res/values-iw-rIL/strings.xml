@@ -67,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">כבה פוד</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">לחצו <b>הבא</b> כדי להשבית את הפוד.\n\n<b>הערה:</b> פעולה זו תשהה כל הזרקת אינסולין ותשבית את הפוד.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">לא ניתן להשתמש שוב בפוד שהושבת. להשבית את הפוד הזה עכשיו?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">בתהליך כיבוי הפוד</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">משבית את הפוד.\n\nכאשר ההשבתה תושלם, תוכלו ללחוץ על <b>הבא</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">הפוד הושבת</string>
@@ -98,6 +99,9 @@
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">התראת צליל של בזאלי זמני לא ודאי מאופשרת</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">מאופשרת התראת צליל עבור SMB לא ודאי</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">התראת צליל של בולוס לא ודאי מאופשרת</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">השמע צליל כאשר התראה על השהיית מתן אינסולין מופעלת</string>
+    <string name="omnipod_dash_use_bonding">צימוד בלוטות\'</string>
+    <string name="omnipod_dash_use_bonding_summary">נסה זאת רק אם הפוד לא מצליח לשמור על חיבור יציב. הטלפון יציג בקשות צימוד שעליך לאשר. השאר את האפשרות כבויה אם הפוד מתחבר כשורה. אין לכך השפעה מתחת לאנדרואיד 15.</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">אין פוד פעיל</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">התקנה בביצוע (ממתין להפעלת הפוד)</string>
@@ -108,9 +112,20 @@
     <string name="omnipod_common_pod_status_inactive">לא פעיל</string>
     <string name="omnipod_common_pod_status_pod_fault_description">תקלת פוד: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">קוד ייחוס: %1$s</string>
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">מכל ריק</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">מתן האינסולין הופסק. החליפו פוד עכשיו.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">כיבוי אוטומטי</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">מתן האינסולין הופסק. ה-PDM והפוד שלך לא יצרו תקשורת ב-4 השעות האחרונות. כדי לחדש את מתן האינסולין, החלף פוד עכשיו.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">תוקף הפוד פג</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">מתן האינסולין הופסק. החליפו פוד עכשיו.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">זוהתה חסימה</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">מתן האינסולין הופסק. החליפו פוד עכשיו. בדקו את רמת הסוכר</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">שגיאת פוד</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">מתן האינסולין הופסק. החליפו פוד עכשיו.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">תוקף הפוד יפוג בקרוב</string>
     <string name="omnipod_common_alert_expiration_advisory">תוקף הפוד יפוג בקרוב</string>
@@ -136,6 +151,8 @@
     <string name="omnipod_common_cmd_resume_delivery">חידוש הזרקה</string>
     <string name="omnipod_common_cmd_cancel_tbr">ביטול בזאלי זמני( ע\"י המשתמש)</string>
     <string name="omnipod_common_cmd_get_pod_info">קבל מידע על הפוד</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">הגדרת מצב השהיה זמני מדומה</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">ביטול מצב השהיה זמני מדומה</string>
     <string name="omnipod_common_cmd_split_tbr">פצל בזאלי זמני</string>
     <string name="omnipod_common_cmd_play_test_beep">השמע צפצוף ניסיון</string>
     <string name="omnipod_common_cmd_unknown_entry">רשומה לא ידועה</string>
@@ -169,4 +186,8 @@
         <item quantity="two">התראות פוד: %1$s</item>
         <item quantity="other">התראות פוד: %1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">מועד הסיום הסופי של הפוד</string>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_bolus_value">%1$.2f יח\'</string>
+    <string name="omnipod_common_history_total_delivered">סה\"כ הוזרקו: %1$.2f יח\'</string>
 </resources>

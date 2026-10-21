@@ -62,8 +62,10 @@ class ActionProfileSwitchPercent(
         return if (switched) {
             pumpEnactResultProvider().success(true).comment(CoreUiStrings.ok)
         } else {
-            aapsLogger.error(LTag.AUTOMATION, "Final profile not valid")
-            pumpEnactResultProvider().success(false).comment(CoreUiStrings.ok)
+            // Say why in the automation log, not "OK" next to a failure.
+            val reason = profileFunction.profileSwitchRefusal(duration.value, pct.value.toInt(), 0) ?: rh.gs(CoreUiStrings.invalid_profile)
+            aapsLogger.error(LTag.AUTOMATION, "Final profile not valid: $reason")
+            pumpEnactResultProvider().success(false).comment(reason)
         }
     }
 

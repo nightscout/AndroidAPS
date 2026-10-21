@@ -41,7 +41,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.Pump
-import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
@@ -53,6 +52,7 @@ import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.UrlOpener
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
@@ -105,7 +105,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.math.abs
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -191,15 +190,16 @@ class MainViewModel(
      */
     val quickLaunchItems: StateFlow<List<ResolvedQuickLaunchItem>> =
         combine(
-            _quickLaunchItems, masterReachable, masterOrPairedClient,
+            _quickLaunchItems, masterReachable, combine(masterOrPairedClient, nsClient.clientRole) { paired, role -> paired to role },
             // Re-check the QuickWizard time window every tick, and at once when an entry is used or edited
             // (its cool-down starts on use).
             progressTicker, quickWizard.changes
         ) { items, reachable, _, _, _ ->
             items
-                // (1) Hide mode-gated actions. masterOrPairedClient is combined in only to re-emit on a pairing
-                // flip; the predicate reads the current state through visibilityContext.
-                .filter { it.action.elementType?.visibility?.isVisible(visibilityContext) ?: true }
+                // (1) Hide mode-gated actions and those the client's role cannot use. masterOrPairedClient and the
+                // role are combined in only to re-emit on a change; the predicate reads the current state through
+                // visibilityContext.
+                .filter { it.action.elementType?.isAvailable(visibilityContext) ?: true }
                 // (2) Hide QuickWizard entries that are not active now.
                 .filter { quickLaunchResolver.isShownNow(it.action) }
                 // (3) Scene actions disable while the master is transiently unreachable.
@@ -416,8 +416,7 @@ class MainViewModel(
             return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = disabledReason)
 
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(entry.insulin(), aapsLogger)).value()
-        val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
-        if (abs(insulinAfterConstraints - entry.insulin()) >= minStep)
+        if (Round.isMoreThanRounding(entry.insulin(), insulinAfterConstraints, pump.bolusStepSize(insulinAfterConstraints)))
             return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.insulin_constraint_violation))
 
         return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, isEnabled = true)
@@ -476,8 +475,7 @@ class MainViewModel(
         val eCarbs = entry.eCarbsGrams()
         if (constraintChecker.applyCarbsConstraints(ConstraintObject(eCarbs, aapsLogger)).value() != eCarbs)
             return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.carbs_constraint_violation))
-        val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints)
-        if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= minStep)
+        if (Round.isMoreThanRounding(wizard.calculatedTotalInsulin, wizard.insulinAfterConstraints, pump.bolusStepSize(wizard.insulinAfterConstraints)))
             return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.insulin_constraint_violation))
 
         return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, isEnabled = true)
@@ -745,7 +743,7 @@ class MainViewModel(
                             message = "",
                             confirmationLines = prepared.lines,
                             icon = icon,
-                            onOk = { appScope.launch { batchExecutor.commit(prepared.id, Sources.TTDialog, label) } })
+                            onOk = { commitAndReport(prepared.id, Sources.TTDialog, label, title = rh.gs(CoreUiStrings.temporary_target)) })
                     )
 
                 is ActionProgress.Rejected ->
@@ -764,13 +762,35 @@ class MainViewModel(
         viewModelScope.launch {
             when (val prepared = batchExecutor.prepare(actions, Sources.ProfileSwitchDialog, label)) {
                 is ActionProgress.Prepared ->
-                    rxBus.send(EventShowDialog.OkCancel(title = label, message = "", confirmationLines = prepared.lines, icon = IcProfile, onOk = { appScope.launch { batchExecutor.commit(prepared.id, Sources.ProfileSwitchDialog, label) } }))
+                    rxBus.send(
+                        EventShowDialog.OkCancel(
+                            title = label, message = "", confirmationLines = prepared.lines, icon = IcProfile,
+                            onOk = { commitAndReport(prepared.id, Sources.ProfileSwitchDialog, label, title = label) })
+                    )
 
                 is ActionProgress.Rejected ->
                     if (!config.AAPSCLIENT || prepared.reason.isNotDeliveryError())
                         rxBus.send(EventShowDialog.Ok(title = label, message = prepared.detail ?: rh.gs(prepared.reason.failText())))
 
                 else                       -> Unit
+            }
+        }
+    }
+
+    /**
+     * Commits a prepared action, and says why when it was refused: a switch the pump cannot take passed the
+     * prepare, but the commit refused it, and the dialog had closed as if it was done. The same as
+     * `ProfileManagementViewModel.activateProfile`. Unconfirmed is shown by the app-level modal.
+     */
+    private fun commitAndReport(id: Long, source: Sources, label: String, title: String) {
+        appScope.launch {
+            val result = batchExecutor.commit(id, source, label)
+            if (result is ActionProgress.Rejected) {
+                if (result.reason.isNotDeliveryError())
+                    rxBus.send(EventShowDialog.Ok(title = title, message = rh.gs(result.reason.failText())))
+                else result.detail?.let { detail ->
+                    rxBus.send(EventShowDialog.Ok(title = title, message = detail))
+                }
             }
         }
     }

@@ -127,7 +127,9 @@ class DataLayerListenerServiceWear : WearableListenerService() {
 
         when (messageEvent.path) {
             rxPath     -> {
-                aapsLogger.debug(LTag.WEAR, "onMessageReceived: ${String(messageEvent.data)}")
+                // Size only, like the data path below: the whole payload (GraphData is the big one)
+                // went into the log file on every sync, and the type is logged by its handler anyway.
+                aapsLogger.debug(LTag.WEAR, "onMessageReceived: ${messageEvent.data.size}")
                 val command = EventData.deserialize(String(messageEvent.data))
                 rxBus.send(command.also { it.sourceNodeId = messageEvent.sourceNodeId })
                 // Use this sender

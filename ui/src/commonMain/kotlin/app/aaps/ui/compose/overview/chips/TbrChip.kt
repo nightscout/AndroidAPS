@@ -87,7 +87,7 @@ private fun TbrState.toDescription(): TextRef = when (this) {
     TbrState.NONE -> CoreUiStrings.tbr_state_none
 }
 
-private fun TbrState.toIcon(): ImageVector = when (this) {
+internal fun TbrState.toIcon(): ImageVector = when (this) {
     TbrState.HIGH -> IcTbrHigh
     TbrState.LOW  -> IcTbrLow
     TbrState.NONE -> IcNoTbr

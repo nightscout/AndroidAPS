@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -77,6 +78,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -140,6 +142,10 @@ import app.aaps.core.interfaces.configuration.Config as AapsConfig
 @Config(sdk = [35])
 @OptIn(ExperimentalCoroutinesApi::class)
 class CarelevoPumpPluginLifecycleTest {
+
+    private val decimalFormatter: DecimalFormatter = mock<DecimalFormatter>().also {
+        whenever(it.to2Decimal(any<Double>())).thenAnswer { inv -> "%.2f".format(Locale.US, inv.getArgument<Double>(0)) }
+    }
 
     // REAL application context: getSystemService(BLUETOOTH_SERVICE) and registerReceiver must work.
     private val context: Context = RuntimeEnvironment.getApplication()
@@ -309,7 +315,8 @@ class CarelevoPumpPluginLifecycleTest {
                 finishImmeBolusInfusionUseCase = finishImmeBolusInfusionUseCase,
                 cancelImmeBolusInfusionUseCase = cancelImmeBolusInfusionUseCase,
                 startExtendBolusInfusionUseCase = startExtendBolusInfusionUseCase,
-                cancelExtendBolusInfusionUseCase = cancelExtendBolusInfusionUseCase
+                cancelExtendBolusInfusionUseCase = cancelExtendBolusInfusionUseCase,
+                decimalFormatter = decimalFormatter
             ),
             tempBasalCoordinator = CarelevoTempBasalCoordinator(
                 aapsLogger = aapsLogger,

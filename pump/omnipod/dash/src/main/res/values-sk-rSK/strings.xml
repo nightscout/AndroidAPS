@@ -16,18 +16,7 @@
     <string name="omnipod_dash_scan_failed">Skenovanie zlyhalo</string>
     <string name="omnipod_dash_generic_error">Všeobecná chyba: %1$s</string>
     <string name="omnipod_dash_connection_lost">Strata spojenia</string>
-    <string name="omnipod_dash_failed_to_send">Nepodarilo sa odoslať príkaz</string>
-    <string name="omnipod_dash_command_not_sent">Príkaz nebol odoslaný</string>
-    <string name="omnipod_dash_command_not_received_by_the_pod">Príkaz nebol prijatý Podom</string>
-    <string name="omnipod_dash_unknown">Neznámy stav príkazu</string>
-    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minut</string>
-    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
-    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
-    <string name="omnipod_common_bolus_type_smb">SMB</string>
-    <string name="omnipod_common_bolus_type_basal_correction">Korekcia bazálu</string>
-    <string name="omnipod_common_bolus_type_priming">Plnenie</string>
     <string name="omnipod_common_alert_delivery_suspended">Podávanie inzulínu je pozastavené</string>
-    <string name="omnipod_common_history_total_delivered">Celkovo podané: %1$.2f U</string>
     <string name="omnipod_dash_bolus_already_in_progress">Už sa podáva iný bolus</string>
     <string name="omnipod_dash_not_enough_insulin">Nedostatok inzulínu v zásobníku</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Nepotvrdený príkaz</string>

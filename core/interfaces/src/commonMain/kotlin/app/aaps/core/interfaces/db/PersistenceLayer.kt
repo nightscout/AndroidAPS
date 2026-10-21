@@ -155,6 +155,12 @@ interface PersistenceLayer {
     suspend fun getBolusByNSId(nsId: String): BS?
 
     /**
+     *  Get bolus by its database id
+     *  @return bolus
+     */
+    suspend fun getBolusById(id: Long): BS?
+
+    /**
      * Get all boluses
      *
      * @return List of all boluses
@@ -289,6 +295,12 @@ interface PersistenceLayer {
     suspend fun getCarbsByNSId(nsId: String): CA?
 
     /**
+     *  Get carbs by its database id
+     *  @return carbs
+     */
+    suspend fun getCarbsById(id: Long): CA?
+
+    /**
      * Get carbs from time (suspend variant)
      *
      * @param startTime from
@@ -406,6 +418,12 @@ interface PersistenceLayer {
     suspend fun getBolusCalculatorResultByNSId(nsId: String): BCR?
 
     /**
+     *  Get bolus calculator result by its database id
+     *  @return bolus calculator result
+     */
+    suspend fun getBolusCalculatorResultById(id: Long): BCR?
+
+    /**
      * Get BCRs starting from time
      *
      * @param startTime from
@@ -502,6 +520,12 @@ interface PersistenceLayer {
     suspend fun getBgReadingByNSId(nsId: String): GV?
 
     /**
+     *  Get BG reading by its database id
+     *  @return BG reading
+     */
+    suspend fun getBgReadingById(id: Long): GV?
+
+    /**
      * Invalidate record with id
      *
      * @param id record id
@@ -525,6 +549,12 @@ interface PersistenceLayer {
     // CALIBRATION ENTRIES
     /** Get highest id in database (sync pointer). */
     suspend fun getLastCalibrationEntryId(): Long?
+
+    /** Get calibration entry by NS id. */
+    suspend fun getCalibrationEntryByNSId(nsId: String): CAL?
+
+    /** Get calibration entry by its database id. */
+    suspend fun getCalibrationEntryById(id: Long): CAL?
 
     /** Get next changed record after id (sync). */
     suspend fun getNextSyncElementCalibrationEntry(id: Long): Pair<CAL, CAL>?
@@ -670,6 +700,12 @@ interface PersistenceLayer {
     suspend fun getProfileSwitchByNSId(nsId: String): PS?
 
     /**
+     *  Get profile switch by its database id
+     *  @return profile switch
+     */
+    suspend fun getProfileSwitchById(id: Long): PS?
+
+    /**
      * Get running profile switch at time with duration == 0 (infinite)
      *
      * @param timestamp time
@@ -728,6 +764,21 @@ interface PersistenceLayer {
      * @return List of inserted/updated records
      */
     suspend fun insertOrUpdateProfileSwitch(profileSwitch: PS, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): TransactionResult<PS>
+
+    /**
+     * Insert or update several records in one database transaction, so an observer sees all of them or none.
+     * An insulin change writes the permanent switch and a copy of the running temporary one. Written one by one,
+     * the pump queue could set the permanent profile first and drop the temporary percentage for a moment.
+     * One user entry is logged for the whole call.
+     *
+     * @param profileSwitches records
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of inserted/updated records
+     */
+    suspend fun insertOrUpdateProfileSwitches(profileSwitches: List<PS>, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): TransactionResult<PS>
 
     /**
      * Invalidate record with id
@@ -797,6 +848,12 @@ interface PersistenceLayer {
      *  @return running mode
      */
     suspend fun getRunningModeByNSId(nsId: String): RM?
+
+    /**
+     *  Get running mode by its database id
+     *  @return running mode
+     */
+    suspend fun getRunningModeById(id: Long): RM?
 
     /**
      * Get running running mode at time with duration == 0 (infinite)
@@ -959,6 +1016,12 @@ interface PersistenceLayer {
     suspend fun getTemporaryBasalByNSId(nsId: String): TB?
 
     /**
+     *  Get temporary basal by its database id
+     *  @return temporary basal
+     */
+    suspend fun getTemporaryBasalById(id: Long): TB?
+
+    /**
      * Get running temporary basal starting in time interval
      *
      * @param startTime from
@@ -1078,6 +1141,15 @@ interface PersistenceLayer {
      */
     suspend fun insertTemporaryBasalWithTempId(temporaryBasal: TB): TransactionResult<TB>
 
+    /**
+     * Keeps the temp basals and boluses with only a temporary id (set by AAPS, not found in the pump history yet)
+     * as they were set: each is stored again with its temporary id as pump id, so it is uploaded to Nightscout, and
+     * the old entry is invalidated. For a pump change, after which no pump confirms them any more.
+     *
+     * @return how many records were kept
+     */
+    suspend fun confirmTemporaryIds(): Int
+
     // EB
     /**
      * Get running extended bolus at time
@@ -1116,6 +1188,12 @@ interface PersistenceLayer {
      *  @return extended bolus
      */
     suspend fun getExtendedBolusByNSId(nsId: String): EB?
+
+    /**
+     *  Get extended bolus by its database id
+     *  @return extended bolus
+     */
+    suspend fun getExtendedBolusById(id: Long): EB?
 
     /**
      * Get running extended bolus starting in time interval
@@ -1234,6 +1312,12 @@ interface PersistenceLayer {
     suspend fun getTemporaryTargetByNSId(nsId: String): TT?
 
     /**
+     *  Get temporary target by its database id
+     *  @return temporary target
+     */
+    suspend fun getTemporaryTargetById(id: Long): TT?
+
+    /**
      * Get temporary targets from time (suspend variant)
      *
      * @param timestamp from
@@ -1302,6 +1386,12 @@ interface PersistenceLayer {
      *  @return therapy event
      */
     suspend fun getTherapyEventByNSId(nsId: String): TE?
+
+    /**
+     *  Get therapy event by its database id
+     *  @return therapy event
+     */
+    suspend fun getTherapyEventById(id: Long): TE?
 
     suspend fun getLastTherapyRecordUpToNow(type: TE.Type): TE?
     suspend fun getTherapyEventDataFromToTime(from: Long, to: Long): List<TE>

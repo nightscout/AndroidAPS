@@ -26,6 +26,7 @@ import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.io.File
 import java.util.regex.Pattern
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.ui.R as UiR
 
 /**
@@ -207,9 +208,9 @@ class SetupWizardE2ETest {
         tapNext("Client control")
 
         // 7b. Client control (master ↔ client pairing) — skip
-        tapNext("Name")
+        tapNext("Who is using this phone?")
 
-        // 8. Patient name — skip
+        // 8. Instance name — skip
         tapNext("Patient type")
 
         // 9. Patient type / safety limits
@@ -396,11 +397,19 @@ class SetupWizardE2ETest {
     /** Treatments → Bolus wizard: open the calculator, add a quick-carb preset, then CANCEL (no delivery). */
     private fun openAndCancelBolusWizard() {
         openVia("Treatments", expect = "Bolus wizard")
-        openVia("Bolus wizard", expect = "Correction") // → wizard dialog (calculator)
+        openVia("Bolus wizard", expect = correctionHeader()) // → wizard dialog (calculator)
         click(cakeCarbsTypeLabel())                    // a quick-carb preset → exercises the calculation
         device.waitForIdle(IDLE_MS)
         click("Close")                                 // dismiss WITHOUT delivering — the cancel path
         returnToOverview()
+    }
+
+    /**
+     * The correction row opens closed, and a closed row shows its label with a colon ("Correction:"). Built from the
+     * same resources the row uses, so the test follows the real text.
+     */
+    private fun correctionHeader(): String = with(instrumentation.targetContext) {
+        getString(CoreUiR.string.label_with_colon, getString(CoreUiR.string.wizard_correction))
     }
 
     /**

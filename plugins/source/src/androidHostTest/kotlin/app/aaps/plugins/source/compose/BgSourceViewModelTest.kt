@@ -1,8 +1,13 @@
 package app.aaps.plugins.source.compose
 
 import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -15,12 +20,17 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -31,6 +41,8 @@ internal class BgSourceViewModelTest {
     @Mock private lateinit var profileUtil: ProfileUtil
     @Mock private lateinit var aapsLogger: AAPSLogger
     @Mock private lateinit var rxBus: RxBus
+    @Mock private lateinit var batchExecutor: BatchExecutor
+    @Mock private lateinit var config: Config
 
     private lateinit var sut: BgSourceViewModel
 
@@ -44,7 +56,7 @@ internal class BgSourceViewModelTest {
         // re-triggers loadData(). The initial loadData()'s background IO launch is intentionally left
         // unstubbed: it never mutates the structural fields asserted below.
         whenever(persistenceLayer.observeChanges(GV::class)).thenReturn(emptyFlow())
-        sut = BgSourceViewModel(persistenceLayer, generatedTextResolver(), dateUtil, profileUtil, aapsLogger, rxBus)
+        sut = BgSourceViewModel(persistenceLayer, generatedTextResolver(), dateUtil, profileUtil, aapsLogger, rxBus, batchExecutor, config)
     }
 
     @AfterEach
@@ -116,33 +128,22 @@ internal class BgSourceViewModelTest {
     }
 
     @Test
-    fun `getDeleteConfirmationMessage is empty when nothing is selected`() {
-        assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("")
-    }
-
-    @Test
-    fun `getDeleteConfirmationMessage uses the plural string for multiple selection`() {
-        sut.enterSelectionMode(gv(id = 1L, timestamp = 1_000L))
-        sut.toggleSelection(gv(id = 2L, timestamp = 2_000L))
-
-        assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("Are you sure you want to remove 2 items")
-    }
-
-    @Test
     fun `formatGlucoseValue delegates to profileUtil`() {
         whenever(profileUtil.fromMgdlToStringInUnits(120.0)).thenReturn("6.7")
         assertThat(sut.formatGlucoseValue(120.0)).isEqualTo("6.7")
     }
 
+    /** The master removes the readings: a BG removed only on a client would still be used by the loop there. */
     @Test
-    fun `getDeleteConfirmationMessage for a single item shows its time and value`() {
-        whenever(dateUtil.dateAndTimeString(1_000L)).thenReturn("2024-01-01 00:00")
-        whenever(profileUtil.fromMgdlToUnits(100.0)).thenReturn(5.5)
-        sut.enterSelectionMode(gv(id = 1L, timestamp = 1_000L))
+    fun `requestDelete asks the master to remove the selected readings by their ids`() = runTest {
+        sut.enterSelectionMode(gv(id = 1L, timestamp = 1_000L).copy(ids = IDs(nightscoutId = "gv1")))
 
-        val message = sut.getDeleteConfirmationMessage()
+        sut.requestDelete()
 
-        assertThat(message).contains("2024-01-01 00:00")
-        assertThat(message).contains("5.5")
+        val actions = argumentCaptor<List<BatchAction>>()
+        verify(batchExecutor).prepare(actions.capture(), eq(Sources.BgFragment), any())
+        assertThat(actions.firstValue).containsExactly(
+            BatchAction.Remove(BatchAction.Remove.Kind.GLUCOSE_VALUE, listOf(BatchAction.Remove.Ref(nsId = "gv1", localId = 1L)))
+        )
     }
 }

@@ -3,6 +3,7 @@ package app.aaps.pump.danar
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.PumpPluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -12,6 +13,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.Dana
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -22,6 +24,7 @@ import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.comment
+import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -92,8 +95,15 @@ abstract class AbstractDanaRPlugin protected constructor(
 
     protected var executionService: AbstractDanaRExecutionService? = null
     private var scope: CoroutineScope? = null
-    override var pumpDescription = PumpDescription()
-        protected set
+
+    /**
+     * Built on every read, with the bolus and basal steps the pump is set to (see [DanaPump.applyReadSteps]).
+     *
+     * The steps used to be copied in at [connect], before the pump was read, so the starting 0.1 U of
+     * [DanaPump] was used until the first status read.
+     */
+    override val pumpDescription: PumpDescription
+        get() = danaPump.applyReadSteps(PumpDescription().fillFor(model()))
 
     override suspend fun onStart() {
         super.onStart()
@@ -169,6 +179,15 @@ abstract class AbstractDanaRPlugin protected constructor(
         }
         return true
     }
+
+    /**
+     * The 24 hourly rates the pump itself reports: it keeps them in 0.01 U/h steps and is read again after each set
+     * (#2454). If that read failed, they are still the old ones; then [isThisProfileSet] fails too, and the profile
+     * is set again at the next connection. null before the pump was read: the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? =
+        if (!isInitialized()) null
+        else danaPump.pumpProfiles?.get(danaPump.activeProfile)?.take(24)?.mapIndexed { hour, rate -> Profile.ProfileValue(T.hours(hour.toLong()).secs().toInt(), rate) }
 
     override val lastDataTime: StateFlow<Long> = danaPump.lastConnectionFlow
     override val lastBolusTime: StateFlow<Long?> = danaPump.lastBolusTimeFlow
@@ -310,8 +329,6 @@ abstract class AbstractDanaRPlugin protected constructor(
 
     override fun connect(reason: String) {
         executionService?.connect()
-        pumpDescription.basalStep = danaPump.basalStep
-        pumpDescription.bolusStep = danaPump.bolusStep
     }
 
     override fun isConnected(): Boolean =
@@ -330,8 +347,6 @@ abstract class AbstractDanaRPlugin protected constructor(
 
     override suspend fun getPumpStatus(reason: String) {
         executionService?.getPumpStatus()
-        pumpDescription.basalStep = danaPump.basalStep
-        pumpDescription.bolusStep = danaPump.bolusStep
     }
 
     override fun manufacturer(): ManufacturerType = ManufacturerType.Sooil

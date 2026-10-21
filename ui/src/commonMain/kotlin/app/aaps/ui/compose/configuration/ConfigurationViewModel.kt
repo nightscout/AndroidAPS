@@ -141,8 +141,11 @@ class ConfigurationViewModel(
             if (plugins.isEmpty()) return
             val titleRes = pluginCategoryTitle(type)
             val isMultiSelect = isMultiSelect(type)
+            // The pump and BG source lists are long and were in the order the plugins are built in. Alphabetical, an
+            // item is easy to find.
+            val ordered = if (type in alphabeticalTypes) plugins.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name }) else plugins
 
-            val pluginModels = plugins.map { plugin ->
+            val pluginModels = ordered.map { plugin ->
                 val id = plugin::class.simpleName.orEmpty()
                 lookup[id] = plugin
                 val pluginEnabled = plugin.isEnabled(type)
@@ -210,6 +213,9 @@ class ConfigurationViewModel(
     }
 
     companion object {
+
+        /** Categories listed by name. The others keep their plugin order. */
+        private val alphabeticalTypes = setOf(PluginType.PUMP, PluginType.BGSOURCE)
 
         private fun isMultiSelect(type: PluginType): Boolean = !type.singleSelect
     }

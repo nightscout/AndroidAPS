@@ -11,6 +11,24 @@
     <string name="pump_status_suspended">מושהה</string>
     <string name="pump_status_executing_command">מבצע פקודה</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">קבלת הגדרות</string>
+    <string name="pump_cmd_desc_get_firmware">קבלת קושחת המשאבה</string>
+    <string name="pump_cmd_desc_get_basal_profile">קבלת פרופיל בזאלי</string>
+    <string name="pump_cmd_desc_set_basal_profile">הגדרת פרופיל בזאלי</string>
+    <string name="pump_cmd_desc_get_tbr">קבלת בזאלי זמני</string>
+    <string name="pump_cmd_desc_cancel_tbr">ביטול בזאלי זמני</string>
+    <string name="pump_cmd_desc_set_tbr">הגדרת בזאלי זמני</string>
+    <string name="pump_cmd_desc_set_bolus">הגדרת בולוס</string>
+    <string name="pump_cmd_desc_get_bolus">קבלת בולוס</string>
+    <string name="pump_cmd_desc_cancel_bolus">ביטול בולוס</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">קבלת כמות האינסולין שנותרה</string>
+    <string name="pump_cmd_desc_get_battery_status">קבלת מצב הסוללה</string>
+    <string name="pump_cmd_desc_get_time">קבלת השעה</string>
+    <string name="pump_cmd_desc_set_time">הגדרת השעה</string>
+    <string name="pump_cmd_desc_get_pump_status">קבל את סטטוס הפוד</string>
+    <string name="pump_cmd_desc_get_history">קבלת היסטוריה</string>
+    <string name="pump_cmd_desc_get_history_params">קבל היסטוריה%s</string>
+    <string name="pump_cmd_desc_custom">פקודה מותאמת אישית</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">בזאלים</string>
     <string name="history_group_configuration">תצורות</string>
@@ -32,6 +50,7 @@
     <string name="time_last_3_hours">ב-3 השעות האחרונות</string>
     <string name="time_last_6_hours">ב-6 השעות האחרונות</string>
     <string name="time_last_12_hours">ב-12 השעות האחרונות</string>
+    <string name="time_last_24_hours">24 שעות אחרונות</string>
     <string name="time_last_2_days">ביומיים אחרונים</string>
     <string name="time_last_4_days">ב-4 הימים האחרונים</string>
     <string name="time_last_week">בשבוע שעבר</string>

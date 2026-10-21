@@ -20,7 +20,6 @@ import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.comment
-import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -97,7 +96,6 @@ class DanaRKoreanPlugin(
 
     init {
         pluginDescription.description(TextRef.AndroidRes(app.aaps.pump.dana.R.string.description_pump_dana_r_korean))
-        pumpDescription.fillFor(PumpType.DANA_R_KOREAN)
     }
 
     override suspend fun onStart() {

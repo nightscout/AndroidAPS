@@ -136,7 +136,7 @@
     <string name="pref_title_ns_use_ws">Use websockets</string>
     <string name="pref_summary_ns_use_ws">Use websockets for real-time communication with Nightscout.</string>
     <string name="pref_title_ns_allow_client_control">Allow client control</string>
-    <string name="pref_summary_ns_allow_client_control">Let paired client devices send signed commands (e.g. start/stop scenes) over Nightscout.</string>
+    <string name="pref_summary_ns_allow_client_control">Let paired client devices send signed commands (e.g. start/stop scenes) over Nightscout. This also turns on hardened mode: changes made directly in Nightscout are not taken any more.</string>
 
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">WiFi only</string>
@@ -297,8 +297,8 @@
     <string name="lang_tr">Turkish</string>
     <string name="lang_zh_tw">Chinese, Traditional</string>
     <string name="lang_zh_cn">Chinese, Simplified</string>
-    <string name="pref_title_patient_name">Name</string>
-    <string name="pref_summary_patient_name">Name to identify this AAPS instance (shown in reports and sync)</string>
+    <string name="pref_title_patient_name">Instance name</string>
+    <string name="pref_summary_patient_name">Name of the person using this phone. It tells this AAPS instance apart in reports and sync.</string>
 
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">AAPS directory</string>

@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.implementation.maintenance.DesktopFolders
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.nio.file.AtomicMoveNotSupportedException
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
@@ -70,11 +71,53 @@ class DesktopSp(
                 // leave the real name pointing at an empty file - the thing this is here to prevent.
                 out.fd.sync()
             }
+            moveIntoPlace(temp)
+        }
+    }
+
+    /**
+     * Replaces the real file with [temp], retrying a few times before giving up.
+     *
+     * On Windows a replacing move fails with [java.nio.file.AccessDeniedException] whenever anything
+     * else holds the target open, and on a normal machine something does: the virus scanner or the
+     * search indexer opens a file that was just written. It is not a permission problem and it does
+     * not stay - the next attempt a few milliseconds later works.
+     *
+     * This used to catch [AtomicMoveNotSupportedException] alone, so that failure escaped. It did not
+     * only lose the one write: the exception travelled up and the whole incoming settings sync step
+     * was reported as failed, which is how a preference arriving from the master went missing on a
+     * Windows client (seen on 2026-10-14, `Load step SETTINGS: Failure`). The same trap is written up
+     * in `AAPSLoggerDesktop.rotate`, which hit it first and handles it there.
+     *
+     * A move that still fails after the retries is thrown, as before. The old content stays on disk
+     * and the new value is already in [properties], so the running app is right either way - only the
+     * next start would read the older value.
+     */
+    private fun moveIntoPlace(temp: File) {
+        var lastFailure: IOException? = null
+        repeat(MOVE_ATTEMPTS) { attempt ->
             try {
-                Files.move(temp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
-            } catch (_: AtomicMoveNotSupportedException) {
-                Files.move(temp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                replace(temp)
+                return
+            } catch (e: IOException) {
+                lastFailure = e
+                // Doubling, and only between attempts, so a run that succeeds waits not at all and the
+                // worst case stays about 60 ms - short enough to sit in a preference setter.
+                if (attempt < MOVE_ATTEMPTS - 1) Thread.sleep(RETRY_DELAY_MS shl attempt)
             }
+        }
+        throw lastFailure ?: IOException("Cannot replace ${file.path}")
+    }
+
+    /** One attempt, atomic where the filesystem allows it. */
+    private fun replace(temp: File) {
+        try {
+            Files.move(temp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+        } catch (_: AtomicMoveNotSupportedException) {
+            // Some network shares. Retrying this one is pointless, but the caller's loop costs nothing
+            // because a share that cannot move atomically cannot start to, and the plain move below is
+            // what answers from here on.
+            Files.move(temp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING)
         }
     }
 
@@ -128,4 +171,13 @@ class DesktopSp(
 
     override fun incInt(key: String) = putInt(key, getInt(key, 0) + 1)
     override fun incLong(key: String) = putLong(key, getLong(key, 0L) + 1L)
+
+    companion object {
+
+        /** How many times [moveIntoPlace] tries before it gives up. */
+        const val MOVE_ATTEMPTS = 3
+
+        /** The wait before the second attempt, doubled for each one after it. */
+        const val RETRY_DELAY_MS = 20L
+    }
 }

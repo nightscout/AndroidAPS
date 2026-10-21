@@ -48,4 +48,7 @@
     <string name="min_recovery_duration">Min. czas odzyskiwania [s]</string>
     <string name="pump_alert">Alarm pompy</string>
     <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">Usuń parowanie</string>
+    <string name="reset_pairing">Zresetować sparowanie?</string>
+    <string name="reservoir_level">Poziom zbiornika</string>
 </resources>

@@ -7,17 +7,20 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.BgType
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.scenes.SceneExpiryCheck
 import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.WorkOutcome
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CancellationException
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -45,14 +48,16 @@ class PostCalculationRunner(
     private val config: Config,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val profileUtil: ProfileUtil,
-    private val preferences: Preferences
-) {
+    private val preferences: Preferences,
+    private val sceneExpiryCheck: SceneExpiryCheck
+) : CalculationPhase {
 
     /** Runs the phase that follows the prepare pass. [isStopped] is asked between steps. */
-    suspend fun run(job: String?, generation: Long, isStopped: () -> Boolean): WorkOutcome {
+    override suspend fun run(job: String, generation: Long, isStopped: () -> Boolean): WorkOutcome {
         val data = workflowChainData.postFor(job, generation) ?: return WorkOutcome.StaleInput
 
         if (data.runLoopAndWidgetPhase) {
+            endOverdueScene()
             invokeLoop()
             if (isStopped()) return WorkOutcome.Stopped
             widgetUpdater.update("WorkFlow")
@@ -66,6 +71,23 @@ class PostCalculationRunner(
         return WorkOutcome.Success
     }
 
+    /**
+     * Ends a scene whose time is over before the loop decides, see [SceneExpiryCheck].
+     *
+     * Only where the loop runs: the master owns the scene, and a client receives its end. A failure
+     * here is logged and the loop runs anyway - missing one loop run is worse than ending a scene late.
+     */
+    private suspend fun endOverdueScene() {
+        if (!config.APS) return
+        try {
+            sceneExpiryCheck.endIfOverdue()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.WORKER, "Ending an overdue scene failed", e)
+        }
+    }
+
     /*
      * Runs after a completed MAIN calculation so the Loop has current data to work with.
      *
@@ -74,14 +96,28 @@ class PostCalculationRunner(
      * replaced by a chain started by another database change before it reaches this runner, and the
      * replacement must not lose the pending BG trigger (issue #5066).
      *
-     * [app.aaps.core.interfaces.aps.Loop.lastBgTriggeredRun] is written before the call and never
-     * reset, so each BG timestamp can drive at most one automatic loop run.
+     * [app.aaps.core.interfaces.aps.Loop.lastBgTriggeredRun] is written before the call, so each BG
+     * timestamp can drive at most one automatic loop run.
+     *
+     * One exception gives the BG back: a run that is cancelled before it stored a decision. That
+     * happens when this chain is replaced or stopped while the loop runs, for example by a profile
+     * switch. Such a run did nothing for this BG, so the chain that replaced this one runs the loop for
+     * it. Before, that BG got no loop run at all. Once a decision is stored the BG stays used: the
+     * enactment after it cannot be cancelled and may have reached the pump, and a second automatic run
+     * for the same BG must not follow.
      */
     private suspend fun invokeLoop() {
         val glucoseValue = iobCobCalculator.ads.actualBg() ?: return
         if (glucoseValue.timestamp <= loop.lastBgTriggeredRun) return
+        val previousTrigger = loop.lastBgTriggeredRun
+        val decisionBefore = loop.lastRun?.lastAPSRun
         loop.lastBgTriggeredRun = glucoseValue.timestamp
-        loop.invoke("Calculation for $glucoseValue", true)
+        try {
+            loop.invoke("Calculation for $glucoseValue", true)
+        } catch (e: CancellationException) {
+            if (loop.lastRun?.lastAPSRun == decisionBefore) loop.lastBgTriggeredRun = previousTrigger
+            throw e
+        }
     }
 
     private fun preparePredictions(data: PostCalculationData) {
@@ -95,12 +131,16 @@ class PostCalculationRunner(
             .toInstant(zone) + 1.hours
         if (predictionsAvailable && apsResult != null) {
             var predictionHours = (ceil(apsResult.latestPredictionsTime - Clock.System.now().toEpochMilliseconds().toDouble()) / (60 * 60 * 1000)).toInt()
-            predictionHours = min(2, predictionHours)
+            predictionHours = min(PREDICTION_WINDOW_HOURS, predictionHours)
             predictionHours = max(0, predictionHours)
             val hoursToFetch = Constants.GRAPH_TIME_RANGE_HOURS - predictionHours
             data.overviewData.toTime = nextHour.toEpochMilliseconds() + 100000 // GraphView-era nudge, retained while workers still consume this shape
             data.overviewData.fromTime = data.overviewData.toTime - T.hours(hoursToFetch.toLong()).msecs()
-            data.overviewData.endTime = data.overviewData.toTime + T.hours(predictionHours.toLong()).msecs()
+            // The newest prediction, not the clamped window share. The axis is already
+            // max(newest point, endTime), so this widens nothing - it only makes endTime agree with
+            // the edge, so the series built against it (IOB, activity, basal) reach it. The clamp
+            // above stays where it belongs: it decides how much history to fetch, not where to stop.
+            data.overviewData.endTime = max(data.overviewData.toTime, apsResult.latestPredictionsTime)
         } else {
             data.overviewData.toTime = nextHour.toEpochMilliseconds() + 100000
             data.overviewData.fromTime = data.overviewData.toTime - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()

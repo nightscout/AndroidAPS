@@ -86,6 +86,42 @@ class DanaRSPluginTest : DanaRSTestBase() {
         assertThat(danaRSPlugin.isInitialized()).isFalse()
     }
 
+    private fun initializedPump() {
+        whenever(preferences.get(DanaStringNonKey.RsName)).thenReturn("UHH00002TI")
+        whenever(preferences.get(DanaStringNonKey.MacAddress)).thenReturn("00:11:22:33:44:55")
+        danaRSPlugin.changePump()
+        danaPump.lastConnection = 1
+        danaPump.maxBasal = 3.0
+        danaPump.ignoreUserPassword = true
+    }
+
+    /** #2454: AAPS keeps the rates the pump reports as the running basal, one per hour. */
+    @Test
+    fun deliveredBasalIsWhatThePumpReports() {
+        initializedPump()
+        danaPump.activeProfile = 0
+        danaPump.pumpProfiles = Array(4) { Array(48) { 0.0 } }.also { profiles -> for (hour in 0..23) profiles[0][hour] = if (hour < 6) 0.56 else 0.84 }
+
+        val delivered = danaRSPlugin.deliveredBasal()!!
+
+        assertThat(delivered.map { it.timeAsSeconds }).containsExactlyElementsIn((0..23).map { it * 3600 }).inOrder()
+        assertThat(delivered.map { it.value }).containsExactlyElementsIn((0..23).map { if (it < 6) 0.56 else 0.84 }).inOrder()
+    }
+
+    @Test
+    fun deliveredBasalIsUnknownBeforeThePumpWasRead() {
+        initializedPump()
+        danaPump.pumpProfiles = null
+        assertThat(danaRSPlugin.deliveredBasal()).isNull()
+    }
+
+    /** A profile set while the pump is not ready is only stored: the old rates say nothing about it. */
+    @Test
+    fun deliveredBasalIsUnknownWhileNotInitialized() {
+        danaPump.pumpProfiles = Array(4) { Array(48) { 0.5 } }
+        assertThat(danaRSPlugin.deliveredBasal()).isNull()
+    }
+
     @Test
     fun isSuspendedReflectsPumpState() {
         assertThat(danaRSPlugin.isSuspended()).isFalse()
@@ -160,15 +196,38 @@ class DanaRSPluginTest : DanaRSTestBase() {
         assertThat(danaRSPlugin.isConfigured()).isTrue()
     }
 
+    /**
+     * #946: a pump set to a 0.1 U bolus step in its doctor menu. The steps were written into a description
+     * that a getter rebuilds on every read, so they were lost and a bolus of 1.55 U was offered and then
+     * refused by the pump. Steps other than the pump type's defaults (0.05 / 0.01), or the test cannot tell.
+     */
     @Test
-    fun getPumpStatusSyncsBasalAndBolusStepIntoTheDescription() {
-        danaPump.basalStep = 0.01
-        danaPump.bolusStep = 0.05
+    fun theDescriptionHasTheStepsThePumpReported() {
+        danaPump.bolusStep = 0.1
+        danaPump.basalStep = 0.1
 
-        runBlocking { danaRSPlugin.getPumpStatus("test") } // service null → just syncs the steps
+        assertThat(danaRSPlugin.pumpDescription.bolusStep).isWithin(0.0001).of(0.1)
+        assertThat(danaRSPlugin.pumpDescription.basalStep).isWithin(0.0001).of(0.1)
+    }
 
-        assertThat(danaRSPlugin.pumpDescription.basalStep).isWithin(0.0001).of(0.01)
+    /** DanaPump starts with 0.1 for both steps, and reset() puts that back. That is not a reading. */
+    @Test
+    fun afterAResetThePumpTypeStepsStay() {
+        danaPump.bolusStep = 0.1
+        danaPump.basalStep = 0.1
+        danaPump.reset()
+
         assertThat(danaRSPlugin.pumpDescription.bolusStep).isWithin(0.0001).of(0.05)
+        assertThat(danaRSPlugin.pumpDescription.basalStep).isWithin(0.0001).of(0.01)
+    }
+
+    /** Connected, but the steps were not read yet. */
+    @Test
+    fun connectedBeforeTheStepsAreReadThePumpTypeStepsStay() {
+        danaPump.lastConnection = 1_000L
+
+        assertThat(danaRSPlugin.pumpDescription.bolusStep).isWithin(0.0001).of(0.05)
+        assertThat(danaRSPlugin.pumpDescription.basalStep).isWithin(0.0001).of(0.01)
     }
 
     @Test

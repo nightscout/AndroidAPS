@@ -267,8 +267,8 @@
     <string name="lang_tr">Turco</string>
     <string name="lang_zh_tw">Chino tradicional</string>
     <string name="lang_zh_cn">Chino simplificado</string>
-    <string name="pref_title_patient_name">Nombre</string>
-    <string name="pref_summary_patient_name">Nombre para identificar esta instancia de AAPS (se muestra en informes y sincronización)</string>
+    <string name="pref_title_patient_name">Nombre de la instancia</string>
+    <string name="pref_summary_patient_name">Nombre de la persona que usa este teléfono. Identifica esta instancia de AAPS en los informes y en la sincronización</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">Directorio de AAPS</string>
     <!-- StringKey: Protection preferences -->

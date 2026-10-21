@@ -200,6 +200,10 @@ jobs:
             PKG=info.nightscout.androidaps
             DEV=emulator-5554
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
+            # RetryRule and the screen dumps of a failed test (tags E2E_*) write to logcat only, so they are
+            # printed after each attempt. Without them a test that passed on its third try looks the same as a
+            # clean pass. The default buffer is too small to keep a whole shard.
+            adb -s $DEV logcat -G 16M || true
             RC=1
             for attempt in 1 2 3; do
               # PRIMARY stability mechanism for the shards. A shard's app intermittently dies at startup under
@@ -217,10 +221,13 @@ jobs:
                   sleep 10
                 done
               fi
+              adb -s $DEV logcat -c || true
               adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardA \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-A.ec \
                 $PKG.test/app.aaps.runners.AapsTestRunner > shard-A-$attempt.txt 2>&1 || true
               tail -n 200 shard-A-$attempt.txt
+              echo "--- shard A attempt $attempt: retries and failure dumps from logcat ---"
+              adb -s $DEV logcat -d -v time | grep -E "RetryRule|E2E_|EquilActivationE2E" || true
               adb -s $DEV exec-out run-as $PKG cat cov-A.ec > "$COVDIR/cov-A.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-A.ec" 2>/dev/null || echo 0)
               echo "shard A attempt $attempt coverage: ${sz:-0} bytes"
@@ -241,6 +248,8 @@ jobs:
             PKG=info.nightscout.androidaps
             DEV=emulator-5556
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
+            # Retries and failure dumps from logcat, see shard A.
+            adb -s $DEV logcat -G 16M || true
             RC=1
             for attempt in 1 2 3; do
               # PRIMARY stability mechanism for the shards. A shard's app intermittently dies at startup under
@@ -258,10 +267,13 @@ jobs:
                   sleep 10
                 done
               fi
+              adb -s $DEV logcat -c || true
               adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardB \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-B.ec \
                 $PKG.test/app.aaps.runners.AapsTestRunner > shard-B-$attempt.txt 2>&1 || true
               tail -n 200 shard-B-$attempt.txt
+              echo "--- shard B attempt $attempt: retries and failure dumps from logcat ---"
+              adb -s $DEV logcat -d -v time | grep -E "RetryRule|E2E_|EquilActivationE2E" || true
               adb -s $DEV exec-out run-as $PKG cat cov-B.ec > "$COVDIR/cov-B.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-B.ec" 2>/dev/null || echo 0)
               echo "shard B attempt $attempt coverage: ${sz:-0} bytes"
@@ -282,6 +294,8 @@ jobs:
             PKG=info.nightscout.androidaps
             DEV=emulator-5558
             COVDIR=app/build/outputs/code_coverage/fullDebugAndroidTest/connected; mkdir -p "$COVDIR"
+            # Retries and failure dumps from logcat, see shard A.
+            adb -s $DEV logcat -G 16M || true
             RC=1
             for attempt in 1 2 3; do
               # PRIMARY stability mechanism for the shards. A shard's app intermittently dies at startup under
@@ -299,10 +313,13 @@ jobs:
                   sleep 10
                 done
               fi
+              adb -s $DEV logcat -c || true
               adb -s $DEV shell am instrument -w -r -e notAnnotation app.aaps.testcategories.ShardA,app.aaps.testcategories.ShardB \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-C.ec \
                 $PKG.test/app.aaps.runners.AapsTestRunner > shard-C-$attempt.txt 2>&1 || true
               tail -n 200 shard-C-$attempt.txt
+              echo "--- shard C attempt $attempt: retries and failure dumps from logcat ---"
+              adb -s $DEV logcat -d -v time | grep -E "RetryRule|E2E_|EquilActivationE2E" || true
               adb -s $DEV exec-out run-as $PKG cat cov-C.ec > "$COVDIR/cov-C.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-C.ec" 2>/dev/null || echo 0)
               echo "shard C attempt $attempt coverage: ${sz:-0} bytes"
@@ -331,6 +348,13 @@ jobs:
       # Coverage still reaches Codecov from both halves: Actions uploads under the flag "unit", the
       # step below uploads under "instrumented", and Codecov merges uploads that share a commit SHA.
       # codecov.yml sets after_n_builds so the status waits for both instead of reporting half.
+      #
+      # This step waits for shard A, because both use emulator-5554. When they ran at the same time, 5554 went
+      # "device offline" for a moment (build 41823 logged "Failed to install APK ... device offline" here), and
+      # that ends the adb shell of shard A without any message. In 6 of 33 builds (41805-41904) the first attempt
+      # of shard A stopped in its first test with no result and no coverage, and the whole shard ran again,
+      # 150-300 s more. Shards B and C have their emulators to themselves and never lost an attempt. Shard A
+      # ends at about 400 s and this step takes 50-90 s, so it still ends about when shard C does.
       - run:
           name: Non-app module androidTests (Gradle, emu-5554)
           command: |
@@ -356,6 +380,13 @@ jobs:
               TASKS="$TASKS :$m:connectedAndroidDeviceTest"
             done
             echo "running: $TASKS"
+            # Prints a line every minute: CircleCI stops a step after 10 minutes with no output.
+            for i in $(seq 1 1200); do
+              [ -f /tmp/rc-A ] && break
+              [ $((i % 30)) = 0 ] && echo "waiting for shard A to free emulator-5554: $((i * 2)) s"
+              sleep 2
+            done
+            [ -f /tmp/rc-A ] || echo "shard A did not finish in 2400 s, running on the busy emulator"
             # if/else, not `cmd || echo`: the old form was meant for "there are no such modules" but
             # swallowed every non-zero exit, so a failing suite - or a Gradle configuration error -
             # left the step green. That is how these tests went unnoticed for months.
@@ -367,8 +398,28 @@ jobs:
 
       - run:
           name: Collect app shard results
+          # The wait prints a line every minute. CircleCI stops a step after 10 minutes with no output, and
+          # this loop used to wait in silence: when a shard ran past that, the step timed out, the job ran
+          # "Kill emulators", and the shard still running lost its emulator ("adb: device offline"). So a
+          # slow shard C looked like an emulator crash in SetupWizardE2ETest.
+          #
+          # The limit is 2400 s, not 1200 s. A healthy shard C takes about 600 s, but RetryRule runs a failing test
+          # three times, so a few real failures make it much slower. In builds 41881-41900 six Equil tests failed,
+          # shard C needed more than 1200 s, Collect gave up, and the emulator was killed in the middle of the last
+          # test. The shard log then ended with "adb: device offline" and the real failures looked like a flake.
+          # A shard that does not finish in time prints the failures it has so far, so the cause is visible here.
           command: |
-            for i in $(seq 1 600); do [ -f /tmp/rc-A ] && [ -f /tmp/rc-B ] && [ -f /tmp/rc-C ] && break; sleep 2; done
+            for i in $(seq 1 1200); do
+              [ -f /tmp/rc-A ] && [ -f /tmp/rc-B ] && [ -f /tmp/rc-C ] && break
+              [ $((i % 30)) = 0 ] && echo "waiting for the shards: $((i * 2)) s"
+              sleep 2
+            done
+            for s in A B C; do
+              if [ ! -f /tmp/rc-$s ]; then
+                echo "shard $s did not finish in 2400 s. Failures so far:"
+                grep -h -A2 "^Error in" shard-$s-*.txt 2>/dev/null || echo "  none"
+              fi
+            done
             RCA=$(cat /tmp/rc-A 2>/dev/null || echo 1); RCB=$(cat /tmp/rc-B 2>/dev/null || echo 1); RCC=$(cat /tmp/rc-C 2>/dev/null || echo 1)
             echo "shard A rc=$RCA  shard B rc=$RCB  shard C rc=$RCC"
             # rc is 1 if any leg failed a test OR produced missing/short coverage - so a silently dropped

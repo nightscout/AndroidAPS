@@ -18,10 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,9 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.TE
-import app.aaps.core.data.ue.Action
-import app.aaps.core.data.ue.Sources
-import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.CoreUiStrings
@@ -44,19 +37,17 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.MenuItemData
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.RecordRemovalDialog
 import app.aaps.core.ui.compose.icons.Ns
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.treatments.viewmodels.CareportalViewModel
-import kotlinx.coroutines.launch
 
 /**
  * Composable screen displaying therapy events (careportal entries) with delete and show hidden functionality.
  *
  * @param viewModel ViewModel managing state and business logic
- * @param persistenceLayer Database layer for therapy event data (needed for menu item)
  * @param translator Translator for therapy event types
  * @param setToolbarConfig Callback to set the toolbar configuration
  * @param onNavigateBack Callback to navigate back
@@ -65,74 +56,30 @@ import kotlinx.coroutines.launch
 @Composable
 fun CareportalScreen(
     viewModel: CareportalViewModel,
-    persistenceLayer: PersistenceLayer,
     translator: Translator,
     setToolbarConfig: (ToolbarConfig) -> Unit,
     onNavigateBack: () -> Unit = { }
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val scope = rememberCoroutineScope()
-
-    // Dialog states
-    var showDeleteDialog by remember { mutableStateOf(false) }
-    var deleteDialogMessage by remember { mutableStateOf("") }
-    var showRemoveStartedDialog by remember { mutableStateOf(false) }
 
     // Update toolbar configuration whenever state changes
     LaunchedEffect(uiState.isRemovingMode, uiState.selectedItems.size, uiState.showInvalidated) {
         setToolbarConfig(
             viewModel.getToolbarConfig(
                 onNavigateBack = onNavigateBack,
-                onDeleteClick = {
-                    if (uiState.selectedItems.isNotEmpty()) {
-                        deleteDialogMessage = viewModel.getDeleteConfirmationMessage()
-                        showDeleteDialog = true
-                    }
-                },
+                onDeleteClick = { viewModel.requestDelete() },
                 menuItems = listOf(
                     MenuItemData(
                         label = viewModel.rh.gs(UiStrings.careportal_remove_started_events),
-                        onClick = {
-                            showRemoveStartedDialog = true
-                        }
+                        onClick = { viewModel.requestRemoveStartEvents() }
                     )
                 )
             )
         )
     }
 
-    // Delete confirmation dialog
-    if (showDeleteDialog) {
-        OkCancelDialog(
-            title = stringResource(CoreUiStrings.removerecord),
-            message = deleteDialogMessage,
-            onConfirm = {
-                viewModel.deleteSelected()
-                showDeleteDialog = false
-            },
-            onDismiss = { showDeleteDialog = false }
-        )
-    }
-
-    // Remove started events dialog
-    if (showRemoveStartedDialog) {
-        OkCancelDialog(
-            title = stringResource(CoreUiStrings.careportal),
-            message = stringResource(UiStrings.careportal_remove_started_events),
-            onConfirm = {
-                scope.launch {
-                    persistenceLayer.invalidateTherapyEventsWithNote(
-                        viewModel.rh.gs(CoreUiStrings.androidaps_start),
-                        Action.RESTART_EVENTS_REMOVED,
-                        Sources.Treatments
-                    )
-                    viewModel.loadData()
-                }
-                showRemoveStartedDialog = false
-            },
-            onDismiss = { showRemoveStartedDialog = false }
-        )
-    }
+    // Confirmation for both removals, written by the master
+    RecordRemovalDialog(removal = viewModel.removal, onApplied = { viewModel.onRemoved() })
 
     AapsTheme {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -261,8 +208,8 @@ private fun TherapyEventItem(
                     .padding(start = 8.dp, top = 1.dp, end = 8.dp, bottom = 2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Duration
-                if (therapyEvent.duration != 0L) {
+                // Duration. An event without an end (a scene without a duration) has none to show.
+                if (therapyEvent.duration != 0L && therapyEvent.hasEnd) {
                     Text(
                         text = dateUtil.niceTimeScalar(therapyEvent.duration, rh),
                         modifier = Modifier.padding(start = 16.dp),

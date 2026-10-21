@@ -145,29 +145,36 @@ class DanaRSComposeContent(
             DanaScreen.PAIR_WIZARD  -> {
                 KeepScreenOnEffect()
 
+                // The wizard starts a BLE scan as soon as it is shown. Without the Bluetooth
+                // permissions that scan crashes the app, so show the wizard only after the check.
+                // The emulator has no radio to check.
+                var bleReady by remember { mutableStateOf(wizardViewModel.isEmulating) }
                 if (!wizardViewModel.isEmulating) {
                     BlePreCheckHost(
                         blePreCheck = blePreCheck,
+                        onReady = { bleReady = true },
                         onFailed = { currentScreen = DanaScreen.OVERVIEW }
                     )
                 }
 
-                LaunchedEffect(wizardViewModel) {
-                    wizardViewModel.events.collect { event ->
-                        when (event) {
-                            is PairWizardEvent.Finish -> currentScreen = DanaScreen.OVERVIEW
+                if (bleReady) {
+                    LaunchedEffect(wizardViewModel) {
+                        wizardViewModel.events.collect { event ->
+                            when (event) {
+                                is PairWizardEvent.Finish -> currentScreen = DanaScreen.OVERVIEW
+                            }
                         }
                     }
-                }
 
-                DanaRSPairWizardScreen(
-                    viewModel = wizardViewModel,
-                    onFinish = { currentScreen = DanaScreen.OVERVIEW },
-                    onCancel = {
-                        wizardViewModel.cancel()
-                        currentScreen = DanaScreen.OVERVIEW
-                    }
-                )
+                    DanaRSPairWizardScreen(
+                        viewModel = wizardViewModel,
+                        onFinish = { currentScreen = DanaScreen.OVERVIEW },
+                        onCancel = {
+                            wizardViewModel.cancel()
+                            currentScreen = DanaScreen.OVERVIEW
+                        }
+                    )
+                }
             }
 
             DanaScreen.HISTORY      -> {

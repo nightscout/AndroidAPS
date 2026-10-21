@@ -27,6 +27,7 @@
     <string name="constraint_applied">Restriction appliquée !</string>
     <string name="tt_label">CT</string>
     <string name="pump_unreachable">Pompe hors de portée</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Le pilote de pompe ne répond pas. \"%1$s\" a été exécuté pendant %2$d min et aucune autre commande ne peut atteindre la pompe. Vérifiez la pompe, puis redémarrez AAPS.</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
@@ -63,6 +64,8 @@
     <string name="configbuilder_switch_confirmation">Ceci désactivera %1$s et activera %2$s.</string>
     <string name="expand">Développer</string>
     <string name="collapse">Replier</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Terminé</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Étendu</string>
     <string name="no_compose_preferences">Pas de préférence disponibles pour ce plugin</string>
     <string name="confirm_password_hint">Confirmez le mot de passe</string>
     <string name="confirm_pin_hint">Confirmer le code PIN</string>
@@ -107,6 +110,9 @@
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
+    <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
     <string name="objectives">Objectifs</string>
     <string name="please_wait">Merci de patienter...</string>
     <string name="stop">Arrêt</string>
@@ -114,9 +120,14 @@
     <string name="invalid_profile">Profil incorrect!</string>
     <string name="no_profile_set">PAS DE PROFIL SELECTIONNÉ</string>
     <string name="profile_switch_no_insulin">Impossible de changer de profil : aucune insuline n\'est utilisée, et aucune insuline n\'a été sélectionnée.</string>
+    <string name="scene_no_profile_before">Aucun profil n\'était utilisé avant le début du scénario.</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">Scénario %1$s est termin, mais son profil est toujours utilisé. %2$s Activez un profil à la main.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Ce profile temporaire a du %1$s, mais le profil permanent a du %2$s. En premier, dans les paramètres de l\'insuline, sélectionnez la même insuline qui se trouve dans la pompe.</string>
     <string name="profile_switch_select_insulin_hint">Aucune insuline n\'est encore utilisée. Sélectionnez l\'insuline que vous utilisez, afin que le changement de profil puisse l\'enregistrer.</string>
     <string name="insulin_activation_failed">L\'insuline n\'a pas été changée. Votre insuline précédente est toujours utilisée.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">L\'insuline n\'a pas été changée: %1$s. Votre insuline précédente est toujours utilisée.</string>
     <string name="insulin_activation_unconfirmed">Le changement d\'insuline n\'a pas pu être confirmé. Vérifiez quelle insuline est active dans votre profil avant d\'injecter.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">L\'insuline n\'a pas été changée. Votre insuline précédente est toujours utilisée.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nL\'insuline n\'a pas non plus été changée.</string>
     <string name="active"><![CDATA[<Actif>]]></string>
     <string name="date"> Date</string>
@@ -173,6 +184,7 @@
     <string name="notconfigured">Non configuré</string>
     <string name="loop_suspended_by_dst">Boucle suspendue par le changement d\'heure</string>
     <string name="required">requis</string>
+    <string name="a11y_arrow_triple_down">en baisse très rapide</string>
     <string name="a11y_arrow_double_down">en baisse rapide</string>
     <string name="a11y_arrow_single_down">en baisse</string>
     <string name="a11y_arrow_forty_five_down">en baisse lente</string>
@@ -180,8 +192,10 @@
     <string name="a11y_arrow_forty_five_up">hausse lente</string>
     <string name="a11y_arrow_single_up">en hausse</string>
     <string name="a11y_arrow_double_up">en hausse rapide</string>
+    <string name="a11y_arrow_triple_up">en hausse très rapide</string>
     <string name="a11y_arrow_none">aucun</string>
     <string name="a11y_arrow_unknown">inconnu</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">réduire %1$s par %2$s</string>
     <string name="decrement">diminuer</string>
     <string name="increment">augmenter</string>
     <string name="a11y_high">haut</string>
@@ -354,7 +368,6 @@
     <string name="scene_action_careportal">Note : %1$s</string>
     <string name="scene_management">Scénarii</string>
     <string name="scene_management_desc">Créer, éditer et gérer les scénarii</string>
-    <string name="scene_action_count">%1$d actions</string>
     <string name="scene_start_from_template">Créer à partir d\'un modèle</string>
     <string name="scene_editor_target">Cible</string>
     <string name="scene_editor_tt_preset">Préréglage CT</string>

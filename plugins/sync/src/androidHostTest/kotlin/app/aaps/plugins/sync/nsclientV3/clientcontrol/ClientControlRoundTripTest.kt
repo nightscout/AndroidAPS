@@ -154,8 +154,12 @@ internal class ClientControlRoundTripTest {
     }
 
     @Test
-    fun onProgressDoc_completePhase_completesClientBolusProgress() = runTest {
-        sut.onProgressDoc(progressDoc(ProgressPhase.Complete, percent = 100))
+    fun onProgressDoc_completePhase_appliesTheLastValuesThenCompletesClientBolusProgress() = runTest {
+        // The last Active frame may have been throttled away on the master, so the dialog must take
+        // the delivered amount from the Complete frame, not end on the amount before
+        sut.onProgressDoc(progressDoc(ProgressPhase.Complete, percent = 100, status = "Delivering 0.25U", insulin = 0.25, delivered = 0.25))
+
+        verify(bolusProgressData).updateProgress(eq(100), eq(TextRef.Literal("Delivering 0.25U")), eq(PumpInsulin(0.25)))
         verify(bolusProgressData).completeAndAutoClear()
     }
 

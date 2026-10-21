@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.Dana
@@ -128,8 +129,15 @@ class DanaRSPlugin(
 
     private var scope: CoroutineScope? = null
 
-    override val pumpDescription
-        get() = PumpDescription().fillFor(danaPump.pumpType())
+    /**
+     * Built on every read, because the pump type is only known after connecting (RS, i or i2), with the
+     * bolus and basal steps the pump is set to (see [DanaPump.applyReadSteps]).
+     *
+     * The steps used to be written into this description from [getPumpStatus], but a getter hands out a
+     * new object each time, so they were lost and a bolus of 1.55 U was refused by a pump set to 0.1 U (#946).
+     */
+    override val pumpDescription: PumpDescription
+        get() = danaPump.applyReadSteps(PumpDescription().fillFor(danaPump.pumpType()))
 
     override suspend fun onStart() {
         super.onStart()
@@ -202,8 +210,6 @@ class DanaRSPlugin(
 
     override suspend fun getPumpStatus(reason: String) {
         danaRSService?.readPumpStatus()
-        pumpDescription.basalStep = danaPump.basalStep
-        pumpDescription.bolusStep = danaPump.bolusStep
     }
 
     // DanaR interface
@@ -280,6 +286,15 @@ class DanaRSPlugin(
         }
         return true
     }
+
+    /**
+     * The 24 hourly rates the pump itself reports: it keeps them in 0.01 U/h steps and is read again after each set
+     * (#2454). If that read failed, they are still the old ones; then [isThisProfileSet] fails too, and KeepAlive
+     * sets the profile again. null before the pump was read: the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? =
+        if (!isInitialized()) null
+        else danaPump.pumpProfiles?.get(danaPump.activeProfile)?.take(24)?.mapIndexed { hour, rate -> Profile.ProfileValue(T.hours(hour.toLong()).secs().toInt(), rate) }
 
     override val baseBasalRate get() = PumpRate(danaPump.currentBasal)
 

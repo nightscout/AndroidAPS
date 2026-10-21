@@ -1,5 +1,6 @@
 package app.aaps.pump.common.compose
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
@@ -7,8 +8,10 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.ParcelUuid
 import androidx.compose.runtime.Stable
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -83,6 +86,12 @@ class RileyLinkPairWizardViewModel(
     @SuppressLint("MissingPermission")
     fun startScan() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLinkPairWizard: startScan")
+        // Without the permission Android throws a SecurityException, and the app ends.
+        // Check it first, so the RileyLink in use is not disconnected for a scan that cannot run.
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "RileyLinkPairWizard: BLUETOOTH_SCAN permission missing, no scan")
+            return
+        }
         // Disconnect current RL so it becomes discoverable
         rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect)
         _uiState.update { it.copy(devices = emptyList()) }

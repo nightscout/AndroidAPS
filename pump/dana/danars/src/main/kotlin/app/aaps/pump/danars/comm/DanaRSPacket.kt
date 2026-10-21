@@ -1,7 +1,6 @@
 package app.aaps.pump.danars.comm
 
 import app.aaps.pump.danars.encryption.BleEncryption
-import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
@@ -47,14 +46,13 @@ open class DanaRSPacket {
         return ret
     }
 
+    /** Start of a local date from the pump. Where the clock changes at midnight, the day starts at the first time that exists. */
     fun dateFromBuff(buff: ByteArray, offset: Int): Long =
-        DateTime(
+        LocalDate(
             2000 + byteArrayToInt(getBytes(buff, offset, 1)),
             byteArrayToInt(getBytes(buff, offset + 1, 1)),
-            byteArrayToInt(getBytes(buff, offset + 2, 1)),
-            0,
-            0
-        ).millis
+            byteArrayToInt(getBytes(buff, offset + 2, 1))
+        ).toDateTimeAtStartOfDay().millis
 
     protected fun byteArrayToInt(b: ByteArray): Int =
         when (b.size) {
@@ -79,10 +77,7 @@ open class DanaRSPacket {
         val minute = intFromBuff(buff, offset + 4, 1)
         val second = intFromBuff(buff, offset + 5, 1)
         if (!isValidDateTime(year, month, day, hour, minute, second)) return 0L
-        val local = LocalDateTime(year, month, day, hour, minute, second)
-        // A time in the daylight saving gap does not exist on the phone, use the next hour
-        val existing = if (DateTimeZone.getDefault().isLocalDateTimeGap(local)) local.plusHours(1) else local
-        return existing.toDateTime().millis
+        return localTimeToMillis(LocalDateTime(year, month, day, hour, minute, second))
     }
 
     protected fun intFromBuff(b: ByteArray, srcStart: Int, srcLength: Int): Int =
@@ -121,6 +116,18 @@ open class DanaRSPacket {
 
         fun isValidDateTime(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int): Boolean =
             month in 1..12 && day in 1..LocalDate(year, month, 1).dayOfMonth().maximumValue && isValidTime(hour, minute, second)
+
+        /**
+         * A local time from a pump that keeps local time, in the time zone of the phone.
+         *
+         * When the clock goes forward, the hour in the daylight saving gap does not exist on the phone and Joda
+         * throws. The pump clock has not moved yet and is behind by the gap, so the next hour is used. The same
+         * rule for the pump clock and the history keeps them in step until AAPS sets the pump clock.
+         */
+        fun localTimeToMillis(local: LocalDateTime): Long {
+            val existing = if (DateTimeZone.getDefault().isLocalDateTimeGap(local)) local.plusHours(1) else local
+            return existing.toDateTime().millis
+        }
 
         fun asciiStringFromBuff(buff: ByteArray, offset: Int, length: Int): String {
             val stringBuff = ByteArray(length)

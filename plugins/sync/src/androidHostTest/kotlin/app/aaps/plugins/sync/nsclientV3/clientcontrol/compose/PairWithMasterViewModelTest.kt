@@ -1,6 +1,11 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.ClientRole
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.MasterPairing
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
@@ -9,6 +14,7 @@ import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferFetcher
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
@@ -42,10 +48,17 @@ internal class PairWithMasterViewModelTest {
     @Mock private lateinit var publisher: ClientControlPublisher
     @Mock private lateinit var fetcher: PairingOfferFetcher
     @Mock private lateinit var dateUtil: DateUtil
+    @Mock private lateinit var preferences: Preferences
+    @Mock private lateinit var nsClient: NsClient
 
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
+        // The hardened-mode flow is built at construction from these.
+        whenever(preferences.observe(BooleanKey.HardenedMode)).thenReturn(MutableStateFlow(false))
+        whenever(preferences.observe(BooleanKey.GeneralSimpleMode)).thenReturn(MutableStateFlow(false))
+        whenever(preferences.observe(StringNonKey.NsClientControlClientId)).thenReturn(MutableStateFlow(""))
+        whenever(nsClient.clientRole).thenReturn(MutableStateFlow(ClientRole.Admin))
         // StandardTestDispatcher does NOT auto-run viewModelScope.launch bodies (no advanceUntilIdle),
         // so onPinEntered/confirmPair only apply their synchronous prelude.
         Dispatchers.setMain(StandardTestDispatcher())
@@ -67,7 +80,7 @@ internal class PairWithMasterViewModelTest {
      * until the queue is drained, hence the advanceUntilIdle here rather than in every test.
      */
     private fun TestScope.createViewModel() =
-        PairWithMasterViewModel(repository, publisher, fetcher, dateUtil).also { advanceUntilIdle() }
+        PairWithMasterViewModel(repository, publisher, fetcher, dateUtil, preferences, nsClient).also { advanceUntilIdle() }
 
     @Test
     fun `default state is PinEntry when not paired`() = runTest {

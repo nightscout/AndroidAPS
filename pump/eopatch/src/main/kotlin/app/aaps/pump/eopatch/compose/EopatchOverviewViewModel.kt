@@ -249,7 +249,7 @@ class EopatchOverviewViewModel(
         val isBolusActive = preferenceManager.patchState.isBolusActive
         val tempBasal = tempBasalManager.startedBasal
         val isTempBasalActive = preferenceManager.patchState.isTempBasalActive && tempBasal != null
-        val tempRate = tempBasal?.doseUnitText ?: ""
+        val tempRate = tempBasal?.doseText ?: ""
         val tempRemainTime = tempBasal?.remainTimeText ?: ""
         var remainBolus = preferenceManager.patchState.isNowBolusActive.takeOne(preferenceManager.bolusCurrent.remain(BolusType.NOW), 0f)
         remainBolus += preferenceManager.patchState.isExtBolusActive.takeOne(preferenceManager.bolusCurrent.remain(BolusType.EXT), 0f)
@@ -299,7 +299,7 @@ class EopatchOverviewViewModel(
 
                 // Basal rate
                 if (preferenceManager.patchState.isNormalBasalRunning) {
-                    val basalRate = ch.basalRateString(PumpRate(normalBasalManager.normalBasal.currentSegmentDoseUnitPerHour.toDouble()), true)
+                    val basalRate = ch.basalRateString(PumpRate(normalBasalManager.normalBasal.currentDeliveredDoseUnitPerHour), true)
                     add(PumpInfoRow(label = rh.gs(R.string.eopatch_base_basal_rate), value = basalRate))
                 }
 

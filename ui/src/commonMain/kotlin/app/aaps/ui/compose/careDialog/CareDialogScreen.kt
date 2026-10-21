@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -54,11 +55,13 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.EventTimeRow
+import app.aaps.core.ui.compose.ExpandableNumberInputRow
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
@@ -251,6 +254,7 @@ internal fun CareDialogContent(
                             glucoseUnits = uiState.glucoseUnits,
                             onMeterTypeChange = onMeterTypeChange,
                             onBgValueChange = onBgValueChange,
+                            folded = !uiState.bgIsPrimary,
                             modifier = itemModifier
                         )
                     }
@@ -299,6 +303,13 @@ internal fun CareDialogContent(
     }
 }
 
+/**
+ * The BG and how it was measured.
+ *
+ * @param folded true where the BG only comes along with the entry (a question, an announcement).
+ *   The row then shows the value and the meter type, and opens for typing. A BG check is about the
+ *   BG, so there it stays open.
+ */
 @Composable
 private fun BgSection(
     meterType: TE.MeterType,
@@ -306,60 +317,104 @@ private fun BgSection(
     glucoseUnits: GlucoseUnit,
     onMeterTypeChange: (TE.MeterType) -> Unit,
     onBgValueChange: (Double) -> Unit,
+    folded: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
-        val meterOptions = listOf(
-            TE.MeterType.FINGER to stringResource(UiStrings.bg_meter),
-            TE.MeterType.SENSOR to stringResource(UiStrings.bg_sensor),
-            TE.MeterType.MANUAL to stringResource(UiStrings.bg_other)
-        )
+    val (minBg, maxBg, step, format) = when (glucoseUnits) {
+        GlucoseUnit.MMOL -> BgParams(2.0, 30.0, 0.1, NumberFormat.DECIMAL_1)
+        GlucoseUnit.MGDL -> BgParams(36.0, 500.0, 1.0, NumberFormat.INTEGER)
+    }
+    val unitLabel = TextRef.Literal(glucoseUnits.displayLabel)
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .selectableGroup(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            meterOptions.forEach { (type, label) ->
-                Row(
-                    modifier = Modifier
-                        .selectable(
-                            selected = meterType == type,
-                            onClick = { onMeterTypeChange(type) },
-                            role = Role.RadioButton
-                        )
-                        .padding(vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = meterType == type,
-                        onClick = null
-                    )
-                    Text(
-                        text = label,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(start = 2.dp)
-                    )
-                }
-            }
-        }
-
-        val (minBg, maxBg, step, format) = when (glucoseUnits) {
-            GlucoseUnit.MMOL -> BgParams(2.0, 30.0, 0.1, NumberFormat.DECIMAL_1)
-            GlucoseUnit.MGDL -> BgParams(36.0, 500.0, 1.0, NumberFormat.INTEGER)
-        }
-
-        NumberInputRow(
+    if (folded) {
+        var expanded by rememberSaveable { mutableStateOf(false) }
+        val expandRequester = rememberBringIntoViewOnExpand(expanded)
+        ExpandableNumberInputRow(
             labelRef = CoreUiStrings.bg_label,
             value = bgValue,
             onValueChange = onBgValueChange,
             valueRange = minBg..maxBg,
             step = step,
             valueFormat = format,
-            unitLabel = TextRef.Literal(glucoseUnits.displayLabel)
+            unitLabel = unitLabel,
+            expanded = expanded,
+            onExpandedChange = { expanded = it },
+            modifier = modifier.bringIntoViewRequester(expandRequester),
+            // The meter type is shown with the value: a change of the value turns Sensor into
+            // Finger, and that must not happen out of sight.
+            valueContent = {
+                Text(
+                    text = stringResource(CoreUiStrings.value_with_unit, format.format(bgValue), glucoseUnits.displayLabel),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = stringResource(CoreUiStrings.value_in_parentheses, meterTypeLabel(meterType)),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            expandedContent = {
+                MeterTypeSelector(meterType = meterType, onMeterTypeChange = onMeterTypeChange)
+            }
         )
+    } else {
+        Column(modifier = modifier) {
+            MeterTypeSelector(meterType = meterType, onMeterTypeChange = onMeterTypeChange)
+            NumberInputRow(
+                labelRef = CoreUiStrings.bg_label,
+                value = bgValue,
+                onValueChange = onBgValueChange,
+                valueRange = minBg..maxBg,
+                step = step,
+                valueFormat = format,
+                unitLabel = unitLabel
+            )
+        }
     }
+}
+
+@Composable
+private fun MeterTypeSelector(
+    meterType: TE.MeterType,
+    onMeterTypeChange: (TE.MeterType) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .selectableGroup(),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        listOf(TE.MeterType.FINGER, TE.MeterType.SENSOR, TE.MeterType.MANUAL).forEach { type ->
+            Row(
+                modifier = Modifier
+                    .selectable(
+                        selected = meterType == type,
+                        onClick = { onMeterTypeChange(type) },
+                        role = Role.RadioButton
+                    )
+                    .padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(
+                    selected = meterType == type,
+                    onClick = null
+                )
+                Text(
+                    text = meterTypeLabel(type),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 2.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun meterTypeLabel(type: TE.MeterType): String = when (type) {
+    TE.MeterType.FINGER -> stringResource(UiStrings.bg_meter)
+    TE.MeterType.SENSOR -> stringResource(UiStrings.bg_sensor)
+    TE.MeterType.MANUAL -> stringResource(UiStrings.bg_other)
 }
 
 private data class BgParams(
@@ -369,20 +424,25 @@ private data class BgParams(
     val format: NumberFormat
 )
 
+/** Folded: most notes have no duration, and an exercise is mostly only nudged. */
 @Composable
 private fun DurationSection(
     duration: Double,
     onDurationChange: (Double) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    NumberInputRow(
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    val expandRequester = rememberBringIntoViewOnExpand(expanded)
+    ExpandableNumberInputRow(
         labelRef = CoreUiStrings.duration_label,
         value = duration,
         onValueChange = onDurationChange,
         valueRange = Constants.ACTION_DURATION,
         step = 10.0,
         unitLabel = CoreUiStrings.units_min,
-        modifier = modifier
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = modifier.bringIntoViewRequester(expandRequester)
     )
 }
 

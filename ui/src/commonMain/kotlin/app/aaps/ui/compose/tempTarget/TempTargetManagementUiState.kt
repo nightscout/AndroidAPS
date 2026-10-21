@@ -13,9 +13,6 @@ data class TempTargetManagementUiState(
     /** Currently active temporary target (if any) */
     val activeTT: TT? = null,
 
-    /** Remaining time in milliseconds for active TT */
-    val remainingTimeMs: Long? = null,
-
     /** List of user-defined presets (minimum 3 default presets) */
     val presets: List<TTPreset> = emptyList(),
 

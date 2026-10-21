@@ -74,6 +74,8 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Hvis aktivert, vil opplastinger gå til testservere i stedet for den vanlige</string>
     <string name="title_tidepool_dev_servers">Bruk integrasjon (test) servere</string>
+    <string name="title_tidepool_use_ns_connection">Bruk tilkoblingsinnstillingene for Nightscout</string>
+    <string name="summary_tidepool_use_ns_connection">Slå av for å angi egne tilkoblingsinnstillinger for Tidepool</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Laster opp data til Tidepool</string>
     <string name="upload_now">Last opp nå</string>
@@ -107,6 +109,7 @@
     <string name="scene_not_available">Scene %1$s finnes ikke lenger</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Fjernkommandoer for insulin er deaktivert i AAPSClient-modus</string>
     <string name="wear_phone_not_ready">Telefonen starter fortsatt opp eller tar i bruk innstillinger. Prøv igjen om litt.</string>
+    <string name="wear_control_disabled">Kontroller fra klokke er deaktivert i Klokke-innstillingene på telefonen.</string>
     <string name="wear_action_tempt_unit_error">Forskjellige enheter brukt på klokke og telefon!</string>
     <string name="wear_action_tempt_min_bg_error">Min-BS utenfor område!</string>
     <string name="wear_action_tempt_max_bg_error">Maks-BS utenfor område!</string>
@@ -155,7 +158,7 @@
     <string name="aps">APS</string>
     <string name="last_run">Siste beregning</string>
     <string name="last_enact">Siste utført</string>
-    <string name="tdd_line">%1$.2fE %1$.0f%%</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fE %2$.0f%%</string>
     <string name="today">Idag</string>
     <string name="weighted">vektlagt</string>
     <string name="full_xdrip_sync_comment">Full synkronisering? Det kan ta en stund og før den er ferdig vil du ikke se nye data i xDrip+.</string>

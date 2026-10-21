@@ -68,7 +68,7 @@ Independent gates on the master (`ClientControlReceiver`), in order:
 
 | Identifier prefix | Direction | Semantics |
 |---|---|---|
-| `aaps_clientcontrol_` | — | shared prefix; gates WS routing + polling fallback |
+| `aaps_clientcontrol_` | — | shared prefix; gates WS routing |
 | `aaps_clientcontrol_hello_<…>` | client→master | first message, Pending → Active |
 | `aaps_clientcontrol_cmd_<type>_<clientId>` | client→master | **per-type** command slot, **latest-wins** overwrite |
 | `aaps_clientcontrol_ack_<clientId>` | master→client | one ACK doc per client, overwritten in place |
@@ -126,6 +126,7 @@ masterReachable = AAPSCLIENT
                && fresh liveness signal (≤ 9 min)
                && paired
                && authorized (in roster, not orphan)
+               && master's client-control switch on (read with the master's rule, see §2.9)
 ```
 
 Freshness is fed by **any** authenticated master signal (`_lastMasterSignalAt` bumped by): (1) a devicestatus heartbeat, (2) a **PING pong**, or (3) a live config republish. The `freshness(thresholdMs = 9 min, tickMs = 60s, pristine = false)` term re-evaluates ~every minute so a stale timestamp flips `fresh → false` within ~1 min of crossing the threshold. `pristine = false` means it **fails closed at boot** (offline until a signal arrives). The flow is shared via `stateIn(WhileSubscribed(5000))`.
@@ -150,6 +151,45 @@ The client maps the round-trip to exactly three outcomes:
 | **Unconfirmed** | sent but no `Done` ack before the deadline, or connection lost mid-wait | **state unknown** — the client flips `masterReachable` offline (`forceOfflineProbe`), pings/re-pulls, and reconciles real state via sync-back |
 
 > `masterReachable` is observed as `.drop(1).filter { !it }` during a round-trip — the wait **early-aborts** to `Unconfirmed` only on a *transition* to false (connection loss), not on an initial-false (the timeout/poll path covers that).
+
+### 2.9 Hardened mode
+
+The master's client-control switch (`BooleanKey.HardenedMode`, still stored as `ns_allow_client_control`) is also **hardened mode**: while it is on, the master takes changes only through this signed channel, never directly from Nightscout.
+
+- **One rule, `Preferences.hardenedMode`.** On the master it is the switch, read with `get()`, so simple mode turns it on (`defaultedBySM`). On a client it is the master's synced value of the switch, read with the same rule (simple mode is synced too), and only while the client is paired. An unpaired client is a viewer and keeps its own settings. Both phones get the same answer because they apply the same rule to the same values.
+- **Forced keys (`defaultedByHardenedMode`).** While hardened mode is on, `PreferencesImpl.get()` returns the key's default and `PreferenceState` hides its row: the nine `NsClientAccept*` keys (off), `NsClientUploadData` and `BgSourceUploadToNs` (on), and `NsClient3UseWs` (on). The code that reads these keys does not change. The Synchronization screen disappears with them (`hideParentScreenIfHidden`).
+- **What still comes from Nightscout:** BG when Nightscout is the BG source (`NsIncomingDataProcessor.acceptsGlucose`), Full sync (the way to load the history, profiles included, on a new master), and food. SMS commands are not affected.
+- **WebSocket.** Simple mode keeps `NsClient3UseWs` on for every phone; hardened mode keeps it on for the master and for paired clients. So "switch on" always means the master can serve commands. That is why the published switch is no longer rewritten (it travels like every other cold key) and why there is no poll fallback for commands.
+- **Listeners.** `observe(key)` emits only the stored value, so it misses a change forced by simple mode or hardened mode. Code that must follow the value in use takes `Preferences.observeEffective(key)` or `observeHardenedMode()`: the WebSocket restart, `masterReachable`, `masterControlAllowed`, the Authorized clients switch.
+- **Stored at pairing.** Unset, the switch is on only in simple mode. On Pending → Active the master stores the value in use, so leaving simple mode later does not silently turn client control off. At master start the same is done once for clients paired before this existed (`storeClientControlSwitchIfUnset`).
+- **A WebSocket that does not work.** Data still arrives: the 5-minute tick polls whenever the socket is not connected (`NSClientV3Plugin.needsPolling`), not only when the setting is off. Client control itself needs a working WebSocket (a command is valid for seconds, a poll comes minutes later). The way out for such a host: leave simple mode, turn the switch off, then turn the WebSocket off.
+- **UI.** "Hardened mode on" with an (i) explanation on the Authorized clients screen (master, every mode; the switch row itself is hidden in simple mode) and on the client's pairing screen. The setup wizard shows the explanation instead of the button to the "accept from Nightscout" settings.
+
+### 2.10 Client roles
+
+Each paired client has a role, set on the master. The roles are a ladder (`ClientRole`, `core/keys`); each one can do everything the one below it can.
+
+| Role | Label | May do |
+|---|---|---|
+| `ReadOnly` | Read-only | nothing; it sees everything, and `Hello`/`Ping` still work, so it stays paired and shows online |
+| `MealAssistant` | Meals | bolus, wizard, QuickWizard, carbs and eCarbs, stop a bolus, dismiss the bolus-failed alarm |
+| `Caregiver` | Caregiver | every command except setting preferences: temp targets, profile switch, running mode, TBR and extended bolus, careportal and device events, scenes, deletes, calibration |
+| `Admin` | Admin | also defines presets and changes synced settings (`PreferencesUpdate`) |
+
+This is a simpler form of the per-permission idea in issue #5348. One thing that issue asks for is not possible: carbs plus temp target without bolus (a meal assistant cannot set a temp target).
+
+- **Stored on the master** in `AuthorizedClient.role` (a `String`, so a role a later build adds never fails decoding, which would empty the whole list). The user picks it in the "Add client" dialog (nothing preselected, OK stays off until one is chosen) and can change it any time with the segmented row under the client's name. A client stored before roles existed has no role and reads as `Admin`, so an update changes nothing for it. An unknown name reads as `ReadOnly`.
+- **The master is the gate.** `ClientControlReceiver.verifyAndAck` checks the role after the signature, counter and control-disabled checks. A refusal is a signed `Done/Failed` ACK with `FailureReason.NotAllowedForRole`, and the counter is used up like for any other answer. For `BatchPrepare` the needed role is the highest one of its actions (`List<BatchAction>.requiredRole`: a bolus needs Meals, anything else Caregiver).
+- **Parked actions belong to their caller.** A prepare parks under an id the client could guess, so the park keeps who made it (`RemoteCaller`, or the owner id for scenes). `PendingSlots.takeFor` and `ParkedScenes.takeFor` hand it out only to that caller and leave it in place for anyone else (`NoPending`). A client cannot commit a dose the master parked for itself, and the master cannot commit one a client parked. At commit the role is checked again against what the park needs, so a role lowered between prepare and commit refuses it (`ConfirmResult.NotAllowed` → `NotAllowedForRole`).
+- **The client learns its role** from the cold doc: `authorizedClients.roles` maps each active clientId to its role. `OrphanDetector.storeOwnRole` stores it in `StringNonKey.NsClientControlRole`; `NsClient.clientRole` is the flow the UI reads. A master is always `Admin`. No `roles` map at all (an older master) means `Admin`, since such a master does not check roles. A paired client missing from the map, and an unpaired client (pair and unpair clear the key), is `ReadOnly`.
+- **The client hides what the master would refuse.** `ElementType.role` is the lowest role for each element and `ElementType.isAvailable(ctx)` checks both its visibility and the role (`VisibilityContext.clientRole`). Compose code reads `LocalClientRole` (provided in `AapsAppRoot`) or `masterEditingEnabled(role)`. Screens that both use and define presets (temp targets, insulins, QuickWizard, profiles, scenes, automation) open in use mode below `Admin`, and synced settings rows are locked below `Admin`. A read-only client shows a banner in the Manage sheet. The Insulin and Carbs dialogs leave out their temp target switches below `Caregiver`, and the Carbs dialog then does not tick the hypo target by itself on a low: the master would refuse the carbs together with the target.
+- **A refusal is shown once.** `NotAllowedForRole` always comes back from the master, so the round-trip modal shows it. It is not in `isNotDeliveryError()`, the list of reasons the screens show again because nothing was sent.
+
+Not covered yet:
+
+- Food is written to the local database, not through the master.
+- Three watch paths still write locally on the client, and the watch does not know the role (the master still refuses, so the user sees the refusal, not a hidden button).
+- Going back to a build without roles makes the master stop checking them (fail open). A role only exists in builds that check it.
 
 ---
 
@@ -187,15 +227,15 @@ suspend fun prepare(label, clientCommand, masterPrepare): ActionProgress {
 
 ### 3.3 Consume-once, parked-by-id
 
-`WizardBolusExecutorImpl` keeps a `ConcurrentHashMap<Long, PendingBolus>` keyed by `bolusId` (the master timestamp at park time; TTL **10 min**, trimmed on the next prepare). On commit, `pending.remove(bolusId)` is **atomic** — two concurrent commits of the same id can't both deliver (the loser gets `null` → `ConfirmResult.NoPending` → `Rejected(NoPendingBolus)`). This is the **single point** where a parked dose leaves the slot. Triple-redundant against a double-dose: atomic `remove` + receiver `commandMutex` + the per-client counter gate.
+`MasterActionExecutorImpl` keeps a `ConcurrentHashMap<Long, PendingBolus>` keyed by `bolusId` (the master timestamp at park time; TTL **10 min**, trimmed on the next prepare). On commit, `pending.remove(bolusId)` is **atomic** — two concurrent commits of the same id can't both deliver (the loser gets `null` → `ConfirmResult.NoPending` → `Rejected(NoPendingBolus)`). This is the **single point** where a parked dose leaves the slot. Triple-redundant against a double-dose: atomic `remove` + receiver `commandMutex` + the per-client counter gate. The slot is taken only by the caller that parked it (`takeFor(id, owner)`, see 2.10); anyone else gets `NoPending` and the slot stays.
 
 The **scene executor uses a separate `pendingScenes` map** (own id-space, shorter `PARK_TTL_MS` = 2 min — no long round-trip window needed), so a `SceneCommit` and a `BolusCommit` can never drain each other's parked state. This is exactly why `SceneCommit` is a distinct wire type from `BolusCommit`.
 
 ### 3.4 The master authors the confirmation
 
-All confirmation builders live on the master in `WizardBolusExecutorImpl`: `buildConfirmationLines` (manual wizard) and, for batches, `buildFixedLines` + `buildTtLine` + `buildPsLine` + `buildRmLine` + `buildTempBasalLine` + `buildExtendedBolusLine` + `buildCancelLine` + `buildInsulinActivateLine`. Each line carries a `ConfirmationRole` (`BOLUS`, `CARBS`, `PRIMARY`, `NORMAL`, `WARNING`) → mapped to a theme color in the UI layer. The client/watch render the list verbatim.
+All confirmation builders live on the master in `MasterActionExecutorImpl`: `buildConfirmationLines` (manual wizard) and, for batches, `buildFixedLines` + `buildTtLine` + `buildPsLine` + `buildRmLine` + `buildTempBasalLine` + `buildExtendedBolusLine` + `buildCancelLine` + `buildInsulinActivateLine`. Removing records, removing start events and adding a calibration get their lines from `MasterRecordWriter`, which also applies them. Each line carries a `ConfirmationRole` (`BOLUS`, `CARBS`, `PRIMARY`, `NORMAL`, `WARNING`) → mapped to a theme color in the UI layer. The client/watch render the list verbatim.
 
-**Decision-B bundle order at commit** (`WizardBolusExecutorImpl` confirm path) — the safety net survives an async pump failure:
+**Decision-B bundle order at commit** (`MasterActionExecutorImpl` confirm path) — the safety net survives an async pump failure:
 
 1. **TempTarget** if target-**raising** (hypo/activity) — unconditional, first;
 2. **Bolus / Carbs** delivery;
@@ -206,7 +246,7 @@ All confirmation builders live on the master in `WizardBolusExecutorImpl`: `buil
 
 ## 4. Entity coverage
 
-`BatchAction` (`core/interfaces/.../bolus/BatchAction.kt`) is the domain union (at most one of each per batch): `Bolus`, `TempTarget`, `ProfileSwitch`, `RunningMode`, `TempBasal`, `ExtendedBolus`, `CancelTempBasal`, `CancelExtendedBolus`, `InsulinActivate`. `BatchActionDto` (`plugins/sync/.../clientcontrol/BatchActionMapping.kt`) is the flat type-tagged wire form (`TYPE_*` constants).
+`BatchAction` (`core/interfaces/.../bolus/BatchAction.kt`) is the domain union: `Bolus`, `TempTarget`, `ProfileSwitch`, `RunningMode`, `TempBasal`, `ExtendedBolus`, `CancelTempBasal`, `CancelExtendedBolus`, `InsulinActivate`, `RemoveStartEvents` and `Calibration` (at most one of each per batch), plus `TherapyEvent`, `TherapyEventEdit` and `Remove` (any number). `BatchActionDto` (`plugins/sync/.../clientcontrol/BatchActionMapping.kt`) is the flat type-tagged wire form (`TYPE_*` constants).
 
 | User action | Command / route | Pattern | Note |
 |---|---|---|---|
@@ -227,8 +267,15 @@ All confirmation builders live on the master in `WizardBolusExecutorImpl`: `buil
 | **Preference edit** (bidirectional key) | `PreferenceEdit(prefs)` | single-step | pessimistic round-trip + republish (§5.2); locally-built modal copy |
 | **Fill / prime** | — | off-relay | local-only; `rejectIfAapsClient()`; PRIMING bolus + profile-switch chaining, no relay command |
 | **SMS** | — | off-relay | not on the client-control channel |
-| Calibration | — | off-relay | local `activeCalibration.addEntry`, NS-synced |
-| CarePortal | — | off-relay | additive `persistenceLayer.insert` + NS sync |
+| CarePortal / sensor change | `BatchAction.TherapyEvent` | two-step | the master stores it (insert-if-new by timestamp); the calibration dialog's "sensor change" button too |
+| Site location edit | `BatchAction.TherapyEventEdit` | two-step | the master finds the event by timestamp + type; a missing one is an error |
+| Calibration | `BatchAction.Calibration(glucoseMgdl)` | two-step | the master checks the conditions and pairs the value with **its** latest sensor reading, so the loop's BG is calibrated; refusal texts are built on the master |
+| **Remove records** (every list screen: treatments tabs, BG, calibration) | `BatchAction.Remove(kind, refs)` | two-step | only **Nightscout ids** travel; the master finds, describes and removes its own copies and the change comes back through NS. The client never removes anything itself. A record the master does not have is not removed and the confirmation says so (all missing → refused). Known limit: when xDrip uploads BG and AAPS on the master does not, the master's BG has no NS id, so a client cannot remove BG |
+| Remove "AndroidAPS started" events | `BatchAction.RemoveStartEvents` | two-step | matched by the master's own text (the events carry it in the master's language) |
+| Food | — | off-relay | not uploaded by NSCv3 on any role |
+| "Sensor change detected" notice (calibration) | — | master only | its button writes a sensor change, so a client does not post the notice; the master sees the same BG gap |
+| Autotune profile switch | — | master only | the button is hidden on a client; copying the tuned profile into the (synced) profile store still works |
+| **Garmin** carbs, pump connect / disconnect | — | master only | a client only shows values on the watch; it refuses these and says so in a phone notification (the watch cannot show why). Heart rate is still stored locally, like Wear |
 
 ---
 
@@ -251,7 +298,7 @@ Kept separate so a cold-doc apply (which has no `activeScene` block) **never cle
 - **Hot** → pass the active-scene snapshot (or null) to `ActiveSceneSync.applyActiveScene()` and put `usedAutosensOnMainPhone`.
 
 Notable invariants:
-- **Raw value, not mode-adjusted.** `syncedPrefs` serializes the **raw** persisted value, not `preferences.get()`'s mode-adjusted effective value. Simple/Expert mode is per-device presentation; each device re-applies its own mode on read. Master in Simple + client in Expert both sync the raw setting.
+- **Raw value, not mode-adjusted.** `syncedPrefs` serializes the **raw** persisted value (or the computed default when unset), not `preferences.get()`'s mode-adjusted effective value. Each device re-applies the mode rules on read. Simple mode itself is synced, so both phones apply the same rules. The client-control switch is no exception (see §2.9).
 - **Flat map.** A new bidirectional setting needs **zero** publisher changes — it auto-appears as another map entry.
 - **Roster appended at publish time.** `AuthorizedClientsRepository` is in `:plugins:sync` but `RunningConfigurationImpl` is in `:plugins:configuration`; to avoid an inter-module dep, the roster is appended to the JSON in `RunningConfigurationPublisher.publishCold` *after* `configuration()`. Block absence is a backward-compat marker — clients must **not** infer orphan from `null`, only from "block present + clientId missing". Pending entries are deliberately omitted (a pairing client would otherwise wrongly think it isn't paired yet).
 - **Self-healing republish.** On WS reconnect (debounced 3 s, `WS_RECONNECT_DEBOUNCE_MS`) the master republishes its **entire** config (not just changes), recovering: an offline edit that failed to publish, an auto-pruned doc, or a `start()`-before-NS-ready initial publish. `LoadSettingsWorker` unconditionally GETs both docs on every loop, pulling any missed WS push. Republishing unchanged config is idempotent (per-key LWW no-ops → no echo storm).
@@ -335,7 +382,7 @@ To add a new master-authored two-step action (e.g. a new therapy command):
 
 1. **Domain type.** Add a `BatchAction` subtype (if it fits the batch bundle) *or* a new `ClientControlMessage` variant + matching `ClientControlActionDispatcher.Command`. If a `ClientControlMessage`, give it a **stable `@SerialName`** (the wire contract — never rename later) and add it to the `when` in `ClientControlReceiver.onVerifiedEnvelope`.
 2. **Wire mapping.** If it's a `BatchAction`, add a `TYPE_*` constant + fields to `BatchActionDto` and the to/from mapping in `BatchActionMapping.kt`.
-3. **Master execution + confirmation.** Add the prepare logic (cap/validate against the master's live state, park by `bolusId`) and a `buildXxxLine` confirmation builder in `WizardBolusExecutorImpl`. Re-validate anything that could be stale (TOCTOU). Return `PrepareResult.Preview(bolusId, lines, …)`.
+3. **Master execution + confirmation.** Add the prepare logic (cap/validate against the master's live state, park by `bolusId`) and a `buildXxxLine` confirmation builder in `MasterActionExecutorImpl`. Re-validate anything that could be stale (TOCTOU). Return `PrepareResult.Preview(bolusId, lines, …)`.
 4. **Receiver handler.** Add `onVerifiedXxx` that calls the executor's prepare/confirm and returns an `AckOutcome`.
 5. **Route through `RoleBranch`.** Call `batchExecutor.prepare(...)` / `commit(bolusId, ...)` (or `wizardExecutor` for recompute) from the dialog/screen/wear handler. **Do not** add a role check in the caller — `RoleBranch` already handles client-vs-master, the offline gate, and the `ActionProgress` mapping.
 6. **Wear (optional).** Add a `handleXxxPreCheck` in `DataHandlerMobile` that calls `contacting()` + `shipPrepared(...)`, and an `onEvent<ActionXxxConfirmed>` that calls `commit(bolusId)`. The watch renders the master's lines automatically.

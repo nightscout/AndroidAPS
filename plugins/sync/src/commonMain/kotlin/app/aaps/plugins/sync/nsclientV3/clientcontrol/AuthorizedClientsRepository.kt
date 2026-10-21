@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.AuthorizedClient
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
@@ -17,6 +18,9 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
+
+/** The role of a stored client: none stored means Admin (see [ClientRole.of]). */
+internal val AuthorizedClient.clientRole: ClientRole get() = ClientRole.of(role)
 
 /**
  * Master-side store of clients authorized to send commands.
@@ -87,7 +91,7 @@ class AuthorizedClientsRepository(
      * for caller-side wrapping (PIN-based pairing offer) — caller must not persist it. The
      * encrypted form is stored on the entry.
      */
-    suspend fun addPending(name: String, pairTtlMs: Long, now: Long): PendingResult = mutex.withLock {
+    suspend fun addPending(name: String, role: ClientRole, pairTtlMs: Long, now: Long): PendingResult = mutex.withLock {
         val secretBytes = ClientControlCrypto.newSecretBytes()
         val secretHex = ClientControlCrypto.bytesToHex(secretBytes)
         val entry = AuthorizedClient(
@@ -96,7 +100,8 @@ class AuthorizedClientsRepository(
             encryptedSecret = secureEncrypt.encrypt(secretHex, SECURE_ENCRYPT_ALIAS),
             state = ClientState.Pending,
             createdAt = now,
-            pairExpiresAt = now + pairTtlMs
+            pairExpiresAt = now + pairTtlMs,
+            role = role.name
         )
         write(decode() + entry)
         PendingResult(entry, secretHex)
@@ -104,6 +109,13 @@ class AuthorizedClientsRepository(
 
     suspend fun delete(clientId: String): Unit = mutex.withLock {
         write(decode().filterNot { it.clientId == clientId })
+    }
+
+    /** Change the role of a client. It takes effect on the next command; the client learns it from the roster. */
+    suspend fun setRole(clientId: String, role: ClientRole): Unit = mutex.withLock {
+        val list = decode()
+        val updated = list.map { if (it.clientId == clientId) it.copy(role = role.name) else it }
+        if (updated != list) write(updated)
     }
 
     /**

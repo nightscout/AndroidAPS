@@ -43,6 +43,10 @@ val CareDialogUiState.showBgSection: Boolean
         CareportalEventType.ANNOUNCEMENT
     )
 
+/** A BG check is about the BG. With a question or an announcement the BG only comes along. */
+val CareDialogUiState.bgIsPrimary: Boolean
+    get() = eventType == CareportalEventType.BGCHECK
+
 /** Duration section visible for NOTE, EXERCISE */
 val CareDialogUiState.showDurationSection: Boolean
     get() = eventType in setOf(

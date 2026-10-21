@@ -126,21 +126,33 @@ class CarelevoPumpPluginMoreTest : CarelevoPumpPluginTestBase() {
 
     // ---- isThisProfileSet -----------------------------------------------------------------------
 
+    /** After a restart the profile in memory is the running one, with the rounded basal: it must not decide (#2454). */
     @Test
-    fun `isThisProfileSet should delegate to the patch profile comparison`() {
+    fun `isThisProfileSet compares with the program the patch accepted`() {
         val profile = pumpProfile()
+        whenever(setBasalProgramUseCase.isAccepted(profile)).thenReturn(true)
+        whenever(carelevoPatch.checkIsSameProfile(profile)).thenReturn(false)
+
+        assertThat(plugin.isThisProfileSet(profile)).isTrue()
+    }
+
+    @Test
+    fun `isThisProfileSet is false when the patch accepted another program`() {
+        val profile = pumpProfile()
+        whenever(setBasalProgramUseCase.isAccepted(profile)).thenReturn(false)
+        whenever(carelevoPatch.checkIsSameProfile(profile)).thenReturn(true)
+
+        assertThat(plugin.isThisProfileSet(profile)).isFalse()
+    }
+
+    @Test
+    fun `isThisProfileSet uses the profile in memory before a program was accepted`() {
+        val profile = pumpProfile()
+        whenever(setBasalProgramUseCase.isAccepted(profile)).thenReturn(null)
         whenever(carelevoPatch.checkIsSameProfile(profile)).thenReturn(true)
 
         assertThat(plugin.isThisProfileSet(profile)).isTrue()
         verify(carelevoPatch).checkIsSameProfile(profile)
-    }
-
-    @Test
-    fun `isThisProfileSet should return false when the patch reports a different profile`() {
-        val profile = pumpProfile()
-        whenever(carelevoPatch.checkIsSameProfile(profile)).thenReturn(false)
-
-        assertThat(plugin.isThisProfileSet(profile)).isFalse()
     }
 
     // ---- executeCustomCommand (queue routing) ---------------------------------------------------

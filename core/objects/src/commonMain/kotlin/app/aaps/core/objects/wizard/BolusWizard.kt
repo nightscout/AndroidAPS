@@ -17,7 +17,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -70,7 +70,7 @@ class BolusWizard(
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val runningModeGuard: RunningModeGuard,
     private val ch: ConcentrationHelper,
-    private val wizardBolusExecutor: WizardBolusExecutor,
+    private val masterActionExecutor: MasterActionExecutor,
     private val appScope: CoroutineScope
 ) {
 
@@ -288,7 +288,7 @@ class BolusWizard(
             // preClamp stays as the original negative value
         }
 
-        // Amount-aware (Insight) + concentration-adjusted deliverable step, so the rounded value matches the pump grid.
+        // The step of the pump, converted by the concentration, so the rounded value matches the pump grid.
         val bolusStep = ch.bolusStep(calculatedTotalInsulin)
         calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep)
         unclampedCalculatedInsulin = Round.roundTo(preClamp, bolusStep)
@@ -507,7 +507,7 @@ class BolusWizard(
      * Execute normal bolus wizard flow (bolus + carbs + superbolus + BCR save).
      * No UI dependency — errors reported via [onError] callback.
      */
-    suspend fun executeNormal(onError: (WizardBolusExecutor.Failure) -> Unit, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0, forcedRecordOnly: Boolean = false) {
+    suspend fun executeNormal(onError: (MasterActionExecutor.Failure) -> Unit, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0, forcedRecordOnly: Boolean = false) {
         if (accepted) {
             aapsLogger.debug(LTag.UI, "guarding: already accepted")
             return
@@ -600,7 +600,7 @@ class BolusWizard(
                 // Phone wizard bolus now rides the shared executor's canonical BOLUS_WIZARD entry point —
                 // identical end state to the watch, differing only in [source]. The executor logs the UEL,
                 // delivers via the one audited pump path, and persists the BCR.
-                wizardBolusExecutor.deliverWizardBolus(
+                masterActionExecutor.deliverWizardBolus(
                     insulin = insulinAfterConstraints,
                     carbs = carbs,
                     carbTimeMinutes = carbTime,
@@ -617,7 +617,7 @@ class BolusWizard(
         }
     }
 
-    private fun scheduleECarbs(eCarbsGrams: Int, delayMinutes: Int, durationHours: Int, onError: (WizardBolusExecutor.Failure) -> Unit, forcedRecordOnly: Boolean = false) {
+    private fun scheduleECarbs(eCarbsGrams: Int, delayMinutes: Int, durationHours: Int, onError: (MasterActionExecutor.Failure) -> Unit, forcedRecordOnly: Boolean = false) {
         // delayMinutes is already the total delay from now — the caller folds the meal carbTime into it.
         // Do NOT add carbTime again here or the eCarbs record lands carbTime minutes too late.
         val totalDelayMinutes = delayMinutes
@@ -651,7 +651,7 @@ class BolusWizard(
         } else {
             // eCarbs delivery now rides the shared executor (one audited path).
             appScope.launch {
-                wizardBolusExecutor.deliverECarbs(eCarbsGrams, eventTime, durationHours, totalDelayMinutes, notes, Sources.WizardDialog, onError)
+                masterActionExecutor.deliverECarbs(eCarbsGrams, eventTime, durationHours, totalDelayMinutes, notes, Sources.WizardDialog, onError)
             }
         }
     }

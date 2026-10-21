@@ -29,6 +29,7 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
@@ -183,12 +184,21 @@ class SWDefinition(
                     .comment(ConfigurationStrings.high_mark_comment)
             )
 
+    /**
+     * Android only: runtime permissions are an Android idea and the other shells have nothing to ask
+     * for. The desktop shell answers `onRequestPermission` with `notWiredYet` and the iOS one with
+     * `reportNotAvailable`, so on those two this screen cannot do anything - it asked the user to
+     * grant permissions that do not exist, and every button on it was dead. It was `.skippable(true)`,
+     * so it could be clicked past, which is why it survived unnoticed until a desktop client was run
+     * through the wizard on 2026-10-14.
+     */
     private val screenPermissions
         get() = swScreenProvider().with(ConfigurationStrings.setupwizard_permissions)
             .skippable(true)
             .add(swInfoTextProvider().label(ConfigurationStrings.setupwizard_permissions_info))
             .add(swBreakProvider())
             .add(swPermissionsProvider().with(this))
+            .visibility { config.platform in AppPlatform.ANDROID_ONLY }
 
     private val screenImport
         get() = swScreenProvider().with(CoreUiStrings.import_setting)
@@ -225,10 +235,14 @@ class SWDefinition(
             )
             .add(swInfoTextProvider().label(ConfigurationStrings.setupwizard_pairing_ws_warning).visibility { !preferences.get(BooleanKey.NsClient3UseWs) })
             .add(swBreakProvider())
-            .add(swInfoTextProvider().label(ConfigurationStrings.setupwizard_ns_receive_info))
+            // In hardened mode the "accept from Nightscout" settings are hidden, so the button would open an empty
+            // screen. Explain hardened mode instead.
+            .add(swInfoTextProvider().label(CoreUiStrings.hardened_mode_info).visibility { preferences.hardenedMode })
+            .add(swInfoTextProvider().label(ConfigurationStrings.setupwizard_ns_receive_info).visibility { !preferences.hardenedMode })
             .add(
                 swButtonProvider()
                     .text(ConfigurationStrings.setupwizard_open_ns_receive_settings)
+                    .visibility { !preferences.hardenedMode }
                     .action { onOpenNsReceiveSettings?.invoke() }
             )
 
@@ -248,11 +262,13 @@ class SWDefinition(
             .add(swPairingStatusProvider())
             .add(swInfoTextProvider().label(ConfigurationStrings.setupwizard_pairing_ws_warning).visibility { !preferences.get(BooleanKey.NsClient3UseWs) })
 
-    private val screenPatientName
-        get() = swScreenProvider().with(StringKey.GeneralPatientName.title)
+    // Asks as a question rather than with the preference title ("Instance name"), which reads badly as
+    // a wizard heading. The setting is device-local, so every role asks it.
+    private val screenInstanceName
+        get() = swScreenProvider().with(ConfigurationStrings.setupwizard_instance_name_title)
             .skippable(true)
-            .add(swInfoTextProvider().label(StringKey.GeneralPatientName.summary!!))
-            .add(swEditStringProvider().validator(String::isNotEmpty).preference(StringKey.GeneralPatientName))
+            .add(swInfoTextProvider().label(StringKey.GeneralInstanceName.summary!!))
+            .add(swEditStringProvider().validator(String::isNotEmpty).preference(StringKey.GeneralInstanceName))
 
     private val screenMasterPassword
         get() = swScreenProvider().with(StringKey.ProtectionMasterPassword.title)
@@ -403,7 +419,7 @@ class SWDefinition(
 
             .add(screenNsClient)
             .add(screenClientControl)
-            .add(screenPatientName)
+            .add(screenInstanceName)
             .add(screenAge)
             .add(screenInsulin)
             .add(screenBgSource)
@@ -425,7 +441,7 @@ class SWDefinition(
             .add(displaySettings)
 
             .add(screenNsClient)
-            .add(screenPatientName)
+            .add(screenInstanceName)
             .add(screenAge)
             .add(screenInsulin)
             .add(screenBgSource)
@@ -435,17 +451,21 @@ class SWDefinition(
             .add(screenPump)
             .add(screenSensitivity)
 
+    // A client asks only for what it owns itself. Units and the low/high marks are deliberately NOT
+    // here: they carry SyncSpec(Cold, Bidirectional), so the master's cold running-config doc
+    // overwrites whatever the user sets (applySyncedPrefs adopts with putRemote(.., 0L)) as soon as
+    // the Nightscout connection is up - pairing is not even needed for that. Asking would be wasted
+    // work, and on a re-run of the wizard an edit here would instead push to the master. They stay
+    // editable in Settings, where the sync badge says they are shared with the main phone.
+    // There is no BG source screen either: a client reads BG from Nightscout.
     private fun swDefinitionNSClient() = // List all the screens here
         add(screenSetupWizard)
             .add(screenEula)
             .add(screenPermissions)
             .add(screenMasterPassword)
             .add(screenImport)
-            .add(screenUnits)
-            .add(displaySettings)
 
             .add(screenNsClient)
             .add(screenPairWithMaster)
-            //.add(screenBgSource)
-            .add(screenPatientName)
+            .add(screenInstanceName)
 }

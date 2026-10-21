@@ -67,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Deaktivovat Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Stiskněte <b>Další</b> pro deaktivaci Podu.\n\n<b>Poznámka:</b> Zastavíte veškerý výdej inzulínu a deaktivujete Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">Deaktivovaný pod nelze znovu použít. Chcete nyní deaktivovat tento pod?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Deaktivace Podu</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Deaktivace Podu.\n\nPo úspěšném dokončení deaktivace můžete stisknout <b>Další</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod deaktivován</string>
@@ -191,4 +192,16 @@
         <item quantity="other">Výstrahy Podu: %1$s</item>
     </plurals>
     <string name="omnipod_common_overview_pod_hard_end_date">Definitivní konec podu</string>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minut</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Korekce bazálu</string>
+    <string name="omnipod_common_bolus_type_priming">Plnění</string>
+    <string name="omnipod_common_history_total_delivered">Celkem dodáno: %1$.2f U</string>
+    <string name="omnipod_common_failed_to_send">Nezdařilo se odeslat příkaz</string>
+    <string name="omnipod_common_command_not_sent">Příkaz nebyl odeslán</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">Příkaz nebyl přijat podem</string>
+    <string name="omnipod_common_unknown">Neznámý stav příkazu</string>
 </resources>

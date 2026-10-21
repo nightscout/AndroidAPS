@@ -34,7 +34,10 @@ internal fun BatchAction.toDto(): BatchActionDto = when (this) {
         profileName = profileName, notes = notes ?: "",
         // Only set when the client already asked the user (fill/prime, activation). Null → the master
         // resolves the insulin in force itself, or refuses the batch when there is none.
-        iCfgJson = iCfg?.toJsonObject()?.toString()
+        iCfgJson = iCfg?.toJsonObject()?.toString(),
+        // The time the user picked on the client; 0 → the master stamps now. The master bounds it
+        // against its own clock, so a client with a wrong clock cannot place a switch days away.
+        timestamp = timestamp
     )
 
     is BatchAction.RunningMode         -> BatchActionDto(
@@ -67,7 +70,20 @@ internal fun BatchAction.toDto(): BatchActionDto = when (this) {
         type = BatchActionDto.TYPE_THERAPY_EVENT_EDIT,
         teType = teType.name, timestamp = timestamp, notes = note ?: "", location = location?.name, arrow = arrow?.name, source = source.name
     )
+
+    // Only the Nightscout ids travel: a local database id means nothing on the master. A record without one is
+    // only on this device, so the master has nothing to remove for it; it only learns how many there are.
+    is BatchAction.Remove              -> BatchActionDto(
+        type = BatchActionDto.TYPE_REMOVE, recordKind = kind.name,
+        nsIds = records.mapNotNull { it.nsId }, localOnlyCount = records.count { it.nsId == null }
+    )
+
+    is BatchAction.RemoveStartEvents   -> BatchActionDto(type = BatchActionDto.TYPE_REMOVE_START_EVENTS)
+    is BatchAction.Calibration         -> BatchActionDto(type = BatchActionDto.TYPE_CALIBRATION, glucoseMgdl = glucoseMgdl)
 }
+
+/** Upper bound for [BatchActionDto.localOnlyCount] on the master side. */
+private const val MAX_LOCAL_ONLY = 10_000
 
 /** Parse the shared, type-gated [BatchActionDto.iCfgJson] slot; null when absent or unparseable. */
 private fun String?.toICfgOrNull(): ICfg? =
@@ -86,7 +102,7 @@ internal fun BatchActionDto.toDomain(): BatchAction? = when (type) {
     BatchActionDto.TYPE_TEMP_TARGET           -> reason?.let { BatchAction.TempTarget(it, lowMgdl, highMgdl, durationMinutes, startOffsetMinutes, notes.ifEmpty { null }) }
     // An unparseable iCfg degrades to null (the master then resolves the in-force insulin or refuses) rather
     // than dropping the action — unlike INSULIN_ACTIVATE, the switch is still meaningful without it.
-    BatchActionDto.TYPE_PROFILE_SWITCH        -> BatchAction.ProfileSwitch(percentage, timeShiftHours, durationMinutes, profileName, notes.ifEmpty { null }, iCfgJson.toICfgOrNull())
+    BatchActionDto.TYPE_PROFILE_SWITCH        -> BatchAction.ProfileSwitch(percentage, timeShiftHours, durationMinutes, profileName, notes.ifEmpty { null }, iCfgJson.toICfgOrNull(), timestamp)
     BatchActionDto.TYPE_RUNNING_MODE          -> runningMode?.let { name -> runCatching { RM.Mode.valueOf(name) }.getOrNull()?.let { BatchAction.RunningMode(it, durationMinutes) } }
     BatchActionDto.TYPE_TEMP_BASAL            -> BatchAction.TempBasal(rate, isPercent, durationMinutes)
     BatchActionDto.TYPE_EXTENDED_BOLUS        -> BatchAction.ExtendedBolus(insulin, durationMinutes)
@@ -114,6 +130,14 @@ internal fun BatchActionDto.toDomain(): BatchAction? = when (type) {
             source = source?.let { runCatching { Sources.valueOf(it) }.getOrNull() } ?: Sources.NSClient
         )
     }
+    // An unknown record type drops the action, like an unknown teType. The client-only records come back as refs
+    // without any id: the master finds nothing for them and counts them in its confirmation. The count is bounded
+    // so a bad value cannot make the master build a huge list.
+    BatchActionDto.TYPE_REMOVE                -> recordKind?.let { runCatching { BatchAction.Remove.Kind.valueOf(it) }.getOrNull() }?.let { kind ->
+        BatchAction.Remove(kind, nsIds.map { BatchAction.Remove.Ref(nsId = it) } + List(localOnlyCount.coerceIn(0, MAX_LOCAL_ONLY)) { BatchAction.Remove.Ref(nsId = null) })
+    }
+    BatchActionDto.TYPE_REMOVE_START_EVENTS   -> BatchAction.RemoveStartEvents
+    BatchActionDto.TYPE_CALIBRATION           -> glucoseMgdl?.let { BatchAction.Calibration(it) }
 
     else                                      -> null
 }

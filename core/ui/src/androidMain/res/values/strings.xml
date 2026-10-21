@@ -121,10 +121,16 @@
     <string name="invalid_profile">Invalid profile!</string>
     <string name="no_profile_set">NO PROFILE SET</string>
     <string name="profile_switch_no_insulin">Cannot switch profile: no insulin is in use, and none was selected.</string>
+    <string name="scene_no_profile_before">No profile was in use before the scene started.</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">Scene %1$s has ended, but its profile is still in use. %2$s Activate a profile by hand.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">This temporary switch has %1$s, but the permanent profile under it has %2$s. Activate the insulin that is in the pump in Insulin settings first.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">The profile switch time must be within %1$d hours of now.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">The temporary target must start within %1$d hours of now.</string>
     <string name="profile_switch_select_insulin_hint">No insulin is in use yet. Select the insulin you are using, so this profile switch can record it.</string>
     <string name="insulin_activation_failed">The insulin was not switched. Your previous insulin is still in use.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">The insulin was not switched: %1$s Your previous insulin is still in use.</string>
     <string name="insulin_activation_unconfirmed">The insulin switch could not be confirmed. Check which insulin is active in your profile before dosing.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">The insulin was not switched. Your previous insulin is still in use.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nThe insulin was also not switched.</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Date</string>
@@ -172,6 +178,11 @@
     <string name="wrong_pump_data">Data is coming from different pump. Change pump driver to reset pump state.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Calibration</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Calibration not saved: BG is changing too fast (Δ %1$s %3$s per 5 min, limit %2$s). Try again when glucose is stable.</string>
+    <string name="cal_reject_no_pair">Calibration not saved: no CGM reading found in the 10 minutes before now.</string>
+    <string name="cal_reject_warmup">Calibration not saved: sensor is still in the 2-hour warm-up window.</string>
+    <string name="cal_reject_no_session">Calibration not saved: no sensor session is active. Mark a sensor change first.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Bolus reported an error. Manually check real delivered insulin and carb amount</string>
     <string name="bolus_reminder">Remind for bolus when BG recovers</string>
@@ -194,6 +205,8 @@
     <string name="a11y_arrow_unknown">unknown</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">decrement %1$s by %2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">increment %1$s by %2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">open %1$s for typing</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">close %1$s</string>
     <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Move up</string>
     <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Move down</string>
     <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Step %1$d of %2$d</string>
@@ -214,6 +227,7 @@
     <string name="percentage_label">Percentage</string>
     <string name="timeshift_label">Time shift</string>
     <string name="confirm_remove_multiple_items">Are you sure you want to remove %1$d items</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">The master does not have %1$d of these entries. They are not removed.</string>
     <string name="overview_treatment_label">Treatment</string>
     <string name="copytolocalprofile">Create new profile from this profile?</string>
     <string name="wear_wizard_settings">Wear Wizard Settings</string>
@@ -225,6 +239,8 @@
     <string name="logout">Logout</string>
     <string name="prime_fill">Prime/Fill</string>
     <string name="prime_not_available">This pump fills and primes itself during activation. Prime/Fill from AAPS is not available.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Change</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Fill</string>
     <string name="site_rotation">Site Rotation</string>
     <string name="edit_site">Edit</string>
     <string name="select_arrow">Select Arrow</string>
@@ -359,6 +375,7 @@
     <string name="temporary_target">Temporary target</string>
     <string name="temporary_targets">Temporary targets</string>
     <string name="running_mode">Running mode</string>
+    <string name="running_mode_desc">Close or open the loop, suspend it, or disconnect the pump</string>
     <string name="running_mode_change_not_allowed">Running mode change not available</string>
     <string name="pump_reconnect">Reconnect pump</string>
     <string name="scene">Scene</string>
@@ -414,6 +431,19 @@
     <string name="scene_lock_banner_control_disabled">Master has disabled remote control. Scene controls will resume when it is re-enabled on the master.</string>
     <string name="master_offline_banner">Master device unreachable. Editing is disabled until the connection is restored.</string>
     <string name="master_control_disabled_banner">Master has disabled remote control. Editing is disabled until it is re-enabled on the master.</string>
+    <string name="hardened_mode_on">Hardened mode on</string>
+    <string name="hardened_mode_title">Hardened mode</string>
+    <string name="hardened_mode_info_open">About hardened mode</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Read-only</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Meals</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Caregiver</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Admin</string>
+    <string name="client_role_title">Role</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Role: %1$s</string>
+    <string name="client_roles_info_open">About roles</string>
+    <string name="client_roles_info">Each paired phone has a role. The main phone checks it for every command, and the phone shows only what its role allows. A new role takes effect at once, without pairing again.\n\nRead-only: the phone stays paired, but only shows data.\n\nMeals: bolus, bolus wizard, QuickWizard and carbs. It can also stop a running bolus. Carbs entered here can make the loop give more insulin.\n\nCaregiver: everything a user does in AAPS, like temp targets, profile and insulin switches, loop mode, temp basal, extended bolus, scenes, careportal events, calibrations and removing records. It cannot change settings or presets.\n\nAdmin: everything, settings and presets included (QuickWizard, temp target presets, scenes, profiles, automation, insulin).</string>
+    <string name="client_read_only_banner">This phone is in read-only mode on the main phone.</string>
+    <string name="hardened_mode_info">The main phone takes changes only from paired clients. It does not take treatments, temp targets, profile changes, running mode changes or deletes that are made directly in Nightscout, for example on the website or in other apps. The settings for accepting data from Nightscout are hidden while hardened mode is on. SMS commands are not affected.\n\nThe main phone still uploads all data to Nightscout, BG included. If it gets its BG from Nightscout, it still takes BG from there.\n\nTo load the history on a new main phone, use Full sync in NSClient. Full sync takes everything that is in Nightscout, profiles included.\n\nRemote control from clients needs a working WebSocket connection to Nightscout, on the main phone and on paired clients. Simple mode always turns hardened mode on. To turn it off, leave simple mode and turn off client control on the main phone.</string>
     <string name="scene_lock_reason_master_offline">Master disconnected</string>
     <string name="scene_lock_reason_control_disabled">Remote control disabled</string>
     <string name="scene_lock_reason_scene_active">Stop the running scene first</string>
@@ -444,6 +474,7 @@
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus cancelled. No insulin was given.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Cancelled</string>
     <string name="clientcontrol_fail_control_disabled">Remote control is turned off on the master.</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">This phone\'s role on the master does not allow this.</string>
     <string name="clientcontrol_fail_no_pending_bolus">The prepared bolus expired or was superseded. Tap the button again.</string>
     <string name="clientcontrol_fail_bolus_compute">The master couldn\'t calculate the bolus (missing glucose / profile, or pump not ready).</string>
     <string name="clientcontrol_fail_internal">Something went wrong.</string>
@@ -702,6 +733,7 @@
     <string name="missing_profile_name">Missing profile name</string>
     <string name="profile_not_saved_activate">Profile not saved. Please save the profile before activating.</string>
     <string name="profile_basal_not_compatible_with_pump">Basal rate is not compatible with the current pump and cannot be activated. Reduce the percentage or adjust the basal rate.</string>
+    <string name="profile_basal_below_pump_minimum">Basal rate is below the minimum of the current pump and cannot be activated. Raise the percentage or adjust the basal rate.</string>
     <string name="profile_pump_incompatible_label">Pump limit</string>
     <string name="error_in_ic_values">Error in IC values</string>
     <string name="error_in_isf_values">Error in ISF values</string>

@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.fillFor
+import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
@@ -616,6 +617,14 @@ class OmnipodDashPumpPlugin(
         return equal
     }
 
+    /**
+     * The 24 hourly rates the pod runs: the program it confirmed, each rate rounded to the nearest 0.05 U/h (#2454).
+     * null without an activated pod or a confirmed program: the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? =
+        if (!podStateManager.isActivationCompleted) null
+        else podStateManager.basalProgram?.hourlyRates()?.mapIndexed { hour, rate -> Profile.ProfileValue(T.hours(hour.toLong()).secs().toInt(), rate) }
+
     private val _lastDataTime = MutableStateFlow(0L)
     override val lastDataTime: StateFlow<Long> = _lastDataTime
 
@@ -807,8 +816,14 @@ class OmnipodDashPumpPlugin(
             if (bolusType == BolusType.SMB) {
                 continue
             }
-            val percent = (waited.toFloat() / estimatedDeliveryTimeSeconds) * 100
-            bolusProgressData.updateProgress(percent = percent.toInt())
+            bolusProgressData.updateProgress(
+                delivered = PumpInsulin(
+                    Round.roundTo(
+                        (waited.toFloat() / estimatedDeliveryTimeSeconds) * requestedBolusAmount,
+                        PodConstants.POD_PULSE_BOLUS_UNITS
+                    )
+                )
+            )
         }
 
         (1..BOLUS_RETRIES).forEach { tryNumber ->
@@ -825,7 +840,7 @@ class OmnipodDashPumpPlugin(
             } catch (e: Exception) {
                 errorGettingStatus = e
                 aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$errorGettingStatus")
-                Thread.sleep(BOLUS_RETRY_INTERVAL_MS) // retry every 3 sec
+                Thread.sleep(BOLUS_RETRY_INTERVAL_MS) // retry every 2 sec
             }
             if (errorGettingStatus != null) {
                 return@forEach
@@ -835,14 +850,13 @@ class OmnipodDashPumpPlugin(
             if (bolusDeliveringActive) {
                 // delivery not complete yet
                 val remainingUnits = podStateManager.lastBolus!!.bolusUnitsRemaining
-                val percent = ((requestedBolusAmount - remainingUnits) / requestedBolusAmount) * 100
-                bolusProgressData.updateProgress(percent = percent.toInt())
+                bolusProgressData.updateProgress(delivered = PumpInsulin(requestedBolusAmount - remainingUnits))
 
-                val sleepSeconds = if (bolusCanceled)
+                val sleepMillis = if (bolusCanceled)
                     BOLUS_RETRY_INTERVAL_MS
                 else
-                    estimateBolusDeliverySeconds(remainingUnits)
-                Thread.sleep(sleepSeconds * 1000.toLong())
+                    estimateBolusDeliverySeconds(remainingUnits) * 1000L
+                Thread.sleep(sleepMillis)
             } else {
                 // delivery is complete. If pod is Kaput, we are handling this in getPodStatus
                 return@defer Single.just(podStateManager.lastBolus!!.deliveredUnits()!!)

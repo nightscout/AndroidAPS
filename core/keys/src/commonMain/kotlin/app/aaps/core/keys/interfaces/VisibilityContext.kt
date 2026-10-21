@@ -60,6 +60,13 @@ interface VisibilityContext {
         get() = true
 
     /**
+     * This phone's role on the master ([ClientRole]); always [ClientRole.Admin] on a master. An element that needs
+     * a higher role is not shown: the master would refuse it anyway.
+     */
+    val clientRole: ClientRole
+        get() = ClientRole.Admin
+
+    /**
      * Whether the pump is currently paired/connected.
      * Used by pump plugins like ComboV2 to enable/disable pairing preferences.
      */

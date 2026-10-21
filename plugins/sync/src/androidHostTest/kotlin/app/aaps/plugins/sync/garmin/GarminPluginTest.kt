@@ -5,13 +5,16 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.StringNonKey
+import app.aaps.plugins.sync.SyncStringsValues
 import app.aaps.plugins.sync.garmin.keys.GarminBooleanKey
 import app.aaps.plugins.sync.garmin.keys.GarminIntKey
 import app.aaps.plugins.sync.garmin.keys.GarminStringKey
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertArrayEquals
@@ -24,6 +27,7 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.atMost
 import org.mockito.kotlin.eq
@@ -54,7 +58,7 @@ class GarminPluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        gp = GarminPlugin(aapsLogger, rh, preferences, context, loopHub, persistenceLayer, mock())
+        gp = GarminPlugin(aapsLogger, rh, preferences, context, loopHub, persistenceLayer, config, notificationManager)
         gp.clock = clock
         whenever(loopHub.currentProfileName).thenReturn("Default")
         whenever(preferences.get(GarminIntKey.LocalHttpPort)).thenReturn(28890)
@@ -389,6 +393,39 @@ class GarminPluginTest : TestBaseWithProfile() {
         assertEquals("{\"connected\":true}", gp.onConnectPump(uri))
         verify(loopHub).connectPump()
         verify(loopHub).isConnected
+    }
+
+    // A client only shows values. Carbs or a pump disconnect stored there would never reach the master, and the watch
+    // cannot show why, so the phone says it.
+    private fun clientPlugin(): GarminPlugin {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        val text = generatedTextResolver("sync" to SyncStringsValues::textOf)
+        return GarminPlugin(aapsLogger, text, preferences, context, loopHub, persistenceLayer, config, notificationManager)
+    }
+
+    private fun postedNotice(): String {
+        val captor = argumentCaptor<String>()
+        verify(notificationManager).post(eq(NotificationId.GARMIN_NOT_ON_CLIENT), captor.capture(), any(), any<Int>(), anyOrNull(), any(), anyOrNull())
+        return captor.firstValue
+    }
+
+    @Test
+    fun testOnPostCarbs_OnClient() {
+        val uri = createUri(mapOf("carbs" to "12"))
+        assertEquals("", clientPlugin().onPostCarbs(uri))
+        assertEquals("The Garmin watch sent 12 g of carbs. This phone is a client, so they were not entered. Enter them in AAPS.", postedNotice())
+    }
+
+    @Test
+    fun testOnConnectPump_DisconnectOnClient() {
+        val uri = createUri(mapOf("disconnectMinutes" to "20"))
+        whenever(loopHub.isConnected).thenReturn(true)
+        assertEquals("{\"connected\":true}", clientPlugin().onConnectPump(uri))
+        verify(loopHub).isConnected
+        assertEquals(
+            "The Garmin watch asked to connect or disconnect the pump. This phone is a client, so nothing was changed. Do it in AAPS.",
+            postedNotice()
+        )
     }
 
     @Test

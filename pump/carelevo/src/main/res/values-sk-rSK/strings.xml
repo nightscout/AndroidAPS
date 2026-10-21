@@ -177,6 +177,8 @@
     <string name="alarm_feat_btn_resume_infusion">Spustiť inzulín</string>
     <!-- General Messages -->
     <string name="alarm_feat_msg_check_patch_connect">Skontrolujte prosím pripojenie náplasťovej pumpy.</string>
+    <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">Bolus nie je možné podať. Dostupný bolus: %1$s</string>
+    <string name="carelevo_bolus_rejected_exceed_limit_none">Bolus nie je možné podať. V zásobníku nie je dostatok inzulínu.</string>
     <!--    notification -->
     <string name="alarm_notification_desc_warning_low_insulin">Zostáva menej ako 10 U; podávanie inzulínu bolo zastavené. Klepnite na tlačidlo [Deaktivovať náplasťovú pumpu] a ihneď ju vymeňte.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Životnosť náplasťovej pumpy vypršala; podávanie inzulínu bolo zastavené. Klepnite na tlačidlo [Deaktivovať náplasťovú pumpu] a ihneď ju vymeňte.</string>
@@ -210,4 +212,7 @@
     <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS sa ukončilo z neznámeho dôvodu.</string>
     <string name="alarm_notification_desc_notice_lgs_error">Skontrolujte prosím pripojenie náplasťovej pumpy a CGM.</string>
     <string name="carelevo_profile_update_skip_comment">Preskočené: aktualizácia príliš skoro.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">Pod nepotvrdil zastavenie. Čaká sa na ukončenie bolusu…</string>
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">Bolus, ktorý nebol zaznamenaný, bol teraz doplnený. Skontrolujte IOB a skúste to znova.</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Pod nepotvrdil zastavenie. Zaznamenaný bol celý bolus %1$s.</string>
 </resources>

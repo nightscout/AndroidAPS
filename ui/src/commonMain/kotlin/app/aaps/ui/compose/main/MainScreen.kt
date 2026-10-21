@@ -132,6 +132,7 @@ fun MainScreen(
     // Objectives progress
     objectivesSetupPlugin: PluginBase? = null,
     objectivesProgressText: String? = null,
+    objectivesProgressDescription: String? = null,
     // Permissions
     permissionsMissing: Boolean = false,
     onPermissionsClick: () -> Unit = {},
@@ -179,11 +180,17 @@ fun MainScreen(
         drawerState = drawerState,
         drawerContent = {
             MainDrawer(
+                drawerState = drawerState,
                 versionName = mainViewModel.versionName,
                 onNavigate = { request ->
-                    scope.launch { drawerState.close() }
-                    onDrawerClosed()
-                    onNavigate(request)
+                    // Close the drawer first, then open the screen. Opened while the drawer was still
+                    // sliding in (a fast tap, as the e2e test makes), one Back from that screen left
+                    // the app instead of coming back to the overview.
+                    scope.launch {
+                        drawerState.close()
+                        onDrawerClosed()
+                        onNavigate(request)
+                    }
                 },
                 isTreatmentsEnabled = uiState.isProfileLoaded,
                 showExit = mainViewModel.showExit
@@ -429,6 +436,7 @@ fun MainScreen(
                             bgQualityBadgeDescription = bgQualityBadgeDescription,
                             objectivesSetupPlugin = objectivesSetupPlugin,
                             objectivesProgressText = objectivesProgressText,
+                            objectivesProgressDescription = objectivesProgressDescription,
                             onNavigate = onNavigate,
                             permissionsMissing = permissionsMissing,
                             onPermissionsClick = onPermissionsClick,
@@ -504,7 +512,8 @@ fun MainScreen(
             automationItems = automationState.items,
             onItemClick = { item -> mainViewModel.requestAutomationConfirmation(item.eventId) },
             sceneItems = automationState.sceneItems,
-            onSceneClick = { sceneId -> mainViewModel.requestSceneConfirmation(sceneId) }
+            onSceneClick = { sceneId -> mainViewModel.requestSceneConfirmation(sceneId) },
+            onEditScenesClick = { onNavigate(NavigationRequest.Element(ElementType.SCENE_MANAGEMENT)) }
         )
     }
 

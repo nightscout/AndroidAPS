@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.EffectiveProfile
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
@@ -24,6 +25,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlin.math.abs
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
@@ -55,6 +57,9 @@ class PumpWithConcentrationImplTest : TestBase() {
         // The concentration boundary floors the converted cU to the pump's native step, so the driver needs a
         // pumpDescription. The pumpDescription-scaling tests below re-stub this with their own description.
         whenever(pump.pumpDescription).thenReturn(PumpDescription().fillFor(PumpType.DANA_RS))
+        // The driver's step is the interface default, which reads the description above. A plain mock would
+        // answer 0.0 and floor every bolus to nothing.
+        whenever(pump.bolusStepSize(any())).thenCallRealMethod()
         // Feature-2 last-resort guard queries the overall max; default to no effective cap.
         whenever(constraintsChecker.getMaxBolusAllowed()).thenReturn(ConstraintObject(Double.MAX_VALUE, aapsLogger))
         whenever(constraintsChecker.getMaxExtendedBolusAllowed()).thenReturn(ConstraintObject(Double.MAX_VALUE, aapsLogger))
@@ -81,6 +86,75 @@ class PumpWithConcentrationImplTest : TestBase() {
         sut.deliverTreatment(dbi)
 
         verify(pump).deliverTreatment(argThat { insulin == 5.0 })
+    }
+
+    // --- the bolus step (#946) ---
+
+    /** A Dana RS set to 0.1 U in its doctor menu. Its pump type says 0.05 U, so 1.55 U went to the pump and was refused. */
+    private fun pumpReportingStep(step: Double) {
+        whenever(pump.pumpDescription).thenReturn(PumpDescription().fillFor(PumpType.DANA_RS).also { it.bolusStep = step })
+    }
+
+    @Test
+    fun `deliverTreatment floors to the step the pump reports`() = runBlocking<Unit> {
+        setupU100()
+        pumpReportingStep(0.1)
+        whenever(pump.deliverTreatment(any())).thenReturn(pumpEnactResult)
+
+        sut.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.55 })
+
+        verify(pump).deliverTreatment(argThat { abs(insulin - 1.5) < 1e-9 })
+    }
+
+    /**
+     * #2454: still in pump units. The running profile is the old one when a new profile has just been set, so the
+     * caller converts with the concentration of the profile it set, not the one this class reads.
+     */
+    @Test
+    fun `deliveredBasal is passed on in pump units`() = runBlocking<Unit> {
+        setupConcentration(2.0)
+        whenever(pump.deliveredBasal()).thenReturn(listOf(Profile.ProfileValue(0, 0.5)))
+
+        assertThat(sut.deliveredBasal()).containsExactly(Profile.ProfileValue(0, 0.5))
+    }
+
+    @Test
+    fun `bolusStepSize converts the pump's step to insulin units`() = runBlocking<Unit> {
+        setupConcentration(2.0)
+        pumpReportingStep(0.1)
+
+        // 0.1 cU of U200 insulin is 0.2 IU
+        assertThat(sut.bolusStepSize(3.0)).isWithin(1e-9).of(0.2)
+    }
+
+    /**
+     * A pump type with a step per amount: the amount is converted to pump units BEFORE the table is read.
+     * The interface default, reading the already scaled description, would read the table with insulin units.
+     */
+    @Test
+    fun `bolusStepSize reads the step table with the amount in pump units`() = runBlocking<Unit> {
+        setupConcentration(2.0)
+        whenever(pump.pumpDescription).thenReturn(PumpDescription().fillFor(PumpType.ACCU_CHEK_INSIGHT_VIRTUAL))
+
+        // The table: 0.05 below 2, 0.1 below 5, 0.2 below 10, then 0.5. The amounts are picked so that the
+        // amount in insulin units would land in another band than the amount in pump units.
+        // 3.0 IU is 1.5 cU: 0.05 cU, which is 0.1 IU (read with 3.0 the table says 0.1, so 0.2 IU)
+        assertThat(sut.bolusStepSize(3.0)).isEqualTo(0.1)
+        // 12.0 IU is 6 cU: 0.2 cU, which is 0.4 IU (read with 12.0 the table says 0.5, so 1.0 IU)
+        assertThat(sut.bolusStepSize(12.0)).isEqualTo(0.4)
+        // Without the conversion back the step would stay in pump units: 1.0 IU is 0.5 cU, 0.05 cU is 0.1 IU
+        assertThat(sut.bolusStepSize(1.0)).isEqualTo(0.1)
+    }
+
+    /** 0.05 * 0.2 is 0.010000000000000002. A step with that tail made Round overflow into a negative dose. */
+    @Test
+    fun `steps in insulin units carry no float tail`() = runBlocking<Unit> {
+        setupConcentration(0.2)
+        whenever(pump.pumpDescription).thenReturn(PumpDescription().fillFor(PumpType.DANA_RS))
+
+        assertThat(sut.bolusStepSize(1.0)).isEqualTo(0.01)
+        assertThat(sut.pumpDescription.bolusStep).isEqualTo(0.01)
+        assertThat(sut.pumpDescription.extendedBolusStep).isEqualTo(0.01)
     }
 
     // --- deliverTreatment tests ---
@@ -310,6 +384,16 @@ class PumpWithConcentrationImplTest : TestBase() {
         assertThat(result.basalMinimumRate).isEqualTo(0.1)
         assertThat(result.basalMaximumRate).isEqualTo(10.0)
         assertThat(result.maxReservoirReading).isEqualTo(600)
+    }
+
+    @Test
+    fun `pumpDescription scales the max extended bolus and keeps no limit as no limit`() = runBlocking<Unit> {
+        setupConcentration(2.0)
+        whenever(pump.pumpDescription).thenReturn(PumpDescription().apply { extendedBolusMaxAmount = 25.0 })
+        assertThat(sut.pumpDescription.extendedBolusMaxAmount).isEqualTo(50.0)
+
+        whenever(pump.pumpDescription).thenReturn(PumpDescription())
+        assertThat(sut.pumpDescription.extendedBolusMaxAmount).isEqualTo(Double.MAX_VALUE)
     }
 
     @Test

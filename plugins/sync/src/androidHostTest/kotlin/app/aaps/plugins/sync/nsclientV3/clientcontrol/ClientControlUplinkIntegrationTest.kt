@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -15,11 +15,11 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 import app.aaps.core.keys.interfaces.NonPreferenceKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
@@ -107,7 +107,7 @@ class ClientControlUplinkIntegrationTest {
     @Mock private lateinit var offerPublisher: PairingOfferPublisher
     @Mock private lateinit var runningConfigurationPublisher: RunningConfigurationPublisher
     @Mock private lateinit var persistenceLayer: PersistenceLayer
-    @Mock private lateinit var wizardBolusExecutor: WizardBolusExecutor
+    @Mock private lateinit var masterActionExecutor: MasterActionExecutor
     @Mock private lateinit var notificationManager: NotificationManager
     private val rh = generatedTextResolver("sync" to SyncStringsValues::textOf)
     @Mock private lateinit var masterConfig: Config
@@ -156,9 +156,8 @@ class ClientControlUplinkIntegrationTest {
         // ---------- master Preferences fake ----------
         // Client control ON — the receiver now gates ALL client→master traffic (commands AND the preferences-update
         // settings sync) on this, matching the old WS-path drop. Off → the uplink is rejected (see ClientControlReceiverTest).
-        whenever(masterPrefs.get(BooleanKey.NsClientAllowClientControl)).thenReturn(true)
-        // Remote control rides the WebSocket, so the gate needs this too (see clientControlOperational).
-        whenever(masterPrefs.get(BooleanKey.NsClient3UseWs)).thenReturn(true)
+        // On the master, client control on is hardened mode on.
+        whenever(masterPrefs.hardenedMode).thenReturn(true)
         whenever(masterPrefs.get(StringNonKey.NsClientControlAuthorizedClients)).thenAnswer { masterAuthorizedClients }
         doAnswer { masterAuthorizedClients = it.getArgument(1); null }
             .whenever(masterPrefs).put(eq(StringNonKey.NsClientControlAuthorizedClients), any<String>())
@@ -211,12 +210,12 @@ class ClientControlUplinkIntegrationTest {
         masterScope = CoroutineScope(Dispatchers.Unconfined)
         masterReceiver = ClientControlReceiver(
             masterAuthorizedRepository, { nsClientV3Plugin }, nsClientRepository, sceneAutomationApi,
-            offerPublisher, masterPrefs, dateUtil, uel, runningConfigurationPublisher, persistenceLayer, wizardBolusExecutor, notificationManager, masterConfig, bolusProgressData, commandQueue, rh, aapsLogger,
+            offerPublisher, masterPrefs, dateUtil, uel, runningConfigurationPublisher, persistenceLayer, masterActionExecutor, notificationManager, masterConfig, bolusProgressData, commandQueue, rh, aapsLogger,
             masterScope
         )
 
         // ---------- pairing: same secret on both sides ----------
-        val (entry, secretHex) = masterAuthorizedRepository.addPending("phone", pairTtlMs = 60_000L, now = now - 10_000L)
+        val (entry, secretHex) = masterAuthorizedRepository.addPending("phone", ClientRole.Admin, pairTtlMs = 60_000L, now = now - 10_000L)
         masterAuthorizedRepository.markActive(entry.clientId, counterReceived = 0L, now = now - 5_000L)
         // check(), not a bare call: pair() refuses when the secret cannot be wrapped, and a test that
         // silently ran unpaired would pass for the wrong reason. It also keeps setUp returning Unit.

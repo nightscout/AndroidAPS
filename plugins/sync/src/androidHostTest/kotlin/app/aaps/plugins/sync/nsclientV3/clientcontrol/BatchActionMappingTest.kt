@@ -90,6 +90,18 @@ class BatchActionMappingTest {
         assertThat(back.notes).isEqualTo("n")
         // No insulin asked of the user → the master resolves the one in force (or refuses).
         assertThat(back.iCfg).isNull()
+        // No time picked on the client → 0, and the master stamps its own clock.
+        assertThat(back.timestamp).isEqualTo(0L)
+    }
+
+    @Test
+    fun profileSwitchRoundTripsThePickedTime() {
+        // The time the user picked on a client has to reach the master, or a relayed switch is applied
+        // immediately instead of at that time (issue #5239). The master bounds the value itself.
+        val picked = 1_700_000_000_000L
+        val original = BatchAction.ProfileSwitch(percentage = 100, timeShiftHours = 0, durationMinutes = 0, profileName = "Lunch", timestamp = picked)
+        val back = original.toDto().toDomain() as BatchAction.ProfileSwitch
+        assertThat(back.timestamp).isEqualTo(picked)
     }
 
     @Test
@@ -168,5 +180,58 @@ class BatchActionMappingTest {
     fun therapyEventEditWithUnknownTypeMapsToNull() {
         // An unknown/unparseable teType drops the action (the master's no-action guard then rejects an empty batch).
         assertThat(BatchActionDto(type = BatchActionDto.TYPE_THERAPY_EVENT_EDIT, teType = "NOT_A_TYPE").toDomain()).isNull()
+    }
+
+    @Test
+    fun removeSendsOnlyTheNightscoutIds() {
+        // A local database id means nothing on the master, so it must not travel. A record without a Nightscout id
+        // arrives as a ref without any id: the master finds nothing for it and counts it in its confirmation.
+        val original = BatchAction.Remove(
+            BatchAction.Remove.Kind.CARBS,
+            listOf(BatchAction.Remove.Ref(nsId = "ns1", localId = 11L), BatchAction.Remove.Ref(nsId = null, localId = 12L))
+        )
+
+        val dto = original.toDto()
+
+        assertThat(dto.nsIds).containsExactly("ns1")
+        assertThat(dto.localOnlyCount).isEqualTo(1)
+        assertThat(dto.toDomain()).isEqualTo(
+            BatchAction.Remove(BatchAction.Remove.Kind.CARBS, listOf(BatchAction.Remove.Ref(nsId = "ns1"), BatchAction.Remove.Ref(nsId = null)))
+        )
+    }
+
+    @Test
+    fun removeOfEveryKindRoundTripsTheKind() {
+        BatchAction.Remove.Kind.entries.forEach { kind ->
+            val original = BatchAction.Remove(kind, listOf(BatchAction.Remove.Ref(nsId = "id")))
+            assertThat(original.toDto().toDomain()).isEqualTo(original)
+        }
+    }
+
+    @Test
+    fun removeWithUnknownKindMapsToNull() {
+        assertThat(BatchActionDto(type = BatchActionDto.TYPE_REMOVE, recordKind = "NOT_A_KIND", nsIds = listOf("a")).toDomain()).isNull()
+    }
+
+    @Test
+    fun removeWithAHugeLocalOnlyCountIsBounded() {
+        val removal = BatchActionDto(type = BatchActionDto.TYPE_REMOVE, recordKind = "BOLUS", localOnlyCount = Int.MAX_VALUE).toDomain() as BatchAction.Remove
+        assertThat(removal.records.size).isAtMost(10_000)
+    }
+
+    @Test
+    fun removeStartEventsRoundTrips() {
+        assertThat(BatchAction.RemoveStartEvents.toDto().toDomain()).isEqualTo(BatchAction.RemoveStartEvents)
+    }
+
+    @Test
+    fun calibrationRoundTrips() {
+        val original = BatchAction.Calibration(glucoseMgdl = 123.0)
+        assertThat(original.toDto().toDomain()).isEqualTo(original)
+    }
+
+    @Test
+    fun calibrationWithoutGlucoseMapsToNull() {
+        assertThat(BatchActionDto(type = BatchActionDto.TYPE_CALIBRATION).toDomain()).isNull()
     }
 }

@@ -1,6 +1,8 @@
 package app.aaps.plugins.aps.autotune.compose
 
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
@@ -12,6 +14,7 @@ import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.R
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.plugins.aps.autotune.AutotuneFS
 import app.aaps.plugins.aps.autotune.AutotunePlugin
@@ -68,6 +71,7 @@ internal class AutotuneViewModelTest {
     @Mock private lateinit var rxBus: RxBus
     @Mock private lateinit var uel: UserEntryLogger
     @Mock private lateinit var loop: Loop
+    @Mock private lateinit var config: Config
 
     private val autotunePlugin: AutotunePlugin = mock()
     private val profileStoreProvider: () -> ProfileStore = mock()
@@ -92,7 +96,7 @@ internal class AutotuneViewModelTest {
         // some other VM does not also release this one's init into its unstubbed dependencies.
         sut = AutotuneViewModel(
             autotunePlugin, autotuneFS, profileFunction, profileUtil, profileRepository, preferences,
-            dateUtil, rh, rxBus, uel, loop, profileStoreProvider, atProfileProvider,
+            dateUtil, rh, rxBus, uel, loop, config, profileStoreProvider, atProfileProvider,
             CoroutineScope(StandardTestDispatcher(TestCoroutineScheduler()))
         )
     }
@@ -142,12 +146,12 @@ internal class AutotuneViewModelTest {
         whenever(autotunePlugin.selectedProfile).thenReturn("")
         whenever(autotunePlugin.days).thenReturn(WeekDay())
         whenever(autotunePlugin.calcDays(any())).thenReturn(1)
-        whenever(rh.gs(app.aaps.core.ui.R.string.active)).thenReturn("Active")
-        whenever(rh.gs(app.aaps.core.ui.R.string.profileswitch_ismissing)).thenReturn("No profile")
+        whenever(rh.gs(R.string.active)).thenReturn("Active")
+        whenever(rh.gs(R.string.profileswitch_ismissing)).thenReturn("No profile")
         whenever(dateUtil.dateAndTimeString(any())).thenReturn("now")
         return AutotuneViewModel(
             autotunePlugin, autotuneFS, profileFunction, profileUtil, profileRepository, preferences,
-            dateUtil, rh, rxBus, uel, loop, profileStoreProvider, atProfileProvider,
+            dateUtil, rh, rxBus, uel, loop, config, profileStoreProvider, atProfileProvider,
             CoroutineScope(SupervisorJob() + StandardTestDispatcher(scheduler))
         )
     }
@@ -162,8 +166,8 @@ internal class AutotuneViewModelTest {
         whenever(autotunePlugin.tunedProfile).thenReturn(tunedProfile)
         whenever(preferences.get(BooleanKey.AutotuneCircadianIcIsf)).thenReturn(false)
         whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(null)
-        whenever(rh.gs(app.aaps.core.ui.R.string.autotune)).thenReturn("Autotune")
-        whenever(rh.gs(app.aaps.core.ui.R.string.profile_switch_no_insulin)).thenReturn("No insulin in use")
+        whenever(rh.gs(R.string.autotune)).thenReturn("Autotune")
+        whenever(rh.gs(R.string.profile_switch_no_insulin)).thenReturn("No insulin in use")
 
         advanceableSut(testScheduler).onProfileSwitchConfirm()
         advanceUntilIdle()
@@ -174,5 +178,55 @@ internal class AutotuneViewModelTest {
         verifyBlocking(profileFunction, never()) {
             createProfileSwitch(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
         }
+    }
+
+    // A refused switch (here: the pump cannot take the tuned basal) closed the dialog as if it was done.
+    @Test
+    fun `confirming a profile switch that is refused says why`() = runTest {
+        val tunedProfile = mock<ATProfile>()
+        whenever(tunedProfile.profileName).thenReturn("Tuned")
+        whenever(tunedProfile.profileStore(false)).thenReturn(mock())
+        whenever(autotunePlugin.tunedProfile).thenReturn(tunedProfile)
+        whenever(preferences.get(BooleanKey.AutotuneCircadianIcIsf)).thenReturn(false)
+        whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(ICfg("Insulin", peak = 75, dia = 6.0, concentration = 1.0))
+        // createProfileSwitch is not stubbed, so it refuses (null).
+        whenever(profileFunction.profileSwitchRefusal(any(), any(), any(), any(), any(), any())).thenReturn("The pump cannot take it")
+        whenever(rh.gs(R.string.autotune)).thenReturn("Autotune")
+
+        advanceableSut(testScheduler).onProfileSwitchConfirm()
+        advanceUntilIdle()
+
+        val captor = argumentCaptor<EventShowDialog.Ok>()
+        verify(rxBus).send(captor.capture())
+        assertThat(captor.firstValue.message).isEqualTo("The pump cannot take it")
+    }
+
+    // A switch made on a client stays there and never reaches the master, so the client does not offer it. Copying the
+    // tuned profile into the profile store is still offered: the store is synced.
+    @Test
+    fun `a client does not offer the switch to the tuned profile`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        val vm = tunedSut(testScheduler)
+        advanceUntilIdle()
+
+        assertThat(vm.uiState.value.lastRunSuccess).isTrue()
+        assertThat(vm.uiState.value.showProfileSwitch).isFalse()
+        assertThat(vm.uiState.value.showCopyLocal).isTrue()
+    }
+
+    @Test
+    fun `the master offers the switch to the tuned profile`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(false)
+        val vm = tunedSut(testScheduler)
+        advanceUntilIdle()
+
+        assertThat(vm.uiState.value.showProfileSwitch).isTrue()
+    }
+
+    /** A VM whose last run succeeded, so the result buttons are worked out. */
+    private fun tunedSut(scheduler: TestCoroutineScheduler): AutotuneViewModel {
+        whenever(autotunePlugin.lastRunSuccess).thenReturn(true)
+        whenever(rh.gs(any<Int>())).thenReturn("text")
+        return advanceableSut(scheduler)
     }
 }

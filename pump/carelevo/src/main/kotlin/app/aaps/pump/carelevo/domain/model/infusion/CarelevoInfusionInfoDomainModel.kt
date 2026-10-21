@@ -75,7 +75,13 @@ data class CarelevoImmeBolusInfusionInfoDomainModel(
     val createdAt: Instant = Clock.System.now(),
     val updatedAt: Instant = Clock.System.now(),
     val volume: Double? = null,
-    val infusionDurationSeconds: Int? = null
+    val infusionDurationSeconds: Int? = null,
+    /** Pump id every record of this bolus uses, so a later record of it updates the first one. Null in older records. */
+    val pumpId: Long? = null,
+    /** The patch's bolus total read just before this bolus, to know later what it really gave. */
+    val bolusTotalBefore: Double? = null,
+    /** `BS.Type` name of this bolus, so a bolus recorded later keeps its type (for example PRIMING). */
+    val bolusType: String? = null
 )
 
 data class CarelevoExtendBolusInfusionInfoDomainModel(

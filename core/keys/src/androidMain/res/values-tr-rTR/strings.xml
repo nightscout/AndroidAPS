@@ -3,6 +3,7 @@
     <!-- General preferences -->
     <!-- Overview preferences -->
     <!-- Pump preferences -->
+    <string name="pref_summary_bt_watchdog">Pompayla bağlantı kurulamaması durumunda, telefonun bluetooth özelliğini bir saniyeliğine kapatır. Bu işlem, bluetooth altyapısının donduğu bazı telefonlarda sorunun çözülmesine yardımcı olabilir.</string>
     <!-- Alert preferences -->
     <!-- BG Source preferences -->
     <!-- APS preferences -->
@@ -11,6 +12,7 @@
     <!-- SMS preferences -->
     <!-- Virtual pump preferences -->
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_receive_profile_switch">NS\'den profil geçişlerini al</string>
     <!-- OpenHumans preferences -->
     <!-- xDrip preferences -->
     <!-- Wear preferences -->

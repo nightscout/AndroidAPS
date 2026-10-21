@@ -485,14 +485,16 @@ class StoreDataForDbImplTest : TestBaseWithProfile() {
         verify(persistenceLayer, never()).invalidateTemporaryTarget(any(), any(), any(), anyOrNull(), anyList())
     }
 
+    // A bolus wizard result belongs to its bolus, so its delete follows the insulin setting. It used to be
+    // taken from Nightscout with no check at all.
     @Test
-    fun `updateDeletedTreatmentsInDb always invalidates bolus calculator result`() = runTest {
+    fun `updateDeletedTreatmentsInDb invalidates bolus calculator result when insulin is accepted`() = runTest {
         // Arrange
         val nsId = "bcr_to_delete"
         val bcrToDelete = bcr.apply { this.id = 999L }
         storeDataForDb.addToDeleteTreatment(nsId)
 
-        // Set preferences too false to prove they are ignored for BCR
+        whenever(preferences.get(BooleanKey.NsClientAcceptInsulin)).thenReturn(true)
         whenever(persistenceLayer.getBolusCalculatorResultByNSId(nsId)).thenReturn(bcrToDelete)
         whenever(persistenceLayer.invalidateBolusCalculatorResult(any(), any(), any(), anyOrNull(), anyList())).thenReturn(PersistenceLayer.TransactionResult())
 
@@ -502,6 +504,18 @@ class StoreDataForDbImplTest : TestBaseWithProfile() {
         // Assert
         verify(persistenceLayer).getBolusCalculatorResultByNSId(nsId)
         verify(persistenceLayer).invalidateBolusCalculatorResult(eq(bcrToDelete.id), any(), any(), anyOrNull(), anyList())
+    }
+
+    @Test
+    fun `updateDeletedTreatmentsInDb does NOT invalidate bolus calculator result when insulin is not accepted`() = runTest {
+        storeDataForDb.addToDeleteTreatment("bcr_to_ignore")
+
+        whenever(preferences.get(BooleanKey.NsClientAcceptInsulin)).thenReturn(false)
+        whenever(config.AAPSCLIENT).thenReturn(false)
+        storeDataForDb.updateDeletedTreatmentsInDb()
+
+        verify(persistenceLayer, never()).getBolusCalculatorResultByNSId(any())
+        verify(persistenceLayer, never()).invalidateBolusCalculatorResult(any(), any(), any(), anyOrNull(), anyList())
     }
 
     @Test
@@ -650,8 +664,8 @@ class StoreDataForDbImplTest : TestBaseWithProfile() {
         val nsId = "rm_to_delete"
         storeDataForDb.addToDeleteTreatment(nsId)
 
+        // Not in engineering mode (the mock answers false): a delete follows the same rule as adding a running mode.
         whenever(preferences.get(BooleanKey.NsClientAcceptRunningMode)).thenReturn(true)
-        whenever(config.isEngineeringMode()).thenReturn(true) // Both conditions must be met
         whenever(persistenceLayer.getRunningModeByNSId(nsId)).thenReturn(rm)
         whenever(persistenceLayer.invalidateRunningMode(any(), any(), any(), anyOrNull(), anyList())).thenReturn(PersistenceLayer.TransactionResult())
 
@@ -670,7 +684,6 @@ class StoreDataForDbImplTest : TestBaseWithProfile() {
         storeDataForDb.addToDeleteTreatment(nsId)
 
         whenever(preferences.get(BooleanKey.NsClientAcceptRunningMode)).thenReturn(false)
-        whenever(config.isEngineeringMode()).thenReturn(true) // One condition is still true
 
         // Act
         storeDataForDb.updateDeletedTreatmentsInDb()

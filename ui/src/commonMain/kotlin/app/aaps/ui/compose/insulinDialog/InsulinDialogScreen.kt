@@ -55,6 +55,7 @@ import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.InsulinSelector
 import app.aaps.core.ui.compose.LabeledSwitch
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.TimeOffsetRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
@@ -177,7 +178,7 @@ fun InsulinDialogScreen(
         cob = cob,
         dateString = viewModel.dateUtil.dateString(uiState.eventTime),
         timeString = viewModel.dateUtil.timeString(uiState.eventTime),
-        bolusFormat = viewModel.decimalFormatter.pumpSupportedBolusFormat(uiState.bolusStep),
+        bolusFormat = viewModel.decimalFormatter.pumpSupportedBolusFormat(uiState.displayStep),
         formatAmount = { viewModel.decimalFormatter.toPumpSupportedBolus(it, uiState.bolusStep) },
         onEatingSoonChange = viewModel::updateEatingSoonTt,
         onRecordOnlyChange = viewModel::updateRecordOnly,
@@ -306,7 +307,7 @@ internal fun InsulinDialogContent(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    LabeledSwitch(
+                    if (uiState.canSetTempTarget) LabeledSwitch(
                         label = stringResource(UiStrings.start_eating_soon_tt),
                         checked = uiState.eatingSoonTtChecked,
                         onCheckedChange = onEatingSoonChange
@@ -370,28 +371,29 @@ internal fun InsulinDialogContent(
             }
 
             // --- Card 4: Time Selection (visible when recordOnly) ---
+            // Folded at "Now" like the carb time: most doses are recorded when they are given.
             if (uiState.timeLayoutVisible) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
                 ) {
-                    Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                        NumberInputRow(
-                            labelRef = CoreUiStrings.time,
-                            value = uiState.timeOffsetMinutes.toDouble(),
-                            onValueChange = onTimeOffsetChange,
-                            valueRange = -12.0 * 60..12.0 * 60,
-                            step = 5.0,
-                            unitLabel = CoreUiStrings.units_min
-                        )
-                        DateTimeSection(
-                            dateString = dateString,
-                            timeString = timeString,
-                            eventTimeChanged = uiState.eventTimeChanged,
-                            onDateClick = onDateClick,
-                            onTimeClick = onTimeClick
-                        )
-                    }
+                    TimeOffsetRow(
+                        labelRef = CoreUiStrings.time,
+                        offsetMinutes = uiState.timeOffsetMinutes,
+                        onOffsetChange = { onTimeOffsetChange(it.toDouble()) },
+                        resolvedTimeText = if (uiState.timeOffsetMinutes != 0) timeString else null,
+                        offsetRange = -12 * 60..12 * 60,
+                        dateTimeContent = {
+                            DateTimeSection(
+                                dateString = dateString,
+                                timeString = timeString,
+                                eventTimeChanged = uiState.eventTimeChanged,
+                                onDateClick = onDateClick,
+                                onTimeClick = onTimeClick
+                            )
+                        },
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
                 }
             }
 

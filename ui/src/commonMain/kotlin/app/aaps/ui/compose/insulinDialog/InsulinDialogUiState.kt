@@ -10,6 +10,8 @@ data class InsulinDialogUiState(
     val insulin: Double = 0.0,
     val timeOffsetMinutes: Int = 0,
     val eatingSoonTtChecked: Boolean = false,
+    /** False on a client whose role may give insulin but not set a temp target: the switch is not offered. */
+    val canSetTempTarget: Boolean = true,
     val recordOnlyChecked: Boolean = false,
     val notes: String = "",
     val eventTime: Long = 0L,
@@ -45,3 +47,12 @@ val InsulinDialogUiState.recordOnlyEnabled: Boolean
 
 val InsulinDialogUiState.confirmEnabled: Boolean
     get() = insulin > 0.0 || eatingSoonTtChecked
+
+/**
+ * The step the amount field is formatted with. A record-only dose is kept as typed (a pen can give 1.33 U), so it
+ * is shown with 2 decimals, the format of a 0.01 step, and not with the step of the pump.
+ */
+val InsulinDialogUiState.displayStep: Double
+    get() = if (recordOnlyChecked) RECORD_ONLY_DISPLAY_STEP else bolusStep
+
+private const val RECORD_ONLY_DISPLAY_STEP = 0.01

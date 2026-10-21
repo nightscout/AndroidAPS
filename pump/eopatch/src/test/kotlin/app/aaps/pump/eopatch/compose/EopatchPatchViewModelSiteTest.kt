@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.siteRotation.BodyType
@@ -69,6 +70,7 @@ class EopatchPatchViewModelSiteTest {
     private val profileFunction: ProfileFunction = mock()
     private val profileRepository: ProfileRepository = mock()
     private val persistenceLayer: PersistenceLayer = mock()
+    private val rxBus: RxBus = mock()
 
     private val testDispatcher = StandardTestDispatcher()
 
@@ -96,7 +98,7 @@ class EopatchPatchViewModelSiteTest {
     private fun sut() = EopatchPatchViewModel(
         rh, patchManager, patchManagerExecutor, preferenceManager, patchConfig, alarmRegistry,
         aapsLogger, aapsSchedulers, rxAction, preferences, insulinManager, profileFunction,
-        profileRepository, persistenceLayer
+        profileRepository, persistenceLayer, rxBus
     )
 
     // ---- choosing a site ----

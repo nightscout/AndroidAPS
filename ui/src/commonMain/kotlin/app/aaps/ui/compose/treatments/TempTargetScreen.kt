@@ -18,9 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,7 +37,7 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.RecordRemovalDialog
 import app.aaps.core.ui.compose.icons.Ns
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.extensions.highValueToUnitsToString
@@ -67,10 +65,6 @@ fun TempTargetScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // Dialog state
-    var showDeleteDialog by remember { mutableStateOf(false) }
-    var deleteDialogMessage by remember { mutableStateOf("") }
-
     val currentlyActiveTarget = remember(uiState.tempTargets) {
         viewModel.getActiveTarget()
     }
@@ -80,28 +74,13 @@ fun TempTargetScreen(
         setToolbarConfig(
             viewModel.getToolbarConfig(
                 onNavigateBack = onNavigateBack,
-                onDeleteClick = {
-                    if (uiState.selectedItems.isNotEmpty()) {
-                        deleteDialogMessage = viewModel.getDeleteConfirmationMessage()
-                        showDeleteDialog = true
-                    }
-                }
+                onDeleteClick = { viewModel.requestDelete() }
             )
         )
     }
 
-    // Delete confirmation dialog
-    if (showDeleteDialog) {
-        OkCancelDialog(
-            title = stringResource(CoreUiStrings.removerecord),
-            message = deleteDialogMessage,
-            onConfirm = {
-                viewModel.deleteSelected()
-                showDeleteDialog = false
-            },
-            onDismiss = { showDeleteDialog = false }
-        )
-    }
+    // Delete confirmation, written by the master
+    RecordRemovalDialog(removal = viewModel.removal, onApplied = { viewModel.onRemoved() })
 
     AapsTheme {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -188,8 +167,9 @@ private fun TempTargetItem(
             // Time range, targets, duration, reason - all in one compact format
             Text(
                 text = buildString {
-                    // Time range
-                    append(dateUtil.timeRangeString(tempTarget.timestamp, tempTarget.end))
+                    // Time range. A target without an end (a scene without a duration) shows only its start.
+                    if (tempTarget.hasEnd) append(dateUtil.timeRangeString(tempTarget.timestamp, tempTarget.end))
+                    else append(dateUtil.timeString(tempTarget.timestamp))
                     append(" ")
                     // Targets - show only one value if low and high are the same
                     if (tempTarget.lowTarget == tempTarget.highTarget) {
@@ -201,9 +181,11 @@ private fun TempTargetItem(
                     }
                     append(" ")
                     // Duration
-                    append(T.msecs(tempTarget.duration).mins().toInt())
-                    append(stringResource(CoreUiStrings.units_min))
-                    append(" ")
+                    if (tempTarget.hasEnd) {
+                        append(T.msecs(tempTarget.duration).mins().toInt())
+                        append(stringResource(CoreUiStrings.units_min))
+                        append(" ")
+                    }
                     // Reason (without "Reason:" label)
                     append(translator.translate(tempTarget.reason))
                 },

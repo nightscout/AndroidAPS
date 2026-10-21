@@ -86,6 +86,28 @@ class MedtronicCommunicationManager(
         private const val MAX_COMMAND_TRIES = 3
         private const val DEFAULT_TIMEOUT = 2000
         private const val RILEYLINK_TIMEOUT: Long = 15 * 60 * 1000L // 15 min
+
+        /** NAK error code: the pump has no history page with the asked number. */
+        internal const val NAK_PAGE_DOES_NOT_EXIST = 0x0D
+
+        /** The error code of a NAK the pump sent, or null when [response] is not a NAK. */
+        internal fun nakErrorCode(response: PumpMessage): Int? =
+            if (response.commandType == MedtronicCommandType.CommandNAK)
+                response.messageBody?.txData?.firstOrNull()?.toInt()?.and(0xFF) ?: 0
+            else null
+
+        /** A history page comes in this many frames of 64 bytes. */
+        internal const val FRAMES_PER_PAGE = 16
+
+        /** A page that lost a frame is read again, but not more often than this. */
+        private const val MAX_PAGE_ATTEMPTS = 2
+
+        /**
+         * True when the pump sent a later frame than [expectedFrame]: the expected one was lost on the radio,
+         * and the pump took our ACK as the ACK for it. More ACKs only bring later frames.
+         */
+        internal fun pumpSkippedFrame(response: GetHistoryPageCarelinkMessageBody, expectedFrame: Int): Boolean =
+            response.frameData.isNotEmpty() && response.frameNumber in expectedFrame + 1..FRAMES_PER_PAGE
     }
 
     var errorResponse: String? = null
@@ -276,7 +298,7 @@ class MedtronicCommunicationManager(
         medtronicPumpStatus.pumpDeviceState = PumpDeviceState.Active
         var doneWithError = false
         for (pageNumber in 0..4) {
-            val rawHistoryPage = RawHistoryPage(aapsLogger)
+            var rawHistoryPage = RawHistoryPage(aapsLogger)
             // wakeUp(receiverDeviceAwakeForMinutes, false);
             val getHistoryMsg = makePumpMessage(
                 MedtronicCommandType.GetHistoryData,
@@ -285,31 +307,37 @@ class MedtronicCommunicationManager(
             aapsLogger.info(LTag.PUMPCOMM, "getPumpHistory: Page $pageNumber")
             // aapsLogger.info(LTag.PUMPCOMM,"getPumpHistoryPage("+pageNumber+"): "+ByteUtil.shortHexString(getHistoryMsg.getTxData()));
             // Ask the pump to transfer history (we get first frame?)
-            var firstResponse: PumpMessage? = null
-            var failed = false
             medtronicUtil.setCurrentCommand(MedtronicCommandType.GetHistoryData, pageNumber, null)
-            for (retries in 0 until MAX_COMMAND_TRIES) {
-                try {
-                    firstResponse = runCommandWithArgs(getHistoryMsg)
-                    failed = false
-                    break
-                } catch (_: RileyLinkCommunicationException) {
-                    aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "First call for PumpHistory failed (retry=%d)", retries))
-                    failed = true
-                }
+            val firstResponse = requestHistoryPage(getHistoryMsg)
+            if (firstResponse == null) {
+                aapsLogger.error(LTag.PUMPCOMM, "getPumpHistory: Page $pageNumber could not be asked for, the read failed.")
+                pumpTotalResult.readFailed = true
+                medtronicPumpStatus.pumpDeviceState = PumpDeviceState.Sleeping
+                return pumpTotalResult
             }
-            if (failed) {
+
+            // The pump answers a page it does not have with a NAK. Its error code was read as a frame
+            // number ("expected 1, received 13"), and the ACKs sent to retry were never answered:
+            // every history read lost about 80 s in timeouts before it gave up.
+            nakErrorCode(firstResponse)?.let { errorCode ->
+                if (errorCode == NAK_PAGE_DOES_NOT_EXIST)
+                    aapsLogger.info(LTag.PUMPCOMM, "getPumpHistory: Page $pageNumber does not exist, there is no older history")
+                else {
+                    aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "getPumpHistory: Pump refused page %d (NAK, error 0x%02X)", pageNumber, errorCode))
+                    pumpTotalResult.readFailed = true
+                }
                 medtronicPumpStatus.pumpDeviceState = PumpDeviceState.Sleeping
                 return pumpTotalResult
             }
 
             // aapsLogger.info(LTag.PUMPCOMM,"getPumpHistoryPage("+pageNumber+"): " + ByteUtil.shortHexString(firstResponse.getContents()));
             val ackMsg = makePumpMessage(MedtronicCommandType.CommandACK, PumpAckMessageBody())
-            var currentResponse = GetHistoryPageCarelinkMessageBody(firstResponse!!.messageBody!!.txData)
+            var currentResponse = GetHistoryPageCarelinkMessageBody(firstResponse.messageBody!!.txData)
             var expectedFrameNum = 1
             var done = false
             // while (expectedFrameNum == currentResponse.getFrameNumber()) {
             var failures = 0
+            var pageAttempt = 1
             while (!done) {
                 // examine current response for problems.
                 val frameData = currentResponse.frameData
@@ -334,6 +362,32 @@ class MedtronicCommunicationManager(
                     } else {
                         done = true // successful completion
                     }
+                } else if (pumpSkippedFrame(currentResponse, expectedFrameNum)) {
+                    // Sending the ACK again, as below, only brought later frames until it gave up after 6 tries.
+                    aapsLogger.warn(
+                        LTag.PUMPCOMM, String.format(
+                            Locale.ENGLISH, "getPumpHistory: Frame %d of page %d was lost, the pump sent frame %d",
+                            expectedFrameNum, pageNumber, currentResponse.frameNumber
+                        )
+                    )
+                    finishHistoryPage(ackMsg, currentResponse)
+                    val firstFrame =
+                        if (pageAttempt < MAX_PAGE_ATTEMPTS) {
+                            pageAttempt++
+                            aapsLogger.info(LTag.PUMPCOMM, "getPumpHistory: Reading page $pageNumber again")
+                            requestHistoryPage(getHistoryMsg)?.takeIf { nakErrorCode(it) == null }
+                        } else null
+                    if (firstFrame == null) {
+                        aapsLogger.error(LTag.PUMPCOMM, "getPumpHistory: Page $pageNumber could not be read, giving up.")
+                        done = true
+                        doneWithError = true
+                    } else {
+                        rawHistoryPage = RawHistoryPage(aapsLogger)
+                        expectedFrameNum = 1
+                        failures = 0
+                        currentResponse = GetHistoryPageCarelinkMessageBody(firstFrame.messageBody!!.txData)
+                    }
+                    continue
                 } else {
                     if (frameData.isEmpty()) {
                         aapsLogger.error(LTag.PUMPCOMM, "null frame data, retrying")
@@ -382,6 +436,9 @@ class MedtronicCommunicationManager(
                 doneWithError = true
             }
             if (doneWithError) {
+                // The pages before this one were read, but the entries on this page are missing. Processed without them,
+                // a temp basal was ended by the wrong entry, and the missing ones were never read again (#3378).
+                pumpTotalResult.readFailed = true
                 medtronicPumpStatus.pumpDeviceState = PumpDeviceState.Sleeping
                 return pumpTotalResult
             }
@@ -397,6 +454,41 @@ class MedtronicCommunicationManager(
         }
         medtronicPumpStatus.pumpDeviceState = PumpDeviceState.Sleeping
         return pumpTotalResult
+    }
+
+    /** Asks the pump for a history page. Returns its first reply, or null when the pump did not answer. */
+    private fun requestHistoryPage(getHistoryMsg: PumpMessage): PumpMessage? {
+        for (retries in 0 until MAX_COMMAND_TRIES) {
+            try {
+                val reply = runCommandWithArgs(getHistoryMsg)
+                // No ACK to the attention packet: the pump did not start the page. This reply was taken as the
+                // first frame, and ACKing a page that never started timed out for about 70 s.
+                if (!reply.isErrorResponse) return reply
+                aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "First call for PumpHistory got no ACK (retry=%d)", retries))
+            } catch (_: RileyLinkCommunicationException) {
+                aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "First call for PumpHistory failed (retry=%d)", retries))
+            }
+        }
+        return null
+    }
+
+    /**
+     * Sends ACKs until the pump sent the last frame of the page. The pump then waits for a new command, the
+     * same way as after a page that was read without a problem.
+     */
+    private fun finishHistoryPage(ackMsg: PumpMessage, response: GetHistoryPageCarelinkMessageBody) {
+        var current = response
+        var acks = 0
+        while (!current.wasLastFrame() && current.frameNumber != FRAMES_PER_PAGE && acks < FRAMES_PER_PAGE) {
+            acks++
+            val next = try {
+                sendAndListen(ackMsg)
+            } catch (_: RileyLinkCommunicationException) {
+                aapsLogger.warn(LTag.PUMPCOMM, "getPumpHistory: No answer to an ACK, the page may have ended")
+                return
+            }
+            current = GetHistoryPageCarelinkMessageBody(next.messageBody?.txData ?: byteArrayOf())
+        }
     }
 
     override fun createPumpMessageContent(type: RLMessageType): ByteArray {

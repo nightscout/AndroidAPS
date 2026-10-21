@@ -51,6 +51,7 @@
     <string name="pair_with_master_error_ambiguous_pin">Více párování odpovídá kódu PIN. Požádejte na hlavním zařízení o vygenerování nového a opakujte akci.</string>
     <string name="pair_with_master_error_expired">Toto párování vypršelo. Vygenerujte nový PIN na hlavním zařízení.</string>
     <string name="pair_with_master_error_network">K Nightscoutu se nelze připojit. Zkontrolujte připojení a zkuste to znovu.</string>
+    <string name="pair_with_master_error_secret_store">Tento telefon nemohl uložit klíč párování, takže spárování bylo zrušeno. Nic se nezměnilo. Zkuste to znovu, a pokud se nedaří, restartujte telefon.</string>
     <string name="pair_with_master_retry">Zkuste to znovu</string>
     <string name="pair_with_master_already_paired_title">Již spárováno</string>
     <string name="pair_with_master_already_paired_master">Momentálně spárováno s hlavním zařízením %1$s. Před zadáním nového PINu nejprve odpárujte.</string>
@@ -73,6 +74,8 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Pokud je tato možnost povolena, data budou nahrávána na testovací servery, nikoli na běžné</string>
     <string name="title_tidepool_dev_servers">Používat testovací servery</string>
+    <string name="title_tidepool_use_ns_connection">Použít nastavení připojení k Nightscoutu</string>
+    <string name="summary_tidepool_use_ns_connection">Vypněte, chcete-li vytvořit samostatné nastavení připojení pro Tidepool</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Nahrávání dat do Tidepoolu</string>
     <string name="upload_now">Nahrát nyní</string>
@@ -106,6 +109,7 @@
     <string name="scene_not_available">Vybraná scéna %1$s již není k dispozici, obnovte prosím svou dlaždici</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Vzdálené příkazy na podání inzulínu jsou v klientském režimu vypnuty</string>
     <string name="wear_phone_not_ready">Telefon se stále spouští nebo používá nastavení. Zkuste to znovu za chvíli.</string>
+    <string name="wear_control_disabled">Ovládání Wear je vypnuto v nastavení Wear v telefonu.</string>
     <string name="wear_action_tempt_unit_error">Různé jednotky používané na hodinkách a telefonu!</string>
     <string name="wear_action_tempt_min_bg_error">Minimální glykémie mimo rozsah!</string>
     <string name="wear_action_tempt_max_bg_error">Maximální glykémie mimo rozsah!</string>
@@ -154,7 +158,7 @@
     <string name="aps">APS</string>
     <string name="last_run">Poslední spuštění</string>
     <string name="last_enact">Poslední provedení</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fU %2$.0f%%</string>
     <string name="today">Dnes</string>
     <string name="weighted">vážený</string>
     <string name="full_xdrip_sync_comment">Plná synchronizace? Může to chvíli trvat a dokud nebude dokončena, neuvidíte v xDrip+ nová data.</string>

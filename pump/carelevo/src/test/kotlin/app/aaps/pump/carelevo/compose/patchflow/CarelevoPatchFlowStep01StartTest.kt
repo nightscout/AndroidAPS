@@ -110,7 +110,9 @@ class CarelevoPatchFlowStep01StartTest {
             profileFunction = mock(),
             profileRepository = mock(),
             insulinManager = mock(),
-            persistenceLayer = mock()
+            persistenceLayer = mock(),
+            rh = mock(),
+            rxBus = mock()
         )
     }
 

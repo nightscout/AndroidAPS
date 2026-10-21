@@ -3,7 +3,7 @@ package app.aaps.plugins.sync.smsCommunicator.actions
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.bolus.BatchAction
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -24,7 +24,7 @@ import app.aaps.plugins.sync.smsCommunicator.runSmsBatch
 /**
  * Executes a remote bolus delivery: BOLUS <insulin> [MEAL].
  *
- * Delivered through [WizardBolusExecutor], so the bolus is capped, gated and logged exactly like one from the phone.
+ * Delivered through [MasterActionExecutor], so the bolus is capped, gated and logged exactly like one from the phone.
  * MEAL adds the eating-soon temp target to the same batch. As in the phone's insulin dialog, the target is set once
  * the bolus is accepted, not after the pump finished.
  */
@@ -32,7 +32,7 @@ class BolusAction(
     private val insulin: Double,
     private val isMeal: Boolean,
     private val receivedSms: Sms,
-    private val wizardBolusExecutor: WizardBolusExecutor,
+    private val masterActionExecutor: MasterActionExecutor,
     private val commandQueue: CommandQueue,
     private val rh: TextResolver,
     private val profileUtil: ProfileUtil,
@@ -59,7 +59,7 @@ class BolusAction(
             recordOnly = false, notes = "", timestamp = 0L, iCfg = null
         )
         val actions = listOfNotNull(bolus, mealTarget)
-        when (val result = wizardBolusExecutor.runSmsBatch(actions, waitForDose = true)) {
+        when (val result = masterActionExecutor.runSmsBatch(actions, waitForDose = true)) {
             is SmsBatchResult.Done    -> {
                 commandQueue.readStatus(rh.gs(CoreUiStrings.sms))
                 updateLastRemoteBolusTime(dateUtil.now())

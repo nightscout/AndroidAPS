@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
@@ -78,7 +79,8 @@ class DashOmnipodWizardViewModel(
     persistenceLayer: PersistenceLayer,
     pumpEnactResultProvider: () -> PumpEnactResult,
     logger: AAPSLogger,
-    aapsSchedulers: AapsSchedulers
+    aapsSchedulers: AapsSchedulers,
+    rxBus: RxBus
 ) : OmnipodWizardViewModel(
     logger,
     aapsSchedulers,
@@ -86,7 +88,9 @@ class DashOmnipodWizardViewModel(
     profileFunction,
     profileRepository,
     insulinManager,
-    persistenceLayer
+    persistenceLayer,
+    rh,
+    rxBus
 ) {
 
     override val pumpSource: Sources = Sources.OmnipodDash

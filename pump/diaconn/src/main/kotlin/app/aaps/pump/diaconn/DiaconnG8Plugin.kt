@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -215,9 +216,8 @@ class DiaconnG8Plugin(
 
     override suspend fun getPumpStatus(reason: String) {
         diaconnG8Service?.readPumpStatus()
-        pumpDescription.basalStep = diaconnG8Pump.basalStep
-        pumpDescription.bolusStep = diaconnG8Pump.bolusStep
-        pumpDescription.basalMaximumRate = diaconnG8Pump.maxBasalPerHours
+        // Only once the pump reported it: before that it is 0, and a max basal of 0 makes every profile invalid.
+        if (diaconnG8Pump.maxBasalPerHours > 0) pumpDescription.basalMaximumRate = diaconnG8Pump.maxBasalPerHours
     }
 
     // Diaconn Pump Interface
@@ -289,6 +289,15 @@ class DiaconnG8Plugin(
         }
         return true
     }
+
+    /**
+     * The 24 hourly rates the pump itself reports: it is read again after each set (#2454). If that read failed, they
+     * are still the old ones; then [isThisProfileSet] fails too, and the profile is set again. null before the pump
+     * was read: the profile counts as it was sent.
+     */
+    override fun deliveredBasal(): List<Profile.ProfileValue>? =
+        if (!isInitialized()) null
+        else diaconnG8Pump.pumpProfiles?.get(diaconnG8Pump.activeProfile)?.take(24)?.mapIndexed { hour, rate -> Profile.ProfileValue(T.hours(hour.toLong()).secs().toInt(), rate) }
 
     override val lastDataTime: StateFlow<Long> = diaconnG8Pump.lastConnectionFlow
     override val lastBolusTime: StateFlow<Long?> = diaconnG8Pump.lastBolusTimeFlow

@@ -81,6 +81,10 @@ sealed class ProfileSealed(
     ), EffectiveProfile {
 
         override val iCfg: ICfg = value.iCfg
+
+        /** The running profile was made from this switch when it links to it. Without a link (older records) the values decide. */
+        override fun isAppliedAs(running: Profile): Boolean =
+            (running is EPS && value.id != 0L && running.value.originalPsId == value.id) || isEqual(running)
     }
 
     /**
@@ -261,6 +265,7 @@ sealed class ProfileSealed(
                         notificationManager.post(NotificationId.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, InterfacesStrings.basalprofilenotaligned.withArgs(from))
                     }
                     validityCheck.isValid = false
+                    validityCheck.basalProblem = Profile.BasalProblem.NOT_ALIGNED_TO_HOURS
                     validityCheck.reasons.add(
                         rh.gs(InterfacesStrings.basalprofilenotaligned, from)
                     )
@@ -271,11 +276,13 @@ sealed class ProfileSealed(
             if (basalAmount < description.basalMinimumRate) {
                 if (sendNotifications) sendBelowMinimumNotification(from, notificationManager, rh)
                 validityCheck.isValid = false
+                validityCheck.basalProblem = Profile.BasalProblem.BELOW_PUMP_MINIMUM
                 validityCheck.reasons.add(rh.gs(InterfacesStrings.minimalbasalvaluereplaced, from))
                 break
             } else if (basalAmount > description.basalMaximumRate) {
                 if (sendNotifications) sendAboveMaximumNotification(from, notificationManager, rh)
                 validityCheck.isValid = false
+                validityCheck.basalProblem = Profile.BasalProblem.ABOVE_PUMP_MAXIMUM
                 validityCheck.reasons.add(rh.gs(InterfacesStrings.maximumbasalvaluereplaced, from))
                 break
             }

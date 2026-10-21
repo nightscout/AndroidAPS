@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.profileManagement
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -49,8 +49,7 @@ fun TimeValueList(
     unitLabel: String = "",
     modifier: Modifier = Modifier
 ) {
-    LocalDateUtil.current
-    var showTimePicker by remember { mutableStateOf(false) }
+    // Row whose time is being edited, -1 for none.
     var editingIndex by remember { mutableIntStateOf(-1) }
 
     val header = if (unitLabel.isNotEmpty()) "$title [$unitLabel]" else title
@@ -64,20 +63,27 @@ fun TimeValueList(
             )
         }
 
+        val hours = entries.map { it.timeSeconds / 3600 }
         entries.forEachIndexed { index, entry ->
-            val currentHour = entry.timeSeconds / 3600
-            val nextHour = if (index < entries.size - 1) entries[index + 1].timeSeconds / 3600 else 24
+            val nextHour = if (index < entries.lastIndex) hours[index + 1] else 24
             // Can add if there's at least 2 hours gap (room for a new entry)
-            val canAddAfter = entries.size < 24 && (nextHour - currentHour) >= 2
+            val canAddAfter = entries.size < 24 && (nextHour - hours[index]) >= 2
 
             TimeValueRow(
                 index = index,
                 timeSeconds = entry.timeSeconds,
                 value = entry.value,
-                onTimeClick = {
-                    editingIndex = index
-                    showTimePicker = true
-                },
+                onTimeClick = { editingIndex = index },
+                timePicker = if (editingIndex == index) {
+                    {
+                        EntryHourPicker(
+                            hours = hours,
+                            index = index,
+                            onHourSelected = { hour -> onEntryChange(index, entry.copy(timeSeconds = hour * 3600)) },
+                            onDismiss = { editingIndex = -1 }
+                        )
+                    }
+                } else null,
                 onValueChange = { newValue ->
                     onEntryChange(index, entry.copy(value = newValue))
                 },
@@ -91,37 +97,53 @@ fun TimeValueList(
                 header = header
             )
         }
+    }
+}
 
-        // Show time picker popup
-        if (showTimePicker && editingIndex >= 0) {
-            val currentEntry = entries.getOrNull(editingIndex)
-            val currentHour = (currentEntry?.timeSeconds ?: 0) / 3600
+/**
+ * The hour wheel for the entry at [index]. It offers the hours between the two neighbouring entries,
+ * so the entries stay in time order.
+ */
+@Composable
+private fun EntryHourPicker(
+    hours: List<Int>,
+    index: Int,
+    onHourSelected: (Int) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val prevHour = if (index > 0) hours[index - 1] else -1
+    val nextHour = if (index < hours.lastIndex) hours[index + 1] else 24
+    HourWheelPicker(
+        selectedHour = hours[index],
+        availableHours = ((prevHour + 1) until nextHour).toList(),
+        onHourSelected = onHourSelected,
+        onDismiss = onDismiss
+    )
+}
 
-            // Calculate available hours (between prev and next entry)
-            val prevHour = if (editingIndex > 0) entries[editingIndex - 1].timeSeconds / 3600 else -1
-            val nextHour = if (editingIndex < entries.size - 1) entries[editingIndex + 1].timeSeconds / 3600 else 24
-            val availableHours = ((prevHour + 1) until nextHour).toList()
-
-            if (availableHours.isNotEmpty()) {
-                HourWheelPicker(
-                    selectedHour = currentHour,
-                    availableHours = availableHours,
-                    onHourSelected = { hour ->
-                        currentEntry?.let { entry ->
-                            onEntryChange(editingIndex, entry.copy(timeSeconds = hour * 3600))
-                        }
-                    },
-                    onDismiss = {
-                        showTimePicker = false
-                        editingIndex = -1
-                    }
-                )
-            } else {
-                showTimePicker = false
-                editingIndex = -1
-            }
-        }
-
+/**
+ * The time of one row. The first row is always 00:00, so only later rows can open the picker.
+ * [timePicker] is emitted inside the chip's [Box], which anchors the popup to the chip the user
+ * tapped; emitted anywhere else it would open there instead.
+ */
+@Composable
+private fun TimeChip(
+    index: Int,
+    timeString: String,
+    onClick: () -> Unit,
+    timePicker: (@Composable () -> Unit)?
+) {
+    Box {
+        SuggestionChip(
+            onClick = onClick,
+            label = { Text(timeString) },
+            modifier = Modifier.width(80.dp),
+            enabled = index > 0,
+            colors = SuggestionChipDefaults.suggestionChipColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
+            )
+        )
+        timePicker?.invoke()
     }
 }
 
@@ -131,6 +153,7 @@ private fun TimeValueRow(
     timeSeconds: Int,
     value: Double,
     onTimeClick: () -> Unit,
+    timePicker: (@Composable () -> Unit)?,
     onValueChange: (Double) -> Unit,
     onRemove: () -> Unit,
     canRemove: Boolean,
@@ -151,16 +174,7 @@ private fun TimeValueRow(
                 .padding(vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Time chip
-            SuggestionChip(
-                onClick = { if (index > 0) onTimeClick() }, // First entry always at 00:00
-                label = { Text(timeString) },
-                modifier = Modifier.width(80.dp),
-                enabled = index > 0,
-                colors = SuggestionChipDefaults.suggestionChipColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-                )
-            )
+            TimeChip(index = index, timeString = timeString, onClick = onTimeClick, timePicker = timePicker)
 
             Spacer(Modifier.width(8.dp))
 
@@ -226,8 +240,7 @@ fun TargetValueList(
     unitLabel: String = "",
     modifier: Modifier = Modifier
 ) {
-    LocalDateUtil.current
-    var showTimePicker by remember { mutableStateOf(false) }
+    // Row whose time is being edited, -1 for none.
     var editingIndex by remember { mutableIntStateOf(-1) }
 
     val header = if (unitLabel.isNotEmpty()) "$title [$unitLabel]" else title
@@ -239,20 +252,28 @@ fun TargetValueList(
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
+        val hours = lowEntries.map { it.timeSeconds / 3600 }
         lowEntries.zip(highEntries).forEachIndexed { index, (low, high) ->
-            val currentHour = low.timeSeconds / 3600
-            val nextHour = if (index < lowEntries.size - 1) lowEntries[index + 1].timeSeconds / 3600 else 24
-            val canAddAfter = lowEntries.size < 24 && (nextHour - currentHour) >= 2
+            val nextHour = if (index < lowEntries.lastIndex) hours[index + 1] else 24
+            val canAddAfter = lowEntries.size < 24 && (nextHour - hours[index]) >= 2
 
             TargetValueRow(
                 index = index,
                 timeSeconds = low.timeSeconds,
                 lowValue = low.value,
                 highValue = high.value,
-                onTimeClick = {
-                    editingIndex = index
-                    showTimePicker = true
-                },
+                onTimeClick = { editingIndex = index },
+                timePicker = if (editingIndex == index) {
+                    {
+                        EntryHourPicker(
+                            hours = hours,
+                            index = index,
+                            // Low and high share one time; move both.
+                            onHourSelected = { hour -> onEntryChange(index, low.copy(timeSeconds = hour * 3600), high.copy(timeSeconds = hour * 3600)) },
+                            onDismiss = { editingIndex = -1 }
+                        )
+                    }
+                } else null,
                 onLowValueChange = { newLow ->
                     // Keep low <= high: raising low above high pushes high up too, but only inside
                     // the range allowed for high.
@@ -276,42 +297,6 @@ fun TargetValueList(
                 header = header
             )
         }
-
-        // Show time picker popup
-        if (showTimePicker && editingIndex >= 0) {
-            val currentEntry = lowEntries.getOrNull(editingIndex)
-            val currentHour = (currentEntry?.timeSeconds ?: 0) / 3600
-
-            val prevHour = if (editingIndex > 0) lowEntries[editingIndex - 1].timeSeconds / 3600 else -1
-            val nextHour = if (editingIndex < lowEntries.size - 1) lowEntries[editingIndex + 1].timeSeconds / 3600 else 24
-            val availableHours = ((prevHour + 1) until nextHour).toList()
-
-            if (availableHours.isNotEmpty()) {
-                HourWheelPicker(
-                    selectedHour = currentHour,
-                    availableHours = availableHours,
-                    onHourSelected = { hour ->
-                        val low = lowEntries.getOrNull(editingIndex)
-                        val high = highEntries.getOrNull(editingIndex)
-                        if (low != null && high != null) {
-                            onEntryChange(
-                                editingIndex,
-                                low.copy(timeSeconds = hour * 3600),
-                                high.copy(timeSeconds = hour * 3600)
-                            )
-                        }
-                    },
-                    onDismiss = {
-                        showTimePicker = false
-                        editingIndex = -1
-                    }
-                )
-            } else {
-                showTimePicker = false
-                editingIndex = -1
-            }
-        }
-
     }
 }
 
@@ -322,6 +307,7 @@ private fun TargetValueRow(
     lowValue: Double,
     highValue: Double,
     onTimeClick: () -> Unit,
+    timePicker: (@Composable () -> Unit)?,
     onLowValueChange: (Double) -> Unit,
     onHighValueChange: (Double) -> Unit,
     onRemove: () -> Unit,
@@ -351,16 +337,7 @@ private fun TargetValueRow(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Time chip
-            SuggestionChip(
-                onClick = { if (index > 0) onTimeClick() },
-                label = { Text(timeString) },
-                modifier = Modifier.width(80.dp),
-                enabled = index > 0,
-                colors = SuggestionChipDefaults.suggestionChipColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-                )
-            )
+            TimeChip(index = index, timeString = timeString, onClick = onTimeClick, timePicker = timePicker)
 
             Spacer(Modifier.weight(1f))
 

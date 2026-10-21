@@ -174,8 +174,28 @@ class PersistentNotificationPlugin(
         // came back only when the next rxBus event reached triggerNotificationUpdate, so after a stop and
         // start the process sat without its foreground service for however long that took - and
         // DummyService is what keeps AAPS out of Android's background execution limits. Starting it here
-        // is idempotent (startService on a running service is a no-op) and deferred, because Android 12+
-        // forbids starting a foreground service from the background.
+        // is idempotent (startService on a running service is a no-op).
+        startDummyService()
+    }
+
+    /**
+     * Starts DummyService, at once when Android allows it from the background, otherwise as soon as
+     * AAPS is on screen.
+     *
+     * At once matters. The process is often started in the background: after an update, or when
+     * Android killed it and a CGM broadcast or a job brings it back. Until the foreground service runs,
+     * Android may freeze the process, and the calculation and the loop then stop until the user opens
+     * AAPS. With the battery optimisation exemption Android allows the start from the background. When
+     * the exemption is missing, or Android refuses anyway, the start waits for the screen as before.
+     */
+    private fun startDummyService() {
+        if (dummyServiceHelper.mayStartFromBackground(context))
+            dummyServiceHelper.startService(context, onNotAllowed = ::startDummyServiceWhenOnScreen)
+        else
+            startDummyServiceWhenOnScreen()
+    }
+
+    private fun startDummyServiceWhenOnScreen() {
         deferredStart.start { dummyServiceHelper.startService(context) }
     }
 
@@ -210,7 +230,7 @@ class PersistentNotificationPlugin(
     // thread for the whole update.
     private suspend fun triggerNotificationUpdate(includeAuto: Boolean = false) {
         updateNotification(includeAuto)
-        deferredStart.start { dummyServiceHelper.startService(context) }
+        startDummyService()
     }
 
     private suspend fun updateNotification(includeAuto: Boolean = false) {
@@ -316,8 +336,9 @@ class PersistentNotificationPlugin(
                 var aaTarget = ""
                 val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
                 if (tempTarget != null) {
+                    // A target without an end (a scene without a duration) shows no remaining time, like the overview chip.
                     aaTarget = profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) +
-                        " " + dateUtil.untilString(tempTarget.end, rh)
+                        if (tempTarget.hasEnd) " " + dateUtil.untilString(tempTarget.end, rh) else ""
                 } else {
                     profileFunction.getProfile()?.let { profile ->
                         val adjustedTarget = profile.apsAdjustedTargetMgdl(loop, config, processedDeviceStatusData)

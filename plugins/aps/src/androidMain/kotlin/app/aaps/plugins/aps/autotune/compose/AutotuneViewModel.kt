@@ -11,6 +11,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.graph.profile.ProfileViewerData
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
@@ -160,6 +161,7 @@ class AutotuneViewModel(
     private val rxBus: RxBus,
     private val uel: UserEntryLogger,
     private val loop: Loop,
+    private val config: Config,
     private val profileStoreProvider: () -> ProfileStore,
     private val atProfileProvider: () -> ATProfile,
     private val scope: CoroutineScope
@@ -326,7 +328,7 @@ class AutotuneViewModel(
                         )
                         return@launch
                     }
-                    profileFunction.createProfileSwitch(
+                    val switched = profileFunction.createProfileSwitch(
                         profileStore = profileStore,
                         profileName = tunedP.profileName,
                         durationInMinutes = 0,
@@ -339,6 +341,15 @@ class AutotuneViewModel(
                         listValues = listOf(ValueWithUnit.SimpleString(tunedP.profileName)),
                         iCfg = iCfg
                     )
+                    // A refused switch must not look like a done one: say why.
+                    if (switched == null)
+                        rxBus.send(
+                            EventShowDialog.Ok(
+                                title = rh.gs(app.aaps.core.ui.R.string.autotune),
+                                message = profileFunction.profileSwitchRefusal(profileStore, tunedP.profileName, 0, 100, 0, iCfg)
+                                    ?: rh.gs(app.aaps.core.ui.R.string.invalid_profile)
+                            )
+                        )
                 }
             }
         }
@@ -522,7 +533,9 @@ class AutotuneViewModel(
             showCopyLocal = autotunePlugin.lastRunSuccess,
             showUpdateProfile = autotunePlugin.lastRunSuccess && autotunePlugin.updateButtonVisibility == View.VISIBLE,
             showRevertProfile = autotunePlugin.lastRunSuccess && autotunePlugin.updateButtonVisibility != View.VISIBLE,
-            showProfileSwitch = autotunePlugin.lastRunSuccess,
+            // A switch made here would stay on a client and never reach the master. The tuned profile can still be
+            // copied into the profile store, which is synced.
+            showProfileSwitch = autotunePlugin.lastRunSuccess && !config.AAPSCLIENT,
             showCompare = autotunePlugin.lastRunSuccess,
             showResultsCard = !(autotunePlugin.calculationRunning && autotunePlugin.result.isEmpty()),
             showCalcDays = daysBack.toInt() != calcDays,

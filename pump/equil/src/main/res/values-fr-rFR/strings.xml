@@ -24,6 +24,12 @@
     <string name="equil_title_unpair_detach">Détacher la pompe</string>
     <string name="equil_title_history_events">Événement de l\'historique</string>
     <string name="equil_tone">Son d\'alerte</string>
+    <string name="equil_bolus_speed">Vitesse du bolus</string>
+    <string name="equil_bolus_speed_summary">Un bolus plus rapide peut donner plus d\'alarmes d\'occlusion.</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1,5 U/min (standard)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 U/min</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 U/min</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 U/min</string>
     <string name="equil_tone_mode_mute">Muet</string>
     <string name="equil_tone_mode_shake">Vibreur uniquement</string>
     <string name="equil_tone_mode_tone">Son uniquement</string>
@@ -33,6 +39,10 @@
     <string name="equil_error">Erreur de connexion</string>
     <string name="equil_change">Changer la pompe</string>
     <string name="equil_change_content">Veuillez détacher la pompe de la plaque de base.</string>
+    <string name="equil_new_infusion_set_question">Allez-vous également mettre un nouveau set de perfusion (plaque de base et canule) ?</string>
+    <string name="equil_new_infusion_set_yes">Oui, un nouvel ensemble de perfusion</string>
+    <string name="equil_new_infusion_set_no">Non, uniquement le réservoir ou la batterie</string>
+    <string name="equil_same_infusion_set_hint">La canule ne sera pas amorcée et aucun changement de canule ne sera enregistré.</string>
     <string name="equil_unpair_alert">Êtes-vous sûr de vouloir abandonner le contrôle de %1$s?</string>
     <string name="equil_record_basal">Débit de base %1$s U/h</string>
     <string name="equil_record_basal_temp">Débit de basale temporaire %1$s U/h</string>
@@ -40,8 +50,10 @@
     <string name="equil_error_set_temp_basal_failed_validation">La durée du DBT doit être supérieure à zéro et un multiple de %1$s minutes.</string>
     <string name="equil_basal_exceeds_max">Le débit de base du profil %1$s U/h dépasse le débit maximum de la pompe %2$s U/h. Augmentez le réglage Basal max et reconnectez la pompe.</string>
     <string name="equil_not_enough_insulin">Pas assez d\'insuline dans le réservoir</string>
-    <string name="equil_low_battery">Batterie faible</string>
-    <string name="equil_low_insulin">Pas assez d\'insuline dans le réservoir</string>
+    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Batterie faible: %1$d%%</string>
+    <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Pas assez d\'insuline dans le réservoir : %1$s</string>
+    <string name="equil_reservoir_empty">Le réservoir est vide. La pompe n\'injecte plus d\'insuline.</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">La pompe s\'est arrêtée pendant le bolus. Injecté: %1$s de %2$s</string>
     <string name="equil_pump_not_run">Pompe arrêtée</string>
     <string name="equil_pair">Appairer</string>
     <string name="equil_pair_error">Erreur d\'appairage</string>

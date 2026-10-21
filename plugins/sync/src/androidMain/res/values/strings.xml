@@ -17,7 +17,6 @@
     <string name="authorized_clients_add">Add client</string>
     <string name="authorized_clients_comm_switch_title">Allow client control</string>
     <string name="authorized_clients_comm_switch_summary">Let paired clients send signed commands over Nightscout. Turn off to stop communication without removing them.</string>
-    <string name="authorized_clients_needs_websocket">Websockets are turned off, so commands from clients cannot be received. Clients see this master as not accepting commands until you turn websockets on.</string>
     <string name="authorized_clients_state_active">Active</string>
     <string name="authorized_clients_state_pending">Pending</string>
     <string name="authorized_clients_last_seen">Last seen %1$s</string>
@@ -108,6 +107,8 @@
     <string name="garmin_description">Connection to Garmin device (Fenix, Edge, …)</string>
     <string name="garmin_local_http_server_port">Local HTTP server port</string>
     <string name="garmin_local_http_server">Local HTTP server</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">The Garmin watch sent %1$s of carbs. This phone is a client, so they were not entered. Enter them in AAPS.</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">The Garmin watch asked to connect or disconnect the pump. This phone is a client, so nothing was changed. Do it in AAPS.</string>
 
     <!--    Wear-->
     <string name="description_wear">Monitor and control AAPS using your WearOS watch.</string>
@@ -167,7 +168,7 @@
     <string name="aps">APS</string>
     <string name="last_run">Last run</string>
     <string name="last_enact">Last Enact</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fU %2$.0f%%</string>
     <string name="today">Today</string>
     <string name="weighted">weighted</string>
     <string name="full_xdrip_sync_comment">Full synchronization? It may take a while and until it is finished you\'ll not see new data in xDrip+.</string>

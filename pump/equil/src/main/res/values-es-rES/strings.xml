@@ -24,6 +24,12 @@
     <string name="equil_title_unpair_detach">Desacoplar la bomba</string>
     <string name="equil_title_history_events">Historial de eventos</string>
     <string name="equil_tone">Tono de alerta</string>
+    <string name="equil_bolus_speed">Velocidad del bolo</string>
+    <string name="equil_bolus_speed_summary">Una velocidad de bolo más rápida puede provocar más alarmas de oclusión</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1,5 U/min (estándar)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 U/min</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 U/min</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 U/min</string>
     <string name="equil_tone_mode_mute">Silenciar</string>
     <string name="equil_tone_mode_shake">Sólo vibrar</string>
     <string name="equil_tone_mode_tone">Sólo sonido</string>
@@ -33,15 +39,21 @@
     <string name="equil_error">Error de conexión</string>
     <string name="equil_change">Cambiar bomba</string>
     <string name="equil_change_content">Desmonte la bomba de la placa base.</string>
+    <string name="equil_new_infusion_set_question">¿Colocará también un nuevo equipo de infusión (base y cánula)?</string>
+    <string name="equil_new_infusion_set_yes">Sí, nuevo equipo de infusión</string>
+    <string name="equil_new_infusion_set_no">No, solo reservorio o batería</string>
+    <string name="equil_same_infusion_set_hint">No se cebará la cánula y no se registrará ningún cambio de cánula</string>
     <string name="equil_unpair_alert">¿Estás seguro de que quieres renunciar al control sobre %1$s?</string>
     <string name="equil_record_basal">Tasa basal %1$s U/H</string>
     <string name="equil_record_basal_temp">Tasa basal temporal %1$s U/H</string>
     <string name="equil_record_bolus">Bolo %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">La duración de la TBR debe ser mayor que cero y múltiplo de %1$s minutos.</string>
-    <string name="equil_basal_exceeds_max">La tasa basal del perfil %1s U/h supera el máximo basal de la bomba %2s U/h. Aumenta el ajuste del máximo basal y vuelve a conectar la bomba</string>
+    <string name="equil_basal_exceeds_max">La tasa basal del perfil %1$s U/h supera el máximo basal de la bomba %2$s U/h. Aumenta el ajuste del máximo basal y vuelve a conectar la bomba.</string>
     <string name="equil_not_enough_insulin">No queda suficiente insulina en el reservorio</string>
-    <string name="equil_low_battery">Batería baja</string>
-    <string name="equil_low_insulin">No queda suficiente insulina en el reservorio</string>
+    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Batería baja: %1$d%%</string>
+    <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Insulina insuficiente en el reservorio: %1$s</string>
+    <string name="equil_reservoir_empty">El reservorio está vacío. La bomba ya no administra insulina</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">La bomba se detuvo durante el bolo. Administrado: %1$s de %2$s</string>
     <string name="equil_pump_not_run">La bomba no está funcionando</string>
     <string name="equil_pair">Emparejar</string>
     <string name="equil_pair_error">Error de emparejamiento</string>

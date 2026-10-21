@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -14,6 +15,7 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danarv2.services.DanaRv2ExecutionService
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -114,4 +116,30 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
         Assertions.assertEquals(0.8, result.cU, 0.01)
     }
 
+    @Test
+    fun theDescriptionIsForTheDanaRv2() {
+        assertThat(danaRv2Plugin.pumpDescription.pumpType).isEqualTo(PumpType.DANA_RV2)
+    }
+
+    /** #2454: AAPS keeps the rates the pump reports as the running basal, one per hour. */
+    @Test
+    fun deliveredBasalIsWhatThePumpReports() {
+        whenever(preferences.get(DanaStringNonKey.RName)).thenReturn("DAN12345AB")
+        whenever(preferences.get(DanaIntNonKey.Password)).thenReturn(1234)
+        danaPump.password = 1234
+        danaPump.lastConnection = 1
+        danaPump.maxBasal = 3.0
+        danaPump.pumpProfiles = Array(4) { Array(48) { 0.0 } }.also { profiles -> for (hour in 0..23) profiles[0][hour] = if (hour < 6) 0.56 else 0.84 }
+
+        val delivered = danaRv2Plugin.deliveredBasal()!!
+
+        assertThat(delivered.map { it.timeAsSeconds }).containsExactlyElementsIn((0..23).map { it * 3600 }).inOrder()
+        assertThat(delivered.map { it.value }).containsExactlyElementsIn((0..23).map { if (it < 6) 0.56 else 0.84 }).inOrder()
+    }
+
+    @Test
+    fun deliveredBasalIsUnknownWhileNotInitialized() {
+        danaPump.pumpProfiles = Array(4) { Array(48) { 0.5 } }
+        assertThat(danaRv2Plugin.deliveredBasal()).isNull()
+    }
 }

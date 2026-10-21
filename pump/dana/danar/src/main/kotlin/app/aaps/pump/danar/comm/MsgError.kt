@@ -35,6 +35,8 @@ class MsgError(
             failed = false
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Error detected: $errorString")
-        runBlocking { pumpSync.insertAnnouncement(errorString, null, danaPump.pumpType(), danaPump.serialNumber) }
+        // The type of the driver, as in its other records. danaPump.pumpType() comes from the firmware: the DanaR
+        // driver on a pump with v2 firmware gave DanaRv2 here, so the alarm was dropped as data from another pump.
+        runBlocking { pumpSync.insertAnnouncement(errorString, null, activePlugin.activePump.model(), danaPump.serialNumber) }
     }
 }

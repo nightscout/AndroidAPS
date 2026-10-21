@@ -16,7 +16,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.bolus.BatchAction
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -57,6 +57,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.isNull
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
@@ -77,7 +78,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
     @Mock lateinit var bolusProgressData: BolusProgressData
-    @Mock lateinit var wizardBolusExecutor: WizardBolusExecutor
+    @Mock lateinit var masterActionExecutor: MasterActionExecutor
     private lateinit var runningModeGuard: RunningModeGuard
 
     /**
@@ -120,15 +121,15 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         // Null-safe on purpose: a test that stubs these again calls the mock once with null matchers, which runs
         // these answers.
         runBlocking {
-            whenever(wizardBolusExecutor.prepareBatch(anyOrNull())).thenAnswer { invocation ->
+            whenever(masterActionExecutor.prepareBatch(anyOrNull(), isNull())).thenAnswer { invocation ->
                 val actions = invocation.getArgument<List<BatchAction>?>(0).orEmpty()
                 if (actions.isNotEmpty()) batches += actions
                 val bolus = actions.filterIsInstance<BatchAction.Bolus>().firstOrNull()
-                WizardBolusExecutor.PrepareResult.Preview(insulin = bolus?.insulin ?: 0.0, carbs = bolus?.carbs ?: 0, bolusId = 42L)
+                MasterActionExecutor.PrepareResult.Preview(insulin = bolus?.insulin ?: 0.0, carbs = bolus?.carbs ?: 0, bolusId = 42L)
             }
-            whenever(wizardBolusExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull())).thenAnswer { invocation ->
-                invocation.getArgument<(() -> Unit)?>(5)?.invoke()
-                WizardBolusExecutor.ConfirmResult.Delivered
+            whenever(masterActionExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull())).thenAnswer { invocation ->
+                invocation.getArgument<(() -> Unit)?>(6)?.invoke()
+                MasterActionExecutor.ConfirmResult.Delivered
             }
         }
         // Use a real RunningModeGuard so the gate decisions actually fire from the mocked loop
@@ -141,7 +142,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             aapsLogger, text, smsManager, preferences, constraintChecker, profileFunction, profileUtil, activePlugin, profileRepository,
             commandQueue, loop, iobCobCalculator, xDripBroadcast, otp, config, dateUtilMocked, uel,
             smbGlucoseStatusProvider, decimalFormatter, configBuilder, pumpStatusProvider, notificationManager,
-            runningModeGuard, bolusProgressData, { wizardBolusExecutor }, repository
+            runningModeGuard, bolusProgressData, { masterActionExecutor }, repository
         )
         smsCommunicatorPlugin.setPluginEnabledBlocking(PluginType.SYNC, true)
         // Pump commands go through the executor now; the plugin itself only reads the pump status.
@@ -156,11 +157,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         runBlocking { whenever(pumpStatusProvider.shortStatus(anyBoolean())).thenReturn(testPumpPlugin.pumpSpecificShortStatus(true)) }
         whenever(otp.name()).thenReturn("User")
         whenever(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.OK)
-
-        // Fixed text, not an echo of the format argument: Mockito does not surface the varargs of the
-        // `gs(TextRef, vararg Any?)` overload, and the assertions only check the fixed part anyway.
-        // 30 is the durationStep the mocked pump reports; see the assertions in processBasalTest.
-        // RunningModeGuard asks by TextRef, which is a different overload than the id above.
     }
 
     @Test
@@ -308,7 +304,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         // The reply above only proves an SMS went out. Pin down what reached the executor, so a refactor
         // cannot change the mode or the duration silently. The executor picks the audit action itself.
         assertThat(lastAction()).isEqualTo(BatchAction.RunningMode(RM.Mode.RESUME, 0))
-        verify(wizardBolusExecutor).confirm(eq(42L), eq(Sources.SMS), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull())
+        verify(masterActionExecutor).confirm(eq(42L), eq(Sources.SMS), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull())
 
         //LOOP SUSPEND 1 2: wrong format
         smsCommunicatorPlugin.messages = ArrayList()
@@ -725,29 +721,29 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         // to the executor: the right profile, the 90 the user sent, and no duration or time shift. What the
         // executor then does with it is covered by its own tests.
         val batchCaptor = argumentCaptor<List<BatchAction>>()
-        verify(wizardBolusExecutor).prepareBatch(batchCaptor.capture())
+        verify(masterActionExecutor).prepareBatch(batchCaptor.capture(), isNull())
         val switch = batchCaptor.firstValue.single() as BatchAction.ProfileSwitch
         assertThat(switch.profileName).isEqualTo(TESTPROFILENAME)
         assertThat(switch.percentage).isEqualTo(90)
         assertThat(switch.timeShiftHours).isEqualTo(0)
         assertThat(switch.durationMinutes).isEqualTo(0)
         // The parked batch is confirmed by its own id, and the switch is recorded as coming from SMS.
-        verify(wizardBolusExecutor).confirm(eq(42L), eq(Sources.SMS), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull())
+        verify(masterActionExecutor).confirm(eq(42L), eq(Sources.SMS), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull())
     }
 
     /**
      * A remote switch has to record an insulin and must not invent one: the requester is not at the phone, so
      * with nothing in force the reply carries the reason and no switch is written.
      *
-     * That rule now belongs to `WizardBolusExecutor.prepareBatch`, which refuses the batch, so the SMS side is
+     * That rule now belongs to `MasterActionExecutor.prepareBatch`, which refuses the batch, so the SMS side is
      * responsible for two things only: passing the refusal on as the reply, and not confirming anyway.
      */
     @Test fun processProfileWithNoInsulinInForceTest() = runTest {
         whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(getValidProfileStore()))
         whenever(profileFunction.getProfileName()).thenReturn(TESTPROFILENAME)
-        whenever(wizardBolusExecutor.prepareBatch(anyOrNull()))
-            .thenReturn(WizardBolusExecutor.PrepareResult.Error("Cannot switch profile: no insulin is in use, and none was selected."))
+        whenever(masterActionExecutor.prepareBatch(anyOrNull(), isNull()))
+            .thenReturn(MasterActionExecutor.PrepareResult.Error("Cannot switch profile: no insulin is in use, and none was selected."))
 
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.processSms(Sms("1234", "PROFILE 1 90"))
@@ -755,7 +751,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
 
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Cannot switch profile: no insulin is in use, and none was selected.")
-        verifyBlocking(wizardBolusExecutor, never()) { confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull()) }
+        verifyBlocking(masterActionExecutor, never()) { confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull()) }
     }
 
     @Test fun processBasalTest() = runTest {
@@ -875,14 +871,32 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(lastAction()).isEqualTo(BatchAction.TempBasal(rate = 1.0, isPercent = false, durationMinutes = 30))
     }
 
+    /** The duration step is the one in the description of the pump, not the one of its pump type. */
+    @Test fun basalDurationMustBeAMultipleOfTheStepInTheDescription() = runTest {
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        testPumpPlugin.pumpDescription.tempBasalStyle = PumpDescription.ABSOLUTE
+        testPumpPlugin.pumpDescription.tempDurationStep = 60
+        whenever(constraintChecker.applyBasalConstraints(anyOrNull(), anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
+
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(Sms("1234", "BASAL 1 30"))
+        // The user is told the step of the pump.
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("TBR duration must be a multiple of 60 minutes and greater than 0.")
+        assertThat(smsCommunicatorPlugin.messageToConfirm).isNull()
+
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(Sms("1234", "BASAL 1 60"))
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To start basal 1.00 U/h for 60 min reply with code")
+    }
+
     /** A temp basal the pump did not set is reported with the executor's reason, and only to the sender. */
     @Test fun processBasalFailureTest() = runTest {
         whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
         testPumpPlugin.pumpDescription.tempBasalStyle = PumpDescription.ABSOLUTE
         whenever(constraintChecker.applyBasalConstraints(anyOrNull(), anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
-        whenever(wizardBolusExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull())).thenAnswer { invocation ->
-            invocation.getArgument<((WizardBolusExecutor.Failure) -> Unit)?>(2)?.invoke(WizardBolusExecutor.Failure("Pump not reachable"))
-            WizardBolusExecutor.ConfirmResult.Delivered
+        whenever(masterActionExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull())).thenAnswer { invocation ->
+            invocation.getArgument<((MasterActionExecutor.Failure) -> Unit)?>(2)?.invoke(MasterActionExecutor.Failure("Pump not reachable"))
+            MasterActionExecutor.ConfirmResult.Delivered
         }
 
         smsCommunicatorPlugin.messages = ArrayList()
@@ -1095,9 +1109,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         whenever(preferences.get(IntKey.SmsRemoteBolusDistance)).thenReturn(15)
         whenever(dateUtilMocked.now()).thenReturn(Constants.REMOTE_BOLUS_MIN_DISTANCE + 1002L)
         smsCommunicatorPlugin.lastRemoteBolusTime = 0
-        whenever(wizardBolusExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull())).thenAnswer { invocation ->
-            invocation.getArgument<((WizardBolusExecutor.Failure) -> Unit)?>(2)?.invoke(WizardBolusExecutor.Failure("Pump not reachable"))
-            WizardBolusExecutor.ConfirmResult.Delivered
+        whenever(masterActionExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull())).thenAnswer { invocation ->
+            invocation.getArgument<((MasterActionExecutor.Failure) -> Unit)?>(2)?.invoke(MasterActionExecutor.Failure("Pump not reachable"))
+            MasterActionExecutor.ConfirmResult.Delivered
         }
 
         smsCommunicatorPlugin.messages = ArrayList()

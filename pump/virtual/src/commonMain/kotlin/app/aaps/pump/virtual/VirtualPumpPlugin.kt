@@ -155,28 +155,12 @@ open class VirtualPumpPlugin(
     private val _lastBolusAmount = MutableStateFlow<PumpInsulin?>(null)
     override val lastBolusAmount: StateFlow<PumpInsulin?> = _lastBolusAmount
 
-    override val pumpDescription = PumpDescription().also {
-        it.isBolusCapable = true
-        it.bolusStep = 0.1
-        it.isExtendedBolusCapable = true
-        it.extendedBolusStep = 0.05
-        it.extendedBolusDurationStep = 30.0
-        it.extendedBolusMaxDuration = 8 * 60.0
-        it.isTempBasalCapable = true
-        it.tempBasalStyle = PumpDescription.PERCENT or PumpDescription.ABSOLUTE
-        it.maxTempPercent = 500
-        it.tempPercentStep = 10
-        it.tempDurationStep = 30
-        it.tempDurationStep15mAllowed = true
-        it.tempDurationStep30mAllowed = true
-        it.tempMaxDuration = 24 * 60
-        it.isSetBasalProfileCapable = true
-        it.basalStep = 0.01
-        it.basalMinimumRate = 0.01
-        it.isRefillingCapable = true
-        //it.storesCarbInfo = false
-        it.is30minBasalRatesCapable = true
-    }
+    /**
+     * Filled for the emulated pump type in [refreshConfiguration] at start. Until then it is the generic
+     * virtual pump. It used to be set by hand to percent AND absolute temp basals. The safety checks test
+     * for exactly one style, so in that time no pump limit was applied to a temp basal.
+     */
+    override val pumpDescription = PumpDescription().fillFor(PumpType.GENERIC_AAPS)
 
     override fun requiredPermissions(): List<PermissionGroup> = emptyList()
 
@@ -452,7 +436,7 @@ open class VirtualPumpPlugin(
         items = listOf(
             StringKey.VirtualPumpType.withEntries(
                 PumpType.entries
-                    .filter { it.description != "USER" }
+                    .filter { it !in PumpType.RECORD_TAGS }
                     .sortedBy { it.description }
                     .associate { it.description to TextRef.Literal(it.description) }
             ),

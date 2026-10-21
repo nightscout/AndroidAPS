@@ -2,6 +2,7 @@ package app.aaps.implementation.scenes
 
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
@@ -15,7 +16,7 @@ import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -71,11 +72,14 @@ class SceneExecutor(
     private val sceneChainResolver: SceneChainResolver
 ) {
 
-    /** A parked scene activation awaiting [commitScene] — the two-step master-authoritative path. */
-    private data class ParkedScene(val scene: Scene, val durationMinutes: Int, val parkedAt: Long)
+    /**
+     * A parked scene activation awaiting [commitScene] — the two-step master-authoritative path. [owner] is the clientId
+     * of the paired client it was prepared for (null: the master itself); only that one may commit it.
+     */
+    private data class ParkedScene(val scene: Scene, val durationMinutes: Int, val parkedAt: Long, val owner: String?)
 
     /**
-     * Consume-once parked scenes keyed by bolusId (its OWN id-space, separate from the bolus executor's `pending`,
+     * Consume-once parked scenes keyed by bolusId (its OWN id-space, separate from the `pending` slot of `MasterActionExecutorImpl`,
      * so a scene commit and a bolus commit can never drain each other). [take] is atomic → no double-activate.
      *
      * A `ConcurrentHashMap` before, which does not exist outside the JVM. The guarantee that matters here is
@@ -91,7 +95,10 @@ class SceneExecutor(
             lock.withLock { slots[id] = scene }
         }
 
-        fun take(id: Long): ParkedScene? = lock.withLock { slots.remove(id) }
+        /** The scene parked under [id] for [owner], removed; null (and left in place) for anyone else - ids are guessable. */
+        fun takeFor(id: Long, owner: String?): ParkedScene? = lock.withLock {
+            if (slots[id]?.owner == owner) slots.remove(id) else null
+        }
 
         /** Drops parks older than [cutoff], so a prepare the user walked away from cannot be committed later. */
         fun evictParkedBefore(cutoff: Long) {
@@ -130,16 +137,16 @@ class SceneExecutor(
     /**
      * Two-step PREPARE (master side): gate the scene, AUTHOR the confirmation lines from its actions (so the client
      * renders the master's exact confirmation, not a client-built one), and park it consume-once. Nothing is
-     * activated — a [commitScene] with the returned bolusId does that. Mirrors [WizardBolusExecutor.prepareBatch].
+     * activated — a [commitScene] with the returned bolusId does that. Mirrors [MasterActionExecutor.prepareBatch].
      */
-    suspend fun prepareScene(scene: Scene, durationMinutes: Int?): WizardBolusExecutor.PrepareResult {
-        validateActivation(scene)?.let { return WizardBolusExecutor.PrepareResult.Error(it) }
+    suspend fun prepareScene(scene: Scene, durationMinutes: Int?, owner: String? = null): MasterActionExecutor.PrepareResult {
+        validateActivation(scene)?.let { return MasterActionExecutor.PrepareResult.Error(it) }
         val effective = durationMinutes ?: scene.defaultDurationMinutes
         val bolusId = dateUtil.now()
         // Trim abandoned parks (user cancelled / app killed) so a stale prepare can't be committed minutes later.
         pendingScenes.evictParkedBefore(bolusId - PARK_TTL_MS)
-        pendingScenes.park(bolusId, ParkedScene(scene, effective, bolusId))
-        return WizardBolusExecutor.PrepareResult.Preview(
+        pendingScenes.park(bolusId, ParkedScene(scene, effective, bolusId, owner))
+        return MasterActionExecutor.PrepareResult.Preview(
             insulin = 0.0, carbs = 0, bolusId = bolusId,
             lines = buildSceneLines(scene, effective), advisorApplies = false, advisorLines = emptyList()
         )
@@ -147,14 +154,14 @@ class SceneExecutor(
 
     /**
      * Two-step COMMIT (master side): drain the parked scene matching [bolusId] EXACTLY once and activate it. A re-sent
-     * commit finds the slot drained → [WizardBolusExecutor.ConfirmResult.NoPending] (no double-activate). An activation
-     * failure rides back through [onError]. Mirrors [WizardBolusExecutor.confirm].
+     * commit finds the slot drained → [MasterActionExecutor.ConfirmResult.NoPending] (no double-activate). An activation
+     * failure rides back through [onError]. Mirrors [MasterActionExecutor.confirm].
      */
-    suspend fun commitScene(bolusId: Long, onError: (WizardBolusExecutor.Failure) -> Unit): WizardBolusExecutor.ConfirmResult {
-        val parked = pendingScenes.take(bolusId) ?: return WizardBolusExecutor.ConfirmResult.NoPending
+    suspend fun commitScene(bolusId: Long, onError: (MasterActionExecutor.Failure) -> Unit, owner: String? = null): MasterActionExecutor.ConfirmResult {
+        val parked = pendingScenes.takeFor(bolusId, owner) ?: return MasterActionExecutor.ConfirmResult.NoPending
         val result = activate(parked.scene, parked.durationMinutes)
-        if (!result.success) onError(WizardBolusExecutor.Failure(result.errorMessage ?: rh.gs(CoreUiStrings.scene_some_actions_failed)))
-        return WizardBolusExecutor.ConfirmResult.Delivered
+        if (!result.success) onError(MasterActionExecutor.Failure(result.errorMessage ?: rh.gs(CoreUiStrings.scene_some_actions_failed)))
+        return MasterActionExecutor.ConfirmResult.Delivered
     }
 
     /**
@@ -457,6 +464,8 @@ class SceneExecutor(
                                 iCfg = iCfg
                             )
                         }
+                        // Also when another change event leads to the pump write, see ProfileSwitchSilentGate.markSilent
+                        ps?.let { profileSwitchSilentGate.markSilent(it.id, now) }
                         SceneExecutionResult.ActionResult(
                             action = action,
                             success = ps != null,
@@ -547,13 +556,21 @@ class SceneExecutor(
                 is SceneAction.ProfileSwitch   -> {
                     // Shorten the scene's PS so its window ends now; the resolver picks up
                     // any underlying temp/permanent PS automatically (mirrors TT/RM revert).
-                    // Override-protection: if the active EPS no longer derives from the scene's
-                    // PS, the user changed profile during the scene — leave their choice alone.
+                    // Override-protection: if neither the requested switch nor the active EPS is the
+                    // scene's PS, the user changed profile during the scene — leave their choice alone.
+                    // The requested switch counts too: until the pump has set the scene's PS, the EPS is
+                    // still the one from before. An insulin change during the scene is not a change of
+                    // profile: ActiveSceneManager follows the copy it makes of the scene's PS. Asked here,
+                    // not left to its change event, which may not have run yet, or not at all when the app
+                    // was killed in between.
+                    val psId = activeSceneManager.followInsulinCopyNow() ?: scoped.psId
+                    val requested = persistenceLayer.getProfileSwitchActiveAt(now)
                     val currentEps = persistenceLayer.getEffectiveProfileSwitchActiveAt(now)
-                    val profileStillFromScene = scoped.psId != null &&
-                        currentEps?.originalPsId == scoped.psId
 
-                    if (profileStillFromScene) {
+                    if (psId != null && (requested?.id == psId || currentEps?.originalPsId == psId)) {
+                        restoreProfileBeforeScene(requested?.takeIf { it.id == psId }, state, now)?.let { reason ->
+                            return SceneExecutionResult.ActionResult(action, success = false, errorMessage = reason)
+                        }
                         // Scene revert is an internal/automatic write — suppress the central "Basal profile in
                         // pump updated" notification (issue #4959). Two triggers reach onProfileChanged for this
                         // revert: cancelProfileSwitch's observeChanges(PS) emission (silenced by the armed gate) AND
@@ -562,7 +579,7 @@ class SceneExecutor(
                         // silencedProfileWrite resets the gate on the no-op / throwing paths.
                         silencedProfileWrite(wroteRow = { it.updated.isNotEmpty() }) {
                             persistenceLayer.cancelProfileSwitch(
-                                id = scoped.psId!!,
+                                id = psId,
                                 timestamp = now,
                                 action = Action.PROFILE_SWITCH,
                                 source = Sources.Scene,
@@ -570,6 +587,8 @@ class SceneExecutor(
                                 listValues = emptyList()
                             )
                         }
+                        // The switch now in force is the one the pump gets: its write is the scene's too
+                        persistenceLayer.getProfileSwitchActiveAt(now)?.let { profileSwitchSilentGate.markSilent(it.id, now) }
                         rxBus.send(EventProfileChangeRequested(silent = true))
                     } else {
                         aapsLogger.info(LTag.UI, "Skipping profile revert — profile was changed during scene")
@@ -628,6 +647,54 @@ class SceneExecutor(
             aapsLogger.error(LTag.UI, "Failed to revert scene action: $action", e)
             SceneExecutionResult.ActionResult(action, success = false, errorMessage = e.message)
         }
+    }
+
+    /**
+     * An indefinite scene's profile switch is permanent, so an insulin change during the scene has no switch under it
+     * to give the new insulin to: it only copies the scene's switch. Cutting that copy would bring back the scene's own
+     * switch, or the profile from before the scene with the old insulin (#5081). So the profile from before the scene
+     * is written again with the insulin of the copy, before the copy is cut. It is the newest switch then, so cutting
+     * the copy changes nothing more, and the pump sets the profile only once.
+     *
+     * It is a copy of the switch from before the scene, not of the profile store's version, so a profile renamed or
+     * edited during the scene does not matter.
+     *
+     * Only for a copy: a permanent [sceneSwitch] newer than the scene's start. The scene's own switch has the insulin
+     * of the scene's start, which is not a reason to change the insulin under it.
+     *
+     * Returns why it could not be done, or null. Then the scene's switch is not cut, because a percentage that stays is
+     * better than an old insulin, and a notification says so: the End Scene dialog does not show the result.
+     */
+    private suspend fun restoreProfileBeforeScene(sceneSwitch: PS?, state: ActiveSceneState, now: Long): String? {
+        if (sceneSwitch == null || sceneSwitch.duration != 0L || sceneSwitch.timestamp <= state.activatedAt) return null
+        val before = persistenceLayer.getPermanentProfileSwitchActiveAt(state.activatedAt - 1)
+        val restored = if (before == null) null else {
+            silencedProfileWrite(wroteRow = { it != null }) {
+                profileFunction.createProfileSwitchLike(
+                    original = before,
+                    timestamp = now,
+                    duration = 0L,
+                    iCfg = sceneSwitch.iCfg,
+                    action = Action.PROFILE_SWITCH,
+                    source = Sources.Scene,
+                    note = null,
+                    listValues = listOf(ValueWithUnit.SimpleString(before.profileName), ValueWithUnit.Percent(before.percentage))
+                )
+            }
+        }
+        if (restored != null) {
+            profileSwitchSilentGate.markSilent(restored.id, now)
+            return null
+        }
+        val reason = if (before == null) rh.gs(CoreUiStrings.scene_no_profile_before)
+        else profileFunction.profileSwitchLikeRefusal(before, now, 0L, sceneSwitch.iCfg) ?: rh.gs(CoreUiStrings.invalid_profile)
+        aapsLogger.error(LTag.UI, "Scene '${state.scene.name}': the profile from before it was not written, its switch ${sceneSwitch.id} stays: $reason")
+        notificationManager.post(
+            id = NotificationId.SCENE_PROFILE_NOT_RESTORED,
+            text = rh.gs(CoreUiStrings.scene_profile_not_restored, state.scene.name, reason),
+            validMinutes = 0
+        )
+        return reason
     }
 
     companion object {

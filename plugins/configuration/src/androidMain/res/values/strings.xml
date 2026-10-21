@@ -46,6 +46,7 @@
     <string name="setupwizard_pairing_status_master_none">No clients paired yet</string>
     <string name="setupwizard_pairing_status_client_paired">Paired with a master</string>
     <string name="setupwizard_pairing_status_client_not_paired">Not paired yet</string>
+    <string name="setupwizard_instance_name_title">Who is using this phone?</string>
     <string name="readstatus">Read status</string>
 
     <!-- Provider-agnostic cloud export/import strings -->

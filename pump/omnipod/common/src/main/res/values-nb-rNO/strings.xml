@@ -67,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Deaktiver Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Trykk på <b>Neste</b> for å deaktivere Pod.\n\n<b>Merk:</b> Dette vil stanse all insulinlevering og deaktivere Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">En deaktivert Pod kan ikke brukes igjen. Vil du deaktivere denne Pod-en nå?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Deaktiverer Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Deaktivering av Pod.\n\nNår deaktiveringen er utført, kan du trykke på <b>Neste</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod deaktivert</string>
@@ -183,4 +184,16 @@
         <item quantity="other">Pod varsler: %1$s</item>
     </plurals>
     <string name="omnipod_common_overview_pod_hard_end_date">Pod avslutter</string>
+    <!-- Omnipod - History -->
+    <string name="omnipod_common_history_tbr_value">%1$.2f E/t, %2$d minutter</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f E</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Basalkorreksjon</string>
+    <string name="omnipod_common_bolus_type_priming">Priming</string>
+    <string name="omnipod_common_history_total_delivered">Totalt levert: %1$.2f E</string>
+    <string name="omnipod_common_failed_to_send">Kunne ikke sende kommandoen</string>
+    <string name="omnipod_common_command_not_sent">Kommandoen ble ikke sendt</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">Kommandoen ble ikke mottatt av poden</string>
+    <string name="omnipod_common_unknown">Ukjent tilstand for kommandoen</string>
 </resources>

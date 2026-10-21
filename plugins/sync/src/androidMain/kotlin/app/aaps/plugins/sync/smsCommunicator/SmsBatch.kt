@@ -2,16 +2,16 @@ package app.aaps.plugins.sync.smsCommunicator
 
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.bolus.BatchAction
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import kotlinx.coroutines.CompletableDeferred
 
 /**
- * How a confirmed SMS command ended, after it went through [WizardBolusExecutor].
+ * How a confirmed SMS command ended, after it went through [MasterActionExecutor].
  */
 sealed interface SmsBatchResult {
 
     /** Applied. [preview] holds the values after the executor's caps. */
-    data class Done(val preview: WizardBolusExecutor.PrepareResult.Preview) : SmsBatchResult
+    data class Done(val preview: MasterActionExecutor.PrepareResult.Preview) : SmsBatchResult
 
     /** Not applied. */
     sealed interface NotDone : SmsBatchResult {
@@ -47,12 +47,12 @@ sealed interface SmsBatchResult {
  * A bolus or carbs entry is delivered in the background, so with [waitForDose] this waits for the pump to finish
  * before it returns. Every other step is awaited inside `confirm` already.
  */
-suspend fun WizardBolusExecutor.runSmsBatch(actions: List<BatchAction>, waitForDose: Boolean = false): SmsBatchResult {
+suspend fun MasterActionExecutor.runSmsBatch(actions: List<BatchAction>, waitForDose: Boolean = false): SmsBatchResult {
     val prepared = prepareBatch(actions)
-    if (prepared !is WizardBolusExecutor.PrepareResult.Preview)
-        return SmsBatchResult.Refused((prepared as? WizardBolusExecutor.PrepareResult.Error)?.message)
-    var failure: WizardBolusExecutor.Failure? = null
-    val doseOutcome = CompletableDeferred<WizardBolusExecutor.Failure?>()
+    if (prepared !is MasterActionExecutor.PrepareResult.Preview)
+        return SmsBatchResult.Refused((prepared as? MasterActionExecutor.PrepareResult.Error)?.message)
+    var failure: MasterActionExecutor.Failure? = null
+    val doseOutcome = CompletableDeferred<MasterActionExecutor.Failure?>()
     val result = confirm(
         bolusId = prepared.bolusId,
         source = Sources.SMS,
@@ -62,7 +62,7 @@ suspend fun WizardBolusExecutor.runSmsBatch(actions: List<BatchAction>, waitForD
         },
         onSuccess = { doseOutcome.complete(null) }
     )
-    if (result != WizardBolusExecutor.ConfirmResult.Delivered) return SmsBatchResult.Failed(failure?.comment)
+    if (result != MasterActionExecutor.ConfirmResult.Delivered) return SmsBatchResult.Failed(failure?.comment)
     val doseFailure = if (waitForDose) doseOutcome.await() else failure
     return if (doseFailure == null) SmsBatchResult.Done(prepared) else SmsBatchResult.Failed(doseFailure.comment)
 }

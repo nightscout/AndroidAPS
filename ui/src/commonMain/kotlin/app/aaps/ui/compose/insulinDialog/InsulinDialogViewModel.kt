@@ -21,10 +21,12 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
@@ -79,7 +81,8 @@ class InsulinDialogViewModel(
     private val rxBus: RxBus,
     // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
     // binds the same instance under both names.
-    private val appScope: CoroutineScope
+    private val appScope: CoroutineScope,
+    nsClient: NsClient
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(InsulinDialogUiState())
@@ -123,6 +126,8 @@ class InsulinDialogViewModel(
                 insulin = 0.0,
                 timeOffsetMinutes = 0,
                 eatingSoonTtChecked = false,
+                // A temp target needs a higher role than insulin; the master would refuse the bolus together with it.
+                canSetTempTarget = nsClient.clientRole.value.allows(ElementType.TEMP_TARGET_MANAGEMENT.role),
                 recordOnlyChecked = initialForcedRecordOnly,
                 notes = "",
                 eventTime = now,
@@ -179,10 +184,11 @@ class InsulinDialogViewModel(
     fun addInsulin(increment: Double) {
         val state = uiState.value
         // Snap to the deliverable bolus step so a preset increment that isn't a step multiple (e.g. a 0.25 U
-        // button on U200, step 0.10) lands on a deliverable value. ch.bolusStep is amount-aware (Insight) and
-        // concentration-adjusted; evaluated at the target so it matches the pump's grid there. Floor, never up.
+        // button on U200, step 0.10) lands on a deliverable value. ch.bolusStep is the step of the pump, converted
+        // by the concentration; asked at the target, in case a pump steps by amount. Floor, never up.
+        // A record-only dose (a pen) never reaches the pump, so it is not put on the pump's grid.
         val target = max(0.0, state.insulin + increment).coerceAtMost(state.maxInsulin)
-        val newValue = Round.floorTo(target, ch.bolusStep(target))
+        val newValue = if (state.recordOnlyChecked) target else Round.floorTo(target, ch.bolusStep(target))
         _uiState.update { it.copy(insulin = newValue) }
     }
 
@@ -301,13 +307,15 @@ class InsulinDialogViewModel(
                 add(BatchAction.TempTarget(reason = TT.Reason.EATING_SOON.text, lowMgdl = mgdl, highMgdl = mgdl, durationMinutes = state.eatingSoonTtDuration, startOffsetMinutes = 0))
             }
             // Floor to the deliverable bolus step so the confirmed amount equals what the pump delivers (the
-            // concentration boundary floors the converted cU to the native pulse grid). ch.bolusStep is
-            // amount-aware (Insight) + concentration-adjusted. Covers typed entry too.
-            val deliverableInsulin = Round.floorTo(state.insulin, ch.bolusStep(state.insulin))
-            if (deliverableInsulin > 0)
+            // concentration boundary floors the converted cU to the native pulse grid). ch.bolusStep is the
+            // step of the pump, converted by the concentration. Covers typed entry too.
+            // A record-only dose (a pen) is not given by the pump, so it is recorded as typed: floored, a 1.5 U
+            // pen dose at U200 (step 0.2 U) was saved as 1.4 U and IOB was too low.
+            val insulin = if (state.recordOnlyChecked) state.insulin else Round.floorTo(state.insulin, ch.bolusStep(state.insulin))
+            if (insulin > 0)
                 add(
                     BatchAction.Bolus(
-                        insulin = deliverableInsulin, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0,
+                        insulin = insulin, carbs = 0, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0,
                         recordOnly = state.recordOnlyChecked, notes = state.notes, timestamp = state.eventTime, iCfg = iCfg
                     )
                 )

@@ -3,6 +3,7 @@ package app.aaps.implementation.resources
 import androidx.test.core.app.ApplicationProvider
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
@@ -41,6 +42,9 @@ internal class ResourceHelperImplNamedRefTest {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
+        // Both keys are observed, so both have to answer. The language itself is not what this class
+        // tests - see ResourceHelperImplLocaleTest for that.
+        whenever(preferences.observe(StringKey.GeneralLanguage)).thenReturn(MutableStateFlow("default"))
         whenever(preferences.observe(BooleanKey.GeneralSimpleMode)).thenReturn(MutableStateFlow(true))
         sut = ResourceHelperImpl(ApplicationProvider.getApplicationContext(), fabricPrivacy, preferences)
         // The `coreUi` and `implementation` owners are registered by start(), not by the constructor -

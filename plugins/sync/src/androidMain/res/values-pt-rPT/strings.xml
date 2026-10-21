@@ -52,7 +52,6 @@
     <string name="pump_old_data">TID: Ainda dados antigos! Não é possível carregar a partir da bomba.</string>
     <string name="units_short">U</string>
     <string name="hour_short">h</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Hoje</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Comunicador SMS</string>

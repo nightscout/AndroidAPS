@@ -22,7 +22,7 @@
     <string name="random_bg">Vilkårlig BS</string>
     <string name="description_source_random_bg">Generer vilkårlige BS-data (kun demo formål)</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai</string>
+    <string name="syai_tag_app">Syai/Ottai</string>
     <string name="description_source_patched_syai_tag_app">Motta blodsukkerverdier fra Syai/Ottai App.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">SI app</string>
@@ -51,4 +51,5 @@
     <string name="aidex_sensor_stabilizing">Sensoren stabiliserer seg, vennligst vent…</string>
     <string name="aidex_sensor_replace">Sensorbytte må utføres, vennligst bytt ut med en ny sensor så snart som mulig</string>
     <string name="aidex_signal_lost">Sensorsignalet er borte. Sjekk forbindelsen</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">duplikat avlesning</string>
 </resources>

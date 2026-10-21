@@ -27,6 +27,7 @@
     <string name="constraint_applied">¡Restricción aplicada!</string>
     <string name="tt_label">OT</string>
     <string name="pump_unreachable">Bomba no alcanzable</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">El controlador de la bomba no responde. \"%1$s\" lleva ejecutándose %2$d min y ¡ningún otro comando puede alcanzar la bomba! Comprueba la bomba y reinicia AAPS</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
@@ -110,6 +111,9 @@
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
+    <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
     <string name="objectives">Objetivos</string>
     <string name="please_wait">Por favor, espere…</string>
     <string name="stop">Detener</string>
@@ -117,10 +121,16 @@
     <string name="invalid_profile">Perfil inválido</string>
     <string name="no_profile_set">NINGÚN PERFIL ACTIVO</string>
     <string name="profile_switch_no_insulin">No se puede cambiar de perfil: no hay ninguna insulina en uso y no se ha seleccionado ninguna</string>
+    <string name="scene_no_profile_before">No se estaba utilizando ningún perfil antes de que comenzara la escena</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">La escena %1$s ha finalizado, pero su perfil se sigue utilizando. %2$s Active un perfil manualmente</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Este cambio temporal tiene %1$s, pero el perfil permanente inferior tiene %2$s. Active primero en los ajustes de insulina la insulina que está en la bomba</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">La hora del cambio de perfil debe estar dentro de las %1$d horas posteriores a la actual</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">El objetivo temporal debe comenzar dentro de las %1$d horas posteriores a la actual</string>
     <string name="profile_switch_select_insulin_hint">Todavía no hay ninguna insulina en uso. Selecciona la insulina que estás utilizando para que este cambio de perfil pueda registrarla</string>
     <string name="insulin_activation_failed">La insulina no se ha cambiado. Se sigue utilizando tu insulina anterior</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">No se cambió la insulina: %1$s Su insulina anterior sigue en uso</string>
     <string name="insulin_activation_unconfirmed">No se ha podido confirmar el cambio de insulina. Comprueba qué insulina está activa en tu perfil antes de administrar la dosis</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">No se ha cambiado la insulina. Su insulina anterior sigue en uso.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nTampoco se ha cambiado la insulina</string>
     <string name="active"><![CDATA[<Activo>]]></string>
     <string name="date">Fecha</string>
@@ -190,6 +200,11 @@
     <string name="a11y_arrow_unknown">desconocido</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">disminuir %1$s en \%2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">incrementar %1$s en \%2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">abra %1$s para escribir</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">cierre %1$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Subir</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Bajar</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Paso %1$d de %2$d</string>
     <string name="decrement">decremento</string>
     <string name="increment">incremento</string>
     <string name="a11y_high">alto</string>
@@ -216,6 +231,9 @@
     <string name="login">Inicio de sesión</string>
     <string name="logout">Cerrar sesión</string>
     <string name="prime_fill">Cebar/Llenar</string>
+    <string name="prime_not_available">Esta bomba se llena y se ceba automáticamente durante la activación. El cebado o llenado desde AAPS no está disponible</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Cambio</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Rellenar</string>
     <string name="site_rotation">Rotación del sitio</string>
     <string name="edit_site">Editar</string>
     <string name="select_arrow">Seleccionar flecha</string>
@@ -279,6 +297,7 @@
     <!--    Insulin / Concentration-->
     <string name="ins_concentration_confirmed">Insulina %1$s confirmada</string>
     <string name="current_insulin">Activo actualmente</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Se activará</string>
     <string name="change_insulin">Cambiar</string>
     <string name="select_insulin_description">Seleccione la insulina con la que está llenando la bomba. Se aplicará un cambio de perfil después de la activación/cebado.</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
@@ -317,6 +336,7 @@
     <string name="careportal_note_message">Nota : %1$s</string>
     <string name="careportal_question_message">Pregunta : %1$s</string>
     <string name="careportal_exercise_message">Ejercicio : %1$s</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Cambio de zona de la bomba: %1$s</string>
     <string name="careportal_pump_site_change">Cambio de zona de la bomba</string>
     <string name="cgm_sensor_insert">Inserción de sensor</string>
     <string name="careportal_pump_site_management">Sitios de la bomba</string>
@@ -339,6 +359,7 @@
     <string name="temporary_target">Objetivo temporal</string>
     <string name="temporary_targets">Objetivos temporales</string>
     <string name="running_mode">Modo de funcionamiento</string>
+    <string name="running_mode_desc">Cierre o abra el lazo, suspéndalo o desconecte la bomba</string>
     <string name="running_mode_change_not_allowed">El cambio de modo de funcionamiento no está disponible</string>
     <string name="pump_reconnect">Reconectar bomba</string>
     <string name="scene">Escena</string>
@@ -366,7 +387,6 @@
     <string name="scene_action_careportal">Registro: %1$s</string>
     <string name="scene_management">Escenas</string>
     <string name="scene_management_desc">Crear, editar y gestionar escenas</string>
-    <string name="scene_action_count">%1$d acciones</string>
     <string name="scene_start_from_template">Empezar desde plantilla</string>
     <string name="scene_editor_target">Objetivo</string>
     <string name="scene_editor_tt_preset">Ajuste preestablecido de objetivo temporal</string>
@@ -382,6 +402,8 @@
     <string name="scene_editor_enabled">Habilitado</string>
     <string name="scene_editor_disabled">Deshabilitado</string>
     <string name="scene_summary">%1$d acciones, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_duration_indefinite">Indefinido (finalización manual)</string>
     <string name="scene_some_actions_failed">Se produjeron errores en algunas acciones</string>
     <string name="scene_no_active">Sin escena activa</string>
@@ -669,6 +691,7 @@
     <string name="missing_profile_name">Falta el nombre del perfil</string>
     <string name="profile_not_saved_activate">Perfil no guardado. Guarde el perfil antes de activarlo</string>
     <string name="profile_basal_not_compatible_with_pump">La tasa basal no es compatible con la bomba actual y no se puede activar. Reduce el porcentaje o ajusta la tasa basal</string>
+    <string name="profile_basal_below_pump_minimum">La tasa basal está por debajo del mínimo de la bomba actual y no se puede activar. Aumente el porcentaje o ajuste la tasa basal</string>
     <string name="profile_pump_incompatible_label">Límite de la bomba</string>
     <string name="error_in_ic_values">Error en los valores de Ratio de Hidratos (IC)</string>
     <string name="error_in_isf_values">Error en los valores de Sensibilidad (ISF)</string>
@@ -731,6 +754,7 @@
     <string name="wizard_carb_time">Hora de los carbohidratos</string>
     <string name="carb_time_now">Ahora</string>
     <string name="change">Cambiar</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
     <string name="grant">Conceder</string>
     <string name="set">Establecer</string>
     <string name="wizard_set_alarm">Establecer alarma</string>

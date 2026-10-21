@@ -2,6 +2,7 @@
 <resources>
     <string name="executing_right_now">Commande exécutée à l\'instant</string>
     <string name="basal_value_below_minimum">Le débit Basal est inférieur au minimum autorisé. Profil non accepté !</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Profil basal de la pompe a été mis à jour. La pompe arrondit le débit basal à son propre palier : elle injecte %1$s par jour au lieu de %2$s.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">Gluc.</string>
     <!--    PumpStatusGenerator-->
@@ -17,6 +18,7 @@
     <string name="permission_directory_description">Sélectionnez un répertoire pour les paramètres de l\'application et les fichiers journaux</string>
     <string name="permission_notifications_title">Notifications</string>
     <string name="permission_notifications_description">Requis pour afficher les alertes, les alarmes et les mises à jour des états de la pompe</string>
+    <!--    Notification channels, shown in the Android settings-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>

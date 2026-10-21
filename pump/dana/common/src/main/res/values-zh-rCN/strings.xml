@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">配对超时</string>
+    <string name="danars_bonding_failed">与泵的蓝牙配对失败或被取消。请重试，并输入泵上显示的 PIN 码。</string>
     <string name="danarspump">丹纳-i/RS</string>
     <string name="description_pump_dana_rs">与丹纳-RS或丹纳-i泵集成。</string>
     <string name="maxbolusviolation">超出最大大剂量的限制</string>
@@ -8,6 +9,12 @@
     <string name="speederror">速度错误</string>
     <string name="insulinlimitviolation">违反胰岛素限制</string>
     <string name="boluserrorcode">已请求: %1$.2fU 已输注: %2$.2fU 错误代码: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">泵未预充</string>
+    <string name="danai2_bolus_error_not_enough_insulin">储药器中胰岛素不足</string>
+    <string name="danai2_bolus_error_easy_sleep">泵上的简易睡眠模式已开启</string>
+    <string name="danai2_pump_check_error">泵检查错误</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">简单模式</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">自动锁定</string>
     <string name="danar_valuenotsetproperly">数值设定的不正确</string>
     <string name="danar_setbasalstep001">将基础率的步进值设定为 0.01 U/小时</string>
     <string name="resetpairing">重置配对信息?</string>
@@ -17,6 +24,7 @@
     <string name="danar_disablebolusblock">Il blocco bolo è abilitato sul micro. AAPS non può erogare insulina mentre è attivo. Disabilita il blocco bolo nelle impostazioni del microinfusore.</string>
     <string name="overview_bolusprogress_stoped">已停止</string>
     <string name="unsupportedfirmware">不支持的泵固件</string>
+    <string name="danars_unsupported_model">不支持的泵型号 (代码 %1$s)</string>
     <string name="pumperror">泵错误</string>
     <string name="lowbattery">电池电量低</string>
     <string name="basalcompare">输注剂量低于预设基础率</string>

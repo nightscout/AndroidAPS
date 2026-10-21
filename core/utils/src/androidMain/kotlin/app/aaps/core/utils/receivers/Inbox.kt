@@ -1,9 +1,11 @@
 package app.aaps.core.utils.receivers
 
 import android.content.Context
+import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.ListenableWorker
 import androidx.work.OneTimeWorkRequest
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 
 /**
@@ -116,7 +118,24 @@ class DataInbox(
         WorkManager.getInstance(context).enqueueUniqueWork(
             slot.workName,
             ExistingWorkPolicy.APPEND_OR_REPLACE,
-            OneTimeWorkRequest.Builder(slot.workerClass).build()
+            incomingDataWorkRequest(slot.workerClass)
         )
     }
 }
+
+/**
+ * A work request for incoming data that the loop waits for, such as a new BG or an SMS command.
+ *
+ * Expedited, because a plain job can be kept waiting for a long time. Android counts the run time of
+ * plain jobs against a quota, and since Android 16 also for an app with a foreground service: 4 hours
+ * in 24 hours. Other AAPS jobs (the widget, Nightscout sync) can use that up, and then a new BG is not
+ * stored, so the loop does not run. Expedited jobs have a quota of their own (one hour a day in the
+ * exempted standby bucket), which storing BG values uses only a few minutes of.
+ *
+ * When that quota is used up too, the request runs as a plain job, as before.
+ */
+fun incomingDataWorkRequest(worker: Class<out ListenableWorker>, data: Data = Data.EMPTY): OneTimeWorkRequest =
+    OneTimeWorkRequest.Builder(worker)
+        .setInputData(data)
+        .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+        .build()

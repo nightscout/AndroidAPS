@@ -235,7 +235,17 @@ enum class NotificationId(
     // The Combo reported an error, so the driver does not connect until the user has handled it. Its own
     // id, so that this hint does not replace the card that names the error (COMBO_PUMP_ALARM) (#5263).
     // Appended at the END for the same reason as above.
-    COMBO_PUMP_ERROR_LOCKOUT(NORMAL, PUMP);
+    COMBO_PUMP_ERROR_LOCKOUT(NORMAL, PUMP),
+
+    // A scene ended, but its profile switch could not be undone, so the scene's percentage is still in force.
+    // The End Scene dialog does not show the result, so without this nothing said so. IMPORTANT: it changes
+    // insulin delivery until the user activates a profile, but nothing is delivered wrongly now.
+    // Appended at the END for the same reason as above.
+    SCENE_PROFILE_NOT_RESTORED(IMPORTANT, AUTOMATION),
+
+    // A Garmin watch connected to a client sent carbs or a pump disconnect. A client does not store them, because
+    // they would never reach the master, and the watch cannot show why. Appended at the END for the same reason as above.
+    GARMIN_NOT_ON_CLIENT(NORMAL, SYNC);
 
     companion object {
 

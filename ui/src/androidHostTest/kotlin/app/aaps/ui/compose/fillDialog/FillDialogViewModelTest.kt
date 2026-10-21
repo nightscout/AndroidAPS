@@ -5,11 +5,10 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.bolus.BatchExecutor
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
@@ -17,6 +16,8 @@ import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -68,13 +69,12 @@ internal class FillDialogViewModelTest {
     @Mock private lateinit var ch: ConcentrationHelper
     @Mock private lateinit var insulinManager: InsulinManager
     @Mock private lateinit var profileFunction: ProfileFunction
-    @Mock private lateinit var wizardBolusExecutor: WizardBolusExecutor
+    @Mock private lateinit var masterActionExecutor: MasterActionExecutor
     @Mock private lateinit var batchExecutor: BatchExecutor
     @Mock private lateinit var rxBus: RxBus
 
     private val pump: PumpWithConcentration = mock()
     private val pumpDescription: PumpDescription = mock()
-    private val maxBolusConstraint: Constraint<Double> = mock()
 
     private lateinit var sut: FillDialogViewModel
 
@@ -91,12 +91,13 @@ internal class FillDialogViewModelTest {
         rh = generatedTextResolver("ui" to UiStringsValues::textOf)
         Dispatchers.setMain(StandardTestDispatcher())
         whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(activePlugin.activePumpInternal).thenReturn(pump)
         whenever(pump.pumpDescription).thenReturn(pumpDescription)
         whenever(pumpDescription.bolusStep).thenReturn(0.1)
         // A tube pump unless a test says otherwise: it can be primed from this dialog.
         whenever(pumpDescription.isRefillingCapable).thenReturn(true)
-        whenever(maxBolusConstraint.value()).thenReturn(10.0)
-        whenever(constraintChecker.getMaxBolusAllowed()).thenReturn(maxBolusConstraint)
+        // Up to 10 pump units, the rest as asked.
+        whenever(constraintChecker.applyPrimingConstraints(any())).thenAnswer { PumpInsulin(it.getArgument<PumpInsulin>(0).cU.coerceAtMost(10.0)) }
         whenever(insulinManager.insulins).thenReturn(arrayListOf<ICfg>())
         // observeConcentrationEnabled() builds a flow from preferences.observe(key) in init (collection deferred).
         whenever(preferences.observe(BooleanKey.GeneralInsulinConcentration)).thenReturn(MutableStateFlow(false))
@@ -106,7 +107,7 @@ internal class FillDialogViewModelTest {
     private fun buildSut() = FillDialogViewModel(
         SavedStateHandle(), constraintChecker, activePlugin, persistenceLayer, preferences, config,
         decimalFormatter, rh, dateUtil, translator, aapsLogger, ch, insulinManager, profileFunction,
-        wizardBolusExecutor, batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher())
+        masterActionExecutor, batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher())
     )
 
     @AfterEach
@@ -180,11 +181,8 @@ internal class FillDialogViewModelTest {
      */
     private suspend fun runFailingPrime(changeInsulin: Boolean, cancelled: Boolean = false): List<String> {
         // A non-zero constrained amount makes hasPrimeBolus true, so the switch is chained to the prime.
-        val constrained: Constraint<Double> = mock()
-        whenever(constrained.value()).thenReturn(0.3)
-        whenever(constraintChecker.applyBolusConstraints(any())).thenReturn(constrained)
-        whenever(wizardBolusExecutor.deliverFillBolus(any(), anyOrNull(), any(), any(), any())).thenAnswer { inv ->
-            inv.getArgument<(WizardBolusExecutor.Failure) -> Unit>(3).invoke(WizardBolusExecutor.Failure("pump error", cancelled))
+        whenever(masterActionExecutor.deliverFillBolus(any(), anyOrNull(), any(), any(), any())).thenAnswer { inv ->
+            inv.getArgument<(MasterActionExecutor.Failure) -> Unit>(3).invoke(MasterActionExecutor.Failure("pump error", cancelled))
         }
         if (changeInsulin) sut.selectInsulin(ICfg(insulinLabel = "Fiasp", insulinEndTime = 480, insulinPeakTime = 55, concentration = 1.0))
         sut.updateCartridgeChange(true)
@@ -237,9 +235,6 @@ internal class FillDialogViewModelTest {
     fun `a pump that primes itself gets no prime, only the site change`() = runTest {
         whenever(pumpDescription.isRefillingCapable).thenReturn(false)
         sut = buildSut()
-        val constrained: Constraint<Double> = mock()
-        whenever(constrained.value()).thenReturn(0.3)
-        whenever(constraintChecker.applyBolusConstraints(any())).thenReturn(constrained)
         whenever(batchExecutor.prepare(any(), any(), any())).thenReturn(ActionProgress.Applied)
 
         sut.updateInsulin(0.3)
@@ -252,7 +247,7 @@ internal class FillDialogViewModelTest {
         // No prime amount line and no prime warning in the confirmation.
         assertThat(lines.map { it.role }).doesNotContain(ConfirmationRole.BOLUS)
         assertThat(lines.map { it.role }).doesNotContain(ConfirmationRole.WARNING)
-        verify(wizardBolusExecutor, never()).deliverFillBolus(any(), anyOrNull(), any(), any(), any())
+        verify(masterActionExecutor, never()).deliverFillBolus(any(), anyOrNull(), any(), any(), any())
         // The site change is still recorded.
         verify(batchExecutor).prepare(any(), any(), any())
     }
@@ -261,13 +256,37 @@ internal class FillDialogViewModelTest {
     fun `on a pump that primes itself an amount alone is not an action`() {
         whenever(pumpDescription.isRefillingCapable).thenReturn(false)
         sut = buildSut()
-        val constrained: Constraint<Double> = mock()
-        whenever(constrained.value()).thenReturn(0.3)
-        whenever(constraintChecker.applyBolusConstraints(any())).thenReturn(constrained)
 
         sut.updateInsulin(0.3)
 
         assertThat(sut.uiState.value.hasAction).isFalse()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // A prime is in pump units
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * The amount goes to the pump as it is, so it is limited by the priming constraint (pump units), and the
+     * step of the dialog is the pump's own, not the one of the concentration wrapper (insulin units).
+     */
+    @Test
+    fun `the prime amount, its max and its step are in pump units`() {
+        val driverDescription: PumpDescription = mock()
+        whenever(driverDescription.bolusStep).thenReturn(0.05)
+        val driver: Pump = mock()
+        whenever(driver.pumpDescription).thenReturn(driverDescription)
+        whenever(activePlugin.activePumpInternal).thenReturn(driver)
+        whenever(constraintChecker.applyPrimingConstraints(any())).thenAnswer { PumpInsulin(it.getArgument<PumpInsulin>(0).cU.coerceAtMost(5.0)) }
+        sut = buildSut()
+
+        sut.updateInsulin(7.0)
+
+        assertThat(sut.uiState.value.maxInsulin).isEqualTo(5.0)
+        assertThat(sut.uiState.value.bolusStep).isEqualTo(0.05)
+        assertThat(sut.uiState.value.insulinAfterConstraints).isEqualTo(5.0)
+        assertThat(sut.uiState.value.constraintApplied).isTrue()
+        verify(constraintChecker, never()).applyBolusConstraints(any())
     }
 
     @Test

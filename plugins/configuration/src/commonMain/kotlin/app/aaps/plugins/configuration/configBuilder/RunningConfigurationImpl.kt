@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.scenes.ActiveSceneSnapshot
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
-import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
@@ -112,10 +111,7 @@ class RunningConfigurationImpl(
     // All cold-synced values (plugin selection, plugin settings, scene/quick-wizard/automation/insulin
     // definitions) are declared via SyncSpec — a change to any republishes the cold doc. Their domain
     // objects self-reload from the key, so there's no reloadInternalState hook.
-    // NsClient3UseWs carries no SyncSpec of its own, but the published value of
-    // NsClientAllowClientControl is masked by it (a master with the WebSocket off cannot serve
-    // commands in time), so flipping it has to trigger a republish like any other cold change.
-    override fun observableKeys(): List<NonPreferenceKey> = coldSyncKeys() + BooleanKey.NsClient3UseWs
+    override fun observableKeys(): List<NonPreferenceKey> = coldSyncKeys()
 
     /** Plain preference keys declared to ride the cold running-config doc via [SyncChannel.Cold]. */
     private fun coldSyncKeys(): List<NonPreferenceKey> =
@@ -129,8 +125,10 @@ class RunningConfigurationImpl(
     // COMPUTED default (calculatedDefaultValue) when unset, but WITHOUT simple-mode presentation forcing.
     // Rationale: simple-mode / defaultedBySM is a per-device presentation choice, so the underlying user setting
     // must travel and each device re-applies its own mode logic on read — hence NOT the full effective getter.
-    // But a plain raw read would publish the literal default for computed-default keys (NsClientAllowClientControl,
+    // But a plain raw read would publish the literal default for computed-default keys (HardenedMode,
     // AutosensPeriod, …), mis-telling clients the master's operative value; forSync uses the computed default instead.
+    // The client-control switch (HardenedMode) follows the same rule: simple mode is synced too, so the client
+    // applies the same simple-mode forcing and gets the master's answer.
     // Every value here is written as a JSON *string*, including numbers and booleans. That is the
     // existing wire format and the client parses it back that way, so it is kept as is.
     private fun buildSyncedPrefs(): JsonObject = buildJsonObject {
@@ -189,7 +187,9 @@ class RunningConfigurationImpl(
         configuration.pump?.let {
             if (preferences.get(StringKey.VirtualPumpType) != it) {
                 preferences.put(StringKey.VirtualPumpType, it)
-                activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(it))
+                // The driver's own description: through the concentration wrapper it is a copy when the
+                // insulin is not U100, and the change would be lost.
+                activePlugin.activePumpInternal.pumpDescription.fillFor(PumpType.getByDescription(it))
                 pumpSync.connectNewPump(endRunning = false) // do not end running TBRs, we call this only to accept data properly
                 aapsLogger.debug(LTag.CORE, "Changing pump type to $it")
             }

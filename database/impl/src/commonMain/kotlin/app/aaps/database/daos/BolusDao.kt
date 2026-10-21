@@ -36,6 +36,10 @@ internal interface BolusDao : TraceableDao<Bolus> {
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE (temporaryId = :temporaryId) AND (pumpType = :pumpType) AND (pumpSerial = :pumpSerial) AND (+referenceId IS NULL)")
     suspend fun findByPumpTempIds(temporaryId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Bolus?
 
+    /** Set by AAPS and not found in the pump history yet: they have only a temporary id. */
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE (temporaryId IS NOT NULL) AND (pumpId IS NULL) AND (isValid = 1) AND (referenceId IS NULL)")
+    suspend fun getWithTemporaryIdOnly(): List<Bolus>
+
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE (isValid = 1) AND type <> :exclude AND (+referenceId IS NULL) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getLastBolusRecord(exclude: Bolus.Type = Bolus.Type.PRIMING): Bolus?
 

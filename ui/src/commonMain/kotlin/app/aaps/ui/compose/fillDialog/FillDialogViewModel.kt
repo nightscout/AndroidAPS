@@ -17,7 +17,7 @@ import app.aaps.core.data.ui.confirmationLines
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -28,6 +28,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
@@ -38,7 +39,6 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.observeChange
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.clientcontrol.failText
@@ -82,7 +82,7 @@ class FillDialogViewModel(
     private val ch: ConcentrationHelper,
     insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction,
-    private val wizardBolusExecutor: WizardBolusExecutor,
+    private val masterActionExecutor: MasterActionExecutor,
     private val batchExecutor: BatchExecutor,
     private val rxBus: RxBus,
     // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
@@ -118,8 +118,9 @@ class FillDialogViewModel(
 
     init {
         val preselect = FillPreselect.entries[savedStateHandle.get<Int>("preselect") ?: 0]
-        val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
-        val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
+        // A prime is in pump units, so its max and its step are those of the pump itself.
+        val maxInsulin = constraintChecker.applyPrimingConstraints(PumpInsulin(Double.MAX_VALUE)).cU
+        val bolusStep = activePlugin.activePumpInternal.pumpDescription.bolusStep
 
         val availableInsulins = insulinManager.insulins.map { it.deepClone() }
 
@@ -206,9 +207,7 @@ class FillDialogViewModel(
     }
 
     fun updateInsulin(value: Double) {
-        val constrained = constraintChecker.applyBolusConstraints(
-            ConstraintObject(value, aapsLogger)
-        ).value()
+        val constrained = constraintChecker.applyPrimingConstraints(PumpInsulin(value)).cU
         _uiState.update {
             it.copy(
                 insulin = value,
@@ -339,7 +338,7 @@ class FillDialogViewModel(
             // Prime now rides the shared executor (one audited path): it logs the user entry, sets the
             // PRIMING treatment + notes, and the profile switch is sequenced on prime success.
             appScope.launch {
-                wizardBolusExecutor.deliverFillBolus(
+                masterActionExecutor.deliverFillBolus(
                     amount = state.insulinAfterConstraints,
                     notes = notes,
                     source = Sources.FillDialog,

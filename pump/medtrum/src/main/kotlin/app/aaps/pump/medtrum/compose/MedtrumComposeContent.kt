@@ -128,38 +128,40 @@ class MedtrumComposeContent(
         if (showPatchWorkflow) {
             KeepScreenOnEffect()
 
-            // BLE pre-check — shows dialog on failure, cancels workflow
+            // BLE pre-check — shows dialog on failure, cancels workflow.
+            // The workflow uses Bluetooth, so it starts only after the check has passed.
+            var bleReady by remember { mutableStateOf(false) }
             BlePreCheckHost(
                 blePreCheck = blePreCheck,
+                onReady = { bleReady = true },
                 onFailed = {
                     showPatchWorkflow = false
                     startPatchStep = null
                 }
             )
 
-            // Initialize with the start step (reset was already called before showing workflow)
-            LaunchedEffect(startPatchStep) {
-                startPatchStep?.let { step ->
-                    patchViewModel.initializePatchStep(step)
+            if (bleReady) {
+                // Initialize with the start step (reset was already called before showing workflow)
+                LaunchedEffect(startPatchStep) {
+                    startPatchStep?.let { step ->
+                        patchViewModel.initializePatchStep(step)
+                    }
                 }
-            }
 
-            // Observe finish events
-            LaunchedEffect(patchViewModel) {
-                patchViewModel.events.collect { event ->
-                    when (event) {
-                        is PatchEvent.Finish -> {
-                            showPatchWorkflow = false
-                            startPatchStep = null
-                        }
-
-                        is PatchEvent.ShowError -> { /* handled by step composables */
+                // Observe finish events
+                LaunchedEffect(patchViewModel) {
+                    patchViewModel.events.collect { event ->
+                        when (event) {
+                            is PatchEvent.Finish -> {
+                                showPatchWorkflow = false
+                                startPatchStep = null
+                            }
                         }
                     }
                 }
-            }
 
-            MedtrumPatchScreen(viewModel = patchViewModel, setToolbarConfig = setToolbarConfig)
+                MedtrumPatchScreen(viewModel = patchViewModel, setToolbarConfig = setToolbarConfig)
+            }
         } else {
             MedtrumOverviewScreen(viewModel = overviewViewModel)
         }

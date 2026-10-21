@@ -25,6 +25,7 @@
     <string name="doprofileswitch">프로파일 변경 실행</string>
     <string name="exitwizard">설정 마법사 건너뛰기</string>
     <string name="setupwizard_sensitivity_description">민감도 플러그인은 민감도감지와 COB 계산을 위해 사용됩니다. 더 많은 정보는 다름 링크를 방문하세요.</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/ko/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">하단의 RileyLink를 설정하십시오. RileyLink를 선택한 뒤, RileyLink 상태가 \"연결됨\"이 되고 나면 설정을 계속 할 수 있습니다. 이 작업은 금방 진행됩니다.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>참고:</b> 펌프가 한 번 연동되면 계속 설정할 수 있습니다.\n</string>
     <string name="startobjective">첫번째 목표를 시작하세요.</string>

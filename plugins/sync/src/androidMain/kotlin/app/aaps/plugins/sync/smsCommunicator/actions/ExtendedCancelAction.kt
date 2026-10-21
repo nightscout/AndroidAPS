@@ -1,7 +1,7 @@
 package app.aaps.plugins.sync.smsCommunicator.actions
 
 import app.aaps.core.interfaces.bolus.BatchAction
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
@@ -10,10 +10,10 @@ import app.aaps.plugins.sync.smsCommunicator.SmsAction
 import app.aaps.plugins.sync.smsCommunicator.SmsBatchResult
 import app.aaps.plugins.sync.smsCommunicator.runSmsBatch
 
-/** Cancels an extended bolus through [WizardBolusExecutor]: EXTENDED CANCEL/STOP. */
+/** Cancels an extended bolus through [MasterActionExecutor]: EXTENDED CANCEL/STOP. */
 class ExtendedCancelAction(
     private val receivedSms: Sms,
-    private val wizardBolusExecutor: WizardBolusExecutor,
+    private val masterActionExecutor: MasterActionExecutor,
     private val rh: TextResolver,
     private val smsCommunicator: SmsCommunicator,
     private val sendSMSToAllNumbers: (Sms) -> Unit,
@@ -21,7 +21,7 @@ class ExtendedCancelAction(
 ) : SmsAction(pumpCommand = true) {
 
     override suspend fun run() {
-        when (val result = wizardBolusExecutor.runSmsBatch(listOf(BatchAction.CancelExtendedBolus))) {
+        when (val result = masterActionExecutor.runSmsBatch(listOf(BatchAction.CancelExtendedBolus))) {
             is SmsBatchResult.Done    ->
                 sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_extended_canceled) + "\n" + shortStatusBlocking()))
 

@@ -141,7 +141,7 @@ anything they do. Nine need no other change at all:
 | `ProtectionCheckImpl` | `java.util.concurrent.atomic.AtomicLong` -> `kotlin.concurrent.atomics` |
 | `AutosensDataObject` | `java.util.Locale` |
 | `ActiveSceneManager` | `org.json.JSONObject` -> kotlinx, as `ProfileRepositoryImpl` did |
-| `WizardBolusExecutorImpl` | still `javax.inject`; also `ConcurrentHashMap` and `AtomicLong` |
+| `MasterActionExecutorImpl` | still `javax.inject`; also `ConcurrentHashMap` and `AtomicLong` |
 
 Left for the kmp session because it is a sweep across one module rather than iOS work. Worth doing
 mostly because each one that moves is one less thing an iOS graph cannot build - `ProtectionCheck`
@@ -1415,6 +1415,19 @@ not-Android concern, and two identical copies in two shells is how the two quiet
 One small change: the runners are `() -> T` lambdas rather than `Provider<T>`, so `:workflow` keeps
 no dependency on a DI library. Each shell passes `{ provider() }`. The KDoc explaining the cycle is
 yours, kept as it was.
+
+**Update 2026-10-13: Android uses this executor too.** On Android 16 the system stopped the
+WorkManager calculation jobs once the app had used its job time quota, so the loop did not run for
+long periods. Android now binds `AndroidCalculationExecutor` (`:workflow` androidMain), which is
+`LazyCalculationExecutor` plus a partial wake lock per run, and the WorkManager executor and its two
+workers are deleted. What reaches iOS and desktop:
+
+- `CoroutineCalculationExecutor` catches a throw in a phase and logs it as a failed phase, instead of
+  letting it reach the scope.
+- The post phase (the loop) runs only after a prepare phase that reported `Success` or `Skipped`.
+- `start` and `startPostOnly` are `suspend` now and register the run before they return, so starts
+  replace each other in call order.
+- `ClientGraphBindings` passes `wakeLock = null`.
 
 Desktop now depends on the same 26 modules `:ios:shell` lists, so the plugin bindings are in its
 graph too, and `DesktopMainPluginsBindings` is a near copy of `IosMainPluginsBindings`. If that pair
