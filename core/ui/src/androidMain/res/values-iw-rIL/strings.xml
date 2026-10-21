@@ -172,6 +172,10 @@
     <string name="wrong_pump_data">הנתונים מגיעים ממשאבה אחרת. בחרו מחדש את סוג המשאבה כדי לאפס את מצב המשאבה.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">כיול</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">הכיול לא נשמר: לא נמצאה קריאת חיישן ב-10 הדקות האחרונות.</string>
+    <string name="cal_reject_warmup">הכיול לא נשמר: החיישן עדיין נמצא בזמן החימום.</string>
+    <string name="cal_reject_no_session">הכיול לא נשמר: לא רשום חיישן פעיל. יש לרשום חיישן פעיל תחילה.</string>
     <string name="cgm">סנסור</string>
     <string name="treatmentdeliveryerror">דווחה שגיאה בבולוס. נא לבדוק את הכמות שהוזרקה באופן ידני</string>
     <string name="bolus_reminder">תזכורת לבולוס כאשר רמת הסוכר תתאושש</string>
