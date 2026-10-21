@@ -2,6 +2,7 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day pompos integracija</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Pompa nepatvirtino, kad bolusas baigtas. Užregistruota %1$s, tačiau galėjo būti suleista ir daugiau insulino. Prieš leisdami insulino papildomai, patikrinkite pompą.</string>
     <string name="low_reservoir">Senkančio rezervuaro perspėjimai</string>
     <string name="patch_expiration_reminders">Priminimas apie rezervuaro galiojimą</string>
     <string name="patch_buzzer_reminders">Garsiniai priminimai</string>
