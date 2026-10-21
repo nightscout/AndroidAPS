@@ -59,7 +59,6 @@
     <!-- Virtual pump preferences -->
     <!-- NS Client preferences -->
     <string name="pref_title_ns_allow_client_control">Client controle toestaan</string>
-    <string name="pref_summary_ns_allow_client_control">Laat gekoppelde client apparaten ondertekende opdrachten verzenden (bijvoorbeeld scènes starten/stoppen) via Nightscout.</string>
     <!-- OpenHumans preferences -->
     <!-- xDrip preferences -->
     <!-- Wear preferences -->
