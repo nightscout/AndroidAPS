@@ -273,8 +273,8 @@ val TriangleShape: Shape = GenericShape { size, _ ->
 /**
  * Inverted triangle shape pointing downward (flat base at top, apex at bottom).
  *
- * Used for rendering bolus markers on graphs. The base sits at the data point's
- * y-coordinate with the apex pointing down.
+ * Used for rendering carbs markers on graphs. The apex sits at the data point's
+ * y-coordinate with the base above it.
  */
 val InvertedTriangleShape: Shape = GenericShape { size, _ ->
     val baseHalf = size.width * 0.3f         // Narrow base for sharper triangle
@@ -282,6 +282,25 @@ val InvertedTriangleShape: Shape = GenericShape { size, _ ->
     moveTo(cx - baseHalf, 0f)               // Top left (base)
     lineTo(cx + baseHalf, 0f)               // Top right (base)
     lineTo(cx, size.height / 2f)            // Bottom center (apex)
+    close()
+}
+
+/**
+ * Triangle pointing downward, drawn in the lower half of its box: flat base at the data point's
+ * y-coordinate, apex below it.
+ *
+ * Vico centers a point component on its data point, and both [TriangleShape] and
+ * [InvertedTriangleShape] draw in the upper half of the box, so neither can hang below a point.
+ * This one does, which is what the carbs half of a treatment marker on the BG graph needs:
+ * insulin grows upward from the reading ([TriangleShape]) and carbs downward from it.
+ * Same proportions as the other two.
+ */
+val TriangleBelowShape: Shape = GenericShape { size, _ ->
+    val baseHalf = size.width * 0.3f         // Narrow base for sharper triangle
+    val cx = size.width / 2f
+    moveTo(cx - baseHalf, size.height / 2f)  // Left base, at the data point
+    lineTo(cx + baseHalf, size.height / 2f)  // Right base, at the data point
+    lineTo(cx, size.height)                  // Bottom center (apex)
     close()
 }
 

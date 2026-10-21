@@ -45,16 +45,18 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.BolusGraphPoint
-import app.aaps.core.interfaces.overview.graph.BolusType
+import app.aaps.core.interfaces.overview.graph.CalibrationGraphPoint
 import app.aaps.core.interfaces.overview.graph.CarbsGraphPoint
 import app.aaps.core.interfaces.overview.graph.GraphDataPoint
 import app.aaps.core.interfaces.overview.graph.TbrState
+import app.aaps.core.interfaces.overview.graph.TherapyEventGraphPoint
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.LocalProfileUtil
+import app.aaps.core.ui.compose.icons.IcBgCheck
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.stringResource
@@ -78,8 +80,14 @@ import kotlinx.coroutines.flow.collectLatest
 /** Max distance from the finger's time for a reading or value, in ms. */
 private const val INSPECT_MATCH_MS = 5 * 60_000L
 
-/** Max distance from the reading for a bolus or carbs entry (half a reading interval), in ms. */
-private const val INSPECT_TREATMENT_MS = 150_000L
+/**
+ * Max distance from the finger's own time for a treatment, in ms.
+ *
+ * Matched against the finger, not against the reading the pill snapped to: a marker is drawn at its
+ * exact time on the BG graph, so a treatment between two readings must still be listed when it is
+ * held. The same window as [INSPECT_MATCH_MS], so anything visible under the finger is in the pill.
+ */
+private const val INSPECT_TREATMENT_MS = INSPECT_MATCH_MS
 
 /** How long the pill stays after the finger is lifted. */
 private const val INSPECT_LINGER_MS = 2_000L
@@ -266,7 +274,9 @@ fun GraphInspectOverlay(
                 actualBasal = basalGraph.actualBasal,
                 profileBasal = basalGraph.profileBasal,
                 boluses = treatmentGraph.boluses,
-                carbs = treatmentGraph.carbs
+                carbs = treatmentGraph.carbs,
+                calibrations = treatmentGraph.calibrations,
+                therapyEvents = treatmentGraph.therapyEvents
             )
             if (data.timestamp != inspectData?.timestamp) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
             inspect.shownX = timestampToX(data.timestamp, min)
@@ -301,7 +311,8 @@ data class InspectData(
     val basal: Double?,
     val tbrState: TbrState,
     val boluses: List<BolusGraphPoint>,
-    val carbs: List<CarbsGraphPoint>
+    val carbs: List<CarbsGraphPoint>,
+    val measured: List<String>
 )
 
 /** The nearest reading to [timestamp], with the values and treatments at its time. */
@@ -313,7 +324,9 @@ fun inspectDataAt(
     actualBasal: List<GraphDataPoint>,
     profileBasal: List<GraphDataPoint>,
     boluses: List<BolusGraphPoint>,
-    carbs: List<CarbsGraphPoint>
+    carbs: List<CarbsGraphPoint>,
+    calibrations: List<CalibrationGraphPoint>,
+    therapyEvents: List<TherapyEventGraphPoint>
 ): InspectData {
     val bg = bgReadings.nearest(timestamp) { it.timestamp }
     val time = bg?.timestamp ?: timestamp
@@ -326,8 +339,16 @@ fun inspectDataAt(
         cob = cob.nearest(time) { it.timestamp }?.value,
         basal = basal,
         tbrState = tbrState(basal, profileBasal.lastOrNull { it.timestamp <= time }?.value),
-        boluses = boluses.filter { it.isValid && abs(it.timestamp - time) <= INSPECT_TREATMENT_MS },
-        carbs = carbs.filter { it.isValid && abs(it.timestamp - time) <= INSPECT_TREATMENT_MS }
+        // Treatments are matched against the finger, not against the snapped reading — see
+        // INSPECT_TREATMENT_MS
+        boluses = boluses.filter { it.isValid && abs(it.timestamp - timestamp) <= INSPECT_TREATMENT_MS },
+        carbs = carbs.filter { it.isValid && abs(it.timestamp - timestamp) <= INSPECT_TREATMENT_MS },
+        measured = calibrations
+            .filter { it.isValid && abs(it.timestamp - timestamp) <= INSPECT_TREATMENT_MS }
+            .map { it.label } +
+            therapyEvents
+                .filter { it.glucoseUserUnits != null && abs(it.timestamp - timestamp) <= INSPECT_TREATMENT_MS }
+                .map { it.label }
     )
 }
 
@@ -391,11 +412,15 @@ fun GraphInspectPill(
                 data.basal?.let {
                     PillItem(data.tbrState.toIcon(), stringResource(CoreUiStrings.pump_base_basal_rate, it), ElementType.TEMP_BASAL.color())
                 }
-                // Same triangles as the IOB and COB graphs
+                // Same triangles as the BG, IOB and COB graphs: insulin up, carbs down
                 data.boluses.forEach { bolus ->
-                    PillTriangleItem(pointsUp = bolus.bolusType == BolusType.SMB, text = bolus.label, color = ElementType.INSULIN.color())
+                    PillTriangleItem(pointsUp = true, text = bolus.label, color = ElementType.INSULIN.color())
                 }
                 data.carbs.forEach { carbs -> PillTriangleItem(pointsUp = false, text = carbs.label, color = ElementType.CARBS.color()) }
+                // Calibration or BG check, same icon as on the BG graph
+                data.measured.forEach { label ->
+                    PillItem(IcBgCheck, label, AapsTheme.elementColors.bgCheck)
+                }
             }
         }
     }

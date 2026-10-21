@@ -246,7 +246,7 @@ fun SecondaryGraphCompose(
     }
 
     // Cache last non-empty treatment data to survive reset() cycles
-    val lastTreatmentData = remember { mutableStateOf(treatmentData ?: TreatmentGraphData(emptyList(), emptyList(), emptyList(), emptyList())) }
+    val lastTreatmentData = remember { mutableStateOf(treatmentData ?: TreatmentGraphData(emptyList(), emptyList(), emptyList(), emptyList(), emptyList())) }
     if (treatmentData != null && (treatmentData.boluses.isNotEmpty() || treatmentData.carbs.isNotEmpty() || treatmentData.extendedBoluses.isNotEmpty())) {
         lastTreatmentData.value = treatmentData
     }
@@ -1320,11 +1320,12 @@ fun rememberIobLineStyles(): IobLineStyles {
                     LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(smbColor), shape = TriangleShape), size = 22.dp)
                 )
             ),
+            // Insulin points up on every graph, a manual bolus like an SMB — only the size differs
             bolusLine = LineCartesianLayer.Line(
                 fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
                 areaFill = null,
                 pointProvider = LineCartesianLayer.PointProvider.single(
-                    LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(smbColor), shape = InvertedTriangleShape), size = 22.dp)
+                    LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(smbColor), shape = TriangleShape), size = 22.dp)
                 ),
                 dataLabel = bolusLabelComponent,
                 dataLabelPosition = Position.Vertical.Top,
