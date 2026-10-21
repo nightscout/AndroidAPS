@@ -178,6 +178,10 @@
     <string name="wrong_pump_data">数据来自不同的胰岛素泵，修改泵的驱动配置用来重置泵的状态。</string>
     <string name="bg_label">血糖</string>
     <string name="calibration">校准</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">校准未保存：过去10分钟内未找到CGM读数。</string>
+    <string name="cal_reject_warmup">校准未保存：传感器仍处于2小时预热窗口内。</string>
+    <string name="cal_reject_no_session">校准未保存：当前无活动传感器会话。请先标记传感器更换。</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">大剂量输注报告了一个错误。请手动检查实际输送的胰岛素和碳水化合物量</string>
     <string name="bolus_reminder">当血糖恢复时提醒推注</string>
