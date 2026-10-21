@@ -175,6 +175,10 @@
     <string name="wrong_pump_data">Les données proviennent de différentes pompes. Changer le pilote de la pompe pour réinitialiser l\'état de la pompe.</string>
     <string name="bg_label">Gly</string>
     <string name="calibration">Étalonnage</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">Calibration non sauvegardée : aucune lecture MGC trouvée dans les 10 minutes précédentes.</string>
+    <string name="cal_reject_warmup">Calibration non sauvegardée : le capteur est toujours dans la fenêtre pré-chauffage de 2 heures.</string>
+    <string name="cal_reject_no_session">Calibration non enregistrée: aucune session de capteur n\'est active. Effectuez d\'abord un changement de capteur.</string>
     <string name="cgm">MGC</string>
     <string name="treatmentdeliveryerror">Erreur lors du Bolus. Vérifiez manuellement la quantité réellement injectée ainsi que les glucides actifs</string>
     <string name="bolus_reminder">Rappeler le bolus quand la Gly remonte</string>
