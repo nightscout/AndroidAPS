@@ -8,6 +8,11 @@
     <string name="speederror">Greičio klaida</string>
     <string name="insulinlimitviolation">Pažeistas insulino dozės limitas</string>
     <string name="boluserrorcode">Įvesta: %1$.2fV Suleista: %2$.2fV. Klaidos kodas: %3$s</string>
+    <string name="danai2_bolus_error_not_enough_insulin">Rezervuare nepakanka insulino</string>
+    <string name="danai2_bolus_error_easy_sleep">Pompoje įjungtas supaprastintas režimas</string>
+    <string name="danai2_pump_check_error">Pompos patikros klaida</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Supaprastintas režimas</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Automatinis užraktas</string>
     <string name="danar_valuenotsetproperly">Vertė nėra tinkamai nustatyta</string>
     <string name="danar_setbasalstep001">Nustatyti bazės žingsnį 0.01 V/val.</string>
     <string name="resetpairing">Panaikinti susiejimo informaciją?</string>
@@ -17,6 +22,7 @@
     <string name="danar_disablebolusblock">Pompoje įjungtas boluso blokavimas. Kol jis aktyvus, AAPS negali suleisti insulino. Išjunkite boluso blokavimą pompos nustatymuose.</string>
     <string name="overview_bolusprogress_stoped">Sustabdyta</string>
     <string name="unsupportedfirmware">Pompos programinės įrangos versija nepalaikoma</string>
+    <string name="danars_unsupported_model">Nepalaikomas pompos modelis (kodas %1$s)</string>
     <string name="pumperror">Pompos klaida</string>
     <string name="lowbattery">Senka baterija</string>
     <string name="basalcompare">Suleidžiama mažiau už nustatytą valandinę bazę</string>
