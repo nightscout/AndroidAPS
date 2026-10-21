@@ -126,6 +126,7 @@
     <string name="pref_title_ns_use_ws">Použiť websockety</string>
     <string name="pref_summary_ns_use_ws">Použiť websockety pre komunikáciu v reálnom čase s Nightscoutom.</string>
     <string name="pref_title_ns_allow_client_control">Povoliť ovládanie klientom</string>
+    <string name="pref_summary_ns_allow_client_control">Povoliť spárovaným klientskym zariadeniam odosielať podpísané príkazy (napr. spustenie/zastavenie scén) cez Nightscout. Tým sa zároveň aktivuje režim zvýšeného zabezpečenia: zmeny vykonané priamo v Nightscoute sa už nebudú prijímať.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Iba WiFi</string>
     <string name="pref_title_openhumans_charging_only">Iba pri nabíjaní</string>
