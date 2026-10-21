@@ -178,6 +178,10 @@
     <string name="wrong_pump_data">Dane pochodzą z innej pompy. Zmień sterownik pompy, aby zresetować stan pompy.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibracja</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">Kalibracja nie została zapisana: nie znaleziono żadnego odczytu CGM w ciągu ostatnich 10 minut.</string>
+    <string name="cal_reject_warmup">Kalibracja nie została zapisana: sensor nadal znajduje się w 2-godzinnym okresie rozgrzewania.</string>
+    <string name="cal_reject_no_session">Kalibracja nie została zapisana: sesja sensora nie jest aktywna. Najpierw oznacz wymianę sensora.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Błąd podczas podawania bolusa. Sprawdź ręcznie ile faktycznie podano insuliny i ilość węglowodanów</string>
     <string name="bolus_reminder">Przypomnij o bolusie po odzyskaniu glikemii</string>
