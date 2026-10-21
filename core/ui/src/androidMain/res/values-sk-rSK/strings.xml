@@ -178,6 +178,10 @@
     <string name="wrong_pump_data">Dáta prichádzajú z inej pumpy. Zmeňte ovládač pre obnovenie stavu pumpy.</string>
     <string name="bg_label">Glykémia</string>
     <string name="calibration">Kalibrácia</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">Kalibrácia nebola uložená: 10 minút späť nenájdená žiadna glykémia.</string>
+    <string name="cal_reject_warmup">Kalibrácia nebola uložená: senzor je stále v dvojhodinovom zahrievacom okne.</string>
+    <string name="cal_reject_no_session">Kalibrácia nebola uložená: nie je aktívna žiadna relácia. Zaznamenajte najskôr výmenu senzora.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Bolus zaznamenal chybu. Manuálne skontrolujte skutočne podané množstvo inzulínu a sacharidov</string>
     <string name="bolus_reminder">Upozornenie na bolus keď sa obnoví glykémia</string>
