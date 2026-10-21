@@ -974,6 +974,13 @@ class OmnipodDashPodStateManagerImpl(
         podState.eapAkaSequenceNumber = 1
         podState.ltk = pairResult.ltk
         podState.uniqueId = uniqueId.toLong()
+        // A new pod starts with a clean fault history. Without this, a fault snapshot left over from a
+        // pod that was not cleanly discarded (app restart, pod removed without using Discard Pod, ...)
+        // would keep being shown - and alarmSynced=true would even suppress the new pod's own fault
+        // notification, since it is only posted once per pod.
+        podState.alarmType = null
+        podState.pdmRef = null
+        podState.alarmSynced = false
     }
 
     override fun connectionSuccessRatio(): Float {
