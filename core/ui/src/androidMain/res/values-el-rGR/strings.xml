@@ -104,6 +104,7 @@
     <string name="wrong_pump_data">Τα δεδομένα προέρχονται από διαφορετική αντλία. Αλλάξτε τον οδηγό της αντλίας για να επαναφέρετε την κατάσταση της αντλίας.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Καλιμπράρισμα</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="cgm">CGM</string>
     <string name="duration_label">Διάρκεια</string>
     <string name="shortgramm">g</string>
