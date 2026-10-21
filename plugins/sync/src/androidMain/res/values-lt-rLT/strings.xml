@@ -55,6 +55,7 @@
     <string name="pair_with_master_already_paired_master">Šiuo metu susieta su pagrindiniu įrenginiu %1$s. Norėdami įvesti naują PIN, pirmiausia atsiekite.</string>
     <string name="pair_with_master_unpair">Atsieti</string>
     <string name="pair_with_master_sending">Siunčiamas susiejimo pranešimas…</string>
+    <!-- Client set-up from the master's QR code -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">Pagrindinis AAPS įrenginys šio įrenginio nebeatpažįsta. Atverkite Valdymas → Susieti su pagrindiniu įrenginiu ir susiekite iš naujo.</string>
     <string name="ns_client">NSClient</string>
