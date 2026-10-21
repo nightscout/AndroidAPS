@@ -347,12 +347,6 @@
     <string name="widget_rm_suspended">Suspended</string>
     <string name="widget_rm_resume">Resume</string>
 
-    <!-- Calibration entry rejection reasons -->
-    <string name="cal_reject_delta_too_high">Calibration not saved: BG is changing too fast (Δ %1$s %3$s per 5 min, limit %2$s). Try again when glucose is stable.</string>
-    <string name="cal_reject_no_pair">Calibration not saved: no CGM reading found in the 10 minutes before now.</string>
-    <string name="cal_reject_warmup">Calibration not saved: sensor is still in the 2-hour warm-up window.</string>
-    <string name="cal_reject_no_session">Calibration not saved: no sensor session is active. Mark a sensor change first.</string>
-
     <!-- Calibration preflight messages shown in the dialog before submit -->
     <string name="cal_precheck_warmup">Sensor still in warm-up. Calibration available at %1$s.</string>
     <string name="cal_precheck_no_session">No sensor session is active.</string>
