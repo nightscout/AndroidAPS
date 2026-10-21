@@ -86,6 +86,5 @@
     <!-- Toolbar configuration -->
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
     <string name="widget_rm_lgs">LGS</string>
-    <!-- Calibration entry rejection reasons -->
     <!-- Calibration preflight messages shown in the dialog before submit -->
 </resources>
