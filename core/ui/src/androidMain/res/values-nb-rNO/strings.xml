@@ -179,6 +179,7 @@
     <string name="bg_label">BS</string>
     <string name="calibration">Kalibrering</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Kalibrering ble ikke lagret: Blodsukkeret endrer seg for raskt (Δ %1$s %3$s per 5 min, grense %2$s). Prøv igjen når glukosen er stabil.</string>
     <string name="cal_reject_no_pair">Kalibrering ble ikke lagret: Ingen CGM-måling funnet de siste 10 minuttene.</string>
     <string name="cal_reject_warmup">Kalibrering ble ikke lagret: Sensoren er fortsatt i den 2 timer lange oppvarmingsperioden.</string>
     <string name="cal_reject_no_session">Kalibrering ble ikke lagret: Ingen aktiv sensorsesjon. Registrer et sensorbytte først.</string>
@@ -226,6 +227,7 @@
     <string name="percentage_label">Percentage</string>
     <string name="timeshift_label">Tidsforskyving</string>
     <string name="confirm_remove_multiple_items">Er du sikker på at du vil fjerne %1$d elementer</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Hovedenheten har ikke %1$d av disse oppføringene. De blir ikke fjernet.</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="copytolocalprofile">Opprett ny profil fra denne profilen?</string>
     <string name="wear_wizard_settings">Innstillinger for boluskalkulator på klokken</string>
@@ -419,6 +421,19 @@
     <string name="scene_lock_banner_control_disabled">Hovedenheten har deaktivert fjernstyring. Scenekontrollene blir tilgjengelige igjen når fjernstyring aktiveres på hovedenheten.</string>
     <string name="master_offline_banner">Hovedenheten kan ikke nås. Redigering er deaktivert til forbindelsen er gjenopprettet.</string>
     <string name="master_control_disabled_banner">Hovedenheten har deaktivert fjernstyring. Redigering er deaktivert til den aktiveres igjen på hovedenheten.</string>
+    <string name="hardened_mode_on">Herdet modus aktivert</string>
+    <string name="hardened_mode_title">Herdet modus</string>
+    <string name="hardened_mode_info_open">Om herdet modus</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Kun lesing</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Måltider</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Omsorgsperson</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Administrator</string>
+    <string name="client_role_title">Rolle</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Rolle: %1$s</string>
+    <string name="client_roles_info_open">Om roller</string>
+    <string name="client_roles_info">Hver sammenkoblet telefon har en rolle. Hovedenheten kontrollerer rollen for hver kommando, og telefonen viser bare det rollen gir tilgang til. En ny rolle trer i kraft umiddelbart, uten at telefonen må sammenkobles på nytt.\n\nKun lesing: Telefonen forblir sammenkoblet, men viser bare data.\n\nMåltider: Bolus, boluskalkulator, hurtigknapper og karbohydrater. Den kan også stoppe en pågående bolus. Karbohydrater som registreres her, kan føre til at loop gir mer insulin.\n\nOmsorgsperson: Alt en bruker kan gjøre i AAPS, for eksempel sette midlertidige mål, bytte profil og insulin, endre kjøremodus, angi midlertidig basaldose, forlenget bolus, scener og Helseportal-hendelser, kalibrere og fjerne oppføringer. Rollen gir ikke tilgang til å endre innstillinger eller forhåndsinnstillinger.\n\nAdministrator: Alt, inkludert innstillinger og forhåndsinnstillinger (hurtigknapper, forhåndsinnstillinger for midlertidige mål, scener, profiler, automatisering og insulin).</string>
+    <string name="client_read_only_banner">Denne telefonen er i kun lesing modus på hovedenheten.</string>
+    <string name="hardened_mode_info">Hovedenheten godtar bare endringer fra sammenkoblede klienter. Den godtar ikke behandlinger, midlertidige mål, profilendringer, endringer i kjøremodus eller slettinger som gjøres direkte i Nightscout, for eksempel på nettstedet eller i andre apper. Innstillingene for å godta data fra Nightscout er skjult når herdet modus er aktivert. SMS-kommandoer påvirkes ikke.\n\nHovedenheten laster fortsatt opp alle data til Nightscout, inkludert blodsukkerverdier. Hvis den henter blodsukkerverdier fra Nightscout, fortsetter den å hente dem derfra.\n\nFor å laste inn historikken på en ny hovedenhet bruker du Full synkronisering i NSClient. Full synkronisering henter alt som finnes i Nightscout, inkludert profiler.\n\nFjernstyring fra klienter krever en fungerende WebSocket-forbindelse til Nightscout, både på hovedenheten og på de sammenkoblede klientene. Enkel modus aktiverer alltid herdet modus. For å deaktivere herdet modus må du avslutte enkel modus og slå av klientstyring på hovedenheten.</string>
     <string name="scene_lock_reason_master_offline">Hovedenheten er frakoblet</string>
     <string name="scene_lock_reason_control_disabled">Fjernstyring deaktivert</string>
     <string name="scene_lock_reason_scene_active">Avslutt den aktive scenen først</string>
@@ -447,6 +462,7 @@
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus avbrutt. Ingen insulin ble gitt.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Avbrutt</string>
     <string name="clientcontrol_fail_control_disabled">Fjernstyring er slått av på hovedenheten.</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">Rollen denne telefonen har på hovedenheten, gir ikke tilgang til dette.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Den forberedte bolusen utløp eller ble erstattet. Trykk på knappen igjen.</string>
     <string name="clientcontrol_fail_bolus_compute">Hovedenheten kunne ikke beregne bolusen (mangler glukoseverdi/profil, eller pumpen er ikke klar).</string>
     <string name="clientcontrol_fail_internal">Noe gikk galt.</string>
