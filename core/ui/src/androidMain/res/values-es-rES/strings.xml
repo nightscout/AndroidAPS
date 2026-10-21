@@ -178,6 +178,10 @@
     <string name="wrong_pump_data">Los datos proceden de una bomba diferente. Cambia el controlador de la bomba para resetear su estado.</string>
     <string name="bg_label">Glucemia</string>
     <string name="calibration">Calibración</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">Calibración no guardada: no se han encontrado lecturas del MCG en los últimos 10 minutos</string>
+    <string name="cal_reject_warmup">Calibración no guardada: el sensor todavía está en el periodo de calentamiento de 2 horas</string>
+    <string name="cal_reject_no_session">Calibración no guardada: no hay ninguna sesión de sensor activa. Registra primero un cambio de sensor</string>
     <string name="cgm">MCG</string>
     <string name="treatmentdeliveryerror">El bolo reportó un error. Comprueba manualmente la cantidad real de insulina entregada y la cantidad de carbohidratos</string>
     <string name="bolus_reminder">Recordar bolo cuando la glucemia se recupere</string>
