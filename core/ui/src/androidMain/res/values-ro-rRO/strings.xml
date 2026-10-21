@@ -175,6 +175,10 @@
     <string name="wrong_pump_data">Datele vin de la o pompă diferită. Schimbați driver-ul de pompă pentru a reseta starea pompei.</string>
     <string name="bg_label">Glicemie</string>
     <string name="calibration">Calibrare</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">Calibrarea nu a fost salvată: Nu a fost găsită nicio citire a senzorului în ultimele 10 minute.</string>
+    <string name="cal_reject_warmup">Calibrarea nu a fost salvată: senzorul se află încă în fereastra de încălzire de 2 ore.</string>
+    <string name="cal_reject_no_session">Calibrarea nu a fost salvată: nicio sesiune de senzor nu este activă. Înregistrați o schimbare de senzor mai întâi.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Bolusarea a raportat o eroare. Verificați manual insulina administrată și cantitatea de carbohidrați</string>
     <string name="bolus_reminder">Reamintiți de bolus atunci când glicemia revine</string>
