@@ -55,6 +55,7 @@
     <string name="pair_with_master_already_paired_master">מצומד כעת למכשיר הראשי %1$s. יש לבטל תחילה את הצימוד כדי להזין קוד PIN חדש.</string>
     <string name="pair_with_master_unpair">בטל התאמה</string>
     <string name="pair_with_master_sending">שולח הודעת התאמה…</string>
+    <!-- Client set-up from the master's QR code -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">מכשיר AAPS הראשי כבר אינו מזהה מכשיר זה. פתחו את מסך הניהול ← צימוד למכשיר הראשי כדי לצמד מחדש.</string>
     <string name="ns_client">NSClient</string>
