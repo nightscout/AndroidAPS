@@ -324,11 +324,6 @@ Pojawi się tutaj, jeśli/gdy telefon pacjenta je zastosuje.</string>
     <string name="widget_rm_disabled">Wyłączona</string>
     <string name="widget_rm_suspended">Zawieszona</string>
     <string name="widget_rm_resume">Wznów</string>
-    <!-- Calibration entry rejection reasons -->
-    <string name="cal_reject_delta_too_high">Kalibracja nie została zapisana: BG zmienia się zbyt szybko (Δ %1$s %3$s w ciągu 5 min, limit %2$s). Spróbuj ponownie, gdy glukoza jest stabilna.</string>
-    <string name="cal_reject_no_pair">Kalibracja nie została zapisana: nie znaleziono żadnego odczytu CGM w ciągu ostatnich 10 minut.</string>
-    <string name="cal_reject_warmup">Kalibracja nie została zapisana: sensor nadal znajduje się w 2-godzinnym okresie rozgrzewania.</string>
-    <string name="cal_reject_no_session">Kalibracja nie została zapisana: sesja sensora nie jest aktywna. Najpierw oznacz wymianę sensora.</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
     <string name="cal_precheck_warmup">Sensor nadal się rozgrzewa. Kalibracja będzie dostępna o %1$s.</string>
     <string name="cal_precheck_no_session">Brak aktywnej sesji sensora.</string>
