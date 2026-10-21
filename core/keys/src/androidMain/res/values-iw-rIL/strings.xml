@@ -113,7 +113,6 @@
     <string name="pref_title_ns_use_ws">שימוש ב־WebSockets</string>
     <string name="pref_summary_ns_use_ws">השתמש ב־WebSockets לתקשורת בזמן אמת עם Nightscout.</string>
     <string name="pref_title_ns_allow_client_control">אפשר שליטה ממכשיר לקוח</string>
-    <string name="pref_summary_ns_allow_client_control">אפשר למכשירי לקוח מצומדים לשלוח פקודות חתומות, כגון הפעלה או עצירה של תרחישים, דרך Nightscout.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Wi‑Fi בלבד</string>
     <string name="pref_title_openhumans_charging_only">רק בזמן טעינה</string>
