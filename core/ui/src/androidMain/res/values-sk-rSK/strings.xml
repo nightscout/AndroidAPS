@@ -463,6 +463,7 @@
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Zrušené</string>
     <string name="clientcontrol_fail_control_disabled">Diaľkové ovládanie je vypnuté na hlavnom zariadení.</string>
     <string name="clientcontrol_fail_not_allowed_for_role">Rola priradená tomuto telefónu na hlavnom zariadení to neumožňuje.</string>
+    <string name="clientcontrol_fail_other_token">Hlavné zariadenie požiadavku odmietlo: tento telefón zapisuje do Nightscoutu pomocou iného tokenu, než vlastného. Na hlavnom zariadení odstráňte tento telefón a znova ho pridajte.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Pripravený bolus exspiroval alebo bol nahradený. ​​Znova kliknite na tlačidlo.</string>
     <string name="clientcontrol_fail_bolus_compute">Hlavné zariadenie nedokázalo vypočítať bolus (chýba glukóza/profil alebo pumpa nie je pripravená).</string>
     <string name="clientcontrol_fail_internal">Niečo sa pokazilo.</string>
