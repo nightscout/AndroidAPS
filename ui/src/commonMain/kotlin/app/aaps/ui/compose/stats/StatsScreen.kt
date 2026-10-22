@@ -38,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.stringResource
@@ -45,7 +46,7 @@ import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.stats.viewmodels.StatsViewModel
 
 /**
- * Composable screen displaying statistics including TDD, TIR and Dexcom TIR.
+ * Composable screen displaying statistics including TDD, AGP, TIR and Dexcom TIR.
  * Uses pure Material3 design with Cards and standard typography.
  *
  * @param viewModel ViewModel containing all statistics state and business logic
@@ -139,6 +140,40 @@ fun StatsScreen(
                                 }
                             }
                         }
+                    }
+                }
+            }
+
+            // AGP Section
+            AapsCard(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.padding(AapsSpacing.extraLarge)) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { viewModel.toggleAgpExpanded() }
+                            .semantics { heading() }
+                            .padding(bottom = AapsSpacing.medium),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(UiStrings.agp),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        Icon(
+                            imageVector = if (state.agpExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    AnimatedVisibility(visible = state.agpExpanded) {
+                        AGPStats(
+                            selectedRange = state.agpRange,
+                            onSelectRange = viewModel::loadAgpStats,
+                            data = state.agpStatsData,
+                            isLoading = state.agpLoading,
+                            hasError = state.agpError
+                        )
                     }
                 }
             }

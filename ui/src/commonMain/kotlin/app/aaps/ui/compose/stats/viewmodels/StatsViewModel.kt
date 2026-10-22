@@ -26,16 +26,21 @@ import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntNonKey
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.ui.compose.stats.AgpStatsData
+import app.aaps.ui.compose.stats.AgpStatsRange
 import app.aaps.ui.compose.stats.CycleSeries
 import app.aaps.ui.compose.stats.TddCyclePatternData
 import app.aaps.ui.compose.stats.TddStatsData
 import app.aaps.ui.compose.stats.TirStatsData
+import app.aaps.ui.compose.stats.calculateAgpStatsData
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
@@ -86,6 +91,7 @@ class StatsViewModel(
     val uiState: StateFlow<StatsUiState> = _uiState.asStateFlow()
 
     private var cycleLoadJob: Job? = null
+    private var agpLoadJob: Job? = null
 
     /**
      * Held so a reload can replace the one before it instead of racing it.
@@ -150,8 +156,36 @@ class StatsViewModel(
 
     fun loadAllStats() {
         loadTddStats()
+        loadAgpStats(uiState.value.agpRange)
         loadTirStats()
         loadDexcomTirStats()
+    }
+
+    fun loadAgpStats(range: AgpStatsRange) {
+        agpLoadJob?.cancel()
+        _uiState.update { it.copy(agpRange = range, agpLoading = true, agpError = false) }
+        agpLoadJob = viewModelScope.launch {
+            try {
+                val data = withContext(aapsIoDispatcher) {
+                    val endTime = dateUtil.now()
+                    val readings = persistenceLayer.getBgReadingsDataFromTimeToTime(range.startTime(endTime), endTime, true)
+                    calculateAgpStatsData(
+                        readings = readings,
+                        lowMgdl = profileUtil.convertToMgdlDetect(preferences.get(UnitDoubleKey.OverviewLowMark)),
+                        highMgdl = profileUtil.convertToMgdlDetect(preferences.get(UnitDoubleKey.OverviewHighMark))
+                    )
+                }
+                _uiState.update { it.copy(agpStatsData = data, agpLoading = false) }
+            } catch (exception: CancellationException) {
+                throw exception
+            } catch (_: Exception) {
+                _uiState.update { it.copy(agpLoading = false, agpError = true) }
+            }
+        }
+    }
+
+    fun toggleAgpExpanded() {
+        _uiState.update { it.copy(agpExpanded = !it.agpExpanded) }
     }
 
     private fun loadTddStats() {
@@ -371,6 +405,11 @@ class StatsViewModel(
 @Immutable
 data class StatsUiState(
     val tddStatsData: TddStatsData? = null,
+    val agpStatsData: AgpStatsData? = null,
+    val agpRange: AgpStatsRange = AgpStatsRange.TODAY,
+    val agpLoading: Boolean = true,
+    val agpError: Boolean = false,
+    val agpExpanded: Boolean = true,
     val tirStatsData: TirStatsData? = null,
     val dexcomTirData: DexcomTIR? = null,
     val tddCycleEntries: List<TDD> = emptyList(),
