@@ -72,7 +72,6 @@
     <string name="combov2_bolus_delivery_failed">Administration bolus échouée. Il semble qu’aucun bolus n’a été administré. Pour être sûr, veuillez vérifier la pompe pour éviter un double bolus ensuite refaire le bolus une nouvelle fois.</string>
     <string name="combov2_bolus_not_delivered">Bolus non injecté</string>
     <string name="combov2_cannot_access_pump_data">Impossible d\'accéder aux données de la pompe, la pompe doit être à nouveau appairée</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Détection de bolus non comptabilisés. Annulation du bolus pour des raisons de sécurité.</string>
     <string name="combov2_incorrect_active_basal_profile">Profil actif incorrect, le profil 1 doit être actif et non le profil %1$d</string>
     <string name="combov2_unrecognized_alert">Alerte Combo inconnue</string>
     <string name="combov2_combo_alert">Alerte Combo</string>
