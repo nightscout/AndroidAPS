@@ -225,6 +225,8 @@
     <string name="omnipod_5_certificate_import_parse_error">Could not parse that certificate - check it was copied completely</string>
     <string name="omnipod_5_certificate_import_failed">Could not import the certificate. Please try again.</string>
     <string name="omnipod_5_certificate_import_try_again">Try again</string>
+    <string name="omnipod_5_certificate_internet_required">Internet connection needed</string>
+    <string name="omnipod_5_certificate_internet_required_message">Unable to connect. An internet connection is needed to retrieve your Omnipod 5 certificate. This is a one-time step before pairing your first pod. Once the certificate is retrieved, you can pair later pods without internet. Please try again once you have a network connection.</string>
     <string name="omnipod_5_certificate_imported">Omnipod 5 certificate imported</string>
     <string name="omnipod_5_certificate_import_error">Error importing certificate</string>
     <string name="omnipod_5_certificate_bridge_unsupported">This device\'s WebView does not support the certificate bridge. Please update Android System WebView and try again.</string>
