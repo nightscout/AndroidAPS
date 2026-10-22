@@ -62,6 +62,7 @@
     <string name="authorized_clients_delete_dialog_token">Its Nightscout token is deleted too, so it can no longer read Nightscout.</string>
     <string name="authorized_clients_uses_client_token">Own Nightscout token</string>
     <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Uses the Nightscout token %1$s, which has more rights than a client needs</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Uses the Nightscout token %1$s, not its own: its commands are refused. Remove it and add it again.</string>
 
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Pair with master</string>
@@ -91,6 +92,10 @@
     <string name="client_setup_scan_title">Scan the master\'s QR code</string>
     <string name="client_setup_scan_instructions">On the master, open Authorized clients and add this phone with a QR code. Point the camera at the code.</string>
     <string name="client_setup_scan_camera_refused">The camera is needed to read the QR code. Allow it, or pair with the PIN.</string>
+    <string name="client_setup_scan_camera_denied">Camera access is turned off for AAPS. Turn it on in the system settings, or pair with the PIN.</string>
+    <string name="client_setup_scan_camera_blocked">Camera access is not allowed on this device. Pair with the PIN instead.</string>
+    <string name="client_setup_scan_camera_unavailable">The camera cannot be used on this device. Pair with the PIN instead.</string>
+    <string name="client_setup_scan_open_settings">Open settings</string>
     <string name="client_setup_scan_not_a_code">This is not a QR code from AAPS.</string>
     <string name="client_setup_scan_other_version">This code is from another AAPS version. The master and this phone must run the same version.</string>
     <string name="client_setup_scan_expired">This code has expired. Make a new one on the master.</string>
