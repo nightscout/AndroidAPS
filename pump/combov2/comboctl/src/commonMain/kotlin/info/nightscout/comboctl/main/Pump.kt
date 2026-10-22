@@ -64,6 +64,25 @@ private const val DEFAULT_MAX_NUM_REGULAR_CONNECT_ATTEMPTS = 10
 private const val DELAY_IN_MS_BETWEEN_COMMAND_DISPATCH_ATTEMPTS = 2000L
 private const val PUMP_DATETIME_UPDATE_LONG_RT_BUTTON_PRESS_THRESHOLD = 5
 
+/**
+ * True if the history delta has an entry that means insulin was given or is being given.
+ *
+ * A "requested" entry without its "infused" entry is a bolus that is still running. The ends
+ * of extended and multiwave boluses do not count, since their start was reported before.
+ */
+internal fun List<ApplicationLayer.CMDHistoryEvent>.containsNewBolus() = any {
+    when (it.detail) {
+        is CMDHistoryEventDetail.QuickBolusRequested,
+        is CMDHistoryEventDetail.QuickBolusInfused,
+        is CMDHistoryEventDetail.StandardBolusRequested,
+        is CMDHistoryEventDetail.StandardBolusInfused,
+        is CMDHistoryEventDetail.ExtendedBolusStarted,
+        is CMDHistoryEventDetail.MultiwaveBolusStarted -> true
+
+        else                                           -> false
+    }
+}
+
 object RTCommandProgressStage {
     /**
      * Basal profile setting stage.
@@ -261,6 +280,12 @@ class Pump(
 
     private var currentPumpUtcOffset: UtcOffset? = null
 
+    // Set by performOnConnectChecks() when the history delta read at connect time showed
+    // a bolus that was not known before. A bolus that was asked for before this connection
+    // was decided without that insulin, so deliverBolus() does not give the first bolus of
+    // this connection (#5359).
+    private var newBolusSeenOnConnect = false
+
     // Command progress reporters.
 
     private val setBasalProfileReporter = createBasalProgressReporter<RTCommandProgressStage.SettingBasalProfile>()
@@ -414,8 +439,9 @@ class Pump(
      *
      * @param totalAmount Total bolus amount that was supposed to be delivered. In 0.1 IU units.
      * @param message The detail message.
+     * @param cause The exception that caused this one, if any.
      */
-    open class BolusDeliveryException(val totalAmount: Int, message: String) : ComboException(message)
+    open class BolusDeliveryException(val totalAmount: Int, message: String, cause: Throwable? = null) : ComboException(message, cause)
 
     /**
      * Exception thrown when the Combo did not deliver the bolus at all.
@@ -465,6 +491,43 @@ class Pump(
             bolusAmount,
             "Insufficient insulin in reservoir for bolus: bolus amount: ${bolusAmount.toStringWithDecimal(1)} IU  " +
                 "available units in reservoir: $availableUnitsInReservoir"
+        )
+
+    /**
+     * Exception thrown when the Combo accepted the bolus, but the connection failed before
+     * the pump history could show how much was given.
+     *
+     * The Combo goes on with a bolus when the connection is lost, so the bolus may still
+     * be running. It is not "not delivered". The history is read at the next connection,
+     * and the bolus is then reported with `onEvent` like any other bolus (#5359).
+     *
+     * @param totalAmount Total bolus amount that was supposed to be delivered. In 0.1 IU units.
+     * @param deliveredAmountSoFar Amount that the pump reported as given before the connection
+     *   failed. In 0.1 IU units. The real amount can be larger. If this is equal to [totalAmount],
+     *   the pump already reported the whole bolus as given.
+     * @param cause The exception that ended the connection.
+     */
+    class BolusOutcomeUnknownException(totalAmount: Int, val deliveredAmountSoFar: Int, cause: Throwable) :
+        BolusDeliveryException(
+            totalAmount,
+            "Bolus outcome unknown (delivered amount so far: ${deliveredAmountSoFar.toStringWithDecimal(1)} IU  " +
+                "total programmed amount: ${totalAmount.toStringWithDecimal(1)} IU",
+            cause
+        )
+
+    /**
+     * Exception thrown before a bolus is given, when the pump history shows a bolus that
+     * was not known yet.
+     *
+     * This bolus is not given, because its amount was decided without that insulin. The
+     * boluses that were found are reported with `onEvent` before this is thrown (#5359).
+     *
+     * @param totalAmount Total bolus amount that was supposed to be delivered. In 0.1 IU units.
+     */
+    class UnknownBolusInHistoryException(totalAmount: Int) :
+        BolusDeliveryException(
+            totalAmount,
+            "Pump history has a bolus that was not known yet; not delivering bolus of ${totalAmount.toStringWithDecimal(1)} IU"
         )
 
     /**
@@ -1495,6 +1558,15 @@ class Pump(
      * by looking at [statusFlow] and compared against [totalBolusAmount]. If there aren't
      * enough IU in the reservoir, this function throws [InsufficientInsulinAvailableException].
      *
+     * Also prior to the delivery, the history delta is read, and the boluses in it are
+     * reported via [onEvent]. If it shows a bolus that was not known yet, or if the history
+     * read at connect time did, this bolus is not delivered, since its amount was decided
+     * without that insulin. [UnknownBolusInHistoryException] is thrown then.
+     *
+     * If the connection fails after the pump accepted the bolus, and before the history
+     * delta shows how much was given, [BolusOutcomeUnknownException] is thrown. The Combo
+     * goes on with the bolus without a connection, so the bolus may still be running.
+     *
      * After the delivery, this function looks at the Combo's bolus history delta. That
      * delta is expected to contain exactly one entry - the bolus that was just delivered
      * or started (depending on the bolus type). The details in that history delta entry
@@ -1540,6 +1612,10 @@ class Pump(
      *   more than one bolus is reported in the Combo's bolus history delta.
      * @throws InsufficientInsulinAvailableException if the reservoir does not
      *   have enough IUs left for this bolus.
+     * @throws UnknownBolusInHistoryException if the pump history shows a bolus
+     *   that was not known yet. This bolus is then not delivered.
+     * @throws BolusOutcomeUnknownException if the connection failed after the
+     *   pump accepted the bolus and before the history showed the amount.
      * @throws IllegalArgumentException if [totalBolusAmount] is not in the 0-250 range, or
      *   if [bolusStatusUpdateIntervalInMs] is less than 1, or if [immediateBolusAmount] exceeds
      *   [totalBolusAmount] when delivering a multiwave bolus, or if [durationInMinutes] is <15
@@ -1646,17 +1722,40 @@ class Pump(
                 throw InsufficientInsulinAvailableException(totalBolusAmount, status.availableUnitsInReservoir)
         } ?: throw IllegalStateException("Cannot deliver bolus without a known pump status")
 
+        // Read the history delta before the bolus and report what is in it. A bolus that ended
+        // after the connect-time history read (for example one that was still running when this
+        // connection was set up) is then reported here, and not in the check after this bolus,
+        // where it looked like an extra bolus. Such a bolus was not known when this one was asked
+        // for, and neither was one that the connect-time read found. In both cases this bolus
+        // was decided without that insulin, so it is not given (#5359).
+        val historyDeltaBeforeBolus = fetchHistoryDelta()
+        scanHistoryDeltaForBolusToEmit(historyDeltaBeforeBolus)
+        val unknownBolusFound = newBolusSeenOnConnect || historyDeltaBeforeBolus.containsNewBolus()
+        newBolusSeenOnConnect = false
+        if (unknownBolusFound) {
+            logger(LogLevel.ERROR) { "Pump history has a bolus that was not known yet; not delivering this bolus" }
+            throw UnknownBolusInHistoryException(totalBolusAmount)
+        }
+
         // Switch to COMMAND mode for the actual bolus delivery
         // and for tracking the bolus progress below.
         pumpIO.switchMode(PumpIO.Mode.COMMAND)
 
         logger(LogLevel.DEBUG) { "Beginning bolus delivery of ${totalBolusAmount.toStringWithDecimal(1)} IU" }
-        val didDeliver = pumpIO.deliverCMDStandardBolus(
-            totalBolusAmount,
-            immediateBolusAmount,
-            durationInMinutes,
-            bolusType
-        )
+        val didDeliver = try {
+            pumpIO.deliverCMDStandardBolus(
+                totalBolusAmount,
+                immediateBolusAmount,
+                durationInMinutes,
+                bolusType
+            )
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            // The request may have reached the pump before the connection failed (#5359).
+            logger(LogLevel.ERROR) { "Connection failed while requesting the bolus; outcome unknown: $e" }
+            throw BolusOutcomeUnknownException(totalBolusAmount, deliveredAmountSoFar = 0, e)
+        }
         if (!didDeliver) {
             logger(LogLevel.ERROR) { "Bolus delivery did not commence" }
             throw BolusNotDeliveredException(totalBolusAmount)
@@ -1669,6 +1768,10 @@ class Pump(
         var bolusFinishedCompletely = false
         // True once the history delta shows exactly the bolus that was asked for.
         var bolusConfirmedInHistory = false
+        // The amount that the pump reported as given so far. In 0.1 IU units.
+        var deliveredAmountSoFar = 0
+        // True when the history could not be read after the bolus started (#5359).
+        var outcomeUnknown = false
 
         try {
             // The Combo does not send immediate bolus delivery information on its own.
@@ -1700,6 +1803,7 @@ class Pump(
 
                             ApplicationLayer.CMDBolusDeliveryState.CANCELLED_BY_USER    -> {
                                 logger(LogLevel.DEBUG) { "Bolus cancelled by user" }
+                                deliveredAmountSoFar = expectedImmediateAmount - status.remainingAmount
                                 throw BolusCancelledByUserException(
                                     deliveredImmediateAmount = expectedImmediateAmount - status.remainingAmount,
                                     totalImmediateAmount = expectedImmediateAmount
@@ -1708,6 +1812,7 @@ class Pump(
 
                             ApplicationLayer.CMDBolusDeliveryState.ABORTED_DUE_TO_ERROR -> {
                                 logger(LogLevel.ERROR) { "Bolus aborted due to a delivery error" }
+                                deliveredAmountSoFar = expectedImmediateAmount - status.remainingAmount
                                 throw BolusAbortedDueToErrorException(
                                     deliveredImmediateAmount = expectedImmediateAmount - status.remainingAmount,
                                     totalImmediateAmount = expectedImmediateAmount
@@ -1716,6 +1821,7 @@ class Pump(
 
                             else                                                        -> continue
                         }
+                        deliveredAmountSoFar = deliveredAmount
 
                         bolusDeliveryProgressReporter.setCurrentProgressStage(
                             RTCommandProgressStage.DeliveringBolus(
@@ -1774,7 +1880,19 @@ class Pump(
             // to the outside even if the bolus delivery did not succeed.
 
             try {
-                val historyDelta = fetchHistoryDelta()
+                val historyDelta = try {
+                    fetchHistoryDelta()
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    // The pump accepted the bolus, but its history cannot be read now, so it is not
+                    // known how much was given. The Combo goes on with a bolus when the connection
+                    // is lost, so this is not "not delivered". The next connection reads the history
+                    // and reports the bolus (#5359).
+                    logger(LogLevel.ERROR) { "Could not read the history after the bolus started; outcome unknown: $e" }
+                    outcomeUnknown = true
+                    throw BolusOutcomeUnknownException(totalBolusAmount, deliveredAmountSoFar, e)
+                }
 
                 if (historyDelta.isEmpty()) {
                     if (bolusFinishedCompletely) {
@@ -1892,9 +2010,11 @@ class Pump(
                     // whole bolus used to fail, and AAPS reported "bolus failed" for insulin that
                     // was given, so the user might give it again (#4240). Keep the bolus as
                     // delivered; the next connection reads the status again.
-                    if (!bolusConfirmedInHistory)
+                    // When the outcome is already unknown, that exception is on its way out, and
+                    // this one must not replace it (#5359).
+                    if (!bolusConfirmedInHistory && !outcomeUnknown)
                         throw e
-                    logger(LogLevel.ERROR) { "Could not re-read the pump status after a confirmed bolus; not failing the bolus: $e" }
+                    logger(LogLevel.ERROR) { "Could not re-read the pump status after the bolus: $e" }
                 }
             }
         }
@@ -2741,6 +2861,12 @@ class Pump(
         // for further evaluating the current pump state.
         val historyDelta = fetchHistoryDelta()
 
+        // Report all boluses in the delta right away. Reading the delta removes it from the
+        // pump, so if a check below failed first (for example the screen check while a bolus
+        // is still running), these boluses were lost for good (#5359).
+        scanHistoryDeltaForBolusToEmit(historyDelta)
+        newBolusSeenOnConnect = historyDelta.containsNewBolus()
+
         // This reads information from the main screen and quickinfo screen.
         // Don't switch states. The caller does that.
         updateStatusImpl(
@@ -2758,9 +2884,6 @@ class Pump(
         // are in that mode before reading the datetime.
         pumpIO.switchMode(PumpIO.Mode.COMMAND)
         val timestampOfStatusUpdate = pumpIO.readCMDDateTime()
-
-        // Scan history delta for unaccounted bolus(es). Report all discovered ones.
-        scanHistoryDeltaForBolusToEmit(historyDelta)
 
         if (pumpSuspended) {
             // If the pump is suspended, no insulin is delivered. This behaves like

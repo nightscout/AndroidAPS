@@ -1030,6 +1030,14 @@ class ComboV2Plugin(
             // solved by instead accessing the lastBolusFlow through the local
             // "acquiredPump" reference.
 
+            // True when this bolus was not given because the pump history had a bolus
+            // that was not known yet (#5359).
+            var bolusNotGiven = false
+            // Set when the pump accepted the bolus, but the connection failed before the
+            // history showed the amount (#5359). The amount the pump reported until then,
+            // in 0.1 IU units.
+            var amountSoFarWhenOutcomeUnknown: Int? = null
+
             try {
                 executeCommand {
                     acquiredPump.deliverBolus(requestedBolusAmount, bolusReason)
@@ -1058,8 +1066,27 @@ class ComboV2Plugin(
                 aapsLogger.error(LTag.PUMP, "Bolus not delivered")
                 reportFinishedBolus(R.string.combov2_bolus_not_delivered, detailedBolusInfo.id, pumpEnactResult, succeeded = false)
             } catch (_: ComboCtlPump.UnaccountedBolusDetectedException) {
-                aapsLogger.error(LTag.PUMP, "Unaccounted bolus detected")
-                reportFinishedBolus(R.string.combov2_unaccounted_bolus_detected_cancelling_bolus, detailedBolusInfo.id, pumpEnactResult, succeeded = false)
+                // This bolus was given, but the history after it also had other boluses. All of
+                // them are recorded now. Reporting it as failed made the user think no insulin
+                // was given, and the carbs were not stored (#5359).
+                aapsLogger.error(LTag.PUMP, "Unaccounted bolus detected after the bolus was given")
+                notificationManager.post(NotificationId.COMBO_PUMP_ALARM, TextRef.AndroidRes(R.string.combov2_bolus_given_other_boluses_found))
+                reportFinishedBolus(R.string.combov2_bolus_given_other_boluses_found, detailedBolusInfo.id, pumpEnactResult, succeeded = true)
+            } catch (_: ComboCtlPump.UnknownBolusInHistoryException) {
+                aapsLogger.error(LTag.PUMP, "Pump history has a bolus that was not known yet; this bolus was not given")
+                bolusNotGiven = true
+                reportFinishedBolus(R.string.combov2_unknown_bolus_in_history, detailedBolusInfo.id, pumpEnactResult, succeeded = false)
+            } catch (e: ComboCtlPump.BolusOutcomeUnknownException) {
+                aapsLogger.error(LTag.PUMP, "Bolus outcome unknown: $e")
+                amountSoFarWhenOutcomeUnknown = e.deliveredAmountSoFar
+                if (e.deliveredAmountSoFar >= e.totalAmount) {
+                    // The pump already reported the whole bolus as given. Only the history
+                    // entry is missing, and the next connection reads it.
+                    reportFinishedBolus(rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, detailedBolusInfo.insulin), detailedBolusInfo.id, pumpEnactResult, succeeded = true)
+                } else {
+                    val amountSoFar = rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, e.deliveredAmountSoFar.cctlBolusToIU())
+                    reportFinishedBolus(rh.gs(R.string.combov2_bolus_outcome_unknown, amountSoFar), detailedBolusInfo.id, pumpEnactResult, succeeded = false)
+                }
             } catch (_: ComboCtlPump.InsufficientInsulinAvailableException) {
                 aapsLogger.error(LTag.PUMP, "Insufficient insulin in reservoir")
                 reportFinishedBolus(R.string.combov2_insufficient_insulin_in_reservoir, detailedBolusInfo.id, pumpEnactResult, succeeded = false)
@@ -1067,13 +1094,31 @@ class ComboV2Plugin(
                 aapsLogger.error(LTag.PUMP, "Exception thrown during bolus delivery: $e")
                 reportFinishedBolus(R.string.combov2_bolus_delivery_failed, detailedBolusInfo.id, pumpEnactResult, succeeded = false)
             } finally {
-                // The delivery was enacted if even a partial amount was infused.
-                acquiredPump.lastBolusFlow.value?.takeIf { it != lastBolusBefore }?.also {
-                    pumpEnactResult.enacted = (it.bolusAmount > 0)
-                    pumpEnactResult.bolusDelivered = it.bolusAmount.cctlBolusToIU()
-                } ?: run {
-                    pumpEnactResult.enacted = false
-                    pumpEnactResult.bolusDelivered = 0.0
+                val newBolus = acquiredPump.lastBolusFlow.value?.takeIf { it != lastBolusBefore }
+                when {
+                    // A bolus that the history read found before this one is not this bolus.
+                    bolusNotGiven                         -> {
+                        pumpEnactResult.enacted = false
+                        pumpEnactResult.bolusDelivered = 0.0
+                    }
+
+                    // The pump accepted the bolus. Report what it gave until the connection
+                    // failed; the history at the next connection records the real amount.
+                    amountSoFarWhenOutcomeUnknown != null -> {
+                        pumpEnactResult.enacted = true
+                        pumpEnactResult.bolusDelivered = amountSoFarWhenOutcomeUnknown.cctlBolusToIU()
+                    }
+
+                    // The delivery was enacted if even a partial amount was infused.
+                    newBolus != null                      -> {
+                        pumpEnactResult.enacted = (newBolus.bolusAmount > 0)
+                        pumpEnactResult.bolusDelivered = newBolus.bolusAmount.cctlBolusToIU()
+                    }
+
+                    else                                  -> {
+                        pumpEnactResult.enacted = false
+                        pumpEnactResult.bolusDelivered = 0.0
+                    }
                 }
                 aapsLogger.debug(
                     LTag.PUMP,
