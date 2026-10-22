@@ -102,9 +102,15 @@ class NsIncomingDataProcessor(
     /**
      * Preprocess list of SGVs
      *
+     * @param advanceInitialLoadCursor true only for the REST load that pages forward through history.
+     *   It moves the first-load cursor to the newest record seen, so the next page starts after this
+     *   one. A live websocket frame must NOT pass true: during a first load it would jump the cursor
+     *   to now, and the whole history behind it - profile switches included - is then never fetched.
+     *   Defaults to false so a new caller cannot cause that by forgetting.
+     *
      * @return true if there was an accepted SGV
      */
-    fun processSgvs(sgvs: Any, doFullSync: Boolean): Boolean {
+    fun processSgvs(sgvs: Any, doFullSync: Boolean, advanceInitialLoadCursor: Boolean = false): Boolean {
         // Objective0
         preferences.put(BooleanNonKey.ObjectivesBgIsAvailableInNs, true)
 
@@ -126,7 +132,7 @@ class NsIncomingDataProcessor(
             }
         }
         if (glucoseValues.isNotEmpty()) {
-            nsClient.updateLatestBgReceivedIfNewer(latestDateInReceivedData)
+            if (advanceInitialLoadCursor) nsClient.updateLatestBgReceivedIfNewer(latestDateInReceivedData)
             // Was that sgv more less 5 mins ago ?
             if (T.msecs(dateUtil.now() - latestDateInReceivedData).mins() < 5L) {
                 notificationManager.dismiss(NotificationId.NS_ALARM)
@@ -155,9 +161,15 @@ class NsIncomingDataProcessor(
     /**
      * Preprocess list of treatments
      *
+     * @param advanceInitialLoadCursor true only for the REST load that pages forward through history.
+     *   It moves the first-load cursor to the newest record seen, so the next page starts after this
+     *   one. A live websocket frame must NOT pass true: during a first load it would jump the cursor
+     *   to now, and the whole history behind it - profile switches included - is then never fetched.
+     *   Defaults to false so a new caller cannot cause that by forgetting.
+     *
      * @return true if there was an accepted treatment
      */
-    fun processTreatments(treatments: List<NSTreatment>, doFullSync: Boolean): Boolean {
+    fun processTreatments(treatments: List<NSTreatment>, doFullSync: Boolean, advanceInitialLoadCursor: Boolean = false): Boolean {
         try {
             var latestDateInReceivedData: Long = 0
             for (treatment in treatments) {
@@ -244,7 +256,7 @@ class NsIncomingDataProcessor(
                             }
                 }
             }
-            if (latestDateInReceivedData > 0)
+            if (advanceInitialLoadCursor && latestDateInReceivedData > 0)
                 nsClient.updateLatestTreatmentReceivedIfNewer(latestDateInReceivedData)
             return latestDateInReceivedData > 0
         } catch (error: Exception) {
