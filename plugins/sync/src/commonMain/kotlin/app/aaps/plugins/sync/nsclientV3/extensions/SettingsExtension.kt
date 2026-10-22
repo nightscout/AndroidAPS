@@ -6,8 +6,9 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 
 /**
- * Parse a NS `settings` doc with shape `{ schemaVersion: 1, runningConfig: <…> }` into a
- * [NSRunningConfiguration] for `RunningConfiguration.apply()`.
+ * Parse JSON with a `runningConfig` object into a [NSRunningConfiguration] for `RunningConfiguration.apply()`: the
+ * signed text of a settings doc (`{ signedAt, runningConfig }`), or an old unsigned doc
+ * (`{ schemaVersion: 1, runningConfig: <…> }`). Docs from Nightscout go through `MasterDocVerifier` first.
  *
  * Returns null when the doc is missing `runningConfig`, the JSON is malformed, or
  * the `runningConfig` block fails to deserialize into [NSRunningConfiguration].

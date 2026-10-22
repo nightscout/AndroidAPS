@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
 import app.aaps.core.data.json.OrgJsonCompat.optJsonObjectCompat
+import app.aaps.core.data.json.OrgJsonCompat.optStringCompat
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
@@ -41,11 +42,14 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.BolusPreview
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientControlMessage
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import app.aaps.core.nssdk.localmodel.clientcontrol.ConfirmationLineDto
+import app.aaps.core.nssdk.localmodel.clientcontrol.KeyExchangeEnvelope
+import app.aaps.core.nssdk.localmodel.clientcontrol.PongPayload
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressPhase
 import app.aaps.core.nssdk.localmodel.clientcontrol.SignedEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.WizardDetailDto
 import app.aaps.core.nssdk.utils.ClientControlCrypto
+import app.aaps.core.nssdk.utils.ClientControlKeyExchangeCrypto
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
 import dev.zacsweers.metro.AppScope
@@ -120,7 +124,9 @@ class ClientControlReceiver(
     private val aapsLogger: AAPSLogger,
     // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
     // commonMain. AppCoroutineBindings.unqualifiedAppScope provides the same scope unqualified.
-    private val appScope: CoroutineScope
+    private val appScope: CoroutineScope,
+    private val clientTokens: ClientTokens,
+    private val masterSigningKey: MasterSigningKey
 ) {
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -246,6 +252,8 @@ class ClientControlReceiver(
         if (identifier.startsWith(ClientControlPublisher.IDENTIFIER_ACK_PREFIX)) return
         // Bolus-progress docs are master-written, consumed by clients — never an inbound command here.
         if (identifier.startsWith(ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX)) return
+        // The answer to a key exchange is master-written too.
+        if (identifier.startsWith(ClientControlPublisher.IDENTIFIER_KEY_PREFIX)) return
         verifyAndAck(identifier, doc, dateUtil.now())
     }
 
@@ -284,9 +292,17 @@ class ClientControlReceiver(
             return
         }
         val lookup = authorizedRepository.secretLookup(entry.clientId) ?: return
-        if (!ClientControlCrypto.verifyEnvelope(lookup.secretBytes, envelope)) {
-            aapsLogger.error(LTag.NSCLIENT, "ClientControl: $identifier signature invalid")
-            return
+        // After a key exchange the client signs with the new secret as soon as it has the master's answer, and with the
+        // old one before that, so both pass. The first message with the new one makes it the only one (below).
+        val pendingSecret = lookup.pendingSecretBytes
+        val secret = when {
+            ClientControlCrypto.verifyEnvelope(lookup.secretBytes, envelope)                       -> lookup.secretBytes
+            pendingSecret != null && ClientControlCrypto.verifyEnvelope(pendingSecret, envelope) -> pendingSecret
+
+            else                                                                                   -> {
+                aapsLogger.error(LTag.NSCLIENT, "ClientControl: $identifier signature invalid")
+                return
+            }
         }
         if (envelope.counter <= lookup.counterReceived) {
             aapsLogger.error(
@@ -299,6 +315,23 @@ class ClientControlReceiver(
             aapsLogger.error(LTag.NSCLIENT, "ClientControl: $identifier timestamp outside skew window")
             return
         }
+        // The name of the Nightscout token this was written with. Nightscout sets it; a client cannot choose it. Kept
+        // only now that the message is known to come from this client.
+        val subject = doc.optStringCompat("subject")
+        if (subject.isNotEmpty() && subject != entry.nsSubject) authorizedRepository.noteSubject(entry.clientId, subject)
+        // The first message written with the token the master made for this client binds the client to it (from the start
+        // for a QR code, after the key exchange for a PIN, or the next message for a client paired before this).
+        val ownToken = entry.ownToken ?: subject.takeIf { it == ClientTokens.subjectName(entry.name) }?.also {
+            authorizedRepository.bindOwnToken(entry.clientId, it)
+            nsClientRepository.addLog("◄ CLIENTCTL", "${entry.name} uses its own Nightscout token")
+        }
+        if (secret === pendingSecret) {
+            // The client has the master's answer: the old secret, which travelled, is no longer accepted, and the answer
+            // with the client's token goes from Nightscout.
+            authorizedRepository.promotePendingSecret(entry.clientId)
+            offerPublisher.deleteKeyExchange(entry.clientId)
+            nsClientRepository.addLog("◄ CLIENTCTL", "${entry.name} uses its new secret")
+        }
         // Hard expiry: a command that sat past its validity must NOT fire late (e.g. a profile switch
         // requested 15 min ago and only now picked up). Consume the counter so it can't replay, and
         // tell the client definitively rather than leaving it to time out.
@@ -306,7 +339,7 @@ class ClientControlReceiver(
             authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
             nsClientRepository.addLog("◄ CLIENTCTL", "expired ${envelope.type} from ${entry.name}")
             aapsLogger.warn(LTag.NSCLIENT, "ClientControl: $identifier expired (validUntil=${envelope.validUntil} < now=$now), not executing")
-            if (envelope.wantsAck) writeAck(client, lookup.secretBytes, envelope.clientId, envelope.counter, AckPhase.Done, AckStatus.Expired, "expired before master applied it", null, now)
+            if (envelope.wantsAck) writeAck(client, secret, envelope.clientId, envelope.counter, AckPhase.Done, AckStatus.Expired, "expired before master applied it", null, now)
             return
         }
         // Decode the payload into the sealed message family. A failure here means the verified
@@ -324,7 +357,17 @@ class ClientControlReceiver(
             authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
             nsClientRepository.addLog("◄ CLIENTCTL", "control disabled, rejecting ${envelope.type} from ${entry.name}")
             aapsLogger.warn(LTag.NSCLIENT, "ClientControl: $identifier rejected — client control disabled on master")
-            if (envelope.wantsAck) writeAck(client, lookup.secretBytes, envelope.clientId, envelope.counter, AckPhase.Done, AckStatus.Failed, FailureReason.ControlDisabled.name, null, now)
+            if (envelope.wantsAck) writeAck(client, secret, envelope.clientId, envelope.counter, AckPhase.Done, AckStatus.Failed, FailureReason.ControlDisabled.name, null, now)
+            return
+        }
+        // Token gate: a client that has used its own Nightscout token must keep using it. A command written with another
+        // token (one with more rights, or another client's) is refused cleanly like above, even with a valid signature.
+        // Hello and Ping still pass, so the pairing, the key exchange and the liveness keep working.
+        if (ownToken != null && subject != ownToken && message !is ClientControlMessage.Hello && message !is ClientControlMessage.Ping) {
+            authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
+            nsClientRepository.addLog("◄ CLIENTCTL", "${envelope.type} from ${entry.name} refused: written with ${subject.ifEmpty { "no token" }}, not its own token")
+            aapsLogger.warn(LTag.NSCLIENT, "ClientControl: $identifier rejected — written with another token than $ownToken")
+            if (envelope.wantsAck) writeAck(client, secret, envelope.clientId, envelope.counter, AckPhase.Done, AckStatus.Failed, FailureReason.OtherToken.name, null, now)
             return
         }
         // Role gate: this client's role on the master must allow the command (see ClientRole). Same clean refusal as
@@ -334,19 +377,20 @@ class ClientControlReceiver(
             authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
             nsClientRepository.addLog("◄ CLIENTCTL", "role ${entry.clientRole} does not allow ${envelope.type} from ${entry.name}")
             aapsLogger.warn(LTag.NSCLIENT, "ClientControl: $identifier rejected — ${entry.clientRole} needs $requiredRole")
-            if (envelope.wantsAck) writeAck(client, lookup.secretBytes, envelope.clientId, envelope.counter, AckPhase.Done, AckStatus.Failed, FailureReason.NotAllowedForRole.name, null, now)
+            if (envelope.wantsAck) writeAck(client, secret, envelope.clientId, envelope.counter, AckPhase.Done, AckStatus.Failed, FailureReason.NotAllowedForRole.name, null, now)
             return
         }
         // Hello is the pairing handshake, not a user action — no ACK round-trip. Its handling
         // includes the Pending → Active transition + offer-doc cleanup (suspends on deleteOffer).
         if (message is ClientControlMessage.Hello) {
             onVerifiedHello(entry, envelope, now)
+            message.publicKey?.let { answerKeyExchange(client, entry, it, secret, subject, now) }
             return
         }
         // Round-trip commands (wantsAck) get the two-step ACK: Executing before dispatch, then the
         // result. Fire-and-forget commands (scenes, pref sync) skip it — no client is waiting, so the
         // ACK doc would be pure write amplification.
-        if (envelope.wantsAck) writeAck(client, lookup.secretBytes, envelope.clientId, envelope.counter, AckPhase.Executing, AckStatus.Pending, null, null, now)
+        if (envelope.wantsAck) writeAck(client, secret, envelope.clientId, envelope.counter, AckPhase.Executing, AckStatus.Pending, null, null, now)
         // Advance the replay counter ONCE here — post-gate, pre-dispatch — so a command can never be re-executed even
         // if a handler throws or early-returns before its own bump. The whole pipeline is inside commandMutex, so this
         // just makes the protection order explicit; the per-handler bumpLastSeen calls become idempotent no-ops (same
@@ -370,7 +414,7 @@ class ClientControlReceiver(
             ClientControlMessage.DismissAlarm         -> onVerifiedDismissAlarm(entry, envelope, now)
             ClientControlMessage.StopBolus            -> onVerifiedStopBolus(entry, envelope, now)
         }
-        if (envelope.wantsAck) writeAck(client, lookup.secretBytes, envelope.clientId, envelope.counter, AckPhase.Done, outcome.status, outcome.reason, outcome.payload, now)
+        if (envelope.wantsAck) writeAck(client, secret, envelope.clientId, envelope.counter, AckPhase.Done, outcome.status, outcome.reason, outcome.payload, now)
         // Don't deleteSettings here (nor on any error path above). NS soft-deletes (tombstones)
         // the identifier; the next legitimate same-type command from the same client would PUT to
         // that identifier and hit HTTP 410. Counter dedup (line above) prevents replay; the doc
@@ -423,11 +467,69 @@ class ClientControlReceiver(
         nsClientRepository.addLog("◄ CLIENTCTL", "hello accepted for ${entry.name} (${entry.clientId})")
     }
 
+    /**
+     * Answers the key exchange in a hello (`ClientControlKeyExchangeCrypto`): makes this side's key pair, keeps the new
+     * secret next to the old one until the client uses it, and writes the answer, signed with [oldSecret], to
+     * `aaps_clientcontrol_key_<clientId>`. When the client writes with a token that is not a client token (the user's
+     * own, usually an admin token) and this master can make tokens, the answer also carries the client's own token,
+     * encrypted, so the client keeps only the rights it needs.
+     */
+    private suspend fun answerKeyExchange(client: NSAndroidClient, entry: AuthorizedClient, clientPublicKey: String, oldSecret: ByteArray, subject: String, now: Long) {
+        val master = ClientControlKeyExchangeCrypto.newKeyPair()
+        val keys = runCatching {
+            ClientControlKeyExchangeCrypto.deriveKeys(master.privateKey, clientPublicKey, oldSecret, entry.clientId, clientPublicKey, master.publicKey)
+        }.getOrElse {
+            aapsLogger.error(LTag.NSCLIENT, "ClientControl: key exchange with ${entry.name} failed: ${it.message}")
+            return
+        }
+        if (!authorizedRepository.setPendingSecret(entry.clientId, keys.secret)) {
+            aapsLogger.error(LTag.NSCLIENT, "ClientControl: the new secret for ${entry.name} could not be stored, the key exchange is not answered")
+            return
+        }
+        val sealedToken = ownTokenFor(entry, subject)?.let { ClientControlKeyExchangeCrypto.encryptToken(keys.tokenKey, it) }
+        val answer = ClientControlCrypto.signKeyExchange(
+            oldSecret,
+            KeyExchangeEnvelope(
+                clientId = entry.clientId,
+                clientPublicKey = clientPublicKey,
+                masterPublicKey = master.publicKey,
+                tokenIv = sealedToken?.first,
+                token = sealedToken?.second,
+                timestamp = now,
+                signature = ""
+            )
+        )
+        val doc = buildJsonObject {
+            put("date", ClientControlPublisher.DOC_DATE)
+            put("utcOffset", 0)
+            put("app", "AAPS")
+            put("schemaVersion", ClientControlPublisher.SCHEMA_VERSION)
+            put("key", json.encodeToJsonElement(KeyExchangeEnvelope.serializer(), answer))
+        }
+        val identifier = ClientControlPublisher.IDENTIFIER_KEY_PREFIX + entry.clientId
+        runCatching { client.updateSettings(identifier, doc) }
+            .onSuccess { nsClientRepository.addLog("► CLIENTCTL", "new secret for ${entry.name}" + if (sealedToken != null) " and its own Nightscout token" else "") }
+            .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl: the answer to the key exchange of ${entry.name} was not written: ${it.message}") }
+    }
+
+    /**
+     * The client's own Nightscout token, when the token it writes with ([subject]) is not a client token and this master
+     * can make one. Null otherwise: then the client keeps its token, and the card on the master says so.
+     */
+    private suspend fun ownTokenFor(entry: AuthorizedClient, subject: String): String? {
+        val subjects = (clientTokens.subjects() as? ClientTokens.Result.Ok)?.value ?: return null
+        if (subjects.any { it.name == subject && clientTokens.isClientToken(it) }) return null
+        return (clientTokens.tokenFor(entry.name) as? ClientTokens.Result.Ok)?.value?.accessToken
+    }
+
     /** Liveness probe: nothing to do but advance the counter and ack Ok — the ack is the pong. */
     private suspend fun onVerifiedPing(entry: AuthorizedClient, envelope: SignedEnvelope, now: Long): AckOutcome {
         authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
         nsClientRepository.addLog("◄ CLIENTCTL", "ping from ${entry.name}")
-        return AckOutcome(AckStatus.Ok, null)
+        // The pong carries the key the settings docs are signed with; the pairing secret signs the pong. Every client
+        // pings on each connect, so this is how a paired client learns the key (MasterDocVerifier).
+        val payload = masterSigningKey.publicKey()?.let { json.encodeToString(PongPayload.serializer(), PongPayload(signingKey = it)) }
+        return AckOutcome(AckStatus.Ok, null, payload)
     }
 
     /**

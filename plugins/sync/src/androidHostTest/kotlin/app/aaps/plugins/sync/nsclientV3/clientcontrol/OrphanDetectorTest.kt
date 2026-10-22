@@ -88,6 +88,18 @@ internal class OrphanDetectorTest {
         verify(preferences).put(StringNonKey.NsClientControlRole, "ReadOnly")
     }
 
+    /**
+     * Just paired: the doc in flight is from before the pairing, so it cannot list this phone. It must not turn the role
+     * the pairing came with into ReadOnly - the client showed only Manage until the master's next roster.
+     */
+    @Test
+    fun aDocFromBeforeThePairingKeepsTheRoleOfThePairing() = runTest {
+        pairedAt = now
+        val staleDoc = NSRunningConfiguration(authorizedClients = NSAuthorizedClients(clientIds = listOf("other"), roles = mapOf("other" to "Admin")))
+        sut.onSettingsDoc(staleDoc, docSrvModified = now - 4_000L)
+        verify(preferences, never()).put(eq(StringNonKey.NsClientControlRole), any<String>())
+    }
+
     @Test
     fun anUnchangedRoleIsNotWrittenAgain() = runTest {
         whenever(preferences.get(StringNonKey.NsClientControlRole)).thenReturn("Caregiver")

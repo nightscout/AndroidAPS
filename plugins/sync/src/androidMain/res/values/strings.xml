@@ -36,6 +36,33 @@
     <string name="authorized_clients_pin_published">Pairing offer ready on Nightscout.</string>
     <string name="authorized_clients_pin_publish_failed">Could not upload pairing offer to Nightscout.</string>
     <string name="authorized_clients_pin_retry">Retry</string>
+    <string name="authorized_clients_method_title">How is the phone set up?</string>
+    <string name="authorized_clients_method_qr_pair">QR code: Nightscout and pairing</string>
+    <string name="authorized_clients_method_qr_pair_summary">Scan once on the new phone. It gets its own Nightscout token and is paired.</string>
+    <string name="authorized_clients_method_qr_ns">QR code: Nightscout only</string>
+    <string name="authorized_clients_method_qr_ns_summary">The phone gets its own Nightscout token and can read the data. It is not paired and cannot send commands.</string>
+    <string name="authorized_clients_method_pin">PIN</string>
+    <string name="authorized_clients_method_pin_summary">For a phone without a camera. It must be connected to Nightscout already.</string>
+    <string name="authorized_clients_qr_working">Making the Nightscout token…</string>
+    <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Set up %1$s</string>
+    <string name="authorized_clients_qr_pair_instructions">Scan this code on the new phone, in the setup wizard or in Pair with master. It sets up Nightscout and pairs the phone.</string>
+    <string name="authorized_clients_qr_ns_instructions">Scan this code on the new phone, in the setup wizard or in Pair with master. It sets up Nightscout. The phone is not paired.</string>
+    <string name="authorized_clients_qr_keep_private">Anyone who sees this code can read your Nightscout. Show it only to the new phone.</string>
+    <string name="authorized_clients_token_problem_title">No QR code</string>
+    <string name="authorized_clients_token_problem_not_connected">This phone is not connected to Nightscout, so it cannot make a token for the client.</string>
+    <string name="authorized_clients_token_problem_not_allowed">The Nightscout token of this phone is not an admin token, so it cannot make a token for the client. Use an admin token here, or add the client with the PIN.</string>
+    <string name="authorized_clients_token_problem_name_taken">Nightscout has a token with this name and other rights. Choose another name.</string>
+    <string name="authorized_clients_token_problem_name_in_use">A client with this name is in the list already. Choose another name, or remove that client first.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout did not make the token. Check the connection and try again.</string>
+    <string name="authorized_clients_tokens_header">Read Nightscout only</string>
+    <string name="authorized_clients_token_unpaired">Own Nightscout token, not paired</string>
+    <string name="authorized_clients_token_show_qr">Show QR code</string>
+    <string name="authorized_clients_token_delete_title">Delete the token?</string>
+    <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s can no longer read Nightscout.</string>
+    <string name="authorized_clients_delete_dialog_token">Its Nightscout token is deleted too, so it can no longer read Nightscout.</string>
+    <string name="authorized_clients_uses_client_token">Own Nightscout token</string>
+    <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Uses the Nightscout token %1$s, which has more rights than a client needs</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Uses the Nightscout token %1$s, not its own: its commands are refused. Remove it and add it again.</string>
 
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Pair with master</string>
@@ -59,6 +86,24 @@
     <string name="pair_with_master_already_paired_master">Currently paired with master %1$s. Unpair first to enter a new PIN.</string>
     <string name="pair_with_master_unpair">Unpair</string>
     <string name="pair_with_master_sending">Sending pairing message…</string>
+
+    <!-- Client set-up from the master's QR code -->
+    <string name="client_setup_scan_button">Scan QR code</string>
+    <string name="client_setup_scan_title">Scan the master\'s QR code</string>
+    <string name="client_setup_scan_instructions">On the master, open Authorized clients and add this phone with a QR code. Point the camera at the code.</string>
+    <string name="client_setup_scan_camera_refused">The camera is needed to read the QR code. Allow it, or pair with the PIN.</string>
+    <string name="client_setup_scan_not_a_code">This is not a QR code from AAPS.</string>
+    <string name="client_setup_scan_other_version">This code is from another AAPS version. The master and this phone must run the same version.</string>
+    <string name="client_setup_scan_expired">This code has expired. Make a new one on the master.</string>
+    <string name="client_setup_scan_already_paired">This phone is paired already. Unpair it first to use a code that pairs.</string>
+    <string name="client_setup_confirm_title">Use this code?</string>
+    <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nightscout: %1$s</string>
+    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">It also pairs this phone with master %1$s.</string>
+    <string name="client_setup_confirm_replaces">It replaces the Nightscout address and token of this phone.</string>
+    <string name="client_setup_confirm_apply">Use</string>
+    <string name="client_setup_done_title">Done</string>
+    <string name="client_setup_done_paired">Nightscout is set up and the phone is paired. The master shows it as active when it has connected.</string>
+    <string name="client_setup_done_ns_only">Nightscout is set up. To control the master from this phone, pair it too.</string>
 
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">Master AAPS no longer recognises this device. Open Manage sheet → Pair with master to re-pair.</string>

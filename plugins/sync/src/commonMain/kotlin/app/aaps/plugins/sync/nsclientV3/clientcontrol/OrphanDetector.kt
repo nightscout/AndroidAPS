@@ -94,18 +94,18 @@ class OrphanDetector(
     suspend fun onSettingsDoc(configuration: NSRunningConfiguration, docSrvModified: Long) {
         if (!config.AAPSCLIENT) return
         val pairing = pairingRepository.currentPairing() ?: return
-        storeOwnRole(configuration.authorizedClients?.roles, pairing.clientId)
+        val pairedAt = preferences.get(LongNonKey.NsClientControlPairedAt)
+        // A doc modified before pairing + the grace window may not list this pairing yet. It says nothing about it:
+        // neither its role nor that it was removed.
+        val predatesPairing = pairedAt > 0L && docSrvModified > 0L && docSrvModified < pairedAt + POST_PAIRING_GRACE_MS
+        storeOwnRole(configuration.authorizedClients?.roles, pairing.clientId, predatesPairing)
         val roster = configuration.authorizedClients ?: return
         if (pairing.clientId in roster.clientIds) {
             _authorized.value = true
             notificationManager.dismiss(NotificationId.NSCLIENT_PAIRING_ORPHAN)
             return
         }
-        val pairedAt = preferences.get(LongNonKey.NsClientControlPairedAt)
-        // Intent-first: defer the orphan verdict while this doc was modified before pairing + the grace
-        // window. Equivalent to the original pairedAt > docSrvModified - POST_PAIRING_GRACE_MS, but reads
-        // as "doc predates pairing + grace".
-        if (pairedAt > 0L && docSrvModified > 0L && docSrvModified < pairedAt + POST_PAIRING_GRACE_MS) {
+        if (predatesPairing) {
             aapsLogger.debug(
                 LTag.NSCLIENT,
                 "ClientControl: missing from authorizedClients but doc predates pairing (pairedAt=$pairedAt srvModified=$docSrvModified); deferring orphan signal"
@@ -119,10 +119,13 @@ class OrphanDetector(
 
     /**
      * Keep this phone's role as the master publishes it. No roles at all is an older master without roles: full
-     * control, as before. Roles without this phone (not Active yet, or removed) means read-only.
+     * control, as before. Roles without this phone (not Active yet, or removed) means read-only, except in a doc that
+     * [predatesPairing]: that one cannot list the pairing yet, so the role the pairing came with stays.
      */
-    private fun storeOwnRole(roles: Map<String, String>?, clientId: String) {
-        val role = if (roles == null) ClientRole.Admin else roles[clientId]?.let { ClientRole.of(it) } ?: ClientRole.ReadOnly
+    private fun storeOwnRole(roles: Map<String, String>?, clientId: String, predatesPairing: Boolean) {
+        val listed = roles?.get(clientId)
+        if (roles != null && listed == null && predatesPairing) return
+        val role = if (roles == null) ClientRole.Admin else listed?.let { ClientRole.of(it) } ?: ClientRole.ReadOnly
         if (preferences.get(StringNonKey.NsClientControlRole) != role.name) {
             aapsLogger.debug(LTag.NSCLIENT, "ClientControl: role on master is now $role")
             preferences.put(StringNonKey.NsClientControlRole, role.name)

@@ -71,6 +71,7 @@ enum class FailureReason {
     Cancelled,       // the queued pump command was dropped on purpose (queue cleared, e.g. by a settings import) — nothing was sent, NOT an error
     ControlDisabled, // master has client control turned OFF — command refused by policy (not an error, not offline)
     NotAllowedForRole, // this client's role on the master does not allow the command — refused by policy, like ControlDisabled
+    OtherToken,      // written to Nightscout with another token than the client's own — refused by policy, like NotAllowedForRole
     NoAction,        // prepare resolved to a no-op (nothing to do, e.g. negative carbs with no COB to remove) — NOT an error
     NoPendingBolus,  // bolus commit: the prepared dose was already consumed / superseded → re-prepare
     BolusComputeFailed, // bolus prepare: master couldn't compute the dose (no BG / profile / pump not ready)

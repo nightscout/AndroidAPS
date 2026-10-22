@@ -42,7 +42,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
@@ -213,7 +215,9 @@ fun GraphsSection(
      * announcing them beside a past day would state something untrue about insulin.
      */
     iobText: String? = null,
-    cobText: String? = null
+    cobText: String? = null,
+    /** Height of the bars drawn over the end of this section (the overview's preview mode), added to the space at its end. */
+    overlaidBarsHeight: Dp = 0.dp
 ) {
     val dateUtil = LocalDateUtil.current
     val savedGraphConfig by graphViewModel.graphConfigFlow.collectAsStateWithLifecycle()
@@ -738,51 +742,54 @@ fun GraphsSection(
                 onDismiss = { editingGraphIndex = -1 }
             )
         }
-        // Add graph button (hidden in simple mode)
-        if (!isSimpleMode && activeCount < GraphConfig.MAX_SECONDARY_GRAPHS) {
-            var showAddSheet by remember { mutableStateOf(false) }
-            TextButton(
-                onClick = { showAddSheet = true },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text(stringResource(CoreUiStrings.graph_add), style = MaterialTheme.typography.labelMedium)
-            }
-            if (showAddSheet) {
-                var newGraphSeries by remember { mutableStateOf(emptyList<SeriesType>()) }
-                var newGraphHeight by remember { mutableIntStateOf(GraphConfig.DEFAULT_GRAPH_HEIGHT_DP) }
-                GraphSeriesBottomSheet(
-                    title = stringResource(CoreUiStrings.graph_new),
-                    selectedSeries = newGraphSeries,
-                    availableSeries = CONFIGURABLE_SERIES,
-                    height = newGraphHeight,
-                    onHeightChange = { newGraphHeight = it },
-                    onToggle = { type ->
-                        val current = newGraphSeries.toMutableList()
-                        if (type in current) {
-                            current.remove(type)
-                        } else {
-                            current.add(type)
-                            if (current.size > 2) current.removeAt(0)
-                        }
-                        newGraphSeries = current
-                    },
-                    onDismiss = {
-                        if (newGraphSeries.isNotEmpty()) {
-                            val graphs = graphConfig.secondaryGraphs.toMutableList()
-                            graphs.add(SecondaryGraph(newGraphSeries, newGraphHeight))
-                            graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
-                        }
-                        newGraphSeries = emptyList()
-                        newGraphHeight = GraphConfig.DEFAULT_GRAPH_HEIGHT_DP
-                        showAddSheet = false
+        // Add graph button. In simple mode, or with all graphs added, it stays as an invisible placeholder: its height
+        // is part of the space below the last graph, and the spacer alone is lower than the QuickLaunch toolbar.
+        val canAddGraph = !isSimpleMode && activeCount < GraphConfig.MAX_SECONDARY_GRAPHS
+        var showAddSheet by remember { mutableStateOf(false) }
+        TextButton(
+            onClick = { showAddSheet = true },
+            enabled = canAddGraph,
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(if (canAddGraph) Modifier else Modifier.alpha(0f).clearAndSetSemantics {})
+        ) {
+            Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+            Spacer(Modifier.width(4.dp))
+            Text(stringResource(CoreUiStrings.graph_add), style = MaterialTheme.typography.labelMedium)
+        }
+        if (canAddGraph && showAddSheet) {
+            var newGraphSeries by remember { mutableStateOf(emptyList<SeriesType>()) }
+            var newGraphHeight by remember { mutableIntStateOf(GraphConfig.DEFAULT_GRAPH_HEIGHT_DP) }
+            GraphSeriesBottomSheet(
+                title = stringResource(CoreUiStrings.graph_new),
+                selectedSeries = newGraphSeries,
+                availableSeries = CONFIGURABLE_SERIES,
+                height = newGraphHeight,
+                onHeightChange = { newGraphHeight = it },
+                onToggle = { type ->
+                    val current = newGraphSeries.toMutableList()
+                    if (type in current) {
+                        current.remove(type)
+                    } else {
+                        current.add(type)
+                        if (current.size > 2) current.removeAt(0)
                     }
-                )
-            }
+                    newGraphSeries = current
+                },
+                onDismiss = {
+                    if (newGraphSeries.isNotEmpty()) {
+                        val graphs = graphConfig.secondaryGraphs.toMutableList()
+                        graphs.add(SecondaryGraph(newGraphSeries, newGraphHeight))
+                        graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
+                    }
+                    newGraphSeries = emptyList()
+                    newGraphHeight = GraphConfig.DEFAULT_GRAPH_HEIGHT_DP
+                    showAddSheet = false
+                }
+            )
         }
         // Spacer so the last graph / Add button isn't covered by QuickLaunch toolbar
-        Spacer(Modifier.height(48.dp))
+        Spacer(Modifier.height(48.dp + overlaidBarsHeight))
     }
 }
 

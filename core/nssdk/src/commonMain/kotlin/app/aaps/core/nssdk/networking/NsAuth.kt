@@ -28,8 +28,8 @@ import kotlin.time.Clock
  *   request - it answers **200 with the anonymous role**, which flows into `hasWritePermission` and
  *   makes `DataSyncWorker` skip the whole upload block. Nothing is logged. Here the header is always
  *   sent, even while the token is still empty.
- * - it refreshes on 401 only. This refreshes on 401 and 403 - see [REFRESHABLE], where that second
- *   code is questioned against the server source rather than defended.
+ * - it refreshes on 401 only. This refreshes on 401 and 403, because Nightscout answers 403 for a
+ *   deleted token - see [REFRESHABLE].
  * - its refresh hook never sees the response body, so the clock-skew case below could not exist.
  *
  * `NsSdkAuthContractTest` pins all of it.
@@ -109,21 +109,20 @@ internal object NsAuth {
     /**
      * What is treated as "worth trying a new token for".
      *
-     * **The 403 here is doubtful and is kept only because it is what shipped.** This used to say
-     * "Nightscout answers 403 as well as 401 for an expired token", and that is not what the server
-     * source says. In `lib/api3/security.js` a missing, bad or expired token is
-     * `HTTP_401_MISSING_OR_BAD_TOKEN` / `HTTP_401_BAD_TOKEN`, while 403 is
-     * `HTTP_403_MISSING_PERMISSION` - the token authenticated and simply lacks the permission for
-     * that call. `lib/authorization/index.js` sends no 403 at all. So Nightscout draws the same line
-     * Google does, and a new token has the same permissions as the old one.
+     * **The 403 is needed.** Checked in the server source and against a live Nightscout (2026-10-21):
+     * - a broken or expired login (JWT): 401;
+     * - a login whose access token lacks the permission for the call: 403;
+     * - a login whose access token was **deleted** in Nightscout: also 403, not 401. API v3 still
+     *   accepts the signed login, finds no token behind it, and so finds no permission. The login
+     *   itself stays valid for up to 8 hours.
      *
-     * The cost of the extra entry is a wasted refresh and one wasted retry on every
-     * permission-denied call, which then fails the same way. It is **not** the Drive bug: nothing
-     * here clears a credential, so no user is signed out by it.
+     * Only the refresh tells the last two apart: asked for a new login for a deleted token,
+     * Nightscout answers 401, which becomes [InvalidAccessTokenException]. Without 403 here, a phone
+     * whose token was deleted (for example a client removed on the master) would see "no permission"
+     * for up to 8 hours instead of "invalid token".
      *
-     * Left alone on purpose. Narrowing it to 401 is very likely right, but it changes behaviour
-     * against a server this session cannot test, and the reading above is from source rather than
-     * from a live 403. Worth doing with a Nightscout instance in front of you.
+     * The cost is one refresh and one retry for each call that really lacks the permission. It is
+     * **not** the Drive bug: nothing here clears a credential, so no user is signed out by it.
      */
     private val REFRESHABLE = listOf(401, 403)
 }

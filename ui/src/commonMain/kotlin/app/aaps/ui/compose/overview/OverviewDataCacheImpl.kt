@@ -4,6 +4,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GV
@@ -41,6 +42,7 @@ import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.BgiGraphData
 import app.aaps.core.interfaces.overview.graph.BolusGraphPoint
 import app.aaps.core.interfaces.overview.graph.BolusType
+import app.aaps.core.interfaces.overview.graph.CalibrationGraphPoint
 import app.aaps.core.interfaces.overview.graph.CarbsGraphPoint
 import app.aaps.core.interfaces.overview.graph.CobGraphData
 import app.aaps.core.interfaces.overview.graph.DevSlopeGraphData
@@ -270,7 +272,7 @@ class OverviewDataCacheImpl(
     override val heartRateGraphFlow: StateFlow<HeartRateGraphData> = _heartRateGraphFlow.asStateFlow()
     private val _stepsGraphFlow = MutableStateFlow(StepsGraphData(emptyList()))
     override val stepsGraphFlow: StateFlow<StepsGraphData> = _stepsGraphFlow.asStateFlow()
-    private val _treatmentGraphFlow = MutableStateFlow(TreatmentGraphData(emptyList(), emptyList(), emptyList(), emptyList()))
+    private val _treatmentGraphFlow = MutableStateFlow(TreatmentGraphData(emptyList(), emptyList(), emptyList(), emptyList(), emptyList()))
     override val treatmentGraphFlow: StateFlow<TreatmentGraphData> = _treatmentGraphFlow.asStateFlow()
     private val _epsGraphFlow = MutableStateFlow<List<EpsGraphPoint>>(emptyList())
     override val epsGraphFlow: StateFlow<List<EpsGraphPoint>> = _epsGraphFlow.asStateFlow()
@@ -418,7 +420,7 @@ class OverviewDataCacheImpl(
 
             // Observe treatment-related DB changes
             for (type in listOf(
-                BS::class, CA::class, EB::class, TE::class
+                BS::class, CA::class, EB::class, TE::class, CAL::class
             )) {
                 scope.launch {
                     persistenceLayer.observeChanges(type)
@@ -930,7 +932,20 @@ class OverviewDataCacheImpl(
                     timestamp = te.timestamp,
                     eventType = teType,
                     label = therapyEventLabel(te, translator.translate(te.type), profileUtil, rh),
-                    duration = te.duration
+                    duration = te.duration,
+                    glucoseUserUnits = te.glucose?.let { profileUtil.fromMgdlToUnits(profileUtil.convertToMgdl(it, te.glucoseUnit)) }
+                )
+            }
+
+        // Calibration pairs — only the finger value is drawn, at its own glucose value
+        val calibrationPoints = persistenceLayer.getValidCalibrationEntriesSince(fromTime)
+            .filter { it.timestamp <= toTime }
+            .map { cal ->
+                CalibrationGraphPoint(
+                    timestamp = cal.timestamp,
+                    fingerstickUserUnits = profileUtil.fromMgdlToUnits(cal.fingerstickMgdl),
+                    isValid = cal.isValid,
+                    label = profileUtil.fromMgdlToStringWithUnits(cal.fingerstickMgdl)
                 )
             }
 
@@ -938,7 +953,8 @@ class OverviewDataCacheImpl(
             boluses = bolusPoints,
             carbs = carbsPoints,
             extendedBoluses = extendedBolusPoints,
-            therapyEvents = therapyEventPoints
+            therapyEvents = therapyEventPoints,
+            calibrations = calibrationPoints
         )
     }
 
@@ -1262,7 +1278,7 @@ class OverviewDataCacheImpl(
         _varSensGraphFlow.value = VarSensGraphData(emptyList())
         _heartRateGraphFlow.value = HeartRateGraphData(emptyList())
         _stepsGraphFlow.value = StepsGraphData(emptyList())
-        _treatmentGraphFlow.value = TreatmentGraphData(emptyList(), emptyList(), emptyList(), emptyList())
+        _treatmentGraphFlow.value = TreatmentGraphData(emptyList(), emptyList(), emptyList(), emptyList(), emptyList())
         _epsGraphFlow.value = emptyList()
         _basalGraphFlow.value = BasalGraphData(emptyList(), emptyList(), 0.0)
         _targetLineFlow.value = TargetLineData(emptyList())

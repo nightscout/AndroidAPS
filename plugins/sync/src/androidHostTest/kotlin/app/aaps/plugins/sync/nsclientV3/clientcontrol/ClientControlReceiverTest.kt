@@ -32,15 +32,20 @@ import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
+import app.aaps.core.nssdk.localmodel.authorization.NSAuthSubject
 import app.aaps.core.nssdk.localmodel.clientcontrol.AckEnvelope
+import app.aaps.core.nssdk.localmodel.clientcontrol.AckPhase
+import app.aaps.core.nssdk.localmodel.clientcontrol.PongPayload
 import app.aaps.core.nssdk.localmodel.clientcontrol.BatchActionDto
 import app.aaps.core.nssdk.localmodel.clientcontrol.BolusPreview
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientControlMessage
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
+import app.aaps.core.nssdk.localmodel.clientcontrol.KeyExchangeEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.PrefEntry
 import app.aaps.core.nssdk.localmodel.clientcontrol.SignedEnvelope
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import app.aaps.core.nssdk.utils.ClientControlCrypto
+import app.aaps.core.nssdk.utils.ClientControlKeyExchangeCrypto
 import app.aaps.plugins.sync.SyncStringsValues
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
@@ -66,6 +71,8 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -82,6 +89,7 @@ internal class ClientControlReceiverTest {
     @Mock private lateinit var nsAndroidClient: NSAndroidClient
     @Mock private lateinit var sceneAutomationApi: SceneAutomationApi
     @Mock private lateinit var offerPublisher: PairingOfferPublisher
+    @Mock private lateinit var clientTokens: ClientTokens
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var uel: UserEntryLogger
     @Mock private lateinit var runningConfigurationPublisher: RunningConfigurationPublisher
@@ -91,6 +99,7 @@ internal class ClientControlReceiverTest {
     @Mock private lateinit var config: Config
     @Mock private lateinit var bolusProgressData: BolusProgressData
     @Mock private lateinit var commandQueue: CommandQueue
+    @Mock private lateinit var masterSigningKey: MasterSigningKey
 
     // Same deterministic fake as the repository tests — encrypt/decrypt round-trip via reverse,
     // so the persisted form does not contain the original plaintext.
@@ -177,7 +186,9 @@ internal class ClientControlReceiverTest {
             commandQueue,
             rh,
             aapsLogger,
-            appScope
+            appScope,
+            clientTokens,
+            masterSigningKey
         )
     }
 
@@ -261,6 +272,148 @@ internal class ClientControlReceiverTest {
         // …but the offer doc IS dropped on the Pending → Active transition so the wrapped secret
         // does not linger on NS past pairing-complete.
         verify(offerPublisher).deleteOffer(clientId)
+    }
+
+    // ---- key exchange in the hello: the secret that travelled is replaced ----
+
+    private val writeOk = CreateUpdateResponse(response = 200, identifier = null, isDeduplication = false, deduplicatedIdentifier = null, lastModified = null, errorResponse = null)
+
+    /** Sends a hello with a key from [clientKeys] and returns the master's answer as written to Nightscout. */
+    private suspend fun helloWithKey(clientId: String, secret: ByteArray, clientKeys: ClientControlKeyExchangeCrypto.KeyPair, subject: String = "mujtelefon"): KeyExchangeEnvelope {
+        whenever(nsAndroidClient.updateSettings(any(), any())).thenReturn(writeOk)
+        val doc = JsonObject(wrap(envelope(clientId, secret, ClientControlMessage.Hello(publicKey = clientKeys.publicKey), counter = 1L)) + ("subject" to JsonPrimitive(subject)))
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_HELLO_PREFIX + clientId, doc)
+        val written = argumentCaptor<JsonObject>()
+        verify(nsAndroidClient).updateSettings(eq(ClientControlPublisher.IDENTIFIER_KEY_PREFIX + clientId), written.capture())
+        return Json.decodeFromJsonElement(KeyExchangeEnvelope.serializer(), written.firstValue["key"]!!)
+    }
+
+    private fun clientSideKeys(answer: KeyExchangeEnvelope, clientKeys: ClientControlKeyExchangeCrypto.KeyPair, oldSecret: ByteArray, clientId: String) =
+        ClientControlKeyExchangeCrypto.deriveKeys(clientKeys.privateKey, answer.masterPublicKey, oldSecret, clientId, clientKeys.publicKey, answer.masterPublicKey)
+
+    /**
+     * The pong carries the master's key for its settings docs, inside the ACK the pairing secret signs: every client
+     * pings on each connect, so this is how a paired client learns the key.
+     */
+    @Test
+    fun thePongCarriesTheKeyTheSettingsDocsAreSignedWith() = runTest {
+        whenever(masterSigningKey.publicKey()).thenReturn("master-key")
+        whenever(nsAndroidClient.updateSettings(any(), any())).thenReturn(writeOk)
+        val (clientId, secret) = pair()
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_HELLO_PREFIX + clientId, wrap(envelope(clientId, secret, counter = 1L)))
+
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_CMD_PREFIX + "ping_" + clientId, wrap(envelope(clientId, secret, ClientControlMessage.Ping, counter = 2L, wantsAck = true)))
+
+        val written = argumentCaptor<JsonObject>()
+        verify(nsAndroidClient, atLeastOnce()).updateSettings(eq(ClientControlPublisher.IDENTIFIER_ACK_PREFIX + clientId), written.capture())
+        val done = written.allValues.map { Json.decodeFromJsonElement(AckEnvelope.serializer(), it["ack"]!!) }.single { it.phase == AckPhase.Done }
+        assertThat(ClientControlCrypto.verifyAck(secret, done)).isTrue()
+        assertThat(Json.decodeFromString(PongPayload.serializer(), done.payload!!).signingKey).isEqualTo("master-key")
+    }
+
+    @Test
+    fun aHelloWithAKeyIsAnsweredWithAKeyExchange() = runTest {
+        whenever(clientTokens.subjects()).thenReturn(ClientTokens.Result.NotAllowed)
+        val (clientId, secret) = pair()
+        val clientKeys = ClientControlKeyExchangeCrypto.newKeyPair()
+
+        val answer = helloWithKey(clientId, secret, clientKeys)
+
+        // Signed with the old secret, the only one the client has, and naming the client's key.
+        assertThat(ClientControlCrypto.verifyKeyExchange(secret, answer)).isTrue()
+        assertThat(answer.clientPublicKey).isEqualTo(clientKeys.publicKey)
+        // The client comes to the same new secret, which waits on the master next to the old one.
+        val lookup = authorizedRepository.secretLookup(clientId)!!
+        assertThat(lookup.pendingSecretBytes).isEqualTo(clientSideKeys(answer, clientKeys, secret, clientId).secret)
+        assertThat(lookup.secretBytes).isEqualTo(secret)
+        // Without admin rights there is no token to send.
+        assertThat(answer.token).isNull()
+    }
+
+    /** Until the client has the answer it signs with the old secret, and that still works. */
+    @Test
+    fun theOldSecretStillWorksUntilTheClientUsesTheNewOne() = runTest {
+        whenever(clientTokens.subjects()).thenReturn(ClientTokens.Result.NotAllowed)
+        val (clientId, secret) = pair()
+        helloWithKey(clientId, secret, ClientControlKeyExchangeCrypto.newKeyPair())
+
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_CMD_PREFIX + "ping_" + clientId, wrap(envelope(clientId, secret, ClientControlMessage.Ping, counter = 2L, wantsAck = true)))
+
+        val lookup = authorizedRepository.secretLookup(clientId)!!
+        assertThat(lookup.counterReceived).isEqualTo(2L)
+        assertThat(lookup.pendingSecretBytes).isNotNull()
+        verify(offerPublisher, never()).deleteKeyExchange(any())
+    }
+
+    /** The first message with the new secret: the old one, which travelled, stops working, and the answer goes. */
+    @Test
+    fun theFirstMessageWithTheNewSecretMakesItTheOnlyOne() = runTest {
+        whenever(clientTokens.subjects()).thenReturn(ClientTokens.Result.NotAllowed)
+        val (clientId, secret) = pair()
+        val clientKeys = ClientControlKeyExchangeCrypto.newKeyPair()
+        val newSecret = clientSideKeys(helloWithKey(clientId, secret, clientKeys), clientKeys, secret, clientId).secret
+
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_CMD_PREFIX + "ping_" + clientId, wrap(envelope(clientId, newSecret, ClientControlMessage.Ping, counter = 2L, wantsAck = true)))
+
+        val lookup = authorizedRepository.secretLookup(clientId)!!
+        assertThat(lookup.secretBytes).isEqualTo(newSecret)
+        assertThat(lookup.pendingSecretBytes).isNull()
+        verify(offerPublisher).deleteKeyExchange(clientId)
+
+        // Signed with the old secret now: not accepted.
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_CMD_PREFIX + "ping_" + clientId, wrap(envelope(clientId, secret, ClientControlMessage.Ping, counter = 3L, wantsAck = true)))
+        assertThat(authorizedRepository.secretLookup(clientId)!!.counterReceived).isEqualTo(2L)
+    }
+
+    /** A client writing with the user's admin token gets its own client token, which only it can open. */
+    @Test
+    fun aClientOnAnotherTokenGetsItsOwnToken() = runTest {
+        whenever(clientTokens.subjects()).thenReturn(ClientTokens.Result.Ok(listOf(NSAuthSubject(id = "s0", name = "mujtelefon", roles = listOf("admin")))))
+        whenever(clientTokens.isClientToken(any())).thenAnswer { (it.arguments[0] as NSAuthSubject).roles == listOf(ClientTokens.ROLE_NAME) }
+        whenever(clientTokens.tokenFor("phone"))
+            .thenReturn(ClientTokens.Result.Ok(NSAuthSubject(id = "s1", name = "aaps-phone", roles = listOf(ClientTokens.ROLE_NAME), accessToken = "aapsphone-0123456789abcdef")))
+        val (clientId, secret) = pair()
+        val clientKeys = ClientControlKeyExchangeCrypto.newKeyPair()
+
+        val answer = helloWithKey(clientId, secret, clientKeys, subject = "mujtelefon")
+
+        val keys = clientSideKeys(answer, clientKeys, secret, clientId)
+        assertThat(ClientControlKeyExchangeCrypto.decryptToken(keys.tokenKey, answer.tokenIv!!, answer.token!!)).isEqualTo("aapsphone-0123456789abcdef")
+    }
+
+    /** A client on its own client token (set up from the QR code) keeps it. */
+    @Test
+    fun aClientOnItsOwnTokenGetsNone() = runTest {
+        whenever(clientTokens.subjects()).thenReturn(ClientTokens.Result.Ok(listOf(NSAuthSubject(id = "s1", name = "aaps-phone", roles = listOf(ClientTokens.ROLE_NAME)))))
+        whenever(clientTokens.isClientToken(any())).thenAnswer { (it.arguments[0] as NSAuthSubject).roles == listOf(ClientTokens.ROLE_NAME) }
+        val (clientId, secret) = pair()
+
+        val answer = helloWithKey(clientId, secret, ClientControlKeyExchangeCrypto.newKeyPair(), subject = "aaps-phone")
+
+        assertThat(answer.token).isNull()
+        verify(clientTokens, never()).tokenFor(any())
+    }
+
+    /** Nightscout puts the name of the token that wrote a doc in `subject`; the master keeps it for a verified message. */
+    @Test
+    fun theTokenNameOfAVerifiedMessageIsKept() = runTest {
+        val (clientId, secret) = pair()
+        val doc = JsonObject(wrap(envelope(clientId, secret, counter = 1L)) + ("subject" to JsonPrimitive("aaps-phone")))
+
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_HELLO_PREFIX + clientId, doc)
+
+        assertThat(authorizedRepository.current(now).single { it.clientId == clientId }.nsSubject).isEqualTo("aaps-phone")
+    }
+
+    /** A doc that does not verify says nothing about the client, so its `subject` is not kept. */
+    @Test
+    fun theTokenNameOfAForgedMessageIsNotKept() = runTest {
+        val (clientId, _) = pair()
+        val forged = JsonObject(wrap(envelope(clientId, ByteArray(32) { 7 }, counter = 1L)) + ("subject" to JsonPrimitive("someone-else")))
+
+        sut.onSettingsDocChanged(ClientControlPublisher.IDENTIFIER_HELLO_PREFIX + clientId, forged)
+
+        assertThat(authorizedRepository.current(now).single { it.clientId == clientId }.nsSubject).isNull()
     }
 
     @Test
@@ -1069,6 +1222,69 @@ internal class ClientControlReceiverTest {
         )
 
         assertThat(acks.last().status.name).isEqualTo("Ok")
+    }
+
+    // -- the client's own Nightscout token ------------------------------------------------------
+
+    /** [message] from [clientId], written to Nightscout with the token [subject] (Nightscout puts its name in `subject`). */
+    private suspend fun sendWith(clientId: String, secret: ByteArray, message: ClientControlMessage, subject: String, counter: Long) {
+        val type = if (message is ClientControlMessage.Ping) "ping" else "dismiss_alarm"
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}${type}_$clientId",
+            JsonObject(wrap(envelope(clientId, secret, message = message, counter = counter, wantsAck = true)) + ("subject" to JsonPrimitive(subject)))
+        )
+    }
+
+    /** Once a client has used its own token, a command written with another one is refused, even with a valid signature. */
+    @Test
+    fun aClientThatUsedItsOwnTokenIsRefusedACommandWrittenWithAnother() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.Admin)
+        val acks = captureAcks(clientId)
+        sendWith(clientId, secret, ClientControlMessage.Ping, subject = "aaps-phone", counter = 2L)
+        assertThat(authorizedRepository.current(now).single().ownToken).isEqualTo("aaps-phone")
+
+        sendWith(clientId, secret, ClientControlMessage.DismissAlarm, subject = "mujtelefon", counter = 3L)
+
+        assertThat(acks.last().reason).isEqualTo(FailureReason.OtherToken.name)
+        verify(notificationManager, never()).dismiss(NotificationId.BOLUS_DELIVERY_FAILED)
+    }
+
+    @Test
+    fun aClientWithItsOwnTokenIsServed() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.Admin)
+        captureAcks(clientId)
+        sendWith(clientId, secret, ClientControlMessage.Ping, subject = "aaps-phone", counter = 2L)
+
+        sendWith(clientId, secret, ClientControlMessage.DismissAlarm, subject = "aaps-phone", counter = 3L)
+
+        verify(notificationManager).dismiss(NotificationId.BOLUS_DELIVERY_FAILED)
+    }
+
+    /** The ping still passes with another token: the phone stays online and can show why its commands are refused. */
+    @Test
+    fun aBoundClientStillAnswersLivenessWithAnotherToken() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.Admin)
+        val acks = captureAcks(clientId)
+        sendWith(clientId, secret, ClientControlMessage.Ping, subject = "aaps-phone", counter = 2L)
+
+        sendWith(clientId, secret, ClientControlMessage.Ping, subject = "mujtelefon", counter = 3L)
+
+        assertThat(acks.last().status.name).isEqualTo("Ok")
+    }
+
+    /**
+     * A client that never used its own token (the master could not make one, or the phone kept the token it had) is
+     * served as before: before the key exchange a PIN client writes with the user's token too.
+     */
+    @Test
+    fun aClientThatNeverUsedItsOwnTokenIsServedWithAnyToken() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.Admin)
+        captureAcks(clientId)
+
+        sendWith(clientId, secret, ClientControlMessage.DismissAlarm, subject = "mujtelefon", counter = 2L)
+
+        verify(notificationManager).dismiss(NotificationId.BOLUS_DELIVERY_FAILED)
+        assertThat(authorizedRepository.current(now).single().ownToken).isNull()
     }
 
     @Test
