@@ -24,7 +24,7 @@ class SetUniqueIdCommand private constructor(
                 .put(BODY_LENGTH)
                 .putInt(uniqueId)
                 .put(0x14.toByte()) // FIXME ??
-                .put(PACKET_TIMEOUT_LIMIT) // FIXME ??
+                .put(0x04.toByte()) // FIXME ??
                 .put(encodeInitializationTime(initializationTime))
                 .putInt(lotNumber)
                 .putInt(podSequenceNumber)
@@ -84,10 +84,6 @@ class SetUniqueIdCommand private constructor(
         private const val DEFAULT_UNIQUE_ID = -1
         private const val LENGTH: Short = 21
         private const val BODY_LENGTH: Byte = 19
-
-        /** Identified via OmnipodKit's SetupPodCommand.swift, where the equivalent byte is a
-         *  named `packetTimeoutLimit` field (default 4) rather than an unexplained constant. */
-        private const val PACKET_TIMEOUT_LIMIT: Byte = 0x04
         private fun encodeInitializationTime(date: Date): ByteArray {
             val instance = Calendar.getInstance()
             instance.time = date

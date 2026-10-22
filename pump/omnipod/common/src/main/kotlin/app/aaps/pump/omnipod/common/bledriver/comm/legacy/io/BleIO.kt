@@ -96,24 +96,8 @@ open class BleIO(
     }
 
     /**
-     * Enable notifications/indications on the characteristic, whichever it actually
-     * declares support for. This will signal the pod it can start sending back data.
-     *
-     * Unlike iOS's CoreBluetooth (where `setNotifyValue` picks the correct CCCD value
-     * for you automatically, based on the characteristic's own properties - the app
-     * never has to choose), Android's BluetoothGatt API requires the caller to inspect
-     * `characteristic.properties` and write the matching CCCD value itself. This used
-     * to unconditionally write ENABLE_INDICATION_VALUE - correct for Dash's hardware
-     * (years of real-hardware use back that up), but never verified against O5's, which
-     * may only declare PROPERTY_NOTIFY for these characteristics. A pod whose firmware
-     * never receives the CCCD value matching what it actually supports can accept the
-     * write without error yet never deliver anything the way it's being asked to -
-     * consistent with real O5 pairing attempts consistently disconnecting a few seconds
-     * after SPS0 is sent, with no response ever received. Mirrors the same dynamic
-     * check [app.aaps.pump.omnipod.common.bledriver.comm.legacy.session.O5Connection
-     * .enableHeartbeatNotifications] already uses for the heartbeat characteristic -
-     * this is the same decision, just never applied here too, where it actually matters
-     * for pairing.
+     * Enable indications on the characteristic.
+     * This will signal the pod it can start sending back data.
      * @return
      */
     @Suppress("DEPRECATION")
