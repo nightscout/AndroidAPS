@@ -18,8 +18,6 @@ import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.overview.graph.AapsClientStatusData
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.core.ui.compose.stringResource
 
@@ -54,30 +53,26 @@ fun AapsClientStatusCard(
     var expanded by rememberSaveable { mutableStateOf(false) }
     val expandRequester = rememberBringIntoViewOnExpand(expanded)
 
-    ElevatedCard(
+    AapsCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 4.dp)
-            .bringIntoViewRequester(expandRequester),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
-        colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-        )
+            .bringIntoViewRequester(expandRequester)
     ) {
         Column {
-            // Header row — compact chips + expand/collapse toggle
+            // Header row — compact chips + expand/collapse toggle. Padded like the status section's row
+            // (around the whole row, so the chevron counts), which makes the two cards the same height.
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(flavorTint)
-                    .padding(horizontal = 8.dp),
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 FlowRow(
                     modifier = Modifier
                         .weight(1f)
-                        .clickable { expanded = !expanded }
-                        .padding(vertical = 4.dp),
+                        .clickable { expanded = !expanded },
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
                 ) {
                     items.forEach { item ->
