@@ -179,6 +179,7 @@
     <string name="bg_label">Glucemia</string>
     <string name="calibration">Calibración</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Calibración no guardada: la glucemia está cambiando demasiado rápido (Δ %1$s %3$s por cada 5 min, límite %2$s). Vuelva a intentarlo cuando la glucosa se haya estabilizado</string>
     <string name="cal_reject_no_pair">Calibración no guardada: no se han encontrado lecturas del MCG en los últimos 10 minutos</string>
     <string name="cal_reject_warmup">Calibración no guardada: el sensor todavía está en el periodo de calentamiento de 2 horas</string>
     <string name="cal_reject_no_session">Calibración no guardada: no hay ninguna sesión de sensor activa. Registra primero un cambio de sensor</string>
@@ -226,6 +227,7 @@
     <string name="percentage_label">Porcentaje</string>
     <string name="timeshift_label">Desplazamiento de hora</string>
     <string name="confirm_remove_multiple_items">¿Estás seguro de que quieres eliminar %1$d elementos</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">El master no tiene %1$d de estas entradas. No se han eliminado</string>
     <string name="overview_treatment_label">Tratamiento</string>
     <string name="copytolocalprofile">¿Deseas crear nuevo perfil con base en éste?</string>
     <string name="wear_wizard_settings">Ajustes del asistente en el reloj</string>
@@ -419,6 +421,19 @@
     <string name="scene_lock_banner_control_disabled">El máster ha desactivado el control remoto. Los controles de escena se reanudarán cuando se vuelva a activar en el máster</string>
     <string name="master_offline_banner">Dispositivo máster inaccesible. Los controles de escena se reanudarán cuando se restablezca la conexión</string>
     <string name="master_control_disabled_banner">El máster ha desactivado el control remoto. La edición estará deshabilitada hasta que se vuelva a activar en el máster</string>
+    <string name="hardened_mode_on">Modo reforzado activado</string>
+    <string name="hardened_mode_title">Modo reforzado</string>
+    <string name="hardened_mode_info_open">Acerca del modo reforzado</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Solo lectura</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Comidas</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Cuidador</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Administrador</string>
+    <string name="client_role_title">Rol</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Rol: %1$s</string>
+    <string name="client_roles_info_open">Acerca de los roles</string>
+    <string name="client_roles_info">Cada teléfono emparejado tiene un rol. El teléfono principal lo comprueba con cada comando y el teléfono muestra solo lo que su rol permite. Un nuevo rol se aplica de inmediato, sin necesidad de volver a emparejar.\n\nSolo lectura: el teléfono permanece emparejado, pero solo muestra datos.\n\nComidas: bolo, asistente de bolos, QuickWizard y raciones de hidratos. También puede detener un bolo en ejecución. Los hidratos introducidos aquí pueden hacer que el lazo administre más insulina.\n\nCuidador: todo lo que un usuario hace en AAPS, como objetivos temporales, cambios de perfil e insulina, modo de lazo, basal temporal, bolo extendido, escenas, eventos de careportal, calibraciones y eliminación de registros. No puede cambiar la configuración ni los ajustes predeterminados.\n\nAdministrador: todo, incluida la configuración y los ajustes predeterminados (QuickWizard, ajustes predeterminados de objetivos temporales, escenas, perfiles, automatización e insulina)</string>
+    <string name="client_read_only_banner">Este teléfono está en modo solo lectura en el teléfono principal.</string>
+    <string name="hardened_mode_info">El teléfono principal solo acepta cambios de clientes emparejados. No acepta tratamientos, objetivos temporales, cambios de perfil, cambios de modo de ejecución ni eliminaciones que se realicen directamente en Nightscout, por ejemplo en la web o en otras aplicaciones. Las opciones para aceptar datos de Nightscout se ocultan mientras el modo reforzado está activado. Los comandos por SMS no se ven afectados.\n\nEl teléfono principal sigue subiendo todos los datos a Nightscout, incluida la glucosa en sangre. Si obtiene la glucosa en sangre de Nightscout, la seguirá recibiendo de allí.\n\nPara cargar el historial en un nuevo teléfono principal, utilice Sincronización completa en NSClient. La sincronización completa toma todo lo que hay en Nightscout, perfiles incluidos.\n\nEl control remoto desde los clientes requiere una conexión WebSocket activa con Nightscout, tanto en el teléfono principal como en los clientes emparejados. El modo simple siempre activa el modo reforzado. Para desactivarlo, salga del modo simple y desactive el control de clientes en el teléfono principal</string>
     <string name="scene_lock_reason_master_offline">Máster desconectado</string>
     <string name="scene_lock_reason_control_disabled">Control remoto desactivado</string>
     <string name="scene_lock_reason_scene_active">Detén primero la escena en ejecución</string>
@@ -447,6 +462,7 @@
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolo cancelado. No se administró insulina.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Cancelado</string>
     <string name="clientcontrol_fail_control_disabled">El control remoto está desactivado en el máster</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">Este teléfono no tiene permisos para esta acción según su rol en el master</string>
     <string name="clientcontrol_fail_no_pending_bolus">El bolo preparado ha caducado o ha sido reemplazado. Toca el botón de nuevo</string>
     <string name="clientcontrol_fail_bolus_compute">El máster no ha podido calcular el bolo (falta la glucemia, el perfil, o la bomba no está lista)</string>
     <string name="clientcontrol_fail_internal">Algo ha salido mal</string>
