@@ -42,6 +42,7 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Un bolus a été délivré au cours des 3 dernières minutes, SMB ignoré</string>
     <string name="pump_not_initialized">Pompe non initialisée !</string>
+    <string name="zero_basal_not_set">La pompe n\'a pas accepté la basale temporaire à zéro. Elle peut toujours donner de l\'insuline basale. Vérifiez la pompe.</string>
     <string name="description_loop">Activer ou désactiver la mise en œuvre déclenchant la Boucle.</string>
     <string name="no_aps_selected">Pas d\'APS sélectionné ou pas de résultat fourni</string>
     <string name="ignore5m">Ignorer 5m</string>
@@ -49,6 +50,8 @@
     <string name="ignore30m">Ignorer 30m</string>
     <string name="carbs_suggestion">Suggestion de glucides</string>
     <string name="open_loop_new_suggestion">Nouvelle recommendation disponible</string>
+    <string name="loop_notification_channel_name">Suggestions de la boucle</string>
+    <string name="open_loop_suggestion_too_old">Cette suggestion est trop ancienne. Rien n\'a été envoyé à la pompe. Attendez la suivante.</string>
     <string name="basal_set_correctly">Basal configuré correctement</string>
     <string name="last_run_label">Dernière exécution</string>
     <string name="loop_aps_label">APS</string>
