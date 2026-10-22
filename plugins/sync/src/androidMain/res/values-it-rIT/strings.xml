@@ -60,6 +60,7 @@
     <string name="authorized_clients_delete_dialog_token">Anche il suo token Nightscout viene eliminato, quindi non può più leggere Nightscout.</string>
     <string name="authorized_clients_uses_client_token">Token Nightscout proprio</string>
     <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Usa il token %1$sdi Nightscout, che ha più diritti di quanto il client abbia bisogno</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Usa il token %1$sdi Nightscout, non il suo: i suoi comandi sono rifiutati. Rimuovilo e aggiungilo di nuovo.</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Accoppia con master</string>
     <string name="pair_with_master_pin_entry_title">Inserisci il PIN di accoppiamento</string>
@@ -87,6 +88,10 @@
     <string name="client_setup_scan_title">Scansiona il codice QR del master</string>
     <string name="client_setup_scan_instructions">Sul master, aprire client autorizzati e aggiungere questo telefono con un codice QR. Posizionare la fotocamera al codice.</string>
     <string name="client_setup_scan_camera_refused">La fotocamera è necessaria per leggere il codice QR. Consenti o abbinalo con il PIN.</string>
+    <string name="client_setup_scan_camera_denied">L\'accesso alla fotocamera è spento per AAPS. Accendere le impostazioni di sistema o accoppiare con il PIN.</string>
+    <string name="client_setup_scan_camera_blocked">L\'accesso alla fotocamera non è consentito su questo dispositivo. Coppia invece con il PIN.</string>
+    <string name="client_setup_scan_camera_unavailable">L\'accesso alla fotocamera non è consentito su questo dispositivo. Associa invece con il PIN.</string>
+    <string name="client_setup_scan_open_settings">Apri impostazioni</string>
     <string name="client_setup_scan_not_a_code">Questo non è un codice QR da AAPS.</string>
     <string name="client_setup_scan_other_version">Questo codice proviene da un\'altra versione AAPS. Il master e questo telefono devono eseguire la stessa versione.</string>
     <string name="client_setup_scan_expired">Questo codice è scaduto. Crearne uno nuovo sul master.</string>
