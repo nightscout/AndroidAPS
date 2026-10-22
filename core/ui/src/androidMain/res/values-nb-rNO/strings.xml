@@ -463,6 +463,7 @@
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Avbrutt</string>
     <string name="clientcontrol_fail_control_disabled">Fjernstyring er slått av på hovedenheten.</string>
     <string name="clientcontrol_fail_not_allowed_for_role">Rollen denne telefonen har på hovedenheten, gir ikke tilgang til dette.</string>
+    <string name="clientcontrol_fail_other_token">Hovedenheten avviste forespørselen: Denne telefonen skriver til Nightscout med et annet token enn sitt eget. Fjern denne telefonen fra hovedenheten, og legg den til på nytt.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Den forberedte bolusen utløp eller ble erstattet. Trykk på knappen igjen.</string>
     <string name="clientcontrol_fail_bolus_compute">Hovedenheten kunne ikke beregne bolusen (mangler glukoseverdi/profil, eller pumpen er ikke klar).</string>
     <string name="clientcontrol_fail_internal">Noe gikk galt.</string>
