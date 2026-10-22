@@ -81,7 +81,6 @@ Jeśli po więcej niż ~5 minutach połączenie nie zostanie ustanowione:\n\n
     <string name="combov2_bolus_delivery_failed">Podanie bolusa nie powiodło się. Wygląda na to, że bolus nie został dostarczony. Aby upewnić się, sprawdź pompę, aby uniknąć podwójnego bolusa, a następnie ponownie podaj bolus. Aby uniknąć błędów, bolusy nie są automatycznie ponawiane.</string>
     <string name="combov2_bolus_not_delivered">Bolus nie dostarczony</string>
     <string name="combov2_cannot_access_pump_data">Nie można uzyskać dostępu do danych pompy; pompa musi zostać sparowana ponownie</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Wykryto nierozliczony bolus. Anulowanie bieżącego bolusa ze względów bezpieczeństwa.</string>
     <string name="combov2_incorrect_active_basal_profile">Niepoprawny aktywny profil bazy; system wymaga aktywowania profilu nr. 1, a nie nr. %1$d</string>
     <string name="combov2_unrecognized_alert">Nierozpoznany alarm Combo</string>
     <string name="combov2_combo_alert">Alarm Combo</string>
