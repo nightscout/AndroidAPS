@@ -34,6 +34,14 @@
     <string name="authorized_clients_pin_published">Vinculación lista en Nightscout</string>
     <string name="authorized_clients_pin_publish_failed">No se ha podido subir la vinculación a Nightscout</string>
     <string name="authorized_clients_pin_retry">Reintentar</string>
+    <string name="authorized_clients_method_title">¿Cómo está configurado el teléfono?</string>
+    <string name="authorized_clients_method_qr_pair">Código QR: Nightscout y emparejamiento</string>
+    <string name="authorized_clients_method_qr_pair_summary">Escanee una vez en el nuevo teléfono. Obtendrá su propio token de Nightscout y quedará emparejado</string>
+    <string name="authorized_clients_method_qr_ns">Código QR: solo Nightscout</string>
+    <string name="authorized_clients_method_qr_ns_summary">El teléfono obtiene su propio token de Nightscout y puede leer los datos. No está emparejado y no puede enviar comandos</string>
+    <string name="authorized_clients_method_pin">PIN</string>
+    <string name="authorized_clients_method_pin_summary">Para un teléfono sin cámara. Ya debe estar conectado a Nightscout</string>
+    <string name="authorized_clients_qr_working">Generando el token de Nightscout…</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Vincular con máster</string>
     <string name="pair_with_master_pin_entry_title">Introduce el PIN de vinculación</string>
@@ -100,6 +108,8 @@
     <string name="garmin_description">Conexión al dispositivo Garmin (Fénix, Edge, …)</string>
     <string name="garmin_local_http_server_port">Puerto del servidor local HTTP</string>
     <string name="garmin_local_http_server">Servidor local HTTP</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">El reloj Garmin ha enviado %1$s de hidratos. Este teléfono es un cliente, por lo que no se han introducido. Introdúzcalos en AAPS</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">El reloj Garmin ha solicitado conectar o desconectar la bomba. Este teléfono es un cliente, por lo que no se ha cambiado nada. Hágalo en AAPS</string>
     <!--    Wear-->
     <string name="description_wear">Supervisar y controlar AAPS usando un reloj WearOS</string>
     <string name="no_watch_connected">(Ningún reloj conectado)</string>
