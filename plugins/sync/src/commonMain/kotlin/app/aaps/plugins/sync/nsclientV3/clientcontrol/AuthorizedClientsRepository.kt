@@ -141,6 +141,13 @@ class AuthorizedClientsRepository(
         if (updated != list) write(updated)
     }
 
+    /** The client wrote with its own token [ownToken]: from now on its commands are taken only with that one. */
+    suspend fun bindOwnToken(clientId: String, ownToken: String): Unit = mutex.withLock {
+        val list = decode()
+        val updated = list.map { if (it.clientId == clientId && it.ownToken == null) it.copy(ownToken = ownToken) else it }
+        if (updated != list) write(updated)
+    }
+
     suspend fun delete(clientId: String): Unit = mutex.withLock {
         write(decode().filterNot { it.clientId == clientId })
     }

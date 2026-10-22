@@ -319,6 +319,12 @@ class ClientControlReceiver(
         // only now that the message is known to come from this client.
         val subject = doc.optStringCompat("subject")
         if (subject.isNotEmpty() && subject != entry.nsSubject) authorizedRepository.noteSubject(entry.clientId, subject)
+        // The first message written with the token the master made for this client binds the client to it (from the start
+        // for a QR code, after the key exchange for a PIN, or the next message for a client paired before this).
+        val ownToken = entry.ownToken ?: subject.takeIf { it == ClientTokens.subjectName(entry.name) }?.also {
+            authorizedRepository.bindOwnToken(entry.clientId, it)
+            nsClientRepository.addLog("◄ CLIENTCTL", "${entry.name} uses its own Nightscout token")
+        }
         if (secret === pendingSecret) {
             // The client has the master's answer: the old secret, which travelled, is no longer accepted, and the answer
             // with the client's token goes from Nightscout.
@@ -352,6 +358,16 @@ class ClientControlReceiver(
             nsClientRepository.addLog("◄ CLIENTCTL", "control disabled, rejecting ${envelope.type} from ${entry.name}")
             aapsLogger.warn(LTag.NSCLIENT, "ClientControl: $identifier rejected — client control disabled on master")
             if (envelope.wantsAck) writeAck(client, secret, envelope.clientId, envelope.counter, AckPhase.Done, AckStatus.Failed, FailureReason.ControlDisabled.name, null, now)
+            return
+        }
+        // Token gate: a client that has used its own Nightscout token must keep using it. A command written with another
+        // token (one with more rights, or another client's) is refused cleanly like above, even with a valid signature.
+        // Hello and Ping still pass, so the pairing, the key exchange and the liveness keep working.
+        if (ownToken != null && subject != ownToken && message !is ClientControlMessage.Hello && message !is ClientControlMessage.Ping) {
+            authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
+            nsClientRepository.addLog("◄ CLIENTCTL", "${envelope.type} from ${entry.name} refused: written with ${subject.ifEmpty { "no token" }}, not its own token")
+            aapsLogger.warn(LTag.NSCLIENT, "ClientControl: $identifier rejected — written with another token than $ownToken")
+            if (envelope.wantsAck) writeAck(client, secret, envelope.clientId, envelope.counter, AckPhase.Done, AckStatus.Failed, FailureReason.OtherToken.name, null, now)
             return
         }
         // Role gate: this client's role on the master must allow the command (see ClientRole). Same clean refusal as

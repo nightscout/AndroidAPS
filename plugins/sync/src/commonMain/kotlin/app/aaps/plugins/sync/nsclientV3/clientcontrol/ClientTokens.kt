@@ -46,6 +46,9 @@ class ClientTokens(
         const val ROLE_NOTES = "Made by AAPS for its client phones. AAPS sets it back if it is changed."
         const val SUBJECT_PREFIX = "aaps-"
         const val SUBJECT_NOTES = "Made by AAPS for a client phone."
+
+        /** The name of the token for the client [clientName]. */
+        fun subjectName(clientName: String): String = SUBJECT_PREFIX + clientName.trim()
     }
 
     sealed interface Result<out T> {
@@ -63,9 +66,6 @@ class ClientTokens(
 
         data class Failed(val message: String?) : Result<Nothing>
     }
-
-    /** The name of the token for the client [clientName]. */
-    fun subjectName(clientName: String): String = SUBJECT_PREFIX + clientName.trim()
 
     /** True for a client token: a subject with the client role and nothing else. */
     fun isClientToken(subject: NSAuthSubject): Boolean = subject.roles == listOf(ROLE_NAME)

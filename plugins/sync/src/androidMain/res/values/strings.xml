@@ -62,6 +62,7 @@
     <string name="authorized_clients_delete_dialog_token">Its Nightscout token is deleted too, so it can no longer read Nightscout.</string>
     <string name="authorized_clients_uses_client_token">Own Nightscout token</string>
     <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Uses the Nightscout token %1$s, which has more rights than a client needs</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Uses the Nightscout token %1$s, not its own: its commands are refused. Remove it and add it again.</string>
 
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Pair with master</string>

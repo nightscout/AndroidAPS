@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -162,6 +163,30 @@ internal class AuthorizedClientsViewModelTokensTest {
 
         verify(repository).delete("c1")
         verify(clientTokens).deleteByName("aaps-Tablet")
+    }
+
+    /** It writes with another token now, but its own token is still its own: removing the client deletes that too. */
+    @Test
+    fun `removing a client that switched tokens deletes its own token too`() = runTest {
+        val sut = newSut()
+        val client = AuthorizedClient(clientId = "c1", name = "Tablet", encryptedSecret = "enc", state = ClientState.Active, createdAt = 0L, nsSubject = "mujtelefon", ownToken = "aaps-Tablet")
+        whenever(clientTokens.deleteByName(any())).thenReturn(ClientTokens.Result.Ok(1))
+
+        sut.requestDelete(client)
+        sut.confirmDelete()
+
+        verify(clientTokens).deleteByName("aaps-Tablet")
+    }
+
+    /** Its own token is not a token without a client because the client writes with another one for now. */
+    @Test
+    fun `the own token of a client that switched is not listed as not paired`() = runTest {
+        val client = AuthorizedClient(clientId = "c1", name = "Tablet", encryptedSecret = "enc", state = ClientState.Active, createdAt = 0L, nsSubject = "mujtelefon", ownToken = "aaps-Tablet")
+        whenever(repository.observe()).thenReturn(flowOf(listOf(client)))
+        val sut = newSut()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { sut.unpairedTokens.collect {} }
+
+        assertThat(sut.unpairedTokens.value).isEmpty()
     }
 
     @Test

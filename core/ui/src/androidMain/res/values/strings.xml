@@ -475,6 +475,7 @@
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Cancelled</string>
     <string name="clientcontrol_fail_control_disabled">Remote control is turned off on the master.</string>
     <string name="clientcontrol_fail_not_allowed_for_role">This phone\'s role on the master does not allow this.</string>
+    <string name="clientcontrol_fail_other_token">The master refused it: this phone writes to Nightscout with another token than its own. On the master, remove this phone and add it again.</string>
     <string name="clientcontrol_fail_no_pending_bolus">The prepared bolus expired or was superseded. Tap the button again.</string>
     <string name="clientcontrol_fail_bolus_compute">The master couldn\'t calculate the bolus (missing glucose / profile, or pump not ready).</string>
     <string name="clientcontrol_fail_internal">Something went wrong.</string>

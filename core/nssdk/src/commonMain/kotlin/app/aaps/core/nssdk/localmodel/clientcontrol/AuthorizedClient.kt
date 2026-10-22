@@ -54,6 +54,13 @@ data class AuthorizedClient(
     val nsSubject: String? = null,
 
     /**
+     * Name of the client's own Nightscout token, the one the master made for it, from the first verified message the
+     * client wrote with it. From then on the master refuses the client's commands written with any other token. Null
+     * while the client has never used one (the master could not make it, or the phone kept the token it had).
+     */
+    val ownToken: String? = null,
+
+    /**
      * The secret from the key exchange in the client's last hello, wrapped like [encryptedSecret]. It becomes the
      * only secret when the client first signs with it; until then the client may not have the answer yet, so both
      * are accepted.

@@ -274,6 +274,12 @@ private fun AuthorizedClientCard(
                         color = MaterialTheme.colorScheme.error
                     )
 
+                    AuthorizedClientsViewModel.TokenKind.NotItsOwn   -> Text(
+                        text = stringResource(SyncStrings.authorized_clients_uses_not_own_token, client.nsSubject.orEmpty()),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+
                     AuthorizedClientsViewModel.TokenKind.Unknown     -> Unit
                 }
             }
