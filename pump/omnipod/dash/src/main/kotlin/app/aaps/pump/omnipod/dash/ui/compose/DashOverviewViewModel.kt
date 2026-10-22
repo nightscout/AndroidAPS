@@ -41,7 +41,6 @@ import app.aaps.pump.omnipod.common.EventOmnipodDashPumpValuesChanged
 import app.aaps.pump.omnipod.common.OMNIPOD_DURATION_LABELS
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
-import app.aaps.pump.omnipod.common.ui.compose.notificationText
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange

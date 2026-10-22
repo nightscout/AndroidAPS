@@ -15,6 +15,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlarmType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodStatus
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
+import app.aaps.pump.omnipod.omnipod5.R
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -87,30 +88,25 @@ internal class O5OverviewViewModelTest {
     )
     fun faultCategory_showsPdmTextAndReference(alarm: AlarmType, resourceSuffix: String) {
         val ref = "19-00006-02251-152"
+        val templateRes = when (resourceSuffix) {
+            "reservoir_empty" -> R.string.omnipod_o5_pdm_notification_reservoir_empty
+            "auto_off"        -> R.string.omnipod_o5_pdm_notification_auto_off
+            "pod_expired"     -> R.string.omnipod_o5_pdm_notification_pod_expired
+            "occluded"        -> R.string.omnipod_o5_pdm_notification_occluded
+            "pod_error"       -> R.string.omnipod_o5_pdm_notification_pod_error
+            else              -> error("unexpected resourceSuffix $resourceSuffix")
+        }
         whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
         whenever(podStateManager.alarmType).thenReturn(alarm)
         whenever(podStateManager.pdmRef).thenReturn(ref)
         whenever(rh.gs(any<Int>())).thenAnswer { invocation ->
-            when (invocation.getArgument<Int>(0)) {
-                CommonR.string.omnipod_common_pdm_notification_label -> "PDM Notification"
-                CommonR.string.omnipod_common_pdm_notification_header_reservoir_empty -> "header reservoir_empty"
-                CommonR.string.omnipod_common_pdm_notification_text_reservoir_empty -> "text reservoir_empty"
-                CommonR.string.omnipod_common_pdm_notification_header_auto_off -> "header auto_off"
-                CommonR.string.omnipod_common_pdm_notification_text_auto_off -> "text auto_off"
-                CommonR.string.omnipod_common_pdm_notification_header_pod_expired -> "header pod_expired"
-                CommonR.string.omnipod_common_pdm_notification_text_pod_expired -> "text pod_expired"
-                CommonR.string.omnipod_common_pdm_notification_header_occluded -> "header occluded"
-                CommonR.string.omnipod_common_pdm_notification_text_occluded -> "text occluded"
-                CommonR.string.omnipod_common_pdm_notification_header_pod_error -> "header pod_error"
-                CommonR.string.omnipod_common_pdm_notification_text_pod_error -> "text pod_error"
-                else -> "label"
-            }
+            if (invocation.getArgument<Int>(0) == CommonR.string.omnipod_common_pdm_notification_label) "PDM Notification" else "label"
         }
-        whenever(rh.gs(CommonR.string.omnipod_common_pdm_ref, ref)).thenReturn("Ref: $ref")
+        whenever(rh.gs(templateRes, ref)).thenReturn("templated $resourceSuffix: $ref")
 
         val row = createViewModel().uiState.value.infoRows.filterIsInstance<PumpInfoRow>().single { it.label == "PDM Notification" }
 
-        assertThat(row.value).isEqualTo("header $resourceSuffix\ntext $resourceSuffix\n\nRef: $ref")
+        assertThat(row.value).isEqualTo("templated $resourceSuffix: $ref")
     }
 
     @ParameterizedTest

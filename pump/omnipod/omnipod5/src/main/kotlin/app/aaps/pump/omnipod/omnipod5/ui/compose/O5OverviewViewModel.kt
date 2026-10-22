@@ -34,7 +34,6 @@ import app.aaps.core.ui.compose.pump.tickerFlow
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants
-import app.aaps.pump.omnipod.common.ui.compose.notificationText
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.expiry
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.time

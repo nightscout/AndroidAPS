@@ -9,4 +9,13 @@
     <string name="omnipod_o5_history_tbr_value">%1$.2f U/h, %2$d minutes</string>
     <string name="omnipod_o5_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_o5_history_basal_drift_compensation_bolus_value">Basal drift compensation bolus: %1$.2f U</string>
+
+    <!-- Omnipod 5 - PDM Notification -->
+    <!-- Worded as if the Omnipod 5 app itself had shown it, so the user can report the fault to Insulet.
+         One message per PDM-style fault category (see AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_o5_pdm_notification_reservoir_empty">Pod Out of Insulin\nPod empty: no insulin left in Pod.\nInsulin delivery stopped.\nChange Pod now.</string>
+    <string name="omnipod_o5_pdm_notification_auto_off">Pod Shut-Off\nInsulin delivery stopped.\nThe Omnipod 5 App has not communicated with your Pod in the last 4 hours. To start insulin delivery, change your Pod.</string>
+    <string name="omnipod_o5_pdm_notification_pod_expired" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020.">Pod Expired\nInsulin delivery stopped.\nChange Pod now.\n\nRef: %1$s</string>
+    <string name="omnipod_o5_pdm_notification_occluded">Blockage detected\nInsulin delivery stopped.\nChange Pod now.\nCheck your BG.</string>
+    <string name="omnipod_o5_pdm_notification_pod_error" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020.">Pod Error\nInsulin delivery stopped.\nChange Pod now.\n\nRef: %1$s</string>
 </resources>
