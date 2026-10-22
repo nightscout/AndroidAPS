@@ -60,6 +60,7 @@
     <string name="authorized_clients_delete_dialog_token">Token Nightscout tego urządzenia zostanie również usunięty, więc nie będzie ono mogło już odczytywać danych z Nightscout.</string>
     <string name="authorized_clients_uses_client_token">Własny token Nightscout</string>
     <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Używa tokena Nightscout %1$s, który ma więcej uprawnień, niż potrzebuje klient.</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Używa tokenu Nightscout %1$s, a nie własnego: jego polecenia są odrzucane. Usuń go i dodaj ponownie.</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Parowanie z telefonem pacjenta</string>
     <string name="pair_with_master_pin_entry_title">Wpisz PIN parowania</string>
@@ -87,6 +88,10 @@
     <string name="client_setup_scan_title">Zeskanuj kod QR telefonu pacjenta</string>
     <string name="client_setup_scan_instructions">Na telefonie pacjenta otwórz „Autoryzowani opiekunowie” i dodaj ten telefon za pomocą kodu QR. Skieruj aparat na kod.</string>
     <string name="client_setup_scan_camera_refused">Aparat jest potrzebny do odczytania kodu QR. Zezwól na jego użycie albo sparuj urządzenie za pomocą PIN.</string>
+    <string name="client_setup_scan_camera_denied">Dostęp do aparatu jest wyłączony dla AAPS. Włącz go w ustawieniach systemowych albo sparuj urządzenie za pomocą PIN-u.</string>
+    <string name="client_setup_scan_camera_blocked">Dostęp do aparatu nie jest dozwolony na tym urządzeniu. Sparuj się za pomocą PIN-u.</string>
+    <string name="client_setup_scan_camera_unavailable">Kamery nie można użyć na tym urządzeniu. Sparuj za pomocą PIN-u zamiast tego.</string>
+    <string name="client_setup_scan_open_settings">Otwórz ustawienia</string>
     <string name="client_setup_scan_not_a_code">To nie jest kod QR z AAPS.</string>
     <string name="client_setup_scan_other_version">Ten kod pochodzi z innej wersji AAPS. Telefon pacjenta i telefon opiekuna muszą działać na tej samej wersji.</string>
     <string name="client_setup_scan_expired">Ten kod wygasł. Wygeneruj nowy na telefonie pacjenta.</string>
@@ -123,6 +128,12 @@
     <string name="upload_now">Prześlij teraz</string>
     <string name="tidepool_purge_data">Wyczyść wszystkie dane</string>
     <string name="tidepool_purge_data_confirm">Usunąć WSZYSTKIE dane, które AAPS przesłało do Tidepool? Tej operacji nie można cofnąć. Użyj jej, aby usunąć dane uszkodzone przez starszą wersję, a następnie uruchom „Pełna synchronizacja”, aby przesłać je ponownie.</string>
+    <string name="tidepool_full_sync_comment">Pełna synchronizacja? AAPS ponownie przesreśle wszystkie dane do Tidepool. Może to chwilę potrwać.</string>
+    <string name="tidepool_logout_confirm">Wylogować się z Tidepool? Wysyłanie danych zostanie wstrzymane, dopóki ponownie się nie zalogujesz.</string>
+    <string name="tidepool_status_not_logged_in">Nie zalogowano</string>
+    <string name="tidepool_status_no_session">Zalogowano, brak połączenia</string>
+    <string name="tidepool_status_blocked">Zablokowane przez ustawienia połączenia</string>
+    <string name="tidepool_status_failed">Błąd. Zobacz dziennik poniżej.</string>
     <string name="not_connected">Nie połączono</string>
     <string name="read_only">Tylko do odczytu</string>
     <string name="working">Pracuje</string>
