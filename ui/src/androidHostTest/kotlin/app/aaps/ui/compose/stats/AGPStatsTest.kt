@@ -44,7 +44,7 @@ class AGPStatsTest {
     }
 
     @Test
-    fun rangeTabsSelectTheRequestedRange() {
+    fun rangeButtonsSelectTheRequestedRange() {
         var selected = AgpStatsRange.TODAY
         compose.setContent {
             MaterialTheme {

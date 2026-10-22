@@ -326,6 +326,7 @@
     <string name="permission_nav_label">Permissions</string>
 
     <!--    TDD Cycle Pattern -->
+    <string name="stats_tab_cycle" comment="Short tab label on the Statistics screen. The tab shows daily insulin totals laid over 28-day cycles (TDD Cycle Pattern).">Cycle</string>
     <string name="cycle_offset">Cycle offset</string>
     <string name="raw_tdd">Raw TDD</string>
     <string name="cleaned_tdd">Cleaned TDD</string>

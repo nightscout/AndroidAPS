@@ -16,10 +16,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryScrollableTabRow
-import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -55,21 +55,17 @@ fun AGPStats(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(AapsSpacing.large)
     ) {
-        PrimaryTabRow(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            selectedTabIndex = selectedRange.ordinal,
-            containerColor = Color.Transparent,
-        ) {
-            AgpStatsRange.entries.forEach { range ->
-                Tab(
+        // One period out of five is a choice, not a place to go: a segmented button, not tabs, which would
+        // also sit inside the screen's own tabs
+        SingleChoiceSegmentedButtonRow(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+            AgpStatsRange.entries.forEachIndexed { index, range ->
+                SegmentedButton(
                     selected = selectedRange == range,
                     onClick = { onSelectRange(range) },
-                    text = {
-                        Text(
-                            text = range.label(),
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                    }
+                    shape = SegmentedButtonDefaults.itemShape(index = index, count = AgpStatsRange.entries.size),
+                    // No check mark: five periods share the width of a phone
+                    icon = {},
+                    label = { Text(text = range.label(), maxLines = 1) }
                 )
             }
         }

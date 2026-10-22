@@ -24,8 +24,8 @@ import app.aaps.core.interfaces.stats.DexcomTirCalculator
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntNonKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.ui.compose.stats.AgpStatsData
@@ -101,27 +101,60 @@ class StatsViewModel(
      */
     private var tddLoadJob: Job? = null
 
+    /**
+     * Tabs whose numbers were calculated since the screen was last started. Only the tab on screen is
+     * calculated: the screen used to compute everything on open, 90 days of AGP included.
+     */
+    private val loadedTabs = mutableSetOf<StatsTab>()
+
     init {
-        val savedOffset = preferences.get(IntNonKey.TddCycleOffset)
-        val tddExpanded = preferences.get(BooleanNonKey.StatsTddExpanded)
-        val tirExpanded = preferences.get(BooleanNonKey.StatsTirExpanded)
-        val dexcomTirExpanded = preferences.get(BooleanNonKey.StatsDexcomTirExpanded)
-        val tddCycleExpanded = preferences.get(BooleanNonKey.StatsTddCycleExpanded)
+        val savedTab = StatsTab.entries.firstOrNull { it.name == preferences.get(StringNonKey.StatsTab) } ?: StatsTab.entries.first()
         _uiState.update {
             it.copy(
-                tddCycleOffset = savedOffset,
-                tddExpanded = tddExpanded,
-                tirExpanded = tirExpanded,
-                dexcomTirExpanded = dexcomTirExpanded,
-                tddCycleExpanded = tddCycleExpanded
+                selectedTab = savedTab,
+                tddCycleOffset = preferences.get(IntNonKey.TddCycleOffset)
             )
         }
-        loadAllStats()
         observeTddInputs()
-        // Cycle pattern data is loaded lazily; if the section was left expanded, load it now
-        if (tddCycleExpanded) {
-            _uiState.update { it.copy(tddCycleLoading = true, tddCycleProgress = 0f) }
-            loadCyclePatternData()
+    }
+
+    /** The screen is shown again: recalculate the tab on screen, and the others when they are opened. */
+    fun onStart() {
+        loadedTabs.clear()
+        loadTab(uiState.value.selectedTab)
+    }
+
+    /** The user opened [tab]. It is remembered, so the screen opens on it next time. */
+    fun selectTab(tab: StatsTab) {
+        if (tab != uiState.value.selectedTab) {
+            preferences.put(StringNonKey.StatsTab, tab.name)
+            _uiState.update { it.copy(selectedTab = tab) }
+        }
+        if (tab !in loadedTabs) loadTab(tab)
+    }
+
+    private fun loadTab(tab: StatsTab) {
+        loadedTabs += tab
+        when (tab) {
+            StatsTab.INSULIN       -> loadTddStats()
+
+            // 168 days of TDD: calculated once, the first time the tab is opened, and kept after that
+            StatsTab.CYCLE         ->
+                if (uiState.value.tddCycleEntries.isEmpty() && cycleLoadJob?.isActive != true) {
+                    _uiState.update { it.copy(tddCycleLoading = true, tddCycleProgress = 0f) }
+                    loadCyclePatternData()
+                }
+
+            StatsTab.TIME_IN_RANGE -> {
+                loadTirStats()
+                loadDexcomTirStats()
+            }
+
+            // The glucose pentagon is drawn from the Dexcom TIR numbers
+            StatsTab.GLUCOSE       -> {
+                loadAgpStats(uiState.value.agpRange)
+                loadDexcomTirStats()
+            }
         }
     }
 
@@ -150,15 +183,12 @@ class StatsViewModel(
             persistenceLayer.observeChanges(EPS::class).map {}
         )
             .debounce(TDD_RELOAD_DEBOUNCE_MS)
-            .onEach { loadTddStats() }
+            .onEach {
+                // Recalculated now only when on screen; otherwise when the Insulin tab is opened next time
+                if (uiState.value.selectedTab == StatsTab.INSULIN) loadTddStats()
+                else loadedTabs -= StatsTab.INSULIN
+            }
             .launchIn(viewModelScope)
-    }
-
-    fun loadAllStats() {
-        loadTddStats()
-        loadAgpStats(uiState.value.agpRange)
-        loadTirStats()
-        loadDexcomTirStats()
     }
 
     fun loadAgpStats(range: AgpStatsRange) {
@@ -182,10 +212,6 @@ class StatsViewModel(
                 _uiState.update { it.copy(agpLoading = false, agpError = true) }
             }
         }
-    }
-
-    fun toggleAgpExpanded() {
-        _uiState.update { it.copy(agpExpanded = !it.agpExpanded) }
     }
 
     private fun loadTddStats() {
@@ -239,36 +265,6 @@ class StatsViewModel(
                 dexcomTirCalculator.calculate()
             }
             _uiState.update { it.copy(dexcomTirData = data, dexcomTirLoading = false) }
-        }
-    }
-
-    fun toggleTddExpanded() {
-        val expanded = !uiState.value.tddExpanded
-        preferences.put(BooleanNonKey.StatsTddExpanded, expanded)
-        _uiState.update { it.copy(tddExpanded = expanded) }
-    }
-
-    fun toggleTirExpanded() {
-        val expanded = !uiState.value.tirExpanded
-        preferences.put(BooleanNonKey.StatsTirExpanded, expanded)
-        _uiState.update { it.copy(tirExpanded = expanded) }
-    }
-
-    fun toggleDexcomTirExpanded() {
-        val expanded = !uiState.value.dexcomTirExpanded
-        preferences.put(BooleanNonKey.StatsDexcomTirExpanded, expanded)
-        _uiState.update { it.copy(dexcomTirExpanded = expanded) }
-    }
-
-    fun toggleTddCycleExpanded() {
-        val wasExpanded = uiState.value.tddCycleExpanded
-        preferences.put(BooleanNonKey.StatsTddCycleExpanded, !wasExpanded)
-        if (!wasExpanded && uiState.value.tddCycleEntries.isEmpty()) {
-            // Atomic: set expanded + loading in single update so AnimatedVisibility sees loading immediately
-            _uiState.update { it.copy(tddCycleExpanded = true, tddCycleLoading = true, tddCycleProgress = 0f) }
-            loadCyclePatternData()
-        } else {
-            _uiState.update { it.copy(tddCycleExpanded = !wasExpanded) }
         }
     }
 
@@ -400,16 +396,27 @@ class StatsViewModel(
 }
 
 /**
+ * The tabs of the Statistics screen. Each one groups the sections about one subject.
+ */
+enum class StatsTab {
+
+    INSULIN,
+    TIME_IN_RANGE,
+    GLUCOSE,
+    CYCLE
+}
+
+/**
  * UI state for StatsScreen
  */
 @Immutable
 data class StatsUiState(
+    val selectedTab: StatsTab = StatsTab.INSULIN,
     val tddStatsData: TddStatsData? = null,
     val agpStatsData: AgpStatsData? = null,
     val agpRange: AgpStatsRange = AgpStatsRange.TODAY,
     val agpLoading: Boolean = true,
     val agpError: Boolean = false,
-    val agpExpanded: Boolean = true,
     val tirStatsData: TirStatsData? = null,
     val dexcomTirData: DexcomTIR? = null,
     val tddCycleEntries: List<TDD> = emptyList(),
@@ -419,10 +426,6 @@ data class StatsUiState(
     val dexcomTirLoading: Boolean = true,
     val tddCycleLoading: Boolean = true,
     val tddCycleProgress: Float = 0f,
-    val tddExpanded: Boolean = true,
-    val tirExpanded: Boolean = true,
-    val dexcomTirExpanded: Boolean = true,
-    val tddCycleExpanded: Boolean = false,
     val tddCycleOffset: Int = 0,
     val showRecalculateDialog: Boolean = false
 )
