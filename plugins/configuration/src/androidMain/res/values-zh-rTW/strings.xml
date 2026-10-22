@@ -40,6 +40,10 @@
     <string name="setupwizard_client_control_info">配對用戶端裝置，使其能透過 Nightscout 向此主控端傳送已簽章的指令。這是遠端控制 AAPS 的新建議方式。</string>
     <string name="setupwizard_ns_receive_info">直接接受來自 Nightscout 的治療與資料（較不安全的方式）現在預設為關閉。僅在仍然需要時才開啟下方設定。若你需要透過 NS 或第三方應用程式輸入資料，才有必要啟用。</string>
     <string name="setupwizard_open_ns_receive_settings">Nightscout 資料接收</string>
+    <string name="setupwizard_pair_with_master_info">請將此客戶端與你的主裝置 AAPS 配對，使其能透過安全通道傳送指令。完成配對後，設定即結束。</string>
+    <string name="setupwizard_setup_from_master_title">由主裝置設定</string>
+    <string name="setupwizard_setup_from_master_info">在主裝置上開啟「已授權的客戶端」，使用 QR Code 將此手機加入。掃描後會為此手機設定 Nightscout 並建立其專屬權杖，也可同時配對此手機。掃描完成後，設定即結束。若沒有 QR Code，請略過此步驟並自行設定 Nightscout。</string>
+    <string name="setupwizard_scan_master_qr">掃描 QR Code</string>
     <string name="setupwizard_pairing_ws_warning">配對需要 Nightscout WebSocket 連線。請返回上一步先啟用它。</string>
     <string name="setupwizard_pairing_status_master">已配對的用戶端：%1$d</string>
     <string name="setupwizard_pairing_status_master_none">尚未配對任何用戶端</string>
