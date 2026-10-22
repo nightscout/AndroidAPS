@@ -135,7 +135,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
             Objective8(preferences, text, durationText, dateUtil),
             Objective9(preferences, text, durationText, dateUtil)
         )
-        objectivesPlugin = ObjectivesPlugin(aapsLogger, text, preferences, config, notificationManager, objectives)
+        objectivesPlugin = ObjectivesPlugin(aapsLogger, text, preferences, config, objectives, mock())
         runBlocking { objectivesPlugin.onStart() }
         openAPSSMBPlugin =
             OpenAPSSMBPlugin(

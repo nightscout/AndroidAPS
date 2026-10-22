@@ -39,13 +39,13 @@ class PumpDriverBucketTest {
      * so a missing entry is a mismatch - and it now also catches one that arrives without declaring
      * `@PumpDriver` at all.
      */
-     @Test
-     fun `the pump bucket holds exactly the drivers compiled into this build`() {
-         val declared = declaredDriverKeys()
-         check(declared.isNotEmpty()) { "Found no @PumpDriver classes on the classpath - the scan broke" }
+    @Test
+    fun `the pump bucket holds exactly the drivers compiled into this build`() {
+        val declared = declaredDriverKeys()
+        check(declared.isNotEmpty()) { "Found no @PumpDriver classes on the classpath - the scan broke" }
 
-         assertThat(testRoot().contributedPumpDriverPlugins.keys).isEqualTo(declared)
-     }
+        assertThat(testRoot().contributedPumpDriverPlugins.keys).isEqualTo(declared)
+    }
 
     /**
      * Each driver is filed under the key it declares. This is what the fourteen `isInstanceOf` lines

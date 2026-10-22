@@ -3,6 +3,7 @@ package app.aaps.ui.search
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.PreferenceKey
@@ -177,11 +178,13 @@ class SearchIndexBuilder(
 
     /**
      * A plugin's settings (screen/category and individual preference keys) are searchable when the
-     * plugin is list-visible. VirtualPump on a client is hidden, so its settings stay out of search —
-     * the values come from the master and are not editable locally.
+     * plugin is list-visible or enforced ENABLED. Enforced plugins (e.g. Safety) are hidden
+     * from the Config Builder list only because they cannot be toggled — their settings are still
+     * user-facing and shown in Preferences. VirtualPump on a client is hidden and not enforced,
+     * so its settings stay out of search — the values come from the master and aren't editable locally.
      */
     private fun PluginBase.hasSearchableSettings(): Boolean =
-        categoryAvailable() && showInList() && pluginDescription.pluginName != null
+        categoryAvailable() && (showInList() || enforcedState() == EnforcedState.Enabled) && pluginDescription.pluginName != null
 
     private fun collectPlugins(entries: MutableList<SearchIndexEntry>, seenKeys: MutableSet<String>) {
         activePlugin.getPluginsList()
