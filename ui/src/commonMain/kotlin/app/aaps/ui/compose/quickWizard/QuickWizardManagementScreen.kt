@@ -1,10 +1,8 @@
 package app.aaps.ui.compose.quickWizard
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -20,7 +17,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Save
@@ -30,7 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -46,7 +41,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
@@ -54,6 +48,9 @@ import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsFab
+import app.aaps.core.ui.compose.AapsFloatingToolbar
+import app.aaps.core.ui.compose.AapsFloatingToolbarDeleteButton
+import app.aaps.core.ui.compose.AapsFloatingToolbarRow
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -470,61 +467,32 @@ fun QuickWizardManagementScreen(
 
                     // Floating Toolbar with FAB (M3 style) — both are absolutely positioned over the
                     // cards, so they are hidden while sorting rather than left floating over the sort controls.
-                    if (!isReorderMode) Row(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    if (!isReorderMode) AapsFloatingToolbarRow(modifier = Modifier.align(Alignment.BottomCenter)) {
                         // Floating Toolbar — hidden in PLAY mode
                         if (!isPlayMode) {
-                            Surface(
-                                shape = RoundedCornerShape(percent = 50),
-                                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                shadowElevation = 6.dp,
-                                tonalElevation = 6.dp
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(horizontal = 4.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    // Add button
-                                    IconButton(onClick = { viewModel.addNewEntry() }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Add,
-                                            contentDescription = stringResource(CoreUiStrings.add)
-                                        )
-                                    }
-                                    // Clone button
-                                    IconButton(
-                                        onClick = { viewModel.cloneCurrentEntry() },
-                                        enabled = uiState.entries.isNotEmpty()
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.ContentCopy,
-                                            contentDescription = stringResource(UiStrings.clone_label),
-                                            tint = if (uiState.entries.isNotEmpty())
-                                                MaterialTheme.colorScheme.onSurface
-                                            else
-                                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                        )
-                                    }
-                                    // Delete button
-                                    IconButton(
-                                        onClick = { showDeleteDialog = true },
-                                        enabled = uiState.entries.isNotEmpty()
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Delete,
-                                            contentDescription = stringResource(UiStrings.remove_label),
-                                            tint = if (uiState.entries.isNotEmpty())
-                                                MaterialTheme.colorScheme.error
-                                            else
-                                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                        )
-                                    }
+                            AapsFloatingToolbar {
+                                // Add button
+                                IconButton(onClick = { viewModel.addNewEntry() }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Add,
+                                        contentDescription = stringResource(CoreUiStrings.add)
+                                    )
                                 }
+                                // Clone button
+                                IconButton(
+                                    onClick = { viewModel.cloneCurrentEntry() },
+                                    enabled = uiState.entries.isNotEmpty()
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.ContentCopy,
+                                        contentDescription = stringResource(UiStrings.clone_label)
+                                    )
+                                }
+                                AapsFloatingToolbarDeleteButton(
+                                    onClick = { showDeleteDialog = true },
+                                    enabled = uiState.entries.isNotEmpty(),
+                                    contentDescription = stringResource(UiStrings.remove_label)
+                                )
                             }
                         }
 

@@ -2,10 +2,8 @@ package app.aaps.ui.compose.tempTarget
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +18,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
@@ -33,7 +30,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -48,7 +44,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -59,6 +54,9 @@ import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsFab
+import app.aaps.core.ui.compose.AapsFloatingToolbar
+import app.aaps.core.ui.compose.AapsFloatingToolbarDeleteButton
+import app.aaps.core.ui.compose.AapsFloatingToolbarRow
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -503,13 +501,7 @@ fun TempTargetManagementScreen(
 
                     // Floating Toolbar with FAB (M3 style) — both are absolutely positioned over the
                     // cards, so they are hidden while sorting rather than left floating over the sort controls.
-                    if (!isReorderMode) Row(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    if (!isReorderMode) AapsFloatingToolbarRow(modifier = Modifier.align(Alignment.BottomCenter)) {
                         // Cancel the active TT. Same master-reachable rule as Activate: cancelling is a
                         // master/NS action that couldn't be delivered.
                         val showCancel = editingEnabled && uiState.activeTT != null
@@ -520,79 +512,61 @@ fun TempTargetManagementScreen(
                         // used to be a small × floating above this row, which landed beside the time field
                         // and read as "clear this field".
                         if (!isPlayMode || showCancel) {
-                            Surface(
-                                shape = RoundedCornerShape(percent = 50),
-                                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                shadowElevation = 6.dp,
-                                tonalElevation = 6.dp
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(horizontal = 4.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    if (!isPlayMode) {
-                                        IconButton(onClick = { viewModel.addNewPreset() }) {
+                            AapsFloatingToolbar {
+                                if (!isPlayMode) {
+                                    IconButton(onClick = { viewModel.addNewPreset() }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Add,
+                                            contentDescription = stringResource(CoreUiStrings.add)
+                                        )
+                                    }
+                                    // Revert button (only for fixed presets when editor values differ from defaults)
+                                    val showRevert = uiState.selectedPreset?.isDeletable == false &&
+                                        viewModel.isEditorDifferentFromDefaults()
+                                    if (showRevert) {
+                                        IconButton(onClick = { viewModel.revertToDefaults() }) {
                                             Icon(
-                                                imageVector = Icons.Filled.Add,
-                                                contentDescription = stringResource(CoreUiStrings.add)
-                                            )
-                                        }
-                                        // Revert button (only for fixed presets when editor values differ from defaults)
-                                        val showRevert = uiState.selectedPreset?.isDeletable == false &&
-                                            viewModel.isEditorDifferentFromDefaults()
-                                        if (showRevert) {
-                                            IconButton(onClick = { viewModel.revertToDefaults() }) {
-                                                Icon(
-                                                    imageVector = Icons.Filled.Refresh,
-                                                    contentDescription = stringResource(CoreUiStrings.revert_to_defaults)
-                                                )
-                                            }
-                                        }
-                                        IconButton(
-                                            onClick = { showDeleteDialog = true },
-                                            enabled = uiState.selectedPreset?.isDeletable == true
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Filled.Delete,
-                                                contentDescription = stringResource(UiStrings.remove_label),
-                                                tint = if (uiState.selectedPreset?.isDeletable == true)
-                                                    MaterialTheme.colorScheme.error
-                                                else
-                                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                                imageVector = Icons.Filled.Refresh,
+                                                contentDescription = stringResource(CoreUiStrings.revert_to_defaults)
                                             )
                                         }
                                     }
-                                    if (showCancel) {
-                                        // Cancel acts on the running target, the icons before it on the preset.
-                                        // A divider keeps the two groups apart (reviewer request on #5274).
-                                        if (!isPlayMode) {
-                                            VerticalDivider(
-                                                modifier = Modifier
-                                                    .height(AapsSpacing.xxLarge)
-                                                    .padding(horizontal = AapsSpacing.small)
-                                            )
-                                        }
-                                        // Tonal error disc: the loudest a toolbar button gets without being
-                                        // a second FAB, so "stop" reads next to "play" at a glance.
-                                        FilledTonalIconButton(
-                                            onClick = { viewModel.cancelActive(onSuccess = onNavigateBack) },
-                                            // A filled square needs more air than a bare icon, whose 24 dp glyph
-                                            // sits 12 dp inside its button: 8 dp here gives 16 dp to the pill end
-                                            // (same as the leading icon) and centres the divider.
-                                            modifier = Modifier.padding(horizontal = AapsSpacing.medium),
-                                            // Rounded square like the play FAB, not a disc. At 40 dp the corner
-                                            // has to be smaller than the FAB's 16 dp or it still reads as round.
-                                            shape = RoundedCornerShape(AapsSpacing.medium),
-                                            colors = IconButtonDefaults.filledTonalIconButtonColors(
-                                                containerColor = MaterialTheme.colorScheme.errorContainer,
-                                                contentColor = MaterialTheme.colorScheme.onErrorContainer
-                                            )
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Filled.Close,
-                                                contentDescription = stringResource(CoreUiStrings.clientcontrol_action_cancel_temp_target)
-                                            )
-                                        }
+                                    AapsFloatingToolbarDeleteButton(
+                                        onClick = { showDeleteDialog = true },
+                                        enabled = uiState.selectedPreset?.isDeletable == true,
+                                        contentDescription = stringResource(UiStrings.remove_label)
+                                    )
+                                }
+                                if (showCancel) {
+                                    // Cancel acts on the running target, the icons before it on the preset.
+                                    // A divider keeps the two groups apart (reviewer request on #5274).
+                                    if (!isPlayMode) {
+                                        VerticalDivider(
+                                            modifier = Modifier
+                                                .height(AapsSpacing.xxLarge)
+                                                .padding(horizontal = AapsSpacing.small)
+                                        )
+                                    }
+                                    // Tonal error disc: the loudest a toolbar button gets without being
+                                    // a second FAB, so "stop" reads next to "play" at a glance.
+                                    FilledTonalIconButton(
+                                        onClick = { viewModel.cancelActive(onSuccess = onNavigateBack) },
+                                        // A filled square needs more air than a bare icon, whose 24 dp glyph
+                                        // sits 12 dp inside its button: 8 dp here gives 16 dp to the pill end
+                                        // (same as the leading icon) and centres the divider.
+                                        modifier = Modifier.padding(horizontal = AapsSpacing.medium),
+                                        // Rounded square like the play FAB, not a disc. At 40 dp the corner
+                                        // has to be smaller than the FAB's 16 dp or it still reads as round.
+                                        shape = RoundedCornerShape(AapsSpacing.medium),
+                                        colors = IconButtonDefaults.filledTonalIconButtonColors(
+                                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                                        )
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Close,
+                                            contentDescription = stringResource(CoreUiStrings.clientcontrol_action_cancel_temp_target)
+                                        )
                                     }
                                 }
                             }
