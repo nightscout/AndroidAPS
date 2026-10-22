@@ -41,10 +41,9 @@ import app.aaps.core.ui.R as CoreUiR
 private const val BRIDGE_NAME = "aapsKeymanagerBridge"
 
 /**
- * Origins the bridge accepts messages from. "*" allows every origin, which is fine for the
- * stubbed URL; tighten this once the real certificate page URL is known.
+ * Only the certificate service origin may send messages through the bridge.
  */
-private val ALLOWED_ORIGIN_RULES = setOf("*")
+private val ALLOWED_ORIGIN_RULES = setOf("https://api.osaid-keymanager.org")
 
 internal class O5CertificateNetworkException(message: String) : IOException(message)
 
