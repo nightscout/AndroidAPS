@@ -60,6 +60,7 @@
     <string name="authorized_clients_delete_dialog_token">Nightscout-tokenet slettes også, slik at enheten ikke lenger kan lese Nightscout.</string>
     <string name="authorized_clients_uses_client_token">Eget Nightscout-token</string>
     <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Bruker Nightscout-tokenet %1$s, som har flere rettigheter enn en klient trenger</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Bruker Nightscout-tokenet %1$s i stedet for sitt eget. Kommandoer fra denne enheten blir derfor avvist. Fjern enheten, og legg den til på nytt.</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Koble til hovedenhet</string>
     <string name="pair_with_master_pin_entry_title">Skriv inn sammenkoblings-PIN</string>
@@ -87,6 +88,10 @@
     <string name="client_setup_scan_title">Skann hovedenhetens QR-kode</string>
     <string name="client_setup_scan_instructions">Åpne Autoriserte klienter på hovedenheten, og legg til denne telefonen ved hjelp av en QR-kode. Rett kameraet mot koden.</string>
     <string name="client_setup_scan_camera_refused">Kameraet kreves for å lese QR-koden. Gi tilgang til kameraet, eller bruk PIN-koden for å sammenkoble telefonen.</string>
+    <string name="client_setup_scan_camera_denied">Kameratilgang er deaktivert for AAPS. Aktiver den i systeminnstillingene, eller bruk PIN-koden for å sammenkoble enheten.</string>
+    <string name="client_setup_scan_camera_blocked">Kameratilgang er ikke tillatt på denne enheten. Bruk PIN-koden for å sammenkoble enheten i stedet.</string>
+    <string name="client_setup_scan_camera_unavailable">Kameraet kan ikke brukes på denne enheten. Bruk PIN-koden for å sammenkoble enheten i stedet.</string>
+    <string name="client_setup_scan_open_settings">Åpne innstillinger</string>
     <string name="client_setup_scan_not_a_code">Dette er ikke en QR-kode fra AAPS.</string>
     <string name="client_setup_scan_other_version">Denne koden er fra en annen AAPS-versjon. Hovedenheten og denne telefonen må bruke samme versjon.</string>
     <string name="client_setup_scan_expired">Denne koden har utløpt. Opprett en ny kode på hovedenheten.</string>
@@ -123,6 +128,12 @@
     <string name="upload_now">Last opp nå</string>
     <string name="tidepool_purge_data">Slett alle data</string>
     <string name="tidepool_purge_data_confirm">Slette ALLE data som AAPS har lastet opp til Tidepool? Dette kan ikke angres. Bruk dette for å fjerne data som ble ødelagt av en eldre versjon, og kjør deretter «Full synkronisering» for å laste opp dataene på nytt.</string>
+    <string name="tidepool_full_sync_comment">Full synkronisering? AAPS laster opp alle data til Tidepool på nytt. Dette kan ta litt tid.</string>
+    <string name="tidepool_logout_confirm">Logge ut av Tidepool? Opplastinger stopper til du logger inn igjen.</string>
+    <string name="tidepool_status_not_logged_in">Ikke innlogget</string>
+    <string name="tidepool_status_no_session">Innlogget, men ikke tilkoblet ennå</string>
+    <string name="tidepool_status_blocked">Blokkert av tilkoblingsinnstillingene</string>
+    <string name="tidepool_status_failed">Mislyktes. Se loggen nedenfor.</string>
     <string name="not_connected">Ikke tilkoblet</string>
     <string name="read_only">Skrivebeskyttet</string>
     <string name="working">Prosesserer</string>
