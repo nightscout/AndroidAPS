@@ -34,6 +34,7 @@ import app.aaps.core.ui.compose.pump.tickerFlow
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants
+import app.aaps.pump.omnipod.common.ui.compose.podExpiryRows
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.expiry
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.time
@@ -62,7 +63,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Duration
-import java.time.ZonedDateTime
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
@@ -200,22 +200,13 @@ class O5OverviewViewModel @Inject constructor(
             }
 
             val expiresAt = podStateManager.expiry
-            val expiryValue = expiresAt?.let { dateUtil.dateAndTimeString(it.toEpochSecond() * 1000) } ?: PLACEHOLDER
-            val expiryLevel = when {
-                expiresAt != null && ZonedDateTime.now().isAfter(expiresAt)               -> StatusLevel.CRITICAL
-                expiresAt != null && ZonedDateTime.now().isAfter(expiresAt.minusHours(4)) -> StatusLevel.WARNING
-                else                                                                      -> StatusLevel.NORMAL
-            }
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_expiry_date), value = expiryValue, level = expiryLevel))
-
-            val hardEndAt = expiresAt?.plusHours(POD_GRACE_PERIOD_HOURS)
-            val hardEndValue = hardEndAt?.let { dateUtil.dateAndTimeString(it.toEpochSecond() * 1000) } ?: PLACEHOLDER
-            val hardEndLevel = when {
-                hardEndAt != null && ZonedDateTime.now().isAfter(hardEndAt)               -> StatusLevel.CRITICAL
-                hardEndAt != null && ZonedDateTime.now().isAfter(hardEndAt.minusHours(4)) -> StatusLevel.WARNING
-                else                                                                      -> StatusLevel.NORMAL
-            }
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_hard_end_date), value = hardEndValue, level = hardEndLevel))
+            addAll(
+                podExpiryRows(
+                    rh, dateUtil, dateUtil.now(),
+                    expiresAt = expiresAt?.toInstant()?.toEpochMilli(),
+                    hardEndAt = expiresAt?.plusHours(POD_GRACE_PERIOD_HOURS)?.toInstant()?.toEpochMilli()
+                ) { dateUtil.dateAndTimeString(it) }
+            )
 
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_status), value = buildPodStatusText(), level = buildPodStatusLevel()))
 
