@@ -50,6 +50,7 @@ import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandSuspendDelivery
+import app.aaps.pump.omnipod.common.ui.compose.podExpiryRows
 import app.aaps.pump.omnipod.common.ui.wizard.compose.ActivationType
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodOverviewEvent
 import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
@@ -214,17 +215,15 @@ class ErosOverviewViewModel(
             val timeLevel = if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) StatusLevel.WARNING else StatusLevel.NORMAL
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_time_on_pod), value = timeOnPodValue, level = timeLevel))
 
-            // Pod expiry
+            // Pod expiry and pod hard end (end of the grace period following expiry)
             val expiresAt = podStateManager.expiresAt
-            val expiryValue = expiresAt?.let { readableZonedTime(it) } ?: PLACEHOLDER
-            val expiryLevel = if (expiresAt != null && DateTime.now().isAfter(expiresAt)) StatusLevel.CRITICAL else StatusLevel.NORMAL
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_expiry_date), value = expiryValue, level = expiryLevel))
-
-            // Pod hard end (end of the grace period following expiry)
-            val hardEndAt = expiresAt?.plus(POD_GRACE_PERIOD)
-            val hardEndValue = hardEndAt?.let { readableZonedTime(it) } ?: PLACEHOLDER
-            val hardEndLevel = if (hardEndAt != null && DateTime.now().isAfter(hardEndAt)) StatusLevel.CRITICAL else StatusLevel.NORMAL
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_hard_end_date), value = hardEndValue, level = hardEndLevel))
+            addAll(
+                podExpiryRows(
+                    rh, dateUtil, dateUtil.now(),
+                    expiresAt = expiresAt?.millis,
+                    hardEndAt = expiresAt?.plus(POD_GRACE_PERIOD)?.millis
+                ) { readableZonedTime(DateTime(it, podStateManager.timeZone)) }
+            )
 
             // Pod status
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_status), value = buildPodStatusText(), level = buildPodStatusLevel()))
