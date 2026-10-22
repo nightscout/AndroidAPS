@@ -14,6 +14,7 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
+import kotlin.math.round
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -138,11 +139,15 @@ class SensitivityOverviewImplTest : TestBaseWithProfile() {
     /**
      * The step is worked out from the numbers, but a step the chip cannot show must not get an
      * arrow: two values that round to the same text would read "5.5 up 5.5".
+     *
+     * The ratio moves the ISF toward the middle of its shown 0.1 step. A fixed ratio failed from
+     * 00:00 to 02:00, where the profile ISF (3 mmol/L = 54.047 mg/dL) is close to a rounding edge.
      */
     @Test
     fun `a ratio too small to change the shown value gives no step`() = runBlocking {
+        val isf = effectiveProfile.getProfileIsfMgdl()
         autosensRatio(1.0)
-        ratioUsedByLoop(0.9999)
+        ratioUsedByLoop(if (isf < round(isf * 10) / 10) 0.9999 else 1.0001)
 
         val data = sut.build()
 
