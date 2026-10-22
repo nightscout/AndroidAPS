@@ -134,6 +134,12 @@
     <string name="upload_now">Upload now</string>
     <string name="tidepool_purge_data">Purge all data</string>
     <string name="tidepool_purge_data_confirm">Delete ALL data AAPS has uploaded to Tidepool? This cannot be undone. Use it to remove data corrupted by an older version, then run \"Full synchronization\" to re-upload.</string>
+    <string name="tidepool_full_sync_comment">Full synchronization? AAPS will upload all data to Tidepool again. It may take a while.</string>
+    <string name="tidepool_logout_confirm">Log out of Tidepool? Uploads stop until you log in again.</string>
+    <string name="tidepool_status_not_logged_in">Not logged in</string>
+    <string name="tidepool_status_no_session">Logged in, not connected yet</string>
+    <string name="tidepool_status_blocked">Blocked by connection settings</string>
+    <string name="tidepool_status_failed">Failed. See the log below.</string>
     <string name="not_connected">Not connected</string>
     <string name="read_only">Read only</string>
     <string name="working">Working</string>
