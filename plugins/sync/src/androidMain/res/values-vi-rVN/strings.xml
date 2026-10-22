@@ -34,6 +34,32 @@
     <string name="authorized_clients_pin_published">Yêu cầu ghép đôi đã sẵn sàng trên Nightscout.</string>
     <string name="authorized_clients_pin_publish_failed">Không thể gửi yêu cầu ghép đôi lên Nightscout.</string>
     <string name="authorized_clients_pin_retry">Thử lại</string>
+    <string name="authorized_clients_method_title">Điện thoại được thiết lập như thế nào?</string>
+    <string name="authorized_clients_method_qr_pair">Mã QR: Nightscout và ghép đôi</string>
+    <string name="authorized_clients_method_qr_pair_summary">Quét mã một lần trên điện thoại mới. Điện thoại sẽ có token Nightscout riêng và được ghép đôi.</string>
+    <string name="authorized_clients_method_qr_ns">Mã QR: Chỉ Nightscout</string>
+    <string name="authorized_clients_method_qr_ns_summary">Điện thoại có token Nightscout riêng và có thể đọc dữ liệu. Điện thoại chưa được ghép đôi nên không thể gửi lệnh.</string>
+    <string name="authorized_clients_method_pin">Mã PIN</string>
+    <string name="authorized_clients_method_pin_summary">Dành cho điện thoại không có camera. Điện thoại phải được kết nối với Nightscout từ trước.</string>
+    <string name="authorized_clients_qr_working">Đang tạo token Nightscout…</string>
+    <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Thiết lập %1$s</string>
+    <string name="authorized_clients_qr_pair_instructions">Quét mã này trên điện thoại mới, trong trình hướng dẫn thiết lập hoặc mục Ghép đôi với thiết bị chính. Mã sẽ thiết lập Nightscout và ghép đôi điện thoại.</string>
+    <string name="authorized_clients_qr_ns_instructions">Quét mã này trên điện thoại mới, trong trình hướng dẫn thiết lập hoặc mục Ghép đôi với thiết bị chính. Mã sẽ thiết lập Nightscout nhưng không ghép đôi điện thoại.</string>
+    <string name="authorized_clients_qr_keep_private">Bất kỳ ai nhìn thấy mã này đều có thể đọc dữ liệu Nightscout của bạn. Chỉ hiển thị mã này trên điện thoại mới.</string>
+    <string name="authorized_clients_token_problem_title">Không có mã QR</string>
+    <string name="authorized_clients_token_problem_not_connected">Điện thoại này chưa được kết nối với Nightscout nên không thể tạo token cho thiết bị phụ.</string>
+    <string name="authorized_clients_token_problem_not_allowed">Token Nightscout của điện thoại này không phải token quản trị nên không thể tạo token cho thiết bị phụ. Hãy sử dụng token quản trị tại đây hoặc thêm thiết bị phụ bằng mã PIN.</string>
+    <string name="authorized_clients_token_problem_name_taken">Nightscout đã có token mang tên này nhưng có quyền khác. Hãy chọn tên khác.</string>
+    <string name="authorized_clients_token_problem_name_in_use">Danh sách đã có thiết bị phụ mang tên này. Hãy chọn tên khác hoặc xóa thiết bị phụ đó trước.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout không tạo được token. Hãy kiểm tra kết nối rồi thử lại.</string>
+    <string name="authorized_clients_tokens_header">Chỉ đọc dữ liệu Nightscout</string>
+    <string name="authorized_clients_token_unpaired">Giữ Token Nightscout, chưa ghép đôi</string>
+    <string name="authorized_clients_token_show_qr">Hiển thị mã QR</string>
+    <string name="authorized_clients_token_delete_title">Xóa token?</string>
+    <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s không còn có thể đọc dữ liệu Nightscout.</string>
+    <string name="authorized_clients_delete_dialog_token">Token Nightscout của thiết bị này cũng đã bị xóa, nên thiết bị không còn có thể đọc dữ liệu Nightscout.</string>
+    <string name="authorized_clients_uses_client_token">Giữ token Nightscout</string>
+    <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Đang sử dụng token Nightscout %1$s có nhiều quyền hơn mức cần thiết cho thiết bị phụ</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Ghép đôi với thiết bị chính</string>
     <string name="pair_with_master_pin_entry_title">Nhập mã PIN ghép đôi</string>
@@ -57,6 +83,22 @@
     <string name="pair_with_master_unpair">Hủy ghép đôi</string>
     <string name="pair_with_master_sending">Đang gửi yêu cầu ghép đôi…</string>
     <!-- Client set-up from the master's QR code -->
+    <string name="client_setup_scan_button">Quét mã QR</string>
+    <string name="client_setup_scan_title">Quét mã QR của thiết bị chính</string>
+    <string name="client_setup_scan_instructions">Trên thiết bị chính, mở mục Thiết bị phụ được ủy quyền và thêm điện thoại này bằng mã QR. Hướng camera vào mã QR.</string>
+    <string name="client_setup_scan_camera_refused">Cần có quyền truy cập camera để quét mã QR. Hãy cấp quyền truy cập camera hoặc ghép đôi bằng mã PIN.</string>
+    <string name="client_setup_scan_not_a_code">Đây không phải mã QR của AAPS.</string>
+    <string name="client_setup_scan_other_version">Mã này thuộc phiên bản AAPS khác. Thiết bị chính và điện thoại này phải chạy cùng một phiên bản AAPS.</string>
+    <string name="client_setup_scan_expired">Mã này đã hết hạn. Hãy tạo mã mới trên thiết bị chính.</string>
+    <string name="client_setup_scan_already_paired">Điện thoại này đã được ghép đôi. Hãy hủy ghép đôi trước khi sử dụng mã ghép đôi.</string>
+    <string name="client_setup_confirm_title">Sử dụng mã này không?</string>
+    <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nightscout: %1$s</string>
+    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">Nó cũng ghép đôi điện thoại với thiết bị chính %1$s.</string>
+    <string name="client_setup_confirm_replaces">Nó sẽ thay thế địa chỉ Nightscout và token của điện thoại.</string>
+    <string name="client_setup_confirm_apply">Sử dụng</string>
+    <string name="client_setup_done_title">Hoàn thành</string>
+    <string name="client_setup_done_paired">Nightscout đã được thiết lập và điện thoại đã được ghép đôi. Thiết bị chính sẽ hiển thị điện thoại là đang hoạt động khi điện thoại kết nối.</string>
+    <string name="client_setup_done_ns_only">Nightscout đã được thiết lập. Để điều khiển thiết bị chính từ điện thoại này, hãy ghép đôi điện thoại.</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">Thiết bị chính AAPS không còn nhận diện thiết bị này. Mở Quản lý → Ghép đôi với thiết bị chính để ghép đôi lại.</string>
     <string name="ns_client">NSClient</string>
