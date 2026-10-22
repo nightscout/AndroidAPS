@@ -156,6 +156,13 @@ class PrepareGraphDataRunner(
     internal fun carbsForBucket(windowCarbs: List<CA>, bgTime: Long): List<CA> =
         windowCarbs.filter { it.timestamp in (bgTime - T.mins(5).msecs() + 1)..bgTime }
 
+    internal fun shouldIgnoreHypoCarb(carb: CA, now: Long): Boolean {
+        val note = carb.notes ?: return false
+        if (!note.contains(Constants.HYPO_CARB_NOTE_TAG, ignoreCase = true)) return false
+        val ignoreUntil = carb.timestamp + T.mins(Constants.HYPO_CARB_IGNORE_MINUTES.toLong()).msecs()
+        return now < ignoreUntil
+    }
+
     // ---------- Phase 1 helpers (LoadBgDataWorker logic) ----------
 
     private suspend fun AutosensDataStore.loadBgData(to: Long) {
@@ -303,7 +310,7 @@ class PrepareGraphDataRunner(
                 ads.roundUpTime(bucketedData[bucketedData.size - 1].timestamp) - T.mins(5).msecs() + 1,
                 ads.roundUpTime(bucketedData[0].timestamp),
                 true
-            )
+            ).filterNot { shouldIgnoreHypoCarb(it, start) }
             // start from oldest to be able sub cob
             for (i in bucketedData.size - 4 downTo 0) {
                 data.signals.emitProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt())
@@ -530,7 +537,7 @@ class PrepareGraphDataRunner(
                 ads.roundUpTime(bucketedData[bucketedData.size - 1].timestamp) - T.mins(5).msecs() + 1,
                 ads.roundUpTime(bucketedData[0].timestamp),
                 true
-            )
+            ).filterNot { shouldIgnoreHypoCarb(it, start) }
             // start from oldest to be able to sub cob
             for (i in bucketedData.size - 4 downTo 0) {
                 data.signals.emitProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt())

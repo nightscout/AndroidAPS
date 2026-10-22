@@ -153,11 +153,24 @@ internal class CarbsDialogViewModelTest {
         sut.updateNotes("late dinner")
         sut.updateAlarm(true)
         sut.updateBolusReminder(true)
+        sut.updateHypoCarbs(true)
 
         val state = sut.uiState.value
         assertThat(state.notes).isEqualTo("late dinner")
         assertThat(state.alarmChecked).isTrue()
         assertThat(state.bolusReminderChecked).isTrue()
+        assertThat(state.hypoCarbsChecked).isTrue()
+    }
+
+    @Test
+    fun `hypo carbs marker is independent from temp-target toggles`() {
+        sut.updateHypoCarbs(true)
+        sut.updateHypoTt(true)
+        sut.updateActivityTt(true)
+
+        val state = sut.uiState.value
+        assertThat(state.hypoCarbsChecked).isTrue()
+        assertThat(state.activityTtChecked).isTrue()
     }
 
     /** `glucose + 3 * delta < 70` is the "heading low" test the reminder row is gated on. */

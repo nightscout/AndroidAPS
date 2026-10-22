@@ -1,5 +1,6 @@
 package app.aaps.workflow
 
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensData
@@ -143,6 +144,32 @@ class PrepareGraphDataRunnerTest : TestBaseWithProfile() {
     @Test
     fun `an empty span yields nothing`() {
         assertThat(runner().carbsForBucket(emptyList(), T.mins(60).msecs())).isEmpty()
+    }
+
+    @Test
+    fun `hypo carb note is ignored while still inside ignore window`() {
+        val now = T.hours(12).msecs()
+        val tagged = CA(
+            timestamp = now - T.mins((Constants.HYPO_CARB_IGNORE_MINUTES - 1).toLong()).msecs(),
+            amount = 12.0,
+            duration = 0,
+            notes = "${Constants.HYPO_CARB_NOTE_TAG} juice"
+        )
+
+        assertThat(runner().shouldIgnoreHypoCarb(tagged, now)).isTrue()
+    }
+
+    @Test
+    fun `hypo carb note is used normally after ignore window expires`() {
+        val now = T.hours(12).msecs()
+        val tagged = CA(
+            timestamp = now - T.mins((Constants.HYPO_CARB_IGNORE_MINUTES + 1).toLong()).msecs(),
+            amount = 12.0,
+            duration = 0,
+            notes = "${Constants.HYPO_CARB_NOTE_TAG} juice"
+        )
+
+        assertThat(runner().shouldIgnoreHypoCarb(tagged, now)).isFalse()
     }
 
     @Test

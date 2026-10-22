@@ -74,6 +74,8 @@ object Constants {
     const val DEFAULT_TT_ACTIVITY_DURATION = 90
     const val DEFAULT_TT_HYPO_TARGET = 160.0
     const val DEFAULT_TT_HYPO_DURATION = 60
+    const val HYPO_CARB_IGNORE_MINUTES = 180
+    const val HYPO_CARB_NOTE_TAG = "[HYPO-CARB]"
 
     //Autosens
     const val DEVIATION_TO_BE_EQUAL = 2.0

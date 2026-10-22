@@ -265,6 +265,10 @@ class CarbsDialogViewModel(
         }
     }
 
+    fun updateHypoCarbs(checked: Boolean) {
+        _uiState.update { it.copy(hypoCarbsChecked = checked) }
+    }
+
     fun updateAlarm(checked: Boolean) {
         _uiState.update { it.copy(alarmChecked = checked) }
     }
@@ -381,9 +385,20 @@ class CarbsDialogViewModel(
                 add(
                     BatchAction.Bolus(
                         insulin = 0.0, carbs = state.carbs, carbsTimeOffsetMinutes = state.timeOffsetMinutes,
-                        carbsDurationHours = state.durationHours, recordOnly = false, notes = state.notes, timestamp = state.eventTime, iCfg = null
+                        carbsDurationHours = state.durationHours,
+                        recordOnly = false,
+                        notes = buildCarbNote(state.notes, state.hypoCarbsChecked && state.carbs > 0),
+                        timestamp = state.eventTime,
+                        iCfg = null
                     )
                 )
         }
+    }
+
+    private fun buildCarbNote(notes: String, markAsHypoCarbs: Boolean): String {
+        val raw = notes.trim()
+        if (!markAsHypoCarbs) return raw
+        if (raw.startsWith(Constants.HYPO_CARB_NOTE_TAG)) return raw
+        return if (raw.isEmpty()) Constants.HYPO_CARB_NOTE_TAG else "${Constants.HYPO_CARB_NOTE_TAG} $raw"
     }
 }
