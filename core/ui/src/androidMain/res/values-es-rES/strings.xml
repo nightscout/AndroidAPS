@@ -463,6 +463,7 @@
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Cancelado</string>
     <string name="clientcontrol_fail_control_disabled">El control remoto está desactivado en el máster</string>
     <string name="clientcontrol_fail_not_allowed_for_role">Este teléfono no tiene permisos para esta acción según su rol en el master</string>
+    <string name="clientcontrol_fail_other_token">El master lo ha rechazado: este teléfono escribe en Nightscout con un token distinto al suyo. En el master, elimine este teléfono y vuelva a añadirlo</string>
     <string name="clientcontrol_fail_no_pending_bolus">El bolo preparado ha caducado o ha sido reemplazado. Toca el botón de nuevo</string>
     <string name="clientcontrol_fail_bolus_compute">El máster no ha podido calcular el bolo (falta la glucemia, el perfil, o la bomba no está lista)</string>
     <string name="clientcontrol_fail_internal">Algo ha salido mal</string>
