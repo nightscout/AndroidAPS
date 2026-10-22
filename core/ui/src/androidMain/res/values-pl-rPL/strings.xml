@@ -463,6 +463,7 @@
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Anulowano</string>
     <string name="clientcontrol_fail_control_disabled">Zdalne sterowanie jest wyłączone na telefonie pacjenta.</string>
     <string name="clientcontrol_fail_not_allowed_for_role">Rola tego telefonu na telefonie głównym nie pozwala na to.</string>
+    <string name="clientcontrol_fail_other_token">Telefon pacjenta odrzucił żądanie: ten telefon zapisuje dane do Nightscout innym tokenem niż własny. Na telefonie pacjenta usuń ten telefon i dodaj go ponownie.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Przygotowany wcześniej bolus wygasł lub został zastąpiony nowszym. Naciśnij przycisk ponownie.</string>
     <string name="clientcontrol_fail_bolus_compute">Telefon pacjenta nie mógł obliczyć bolusa (brak glukozy / profilu lub pompa nie jest gotowa).</string>
     <string name="clientcontrol_fail_internal">Coś poszło nie tak.</string>
