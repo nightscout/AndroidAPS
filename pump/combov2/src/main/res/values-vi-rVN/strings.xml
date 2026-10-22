@@ -81,7 +81,6 @@ Nếu sau khoảng 5 phút vẫn chưa thiết lập được kết nối:\n\n
     <string name="combov2_bolus_delivery_failed">Tiêm liều bolus thất bại. Có vẻ như bolus chưa được tiêm. Để chắc chắn, vui lòng kiểm tra trực tiếp trên bơm để tránh tiêm bolus hai lần, sau đó thực hiện lại bolus. Để phòng tránh lỗi phần mềm, hệ thống sẽ không tự động thử tiêm lại bolus.</string>
     <string name="combov2_bolus_not_delivered">Liều Bolus chưa được tiêm</string>
     <string name="combov2_cannot_access_pump_data">Không thể truy cập dữ liệu bơm; cần ghép nối lại bơm</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Phát hiện các liều bolus không được ghi nhận. Hủy bolus vì lý do an toàn.</string>
     <string name="combov2_incorrect_active_basal_profile">Cấu hình liều nền đang hoạt động không đúng; Cấu hình 1 phải là cấu hình đang kích hoạt, không phải cấu hình %1$d</string>
     <string name="combov2_unrecognized_alert">Cảnh báo Combo không được nhận dạng</string>
     <string name="combov2_combo_alert">Cảnh báo Combo</string>
