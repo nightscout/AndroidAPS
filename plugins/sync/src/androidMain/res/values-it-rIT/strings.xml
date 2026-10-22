@@ -128,6 +128,12 @@
     <string name="upload_now">Carica adesso</string>
     <string name="tidepool_purge_data">Elimina tutti i dati</string>
     <string name="tidepool_purge_data_confirm">Eliminare TUTTI i dati AAPS caricati su Tidepool? Questo non può essere annullato. Usalo per rimuovere i dati corrotti da una versione più vecchia, quindi esegui \"Sincronizzazione completa\" per ri-caricare.</string>
+    <string name="tidepool_full_sync_comment">Sincronizzazione completa? AAPS caricherà nuovamente tutti i dati su Tidepool. Potrebbe volerci un po\' di tempo.</string>
+    <string name="tidepool_logout_confirm">Esci da Tidepool? Il caricamento si ferma fino a quando non accedi di nuovo.</string>
+    <string name="tidepool_status_not_logged_in">Accesso non effettuato</string>
+    <string name="tidepool_status_no_session">Accesso effettuato, non ancora connesso</string>
+    <string name="tidepool_status_blocked">Bloccato dalle opzioni di connettività</string>
+    <string name="tidepool_status_failed">Fallito. Vedi il log qui sotto.</string>
     <string name="not_connected">Non connesso</string>
     <string name="read_only">Sola lettura</string>
     <string name="working">In esecuzione</string>
