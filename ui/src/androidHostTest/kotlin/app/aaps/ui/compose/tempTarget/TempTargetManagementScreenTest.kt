@@ -60,7 +60,6 @@ class TempTargetManagementScreenTest {
     private lateinit var context: Context
 
     private lateinit var switchToEdit: String
-    private lateinit var moreOptions: String
     private lateinit var removeLabel: String
     private lateinit var activateLabel: String
     private lateinit var cancelLabel: String
@@ -81,7 +80,6 @@ class TempTargetManagementScreenTest {
         viewModels = TempTargetManagementViewModelFixture(screen)
         context = RuntimeEnvironment.getApplication()
         switchToEdit = context.getString(app.aaps.core.ui.R.string.switch_to_edit)
-        moreOptions = context.getString(app.aaps.core.ui.R.string.more_options)
         removeLabel = context.getString(app.aaps.ui.R.string.remove_label)
         activateLabel = context.getString(app.aaps.ui.R.string.activate_label)
         cancelLabel = context.getString(app.aaps.core.ui.R.string.cancel)
@@ -141,7 +139,7 @@ class TempTargetManagementScreenTest {
     fun editModeOffersTheEditToolbarAndTheActivateButton() {
         setScreen(viewModels.build(presets = builtIns))
 
-        compose.onNodeWithContentDescription(moreOptions).assertIsDisplayed()
+        compose.onNodeWithContentDescription(reorderLabel).assertIsDisplayed()
         compose.onNodeWithContentDescription(removeLabel).assertIsDisplayed()
         compose.onNodeWithContentDescription(activateLabel).assertIsDisplayed()
         compose.onNodeWithContentDescription(switchToEdit).assertDoesNotExist()
@@ -154,7 +152,7 @@ class TempTargetManagementScreenTest {
         compose.onNodeWithContentDescription(switchToEdit).assertIsDisplayed()
         // The whole editing toolbar is gone, not merely disabled.
         compose.onNodeWithContentDescription(removeLabel).assertDoesNotExist()
-        compose.onNodeWithContentDescription(moreOptions).assertDoesNotExist()
+        compose.onNodeWithContentDescription(reorderLabel).assertDoesNotExist()
         // Activating is still allowed from play mode.
         compose.onNodeWithContentDescription(activateLabel).assertIsDisplayed()
     }
@@ -283,23 +281,20 @@ class TempTargetManagementScreenTest {
         // Only the three built-ins: they keep their positions, so there is no move to make.
         setScreen(viewModels.build(presets = builtIns))
 
-        compose.onNodeWithContentDescription(moreOptions).performClick()
-
-        compose.onNodeWithText(reorderLabel).assertIsNotEnabled()
+        compose.onNodeWithContentDescription(reorderLabel).assertIsNotEnabled()
     }
 
     @Test
     fun sortModeReplacesTheTopBarAndHidesTheFloatingActions() {
         setScreen(viewModels.build(presets = builtIns + listOf(custom("a"), custom("b"))))
 
-        compose.onNodeWithContentDescription(moreOptions).performClick()
-        compose.onNodeWithText(reorderLabel).assertIsEnabled()
-        compose.onNodeWithText(reorderLabel).performClick()
+        compose.onNodeWithContentDescription(reorderLabel).assertIsEnabled()
+        compose.onNodeWithContentDescription(reorderLabel).performClick()
 
-        // Confirm and cancel replace back and the overflow menu.
+        // Confirm and cancel replace back and the reorder button.
         compose.onNodeWithContentDescription(okLabel).assertIsDisplayed()
         compose.onNodeWithContentDescription(cancelLabel).assertIsDisplayed()
-        compose.onNodeWithContentDescription(moreOptions).assertDoesNotExist()
+        compose.onNodeWithContentDescription(reorderLabel).assertDoesNotExist()
         // The buttons that float over the cards would sit on top of the sort controls.
         compose.onNodeWithContentDescription(activateLabel).assertDoesNotExist()
         compose.onNodeWithContentDescription(removeLabel).assertDoesNotExist()

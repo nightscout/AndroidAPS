@@ -29,9 +29,8 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.pump.ActionCategory
-import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
@@ -195,14 +194,13 @@ open class DanaOverviewViewModel(
     /**
      * Override in subclasses to add variant-specific management actions (e.g., BLE pair/unpair for DanaRS).
      */
-    protected open fun buildManagementActions(pump: DanaPump, isInitialized: Boolean, isConfigured: Boolean): List<PumpAction> = buildList {
+    protected open fun buildManagementActions(pump: DanaPump, isInitialized: Boolean, isConfigured: Boolean): List<ScreenAction> = buildList {
         // User Settings (only for non-Korean, non-legacy-DanaR firmware)
         if (pump.hwModel != 1 && pump.protocol != 0x00) {
             add(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(R.string.danar_user_options),
                     icon = Icons.Filled.Settings,
-                    category = ActionCategory.MANAGEMENT,
                     visible = isInitialized,
                     onClick = { onUserSettingsClick() }
                 )
@@ -212,19 +210,17 @@ open class DanaOverviewViewModel(
         // Pair / Unpair
         if (isConfigured) {
             add(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(CoreUiR.string.pump_unpair),
                     icon = Icons.Filled.Bluetooth,
-                    category = ActionCategory.MANAGEMENT,
                     onClick = { onUnpairClick() }
                 )
             )
         } else {
             add(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(CoreUiR.string.pairing),
                     icon = Icons.Filled.Bluetooth,
-                    category = ActionCategory.MANAGEMENT,
                     onClick = { onPairClick() }
                 )
             )
@@ -397,17 +393,15 @@ open class DanaOverviewViewModel(
 
         // Actions
         val primaryActions = listOf(
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CoreUiR.string.refresh),
                 icon = Icons.Filled.Refresh,
-                category = ActionCategory.PRIMARY,
                 visible = isInitialized,
                 onClick = { onRefreshClick() }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CoreUiR.string.pump_history),
                 icon = Icons.AutoMirrored.Filled.List,
-                category = ActionCategory.PRIMARY,
                 visible = isInitialized,
                 onClick = { onHistoryClick() }
             )

@@ -23,10 +23,8 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -108,7 +106,6 @@ fun ProfileManagementScreen(
     val isReorderMode = reorderOrder != null
     val canReorder = !isPlayMode && uiState.profileNames.size > 1
     val scope = rememberCoroutineScope()
-    var showOverflowMenu by remember { mutableStateOf(false) }
 
     // Back leaves sort mode rather than the screen, so a reshuffle isn't silently discarded.
     NavigationBackHandler(
@@ -230,28 +227,13 @@ fun ProfileManagementScreen(
                                     }
                                 }
                             } else {
-                                // Menu entry as well as the long-press: the long-press is undiscoverable
+                                // A button as well as the long-press: the long-press is undiscoverable
                                 // on its own, and this is the only route a screen reader can take.
-                                Box {
-                                    IconButton(onClick = { showOverflowMenu = true }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.MoreVert,
-                                            contentDescription = stringResource(CoreUiStrings.more_options)
-                                        )
-                                    }
-                                    DropdownMenu(
-                                        expanded = showOverflowMenu,
-                                        onDismissRequest = { showOverflowMenu = false }
-                                    ) {
-                                        DropdownMenuItem(
-                                            text = { Text(stringResource(CoreUiStrings.reorder)) },
-                                            enabled = canReorder,
-                                            onClick = {
-                                                showOverflowMenu = false
-                                                viewModel.enterReorderMode()
-                                            }
-                                        )
-                                    }
+                                IconButton(onClick = { viewModel.enterReorderMode() }, enabled = canReorder) {
+                                    Icon(
+                                        imageVector = Icons.Filled.SwapVert,
+                                        contentDescription = stringResource(CoreUiStrings.reorder)
+                                    )
                                 }
                             }
                         }

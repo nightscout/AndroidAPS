@@ -31,9 +31,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.readableDuration
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.pump.ActionCategory
-import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
@@ -285,40 +284,40 @@ class ErosOverviewViewModel(
 
     // region Actions
 
-    private fun buildPrimaryActions(): List<PumpAction> {
+    private fun buildPrimaryActions(): List<ScreenAction> {
         if (!podStateManager.hasPodState()) return emptyList()
         val queueEmpty = isQueueEmpty()
         val rlReady = rileyLinkServiceData.rileyLinkServiceState.isReady()
 
         return listOf(
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CoreUiR.string.refresh),
                 icon = Icons.Filled.Refresh,
                 enabled = podStateManager.isPodInitialized && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED) && rlReady && queueEmpty,
                 onClick = { runCustomCommandWithErrorDialog(CommandGetPodStatus(), rh.gs(CommonR.string.omnipod_common_error_failed_to_refresh_status)) }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CommonR.string.omnipod_common_overview_button_silence_alerts),
                 icon = Icons.Filled.NotificationsOff,
                 enabled = rlReady && queueEmpty,
                 visible = !omnipodManager.isAutomaticallyAcknowledgeAlertsEnabled && podStateManager.isPodRunning && (podStateManager.hasActiveAlerts() || commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class)),
                 onClick = { runCustomCommandWithErrorDialog(CommandSilenceAlerts(), rh.gs(CommonR.string.omnipod_common_error_failed_to_silence_alerts)) }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CommonR.string.omnipod_common_overview_button_resume_delivery),
                 icon = Icons.Filled.PlayArrow,
                 enabled = rlReady && queueEmpty,
                 visible = podStateManager.isPodRunning && (podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandResumeDelivery::class)),
                 onClick = { runCustomCommandWithErrorDialog(CommandResumeDelivery(), rh.gs(CommonR.string.omnipod_common_error_failed_to_resume_delivery)) }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CommonR.string.omnipod_common_overview_button_suspend_delivery),
                 icon = Icons.Filled.Pause,
                 enabled = podStateManager.isPodRunning && !podStateManager.isSuspended && rlReady && queueEmpty,
                 visible = omnipodManager.isSuspendDeliveryButtonEnabled && podStateManager.isPodRunning && (!podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandSuspendDelivery::class)),
                 onClick = { runCustomCommandWithErrorDialog(CommandSuspendDelivery(), rh.gs(CommonR.string.omnipod_common_error_failed_to_suspend_delivery)) }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CommonR.string.omnipod_common_overview_button_set_time),
                 icon = Icons.Filled.Schedule,
                 enabled = podStateManager.isPodRunning && !podStateManager.isSuspended && rlReady && queueEmpty,
@@ -328,52 +327,46 @@ class ErosOverviewViewModel(
         )
     }
 
-    private fun buildManagementActions(): List<PumpAction> {
+    private fun buildManagementActions(): List<ScreenAction> {
         val rlReady = rileyLinkServiceData.rileyLinkServiceState.isReady()
 
         return listOf(
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CommonR.string.omnipod_common_pod_management_button_activate_pod),
                 icon = Icons.Filled.PlayArrow,
-                category = ActionCategory.MANAGEMENT,
                 visible = !podStateManager.isPodActivationCompleted,
                 enabled = rlReady,
                 onClick = { onActivatePodClicked() }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CommonR.string.omnipod_common_pod_management_button_deactivate_pod),
                 icon = Icons.Filled.Pause,
-                category = ActionCategory.MANAGEMENT,
                 // As soon as a pod is paired, not only after activation. A pod that faults part way through
                 // activation can only be removed here: when deactivation fails, the wizard offers "Discard" (#1217).
                 visible = podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED),
                 enabled = rlReady,
                 onClick = { _events.tryEmit(OmnipodOverviewEvent.StartDeactivation) }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CommonR.string.omnipod_common_pod_management_button_play_test_beep),
                 icon = Icons.AutoMirrored.Filled.VolumeUp,
-                category = ActionCategory.MANAGEMENT,
                 enabled = rlReady && !commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class),
                 visible = podStateManager.isPodInitialized && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED),
                 onClick = { runCustomCommandWithErrorDialog(CommandPlayTestBeep(), rh.gs(CommonR.string.omnipod_common_error_failed_to_play_test_beep)) }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CommonR.string.omnipod_common_pod_management_button_pod_history),
                 icon = Icons.Filled.History,
-                category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(OmnipodOverviewEvent.ShowHistory) }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(RileyLinkR.string.rileylink_pair),
                 icon = Icons.Filled.Bluetooth,
-                category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(OmnipodOverviewEvent.ShowRileyLinkPairWizard) }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(R.string.omnipod_eros_pod_management_button_riley_link_stats),
                 icon = Icons.Filled.Bluetooth,
-                category = ActionCategory.MANAGEMENT,
                 visible = omnipodManager.isRileylinkStatsButtonEnabled,
                 onClick = {
                     if (omnipodErosPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
@@ -381,19 +374,17 @@ class ErosOverviewViewModel(
                     }
                 }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(R.string.omnipod_eros_pod_management_button_reset_riley_link_config),
                 icon = Icons.Filled.RestartAlt,
-                category = ActionCategory.MANAGEMENT,
                 onClick = {
                     serviceTaskExecutor.startTask(resetRileyLinkConfigurationTaskProvider())
                     _events.tryEmit(OmnipodOverviewEvent.ShowSnackbar(rh.gs(RileyLinkR.string.rileylink_config_reset)))
                 }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CommonR.string.omnipod_common_pod_management_button_discard_pod),
                 icon = Icons.Filled.Delete,
-                category = ActionCategory.MANAGEMENT,
                 visible = podStateManager.hasPodState() && (!podStateManager.isPodInitialized || config.isEngineeringMode()),
                 onClick = { onDiscardPodClicked() }
             )
