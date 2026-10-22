@@ -81,7 +81,6 @@ Se non viene stabilita alcuna connessione dopo più di ~5 minuti:\n\n
     <string name="combov2_bolus_delivery_failed">Erogazione bolo fallita. Sembra che nessun bolo sia stato erogato. Per sicurezza, controlla il micro per evitare un doppio bolo e se è tutto ok, erogalo di nuovo. Come protezione da eventuali \"bug\", i boli non vengono ripetuti automaticamente.</string>
     <string name="combov2_bolus_not_delivered">Bolo non erogato</string>
     <string name="combov2_cannot_access_pump_data">Impossibile accedere ai dati del micro; il micro deve essere associato di nuovo</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Rilevate erogazioni bolo non contabilizzate. Cancellazione del bolo per motivi di sicurezza.</string>
     <string name="combov2_incorrect_active_basal_profile">Profilo basale attivo errato; il profilo 1 deve essere quello attivo, non il profilo %1$d</string>
     <string name="combov2_unrecognized_alert">Avviso del Combo non riconosciuto</string>
     <string name="combov2_combo_alert">Avviso del Combo</string>
