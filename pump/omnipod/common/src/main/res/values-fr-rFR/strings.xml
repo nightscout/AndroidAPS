@@ -120,9 +120,13 @@
     <string name="omnipod_common_pdm_notification_header_reservoir_empty">Réservoir vide</string>
     <string name="omnipod_common_pdm_notification_text_reservoir_empty">L\'administration d\'insuline s\'est arrêtée. Changez de Pod maintenant.</string>
     <string name="omnipod_common_pdm_notification_header_auto_off">Arrêt automatique</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Injection d\'insuline arrêtée. Votre PDM et votre Pod n\'ont pas communiqué au cours des 4 dernières heures. Pour reprendre l\'injection d\'insuline, changez le Pod maintenant.</string>
     <string name="omnipod_common_pdm_notification_header_pod_expired">Pod expiré</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">L\'injection d\'insuline s\'est arrêtée. Changez le Pod maintenant.</string>
     <string name="omnipod_common_pdm_notification_header_occluded">Occlusion détectée</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">L\'injection d\'insuline a été arrêtée. Changez le Pod maintenant. Vérifiez votre glycémie</string>
     <string name="omnipod_common_pdm_notification_header_pod_error">Erreur du Pod</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">L\'injection d\'insuline s\'est arrêtée. Changez le Pod maintenant.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Le Pod expirera bientôt</string>
     <string name="omnipod_common_alert_expiration_advisory">Le Pod expirera bientôt</string>
