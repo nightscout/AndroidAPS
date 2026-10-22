@@ -82,6 +82,9 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_bolus_delivery_failed">Bolus avbrutt. Det virker som ingen bolus er levert. For å være sikker, sjekk pumpen for å unngå levering av dobbel bolus og gjør evt et nytt forsøk. For å unngå feil vil systemet aldri prøve å levere ny bolus.</string>
     <string name="combov2_bolus_not_delivered">Bolus ikke levert</string>
     <string name="combov2_cannot_access_pump_data">Kan ikke lese data fra pumpen; pumpen må sammenkobles igjen</string>
+    <string name="combov2_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.60 U">Tilkoblingen til pumpen ble brutt under bolusen. Pumpen hadde da levert %1$s, og den kan fortsatt levere resten. Ikke gi en ny bolus. AAPS henter den faktiske mengden fra pumpen ved neste tilkobling.</string>
+    <string name="combov2_unknown_bolus_in_history">Pumpehistorikken inneholder en bolus som AAPS ikke kjente til. Den er nå registrert. Denne bolusen ble ikke levert, fordi den ble beregnet uten å ta hensyn til dette insulinet. Kontroller IOB, og gi deretter en ny bolus hvis det fortsatt er nødvendig.</string>
+    <string name="combov2_bolus_given_other_boluses_found">Bolusen ble levert, men pumpehistorikken inneholdt også andre boluser som AAPS ikke kjente til. De er nå registrert. Kontroller IOB før neste bolus.</string>
     <string name="combov2_incorrect_active_basal_profile">Feil aktiv basalprofil; profil 1 må være den aktive, ikke profil %1$d</string>
     <string name="combov2_unrecognized_alert">Ukjent Combo alarm</string>
     <string name="combov2_combo_alert">Combo alarm</string>
