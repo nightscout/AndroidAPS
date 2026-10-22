@@ -159,7 +159,7 @@ class NsFrameHandler(
                     nsClientV3Plugin().bumpMasterSignal(opened.signedAt ?: srvModified)
                 }
 
-            // Client: hot state doc - the active scene and runtime flags only. Kept apart from the
+            // Client: hot state doc - the active scene only. Kept apart from the
             // cold branch so this can never clear a running scene.
             config.AAPSCLIENT && identifier == SettingsIdentifiers.STATE                                  ->
                 masterDocVerifier().open(identifier, doc)?.let { opened ->

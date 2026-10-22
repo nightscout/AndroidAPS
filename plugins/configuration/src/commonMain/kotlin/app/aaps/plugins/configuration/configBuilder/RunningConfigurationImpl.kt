@@ -81,11 +81,14 @@ class RunningConfigurationImpl(
             // activePumpInternal because a client only has VirtualPump (not the PumpWithConcentration wrapper).
             // Stays a real JSON boolean, as it was with org.json - everything under syncedPrefs is a string, this is not.
             put("isFakingTempsByExtendedBoluses", pumpInterface.isFakingTempsByExtendedBoluses)
+            // Computed from cold settings (the autosens and dynamic ISF switches, the APS plugin), so it goes in the cold
+            // doc, which is sent when they change. The hot doc is sent only when the scene changes.
+            put("usedAutosensOnMainPhone", constraintsChecker.isAutosensModeEnabled().value())
             put("version", config.VERSION_NAME)
         }
     }
 
-    // called in AAPS mode only — the small "hot" doc: active scene (if any) + computed runtime flags.
+    // called in AAPS mode only — the small "hot" doc: the active scene, if any.
     override fun activeSceneConfiguration(): JsonObject = buildJsonObject {
         activeSceneSync.activeSceneSnapshot()?.let { snapshot ->
             // Serialize from the wire DTO so the field set stays in lockstep with
@@ -105,7 +108,6 @@ class RunningConfigurationImpl(
             // could not read a kotlinx tree.
             put("activeScene", wireJson.encodeToJsonElement(NSActiveScene.serializer(), wire))
         }
-        put("usedAutosensOnMainPhone", constraintsChecker.isAutosensModeEnabled().value())
     }
 
     // All cold-synced values (plugin selection, plugin settings, scene/quick-wizard/automation/insulin
@@ -200,9 +202,10 @@ class RunningConfigurationImpl(
         // (incl. false, so turning it off on the master propagates); null = older master → leave the client flag as-is.
         // activePumpInternal (the real plugin) — NOT activePump, which is a PumpWithConcentration wrapper that isn't a VirtualPump.
         configuration.isFakingTempsByExtendedBoluses?.let { (activePlugin.activePumpInternal as? VirtualPump)?.fakeDataDetected = it }
+        configuration.usedAutosensOnMainPhone?.let { preferences.put(BooleanNonKey.AutosensUsedOnMainPhone, it) }
     }
 
-    // called in NSClient mode only — apply the hot doc (active scene + computed runtime flags).
+    // called in NSClient mode only — apply the hot doc (the active scene).
     // Kept separate from [applyCold] so a cold-doc apply (which carries no activeScene) never
     // clears a running scene.
     override fun applyHot(configuration: NSRunningConfiguration) {
@@ -213,7 +216,6 @@ class RunningConfigurationImpl(
         // activeScene: null on the wire means "no scene active" — clear locally.
         // Always pass through (even null) so master-side dismissal propagates.
         activeSceneSync.applyActiveScene(configuration.activeScene?.toSnapshot())
-        configuration.usedAutosensOnMainPhone?.let { preferences.put(BooleanNonKey.AutosensUsedOnMainPhone, it) }
     }
 
     private fun NSActiveScene.toSnapshot() =

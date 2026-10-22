@@ -157,7 +157,8 @@ class RunningConfigurationPublisherTest {
     fun `both docs are signed and each one later than the one before`() = runTest {
         whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(false)
         whenever(runningConfiguration.configuration()).thenReturn(buildJsonObject { put("syncedPrefs", syncedPrefs) })
-        whenever(runningConfiguration.activeSceneConfiguration()).thenReturn(buildJsonObject { put("usedAutosensOnMainPhone", true) })
+        val scene = buildJsonObject { put("sceneId", "scene-1") }
+        whenever(runningConfiguration.activeSceneConfiguration()).thenReturn(buildJsonObject { put("activeScene", scene) })
         whenever(authorizedRepository.observe()).thenReturn(emptyFlow())
         whenever(authorizedRepository.current(any())).thenReturn(emptyList())
         whenever(nsAndroidClient.updateSettings(any(), any())).thenReturn(response(200))
@@ -171,7 +172,7 @@ class RunningConfigurationPublisherTest {
         val hot = argumentCaptor<JsonObject>()
         verify(nsAndroidClient).updateSettings(eq(SettingsIdentifiers.COLD), cold.capture())
         verify(nsAndroidClient).updateSettings(eq(SettingsIdentifiers.STATE), hot.capture())
-        assertThat(openSigned(SettingsIdentifiers.STATE, hot.firstValue)["usedAutosensOnMainPhone"]).isEqualTo(JsonPrimitive(true))
+        assertThat(openSigned(SettingsIdentifiers.STATE, hot.firstValue)["activeScene"]).isEqualTo(scene)
         val signedAt = { doc: JsonObject -> Json.parseToJsonElement(doc[MasterDocVerifier.SIGNED]!!.jsonPrimitive.content).jsonObject[MasterDocVerifier.SIGNED_AT]!!.jsonPrimitive.long }
         assertThat(signedAt(hot.firstValue)).isGreaterThan(signedAt(cold.firstValue))
     }

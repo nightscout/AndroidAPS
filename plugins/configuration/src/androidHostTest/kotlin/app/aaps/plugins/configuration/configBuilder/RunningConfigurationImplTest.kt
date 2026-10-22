@@ -3,6 +3,7 @@ package app.aaps.plugins.configuration.configBuilder
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -10,6 +11,7 @@ import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.scenes.ActiveSceneSnapshot
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
@@ -22,7 +24,9 @@ import app.aaps.core.keys.interfaces.SyncChannel
 import app.aaps.core.keys.interfaces.SyncDirection
 import app.aaps.core.nssdk.localmodel.configuration.NSActiveScene
 import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
+import kotlinx.serialization.json.JsonPrimitive
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -89,9 +93,33 @@ internal class RunningConfigurationImplTest {
     /** The hot doc owns scene state: a null activeScene clears it (master-side dismissal propagates). */
     @Test
     fun applyHotWithNullActiveSceneClearsIt() {
-        sut.applyHot(NSRunningConfiguration(activeScene = null, usedAutosensOnMainPhone = true))
+        sut.applyHot(NSRunningConfiguration(activeScene = null))
         verify(activeSceneSync, times(1)).applyActiveScene(isNull())
-        verify(preferences).put(eq(BooleanNonKey.AutosensUsedOnMainPhone), eq(true))
+    }
+
+    /**
+     * Whether autosens is used is worked out from cold settings, so it goes in the cold doc. In the hot doc, which is
+     * sent only when the scene changes, switching autosens off on the master did not reach the client.
+     */
+    @Test
+    fun theColdDocCarriesWhetherAutosensIsUsedAndTheHotDocDoesNot() {
+        val pump = mock<PumpWithConcentration>()
+        whenever(config.appInitialized).thenReturn(true)
+        whenever(config.VERSION_NAME).thenReturn("3.4.0")
+        whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(pump.isInitialized()).thenReturn(true)
+        whenever(pump.model()).thenReturn(PumpType.GENERIC_AAPS)
+        val autosens = mock<Constraint<Boolean>>().also { whenever(it.value()).thenReturn(false) }
+        whenever(constraintsChecker.isAutosensModeEnabled()).thenReturn(autosens)
+
+        assertEquals(JsonPrimitive(false), sut.configuration()["usedAutosensOnMainPhone"])
+        assertNull(sut.activeSceneConfiguration()["usedAutosensOnMainPhone"])
+    }
+
+    @Test
+    fun applyColdPutsWhetherAutosensIsUsedOnTheMaster() {
+        sut.applyCold(NSRunningConfiguration(usedAutosensOnMainPhone = false))
+        verify(preferences).put(eq(BooleanNonKey.AutosensUsedOnMainPhone), eq(false))
     }
 
     /** The hot doc applies a present scene snapshot. */
