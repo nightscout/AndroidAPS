@@ -82,7 +82,9 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_bolus_delivery_failed">Bolus delivery failed. It appears no bolus was delivered. To be sure, please check the pump to avoid a double bolus and then bolus again. To guard against bugs, boluses are not automatically retried.</string>
     <string name="combov2_bolus_not_delivered">Bolus not delivered</string>
     <string name="combov2_cannot_access_pump_data">Cannot access pump data; the pump must be paired again</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Unaccounted bolus deliveries detected. Cancelling bolus for safety reasons.</string>
+    <string name="combov2_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.60 U">The connection to the pump was lost during the bolus. The pump had given %1$s by then, and it may still give the rest. Do not bolus again. AAPS reads the real amount from the pump at the next connection.</string>
+    <string name="combov2_unknown_bolus_in_history">The pump history has a bolus that AAPS did not know about. It is recorded now. This bolus was not given, because it was calculated without that insulin. Check IOB, then bolus again if it is still needed.</string>
+    <string name="combov2_bolus_given_other_boluses_found">The bolus was given, but the pump history also had other boluses that AAPS did not know about. They are recorded now. Check IOB before the next bolus.</string>
     <string name="combov2_incorrect_active_basal_profile">Incorrect active basal profile; profile 1 must be the active one, not profile %1$d</string>
     <string name="combov2_unrecognized_alert">Unrecognized Combo alert</string>
     <string name="combov2_combo_alert">Combo alert</string>
