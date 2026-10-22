@@ -179,6 +179,7 @@
     <string name="bg_label">Glykémia</string>
     <string name="calibration">Kalibrácia</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Kalibrácia nebola uložená: glykémia sa mení príliš rýchlo (Δ %1$s %3$s za 5 min, limit %2$s). Skúste to znova, keď sa glykémia stabilizuje.</string>
     <string name="cal_reject_no_pair">Kalibrácia nebola uložená: 10 minút späť nenájdená žiadna glykémia.</string>
     <string name="cal_reject_warmup">Kalibrácia nebola uložená: senzor je stále v dvojhodinovom zahrievacom okne.</string>
     <string name="cal_reject_no_session">Kalibrácia nebola uložená: nie je aktívna žiadna relácia. Zaznamenajte najskôr výmenu senzora.</string>
@@ -226,6 +227,7 @@
     <string name="percentage_label">Percento</string>
     <string name="timeshift_label">Posun času</string>
     <string name="confirm_remove_multiple_items">Naozaj chcete odstrániť %1$d položiek</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Hlavné zariadenie nemá %1$d z týchto záznamov. Tieto záznamy nebudú odstránené.</string>
     <string name="overview_treatment_label">Ošetrenie</string>
     <string name="copytolocalprofile">Vytvoriť z tohoto profilu nový profil?</string>
     <string name="wear_wizard_settings">Nastavenie sprievodcu na hodinkách</string>
@@ -419,6 +421,19 @@
     <string name="scene_lock_banner_control_disabled">Hlavné zariadenie (Master) má zakázané vzdialené ovládanie. Ovládanie scén sa obnoví, keď bude znovu povolené na hlavnom zariadení.</string>
     <string name="master_offline_banner">Hlavné zariadenie je nedostupné. Úpravy sú zakázané, kým sa pripojenie neobnoví.</string>
     <string name="master_control_disabled_banner">Hlavné zariadenie (Master) má zakázané diaľkové ovládanie. Úprava je zakázaná, dokiaľ nie je diaľkové ovládanie znovu povolené na hlavnom zariadení.</string>
+    <string name="hardened_mode_on">Režim zvýšeného zabezpečenia je zapnutý</string>
+    <string name="hardened_mode_title">Režim zvýšeného zabezpečenia</string>
+    <string name="hardened_mode_info_open">O režime zvýšeného zabezpečenia</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Len na čítanie</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Jedlá</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Opatrovateľ</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Správca</string>
+    <string name="client_role_title">Rola</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Rola: %1$s</string>
+    <string name="client_roles_info_open">O rolách</string>
+    <string name="client_roles_info">Každý spárovaný telefón má priradenú rolu. Hlavný telefón ju kontroluje pri každom príkaze a klientsky telefón zobrazuje iba funkcie, ktoré jeho rola povoľuje. Zmena roly sa prejaví okamžite, bez potreby opätovného párovania.\n\nLen na čítanie: Telefón zostáva spárovaný, ale iba zobrazuje údaje.\n\nJedlá: Bolus, bolusový kalkulátor, Rýchly sprievodca a sacharidy. Umožňuje tiež zastaviť prebiehajúci bolus. Zadané sacharidy môžu spôsobiť, že slučka podá viac inzulínu.\n\nOpatrovateľ: Všetky bežné používateľské funkcie AAPS, ako sú dočasné ciele, prepínanie profilov a inzulínov, režim slučky, dočasný bazál, predĺžený bolus, scény, udalosti Ošetrení, kalibrácie a odstraňovanie záznamov. Nemôže meniť nastavenia ani predvoľby.\n\nAdministrátor: Všetky funkcie vrátane nastavení a predvolieb (Rýchly sprievodca, predvoľby dočasných cieľov, scény, profily, automatizácia, inzulín).</string>
+    <string name="client_read_only_banner">Tento telefón má na hlavnom telefóne nastavený režim len na čítanie.</string>
+    <string name="hardened_mode_info">Hlavný telefón prijíma zmeny iba zo spárovaných klientov. Neprijíma záznamy o liečbe, dočasné ciele, zmeny profilov, zmeny režimu prevádzky ani požiadavky na odstránenie záznamov vykonané priamo v Nightscoute, napríklad cez webovú stránku alebo iné aplikácie. Nastavenia prijímania údajov z Nightscoutu sú počas zapnutého režimu zvýšeného zabezpečenia skryté. SMS príkazy nie sú ovplyvnené.\n\nHlavný telefón naďalej odosiela všetky údaje do Nightscoutu vrátane hodnôt glykémie. Ak získava hodnoty glykémie z Nightscoutu, naďalej ich odtiaľ prijíma.\n\nAk chcete načítať históriu do nového hlavného telefónu, použite Úplnú synchronizáciu v NSClient. Úplná synchronizácia načíta všetky údaje uložené v Nightscoute vrátane profilov.\n\nVzdialené ovládanie z klientov vyžaduje funkčné pripojenie WebSocket k Nightscoutu na hlavnom telefóne aj na spárovaných klientoch. Jednoduchý režim vždy zapína režim zvýšeného zabezpečenia. Ak ho chcete vypnúť, ukončite jednoduchý režim a vypnite ovládanie z klientov na hlavnom telefóne.</string>
     <string name="scene_lock_reason_master_offline">Hlavné zariadenie je odpojené</string>
     <string name="scene_lock_reason_control_disabled">Vzdialené ovládanie je zakázané</string>
     <string name="scene_lock_reason_scene_active">Najprv zastavte prebiehajúcu scénu</string>
@@ -447,6 +462,7 @@
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus zrušený. Nebol podaný žiadny inzulín.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Zrušené</string>
     <string name="clientcontrol_fail_control_disabled">Diaľkové ovládanie je vypnuté na hlavnom zariadení.</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">Rola priradená tomuto telefónu na hlavnom zariadení to neumožňuje.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Pripravený bolus exspiroval alebo bol nahradený. ​​Znova kliknite na tlačidlo.</string>
     <string name="clientcontrol_fail_bolus_compute">Hlavné zariadenie nedokázalo vypočítať bolus (chýba glukóza/profil alebo pumpa nie je pripravená).</string>
     <string name="clientcontrol_fail_internal">Niečo sa pokazilo.</string>
