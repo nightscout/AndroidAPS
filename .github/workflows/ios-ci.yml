@@ -105,6 +105,7 @@ jobs:
             :core:data:compileKotlinIosArm64 :core:data:compileKotlinIosSimulatorArm64 \
             :core:nssdk:compileKotlinIosArm64 :core:nssdk:compileKotlinIosSimulatorArm64 \
             :core:keys:compileKotlinIosArm64 :core:keys:compileKotlinIosSimulatorArm64 \
+            :plugins:sync:compileKotlinIosArm64 :plugins:sync:compileKotlinIosSimulatorArm64 \
             | tee compile.log
 
       # A disabled Kotlin/Native task reports SKIPPED and still exits 0, so "BUILD SUCCESSFUL" alone
@@ -148,6 +149,7 @@ jobs:
           ./gradlew --console=plain --no-daemon \
             :core:data:iosSimulatorArm64Test :core:nssdk:iosSimulatorArm64Test :core:keys:iosSimulatorArm64Test \
             :implementation:iosSimulatorArm64Test :ios:shell:iosSimulatorArm64Test \
+            :plugins:sync:iosSimulatorArm64Test \
             | tee test.log
 
       # Every module that HAS iOS tests is checked by name. A module added to the run above but not
@@ -177,6 +179,7 @@ jobs:
           check ":core:data" core/data
           check ":implementation" implementation
           check ":ios:shell" ios/shell
+          check ":plugins:sync" plugins/sync
           exit $fail
 
       - name: Upload test results
@@ -188,4 +191,5 @@ jobs:
             core/*/build/test-results/iosSimulatorArm64Test/**
             implementation/build/test-results/iosSimulatorArm64Test/**
             ios/shell/build/test-results/iosSimulatorArm64Test/**
+            plugins/sync/build/test-results/iosSimulatorArm64Test/**
           if-no-files-found: warn

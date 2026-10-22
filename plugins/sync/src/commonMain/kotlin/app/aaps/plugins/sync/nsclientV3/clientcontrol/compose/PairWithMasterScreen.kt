@@ -44,6 +44,7 @@ import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.clientcontrol.label
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.qrScannerAvailable
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.metroViewModel

@@ -47,9 +47,6 @@ import com.google.zxing.qrcode.QRCodeReader
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-/** CameraX and ZXing: no Play services, so it works on every phone with a camera. */
-internal actual val qrScannerAvailable: Boolean = true
-
 @Composable
 internal actual fun QrScanner(onScanned: (String) -> Unit, modifier: Modifier) {
     val context = LocalContext.current
