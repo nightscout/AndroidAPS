@@ -34,6 +34,7 @@ import app.aaps.pump.omnipod.common.bledriver.comm.session.Session
 import app.aaps.pump.omnipod.common.bledriver.comm.session.SessionEstablisher
 import app.aaps.pump.omnipod.common.bledriver.comm.session.SessionKeys
 import app.aaps.pump.omnipod.common.bledriver.comm.session.SessionNegotiationResynchronization
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodType
 
 abstract class SharedBleConnection(
     protected val podDevice: BluetoothDevice,
@@ -42,7 +43,7 @@ abstract class SharedBleConnection(
     protected val context: Context
 ) : BleConnection, DisconnectHandler {
 
-    protected abstract val connectionName: String
+    protected abstract val podType: PodType
     protected val incomingPackets = IncomingPackets()
     protected val bleCommCallbacks by lazy { BleCommCallbacks(aapsLogger, incomingPackets, this) }
     protected var gattConnection: BluetoothGatt? = null
@@ -61,11 +62,12 @@ abstract class SharedBleConnection(
     protected open fun prepareGatt(gatt: BluetoothGatt) = Unit
     protected abstract fun hello(cmdBleIO: CmdBleIO)
     protected abstract fun createSession(messageIO: MessageIO, ids: Ids, keys: SessionKeys, enDecrypt: EnDecrypt): Session
+
     protected open fun discoverServices(
         gatt: BluetoothGatt,
         connectionWaitCond: ConnectionWaitCondition
     ): Map<CharacteristicType, BluetoothGattCharacteristic> =
-        ServiceDiscoverer(aapsLogger, gatt, bleCommCallbacks, this).discoverServices(connectionWaitCond)
+        ServiceDiscoverer(aapsLogger, gatt, bleCommCallbacks, this).discoverServices(connectionWaitCond, podType)
 
     protected open fun createMessageIO(
         gatt: BluetoothGatt,
@@ -78,19 +80,21 @@ abstract class SharedBleConnection(
             gatt,
             bleCommCallbacks
         )
+        val dataType = if (podType == PodType.OMNIPOD_5) CharacteristicType.DATA_O5 else CharacteristicType.DATA
         val dataBleIO = DataBleIO(
             aapsLogger,
             discovered.getValue(CharacteristicType.DATA),
             incomingPackets.dataQueue,
             gatt,
-            bleCommCallbacks
+            bleCommCallbacks,
+            dataType
         )
         return cmdBleIO to dataBleIO
     }
 
     @Synchronized
     final override fun connect(connectionWaitCond: ConnectionWaitCondition) {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Connecting $connectionName connectionWaitCond=$connectionWaitCond")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Connecting $podType connectionWaitCond=$connectionWaitCond")
         connectionWaitCondition = connectionWaitCond
         recordConnectionAttempt()
         updateConnectionState(LifecycleState.CONNECTING)
@@ -121,7 +125,7 @@ abstract class SharedBleConnection(
         val discovered = discoverServices(gatt, connectionWaitCond)
         prepareGatt(gatt)
         val (cmdBleIO, dataBleIO) = createMessageIO(gatt, discovered)
-        msgIO = MessageIO(aapsLogger, cmdBleIO, dataBleIO)
+        msgIO = MessageIO(aapsLogger, cmdBleIO, dataBleIO, podType)
         hello(cmdBleIO)
         cmdBleIO.readyToRead()
         dataBleIO.readyToRead()
@@ -130,7 +134,7 @@ abstract class SharedBleConnection(
 
     @Synchronized
     final override fun disconnect(closeGatt: Boolean) {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Disconnecting $connectionName closeGatt=$closeGatt")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Disconnecting $podType closeGatt=$closeGatt")
         if (!closeGatt && gattConnection != null) {
             gattConnection?.disconnect()
             updateConnectionState(LifecycleState.DISCONNECTED)
@@ -158,7 +162,7 @@ abstract class SharedBleConnection(
                 }
             }
         } catch (_: InterruptedException) {
-            aapsLogger.info(LTag.PUMPBTCOMM, "Interrupted while waiting for $connectionName connection")
+            aapsLogger.info(LTag.PUMPBTCOMM, "Interrupted while waiting for $podType connection")
         }
         return connectionState()
     }
@@ -195,7 +199,7 @@ abstract class SharedBleConnection(
     }
 
     final override fun onConnectionLost(status: Int) {
-        aapsLogger.info(LTag.PUMPBTCOMM, "Lost $connectionName connection with status: $status")
+        aapsLogger.info(LTag.PUMPBTCOMM, "Lost $podType connection with status: $status")
         connectionWaitCondition?.stopConnection?.let {
             if (it.count > 0) it.countDown()
         }

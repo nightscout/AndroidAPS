@@ -24,6 +24,8 @@ AAPS.Omnipod.suspend_delivery_button_enabled|ErosBooleanPreferenceKey|true
 AAPS.Omnipod.tbr_beeps_enabled|OmnipodBooleanPreferenceKey|true
 AAPS.Omnipod.tbrs_set|ErosLongNonPreferenceKey|true
 AAPS.Omnipod.time_change_enabled|ErosBooleanPreferenceKey|true
+AAPS.Omnipod5.pod_state|O5StringNonPreferenceKey|true
+AAPS.Omnipod5.registration_data_encrypted|O5StringNonPreferenceKey|false
 AAPS.OmnipodDash.pod_state|DashStringNonPreferenceKey|true
 AAPS.RileyLink.LastGoodDeviceFrequency|RileyLinkDoubleKey|true
 AAPS.RileyLink.lastGoodDeviceCommunicationTime|RileyLinkLongKey|true
@@ -363,6 +365,8 @@ nsclientinternal_api_secret|StringKey|true
 nsclientinternal_url|StringKey|true
 oh_charging_only|BooleanKey|true
 oh_wifi_only|BooleanKey|true
+omnipod_5_certificate_store|O5IntentKey|false
+omnipod_5_history|O5IntentKey|false
 openaps_smb_min_5m_carbimpact|DoubleKey|true
 openapsama_autosens_period|IntKey|true
 openapsama_current_basal_safety_multiplier|DoubleKey|true

@@ -7,11 +7,14 @@ class BasalProgram(
     segments: List<Segment>
 ) {
 
-    val segments: MutableList<Segment> = segments.toMutableList()
-        get() = Collections.unmodifiableList(field)
+    private var mutableSegmentsOrNull: MutableList<Segment>? = segments.toMutableList()
+    private val mutableSegments: MutableList<Segment>
+        get() = mutableSegmentsOrNull ?: mutableListOf<Segment>().also { mutableSegmentsOrNull = it }
+
+    val segments: MutableList<Segment> get() = Collections.unmodifiableList(mutableSegments)
 
     fun addSegment(segment: Segment) {
-        segments.add(segment)
+        mutableSegments.add(segment)
     }
 
     fun hasZeroUnitSegments() = segments.any { it.basalRateInHundredthUnitsPerHour == 0 }

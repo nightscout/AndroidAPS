@@ -52,6 +52,7 @@
     <string name="omnipod_common_overview_pod_active_alerts">Active Pod Alerts</string>
     <string name="omnipod_common_overview_firmware_version">Firmware Version</string>
     <string name="omnipod_common_overview_time_on_pod">Time on Pod</string>
+    <string name="omnipod_common_overview_pod_activated_at">Pod Activated At</string>
     <string name="omnipod_common_uncertain">uncertain</string>
 
     <!-- Omnipod - Wizard Base -->
@@ -119,6 +120,7 @@
     <string name="omnipod_common_pod_status_pod_fault">Pod Fault</string>
     <string name="omnipod_common_pod_status_inactive">Inactive</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod Fault: %1$03d %2$s</string>
+    <string name="omnipod_common_pod_fault_time_label">Fault Occurred</string>
 
     <!-- Omnipod - PDM Notification -->
     <string name="omnipod_common_pdm_notification_label">PDM Notification</string>
@@ -200,7 +202,60 @@
         <item quantity="one">Pod Alert: %1$s</item>
         <item quantity="other">Pod Alerts: %1$s</item>
     </plurals>
+
+    <!-- Omnipod 5 -->
+    <string name="omnipod_5_login" translatable="false">https://api.osaid-keymanager.org/o5/aaps/start</string>
+    <string name="omnipod_5_store_certificates">Certificates</string>
+    <string name="omnipod_5_name">Omnipod 5</string>
+    <string name="omnipod_5_name_short">O5</string>
+    <string name="omnipod_5_unconfirmed_command" comment="Reason shown when a status read is triggered to reconcile an unconfirmed command. 26 characters max for translation.">Unconfirmed command</string>
+    <string name="omnipod_5_pump_description">Pump integration for Omnipod 5.</string>
+    <string name="omnipod_5_certificate_store">Certificate store</string>
+    <string name="omnipod_5_certificate_store_summary">Import and manage the Omnipod 5 pairing certificate.</string>
+    <string name="omnipod_5_certificate_store_import">Import certificate</string>
+    <string name="omnipod_5_certificate_store_imported">Imported certificate for controller %1$s</string>
+    <string name="omnipod_5_certificate_store_controller_id">Controller %1$s</string>
+    <string name="omnipod_5_certificate_store_installed_certificates">Installed certificates</string>
+    <string name="omnipod_5_certificate_store_remove_blocked">Certificate can only be removed when there is no active pod</string>
+    <string name="omnipod_5_certificate_manual_import_title">Import Omnipod 5 certificate</string>
+    <string name="omnipod_5_certificate_manual_import_description">Paste a certificate string obtained from a trusted source. This does not pair with a pod by itself - it only makes the certificate available for pairing.</string>
+    <string name="omnipod_5_certificate_manual_import_label">Certificate string</string>
+    <string name="omnipod_5_certificate_import_paste_first">Paste a certificate string first</string>
+    <string name="omnipod_5_certificate_import_empty">Empty certificate received</string>
+    <string name="omnipod_5_certificate_import_parse_error">Could not parse that certificate - check it was copied completely</string>
+    <string name="omnipod_5_certificate_import_failed">Could not import the certificate. Please try again.</string>
+    <string name="omnipod_5_certificate_import_try_again">Try again</string>
+    <string name="omnipod_5_certificate_internet_required">Internet connection needed</string>
+    <string name="omnipod_5_certificate_internet_required_message">Unable to connect. An internet connection is needed to retrieve your Omnipod 5 certificate. This is a one-time step before pairing your first pod. Once the certificate is retrieved, you can pair later pods without internet. Please try again once you have a network connection.</string>
+    <string name="omnipod_5_certificate_imported">Omnipod 5 certificate imported</string>
+    <string name="omnipod_5_certificate_import_error">Error importing certificate</string>
+    <string name="omnipod_5_certificate_bridge_unsupported">This device\'s WebView does not support the certificate bridge. Please update Android System WebView and try again.</string>
+    <string name="omnipod_5_error_not_enough_insulin">Not enough insulin left in the reservoir for this bolus.</string>
+    <string name="omnipod_5_error_bolus_already_in_progress">A bolus is already in progress.</string>
+    <string name="omnipod_5_error_setting_basal_profile_might_have_failed">Setting the new basal profile might have failed. Refresh pod status to confirm or deny this.</string>
+    <string name="omnipod_5_error_uncertain_smb" comment="%1$s=requested SMB amount in units, e.g. 0.55">Unable to verify whether the SMB bolus (%1$s U) succeeded. Refresh pod status to confirm or deny this command.</string>
+    <string name="omnipod_5_error_bolus_delivery_status_uncertain">Bolus delivery status is uncertain. Refresh pod status to confirm or deny this command.</string>
+    <string name="omnipod_5_error_setting_temp_basal_might_have_failed">Setting the temp basal might have failed. Refresh pod status to confirm or deny this.</string>
+    <string name="omnipod_5_error_cancel_temp_basal_result_is_uncertain">Cancelling the temp basal result is uncertain. Refresh pod status to confirm or deny this.</string>
+    <string name="omnipod_5_error_unresolved_dose_pending">An earlier dose could not be confirmed with the pod, so a new one was not sent. Refresh pod status once the pod is reachable again.</string>
+    <string name="omnipod_5_error_extended_bolus_not_supported">Omnipod 5 driver does not support extended boluses</string>
+    <string name="omnipod_5_error_tdd_not_supported">Omnipod 5 driver does not support TDD</string>
+    <string name="omnipod_5_error_no_active_alerts">No active alerts</string>
+    <string name="omnipod_5_error_no_active_profile">No profile active</string>
+    <string name="omnipod_5_pod_activation_wizard_start_pod_activation_text">Fill a new Pod
+        with enough insulin for 3 days.\n\nListen for two beeps from the Pod during the filling process. These indicate that the minimum amount of 80U has been inserted. Be sure to completely empty the fill syringe, even after hearing the two beeps.\n\nAfter filling the Pod, please press <b>Next</b>.\n\n<b>Note:</b> do not remove the Pod\'s needle cap at this time.</string>
+    <string name="omnipod_5_pod_activation_wizard_initialize_pod_text">Trying to pair with the new Pod and prime it.\n\nWhen the initialization process has successfully been completed, you can press <b>Next</b>.</string>
+
+    <!-- Omnipod 5 overview - these mirror Dash's own omnipod_dash_overview_* strings
+         (pump/omnipod/dash/src/main/res/values/strings.xml), which O5OverviewViewModel
+         can't reference directly since common can't depend on dash. -->
+    <string name="omnipod_common_overview_bluetooth_address">Bluetooth Address</string>
+    <string name="omnipod_common_overview_bluetooth_connection_quality">Connection quality</string>
+    <string name="omnipod_common_overview_delivery_status">Delivery Status</string>
+    <string name="omnipod_common_overview_firmware_version_value" comment="%1$s=firmware version, %2$s=BLE version">Firmware %1$s / Bluetooth %2$s</string>
+    <string name="omnipod_common_alert_delivery_suspended">Insulin delivery is suspended</string>
     <string name="omnipod_common_overview_pod_hard_end_date">Pod Hard End</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Timezone on pod is different from the timezone on phone. Basal rate is incorrect. Switch profile to fix</string>
 
     <!-- Omnipod - History -->
     <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minutes</string>

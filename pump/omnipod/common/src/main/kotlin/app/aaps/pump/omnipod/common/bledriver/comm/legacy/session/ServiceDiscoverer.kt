@@ -11,6 +11,7 @@ import app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks.BleCommCallb
 import app.aaps.pump.omnipod.common.bledriver.comm.session.Connected
 import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionWaitCondition
 import app.aaps.pump.omnipod.common.bledriver.comm.session.STOP_CONNECTING_CHECK_INTERVAL_MS
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodType
 import java.math.BigInteger
 import java.util.UUID
 
@@ -22,9 +23,17 @@ class ServiceDiscoverer(
 ) {
 
     /**
-     * This is first step after connection establishment
+     * This is first step after connection establishment.
+     *
+     * [podType] defaults to [PodType.DASH], preserving existing behavior for every call
+     * site that doesn't pass it explicitly. Dash and Omnipod 5 share the same GATT
+     * service and CMD characteristic; only the DATA characteristic differs (see
+     * [app.aaps.pump.omnipod.common.bledriver.pod.util.BluetoothServiceUuids]).
      */
-    fun discoverServices(connectionWaitCond: ConnectionWaitCondition): Map<CharacteristicType, BluetoothGattCharacteristic> {
+    fun discoverServices(
+        connectionWaitCond: ConnectionWaitCondition,
+        podType: PodType = PodType.DASH
+    ): Map<CharacteristicType, BluetoothGattCharacteristic> {
         logger.debug(LTag.PUMPBTCOMM, "Discovering services")
         bleCallbacks.startServiceDiscovery()
         try {
@@ -55,8 +64,9 @@ class ServiceDiscoverer(
             }
         val cmdChar = service.getCharacteristic(CharacteristicType.CMD.uuid)
             ?: throw ConnectException("Characteristic not found: ${CharacteristicType.CMD.value}")
-        val dataChar = service.getCharacteristic(CharacteristicType.DATA.uuid)
-            ?: throw ConnectException("Characteristic not found: ${CharacteristicType.DATA.value}")
+        val dataCharacteristicType = if (podType == PodType.OMNIPOD_5) CharacteristicType.DATA_O5 else CharacteristicType.DATA
+        val dataChar = service.getCharacteristic(dataCharacteristicType.uuid)
+            ?: throw ConnectException("Characteristic not found: ${dataCharacteristicType.value}")
         return mapOf(
             CharacteristicType.CMD to cmdChar,
             CharacteristicType.DATA to dataChar

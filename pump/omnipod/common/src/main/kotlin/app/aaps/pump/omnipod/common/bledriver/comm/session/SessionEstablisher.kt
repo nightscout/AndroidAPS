@@ -44,11 +44,14 @@ class SessionEstablisher(
         if (sendResult !is MessageSendSuccess) {
             throw SessionEstablishmentException("Could not send the EAP AKA challenge: $sendResult")
         }
+        aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: challenge sent (seq=$msgSeq), awaiting response")
         val challengeResponse = msgIO.receiveMessage()
             ?: throw SessionEstablishmentException("Could not establish session")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: challenge response received (${challengeResponse.payload.size} bytes)")
 
         val newSqn = processChallengeResponse(challengeResponse)
         if (newSqn != null) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: resynchronization required, new SQN=$newSqn")
             return SessionNegotiationResynchronization(
                 synchronizedEapSqn = newSqn,
                 msgSequenceNumber = msgSeq
@@ -58,6 +61,7 @@ class SessionEstablisher(
         msgSeq++
         val success = eapSuccess()
         msgIO.sendMessage(success)
+        aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: session keys negotiated, EAP-Success sent (seq=$msgSeq)")
 
         return SessionKeys(
             ck = milenage.ck,

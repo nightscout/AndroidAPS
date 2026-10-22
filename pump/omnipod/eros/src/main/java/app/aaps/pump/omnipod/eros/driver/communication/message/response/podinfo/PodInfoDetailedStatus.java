@@ -57,8 +57,8 @@ public class PodInfoDetailedStatus extends PodInfo implements StatusUpdatableRes
             faultEventTime = Duration.standardMinutes(minutesSinceActivation);
         }
 
-        double reservoirValue = ((encodedData[11] & 0x03) << 8) +
-                ByteUtil.INSTANCE.convertUnsignedByteToInt(encodedData[12]) * OmnipodConstants.POD_PULSE_SIZE;
+        double reservoirValue = (((encodedData[11] & 0x03) << 8) +
+                ByteUtil.INSTANCE.convertUnsignedByteToInt(encodedData[12])) * OmnipodConstants.POD_PULSE_SIZE;
         if (reservoirValue > OmnipodConstants.MAX_RESERVOIR_READING) {
             reservoirLevel = null;
         } else {

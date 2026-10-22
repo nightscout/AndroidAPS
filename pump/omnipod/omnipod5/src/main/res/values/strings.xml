@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="omnipod_o5_history_command_failed">Command failed</string>
+    <string name="omnipod_o5_failed_to_connect">Failed to connect</string>
+    <string name="omnipod_o5_found_too_many_pods">Found too many Pods</string>
+    <string name="omnipod_o5_scan_failed">Scan failed</string>
+    <string name="omnipod_o5_generic_error">Generic error: %1$s</string>
+    <string name="omnipod_o5_connection_lost">Connection lost</string>
+    <string name="omnipod_o5_history_tbr_value">%1$.2f U/h, %2$d minutes</string>
+    <string name="omnipod_o5_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_o5_history_basal_drift_compensation_bolus_value">Basal drift compensation bolus: %1$.2f U</string>
+</resources>

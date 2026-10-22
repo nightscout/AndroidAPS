@@ -4,6 +4,11 @@ import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.CouldNotParseRespo
 import app.aaps.pump.omnipod.common.bledriver.pod.response.AlarmStatusResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.DefaultStatusResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.NakResponse
+import app.aaps.pump.omnipod.common.bledriver.pod.response.PodInfoActivationTimeResponse
+import app.aaps.pump.omnipod.common.bledriver.pod.response.PodInfoPulseLogPlusResponse
+import app.aaps.pump.omnipod.common.bledriver.pod.response.PodInfoPulseLogPreviousResponse
+import app.aaps.pump.omnipod.common.bledriver.pod.response.PodInfoPulseLogRecentResponse
+import app.aaps.pump.omnipod.common.bledriver.pod.response.PodInfoTriggeredAlertsResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.Response
 import app.aaps.pump.omnipod.common.bledriver.pod.response.ResponseType
 import app.aaps.pump.omnipod.common.bledriver.pod.response.SetUniqueIdResponse
@@ -36,14 +41,12 @@ object ResponseUtil {
     private fun parseAdditionalStatusResponse(payload: ByteArray): Response {
         return when (byValue(payload[2], ResponseType.StatusResponseType.UNKNOWN)) {
             ResponseType.StatusResponseType.DEFAULT_STATUS_RESPONSE -> DefaultStatusResponse(payload) // Unreachable; this response type is only used for requesting a default status response
-            ResponseType.StatusResponseType.STATUS_RESPONSE_PAGE_1  -> throw UnsupportedOperationException("Status response page 1 is not (yet) implemented")
+            ResponseType.StatusResponseType.STATUS_RESPONSE_PAGE_1  -> PodInfoTriggeredAlertsResponse(payload)
             ResponseType.StatusResponseType.ALARM_STATUS            -> AlarmStatusResponse(payload)
-            ResponseType.StatusResponseType.STATUS_RESPONSE_PAGE_3  -> throw UnsupportedOperationException("Status response page 3 is not (yet) implemented")
-            ResponseType.StatusResponseType.STATUS_RESPONSE_PAGE_5  -> throw UnsupportedOperationException("Status response page 5 is not (yet) implemented")
-            ResponseType.StatusResponseType.STATUS_RESPONSE_PAGE_6  -> throw UnsupportedOperationException("Status response page 6 is not (yet) implemented")
-            ResponseType.StatusResponseType.STATUS_RESPONSE_PAGE_70 -> throw UnsupportedOperationException("Status response page 70 is not (yet) implemented")
-            ResponseType.StatusResponseType.STATUS_RESPONSE_PAGE_80 -> throw UnsupportedOperationException("Status response page 80 is not (yet) implemented")
-            ResponseType.StatusResponseType.STATUS_RESPONSE_PAGE_81 -> throw UnsupportedOperationException("Status response page 81 is not (yet) implemented")
+            ResponseType.StatusResponseType.STATUS_RESPONSE_PAGE_3  -> PodInfoPulseLogPlusResponse(payload)
+            ResponseType.StatusResponseType.STATUS_RESPONSE_PAGE_5  -> PodInfoActivationTimeResponse(payload)
+            ResponseType.StatusResponseType.STATUS_RESPONSE_PAGE_80 -> PodInfoPulseLogRecentResponse(payload)
+            ResponseType.StatusResponseType.STATUS_RESPONSE_PAGE_81 -> PodInfoPulseLogPreviousResponse(payload)
             ResponseType.StatusResponseType.UNKNOWN                 -> throw CouldNotParseResponseException("Unrecognized additional status response type: ${payload[2]}")
         }
     }

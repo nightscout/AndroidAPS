@@ -12,6 +12,7 @@ import app.aaps.pump.omnipod.common.bledriver.comm.legacy.io.CmdBleIO
 import app.aaps.pump.omnipod.common.bledriver.comm.message.MessageIO
 import app.aaps.pump.omnipod.common.bledriver.comm.session.Session
 import app.aaps.pump.omnipod.common.bledriver.comm.session.SessionKeys
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodType
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 
 class Connection(
@@ -22,7 +23,7 @@ class Connection(
     private val podState: OmnipodDashPodStateManager
 ) : SharedBleConnection(podDevice, aapsLogger, config, context) {
 
-    override val connectionName = "Dash"
+    override val podType = PodType.DASH
 
     override fun recordConnectionAttempt() {
         podState.connectionAttempts++
