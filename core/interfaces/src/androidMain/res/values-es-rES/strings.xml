@@ -9,14 +9,14 @@
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Se ha cambiado el controlador de la bomba.</string>
     <!--    DateUtil-->
-    <string name="minago">Hace %1$dm</string>
-    <string name="secago">Hace %1$ds</string>
+    <string name="minago">hace %1$dm</string>
+    <string name="secago">hace %1$ds</string>
     <string name="min_plus">(+%1$dm)</string>
     <string name="sec_plus">(+%1$ds)</string>
-    <string name="minago_long">Hace %1$d minutos</string>
-    <string name="hoursago">Hace %1$.1fh</string>
-    <string name="days_ago">Hace %1$.1f día</string>
-    <string name="days_ago_round">Hace %1$.0f días</string>
+    <string name="minago_long">hace %1$d minutos</string>
+    <string name="hoursago">hace %1$.1fh</string>
+    <string name="days_ago">hace %1$.1f día</string>
+    <string name="days_ago_round">hace %1$.0f días</string>
     <plurals name="plurals_day_hour_ago">
         <item quantity="one">hace %1$s día %2$s horas</item>
         <item quantity="other">hace %1$s días %2$s horas</item>
