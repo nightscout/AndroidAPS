@@ -463,6 +463,7 @@
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Đã Hủy</string>
     <string name="clientcontrol_fail_control_disabled">Điều khiển từ xa đang bị tắt trên thiết bị chính.</string>
     <string name="clientcontrol_fail_not_allowed_for_role">Vai trò của điện thoại này trên thiết bị chính không cho phép thực hiện thao tác này.</string>
+    <string name="clientcontrol_fail_other_token">Thiết bị chính đã từ chối lệnh: Điện thoại này ghi dữ liệu lên Nightscout bằng token không thuộc về chính nó. Hãy xóa điện thoại này khỏi danh sách trên thiết bị chính rồi thêm lại.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Liều Bolus đã chuẩn bị đã hết hiệu lực hoặc bị thay thế. Hãy nhấn nút lại.</string>
     <string name="clientcontrol_fail_bolus_compute">Thiết bị chính không thể tính toán bolus (thiếu dữ liệu đường huyết, cấu hình hoặc bơm chưa sẵn sàng).</string>
     <string name="clientcontrol_fail_internal">Đã xảy ra lỗi.</string>
