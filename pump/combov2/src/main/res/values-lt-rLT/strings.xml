@@ -81,7 +81,6 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_bolus_delivery_failed">Boluso suleisti nepavyko. Panašu, kad nė kiek insulino nesuleista. Patikrinkite pompos įstoriją, kad įsitikintumėte tuo, ir bandykite vėl. Bolusai nekartojami automatiškai, siekiant apsisaugoti nuo programos klaidų.</string>
     <string name="combov2_bolus_not_delivered">Bolusas nesuleistas</string>
     <string name="combov2_cannot_access_pump_data">Neįmanoma gauti pompos duomenų; pompa turi būti susieta iš naujo</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Aptikti neįskaičiuoti insulino suleidimai. Bolusas atšaukiamas saugumui užtikrinti.</string>
     <string name="combov2_incorrect_active_basal_profile">Neteisingas aktyvus bazės profilis; aktyvus turi būti profilis 1, ne profilis %1$d</string>
     <string name="combov2_unrecognized_alert">Neatpažintas Combo įspėjimas</string>
     <string name="combov2_combo_alert">Compo įspėjimas</string>
