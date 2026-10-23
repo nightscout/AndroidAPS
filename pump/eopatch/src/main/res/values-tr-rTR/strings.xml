@@ -69,7 +69,6 @@
     <string name="patch_communication_succeed">Bağlantı başarılı</string>
     <string name="patch_communication_succeed_message">Pompaya bağlandı.</string>
     <string name="patch_cancel_pairing">Eşleştirmeyi iptal et</string>
-    <string name="all_dose_unit">&#160;Ü</string>
     <string name="insulin_suspend_msg1">Askıya alındığında, şu anda iletilen Bolus &amp; Geçici bazal iptal edilecek. \n\nOran : %1$s Ü/sa\nKalan süre : %2$s\n&amp; Gidecek İnsülin: %3$.2f Ü</string>
     <string name="insulin_suspend_msg2">Askıya alındığında, mevcut Bolus iptal edilecektir. \n\nGidecek İnsülin: %1$.2f Ü</string>
     <string name="insulin_suspend_msg3">Askıya alındığında, şu anda iletilen Geçici Bazal iptal edilecek. \n\nOran : %1$s Ü/sa\nKalan süre : %2$s</string>
