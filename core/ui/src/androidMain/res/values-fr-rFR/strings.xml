@@ -309,7 +309,7 @@
     <string name="record_insulin_hint">Si vous injectez l\'insuline avec un stylo, sélectionnez le bon type d\'insuline ci-dessous. La dose est toujours en Unité Internationale.</string>
     <!--       Stats -->
     <string name="average">Moyenne</string>
-    <string name="tir">Temps dans la cible</string>
+    <string name="tir">TIR</string>
     <string name="below" comment="below &quot;in range&quot;">En-dessous</string>
     <string name="in_range">Dans la cible</string>
     <string name="veryLow" comment="below 3.1">Très bas</string>
