@@ -46,7 +46,6 @@
     <string name="unit_days">дни</string>
     <string name="unit_weeks">седмици</string>
     <string name="shortminute">м</string>
-    <string name="shortday">д</string>
     <string name="time_remaining_h_m">%1$dч %2$dмин остават</string>
     <string name="time_remaining_m">%1$dмин остават</string>
     <string name="later_today">По-късно днес</string>
@@ -94,7 +93,6 @@
     <string name="temp_basal_absolute_rate">%1$.2f Е/ч в %2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% в %2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">Уд болус %1$.2f Е/ч в %2$s %3$d/%4$d мин</string>
-    <string name="forever">Вечно</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">Bluetooth</string>
     <string name="permission_bluetooth_description">Приложението се нуждае от bluetooth достъп за свързване с помпа</string>
