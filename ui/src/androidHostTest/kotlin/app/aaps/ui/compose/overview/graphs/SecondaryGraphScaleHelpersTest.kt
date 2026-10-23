@@ -6,12 +6,12 @@ import app.aaps.core.interfaces.overview.graph.SeriesType
 import com.google.common.truth.Truth.assertThat
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.axis.Axis
-import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartRanges
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 /**
  * Regression coverage for [SecondaryGraphCompose]'s dual-axis / windowing helper functions,
@@ -230,9 +230,10 @@ internal class SecondaryGraphScaleHelpersTest {
     inner class FractionAlignedNiceRangeTest {
 
         @Test
-        fun `stretched bound is nice-ified, not left as a raw fraction result`() {
+        fun `stretched bound is rounded out, not left as a raw fraction result`() {
+            // 0.2 of the height asks for -25; rounded out on the grid of 25 that is -26
             val (min, max) = fractionAlignedNiceRange(niceMin = 0.0, niceMax = 100.0, targetFraction = 0.2)
-            assertThat(min).isEqualTo(-25.0)
+            assertThat(min).isEqualTo(-26.0)
             assertThat(max).isEqualTo(100.0)
         }
 
@@ -262,22 +263,22 @@ internal class SecondaryGraphScaleHelpersTest {
         @Test
         fun `SENS pivot flat at 100 paired with COB snaps to 95-100-105, COB half covers its own max`() {
             val pairing = pivotZeroFloorPairing(
-                pivotY = listOf(100.0, 100.0), zeroFloorY = listOf(0.0, 82.0), pivot = 100.0, minDeviation = 5.0, pivotTickCount = 3
+                pivotY = listOf(100.0, 100.0), zeroFloorY = listOf(0.0, 82.0), pivot = 100.0, minDeviation = 5.0
             )
             assertThat(pairing.pivotNice.min).isEqualTo(95.0)
             assertThat(pairing.pivotNice.max).isEqualTo(105.0)
-            assertThat(pairing.zeroFloorHalf).isEqualTo(100.0)
+            assertThat(pairing.zeroFloorHalf).isEqualTo(90.0)
             assertThat(pairing.zeroFloorMin).isEqualTo(0.0)
         }
 
         @Test
         fun `DEV_SLOPE pivot paired with a BGI-style series that has its own small negative sliver`() {
             val pairing = pivotZeroFloorPairing(
-                pivotY = listOf(-2.0, 3.0), zeroFloorY = listOf(-0.5, 12.0), pivot = 0.0, minDeviation = 0.0, pivotTickCount = 5
+                pivotY = listOf(-2.0, 3.0), zeroFloorY = listOf(-0.5, 12.0), pivot = 0.0, minDeviation = 0.0
             )
-            assertThat(pairing.pivotNice.min).isEqualTo(-6.0)
-            assertThat(pairing.pivotNice.max).isEqualTo(6.0)
-            assertThat(pairing.zeroFloorHalf).isEqualTo(20.0)
+            assertThat(pairing.pivotNice.min).isWithin(1e-9).of(-3.0)
+            assertThat(pairing.pivotNice.max).isWithin(1e-9).of(3.0)
+            assertThat(pairing.zeroFloorHalf).isEqualTo(12.0)
             // The zero-floor side's own negative sliver must be preserved, not silently discarded
             assertThat(pairing.zeroFloorMin).isEqualTo(-0.5)
         }
@@ -285,7 +286,7 @@ internal class SecondaryGraphScaleHelpersTest {
         @Test
         fun `pivot side is always exactly centered on its own pivot`() {
             val pairing = pivotZeroFloorPairing(
-                pivotY = listOf(60.0, 108.0), zeroFloorY = listOf(0.0, 20.0), pivot = 100.0, minDeviation = 5.0, pivotTickCount = 5
+                pivotY = listOf(60.0, 108.0), zeroFloorY = listOf(0.0, 20.0), pivot = 100.0, minDeviation = 5.0
             )
             assertThat((pairing.pivotNice.min + pairing.pivotNice.max) / 2.0).isEqualTo(100.0)
         }
@@ -341,46 +342,52 @@ internal class SecondaryGraphScaleHelpersTest {
     }
 
     @Nested
-    inner class ClampedVerticalAxisItemPlacerTest {
+    inner class NiceVerticalAxisItemPlacerTest {
 
-        private val context = mock<CartesianDrawingContext>()
-
-        @Test
-        fun `visibleMax clamp drops labels and lines above the bound`() {
-            val delegate = mock<VerticalAxis.ItemPlacer>()
-            whenever(delegate.getLabelValues(any(), any(), any(), any())).thenReturn(listOf(0.0, 1.0, 2.0, 3.0))
-            whenever(delegate.getLineValues(any(), any(), any(), any())).thenReturn(listOf(0.0, 1.0, 2.0, 3.0))
-            val placer = ClampedVerticalAxisItemPlacer(delegate, visibleMax = { 2.0 })
-
-            assertThat(placer.getLabelValues(context, 100f, 20f, Axis.Position.Vertical.Start)).containsExactly(0.0, 1.0, 2.0)
-            assertThat(placer.getLineValues(context, 100f, 20f, Axis.Position.Vertical.Start)).containsExactly(0.0, 1.0, 2.0)
+        /** A drawing context whose start axis goes from [minY] to [maxY]. */
+        private fun context(minY: Double, maxY: Double): CartesianDrawingContext {
+            val yRange = mock<CartesianChartRanges.YRange> {
+                on { this.minY } doReturn minY
+                on { this.maxY } doReturn maxY
+            }
+            val ranges = mock<CartesianChartRanges> { on { getYRange(any()) } doReturn yRange }
+            return mock { on { this.ranges } doReturn ranges }
         }
 
         @Test
-        fun `visibleMin clamp drops labels below the bound (hides a fake negative tick)`() {
-            val delegate = mock<VerticalAxis.ItemPlacer>()
-            whenever(delegate.getLabelValues(any(), any(), any(), any())).thenReturn(listOf(-82.0, -41.0, 0.0, 41.0, 82.0))
-            val placer = ClampedVerticalAxisItemPlacer(delegate, visibleMin = { 0.0 })
+        fun `labels come from the axis range and stop at labelMax`() {
+            // The IOB/BAS axis of a 2.9 U IOB: 0..4, the IOB itself up to 3
+            val placer = NiceVerticalAxisItemPlacer(labelMax = 3.0)
 
-            assertThat(placer.getLabelValues(context, 100f, 20f, Axis.Position.Vertical.Start)).containsExactly(0.0, 41.0, 82.0)
+            assertThat(placer.getLabelValues(context(0.0, 4.0), 200f, 20f, Axis.Position.Vertical.Start)).containsExactly(0.0, 1.0, 2.0, 3.0).inOrder()
         }
 
         @Test
-        fun `no bounds configured passes everything through unfiltered`() {
-            val delegate = mock<VerticalAxis.ItemPlacer>()
-            whenever(delegate.getLabelValues(any(), any(), any(), any())).thenReturn(listOf(-5.0, 0.0, 5.0))
-            val placer = ClampedVerticalAxisItemPlacer(delegate)
+        fun `labelMin hides a fake negative label`() {
+            val placer = NiceVerticalAxisItemPlacer(labelMin = 0.0)
 
-            assertThat(placer.getLabelValues(context, 100f, 20f, Axis.Position.Vertical.Start)).containsExactly(-5.0, 0.0, 5.0)
+            assertThat(placer.getLabelValues(context(-82.0, 82.0), 200f, 20f, Axis.Position.Vertical.Start)).containsExactly(0.0, 50.0).inOrder()
         }
 
         @Test
-        fun `null line values from the delegate pass through as null`() {
-            val delegate = mock<VerticalAxis.ItemPlacer>()
-            whenever(delegate.getLineValues(any(), any(), any(), any())).thenReturn(null)
-            val placer = ClampedVerticalAxisItemPlacer(delegate, visibleMax = { 2.0 })
+        fun `the axis is measured for its width with the same labels it draws`() {
+            val placer = NiceVerticalAxisItemPlacer(labelMax = 3.0)
+            val context = context(0.0, 4.0)
 
-            assertThat(placer.getLineValues(context, 100f, 20f, Axis.Position.Vertical.Start)).isNull()
+            assertThat(placer.getWidthMeasurementLabelValues(context, 200f, 20f, Axis.Position.Vertical.Start))
+                .isEqualTo(placer.getLabelValues(context, 200f, 20f, Axis.Position.Vertical.Start))
+        }
+
+        @Test
+        fun `grid lines are left to Vico, which draws them at the labels`() {
+            assertThat(NiceVerticalAxisItemPlacer().getLineValues(context(0.0, 4.0), 200f, 20f, Axis.Position.Vertical.Start)).isNull()
+        }
+
+        // The placer is part of the extras of the chart model: equal placers must not make Vico redraw
+        @Test
+        fun `placers with the same limits are equal`() {
+            assertThat(NiceVerticalAxisItemPlacer(labelMax = 3.0)).isEqualTo(NiceVerticalAxisItemPlacer(labelMax = 3.0))
+            assertThat(NiceVerticalAxisItemPlacer(labelMax = 3.0)).isNotEqualTo(NiceVerticalAxisItemPlacer(labelMax = 4.0))
         }
     }
 }

@@ -117,8 +117,7 @@ private val BG_VISIBLE_RANGE_KEY = ExtraStore.Key<Pair<Long?, Long?>>()
 private class MutableYRangeProvider(
     @Volatile var maxX: Double,
     @Volatile var minY: Double,
-    @Volatile var maxY: Double,
-    @Volatile var yStep: Double = 0.0
+    @Volatile var maxY: Double
 ) : CartesianLayerRangeProvider {
     override fun getMinX(minX: Double, maxX: Double, extraStore: ExtraStore) = 0.0
     override fun getMaxX(minX: Double, maxX: Double, extraStore: ExtraStore) = this.maxX
@@ -218,7 +217,7 @@ fun BgGraphCompose(
     // the LaunchedEffect below rather than recreated (see MutableYRangeProvider).
     val startAxisRangeProvider = remember {
         val initialScale = niceScale(chartConfig.lowMark, chartConfig.highMark)
-        MutableYRangeProvider(maxX = maxX, minY = initialScale.min, maxY = initialScale.max, yStep = initialScale.step)
+        MutableYRangeProvider(maxX = maxX, minY = initialScale.min, maxY = initialScale.max)
     }
 
     // Track which series are currently included (for matching LineProvider)
@@ -430,10 +429,10 @@ fun BgGraphCompose(
         // loaded range), floored/ceiled at chartConfig.lowMark/highMark (the "Low mark"/"High mark"
         // target-range preferences) so the axis never shrinks past the configured target range —
         // but also never stays locked at a fixed 0 floor when real data sits well above it, which
-        // used to leave a large empty band under the curve (worse for mmol/L users, since niceScale
-        // can round the top up to a proportionally huge ceiling like 15 mmol/L). niceScale(...)
-        // rounds both bounds and the tick step to clean numbers (e.g. 70, 180) instead of the raw
-        // data values. Mutate the stable provider in place (see MutableYRangeProvider) — Vico picks
+        // used to leave a large empty band under the curve. niceScale(...) rounds both bounds out
+        // a little, to a grid of about a tenth of the range, instead of using the raw data values;
+        // the labels are placed apart from that (NiceVerticalAxisItemPlacer).
+        // Mutate the stable provider in place (see MutableYRangeProvider) — Vico picks
         // up the new values when it processes the transaction submitted below, without ever
         // recreating BG's chart object.
         // Includes predictions (when shown) — otherwise scrolling into a region with only future
@@ -454,7 +453,6 @@ fun BgGraphCompose(
         startAxisRangeProvider.maxX = maxX
         startAxisRangeProvider.minY = niceBgScale.min
         startAxisRangeProvider.maxY = niceBgScale.max
-        startAxisRangeProvider.yStep = niceBgScale.step
 
         // Activity overlay: zero anchored on the low mark (bottom edge of the green in-range belt),
         // scaled from the visible window like every other curve. The BG axis above is never changed
@@ -769,7 +767,7 @@ fun BgGraphCompose(
                 verticalAxisPosition = Axis.Position.Vertical.Start
             ),
             startAxis = VerticalAxis.rememberStart(
-                itemPlacer = VerticalAxis.ItemPlacer.step({ startAxisRangeProvider.yStep }),
+                itemPlacer = remember { NiceVerticalAxisItemPlacer() },
                 label = rememberTextComponent(
                     style = TextStyle(color = MaterialTheme.colorScheme.onSurface),
                     minWidth = TextComponent.MinWidth.fixed(30.dp)
