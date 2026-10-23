@@ -10,6 +10,8 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
@@ -32,6 +34,7 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.icons.IcBgCheck
 import app.aaps.core.ui.compose.icons.IcProfile
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.VicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.VicoZoomState
 import com.patrykandpatrick.vico.compose.cartesian.axis.Axis
@@ -40,7 +43,7 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
-import com.patrykandpatrick.vico.compose.cartesian.decoration.HorizontalBox
+import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
 import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarkerController
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
@@ -696,11 +699,7 @@ fun BgGraphCompose(
     val lowMark = chartConfig.lowMark
     val highMark = chartConfig.highMark
     val inRangeBox = remember(lowMark, highMark, inRangeColor) {
-        HorizontalBox(
-            y = { lowMark..highMark },
-            box = ShapeComponent(fill = Fill(inRangeColor.copy(alpha = 0.2f))),
-            verticalAxisPosition = Axis.Position.Vertical.Start
-        )
+        InRangeBand(low = lowMark, high = highMark, color = inRangeColor.copy(alpha = 0.2f))
     }
 
     val inspectMarker = remember(inspect) { inspect?.let { SilentInspectMarker } }
@@ -809,4 +808,32 @@ private fun createMarkerLine(color: Color, shapeOf: (tipInset: Float) -> Shape, 
             LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(color), shape = shape), size = boxSize)
         )
     )
+}
+
+/**
+ * The in-range belt between [low] and [high] on the BG axis, drawn under the layers. Vico's
+ * `HorizontalBox` draws over them, and its translucent green then tinted every reading and marker
+ * inside the belt, so a bolus looked one colour in range and another out of it.
+ */
+private data class InRangeBand(private val low: Double, private val high: Double, private val color: Color) : Decoration {
+
+    override fun drawUnderLayers(context: CartesianDrawingContext) {
+        with(context) {
+            val yRange = ranges.getYRange(Axis.Position.Vertical.Start)
+            if (yRange.length == 0.0) return
+            fun canvasY(value: Double): Float =
+                (layerBounds.bottom - ((value - yRange.minY) / yRange.length).toFloat() * layerBounds.height)
+                    .coerceIn(layerBounds.top, layerBounds.bottom)
+            val top = canvasY(high)
+            val bottom = canvasY(low)
+            if (bottom <= top) return
+            with(mutableDrawScope) {
+                drawRect(
+                    color = this@InRangeBand.color,
+                    topLeft = Offset(layerBounds.left, top),
+                    size = Size(layerBounds.width, bottom - top)
+                )
+            }
+        }
+    }
 }
