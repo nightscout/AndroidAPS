@@ -510,7 +510,7 @@ private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: In
                 if (correctionSteps != 0 && detail.carbs == 0) {
                     val corrSign = if (correctionU > 0) "+" else ""
                     Text(
-                        text = "$corrSign${fmt2.format(correctionU)} ${stringResource(R.string.insulin_unit_short)}",
+                        text = stringResource(R.string.wizard_insulin_format, "$corrSign${fmt2.format(correctionU)}"),
                         color = InsulinBlue,
                         fontSize = 12.sp,
                         textAlign = TextAlign.Center,
@@ -545,7 +545,7 @@ private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: In
                             Spacer(Modifier.width(3.dp))
                             Text(text = "(", color = WearSecondaryText, fontSize = carbsFontSize)
                             Text(
-                                text = "$corrSign${fmt2.format(correctionU)} ${stringResource(R.string.insulin_unit_short)}",
+                                text = stringResource(R.string.wizard_insulin_format, "$corrSign${fmt2.format(correctionU)}"),
                                 color = InsulinBlue,
                                 fontSize = carbsFontSize,
                                 fontWeight = FontWeight.Bold,
@@ -683,7 +683,7 @@ private fun WizardDetailRow(label: String, value: Double, fmt: NumberFormat) {
         Spacer(Modifier.width(6.dp))
         Text(text = label, color = WearSecondaryText, fontSize = 11.sp, modifier = Modifier.weight(1f))
         Text(
-            text = "$sign${fmt.format(value)} ${stringResource(R.string.insulin_unit_short)}",
+            text = stringResource(R.string.wizard_insulin_format, "$sign${fmt.format(value)}"),
             color = valueColor,
             fontSize = 11.sp,
         )
