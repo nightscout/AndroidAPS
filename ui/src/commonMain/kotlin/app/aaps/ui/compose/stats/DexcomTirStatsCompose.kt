@@ -47,35 +47,16 @@ fun DexcomTirStatsCompose(
     val profileUtil = LocalProfileUtil.current
     Column(modifier = modifier) {
         // Header with ranges
+        val zero = profileUtil.fromMgdlToStringInUnits(0.0)
+        val veryLow = profileUtil.stringInCurrentUnitsDetect(dexcomTir.veryLowTirMgdl())
+        val low = profileUtil.stringInCurrentUnitsDetect(dexcomTir.lowTirMgdl())
+        val veryHigh = profileUtil.stringInCurrentUnitsDetect(dexcomTir.veryHighTirMgdl())
         Text(
-            text = buildString {
-                append(stringResource(CoreUiStrings.detailed_14_days))
-                append("\n")
-                append(stringResource(CoreUiStrings.day_tir))
-                append(" (")
-                append(profileUtil.fromMgdlToStringInUnits(0.0))
-                append("-")
-                append(profileUtil.stringInCurrentUnitsDetect(dexcomTir.veryLowTirMgdl()))
-                append("-")
-                append(profileUtil.stringInCurrentUnitsDetect(dexcomTir.lowTirMgdl()))
-                append("-")
-                append(profileUtil.stringInCurrentUnitsDetect(dexcomTir.highTirMgdl()))
-                append("-")
-                append(profileUtil.stringInCurrentUnitsDetect(dexcomTir.veryHighTirMgdl()))
-                append("-∞)\n")
-                append(stringResource(CoreUiStrings.night_tir))
-                append(" (")
-                append(profileUtil.fromMgdlToStringInUnits(0.0))
-                append("-")
-                append(profileUtil.stringInCurrentUnitsDetect(dexcomTir.veryLowTirMgdl()))
-                append("-")
-                append(profileUtil.stringInCurrentUnitsDetect(dexcomTir.lowTirMgdl()))
-                append("-")
-                append(profileUtil.stringInCurrentUnitsDetect(dexcomTir.highNightTirMgdl()))
-                append("-")
-                append(profileUtil.stringInCurrentUnitsDetect(dexcomTir.veryHighTirMgdl()))
-                append("-∞)")
-            },
+            text = listOf(
+                stringResource(CoreUiStrings.detailed_14_days),
+                stringResource(CoreUiStrings.day_tir_ranges, zero, veryLow, low, profileUtil.stringInCurrentUnitsDetect(dexcomTir.highTirMgdl()), veryHigh),
+                stringResource(CoreUiStrings.night_tir_ranges, zero, veryLow, low, profileUtil.stringInCurrentUnitsDetect(dexcomTir.highNightTirMgdl()), veryHigh)
+            ).joinToString("\n"),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
@@ -119,13 +100,7 @@ fun DexcomTirStatsCompose(
             val hba1cMmol = (((mean + 46.7) / 28.7 - 2.15) * 10.929).roundToInt()
 
             Text(
-                text = buildString {
-                    append(stringResource(CoreUiStrings.hba1c))
-                    append(hba1cPercent)
-                    append("% (")
-                    append(hba1cMmol)
-                    append(" mmol/mol)")
-                },
+                text = stringResource(CoreUiStrings.hba1c_value, decimalFormatter.to1Decimal(hba1cPercent), hba1cMmol),
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -196,7 +171,7 @@ private fun RowScope.BarSegment(pct: Double, color: Color) {
     ) {
         if (pct >= 8.0) {
             Text(
-                text = LocalDecimalFormatter.current.to0Decimal(pct, "%"),
+                text = formatPercent(pct, LocalDecimalFormatter.current),
                 color = textColor,
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
@@ -308,5 +283,6 @@ private fun DexcomTirTableDataRow(
 /**
  * Formats a percentage value as a string.
  */
+@Composable
 private fun formatPercent(value: Double, decimalFormatter: DecimalFormatter): String =
-    decimalFormatter.to0Decimal(value, "%")
+    stringResource(CoreUiStrings.units_format_percent_value, decimalFormatter.to0Decimal(value))

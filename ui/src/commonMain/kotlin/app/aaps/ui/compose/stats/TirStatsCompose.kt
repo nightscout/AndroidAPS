@@ -70,9 +70,11 @@ fun TirStatsCompose(
     Column(modifier = modifier) {
         // TIR Section
         Text(
-            text = stringResource(CoreUiStrings.tir) + " (" +
-                profileUtil.stringInCurrentUnitsDetect(tirStatsData.lowTirMgdl) + "-" +
-                profileUtil.stringInCurrentUnitsDetect(tirStatsData.highTirMgdl) + ")",
+            text = stringResource(
+                CoreUiStrings.tir_range,
+                profileUtil.stringInCurrentUnitsDetect(tirStatsData.lowTirMgdl),
+                profileUtil.stringInCurrentUnitsDetect(tirStatsData.highTirMgdl)
+            ),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.SemiBold
         )
@@ -103,9 +105,11 @@ fun TirStatsCompose(
         )
 
         Text(
-            text = stringResource(CoreUiStrings.average) + " (" +
-                profileUtil.stringInCurrentUnitsDetect(tirStatsData.lowTirMgdl) + "-" +
-                profileUtil.stringInCurrentUnitsDetect(tirStatsData.highTirMgdl) + ")",
+            text = stringResource(
+                CoreUiStrings.average_range,
+                profileUtil.stringInCurrentUnitsDetect(tirStatsData.lowTirMgdl),
+                profileUtil.stringInCurrentUnitsDetect(tirStatsData.highTirMgdl)
+            ),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(vertical = 8.dp)
@@ -137,9 +141,11 @@ fun TirStatsCompose(
         )
 
         Text(
-            text = stringResource(CoreUiStrings.average) + " (" +
-                profileUtil.stringInCurrentUnitsDetect(tirStatsData.lowTitMgdl) + "-" +
-                profileUtil.stringInCurrentUnitsDetect(tirStatsData.highTitMgdl) + ")",
+            text = stringResource(
+                CoreUiStrings.average_range,
+                profileUtil.stringInCurrentUnitsDetect(tirStatsData.lowTitMgdl),
+                profileUtil.stringInCurrentUnitsDetect(tirStatsData.highTitMgdl)
+            ),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(vertical = 8.dp)
@@ -266,9 +272,10 @@ fun TirTableDataRow(
 /**
  * Formats a TIR value as a percentage string.
  */
+@Composable
 private fun formatPercentage(value: Int, total: Int, decimalFormatter: DecimalFormatter): String {
     return if (total > 0) {
-        decimalFormatter.to0Decimal(value * 100.0 / total, "%")
+        stringResource(CoreUiStrings.units_format_percent_value, decimalFormatter.to0Decimal(value * 100.0 / total))
     } else {
         "-"
     }

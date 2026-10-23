@@ -50,7 +50,7 @@
     <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Mean</string>
     <string name="cgp_reference">Healthy person</string>
     <string name="cgp_patient">Patient</string>
-    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_value" comment="PGR = Prognostic Glycemic Risk score. %1$s=score. Example: PGR: 2.4">PGR: %1$s</string>
     <string name="cgp_pgr_very_low">Very low risk</string>
     <string name="cgp_pgr_low">Low risk</string>
     <string name="cgp_pgr_moderate">Moderate risk</string>
