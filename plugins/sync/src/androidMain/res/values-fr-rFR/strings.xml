@@ -60,6 +60,7 @@
     <string name="authorized_clients_delete_dialog_token">Son jeton Nightscout est également supprimé. Il ne peut donc plus lire Nightscout.</string>
     <string name="authorized_clients_uses_client_token">Propre jeton Nightscout</string>
     <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Utilise le jeton Nightscout %1$s, qui a plus de droits qu\'un client n\'en a besoin</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Utilise le jeton Nightscout %1$s, pas le sien : ses commandes sont refusées. Supprimez-le et ajoutez-le à nouveau.</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Associer au maître</string>
     <string name="pair_with_master_pin_entry_title">Entrez le code PIN d\'appairage</string>
@@ -87,6 +88,10 @@
     <string name="client_setup_scan_title">Scannez le QR code du maître</string>
     <string name="client_setup_scan_instructions">Sur le maître, ouvrez les clients autorisés et ajoutez ce téléphone avec un QR code. Pointez la caméra sur le code.</string>
     <string name="client_setup_scan_camera_refused">La caméra est nécessaire pour lire le QR code. Autorisez-le, ou associez-la avec le code PIN.</string>
+    <string name="client_setup_scan_camera_denied">L\'accès à la caméra est bloqué pour AAPS. Activez-le dans les paramètres du système, ou associez-le avec le PIN.</string>
+    <string name="client_setup_scan_camera_blocked">L\'accès à la caméra n\'est pas autorisé sur cet appareil. Associer avec le code PIN à la place.</string>
+    <string name="client_setup_scan_camera_unavailable">La caméra ne peut pas être utilisée sur cet appareil. Appairer avec le code PIN à la place.</string>
+    <string name="client_setup_scan_open_settings">Ouvrir les paramètres</string>
     <string name="client_setup_scan_not_a_code">Ceci n\'est pas un QR code d\'AAPS.</string>
     <string name="client_setup_scan_other_version">Ce code provient d\'une autre version d\'AAPS. Le maître et ce téléphone doivent exécuter la même version.</string>
     <string name="client_setup_scan_expired">Ce code a expiré. Faites-en un nouveau sur le maître.</string>
@@ -123,6 +128,9 @@
     <string name="upload_now">Télécharger maintenant</string>
     <string name="tidepool_purge_data">Purger toutes les données</string>
     <string name="tidepool_purge_data_confirm">Supprimer TOUTES les données que AAPS a téléchargées sur Tidepool ? Cette action est irréversible. Utilisez-le pour supprimer les données corrompues par une ancienne version, puis exécutez \"Synchronisation totale\" pour re-télécharger.</string>
+    <string name="tidepool_status_not_logged_in">Non connecté</string>
+    <string name="tidepool_status_blocked">Bloqué par les paramètres de connexion</string>
+    <string name="tidepool_status_failed">Échec. Voir le journal ci-dessous.</string>
     <string name="not_connected">Non connecté</string>
     <string name="read_only">Lecture seule</string>
     <string name="working">Opération en cours</string>
