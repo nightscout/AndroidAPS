@@ -161,7 +161,7 @@ class CarbsDialogViewModel(
         if (activeTT != null) {
             val activeTarget = activeTT.highTarget
             val remainingDurationMin = ((activeTT.timestamp + activeTT.duration) - now) / 60000
-            if (activeTarget > Constants.NORMAL_TARGET_MGDL && remainingDurationMin > hypoTTDuration) {
+            if (Constants.isAboveNormalTarget(activeTarget) && remainingDurationMin > hypoTTDuration) {
                 return false
             }
         }
