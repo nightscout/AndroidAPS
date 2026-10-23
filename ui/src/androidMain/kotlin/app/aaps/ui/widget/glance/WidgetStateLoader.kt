@@ -97,7 +97,7 @@ class WidgetStateLoader(
             if (constraintsProcessed.carbsReq > 0) {
                 val lastCarbsTime = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
                 if (lastCarbsTime < lastRun.lastAPSRun) {
-                    cobText += "\n" + constraintsProcessed.carbsReq + " " + rh.gs(CoreUiStrings.required)
+                    cobText += "\n" + rh.gs(UiStrings.carbs_req_value, constraintsProcessed.carbsReq)
                     cobActive = true
                 }
             }

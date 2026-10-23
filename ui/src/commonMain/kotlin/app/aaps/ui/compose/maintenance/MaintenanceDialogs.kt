@@ -17,6 +17,7 @@ import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.dialogs.QueryAnyPasswordDialog
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel.ExportState
 
 /**
@@ -170,7 +171,7 @@ fun MaintenanceDialogs(
     if (showConfirmSendLogs) {
         OkCancelDialog(
             title = stringResource(CoreUiStrings.confirmation),
-            message = stringResource(CoreUiStrings.send_logs) + "?",
+            message = stringResource(UiStrings.send_logs_question),
             onConfirm = {
                 showConfirmSendLogs = false
                 maintenanceViewModel.sendLogs()
@@ -182,7 +183,7 @@ fun MaintenanceDialogs(
     if (showConfirmExportCsv) {
         OkCancelDialog(
             title = stringResource(CoreUiStrings.confirmation),
-            message = stringResource(CoreUiStrings.ue_export_to_csv) + "?",
+            message = stringResource(UiStrings.ue_export_to_csv_question),
             onConfirm = {
                 showConfirmExportCsv = false
                 maintenanceViewModel.exportCsv()
@@ -205,7 +206,7 @@ fun MaintenanceDialogs(
             val confirmState = exportState as ExportState.ConfirmExport
             OkCancelDialog(
                 title = stringResource(CoreUiStrings.export_to),
-                message = confirmState.fileName + "?\n\n" +
+                message = stringResource(UiStrings.export_file_question, confirmState.fileName) + "\n\n" +
                     stringResource(CoreUiStrings.password_preferences_encrypt_prompt),
                 onConfirm = { maintenanceViewModel.onExportConfirmed() },
                 onDismiss = { maintenanceViewModel.cancelExport() }

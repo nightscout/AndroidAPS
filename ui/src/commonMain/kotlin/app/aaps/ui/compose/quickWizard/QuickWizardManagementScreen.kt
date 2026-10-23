@@ -129,7 +129,7 @@ fun QuickWizardManagementScreen(
         val entry = uiState.entries.getOrNull(uiState.selectedIndex)
         OkCancelDialog(
             title = stringResource(CoreUiStrings.removerecord),
-            message = "${stringResource(CoreUiStrings.delete)} ${entry?.buttonText() ?: ""}?",
+            message = stringResource(UiStrings.delete_item_question, entry?.buttonText() ?: ""),
             onConfirm = {
                 viewModel.deleteCurrentEntry()
                 showDeleteDialog = false

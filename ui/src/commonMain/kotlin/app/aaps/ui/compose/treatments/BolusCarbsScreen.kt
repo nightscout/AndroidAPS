@@ -29,10 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -48,6 +47,7 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.StyledArg
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.RecordRemovalDialog
 import app.aaps.core.ui.compose.icons.Ns
@@ -55,6 +55,8 @@ import app.aaps.core.ui.compose.icons.Pump
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.styledStringResource
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.treatments.viewmodels.BolusCarbsViewModel
 
@@ -255,34 +257,23 @@ private fun MealLinkItem(
                         profile?.let { _ ->
                             val iob = bolus.iobCalc(dateUtil.now())
                             val bolusText = if (iob.iobContrib > 0.01) {
-                                buildAnnotatedString {
-                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        append(stringResource(InterfacesStrings.format_insulin_units, bolus.amount))
-                                        append(" ")
-                                    }
-                                    withStyle(
-                                        style = SpanStyle(
-                                            fontWeight = FontWeight.Bold,
-                                            color = Color(AapsTheme.generalColors.activeInsulinText.value)
-                                        )
-                                    ) {
-                                        append("(")
-                                        append(stringResource(InterfacesStrings.format_insulin_units, iob.iobContrib))
-                                        append(")")
-                                    }
-                                }
+                                styledStringResource(
+                                    UiStrings.bolus_amount_with_iob,
+                                    StyledArg(stringResource(InterfacesStrings.format_insulin_units, bolus.amount)),
+                                    StyledArg(
+                                        stringResource(InterfacesStrings.format_insulin_units, iob.iobContrib),
+                                        SpanStyle(color = Color(AapsTheme.generalColors.activeInsulinText.value))
+                                    )
+                                )
                             } else {
-                                buildAnnotatedString {
-                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        append(stringResource(InterfacesStrings.format_insulin_units, bolus.amount))
-                                    }
-                                }
+                                AnnotatedString(stringResource(InterfacesStrings.format_insulin_units, bolus.amount))
                             }
 
                             Text(
                                 text = bolusText,
                                 modifier = Modifier.padding(start = 10.dp),
-                                fontSize = 14.sp
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold
                             )
                         } ?: run {
                             Text(
@@ -377,15 +368,12 @@ private fun MealLinkItem(
                         )
 
                         Text(
-                            text = stringResource(InterfacesStrings.carbs) + ":",
-                            modifier = Modifier.padding(start = 8.dp, end = 4.dp),
+                            text = styledStringResource(
+                                UiStrings.carbs_amount_line,
+                                StyledArg(stringResource(InterfacesStrings.format_carbs, carbs.amount.toInt()), SpanStyle(fontWeight = FontWeight.Bold))
+                            ),
+                            modifier = Modifier.padding(start = 8.dp),
                             fontSize = 14.sp
-                        )
-
-                        Text(
-                            text = stringResource(InterfacesStrings.format_carbs, carbs.amount.toInt()),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold
                         )
 
                         if (carbs.duration > 0) {

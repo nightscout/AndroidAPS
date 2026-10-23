@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.ui.extensions.displayText
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -82,7 +83,7 @@ class ChipsViewModel(
             if (constraintsProcessed.carbsReq > 0) {
                 val lastCarbsTime = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
                 if (lastCarbsTime < lastRun.lastAPSRun) {
-                    cobText += " ${constraintsProcessed.carbsReq}${rh.gs(CoreUiStrings.required)}"
+                    cobText = rh.gs(UiStrings.cob_with_carbs_req, cobText, constraintsProcessed.carbsReq)
                 }
                 carbsReq = constraintsProcessed.carbsReq
             }
@@ -127,10 +128,13 @@ class ChipsViewModel(
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             val total = bolusIob.iob + basalIob.basaliob
-            val message =
-                rh.gs(CoreUiStrings.bolus_iob_label) + ": " + rh.gs(InterfacesStrings.format_insulin_units, bolusIob.iob) + "\n" +
-                    rh.gs(CoreUiStrings.treatments_wizard_basaliob_label) + ": " + rh.gs(InterfacesStrings.format_insulin_units, basalIob.basaliob) + "\n" +
-                    rh.gs(CoreUiStrings.iob) + ": " + rh.gs(InterfacesStrings.format_insulin_units, total)
+            val message = listOf(
+                CoreUiStrings.bolus_iob_label to bolusIob.iob,
+                CoreUiStrings.treatments_wizard_basaliob_label to basalIob.basaliob,
+                CoreUiStrings.iob to total
+            ).joinToString("\n") { (label, insulin) ->
+                rh.gs(InterfacesStrings.confirmation_line, rh.gs(label), rh.gs(InterfacesStrings.format_insulin_units, insulin))
+            }
             rxBus.send(
                 EventShowDialog.Ok(
                     title = rh.gs(CoreUiStrings.iob),

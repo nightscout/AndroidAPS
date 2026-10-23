@@ -55,7 +55,7 @@ fun PumpActivityFab(
         ) {
             if (bolusState != null && bolusState.isSMB && bolusState.percent in 1..99) {
                 Text(
-                    text = "${bolusState.percent}%",
+                    text = stringResource(CoreUiStrings.format_percent, bolusState.percent),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold
                 )

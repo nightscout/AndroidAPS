@@ -60,6 +60,7 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileEditorViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileUiState
 import app.aaps.ui.compose.profileManagement.viewmodels.SingleProfileState
@@ -364,7 +365,7 @@ private fun ProfileNameHeader(
 
             // Units display
             Text(
-                text = "${stringResource(CoreUiStrings.units_colon)} $units",
+                text = stringResource(UiStrings.profile_units_value, units),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -490,7 +491,7 @@ private fun IsfContent(
                 valueRange = state.isfRange,
                 step = if (profile.mgdl) 1.0 else 0.1,
                 valueFormat = if (profile.mgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1,
-                unitLabel = "${state.units}/${stringResource(CoreUiStrings.insulin_unit_shortname)}",
+                unitLabel = stringResource(UiStrings.isf_unit_label, state.units, stringResource(CoreUiStrings.insulin_unit_shortname)),
                 modifier = Modifier.padding(16.dp)
             )
         }
@@ -533,12 +534,12 @@ private fun BasalContent(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "${stringResource(CoreUiStrings.basal_long_label)} [${stringResource(InterfacesStrings.profile_ins_units_per_hour)}]",
+                        text = stringResource(UiStrings.basal_header_with_unit, stringResource(CoreUiStrings.basal_long_label), stringResource(InterfacesStrings.profile_ins_units_per_hour)),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "∑ ${stringResource(InterfacesStrings.format_insulin_units, state.basalSum)}",
+                        text = stringResource(UiStrings.basal_daily_sum, stringResource(InterfacesStrings.format_insulin_units, state.basalSum)),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )

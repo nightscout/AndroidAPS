@@ -110,6 +110,7 @@
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
@@ -191,7 +192,6 @@
     <string name="pump_running">Pump running</string>
     <string name="notconfigured">Not configured</string>
     <string name="loop_suspended_by_dst">Loop suspended by DST</string>
-    <string name="required">req</string>
     <string name="a11y_arrow_triple_down">falling very rapidly</string>
     <string name="a11y_arrow_double_down">falling rapidly</string>
     <string name="a11y_arrow_single_down">falling</string>
@@ -233,7 +233,7 @@
     <string name="wear_wizard_settings">Wear Wizard Settings</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
-    <string name="format_percent" translatable="false">%1$d%%</string>
+    <string name="format_percent" comment="A whole percentage. %1$d=the number. Example: 75%">%1$d%%</string>
     <string name="invalid">INVALID</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
@@ -277,7 +277,7 @@
     <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
     <string name="nav_export">Export settings</string>
     <string name="location_permission_not_granted">Location permission not granted. Allow in android settings.</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
+    <string name="nightscout_version_value" comment="%1$s=version of the Nightscout server. Example: Nightscout version: 15.0.2">Nightscout version: %1$s</string>
     <string name="not_available_full">Not available</string>
     <string name="not_implemented_yet">This function is not ready on this platform yet</string>
     <string name="not_available_on_platform">This function is not available on this platform</string>
@@ -1092,7 +1092,6 @@
     <string name="target_short">TARG</string>
     <string name="profile_name">Profile name:</string>
     <string name="edit_profile_name">Edit profile name</string>
-    <string name="units_colon">Units:</string>
     <string name="unsaved_changes">Unsaved changes</string>
     <string name="unsaved_changes_message">You have unsaved changes. What would you like to do?</string>
     <string name="discard">Discard</string>

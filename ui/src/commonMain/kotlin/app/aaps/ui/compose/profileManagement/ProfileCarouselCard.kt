@@ -167,7 +167,7 @@ internal fun ProfileCarouselCard(
 
                     // Show "ACTIVE -> Next: profile" when there's a next profile, otherwise just "ACTIVE"
                     val activeText = if (hasDuration && nextProfileName != null) {
-                        "${stringResource(UiStrings.active_profile_indicator)} → $nextProfileName"
+                        stringResource(UiStrings.active_profile_then_next, stringResource(UiStrings.active_profile_indicator), nextProfileName)
                     } else {
                         stringResource(UiStrings.active_profile_indicator)
                     }
@@ -182,15 +182,15 @@ internal fun ProfileCarouselCard(
 
                     // Percentage and timeshift for active profile
                     activeProfileSwitch?.let { eps ->
-                        val details = buildString {
-                            if (eps.originalPercentage != 100) {
-                                append("${eps.originalPercentage}%")
-                            }
-                            val timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt()
-                            if (timeshiftHours != 0) {
-                                if (isNotEmpty()) append(" ")
-                                append(if (timeshiftHours > 0) "+${timeshiftHours}h" else "${timeshiftHours}h")
-                            }
+                        val timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt()
+                        val signedHours = if (timeshiftHours > 0) "+$timeshiftHours" else "$timeshiftHours"
+                        val details = when {
+                            eps.originalPercentage != 100 && timeshiftHours != 0 ->
+                                stringResource(UiStrings.profile_percentage_timeshift_signed, eps.originalPercentage, signedHours)
+
+                            eps.originalPercentage != 100                        -> stringResource(CoreUiStrings.format_percent, eps.originalPercentage)
+                            timeshiftHours != 0                                  -> stringResource(UiStrings.profile_timeshift_signed, signedHours)
+                            else                                                 -> ""
                         }
                         if (details.isNotEmpty()) {
                             Text(

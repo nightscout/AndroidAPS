@@ -49,13 +49,17 @@
     <string name="unit_days">days</string>
     <string name="unit_weeks">weeks</string>
     <string name="shortminute">m</string>
-    <string name="shortday">d</string>
     <string name="time_remaining_h_m">%1$dh %2$dm remaining</string>
     <string name="time_remaining_m">%1$dm remaining</string>
     <string name="later_today">Later today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+    <string name="relative_day_with_date" comment="%1$s=Today, Yesterday or how many days ago, %2$s=the date. Example: Yesterday - 10/22/2026">%1$s - %2$s</string>
+    <string name="time_frame_hours_minutes" comment="A duration, short. h=hours, the mark after the minutes means minutes. %1$d=hours, %2$d=minutes. Example: 1h 30'">%1$dh %2$d\'</string>
+    <string name="time_frame_minutes" comment="A duration in minutes, short. The mark after the number means minutes. %1$d=minutes. Example: 30'">%1$d\'</string>
+    <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
+    <string name="time_value_with_unit" comment="%1$s=a number, %2$s=the time unit, like minutes or days. Example: 5 minutes">%1$s %2$s</string>
 
     <!-- Rx -->
     <string name="connecting_for">Connecting for %1$d s</string>
@@ -105,7 +109,6 @@
     <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
-    <string name="forever">Forever</string>
 
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">Bluetooth</string>
@@ -164,6 +167,10 @@
     <string name="advisoralarm">Run alarm when is time to eat</string>
     <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs %1$d g / %2$d h (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
+    <string name="carbs_with_time_later" comment="Carbs eaten later. %1$s=carbs with unit, %2$s=minutes from now, with unit. Example: 20 g (+15 min)">%1$s (+%2$s)</string>
+    <string name="carbs_with_time_earlier" comment="Carbs eaten before now. %1$s=carbs with unit, %2$s=minutes, with a minus sign and unit. Example: 20 g (-15 min)">%1$s (%2$s)</string>
+    <string name="quickwizard_ecarbs" comment="Extended carbs of a quick wizard button. %1$s=carbs with unit, %2$d=hours they are spread over, %3$d=minutes until they start. Example: 20 g/3h (+30min)">%1$s/%2$dh (+%3$dmin)</string>
     <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Plugin %1$s failed to start and may not work. Please restart AAPS.</string>
     <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Plugin %1$s hit an error and part of it has stopped. Please restart AAPS.</string>
 </resources>

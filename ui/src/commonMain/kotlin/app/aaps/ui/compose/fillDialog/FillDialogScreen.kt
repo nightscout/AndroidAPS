@@ -399,7 +399,7 @@ internal fun FillDialogContent(
                     // Time (collapsible "Now" pattern)
                     EventTimeRow(
                         timeChanged = uiState.eventTimeChanged,
-                        displayText = "$dateString $timeString",
+                        displayText = stringResource(UiStrings.date_and_time, dateString, timeString),
                         dateTimeContent = {
                             DateTimeSection(
                                 dateString = dateString,

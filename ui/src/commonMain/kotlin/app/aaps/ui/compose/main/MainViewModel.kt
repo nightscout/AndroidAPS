@@ -465,8 +465,11 @@ class MainViewModel(
         if (wizard.calculatedTotalInsulin <= 0.0)
             return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, disabledReason = rh.gs(UiStrings.wizard_no_insulin_required))
 
-        val detail = rh.gs(InterfacesStrings.format_carbs, entry.carbs()) +
-            " " + rh.gs(InterfacesStrings.format_insulin_units, wizard.calculatedTotalInsulin)
+        val detail = rh.gs(
+            UiStrings.quickwizard_carbs_and_insulin,
+            rh.gs(InterfacesStrings.format_carbs, entry.carbs()),
+            rh.gs(InterfacesStrings.format_insulin_units, wizard.calculatedTotalInsulin)
+        )
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != entry.carbs())
@@ -670,7 +673,7 @@ class MainViewModel(
         // predates the property, such as a test double, which then omits the line rather than
         // claiming a platform.
         if (config.PLATFORM.isNotEmpty()) message += "Platform: ${config.PLATFORM}\n"
-        message += "${rh.gs(CoreUiStrings.configbuilder_nightscoutversion_label)} ${nsClient.detectedNsVersion() ?: rh.gs(CoreUiStrings.not_available_full)}"
+        message += rh.gs(CoreUiStrings.nightscout_version_value, nsClient.detectedNsVersion() ?: rh.gs(CoreUiStrings.not_available_full))
         if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(CoreUiStrings.fabric_upload_disabled)}"
         val enabledOptions = ExternalOptions.entries.filter { config.isEnabled(it) }
         message += rh.gs(CoreUiStrings.about_link_urls)

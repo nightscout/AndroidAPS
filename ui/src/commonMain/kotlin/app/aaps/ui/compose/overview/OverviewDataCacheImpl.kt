@@ -962,10 +962,12 @@ class OverviewDataCacheImpl(
         val (fromTime, toTime) = graphTimeRange() ?: return
         _epsGraphFlow.value = persistenceLayer.getEffectiveProfileSwitchesFromTimeToTime(fromTime, toTime, true)
             .map { eps ->
-                val label = buildString {
-                    if (eps.originalPercentage != 100) append("${eps.originalPercentage}%")
-                    if (eps.originalPercentage != 100 && eps.originalTimeshift != 0L) append(",")
-                    if (eps.originalTimeshift != 0L) append("${T.msecs(eps.originalTimeshift).hours()}${rh.gs(InterfacesStrings.shorthour)}")
+                val hours = T.msecs(eps.originalTimeshift).hours()
+                val label = when {
+                    eps.originalPercentage != 100 && eps.originalTimeshift != 0L -> rh.gs(UiStrings.eps_graph_percentage_timeshift, eps.originalPercentage, hours)
+                    eps.originalPercentage != 100                                -> rh.gs(CoreUiStrings.format_percent, eps.originalPercentage)
+                    eps.originalTimeshift != 0L                                  -> rh.gs(UiStrings.eps_graph_timeshift, hours)
+                    else                                                         -> ""
                 }
                 EpsGraphPoint(
                     timestamp = eps.timestamp,
@@ -1154,11 +1156,13 @@ class OverviewDataCacheImpl(
                 else                                                                              -> AapsClientLevel.INFO
             }
             // Format: "75% 3 min ago" (running mode excluded — already shown in RunningMode chip)
-            val value = buildString {
-                if (pumpData.isPercent) append("${pumpData.percent}% ")
-                if (!pumpData.isPercent && pumpData.voltage > 0) append("${Round.roundTo(pumpData.voltage, 0.001)} ")
-                append(dateUtil.minAgo(rh, pumpData.clock))
-            }.trim()
+            val battery = when {
+                pumpData.isPercent      -> rh.gs(CoreUiStrings.format_percent, pumpData.percent)
+                pumpData.voltage > 0    -> Round.roundTo(pumpData.voltage, 0.001).toString()
+                else                    -> null
+            }
+            val age = dateUtil.minAgo(rh, pumpData.clock)
+            val value = battery?.let { rh.gs(UiStrings.nsclient_battery_and_age, it, age) } ?: age
             val dialogText = buildString {
                 pumpData.extended?.let {
                     append(it.trim())
@@ -1184,17 +1188,9 @@ class OverviewDataCacheImpl(
             val clockEnacted = processedDeviceStatusData.openAPSData.clockEnacted
             val enacted = processedDeviceStatusData.openAPSData.enacted
             val sameCycle = enacted != null && clockSuggested - clockEnacted <= 60_000L
-            val dialogText = buildString {
-                if (sameCycle) {
-                    append("Enacted: ${dateUtil.minAgo(rh, clockEnacted)}")
-                    append(" ${enacted.reason}")
-                } else {
-                    processedDeviceStatusData.openAPSData.suggested?.let {
-                        append("Suggested: ${dateUtil.minAgo(rh, clockSuggested)}")
-                        append(" ${it.reason}")
-                    }
-                }
-            }
+            val dialogText =
+                if (sameCycle) rh.gs(UiStrings.nsclient_enacted_ago, dateUtil.minAgo(rh, clockEnacted), enacted.reason)
+                else processedDeviceStatusData.openAPSData.suggested?.let { rh.gs(UiStrings.nsclient_suggested_ago, dateUtil.minAgo(rh, clockSuggested), it.reason) } ?: ""
             AapsClientStatusItem(
                 label = rh.gs(CoreUiStrings.openaps_short),
                 value = value,
@@ -1214,17 +1210,13 @@ class OverviewDataCacheImpl(
                 }
             }
             // Match original format: "ᴪ 93%" or "93%"
-            val value = buildString {
-                if (isCharging) append("\u26A1")
-                append("$minBattery%")
+            val minBatteryText = rh.gs(CoreUiStrings.format_percent, minBattery)
+            val value = if (isCharging) rh.gs(UiStrings.battery_charging, minBatteryText) else minBatteryText
+            val dialogText = processedDeviceStatusData.uploaderMap.entries.joinToString("\n") { (device, uploader) ->
+                val battery = rh.gs(CoreUiStrings.format_percent, uploader.battery)
+                if (uploader.isCharging == true) rh.gs(UiStrings.device_battery_charging, device, battery)
+                else rh.gs(InterfacesStrings.confirmation_line, device, battery)
             }
-            val dialogText = buildString {
-                for ((device, uploader) in processedDeviceStatusData.uploaderMap) {
-                    append("$device: ${uploader.battery}%")
-                    if (uploader.isCharging == true) append(" \u26A1")
-                    append("\n")
-                }
-            }.trimEnd()
             AapsClientStatusItem(
                 label = rh.gs(CoreUiStrings.uploader_short),
                 value = value,

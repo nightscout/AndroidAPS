@@ -674,7 +674,7 @@ fun GraphsSection(
                     .height(graphConfig.iobHeight.dp - REMOVED_TIME_LABELS_HEIGHT)
             )
             GraphNameRow(
-                name = stringResource(CoreUiStrings.iob) + " / " + stringResource(CoreUiStrings.basal_shortname),
+                name = stringResource(UiStrings.graph_name_iob_basal, stringResource(CoreUiStrings.iob), stringResource(CoreUiStrings.basal_shortname)),
                 editName = stringResource(CoreUiStrings.iob),
                 onEdit = if (isSimpleMode) null else ({ editingIobOverlays = true }),
                 modifier = Modifier
@@ -684,7 +684,7 @@ fun GraphsSection(
         }
         if (editingIobOverlays) {
             GraphSeriesBottomSheet(
-                title = stringResource(CoreUiStrings.iob) + " / " + stringResource(CoreUiStrings.basal_shortname),
+                title = stringResource(UiStrings.graph_name_iob_basal, stringResource(CoreUiStrings.iob), stringResource(CoreUiStrings.basal_shortname)),
                 selectedSeries = graphConfig.iobOverlays,
                 availableSeries = listOf(SeriesType.ACTIVITY),
                 height = graphConfig.iobHeight,
