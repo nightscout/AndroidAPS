@@ -1,4 +1,4 @@
-package app.aaps.ios.shell.di
+package app.aaps.shared.clientbindings
 
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
@@ -27,30 +27,34 @@ import dev.zacsweers.metro.SingleIn
 /**
  * Marks objects belonging to one history browsing window rather than to the running app.
  *
- * Its own scope, and that is the entire point - see [IosHistoryWindowGraph].
+ * Its own scope, and that is the entire point - see [ClientHistoryWindowGraph].
  */
-abstract class IosHistoryWindowScope private constructor()
+abstract class ClientHistoryWindowScope private constructor()
 
 /**
- * One history browsing window's calculation objects, the iOS counterpart of `HistoryWindowGraph`.
+ * One history browsing window's calculation objects, for iOS and desktop. The Android counterpart is
+ * `HistoryWindowGraph` in `:app`.
  *
  * The History Browser recalculates over a **different time range** than the running loop. Every
  * object below is therefore the window's own: its own `OverviewData`, its own signals, its own cache
  * and its own calculator. Handing back the app-scoped ones would satisfy every type and silently
  * make history browsing rewrite the state the loop is calculating on - which is the bug this whole
- * arrangement exists to prevent, and the reason the iOS placeholder that came before this refused to
+ * arrangement exists to prevent, and the reason the placeholders that came before it refused to
  * answer at all rather than share them.
  *
  * A `@GraphExtension` rather than a root graph of its own: it inherits the app-wide objects - the
- * database, preferences, the logger - while everything marked `@SingleIn(IosHistoryWindowScope)` is
- * fresh per window. A root graph would share nothing, so every leaf would have to be threaded in by
- * hand.
+ * database, preferences, the logger - while everything marked `@SingleIn(ClientHistoryWindowScope)`
+ * is fresh per window. A root graph would share nothing, so every leaf would have to be threaded in
+ * by hand.
+ *
+ * A parent graph reaches it only through an accessor it states itself, `historyWindowFactory`.
+ * Without that accessor the factory looks like an ordinary missing binding.
  *
  * The cache and the calculator need each other; a function type defers the lookup so the graph
  * accepts what a direct reference would reject.
  */
-@GraphExtension(IosHistoryWindowScope::class)
-interface IosHistoryWindowGraph {
+@GraphExtension(ClientHistoryWindowScope::class)
+interface ClientHistoryWindowGraph {
 
     val overviewData: OverviewData
     val signals: CalculationSignalsEmitter
@@ -61,15 +65,15 @@ interface IosHistoryWindowGraph {
     @GraphExtension.Factory
     fun interface Factory {
 
-        fun create(): IosHistoryWindowGraph
+        fun create(): ClientHistoryWindowGraph
     }
 
     @Provides
-    @SingleIn(IosHistoryWindowScope::class)
+    @SingleIn(ClientHistoryWindowScope::class)
     fun provideOverviewData(): OverviewData = OverviewDataImpl()
 
     @Provides
-    @SingleIn(IosHistoryWindowScope::class)
+    @SingleIn(ClientHistoryWindowScope::class)
     fun provideSignals(): CalculationSignalsEmitter = CalculationSignalsImpl()
 
     /**
@@ -78,7 +82,7 @@ interface IosHistoryWindowGraph {
      * while they were reading it.
      */
     @Provides
-    @SingleIn(IosHistoryWindowScope::class)
+    @SingleIn(ClientHistoryWindowScope::class)
     fun provideCache(
         factory: OverviewDataCacheFactory,
         signals: CalculationSignalsEmitter,
@@ -91,7 +95,7 @@ interface IosHistoryWindowGraph {
 
     @Suppress("LongParameterList")
     @Provides
-    @SingleIn(IosHistoryWindowScope::class)
+    @SingleIn(ClientHistoryWindowScope::class)
     fun provideIobCobCalculator(
         aapsLogger: AAPSLogger,
         rxBus: RxBus,

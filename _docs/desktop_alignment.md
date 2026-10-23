@@ -29,7 +29,11 @@ nothing is silently half-done:
 | `DesktopBgQualityCheck` | Not started |
 | `DesktopMaintenance` | Partly - `deleteLogs` works, `executeSendLogs` needs a product decision |
 | `DesktopCloudDirectoryManager` | **Mostly unblocked - see below** |
-| `DesktopHistoryScope` | Not started |
+
+`DesktopHistoryScope` is gone. It refused every call, so opening the History Browser crashed the
+window. Desktop now uses `ClientHistoryWindowGraph` and `ClientHistoryScope` from
+`:shared:clientbindings`, the same code iOS runs. `DesktopHistoryWindowScopingTest` checks that a
+window does not share the loop's calculation objects.
 
 ## Done: import and export of settings
 

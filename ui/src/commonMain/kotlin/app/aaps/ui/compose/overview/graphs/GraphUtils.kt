@@ -24,6 +24,7 @@ import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.input.pointer.util.addPointerInputChange
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import app.aaps.core.data.ui.MarkerTier
 import app.aaps.core.interfaces.overview.graph.SeriesType
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.CartesianMeasuringContext
@@ -356,7 +357,8 @@ fun filterToRange(
 
 /**
  * Target point size for layout normalization across all synchronized graphs.
- * Must be >= the largest actual point size used in any graph (currently 22dp from IOB SMB/bolus markers).
+ * Must be >= the largest actual point size used in any graph (currently 30 dp: the largest BG graph
+ * marker, 22 dp, in a box grown by the tip gap on both sides, see `MARKER_TIP_GAP`).
  *
  * Every graph includes an invisible normalizer line with this point size (via [createNormalizerLine]).
  * This ensures all charts have the same maxPointSize, which makes Vico compute identical:
@@ -365,7 +367,7 @@ fun filterToRange(
  *
  * Without this, each chart's different point sizes cause different layout, breaking pixel-based sync.
  */
-val NORMALIZER_POINT_SIZE: Dp = 22.dp
+val NORMALIZER_POINT_SIZE: Dp = 30.dp
 
 /**
  * Creates an invisible line with [NORMALIZER_POINT_SIZE] transparent points.
@@ -415,15 +417,23 @@ val TriangleShape: Shape = GenericShape { size, _ ->
 /**
  * Inverted triangle shape pointing downward (flat base at top, apex at bottom).
  *
- * Used for a manual bolus on the BG and IOB graphs, and for carbs on the COB graph. The apex
- * sits at the data point's y-coordinate with the base above it, so it points at the value.
+ * Used for a manual bolus on the BG and IOB graphs, and for carbs on the COB graph. The apex sits at the data point's
+ * y-coordinate with the base above it, so it points at the value.
  */
-val InvertedTriangleShape: Shape = GenericShape { size, _ ->
-    val baseHalf = size.width * 0.3f         // Narrow base for sharper triangle
+val InvertedTriangleShape: Shape = invertedTriangleShape()
+
+/**
+ * [InvertedTriangleShape] with its apex [tipInset] of the box above the box centre, so the tip
+ * stops short of the data point. The base is narrowed by the same share: in a box grown by twice
+ * the inset the triangle keeps the proportions of the plain shape and only moves away from the
+ * point. The BG graph uses it to keep a marker's tip outside the reading dot.
+ */
+fun invertedTriangleShape(tipInset: Float = 0f): Shape = GenericShape { size, _ ->
+    val baseHalf = size.width * 0.3f * (1f - 2f * tipInset)   // Narrow base for sharper triangle
     val cx = size.width / 2f
-    moveTo(cx - baseHalf, 0f)               // Top left (base)
-    lineTo(cx + baseHalf, 0f)               // Top right (base)
-    lineTo(cx, size.height / 2f)            // Bottom center (apex)
+    moveTo(cx - baseHalf, 0f)                                 // Top left (base)
+    lineTo(cx + baseHalf, 0f)                                 // Top right (base)
+    lineTo(cx, size.height * (0.5f - tipInset))               // Bottom center (apex)
     close()
 }
 
@@ -438,18 +448,21 @@ val InvertedTriangleShape: Shape = GenericShape { size, _ ->
  * it from below, so both tips meet at the moment on the curve.
  * Same proportions as the other two.
  */
-val TriangleBelowShape: Shape = GenericShape { size, _ ->
-    val baseHalf = size.width * 0.3f         // Narrow base for sharper triangle
+val TriangleBelowShape: Shape = triangleBelowShape()
+
+/** [TriangleBelowShape] with its apex [tipInset] of the box below the box centre, see [invertedTriangleShape]. */
+fun triangleBelowShape(tipInset: Float = 0f): Shape = GenericShape { size, _ ->
+    val baseHalf = size.width * 0.3f * (1f - 2f * tipInset)   // Narrow base for sharper triangle
     val cx = size.width / 2f
-    moveTo(cx, size.height / 2f)             // Top center (apex), at the data point
-    lineTo(cx + baseHalf, size.height)       // Right base
-    lineTo(cx - baseHalf, size.height)       // Left base
+    moveTo(cx, size.height * (0.5f + tipInset))               // Top center (apex), at the data point
+    lineTo(cx + baseHalf, size.height)                        // Right base
+    lineTo(cx - baseHalf, size.height)                        // Left base
     close()
 }
 
 /**
  * Size of a treatment marker (manual bolus, carbs) per [MarkerTier], the same on every graph.
- * The largest must stay within [NORMALIZER_POINT_SIZE].
+ * The largest, with the BG graph's tip gap added on both sides, must stay within [NORMALIZER_POINT_SIZE].
  */
 internal val MarkerTier.markerSize: Dp
     get() = when (this) {
