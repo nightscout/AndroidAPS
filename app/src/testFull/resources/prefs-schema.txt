@@ -366,7 +366,6 @@ nsclientinternal_url|StringKey|true
 oh_charging_only|BooleanKey|true
 oh_wifi_only|BooleanKey|true
 omnipod_5_certificate_store|O5IntentKey|false
-omnipod_5_history|O5IntentKey|false
 openaps_smb_min_5m_carbimpact|DoubleKey|true
 openapsama_autosens_period|IntKey|true
 openapsama_current_basal_safety_multiplier|DoubleKey|true
