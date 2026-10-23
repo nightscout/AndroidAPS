@@ -45,6 +45,7 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.BolusGraphPoint
+import app.aaps.core.interfaces.overview.graph.BolusType
 import app.aaps.core.interfaces.overview.graph.CalibrationGraphPoint
 import app.aaps.core.interfaces.overview.graph.CarbsGraphPoint
 import app.aaps.core.interfaces.overview.graph.GraphDataPoint
@@ -412,11 +413,11 @@ fun GraphInspectPill(
                 data.basal?.let {
                     PillItem(data.tbrState.toIcon(), stringResource(CoreUiStrings.pump_base_basal_rate, it), ElementType.TEMP_BASAL.color())
                 }
-                // Same triangles as the BG, IOB and COB graphs: insulin up, carbs down
+                // Same triangles as the BG and IOB graphs: a manual bolus down, an SMB up, carbs up
                 data.boluses.forEach { bolus ->
-                    PillTriangleItem(pointsUp = true, text = bolus.label, color = ElementType.INSULIN.color())
+                    PillTriangleItem(pointsUp = bolus.bolusType == BolusType.SMB, text = bolus.label, color = ElementType.INSULIN.color())
                 }
-                data.carbs.forEach { carbs -> PillTriangleItem(pointsUp = false, text = carbs.label, color = ElementType.CARBS.color()) }
+                data.carbs.forEach { carbs -> PillTriangleItem(pointsUp = true, text = carbs.label, color = ElementType.CARBS.color()) }
                 // Calibration or BG check, same icon as on the BG graph
                 data.measured.forEach { label ->
                     PillItem(IcBgCheck, label, AapsTheme.elementColors.bgCheck)

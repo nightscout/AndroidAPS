@@ -80,11 +80,6 @@ private const val MARKER_GAP_FRACTION = 0.015
 /** Height of a marker that has no reading near it, as a share of the Y axis above its floor. */
 private const val MARKER_FALLBACK_FRACTION = 0.04
 
-/** Marker sizes per [MarkerTier]. The largest must stay within [NORMALIZER_POINT_SIZE]. */
-private val MARKER_SIZE_SMALL = 12.dp
-private val MARKER_SIZE_MEDIUM = 17.dp
-private val MARKER_SIZE_LARGE = 22.dp
-
 /** Size of the icon drawn at a measured glucose value (calibration, BG check). */
 private val MARKER_SIZE_CALIBRATION = 14.dp
 
@@ -130,8 +125,8 @@ private class MutableYRangeProvider(
  *
  * Layer 0 (start axis): BG readings — regular (outlined circles) + bucketed (filled, range-colored)
  * Layer 1 (end axis, hidden): Basal — profile (dashed step) + actual delivered (solid step + area fill)
- * Layer 5 (start axis): treatment markers — a manual bolus grows up from the reading, carbs down
- * from it, and a measured value (calibration, BG check) sits on its own value. See
+ * Layer 5 (start axis): treatment markers — a manual bolus above the reading pointing down at it,
+ * carbs below it pointing up, and a measured value (calibration, BG check) sits on its own value. See
  * [treatmentMarkers] for the placement rules.
  *
  * Basal Y-axis is scaled so maxBasal occupies [BASAL_HEIGHT_FRACTION] of the chart height (maxY = maxBasal / BASAL_HEIGHT_FRACTION).
@@ -368,10 +363,10 @@ fun BgGraphCompose(
             }
 
             // Block 6 → Treatment markers (layer 5, start axis — drawn at the glucose value of the
-            // moment they happened, see TreatmentMarkers.kt). Insulin grows up from the reading and
-            // carbs down from the same value, so a meal entered with its bolus is one diamond; a
-            // measured value sits on its own value.
-            // Drawn last on purpose: a carbs marker hangs into the curve, and under the BG layer it
+            // moment they happened, see TreatmentMarkers.kt). Insulin points down at the reading from
+            // above and carbs point up at it from below, so a meal entered with its bolus is one marker
+            // with both tips on the curve; a measured value sits on its own value.
+            // Drawn last on purpose: a carbs marker reaches into the curve, and under the BG layer it
             // was covered by the reading dots and the profile icon. It does cover the one reading
             // it sits on.
             // Fixed series order, always all 7: insulin small/medium/large, carbs small/medium/large,
@@ -663,11 +658,11 @@ fun BgGraphCompose(
 
     val treatmentLines = remember(insulinColor, carbsColor, bgCheckColor, bgCheckPainter) {
         buildList {
-            for (size in listOf(MARKER_SIZE_SMALL, MARKER_SIZE_MEDIUM, MARKER_SIZE_LARGE)) {
-                add(createMarkerLine(insulinColor, TriangleShape, size))
+            for (tier in MarkerTier.entries) {
+                add(createMarkerLine(insulinColor, InvertedTriangleShape, tier.markerSize))
             }
-            for (size in listOf(MARKER_SIZE_SMALL, MARKER_SIZE_MEDIUM, MARKER_SIZE_LARGE)) {
-                add(createMarkerLine(carbsColor, TriangleBelowShape, size))
+            for (tier in MarkerTier.entries) {
+                add(createMarkerLine(carbsColor, TriangleBelowShape, tier.markerSize))
             }
             add(
                 LineCartesianLayer.Line(

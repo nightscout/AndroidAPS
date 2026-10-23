@@ -13,9 +13,10 @@ import kotlin.math.abs
  * Placement of the treatment markers drawn inside the BG graph. Pure functions, no Compose and no
  * Vico, so they can be tested on every platform.
  *
- * A marker sits at the glucose value of the moment it happened: insulin grows upward from the
- * reading, carbs downward, with a small space between them: a meal entered with its bolus reads as
- * one marker, but the two halves stay apart instead of merging into a block. The marker is drawn
+ * A marker sits at the glucose value of the moment it happened: insulin above the reading, pointing
+ * down at it, and carbs below it, pointing up, with a small space between them: a meal entered with
+ * its bolus reads as one marker whose tips meet at the curve, but the two halves stay apart instead
+ * of merging into a block. The marker is drawn
  * over the curve and hides the one reading it sits on — under the curve the carbs half was covered
  * by the reading dots instead.
  */
@@ -98,9 +99,11 @@ internal fun interpolatedBgAt(timestamp: Long, readings: List<BgDataPoint>): Dou
  * Taken from the whole loaded range, not from the visible window: a marker that changes size while
  * the graph is scrolled looks like a glitch.
  */
-internal fun tierOf(amount: Double, amounts: List<Double>): MarkerTier {
-    val max = amounts.maxOrNull() ?: return MarkerTier.MEDIUM
-    if (max <= 0.0) return MarkerTier.MEDIUM
+internal fun tierOf(amount: Double, amounts: List<Double>): MarkerTier = tierOf(amount, amounts.maxOrNull())
+
+/** [tierOf] against a largest amount that is already known. [max] null or not positive gives the middle size. */
+internal fun tierOf(amount: Double, max: Double?): MarkerTier {
+    if (max == null || max <= 0.0) return MarkerTier.MEDIUM
     return when {
         amount < max / 3.0       -> MarkerTier.SMALL
         amount < 2.0 * max / 3.0 -> MarkerTier.MEDIUM
@@ -113,8 +116,8 @@ internal fun tierOf(amount: Double, amounts: List<Double>): MarkerTier {
  *
  * Only manual boluses are drawn: an SMB every few minutes would turn the curve into a picket
  * fence, and SMBs are on the IOB graph with their own markers. Insulin sits [gap] above the
- * reading and carbs the same distance below it, growing away from each other, so a meal with its
- * bolus is one marker with a thin seam at the reading. Calibrations and BG checks are drawn at
+ * reading and carbs the same distance below it, both pointing at it, so a meal with its bolus is
+ * one marker with a thin seam at the reading. Calibrations and BG checks are drawn at
  * their own measured value, which is the information they carry, with no interpolation.
  *
  * @param readings the series the curve is drawn from, used for the height of a marker

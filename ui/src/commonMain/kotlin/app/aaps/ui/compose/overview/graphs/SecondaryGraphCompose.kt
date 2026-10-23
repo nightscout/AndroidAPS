@@ -61,6 +61,10 @@ import kotlinx.coroutines.delay
  */
 private val AXIS_SCALE_KEY = ExtraStore.Key<AxisScale>()
 
+/** The largest manual bolus and carbs entry of the loaded range: the markers are sized against them, see [TieredPointProvider]. */
+private val MAX_MANUAL_BOLUS_KEY = ExtraStore.Key<Double>()
+private val MAX_CARBS_KEY = ExtraStore.Key<Double>()
+
 /** The axis setup that a scroll or zoom can change. Equal values mean the axes did not change. */
 private data class AxisScale(
     val primary: CartesianLayerRangeProvider,
@@ -815,7 +819,11 @@ fun SecondaryGraphCompose(
             // identical to last time (see AXIS_SCALE_KEY doc) — otherwise scrolling/zooming
             // would re-submit the same partials and get silently skipped, never picking up the
             // updated primaryRangeProvider.
-            extras { it[AXIS_SCALE_KEY] = axisScale }
+            extras {
+                it[AXIS_SCALE_KEY] = axisScale
+                processedIobTreatments.maxManualBolus?.let { max -> it[MAX_MANUAL_BOLUS_KEY] = max }
+                processedCarbs.maxOfOrNull { carbs -> carbs.second }?.let { max -> it[MAX_CARBS_KEY] = max }
+            }
         }
     }
 
@@ -1013,42 +1021,21 @@ internal fun processStepPoints(points: List<GraphDataPoint>, minTimestamp: Long,
     return inRange + (maxX to edgeValue)
 }
 
-/** Process IOB treatment overlays: split SMBs by size, extract boluses and extended boluses */
+/**
+ * Process IOB treatment overlays: split SMBs by size, extract boluses and extended boluses.
+ * An SMB is sized like a treatment marker ([tierOf]) against the largest SMB of the loaded range,
+ * a manual bolus against the largest manual bolus (see [ProcessedIobOverlays.maxManualBolus]).
+ */
 @Suppress("SameParameterValue")
-private fun processIobOverlays(data: TreatmentGraphData, minTimestamp: Long, minX: Double, maxX: Double): ProcessedIobOverlays {
-    // Filter SMBs to visible range before computing size thresholds (prevents off-screen outliers from distorting buckets)
+internal fun processIobOverlays(data: TreatmentGraphData, minTimestamp: Long, minX: Double, maxX: Double): ProcessedIobOverlays {
+    // SMBs of the loaded range, not only the visible window: a marker must not change size while the graph is scrolled
     val smbs = data.boluses.filter { it.bolusType == BolusType.SMB && timestampToX(it.timestamp, minTimestamp) in minX..maxX }
-
-    var smallSmbs: List<Pair<Double, Double>> = emptyList()
-    var mediumSmbs: List<Pair<Double, Double>> = emptyList()
-    var largeSmbs: List<Pair<Double, Double>> = emptyList()
-
-    if (smbs.isNotEmpty()) {
-        if (smbs.size <= 1 || smbs.minOf { it.amount } == smbs.maxOf { it.amount }) {
-            mediumSmbs = smbs.map { timestampToX(it.timestamp, minTimestamp) to 0.0 }
-        } else {
-            val minAmount = smbs.minOf { it.amount }
-            val range = smbs.maxOf { it.amount } - minAmount
-            val smallThreshold = minAmount + range / 3.0
-            val largeThreshold = minAmount + 2.0 * range / 3.0
-
-            val small = mutableListOf<Pair<Double, Double>>()
-            val medium = mutableListOf<Pair<Double, Double>>()
-            val large = mutableListOf<Pair<Double, Double>>()
-
-            for (smb in smbs) {
-                val point = timestampToX(smb.timestamp, minTimestamp) to 0.0
-                when {
-                    smb.amount < smallThreshold -> small.add(point)
-                    smb.amount < largeThreshold -> medium.add(point)
-                    else                        -> large.add(point)
-                }
-            }
-            smallSmbs = small
-            mediumSmbs = medium
-            largeSmbs = large
-        }
-    }
+    // SMBs stand on the zero line, so the size cannot come from the y of the point: one series per size
+    val smbAmounts = smbs.map { it.amount }
+    val smbsByTier = smbs.groupBy({ tierOf(it.amount, smbAmounts) }) { timestampToX(it.timestamp, minTimestamp) to 0.0 }
+    val smallSmbs = smbsByTier[MarkerTier.SMALL].orEmpty()
+    val mediumSmbs = smbsByTier[MarkerTier.MEDIUM].orEmpty()
+    val largeSmbs = smbsByTier[MarkerTier.LARGE].orEmpty()
 
     val normalBoluses = data.boluses.filter { it.bolusType == BolusType.NORMAL }
     val bolusFiltered = if (normalBoluses.isNotEmpty()) {
@@ -1073,13 +1060,17 @@ private fun processIobOverlays(data: TreatmentGraphData, minTimestamp: Long, min
     )
 }
 
-private data class ProcessedIobOverlays(
+internal data class ProcessedIobOverlays(
     val smallSmbs: List<Pair<Double, Double>>,
     val mediumSmbs: List<Pair<Double, Double>>,
     val largeSmbs: List<Pair<Double, Double>>,
+    /** (x, amount) of each manual bolus, drawn at its amount and sized by it, see [TieredPointProvider]. */
     val normalBoluses: List<Pair<Double, Double>>,
     val extBoluses: List<Triple<Double, Double, Double>>
 ) {
+
+    /** The largest manual bolus of the loaded range, which the sizes of the manual bolus markers are measured against. */
+    val maxManualBolus: Double? get() = normalBoluses.maxOfOrNull { it.second }
 
     companion object {
 
@@ -1261,13 +1252,12 @@ fun rememberIobLineStyles(): IobLineStyles {
                     LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(smbColor), shape = TriangleShape), size = 22.dp)
                 )
             ),
-            // Insulin points up on every graph, a manual bolus like an SMB — only the size differs
+            // A manual bolus points down, with its tip on its amount, the same as on the BG graph. SMBs
+            // point up, so a manual bolus among them still reads as one. Sized as on the BG graph
             bolusLine = LineCartesianLayer.Line(
                 fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
                 areaFill = null,
-                pointProvider = LineCartesianLayer.PointProvider.single(
-                    LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(smbColor), shape = TriangleShape), size = 22.dp)
-                ),
+                pointProvider = TieredPointProvider(InvertedTriangleShape, smbColor, MAX_MANUAL_BOLUS_KEY),
                 dataLabel = bolusLabelComponent,
                 dataLabelPosition = Position.Vertical.Top,
                 dataLabelValueFormatter = bolusValueFormatter
@@ -1322,12 +1312,11 @@ fun rememberCobLineStyles(): CobLineStyles {
                     LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(cobColor), shape = CircleShape), size = 6.dp)
                 )
             ),
+            // Sized as on the BG graph
             carbsLine = LineCartesianLayer.Line(
                 fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
                 areaFill = null,
-                pointProvider = LineCartesianLayer.PointProvider.single(
-                    LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(carbsColor), shape = InvertedTriangleShape), size = 22.dp)
-                ),
+                pointProvider = TieredPointProvider(InvertedTriangleShape, carbsColor, MAX_CARBS_KEY),
                 dataLabel = carbsLabelComponent,
                 dataLabelPosition = Position.Vertical.Top,
                 dataLabelValueFormatter = carbsValueFormatter
