@@ -1068,11 +1068,56 @@ class ComboV2Plugin(
                 }
             }
 
-            // An alert screen or a cancel can take the place of an unknown outcome on the way out of
-            // deliverBolus(), which keeps it for this (#5379). One that was there before is from an
-            // earlier bolus.
-            val outcomeUnknownBefore = acquiredPump.lastBolusOutcomeUnknown
-            fun replacedOutcomeUnknown() = acquiredPump.lastBolusOutcomeUnknown?.takeIf { it !== outcomeUnknownBefore }
+            // This bolus was given, but the history after it also had other boluses. All of
+            // them are recorded now. Reporting it as failed made the user think no insulin
+            // was given, and the carbs were not stored (#5359).
+            fun reportOtherBolusesFound() {
+                // Not on COMBO_PUMP_ALARM: the low reservoir warning of the same bolus is posted there
+                // just before, and this one would replace it (#5379).
+                notificationManager.post(NotificationId.COMBO_UNKNOWN_BOLUS, TextRef.AndroidRes(R.string.combov2_bolus_given_other_boluses_found))
+                reportFinishedBolus(R.string.combov2_bolus_given_other_boluses_found, detailedBolusInfo.id, pumpEnactResult, succeeded = true)
+            }
+
+            // An alert screen, a cancel or another error can take the place of the result on the way
+            // out of deliverBolus(), which keeps what it knows for this (#5379, #5377). One that was
+            // there before is from an earlier bolus.
+            val outcomeBefore = acquiredPump.lastBolusOutcome
+            fun outcomeOfThisBolus() = acquiredPump.lastBolusOutcome?.takeIf { it !== outcomeBefore }
+
+            // The history after this bolus was read, so it tells what the bolus gave. Without this,
+            // a bolus given in full and then followed by an alert screen was reported as "It appears
+            // no bolus was delivered", and the user could give it again (#5377).
+            fun reportFromHistory(outcome: ComboCtlPump.BolusOutcome.HistoryRead) {
+                val givenAmount = acquiredPump.lastBolusFlow.value?.takeIf { it != lastBolusBefore }?.bolusAmount ?: 0
+                when (bolusResultFromHistory(givenAmount, requestedBolusAmount, outcome)) {
+                    BolusResultFromHistory.GIVEN                    ->
+                        reportFinishedBolus(deliveredSuccessfully, detailedBolusInfo.id, pumpEnactResult, succeeded = true)
+
+                    BolusResultFromHistory.GIVEN_WITH_OTHER_BOLUSES -> reportOtherBolusesFound()
+
+                    BolusResultFromHistory.CANCELLED                ->
+                        reportFinishedBolus(R.string.combov2_bolus_cancelled, detailedBolusInfo.id, pumpEnactResult, succeeded = true)
+
+                    BolusResultFromHistory.STOPPED_EARLY            -> {
+                        val given = concentrationHelper.insulinAmountString(PumpInsulin(givenAmount.cctlBolusToIU()))
+                        reportFinishedBolus(rh.gs(R.string.combov2_bolus_stopped_after_error, given), detailedBolusInfo.id, pumpEnactResult, succeeded = false)
+                    }
+
+                    BolusResultFromHistory.NOT_GIVEN                ->
+                        reportFinishedBolus(R.string.combov2_bolus_not_delivered, detailedBolusInfo.id, pumpEnactResult, succeeded = false)
+                }
+            }
+
+            // For an exception that does not tell what this bolus gave: an alert screen, a cancel,
+            // a stop after a pump error, or another error. orElse is used when the pump did not
+            // accept the bolus.
+            fun reportByOutcome(orElse: () -> Unit) {
+                when (val outcome = outcomeOfThisBolus()) {
+                    is ComboCtlPump.BolusOutcome.Unknown     -> reportOutcomeUnknown(outcome.exception)
+                    is ComboCtlPump.BolusOutcome.HistoryRead -> reportFromHistory(outcome)
+                    null                                     -> orElse()
+                }
+            }
 
             try {
                 executeCommand {
@@ -1084,9 +1129,7 @@ class ComboV2Plugin(
                 // Cancellation is not an error, but it also means
                 // that the profile update was not enacted.
 
-                val outcomeUnknown = replacedOutcomeUnknown()
-                if (outcomeUnknown != null) reportOutcomeUnknown(outcomeUnknown)
-                else reportFinishedBolus(R.string.combov2_bolus_cancelled, detailedBolusInfo.id, pumpEnactResult, succeeded = true)
+                reportByOutcome { reportFinishedBolus(R.string.combov2_bolus_cancelled, detailedBolusInfo.id, pumpEnactResult, succeeded = true) }
 
                 // Rethrowing to finish coroutine cancellation.
                 throw e
@@ -1104,14 +1147,8 @@ class ComboV2Plugin(
                 aapsLogger.error(LTag.PUMP, "Bolus not delivered")
                 reportFinishedBolus(R.string.combov2_bolus_not_delivered, detailedBolusInfo.id, pumpEnactResult, succeeded = false)
             } catch (_: ComboCtlPump.UnaccountedBolusDetectedException) {
-                // This bolus was given, but the history after it also had other boluses. All of
-                // them are recorded now. Reporting it as failed made the user think no insulin
-                // was given, and the carbs were not stored (#5359).
                 aapsLogger.error(LTag.PUMP, "Unaccounted bolus detected after the bolus was given")
-                // Not on COMBO_PUMP_ALARM: the low reservoir warning of the same bolus is posted there
-                // just before, and this one would replace it (#5379).
-                notificationManager.post(NotificationId.COMBO_UNKNOWN_BOLUS, TextRef.AndroidRes(R.string.combov2_bolus_given_other_boluses_found))
-                reportFinishedBolus(R.string.combov2_bolus_given_other_boluses_found, detailedBolusInfo.id, pumpEnactResult, succeeded = true)
+                reportOtherBolusesFound()
             } catch (_: ComboCtlPump.UnknownBolusInHistoryException) {
                 aapsLogger.error(LTag.PUMP, "Pump history has a bolus that was not known yet; this bolus was not given")
                 bolusNotGiven = true
@@ -1124,11 +1161,13 @@ class ComboV2Plugin(
                 reportFinishedBolus(R.string.combov2_insufficient_insulin_in_reservoir, detailedBolusInfo.id, pumpEnactResult, succeeded = false)
             } catch (e: Exception) {
                 aapsLogger.error(LTag.PUMP, "Exception thrown during bolus delivery: $e")
-                val outcomeUnknown = replacedOutcomeUnknown()
-                if (outcomeUnknown != null) reportOutcomeUnknown(outcomeUnknown)
-                else reportFinishedBolus(R.string.combov2_bolus_delivery_failed, detailedBolusInfo.id, pumpEnactResult, succeeded = false)
+                reportByOutcome { reportFinishedBolus(R.string.combov2_bolus_delivery_failed, detailedBolusInfo.id, pumpEnactResult, succeeded = false) }
             } finally {
-                val newBolus = acquiredPump.lastBolusFlow.value?.takeIf { it != lastBolusBefore }
+                // Only the history read after this bolus shows what it gave. A read before it that
+                // failed part-way reports the boluses it got (#5377), and those are not this bolus.
+                val newBolus = acquiredPump.lastBolusFlow.value?.takeIf {
+                    it != lastBolusBefore && outcomeOfThisBolus() is ComboCtlPump.BolusOutcome.HistoryRead
+                }
                 when {
                     // A bolus that the history read found before this one is not this bolus.
                     bolusNotGiven                         -> {

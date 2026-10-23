@@ -401,47 +401,47 @@ object ApplicationLayer {
      * IMPORTANT: Bolus amounts are given in 0.1 IU units,
      * so for example, "57" means 5.7 IU.
      */
-    sealed class CMDHistoryEventDetail(val isBolusDetail: Boolean) {
+    sealed class CMDHistoryEventDetail {
 
-        data class QuickBolusRequested(val bolusAmount: Int) : CMDHistoryEventDetail(isBolusDetail = true)
-        data class QuickBolusInfused(val bolusAmount: Int) : CMDHistoryEventDetail(isBolusDetail = true)
+        data class QuickBolusRequested(val bolusAmount: Int) : CMDHistoryEventDetail()
+        data class QuickBolusInfused(val bolusAmount: Int) : CMDHistoryEventDetail()
         data class StandardBolusRequested(
             val bolusAmount: Int,
             val manual: Boolean
-        ) : CMDHistoryEventDetail(isBolusDetail = true)
+        ) : CMDHistoryEventDetail()
 
         data class StandardBolusInfused(
             val bolusAmount: Int,
             val manual: Boolean
-        ) : CMDHistoryEventDetail(isBolusDetail = true)
+        ) : CMDHistoryEventDetail()
 
         data class ExtendedBolusStarted(
             val totalBolusAmount: Int,
             val totalDurationMinutes: Int,
             val manual: Boolean
-        ) : CMDHistoryEventDetail(isBolusDetail = true)
+        ) : CMDHistoryEventDetail()
 
         data class ExtendedBolusEnded(
             val totalBolusAmount: Int,
             val totalDurationMinutes: Int,
             val manual: Boolean
-        ) : CMDHistoryEventDetail(isBolusDetail = true)
+        ) : CMDHistoryEventDetail()
 
         data class MultiwaveBolusStarted(
             val totalBolusAmount: Int,
             val immediateBolusAmount: Int,
             val totalDurationMinutes: Int,
             val manual: Boolean
-        ) : CMDHistoryEventDetail(isBolusDetail = true)
+        ) : CMDHistoryEventDetail()
 
         data class MultiwaveBolusEnded(
             val totalBolusAmount: Int,
             val immediateBolusAmount: Int,
             val totalDurationMinutes: Int,
             val manual: Boolean
-        ) : CMDHistoryEventDetail(isBolusDetail = true)
+        ) : CMDHistoryEventDetail()
 
-        data class NewDateTimeSet(val dateTime: LocalDateTime) : CMDHistoryEventDetail(isBolusDetail = false)
+        data class NewDateTimeSet(val dateTime: LocalDateTime) : CMDHistoryEventDetail()
     }
 
     /**

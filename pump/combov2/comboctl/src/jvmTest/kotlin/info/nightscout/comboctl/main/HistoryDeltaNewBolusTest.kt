@@ -27,6 +27,13 @@ class HistoryDeltaNewBolusTest {
         assertTrue(delta.containsNewBolus())
     }
 
+    // An earlier read can take the "requested" entry while the bolus runs, so a delta can have
+    // the "infused" entry alone. The read before a bolus is there for this case (#5377).
+    @Test
+    fun infusedStandardBolusAloneIsNew() {
+        assertTrue(listOf(event(CMDHistoryEventDetail.StandardBolusInfused(bolusAmount = 90, manual = false))).containsNewBolus())
+    }
+
     @Test
     fun requestedBolusWithoutInfusedIsStillRunningAndCounts() {
         assertTrue(listOf(event(CMDHistoryEventDetail.StandardBolusRequested(bolusAmount = 150, manual = false))).containsNewBolus())
