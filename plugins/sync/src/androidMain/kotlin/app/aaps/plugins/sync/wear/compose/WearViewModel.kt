@@ -210,7 +210,7 @@ class WearViewModel(
 
         val titleName = metadata[CwfMetadataKey.CWF_NAME] ?: ""
         val authorVersion = metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]
-        val title = if (authorVersion != null) "$titleName ($authorVersion)" else titleName
+        val title = if (authorVersion != null) rh.gs(SyncStrings.cwf_title_with_version, titleName, authorVersion) else titleName
 
         val fileName = metadata[CwfMetadataKey.CWF_FILENAME]?.let { "$it.${ZipWatchfaceFormat.CWF_EXTENSION}" } ?: ""
 

@@ -883,6 +883,7 @@
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
     <string name="pumplimit">pump limit</string>
     <string name="limitingpercentrate">Limiting max percent rate to %1$d%% because of %2$s</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Percent rate %1$d%% recalculated to %2$s U/h with current basal %3$s U/h</string>
     <string name="itmustbepositivevalue">it must be positive value</string>
     <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
 
@@ -904,7 +905,6 @@
     <string name="export_expired">Expired</string>
     <string name="export_disabled">Disabled</string>
     <string name="export_failed">Failed</string>
-    <string name="export_alert">ALERT</string>
 
     <!-- Export dialog strings -->
     <string name="master_password_missing">Master password is not set!\n\nPlease set a master password first, then try again.</string>

@@ -5,6 +5,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
 
 /** A value for [styledStringResource], and its style. No style keeps the style of the text around it. */
@@ -24,6 +25,12 @@ data class StyledArg(val text: String, val style: SpanStyle? = null)
 fun styledStringResource(template: TextRef, vararg args: StyledArg): AnnotatedString {
     val markers = Array(args.size) { "$MARKER_START$it$MARKER_END" }
     return styleArguments(stringResource(template, *markers), args.toList())
+}
+
+/** The same as [styledStringResource], for code outside a Composable. */
+fun TextResolver.styledString(template: TextRef, vararg args: StyledArg): AnnotatedString {
+    val markers = Array(args.size) { "$MARKER_START$it$MARKER_END" }
+    return styleArguments(gs(template, *markers), args.toList())
 }
 
 /**

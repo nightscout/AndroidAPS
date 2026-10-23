@@ -395,22 +395,22 @@ class SmsCommunicatorPlugin(
     private suspend fun processBG(receivedSms: Sms) {
         val actualBG = iobCobCalculator.ads.actualBg()
         val lastBG = iobCobCalculator.ads.lastBg()
-        var reply = ""
+        val parts = mutableListOf<String>()
         val units = profileUtil.units
         if (actualBG != null) {
-            reply = rh.gs(SyncStrings.sms_actual_bg) + " " + profileUtil.fromMgdlToStringInUnits(actualBG.recalculated) + ", "
+            parts += rh.gs(SyncStrings.sms_actual_bg_value, profileUtil.fromMgdlToStringInUnits(actualBG.recalculated))
         } else if (lastBG != null) {
             val agoMilliseconds = dateUtil.now() - lastBG.timestamp
             val agoMin = (agoMilliseconds / 60.0 / 1000.0).toInt()
-            reply = rh.gs(SyncStrings.sms_last_bg) + " " + profileUtil.valueInCurrentUnitsDetect(lastBG.recalculated) + " " + rh.gs(SyncStrings.sms_min_ago, agoMin) + ", "
+            parts += rh.gs(SyncStrings.sms_last_bg_value, profileUtil.valueInCurrentUnitsDetect(lastBG.recalculated), rh.gs(SyncStrings.sms_min_ago, agoMin))
         }
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
-        if (glucoseStatus != null) reply += rh.gs(SyncStrings.sms_delta) + " " + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta) + " " + units + ", "
+        if (glucoseStatus != null) parts += rh.gs(SyncStrings.sms_delta_value, profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta), units)
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         val cobInfo = iobCobCalculator.getCobInfo("SMS COB")
-        reply += (rh.gs(SyncStrings.sms_iob) + " " + decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U, "
-            + rh.gs(CoreUiStrings.cob) + ": " + cobInfo.generateCOBString(decimalFormatter))
+        parts += rh.gs(SyncStrings.sms_iob_cob_value, decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob), cobInfo.generateCOBString(decimalFormatter))
+        val reply = parts.reduce { joined, part -> rh.gs(SyncStrings.sms_parts_join, joined, part) }
         sendSMS(Sms(receivedSms.phoneNumber, reply))
         receivedSms.processed = true
     }
@@ -454,9 +454,9 @@ class SmsCommunicatorPlugin(
                 val reply =
                     when (loop.runningMode()) {
                         RM.Mode.DISABLED_LOOP     -> rh.gs(CoreUiStrings.loopisdisabled)
-                        RM.Mode.OPEN_LOOP         -> rh.gs(SyncStrings.smscommunicator_loop_is_enabled) + " - " + rh.gs(CoreUiStrings.openloop)
-                        RM.Mode.CLOSED_LOOP       -> rh.gs(SyncStrings.smscommunicator_loop_is_enabled) + " - " + rh.gs(CoreUiStrings.closedloop)
-                        RM.Mode.CLOSED_LOOP_LGS   -> rh.gs(SyncStrings.smscommunicator_loop_is_enabled) + " - " + rh.gs(CoreUiStrings.lowglucosesuspend)
+                        RM.Mode.OPEN_LOOP         -> rh.gs(SyncStrings.smscommunicator_loop_is_enabled_mode, rh.gs(CoreUiStrings.openloop))
+                        RM.Mode.CLOSED_LOOP       -> rh.gs(SyncStrings.smscommunicator_loop_is_enabled_mode, rh.gs(CoreUiStrings.closedloop))
+                        RM.Mode.CLOSED_LOOP_LGS   -> rh.gs(SyncStrings.smscommunicator_loop_is_enabled_mode, rh.gs(CoreUiStrings.lowglucosesuspend))
                         RM.Mode.SUPER_BOLUS       -> rh.gs(CoreUiStrings.superbolus)
                         RM.Mode.DISCONNECTED_PUMP -> rh.gs(InterfacesStrings.pump_disconnected)
                         RM.Mode.SUSPENDED_BY_PUMP -> rh.gs(InterfacesStrings.pumpsuspended)

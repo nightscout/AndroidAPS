@@ -76,6 +76,8 @@
     <string name="autotune_description">Help for potential adjustments of profile (ISF, carb ratio, and basal rates)</string>
     <string name="autotune_default_tune_days_title">Number of days of data</string>
     <string name="autotune_tunedprofile_name">Tuned</string>
+    <string name="autotune_tuned_profile_name_with_date" comment="Suggested name of a new local profile made by Autotune. %1$s=date and time of the Autotune run. Example: Tuned 10/23/2026 9:15 PM">Tuned %1$s</string>
+    <string name="autotune_activate_profile_question" comment="%1$s=profile name. Example: Activate profile: Tuned 10/23/2026?">Activate profile: %1$s?</string>
     <string name="autotune_profile">Profile :</string>
     <string name="autotune_last_run">Last run :</string>
     <string name="autotune_warning">Warning :</string>

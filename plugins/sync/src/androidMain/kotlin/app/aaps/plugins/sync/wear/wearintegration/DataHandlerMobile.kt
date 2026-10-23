@@ -597,8 +597,11 @@ class DataHandlerMobile(
         val historyList = getTDDList(dummies)
         if (isOldData(historyList)) {
             val busy = activePump.isBusy()
-            val message = rh.gs(CoreUiStrings.tdd_old_data) + ", " +
+            val message = rh.gs(
+                SyncStrings.tdd_old_data_with_state,
+                rh.gs(CoreUiStrings.tdd_old_data),
                 if (busy) rh.gs(CoreUiStrings.pump_busy) else rh.gs(SyncStrings.pump_fetching_data)
+            )
             sendToWear(EventData.ConfirmAction(rh.gs(CoreUiStrings.tdd_short), message, returnCommand = null))
             if (!busy) {
                 commandQueue.loadTDDs()
@@ -1002,7 +1005,7 @@ class DataHandlerMobile(
         }
         // A prime is in pump units.
         val insulinAfterConstraints = constraintChecker.applyPrimingConstraints(PumpInsulin(amount)).cU
-        var message = rh.gs(CoreUiStrings.prime_fill) + ": " + insulinAfterConstraints + rh.gs(SyncStrings.units_short)
+        var message = rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.prime_fill), rh.gs(InterfacesStrings.format_insulin_units, insulinAfterConstraints))
         if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(CoreUiStrings.constraint_applied)
         sendToWear(
             EventData.ConfirmAction(
@@ -1021,7 +1024,7 @@ class DataHandlerMobile(
         }
         // A prime is in pump units.
         val insulinAfterConstraints = constraintChecker.applyPrimingConstraints(PumpInsulin(command.insulin)).cU
-        var message = rh.gs(CoreUiStrings.prime_fill) + ": " + insulinAfterConstraints + rh.gs(SyncStrings.units_short)
+        var message = rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.prime_fill), rh.gs(InterfacesStrings.format_insulin_units, insulinAfterConstraints))
         if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(CoreUiStrings.constraint_applied)
         sendToWear(
             EventData.ConfirmAction(
@@ -1789,7 +1792,7 @@ class DataHandlerMobile(
             val tdd = historyList[0].total
             historyList.removeAt(0)
 
-            message += rh.gs(SyncStrings.today) + ": " + rh.gs(SyncStrings.tdd_line, tdd, 100 * tdd / refTDD) + "\n"
+            message += rh.gs(InterfacesStrings.confirmation_line, rh.gs(SyncStrings.today), rh.gs(SyncStrings.tdd_line, tdd, 100 * tdd / refTDD)) + "\n"
             message += "\n"
         }
         var weighted03 = 0.0
@@ -1808,17 +1811,16 @@ class DataHandlerMobile(
                 weighted03 = weighted03 * 0.7 + tdd * 0.3
             }
         }
-        message += rh.gs(SyncStrings.weighted) + ":\n"
-        message += "0.3: " + rh.gs(SyncStrings.tdd_line, weighted03, 100 * weighted03 / refTDD) + "\n"
-        message += "0.5: " + rh.gs(SyncStrings.tdd_line, weighted05, 100 * weighted05 / refTDD) + "\n"
-        message += "0.7: " + rh.gs(SyncStrings.tdd_line, weighted07, 100 * weighted07 / refTDD) + "\n"
+        message += rh.gs(SyncStrings.weighted_title) + "\n"
+        for ((weight, value) in listOf("0.3" to weighted03, "0.5" to weighted05, "0.7" to weighted07))
+            message += rh.gs(InterfacesStrings.confirmation_line, weight, rh.gs(SyncStrings.tdd_line, value, 100 * value / refTDD)) + "\n"
         message += "\n"
         historyList.reverse()
         // add TDDs:
         for (record in historyList) {
             val tdd = record.total
-            message += df.format(Date(record.timestamp)) + " " + rh.gs(SyncStrings.tdd_line, tdd, 100 * tdd / refTDD)
-            message += (if (dummies.contains(record)) "x" else "") + "\n"
+            val dayLine = if (dummies.contains(record)) SyncStrings.tdd_day_line_estimated else SyncStrings.tdd_day_line
+            message += rh.gs(dayLine, df.format(Date(record.timestamp)), rh.gs(SyncStrings.tdd_line, tdd, 100 * tdd / refTDD)) + "\n"
         }
         return message
     }

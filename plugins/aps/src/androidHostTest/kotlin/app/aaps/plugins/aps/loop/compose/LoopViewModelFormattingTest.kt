@@ -9,10 +9,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +27,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.util.Locale
 
 /**
  * Pins the exact text [LoopViewModel] puts into [LoopUiState].
@@ -46,7 +47,6 @@ internal class LoopViewModelFormattingTest {
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var aapsLogger: AAPSLogger
     @Mock private lateinit var preferences: Preferences
-    @Mock private lateinit var decimalFormatter: DecimalFormatter
 
     private val updateGuiFlow = MutableSharedFlow<EventLoopUpdateGui>()
     private val lastRunGuiFlow = MutableSharedFlow<EventLoopSetLastRunGui>()
@@ -60,15 +60,10 @@ internal class LoopViewModelFormattingTest {
         whenever(rxBus.toFlow(EventLoopSetLastRunGui::class)).thenReturn(lastRunGuiFlow)
         whenever(dateUtil.dateAndTimeString(any())).thenReturn("date-and-time")
         whenever(dateUtil.dateAndTimeAndSecondsString(any())).thenReturn("date-time-seconds")
-        // Locale independent, so the assertions below are stable on any machine.
-        whenever(decimalFormatter.to2Decimal(any())).thenAnswer { invocation ->
-            val text = (invocation.arguments[0] as Double).toString()
-            if (text.endsWith(".0")) text.dropLast(2) else text
-        }
     }
 
     private fun viewModel() =
-        LoopViewModel(loop, rxBus, rh, dateUtil, decimalFormatter, aapsLogger, preferences, CoroutineScope(Dispatchers.Unconfined))
+        LoopViewModel(loop, rxBus, rh, dateUtil, aapsLogger, preferences, CoroutineScope(Dispatchers.Unconfined))
 
     private fun lastRunWith(tbr: PumpEnactResult? = null, smb: PumpEnactResult? = null): Loop.LastRun =
         Loop.LastRun().apply {
@@ -122,7 +117,7 @@ internal class LoopViewModelFormattingTest {
         val sut = viewModel()
 
         assertThat(sut.uiState.value.smbSetByPump)
-            .isEqualTo("Success: true\nEnacted: true\nComment: delivering\nSMB: 0.3 U")
+            .isEqualTo("Success: true\nEnacted: true\nComment: delivering\nSMB: 0.30 U")
     }
 
     @Test
@@ -135,7 +130,7 @@ internal class LoopViewModelFormattingTest {
 
         val sut = viewModel()
 
-        assertThat(sut.uiState.value.smbSetByPump).isEqualTo("Success: true\nEnacted: true\nSMB: 0.3 U")
+        assertThat(sut.uiState.value.smbSetByPump).isEqualTo("Success: true\nEnacted: true\nSMB: 0.30 U")
     }
 
     @Test
@@ -316,7 +311,8 @@ internal class LoopViewModelFormattingTest {
 
     /**
      * Answers by resource id and by [TextRef] name with the same word, so an assertion above holds
-     * whichever of the two overloads the view model uses.
+     * whichever of the two overloads the view model uses. The templates are the English ones and are
+     * formatted for real, in a fixed locale, so the assertions are stable on any machine.
      */
     private class FakeTextResources : ResourceHelper {
 
@@ -326,30 +322,34 @@ internal class LoopViewModelFormattingTest {
             app.aaps.core.ui.R.string.enacted to ("enacted" to "Enacted"),
             app.aaps.core.ui.R.string.comment to ("comment" to "Comment"),
             app.aaps.core.ui.R.string.smb_shortname to ("smb_shortname" to "SMB"),
-            app.aaps.core.ui.R.string.insulin_unit_shortname to ("insulin_unit_shortname" to "U"),
             app.aaps.core.ui.R.string.cancel_temp to ("cancel_temp" to "Cancel temp"),
             app.aaps.core.ui.R.string.duration to ("duration" to "Duration"),
             app.aaps.core.ui.R.string.percent to ("percent" to "Percent"),
             app.aaps.core.ui.R.string.absolute to ("absolute" to "Absolute"),
-            app.aaps.core.ui.R.string.not_available_full to ("not_available_full" to "Not available")
+            app.aaps.core.ui.R.string.not_available_full to ("not_available_full" to "Not available"),
+            app.aaps.core.interfaces.R.string.confirmation_line to ("confirmation_line" to "%1\$s: %2\$s"),
+            app.aaps.core.interfaces.R.string.format_insulin_units to ("format_insulin_units" to "%1\$.2f U"),
+            app.aaps.core.ui.R.string.format_mins to ("format_mins" to "%1\$d min"),
+            app.aaps.core.ui.R.string.format_percent to ("format_percent" to "%1\$d%%"),
+            app.aaps.core.ui.R.string.pump_base_basal_rate to ("pump_base_basal_rate" to "%1\$.2f U/h")
         )
 
         private val byId = words.associate { it.first to it.second.second }
         private val byName = words.associate { it.second.first to it.second.second }
 
         override fun gs(id: Int): String = byId[id] ?: error("unmapped resource id $id")
-        override fun gs(id: Int, vararg args: Any?): String = gs(id)
+        override fun gs(id: Int, vararg args: Any?): String = String.format(Locale.US, gs(id), *args)
         override fun gq(id: Int, quantity: Int, vararg args: Any?): String = gs(id)
         override fun gsNotLocalised(id: Int, vararg args: Any?): String = gs(id)
         override fun shortTextMode(): Boolean = false
 
         override fun gs(ref: TextRef): String = when (ref) {
             is TextRef.Literal    -> ref.text
-            is TextRef.AndroidRes -> gs(ref.id)
-            is TextRef.Named      -> byName[ref.name] ?: error("unmapped string name ${ref.name}")
+            is TextRef.AndroidRes -> gs(ref.id, *ref.args.toTypedArray())
+            is TextRef.Named      -> String.format(Locale.US, byName[ref.name] ?: error("unmapped string name ${ref.name}"), *ref.args.toTypedArray())
         }
 
-        override fun gs(ref: TextRef, vararg args: Any?): String = gs(ref)
+        override fun gs(ref: TextRef, vararg args: Any?): String = gs(ref.withArgs(*args))
         override fun gsNotLocalised(ref: TextRef): String = gs(ref)
     }
 

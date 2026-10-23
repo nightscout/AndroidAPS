@@ -54,7 +54,7 @@ fun LearnedBottomSheet(
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = stringResource(ConstraintsStrings.nth_objective, state.objectiveNumber) + " — " + state.objectiveTitle,
+                text = stringResource(ConstraintsStrings.nth_objective_with_title, state.objectiveNumber, state.objectiveTitle),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

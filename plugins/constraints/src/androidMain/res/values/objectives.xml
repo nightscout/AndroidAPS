@@ -3,6 +3,7 @@
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verify</string>
     <string name="nth_objective">%1$d. Objective</string>
+    <string name="nth_objective_with_title" comment="%1$d=number of the objective, %2$s=its title. Example: 3. Objective — Starting on an open loop">%1$d. Objective — %2$s</string>
     <string name="objectivenotstarted">Objective %1$d not started</string>
     <string name="objectivenotfinished">Objective %1$d not finished</string>
     <string name="objectives_0_objective">Setting up visualization and monitoring, and analyzing basals and ratios</string>

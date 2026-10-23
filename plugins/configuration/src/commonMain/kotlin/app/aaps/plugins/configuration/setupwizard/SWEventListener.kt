@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.rx.events.EventStatus
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.configuration.ConfigurationStrings
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
 import dev.zacsweers.metro.Inject
 import kotlin.reflect.KClass
@@ -67,7 +68,8 @@ class SWEventListener(
                 statusState.value = event.getStatus()
             }
         }
-        val labelText = textLabel?.let { stringResource(it) } ?: ""
-        Text(text = "$labelText ${stringResource(statusState.value)}".trim())
+        val statusText = stringResource(statusState.value)
+        val labelText = textLabel?.let { stringResource(it) }.orEmpty()
+        Text(text = if (labelText.isEmpty()) statusText else stringResource(ConfigurationStrings.setupwizard_label_with_status, labelText, statusText))
     }
 }

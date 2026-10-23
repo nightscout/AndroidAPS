@@ -280,7 +280,7 @@ fun AutotuneScreen(
 
         is DialogState.ProfileSwitch     -> {
             OkCancelDialog(
-                message = stringResource(app.aaps.core.ui.R.string.activate_profile) + ": " + dialog.profileName + "?",
+                message = stringResource(R.string.autotune_activate_profile_question, dialog.profileName),
                 onConfirm = onDialogConfirm,
                 onDismiss = onDialogDismiss
             )
