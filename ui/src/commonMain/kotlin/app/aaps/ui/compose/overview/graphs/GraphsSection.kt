@@ -420,7 +420,6 @@ fun GraphsSection(
     var nudgedResetTrigger by rememberSaveable { mutableIntStateOf(0) }
     LaunchedEffect(bgViewportResetTrigger, bgScrollState) {
         if (bgViewportResetTrigger == nudgedResetTrigger) return@LaunchedEffect
-        nudgedResetTrigger = bgViewportResetTrigger
         val showPredictions = SeriesType.PREDICTIONS in graphConfig.bgOverlays
         val timeRange = derivedTimeRange
         if (showPredictions && predictions.isNotEmpty() && timeRange != null) {
@@ -434,6 +433,9 @@ fun GraphsSection(
             val nowX = timestampToX(dateUtil.now(), minTimestamp)
             bgScrollState.animateScroll(Scroll.Absolute.x(nowX + 120.0, bias = 1f))
         }
+        // Only after the scroll is done. Leaving the overview during the wait cancels this effect,
+        // and the scroll must then run again on return, not count as handled.
+        nudgedResetTrigger = bgViewportResetTrigger
     }
 
     // Correct secondary graph scroll drift — Vico may internally adjust scroll
