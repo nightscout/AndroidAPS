@@ -254,6 +254,70 @@ internal class SecondaryGraphScaleHelpersTest {
             assertThat(min).isAtMost(-10.0)
             assertThat(max).isAtLeast(100.0)
         }
+
+        @Test
+        fun `a target equal to the range's own zero fraction leaves it untouched, despite rounding errors`() {
+            for ((niceMin, niceMax) in listOf(-1.0 to 20.0, -1.0 to 50.0, -0.5 to 10.0, -2.0 to 25.0, -0.1 to 3.0)) {
+                val ownFraction = -niceMin / (niceMax - niceMin)
+                assertThat(fractionAlignedNiceRange(niceMin, niceMax, ownFraction)).isEqualTo(niceMin to niceMax)
+            }
+        }
+    }
+
+    @Nested
+    inner class ZeroFloorDualRangesTest {
+
+        private fun zeroFraction(min: Double, max: Double) = -min / (max - min)
+
+        @Test
+        fun `deviations with a small dip keep their own scale next to COB`() {
+            val deviations = listOf(-1.0, 5.0, 17.0)
+            val ranges = zeroFloorDualRanges(deviations, listOf(0.0, 20.0, 50.0))
+
+            val alone = zeroFloorNiceRange(-1.0, 17.0, SECONDARY_GRAPH_TICK_COUNT)
+            assertThat(ranges.aMin).isEqualTo(alone.min)
+            assertThat(ranges.aMax).isEqualTo(alone.max)
+            assertThat(ranges.aMax).isEqualTo(20.0)
+            assertThat(ranges.bMax).isEqualTo(50.0)
+        }
+
+        @Test
+        fun `both axes have their zero at the same height`() {
+            val ranges = zeroFloorDualRanges(listOf(-3.0, 28.0), listOf(0.0, 120.0))
+
+            assertThat(zeroFraction(ranges.bMin, ranges.bMax)).isWithin(1e-9).of(zeroFraction(ranges.aMin, ranges.aMax))
+        }
+
+        @Test
+        fun `left labels stop at the left series' own floor`() {
+            val ranges = zeroFloorDualRanges(listOf(-3.0, 28.0), listOf(0.0, 120.0))
+
+            assertThat(ranges.bMin).isLessThan(0.0)
+            assertThat(ranges.primaryLabelFloor).isEqualTo(ranges.aMin)
+        }
+
+        @Test
+        fun `a mostly negative series takes at most half of the height below zero, zeros still aligned`() {
+            val ranges = zeroFloorDualRanges(listOf(-30.0, 5.0), listOf(0.0, 80.0))
+
+            assertThat(zeroFraction(ranges.aMin, ranges.aMax)).isAtMost(MAX_SHARED_ZERO_FRACTION)
+            assertThat(zeroFraction(ranges.bMin, ranges.bMax)).isWithin(1e-9).of(zeroFraction(ranges.aMin, ranges.aMax))
+            assertThat(ranges.aMin).isAtMost(-30.0)
+            assertThat(ranges.aMax).isAtLeast(5.0)
+            assertThat(ranges.bMax).isEqualTo(80.0)
+        }
+
+        @Test
+        fun `when the right-axis series dips below zero, the left one makes room`() {
+            val ranges = zeroFloorDualRanges(listOf(0.0, 10.0), listOf(-5.0, 15.0))
+
+            assertThat(ranges.bMin).isAtMost(-5.0)
+            assertThat(ranges.bMax).isEqualTo(15.0)
+            assertThat(zeroFraction(ranges.bMin, ranges.bMax)).isWithin(1e-9).of(zeroFraction(ranges.aMin, ranges.aMax))
+            assertThat(ranges.aMin).isLessThan(0.0)
+            assertThat(ranges.aMax).isEqualTo(10.0)
+            assertThat(ranges.primaryLabelFloor).isEqualTo(0.0)
+        }
     }
 
     @Nested

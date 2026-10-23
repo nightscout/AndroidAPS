@@ -13,6 +13,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -38,8 +40,10 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.Axis
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerDrawingModelInterpolator
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.compose.cartesian.data.LineCartesianLayerDrawingModel
 import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
@@ -52,6 +56,8 @@ import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 import kotlinx.coroutines.delay
+import kotlin.concurrent.Volatile
+import kotlin.math.abs
 
 /**
  * CartesianChartModelProducer.update() skips notifying receivers (and thus skips recomputing axis
@@ -557,13 +563,14 @@ fun SecondaryGraphCompose(
     val iobLineStyle = rememberIobLineStyles()
     val cobLineStyle = rememberCobLineStyles()
     val normalizerLine = remember { createNormalizerLine() }
+    val animatedZero = remember { AnimatedZero() }
 
-    val lines = remember(primarySeries, seriesColors, iobLineStyle, cobLineStyle, normalizerLine) {
+    val lines = remember(primarySeries, seriesColors, iobLineStyle, cobLineStyle, normalizerLine, animatedZero) {
         buildList {
             for (spec in primarySeries) {
                 add(
                     when (val slot = spec.slot) {
-                        is SeriesSlot.DeviationLine -> createDeviationLine(slot.type)
+                        is SeriesSlot.DeviationLine -> createDeviationLine(slot.type, animatedZero)
                         SeriesSlot.IobLine          -> iobLineStyle.iobLine
                         SeriesSlot.SmallSmb         -> iobLineStyle.smallSmbLine
                         SeriesSlot.MediumSmb        -> iobLineStyle.mediumSmbLine
@@ -665,27 +672,7 @@ fun SecondaryGraphCompose(
             return@remember alignZeros(primaryYValues.min(), primaryYValues.max(), secondaryY.min(), secondaryY.max(), primaryPivot, secondaryPivot)
         }
 
-        // Neither series is pivot-centered (e.g. COB + VAR_SENSITIVITY, or BGI + STEPS): primary
-        // stays nice-scaled and zero-floored, secondary stays raw. Each series' own "negative
-        // fraction" is computed independently — primary from its nice bounds, secondary from its
-        // raw bounds — and the shared target is their average, so neither curve's height dominates
-        // the compromise. Each axis is then widened just enough to hit that shared fraction,
-        // anchored at whichever of its own real/nice bounds avoids clipping (see
-        // fractionAlignedRange / fractionAlignedNiceRange) so nothing is ever clipped.
-        val primaryNice = zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max().coerceAtLeast(0.1), SECONDARY_GRAPH_TICK_COUNT)
-        val primaryFraction = if (primaryNice.max > primaryNice.min) -primaryNice.min / (primaryNice.max - primaryNice.min) else 0.0
-
-        val secondaryMax = secondaryY.max().coerceAtLeast(0.1)
-        val secondaryFraction = if (secondaryY.min() < 0.0) -secondaryY.min() / (secondaryMax - secondaryY.min()) else 0.0
-
-        val sharedFraction = (primaryFraction + secondaryFraction) / 2.0
-
-        val (aMin, aMax) = fractionAlignedNiceRange(primaryNice.min, primaryNice.max, sharedFraction)
-        val (bMin, bMax) = fractionAlignedRange(secondaryY.min(), secondaryMax, sharedFraction)
-        // primaryNice.min is primary's own real floor (0 unless it has a genuine negative sliver);
-        // aMin can be pushed below that purely to align zero with secondary — clamp labels back to
-        // primary's own floor so its axis never shows a fake negative tick.
-        AlignedRanges(aMin, aMax, bMin, bMax, primaryLabelFloor = primaryNice.min)
+        zeroFloorDualRanges(primaryYValues, secondaryY)
     }
 
     // Empty graph (only the normalizer series at y=0) would auto-range to a degenerate [0,0]
@@ -804,10 +791,12 @@ fun SecondaryGraphCompose(
     }
 
     // Build chart layers
+    val primaryInterpolator = remember(animatedZero) { ZeroTrackingInterpolator(animatedZero) }
     val primaryLayer = rememberLineCartesianLayer(
         lineProvider = LineCartesianLayer.LineProvider.series(lines),
         rangeProvider = primaryRangeProvider,
-        verticalAxisPosition = Axis.Position.Vertical.Start
+        verticalAxisPosition = Axis.Position.Vertical.Start,
+        drawingModelInterpolator = primaryInterpolator
     )
 
     // Common axis components
@@ -1439,14 +1428,69 @@ private fun deviationColor(type: DeviationType): Color = when (type) {
 }
 
 /** Step line with solid area fill and thin stroke, per-deviation-type color */
-private fun createDeviationLine(type: DeviationType): LineCartesianLayer.Line {
+private fun createDeviationLine(type: DeviationType, zero: AnimatedZero): LineCartesianLayer.Line {
     val color = deviationColor(type)
     return LineCartesianLayer.Line(
         fill = LineCartesianLayer.LineFill.single(Fill(color)),
         stroke = LineCartesianLayer.LineStroke.Continuous(thickness = 0.dp),
-        areaFill = LineCartesianLayer.AreaFill.single(Fill(color.copy(alpha = 0.5f))),
+        areaFill = ZeroFollowingAreaFill(color.copy(alpha = 0.5f), zero),
         interpolator = Square
     )
+}
+
+/** Where zero is drawn in the current animation frame, as a fraction of the height from the bottom. */
+private class AnimatedZero {
+    @Volatile
+    var fraction: Float? = null
+}
+
+/** Vico's line interpolator that also notes where zero is in each frame (the last series lies at zero). */
+private class ZeroTrackingInterpolator(
+    private val zero: AnimatedZero
+) : CartesianLayerDrawingModelInterpolator<LineCartesianLayerDrawingModel.Entry, LineCartesianLayerDrawingModel> {
+
+    private val delegate = CartesianLayerDrawingModelInterpolator.line()
+
+    override fun setModels(old: LineCartesianLayerDrawingModel?, new: LineCartesianLayerDrawingModel?) = delegate.setModels(old, new)
+
+    override suspend fun transform(fraction: Float): LineCartesianLayerDrawingModel? =
+        delegate.transform(fraction).also { model -> zero.fraction = model?.lastOrNull()?.values?.firstOrNull()?.y }
+}
+
+/** Vico's single area fill, but closed at zero as drawn in the current animation frame. */
+private class ZeroFollowingAreaFill(
+    color: Color,
+    private val zero: AnimatedZero
+) : LineCartesianLayer.AreaFill {
+
+    private val paint = Paint().apply { this.color = color }
+    private val areaPath = Path()
+
+    override fun draw(
+        context: CartesianDrawingContext,
+        linePath: Path,
+        halfLineThickness: Float,
+        verticalAxisPosition: Axis.Position.Vertical?
+    ) {
+        if (linePath.isEmpty) return
+        with(context) {
+            val bounds = layerBounds
+            val zeroFraction = zero.fraction ?: ranges.getYRange(verticalAxisPosition).let { range ->
+                if (range.length > 0.0) ((0.0 - range.minY) / range.length).toFloat() else 0f
+            }
+            val zeroY = (bounds.bottom - zeroFraction * bounds.height).coerceIn(bounds.top, bounds.bottom)
+            val lineBounds = linePath.getBounds()
+            areaPath.rewind()
+            areaPath.addPath(linePath)
+            areaPath.lineTo(if (isLtr) lineBounds.right else lineBounds.left, zeroY)
+            areaPath.lineTo(if (isLtr) lineBounds.left else lineBounds.right, zeroY)
+            areaPath.close()
+            canvas.save()
+            canvas.clipRect(bounds.left, bounds.top, bounds.right, bounds.bottom)
+            canvas.drawPath(areaPath, paint)
+            canvas.restore()
+        }
+    }
 }
 
 /** Processed deviation data split by type for multi-series line rendering */
@@ -1564,7 +1608,37 @@ internal fun fractionAlignedNiceRange(niceMin: Double, niceMax: Double, targetFr
     val fraction = targetFraction.coerceIn(0.0, 0.9)
     if (fraction <= 0.0) return niceMin to niceMax
     val candidateMax = niceMin * (fraction - 1.0) / fraction
+    // Already at the target: rounding again would only shrink the range
+    if (abs(candidateMax - niceMax) <= ALIGN_TOLERANCE * maxOf(1.0, abs(niceMax))) return niceMin to niceMax
     return if (candidateMax >= niceMax) niceMin to niceUp(candidateMax)
     else niceNegativeSliver(-fraction / (1.0 - fraction) * niceMax) to niceMax
+}
+
+private const val ALIGN_TOLERANCE = 1e-9
+
+/** The largest part of the height below zero that two dual-axis series share. */
+internal const val MAX_SHARED_ZERO_FRACTION = 0.5
+
+/**
+ * Ranges for a dual-axis combo where neither series is pivot-centered (e.g. DEV + COB). Both zeros are
+ * at the larger of the two series' part below zero, capped at [MAX_SHARED_ZERO_FRACTION].
+ */
+internal fun zeroFloorDualRanges(primaryY: List<Double>, secondaryY: List<Double>): AlignedRanges {
+    val primaryNice = zeroFloorNiceRange(primaryY.min(), primaryY.max().coerceAtLeast(0.1), SECONDARY_GRAPH_TICK_COUNT)
+    val primaryFraction = if (primaryNice.max > primaryNice.min) -primaryNice.min / (primaryNice.max - primaryNice.min) else 0.0
+
+    val secondaryMax = secondaryY.max().coerceAtLeast(0.1)
+    val secondaryFraction = if (secondaryY.min() < 0.0) -secondaryY.min() / (secondaryMax - secondaryY.min()) else 0.0
+
+    val sharedFraction = maxOf(primaryFraction, secondaryFraction).coerceAtMost(MAX_SHARED_ZERO_FRACTION)
+
+    val (aMin, aMax) = fractionAlignedNiceRange(primaryNice.min, primaryNice.max, sharedFraction)
+    // The secondary range follows the primary zero after rounding, not the target
+    val primaryZeroFraction = if (aMax > aMin) -aMin / (aMax - aMin) else sharedFraction
+    val (bMin, bMax) = fractionAlignedRange(secondaryY.min(), secondaryMax, primaryZeroFraction)
+    // primaryNice.min is primary's own real floor (0 unless it has a genuine negative sliver);
+    // aMin can be pushed below that purely to align zero with secondary — clamp labels back to
+    // primary's own floor so its axis never shows a fake negative tick.
+    return AlignedRanges(aMin, aMax, bMin, bMax, primaryLabelFloor = primaryNice.min)
 }
 
