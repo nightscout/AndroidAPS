@@ -93,6 +93,7 @@
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="troubleshooting_hint4">https://github.com/nightscout/AndroidAPS/issues</string>
     <string name="insulin_plugins">Paramètres Insuline</string>
+    <string name="insulin_ultrarapid">Dans les paramètres d\'Insuline, laquelle de ces insulines devrait utiliser un pic d\'activité ultrarapide de 55 minutes ?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
