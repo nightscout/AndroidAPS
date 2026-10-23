@@ -55,7 +55,6 @@ Other
     <string name="unit_days">天</string>
     <string name="unit_weeks">週</string>
     <string name="shortminute">分</string>
-    <string name="shortday">天</string>
     <string name="time_remaining_h_m">剩餘 %1$d 小時 %2$d 分鐘</string>
     <string name="time_remaining_m">剩餘 %1$d 分鐘</string>
     <string name="later_today">今天稍晚</string>
@@ -108,7 +107,6 @@ Other
     <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
-    <string name="forever">永遠</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">藍牙</string>
     <string name="permission_bluetooth_description">應用程式需要藍牙權限才能與幫浦通訊</string>
