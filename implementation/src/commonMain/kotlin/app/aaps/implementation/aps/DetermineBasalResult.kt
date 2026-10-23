@@ -4,6 +4,7 @@ import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
@@ -134,13 +135,16 @@ class DetermineBasalResult(
             else "${rh.gs(CoreUiStrings.rate_percent_duration, rate, rate / ch.fromPump(pump.baseBasalRate) * 100.0, duration)} "
 
             // smb
-            if (smb != 0.0) ret += "SMB: ${decimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump.pumpDescription.bolusStep)} "
+            if (smb != 0.0) {
+                val smbText = decimalFormatter.toPumpSupportedBolusWithUnits(smb, activePlugin.activePump.pumpDescription.bolusStep)
+                ret += "${rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.smb_shortname), smbText)} "
+            }
             if (isCarbsRequired) {
                 ret += "$carbsRequiredText "
             }
 
             // reason
-            ret += rh.gs(CoreUiStrings.reason) + ": " + reason
+            ret += rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.reason), reason)
             return ret
         }
         return if (isCarbsRequired) {

@@ -314,7 +314,7 @@ class MainViewModel(
 
         val ttText = if (ttData != null && !ttExpired) {
             if (ttIsFinite) {
-                "${ttData.targetRangeText} ${dateUtil.untilString(ttData.timestamp + ttData.duration, rh)}"
+                rh.gs(InterfacesStrings.value_with_detail, ttData.targetRangeText, dateUtil.untilString(ttData.timestamp + ttData.duration, rh, withParentheses = false))
             } else {
                 ttData.targetRangeText
             }
@@ -328,7 +328,7 @@ class MainViewModel(
 
         val profileText = if (profileData != null && profileData.profileName.isNotEmpty()) {
             if (profileData.duration > 0 && !profileExpired) {
-                "${profileData.profileName} ${dateUtil.untilString(profileData.timestamp + profileData.duration, rh)}"
+                rh.gs(InterfacesStrings.value_with_detail, profileData.profileName, dateUtil.untilString(profileData.timestamp + profileData.duration, rh, withParentheses = false))
             } else {
                 profileData.profileName
             }
@@ -350,7 +350,7 @@ class MainViewModel(
             val modeName = getModeNameString(rmData.mode)
             // Full text kept for the icon's content description (accessibility).
             if (rmIsTemporaryFinite) {
-                "$modeName ${dateUtil.untilString(rmData.timestamp + rmData.duration, rh)}"
+                rh.gs(InterfacesStrings.value_with_detail, modeName, rmRemaining)
             } else {
                 modeName
             }
