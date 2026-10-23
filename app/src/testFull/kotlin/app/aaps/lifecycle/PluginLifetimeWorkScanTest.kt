@@ -280,6 +280,11 @@ class PluginLifetimeWorkScanTest {
             "readStatus(unconfirmed_command). A read. SAFE to abandon - but see handleCommandConfirmation " +
                 "below, which is the reason unconfirmed commands are being chased in the first place."
         ),
+        "O5PumpPlugin.kt#refreshStatusOnUnacknowledgedCommands" to Site(
+            1,
+            "readStatus(omnipod_5_unconfirmed_command). A copy of OmnipodDashPumpPlugin#refreshStatusOnUnacknowledgedCommands. " +
+                "A read. SAFE to abandon."
+        ),
         "OmnipodErosPumpPlugin.kt#queueAcknowledgeAlertsCommand" to Site(
             1,
             "customCommand(CommandSilenceAlerts), result only logged. Silencing an alert is a pod write, but " +
@@ -303,6 +308,13 @@ class PluginLifetimeWorkScanTest {
                 "actual harm here, because it is the only record that the correction worked. Cancelling would " +
                 "not stop the delivery anyway; the command is already in the queue by then. This is the site " +
                 "that rules out a per-enable pluginScope for this driver."
+        ),
+        "O5PumpPlugin.kt#queueBasalCorrectionIfNeeded" to Site(
+            1,
+            "customCommand(CommandDeliverBasalCorrection). DELIVERS INSULIN. The O5 copy of the correction in " +
+                "OmnipodDashPumpPlugin#handleCommandConfirmation, and the same decision: it must NOT be cancelled, " +
+                "and cancelling would not stop it anyway, because the command is already in the queue. The queued " +
+                "command checks the drift again before it sends anything. Rules out a per-enable pluginScope for O5 too."
         )
     )
 

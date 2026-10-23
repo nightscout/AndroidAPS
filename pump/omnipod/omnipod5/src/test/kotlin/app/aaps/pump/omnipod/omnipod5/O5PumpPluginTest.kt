@@ -62,6 +62,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mock
+import org.mockito.kotlin.after
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.atLeast
@@ -71,6 +72,7 @@ import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.timeout
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -575,7 +577,7 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         commands.verify(bleManager).sendCommand(argThat { this is StopDeliveryCommand }, any())
         commands.verify(bleManager).sendCommand(argThat { this is ProgramTempBasalCommand }, any())
         commands.verifyNoMoreInteractions()
-        verify(commandQueue, never()).customCommand(any())
+        verify(commandQueue, after(500).never()).customCommand(any())
         verify(podStateManager, never()).lastBasalCorrectionTime = anyOrNull()
     }
 
@@ -587,6 +589,8 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         val result = plugin.setTempBasalAbsolute(0.4, 30, false, PumpSync.TemporaryBasalType.NORMAL)
 
         assertThat(result.success).isTrue()
+        // The correction is queued from pluginScope, so wait for it before checking the order
+        verify(commandQueue, timeout(2_000)).customCommand(argThat { this is CommandDeliverBasalCorrection })
         val commands = inOrder(bleManager, commandQueue)
         commands.verify(bleManager).sendCommand(argThat { this is StopDeliveryCommand }, any())
         commands.verify(bleManager).sendCommand(argThat { this is ProgramTempBasalCommand }, any())
@@ -604,7 +608,7 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         val result = plugin.setTempBasalAbsolute(0.4, 30, false, PumpSync.TemporaryBasalType.NORMAL)
 
         assertThat(result.success).isTrue()
-        verify(commandQueue, never()).customCommand(any())
+        verify(commandQueue, after(500).never()).customCommand(any())
     }
 
     @Test
@@ -619,7 +623,7 @@ class O5PumpPluginTest : TestBaseWithProfile() {
 
         assertThat(result.success).isFalse()
         verify(bleManager, never()).sendCommand(argThat { this is ProgramBolusCommand }, any())
-        verify(commandQueue, never()).customCommand(any())
+        verify(commandQueue, after(500).never()).customCommand(any())
         verify(podStateManager, never()).lastBasalCorrectionTime = anyOrNull()
     }
 
@@ -631,6 +635,8 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         val result = plugin.cancelTempBasal(false)
 
         assertThat(result.success).isTrue()
+        // The correction is queued from pluginScope, so wait for it before checking the order
+        verify(commandQueue, timeout(2_000)).customCommand(argThat { this is CommandDeliverBasalCorrection })
         val commands = inOrder(bleManager, commandQueue)
         commands.verify(bleManager).sendCommand(argThat { this is StopDeliveryCommand }, any())
         commands.verify(commandQueue).customCommand(argThat { this is CommandDeliverBasalCorrection })
