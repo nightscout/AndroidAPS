@@ -372,6 +372,15 @@ sealed class EventData : Event() {
          */
         val smbSmallBelow: Double = -1.0,
         val smbLargeFrom: Double = -1.0,
+        /**
+         * The same for the manual boluses and for the carbs, the cuts of the phone's BG graph
+         * markers, thirds from zero to the day's largest. A piece of extended carbs comes out small
+         * next to the meal it belongs to.
+         */
+        val bolusSmallBelow: Double = -1.0,
+        val bolusLargeFrom: Double = -1.0,
+        val carbsSmallBelow: Double = -1.0,
+        val carbsLargeFrom: Double = -1.0,
     ) : EventData() {
 
         @Serializable

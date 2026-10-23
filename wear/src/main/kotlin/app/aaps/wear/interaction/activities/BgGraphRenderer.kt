@@ -58,29 +58,97 @@ internal fun ageColor(ageMs: Long): Color {
     }
 }
 
-// Half width of an SMB triangle as a factor of the BG dot radius, see [smbSizeFactor]. The large
-// one stays a little smaller than the bolus triangle at the bottom (1.4 wide, 2.4 high).
-private const val SMB_SMALL_FACTOR = 0.9f
-private const val SMB_MEDIUM_FACTOR = 1.1f
-private const val SMB_LARGE_FACTOR = 1.3f
+/** Half width of a triangle as a factor of the BG dot radius, one per [MarkerTier]. */
+private class SizeFactors(private val small: Float, private val medium: Float, private val large: Float) {
+
+    fun of(size: MarkerTier?): Float = when (size) {
+        MarkerTier.SMALL        -> small
+        MarkerTier.LARGE        -> large
+        MarkerTier.MEDIUM, null -> medium
+    }
+}
+
+// The phone's sizes against its 6 dp reading dot: a triangle there fills a box of 10, 16 and 22 dp
+// for an SMB on the IOB graph, 12, 17 and 22 dp for a bolus or carbs on the BG graph, with the base
+// 0.6 of the box wide and the apex half the box up. Measured in dot radii that is a half width of
+// one tenth of the box, and a height of 5/3 of the half width.
+// The SMBs are the exception: on the phone they have the IOB graph to themselves, here they share
+// the bottom line, so the two larger classes are held back and the largest SMB stays clearly
+// smaller than a large bolus.
+private val SMB_FACTORS = SizeFactors(small = 1.0f, medium = 1.4f, large = 1.8f)
+private val MEAL_FACTORS = SizeFactors(small = 1.2f, medium = 1.7f, large = 2.2f)
+private const val TRIANGLE_HEIGHT_RATIO = 5f / 3f
 
 /**
- * Gives the triangle size factor for an SMB amount, so a big SMB is seen without opening the log.
- * The cuts come from the phone, taken over a whole day of SMBs, so an SMB has the same size on the
- * phone's IOB graph, the tile and the activity. A phone that does not send them gets the same rule
- * over the SMBs the watch has, the last hours. Without any SMB everything is medium.
+ * Gives the triangle size factor for an amount, so a big SMB, bolus or meal is seen without opening
+ * the log. The cuts come from the phone, taken over a whole day, so a treatment has the same size on
+ * the phone, the tile and the activity. A phone that does not send them gets the same rule over the
+ * treatments the watch has, the last hours. Without any entry everything is medium.
  */
-internal fun smbSizeFactor(treatmentData: EventData.TreatmentData): (Double) -> Float {
-    val classes =
-        if (treatmentData.smbSmallBelow >= 0.0 && treatmentData.smbLargeFrom >= 0.0) MarkerSizeClasses(treatmentData.smbSmallBelow, treatmentData.smbLargeFrom)
-        else MarkerSizeClasses.ofMax(treatmentData.boluses.filter { it.isValid && it.isSMB && it.bolus > 0 }.map { it.bolus })
-    return { amount ->
-        when (classes?.of(amount)) {
-            MarkerTier.SMALL        -> SMB_SMALL_FACTOR
-            MarkerTier.LARGE        -> SMB_LARGE_FACTOR
-            MarkerTier.MEDIUM, null -> SMB_MEDIUM_FACTOR
+private fun sizeFactor(smallBelow: Double, largeFrom: Double, watchClasses: () -> MarkerSizeClasses?, factors: SizeFactors): (Double) -> Float {
+    val classes = if (smallBelow >= 0.0 && largeFrom >= 0.0) MarkerSizeClasses(smallBelow, largeFrom) else watchClasses()
+    return { amount -> factors.of(classes?.of(amount)) }
+}
+
+/** SMB sizes: thirds from zero to the day's largest, the rule of the phone's IOB graph. */
+internal fun smbSizeFactor(treatmentData: EventData.TreatmentData): (Double) -> Float = sizeFactor(
+    treatmentData.smbSmallBelow, treatmentData.smbLargeFrom,
+    { MarkerSizeClasses.ofMax(treatmentData.boluses.filter { it.isValid && it.isSMB && it.bolus > 0 }.map { it.bolus }) },
+    SMB_FACTORS
+)
+
+/** Manual bolus sizes: thirds from zero to the day's largest, the rule of the phone's BG graph. */
+internal fun bolusSizeFactor(treatmentData: EventData.TreatmentData): (Double) -> Float = sizeFactor(
+    treatmentData.bolusSmallBelow, treatmentData.bolusLargeFrom,
+    { MarkerSizeClasses.ofMax(treatmentData.boluses.filter { it.isValid && !it.isSMB && it.bolus > 0 }.map { it.bolus }) },
+    MEAL_FACTORS
+)
+
+/** Carbs sizes, the same rule: a piece of extended carbs comes out small next to the meal it belongs to. */
+internal fun carbsSizeFactor(treatmentData: EventData.TreatmentData): (Double) -> Float = sizeFactor(
+    treatmentData.carbsSmallBelow, treatmentData.carbsLargeFrom,
+    { MarkerSizeClasses.ofMax(treatmentData.boluses.filter { it.isValid && it.carbs > 0 }.map { it.carbs }) },
+    MEAL_FACTORS
+)
+
+/** Max gap to the nearest reading for a marker to sit on the curve. Three reading intervals, like the phone. */
+private const val MARKER_MAX_READING_GAP_MS = 15 * 60_000L
+
+/** A bolus and a carbs entry this close apart are one meal and are drawn at the same height. */
+private const val MARKER_PAIR_MS = 5 * 60_000L
+
+/**
+ * Glucose at [time], interpolated between the readings on each side of it.
+ *
+ * Null when the nearest reading is more than [MARKER_MAX_READING_GAP_MS] away: in a sensor gap, or
+ * in the future, there is no honest height for a marker, so the caller puts it on the bottom line
+ * instead. Across a long gap the near side is used alone, so no height is invented between two
+ * far readings. [readings] must be sorted by time.
+ */
+internal fun interpolatedSgvAt(time: Long, readings: List<EventData.SingleBg>): Float? {
+    val before = readings.lastOrNull { it.timeStamp <= time }?.takeIf { time - it.timeStamp <= MARKER_MAX_READING_GAP_MS }
+    val after = readings.firstOrNull { it.timeStamp >= time }?.takeIf { it.timeStamp - time <= MARKER_MAX_READING_GAP_MS }
+    return when {
+        before != null && after != null -> {
+            val span = (after.timeStamp - before.timeStamp).toDouble()
+            if (span == 0.0) before.sgv.toFloat()
+            else (before.sgv + (after.sgv - before.sgv) * ((time - before.timeStamp) / span)).toFloat()
         }
+
+        before != null                  -> before.sgv.toFloat()
+        after != null                   -> after.sgv.toFloat()
+        else                            -> null
     }
+}
+
+/**
+ * The time a marker takes its height at: the treatment's own, or that of a partner entry (carbs for
+ * a bolus, a bolus for carbs) within [MARKER_PAIR_MS] that came first. Both halves of a meal are
+ * then drawn at the same height and line up into one marker instead of a sheared one.
+ */
+internal fun markerAnchorTime(time: Long, partners: List<Long>): Long {
+    val partner = partners.filter { abs(it - time) <= MARKER_PAIR_MS }.minByOrNull { abs(it - time) }
+    return if (partner != null && partner < time) partner else time
 }
 
 internal fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int, showNowLabel: Boolean = true) {
@@ -222,60 +290,76 @@ internal fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int, 
         )
     }
 
+    // Treatments, drawn like the phone's BG graph: a bolus sits above the reading of its moment and
+    // points down at it, carbs sit below it and point up, each the way it pushes the glucose. The
+    // tips almost touch the reading, with a thin gap, so a meal with its bolus is one marker in two
+    // halves. Where no reading is near (a sensor gap, or a future piece of extended carbs) the
+    // marker waits on the bottom line until the readings catch up. SMBs stay on the bottom line,
+    // pointing up as before: one every few minutes on the curve would turn it into a picket fence.
     val boluses = data.treatmentData.boluses
-    val triSize   = dotRadius * 1.4f
-    val triHeight = dotRadius * 2.4f
     val smbFactor = smbSizeFactor(data.treatmentData)
-
+    val bolusFactor = bolusSizeFactor(data.treatmentData)
+    val carbsFactor = carbsSizeFactor(data.treatmentData)
+    // From the reading's centre to the tip: the tip stops just outside the dot's edge
+    val gap = dotRadius + 1.dp.toPx()
     val bottom = pad + graphH
 
-    for (treatment in boluses) {
-        if (!treatment.isValid || treatment.isSMB) continue
-        // carbs != 0: negative entries (COB removal) are drawn too, like on the phone graph — in magenta to tell them apart
-        if (treatment.carbs == 0.0 || treatment.date !in startTime..endTime) continue
-        val x = timeToX(treatment.date)
-        drawPath(
-            Path().apply {
-                moveTo(x, bottom - triHeight)
-                lineTo(x - triSize, bottom)
-                lineTo(x + triSize, bottom)
-                close()
-            },
-            if (treatment.carbs < 0) CarbsRemovalMagenta else CarbsOrange
-        )
-    }
+    // The readings the heights come from: the dots drawn above, in time order
+    val readings = entries.filter { it.timeStamp in startTime..now && it.sgv > 0 }.sortedBy { it.timeStamp }
+    val bolusTimes = boluses.filter { it.isValid && !it.isSMB && it.bolus > 0 }.map { it.date }
+    val carbsTimes = boluses.filter { it.isValid && it.carbs != 0.0 }.map { it.date }
+
+    /** A triangle with its tip at [apexY] and its body above it: insulin, pointing down. */
+    fun drawPointingDown(x: Float, apexY: Float, halfWidth: Float, height: Float, color: Color) = drawPath(
+        Path().apply {
+            moveTo(x, apexY)
+            lineTo(x - halfWidth, apexY - height)
+            lineTo(x + halfWidth, apexY - height)
+            close()
+        },
+        color
+    )
+
+    /** A triangle with its tip at [apexY] and its body below it: carbs and SMBs, pointing up. */
+    fun drawPointingUp(x: Float, apexY: Float, halfWidth: Float, height: Float, color: Color) = drawPath(
+        Path().apply {
+            moveTo(x, apexY)
+            lineTo(x - halfWidth, apexY + height)
+            lineTo(x + halfWidth, apexY + height)
+            close()
+        },
+        color
+    )
 
     for (treatment in boluses) {
-        if (!treatment.isValid) continue
-        if (treatment.bolus <= 0 || treatment.date !in startTime..endTime) continue
+        if (!treatment.isValid || treatment.date !in startTime..endTime) continue
         val x = timeToX(treatment.date)
-        if (treatment.isSMB) {
-            val nearestEntry = entries.filter { it.sgv > 0 }
-                .minByOrNull { abs(it.timeStamp - treatment.date) }
-            if (nearestEntry != null && abs(nearestEntry.timeStamp - treatment.date) < 10 * 60_000L) {
-                val bgY = sgvToY(nearestEntry.sgv.toFloat())
-                val tipY = bgY - dotRadius * 1.5f
-                val smbTriSize = dotRadius * smbFactor(treatment.bolus)
-                drawPath(
-                    Path().apply {
-                        moveTo(x, tipY)
-                        lineTo(x - smbTriSize, tipY - smbTriSize * 1.8f)
-                        lineTo(x + smbTriSize, tipY - smbTriSize * 1.8f)
-                        close()
-                    },
-                    InsulinBlue.copy(alpha = 0.85f)
-                )
+        when {
+            treatment.isSMB         -> {
+                if (treatment.bolus <= 0) continue
+                val halfWidth = dotRadius * smbFactor(treatment.bolus)
+                val height = halfWidth * TRIANGLE_HEIGHT_RATIO
+                // Stands on the bottom line, base down, as before
+                drawPointingUp(x, bottom - height, halfWidth, height, InsulinBlue.copy(alpha = 0.85f))
             }
-        } else {
-            drawPath(
-                Path().apply {
-                    moveTo(x, bottom)
-                    lineTo(x - triSize, bottom - triHeight)
-                    lineTo(x + triSize, bottom - triHeight)
-                    close()
-                },
-                InsulinBlue
-            )
+
+            treatment.bolus > 0     -> {
+                val halfWidth = dotRadius * bolusFactor(treatment.bolus)
+                // The tip points at the reading from above. With no reading near, it touches the bottom line.
+                val apexY = interpolatedSgvAt(markerAnchorTime(treatment.date, carbsTimes), readings)?.let { sgvToY(it) - gap } ?: bottom
+                drawPointingDown(x, apexY, halfWidth, halfWidth * TRIANGLE_HEIGHT_RATIO, InsulinBlue)
+            }
+
+            // carbs != 0: negative entries (COB removal) are drawn too, in magenta to tell them apart
+            treatment.carbs != 0.0  -> {
+                val halfWidth = dotRadius * carbsFactor(abs(treatment.carbs))
+                val height = halfWidth * TRIANGLE_HEIGHT_RATIO
+                val color = if (treatment.carbs < 0) CarbsRemovalMagenta else CarbsOrange
+                // The tip points at the reading from below. With no reading near, the marker stands
+                // on the bottom line with its base on it.
+                val apexY = interpolatedSgvAt(markerAnchorTime(treatment.date, bolusTimes), readings)?.let { sgvToY(it) + gap } ?: (bottom - height)
+                drawPointingUp(x, apexY, halfWidth, height, color)
+            }
         }
     }
 }
