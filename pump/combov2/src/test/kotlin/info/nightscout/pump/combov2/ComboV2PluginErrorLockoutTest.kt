@@ -87,7 +87,8 @@ class ComboV2PluginErrorLockoutTest {
             notificationManager = notificationManager,
             config = mock(),
             pumpEnactResultProvider = { mock() },
-            bolusProgressData = mock()
+            bolusProgressData = mock(),
+            concentrationHelper = mock()
         )
     }
 

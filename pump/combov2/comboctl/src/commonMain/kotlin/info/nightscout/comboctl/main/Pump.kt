@@ -286,6 +286,16 @@ class Pump(
     // this connection (#5359).
     private var newBolusSeenOnConnect = false
 
+    /**
+     * Set when the last [deliverBolus] lost the outcome of its bolus ([BolusOutcomeUnknownException]),
+     * also when another exception took its place on the way out: an alert screen seen while the
+     * status was read again, or a cancellation. The caller must then still treat the bolus as
+     * possibly given, or it says "not delivered" for insulin that the pump may be giving (#5379).
+     * Cleared when the next bolus starts.
+     */
+    var lastBolusOutcomeUnknown: BolusOutcomeUnknownException? = null
+        private set
+
     // Command progress reporters.
 
     private val setBasalProfileReporter = createBasalProgressReporter<RTCommandProgressStage.SettingBasalProfile>()
@@ -460,8 +470,8 @@ class Pump(
     class BolusCancelledByUserException(val deliveredImmediateAmount: Int, totalImmediateAmount: Int) :
         BolusDeliveryException(
             totalImmediateAmount,
-            "Bolus cancelled (delivered amount: ${deliveredImmediateAmount.toStringWithDecimal(1)} IU  " +
-                "total programmed amount: ${totalImmediateAmount.toStringWithDecimal(1)} IU"
+            "Bolus cancelled (delivered amount: ${deliveredImmediateAmount.toStringWithDecimal(1)} IU; " +
+                "total programmed amount: ${totalImmediateAmount.toStringWithDecimal(1)} IU)"
         )
 
     /**
@@ -473,8 +483,8 @@ class Pump(
     class BolusAbortedDueToErrorException(deliveredImmediateAmount: Int, totalImmediateAmount: Int) :
         BolusDeliveryException(
             totalImmediateAmount,
-            "Bolus aborted due to an error (delivered amount: ${deliveredImmediateAmount.toStringWithDecimal(1)} IU  " +
-                "total programmed amount: ${totalImmediateAmount.toStringWithDecimal(1)} IU"
+            "Bolus aborted due to an error (delivered amount: ${deliveredImmediateAmount.toStringWithDecimal(1)} IU; " +
+                "total programmed amount: ${totalImmediateAmount.toStringWithDecimal(1)} IU)"
         )
 
     /**
@@ -505,15 +515,35 @@ class Pump(
      * @param deliveredAmountSoFar Amount that the pump reported as given before the connection
      *   failed. In 0.1 IU units. The real amount can be larger. If this is equal to [totalAmount],
      *   the pump already reported the whole bolus as given.
+     * @param stage How far the bolus got, which decides what the user is told (#5379).
      * @param cause The exception that ended the connection.
      */
-    class BolusOutcomeUnknownException(totalAmount: Int, val deliveredAmountSoFar: Int, cause: Throwable) :
+    class BolusOutcomeUnknownException(totalAmount: Int, val deliveredAmountSoFar: Int, val stage: Stage, cause: Throwable) :
         BolusDeliveryException(
             totalAmount,
-            "Bolus outcome unknown (delivered amount so far: ${deliveredAmountSoFar.toStringWithDecimal(1)} IU  " +
-                "total programmed amount: ${totalAmount.toStringWithDecimal(1)} IU",
+            "Bolus outcome unknown (stage: $stage; delivered amount so far: ${deliveredAmountSoFar.toStringWithDecimal(1)} IU; " +
+                "total programmed amount: ${totalAmount.toStringWithDecimal(1)} IU)",
             cause
-        )
+        ) {
+
+        enum class Stage {
+
+            /**
+             * The connection failed while the bolus was asked for. It is not known whether the
+             * request reached the pump, so the "0 U so far" says nothing.
+             */
+            REQUEST,
+
+            /** The pump accepted the bolus, and the history could not be read afterwards. It may still be giving it. */
+            DELIVERY,
+
+            /**
+             * The pump reported that it stopped the bolus, cancelled or aborted after an error,
+             * and then the history could not be read. It does not give the rest.
+             */
+            STOPPED_BY_PUMP
+        }
+    }
 
     /**
      * Exception thrown before a bolus is given, when the pump history shows a bolus that
@@ -1561,7 +1591,9 @@ class Pump(
      * Also prior to the delivery, the history delta is read, and the boluses in it are
      * reported via [onEvent]. If it shows a bolus that was not known yet, or if the history
      * read at connect time did, this bolus is not delivered, since its amount was decided
-     * without that insulin. [UnknownBolusInHistoryException] is thrown then.
+     * without that insulin. [UnknownBolusInHistoryException] is thrown then. A prime or fill
+     * ([StandardBolusReason.PRIMING_INFUSION_SET]) is not calculated from IOB and is given; the
+     * next bolus is checked instead.
      *
      * If the connection fails after the pump accepted the bolus, and before the history
      * delta shows how much was given, [BolusOutcomeUnknownException] is thrown. The Combo
@@ -1667,6 +1699,7 @@ class Pump(
         require(bolusStatusUpdateIntervalInMs >= 1) {
             "Invalid bolus status update interval $bolusStatusUpdateIntervalInMs"
         }
+        lastBolusOutcomeUnknown = null
 
         when (bolusType) {
             CMDDeliverBolusType.STANDARD_BOLUS  -> Unit
@@ -1731,10 +1764,16 @@ class Pump(
         val historyDeltaBeforeBolus = fetchHistoryDelta()
         scanHistoryDeltaForBolusToEmit(historyDeltaBeforeBolus)
         val unknownBolusFound = newBolusSeenOnConnect || historyDeltaBeforeBolus.containsNewBolus()
-        newBolusSeenOnConnect = false
-        if (unknownBolusFound) {
-            logger(LogLevel.ERROR) { "Pump history has a bolus that was not known yet; not delivering this bolus" }
-            throw UnknownBolusInHistoryException(totalBolusAmount)
+        if (bolusType == CMDDeliverBolusType.STANDARD_BOLUS && standardBolusReason == StandardBolusReason.PRIMING_INFUSION_SET) {
+            // A prime or fill is not calculated from IOB, so an unknown bolus is no reason to refuse
+            // it. The flag stays, so the next real bolus is still checked (#5379).
+            newBolusSeenOnConnect = unknownBolusFound
+        } else {
+            newBolusSeenOnConnect = false
+            if (unknownBolusFound) {
+                logger(LogLevel.ERROR) { "Pump history has a bolus that was not known yet; not delivering this bolus" }
+                throw UnknownBolusInHistoryException(totalBolusAmount)
+            }
         }
 
         // Switch to COMMAND mode for the actual bolus delivery
@@ -1751,10 +1790,21 @@ class Pump(
             )
         } catch (e: CancellationException) {
             throw e
+        } catch (e: ApplicationLayer.ErrorCodeException) {
+            if (e.appLayerPacket.command != ApplicationLayer.Command.CMD_DELIVER_BOLUS_RESPONSE)
+                throw BolusOutcomeUnknownException(totalBolusAmount, deliveredAmountSoFar = 0, BolusOutcomeUnknownException.Stage.REQUEST, e)
+                    .also { lastBolusOutcomeUnknown = it }
+            // The pump answered the request and refused it, so the bolus was not given. This is not
+            // an unknown outcome (#5379). Seen on the test Combo, which answered a multiwave bolus
+            // with "CMD bolus is not available at the moment".
+            logger(LogLevel.ERROR) { "The pump refused the bolus: $e" }
+            throw BolusNotDeliveredException(totalBolusAmount)
         } catch (e: Exception) {
-            // The request may have reached the pump before the connection failed (#5359).
+            // The request may have reached the pump before the connection failed (#5359). It may
+            // also not have been sent at all: the same errors come before and after the send (#5379).
             logger(LogLevel.ERROR) { "Connection failed while requesting the bolus; outcome unknown: $e" }
-            throw BolusOutcomeUnknownException(totalBolusAmount, deliveredAmountSoFar = 0, e)
+            throw BolusOutcomeUnknownException(totalBolusAmount, deliveredAmountSoFar = 0, BolusOutcomeUnknownException.Stage.REQUEST, e)
+                .also { lastBolusOutcomeUnknown = it }
         }
         if (!didDeliver) {
             logger(LogLevel.ERROR) { "Bolus delivery did not commence" }
@@ -1770,8 +1820,8 @@ class Pump(
         var bolusConfirmedInHistory = false
         // The amount that the pump reported as given so far. In 0.1 IU units.
         var deliveredAmountSoFar = 0
-        // True when the history could not be read after the bolus started (#5359).
-        var outcomeUnknown = false
+        // True when the pump itself reported that it stopped the bolus (#5379).
+        var stoppedByPump = false
 
         try {
             // The Combo does not send immediate bolus delivery information on its own.
@@ -1845,6 +1895,7 @@ class Pump(
             // was cancelled by the user or aborted due to an error.
             // The code further below tries to cancel in case of any
             // exception, which would make no sense with these.
+            stoppedByPump = e is BolusCancelledByUserException || e is BolusAbortedDueToErrorException
             when (e) {
                 is BolusCancelledByUserException ->
                     bolusDeliveryProgressReporter.setCurrentProgressStage(BasicProgressStage.Cancelled)
@@ -1889,9 +1940,12 @@ class Pump(
                     // known how much was given. The Combo goes on with a bolus when the connection
                     // is lost, so this is not "not delivered". The next connection reads the history
                     // and reports the bolus (#5359).
+                    // This replaces a cancel or an abort that the pump reported, so the stage keeps
+                    // it: then the pump does not give the rest (#5379).
                     logger(LogLevel.ERROR) { "Could not read the history after the bolus started; outcome unknown: $e" }
-                    outcomeUnknown = true
-                    throw BolusOutcomeUnknownException(totalBolusAmount, deliveredAmountSoFar, e)
+                    val stage = if (stoppedByPump) BolusOutcomeUnknownException.Stage.STOPPED_BY_PUMP else BolusOutcomeUnknownException.Stage.DELIVERY
+                    throw BolusOutcomeUnknownException(totalBolusAmount, deliveredAmountSoFar, stage, e)
+                        .also { lastBolusOutcomeUnknown = it }
                 }
 
                 if (historyDelta.isEmpty()) {
@@ -2002,6 +2056,9 @@ class Pump(
                         }
                     }
                 } catch (e: CancellationException) {
+                    // These two replace an unknown outcome that is on its way out. They still have to
+                    // go out, the alert is shown and an error locks the pump, so the outcome is kept
+                    // in lastBolusOutcomeUnknown for the caller (#5379).
                     throw e
                 } catch (e: AlertScreenException) {
                     throw e
@@ -2012,7 +2069,7 @@ class Pump(
                     // delivered; the next connection reads the status again.
                     // When the outcome is already unknown, that exception is on its way out, and
                     // this one must not replace it (#5359).
-                    if (!bolusConfirmedInHistory && !outcomeUnknown)
+                    if (!bolusConfirmedInHistory && lastBolusOutcomeUnknown == null)
                         throw e
                     logger(LogLevel.ERROR) { "Could not re-read the pump status after the bolus: $e" }
                 }

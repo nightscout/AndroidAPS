@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.constraints.PumpPluginConstraints
 import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -160,7 +161,8 @@ class ComboV2Plugin(
     notificationManager: NotificationManager,
     private val config: Config,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
-    private val bolusProgressData: BolusProgressData
+    private val bolusProgressData: BolusProgressData,
+    private val concentrationHelper: ConcentrationHelper
 ) :
     PumpPluginBase(
         pluginDescription = PluginDescription()
@@ -1038,17 +1040,53 @@ class ComboV2Plugin(
             // in 0.1 IU units.
             var amountSoFarWhenOutcomeUnknown: Int? = null
 
+            // Amounts here are in pump units, and the user reads them next to amounts in IU (#5379)
+            val deliveredSuccessfully = rh.gs(
+                app.aaps.core.interfaces.R.string.bolus_delivered_successfully,
+                concentrationHelper.fromPump(PumpInsulin(detailedBolusInfo.insulin), isPriming = detailedBolusInfo.bolusType == BS.Type.PRIMING)
+            )
+
+            // The pump may be giving the bolus, so this is never "not delivered" (#5359). What the user
+            // is told depends on how far the bolus got (#5379).
+            fun reportOutcomeUnknown(e: ComboCtlPump.BolusOutcomeUnknownException) {
+                amountSoFarWhenOutcomeUnknown = e.deliveredAmountSoFar
+                val amountSoFar = concentrationHelper.insulinAmountString(PumpInsulin(e.deliveredAmountSoFar.cctlBolusToIU()))
+                when {
+                    e.stage == ComboCtlPump.BolusOutcomeUnknownException.Stage.REQUEST         ->
+                        reportFinishedBolus(R.string.combov2_bolus_request_outcome_unknown, detailedBolusInfo.id, pumpEnactResult, succeeded = false)
+
+                    e.stage == ComboCtlPump.BolusOutcomeUnknownException.Stage.STOPPED_BY_PUMP ->
+                        reportFinishedBolus(rh.gs(R.string.combov2_bolus_stopped_history_unknown, amountSoFar), detailedBolusInfo.id, pumpEnactResult, succeeded = false)
+
+                    // The pump already reported the whole bolus as given. Only the history
+                    // entry is missing, and the next connection reads it.
+                    e.deliveredAmountSoFar >= e.totalAmount                                   ->
+                        reportFinishedBolus(deliveredSuccessfully, detailedBolusInfo.id, pumpEnactResult, succeeded = true)
+
+                    else                                                                      ->
+                        reportFinishedBolus(rh.gs(R.string.combov2_bolus_outcome_unknown, amountSoFar), detailedBolusInfo.id, pumpEnactResult, succeeded = false)
+                }
+            }
+
+            // An alert screen or a cancel can take the place of an unknown outcome on the way out of
+            // deliverBolus(), which keeps it for this (#5379). One that was there before is from an
+            // earlier bolus.
+            val outcomeUnknownBefore = acquiredPump.lastBolusOutcomeUnknown
+            fun replacedOutcomeUnknown() = acquiredPump.lastBolusOutcomeUnknown?.takeIf { it !== outcomeUnknownBefore }
+
             try {
                 executeCommand {
                     acquiredPump.deliverBolus(requestedBolusAmount, bolusReason)
                 }
 
-                reportFinishedBolus(rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, detailedBolusInfo.insulin), detailedBolusInfo.id, pumpEnactResult, succeeded = true)
+                reportFinishedBolus(deliveredSuccessfully, detailedBolusInfo.id, pumpEnactResult, succeeded = true)
             } catch (e: CancellationException) {
                 // Cancellation is not an error, but it also means
                 // that the profile update was not enacted.
 
-                reportFinishedBolus(R.string.combov2_bolus_cancelled, detailedBolusInfo.id, pumpEnactResult, succeeded = true)
+                val outcomeUnknown = replacedOutcomeUnknown()
+                if (outcomeUnknown != null) reportOutcomeUnknown(outcomeUnknown)
+                else reportFinishedBolus(R.string.combov2_bolus_cancelled, detailedBolusInfo.id, pumpEnactResult, succeeded = true)
 
                 // Rethrowing to finish coroutine cancellation.
                 throw e
@@ -1070,7 +1108,9 @@ class ComboV2Plugin(
                 // them are recorded now. Reporting it as failed made the user think no insulin
                 // was given, and the carbs were not stored (#5359).
                 aapsLogger.error(LTag.PUMP, "Unaccounted bolus detected after the bolus was given")
-                notificationManager.post(NotificationId.COMBO_PUMP_ALARM, TextRef.AndroidRes(R.string.combov2_bolus_given_other_boluses_found))
+                // Not on COMBO_PUMP_ALARM: the low reservoir warning of the same bolus is posted there
+                // just before, and this one would replace it (#5379).
+                notificationManager.post(NotificationId.COMBO_UNKNOWN_BOLUS, TextRef.AndroidRes(R.string.combov2_bolus_given_other_boluses_found))
                 reportFinishedBolus(R.string.combov2_bolus_given_other_boluses_found, detailedBolusInfo.id, pumpEnactResult, succeeded = true)
             } catch (_: ComboCtlPump.UnknownBolusInHistoryException) {
                 aapsLogger.error(LTag.PUMP, "Pump history has a bolus that was not known yet; this bolus was not given")
@@ -1078,21 +1118,15 @@ class ComboV2Plugin(
                 reportFinishedBolus(R.string.combov2_unknown_bolus_in_history, detailedBolusInfo.id, pumpEnactResult, succeeded = false)
             } catch (e: ComboCtlPump.BolusOutcomeUnknownException) {
                 aapsLogger.error(LTag.PUMP, "Bolus outcome unknown: $e")
-                amountSoFarWhenOutcomeUnknown = e.deliveredAmountSoFar
-                if (e.deliveredAmountSoFar >= e.totalAmount) {
-                    // The pump already reported the whole bolus as given. Only the history
-                    // entry is missing, and the next connection reads it.
-                    reportFinishedBolus(rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, detailedBolusInfo.insulin), detailedBolusInfo.id, pumpEnactResult, succeeded = true)
-                } else {
-                    val amountSoFar = rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, e.deliveredAmountSoFar.cctlBolusToIU())
-                    reportFinishedBolus(rh.gs(R.string.combov2_bolus_outcome_unknown, amountSoFar), detailedBolusInfo.id, pumpEnactResult, succeeded = false)
-                }
+                reportOutcomeUnknown(e)
             } catch (_: ComboCtlPump.InsufficientInsulinAvailableException) {
                 aapsLogger.error(LTag.PUMP, "Insufficient insulin in reservoir")
                 reportFinishedBolus(R.string.combov2_insufficient_insulin_in_reservoir, detailedBolusInfo.id, pumpEnactResult, succeeded = false)
             } catch (e: Exception) {
                 aapsLogger.error(LTag.PUMP, "Exception thrown during bolus delivery: $e")
-                reportFinishedBolus(R.string.combov2_bolus_delivery_failed, detailedBolusInfo.id, pumpEnactResult, succeeded = false)
+                val outcomeUnknown = replacedOutcomeUnknown()
+                if (outcomeUnknown != null) reportOutcomeUnknown(outcomeUnknown)
+                else reportFinishedBolus(R.string.combov2_bolus_delivery_failed, detailedBolusInfo.id, pumpEnactResult, succeeded = false)
             } finally {
                 val newBolus = acquiredPump.lastBolusFlow.value?.takeIf { it != lastBolusBefore }
                 when {
@@ -1884,7 +1918,8 @@ class ComboV2Plugin(
     }
 
     @OptIn(ExperimentalTime::class)
-    private fun handlePumpEvent(event: ComboCtlPump.Event) {
+    @VisibleForTesting
+    internal fun handlePumpEvent(event: ComboCtlPump.Event) {
         aapsLogger.debug(LTag.PUMP, "Handling pump event $event")
 
         when (event) {
@@ -1942,6 +1977,45 @@ class ComboV2Plugin(
             }
 
             is ComboCtlPump.Event.ExtendedBolusEnded   -> {
+                runBlocking {
+                    pumpSync.syncStopExtendedBolusWithPumpId(
+                        event.timestamp.toEpochMilliseconds(),
+                        event.bolusId,
+                        PumpType.ACCU_CHEK_COMBO,
+                        serialNumber()
+                    )
+                }
+            }
+
+            // A multiwave bolus is a bolus now and an extended bolus with the rest, and is recorded as
+            // those two. It used to fall through to "else" below, so a multiwave given on the pump
+            // never reached IOB (#5379). The total includes the immediate part.
+            is ComboCtlPump.Event.MultiwaveBolusStarted -> {
+                val timestamp = event.timestamp.toEpochMilliseconds()
+                val extendedAmount = event.totalBolusAmount - event.immediateBolusAmount
+                runBlocking {
+                    pumpSync.syncBolusWithPumpId(
+                        timestamp,
+                        PumpInsulin(event.immediateBolusAmount.cctlBolusToIU()),
+                        BS.Type.NORMAL,
+                        event.bolusId,
+                        PumpType.ACCU_CHEK_COMBO,
+                        serialNumber()
+                    )
+                    if (extendedAmount > 0)
+                        pumpSync.syncExtendedBolusWithPumpId(
+                            timestamp,
+                            PumpRate(extendedAmount.cctlBolusToIU()),
+                            event.totalDurationMinutes.toLong() * 60 * 1000,
+                            false,
+                            event.bolusId,
+                            PumpType.ACCU_CHEK_COMBO,
+                            serialNumber()
+                        )
+                }
+            }
+
+            is ComboCtlPump.Event.MultiwaveBolusEnded  -> {
                 runBlocking {
                     pumpSync.syncStopExtendedBolusWithPumpId(
                         event.timestamp.toEpochMilliseconds(),
