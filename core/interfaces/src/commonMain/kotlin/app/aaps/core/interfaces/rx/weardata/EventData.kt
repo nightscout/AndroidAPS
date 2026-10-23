@@ -364,7 +364,23 @@ sealed class EventData : Event() {
         val temps: ArrayList<TempBasal>,
         val basals: ArrayList<Basal>,
         val boluses: ArrayList<Treatment>,
-        val predictions: ArrayList<SingleBg>
+        val predictions: ArrayList<SingleBg>,
+        /**
+         * The SMB size cuts of the phone's IOB graph, taken over a whole day of SMBs, so the watch
+         * draws an SMB with the same size as the phone. Both -1 when there is nothing to tell apart
+         * (then every SMB is medium), or from a phone that does not send them.
+         */
+        val smbSmallBelow: Double = -1.0,
+        val smbLargeFrom: Double = -1.0,
+        /**
+         * The same for the manual boluses and for the carbs, the cuts of the phone's BG graph
+         * markers, thirds from zero to the day's largest. A piece of extended carbs comes out small
+         * next to the meal it belongs to.
+         */
+        val bolusSmallBelow: Double = -1.0,
+        val bolusLargeFrom: Double = -1.0,
+        val carbsSmallBelow: Double = -1.0,
+        val carbsLargeFrom: Double = -1.0,
     ) : EventData() {
 
         @Serializable

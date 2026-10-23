@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.toArgb
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.ActiveSceneState
+import app.aaps.core.data.ui.MarkerSizeClasses
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
@@ -1477,12 +1478,19 @@ class DataHandlerMobile(
                 temps.add(EventData.TreatmentData.TempBasal(now - 60 * 1000, endBasalValue, runningTime + 5 * 60 * 1000, currentAmount, currentAmount))
             }
         }
-        persistenceLayer.getBolusesFromTimeIncludingInvalid(startTimeWindow, true)
-            .stream()
-            .filter { (_, _, _, _, _, _, _, _, _, type) -> type !== BS.Type.PRIMING }
-            .forEach { (_, _, _, isValid, _, _, timestamp, _, amount, type) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, amount, 0.0, type === BS.Type.SMB, isValid)) }
-        persistenceLayer.getCarbsFromTimeExpanded(startTimeWindow, true)
-            .forEach { (_, _, _, isValid, _, _, timestamp, _, _, amount) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, 0.0, amount, false, isValid)) }
+        // A day of boluses and carbs: the last hours go to the watch, the whole day sets the size
+        // cuts, the same day the phone's graphs take them from
+        val dayStart = now - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
+        val dayBoluses = persistenceLayer.getBolusesFromTimeIncludingInvalid(dayStart, true)
+            .filter { it.type != BS.Type.PRIMING }
+        dayBoluses.filter { it.timestamp >= startTimeWindow }
+            .forEach { boluses.add(EventData.TreatmentData.Treatment(it.timestamp, it.amount, 0.0, it.type == BS.Type.SMB, it.isValid)) }
+        val smbSizeClasses = MarkerSizeClasses.ofMax(dayBoluses.filter { it.isValid && it.type == BS.Type.SMB && it.amount > 0 }.map { it.amount })
+        val bolusSizeClasses = MarkerSizeClasses.ofMax(dayBoluses.filter { it.isValid && it.type == BS.Type.NORMAL }.map { it.amount })
+        val dayCarbs = persistenceLayer.getCarbsFromTimeExpanded(dayStart, true)
+        dayCarbs.filter { it.timestamp >= startTimeWindow }
+            .forEach { boluses.add(EventData.TreatmentData.Treatment(it.timestamp, 0.0, it.amount, false, it.isValid)) }
+        val carbsSizeClasses = MarkerSizeClasses.ofMax(dayCarbs.filter { it.isValid && it.amount > 0 }.map { it.amount })
         val apsResult = if (config.APS) {
             val lastRun = loop.lastRun
             if (lastRun?.request?.hasPredictions == true) {
@@ -1508,7 +1516,17 @@ class DataHandlerMobile(
                     )
                 )
             }
-        sendToWear(EventData.TreatmentData(temps, basals, boluses, predictions))
+        sendToWear(
+            EventData.TreatmentData(
+                temps, basals, boluses, predictions,
+                smbSmallBelow = smbSizeClasses?.smallBelow ?: -1.0,
+                smbLargeFrom = smbSizeClasses?.largeFrom ?: -1.0,
+                bolusSmallBelow = bolusSizeClasses?.smallBelow ?: -1.0,
+                bolusLargeFrom = bolusSizeClasses?.largeFrom ?: -1.0,
+                carbsSmallBelow = carbsSizeClasses?.smallBelow ?: -1.0,
+                carbsLargeFrom = carbsSizeClasses?.largeFrom ?: -1.0
+            )
+        )
     }
 
     private fun predictionColor(data: GV): Int {
