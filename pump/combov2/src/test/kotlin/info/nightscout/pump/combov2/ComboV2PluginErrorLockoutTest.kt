@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 
@@ -73,7 +74,13 @@ class ComboV2PluginErrorLockoutTest {
 
     @BeforeEach
     fun setUp() {
-        val rh: ResourceHelper = mock { on { gs(any<Int>()) } doReturn "text" }
+        val rh: ResourceHelper = mock {
+            on { gs(any<Int>()) } doReturn "text"
+            // The alert card joins its parts with shared templates such as "%1$s: %2$s"
+            on { gs(any<Int>(), anyVararg()) } doReturn "text"
+            on { gs(any<TextRef>()) } doReturn "text"
+            on { gs(any<TextRef>(), anyVararg()) } doReturn "text"
+        }
         plugin = ComboV2Plugin(
             aapsLogger = mock(),
             rh = rh,

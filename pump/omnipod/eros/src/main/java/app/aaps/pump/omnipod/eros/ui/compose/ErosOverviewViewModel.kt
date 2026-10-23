@@ -84,6 +84,7 @@ import org.joda.time.DateTime
 import org.joda.time.Duration
 import java.util.Locale
 import java.util.TimeZone
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.common.hw.rileylink.R as RileyLinkR
 import app.aaps.pump.omnipod.common.R as CommonR
@@ -443,7 +444,7 @@ class ErosOverviewViewModel(
                     rh.gs(CommonR.string.omnipod_common_pod_status_running)
                 }
                 if (!podStateManager.isBasalCertain) {
-                    status += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"
+                    status = rh.gs(InterfacesR.string.value_with_detail, status, rh.gs(CommonR.string.omnipod_common_uncertain))
                 }
                 status
             } else if (podStateManager.podProgressStatus == PodProgressStatus.FAULT_EVENT_OCCURRED) {
@@ -481,7 +482,7 @@ class ErosOverviewViewModel(
             )
             text?.let {
                 if (!podStateManager.isLastBolusCertain) {
-                    text += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"
+                    text = rh.gs(InterfacesR.string.value_with_detail, text, rh.gs(CommonR.string.omnipod_common_uncertain))
                     return text to StatusLevel.CRITICAL
                 }
                 return text to StatusLevel.NORMAL
@@ -501,7 +502,7 @@ class ErosOverviewViewModel(
                 durationInMin = podStateManager.tempBasalDuration.standardMinutes.toInt()
             )
             if (!podStateManager.isTempBasalCertain) {
-                text += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"
+                text = rh.gs(InterfacesR.string.value_with_detail, text, rh.gs(CommonR.string.omnipod_common_uncertain))
                 return text to StatusLevel.CRITICAL
             }
             return text to StatusLevel.NORMAL
@@ -509,7 +510,7 @@ class ErosOverviewViewModel(
 
         // Not running
         if (podStateManager.isPodActivationCompleted && !podStateManager.isTempBasalCertain) {
-            return "$PLACEHOLDER (${rh.gs(CommonR.string.omnipod_common_uncertain)})" to StatusLevel.CRITICAL
+            return rh.gs(InterfacesR.string.value_with_detail, PLACEHOLDER, rh.gs(CommonR.string.omnipod_common_uncertain)) to StatusLevel.CRITICAL
         }
         return PLACEHOLDER to StatusLevel.NORMAL
     }

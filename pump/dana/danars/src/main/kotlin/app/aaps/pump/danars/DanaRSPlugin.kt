@@ -592,7 +592,7 @@ class DanaRSPlugin(
 
     override fun pumpSpecificShortStatus(veryShort: Boolean): String {
         if (!veryShort)
-            return "TDD: ${decimalFormatter.to0Decimal(danaPump.dailyTotalUnits)} / ${danaPump.maxDailyTotalUnits} U"
+            return rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, "TDD", rh.gs(app.aaps.core.interfaces.R.string.values_with_slash, decimalFormatter.to0Decimal(danaPump.dailyTotalUnits), rh.gs(app.aaps.core.ui.R.string.units_format_insulin_int, danaPump.maxDailyTotalUnits)))
         return ""
     }
 

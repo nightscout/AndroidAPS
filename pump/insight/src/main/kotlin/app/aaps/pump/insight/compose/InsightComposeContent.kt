@@ -352,7 +352,7 @@ internal class InsightOverviewState(
                 add(
                     PumpInfoRow(
                         label = rh.gs(CoreUiR.string.battery_label),
-                        value = rh.gs(CoreUiR.string.format_percent, battery.batteryAmount)
+                        value = rh.gs(CoreUiR.string.units_format_percent, battery.batteryAmount)
                     )
                 )
             }

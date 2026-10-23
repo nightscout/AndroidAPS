@@ -74,6 +74,7 @@ import java.time.Duration
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.omnipod.common.R as CommonR
 
@@ -487,7 +488,7 @@ class DashOverviewViewModel(
                     PumpInsulin(omnipodDashPumpPlugin.model().determineCorrectBolusSize(requestedBolus)),
                     it.createdRealtime
                 )
-                text += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"
+                text = rh.gs(InterfacesR.string.value_with_detail, text, rh.gs(CommonR.string.omnipod_common_uncertain))
                 return text to StatusLevel.CRITICAL
             }
         }

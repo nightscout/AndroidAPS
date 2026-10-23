@@ -147,7 +147,7 @@ class VirtualPumpViewModel(
         }
 
         val battery = virtualPumpPlugin.batteryLevel.value?.let { level ->
-            rh.gs(CoreUiStrings.format_percent, level)
+            rh.gs(CoreUiStrings.units_format_percent, level)
         }
 
         val reservoir = ch.insulinAmountString(virtualPumpPlugin.reservoirLevel.value)
