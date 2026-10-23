@@ -43,6 +43,7 @@ import app.aaps.core.objects.extensions.observeChange
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.ui.UiStrings
+import app.aaps.ui.compose.EVENT_TIME_OFFSET_RANGE_MINUTES
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -123,6 +124,7 @@ class FillDialogViewModel(
         val bolusStep = activePlugin.activePumpInternal.pumpDescription.bolusStep
 
         val availableInsulins = insulinManager.insulins.map { it.deepClone() }
+        val now = dateUtil.now()
 
         _uiState.update {
             FillDialogUiState(
@@ -130,8 +132,9 @@ class FillDialogViewModel(
                 siteChange = preselect == FillPreselect.SITE_CHANGE,
                 insulinCartridgeChange = preselect == FillPreselect.CARTRIDGE_CHANGE,
                 notes = "",
-                eventTime = dateUtil.now(),
-                eventTimeChanged = false,
+                eventTime = now,
+                eventTimeOriginal = now,
+                timeOffsetMinutes = 0,
                 maxInsulin = maxInsulin,
                 bolusStep = bolusStep,
                 presetButton1 = preferences.get(DoubleKey.ActionsFillButton1),
@@ -233,8 +236,25 @@ class FillDialogViewModel(
         _uiState.update { it.copy(notes = value) }
     }
 
+    /** The -/+ buttons: the time in minutes from when the dialog opened. */
+    fun updateTimeOffset(minutes: Int) {
+        val clamped = minutes.coerceIn(EVENT_TIME_OFFSET_RANGE_MINUTES)
+        _uiState.update {
+            it.copy(
+                timeOffsetMinutes = clamped,
+                eventTime = it.eventTimeOriginal + clamped.toLong() * 60 * 1000
+            )
+        }
+    }
+
+    /** The date and time pickers. The offset follows, so the -/+ buttons go on from the picked time. */
     fun updateEventTime(timeMillis: Long) {
-        _uiState.update { it.copy(eventTime = timeMillis, eventTimeChanged = true) }
+        _uiState.update {
+            it.copy(
+                eventTime = timeMillis,
+                timeOffsetMinutes = ((timeMillis - it.eventTimeOriginal) / (1000 * 60)).toInt()
+            )
+        }
     }
 
     private fun pumpUnitsWarningFor(iCfg: ICfg?): String? {

@@ -26,6 +26,7 @@ private fun PreviewFillDialog(uiState: FillDialogUiState, dateString: String = "
             onInsulinChange = {},
             onInsulinSelect = {},
             onNotesChange = {},
+            onTimeOffsetChange = {},
             onDateClick = {},
             onTimeClick = {},
             onSettingsClick = {},

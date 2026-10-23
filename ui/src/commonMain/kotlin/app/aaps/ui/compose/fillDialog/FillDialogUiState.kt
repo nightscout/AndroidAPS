@@ -17,9 +17,10 @@ data class FillDialogUiState(
     val insulinCartridgeChange: Boolean = false,
     val notes: String = "",
 
-    // Date/Time
+    // Date/Time. The time the dialog opened, and the offset from it in minutes.
     val eventTime: Long = 0L,
-    val eventTimeChanged: Boolean = false,
+    val eventTimeOriginal: Long = 0L,
+    val timeOffsetMinutes: Int = 0,
 
     // Config values (set once on init)
     val maxInsulin: Double = 0.0,
@@ -55,6 +56,9 @@ data class FillDialogUiState(
     val simpleMode: Boolean = true,
     val concentrationEnabled: Boolean = false
 ) {
+
+    val eventTimeChanged: Boolean
+        get() = eventTime != eventTimeOriginal
 
     /** Whether a prime will be delivered */
     val hasPrime: Boolean

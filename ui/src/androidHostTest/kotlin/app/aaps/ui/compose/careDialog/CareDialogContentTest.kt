@@ -95,6 +95,7 @@ class CareDialogContentTest {
                     onBgValueChange = {},
                     onDurationChange = {},
                     onNotesChange = {},
+                    onTimeOffsetChange = {},
                     onNavigateBack = {},
                     onConfirmClick = {},
                     onDateClick = {},
