@@ -198,7 +198,7 @@ class MaintenanceImpl(
         builder.append("Build: " + config.BUILD_VERSION + System.lineSeparator())
         builder.append("Remote: " + config.REMOTE + System.lineSeparator())
         builder.append("Flavor: " + config.FLAVOR + config.BUILD_TYPE + System.lineSeparator())
-        builder.append(rh.gs(CoreUiStrings.nightscout_version_value, nsClient.detectedNsVersion() ?: "UNKNOWN") + System.lineSeparator())
+        builder.append(rh.gs(CoreUiStrings.value_with_unit, rh.gs(CoreUiStrings.configbuilder_nightscoutversion_label), nsClient.detectedNsVersion() ?: "UNKNOWN") + System.lineSeparator())
         if (config.isEngineeringMode()) builder.append(rh.gs(CoreUiStrings.engineering_mode_enabled))
         val body = builder.toString()
         aapsLogger.debug("sending email to $recipient with subject $subject")

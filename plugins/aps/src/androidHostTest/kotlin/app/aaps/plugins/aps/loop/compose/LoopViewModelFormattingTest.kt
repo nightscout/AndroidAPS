@@ -330,7 +330,7 @@ internal class LoopViewModelFormattingTest {
             app.aaps.core.interfaces.R.string.confirmation_line to ("confirmation_line" to "%1\$s: %2\$s"),
             app.aaps.core.interfaces.R.string.format_insulin_units to ("format_insulin_units" to "%1\$.2f U"),
             app.aaps.core.ui.R.string.format_mins to ("format_mins" to "%1\$d min"),
-            app.aaps.core.ui.R.string.format_percent to ("format_percent" to "%1\$d%%"),
+            app.aaps.core.ui.R.string.units_format_percent to ("units_format_percent" to "%1\$d%%"),
             app.aaps.core.ui.R.string.pump_base_basal_rate to ("pump_base_basal_rate" to "%1\$.2f U/h")
         )
 

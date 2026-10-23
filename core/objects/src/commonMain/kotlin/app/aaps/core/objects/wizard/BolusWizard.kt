@@ -390,7 +390,7 @@ class BolusWizard(
                 val carbsText = rh.gs(InterfacesStrings.format_carbs, carbs)
                 val carbsWithTime = when {
                     carbTime > 0 -> rh.gs(InterfacesStrings.carbs_with_time_later, carbsText, rh.gs(InterfacesStrings.mins, carbTime))
-                    carbTime < 0 -> rh.gs(InterfacesStrings.carbs_with_time_earlier, carbsText, rh.gs(InterfacesStrings.mins, carbTime))
+                    carbTime < 0 -> rh.gs(InterfacesStrings.value_with_detail, carbsText, rh.gs(InterfacesStrings.mins, carbTime))
                     else         -> carbsText
                 }
                 line(
@@ -435,8 +435,7 @@ class BolusWizard(
                     val duration = quickWizardEntry.duration()
                     val carbs2 = quickWizardEntry.carbs2()
                     if (carbs2 > 0) {
-                        val ecarbsMessage = rh.gs(InterfacesStrings.quickwizard_ecarbs, rh.gs(InterfacesStrings.format_carbs, carbs2), duration, timeOffset)
-                        line(ConfirmationRole.INFO, rh.gs(InterfacesStrings.confirmation_line, rh.gs(InterfacesStrings.uel_extended_carbs), ecarbsMessage))
+                        line(ConfirmationRole.INFO, rh.gs(InterfacesStrings.wizard_ecarbs, carbs2, duration, timeOffset))
                     }
                 }
             }

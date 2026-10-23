@@ -14,8 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.stats.TIR
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalDecimalFormatter
@@ -64,17 +66,12 @@ fun TirStatsCompose(
     tirStatsData: TirStatsData,
     modifier: Modifier = Modifier
 ) {
-    val profileUtil = LocalProfileUtil.current
     val dateUtil = LocalDateUtil.current
     val decimalFormatter = LocalDecimalFormatter.current
     Column(modifier = modifier) {
         // TIR Section
         Text(
-            text = stringResource(
-                CoreUiStrings.tir_range,
-                profileUtil.stringInCurrentUnitsDetect(tirStatsData.lowTirMgdl),
-                profileUtil.stringInCurrentUnitsDetect(tirStatsData.highTirMgdl)
-            ),
+            text = rangeTitle(CoreUiStrings.tir, tirStatsData.lowTirMgdl, tirStatsData.highTirMgdl),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.SemiBold
         )
@@ -105,11 +102,7 @@ fun TirStatsCompose(
         )
 
         Text(
-            text = stringResource(
-                CoreUiStrings.average_range,
-                profileUtil.stringInCurrentUnitsDetect(tirStatsData.lowTirMgdl),
-                profileUtil.stringInCurrentUnitsDetect(tirStatsData.highTirMgdl)
-            ),
+            text = rangeTitle(CoreUiStrings.average, tirStatsData.lowTirMgdl, tirStatsData.highTirMgdl),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(vertical = 8.dp)
@@ -141,11 +134,7 @@ fun TirStatsCompose(
         )
 
         Text(
-            text = stringResource(
-                CoreUiStrings.average_range,
-                profileUtil.stringInCurrentUnitsDetect(tirStatsData.lowTitMgdl),
-                profileUtil.stringInCurrentUnitsDetect(tirStatsData.highTitMgdl)
-            ),
+            text = rangeTitle(CoreUiStrings.average, tirStatsData.lowTitMgdl, tirStatsData.highTitMgdl),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(vertical = 8.dp)
@@ -267,6 +256,14 @@ fun TirTableDataRow(
             textAlign = TextAlign.Center
         )
     }
+}
+
+/** "Time in Range (3.9 - 10.0)": the label and its BG range, from strings that are already translated. */
+@Composable
+private fun rangeTitle(label: TextRef, lowMgdl: Double, highMgdl: Double): String {
+    val profileUtil = LocalProfileUtil.current
+    val range = stringResource(InterfacesStrings.values_with_dash, profileUtil.stringInCurrentUnitsDetect(lowMgdl), profileUtil.stringInCurrentUnitsDetect(highMgdl))
+    return stringResource(InterfacesStrings.value_with_detail, stringResource(label), range)
 }
 
 /**

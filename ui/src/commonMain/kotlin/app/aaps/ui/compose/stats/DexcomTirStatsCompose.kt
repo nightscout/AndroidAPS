@@ -23,8 +23,10 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDecimalFormatter
@@ -47,15 +49,11 @@ fun DexcomTirStatsCompose(
     val profileUtil = LocalProfileUtil.current
     Column(modifier = modifier) {
         // Header with ranges
-        val zero = profileUtil.fromMgdlToStringInUnits(0.0)
-        val veryLow = profileUtil.stringInCurrentUnitsDetect(dexcomTir.veryLowTirMgdl())
-        val low = profileUtil.stringInCurrentUnitsDetect(dexcomTir.lowTirMgdl())
-        val veryHigh = profileUtil.stringInCurrentUnitsDetect(dexcomTir.veryHighTirMgdl())
         Text(
             text = listOf(
                 stringResource(CoreUiStrings.detailed_14_days),
-                stringResource(CoreUiStrings.day_tir_ranges, zero, veryLow, low, profileUtil.stringInCurrentUnitsDetect(dexcomTir.highTirMgdl()), veryHigh),
-                stringResource(CoreUiStrings.night_tir_ranges, zero, veryLow, low, profileUtil.stringInCurrentUnitsDetect(dexcomTir.highNightTirMgdl()), veryHigh)
+                tirRanges(CoreUiStrings.day_tir, dexcomTir, dexcomTir.highTirMgdl()),
+                tirRanges(CoreUiStrings.night_tir, dexcomTir, dexcomTir.highNightTirMgdl())
             ).joinToString("\n"),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
@@ -100,7 +98,15 @@ fun DexcomTirStatsCompose(
             val hba1cMmol = (((mean + 46.7) / 28.7 - 2.15) * 10.929).roundToInt()
 
             Text(
-                text = stringResource(CoreUiStrings.hba1c_value, decimalFormatter.to1Decimal(hba1cPercent), hba1cMmol),
+                text = stringResource(
+                    CoreUiStrings.value_with_unit,
+                    stringResource(CoreUiStrings.hba1c),
+                    stringResource(
+                        InterfacesStrings.value_with_detail,
+                        stringResource(CoreUiStrings.units_format_percent_value, decimalFormatter.to1Decimal(hba1cPercent)),
+                        stringResource(CoreUiStrings.value_with_unit, hba1cMmol.toString(), "mmol/mol")
+                    )
+                ),
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -278,6 +284,21 @@ private fun DexcomTirTableDataRow(
             textAlign = TextAlign.Center
         )
     }
+}
+
+/** "Day TIR (0 - 3.1 - 3.9 - 10.0 - 13.9 - ∞)": the label and the limits of the five ranges. */
+@Composable
+private fun tirRanges(label: TextRef, dexcomTir: DexcomTIR, highMgdl: Double): String {
+    val profileUtil = LocalProfileUtil.current
+    val limits = listOf(
+        profileUtil.fromMgdlToStringInUnits(0.0),
+        profileUtil.stringInCurrentUnitsDetect(dexcomTir.veryLowTirMgdl()),
+        profileUtil.stringInCurrentUnitsDetect(dexcomTir.lowTirMgdl()),
+        profileUtil.stringInCurrentUnitsDetect(highMgdl),
+        profileUtil.stringInCurrentUnitsDetect(dexcomTir.veryHighTirMgdl()),
+        "∞"
+    ).reduce { joined, limit -> stringResource(InterfacesStrings.values_with_dash, joined, limit) }
+    return stringResource(InterfacesStrings.value_with_detail, stringResource(label), limits)
 }
 
 /**

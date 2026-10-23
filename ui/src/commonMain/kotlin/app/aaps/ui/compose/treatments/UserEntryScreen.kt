@@ -41,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.UE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.navigation.ElementType
@@ -116,7 +117,7 @@ fun UserEntryScreen(
     if (showExportDialog) {
         OkCancelDialog(
             title = stringResource(CoreUiStrings.confirm),
-            message = stringResource(UiStrings.ue_export_to_csv_question),
+            message = stringResource(CoreUiStrings.value_question, stringResource(CoreUiStrings.ue_export_to_csv)),
             onConfirm = {
                 uel.log(Action.EXPORT_CSV, Sources.Treatments)
                 importExportPrefs.exportUserEntriesCsv()
@@ -239,7 +240,7 @@ private fun UserEntryItem(
                 // Source Icon
                 Image(
                     painter = rememberVectorPainter(userEntryPresentationHelper.icon(userEntry.source)),
-                    contentDescription = stringResource(UiStrings.ue_source_value, translator.translate(userEntry.source)),
+                    contentDescription = stringResource(InterfacesStrings.confirmation_line, stringResource(CoreUiStrings.ue_source), translator.translate(userEntry.source)),
                     modifier = Modifier
                         .size(20.dp)
                         .padding(end = 4.dp),
@@ -299,7 +300,7 @@ private fun actionToAnnotatedString(
     translator: Translator
 ): AnnotatedString = when (action) {
     Action.TREATMENT -> styledStringResource(
-        UiStrings.ue_bolus_and_carbs,
+        UiStrings.values_with_plus,
         StyledArg(translator.translate(Action.BOLUS), SpanStyle(color = Action.BOLUS.colorGroup.toElementColor())),
         StyledArg(translator.translate(Action.CARBS), SpanStyle(color = Action.CARBS.colorGroup.toElementColor()))
     )

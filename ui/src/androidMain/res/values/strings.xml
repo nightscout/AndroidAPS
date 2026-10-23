@@ -6,47 +6,8 @@
     <string name="start_eating_soon_tt">Start Eating soon TT</string>
     <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="time_offset">Time offset</string>
-    <string name="bolus_amount_with_iob" comment="%1$s=bolus amount with unit, %2$s=the part of it that is still active (IOB), with unit. Example: 2.00 U (1.20 U)">%1$s (%2$s)</string>
-    <string name="carbs_amount_line" comment="%1$s=carbs amount with unit, shown in bold. Example: Carbs: 20 g">Carbs: %1$s</string>
-    <string name="send_logs_question">Send logs?</string>
-    <string name="ue_export_to_csv_question">Export User Entries to Excel (csv)?</string>
-    <string name="ue_source_value" comment="Read aloud for the source icon of a user entry. %1$s=where the entry came from. Example: Source: Wizard">Source: %1$s</string>
-    <string name="ue_bolus_and_carbs" comment="A user entry that has both. %1$s=the word Bolus, %2$s=the word Carbs. Example: Bolus + Carbs">%1$s + %2$s</string>
-    <string name="quickwizard_carbs_and_insulin" comment="The amounts of a quick wizard button. %1$s=carbs with unit, %2$s=insulin with unit. Example: 20 g 2.00 U">%1$s %2$s</string>
-    <string name="delete_item_question" comment="%1$s=name of the item that will be deleted. Example: Delete Activity?">Delete %1$s?</string>
-    <string name="eps_graph_timeshift" comment="Time shift of a profile switch, shown on the graph. %1$d=hours. Example: 2h">%1$dh</string>
-    <string name="eps_graph_percentage_timeshift" comment="Percentage and time shift of a profile switch, shown on the graph. %1$d=percentage, %2$d=hours. Example: 110%,2h">%1$d%%,%2$dh</string>
-    <string name="nsclient_battery_and_age" comment="Battery of the pump on the master phone, and when it was read. %1$s=battery level, %2$s=how long ago. Example: 75% 3 min ago">%1$s %2$s</string>
-    <string name="nsclient_enacted_ago" comment="%1$s=how long ago the loop did this, %2$s=the reason from the loop, in English. Example: Enacted: 3 min ago COB: 0, Dev: 5">Enacted: %1$s %2$s</string>
-    <string name="nsclient_suggested_ago" comment="%1$s=how long ago the loop suggested this, %2$s=the reason from the loop, in English. Example: Suggested: 3 min ago COB: 0, Dev: 5">Suggested: %1$s %2$s</string>
-    <string name="battery_charging" comment="Battery level while the phone is charging. The symbol means charging. %1$s=battery level. Example: ⚡93%">⚡%1$s</string>
-    <string name="device_battery_charging" comment="%1$s=name of the phone, %2$s=battery level. The symbol means charging. Example: Pixel 9a: 93% ⚡">%1$s: %2$s ⚡</string>
-    <string name="graph_name_iob_basal" comment="Name of the graph that shows two things. %1$s=IOB, %2$s=short word for basal. Example: IOB / BAS">%1$s / %2$s</string>
-    <string name="profile_units_value" comment="%1$s=BG unit of the profile. Example: Units: mmol/L">Units: %1$s</string>
-    <string name="isf_unit_label" comment="Unit of the insulin sensitivity factor. %1$s=BG unit, %2$s=short word for insulin unit. Example: mmol/L/U">%1$s/%2$s</string>
-    <string name="basal_header_with_unit" comment="Title of the basal rates. %1$s=Basal, %2$s=unit. Example: Basal [U/h]">%1$s [%2$s]</string>
-    <string name="basal_daily_sum" comment="Sum of the basal rates of the whole day. %1$s=insulin with unit. Example: ∑ 20.50 U">∑ %1$s</string>
-    <string name="active_profile_then_next" comment="%1$s=the word ACTIVE, %2$s=name of the profile that comes after this one. Example: ACTIVE → Weekend">%1$s → %2$s</string>
-    <string name="profile_timeshift_signed" comment="Time shift of a profile in hours, with its sign. %1$s=hours. Example: +2h">%1$sh</string>
-    <string name="profile_percentage_timeshift_signed" comment="Percentage and time shift of a profile. %1$d=percentage, %2$s=hours with sign. Example: 110% +2h">%1$d%% %2$sh</string>
-    <string name="cob_with_carbs_req" comment="%1$s=carbs on board, %2$d=carbs the loop asks for, in grams. req is short for required. Example: 20 g 15 req">%1$s %2$d req</string>
-    <string name="carbs_req_value" comment="Carbs the loop asks for, in grams. req is short for required. %1$d=grams. Example: 15 req">%1$d req</string>
-    <string name="status_insulin_level" comment="Insulin amount in the short status lights. %1$s=amount. Example: 120U">%1$sU</string>
-    <string name="status_insulin_level_at_least" comment="Insulin in a patch pump when it is more than the patch can report. %1$s=highest amount it can report. Example: 50+ U">%1$s+ U</string>
+    <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
     <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dd%2$dh</string>
-    <string name="status_age_long" comment="Age of a sensor, cannula or battery. %1$d=days, %2$d=hours. Example: 2 days 5 hours">%1$d days %2$d hours</string>
-    <string name="food_fat_short" comment="Fat of a food, short. F=fat, g=grams. %1$d=grams. Example: F:12g">F:%1$dg</string>
-    <string name="food_protein_short" comment="Protein of a food, short. P=protein, g=grams. %1$d=grams. Example: P:5g">P:%1$dg</string>
-    <string name="food_energy_short" comment="Energy of a food in kilojoules. %1$d=kJ. Example: 450kJ">%1$dkJ</string>
-    <string name="date_and_time" comment="%1$s=date, %2$s=time. Example: 10/23/2026 9:15 PM">%1$s %2$s</string>
-    <string name="quicklaunch_profile_with_details" comment="A profile switch button. %1$s=profile name, %2$s=percentage, duration or both. Example: Weekend 120% 1 h 30 min">%1$s %2$s</string>
-    <string name="quicklaunch_percentage_and_duration" comment="%1$s=percentage, %2$s=duration. Example: 120% 1 h 30 min">%1$s %2$s</string>
-    <string name="quickwizard_card_ecarbs" comment="Carbs of a quick wizard button with extended carbs. %1$s=carbs now, %2$s=extended carbs, %3$d=hours they are spread over, %4$d=minutes until they start. Example: 20 g + 10 g / 3h → 60min">%1$s + %2$s / %3$dh → %4$dmin</string>
-    <string name="time_from_to" comment="%1$s=start time, %2$s=end time. Example: 6:00 AM - 10:00 AM">%1$s - %2$s</string>
-    <string name="profile_label_percentage" comment="%1$s=profile name, %2$d=percentage. Example: Weekend (110%)">%1$s (%2$d%%)</string>
-    <string name="profile_label_percentage_timeshift" comment="%1$s=profile name, %2$d=percentage, %3$s=time shift in hours with its sign. Example: Weekend (110%, +2h)">%1$s (%2$d%%, %3$sh)</string>
-    <string name="export_file_question" comment="Asks if the settings should be exported to this file. %1$s=file name. Example: 2026-10-23_210000_AAPS.json?">%1$s?</string>
-    <string name="search_wiki_running" comment="Shown while the search in the documentation is still running">Documentation…</string>
 
 
     <!--    Widget-->
@@ -91,7 +52,7 @@
     <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Mean</string>
     <string name="cgp_reference">Healthy person</string>
     <string name="cgp_patient">Patient</string>
-    <string name="cgp_pgr_value" comment="PGR = Prognostic Glycemic Risk score. %1$s=score. Example: PGR: 2.4">PGR: %1$s</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
     <string name="cgp_pgr_very_low">Very low risk</string>
     <string name="cgp_pgr_low">Low risk</string>
     <string name="cgp_pgr_moderate">Moderate risk</string>
@@ -244,9 +205,6 @@
     <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
     <string name="wizard_calc_with_isf" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin sensitivity factor used. Example: BG (ISF: 3.0)">%1$s (ISF: %2$s)</string>
     <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
-    <string name="wizard_calc_value_with_isf" comment="Line of a saved bolus wizard calculation. %1$s=BG, %2$s=BG value, %3$s=insulin sensitivity factor used. Example: BG 7.5 (ISF: 2.0)">%1$s %2$s (ISF: %3$s)</string>
-    <string name="wizard_calc_trend" comment="Line of a saved bolus wizard calculation. %1$s=BG, %2$s=change of BG in 15 minutes. Example: BG Δ15m: +0.5">%1$s Δ15m: %2$s</string>
-    <string name="wizard_calc_cob_with_ic" comment="Line of a saved bolus wizard calculation. %1$s=COB, %2$s=carbs on board in grams, can have one decimal, %3$s=insulin to carb ratio used. Example: COB 20.5 g (IC: 8.4)">%1$s %2$s g (IC: %3$s)</string>
     <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
     <string name="wizard_carbs_type_bread_desc">100% immediate carbs, no extended carbs</string>
     <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Carbs reduced by %1$d%%, added eCarbs %2$d%% delayed %3$d min for %4$d h</string>

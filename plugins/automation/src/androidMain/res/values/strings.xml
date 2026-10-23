@@ -148,13 +148,8 @@
     <!--    Steps count-->
     <string name="triggerStepsCountLabel">Steps Count</string>
     <string name="triggerStepsCountDesc">Steps count per %1$s minutes %2$s %3$.0f</string>
-    <string name="triggerStepsCountDurationLabel" comment="Label before a list of minutes">Measurement Duration:</string>
+    <string name="triggerStepsCountDropdownLabel">Measurement Duration</string>
     <string name="automation_log_entry" comment="One line of the automation run log. %1$s=time, %2$s=a symbol for success or failure, %3$s=rule name (bold), %4$s=what the action did, %5$s=its result. Example: 21:15 ☺ Night low: Start temp target: 8.0mmol/L@60 min(Automation): OK">%1$s %2$s %3$s: %4$s: %5$s</string>
-    <string name="automation_invalid_action" comment="Line of the automation run log. The rule is switched off because this action cannot run. %1$s=the action. Example: Invalid action: Start temp target: 8.0mmol/L@60 min(Automation)">Invalid action: %1$s</string>
-    <string name="export_alert_message" comment="Announcement after a settings export by an automation rule. %1$s=name of the export, %2$s=the result. Example: ALERT(Weekly backup): Export failed">ALERT(%1$s): %2$s</string>
-    <string name="remove_record_named" comment="%1$s=name of the automation rule that will be removed. Example: Remove record Night low">Remove record %1$s</string>
-    <string name="comparator_with_symbol" comment="An item in the list of comparisons. %1$s=the math symbol, %2$s=its name. Example: ≥   is greater or equal">"%1$s   %2$s"</string>
-
     <!--    SMB mode-->
     <string name="changeSmbState">Enable/disable SMB</string>
     <string name="changeSmbTo">Change SMB to %1$s</string>

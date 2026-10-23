@@ -56,7 +56,6 @@ import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.styledStringResource
-import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.treatments.viewmodels.BolusCarbsViewModel
 
@@ -258,10 +257,10 @@ private fun MealLinkItem(
                             val iob = bolus.iobCalc(dateUtil.now())
                             val bolusText = if (iob.iobContrib > 0.01) {
                                 styledStringResource(
-                                    UiStrings.bolus_amount_with_iob,
+                                    CoreUiStrings.value_with_unit,
                                     StyledArg(stringResource(InterfacesStrings.format_insulin_units, bolus.amount)),
                                     StyledArg(
-                                        stringResource(InterfacesStrings.format_insulin_units, iob.iobContrib),
+                                        stringResource(CoreUiStrings.value_in_parentheses, stringResource(InterfacesStrings.format_insulin_units, iob.iobContrib)),
                                         SpanStyle(color = Color(AapsTheme.generalColors.activeInsulinText.value))
                                     )
                                 )
@@ -369,7 +368,8 @@ private fun MealLinkItem(
 
                         Text(
                             text = styledStringResource(
-                                UiStrings.carbs_amount_line,
+                                InterfacesStrings.confirmation_line,
+                                StyledArg(stringResource(InterfacesStrings.carbs)),
                                 StyledArg(stringResource(InterfacesStrings.format_carbs, carbs.amount.toInt()), SpanStyle(fontWeight = FontWeight.Bold))
                             ),
                             modifier = Modifier.padding(start = 8.dp),

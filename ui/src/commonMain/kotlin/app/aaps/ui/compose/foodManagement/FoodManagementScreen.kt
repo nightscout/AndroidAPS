@@ -62,7 +62,6 @@ import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcCalculator
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -270,9 +269,11 @@ private fun FoodItem(
                     color = MaterialTheme.colorScheme.primary
                 )
                 val extras = buildList {
-                    food.fat?.let { if (it > 0) add(stringResource(UiStrings.food_fat_short, it)) }
-                    food.protein?.let { if (it > 0) add(stringResource(UiStrings.food_protein_short, it)) }
-                    food.energy?.let { if (it > 0) add(stringResource(UiStrings.food_energy_short, it)) }
+                    // F and P were never translated; only the separator and the unit are.
+                    val grams = stringResource(CoreUiStrings.units_grams)
+                    food.fat?.let { if (it > 0) add(stringResource(InterfacesStrings.confirmation_line, "F", stringResource(CoreUiStrings.value_with_unit, it.toString(), grams))) }
+                    food.protein?.let { if (it > 0) add(stringResource(InterfacesStrings.confirmation_line, "P", stringResource(CoreUiStrings.value_with_unit, it.toString(), grams))) }
+                    food.energy?.let { if (it > 0) add(stringResource(CoreUiStrings.value_with_unit, it.toString(), "kJ")) }
                 }
                 if (extras.isNotEmpty()) {
                     Text(

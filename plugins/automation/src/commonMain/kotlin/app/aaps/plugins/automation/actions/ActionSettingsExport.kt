@@ -129,7 +129,7 @@ class ActionSettingsExport(
 
         if (announceAlert && preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS) {
             // Do additional event type announcement for aapsClient alerting
-            val alert = rh.gs(AutomationStrings.export_alert_message, text.value, exportResultMessage)
+            val alert = rh.gs(InterfacesStrings.confirmation_line, rh.gs(InterfacesStrings.value_with_detail, rh.gs(CoreUiStrings.export_alert), text.value), exportResultMessage)
             aapsLogger.debug(LTag.AUTOMATION, "Insert therapy ALERT/ANNOUNCEMENT event, error=:${alert}")
             persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                 therapyEvent = TE.asAnnouncement(error = alert),

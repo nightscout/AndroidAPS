@@ -84,7 +84,7 @@ fun WidgetConfigureScreen(
                         modifier = Modifier.weight(1f)
                     )
                     Text(
-                        text = stringResource(CoreUiStrings.format_percent, opacity * 100 / 255),
+                        text = stringResource(CoreUiStrings.units_format_percent, opacity * 100 / 255),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary
                     )

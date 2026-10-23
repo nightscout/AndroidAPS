@@ -617,7 +617,7 @@ class AutomationRuntime(
         if (!event.areActionsValid()) {
             event.isEnabled = false
             for (action in event.actions.filterNot { it.isValid() }) {
-                executionLog.add(AnnotatedString(rh.gs(AutomationStrings.automation_invalid_action, action.shortDescription())))
+                executionLog.add(AnnotatedString(rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.invalid), action.shortDescription())))
                 aapsLogger.debug(LTag.AUTOMATION, "Invalid action: ${action.shortDescription()}")
             }
             markEdited() // the rule is now disabled - store that and refresh the list

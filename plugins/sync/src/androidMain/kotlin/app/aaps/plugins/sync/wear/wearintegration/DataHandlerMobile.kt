@@ -598,7 +598,7 @@ class DataHandlerMobile(
         if (isOldData(historyList)) {
             val busy = activePump.isBusy()
             val message = rh.gs(
-                SyncStrings.tdd_old_data_with_state,
+                InterfacesStrings.values_with_comma,
                 rh.gs(CoreUiStrings.tdd_old_data),
                 if (busy) rh.gs(CoreUiStrings.pump_busy) else rh.gs(SyncStrings.pump_fetching_data)
             )
@@ -1811,7 +1811,7 @@ class DataHandlerMobile(
                 weighted03 = weighted03 * 0.7 + tdd * 0.3
             }
         }
-        message += rh.gs(SyncStrings.weighted_title) + "\n"
+        message += rh.gs(CoreUiStrings.label_with_colon, rh.gs(SyncStrings.weighted)) + "\n"
         for ((weight, value) in listOf("0.3" to weighted03, "0.5" to weighted05, "0.7" to weighted07))
             message += rh.gs(InterfacesStrings.confirmation_line, weight, rh.gs(SyncStrings.tdd_line, value, 100 * value / refTDD)) + "\n"
         message += "\n"
@@ -1819,8 +1819,9 @@ class DataHandlerMobile(
         // add TDDs:
         for (record in historyList) {
             val tdd = record.total
-            val dayLine = if (dummies.contains(record)) SyncStrings.tdd_day_line_estimated else SyncStrings.tdd_day_line
-            message += rh.gs(dayLine, df.format(Date(record.timestamp)), rh.gs(SyncStrings.tdd_line, tdd, 100 * tdd / refTDD)) + "\n"
+            val dayLine = rh.gs(CoreUiStrings.value_with_unit, df.format(Date(record.timestamp)), rh.gs(SyncStrings.tdd_line, tdd, 100 * tdd / refTDD))
+            // x marks a day that is estimated, not read from the pump
+            message += (if (dummies.contains(record)) rh.gs(CoreUiStrings.value_with_unit, dayLine, "x") else dayLine) + "\n"
         }
         return message
     }

@@ -546,11 +546,16 @@ class ProfileManagementViewModel(
         )
     }
 
-    /** "Weekend (110%)", or "Weekend (110%, +2h)" when the profile is also shifted in time. */
-    private fun labelWithModifications(name: String, percentage: Int, timeshiftHours: Int): String =
-        if (timeshiftHours != 0)
-            rh.gs(UiStrings.profile_label_percentage_timeshift, name, percentage, if (timeshiftHours > 0) "+$timeshiftHours" else "$timeshiftHours")
-        else rh.gs(UiStrings.profile_label_percentage, name, percentage)
+    /** "Weekend (110%)", or "Weekend (110%, +2 h)" when the profile is also shifted in time. */
+    private fun labelWithModifications(name: String, percentage: Int, timeshiftHours: Int): String {
+        val percentageText = rh.gs(CoreUiStrings.units_format_percent, percentage)
+        val details =
+            if (timeshiftHours != 0) {
+                val timeshift = rh.gs(CoreUiStrings.value_with_unit, if (timeshiftHours > 0) "+$timeshiftHours" else "$timeshiftHours", rh.gs(InterfacesStrings.shorthour))
+                rh.gs(InterfacesStrings.values_with_comma, percentageText, timeshift)
+            } else percentageText
+        return rh.gs(InterfacesStrings.value_with_detail, name, details)
+    }
 
     private fun failReorder(): Int? {
         _snackbarEvent.tryEmit(rh.gs(UiStrings.profile_no_longer_exists))

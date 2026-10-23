@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
 import app.aaps.core.ui.extensions.displayText
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -83,7 +82,7 @@ class ChipsViewModel(
             if (constraintsProcessed.carbsReq > 0) {
                 val lastCarbsTime = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
                 if (lastCarbsTime < lastRun.lastAPSRun) {
-                    cobText = rh.gs(UiStrings.cob_with_carbs_req, cobText, constraintsProcessed.carbsReq)
+                    cobText = rh.gs(CoreUiStrings.value_with_unit, cobText, rh.gs(CoreUiStrings.value_with_unit, constraintsProcessed.carbsReq.toString(), rh.gs(CoreUiStrings.required)))
                 }
                 carbsReq = constraintsProcessed.carbsReq
             }

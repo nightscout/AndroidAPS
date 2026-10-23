@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TimeDiff
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.ui.UiStrings
+import app.aaps.core.ui.CoreUiStrings
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -252,7 +252,7 @@ internal class StatusViewModelTest {
             finished.incrementAndGet()
             "12"
         }
-        whenever(rh.gs(eq(UiStrings.status_insulin_level), any())).thenReturn(USAGE_TEXT)
+        whenever(rh.gs(eq(CoreUiStrings.value_with_unit), any(), any())).thenReturn(USAGE_TEXT)
     }
 
     private companion object {

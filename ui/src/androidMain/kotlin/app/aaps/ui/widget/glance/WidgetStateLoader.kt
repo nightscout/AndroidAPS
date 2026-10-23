@@ -97,7 +97,7 @@ class WidgetStateLoader(
             if (constraintsProcessed.carbsReq > 0) {
                 val lastCarbsTime = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
                 if (lastCarbsTime < lastRun.lastAPSRun) {
-                    cobText += "\n" + rh.gs(UiStrings.carbs_req_value, constraintsProcessed.carbsReq)
+                    cobText += "\n" + rh.gs(CoreUiStrings.value_with_unit, constraintsProcessed.carbsReq.toString(), rh.gs(CoreUiStrings.required))
                     cobActive = true
                 }
             }
@@ -218,7 +218,7 @@ class WidgetStateLoader(
             tbrDescription = tbrDescription,
             iobLabel = rh.gs(CoreUiStrings.iob),
             cobLabel = rh.gs(CoreUiStrings.cob),
-            bgSpoken = if (strikeThrough) listOf(bgText, rh.gs(UiStrings.a11y_bg_old_reading)).joinToString(", ") else bgText,
+            bgSpoken = if (strikeThrough) rh.gs(InterfacesStrings.values_with_comma, bgText, rh.gs(UiStrings.a11y_bg_old_reading)) else bgText,
             deltaText = deltaText,
             timeAgoText = timeAgoText,
             iobText = iobText,

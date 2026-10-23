@@ -28,6 +28,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
@@ -215,7 +216,7 @@ internal fun GlucosePentagonCard(
             else               -> MaterialTheme.colorScheme.error
         }
         Text(
-            text = stringResource(UiStrings.cgp_pgr_value, LocalDecimalFormatter.current.to1Decimal(cgpData.pgr)),
+            text = stringResource(InterfacesStrings.confirmation_line, stringResource(UiStrings.cgp_pgr), LocalDecimalFormatter.current.to1Decimal(cgpData.pgr)),
             style = MaterialTheme.typography.titleMedium,
             color = pgrColor,
             textAlign = TextAlign.Center,

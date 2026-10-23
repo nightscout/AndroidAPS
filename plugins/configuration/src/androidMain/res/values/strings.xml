@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="units">Units</string>
-    <string name="setupwizard_label_with_status" comment="A line in the setup wizard. %1$s=what is checked, %2$s=its status. Example: Bluetooth: Connected">%1$s %2$s</string>
     <string name="setupwizard_units_prompt">Select units you want to display values in</string>
     <string name="next_button">Next</string>
     <string name="previous_button">Prev</string>

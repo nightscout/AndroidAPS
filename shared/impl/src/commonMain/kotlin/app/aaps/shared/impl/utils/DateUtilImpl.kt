@@ -120,9 +120,9 @@ class DateUtilImpl(
         val startOfTodayMillis = beginOfDay(nowMillis)
         return if (mills < nowMillis) { // Past
             when {
-                mills > startOfTodayMillis                             -> rh.gs(InterfacesStrings.relative_day_with_date, rh.gs(InterfacesStrings.today), dateString(mills))
-                mills > startOfTodayMillis - 1.days.inWholeMilliseconds -> rh.gs(InterfacesStrings.relative_day_with_date, rh.gs(InterfacesStrings.yesterday), dateString(mills))
-                mills > startOfTodayMillis - 7.days.inWholeMilliseconds -> rh.gs(InterfacesStrings.relative_day_with_date, dayAgo(mills, rh, true), dateString(mills))
+                mills > startOfTodayMillis                             -> rh.gs(InterfacesStrings.values_with_dash, rh.gs(InterfacesStrings.today), dateString(mills))
+                mills > startOfTodayMillis - 1.days.inWholeMilliseconds -> rh.gs(InterfacesStrings.values_with_dash, rh.gs(InterfacesStrings.yesterday), dateString(mills))
+                mills > startOfTodayMillis - 7.days.inWholeMilliseconds -> rh.gs(InterfacesStrings.values_with_dash, dayAgo(mills, rh, true), dateString(mills))
                 else                                                   -> dateString(mills)
             }
         } else { // Future

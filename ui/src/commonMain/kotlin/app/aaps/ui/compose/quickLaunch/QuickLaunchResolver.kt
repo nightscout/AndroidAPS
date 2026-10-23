@@ -28,7 +28,6 @@ import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.core.ui.compose.navigation.description
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.label
-import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.navigation.ElementAvailability
 import app.aaps.ui.compose.scenes.SceneIcons
 import app.aaps.ui.compose.scenes.sceneSummaryWithChain
@@ -228,11 +227,11 @@ class QuickLaunchResolver(
         activePlugin.getPluginsList().find { it::class.simpleName.orEmpty() == className }
 
     private fun buildProfileLabel(action: QuickLaunchAction.ProfileAction): String {
-        val percentage = if (action.percentage != 100) rh.gs(CoreUiStrings.format_percent, action.percentage) else null
+        val percentage = if (action.percentage != 100) rh.gs(CoreUiStrings.units_format_percent, action.percentage) else null
         val duration = if (action.durationMinutes > 0) formatMinutesAsDuration(action.durationMinutes, rh) else null
         val details =
-            if (percentage != null && duration != null) rh.gs(UiStrings.quicklaunch_percentage_and_duration, percentage, duration)
+            if (percentage != null && duration != null) rh.gs(CoreUiStrings.value_with_unit, percentage, duration)
             else percentage ?: duration
-        return details?.let { rh.gs(UiStrings.quicklaunch_profile_with_details, action.profileName, it) } ?: action.profileName
+        return details?.let { rh.gs(CoreUiStrings.value_with_unit, action.profileName, it) } ?: action.profileName
     }
 }

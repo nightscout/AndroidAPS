@@ -216,7 +216,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         sms = Sms("1234", "BG")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BG")
-        assertThat(smsCommunicatorPlugin.messages[1].text).contains("IOB: 0.00U")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("IOB: 0.00 U")
         assertThat(smsCommunicatorPlugin.messages[1].text).contains("Last BG: 100")
         assertThat(smsCommunicatorPlugin.messages[1].text).contains("COB: 10(2)g")
         assertThat(smsCommunicatorPlugin.messages[1].text).doesNotContain("Bolus:")

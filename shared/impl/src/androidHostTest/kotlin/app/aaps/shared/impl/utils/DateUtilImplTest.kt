@@ -1433,7 +1433,7 @@ class DateUtilImplTest {
                 app.aaps.core.interfaces.R.string.hoursago       -> String.format(Locale.US, "%1$.1fh ago", *args)
                 app.aaps.core.interfaces.R.string.days_ago       -> String.format(Locale.US, "%1$.1f days ago", *args)
                 app.aaps.core.interfaces.R.string.days_ago_round -> String.format(Locale.US, "%1$.0f days ago", *args)
-                app.aaps.core.interfaces.R.string.relative_day_with_date    -> String.format(Locale.US, "%1\$s - %2\$s", *args)
+                app.aaps.core.interfaces.R.string.values_with_dash    -> String.format(Locale.US, "%1\$s - %2\$s", *args)
                 app.aaps.core.interfaces.R.string.time_frame_hours_minutes  -> String.format(Locale.US, "%1\$dh %2\$d'", *args)
                 app.aaps.core.interfaces.R.string.time_frame_minutes        -> String.format(Locale.US, "%1\$d'", *args)
                 app.aaps.core.interfaces.R.string.time_frame_in_parentheses -> String.format(Locale.US, "(%1\$s)", *args)
@@ -1452,7 +1452,6 @@ class DateUtilImplTest {
                 app.aaps.core.interfaces.R.string.unit_hours   -> "hours"
                 app.aaps.core.interfaces.R.string.unit_days    -> "days"
                 app.aaps.core.interfaces.R.string.unit_weeks   -> "weeks"
-                app.aaps.core.interfaces.R.string.hours        -> "hours"
                 app.aaps.core.interfaces.R.string.today        -> "Today"
                 app.aaps.core.interfaces.R.string.yesterday    -> "Yesterday"
                 app.aaps.core.interfaces.R.string.tomorrow     -> "Tomorrow"

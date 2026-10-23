@@ -80,7 +80,11 @@ internal fun WizardInfoDialogContent(
         // BG with ISF
         if (bcr.wasGlucoseUsed) {
             CalcRow(
-                label = stringResource(UiStrings.wizard_calc_value_with_isf, stringResource(CoreUiStrings.wizard_bg_label), bgString, decimalFormatter.to1Decimal(isfInUnits)),
+                label = stringResource(
+                    UiStrings.wizard_calc_with_isf,
+                    stringResource(CoreUiStrings.value_with_unit, stringResource(CoreUiStrings.wizard_bg_label), bgString),
+                    decimalFormatter.to1Decimal(isfInUnits)
+                ),
                 value = stringResource(InterfacesStrings.format_insulin_units, bcr.glucoseInsulin)
             )
             if (bcr.wasTempTargetUsed) {
@@ -94,7 +98,11 @@ internal fun WizardInfoDialogContent(
         // Trend
         if (bcr.wasTrendUsed) {
             CalcRow(
-                label = stringResource(UiStrings.wizard_calc_trend, stringResource(CoreUiStrings.wizard_bg_label), trendString),
+                label = stringResource(
+                    InterfacesStrings.confirmation_line,
+                    stringResource(CoreUiStrings.value_with_unit, stringResource(CoreUiStrings.wizard_bg_label), "Δ15m"),
+                    trendString
+                ),
                 value = stringResource(InterfacesStrings.format_insulin_units, bcr.trendInsulin)
             )
         }
@@ -102,7 +110,12 @@ internal fun WizardInfoDialogContent(
         // COB with IC
         if (bcr.wasCOBUsed) {
             CalcRow(
-                label = stringResource(UiStrings.wizard_calc_cob_with_ic, stringResource(CoreUiStrings.cob), decimalFormatter.to1Decimal(bcr.cob), decimalFormatter.to1Decimal(bcr.ic)),
+                label = stringResource(
+                    UiStrings.wizard_calc_carbs_with_ic,
+                    stringResource(CoreUiStrings.cob),
+                    stringResource(CoreUiStrings.value_with_unit, decimalFormatter.to1Decimal(bcr.cob), stringResource(CoreUiStrings.units_grams)),
+                    decimalFormatter.to1Decimal(bcr.ic)
+                ),
                 value = stringResource(InterfacesStrings.format_insulin_units, bcr.cobInsulin)
             )
         }
@@ -130,7 +143,7 @@ internal fun WizardInfoDialogContent(
             )
             val afterPercentage = scaledSubtotal * bcr.percentageCorrection / 100.0
             CalcRow(
-                label = stringResource(CoreUiStrings.format_percent, bcr.percentageCorrection),
+                label = stringResource(CoreUiStrings.units_format_percent, bcr.percentageCorrection),
                 value = stringResource(InterfacesStrings.format_insulin_units, afterPercentage)
             )
         }

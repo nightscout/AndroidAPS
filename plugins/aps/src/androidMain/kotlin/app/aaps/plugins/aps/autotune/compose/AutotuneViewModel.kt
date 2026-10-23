@@ -247,7 +247,7 @@ class AutotuneViewModel(
     // --- Dialog actions ---
 
     fun onCopyLocalClick() {
-        val localName = rh.gs(R.string.autotune_tuned_profile_name_with_date, dateUtil.dateAndTimeString(autotunePlugin.lastRun))
+        val localName = rh.gs(CoreUiStrings.value_with_unit, rh.gs(R.string.autotune_tunedprofile_name), dateUtil.dateAndTimeString(autotunePlugin.lastRun))
         _uiState.value = _uiState.value.copy(dialogState = DialogState.CopyLocal(localName))
     }
 
@@ -486,7 +486,7 @@ class AutotuneViewModel(
     }
 
     private fun formatRow(label: String, input: Double, tuned: Double, format: String, missing: String = ""): ResultRow {
-        val percent = if (input != 0.0) rh.gs(CoreUiStrings.format_percent, Round.roundTo(tuned / input * 100 - 100, 1.0).toInt()) else ""
+        val percent = if (input != 0.0) rh.gs(CoreUiStrings.units_format_percent, Round.roundTo(tuned / input * 100 - 100, 1.0).toInt()) else ""
         return ResultRow(
             label = label,
             profileValue = String.format(Locale.getDefault(), format, input),

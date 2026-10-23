@@ -209,8 +209,8 @@ class NSClientV3Plugin(
             when {
                 preferences.get(NsclientBooleanKey.NsPaused)                                          -> rh.gs(CoreUiStrings.paused)
                 isAllowed.not()                                                                       -> blockingReason
-                preferences.get(BooleanKey.NsClient3UseWs) && nsConnection.socketConnected == true  -> rh.gs(SyncStrings.ws_status, rh.gs(InterfacesStrings.connected))
-                preferences.get(BooleanKey.NsClient3UseWs) && nsConnection.socketConnected == false -> rh.gs(SyncStrings.ws_status, rh.gs(SyncStrings.not_connected))
+                preferences.get(BooleanKey.NsClient3UseWs) && nsConnection.socketConnected == true  -> rh.gs(InterfacesStrings.confirmation_line, "WS", rh.gs(InterfacesStrings.connected))
+                preferences.get(BooleanKey.NsClient3UseWs) && nsConnection.socketConnected == false -> rh.gs(InterfacesStrings.confirmation_line, "WS", rh.gs(SyncStrings.not_connected))
                 lastOperationError != null                                                            -> rh.gs(CoreUiStrings.error)
                 nsAndroidClient?.lastStatus == null                                                   -> rh.gs(SyncStrings.not_connected)
                 nsLoadExecutor.isRunning                                                                       -> rh.gs(SyncStrings.working)

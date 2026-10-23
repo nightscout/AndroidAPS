@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.ui.UiStrings
 import app.aaps.core.ui.compose.StatusLevel
@@ -180,7 +181,7 @@ class StatusViewModel(
         val bgSource = activePlugin.activeBgSource
         // Sensor battery: not shown in Overview (compact), shown in Actions (expanded) unless AAPSCLIENT
         val hasBattery = !config.AAPSCLIENT && bgSource.sensorBatteryLevel != -1
-        val level = if (hasBattery) rh.gs(CoreUiStrings.format_percent, bgSource.sensorBatteryLevel) else null
+        val level = if (hasBattery) rh.gs(CoreUiStrings.units_format_percent, bgSource.sensorBatteryLevel) else null
         val levelPercent = if (hasBattery) bgSource.sensorBatteryLevel / 100f else -1f
 
         return StatusItem(
@@ -212,9 +213,9 @@ class StatusViewModel(
         }
         val level: String? = if (reservoirLevel > 0) {
             if (!config.AAPSCLIENT && isPatchPump && reservoirLevel >= maxReading) {
-                rh.gs(UiStrings.status_insulin_level_at_least, decimalFormatter.to0Decimal(maxReading))
+                rh.gs(CoreUiStrings.value_with_unit, decimalFormatter.to0Decimal(maxReading) + "+", rh.gs(CoreUiStrings.insulin_unit_shortname))
             } else {
-                rh.gs(UiStrings.status_insulin_level, decimalFormatter.to0Decimal(reservoirLevel))
+                rh.gs(CoreUiStrings.value_with_unit, decimalFormatter.to0Decimal(reservoirLevel), rh.gs(CoreUiStrings.insulin_unit_shortname))
             }
         } else null
 
@@ -247,7 +248,7 @@ class StatusViewModel(
             age = event?.let { formatAge(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewCageWarning, IntKey.OverviewCageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewCageCritical) } ?: 0f,
-            level = if (usage > 0) rh.gs(UiStrings.status_insulin_level, decimalFormatter.to0Decimal(usage)) else null,
+            level = if (usage > 0) rh.gs(CoreUiStrings.value_with_unit, decimalFormatter.to0Decimal(usage), rh.gs(CoreUiStrings.insulin_unit_shortname)) else null,
             levelStatus = StatusLevel.UNSPECIFIED, // Usage doesn't have warning thresholds
             levelPercent = -1f,
             icon = icon,
@@ -284,7 +285,7 @@ class StatusViewModel(
             age = event?.let { formatAge(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewBageWarning, IntKey.OverviewBageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewBageCritical) } ?: 0f,
-            level = if (showLevel) rh.gs(CoreUiStrings.format_percent, batteryLevelValue.toInt()) else null,
+            level = if (showLevel) rh.gs(CoreUiStrings.units_format_percent, batteryLevelValue.toInt()) else null,
             levelStatus = if (showLevel) getLevelStatus(batteryLevelValue, IntKey.OverviewBattWarning, IntKey.OverviewBattCritical) else StatusLevel.UNSPECIFIED,
             levelPercent = if (showLevel) 1f - (batteryLevelValue.toFloat() / 100f) else -1f,
             icon = IcPumpBattery,
@@ -299,7 +300,11 @@ class StatusViewModel(
         val days = diff.days
         val hours = diff.hours
         return if (rh.shortTextMode()) rh.gs(UiStrings.status_age_short, days, hours)
-        else rh.gs(UiStrings.status_age_long, days, hours)
+        else rh.gs(
+            CoreUiStrings.value_with_unit,
+            rh.gs(CoreUiStrings.value_with_unit, days.toString(), rh.gs(InterfacesStrings.days)),
+            rh.gs(CoreUiStrings.value_with_unit, hours.toString(), rh.gs(InterfacesStrings.hours))
+        )
     }
 
     private fun getAgeStatus(timestamp: Long, warnKey: IntPreferenceKey, urgentKey: IntPreferenceKey): StatusLevel {

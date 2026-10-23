@@ -135,7 +135,7 @@ fun QuickWizardCarouselCard(
                 val fromTime = dateUtil.timeString(dateUtil.secondsOfTheDayToMillisecondsOfHoursAndMinutes(entry.validFrom()))
                 val toTime = dateUtil.timeString(dateUtil.secondsOfTheDayToMillisecondsOfHoursAndMinutes(entry.validTo()))
                 Text(
-                    text = stringResource(UiStrings.time_from_to, fromTime, toTime),
+                    text = stringResource(InterfacesStrings.values_with_dash, fromTime, toTime),
                     style = MaterialTheme.typography.bodyMedium,
                     color = contentColor.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center
@@ -154,13 +154,7 @@ private fun buildCarbsText(entry: QuickWizardEntry): String = when (entry.mode()
     QuickWizardMode.CARBS, QuickWizardMode.WIZARD -> {
         val carbs = stringResource(InterfacesStrings.format_carbs, entry.carbs())
         if (entry.useEcarbs() == QuickWizardEntry.ALWAYS) {
-            stringResource(
-                UiStrings.quickwizard_card_ecarbs,
-                carbs,
-                stringResource(InterfacesStrings.format_carbs, entry.carbs2()),
-                entry.duration(),
-                entry.time()
-            )
+            stringResource(UiStrings.values_with_plus, carbs, stringResource(InterfacesStrings.wizard_ecarbs, entry.carbs2(), entry.duration(), entry.time()))
         } else {
             carbs
         }

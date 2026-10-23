@@ -38,7 +38,6 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.search.SearchableItem
-import app.aaps.ui.UiStrings
 
 /**
  * Displays search results in a categorized list.
@@ -309,7 +308,7 @@ private fun WikiLoadingIndicator(modifier: Modifier = Modifier) {
         CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
         Spacer(modifier = Modifier.width(12.dp))
         Text(
-            text = stringResource(UiStrings.search_wiki_running),
+            text = stringResource(CoreUiStrings.search_category_wiki),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

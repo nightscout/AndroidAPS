@@ -133,7 +133,7 @@ class LoopViewModel(
                     lines += line(CoreUiStrings.enacted, enacted.toString())
                     if (comment.isNotEmpty()) lines += line(CoreUiStrings.comment, comment)
                     lines += line(CoreUiStrings.duration, rh.gs(CoreUiStrings.format_mins, duration))
-                    lines += line(CoreUiStrings.percent, rh.gs(CoreUiStrings.format_percent, percent))
+                    lines += line(CoreUiStrings.percent, rh.gs(CoreUiStrings.units_format_percent, percent))
                 }
 
                 absolute != -1.0           -> {
