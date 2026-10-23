@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.rx.weardata
 
+import app.aaps.core.data.model.CarbsType
 import app.aaps.core.interfaces.rx.events.Event
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -124,7 +125,8 @@ sealed class EventData : Event() {
     data class ActionProfileSwitchPreCheck(val timeShift: Int, val percentage: Int, val duration: Int) : EventData()
 
     @Serializable
-    data class ActionWizardPreCheck(val carbs: Int, val percentage: Int) : EventData()
+    /** [carbsType] came later. A watch without it sends none, and bread is what it did before: all carbs now, no eCarbs. */
+    data class ActionWizardPreCheck(val carbs: Int, val percentage: Int, val carbsType: CarbsType = CarbsType.BREAD) : EventData()
 
     @Serializable
     data class ActionQuickWizardPreCheck(val guid: String) : EventData()
