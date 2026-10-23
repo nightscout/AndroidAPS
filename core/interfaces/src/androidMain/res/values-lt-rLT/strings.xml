@@ -52,7 +52,6 @@
     <string name="unit_days">d.</string>
     <string name="unit_weeks">savaičių</string>
     <string name="shortminute">min</string>
-    <string name="shortday">d</string>
     <string name="time_remaining_h_m">liko %1$d val. %2$d min</string>
     <string name="time_remaining_m">liko %1$d min</string>
     <string name="later_today">Šiandien vėliau</string>
@@ -105,7 +104,6 @@
     <string name="temp_basal_absolute_rate">%1$.2f V/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f V/val. @%2$s %3$d/%4$d min</string>
-    <string name="forever">Neribotai</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">Bluetooth</string>
     <string name="permission_bluetooth_description">Kad programėlė galėtų palaikyti ryšį su pompa, jai reikia Bluetooth leidimo.</string>
