@@ -69,7 +69,6 @@
     <string name="patch_communication_succeed">Ryšys sėkmingas</string>
     <string name="patch_communication_succeed_message">Rezervuaras susietas.</string>
     <string name="patch_cancel_pairing">Atšaukti susiejimą</string>
-    <string name="all_dose_unit">&#160;v</string>
     <string name="insulin_suspend_msg1">Sustabdžius dabartinis bolusas &amp; laikina bazė bus atšaukti. \n\nDydis : %1$s v/val\nLiko laiko  : %2$s\n&amp; Liko insulino : %3$.2f v</string>
     <string name="insulin_suspend_msg2">Sustabdžius dabartinis bolusas bus atšauktas. \n\nLiko insulino : %1$.2f v</string>
     <string name="insulin_suspend_msg3">Sustabdžius dabartinė laikina bazė bus atšaukta. \n\nDydis : %1$s v/val\nLiko laiko  : %2$s</string>
