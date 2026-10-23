@@ -1,5 +1,7 @@
 package app.aaps.ui.compose.overview.graphs
 
+import app.aaps.core.data.ui.MarkerSizeClasses
+import app.aaps.core.data.ui.MarkerTier
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.BolusGraphPoint
 import app.aaps.core.interfaces.overview.graph.BolusType
@@ -26,9 +28,6 @@ internal const val MARKER_MAX_READING_GAP_MS = 15 * 60_000L
 
 /** A bolus and a carbs entry this close apart are one meal and are drawn at the same height. */
 internal const val MARKER_PAIR_MS = 5 * 60_000L
-
-/** Marker size, from the amount relative to the other markers of the same kind. */
-enum class MarkerTier { SMALL, MEDIUM, LARGE }
 
 /** One treatment marker. [x] is minutes from minTimestamp, [y] is in the BG axis' units. */
 data class TreatmentMarker(val x: Double, val y: Double, val tier: MarkerTier)
@@ -96,20 +95,15 @@ internal fun interpolatedBgAt(timestamp: Long, readings: List<BgDataPoint>): Dou
  * as the largest. Against the biggest dose of the day both come out the same size, and a 1 U
  * correction next to a 10 U meal bolus still reads as small.
  *
+ * The same rule the phone sends to the watch, see [MarkerSizeClasses.ofMax].
+ *
  * Taken from the whole loaded range, not from the visible window: a marker that changes size while
  * the graph is scrolled looks like a glitch.
  */
 internal fun tierOf(amount: Double, amounts: List<Double>): MarkerTier = tierOf(amount, amounts.maxOrNull())
 
 /** [tierOf] against a largest amount that is already known. [max] null or not positive gives the middle size. */
-internal fun tierOf(amount: Double, max: Double?): MarkerTier {
-    if (max == null || max <= 0.0) return MarkerTier.MEDIUM
-    return when {
-        amount < max / 3.0       -> MarkerTier.SMALL
-        amount < 2.0 * max / 3.0 -> MarkerTier.MEDIUM
-        else                     -> MarkerTier.LARGE
-    }
-}
+internal fun tierOf(amount: Double, max: Double?): MarkerTier = MarkerSizeClasses.ofMax(max)?.of(amount) ?: MarkerTier.MEDIUM
 
 /**
  * Builds the markers for the BG graph.

@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.toArgb
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.ActiveSceneState
+import app.aaps.core.data.ui.MarkerSizeClasses
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
@@ -1477,10 +1478,13 @@ class DataHandlerMobile(
                 temps.add(EventData.TreatmentData.TempBasal(now - 60 * 1000, endBasalValue, runningTime + 5 * 60 * 1000, currentAmount, currentAmount))
             }
         }
-        persistenceLayer.getBolusesFromTimeIncludingInvalid(startTimeWindow, true)
-            .stream()
-            .filter { (_, _, _, _, _, _, _, _, _, type) -> type !== BS.Type.PRIMING }
-            .forEach { (_, _, _, isValid, _, _, timestamp, _, amount, type) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, amount, 0.0, type === BS.Type.SMB, isValid)) }
+        // A day of boluses: the last hours go to the watch, the SMBs of the whole day set the size
+        // cuts, the same day the phone's IOB graph takes them from
+        val dayBoluses = persistenceLayer.getBolusesFromTimeIncludingInvalid(now - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs(), true)
+            .filter { it.type != BS.Type.PRIMING }
+        dayBoluses.filter { it.timestamp >= startTimeWindow }
+            .forEach { boluses.add(EventData.TreatmentData.Treatment(it.timestamp, it.amount, 0.0, it.type == BS.Type.SMB, it.isValid)) }
+        val smbSizeClasses = MarkerSizeClasses.ofMax(dayBoluses.filter { it.isValid && it.type == BS.Type.SMB && it.amount > 0 }.map { it.amount })
         persistenceLayer.getCarbsFromTimeExpanded(startTimeWindow, true)
             .forEach { (_, _, _, isValid, _, _, timestamp, _, _, amount) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, 0.0, amount, false, isValid)) }
         val apsResult = if (config.APS) {
@@ -1508,7 +1512,13 @@ class DataHandlerMobile(
                     )
                 )
             }
-        sendToWear(EventData.TreatmentData(temps, basals, boluses, predictions))
+        sendToWear(
+            EventData.TreatmentData(
+                temps, basals, boluses, predictions,
+                smbSmallBelow = smbSizeClasses?.smallBelow ?: -1.0,
+                smbLargeFrom = smbSizeClasses?.largeFrom ?: -1.0
+            )
+        )
     }
 
     private fun predictionColor(data: GV): Int {

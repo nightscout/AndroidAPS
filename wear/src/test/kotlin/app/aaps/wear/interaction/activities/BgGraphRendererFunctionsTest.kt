@@ -1,12 +1,13 @@
 package app.aaps.wear.interaction.activities
 
 import androidx.compose.ui.graphics.Color
+import app.aaps.core.interfaces.rx.weardata.EventData
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 /**
  * Tests for the pure top-level helper functions in BgGraphRenderer.kt:
- * [bgColor], [formatTtDuration] and [ageColor].
+ * [bgColor], [formatTtDuration], [ageColor] and [smbSizeFactor].
  *
  * These are `internal`, so the test lives in the same package to reach them and the module's
  * own color constants ([BgLowColor], [BgHighColor], [BgInRangeColor]). They take only Long/String
@@ -104,5 +105,57 @@ internal class BgGraphRendererFunctionsTest {
         assertThat(ageColor(10L * 60_000L)).isEqualTo(BgLowColor)
         assertThat(ageColor(11L * 60_000L)).isEqualTo(BgLowColor)
         assertThat(ageColor(60L * 60_000L)).isEqualTo(BgLowColor)
+    }
+
+    // --- smbSizeFactor -------------------------------------------------------
+
+    private fun smb(amount: Double) = EventData.TreatmentData.Treatment(date = 0L, bolus = amount, carbs = 0.0, isSMB = true, isValid = true)
+
+    private fun treatments(vararg smbs: Double, smallBelow: Double = -1.0, largeFrom: Double = -1.0) =
+        EventData.TreatmentData(arrayListOf(), arrayListOf(), ArrayList(smbs.map { smb(it) }), arrayListOf(), smallBelow, largeFrom)
+
+    // The three factors are private, so the tests read them off a set with one SMB in each class.
+    private val factorOf = smbSizeFactor(treatments(1.0, 4.0, 7.0, smallBelow = 3.0, largeFrom = 5.0))
+    private val small = factorOf(1.0)
+    private val medium = factorOf(4.0)
+    private val large = factorOf(7.0)
+
+    @Test fun smbSizeFactorHasThreeSizes() {
+        assertThat(small).isLessThan(medium)
+        assertThat(medium).isLessThan(large)
+    }
+
+    @Test fun smbSizeFactorUsesTheCutsFromThePhone() {
+        // The watch has only 0.05 and 0.10, but the day had a 0.30, so the phone's cuts make both small
+        val factor = smbSizeFactor(treatments(0.05, 0.10, smallBelow = 0.133, largeFrom = 0.217))
+
+        assertThat(factor(0.05)).isEqualTo(small)
+        assertThat(factor(0.10)).isEqualTo(small)
+    }
+
+    @Test fun smbSizeFactorWithoutCutsFromThePhoneCutsFromZeroToTheLargestIntoThirds() {
+        // 0..6, cuts at 2 and 4: the smallest SMB does not move the cuts
+        val factor = smbSizeFactor(treatments(1.0, 4.0, 6.0))
+
+        assertThat(factor(1.9)).isEqualTo(small)
+        assertThat(factor(2.0)).isEqualTo(medium)
+        assertThat(factor(3.9)).isEqualTo(medium)
+        assertThat(factor(4.0)).isEqualTo(large)
+    }
+
+    @Test fun smbSizeFactorDrawsTwoNearDosesTheSameSize() {
+        // 0.20 and 0.25 are the same dose to a reader: both large, not smallest and largest
+        val factor = smbSizeFactor(treatments(0.20, 0.25))
+
+        assertThat(factor(0.20)).isEqualTo(large)
+        assertThat(factor(0.25)).isEqualTo(large)
+    }
+
+    @Test fun smbSizeFactorWithoutAnySmbIsMedium() {
+        assertThat(smbSizeFactor(treatments())(0.5)).isEqualTo(medium)
+    }
+
+    @Test fun smbSizeFactorLargestOfTheDayIsLargeAlsoOnItsOwn() {
+        assertThat(smbSizeFactor(treatments(0.5))(0.5)).isEqualTo(large)
     }
 }

@@ -8,6 +8,9 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.unit.dp
+import app.aaps.core.data.ui.MarkerSizeClasses
+import app.aaps.core.data.ui.MarkerTier
+import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.wear.data.ComplicationData
 import app.aaps.wear.interaction.actions.CarbsOrange
 import app.aaps.wear.interaction.actions.InsulinBlue
@@ -52,6 +55,31 @@ internal fun ageColor(ageMs: Long): Color {
         minutes < 4  -> BgInRangeColor
         minutes < 10 -> Color(0xFFFF9800)
         else         -> BgLowColor
+    }
+}
+
+// Half width of an SMB triangle as a factor of the BG dot radius, see [smbSizeFactor]. The large
+// one stays a little smaller than the bolus triangle at the bottom (1.4 wide, 2.4 high).
+private const val SMB_SMALL_FACTOR = 0.9f
+private const val SMB_MEDIUM_FACTOR = 1.1f
+private const val SMB_LARGE_FACTOR = 1.3f
+
+/**
+ * Gives the triangle size factor for an SMB amount, so a big SMB is seen without opening the log.
+ * The cuts come from the phone, taken over a whole day of SMBs, so an SMB has the same size on the
+ * phone's IOB graph, the tile and the activity. A phone that does not send them gets the same rule
+ * over the SMBs the watch has, the last hours. Without any SMB everything is medium.
+ */
+internal fun smbSizeFactor(treatmentData: EventData.TreatmentData): (Double) -> Float {
+    val classes =
+        if (treatmentData.smbSmallBelow >= 0.0 && treatmentData.smbLargeFrom >= 0.0) MarkerSizeClasses(treatmentData.smbSmallBelow, treatmentData.smbLargeFrom)
+        else MarkerSizeClasses.ofMax(treatmentData.boluses.filter { it.isValid && it.isSMB && it.bolus > 0 }.map { it.bolus })
+    return { amount ->
+        when (classes?.of(amount)) {
+            MarkerTier.SMALL        -> SMB_SMALL_FACTOR
+            MarkerTier.LARGE        -> SMB_LARGE_FACTOR
+            MarkerTier.MEDIUM, null -> SMB_MEDIUM_FACTOR
+        }
     }
 }
 
@@ -197,7 +225,7 @@ internal fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int, 
     val boluses = data.treatmentData.boluses
     val triSize   = dotRadius * 1.4f
     val triHeight = dotRadius * 2.4f
-    val smbTriSize = dotRadius * 1.2f
+    val smbFactor = smbSizeFactor(data.treatmentData)
 
     val bottom = pad + graphH
 
@@ -227,6 +255,7 @@ internal fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int, 
             if (nearestEntry != null && abs(nearestEntry.timeStamp - treatment.date) < 10 * 60_000L) {
                 val bgY = sgvToY(nearestEntry.sgv.toFloat())
                 val tipY = bgY - dotRadius * 1.5f
+                val smbTriSize = dotRadius * smbFactor(treatment.bolus)
                 drawPath(
                     Path().apply {
                         moveTo(x, tipY)
