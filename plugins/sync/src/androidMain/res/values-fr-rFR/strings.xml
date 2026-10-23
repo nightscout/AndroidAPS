@@ -128,6 +128,8 @@
     <string name="upload_now">Télécharger maintenant</string>
     <string name="tidepool_purge_data">Purger toutes les données</string>
     <string name="tidepool_purge_data_confirm">Supprimer TOUTES les données que AAPS a téléchargées sur Tidepool ? Cette action est irréversible. Utilisez-le pour supprimer les données corrompues par une ancienne version, puis exécutez \"Synchronisation totale\" pour re-télécharger.</string>
+    <string name="tidepool_full_sync_comment">Synchronisation complète ? AAPS téléversera toutes les données sur Tidepool. Cela peut prendre un certain temps.</string>
+    <string name="tidepool_logout_confirm">Se déconnecter de Tidepool ? Les téléversements s\'arrêtent jusqu\'à ce que vous vous connectiez à nouveau.</string>
     <string name="tidepool_status_not_logged_in">Non connecté</string>
     <string name="tidepool_status_blocked">Bloqué par les paramètres de connexion</string>
     <string name="tidepool_status_failed">Échec. Voir le journal ci-dessous.</string>
