@@ -17,7 +17,7 @@ import app.aaps.core.data.ui.confirmationLines
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -82,7 +82,7 @@ class FillDialogViewModel(
     private val ch: ConcentrationHelper,
     insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction,
-    private val wizardBolusExecutor: WizardBolusExecutor,
+    private val masterActionExecutor: MasterActionExecutor,
     private val batchExecutor: BatchExecutor,
     private val rxBus: RxBus,
     // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
@@ -338,7 +338,7 @@ class FillDialogViewModel(
             // Prime now rides the shared executor (one audited path): it logs the user entry, sets the
             // PRIMING treatment + notes, and the profile switch is sequenced on prime success.
             appScope.launch {
-                wizardBolusExecutor.deliverFillBolus(
+                masterActionExecutor.deliverFillBolus(
                     amount = state.insulinAfterConstraints,
                     notes = notes,
                     source = Sources.FillDialog,

@@ -58,6 +58,7 @@ import app.aaps.core.ui.compose.LocalAppIcon
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalDecimalFormatter
+import app.aaps.core.ui.compose.LocalClientRole
 import app.aaps.core.ui.compose.LocalMasterControlAllowed
 import app.aaps.core.ui.compose.LocalMasterReachable
 import app.aaps.core.ui.compose.LocalPreferences
@@ -138,6 +139,7 @@ fun AapsAppRoot(
     val navController = rememberNavController().also(onNavControllerReady)
     val masterReachable by nsClient.masterReachable.collectAsStateWithLifecycle()
     val masterControlAllowed by nsClient.masterControlAllowed.collectAsStateWithLifecycle()
+    val clientRole by nsClient.clientRole.collectAsStateWithLifecycle()
     val bolusState by bolusProgressData.state.collectAsStateWithLifecycle()
     val pumpStatusBanner by pumpCommunicationStatus.statusBannerFlow.collectAsStateWithLifecycle()
     val pumpQueueStatus by pumpCommunicationStatus.queueStatusFlow.collectAsStateWithLifecycle()
@@ -166,6 +168,7 @@ fun AapsAppRoot(
         LocalConfig provides config,
         LocalMasterReachable provides masterReachable,
         LocalMasterControlAllowed provides masterControlAllowed,
+        LocalClientRole provides clientRole,
         LocalProfileUtil provides profileUtil,
         LocalCheckPassword provides passwordHasher::checkPassword,
         LocalHashPassword provides passwordHasher::hashPassword,

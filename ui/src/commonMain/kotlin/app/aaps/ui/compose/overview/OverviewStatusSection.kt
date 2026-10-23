@@ -21,8 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,6 +45,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsCard
+import app.aaps.core.ui.compose.LocalClientRole
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
@@ -87,14 +87,10 @@ fun OverviewStatusSection(
     var showSettingsSheet by rememberSaveable { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    ElevatedCard(
+    AapsCard(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
-        colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-        )
+            .padding(horizontal = 4.dp)
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
@@ -158,21 +154,23 @@ fun OverviewStatusSection(
                 exit = fadeOut() + shrinkVertically()
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    // Each button also needs this phone's role to allow what it opens (the master would refuse it).
+                    val role = LocalClientRole.current
                     StatusSectionContent(
                         sensorStatus = sensorStatus,
                         insulinStatus = insulinStatus,
                         cannulaStatus = cannulaStatus,
                         batteryStatus = batteryStatus,
-                        onSensorInsertClick = if (commandsAllowed) {
+                        onSensorInsertClick = if (commandsAllowed && role.allows(ElementType.SENSOR_INSERT.role)) {
                             { onNavigate(NavigationRequest.Element(ElementType.SENSOR_INSERT)) }
                         } else null,
-                        onFillClick = if (showFill && commandsAllowed) {
+                        onFillClick = if (showFill && commandsAllowed && role.allows(ElementType.CANNULA_CHANGE.role)) {
                             { onNavigate(NavigationRequest.Element(ElementType.CANNULA_CHANGE)) }
                         } else null,
-                        onInsulinChangeClick = if (showFill && commandsAllowed) {
+                        onInsulinChangeClick = if (showFill && commandsAllowed && role.allows(ElementType.FILL.role)) {
                             { onNavigate(NavigationRequest.Element(ElementType.FILL)) }
                         } else null,
-                        onBatteryChangeClick = if (showPumpBatteryChange && commandsAllowed) {
+                        onBatteryChangeClick = if (showPumpBatteryChange && commandsAllowed && role.allows(ElementType.BATTERY_CHANGE.role)) {
                             { onNavigate(NavigationRequest.Element(ElementType.BATTERY_CHANGE)) }
                         } else null
                     )

@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.ui.MarkerTier
 import app.aaps.core.graph.vico.AdaptiveStep
 import app.aaps.core.graph.vico.Square
 import app.aaps.core.interfaces.overview.graph.BolusType
@@ -31,7 +32,6 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalDecimalFormatter
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.VicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.VicoZoomState
 import com.patrykandpatrick.vico.compose.cartesian.axis.Axis
@@ -43,6 +43,7 @@ import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarkerController
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.Position
@@ -62,6 +63,10 @@ import kotlinx.coroutines.delay
  */
 private val AXIS_SCALE_KEY = ExtraStore.Key<AxisScale>()
 
+/** The largest manual bolus and carbs entry of the loaded range: the markers are sized against them, see [TieredPointProvider]. */
+private val MAX_MANUAL_BOLUS_KEY = ExtraStore.Key<Double>()
+private val MAX_CARBS_KEY = ExtraStore.Key<Double>()
+
 /** The axis setup that a scroll or zoom can change. Equal values mean the axes did not change. */
 private data class AxisScale(
     val primary: CartesianLayerRangeProvider,
@@ -69,67 +74,6 @@ private data class AxisScale(
     val basal: CartesianLayerRangeProvider,
     val startAxisItemPlacer: VerticalAxis.ItemPlacer
 )
-
-/**
- * Secondary graphs are much shorter than the BG graph, so Vico's ItemPlacer thins out a denser
- * tick request to avoid label overlap — and it does so by doubling the step rather than picking a
- * still-nice one, dropping the top boundary in the process (a max of 50 renders as 0/20/40 instead
- * of 0/25/50). Requesting fewer ticks up front avoids that thinning.
- *
- * IOB only occupies the bottom half of its graph (basal reserves the top half — see
- * `iobBasalScale`), so it has roughly half the vertical pixels per tick that a full-height graph
- * does, and needs the more conservative count.
- */
-internal const val IOB_GRAPH_TICK_COUNT = 3
-
-/** Tick count for series that use the graph's full height (COB, BGI/DEV/ACTIVITY/STEPS, VAR_SENS/HEART_RATE, DEV_SLOPE). */
-internal const val SECONDARY_GRAPH_TICK_COUNT = 5
-
-/**
- * Tick count for SENSITIVITY's pivot scale specifically — lower than [SECONDARY_GRAPH_TICK_COUNT]
- * so Vico's step thinning never has anything to thin (3 ticks always fit, at any graph height),
- * guaranteeing the 100% pivot itself is always one of the displayed labels. Vico's step-based
- * ItemPlacer only controls tick spacing, not count — when a denser request doesn't fit the
- * available height it multiplies the step by an integer to compensate, which can drop the pivot
- * (it isn't always one of the surviving ticks) and jumps unpredictably between tick counts as the
- * graph is resized. There's no API for "always keep this value" short of a custom ItemPlacer
- * overriding tick selection, which was tried and reverted for being too dense on some screens —
- * this lower request sidesteps the whole mechanism instead.
- */
-internal const val SENS_PIVOT_TICK_COUNT = 3
-
-/**
- * Wraps a step-based [VerticalAxis.ItemPlacer], filtering out labels/gridlines outside
- * [visibleMin]..[visibleMax]. Two independent uses:
- * - IOB/basal combo graph: the axis extends past the actual IOB data range to reserve headroom
- *   for the basal overlay (see the `iobBasalScale` computation), so labels should stop at the real
- *   data boundary ([visibleMax]) instead of continuing into the reserved band above it.
- * - Dual-axis combos where primary is zero-floor-style: its axis is pushed below its own real
- *   floor purely to align its zero with the secondary/pivot series (see `dualAxisRanges`), so
- *   labels should stop at primary's own real floor ([visibleMin]) instead of showing a fake
- *   negative tick for a series that never actually goes negative.
- * Delegates everything else (margins, measurement, overlap-based thinning) to [delegate].
- */
-internal class ClampedVerticalAxisItemPlacer(
-    private val delegate: VerticalAxis.ItemPlacer,
-    private val visibleMin: () -> Double = { Double.NEGATIVE_INFINITY },
-    private val visibleMax: () -> Double = { Double.POSITIVE_INFINITY }
-) : VerticalAxis.ItemPlacer by delegate {
-
-    override fun getLabelValues(
-        context: CartesianDrawingContext,
-        axisHeight: Float,
-        maxLabelHeight: Float,
-        position: Axis.Position.Vertical
-    ): List<Double> = delegate.getLabelValues(context, axisHeight, maxLabelHeight, position).filter { it in visibleMin()..visibleMax() }
-
-    override fun getLineValues(
-        context: CartesianDrawingContext,
-        axisHeight: Float,
-        maxLabelHeight: Float,
-        position: Axis.Position.Vertical
-    ): List<Double>? = delegate.getLineValues(context, axisHeight, maxLabelHeight, position)?.filter { it in visibleMin()..visibleMax() }
-}
 
 /**
  * General-purpose secondary graph composable.
@@ -246,7 +190,7 @@ fun SecondaryGraphCompose(
     }
 
     // Cache last non-empty treatment data to survive reset() cycles
-    val lastTreatmentData = remember { mutableStateOf(treatmentData ?: TreatmentGraphData(emptyList(), emptyList(), emptyList(), emptyList())) }
+    val lastTreatmentData = remember { mutableStateOf(treatmentData ?: TreatmentGraphData(emptyList(), emptyList(), emptyList(), emptyList(), emptyList())) }
     if (treatmentData != null && (treatmentData.boluses.isNotEmpty() || treatmentData.carbs.isNotEmpty() || treatmentData.extendedBoluses.isNotEmpty())) {
         lastTreatmentData.value = treatmentData
     }
@@ -437,33 +381,29 @@ fun SecondaryGraphCompose(
     // whether or not basal is drawn.
     val primaryDataNiceRange = remember(primaryYValues) {
         if (primaryYValues.isEmpty()) null
-        else zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max().coerceAtLeast(0.1), IOB_GRAPH_TICK_COUNT)
+        else zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max().coerceAtLeast(0.1))
     }
-    // IOB (with basal overlay active): reserve the top BASAL_HEIGHT_FRACTION of the height for
-    // basal, ABOVE the actual data range (not above y=0 — those only coincide when nice.min is 0;
-    // when IOB has a negative excursion, reserving "above 0" would eat into the negative portion's
-    // share and let positive IOB data creep into the fraction of the axis meant for basal).
-    // Solving for axisMax such that
-    // (nice.max - nice.min) / (axisMax - nice.min) == (1 - BASAL_HEIGHT_FRACTION) gives:
-    // axisMax = nice.min + (nice.max - nice.min) / (1 - BASAL_HEIGHT_FRACTION)
-    // — this reduces to the simpler nice.max / (1 - frac) exactly when nice.min == 0. The tick
-    // step comes from the un-inflated nice range, so gridlines in the data region stay clean.
-    // Result pairs the final (inflated) axis range with the un-inflated data max — the latter is
-    // where tick labels must stop (see ClampedVerticalAxisItemPlacer) so they don't extend into
-    // the reserved basal band above the actual IOB data.
+    // IOB (with basal overlay active): IOB fills the lower IOB_HEIGHT_FRACTION of the height,
+    // measured from the real bottom of the data, not from y=0 (those only coincide when nice.min
+    // is 0; with a negative IOB excursion, measuring from 0 would give the negative part less than
+    // its share). Solving (nice.max - nice.min) / (axisMax - nice.min) == IOB_HEIGHT_FRACTION:
+    // axisMax = nice.min + (nice.max - nice.min) / IOB_HEIGHT_FRACTION
+    // — this reduces to the simpler nice.max / IOB_HEIGHT_FRACTION exactly when nice.min == 0.
+    // Result pairs the axis range with the IOB data max — the latter is where the labels stop
+    // (see NiceVerticalAxisItemPlacer), so they don't go on into the room above IOB.
     val iobBasalScaleResult = remember(hasBasalLayer, primaryDataNiceRange) {
         if (!hasBasalLayer) return@remember null // auto-range when no basal
         val nice = primaryDataNiceRange ?: return@remember null
-        val axisMax = nice.min + (nice.max - nice.min) / (1 - BASAL_HEIGHT_FRACTION)
-        NiceScale(nice.min, axisMax, nice.step) to nice.max
+        val axisMax = nice.min + (nice.max - nice.min) / IOB_HEIGHT_FRACTION
+        NiceScale(nice.min, axisMax) to nice.max
     }
     val iobBasalScale = iobBasalScaleResult?.first
     val iobDataMax = iobBasalScaleResult?.second
 
     // Activity overlay — mapped into the IOB axis' own units, zero activity on IOB zero. The IOB
     // scale is never changed to fit it: the curve gets the room the IOB axis already leaves, which
-    // is the data region below the reserved basal band above zero and IOB's own negative sliver
-    // below zero (usually none, so a negative activity tail is clipped there).
+    // is the IOB data region above zero and IOB's own negative sliver below zero (usually none, so
+    // a negative activity tail is clipped there).
     // Both the activity range and the IOB range come from the visible window only.
     // The room comes from primaryDataNiceRange rather than from the IOB+basal axis, so that the
     // overlay does not quietly vanish when that axis is absent. With basal drawn the two are the
@@ -641,14 +581,13 @@ fun SecondaryGraphCompose(
             val isSensPivot = primaryType == SeriesType.SENSITIVITY || secondaryType == SeriesType.SENSITIVITY
             val pivot = if (isSensPivot) 100.0 else 0.0
             val pivotMinDeviation = if (isSensPivot) SENS_MIN_DEVIATION else 0.0
-            val pivotTickCount = if (isSensPivot) SENS_PIVOT_TICK_COUNT else SECONDARY_GRAPH_TICK_COUNT
             return@remember if (primaryIsPivot) {
-                val pairing = pivotZeroFloorPairing(primaryYValues, secondaryY, pivot, pivotMinDeviation, pivotTickCount)
+                val pairing = pivotZeroFloorPairing(primaryYValues, secondaryY, pivot, pivotMinDeviation)
                 // Primary is the pivot itself here — its own axis is fully meaningful in both
                 // directions, no label clamping needed.
                 AlignedRanges(pairing.pivotNice.min, pairing.pivotNice.max, -pairing.zeroFloorHalf, pairing.zeroFloorHalf)
             } else {
-                val pairing = pivotZeroFloorPairing(secondaryY, primaryYValues, pivot, pivotMinDeviation, pivotTickCount)
+                val pairing = pivotZeroFloorPairing(secondaryY, primaryYValues, pivot, pivotMinDeviation)
                 // Primary is the zero-floor side, pushed into a symmetric container purely to
                 // align its zero with the pivot's center — its own real floor (e.g. 0 for COB)
                 // must still be the lowest label shown, or its axis reads as if COB/BGI/etc. can
@@ -672,7 +611,7 @@ fun SecondaryGraphCompose(
         // the compromise. Each axis is then widened just enough to hit that shared fraction,
         // anchored at whichever of its own real/nice bounds avoids clipping (see
         // fractionAlignedRange / fractionAlignedNiceRange) so nothing is ever clipped.
-        val primaryNice = zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max().coerceAtLeast(0.1), SECONDARY_GRAPH_TICK_COUNT)
+        val primaryNice = zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max().coerceAtLeast(0.1))
         val primaryFraction = if (primaryNice.max > primaryNice.min) -primaryNice.min / (primaryNice.max - primaryNice.min) else 0.0
 
         val secondaryMax = secondaryY.max().coerceAtLeast(0.1)
@@ -681,7 +620,11 @@ fun SecondaryGraphCompose(
         val sharedFraction = (primaryFraction + secondaryFraction) / 2.0
 
         val (aMin, aMax) = fractionAlignedNiceRange(primaryNice.min, primaryNice.max, sharedFraction)
-        val (bMin, bMax) = fractionAlignedRange(secondaryY.min(), secondaryMax, sharedFraction)
+        // Rounding the stretched bound moved primary's zero a little off the shared fraction.
+        // Secondary is not rounded, so it takes primary's real fraction, and both zeros stay on
+        // one pixel row.
+        val primaryZeroFraction = if (aMax > aMin) -aMin.coerceAtMost(0.0) / (aMax - aMin) else sharedFraction
+        val (bMin, bMax) = fractionAlignedRange(secondaryY.min(), secondaryMax, primaryZeroFraction)
         // primaryNice.min is primary's own real floor (0 unless it has a genuine negative sliver);
         // aMin can be pushed below that purely to align zero with secondary — clamp labels back to
         // primary's own floor so its axis never shows a fake negative tick.
@@ -726,20 +669,17 @@ fun SecondaryGraphCompose(
     val primarySingleAxisScale = remember(primaryType, dualAxisRanges, hasBasalLayer, primaryYValues) {
         if (dualAxisRanges != null || hasBasalLayer || primaryYValues.isEmpty()) return@remember null
         when (primaryType) {
-            SeriesType.COB                                    -> niceScale(0.0, primaryYValues.max().coerceAtLeast(0.0), SECONDARY_GRAPH_TICK_COUNT)
-            in ZERO_FLOOR_SERIES_TYPES                         -> zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max(), SECONDARY_GRAPH_TICK_COUNT)
-            SeriesType.VAR_SENSITIVITY, SeriesType.HEART_RATE  -> niceScale(primaryYValues.min(), primaryYValues.max(), SECONDARY_GRAPH_TICK_COUNT)
-            SeriesType.SENSITIVITY                             -> niceScaleAroundPivot(primaryYValues.min(), primaryYValues.max(), 100.0, SENS_PIVOT_TICK_COUNT, SENS_MIN_DEVIATION)
-            SeriesType.DEV_SLOPE                               -> niceScaleAroundPivot(primaryYValues.min(), primaryYValues.max(), 0.0, SECONDARY_GRAPH_TICK_COUNT)
+            SeriesType.COB                                    -> niceScale(0.0, primaryYValues.max().coerceAtLeast(0.0))
+            in ZERO_FLOOR_SERIES_TYPES                         -> zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max())
+            SeriesType.VAR_SENSITIVITY, SeriesType.HEART_RATE  -> niceScale(primaryYValues.min(), primaryYValues.max())
+            SeriesType.SENSITIVITY                             -> niceScaleAroundPivot(primaryYValues.min(), primaryYValues.max(), 100.0, SENS_MIN_DEVIATION)
+            SeriesType.DEV_SLOPE                               -> niceScaleAroundPivot(primaryYValues.min(), primaryYValues.max(), 0.0)
             else                                               -> null
         }
     }
-    // Dynamic tick step for the start axis' ItemPlacer — null falls back to Vico's own automatic
-    // spacing for series that don't have a "nice" rule yet.
-    val primaryYStep = iobBasalScale?.step ?: primarySingleAxisScale?.step
     val primaryRangeProvider = remember(maxX, iobBasalScale, dualAxisRanges, hasPrimaryData, primarySingleAxisScale, primaryConstantRange, primaryAutoRange) {
         when {
-            // Basal overlay case takes precedence (reserves the top BASAL_HEIGHT_FRACTION of axis for basal)
+            // Basal overlay case takes precedence (IOB in the lower IOB_HEIGHT_FRACTION, basal from the top)
             iobBasalScale != null        -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = iobBasalScale.min, maxY = iobBasalScale.max)
             // Dual-axis: use zero-aligned primary range so zeros line up with secondary axis
             dualAxisRanges != null       -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = dualAxisRanges.aMin, maxY = dualAxisRanges.aMax)
@@ -811,14 +751,13 @@ fun SecondaryGraphCompose(
     )
 
     // Common axis components
-    val startAxisItemPlacer = remember(primaryYStep, iobDataMax, dualAxisRanges?.primaryLabelFloor) {
-        val stepPlacer = VerticalAxis.ItemPlacer.step({ primaryYStep })
+    val startAxisItemPlacer = remember(iobDataMax, dualAxisRanges?.primaryLabelFloor) {
         val dataMax = iobDataMax
         val labelFloor = dualAxisRanges?.primaryLabelFloor
         when {
-            dataMax != null   -> ClampedVerticalAxisItemPlacer(stepPlacer, visibleMax = { dataMax })
-            labelFloor != null -> ClampedVerticalAxisItemPlacer(stepPlacer, visibleMin = { labelFloor })
-            else               -> stepPlacer
+            dataMax != null    -> NiceVerticalAxisItemPlacer(labelMax = dataMax)
+            labelFloor != null -> NiceVerticalAxisItemPlacer(labelMin = labelFloor)
+            else               -> NiceVerticalAxisItemPlacer()
         }
     }
 
@@ -882,7 +821,11 @@ fun SecondaryGraphCompose(
             // identical to last time (see AXIS_SCALE_KEY doc) — otherwise scrolling/zooming
             // would re-submit the same partials and get silently skipped, never picking up the
             // updated primaryRangeProvider.
-            extras { it[AXIS_SCALE_KEY] = axisScale }
+            extras {
+                it[AXIS_SCALE_KEY] = axisScale
+                processedIobTreatments.maxManualBolus?.let { max -> it[MAX_MANUAL_BOLUS_KEY] = max }
+                processedCarbs.maxOfOrNull { carbs -> carbs.second }?.let { max -> it[MAX_CARBS_KEY] = max }
+            }
         }
     }
 
@@ -903,6 +846,12 @@ fun SecondaryGraphCompose(
         guideline = LineComponent(fill = Fill(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)))
     )
 
+    // Press and hold works here too. The marker draws nothing, it only hands the time under the
+    // finger to the shared inspect state; the line, the dot and the pill are drawn elsewhere.
+    val inspectMarker = remember(inspect) { inspect?.let { SilentInspectMarker } }
+    val defaultMarkerController = CartesianMarkerController.rememberShowOnPress()
+    val markerController = inspect?.controller ?: defaultMarkerController
+
     if (hasBasalLayer) {
         val basalLayer = rememberLineCartesianLayer(
             lineProvider = LineCartesianLayer.LineProvider.series(basalLines),
@@ -913,7 +862,8 @@ fun SecondaryGraphCompose(
             chart = rememberCartesianChart(
                 primaryLayer, basalLayer,
                 startAxis = startAxis,
-                bottomAxis = bottomAxis, decorations = decorations, getXStep = { _, _, _ -> 1.0 }
+                bottomAxis = bottomAxis, decorations = decorations, getXStep = { _, _, _ -> 1.0 },
+                marker = inspectMarker, markerVisibilityListener = inspect?.visibilityListener, markerController = markerController
             ),
             modelProducer = modelProducer,
             modifier = modifier.fillMaxWidth(),
@@ -929,7 +879,8 @@ fun SecondaryGraphCompose(
             chart = rememberCartesianChart(
                 primaryLayer, secondaryLayer,
                 startAxis = startAxis,
-                bottomAxis = bottomAxis, decorations = decorations, getXStep = { _, _, _ -> 1.0 }
+                bottomAxis = bottomAxis, decorations = decorations, getXStep = { _, _, _ -> 1.0 },
+                marker = inspectMarker, markerVisibilityListener = inspect?.visibilityListener, markerController = markerController
             ),
             modelProducer = modelProducer,
             modifier = modifier.fillMaxWidth(),
@@ -940,7 +891,8 @@ fun SecondaryGraphCompose(
             chart = rememberCartesianChart(
                 primaryLayer,
                 startAxis = startAxis,
-                bottomAxis = bottomAxis, decorations = decorations, getXStep = { _, _, _ -> 1.0 }
+                bottomAxis = bottomAxis, decorations = decorations, getXStep = { _, _, _ -> 1.0 },
+                marker = inspectMarker, markerVisibilityListener = inspect?.visibilityListener, markerController = markerController
             ),
             modelProducer = modelProducer,
             modifier = modifier.fillMaxWidth(),
@@ -1080,42 +1032,21 @@ internal fun processStepPoints(points: List<GraphDataPoint>, minTimestamp: Long,
     return inRange + (maxX to edgeValue)
 }
 
-/** Process IOB treatment overlays: split SMBs by size, extract boluses and extended boluses */
+/**
+ * Process IOB treatment overlays: split SMBs by size, extract boluses and extended boluses.
+ * An SMB is sized like a treatment marker ([tierOf]) against the largest SMB of the loaded range,
+ * a manual bolus against the largest manual bolus (see [ProcessedIobOverlays.maxManualBolus]).
+ */
 @Suppress("SameParameterValue")
-private fun processIobOverlays(data: TreatmentGraphData, minTimestamp: Long, minX: Double, maxX: Double): ProcessedIobOverlays {
-    // Filter SMBs to visible range before computing size thresholds (prevents off-screen outliers from distorting buckets)
+internal fun processIobOverlays(data: TreatmentGraphData, minTimestamp: Long, minX: Double, maxX: Double): ProcessedIobOverlays {
+    // SMBs of the loaded range, not only the visible window: a marker must not change size while the graph is scrolled
     val smbs = data.boluses.filter { it.bolusType == BolusType.SMB && timestampToX(it.timestamp, minTimestamp) in minX..maxX }
-
-    var smallSmbs: List<Pair<Double, Double>> = emptyList()
-    var mediumSmbs: List<Pair<Double, Double>> = emptyList()
-    var largeSmbs: List<Pair<Double, Double>> = emptyList()
-
-    if (smbs.isNotEmpty()) {
-        if (smbs.size <= 1 || smbs.minOf { it.amount } == smbs.maxOf { it.amount }) {
-            mediumSmbs = smbs.map { timestampToX(it.timestamp, minTimestamp) to 0.0 }
-        } else {
-            val minAmount = smbs.minOf { it.amount }
-            val range = smbs.maxOf { it.amount } - minAmount
-            val smallThreshold = minAmount + range / 3.0
-            val largeThreshold = minAmount + 2.0 * range / 3.0
-
-            val small = mutableListOf<Pair<Double, Double>>()
-            val medium = mutableListOf<Pair<Double, Double>>()
-            val large = mutableListOf<Pair<Double, Double>>()
-
-            for (smb in smbs) {
-                val point = timestampToX(smb.timestamp, minTimestamp) to 0.0
-                when {
-                    smb.amount < smallThreshold -> small.add(point)
-                    smb.amount < largeThreshold -> medium.add(point)
-                    else                        -> large.add(point)
-                }
-            }
-            smallSmbs = small
-            mediumSmbs = medium
-            largeSmbs = large
-        }
-    }
+    // SMBs stand on the zero line, so the size cannot come from the y of the point: one series per size
+    val smbAmounts = smbs.map { it.amount }
+    val smbsByTier = smbs.groupBy({ tierOf(it.amount, smbAmounts) }) { timestampToX(it.timestamp, minTimestamp) to 0.0 }
+    val smallSmbs = smbsByTier[MarkerTier.SMALL].orEmpty()
+    val mediumSmbs = smbsByTier[MarkerTier.MEDIUM].orEmpty()
+    val largeSmbs = smbsByTier[MarkerTier.LARGE].orEmpty()
 
     val normalBoluses = data.boluses.filter { it.bolusType == BolusType.NORMAL }
     val bolusFiltered = if (normalBoluses.isNotEmpty()) {
@@ -1140,13 +1071,17 @@ private fun processIobOverlays(data: TreatmentGraphData, minTimestamp: Long, min
     )
 }
 
-private data class ProcessedIobOverlays(
+internal data class ProcessedIobOverlays(
     val smallSmbs: List<Pair<Double, Double>>,
     val mediumSmbs: List<Pair<Double, Double>>,
     val largeSmbs: List<Pair<Double, Double>>,
+    /** (x, amount) of each manual bolus, drawn at its amount and sized by it, see [TieredPointProvider]. */
     val normalBoluses: List<Pair<Double, Double>>,
     val extBoluses: List<Triple<Double, Double, Double>>
 ) {
+
+    /** The largest manual bolus of the loaded range, which the sizes of the manual bolus markers are measured against. */
+    val maxManualBolus: Double? get() = normalBoluses.maxOfOrNull { it.second }
 
     companion object {
 
@@ -1270,6 +1205,14 @@ data class IobLineStyles(
     val extBolusLine: LineCartesianLayer.Line
 )
 
+/**
+ * One size for the bolus and carbs labels on the graphs. Vico gives a label no more width than the
+ * gap to its neighbour in the same series and ends it with "..." when the text is wider. The bolus
+ * labels used 16 sp and lost that race far more often than the 14 sp carbs labels, so both use the
+ * smaller size now.
+ */
+private val TREATMENT_LABEL_FONT_SIZE = 14.sp
+
 @Composable
 fun rememberIobLineStyles(): IobLineStyles {
     val iobColor = AapsTheme.generalColors.iobPrediction
@@ -1278,13 +1221,13 @@ fun rememberIobLineStyles(): IobLineStyles {
     val decimalFormatter = LocalDecimalFormatter.current
 
     val bolusLabelComponent = remember(smbColor) {
-        TextComponent(textStyle = TextStyle(color = smbColor, fontSize = 16.sp))
+        TextComponent(textStyle = TextStyle(color = smbColor, fontSize = TREATMENT_LABEL_FONT_SIZE))
     }
     val bolusValueFormatter = remember {
         CartesianValueFormatter { _, value, _ -> formatBolusLabel(value, decimalFormatter) }
     }
     val extBolusLabelComponent = remember(extBolusColor) {
-        TextComponent(textStyle = TextStyle(color = extBolusColor, fontSize = 16.sp))
+        TextComponent(textStyle = TextStyle(color = extBolusColor, fontSize = TREATMENT_LABEL_FONT_SIZE))
     }
     val extBolusValueFormatter = remember {
         CartesianValueFormatter { _, value, _ -> formatBolusLabel(value, decimalFormatter) }
@@ -1320,12 +1263,12 @@ fun rememberIobLineStyles(): IobLineStyles {
                     LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(smbColor), shape = TriangleShape), size = 22.dp)
                 )
             ),
+            // A manual bolus points down, with its tip on its amount, the same as on the BG graph. SMBs
+            // point up, so a manual bolus among them still reads as one. Sized as on the BG graph
             bolusLine = LineCartesianLayer.Line(
                 fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
                 areaFill = null,
-                pointProvider = LineCartesianLayer.PointProvider.single(
-                    LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(smbColor), shape = InvertedTriangleShape), size = 22.dp)
-                ),
+                pointProvider = TieredPointProvider(InvertedTriangleShape, smbColor, MAX_MANUAL_BOLUS_KEY),
                 dataLabel = bolusLabelComponent,
                 dataLabelPosition = Position.Vertical.Top,
                 dataLabelValueFormatter = bolusValueFormatter
@@ -1358,7 +1301,7 @@ fun rememberCobLineStyles(): CobLineStyles {
     val decimalFormatter = LocalDecimalFormatter.current
 
     val carbsLabelComponent = remember(carbsColor) {
-        TextComponent(textStyle = TextStyle(color = carbsColor, fontSize = 14.sp))
+        TextComponent(textStyle = TextStyle(color = carbsColor, fontSize = TREATMENT_LABEL_FONT_SIZE))
     }
     val carbsValueFormatter = remember {
         CartesianValueFormatter { _, value, _ -> formatCarbsLabel(value, decimalFormatter) }
@@ -1380,12 +1323,11 @@ fun rememberCobLineStyles(): CobLineStyles {
                     LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(cobColor), shape = CircleShape), size = 6.dp)
                 )
             ),
+            // Sized as on the BG graph
             carbsLine = LineCartesianLayer.Line(
                 fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
                 areaFill = null,
-                pointProvider = LineCartesianLayer.PointProvider.single(
-                    LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(carbsColor), shape = InvertedTriangleShape), size = 22.dp)
-                ),
+                pointProvider = TieredPointProvider(InvertedTriangleShape, carbsColor, MAX_CARBS_KEY),
                 dataLabel = carbsLabelComponent,
                 dataLabelPosition = Position.Vertical.Top,
                 dataLabelValueFormatter = carbsValueFormatter
@@ -1466,12 +1408,10 @@ internal data class PivotZeroFloorPairing(val pivotNice: NiceScale, val zeroFloo
  * zero-floor nice range, so its zero lands exactly at the pivot's center (same pixel row) and its
  * curve — normally never negative — fills only the upper half, scaled nicely up to its own real
  * max (any rare negative sliver still fits, just not symmetric-looking, since half also covers it).
- * [pivotTickCount] lets the pivot side request fewer ticks than [zeroFloorY]'s own (see
- * [SENS_PIVOT_TICK_COUNT]).
  */
-internal fun pivotZeroFloorPairing(pivotY: List<Double>, zeroFloorY: List<Double>, pivot: Double, minDeviation: Double, pivotTickCount: Int): PivotZeroFloorPairing {
-    val pivotNice = niceScaleAroundPivot(pivotY.min(), pivotY.max(), pivot, pivotTickCount, minDeviation)
-    val zeroFloorNice = zeroFloorNiceRange(zeroFloorY.min(), zeroFloorY.max().coerceAtLeast(0.1), SECONDARY_GRAPH_TICK_COUNT)
+internal fun pivotZeroFloorPairing(pivotY: List<Double>, zeroFloorY: List<Double>, pivot: Double, minDeviation: Double): PivotZeroFloorPairing {
+    val pivotNice = niceScaleAroundPivot(pivotY.min(), pivotY.max(), pivot, minDeviation)
+    val zeroFloorNice = zeroFloorNiceRange(zeroFloorY.min(), zeroFloorY.max().coerceAtLeast(0.1))
     val zeroFloorHalf = maxOf(-zeroFloorNice.min, zeroFloorNice.max)
     return PivotZeroFloorPairing(pivotNice, zeroFloorHalf, zeroFloorNice.min)
 }
@@ -1556,6 +1496,6 @@ internal fun fractionAlignedNiceRange(niceMin: Double, niceMax: Double, targetFr
     if (fraction <= 0.0) return niceMin to niceMax
     val candidateMax = niceMin * (fraction - 1.0) / fraction
     return if (candidateMax >= niceMax) niceMin to niceUp(candidateMax)
-    else niceNegativeSliver(-fraction / (1.0 - fraction) * niceMax) to niceMax
+    else -niceUp(fraction / (1.0 - fraction) * niceMax) to niceMax
 }
 

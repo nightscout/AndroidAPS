@@ -3,7 +3,7 @@ package app.aaps.implementation.bolus
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import dev.zacsweers.metro.AppScope
@@ -23,17 +23,17 @@ import dev.zacsweers.metro.SingleIn
 @Inject
 class BatchExecutorImpl(
     private val roleBranch: RoleBranch,
-    private val wizardBolusExecutor: WizardBolusExecutor
+    private val masterActionExecutor: MasterActionExecutor
 ) : BatchExecutor {
 
     override suspend fun prepare(actions: List<BatchAction>, source: Sources, label: String): ActionProgress =
         roleBranch.prepare(label, ClientControlActionDispatcher.Command.BatchPrepare(actions)) {
-            wizardBolusExecutor.prepareBatch(actions)
+            masterActionExecutor.prepareBatch(actions)
         }
 
     override suspend fun commit(id: Long, source: Sources, label: String, pumpDirect: Boolean): ActionProgress =
         roleBranch.commit(label, ClientControlActionDispatcher.Command.BolusCommit(id, pumpDirect = pumpDirect)) { onError ->
             // Decision-B bundle order (bolus + TT) lives in the executor's confirm().
-            wizardBolusExecutor.confirm(id, source, onError)
+            masterActionExecutor.confirm(id, source, onError)
         }
 }

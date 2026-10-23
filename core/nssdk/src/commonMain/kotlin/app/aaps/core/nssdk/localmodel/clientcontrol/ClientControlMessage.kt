@@ -27,11 +27,16 @@ sealed class ClientControlMessage {
      * counter = 1 (the first envelope after pairing).
      *
      * `protocolVersion` lets either side reject a peer it cannot speak to.
+     *
+     * [publicKey] starts the key exchange that replaces the pairing secret (`ClientControlKeyExchangeCrypto`): the
+     * master answers with a [KeyExchangeEnvelope]. A paired client whose secret was not replaced yet sends a hello again
+     * on each connection until it is, so a client paired before this existed gets a new secret too.
      */
     @Serializable
     @SerialName("hello")
     data class Hello(
-        val protocolVersion: Int = 1
+        val protocolVersion: Int = 1,
+        val publicKey: String? = null
     ) : ClientControlMessage()
 
     /**
@@ -238,7 +243,13 @@ data class BatchActionDto(
     val eCarbsDelayMinutes: Int = 0,
     val eCarbsDurationHours: Int = 0,
     // bolus: originating QuickWizard guid (INSULIN/CARBS mode) so the master marks the entry used on commit (lastUsed)
-    val quickWizardGuid: String? = null
+    val quickWizardGuid: String? = null,
+    // remove: the record type and the Nightscout ids of the records, the only ids every instance shares.
+    // [localOnlyCount] counts the records without a Nightscout id: only the client has them, the master names them
+    // in its confirmation. calibration reuses [glucoseMgdl] (the fingerstick value).
+    val recordKind: String? = null,
+    val nsIds: List<String> = emptyList(),
+    val localOnlyCount: Int = 0
 ) {
 
     companion object {
@@ -263,5 +274,14 @@ data class BatchActionDto(
         // therapy_event_edit: the master UPDATES an existing TherapyEvent it locates by teType+timestamp (reuses the
         // teType/timestamp/location/arrow/notes/source fields). Distinct from create so it never insert-if-news.
         const val TYPE_THERAPY_EVENT_EDIT = "therapy_event_edit"
+
+        // remove: the master removes its own copies of [nsIds] of [recordKind]; ids it does not have are skipped.
+        const val TYPE_REMOVE = "remove"
+
+        // remove_start_events: the master removes every "AndroidAPS started" event, matched by its own text. No fields.
+        const val TYPE_REMOVE_START_EVENTS = "remove_start_events"
+
+        // calibration: the master stores the fingerstick [glucoseMgdl] paired with its own latest sensor reading.
+        const val TYPE_CALIBRATION = "calibration"
     }
 }

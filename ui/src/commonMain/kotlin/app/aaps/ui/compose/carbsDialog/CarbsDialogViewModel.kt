@@ -22,8 +22,10 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
@@ -71,7 +73,8 @@ class CarbsDialogViewModel(
     private val rxBus: RxBus,
     // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
     // binds the same instance under both, so this is the same application scope.
-    private val appScope: CoroutineScope
+    private val appScope: CoroutineScope,
+    private val nsClient: NsClient
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CarbsDialogUiState())
@@ -103,8 +106,11 @@ class CarbsDialogViewModel(
         // COB removal limit: a negative entry may remove at most the carbs currently on board (floored, ≥0).
         val cobLimit = (iobCobCalculator.getCobInfo("carbsDialog").displayCob ?: 0.0).toInt().coerceAtLeast(0)
 
+        // A temp target needs a higher role than carbs. Without it the hypo target is not ticked for the user,
+        // or the carbs for a low would be refused together with it.
+        val canSetTempTarget = nsClient.clientRole.value.allows(ElementType.TEMP_TARGET_MANAGEMENT.role)
         // Auto-detect hypo condition
-        val autoHypo = detectAutoHypo(now)
+        val autoHypo = canSetTempTarget && detectAutoHypo(now)
 
         _uiState.update {
             CarbsDialogUiState(
@@ -112,6 +118,7 @@ class CarbsDialogViewModel(
                 timeOffsetMinutes = 0,
                 durationHours = 0,
                 hypoTtChecked = autoHypo,
+                canSetTempTarget = canSetTempTarget,
                 eatingSoonTtChecked = false,
                 activityTtChecked = false,
                 alarmChecked = false,
@@ -154,7 +161,7 @@ class CarbsDialogViewModel(
         if (activeTT != null) {
             val activeTarget = activeTT.highTarget
             val remainingDurationMin = ((activeTT.timestamp + activeTT.duration) - now) / 60000
-            if (activeTarget > Constants.NORMAL_TARGET_MGDL && remainingDurationMin > hypoTTDuration) {
+            if (Constants.isAboveNormalTarget(activeTarget) && remainingDurationMin > hypoTTDuration) {
                 return false
             }
         }

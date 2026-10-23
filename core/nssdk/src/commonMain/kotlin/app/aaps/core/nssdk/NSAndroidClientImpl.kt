@@ -4,10 +4,13 @@ import app.aaps.core.nssdk.exceptions.DateHeaderOutOfToleranceException
 import app.aaps.core.nssdk.exceptions.InvalidAccessTokenException
 import app.aaps.core.nssdk.exceptions.InvalidFormatNightscoutException
 import app.aaps.core.nssdk.exceptions.InvalidParameterNightscoutException
+import app.aaps.core.nssdk.exceptions.NotAllowedNightscoutException
 import app.aaps.core.nssdk.exceptions.UnknownResponseNightscoutException
 import app.aaps.core.nssdk.exceptions.UnsuccessfulNightscoutException
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.Status
+import app.aaps.core.nssdk.localmodel.authorization.NSAuthRole
+import app.aaps.core.nssdk.localmodel.authorization.NSAuthSubject
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.core.nssdk.localmodel.entry.NSMbgV3
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
@@ -24,6 +27,7 @@ import app.aaps.core.nssdk.mapper.toRemoteFood
 import app.aaps.core.nssdk.mapper.toRemoteTreatment
 import app.aaps.core.nssdk.mapper.toSgv
 import app.aaps.core.nssdk.mapper.toTreatment
+import app.aaps.core.nssdk.networking.NsHttpResponse
 import app.aaps.core.nssdk.networking.NsKtorClient
 import app.aaps.core.nssdk.networking.NsUrl
 import app.aaps.core.nssdk.remotemodel.LastModified
@@ -101,7 +105,31 @@ class NSAndroidClientImpl(
     }
 
     override suspend fun getStatus(): Status = callWrapper(dispatcher) {
-        fetchStatus().toLocal().also { lastStatus = it }
+        fetchStatus().toLocal().withSettingsRights().also { lastStatus = it }
+    }
+
+    /**
+     * The settings rights, asked from Nightscout one by one when `v3/status` does not show full rights.
+     *
+     * `v3/status` cannot be trusted for one collection: it checks `api:undefined:create` and so on (it passes the
+     * collection's name where its object is expected), so only wildcard rights show. The client role has `*:*:read`
+     * plus create and update on settings only, and status reports that as read-only. Settings matter because they are
+     * the channel between a client and its master. An admin token shows full rights and is not asked again.
+     */
+    private suspend fun Status.withSettingsRights(): Status {
+        if (apiPermissions.isFull()) return this
+        val settings = apiPermissions.settings.copy(
+            create = hasPermission("api:settings:create"),
+            update = hasPermission("api:settings:update")
+        )
+        return copy(apiPermissions = apiPermissions.copy(settings = settings))
+    }
+
+    private suspend fun hasPermission(permission: String): Boolean {
+        val response = api.checkPermission(permission)
+        if (response.code == 401 || response.code == 403) return false
+        response.throwIfFailed()
+        return true
     }
 
     /**
@@ -713,6 +741,50 @@ class NSAndroidClientImpl(
             throw UnsuccessfulNightscoutException(response.errorBody() ?: response.message())
     }
 
+    // ---------------------------------------------------------------- authorization (API v2)
+
+    override suspend fun getAuthRoles(): List<NSAuthRole> = callWrapper(dispatcher) {
+        api.getAuthRoles().successBody()
+    }
+
+    // A create is sent once, not through the retry: a request that reached the server but lost its answer would
+    // otherwise store the role a second time.
+    override suspend fun createAuthRole(role: NSAuthRole): NSAuthRole = withContext(dispatcher) {
+        api.createAuthRole(role).successBody()
+    }
+
+    override suspend fun updateAuthRole(role: NSAuthRole): Unit = callWrapper(dispatcher) {
+        api.updateAuthRole(role).throwIfFailed()
+    }
+
+    override suspend fun getAuthSubjects(): List<NSAuthSubject> = callWrapper(dispatcher) {
+        api.getAuthSubjects().successBody()
+    }
+
+    // Sent once, like createAuthRole: a second subject would be a second working token.
+    override suspend fun createAuthSubject(subject: NSAuthSubject): NSAuthSubject = withContext(dispatcher) {
+        api.createAuthSubject(subject).successBody()
+    }
+
+    override suspend fun deleteAuthSubject(id: String): Unit = callWrapper(dispatcher) {
+        api.deleteAuthSubject(id).throwIfFailed()
+    }
+
+    /**
+     * API v2 answers 401 when the token may not do this, also after `NsAuth` has logged in again successfully, so a 401
+     * here means "not an admin token". A token that is not valid at all fails earlier, in the login.
+     */
+    private fun NsHttpResponse<*>.throwIfFailed() {
+        if (isSuccessful) return
+        if (code == 401 || code == 403) throw NotAllowedNightscoutException(errorBody() ?: message())
+        throw UnsuccessfulNightscoutException(errorBody() ?: message())
+    }
+
+    private fun <T> NsHttpResponse<T>.successBody(): T {
+        throwIfFailed()
+        return body() ?: throw UnsuccessfulNightscoutException("Response has no body")
+    }
+
     private suspend fun <T> callWrapper(dispatcher: CoroutineDispatcher, block: suspend () -> T): T =
         withContext(dispatcher) {
             retry(
@@ -721,7 +793,8 @@ class NSAndroidClientImpl(
                 excludedExceptions = listOf(
                     InvalidAccessTokenException::class,
                     DateHeaderOutOfToleranceException::class,
-                    InvalidFormatNightscoutException::class
+                    InvalidFormatNightscoutException::class,
+                    NotAllowedNightscoutException::class
                 )
             ) {
                 block.invoke()

@@ -51,6 +51,12 @@ class PumpManager(
     // List of Pump instances acquired by acquirePump() calls.
     private val acquiredPumps = mutableMapOf<BluetoothAddress, Pump>()
 
+    // Pump.newBolusSeen of the last released Pump instance of each pump. Every connection
+    // gets a new Pump, and the connection that found an unknown bolus can be dropped before
+    // the bolus that waits in the queue is sent. Without this, that bolus was given, though it
+    // was decided without the insulin found (#5377).
+    private val newBolusSeen = mutableMapOf<BluetoothAddress, Boolean>()
+
     /**
      * Stage for when discovery is aborted due to an error.
      */
@@ -415,7 +421,7 @@ class PumpManager(
 
             val bluetoothDevice = bluetoothInterface.getDevice(pumpAddress)
 
-            val pump = Pump(bluetoothDevice, pumpStateStore, initialBasalProfile, onEvent)
+            val pump = Pump(bluetoothDevice, pumpStateStore, initialBasalProfile, newBolusSeen[pumpAddress] ?: false, onEvent)
 
             acquiredPumps[pumpAddress] = pump
 
@@ -431,12 +437,17 @@ class PumpManager(
      */
     suspend fun releasePump(acquiredPumpAddress: BluetoothAddress) {
         pumpStateAccessMutex.withLock {
-            if (!acquiredPumps.contains(acquiredPumpAddress)) {
+            val pump = acquiredPumps.remove(acquiredPumpAddress)
+            if (pump == null) {
                 logger(LogLevel.DEBUG) { "A pump with address $acquiredPumpAddress wasn't previously acquired; ignoring call" }
                 return@withLock
             }
 
-            acquiredPumps.remove(acquiredPumpAddress)
+            // An unpaired pump starts again with nothing seen.
+            if (pumpStateStore.hasPumpState(acquiredPumpAddress))
+                newBolusSeen[acquiredPumpAddress] = pump.newBolusSeen
+            else
+                newBolusSeen.remove(acquiredPumpAddress)
         }
     }
 

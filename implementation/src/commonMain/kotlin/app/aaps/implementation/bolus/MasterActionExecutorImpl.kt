@@ -19,7 +19,9 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchAction
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
+import app.aaps.core.interfaces.bolus.RemoteCaller
+import app.aaps.core.interfaces.bolus.requiredRole
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.configuration.Config
@@ -45,6 +47,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.profile.ProfileSealed
@@ -65,14 +68,14 @@ import kotlin.math.abs
 import kotlin.math.ceil
 
 /**
- * [WizardBolusExecutor] implementation. The `BolusWizard`/`QuickWizardEntry` compute objects stay
+ * [MasterActionExecutor] implementation. The `BolusWizard`/`QuickWizardEntry` compute objects stay
  * **internal** here (`:implementation` sees `core:objects`); the interface exposes only the primitive
  * result, so it can live in `core:interfaces` with no `core:objects` dependency.
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 @Inject
-class WizardBolusExecutorImpl(
+class MasterActionExecutorImpl(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     private val config: Config,
@@ -96,8 +99,9 @@ class WizardBolusExecutorImpl(
     private val bolusProgressData: BolusProgressData,
     // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
     // commonMain. AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
-    private val appScope: CoroutineScope
-) : WizardBolusExecutor {
+    private val appScope: CoroutineScope,
+    private val masterRecordWriter: MasterRecordWriter
+) : MasterActionExecutor {
 
     /**
      * The consumed-once slot. `entry` is non-null only for a quick-wizard prepare (carb timing / super-bolus /
@@ -140,9 +144,17 @@ class WizardBolusExecutorImpl(
         val therapyEvents: List<BatchAction.TherapyEvent> = emptyList(),
         // Edits of existing therapy events (location/arrow/note) — likewise list-handled; the master updates in place.
         val therapyEventEdits: List<BatchAction.TherapyEventEdit> = emptyList(),
+        // Removals of stored records (one per record type) and of the "AndroidAPS started" events; a calibration.
+        val removals: List<BatchAction.Remove> = emptyList(),
+        val removeStartEvents: Boolean = false,
+        val calibration: BatchAction.Calibration? = null,
         val recordOnly: Boolean = false,
         val iCfg: ICfg? = null,
-        val bolusTimestamp: Long? = null
+        val bolusTimestamp: Long? = null,
+        // Who it was prepared for (null: the master itself) and the lowest role its content needs. Only that caller
+        // may commit it, and only while its role still allows it (see RemoteCaller).
+        val caller: RemoteCaller? = null,
+        val requiredRole: ClientRole = ClientRole.MealAssistant
     )
 
     // Consume-once slots keyed by bolusId — a map, NOT a single var, so prepares from different actors (the
@@ -177,7 +189,14 @@ class WizardBolusExecutorImpl(
 
         fun park(id: Long, bolus: PendingBolus) = lock.withLock { slots[id] = bolus }
 
-        fun take(id: Long): PendingBolus? = lock.withLock { slots.remove(id) }
+        /**
+         * Takes the dose parked under [id] only for the caller it was prepared for ([owner] = its clientId, null for
+         * the master itself). For anyone else it returns null and leaves the dose in place: ids are guessable
+         * timestamps, so a client must not be able to commit - or throw away - what another one prepared.
+         */
+        fun takeFor(id: Long, owner: String?): PendingBolus? = lock.withLock {
+            if (slots[id]?.caller?.clientId == owner) slots.remove(id) else null
+        }
 
         fun evictOlderThan(cutoff: Long) = lock.withLock { slots.keys.removeAll { it < cutoff } }
 
@@ -196,7 +215,7 @@ class WizardBolusExecutorImpl(
      * `dateUtil.now()` alone is NOT unique under concurrency. The fill dialog, for one, fires its insulin activation,
      * site change and cartridge change as three separate coroutines; two prepares landing in the same millisecond
      * would share a key, so the second park overwrites the first. The first commit then applies the WRONG batch and
-     * the second is rejected as [WizardBolusExecutor.ConfirmResult.NoPending] — observed in the wild as a fill whose
+     * the second is rejected as [MasterActionExecutor.ConfirmResult.NoPending] — observed in the wild as a fill whose
      * insulin switch silently didn't happen.
      *
      * Hand out a strictly increasing value instead. It still tracks the clock, running ahead only by the number of
@@ -215,48 +234,54 @@ class WizardBolusExecutorImpl(
         evictStalePending()
     }
 
-    override suspend fun prepareQuickWizard(guid: String): WizardBolusExecutor.PrepareResult {
+    override suspend fun prepareQuickWizard(guid: String, caller: RemoteCaller?): MasterActionExecutor.PrepareResult {
         // Reject before plugins are wired up: a remote prepare (client-control) can land while the master is still
         // initializing — before ConfigBuilder.initialize() ran verifySelectionInCategories(). At that point activeAPS
         // is still null (unlike activePump, which has an init-time fallback), so getProfile() builds a profile whose
         // BolusWizard.doCalc would hit ProfileSealed's "APS not defined" guard. Mirrors the appInitialized gate every
         // other external trigger (wear, automation, widgets) already has.
-        if (!config.appInitialized) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.initializing))
-        runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)?.let { return WizardBolusExecutor.PrepareResult.Error(it) }
+        if (!config.appInitialized) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.initializing))
+        runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)?.let { return MasterActionExecutor.PrepareResult.Error(it) }
         val actualBg = iobCobCalculator.ads.actualBg()
         val profile = profileFunction.getProfile()
         val profileName = profileFunction.getProfileName()
-        val entry = quickWizard.get(guid) ?: return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.quick_wizard_not_available))
-        if (actualBg == null) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_actual_bg))
-        if (profile == null) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_active_profile))
+        val entry = quickWizard.get(guid) ?: return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.quick_wizard_not_available))
+        if (actualBg == null) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_actual_bg))
+        if (profile == null) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_active_profile))
         // No COB gate: QuickWizardEntry.doCalc treats a null COB as 0 (only ever LOWERS the dose = safe),
         // so requiring COB here was stricter than the local QuickWizard and the real "missing data" mismatch.
         val pump = activePlugin.activePump
-        if (!pump.isInitialized()) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_pump_not_available))
+        if (!pump.isInitialized()) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_pump_not_available))
 
         val wizard = entry.doCalc(profile, profileName, actualBg)
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
-        if (carbsAfterConstraints != entry.carbs()) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
+        if (carbsAfterConstraints != entry.carbs()) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
         // The eCarbs amount is STORED in the preset, so the carbs limit may have been lowered after it was entered
         // (also: a settings import, or a preset synced from a device with a higher limit). Re-check it exactly like
         // the immediate carbs above — a preset that no longer fits the limit is refused, never silently trimmed.
         val eCarbsGrams = entry.eCarbsGrams()
         if (constraintChecker.applyCarbsConstraints(ConstraintObject(eCarbsGrams, aapsLogger)).value() != eCarbsGrams)
-            return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
+            return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
         val insulinAfterConstraints = wizard.insulinAfterConstraints
         if (Round.isMoreThanRounding(wizard.calculatedTotalInsulin, insulinAfterConstraints, pump.bolusStepSize(insulinAfterConstraints)))
-            return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
+            return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
         // A correction-only QuickWizard (0 carbs) that nets to nothing → reject rather than show an empty confirm.
         if (wizard.calculatedTotalInsulin <= 0.0 && wizard.carbs <= 0)
-            return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_insulin_required))
+            return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_insulin_required))
 
         evictStalePending()
-        pending.park(wizard.timeStamp, PendingBolus(wizard.unclampedCalculatedInsulin, wizard.carbs, wizard.createBolusCalculatorResult(), wizard.timeStamp, entry, carbTimeMinutes = entry.carbTime(), notes = entry.buttonText()))
+        pending.park(
+            wizard.timeStamp,
+            PendingBolus(
+                wizard.unclampedCalculatedInsulin, wizard.carbs, wizard.createBolusCalculatorResult(), wizard.timeStamp, entry,
+                carbTimeMinutes = entry.carbTime(), notes = entry.buttonText(), caller = caller, requiredRole = ClientRole.MealAssistant
+            )
+        )
         // Build the master's color-coded confirmation lines here so the client renders the master's EXACT
         // wizard confirmation (shared builder). advisorApplies offers the high-BG "correct now, eat later" fork.
         val advisorApplies = wizard.needsBolusAdvisor()
-        return WizardBolusExecutor.PrepareResult.Preview(
+        return MasterActionExecutor.PrepareResult.Preview(
             insulin = wizard.calculatedTotalInsulin,
             carbs = wizard.carbs,
             bolusId = wizard.timeStamp,
@@ -275,11 +300,11 @@ class WizardBolusExecutorImpl(
         )
     }
 
-    override suspend fun prepareWizard(inputs: WizardBolusExecutor.WizardInputs): WizardBolusExecutor.PrepareResult {
+    override suspend fun prepareWizard(inputs: MasterActionExecutor.WizardInputs, caller: RemoteCaller?): MasterActionExecutor.PrepareResult {
         // Same pre-init guard as prepareQuickWizard: doCalc would otherwise hit ProfileSealed's "APS not defined" guard
         // when a remote prepare arrives before verifySelectionInCategories() has populated activeAPS.
-        if (!config.appInitialized) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.initializing))
-        runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)?.let { return WizardBolusExecutor.PrepareResult.Error(it) }
+        if (!config.appInitialized) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.initializing))
+        runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)?.let { return MasterActionExecutor.PrepareResult.Error(it) }
         // Resolve the dialog's profile selection: null → the master's active profile (kept dynamic — the master is
         // authoritative); a name → that stored profile (a client/watch relays a name the master owns), wrapped so
         // doCalc sees a full Profile. An unknown name fails the prepare (the picker offered a profile the master lacks).
@@ -288,21 +313,21 @@ class WizardBolusExecutorImpl(
         val profile: Profile
         val profileName: String
         if (selectedProfile == null) {
-            profile = profileFunction.getProfile() ?: return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_active_profile))
+            profile = profileFunction.getProfile() ?: return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_active_profile))
             profileName = profileFunction.getProfileName()
         } else {
             val pure = profileRepository.profile.value?.getSpecificProfile(selectedProfile)
-                ?: return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.scene_profile_not_found, selectedProfile))
+                ?: return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.scene_profile_not_found, selectedProfile))
             profile = ProfileSealed.Pure(pure, activePlugin)
             profileName = selectedProfile
         }
         val pump = activePlugin.activePump
-        if (!pump.isInitialized()) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_pump_not_available))
+        if (!pump.isInitialized()) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_pump_not_available))
         // Recompute on the MASTER's live state (temp target + COB) using the client's inputs + the resolved profile.
         val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
         val cob = if (inputs.useCob) iobCobCalculator.getCobInfo("WizardPrepare").displayCob ?: 0.0 else 0.0
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(inputs.carbs, aapsLogger)).value()
-        if (carbsAfterConstraints != inputs.carbs) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
+        if (carbsAfterConstraints != inputs.carbs) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
         val wizard = bolusWizardProvider().doCalc(
             profile, profileName, tempTarget, carbsAfterConstraints, cob, inputs.bg, inputs.directCorrection, inputs.percentage,
             inputs.useBg, inputs.useCob, inputs.useIob, inputs.useIob, false, inputs.useTt, inputs.useTrend, inputs.alarm, inputs.notes, inputs.carbTime
@@ -318,10 +343,10 @@ class WizardBolusExecutorImpl(
         // "no insulin required" instead of an empty confirmation. The guard lives here so every surface that recomputes
         // through this path — phone wizard dialog, client relay, watch — gets it (it was previously only in the wear handler).
         if (wizard.calculatedTotalInsulin <= 0.0 && wizard.carbs <= 0)
-            return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_insulin_required))
+            return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_insulin_required))
         // A limit that leaves no insulin at all, and there are no carbs either: nothing would be given.
         if (capped && insulinAfterConstraints <= 0.0 && wizard.carbs <= 0)
-            return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
+            return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
         evictStalePending()
         pending.park(wizard.timeStamp,
             PendingBolus(
@@ -335,11 +360,13 @@ class WizardBolusExecutorImpl(
                 notes = inputs.notes,
                 eCarbsGrams = inputs.eCarbsGrams,
                 eCarbsDelayMinutes = inputs.eCarbsDelayMinutes,
-                eCarbsDurationHours = inputs.eCarbsDurationHours
+                eCarbsDurationHours = inputs.eCarbsDurationHours,
+                caller = caller,
+                requiredRole = ClientRole.MealAssistant
             )
         )
         val advisorApplies = wizard.needsBolusAdvisor()
-        return WizardBolusExecutor.PrepareResult.Preview(
+        return MasterActionExecutor.PrepareResult.Preview(
             insulin = wizard.calculatedTotalInsulin,
             carbs = wizard.carbs,
             bolusId = wizard.timeStamp,
@@ -367,7 +394,7 @@ class WizardBolusExecutorImpl(
         )
     }
 
-    override suspend fun prepareBatch(actions: List<BatchAction>): WizardBolusExecutor.PrepareResult {
+    override suspend fun prepareBatch(actions: List<BatchAction>, caller: RemoteCaller?): MasterActionExecutor.PrepareResult {
         val bolus = actions.filterIsInstance<BatchAction.Bolus>().firstOrNull()
         val tt = actions.filterIsInstance<BatchAction.TempTarget>().firstOrNull() // ≤1 by construction
         val ps = actions.filterIsInstance<BatchAction.ProfileSwitch>().firstOrNull() // ≤1 by construction
@@ -379,6 +406,9 @@ class WizardBolusExecutorImpl(
         val ia = actions.filterIsInstance<BatchAction.InsulinActivate>().firstOrNull() // ≤1 by construction
         val tes = actions.filterIsInstance<BatchAction.TherapyEvent>() // ≥0; handled as a list (defensive — clients currently send one per batch)
         val teEdits = actions.filterIsInstance<BatchAction.TherapyEventEdit>() // ≥0; existing-event metadata edits (location/arrow/note)
+        val removals = actions.filterIsInstance<BatchAction.Remove>() // ≥0; one per record type
+        val rse = actions.filterIsInstance<BatchAction.RemoveStartEvents>().firstOrNull() // ≤1 by construction
+        val cal = actions.filterIsInstance<BatchAction.Calibration>().firstOrNull() // ≤1 by construction
         val recordOnly = bolus?.recordOnly == true
         // Originating QuickWizard (INSULIN/CARBS mode), resolved on the MASTER's own store so confirm() can mark it used
         // (lastUsed cooldown) here — the master is SOT and republishes the pref; the client never writes it. Null for a
@@ -391,13 +421,13 @@ class WizardBolusExecutorImpl(
         // field moments ago, and capFixed below is what bounds the rest of a batch.
         if (entry != null && bolus != null && bolus.eCarbsGrams > 0 &&
             constraintChecker.applyCarbsConstraints(ConstraintObject(bolus.eCarbsGrams, aapsLogger)).value() != bolus.eCarbsGrams
-        ) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
+        ) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
         // Gate + pump-init only for an actual INSULIN delivery — carbs-only, a record-only log, and a TT-only batch
         // are always allowed (mirrors executeBolus, which gates only when insulin > 0).
         if (bolus != null && !recordOnly && bolus.insulin > 0.0) {
-            runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)?.let { return WizardBolusExecutor.PrepareResult.Error(it) }
+            runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)?.let { return MasterActionExecutor.PrepareResult.Error(it) }
             if (!activePlugin.activePump.isInitialized())
-                return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_pump_not_available))
+                return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_pump_not_available))
         }
         // Cap a delivery (caps only reduce = safe); a record-only is persisted as given (a record must not be altered).
         // SECURITY NOTE: record-only is DELIBERATELY uncapped (a legitimate pen bolus may exceed the soft max). A
@@ -412,7 +442,7 @@ class WizardBolusExecutorImpl(
         // profile switch below. It matters more here: a target outside the window is stored, never becomes active,
         // and nothing says so, so the user believes they set a target that silently does not happen.
         if (tt != null && T.mins(tt.startOffsetMinutes.toLong()).msecs() !in Constants.TEMP_TARGET_TIME_OFFSET)
-            return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.temp_target_time_too_far, T.msecs(Constants.TEMP_TARGET_TIME_OFFSET.last).hours().toInt()))
+            return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.temp_target_time_too_far, T.msecs(Constants.TEMP_TARGET_TIME_OFFSET.last).hours().toInt()))
         // Validate a profile switch up-front (the master is the authority): no active profile, or a value out of the
         // CPP hard limits, fails the whole batch before parking — mirrors the old wear-local checks.
         if (ps != null) {
@@ -420,52 +450,52 @@ class WizardBolusExecutorImpl(
             if (psName != null) {
                 // Named switch: the target must exist in the MASTER's store (a client may relay a name the master resolves).
                 if (profileRepository.profile.value?.getSpecificProfile(psName) == null)
-                    return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.scene_profile_not_found, psName))
+                    return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.scene_profile_not_found, psName))
                 // The switch has to record an insulin. Accept one the caller already asked the user for
                 // (fill/prime, activation), else the insulin in force. With neither, refuse rather than
                 // substitute — a named switch is reachable with nothing running (first activation, expired EPS).
                 if (ps.iCfg == null && profileFunction.getRunningOrRequestedICfg() == null)
-                    return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.profile_switch_no_insulin))
+                    return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.profile_switch_no_insulin))
             } else if (profileFunction.getProfile() == null) {
-                return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.no_profile_set))
+                return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.no_profile_set))
             }
             if (ps.percentage.toDouble() !in Constants.CPP_PERCENTAGE_RANGE)
-                return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.valueoutofrange, "Profile-Percentage"))
+                return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.valueoutofrange, "Profile-Percentage"))
             if (ps.timeShiftHours.toDouble() !in Constants.CPP_TIMESHIFT_RANGE)
-                return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.valueoutofrange, "Profile-Timeshift"))
+                return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.valueoutofrange, "Profile-Timeshift"))
             if (ps.durationMinutes.toDouble() !in Constants.ACTION_DURATION)
-                return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.valueoutofrange, "Profile-Duration"))
+                return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.valueoutofrange, "Profile-Duration"))
             // Clock sanity bound, checked against the MASTER's clock. The time comes from a user picker, so it may
             // legitimately be in the past (back-dating) or the future (a scheduled start), but only within a day:
             // a paired client sends its own time, and a client with a wrong clock would otherwise place a switch
             // where it either never runs or silently rewrites history. Refused, never clamped — moving the time the
             // user picked without saying so would be worse than asking them to fix it.
             if (ps.timestamp > 0L && (ps.timestamp - dateUtil.now()) !in Constants.PROFILE_SWITCH_TIME_OFFSET)
-                return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.profile_switch_time_too_far, T.msecs(Constants.PROFILE_SWITCH_TIME_OFFSET.last).hours().toInt()))
+                return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.profile_switch_time_too_far, T.msecs(Constants.PROFILE_SWITCH_TIME_OFFSET.last).hours().toInt()))
             // The check the switch itself runs (the pump's basal limits, the hard limits). A switch the pump
             // cannot take is refused here, before the user confirms, not reported as done and silently skipped.
-            profileSwitchRefusal(ps)?.let { return WizardBolusExecutor.PrepareResult.Error(it) }
+            profileSwitchRefusal(ps)?.let { return MasterActionExecutor.PrepareResult.Error(it) }
         }
         // Validate a running-mode change up-front: the master re-checks the mode is still a legal transition
         // (a client/watch list may be stale — TOCTOU), and the temporary modes require a positive duration.
         if (rm != null) {
             if (rm.mode !in loop.allowedNextModes())
-                return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.running_mode_change_not_allowed))
+                return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.running_mode_change_not_allowed))
             if ((rm.mode == RM.Mode.SUSPENDED_BY_USER || rm.mode == RM.Mode.DISCONNECTED_PUMP) && rm.durationMinutes <= 0)
-                return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.valueoutofrange, "Duration"))
+                return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.valueoutofrange, "Duration"))
         }
         // Temp basal (manual): validate against the MASTER's pump, then cap. A client mirrors the master's pump via
         // RunningConfiguration, so a capability/style mismatch means the client's config is briefly out of sync → reject.
         var cappedTb: BatchAction.TempBasal? = null
         if (tb != null) {
             val pump = activePlugin.activePump
-            if (!pump.isInitialized()) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_pump_not_available))
+            if (!pump.isInitialized()) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_pump_not_available))
             val masterIsPercent = pump.pumpDescription.tempBasalStyle and PumpDescription.PERCENT == PumpDescription.PERCENT
             if (!pump.pumpDescription.isTempBasalCapable || tb.isPercent != masterIsPercent)
-                return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_pump_out_of_sync))
+                return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_pump_out_of_sync))
             runningModeGuard.rejectionMessage(if (tb.rate == 0.0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO)
-                ?.let { return WizardBolusExecutor.PrepareResult.Error(it) }
-            val profile = profileFunction.getProfile() ?: return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.no_profile_set))
+                ?.let { return MasterActionExecutor.PrepareResult.Error(it) }
+            val profile = profileFunction.getProfile() ?: return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.no_profile_set))
             val cappedRate = if (tb.isPercent)
                 constraintChecker.applyBasalPercentConstraints(ConstraintObject(tb.rate.toInt(), aapsLogger), profile).value().toDouble()
             else
@@ -476,34 +506,45 @@ class WizardBolusExecutorImpl(
         var cappedEb: BatchAction.ExtendedBolus? = null
         if (eb != null) {
             val pump = activePlugin.activePump
-            if (!pump.isInitialized()) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_pump_not_available))
-            if (!pump.pumpDescription.isExtendedBolusCapable) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_pump_out_of_sync))
-            runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.EXTENDED_BOLUS)?.let { return WizardBolusExecutor.PrepareResult.Error(it) }
+            if (!pump.isInitialized()) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_pump_not_available))
+            if (!pump.pumpDescription.isExtendedBolusCapable) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_pump_out_of_sync))
+            runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.EXTENDED_BOLUS)?.let { return MasterActionExecutor.PrepareResult.Error(it) }
             val cappedInsulin = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(eb.insulin, aapsLogger)).value()
-            if (cappedInsulin <= 0.0) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_insulin_required))
+            if (cappedInsulin <= 0.0) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_insulin_required))
             cappedEb = eb.copy(insulin = cappedInsulin)
         }
         // Cancel a running TBR / extended bolus on the MASTER's pump — no cap, no running-mode gate (a stop is always
         // allowed). Validate only that the master's pump is up + capable (a stale client config → reject).
         if (ctb != null) {
             val pump = activePlugin.activePump
-            if (!pump.isInitialized()) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_pump_not_available))
-            if (!pump.pumpDescription.isTempBasalCapable) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_pump_out_of_sync))
+            if (!pump.isInitialized()) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_pump_not_available))
+            if (!pump.pumpDescription.isTempBasalCapable) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_pump_out_of_sync))
         }
         if (ceb != null) {
             val pump = activePlugin.activePump
-            if (!pump.isInitialized()) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_pump_not_available))
-            if (!pump.pumpDescription.isExtendedBolusCapable) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_pump_out_of_sync))
+            if (!pump.isInitialized()) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_pump_not_available))
+            if (!pump.pumpDescription.isExtendedBolusCapable) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.clientcontrol_pump_out_of_sync))
         }
         // Insulin activation: the master re-applies its CURRENT active profile with this insulin
         // (createProfileSwitchWithNewInsulin), which needs an active EPS profile — validate up-front so a no-profile
         // client gets an error instead of a silent no-op at confirm (the batch confirm path has no per-action failure channel).
         if (ia != null && profileFunction.getProfile() !is ProfileSealed.EPS)
-            return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.no_profile_set))
-        if (insulin <= 0.0 && carbs == 0 && tt == null && ps == null && rm == null && tb == null && eb == null && ctb == null && ceb == null && ia == null && tes.isEmpty() && teEdits.isEmpty())
+            return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.no_profile_set))
+        // A calibration is checked on the MASTER's sensor data (session, warm-up, BG changing too fast): that is the
+        // BG the loop doses on. Refused here, before the user confirms; checked again when it is stored.
+        if (cal != null) masterRecordWriter.calibrationRefusal()?.let { return MasterActionExecutor.PrepareResult.Error(it) }
+        // Removals: the master finds its own copies by Nightscout id. With none of them here there is nothing to
+        // confirm — refused with the reason, or a plain no-op when the master's own records were removed meanwhile.
+        val removalPlan = if (removals.isNotEmpty()) masterRecordWriter.planRemovals(removals) else null
+        if (removalPlan != null && removalPlan.found == 0)
+            return if (removalPlan.notHave > 0) MasterActionExecutor.PrepareResult.Error(masterRecordWriter.notHaveText(removalPlan.notHave))
+            else MasterActionExecutor.PrepareResult.NoAction
+        if (insulin <= 0.0 && carbs == 0 && tt == null && ps == null && rm == null && tb == null && eb == null && ctb == null && ceb == null && ia == null && tes.isEmpty() && teEdits.isEmpty() &&
+            removals.isEmpty() && rse == null && cal == null
+        )
         // Nothing to do after caps/clamps (e.g. negative carbs with no COB to remove): a no-op, NOT a delivery
         // error — the caller renders the neutral "no action selected" message, never the bolus-error title.
-            return WizardBolusExecutor.PrepareResult.NoAction
+            return MasterActionExecutor.PrepareResult.NoAction
         evictStalePending()
         val bolusId = nextPendingId()
         pending.park(
@@ -515,12 +556,15 @@ class WizardBolusExecutorImpl(
                 eCarbsGrams = bolus?.eCarbsGrams ?: 0, eCarbsDelayMinutes = bolus?.eCarbsDelayMinutes ?: 0, eCarbsDurationHours = bolus?.eCarbsDurationHours ?: 0,
                 tempTarget = tt, profileSwitch = ps, runningMode = rm, recordOnly = recordOnly, iCfg = bolus?.iCfg, bolusTimestamp = bolus?.timestamp?.takeIf { it > 0L },
                 tempBasal = cappedTb, extendedBolus = cappedEb, cancelTempBasal = ctb != null, cancelExtendedBolus = ceb != null,
-                insulinActivate = ia, therapyEvents = tes, therapyEventEdits = teEdits
+                insulinActivate = ia, therapyEvents = tes, therapyEventEdits = teEdits,
+                removals = removals, removeStartEvents = rse != null, calibration = cal,
+                caller = caller, requiredRole = actions.requiredRole
             )
         )
         // The master is the SOLE author of the confirmation: build the MERGED lines for the whole batch here, so the
         // client renders the master's exact string and a master-local dialog renders the identical one (decision 1).
-        val isTtOnly = bolus == null && ps == null && rm == null && cappedTb == null && cappedEb == null && ctb == null && ceb == null && ia == null && tes.isEmpty() && teEdits.isEmpty()
+        val isTtOnly = bolus == null && ps == null && rm == null && cappedTb == null && cappedEb == null && ctb == null && ceb == null && ia == null && tes.isEmpty() && teEdits.isEmpty() &&
+            removals.isEmpty() && rse == null && cal == null
         val lines = buildFixedLines(bolus, insulin, carbs, recordOnly) +
             (tt?.let { buildTtLine(it, isTtOnly) } ?: emptyList()) +
             (ps?.let { buildPsLine(it) } ?: emptyList()) +
@@ -531,22 +575,27 @@ class WizardBolusExecutorImpl(
             (ceb?.let { buildCancelLine(CoreUiStrings.extended_bolus) } ?: emptyList()) +
             (ia?.let { buildInsulinActivateLine(it) } ?: emptyList()) +
             tes.flatMap { buildTherapyEventLine(it) } +
-            teEdits.flatMap { buildTherapyEventEditLine(it) }
-        return WizardBolusExecutor.PrepareResult.Preview(insulin, carbs, bolusId, lines = lines, advisorApplies = false, advisorLines = emptyList())
+            teEdits.flatMap { buildTherapyEventEditLine(it) } +
+            (removalPlan?.lines ?: emptyList()) +
+            listOfNotNull(rse?.let { masterRecordWriter.removeStartEventsLine() }, cal?.let { masterRecordWriter.calibrationLine(it) })
+        return MasterActionExecutor.PrepareResult.Preview(insulin, carbs, bolusId, lines = lines, advisorApplies = false, advisorLines = emptyList())
     }
 
     override suspend fun confirm(
         bolusId: Long,
         source: Sources,
-        onError: (WizardBolusExecutor.Failure) -> Unit,
+        onError: (MasterActionExecutor.Failure) -> Unit,
         asAdvisor: Boolean,
         correctionU: Double,
+        caller: RemoteCaller?,
         onSuccess: () -> Unit
-    ): WizardBolusExecutor.ConfirmResult {
-        // Atomic consume-once: remove(bolusId) returns the parked dose and removes it in one step, so two
-        // concurrent commits of the same id can't both deliver (the loser gets null → NoPending). A non-matching
-        // id removes nothing, leaving other actors' parked doses intact.
-        val p = pending.take(bolusId) ?: return WizardBolusExecutor.ConfirmResult.NoPending
+    ): MasterActionExecutor.ConfirmResult {
+        // Atomic consume-once: the parked dose is returned and removed in one step, so two concurrent commits of the
+        // same id can't both deliver (the loser gets null → NoPending). A non-matching id, or a dose prepared for
+        // another caller, removes nothing, leaving other actors' parked doses intact.
+        val p = pending.takeFor(bolusId, caller?.clientId) ?: return MasterActionExecutor.ConfirmResult.NoPending
+        // The role is checked again now: it may have been lowered on the master since the prepare.
+        if (caller != null && !caller.role.allows(p.requiredRole)) return MasterActionExecutor.ConfirmResult.NotAllowed
 
         val notes = p.notes
 
@@ -565,7 +614,7 @@ class WizardBolusExecutorImpl(
             // BOLUS_DELIVERY_FAILED alarm, NOT by reverting the steps below. Consequence: a target-LOWERING TT / PS / RM
             // can still apply when the bolus was queued but later failed on the pump (the alarm is the mitigation).
             var accepted = true
-            val wrapped: (WizardBolusExecutor.Failure) -> Unit = { accepted = false; onError(it) }
+            val wrapped: (MasterActionExecutor.Failure) -> Unit = { accepted = false; onError(it) }
             when {
                 p.recordOnly                     -> {
                     // Record-only (a pen bolus, or a master that can't deliver): persist insulin AND carbs as given,
@@ -620,6 +669,11 @@ class WizardBolusExecutorImpl(
             // Edits of existing therapy events (≥0) — the master updates its own copy in place (sole writer); a
             // not-found target surfaces via onError → the commit reports Rejected/Failed (not a silent success).
             p.therapyEventEdits.forEach { applyTherapyEventEdit(it, source, onError) }
+            // Removals of stored records — the master removes its own copies (sole writer); a record it does not have
+            // is skipped. Then the "AndroidAPS started" cleanup and a calibration (a refusal surfaces via onError).
+            if (p.removals.isNotEmpty()) masterRecordWriter.remove(p.removals, source)
+            if (p.removeStartEvents) masterRecordWriter.removeStartEvents(source)
+            p.calibration?.let { masterRecordWriter.addCalibration(it, source, onError) }
             // A profile switch isn't gated on a dose (a PS-only batch funnels through here with a no-op deliver(0,0)).
             p.profileSwitch?.let { applyProfileSwitch(it, source, onError) }
             // A running-mode change is likewise independent of any dose (an RM-only batch no-ops the deliver(0,0)).
@@ -637,7 +691,7 @@ class WizardBolusExecutorImpl(
             // republishes to clients via the cold-doc sync. The client must NOT do this itself (it would push the synced
             // QuickWizard pref back over the round-trip and collide with this commit → "Update settings … Busy").
             p.entry?.markAsUsed()
-            return if (cancelled) WizardBolusExecutor.ConfirmResult.Cancelled else WizardBolusExecutor.ConfirmResult.Delivered
+            return if (cancelled) MasterActionExecutor.ConfirmResult.Cancelled else MasterActionExecutor.ConfirmResult.Delivered
         }
 
         // High-BG advisor branch (user chose "correct now, eat later"): a correction-only CORRECTION_BOLUS —
@@ -645,7 +699,7 @@ class WizardBolusExecutorImpl(
         if (asAdvisor) {
             executeBolusAdvisor(p.insulin, p.bcr?.glucoseValue, p.bcr, notes, source, onError, onSuccess)
             p.entry?.markAsUsed()
-            return WizardBolusExecutor.ConfirmResult.Delivered
+            return MasterActionExecutor.ConfirmResult.Delivered
         }
 
         val carbTimeOffset = p.carbTimeMinutes.toLong()
@@ -707,7 +761,7 @@ class WizardBolusExecutorImpl(
         if (useAlarm && p.carbs > 0 && carbTimeOffset > 0)
             automation.scheduleTimeToEatReminder(T.mins(carbTimeOffset).secs().toInt())
         p.entry?.markAsUsed()
-        return WizardBolusExecutor.ConfirmResult.Delivered
+        return MasterActionExecutor.ConfirmResult.Delivered
     }
 
     /** Cap + classify a FIXED bolus/carbs (delivery only — a record-only entry must NOT be capped). */
@@ -854,21 +908,21 @@ class WizardBolusExecutorImpl(
      * Apply a batch ProfileSwitch via the dialog-free domain path. `profileName` non-null → switch to that named
      * profile from the master's store (a relayed/dialog switch); null → modify the currently active profile (wear / CPP).
      */
-    private suspend fun applyProfileSwitch(ps: BatchAction.ProfileSwitch, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit) {
+    private suspend fun applyProfileSwitch(ps: BatchAction.ProfileSwitch, source: Sources, onError: (MasterActionExecutor.Failure) -> Unit) {
         val psName = ps.profileName
         // The time the user picked, bounded at prepare; 0 = now. A future time is stored as is and
         // ProfileSwitchScheduler arms the start, so the switch is not applied before the user asked.
         val at = ps.timestamp.takeIf { it > 0L } ?: dateUtil.now()
         val created = if (psName != null) {
             val store = profileRepository.profile.value ?: run {
-                onError(WizardBolusExecutor.Failure(rh.gs(CoreUiStrings.noprofile)))
+                onError(MasterActionExecutor.Failure(rh.gs(CoreUiStrings.noprofile)))
                 return
             }
             // Supplied by the caller that asked the user, else the insulin in force. prepare() refuses the
             // batch when neither exists, so null here means the batch bypassed prepare — a bug, not a user state.
             val iCfg = ps.iCfg ?: profileFunction.getRunningOrRequestedICfg() ?: run {
                 aapsLogger.error(LTag.CORE, "applyProfileSwitch: no insulin config available for '$psName' — prepare should have refused this batch")
-                onError(WizardBolusExecutor.Failure(rh.gs(CoreUiStrings.profile_switch_no_insulin)))
+                onError(MasterActionExecutor.Failure(rh.gs(CoreUiStrings.profile_switch_no_insulin)))
                 return
             }
             profileFunction.createProfileSwitch(
@@ -909,7 +963,7 @@ class WizardBolusExecutorImpl(
         }
         // prepare() checked the same, but things can change before the confirmation (a new pump limit, a
         // profile edit). Without this the caller was told the switch was done.
-        if (created == null) onError(WizardBolusExecutor.Failure(profileSwitchRefusal(ps) ?: rh.gs(CoreUiStrings.invalid_profile)))
+        if (created == null) onError(MasterActionExecutor.Failure(profileSwitchRefusal(ps) ?: rh.gs(CoreUiStrings.invalid_profile)))
     }
 
     /** Why [ProfileFunction.createProfileSwitch] would refuse [ps], or null when it would take it. */
@@ -1019,7 +1073,7 @@ class WizardBolusExecutorImpl(
      * Apply a batch temp basal on the master's pump (already capped + style-validated in prepareBatch).
      * Returns true when the command was dropped from the queue on purpose (see `ConfirmResult.Cancelled`).
      */
-    private suspend fun applyTempBasal(tb: BatchAction.TempBasal, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit): Boolean {
+    private suspend fun applyTempBasal(tb: BatchAction.TempBasal, source: Sources, onError: (MasterActionExecutor.Failure) -> Unit): Boolean {
         val profile = profileFunction.getProfile() ?: return false
         val result = if (tb.isPercent) {
             uel.log(action = Action.TEMP_BASAL, source = source, listValues = listOf(ValueWithUnit.Percent(tb.rate.toInt()), ValueWithUnit.Minute(tb.durationMinutes)))
@@ -1028,7 +1082,7 @@ class WizardBolusExecutorImpl(
             uel.log(action = Action.TEMP_BASAL, source = source, listValues = listOf(ValueWithUnit.Insulin(tb.rate), ValueWithUnit.Minute(tb.durationMinutes)))
             commandQueue.tempBasalAbsolute(tb.rate, tb.durationMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL)
         }
-        if (!result.success) onError(WizardBolusExecutor.Failure(result.comment, result.cancelled))
+        if (!result.success) onError(MasterActionExecutor.Failure(result.comment, result.cancelled))
         return result.cancelled
     }
 
@@ -1046,10 +1100,10 @@ class WizardBolusExecutorImpl(
      * Apply a batch extended bolus on the master's pump (already capped in prepareBatch).
      * Returns true when the command was dropped from the queue on purpose (see `ConfirmResult.Cancelled`).
      */
-    private suspend fun applyExtendedBolus(eb: BatchAction.ExtendedBolus, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit): Boolean {
+    private suspend fun applyExtendedBolus(eb: BatchAction.ExtendedBolus, source: Sources, onError: (MasterActionExecutor.Failure) -> Unit): Boolean {
         uel.log(action = Action.EXTENDED_BOLUS, source = source, listValues = listOf(ValueWithUnit.Insulin(eb.insulin), ValueWithUnit.Minute(eb.durationMinutes)))
         val result = commandQueue.extendedBolus(eb.insulin, eb.durationMinutes)
-        if (!result.success) onError(WizardBolusExecutor.Failure(result.comment, result.cancelled))
+        if (!result.success) onError(MasterActionExecutor.Failure(result.comment, result.cancelled))
         return result.cancelled
     }
 
@@ -1063,18 +1117,18 @@ class WizardBolusExecutorImpl(
     }
 
     /** Cancel a running temp basal on the master's pump. Returns true when the command was dropped on purpose. */
-    private suspend fun applyCancelTempBasal(source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit): Boolean {
+    private suspend fun applyCancelTempBasal(source: Sources, onError: (MasterActionExecutor.Failure) -> Unit): Boolean {
         uel.log(action = Action.CANCEL_TEMP_BASAL, source = source)
         val result = commandQueue.cancelTempBasal(enforceNew = true)
-        if (!result.success) onError(WizardBolusExecutor.Failure(result.comment, result.cancelled))
+        if (!result.success) onError(MasterActionExecutor.Failure(result.comment, result.cancelled))
         return result.cancelled
     }
 
     /** Cancel a running extended bolus on the master's pump. Returns true when the command was dropped on purpose. */
-    private suspend fun applyCancelExtendedBolus(source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit): Boolean {
+    private suspend fun applyCancelExtendedBolus(source: Sources, onError: (MasterActionExecutor.Failure) -> Unit): Boolean {
         uel.log(action = Action.CANCEL_EXTENDED_BOLUS, source = source)
         val result = commandQueue.cancelExtended()
-        if (!result.success) onError(WizardBolusExecutor.Failure(result.comment, result.cancelled))
+        if (!result.success) onError(MasterActionExecutor.Failure(result.comment, result.cancelled))
         return result.cancelled
     }
 
@@ -1097,9 +1151,9 @@ class WizardBolusExecutorImpl(
      * `FillDialogViewModel.reportInsulinActivation` already funnels every non-success outcome to the user -
      * it just never heard about this one.
      */
-    private suspend fun applyInsulinActivate(ia: BatchAction.InsulinActivate, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit) {
+    private suspend fun applyInsulinActivate(ia: BatchAction.InsulinActivate, source: Sources, onError: (MasterActionExecutor.Failure) -> Unit) {
         if (!profileFunction.createProfileSwitchWithNewInsulin(ia.iCfg, source))
-            onError(WizardBolusExecutor.Failure(rh.gs(CoreUiStrings.insulin_activation_failed)))
+            onError(MasterActionExecutor.Failure(rh.gs(CoreUiStrings.insulin_activation_failed)))
     }
 
     /** The careportal-event confirmation line (rarely surfaced — careportal auto-commits without showing the batch preview). */
@@ -1156,11 +1210,11 @@ class WizardBolusExecutorImpl(
      * since-deleted event must surface, not vanish). [note] is applied verbatim (incl. null) so clearing a note works.
      * A relayed edit is logged with the executor-provided [source].
      */
-    private suspend fun applyTherapyEventEdit(te: BatchAction.TherapyEventEdit, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit) {
+    private suspend fun applyTherapyEventEdit(te: BatchAction.TherapyEventEdit, source: Sources, onError: (MasterActionExecutor.Failure) -> Unit) {
         val existing = persistenceLayer.getTherapyEventDataFromToTime(te.timestamp, te.timestamp).firstOrNull { it.type == te.teType }
         if (existing == null) {
             aapsLogger.warn(LTag.DATABASE, "TherapyEvent edit target not found at ${te.timestamp} ${te.teType}")
-            onError(WizardBolusExecutor.Failure(rh.gs(CoreUiStrings.clientcontrol_fail_site_entry_not_found)))
+            onError(MasterActionExecutor.Failure(rh.gs(CoreUiStrings.clientcontrol_fail_site_entry_not_found)))
             return
         }
         val updated = existing.copy(location = te.location, arrow = te.arrow, note = te.note) // keep ids → NS PUT-updates the same record (no duplicate)
@@ -1181,7 +1235,7 @@ class WizardBolusExecutorImpl(
         bolusCalculatorResult: BCR?,
         notes: String?,
         source: Sources,
-        onError: (WizardBolusExecutor.Failure) -> Unit
+        onError: (MasterActionExecutor.Failure) -> Unit
     ) = executeWizardBolus(insulin, carbs, carbTimeMinutes, mgdlGlucose, bolusCalculatorResult, notes, source, onError, onSuccess = {})
 
     /** [deliverWizardBolus] with an [onSuccess], for [confirm]'s caller. */
@@ -1193,7 +1247,7 @@ class WizardBolusExecutorImpl(
         bolusCalculatorResult: BCR?,
         notes: String?,
         source: Sources,
-        onError: (WizardBolusExecutor.Failure) -> Unit,
+        onError: (MasterActionExecutor.Failure) -> Unit,
         onSuccess: () -> Unit
     ) {
         // Type-specific entry point: build the canonical BOLUS_WIZARD end state from the wizard inputs,
@@ -1231,7 +1285,7 @@ class WizardBolusExecutorImpl(
         bolusCalculatorResult: BCR?,
         notes: String?,
         source: Sources,
-        onError: (WizardBolusExecutor.Failure) -> Unit
+        onError: (MasterActionExecutor.Failure) -> Unit
     ) = executeBolusAdvisor(insulin, mgdlGlucose, bolusCalculatorResult, notes, source, onError, onSuccess = {})
 
     /** [deliverBolusAdvisor] with an [onSuccess], for [confirm]'s caller. */
@@ -1241,7 +1295,7 @@ class WizardBolusExecutorImpl(
         bolusCalculatorResult: BCR?,
         notes: String?,
         source: Sources,
-        onError: (WizardBolusExecutor.Failure) -> Unit,
+        onError: (MasterActionExecutor.Failure) -> Unit,
         onSuccess: () -> Unit
     ) {
         // Correction-only advisor bolus (BG high, carbs imminent): canonical CORRECTION_BOLUS end state,
@@ -1276,7 +1330,7 @@ class WizardBolusExecutorImpl(
         insulin: Double,
         note: String?,
         source: Sources,
-        onError: (WizardBolusExecutor.Failure) -> Unit,
+        onError: (MasterActionExecutor.Failure) -> Unit,
         timestamp: Long?,
         treatmentNote: String?,
         recordOnly: Boolean,
@@ -1308,7 +1362,7 @@ class WizardBolusExecutorImpl(
         }
     }
 
-    override suspend fun deliverCarbs(carbs: Int, note: String?, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit, onSuccess: () -> Unit) {
+    override suspend fun deliverCarbs(carbs: Int, note: String?, source: Sources, onError: (MasterActionExecutor.Failure) -> Unit, onSuccess: () -> Unit) {
         // Instant carbs at now (zero insulin): CARBS_CORRECTION + CARBS user entry; note on the entry only.
         val detailedBolusInfo = DetailedBolusInfo().apply {
             eventType = TE.Type.CARBS_CORRECTION
@@ -1337,7 +1391,7 @@ class WizardBolusExecutorImpl(
         bolusCalculatorResult: BCR?,
         notes: String?,
         source: Sources,
-        onError: (WizardBolusExecutor.Failure) -> Unit,
+        onError: (MasterActionExecutor.Failure) -> Unit,
         eventType: TE.Type?,
         recordOnly: Boolean,
         iCfg: ICfg?,
@@ -1382,7 +1436,7 @@ class WizardBolusExecutorImpl(
         note: String?,
         bolusCalculatorResult: BCR?,
         source: Sources,
-        onError: (WizardBolusExecutor.Failure) -> Unit,
+        onError: (MasterActionExecutor.Failure) -> Unit,
         onSuccess: () -> Unit = {},
         recordOnly: Boolean = false,
         iCfg: ICfg? = null
@@ -1410,7 +1464,7 @@ class WizardBolusExecutorImpl(
         }
         if (detailedBolusInfo.insulin > 0) {
             runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)?.let {
-                onError(WizardBolusExecutor.Failure(it))
+                onError(MasterActionExecutor.Failure(it))
                 return
             }
         }
@@ -1435,14 +1489,14 @@ class WizardBolusExecutorImpl(
                     if (result.cancelled) notificationManager.post(NotificationId.BOLUS_CANCELLED, errorText)
                     else notificationManager.post(NotificationId.BOLUS_DELIVERY_FAILED, errorText, validMinutes = 0, sound = AlarmSound.BOLUS_ERROR)
                 }
-                onError(WizardBolusExecutor.Failure(errorText, result.cancelled))
+                onError(MasterActionExecutor.Failure(errorText, result.cancelled))
             } else
                 onSuccess()
         }
         bolusCalculatorResult?.let { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) }
     }
 
-    override suspend fun deliverFillBolus(amount: Double, notes: String?, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit, onSuccess: () -> Unit) {
+    override suspend fun deliverFillBolus(amount: Double, notes: String?, source: Sources, onError: (MasterActionExecutor.Failure) -> Unit, onSuccess: () -> Unit) {
         // Prime/fill now rides the shared core (one audited path). PRIMING type keeps it out of IOB/TDD.
         val detailedBolusInfo = DetailedBolusInfo().apply {
             insulin = amount
@@ -1453,7 +1507,7 @@ class WizardBolusExecutorImpl(
             // Last check for every way in (Fill dialog, watch, a client). A patch pump primes in its own
             // activation wizard and its cannula is already in the body: a prime here would be insulin outside IOB.
             if (!activePlugin.activePump.pumpDescription.isRefillingCapable) {
-                onError(WizardBolusExecutor.Failure(rh.gs(CoreUiStrings.prime_not_available)))
+                onError(MasterActionExecutor.Failure(rh.gs(CoreUiStrings.prime_not_available)))
                 return
             }
             executeBolus(
@@ -1469,7 +1523,7 @@ class WizardBolusExecutorImpl(
         }
     }
 
-    override suspend fun deliverECarbs(carbs: Int, carbsTime: Long, duration: Int, delayMinutes: Int, notes: String?, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit, onSuccess: () -> Unit) {
+    override suspend fun deliverECarbs(carbs: Int, carbsTime: Long, duration: Int, delayMinutes: Int, notes: String?, source: Sources, onError: (MasterActionExecutor.Failure) -> Unit, onSuccess: () -> Unit) {
         // Funnel straight through the shared core (not via deliver) so the UEL is logged exactly once with
         // the eCarbs Timestamp; routing via deliver would re-log [Gram, Hour] as a second, duplicate row.
         val detailedBolusInfo = DetailedBolusInfo().apply {

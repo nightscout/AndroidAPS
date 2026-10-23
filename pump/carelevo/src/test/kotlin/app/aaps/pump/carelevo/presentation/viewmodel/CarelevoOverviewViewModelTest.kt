@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
@@ -1352,7 +1351,6 @@ class CarelevoOverviewViewModelTest {
         assertThat(infoRows()[0].value).isEqualTo(s(R.string.carelevo_state_none_value))
         assertThat(state.primaryActions).hasSize(1)
         assertThat(state.primaryActions[0].label).isEqualTo(s(R.string.carelevo_overview_connect_btn_label))
-        assertThat(state.primaryActions[0].category).isEqualTo(ActionCategory.PRIMARY)
         assertThat(state.managementActions).isEmpty()
     }
 
@@ -1389,7 +1387,6 @@ class CarelevoOverviewViewModelTest {
         assertThat(state.primaryActions).isEmpty()
         assertThat(state.managementActions).hasSize(2)
         assertThat(state.managementActions[0].label).isEqualTo(s(R.string.carelevo_overview_pump_discard_btn_label))
-        assertThat(state.managementActions[0].category).isEqualTo(ActionCategory.MANAGEMENT)
         assertThat(state.managementActions[1].label).isEqualTo(s(R.string.carelevo_overview_pump_suspend_btn_label))
     }
 

@@ -16,7 +16,7 @@ import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -72,11 +72,14 @@ class SceneExecutor(
     private val sceneChainResolver: SceneChainResolver
 ) {
 
-    /** A parked scene activation awaiting [commitScene] — the two-step master-authoritative path. */
-    private data class ParkedScene(val scene: Scene, val durationMinutes: Int, val parkedAt: Long)
+    /**
+     * A parked scene activation awaiting [commitScene] — the two-step master-authoritative path. [owner] is the clientId
+     * of the paired client it was prepared for (null: the master itself); only that one may commit it.
+     */
+    private data class ParkedScene(val scene: Scene, val durationMinutes: Int, val parkedAt: Long, val owner: String?)
 
     /**
-     * Consume-once parked scenes keyed by bolusId (its OWN id-space, separate from the bolus executor's `pending`,
+     * Consume-once parked scenes keyed by bolusId (its OWN id-space, separate from the `pending` slot of `MasterActionExecutorImpl`,
      * so a scene commit and a bolus commit can never drain each other). [take] is atomic → no double-activate.
      *
      * A `ConcurrentHashMap` before, which does not exist outside the JVM. The guarantee that matters here is
@@ -92,7 +95,10 @@ class SceneExecutor(
             lock.withLock { slots[id] = scene }
         }
 
-        fun take(id: Long): ParkedScene? = lock.withLock { slots.remove(id) }
+        /** The scene parked under [id] for [owner], removed; null (and left in place) for anyone else - ids are guessable. */
+        fun takeFor(id: Long, owner: String?): ParkedScene? = lock.withLock {
+            if (slots[id]?.owner == owner) slots.remove(id) else null
+        }
 
         /** Drops parks older than [cutoff], so a prepare the user walked away from cannot be committed later. */
         fun evictParkedBefore(cutoff: Long) {
@@ -131,16 +137,16 @@ class SceneExecutor(
     /**
      * Two-step PREPARE (master side): gate the scene, AUTHOR the confirmation lines from its actions (so the client
      * renders the master's exact confirmation, not a client-built one), and park it consume-once. Nothing is
-     * activated — a [commitScene] with the returned bolusId does that. Mirrors [WizardBolusExecutor.prepareBatch].
+     * activated — a [commitScene] with the returned bolusId does that. Mirrors [MasterActionExecutor.prepareBatch].
      */
-    suspend fun prepareScene(scene: Scene, durationMinutes: Int?): WizardBolusExecutor.PrepareResult {
-        validateActivation(scene)?.let { return WizardBolusExecutor.PrepareResult.Error(it) }
+    suspend fun prepareScene(scene: Scene, durationMinutes: Int?, owner: String? = null): MasterActionExecutor.PrepareResult {
+        validateActivation(scene)?.let { return MasterActionExecutor.PrepareResult.Error(it) }
         val effective = durationMinutes ?: scene.defaultDurationMinutes
         val bolusId = dateUtil.now()
         // Trim abandoned parks (user cancelled / app killed) so a stale prepare can't be committed minutes later.
         pendingScenes.evictParkedBefore(bolusId - PARK_TTL_MS)
-        pendingScenes.park(bolusId, ParkedScene(scene, effective, bolusId))
-        return WizardBolusExecutor.PrepareResult.Preview(
+        pendingScenes.park(bolusId, ParkedScene(scene, effective, bolusId, owner))
+        return MasterActionExecutor.PrepareResult.Preview(
             insulin = 0.0, carbs = 0, bolusId = bolusId,
             lines = buildSceneLines(scene, effective), advisorApplies = false, advisorLines = emptyList()
         )
@@ -148,14 +154,14 @@ class SceneExecutor(
 
     /**
      * Two-step COMMIT (master side): drain the parked scene matching [bolusId] EXACTLY once and activate it. A re-sent
-     * commit finds the slot drained → [WizardBolusExecutor.ConfirmResult.NoPending] (no double-activate). An activation
-     * failure rides back through [onError]. Mirrors [WizardBolusExecutor.confirm].
+     * commit finds the slot drained → [MasterActionExecutor.ConfirmResult.NoPending] (no double-activate). An activation
+     * failure rides back through [onError]. Mirrors [MasterActionExecutor.confirm].
      */
-    suspend fun commitScene(bolusId: Long, onError: (WizardBolusExecutor.Failure) -> Unit): WizardBolusExecutor.ConfirmResult {
-        val parked = pendingScenes.take(bolusId) ?: return WizardBolusExecutor.ConfirmResult.NoPending
+    suspend fun commitScene(bolusId: Long, onError: (MasterActionExecutor.Failure) -> Unit, owner: String? = null): MasterActionExecutor.ConfirmResult {
+        val parked = pendingScenes.takeFor(bolusId, owner) ?: return MasterActionExecutor.ConfirmResult.NoPending
         val result = activate(parked.scene, parked.durationMinutes)
-        if (!result.success) onError(WizardBolusExecutor.Failure(result.errorMessage ?: rh.gs(CoreUiStrings.scene_some_actions_failed)))
-        return WizardBolusExecutor.ConfirmResult.Delivered
+        if (!result.success) onError(MasterActionExecutor.Failure(result.errorMessage ?: rh.gs(CoreUiStrings.scene_some_actions_failed)))
+        return MasterActionExecutor.ConfirmResult.Delivered
     }
 
     /**

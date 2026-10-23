@@ -24,6 +24,7 @@ import app.aaps.core.nssdk.localmodel.clientcontrol.AckPhase
 import app.aaps.core.nssdk.localmodel.clientcontrol.AckStatus
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientControlMessage
 import app.aaps.core.nssdk.localmodel.clientcontrol.MasterPairing
+import app.aaps.core.nssdk.localmodel.clientcontrol.PongPayload
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressEnvelope
 import app.aaps.core.nssdk.localmodel.clientcontrol.ProgressPhase
 import app.aaps.core.nssdk.utils.ClientControlCrypto
@@ -74,6 +75,7 @@ internal class ClientControlRoundTripTest {
     @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var bolusProgressData: BolusProgressData
     @Mock private lateinit var aapsLogger: AAPSLogger
+    @Mock private lateinit var masterDocVerifier: MasterDocVerifier
 
     private val now = 1_700_000_000_000L
     private val counter = 5L
@@ -103,14 +105,14 @@ internal class ClientControlRoundTripTest {
         reachable = MutableStateFlow(true)
         whenever(dateUtil.now()).thenReturn(now)
         runBlocking { whenever(pairingRepository.currentPairing()).thenReturn(MasterPairing(masterInstallId = "m", clientId = clientId, masterSecretEnc = "enc")) }
-        runBlocking { whenever(pairingRepository.secretBytesOrNull()).thenReturn(secret) }
+        runBlocking { whenever(pairingRepository.verificationSecrets()).thenReturn(listOf(secret)) }
         whenever(nsClientV3Plugin.masterReachable).thenReturn(reachable)
         whenever(nsClientV3Plugin.nsAndroidClient).thenReturn(nsAndroidClient)
         whenever(config.AAPSCLIENT).thenReturn(true)
         whenever(notificationManager.notifications).thenReturn(notifications)
         whenever(bolusProgressData.state).thenReturn(MutableStateFlow(null))
         appScope = CoroutineScope(Dispatchers.Unconfined)
-        sut = ClientControlRoundTrip(publisher, pairingRepository, { nsClientV3Plugin }, nsClientRepository, config, dateUtil, notificationManager, rh, bolusProgressData, aapsLogger, appScope)
+        sut = ClientControlRoundTrip(publisher, pairingRepository, { nsClientV3Plugin }, nsClientRepository, config, dateUtil, notificationManager, rh, bolusProgressData, aapsLogger, masterDocVerifier, appScope)
     }
 
     @Test
@@ -123,6 +125,32 @@ internal class ClientControlRoundTripTest {
             eq(NotificationId.BOLUS_DELIVERY_FAILED), any<String>(), any<NotificationLevel>(), any<Int>(),
             anyOrNull<AlarmSound>(), any<List<NotificationAction>>(), anyOrNull<() -> Boolean>()
         )
+    }
+
+    /** A pong signed with the pairing secret carries the master's key for its settings docs: the client keeps it. */
+    @Test
+    fun onAckDoc_pongWithTheSigningKey_keepsTheKey() = runTest {
+        sut.onAckDoc(ackDoc(AckPhase.Done, AckStatus.Ok, payload = json.encodeToString(PongPayload.serializer(), PongPayload(signingKey = "master-key"))))
+
+        verify(masterDocVerifier).keepKey("master-key")
+    }
+
+    /** The same key in an ACK the pairing secret did not sign is not the master's. */
+    @Test
+    fun onAckDoc_pongNotSignedByTheMaster_keepsNoKey() = runTest {
+        val payload = json.encodeToString(PongPayload.serializer(), PongPayload(signingKey = "forged-key"))
+
+        sut.onAckDoc(ackDoc(AckPhase.Done, AckStatus.Ok, payload = payload, signSecret = ByteArray(32) { 0x42 }))
+
+        verify(masterDocVerifier, never()).keepKey(any())
+    }
+
+    /** Other payloads (a prepared bolus, a failure text) carry no key and are not taken for one. */
+    @Test
+    fun onAckDoc_otherPayload_keepsNoKey() = runTest {
+        sut.onAckDoc(ackDoc(AckPhase.Done, AckStatus.Ok, payload = "not json"))
+
+        verify(masterDocVerifier, never()).keepKey(any())
     }
 
     @Test
@@ -154,8 +182,12 @@ internal class ClientControlRoundTripTest {
     }
 
     @Test
-    fun onProgressDoc_completePhase_completesClientBolusProgress() = runTest {
-        sut.onProgressDoc(progressDoc(ProgressPhase.Complete, percent = 100))
+    fun onProgressDoc_completePhase_appliesTheLastValuesThenCompletesClientBolusProgress() = runTest {
+        // The last Active frame may have been throttled away on the master, so the dialog must take
+        // the delivered amount from the Complete frame, not end on the amount before
+        sut.onProgressDoc(progressDoc(ProgressPhase.Complete, percent = 100, status = "Delivering 0.25U", insulin = 0.25, delivered = 0.25))
+
+        verify(bolusProgressData).updateProgress(eq(100), eq(TextRef.Literal("Delivering 0.25U")), eq(PumpInsulin(0.25)))
         verify(bolusProgressData).completeAndAutoClear()
     }
 
@@ -317,6 +349,44 @@ internal class ClientControlRoundTripTest {
     fun forgedAckDoesNotBumpMasterSignal() = runTest {
         sut.onAckDoc(ackDoc(AckPhase.Done, AckStatus.Ok, signSecret = ByteArray(32) { 0x42 }))
         verify(nsClientV3Plugin, never()).bumpMasterSignal(any())
+    }
+
+    /**
+     * Right after the key exchange the master may still sign with the old secret: it takes the new one only when it
+     * has seen this phone use it. Such an answer is still the master's.
+     */
+    @Test
+    fun anAckSignedWithThePreviousSecretIsAccepted() = runTest {
+        val newSecret = ByteArray(32) { 0x11 }
+        whenever(pairingRepository.verificationSecrets()).thenReturn(listOf(newSecret, secret))
+
+        sut.onAckDoc(ackDoc(AckPhase.Done, AckStatus.Ok, signSecret = secret))
+
+        verify(nsClientV3Plugin).bumpMasterSignal(now)
+        verify(pairingRepository, never()).forgetPreviousSecret()
+    }
+
+    /** The first answer signed with the new secret shows the master has switched: the old one is dropped. */
+    @Test
+    fun anAckSignedWithTheNewSecretDropsThePreviousOne() = runTest {
+        val newSecret = ByteArray(32) { 0x11 }
+        whenever(pairingRepository.verificationSecrets()).thenReturn(listOf(newSecret, secret))
+
+        sut.onAckDoc(ackDoc(AckPhase.Done, AckStatus.Ok, signSecret = newSecret))
+
+        verify(nsClientV3Plugin).bumpMasterSignal(now)
+        verify(pairingRepository).forgetPreviousSecret()
+    }
+
+    @Test
+    fun aHelloIsSentOnlyWhenTheSecretIsStillToBeReplaced() = runTest {
+        whenever(pairingRepository.needsKeyExchange(now)).thenReturn(false)
+        assertThat(sut.sendHelloIfDue()).isNull()
+        verify(publisher, never()).publishHello()
+
+        whenever(pairingRepository.needsKeyExchange(now)).thenReturn(true)
+        whenever(publisher.publishHello()).thenReturn(ClientControlSendResult.Success)
+        assertThat(sut.sendHelloIfDue()).isEqualTo(ClientControlSendResult.Success)
     }
 
     // ---- run() drives the single app-level modal (pendingAction) ----

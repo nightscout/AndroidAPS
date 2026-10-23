@@ -12,6 +12,7 @@ import app.aaps.pump.carelevo.command.CmdAlarmClearPatchDiscard
 import app.aaps.pump.carelevo.command.CmdPumpResume
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
+import app.aaps.pump.carelevo.domain.type.AlarmCause
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -53,6 +54,8 @@ class CarelevoAlarmClearCoordinator @Inject constructor(
     suspend fun discardOnAlarm(info: CarelevoAlarmInfo): Boolean = opMutex.withLock {
         commandQueue.customCommand(CmdAlarmClearPatchDiscard(info.alarmId, info.alarmType, info.cause)).success
     }
+
+    fun forgetSnapshotAlarmCause(cause: AlarmCause) = carelevoPatch.forgetSnapshotAlarmCause(cause)
 
     /**
      * Can a discard op plausibly reach the patch? Used by the patch-ABANDON paths (serious warning

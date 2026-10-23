@@ -20,6 +20,8 @@ ktor = "3.6.0"
 cryptographyKotlin = "0.6.0"
 work = "2.12.0"
 datastorePreferences = "1.2.1"
+# CameraX: the client reads the master's set-up QR code with the camera (no Play services needed).
+cameraX = "1.6.2"
 
 # Compose
 wearCompose = "1.7.0"
@@ -29,7 +31,7 @@ composeUi = "1.12.1"
 # Compose Multiplatform. Separate from the androidx Compose above: CMP publishes the same
 # androidx.compose.* package names and its Android variants delegate to androidx, so the
 # composeBom still decides the Android versions.
-composeMultiplatform = "1.12.1"
+composeMultiplatform = "1.12.2"
 jetbrainsLifecycle = "2.11.0"
 
 [plugins]
@@ -56,7 +58,7 @@ com-google-gms = { group = "com.google.gms", name = "google-services", version =
 
 
 com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.8" }
-com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "35.0.0" }
+com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "35.0.2" }
 com-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 com-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 com-google-firebase-config = { group = "com.google.firebase", name = "firebase-config" }
@@ -70,7 +72,7 @@ com-google-android-material = { group = "com.google.android.material", name = "m
 
 com-google-guava = { group = "com.google.guava", name = "guava", version = "33.7.2-jre" }
 com-google-code-gson = { group = "com.google.code.gson", name = "gson", version = "2.14.0" }
-com-google-crypto-tink = { group = "com.google.crypto.tink", name = "tink-android", version = "1.23.0" }
+com-google-crypto-tink = { group = "com.google.crypto.tink", name = "tink-android", version = "1.24.0" }
 com-google-truth = { group = "com.google.truth", name = "truth", version = "1.4.5" }
 com-google-zxing-core = { group = "com.google.zxing", name = "core", version = "3.5.4" }
 
@@ -104,6 +106,10 @@ kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime",
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.8.0" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version = "1.1.0" }
 androidx-browser = { group = "androidx.browser", name = "browser", version = "1.10.0" }
+androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "cameraX" }
+androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "cameraX" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "cameraX" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "cameraX" }
 # Declared rather than left to transitive resolution: it used to land on 1.1.0 in some modules and
 # 1.5.0 in others, and those are different generations of the same class (the newer one is a Kotlin
 # rewrite where size is also a property), so the same code did not compile everywhere. From 1.4.0 it

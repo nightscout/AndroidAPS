@@ -1,19 +1,8 @@
 package app.aaps.ui.compose.wizardDialog
 
 import androidx.compose.runtime.Immutable
+import app.aaps.core.data.model.CarbsType
 import app.aaps.core.data.model.GlucoseUnit
-
-enum class CarbsType(
-    val carbsPercent: Int,
-    val eCarbsPercent: Int,
-    val eCarbsDelayMinutes: Int,
-    val eCarbsDurationHours: Int
-) {
-
-    BREAD(carbsPercent = 100, eCarbsPercent = 0, eCarbsDelayMinutes = 0, eCarbsDurationHours = 0),
-    CAKE(carbsPercent = 90, eCarbsPercent = 20, eCarbsDelayMinutes = 60, eCarbsDurationHours = 2),
-    PIZZA(carbsPercent = 80, eCarbsPercent = 35, eCarbsDelayMinutes = 60, eCarbsDurationHours = 3)
-}
 
 @Immutable
 data class WizardDialogUiState(

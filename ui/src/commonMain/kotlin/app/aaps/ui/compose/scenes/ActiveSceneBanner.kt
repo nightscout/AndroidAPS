@@ -26,10 +26,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import app.aaps.core.data.model.ActiveSceneState
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.objects.extensions.tickerFlow
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalClientRole
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.stringResource
 
@@ -151,10 +153,11 @@ internal fun ActiveSceneBannerContent(
                     FilledTonalButton(onClick = onDismiss) {
                         Text(stringResource(CoreUiStrings.close))
                     }
-                } else {
+                } else if (LocalClientRole.current.allows(ElementType.SCENE.role)) {
                     // Active scene's End button — disabled on AAPSCLIENT while WS is down,
                     // since the scene_stop envelope can't reach the master. Master is the
                     // authoritative actor; locally faking "ended" would desync the chip.
+                    // Not shown at all for a role the master would refuse it for.
                     FilledTonalButton(onClick = onEndClick, enabled = endEnabled) {
                         Text(stringResource(CoreUiStrings.scene_deactivate))
                     }

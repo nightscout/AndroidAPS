@@ -190,6 +190,15 @@ class DataHandlerWear(
         }
         onEvent<EventData.BolusProgress> { handleBolusProgress(it) }
         onEvent<EventData.Status>(detail = { " dataset=${it.dataset} iob=${it.iobSum} cob=${it.cob}" }) {
+            // The temp target tile shows its Cancel button only while a temp target runs. Only the
+            // own dataset counts; the tile cannot cancel a temp target on an external instance.
+            if (it.dataset == 0) {
+                val tempTargetActive = it.tempTargetDuration >= 0
+                if (tempTargetActive != sp.getBoolean(R.string.key_temp_target_active, false)) {
+                    sp.putBoolean(R.string.key_temp_target_active, tempTargetActive)
+                    TileService.getUpdater(context).requestUpdate(TempTargetTileService::class.java)
+                }
+            }
             // Store in DataStore - supports all datasets (0, 1, 2)
             dataStoreScope.launch {
                 complicationDataRepository.updateStatusData(it)

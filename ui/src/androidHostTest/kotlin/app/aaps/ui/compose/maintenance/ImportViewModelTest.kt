@@ -250,7 +250,7 @@ internal class ImportViewModelTest {
     /**
      * The window must close even when the apply blows up, and the existing test below proves a
      * throwing `applyConfiguration` reaches `ApplyFailed`. Left open, `appInitialized` would stay
-     * false for the rest of the process and `WizardBolusExecutorImpl` refuses on it in two places -
+     * false for the rest of the process and `MasterActionExecutorImpl` refuses on it in two places -
      * the user could not bolus. That is worse than the crash this change prevents.
      */
     @Test

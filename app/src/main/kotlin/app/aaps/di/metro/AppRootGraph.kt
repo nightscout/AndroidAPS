@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.bolus.BatchExecutor
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
@@ -311,7 +311,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val cloudDirectoryManager: CloudDirectoryManager
     val graphConfigRepository: GraphConfigRepository
     val batchExecutor: BatchExecutor
-    val wizardBolusExecutor: WizardBolusExecutor
+    val masterActionExecutor: MasterActionExecutor
     val loggerUtils: LoggerUtils
     val importExportPrefs: ImportExportPrefs
     val preferences: Preferences

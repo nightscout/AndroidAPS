@@ -241,7 +241,16 @@ enum class NotificationId(
     // The End Scene dialog does not show the result, so without this nothing said so. IMPORTANT: it changes
     // insulin delivery until the user activates a profile, but nothing is delivered wrongly now.
     // Appended at the END for the same reason as above.
-    SCENE_PROFILE_NOT_RESTORED(IMPORTANT, AUTOMATION);
+    SCENE_PROFILE_NOT_RESTORED(IMPORTANT, AUTOMATION),
+
+    // A Garmin watch connected to a client sent carbs or a pump disconnect. A client does not store them, because
+    // they would never reach the master, and the watch cannot show why. Appended at the END for the same reason as above.
+    GARMIN_NOT_ON_CLIENT(NORMAL, SYNC),
+
+    // The Combo gave the bolus, but its history also had boluses that AAPS did not know about. Its own id,
+    // so that it does not replace the low reservoir warning of the same bolus on COMBO_PUMP_ALARM (#5379).
+    // Appended at the END for the same reason as above.
+    COMBO_UNKNOWN_BOLUS(URGENT, PUMP);
 
     companion object {
 

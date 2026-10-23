@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3
 
+import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.InsulinType
@@ -25,6 +26,7 @@ import app.aaps.core.nssdk.localmodel.treatment.NSProfileSwitch
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
+import app.aaps.plugins.sync.nsclientV3.extensions.toNSBolusWizard
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
@@ -109,6 +111,87 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
                 get(0).timestamp == sgvTime &&
                 get(0).trendArrow == TrendArrow.FORTY_FIVE_UP
         })
+    }
+
+    /**
+     * The first-load cursor moves only when the caller asks for it.
+     *
+     * The REST load pages forward through history and must move it, so the next page starts after
+     * this one. A live websocket record must not: it carries the time of "now", so during a first
+     * load it would make the next page start at now and the history behind it would never be read.
+     */
+    @Test
+    fun `processSgvs moves the first load cursor only when asked`() {
+        val sgvTime = now - T.mins(2).msecs()
+        val sgvList = listOf(sgvAt(sgvTime))
+
+        processor.processSgvs(sgvList, doFullSync = false, advanceInitialLoadCursor = false)
+        verify(nsClient, never()).updateLatestBgReceivedIfNewer(any())
+
+        processor.processSgvs(sgvList, doFullSync = false, advanceInitialLoadCursor = true)
+        verify(nsClient).updateLatestBgReceivedIfNewer(sgvTime)
+    }
+
+    @Test
+    fun `processTreatments moves the first load cursor only when asked`() {
+        val carbTime = now - T.mins(10).msecs()
+        val treatments = listOf<NSTreatment>(carbsAt(carbTime))
+
+        processor.processTreatments(treatments, doFullSync = false, advanceInitialLoadCursor = false)
+        verify(nsClient, never()).updateLatestTreatmentReceivedIfNewer(any())
+
+        processor.processTreatments(treatments, doFullSync = false, advanceInitialLoadCursor = true)
+        verify(nsClient).updateLatestTreatmentReceivedIfNewer(carbTime)
+    }
+
+    private fun sgvAt(time: Long) = NSSgvV3(
+        device = "share2",
+        date = time,
+        identifier = "cursor_sgv",
+        utcOffset = null,
+        isValid = true,
+        units = NsUnits.MG_DL,
+        sgv = 130.0,
+        direction = Direction.FORTY_FIVE_UP,
+        noise = 1.0,
+        filtered = 132.0,
+        unfiltered = 131.0
+    )
+
+    private fun carbsAt(time: Long) = NSCarbs(
+        identifier = "cursor_carb",
+        date = time,
+        carbs = 20.0,
+        duration = 0,
+        utcOffset = null,
+        isValid = true,
+        eventType = EventType.CARBS_CORRECTION,
+        notes = null,
+        pumpId = null,
+        endId = null,
+        pumpType = null,
+        pumpSerial = null
+    )
+
+    // BG from Nightscout, new readings and removed ones alike, is taken when any of the three holds.
+    @Test
+    fun `acceptsGlucose when Nightscout is the BG source`() {
+        whenever(preferences.get(BooleanKey.NsClientAcceptCgmData)).thenReturn(false)
+        assertTrue(processor.acceptsGlucose(doFullSync = false))
+    }
+
+    @Test
+    fun `acceptsGlucose when CGM data from Nightscout is accepted`() {
+        whenever(nsClientSource.isEnabled()).thenReturn(false)
+        assertTrue(processor.acceptsGlucose(doFullSync = false))
+    }
+
+    @Test
+    fun `acceptsGlucose during a full sync only otherwise`() {
+        whenever(nsClientSource.isEnabled()).thenReturn(false)
+        whenever(preferences.get(BooleanKey.NsClientAcceptCgmData)).thenReturn(false)
+        assertFalse(processor.acceptsGlucose(doFullSync = false))
+        assertTrue(processor.acceptsGlucose(doFullSync = true))
     }
 
     @Test
@@ -231,6 +314,37 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
         eventType = EventType.CORRECTION_BOLUS, notes = null, pumpId = null, endId = null, pumpType = null,
         pumpSerial = null, type = NSBolus.BolusType.NORMAL, isBasalInsulin = false, iCfg = null
     )
+
+    // A bolus wizard result belongs to its bolus, so it follows the insulin setting. It used to be taken from
+    // Nightscout with no check at all.
+    @Test
+    fun `processTreatments stores a bolus wizard result when insulin is accepted`() {
+        processor.processTreatments(listOf(bolusWizard()), doFullSync = false)
+        verify(storeDataForDb).addToBolusCalculatorResults(any())
+    }
+
+    @Test
+    fun `processTreatments ignores a bolus wizard result when insulin is not accepted`() {
+        whenever(preferences.get(BooleanKey.NsClientAcceptInsulin)).thenReturn(false)
+        processor.processTreatments(listOf(bolusWizard()), doFullSync = false)
+        verify(storeDataForDb, never()).addToBolusCalculatorResults(any())
+    }
+
+    @Test
+    fun `processTreatments takes a bolus wizard result in a full sync`() {
+        whenever(preferences.get(BooleanKey.NsClientAcceptInsulin)).thenReturn(false)
+        processor.processTreatments(listOf(bolusWizard()), doFullSync = true)
+        verify(storeDataForDb).addToBolusCalculatorResults(any())
+    }
+
+    private fun bolusWizard(): NSTreatment = BCR(
+        timestamp = now - T.mins(5).msecs(), isValid = true, targetBGLow = 110.0, targetBGHigh = 120.0, isf = 30.0, ic = 2.0,
+        bolusIOB = 1.1, wasBolusIOBUsed = true, basalIOB = 1.2, wasBasalIOBUsed = true, glucoseValue = 150.0, wasGlucoseUsed = true,
+        glucoseDifference = 30.0, glucoseInsulin = 1.3, glucoseTrend = 15.0, wasTrendUsed = true, trendInsulin = 1.4, cob = 24.0,
+        wasCOBUsed = true, cobInsulin = 1.5, carbs = 36.0, wereCarbsUsed = true, carbsInsulin = 1.6, otherCorrection = 1.7,
+        wasSuperbolusUsed = false, superbolusInsulin = 0.0, wasTempTargetUsed = false, totalInsulin = 9.1, percentageCorrection = 100,
+        profileName = "Test", note = ""
+    ).toNSBolusWizard()
 
     @Test
     fun `processTreatments ignores carbs if preference is disabled`() {

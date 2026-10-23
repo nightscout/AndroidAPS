@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.time.T
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -18,7 +18,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.clientcontrol.RecordRemoval
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
@@ -32,7 +32,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * ViewModel for RunningModeScreen managing running mode state and business logic.
@@ -44,7 +43,9 @@ class RunningModeViewModel(
     val rh: TextResolver,
     val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    batchExecutor: BatchExecutor,
+    config: Config
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RunningModeUiState())
@@ -155,49 +156,18 @@ class RunningModeViewModel(
      */
     fun getActiveMode(): RM? = uiState.value.activeMode
 
-    /**
-     * Prepare delete confirmation message
-     */
-    fun getDeleteConfirmationMessage(): String {
-        val selected = uiState.value.selectedItems
-        if (selected.isEmpty()) return ""
+    /** Removing the selected items: the master describes and removes them, on every role. */
+    val removal = RecordRemoval(batchExecutor, rh, rxBus, config, viewModelScope, Sources.Treatments)
 
-        return if (selected.size == 1) {
-            val rm = selected.first()
-            "${rh.gs(CoreUiStrings.running_mode)}: ${rm.mode.name}\n${dateUtil.dateAndTimeString(rm.timestamp)}"
-        } else {
-            rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
-        }
+    /** Ask the master to describe removing the selected items; the screen then shows its confirmation. */
+    fun requestDelete() {
+        removal.request(listOfNotNull(BatchAction.Remove.of(BatchAction.Remove.Kind.RUNNING_MODE, uiState.value.selectedItems)))
     }
 
-    /**
-     * Delete selected items
-     */
-    fun deleteSelected() {
-        val selected = uiState.value.selectedItems
-        if (selected.isEmpty()) return
-
-        viewModelScope.launch(aapsIoDispatcher) {
-            try {
-                selected.forEach { rm ->
-                    persistenceLayer.invalidateRunningMode(
-                        id = rm.id,
-                        action = Action.LOOP_REMOVED,
-                        source = Sources.Treatments,
-                        note = null,
-                        listValues = listOfNotNull(
-                            ValueWithUnit.Timestamp(rm.timestamp),
-                            ValueWithUnit.RMMode(rm.mode),
-                            ValueWithUnit.Minute(rm.duration.milliseconds.inWholeMinutes.toInt())
-                        )
-                    )
-                }
-                exitSelectionMode()
-                loadData()
-            } catch (e: Exception) {
-                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting running modes", EventShowSnackbar.Type.Error))
-            }
-        }
+    /** The master removed them. */
+    fun onRemoved() {
+        exitSelectionMode()
+        loadData()
     }
 
     /**

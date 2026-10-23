@@ -21,9 +21,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.pump.ActionCategory
-import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
@@ -206,67 +205,60 @@ class EquilOverviewViewModel(
         }
     }
 
-    private fun buildPrimaryActions(isPaired: Boolean): List<PumpAction> = buildList {
+    private fun buildPrimaryActions(isPaired: Boolean): List<ScreenAction> = buildList {
         if (isPaired && equilManager.isActivationCompleted()) {
             // Reads the run mode and the pump history now, so a pump alarm shows without waiting for
             // the next loop run.
             add(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(CoreUiR.string.refresh),
                     icon = Icons.Filled.Refresh,
-                    category = ActionCategory.PRIMARY,
                     onClick = { onRefreshClick() }
                 ))
             val runMode = equilManager.equilState?.runMode
             if (runMode == RunMode.RUN) {
                 add(
-                    PumpAction(
+                    ScreenAction(
                     label = rh.gs(R.string.equil_common_overview_button_suspend_delivery),
                     icon = IcEquilSuspendDelivery,
-                    category = ActionCategory.PRIMARY,
                     onClick = { toggleMode() }
                 ))
             } else if (runMode == RunMode.SUSPEND) {
                 add(
-                    PumpAction(
+                    ScreenAction(
                     label = rh.gs(R.string.equil_common_overview_button_resume_delivery),
                     icon = IcEquilResumeDelivery,
-                    category = ActionCategory.PRIMARY,
                     onClick = { toggleMode() }
                 ))
             }
         }
     }
 
-    private fun buildManagementActions(isPaired: Boolean): List<PumpAction> = buildList {
+    private fun buildManagementActions(isPaired: Boolean): List<ScreenAction> = buildList {
         if (!isPaired) {
             add(
-                PumpAction(
+                ScreenAction(
                 label = rh.gs(R.string.equil_pair),
                 icon = Icons.Filled.Bluetooth,
-                category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(EquilOverviewEvent.StartWizard(EquilWorkflow.PAIR)) }
             ))
         } else {
             add(
-                PumpAction(
+                ScreenAction(
                 label = rh.gs(R.string.equil_dressing),
                 icon = Icons.Filled.SwapHoriz,
-                category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(EquilOverviewEvent.StartWizard(EquilWorkflow.CHANGE_INSULIN)) }
             ))
             add(
-                PumpAction(
+                ScreenAction(
                 label = rh.gs(CoreUiR.string.history),
                 icon = Icons.Filled.History,
-                category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(EquilOverviewEvent.StartHistory) }
             ))
             add(
-                PumpAction(
+                ScreenAction(
                 label = rh.gs(R.string.equil_unbind),
                 icon = Icons.Filled.Bluetooth,
-                category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(EquilOverviewEvent.StartWizard(EquilWorkflow.UNPAIR)) }
             ))
         }

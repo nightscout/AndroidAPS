@@ -84,7 +84,11 @@ class DataSyncSelectorV3(
 
     override suspend fun doUpload() {
         nsClientRepository.updateStatus(nsClientV3Plugin().status)
-        if ((config.AAPSCLIENT || preferences.get(BooleanKey.NsClientUploadData)) && !isPaused) {
+        // A client uploads nothing. Everything it does goes to the master through the settings collection, and the
+        // master writes the records. What is left on a client stays on the phone: a note like "AndroidAPS started",
+        // or a change it would only send back (a record from NS shortened or removed here). Its NS token may also
+        // be allowed to write to settings only.
+        if (!config.AAPSCLIENT && preferences.get(BooleanKey.NsClientUploadData) && !isPaused) {
             queueCounter.bolusesRemaining = (persistenceLayer.getLastBolusId() ?: 0L) - preferences.get(NsclientLongKey.BolusLastSyncedId)
             queueCounter.carbsRemaining = (persistenceLayer.getLastCarbsId() ?: 0L) - preferences.get(NsclientLongKey.CarbsLastSyncedId)
             queueCounter.bcrRemaining = (persistenceLayer.getLastBolusCalculatorResultId() ?: 0L) - preferences.get(NsclientLongKey.BolusCalculatorLastSyncedId)
@@ -963,10 +967,6 @@ class DataSyncSelectorV3(
     @OpenForTesting
     suspend fun processChangedProfileStore() {
         if (isPaused) return
-        // The master owns the profile store in Nightscout. A client only ever mirrors a list it got
-        // from somewhere else, so uploading it would push the master's own data back at it — or, worse,
-        // publish a client-side edit to Nightscout behind the master's back.
-        if (config.AAPSCLIENT) return
         val lastSync = preferences.get(NsclientLongKey.ProfileStoreLastSyncedId)
         val lastChange = preferences.get(LongNonKey.LocalProfileLastChange)
         if (lastChange == 0L) return

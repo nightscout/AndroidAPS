@@ -2,8 +2,8 @@ package app.aaps.core.ui.compose.pump
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.AnnotatedString
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
 
 /**
@@ -14,8 +14,8 @@ import app.aaps.core.ui.compose.StatusLevel
 data class PumpOverviewUiState(
     val statusBanner: StatusBanner? = null,
     val infoRows: List<PumpInfoInterface> = emptyList(),
-    val primaryActions: List<PumpAction> = emptyList(),
-    val managementActions: List<PumpAction> = emptyList(),
+    val primaryActions: List<ScreenAction> = emptyList(),
+    val managementActions: List<ScreenAction> = emptyList(),
     val queueStatus: AnnotatedString? = null
 )
 
@@ -59,25 +59,3 @@ interface PumpInfoComposable : PumpInfoInterface {
     fun composableContent(): @Composable () -> Unit
     fun hasDividerOnEnd(): Boolean = false
 }
-
-/**
- * Action category for separating primary operational actions from device management actions.
- */
-enum class ActionCategory {
-
-    PRIMARY,
-    MANAGEMENT
-}
-
-/**
- * An action button in the pump overview (refresh, history, pair, etc.).
- */
-@Immutable
-data class PumpAction(
-    val label: String,
-    val icon: ImageVector? = null,
-    val category: ActionCategory = ActionCategory.PRIMARY,
-    val enabled: Boolean = true,
-    val visible: Boolean = true,
-    val onClick: () -> Unit
-)

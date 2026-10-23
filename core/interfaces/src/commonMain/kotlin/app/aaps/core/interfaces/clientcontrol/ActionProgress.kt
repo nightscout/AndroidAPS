@@ -70,6 +70,8 @@ enum class FailureReason {
     ExecutionFailed, // master-side execution failed (detail = message)
     Cancelled,       // the queued pump command was dropped on purpose (queue cleared, e.g. by a settings import) — nothing was sent, NOT an error
     ControlDisabled, // master has client control turned OFF — command refused by policy (not an error, not offline)
+    NotAllowedForRole, // this client's role on the master does not allow the command — refused by policy, like ControlDisabled
+    OtherToken,      // written to Nightscout with another token than the client's own — refused by policy, like NotAllowedForRole
     NoAction,        // prepare resolved to a no-op (nothing to do, e.g. negative carbs with no COB to remove) — NOT an error
     NoPendingBolus,  // bolus commit: the prepared dose was already consumed / superseded → re-prepare
     BolusComputeFailed, // bolus prepare: master couldn't compute the dose (no BG / profile / pump not ready)
@@ -86,6 +88,11 @@ enum class FailureReason {
  *
  * [FailureReason.NoAction] is deliberately NOT in this list, even though it is not an error either: each dialog
  * shows its own "nothing to do" message for it, so it is answered before this check.
+ *
+ * The screens also show their own message for these reasons, because on a client they mostly come before
+ * anything is sent, when there is no round-trip modal. [FailureReason.NotAllowedForRole] is NOT in the list for
+ * that reason: it always comes back from the master, so the round-trip modal already says it. It cannot raise
+ * the alarm either, because a master never refuses itself.
  */
 fun FailureReason.isNotDeliveryError(): Boolean =
     this == FailureReason.NotReachable || this == FailureReason.ControlDisabled || this == FailureReason.Cancelled

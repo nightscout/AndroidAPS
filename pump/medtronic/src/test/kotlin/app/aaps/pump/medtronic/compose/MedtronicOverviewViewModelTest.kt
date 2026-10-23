@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
@@ -76,7 +77,7 @@ internal class MedtronicOverviewViewModelTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
 
         // Catch-all so every info-row / action label resolves to a non-null String (PumpInfoRow.label
-        // and PumpAction.label are non-null; an unstubbed rh.gs() would return null and NPE at build).
+        // and ScreenAction.label are non-null; an unstubbed rh.gs() would return null and NPE at build).
         whenever(rh.gs(anyInt())).thenReturn("txt")
 
         // rx wiring touched at construction: PumpCommunicationStatus init + the three medtronicRefresh

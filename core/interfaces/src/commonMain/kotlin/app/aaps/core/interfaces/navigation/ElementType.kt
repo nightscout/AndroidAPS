@@ -2,7 +2,9 @@ package app.aaps.core.interfaces.navigation
 
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.ElementVisibility
+import app.aaps.core.keys.interfaces.VisibilityContext
 
 /**
  * Unified visual identity for UI elements.
@@ -13,29 +15,32 @@ import app.aaps.core.keys.interfaces.ElementVisibility
  * @param searchable Whether this element appears in global search results
  * @param protection Protection level required for navigation
  * @param visibility Runtime condition gating where this element may surface (e.g. in search)
+ * @param role The lowest client role that may use this element (see [ClientRole]). On a client whose role is lower it
+ *   is not shown, because the master would refuse it. A master is always Admin. Check both with [isAvailable].
  */
 enum class ElementType(
     val category: ElementCategory = ElementCategory.INTERNAL,
     val searchable: Boolean = false,
     val protection: ProtectionCheck.Protection = ProtectionCheck.Protection.NONE,
-    val visibility: ElementVisibility = ElementVisibility.ALWAYS
+    val visibility: ElementVisibility = ElementVisibility.ALWAYS,
+    val role: ClientRole = ClientRole.ReadOnly
 ) {
 
     // Treatment dialogs — all ride the signed Client-Control channel (RoleBranch/BatchExecutor), so an
     // unpaired client must not surface them: CLIENT_PAIRED hides them until paired (always shown on master).
-    INSULIN(category = ElementCategory.TREATMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    CARBS(category = ElementCategory.TREATMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    BOLUS_WIZARD(category = ElementCategory.TREATMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    QUICK_WIZARD(protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    TREATMENT(category = ElementCategory.TREATMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
+    // A meal assistant may give insulin and enter carbs: these five.
+    INSULIN(category = ElementCategory.TREATMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.MealAssistant),
+    CARBS(category = ElementCategory.TREATMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.MealAssistant),
+    BOLUS_WIZARD(category = ElementCategory.TREATMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.MealAssistant),
+    QUICK_WIZARD(protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.MealAssistant),
+    TREATMENT(category = ElementCategory.TREATMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.MealAssistant),
 
     // CGM
     CGM_XDRIP(category = ElementCategory.CGM, searchable = true),
     CGM_DEX(category = ElementCategory.CGM),
 
-    // CALIBRATION is intentionally NOT migrated/gated: it's a CGM-plugin command (activeCalibration.addEntry), not a
-    // DB write, and a client has no CGM source to calibrate — so it stays local/master-only (see Track B calibration notes).
-    CALIBRATION(category = ElementCategory.CGM, searchable = true),
+    // On a client a calibration goes to the master as BatchAction.Calibration, which hands it to its CGM plugin.
+    CALIBRATION(category = ElementCategory.CGM, searchable = true, role = ClientRole.Caregiver),
 
     // Profile & Targets — minimum level is BOLUS; screen mode (PLAY/EDIT) determined by granted auth level.
     // Mutating editors whose writes ride Client-Control → CLIENT_PAIRED (hidden on an unpaired client).
@@ -43,34 +48,34 @@ enum class ElementType(
     // needs to see and calculate with (it receives them from Nightscout), so the screen opens READ-ONLY
     // there instead of disappearing — same rule as the overview chips and status lights.
     PROFILE_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
-    TEMP_TARGET_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    INSULIN_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    QUICK_WIZARD_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    FOOD_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
+    TEMP_TARGET_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
+    INSULIN_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
+    QUICK_WIZARD_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
+    FOOD_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
 
     // Careportal — migrated to the Client-Control batch channel (BatchAction.TherapyEvent via CareDialogViewModel):
     // the master is the sole writer and the event syncs back. Gated MASTER_OR_PAIRED_CLIENT (hidden on an unpaired client).
-    BG_CHECK(category = ElementCategory.CAREPORTAL, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    NOTE(category = ElementCategory.CAREPORTAL, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    EXERCISE(category = ElementCategory.CAREPORTAL, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    QUESTION(category = ElementCategory.CAREPORTAL, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    ANNOUNCEMENT(category = ElementCategory.CAREPORTAL, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
+    BG_CHECK(category = ElementCategory.CAREPORTAL, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
+    NOTE(category = ElementCategory.CAREPORTAL, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
+    EXERCISE(category = ElementCategory.CAREPORTAL, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
+    QUESTION(category = ElementCategory.CAREPORTAL, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
+    ANNOUNCEMENT(category = ElementCategory.CAREPORTAL, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
 
     // Device maintenance. SENSOR_INSERT + BATTERY_CHANGE route through CareDialog; CANNULA_CHANGE + FILL both open the
     // FillDialog (site / cartridge); SITE_ROTATION records + edits via the batch channel — all Client-Control-migrated → gated.
-    SENSOR_INSERT(category = ElementCategory.DEVICE, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    BATTERY_CHANGE(category = ElementCategory.DEVICE, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    CANNULA_CHANGE(category = ElementCategory.DEVICE, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    FILL(category = ElementCategory.DEVICE, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    SITE_ROTATION(category = ElementCategory.DEVICE, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
+    SENSOR_INSERT(category = ElementCategory.DEVICE, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
+    BATTERY_CHANGE(category = ElementCategory.DEVICE, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
+    CANNULA_CHANGE(category = ElementCategory.DEVICE, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
+    FILL(category = ElementCategory.DEVICE, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
+    SITE_ROTATION(category = ElementCategory.DEVICE, searchable = true, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
 
     // Basal — both ride Client-Control → CLIENT_PAIRED.
-    TEMP_BASAL(category = ElementCategory.BASAL, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    EXTENDED_BOLUS(category = ElementCategory.BASAL, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
+    TEMP_BASAL(category = ElementCategory.BASAL, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
+    EXTENDED_BOLUS(category = ElementCategory.BASAL, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
 
     // System
     AUTOMATION(category = ElementCategory.SYSTEM),
-    AUTOMATION_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
+    AUTOMATION_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
 
     // Pump management — only where the build drives a real pump: full + pumpcontrol (i.e. !isClient).
     // An aapsclient has no real pump (VirtualPump is hidden). NOT gated on pairing (a paired client still
@@ -96,8 +101,8 @@ enum class ElementType(
     SENSITIVITY,
 
     // Scenes (situation presets) — activation + management ride Client-Control → CLIENT_PAIRED.
-    SCENE(category = ElementCategory.MANAGEMENT, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
-    SCENE_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
+    SCENE(category = ElementCategory.MANAGEMENT, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
+    SCENE_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
 
     // NSCv3 client control — paired devices that can issue signed commands
     // Master only AND NSCv3-WS enabled — keeps search in lock-step with the Manage-sheet button (ManageViewModel).
@@ -107,13 +112,19 @@ enum class ElementType(
     PAIR_WITH_MASTER(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES, visibility = ElementVisibility { it.isClient && it.preferences.get(BooleanKey.NsClient3UseWs) }),
 
     // Running mode / loop (used by UserEntry) — mode changes ride Client-Control → CLIENT_PAIRED.
-    RUNNING_MODE(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT),
+    RUNNING_MODE(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
     USER_ENTRY,
     LOOP,
     AAPS,
 
     // App lifecycle
     EXIT;
+
+    /**
+     * Whether this element may be shown in [ctx]: its [visibility] rule holds, and this phone's role allows its [role].
+     * Use this rather than `visibility.isVisible(ctx)`, so the role can never be left out.
+     */
+    fun isAvailable(ctx: VisibilityContext): Boolean = visibility.isVisible(ctx) && ctx.clientRole.allows(role)
 
     companion object {
 

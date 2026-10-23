@@ -5,10 +5,14 @@ import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.BgType
 import app.aaps.core.interfaces.overview.graph.BolusGraphPoint
 import app.aaps.core.interfaces.overview.graph.BolusType
+import app.aaps.core.interfaces.overview.graph.CalibrationGraphPoint
 import app.aaps.core.interfaces.overview.graph.CarbsGraphPoint
 import app.aaps.core.interfaces.overview.graph.GraphDataPoint
 import app.aaps.core.interfaces.overview.graph.TbrState
+import app.aaps.core.interfaces.overview.graph.TherapyEventGraphPoint
+import app.aaps.core.interfaces.overview.graph.TherapyEventType
 import com.google.common.truth.Truth.assertThat
+import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarker
 import org.junit.jupiter.api.Test
 
 /** The values shown when holding the BG graph. */
@@ -27,12 +31,15 @@ class GraphInspectTest {
         val data = inspectDataAt(
             timestamp = t0 + 6 * minute,
             bgReadings = readings,
+            predictions = emptyList(),
             iob = listOf(point(0, 1.0), point(5, 1.2), point(10, 1.4)),
             cob = listOf(point(5, 0.0)),
             actualBasal = listOf(point(-30, 0.8), point(4, 1.5), point(20, 0.0)),
             profileBasal = listOf(point(-60, 0.8)),
             boluses = emptyList(),
-            carbs = emptyList()
+            carbs = emptyList(),
+            calibrations = emptyList(),
+            therapyEvents = emptyList()
         )
 
         assertThat(data.timestamp).isEqualTo(t0 + 5 * minute)
@@ -50,12 +57,15 @@ class GraphInspectTest {
         val data = inspectDataAt(
             timestamp = t0 + 30 * minute,
             bgReadings = readings,
+            predictions = emptyList(),
             iob = listOf(point(30, 0.3)),
             cob = emptyList(),
             actualBasal = emptyList(),
             profileBasal = emptyList(),
             boluses = emptyList(),
-            carbs = emptyList()
+            carbs = emptyList(),
+            calibrations = emptyList(),
+            therapyEvents = emptyList()
         )
 
         assertThat(data.bg).isNull()
@@ -66,25 +76,100 @@ class GraphInspectTest {
     }
 
     @Test
-    fun `only valid treatments within half a reading interval belong to the reading`() {
-        val near = BolusGraphPoint(t0 + 5 * minute + 60_000, 0.4, BolusType.SMB, isValid = true, label = "0.40 U")
-        val far = BolusGraphPoint(t0 + 5 * minute + 4 * minute, 1.0, BolusType.NORMAL, isValid = true, label = "1.00 U")
-        val invalid = BolusGraphPoint(t0 + 5 * minute, 2.0, BolusType.NORMAL, isValid = false, label = "2.00 U")
-        val carbs = CarbsGraphPoint(t0 + 5 * minute - 60_000, 20.0, isValid = true, label = "20 g")
+    fun `after the last reading the time snaps to a prediction point, without glucose`() {
+        val predictions = listOf(15, 20, 25).map { BgDataPoint(t0 + it * minute, 7.0, BgRange.HIGH, BgType.IOB_PREDICTION) }
 
         val data = inspectDataAt(
-            timestamp = t0 + 5 * minute,
+            timestamp = t0 + 19 * minute,
             bgReadings = readings,
+            predictions = predictions,
+            iob = listOf(point(20, 0.9)),
+            cob = emptyList(),
+            actualBasal = emptyList(),
+            profileBasal = emptyList(),
+            boluses = emptyList(),
+            carbs = emptyList(),
+            calibrations = emptyList(),
+            therapyEvents = emptyList()
+        )
+
+        assertThat(data.timestamp).isEqualTo(t0 + 20 * minute)
+        assertThat(data.bg).isNull()
+        assertThat(data.iob).isEqualTo(0.9)
+    }
+
+    @Test
+    fun `the finger's x comes from its distance to the nearest point, clamped to the graph`() {
+        val state = GraphInspectState().apply { pxPerX = 2f; minX = 0.0; maxX = 100.0 }
+        // Vico snaps to the last point of the held graph, here at x = 60, drawn at 120 px
+        val lastPoint = object : CartesianMarker.Target {
+            override val x = 60.0
+            override val canvasX = 120f
+        }
+
+        assertThat(state.fingerX(130f, lastPoint)).isEqualTo(65.0)
+        assertThat(state.fingerX(300f, lastPoint)).isEqualTo(100.0)
+        assertThat(state.fingerX(-500f, lastPoint)).isEqualTo(0.0)
+        assertThat(state.fingerX(130f, null)).isNull()
+        // Nothing drawn yet: the point itself, as before
+        assertThat(GraphInspectState().fingerX(130f, lastPoint)).isEqualTo(60.0)
+    }
+
+    /**
+     * The window is measured from the finger, not from the reading the pill snapped to. A marker is
+     * drawn on the BG graph at its own time, so a treatment between two readings has to be listed
+     * when it is held — it used to be dropped, which read as "I can see it but holding it shows
+     * nothing".
+     */
+    @Test
+    fun `only valid treatments within 5 minutes of the finger are listed`() {
+        val near = BolusGraphPoint(t0 + 8 * minute, 0.4, BolusType.SMB, isValid = true, label = "0.40 U")
+        val far = BolusGraphPoint(t0 + 13 * minute, 1.0, BolusType.NORMAL, isValid = true, label = "1.00 U")
+        val invalid = BolusGraphPoint(t0 + 7 * minute, 2.0, BolusType.NORMAL, isValid = false, label = "2.00 U")
+        val carbs = CarbsGraphPoint(t0 + 6 * minute, 20.0, isValid = true, label = "20 g")
+
+        // The finger is at minute 7, between the readings at minute 5 and minute 10
+        val data = inspectDataAt(
+            timestamp = t0 + 7 * minute,
+            bgReadings = readings,
+            predictions = emptyList(),
             iob = emptyList(),
             cob = emptyList(),
             actualBasal = emptyList(),
             profileBasal = emptyList(),
             boluses = listOf(near, far, invalid),
-            carbs = listOf(carbs)
+            carbs = listOf(carbs),
+            calibrations = emptyList(),
+            therapyEvents = emptyList()
         )
 
         assertThat(data.boluses).containsExactly(near)
         assertThat(data.carbs).containsExactly(carbs)
+    }
+
+    @Test
+    fun `a calibration and a BG check near the finger are listed with their value`() {
+        val calibration = CalibrationGraphPoint(t0 + 6 * minute, 7.2, isValid = true, label = "7.2 mmol/L")
+        val invalid = CalibrationGraphPoint(t0 + 6 * minute, 9.9, isValid = false, label = "9.9 mmol/L")
+        val check = TherapyEventGraphPoint(t0 + 8 * minute, TherapyEventType.FINGER_STICK, "6.8 mmol/L", 0, 6.8)
+        val note = TherapyEventGraphPoint(t0 + 8 * minute, TherapyEventType.GENERAL, "sensor changed", 0, null)
+        val far = TherapyEventGraphPoint(t0 + 20 * minute, TherapyEventType.MBG, "5.0 mmol/L", 0, 5.0)
+
+        val data = inspectDataAt(
+            timestamp = t0 + 7 * minute,
+            bgReadings = readings,
+            predictions = emptyList(),
+            iob = emptyList(),
+            cob = emptyList(),
+            actualBasal = emptyList(),
+            profileBasal = emptyList(),
+            boluses = emptyList(),
+            carbs = emptyList(),
+            calibrations = listOf(calibration, invalid),
+            therapyEvents = listOf(check, note, far)
+        )
+
+        assertThat(data.measured).containsExactly("7.2 mmol/L", "6.8 mmol/L")
     }
 
     @Test
@@ -100,7 +185,7 @@ class GraphInspectTest {
     @Test
     fun `leaving the plotted area with the finger down keeps inspecting, lifting it ends`() {
         val state = GraphInspectState()
-        val marker = GraphInspectMarker(state)
+        val marker = SilentInspectMarker
         state.fingerDown = true
         state.pointerDown = true
 

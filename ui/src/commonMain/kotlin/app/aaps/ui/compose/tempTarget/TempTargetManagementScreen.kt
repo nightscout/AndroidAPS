@@ -2,10 +2,8 @@ package app.aaps.ui.compose.tempTarget
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,22 +18,20 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallFloatingActionButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -48,7 +44,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -59,8 +54,14 @@ import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsFab
+import app.aaps.core.ui.compose.AapsFloatingToolbar
+import app.aaps.core.ui.compose.AapsFloatingToolbarDeleteButton
+import app.aaps.core.ui.compose.AapsFloatingToolbarRow
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.keys.interfaces.ClientRole
+import app.aaps.core.ui.compose.LocalClientRole
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.clearFocusOnTap
@@ -100,9 +101,12 @@ fun TempTargetManagementScreen(
     // On a client whose master is unreachable, force VIEW-ONLY so preset (synced config) edits can't be made
     // while they couldn't sync. DERIVED from current state (no setScreenMode side-effect) → deterministic at
     // startup and flips the instant reachability changes. Master is never gated. Both preset edits AND the
-    // master-bound action FABs (Activate / Cancel) are gated by this on a client.
+    // master-bound actions (Activate / Cancel) are gated by this on a client.
     val editingEnabled = masterEditingEnabled()
-    val isPlayMode = uiState.screenMode == ScreenMode.PLAY || !editingEnabled
+    // Using presets (activate, cancel) needs a caregiver, which this screen already needs to open; changing presets
+    // is an admin's. Below admin the screen stays VIEW-ONLY, like an unreachable master.
+    val canDefine = LocalClientRole.current.allows(ClientRole.Admin)
+    val isPlayMode = uiState.screenMode == ScreenMode.PLAY || !editingEnabled || !canDefine
 
     // Set initial screen mode
     LaunchedEffect(initialMode) {
@@ -204,7 +208,6 @@ fun TempTargetManagementScreen(
     // so hiding it while sorting does not discard them — Save comes back with the edits intact.
     val canEnterReorder = !isPlayMode && editingEnabled && viewModel.canReorder()
     val scope = rememberCoroutineScope()
-    var showOverflowMenu by remember { mutableStateOf(false) }
 
     // Back leaves sort mode rather than the screen, so a reshuffle isn't silently discarded.
     NavigationBackHandler(
@@ -214,9 +217,13 @@ fun TempTargetManagementScreen(
     )
 
     // The view model outlives the screen, so an uncommitted order would otherwise survive until the
-    // screen is reopened — dropping the user straight back into sort mode with a stale order.
+    // screen is reopened — dropping the user straight back into sort mode with a stale order. The
+    // same goes for the state a confirmed Activate/Cancel left behind: reload it now, out of sight.
     DisposableEffect(Unit) {
-        onDispose { viewModel.cancelReorder() }
+        onDispose {
+            viewModel.cancelReorder()
+            viewModel.onScreenClosed()
+        }
     }
 
     AapsTheme {
@@ -255,8 +262,8 @@ fun TempTargetManagementScreen(
                         },
                         actions = {
                             if (isPlayMode) {
-                                // Edit mode button (shown in PLAY mode)
-                                IconButton(onClick = onRequestEditMode, enabled = editingEnabled) {
+                                // Edit mode button (shown in PLAY mode, to a role that may change presets)
+                                if (canDefine) IconButton(onClick = onRequestEditMode, enabled = editingEnabled) {
                                     Icon(
                                         imageVector = Icons.Filled.Edit,
                                         contentDescription = stringResource(CoreUiStrings.switch_to_edit)
@@ -276,30 +283,20 @@ fun TempTargetManagementScreen(
                                         )
                                     }
                                 }
-                                // Menu entry as well as the long-press: the long-press is
+                                // A button as well as the long-press: the long-press is
                                 // undiscoverable on its own, and this is the only route a screen
                                 // reader can take.
-                                Box {
-                                    IconButton(onClick = { showOverflowMenu = true }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.MoreVert,
-                                            contentDescription = stringResource(CoreUiStrings.more_options)
-                                        )
-                                    }
-                                    DropdownMenu(
-                                        expanded = showOverflowMenu,
-                                        onDismissRequest = { showOverflowMenu = false }
-                                    ) {
-                                        DropdownMenuItem(
-                                            text = { Text(stringResource(CoreUiStrings.reorder)) },
-                                            enabled = canEnterReorder,
-                                            onClick = {
-                                                showOverflowMenu = false
-                                                focusManager.clearFocus()
-                                                viewModel.enterReorderMode()
-                                            }
-                                        )
-                                    }
+                                IconButton(
+                                    onClick = {
+                                        focusManager.clearFocus()
+                                        viewModel.enterReorderMode()
+                                    },
+                                    enabled = canEnterReorder
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.SwapVert,
+                                        contentDescription = stringResource(CoreUiStrings.reorder)
+                                    )
                                 }
                             }
                         }
@@ -495,51 +492,28 @@ fun TempTargetManagementScreen(
                                         onNotesChange = viewModel::updateNotes,
                                         modifier = Modifier.fillMaxWidth()
                                     )
-                                    // Extra space for floating toolbar
-                                    Spacer(modifier = Modifier.height(80.dp))
+                                    // Space for the floating toolbar, Cancel sits inside it
+                                    Spacer(modifier = Modifier.height(AapsSpacing.fabClearance))
                                 }
                             }
                         }
                     }
 
-                    // Mini FAB for Cancel (only visible when TT is active). Hidden on a client whose master is
-                    // unreachable — canceling a TT is a master/NS action that couldn't be delivered.
-                    if (editingEnabled && uiState.activeTT != null && !isReorderMode) {
-                        SmallFloatingActionButton(
-                            onClick = { viewModel.cancelActive(onSuccess = onNavigateBack) },
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(end = 16.dp, bottom = 88.dp),
-                            containerColor = MaterialTheme.colorScheme.error
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Close,
-                                contentDescription = stringResource(CoreUiStrings.cancel)
-                            )
-                        }
-                    }
-
                     // Floating Toolbar with FAB (M3 style) — both are absolutely positioned over the
                     // cards, so they are hidden while sorting rather than left floating over the sort controls.
-                    if (!isReorderMode) Row(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        // Floating Toolbar — hidden in PLAY mode
-                        if (!isPlayMode) {
-                            Surface(
-                                shape = RoundedCornerShape(percent = 50),
-                                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                shadowElevation = 6.dp,
-                                tonalElevation = 6.dp
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(horizontal = 4.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
+                    if (!isReorderMode) AapsFloatingToolbarRow(modifier = Modifier.align(Alignment.BottomCenter)) {
+                        // Cancel the active TT. Same master-reachable rule as Activate: cancelling is a
+                        // master/NS action that couldn't be delivered.
+                        val showCancel = editingEnabled && uiState.activeTT != null
+
+                        // Floating Toolbar — the edit actions are hidden in PLAY mode, Cancel stays as long
+                        // as a target is running. M3 allows one FAB next to a toolbar, so Cancel is a toolbar
+                        // icon button, placed last so it sits right beside Activate (stop next to play). It
+                        // used to be a small × floating above this row, which landed beside the time field
+                        // and read as "clear this field".
+                        if (!isPlayMode || showCancel) {
+                            AapsFloatingToolbar {
+                                if (!isPlayMode) {
                                     IconButton(onClick = { viewModel.addNewPreset() }) {
                                         Icon(
                                             imageVector = Icons.Filled.Add,
@@ -557,17 +531,41 @@ fun TempTargetManagementScreen(
                                             )
                                         }
                                     }
-                                    IconButton(
+                                    AapsFloatingToolbarDeleteButton(
                                         onClick = { showDeleteDialog = true },
-                                        enabled = uiState.selectedPreset?.isDeletable == true
+                                        enabled = uiState.selectedPreset?.isDeletable == true,
+                                        contentDescription = stringResource(UiStrings.remove_label)
+                                    )
+                                }
+                                if (showCancel) {
+                                    // Cancel acts on the running target, the icons before it on the preset.
+                                    // A divider keeps the two groups apart (reviewer request on #5274).
+                                    if (!isPlayMode) {
+                                        VerticalDivider(
+                                            modifier = Modifier
+                                                .height(AapsSpacing.xxLarge)
+                                                .padding(horizontal = AapsSpacing.small)
+                                        )
+                                    }
+                                    // Tonal error disc: the loudest a toolbar button gets without being
+                                    // a second FAB, so "stop" reads next to "play" at a glance.
+                                    FilledTonalIconButton(
+                                        onClick = { viewModel.cancelActive(onSuccess = onNavigateBack) },
+                                        // A filled square needs more air than a bare icon, whose 24 dp glyph
+                                        // sits 12 dp inside its button: 8 dp here gives 16 dp to the pill end
+                                        // (same as the leading icon) and centres the divider.
+                                        modifier = Modifier.padding(horizontal = AapsSpacing.medium),
+                                        // Rounded square like the play FAB, not a disc. At 40 dp the corner
+                                        // has to be smaller than the FAB's 16 dp or it still reads as round.
+                                        shape = RoundedCornerShape(AapsSpacing.medium),
+                                        colors = IconButtonDefaults.filledTonalIconButtonColors(
+                                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                                        )
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Filled.Delete,
-                                            contentDescription = stringResource(UiStrings.remove_label),
-                                            tint = if (uiState.selectedPreset?.isDeletable == true)
-                                                MaterialTheme.colorScheme.error
-                                            else
-                                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                            imageVector = Icons.Filled.Close,
+                                            contentDescription = stringResource(CoreUiStrings.clientcontrol_action_cancel_temp_target)
                                         )
                                     }
                                 }

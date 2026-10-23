@@ -486,6 +486,17 @@ class CarelevoPatch @Inject constructor(
         preferences.remove(CarelevoStringNonKey.LastSnapshotAlarmCauses)
     }
 
+    /**
+     * An alarm removed locally without a successful AlarmClear is still active on the patch. Drop it
+     * from the baseline so the next snapshot treats it as newly raised instead of suppressing it.
+     */
+    fun forgetSnapshotAlarmCause(cause: AlarmCause) {
+        val previous = loadLastSnapshotAlarmCauses()
+        if (cause !in previous) return
+        saveLastSnapshotAlarmCauses(previous - cause)
+        aapsLogger.info(LTag.PUMPCOMM, "snapshot baseline forget cause=$cause (cleared locally only)")
+    }
+
     private fun reconcileInfusingStateFromSnapshot(infusing: Boolean) {
         val patch = patchInfo.value?.getOrNull() ?: return
         val shouldBeStopped = !infusing

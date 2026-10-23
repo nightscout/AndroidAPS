@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.toArgb
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.ActiveSceneState
+import app.aaps.core.data.ui.MarkerSizeClasses
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
@@ -31,7 +32,7 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.automation.AutomationEvent
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.configuration.Config
@@ -164,11 +165,11 @@ class DataHandlerMobile(
     private val pumpStatusProvider: PumpStatusProvider,
     private val ch: ConcentrationHelper,
     private val runningModeGuard: RunningModeGuard,
-    private val wizardBolusExecutor: WizardBolusExecutor,
-    // Role-transparent relays: on a MASTER they run locally (via wizardBolusExecutor); on a CLIENT they route the
+    private val masterActionExecutor: MasterActionExecutor,
+    // Role-transparent relays: on a MASTER they run locally (via masterActionExecutor); on a CLIENT they route the
     // action to the master over the signed round-trip (gated on masterReachable). EVERY wear therapy action goes
     // through these — bolus/eCarbs/TT/PS/RM via batchExecutor, quick-wizard/wizard via wizardExecutor. The local
-    // wizardBolusExecutor stays on the wear path for Fill ONLY (no relay command for Fill).
+    // masterActionExecutor stays on the wear path for Fill ONLY (no relay command for Fill).
     private val batchExecutor: BatchExecutor,
     private val wizardExecutor: WizardExecutor,
 ) {
@@ -340,7 +341,7 @@ class DataHandlerMobile(
                 // The executor already wrote the right sentence for both cases (a failure and a cancel), so the
                 // watch shows its comment as-is. The watch has no neutral terminal screen — a cancel still lands
                 // under the red "Error" heading — but the words are correct.
-                wizardBolusExecutor.deliverFillBolus(it.insulin, null, Sources.Wear, onError = { failure -> sendError(failure.comment) })
+                masterActionExecutor.deliverFillBolus(it.insulin, null, Sources.Wear, onError = { failure -> sendError(failure.comment) })
         }
         // These two are the ones that actually recompute a dose. The executor they delegate to already
         // refuses before init, so this is defence in depth - but it keeps the refusal in one place with the
@@ -696,9 +697,10 @@ class DataHandlerMobile(
             sendError(rh.gs(CoreUiStrings.wizard_no_actual_bg))
             return
         }
-        val inputs = WizardBolusExecutor.WizardInputs(
+        val inputs = MasterActionExecutor.WizardInputs(
             bg = bgReading.valueToUnits(profileFunction.getUnits()),
-            carbs = command.carbs,
+            // The meal type splits the grams like the phone wizard does: part now, part as eCarbs.
+            carbs = command.carbsType.carbsNow(command.carbs),
             percentage = command.percentage,
             directCorrection = 0.0,
             carbTime = 0,
@@ -709,6 +711,9 @@ class DataHandlerMobile(
             useTrend = preferences.get(BooleanKey.WearWizardTrend),
             alarm = false,
             notes = "",
+            eCarbsGrams = command.carbsType.eCarbs(command.carbs),
+            eCarbsDelayMinutes = command.carbsType.eCarbsDelayMinutes,
+            eCarbsDurationHours = command.carbsType.eCarbsDurationHours,
             source = Sources.Wear
         )
         contacting()
@@ -919,7 +924,7 @@ class DataHandlerMobile(
      * Shared wear eCarbs precheck: cap + park + author the confirmation on the MASTER via the role-transparent
      * [BatchExecutor] (MASTER → local prepareBatch; CLIENT → signed BatchPrepare so the master records them), then push
      * the master-authored [lines][EventData.ConfirmAction.lines] to the watch with the parked bolusId. The wear ✓
-     * commits by id (consume-once). (Was a local-only `wizardBolusExecutor.prepareBatch`; now everything runs on the master.)
+     * commits by id (consume-once). (Was a local-only `masterActionExecutor.prepareBatch`; now everything runs on the master.)
      */
     private suspend fun sendBatchPreCheck(
         bolus: BatchAction.Bolus,
@@ -1473,12 +1478,19 @@ class DataHandlerMobile(
                 temps.add(EventData.TreatmentData.TempBasal(now - 60 * 1000, endBasalValue, runningTime + 5 * 60 * 1000, currentAmount, currentAmount))
             }
         }
-        persistenceLayer.getBolusesFromTimeIncludingInvalid(startTimeWindow, true)
-            .stream()
-            .filter { (_, _, _, _, _, _, _, _, _, type) -> type !== BS.Type.PRIMING }
-            .forEach { (_, _, _, isValid, _, _, timestamp, _, amount, type) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, amount, 0.0, type === BS.Type.SMB, isValid)) }
-        persistenceLayer.getCarbsFromTimeExpanded(startTimeWindow, true)
-            .forEach { (_, _, _, isValid, _, _, timestamp, _, _, amount) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, 0.0, amount, false, isValid)) }
+        // A day of boluses and carbs: the last hours go to the watch, the whole day sets the size
+        // cuts, the same day the phone's graphs take them from
+        val dayStart = now - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
+        val dayBoluses = persistenceLayer.getBolusesFromTimeIncludingInvalid(dayStart, true)
+            .filter { it.type != BS.Type.PRIMING }
+        dayBoluses.filter { it.timestamp >= startTimeWindow }
+            .forEach { boluses.add(EventData.TreatmentData.Treatment(it.timestamp, it.amount, 0.0, it.type == BS.Type.SMB, it.isValid)) }
+        val smbSizeClasses = MarkerSizeClasses.ofMax(dayBoluses.filter { it.isValid && it.type == BS.Type.SMB && it.amount > 0 }.map { it.amount })
+        val bolusSizeClasses = MarkerSizeClasses.ofMax(dayBoluses.filter { it.isValid && it.type == BS.Type.NORMAL }.map { it.amount })
+        val dayCarbs = persistenceLayer.getCarbsFromTimeExpanded(dayStart, true)
+        dayCarbs.filter { it.timestamp >= startTimeWindow }
+            .forEach { boluses.add(EventData.TreatmentData.Treatment(it.timestamp, 0.0, it.amount, false, it.isValid)) }
+        val carbsSizeClasses = MarkerSizeClasses.ofMax(dayCarbs.filter { it.isValid && it.amount > 0 }.map { it.amount })
         val apsResult = if (config.APS) {
             val lastRun = loop.lastRun
             if (lastRun?.request?.hasPredictions == true) {
@@ -1504,7 +1516,17 @@ class DataHandlerMobile(
                     )
                 )
             }
-        sendToWear(EventData.TreatmentData(temps, basals, boluses, predictions))
+        sendToWear(
+            EventData.TreatmentData(
+                temps, basals, boluses, predictions,
+                smbSmallBelow = smbSizeClasses?.smallBelow ?: -1.0,
+                smbLargeFrom = smbSizeClasses?.largeFrom ?: -1.0,
+                bolusSmallBelow = bolusSizeClasses?.smallBelow ?: -1.0,
+                bolusLargeFrom = bolusSizeClasses?.largeFrom ?: -1.0,
+                carbsSmallBelow = carbsSizeClasses?.smallBelow ?: -1.0,
+                carbsLargeFrom = carbsSizeClasses?.largeFrom ?: -1.0
+            )
+        )
     }
 
     private fun predictionColor(data: GV): Int {

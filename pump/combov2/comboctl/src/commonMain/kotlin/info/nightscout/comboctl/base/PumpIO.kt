@@ -900,6 +900,10 @@ class PumpIO(
      *
      * @param maxRequests How many history block request we can
      *        maximally send. This must be at least 10.
+     * @param readEvents Gets the events of each block before the block is
+     *        confirmed, and is also the returned list. A confirmed block is
+     *        not sent again, so if this call throws, the caller still has
+     *        the events read so far in this list (#5377). Pass an empty list.
      * @return The history delta.
      * @throws IllegalArgumentException if maxRequests is less than 10.
      * @throws IllegalStateException if the pump is not in the comand
@@ -916,11 +920,13 @@ class PumpIO(
      *   to the history.
      * @throws ComboIOException if IO with the pump fails.
      */
-    suspend fun getCMDHistoryDelta(maxRequests: Int = 40): List<ApplicationLayer.CMDHistoryEvent> {
+    suspend fun getCMDHistoryDelta(
+        maxRequests: Int = 40,
+        readEvents: MutableList<ApplicationLayer.CMDHistoryEvent> = mutableListOf()
+    ): List<ApplicationLayer.CMDHistoryEvent> {
         require(maxRequests >= 10) { "Maximum amount of requests must be at least 10; caller specified $maxRequests" }
 
         return runPumpIOCall("get history delta", Mode.COMMAND) {
-            val historyDelta = mutableListOf<ApplicationLayer.CMDHistoryEvent>()
             var reachedEnd = false
 
             // Keep requesting history blocks until we reach the end,
@@ -944,6 +950,13 @@ class PumpIO(
                     continue
                 }
 
+                // Keep the events before the block is confirmed. If the confirm
+                // gets to the pump and its answer does not get back, the events
+                // are in readEvents all the same. If the confirm does not get to
+                // the pump, the block comes again with the next read, and the
+                // event counter of each event matches the earlier record (#5377).
+                readEvents.addAll(historyBlock.events)
+
                 // Confirm this history block to let the Combo consider
                 // it processed. The Combo can then move on to the next
                 // history block.
@@ -951,8 +964,6 @@ class PumpIO(
                     ApplicationLayer.createCMDConfirmHistoryBlockPacket(),
                     ApplicationLayer.Command.CMD_CONFIRM_HISTORY_BLOCK_RESPONSE
                 )
-
-                historyDelta.addAll(historyBlock.events)
 
                 // Check if there is a next history block to get.
                 // If not, we are done, and need to exit this loop.
@@ -969,7 +980,7 @@ class PumpIO(
                     "Did not reach an end of the history event list even after $maxRequests request(s)"
                 )
 
-            return@runPumpIOCall historyDelta
+            return@runPumpIOCall readEvents
         }
     }
 

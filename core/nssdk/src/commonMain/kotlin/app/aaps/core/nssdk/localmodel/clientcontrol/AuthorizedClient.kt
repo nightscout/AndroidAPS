@@ -37,7 +37,35 @@ data class AuthorizedClient(
     val counterReceived: Long = 0L,
 
     @SerialName("pairExpiresAt")
-    val pairExpiresAt: Long = 0L
+    val pairExpiresAt: Long = 0L,
+
+    /**
+     * Name of the client's role (`ClientRole` in core/keys). Kept as a plain string so that a role this
+     * build does not know can never fail to decode: a decode failure would read the whole stored list as
+     * empty. Null - a client stored before roles existed - means Admin, the full control it had.
+     */
+    val role: String? = null,
+
+    /**
+     * Name of the Nightscout token (the subject) this client writes with. Nightscout puts it on every document the
+     * client writes, so the master learns it from each verified message; for a token the master made, it is known from
+     * the start. Null until then. Removing the client also deletes this token, if it is a client token.
+     */
+    val nsSubject: String? = null,
+
+    /**
+     * Name of the client's own Nightscout token, the one the master made for it, from the first verified message the
+     * client wrote with it. From then on the master refuses the client's commands written with any other token. Null
+     * while the client has never used one (the master could not make it, or the phone kept the token it had).
+     */
+    val ownToken: String? = null,
+
+    /**
+     * The secret from the key exchange in the client's last hello, wrapped like [encryptedSecret]. It becomes the
+     * only secret when the client first signs with it; until then the client may not have the answer yet, so both
+     * are accepted.
+     */
+    val pendingSecret: String? = null
 )
 
 @Serializable

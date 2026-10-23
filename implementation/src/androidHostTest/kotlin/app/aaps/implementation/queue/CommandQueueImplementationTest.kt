@@ -1494,7 +1494,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     }
 
     /**
-     * Dropping is not failing. The alarm in `WizardBolusExecutorImpl` fires on `!success`, so
+     * Dropping is not failing. The alarm in `MasterActionExecutorImpl` fires on `!success`, so
      * without this flag the import would start raising BOLUS_DELIVERY_FAILED where nothing failed -
      * the same reason a bolus the user stopped does not alarm.
      */

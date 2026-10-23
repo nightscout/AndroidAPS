@@ -1,7 +1,7 @@
 package app.aaps.implementation.bolus
 
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
@@ -23,7 +23,7 @@ import dev.zacsweers.metro.SingleIn
 @Inject
 class WizardExecutorImpl(
     private val roleBranch: RoleBranch,
-    private val wizardBolusExecutor: WizardBolusExecutor
+    private val masterActionExecutor: MasterActionExecutor
 ) : WizardExecutor {
 
     override suspend fun prepare(source: WizardExecutor.WizardSource, label: String): ActionProgress {
@@ -33,14 +33,14 @@ class WizardExecutorImpl(
         }
         return roleBranch.prepare(label, command) {
             when (source) {
-                is WizardExecutor.WizardSource.QuickWizard -> wizardBolusExecutor.prepareQuickWizard(source.guid)
-                is WizardExecutor.WizardSource.Manual      -> wizardBolusExecutor.prepareWizard(source.inputs)
+                is WizardExecutor.WizardSource.QuickWizard -> masterActionExecutor.prepareQuickWizard(source.guid)
+                is WizardExecutor.WizardSource.Manual      -> masterActionExecutor.prepareWizard(source.inputs)
             }
         }
     }
 
     override suspend fun commit(bolusId: Long, asAdvisor: Boolean, source: Sources, label: String, correctionU: Double): ActionProgress =
         roleBranch.commit(label, ClientControlActionDispatcher.Command.BolusCommit(bolusId, asAdvisor, correctionU = correctionU)) { onError ->
-            wizardBolusExecutor.confirm(bolusId, source, onError, asAdvisor, correctionU)
+            masterActionExecutor.confirm(bolusId, source, onError, asAdvisor, correctionU)
         }
 }

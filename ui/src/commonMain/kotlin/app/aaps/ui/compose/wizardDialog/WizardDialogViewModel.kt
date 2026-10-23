@@ -6,11 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import app.aaps.core.data.model.CarbsType
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.automation.Automation
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.isNotDeliveryError
@@ -409,8 +410,8 @@ class WizardDialogViewModel(
 
         // Carbs type split: effective carbs for wizard, eCarbs for later scheduling
         val carbsType = state.carbsType
-        val effectiveCarbs = state.carbs * carbsType.carbsPercent / 100
-        val eCarbs = state.carbs * carbsType.eCarbsPercent / 100
+        val effectiveCarbs = carbsType.carbsNow(state.carbs)
+        val eCarbs = carbsType.eCarbs(state.carbs)
 
         // Carbs constraint check (on effective carbs only)
         val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(ConstraintObject(effectiveCarbs, aapsLogger)).value()
@@ -547,10 +548,10 @@ class WizardDialogViewModel(
      */
     fun deliverManualWizard() {
         val state = uiState.value
-        val effectiveCarbs = state.carbs * state.carbsType.carbsPercent / 100
+        val effectiveCarbs = state.carbsType.carbsNow(state.carbs)
         // null → recompute on the master's active profile (index 0 = "Active"); else the selected stored profile by name.
         val profileName = if (state.selectedProfileIndex == 0) null else state.profileNames.getOrNull(state.selectedProfileIndex)
-        val inputs = WizardBolusExecutor.WizardInputs(
+        val inputs = MasterActionExecutor.WizardInputs(
             bg = state.bg, carbs = effectiveCarbs, percentage = state.percentage, directCorrection = state.directCorrection,
             carbTime = state.carbTime, useBg = state.useBg, useCob = state.useCOB, useIob = state.useIOB,
             useTt = state.useTT, useTrend = state.useTrend, alarm = state.alarmChecked, notes = state.notes,

@@ -19,15 +19,18 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -64,7 +67,9 @@ internal class InsulinDialogViewModelTest {
     @Mock private lateinit var hardLimits: HardLimits
     @Mock private lateinit var batchExecutor: BatchExecutor
     @Mock private lateinit var rxBus: RxBus
+    @Mock private lateinit var nsClient: NsClient
 
+    private val role = MutableStateFlow(ClientRole.Admin)
     private val pump: PumpWithConcentration = mock()
     private val pumpDescription: PumpDescription = mock()
     private val maxBolusConstraint: Constraint<Double> = mock()
@@ -87,11 +92,27 @@ internal class InsulinDialogViewModelTest {
         whenever(profileUtil.fromMgdlToUnits(any(), any())).thenReturn(0.0)
         // ttTargetMgdl/ttDurationMinutes parse this preset string in init; "[]" -> empty -> use defaults.
         whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("[]")
-        sut = InsulinDialogViewModel(
-            constraintChecker, profileFunction, profileUtil, activePlugin, ch, insulinManager,
-            config, automation, decimalFormatter, loop, preferences, rh, dateUtil, hardLimits, batchExecutor,
-            rxBus, CoroutineScope(UnconfinedTestDispatcher())
-        )
+        whenever(nsClient.clientRole).thenReturn(role)
+        sut = create()
+    }
+
+    private fun create() = InsulinDialogViewModel(
+        constraintChecker, profileFunction, profileUtil, activePlugin, ch, insulinManager,
+        config, automation, decimalFormatter, loop, preferences, rh, dateUtil, hardLimits, batchExecutor,
+        rxBus, CoroutineScope(UnconfinedTestDispatcher()), nsClient
+    )
+
+    @Test
+    fun `the eating soon target is offered to a role that may set one`() {
+        assertThat(sut.uiState.value.canSetTempTarget).isTrue()
+    }
+
+    // A meal assistant may give insulin but not set a temp target; with the switch on, the master refuses the bolus too.
+    @Test
+    fun `a meal assistant is not offered the eating soon target`() {
+        role.value = ClientRole.MealAssistant
+
+        assertThat(create().uiState.value.canSetTempTarget).isFalse()
     }
 
     @AfterEach

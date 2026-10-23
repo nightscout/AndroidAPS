@@ -1,20 +1,15 @@
 package app.aaps.plugins.sync.nsclientV3.compose
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,9 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
@@ -36,10 +28,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.sync.SyncStrings
-import app.aaps.plugins.sync.log.SyncLogList
+import app.aaps.plugins.sync.log.LabelValueRow
+import app.aaps.plugins.sync.log.SyncLogLayout
+import app.aaps.plugins.sync.log.clearLogAction
+import app.aaps.plugins.sync.log.fullSyncAction
 
 @Composable
 fun NSClientScreen(
@@ -78,11 +74,6 @@ fun NSClientScreen(
                             )
                         }
                     }
-                    NSClientMenu(
-                        onClearLog = onClearLog,
-                        onSendNow = onSendNow,
-                        onFullSync = onFullSync
-                    )
                 }
             )
         )
@@ -92,6 +83,9 @@ fun NSClientScreen(
         uiState = uiState,
         dateUtil = dateUtil,
         onPauseChanged = onPauseChanged,
+        onSendNow = onSendNow,
+        onFullSync = onFullSync,
+        onClearLog = onClearLog,
         modifier = modifier
     )
 }
@@ -104,13 +98,20 @@ fun NSClientScreenContent(
     uiState: NSClientUiState,
     dateUtil: DateUtil? = null,
     onPauseChanged: (Boolean) -> Unit = {},
+    onSendNow: () -> Unit = {},
+    onFullSync: () -> Unit = {},
+    onClearLog: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    Column(
+    SyncLogLayout(
+        logList = uiState.logList,
+        dateUtil = dateUtil,
+        actions = listOf(
+            ScreenAction(label = stringResource(SyncStrings.deliver_now), icon = Icons.AutoMirrored.Filled.Send, onClick = onSendNow),
+            fullSyncAction(onFullSync),
+            clearLogAction(onClearLog)
+        ),
         modifier = modifier
-            .fillMaxSize()
-            .padding(AapsSpacing.extraLarge),
-        verticalArrangement = Arrangement.spacedBy(AapsSpacing.small)
     ) {
         // URL row - only URL text is clickable
         Row(
@@ -157,16 +158,6 @@ fun NSClientScreenContent(
                 Switch(checked = !uiState.paused, onCheckedChange = null)
             }
         }
-
-        HorizontalDivider()
-
-        SyncLogList(
-            entries = uiState.logList,
-            dateUtil = dateUtil,
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        )
     }
 }
 
@@ -191,72 +182,5 @@ private fun ClickableUrlText(
             color = MaterialTheme.colorScheme.onSurface,
             modifier = modifier
         )
-    }
-}
-
-@Composable
-private fun LabelValueRow(
-    label: String,
-    value: String,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-    }
-}
-
-@Composable
-private fun NSClientMenu(
-    onClearLog: () -> Unit,
-    onSendNow: () -> Unit,
-    onFullSync: () -> Unit
-) {
-    var showMenu by remember { mutableStateOf(false) }
-
-    Box {
-        IconButton(onClick = { showMenu = true }) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(CoreUiStrings.more_options)
-            )
-        }
-        DropdownMenu(
-            expanded = showMenu,
-            onDismissRequest = { showMenu = false }
-        ) {
-            DropdownMenuItem(
-                text = { Text(stringResource(SyncStrings.clear_log)) },
-                onClick = {
-                    showMenu = false
-                    onClearLog()
-                }
-            )
-            DropdownMenuItem(
-                text = { Text(stringResource(SyncStrings.deliver_now)) },
-                onClick = {
-                    showMenu = false
-                    onSendNow()
-                }
-            )
-            DropdownMenuItem(
-                text = { Text(stringResource(SyncStrings.full_sync)) },
-                onClick = {
-                    showMenu = false
-                    onFullSync()
-                }
-            )
-        }
     }
 }

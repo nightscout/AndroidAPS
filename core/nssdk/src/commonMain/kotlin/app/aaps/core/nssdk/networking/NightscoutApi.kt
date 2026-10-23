@@ -1,5 +1,7 @@
 package app.aaps.core.nssdk.networking
 
+import app.aaps.core.nssdk.localmodel.authorization.NSAuthRole
+import app.aaps.core.nssdk.localmodel.authorization.NSAuthSubject
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.core.nssdk.remotemodel.NSResponse
 import app.aaps.core.nssdk.remotemodel.RemoteCreateUpdateResponse
@@ -282,4 +284,32 @@ internal class NightscoutApi(
                 permanent?.let { encodedParameters.append("permanent", it.toString()) }
             }
         }
+
+    // ---------------------------------------------------------------- authorization (API v2, admin token only)
+
+    // API v2 answers plain JSON, not the `{status, result}` wrapper of API v3.
+
+    suspend fun getAuthRoles() =
+        call(HttpMethod.Get, ListSerializer(NSAuthRole.serializer())) { nsUrl("v2", "authorization", "roles") }
+
+    suspend fun createAuthRole(role: NSAuthRole) =
+        call(HttpMethod.Post, NSAuthRole.serializer()) { nsUrl("v2", "authorization", "roles"); jsonBody(role) }
+
+    /** Replaces the whole stored role that has the same `_id`. */
+    suspend fun updateAuthRole(role: NSAuthRole) =
+        call(HttpMethod.Put, NSAuthRole.serializer()) { nsUrl("v2", "authorization", "roles"); jsonBody(role) }
+
+    suspend fun getAuthSubjects() =
+        call(HttpMethod.Get, ListSerializer(NSAuthSubject.serializer())) { nsUrl("v2", "authorization", "subjects") }
+
+    /** Answers the stored subject with its new `_id`, but without the token: only [getAuthSubjects] lists that. */
+    suspend fun createAuthSubject(subject: NSAuthSubject) =
+        call(HttpMethod.Post, NSAuthSubject.serializer()) { nsUrl("v2", "authorization", "subjects"); jsonBody(subject) }
+
+    suspend fun deleteAuthSubject(id: String) =
+        call(HttpMethod.Delete, JsonObject.serializer()) { nsUrl("v2", "authorization", "subjects", id) }
+
+    /** 200 when the token has [permission], 401 when not. Needs no admin token: any token may ask about itself. */
+    suspend fun checkPermission(permission: String) =
+        call(HttpMethod.Get, JsonObject.serializer()) { nsUrl("v2", "authorization", "debug", "check", permission) }
 }

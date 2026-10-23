@@ -25,6 +25,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -65,6 +66,8 @@ class NsFrameHandlerTest : TestBaseWithProfile() {
             nsIncomingDataProcessor = { nsIncomingDataProcessor },
             runningConfiguration = { runningConfiguration },
             orphanDetector = { orphanDetector },
+            clientKeyExchange = { mock() },
+            masterDocVerifier = { mock() },
             storeDataForDb = storeDataForDb,
             notificationManager = notificationManager,
             nsClientRepository = NSClientRepositoryImpl(rxBus, aapsLogger),
@@ -87,7 +90,7 @@ class NsFrameHandlerTest : TestBaseWithProfile() {
     fun `entries document is processed as glucose and queued for storage`() = runTest {
         sut.onDataCreateUpdate(envelope("entries", sgvDoc()))
 
-        verify(nsIncomingDataProcessor).processSgvs(any(), eq(false))
+        verify(nsIncomingDataProcessor).processSgvs(any(), eq(false), eq(false))
         verify(storeDataForDb).requestStoreGlucoseValues()
     }
 
@@ -98,6 +101,31 @@ class NsFrameHandlerTest : TestBaseWithProfile() {
         sut.onDataCreateUpdate(envelope("treatments", doc))
 
         verify(storeDataForDb).requestStoreTreatments(fullSync = false)
+    }
+
+    /**
+     * A live frame must never ask for the first-load cursor to be advanced.
+     *
+     * The record carries the time of "now". During a first load, letting it move the cursor makes
+     * the REST load ask for "treatments since now" instead of since now minus 100 days, so the
+     * whole history behind it is never read - and because the profile switch lives in that history,
+     * the client ends up with no active profile. The same frame also reaches the high-water mark,
+     * which is already guarded for this reason; this cursor was missed.
+     */
+    @Test
+    fun `a live entries frame does not advance the first load cursor`() = runTest {
+        sut.onDataCreateUpdate(envelope("entries", sgvDoc()))
+
+        verify(nsIncomingDataProcessor).processSgvs(any(), eq(false), eq(false))
+    }
+
+    @Test
+    fun `a live treatments frame does not advance the first load cursor`() = runTest {
+        val doc = """{"identifier":"t1","srvModified":1000,"date":1000,"eventType":"Note","notes":"x"}"""
+
+        sut.onDataCreateUpdate(envelope("treatments", doc))
+
+        verify(nsIncomingDataProcessor).processTreatments(any(), eq(false), eq(false))
     }
 
     @Test
@@ -132,7 +160,7 @@ class NsFrameHandlerTest : TestBaseWithProfile() {
 
         sut.onDataCreateUpdate(envelope("entries", """{"identifier":"abc","date":1000,"sgv":100}"""))
 
-        verify(nsIncomingDataProcessor, never()).processSgvs(any(), any())
+        verify(nsIncomingDataProcessor, never()).processSgvs(any(), any(), any())
         verify(nsClientV3Plugin, never()).storeLastLoadedSrvModified()
         assertThat(lastModified.collections.entries).isEqualTo(0L)
     }
@@ -184,10 +212,26 @@ class NsFrameHandlerTest : TestBaseWithProfile() {
 
     @Test
     fun `deleted entry is queued for removal`() = runTest {
+        whenever(nsIncomingDataProcessor.acceptsGlucose(false)).thenReturn(true)
+
         sut.onDataDelete("""{"colName":"entries","identifier":"e1"}""")
 
         verify(storeDataForDb).addToDeleteGlucoseValue("e1")
         verify(storeDataForDb).requestUpdateDeletedGlucoseValues()
+    }
+
+    /**
+     * A phone that does not take BG from Nightscout must not take BG deletes from there either. This path
+     * had no check at all, so anyone who could write to Nightscout could remove a master's readings.
+     */
+    @Test
+    fun `deleted entry is ignored when BG is not taken from Nightscout`() = runTest {
+        whenever(nsIncomingDataProcessor.acceptsGlucose(false)).thenReturn(false)
+
+        sut.onDataDelete("""{"colName":"entries","identifier":"e1"}""")
+
+        verify(storeDataForDb, never()).addToDeleteGlucoseValue(any())
+        verify(storeDataForDb, never()).requestUpdateDeletedGlucoseValues()
     }
 
     /** A document with no collection name matches no branch. It must not delete anything. */
