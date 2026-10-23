@@ -46,7 +46,6 @@
     <string name="unit_days">días</string>
     <string name="unit_weeks">semanas</string>
     <string name="shortminute">m</string>
-    <string name="shortday">d</string>
     <string name="time_remaining_h_m">Faltan %1$dh %2$dm</string>
     <string name="time_remaining_m">Faltan %1$dm</string>
     <string name="later_today">Más tarde hoy</string>
@@ -99,7 +98,6 @@
     <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
-    <string name="forever">Para siempre</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">Bluetooth</string>
     <string name="permission_bluetooth_description">La aplicación necesita permiso de Bluetooth para comunicarse con la bomba</string>
