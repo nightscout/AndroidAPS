@@ -81,6 +81,7 @@
     <string name="sensitivity_time">Някои от опциите на плъгина имат времеви диапазони и потребителят може да ги конфигурира.</string>
     <string name="wrongcarbs_label">Грешки при въвеждане на въглехидрати</string>
     <string name="wrongcarbs_whattodo">Какво трябва да направите, ако неправилно сте въвели въглехидрати?</string>
+    <string name="wrongcarbs_addinsulin">Болус с инсулин през менюто за Пълнене</string>
     <string name="wrongcarbs_donothing">Не правете нищо – AAPS ще направи съответните корекции.</string>
     <string name="wronginsulin_label">Грешки при доставяне/въвеждане на инсулин</string>
     <string name="wronginsulin_whattodo">Какво трябва да направите, ако сте получили по-малко инсулин, отколкото предполага историята на помпата, напр. поради запушване, повредена канюла или забравяне да поставите отново помпата след душ?</string>
