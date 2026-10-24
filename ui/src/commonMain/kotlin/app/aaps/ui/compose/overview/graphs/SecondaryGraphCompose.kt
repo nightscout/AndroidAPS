@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -69,21 +70,39 @@ private val MAX_CARBS_KEY = ExtraStore.Key<Double>()
 
 /** The axis setup that a scroll or zoom can change. Equal values mean the axes did not change. */
 private data class AxisScale(
-    val primary: CartesianLayerRangeProvider,
-    val secondary: CartesianLayerRangeProvider,
+    val left: CartesianLayerRangeProvider,
+    val right: CartesianLayerRangeProvider,
     val basal: CartesianLayerRangeProvider,
-    val startAxisItemPlacer: VerticalAxis.ItemPlacer
+    val startAxisItemPlacer: VerticalAxis.ItemPlacer,
+    val endAxisItemPlacer: VerticalAxis.ItemPlacer
+)
+
+/** Everything the chart model of a graph is built from. Equal values give the same model. */
+private data class ModelInput(
+    val leftSpecs: List<SeriesSpec>,
+    val rightSpecs: List<SeriesSpec>,
+    val basalProfile: List<Pair<Double, Double>>,
+    val basalActual: List<Pair<Double, Double>>,
+    val hasBasalLayer: Boolean,
+    val hasRightAxis: Boolean,
+    val rightFirst: Boolean,
+    val maxX: Double,
+    val axisScale: AxisScale,
+    val maxManualBolus: Double?,
+    val maxCarbs: Double?
 )
 
 /**
  * General-purpose secondary graph composable.
  *
- * Renders any combination of series types on a single chart.
- * Each series type has its own color and rendering style:
+ * Shows one or two series. Every series draws the same way, on either axis:
  * - IOB: Blue line with area fill + bolus markers (SMBs, normal boluses, extended boluses)
  * - COB: Orange adaptive-step line with area fill + carbs markers + failover dots
  * - Simple line series (AbsIOB, BGI, Sensitivity, VarSens, DevSlope, HR, Steps): Colored line with gradient fill
  * - Deviations: Per-type colored step lines with gradient fill (POSITIVE/NEGATIVE/EQUAL/UAM/CSF)
+ *
+ * The first series is drawn against the left axis and the second against the right one, unless the
+ * two share a unit and so one axis. The axes follow the rules in SecondaryGraphAxes.kt.
  */
 @Composable
 fun SecondaryGraphCompose(
@@ -102,14 +121,7 @@ fun SecondaryGraphCompose(
     val dateUtil = LocalDateUtil.current
     if (seriesTypes.isEmpty()) return
 
-    // Ensure DEV_SLOPE is always primary — it needs primary to render both dsMax and dsMin lines
-    val orderedTypes = remember(seriesTypes) {
-        val mustBePrimary = setOf(SeriesType.DEV_SLOPE, SeriesType.DEVIATIONS)
-        if (seriesTypes.size >= 2 && seriesTypes[0] !in mustBePrimary && seriesTypes[1] in mustBePrimary)
-            listOf(seriesTypes[1], seriesTypes[0])
-        else
-            seriesTypes
-    }
+    val sides = remember(seriesTypes) { graphSides(seriesTypes) }
 
     val hasRealTimeRange = derivedTimeRange != null
     val (minTimestamp, maxTimestamp) = derivedTimeRange ?: run {
@@ -128,66 +140,29 @@ fun SecondaryGraphCompose(
     }
 
     // =========================================================================
-    // Collect data flows — only for selected series types
+    // Collect data flows — only for the series this graph shows
     // =========================================================================
 
-    // Primary series = left axis (orderedTypes[0]), secondary series = right axis (orderedTypes[1])
-    val primaryType = orderedTypes[0]
-    val secondaryType = orderedTypes.getOrNull(1)
+    val hasIob = SeriesType.IOB in seriesTypes
+    val hasCob = SeriesType.COB in seriesTypes
+    // The basal band takes the top of the graph, so only when IOB is the graph's only series
+    val hasBasalLayer = sides.left == listOf(SeriesType.IOB) && sides.right.isEmpty()
 
-    // Specific case: BGI and DEVIATIONS share the same mg/dL unit and should share the vertical scale
-    val shareAxis = (primaryType == SeriesType.BGI && secondaryType == SeriesType.DEVIATIONS) ||
-        (primaryType == SeriesType.DEVIATIONS && secondaryType == SeriesType.BGI)
-
-    val isDualAxis = secondaryType != null && !shareAxis
-    val primaryTypes = if (shareAxis) orderedTypes else listOf(primaryType)
-
-    val hasIob = primaryType == SeriesType.IOB
-    val hasCob = primaryType == SeriesType.COB
-
-    // Collect flows for primary series (includes share flow for DEV and BGI if together on the same graph with shareAxis true)
     val iobData = if (hasIob) viewModel.iobGraphFlow.collectAsStateWithLifecycle().value else null
     val cobData = if (hasCob) viewModel.cobGraphFlow.collectAsStateWithLifecycle().value else null
     val treatmentData = if (hasIob || hasCob) viewModel.treatmentGraphFlow.collectAsStateWithLifecycle().value else null
-    val absIobData = if (primaryType == SeriesType.ABS_IOB) viewModel.absIobGraphFlow.collectAsStateWithLifecycle().value else null
-    val bgiData = if (SeriesType.BGI in primaryTypes) viewModel.bgiGraphFlow.collectAsStateWithLifecycle().value else null
-    val deviationsData = if (SeriesType.DEVIATIONS in primaryTypes) viewModel.deviationsGraphFlow.collectAsStateWithLifecycle().value else null
-    val ratioData = if (primaryType == SeriesType.SENSITIVITY) viewModel.ratioGraphFlow.collectAsStateWithLifecycle().value else null
-    val varSensData = if (primaryType == SeriesType.VAR_SENSITIVITY) viewModel.varSensGraphFlow.collectAsStateWithLifecycle().value else null
-    val devSlopeData = if (primaryType == SeriesType.DEV_SLOPE) viewModel.devSlopeGraphFlow.collectAsStateWithLifecycle().value else null
-    val hrData = if (primaryType == SeriesType.HEART_RATE) viewModel.heartRateGraphFlow.collectAsStateWithLifecycle().value else null
-    val stepsData = if (primaryType == SeriesType.STEPS) viewModel.stepsGraphFlow.collectAsStateWithLifecycle().value else null
-    // Activity data: either as primary series OR as overlay (on IOB graph)
-    val needsActivity = primaryType == SeriesType.ACTIVITY || (activityOverlay && hasIob)
+    val absIobData = if (SeriesType.ABS_IOB in seriesTypes) viewModel.absIobGraphFlow.collectAsStateWithLifecycle().value else null
+    val bgiData = if (SeriesType.BGI in seriesTypes) viewModel.bgiGraphFlow.collectAsStateWithLifecycle().value else null
+    val deviationsData = if (SeriesType.DEVIATIONS in seriesTypes) viewModel.deviationsGraphFlow.collectAsStateWithLifecycle().value else null
+    val ratioData = if (SeriesType.SENSITIVITY in seriesTypes) viewModel.ratioGraphFlow.collectAsStateWithLifecycle().value else null
+    val varSensData = if (SeriesType.VAR_SENSITIVITY in seriesTypes) viewModel.varSensGraphFlow.collectAsStateWithLifecycle().value else null
+    val devSlopeData = if (SeriesType.DEV_SLOPE in seriesTypes) viewModel.devSlopeGraphFlow.collectAsStateWithLifecycle().value else null
+    val hrData = if (SeriesType.HEART_RATE in seriesTypes) viewModel.heartRateGraphFlow.collectAsStateWithLifecycle().value else null
+    val stepsData = if (SeriesType.STEPS in seriesTypes) viewModel.stepsGraphFlow.collectAsStateWithLifecycle().value else null
+    // Activity data: either as a series OR as the overlay on the IOB graph
+    val needsActivity = SeriesType.ACTIVITY in seriesTypes || (activityOverlay && hasIob)
     val activityData = if (needsActivity) viewModel.activityGraphFlow.collectAsStateWithLifecycle().value else null
-    // Basal overlay only when IOB is primary and single-axis (no room for basal with dual-axis)
-    val basalData = if (hasIob && !isDualAxis) viewModel.basalGraphFlow.collectAsStateWithLifecycle().value else null
-
-    // Collect flow for secondary (right axis) series - (emptyList() if DEV and BGI together)
-    val secondaryLineData = if (!isDualAxis) emptyList() else when (secondaryType) {
-        SeriesType.IOB             -> viewModel.iobGraphFlow.collectAsStateWithLifecycle().value.let {
-            it.iob.map { p -> GraphDataPoint(p.timestamp, p.value) }
-        }
-
-        SeriesType.ABS_IOB         -> viewModel.absIobGraphFlow.collectAsStateWithLifecycle().value.absIob
-        SeriesType.COB             -> viewModel.cobGraphFlow.collectAsStateWithLifecycle().value.cob
-        SeriesType.BGI             -> viewModel.bgiGraphFlow.collectAsStateWithLifecycle().value.bgi
-        SeriesType.DEVIATIONS      -> viewModel.deviationsGraphFlow.collectAsStateWithLifecycle().value.deviations.map {
-            GraphDataPoint(it.timestamp, it.value)
-        }
-
-        SeriesType.SENSITIVITY     -> viewModel.ratioGraphFlow.collectAsStateWithLifecycle().value.ratio.map {
-            // Stored as 100*(ratio-1), display shifted by +100 to show as percentage (90%, 110%) —
-            // must match the same shift applied when SENSITIVITY is primary (see processedSimpleSeries).
-            GraphDataPoint(it.timestamp, it.value + 100.0)
-        }
-        SeriesType.VAR_SENSITIVITY -> viewModel.varSensGraphFlow.collectAsStateWithLifecycle().value.varSens
-        SeriesType.DEV_SLOPE       -> viewModel.devSlopeGraphFlow.collectAsStateWithLifecycle().value.dsMax
-        SeriesType.HEART_RATE      -> viewModel.heartRateGraphFlow.collectAsStateWithLifecycle().value.heartRates
-        SeriesType.STEPS           -> viewModel.stepsGraphFlow.collectAsStateWithLifecycle().value.steps
-        SeriesType.ACTIVITY        -> viewModel.activityGraphFlow.collectAsStateWithLifecycle().value.activity
-        SeriesType.PREDICTIONS     -> emptyList() // UI-only overlay flag, not a secondary series
-    }
+    val basalData = if (hasBasalLayer) viewModel.basalGraphFlow.collectAsStateWithLifecycle().value else null
 
     // Cache last non-empty treatment data to survive reset() cycles
     val lastTreatmentData = remember { mutableStateOf(treatmentData ?: TreatmentGraphData(emptyList(), emptyList(), emptyList(), emptyList(), emptyList())) }
@@ -201,7 +176,7 @@ fun SecondaryGraphCompose(
 
     // Simple line series processing (excludes BASAL — it's a fixed flipped overlay on IOB)
     val processedSimpleSeries = remember(
-        stableTimeRange, absIobData, bgiData, ratioData, varSensData, devSlopeData, hrData, stepsData, activityData
+        seriesTypes, stableTimeRange, absIobData, bgiData, ratioData, varSensData, devSlopeData, hrData, stepsData, activityData
     ) {
         if (!hasRealTimeRange) return@remember emptyList()
         buildList {
@@ -231,7 +206,8 @@ fun SecondaryGraphCompose(
             stepsData?.steps?.takeIf { it.isNotEmpty() }?.let {
                 add(SeriesType.STEPS to processPoints(it, minTimestamp, minX, maxX))
             }
-            if (primaryType == SeriesType.ACTIVITY) {
+            // Not when activity is only the overlay of the IOB graph: that one is scaled into IOB units below
+            if (SeriesType.ACTIVITY in seriesTypes) {
                 activityData?.let {
                     if (it.activity.isNotEmpty()) add(SeriesType.ACTIVITY to processPoints(it.activity, minTimestamp, minX, maxX))
                     if (it.activityPrediction.isNotEmpty()) add(SeriesType.ACTIVITY to processPoints(it.activityPrediction, minTimestamp, minX, maxX))
@@ -277,8 +253,8 @@ fun SecondaryGraphCompose(
         processPoints(iobData.iob, minTimestamp, minX, maxX)
     }
 
-    // IOB treatment overlays processing
-    val processedIobTreatments = remember(lastTreatmentData.value, stableTimeRange) {
+    // IOB treatment overlays processing. hasIob is a key: the treatments outlive the series in lastTreatmentData.
+    val processedIobTreatments = remember(hasIob, lastTreatmentData.value, stableTimeRange) {
         if (!hasRealTimeRange || !hasIob) return@remember ProcessedIobOverlays.EMPTY
         processIobOverlays(lastTreatmentData.value, minTimestamp, minX, maxX)
     }
@@ -292,8 +268,8 @@ fun SecondaryGraphCompose(
         cobFiltered to failoverFiltered
     }
 
-    // COB carbs overlay processing
-    val processedCarbs = remember(lastTreatmentData.value, stableTimeRange) {
+    // COB carbs overlay processing. hasCob is a key: the treatments outlive the series in lastTreatmentData.
+    val processedCarbs = remember(hasCob, lastTreatmentData.value, stableTimeRange) {
         if (!hasRealTimeRange || !hasCob) return@remember emptyList()
         val pts = lastTreatmentData.value.carbs.map { timestampToX(it.timestamp, minTimestamp) to it.amount }
         filterToRange(pts, minX, maxX)
@@ -312,13 +288,45 @@ fun SecondaryGraphCompose(
         pts.map { (x, y) -> x to -y }
     }
 
-    val hasBasalLayer = hasIob && basalData != null && !isDualAxis
+    // What each series draws: its line and its markers, the same on either axis
+    val seriesSpecs = remember(
+        seriesTypes, processedDeviationLines, processedIob, processedIobTreatments, processedCob, processedCarbs, processedSimpleSeries, processedDevSlopeMin
+    ) {
+        seriesTypes.associateWith { type ->
+            buildList {
+                when (type) {
+                    SeriesType.DEVIATIONS -> processedDeviationLines?.series?.forEach { (deviationType, yValues) ->
+                        add(SeriesSpec(processedDeviationLines.allX, yValues, SeriesSlot.DeviationLine(deviationType)))
+                    }
 
-    // Process secondary (right axis) series
-    val processedSecondary = remember(secondaryLineData, stableTimeRange) {
-        if (!hasRealTimeRange || secondaryLineData.isEmpty()) return@remember emptyList()
-        processPoints(secondaryLineData, minTimestamp, minX, maxX)
+                    SeriesType.IOB        -> {
+                        addPoints(processedIob, SeriesSlot.IobLine)
+                        addPoints(processedIobTreatments.smallSmbs, SeriesSlot.SmallSmb)
+                        addPoints(processedIobTreatments.mediumSmbs, SeriesSlot.MediumSmb)
+                        addPoints(processedIobTreatments.largeSmbs, SeriesSlot.LargeSmb)
+                        addPoints(processedIobTreatments.normalBoluses, SeriesSlot.NormalBolus)
+                        processedIobTreatments.extBoluses.forEach { (start, end, amount) ->
+                            add(SeriesSpec(listOf(start, end), listOf(amount, amount), SeriesSlot.ExtBolus))
+                        }
+                    }
+
+                    SeriesType.COB        -> {
+                        addPoints(processedCob.first, SeriesSlot.CobLine)
+                        addPoints(processedCob.second, SeriesSlot.FailoverDots)
+                        addPoints(processedCarbs, SeriesSlot.CarbsMarker)
+                    }
+
+                    else                  -> {
+                        processedSimpleSeries.filter { it.first == type }.forEach { (_, points) -> addPoints(points, SeriesSlot.SimpleLine(type)) }
+                        if (type == SeriesType.DEV_SLOPE) addPoints(processedDevSlopeMin, SeriesSlot.DevSlopeMin)
+                    }
+                }
+            }
+        }
     }
+    // Deviation bars first on an axis they share, so the line of the other series stays on top
+    val leftBaseSpecs = remember(sides, seriesSpecs) { sides.left.sortedBy { it != SeriesType.DEVIATIONS }.flatMap { seriesSpecs[it].orEmpty() } }
+    val rightSpecs = remember(sides, seriesSpecs) { sides.right.sortedBy { it != SeriesType.DEVIATIONS }.flatMap { seriesSpecs[it].orEmpty() } }
 
     // Visible-window bounds (same x-unit as processed* points — minutes from minTimestamp) for
     // windowing the Y-axis scale to only the currently scrolled/zoomed portion of this graph's
@@ -353,67 +361,24 @@ fun SecondaryGraphCompose(
     val visibleMinX = visibleRange?.first
     val visibleMaxX = visibleRange?.second
 
-    // Union of Y values across all primary-layer series (IOB, COB, simple series, DevSlope-min,
-    // deviation lines), windowed to the visible scroll/zoom range — computed once here since the
-    // IOB+basal scale, the activity overlay scale, the dual-axis alignment, the single-axis
-    // nice-scale dispatch, and the generic auto-range fallback below all need the exact same union.
-    // Carb markers are in here because they are in the model. `hasPrimaryData` counts them, so a
-    // graph holding nothing but carb markers claims to have data - and if the range union left them
-    // out, every branch that needs a non-empty union (dual-axis alignment, the single-axis nice
-    // scale, the auto-range) returned null while the "no data" branch was skipped, so the axis fell
-    // through to Vico's raw auto-range over the model. That is reachable on a cold start: carbs come
-    // straight from the database, COB waits for the calculation workflow, and in between the axis was
-    // sized to the carb amounts alone. Measured on a Pixel with COB+ABS after a restart:
-    // `primaryY=[null..null] n=0` against `modelY=[0.0..43.0] slots=[CarbsMarker]`, giving an axis of
-    // 0..44 that a COB curve reaching 148 was drawn straight through.
-    // Deliberately does NOT include the activity overlay: that one is mapped into this axis' units
-    // (see processedActivityOverlay below), so feeding it back in here would be circular.
-    val primaryYValues = remember(
-        processedIob, processedCob, processedCarbs, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
-    ) {
-        windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedCarbs, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
+    // Each axis by the rule of its series, from what the visible window shows. Carb markers count:
+    // carbs come straight from the database while COB waits for the calculation, and an axis sized
+    // without them drew a COB curve of 148 straight through an axis of 0..44 after a restart.
+    val leftRange = remember(sides, leftBaseSpecs, visibleMinX, visibleMaxX) {
+        sides.left.firstOrNull()?.let { axisRange(axisRuleOf(it), windowedValues(leftBaseSpecs, visibleMinX, visibleMaxX)) }
     }
-
-    // Zero-floor nice range of the primary layer, windowed — 0 if the visible window has no
-    // negative IOB, else a disparity-aware negative sliver (never centering zero).
-    // Deliberately NOT conditioned on hasBasalLayer: the IOB+basal axis below is built from it,
-    // and so is the activity overlay, which needs the room the axis leaves on each side of zero
-    // whether or not basal is drawn.
-    val primaryDataNiceRange = remember(primaryYValues) {
-        if (primaryYValues.isEmpty()) null
-        else zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max().coerceAtLeast(0.1))
+    val rightRange = remember(sides, rightSpecs, visibleMinX, visibleMaxX) {
+        sides.right.firstOrNull()?.let { axisRange(axisRuleOf(it), windowedValues(rightSpecs, visibleMinX, visibleMaxX)) }
     }
-    // IOB (with basal overlay active): IOB fills the lower IOB_HEIGHT_FRACTION of the height,
-    // measured from the real bottom of the data, not from y=0 (those only coincide when nice.min
-    // is 0; with a negative IOB excursion, measuring from 0 would give the negative part less than
-    // its share). Solving (nice.max - nice.min) / (axisMax - nice.min) == IOB_HEIGHT_FRACTION:
-    // axisMax = nice.min + (nice.max - nice.min) / IOB_HEIGHT_FRACTION
-    // — this reduces to the simpler nice.max / IOB_HEIGHT_FRACTION exactly when nice.min == 0.
-    // Result pairs the axis range with the IOB data max — the latter is where the labels stop
-    // (see NiceVerticalAxisItemPlacer), so they don't go on into the room above IOB.
-    val iobBasalScaleResult = remember(hasBasalLayer, primaryDataNiceRange) {
-        if (!hasBasalLayer) return@remember null // auto-range when no basal
-        val nice = primaryDataNiceRange ?: return@remember null
-        val axisMax = nice.min + (nice.max - nice.min) / IOB_HEIGHT_FRACTION
-        NiceScale(nice.min, axisMax) to nice.max
-    }
-    val iobBasalScale = iobBasalScaleResult?.first
-    val iobDataMax = iobBasalScaleResult?.second
 
     // Activity overlay — mapped into the IOB axis' own units, zero activity on IOB zero. The IOB
     // scale is never changed to fit it: the curve gets the room the IOB axis already leaves, which
     // is the IOB data region above zero and IOB's own negative sliver below zero (usually none, so
     // a negative activity tail is clipped there).
     // Both the activity range and the IOB range come from the visible window only.
-    // The room comes from primaryDataNiceRange rather than from the IOB+basal axis, so that the
-    // overlay does not quietly vanish when that axis is absent. With basal drawn the two are the
-    // same range. Without it (IOB paired with a second series on its own axis) the real axis is
-    // the zero-aligned dual-axis range, which always contains this nice range — never clips it,
-    // see fractionAlignedNiceRange — so the curve is sized a little conservatively but still sits
-    // inside the frame with its zero on the axis' zero.
-    val processedActivityOverlay = remember(activityOverlay, hasIob, activityData, primaryDataNiceRange, stableTimeRange, visibleMinX, visibleMaxX) {
+    val processedActivityOverlay = remember(activityOverlay, hasIob, activityData, leftRange, stableTimeRange, visibleMinX, visibleMaxX) {
         if (!hasRealTimeRange || !activityOverlay || !hasIob || activityData == null) return@remember Pair(emptyList(), emptyList())
-        val iobNice = primaryDataNiceRange ?: return@remember Pair(emptyList(), emptyList())
+        val iobRange = leftRange ?: return@remember Pair(emptyList(), emptyList())
         val hist = activityData.activity
             .map { timestampToX(it.timestamp, minTimestamp) to it.value }
             .let { filterToRange(it, minX, maxX) }
@@ -426,68 +391,26 @@ fun SecondaryGraphCompose(
             activityMin = windowed.min(),
             activityMax = windowed.max(),
             zeroLevel = 0.0,
-            roomAbove = iobNice.max,
-            roomBelow = -iobNice.min
+            roomAbove = iobRange.max,
+            roomBelow = -iobRange.min
         )
         if (scale.scale <= 0.0) return@remember Pair(emptyList(), emptyList())
         hist.map { (x, y) -> x to scale.map(y) } to pred.map { (x, y) -> x to scale.map(y) }
     }
-
-    // Single source of truth for the primary layer: build the (x, y, slot) specs synchronously,
-    // in the exact order they are emitted to the model below. Deriving the line styles,
-    // hasPrimaryData and the Y-range from this list (instead of from slot state set asynchronously
-    // inside the LaunchedEffect) keeps the model, styles and axis range consistent within a single
-    // frame. Otherwise the range provider races the model and the graph briefly renders against a
-    // stale 0..1 axis until the next recomposition ("renders wrong, then fixes itself").
-    val primarySeries = remember(
-        processedDeviationLines, processedIob, processedIobTreatments, processedCob,
-        processedCarbs, processedSimpleSeries, processedDevSlopeMin, processedActivityOverlay
-    ) {
+    // The overlay is drawn in IOB units, so it does not count for the IOB axis it is scaled from
+    val leftSpecs = remember(leftBaseSpecs, processedActivityOverlay) {
+        val (activityHistory, activityPrediction) = processedActivityOverlay
         buildList {
-            // Deviation lines (per-type step lines) — first so other series draw on top
-            processedDeviationLines?.series?.forEach { (type, yValues) ->
-                add(PrimarySeriesSpec(processedDeviationLines.allX, yValues, SeriesSlot.DeviationLine(type)))
-            }
-            // IOB line
-            if (processedIob.isNotEmpty())
-                add(PrimarySeriesSpec(processedIob.map { it.first }, processedIob.map { it.second }, SeriesSlot.IobLine))
-            // IOB overlays: SMBs (small, medium, large), normal boluses, extended boluses
-            if (processedIobTreatments.smallSmbs.isNotEmpty())
-                add(PrimarySeriesSpec(processedIobTreatments.smallSmbs.map { it.first }, processedIobTreatments.smallSmbs.map { it.second }, SeriesSlot.SmallSmb))
-            if (processedIobTreatments.mediumSmbs.isNotEmpty())
-                add(PrimarySeriesSpec(processedIobTreatments.mediumSmbs.map { it.first }, processedIobTreatments.mediumSmbs.map { it.second }, SeriesSlot.MediumSmb))
-            if (processedIobTreatments.largeSmbs.isNotEmpty())
-                add(PrimarySeriesSpec(processedIobTreatments.largeSmbs.map { it.first }, processedIobTreatments.largeSmbs.map { it.second }, SeriesSlot.LargeSmb))
-            if (processedIobTreatments.normalBoluses.isNotEmpty())
-                add(PrimarySeriesSpec(processedIobTreatments.normalBoluses.map { it.first }, processedIobTreatments.normalBoluses.map { it.second }, SeriesSlot.NormalBolus))
-            processedIobTreatments.extBoluses.forEach { (start, end, amount) ->
-                add(PrimarySeriesSpec(listOf(start, end), listOf(amount, amount), SeriesSlot.ExtBolus))
-            }
-            // COB line + failover dots + carbs markers
-            val (cobFiltered, failoverFiltered) = processedCob
-            if (cobFiltered.isNotEmpty())
-                add(PrimarySeriesSpec(cobFiltered.map { it.first }, cobFiltered.map { it.second }, SeriesSlot.CobLine))
-            if (failoverFiltered.isNotEmpty())
-                add(PrimarySeriesSpec(failoverFiltered.map { it.first }, failoverFiltered.map { it.second }, SeriesSlot.FailoverDots))
-            if (processedCarbs.isNotEmpty())
-                add(PrimarySeriesSpec(processedCarbs.map { it.first }, processedCarbs.map { it.second }, SeriesSlot.CarbsMarker))
-            // Simple line series
-            processedSimpleSeries.forEach { (type, pts) ->
-                if (pts.isNotEmpty())
-                    add(PrimarySeriesSpec(pts.map { it.first }, pts.map { it.second }, SeriesSlot.SimpleLine(type)))
-            }
-            // DevSlope min (separate slot for magenta color)
-            if (processedDevSlopeMin.isNotEmpty())
-                add(PrimarySeriesSpec(processedDevSlopeMin.map { it.first }, processedDevSlopeMin.map { it.second }, SeriesSlot.DevSlopeMin))
-            // Activity overlay (scaled) — only when activityOverlay=true on IOB graph
-            val (actHist, actPred) = processedActivityOverlay
-            if (actHist.isNotEmpty())
-                add(PrimarySeriesSpec(actHist.map { it.first }, actHist.map { it.second }, SeriesSlot.ActivityOverlay))
-            if (actPred.isNotEmpty())
-                add(PrimarySeriesSpec(actPred.map { it.first }, actPred.map { it.second }, SeriesSlot.ActivityOverlay))
+            addAll(leftBaseSpecs)
+            addPoints(activityHistory, SeriesSlot.ActivityOverlay, countsForRange = false)
+            addPoints(activityPrediction, SeriesSlot.ActivityOverlay, countsForRange = false)
         }
     }
-    val hasPrimaryData = primarySeries.isNotEmpty()
+
+    val axes = remember(leftRange, rightRange, hasBasalLayer) { graphAxes(leftRange, rightRange, hasBasalLayer) }
+    val hasRightAxis = sides.right.isNotEmpty()
+    // Deviation bars are drawn first, so the line of the other axis stays on top of them
+    val rightFirst = SeriesType.DEVIATIONS in sides.right
 
     // =========================================================================
     // Line styles
@@ -498,29 +421,16 @@ fun SecondaryGraphCompose(
     val cobLineStyle = rememberCobLineStyles()
     val normalizerLine = remember { createNormalizerLine() }
 
-    val lines = remember(primarySeries, seriesColors, iobLineStyle, cobLineStyle, normalizerLine) {
-        buildList {
-            for (spec in primarySeries) {
-                add(
-                    when (val slot = spec.slot) {
-                        is SeriesSlot.DeviationLine -> createDeviationLine(slot.type)
-                        SeriesSlot.IobLine          -> iobLineStyle.iobLine
-                        SeriesSlot.SmallSmb         -> iobLineStyle.smallSmbLine
-                        SeriesSlot.MediumSmb        -> iobLineStyle.mediumSmbLine
-                        SeriesSlot.LargeSmb         -> iobLineStyle.largeSmbLine
-                        SeriesSlot.NormalBolus      -> iobLineStyle.bolusLine
-                        SeriesSlot.ExtBolus         -> iobLineStyle.extBolusLine
-                        SeriesSlot.CobLine          -> cobLineStyle.cobLine
-                        SeriesSlot.FailoverDots     -> cobLineStyle.failoverDotsLine
-                        SeriesSlot.CarbsMarker      -> cobLineStyle.carbsLine
-                        SeriesSlot.DevSlopeMin      -> createDevSlopeMinLine()
-                        SeriesSlot.ActivityOverlay  -> createSeriesLine(SeriesType.ACTIVITY, seriesColors)
-                        is SeriesSlot.SimpleLine    -> createSeriesLine(slot.type, seriesColors)
-                    }
-                )
-            }
-            add(normalizerLine)
-        }
+    // The normalizer comes first, here and in the model below. Vico pairs lines and series by index,
+    // and when the series of this graph change, it draws the new lines with the old model until the
+    // new model is built. With the normalizer at index 0 it is still paired with itself then, so the
+    // point spacing stays the same as in the other graphs. When it came last, the spacing shrank for
+    // that moment, Vico cut the scroll down to the new end, and the graph stayed shifted sideways.
+    val leftLines = remember(leftSpecs, seriesColors, iobLineStyle, cobLineStyle, normalizerLine) {
+        listOf(normalizerLine) + leftSpecs.map { lineFor(it.slot, seriesColors, iobLineStyle, cobLineStyle) }
+    }
+    val rightLines = remember(rightSpecs, seriesColors, iobLineStyle, cobLineStyle, normalizerLine) {
+        listOf(normalizerLine) + rightSpecs.map { lineFor(it.slot, seriesColors, iobLineStyle, cobLineStyle) }
     }
 
     // Basal layer line styles — same as BG graph (profile dashed, actual solid with fill)
@@ -560,142 +470,15 @@ fun SecondaryGraphCompose(
     val inspectLine = rememberInspectLine(inspect)
     val decorations = remember(nowLine, visibleRangeReporter, inspectLine) { listOfNotNull(nowLine, visibleRangeReporter, inspectLine) }
 
-    // Dual-axis zero alignment.
-    // Why: Vico computes each vertical axis range independently, so y=0 on the
-    // left axis lands at a different pixel row than y=0 on the right axis. When
-    // both selected series can cross zero (e.g. IOB vs BGI), misaligned zeros
-    // are visually misleading — a point "above zero" on one axis can appear
-    // below a point that is "below zero" on the other. We compute a shared zero
-    // fraction from both data extents and extend each side's range to match it.
-    // Only applied to true dual-axis case (no basal overlay, secondary present).
-    val dualAxisRanges = remember(isDualAxis, hasBasalLayer, primaryYValues, processedSecondary, visibleMinX, visibleMaxX) {
-        if (!isDualAxis || hasBasalLayer) return@remember null
-        val secondaryY = windowedY(processedSecondary, visibleMinX, visibleMaxX)
-        if (primaryYValues.isEmpty() || secondaryY.isEmpty()) return@remember null
-
-        val primaryIsPivot = primaryType == SeriesType.SENSITIVITY || primaryType == SeriesType.DEV_SLOPE
-        val secondaryIsPivot = secondaryType == SeriesType.SENSITIVITY || secondaryType == SeriesType.DEV_SLOPE
-        if (primaryIsPivot != secondaryIsPivot) {
-            // Exactly one side is pivot-centered (SENS/DEV_SLOPE), the other zero-floor-style
-            // (e.g. COB, BGI) — see [pivotZeroFloorPairing] for how each side's range is built.
-            val isSensPivot = primaryType == SeriesType.SENSITIVITY || secondaryType == SeriesType.SENSITIVITY
-            val pivot = if (isSensPivot) 100.0 else 0.0
-            val pivotMinDeviation = if (isSensPivot) SENS_MIN_DEVIATION else 0.0
-            return@remember if (primaryIsPivot) {
-                val pairing = pivotZeroFloorPairing(primaryYValues, secondaryY, pivot, pivotMinDeviation)
-                // Primary is the pivot itself here — its own axis is fully meaningful in both
-                // directions, no label clamping needed.
-                AlignedRanges(pairing.pivotNice.min, pairing.pivotNice.max, -pairing.zeroFloorHalf, pairing.zeroFloorHalf)
-            } else {
-                val pairing = pivotZeroFloorPairing(secondaryY, primaryYValues, pivot, pivotMinDeviation)
-                // Primary is the zero-floor side, pushed into a symmetric container purely to
-                // align its zero with the pivot's center — its own real floor (e.g. 0 for COB)
-                // must still be the lowest label shown, or its axis reads as if COB/BGI/etc. can
-                // go negative when it can't.
-                AlignedRanges(-pairing.zeroFloorHalf, pairing.zeroFloorHalf, pairing.pivotNice.min, pairing.pivotNice.max, primaryLabelFloor = pairing.zeroFloorMin)
-            }
-        }
-        if (primaryIsPivot || secondaryIsPivot) {
-            // Both sides pivot-centered (SENS + DEV_SLOPE together — unusual but possible): keep
-            // the existing pivot-aware zero alignment, both are symmetric around their own pivot
-            // anyway so the old mechanism is adequate here.
-            val primaryPivot = if (primaryType == SeriesType.SENSITIVITY) 100.0 else 0.0
-            val secondaryPivot = if (secondaryType == SeriesType.SENSITIVITY) 100.0 else 0.0
-            return@remember alignZeros(primaryYValues.min(), primaryYValues.max(), secondaryY.min(), secondaryY.max(), primaryPivot, secondaryPivot)
-        }
-
-        // Neither series is pivot-centered (e.g. COB + VAR_SENSITIVITY, or BGI + STEPS): primary
-        // stays nice-scaled and zero-floored, secondary stays raw. Each series' own "negative
-        // fraction" is computed independently — primary from its nice bounds, secondary from its
-        // raw bounds — and the shared target is their average, so neither curve's height dominates
-        // the compromise. Each axis is then widened just enough to hit that shared fraction,
-        // anchored at whichever of its own real/nice bounds avoids clipping (see
-        // fractionAlignedRange / fractionAlignedNiceRange) so nothing is ever clipped.
-        val primaryNice = zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max().coerceAtLeast(0.1))
-        val primaryFraction = if (primaryNice.max > primaryNice.min) -primaryNice.min / (primaryNice.max - primaryNice.min) else 0.0
-
-        val secondaryMax = secondaryY.max().coerceAtLeast(0.1)
-        val secondaryFraction = if (secondaryY.min() < 0.0) -secondaryY.min() / (secondaryMax - secondaryY.min()) else 0.0
-
-        val sharedFraction = (primaryFraction + secondaryFraction) / 2.0
-
-        val (aMin, aMax) = fractionAlignedNiceRange(primaryNice.min, primaryNice.max, sharedFraction)
-        // Rounding the stretched bound moved primary's zero a little off the shared fraction.
-        // Secondary is not rounded, so it takes primary's real fraction, and both zeros stay on
-        // one pixel row.
-        val primaryZeroFraction = if (aMax > aMin) -aMin.coerceAtMost(0.0) / (aMax - aMin) else sharedFraction
-        val (bMin, bMax) = fractionAlignedRange(secondaryY.min(), secondaryMax, primaryZeroFraction)
-        // primaryNice.min is primary's own real floor (0 unless it has a genuine negative sliver);
-        // aMin can be pushed below that purely to align zero with secondary — clamp labels back to
-        // primary's own floor so its axis never shows a fake negative tick.
-        AlignedRanges(aMin, aMax, bMin, bMax, primaryLabelFloor = primaryNice.min)
+    val leftRangeProvider = remember(maxX, axes.left) {
+        CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = axes.left.min, maxY = axes.left.max)
     }
-
-    // Empty graph (only the normalizer series at y=0) would auto-range to a degenerate [0,0]
-    // Y-axis and render an invisible frame. Anchor a default 0..1 range so the axis/grid/now-line
-    // still draw, matching the BG graph's empty frame (BG is anchored by its in-range belt).
-    // A (near-)constant primary series (e.g. a flat COB) is degenerate the same way: Vico collapses
-    // its auto-range to 0..1 and clips the data, so derive an explicit range for that case too.
-    val primaryConstantRange = remember(primarySeries) {
-        val ys = primarySeries.flatMap { it.y }
-        if (ys.isEmpty()) return@remember null
-        val dataMin = ys.min()
-        val dataMax = ys.max()
-        if (dataMax - dataMin >= 1e-6) return@remember null // non-degenerate → let Vico auto-range
-        val low = minOf(0.0, dataMax)
-        low to maxOf(dataMax, low + 1.0)
-    }
-    // Single-axis, non-basal, non-degenerate case (e.g. standalone BGI/DevSlope/VarSens graphs):
-    // Vico's own auto-range would compute from the full loaded model, not the visible window —
-    // same flattening/clipping problem the basal and dual-axis cases solve above — so window it
-    // here too, using the same union-of-primary-series helper.
-    val primaryAutoRange = remember(hasBasalLayer, dualAxisRanges, primaryYValues) {
-        if (hasBasalLayer || dualAxisRanges != null) return@remember null
-        if (primaryYValues.isEmpty()) return@remember null
-        val dataMin = primaryYValues.min()
-        val dataMax = primaryYValues.max()
-        if (dataMax - dataMin >= 1e-6) dataMin to dataMax
-        else { // degenerate (near-flat) windowed subset — pad so Vico doesn't collapse the axis
-            val low = minOf(0.0, dataMax)
-            low to maxOf(dataMax, low + 1.0)
-        }
-    }
-    // Single-axis nice-scale dispatch, by series-type rule (only when neither the IOB+basal combo
-    // nor a dual-axis combo already claimed the primary axis): COB always starts at 0 with a nice
-    // max; BGI/DEVIATIONS/ACTIVITY/STEPS/ABS_IOB are zero-floored (disparity-aware negative
-    // excursion, same rule as IOB); VAR_SENSITIVITY/HEART_RATE are free-range (no zero anchor);
-    // SENSITIVITY/DEV_SLOPE are pivot-centered (pivot always lands exactly at mid-axis). Takes
-    // precedence over primaryConstantRange/primaryAutoRange for these specific series types.
-    val primarySingleAxisScale = remember(primaryType, dualAxisRanges, hasBasalLayer, primaryYValues) {
-        if (dualAxisRanges != null || hasBasalLayer || primaryYValues.isEmpty()) return@remember null
-        when (primaryType) {
-            SeriesType.COB                                    -> niceScale(0.0, primaryYValues.max().coerceAtLeast(0.0))
-            in ZERO_FLOOR_SERIES_TYPES                         -> zeroFloorNiceRange(primaryYValues.min(), primaryYValues.max())
-            SeriesType.VAR_SENSITIVITY, SeriesType.HEART_RATE  -> niceScale(primaryYValues.min(), primaryYValues.max())
-            SeriesType.SENSITIVITY                             -> niceScaleAroundPivot(primaryYValues.min(), primaryYValues.max(), 100.0, SENS_MIN_DEVIATION)
-            SeriesType.DEV_SLOPE                               -> niceScaleAroundPivot(primaryYValues.min(), primaryYValues.max(), 0.0)
-            else                                               -> null
-        }
-    }
-    val primaryRangeProvider = remember(maxX, iobBasalScale, dualAxisRanges, hasPrimaryData, primarySingleAxisScale, primaryConstantRange, primaryAutoRange) {
-        when {
-            // Basal overlay case takes precedence (IOB in the lower IOB_HEIGHT_FRACTION, basal from the top)
-            iobBasalScale != null        -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = iobBasalScale.min, maxY = iobBasalScale.max)
-            // Dual-axis: use zero-aligned primary range so zeros line up with secondary axis
-            dualAxisRanges != null       -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = dualAxisRanges.aMin, maxY = dualAxisRanges.aMax)
-            // No data: anchor a default range so the empty frame is visible
-            !hasPrimaryData              -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = 1.0)
-            // Single-axis nice-scale dispatch (COB / zero-floor / free-range / pivot — see primarySingleAxisScale)
-            primarySingleAxisScale != null -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = primarySingleAxisScale.min, maxY = primarySingleAxisScale.max)
-            // Constant series (whole loaded range is flat): explicit range so it isn't collapsed to 0..1 and clipped
-            primaryConstantRange != null -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = primaryConstantRange.first, maxY = primaryConstantRange.second)
-            // Single-axis: window the range to the visible portion instead of Vico's full-model auto-range
-            primaryAutoRange != null     -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = primaryAutoRange.first, maxY = primaryAutoRange.second)
-            else                         -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX)
-        }
+    val rightRangeProvider = remember(maxX, axes.right) {
+        val right = axes.right ?: EMPTY_AXIS
+        CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = right.min, maxY = right.max)
     }
     // Basal range: 0 at top, -basalMaxY at bottom → basal occupies the top BASAL_HEIGHT_FRACTION of the height.
-    // Windowed to the visible scroll/zoom range, like the primary IOB scale above, so basal doesn't
+    // Windowed to the visible scroll/zoom range, like the IOB scale above, so basal doesn't
     // stay flattened/clipped when scrolled away from the loaded range's peak.
     val basalMaxY = remember(basalData, processedBasalProfile, processedBasalActual, visibleMinX, visibleMaxX) {
         if (basalData == null || basalData.maxBasal <= 0.0) return@remember 1.0
@@ -724,107 +507,82 @@ fun SecondaryGraphCompose(
         CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = -basalMaxY, maxY = 0.0)
     }
 
-    // Secondary axis line style (colored by series type)
-    val secondaryAxisColor = secondaryType?.let { seriesColors.colorFor(it) } ?: Color.Gray
-    val secondaryAxisLine = remember(secondaryAxisColor) {
-        LineCartesianLayer.Line(
-            fill = LineCartesianLayer.LineFill.single(Fill(secondaryAxisColor)),
-            areaFill = LineCartesianLayer.AreaFill.single(
-                fill = Fill(Color.Transparent)
-            )
-        )
-    }
-    val secondaryAxisLines = remember(secondaryAxisLine, normalizerLine) { listOf(secondaryAxisLine, normalizerLine) }
-    // Secondary range: zero-aligned counterpart to primary when available, otherwise auto-range.
-    val secondaryRangeProvider = remember(maxX, dualAxisRanges) {
-        if (dualAxisRanges != null)
-            CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = dualAxisRanges.bMin, maxY = dualAxisRanges.bMax)
-        else
-            CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX)
-    }
-
     // Build chart layers
-    val primaryLayer = rememberLineCartesianLayer(
-        lineProvider = LineCartesianLayer.LineProvider.series(lines),
-        rangeProvider = primaryRangeProvider,
+    val leftLayer = rememberLineCartesianLayer(
+        lineProvider = LineCartesianLayer.LineProvider.series(leftLines),
+        rangeProvider = leftRangeProvider,
         verticalAxisPosition = Axis.Position.Vertical.Start
     )
+    val rightLayer = rememberLineCartesianLayer(
+        lineProvider = LineCartesianLayer.LineProvider.series(rightLines),
+        rangeProvider = rightRangeProvider,
+        verticalAxisPosition = Axis.Position.Vertical.End
+    )
+    val basalLayer = rememberLineCartesianLayer(
+        lineProvider = LineCartesianLayer.LineProvider.series(basalLines),
+        rangeProvider = basalRangeProvider,
+        verticalAxisPosition = Axis.Position.Vertical.End
+    )
 
-    // Common axis components
-    val startAxisItemPlacer = remember(iobDataMax, dualAxisRanges?.primaryLabelFloor) {
-        val dataMax = iobDataMax
-        val labelFloor = dualAxisRanges?.primaryLabelFloor
-        when {
-            dataMax != null    -> NiceVerticalAxisItemPlacer(labelMax = dataMax)
-            labelFloor != null -> NiceVerticalAxisItemPlacer(labelMin = labelFloor)
-            else               -> NiceVerticalAxisItemPlacer()
-        }
+    // Labels only where the series has values: not on the room above IOB left for basal, not on the
+    // part of an axis that was stretched to put its zero next to the other axis' zero, and none at all
+    // on an axis whose series has no values
+    val startAxisItemPlacer = remember(leftRange) {
+        leftRange?.let { NiceVerticalAxisItemPlacer(labelMin = it.min, labelMax = it.max) } ?: NoLabelsAxisItemPlacer
+    }
+    val endAxisItemPlacer = remember(rightRange) {
+        rightRange?.let { NiceVerticalAxisItemPlacer(labelMin = it.min, labelMax = it.max) } ?: NoLabelsAxisItemPlacer
     }
 
     // Rebuilt only when the data or the axes change, not on every scroll step
-    val axisScale = AxisScale(primaryRangeProvider, secondaryRangeProvider, basalRangeProvider, startAxisItemPlacer)
-    LaunchedEffect(
-        processedSimpleSeries,
-        processedDevSlopeMin,
-        processedDeviationLines,
-        processedIob,
-        processedIobTreatments,
-        processedCob,
-        processedCarbs,
-        processedBasalProfile,
-        processedBasalActual,
-        processedSecondary,
-        processedActivityOverlay,
-        maxX,
-        axisScale
-    ) {
-        // Always populate the model — even with no data / no real time range — so the chart frame
-        // (axes, grid, now-line) renders the empty-state normalizer series instead of staying blank.
-        // (Matches TreatmentBeltGraphCompose.) When data is absent the processed* lists are empty,
-        // so only the normalizer is emitted; the primary range provider anchors an empty 0..1 axis.
-        modelProducer.runTransaction {
-            // Primary line layer — emit in the exact order of `primarySeries` so the line styles
-            // (built from the same list) map 1:1 to the series.
-            lineModel {
-                primarySeries.forEach { spec -> series(x = spec.x, y = spec.y) }
-                // Normalizer — ensures identical maxPointSize across all charts
-                series(x = normalizerX(maxX), y = NORMALIZER_Y)
-            }
+    val axisScale = AxisScale(leftRangeProvider, rightRangeProvider, basalRangeProvider, startAxisItemPlacer, endAxisItemPlacer)
+    val modelInput = ModelInput(
+        leftSpecs, rightSpecs, processedBasalProfile, processedBasalActual, hasBasalLayer, hasRightAxis, rightFirst, maxX, axisScale,
+        maxManualBolus = processedIobTreatments.maxManualBolus,
+        maxCarbs = processedCarbs.maxOfOrNull { it.second }
+    )
+    val latestModelInput by rememberUpdatedState(modelInput)
+    // One transaction after the other, and none is cancelled half-way. When the input changes during a
+    // transaction, the newest input waits for it, and the inputs in between are skipped. An effect keyed
+    // on the input cancelled the running transaction instead. When that came just after Vico had
+    // stopped the animation of the transaction before, the lines stayed where the animation stopped,
+    // part-way between the old and the new scale, while the labels showed the new scale. If the next
+    // input was equal to the last finished one (axes going A, B, A), Vico skipped it as a repeat, and
+    // the lines stayed like that.
+    LaunchedEffect(modelProducer) {
+        snapshotFlow { latestModelInput }.collect { input ->
+            // Always populate the model — even with no data / no real time range — so the chart frame
+            // (axes, grid, now-line) renders the empty-state normalizer series instead of staying blank.
+            // (Matches TreatmentBeltGraphCompose.) When data is absent the processed* lists are empty,
+            // so only the normalizer is emitted; the left range provider anchors an empty 0..1 axis.
+            // Each layer gets the normalizer first and then its series in the exact order of its specs,
+            // so the line styles (built from the same lists) map 1:1 to the series. The normalizer keeps
+            // the maxPointSize the same across all charts, see leftLines.
+            val normalizer = normalizerX(input.maxX) to NORMALIZER_Y
+            val left = listOf(normalizer) + input.leftSpecs.map { it.x to it.y }
+            val end = when {
+                input.hasBasalLayer -> listOf(
+                    if (input.basalActual.size >= 2) input.basalActual.map { it.first } to input.basalActual.map { it.second } else EMPTY_BASAL,
+                    if (input.basalProfile.size >= 2) input.basalProfile.map { it.first } to input.basalProfile.map { it.second } else EMPTY_BASAL
+                )
 
-            // Block 2 → Basal layer (end axis, flipped) OR secondary series layer (end axis)
-            if (hasBasalLayer) {
-                lineModel {
-                    if (processedBasalActual.size >= 2) {
-                        series(x = processedBasalActual.map { it.first }, y = processedBasalActual.map { it.second })
-                    } else {
-                        series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
-                    }
-                    if (processedBasalProfile.size >= 2) {
-                        series(x = processedBasalProfile.map { it.first }, y = processedBasalProfile.map { it.second })
-                    } else {
-                        series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
-                    }
-                }
-            } else if (isDualAxis) {
-                lineModel {
-                    if (processedSecondary.isNotEmpty()) {
-                        series(x = processedSecondary.map { it.first }, y = processedSecondary.map { it.second })
-                    } else {
-                        series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
-                    }
-                    // Normalizer for end axis layer
-                    series(x = normalizerX(maxX), y = NORMALIZER_Y)
-                }
+                input.hasRightAxis  -> listOf(normalizer) + input.rightSpecs.map { it.x to it.y }
+                else                -> null
             }
+            // The same order as the layers handed to the chart below
+            val layerSeries = if (end != null && input.rightFirst) listOf(end, left) else listOfNotNull(left, end)
+            modelProducer.runTransaction {
+                for (seriesOfLayer in layerSeries) lineModel { seriesOfLayer.forEach { (x, y) -> series(x = x, y = y) } }
 
-            // Forces Vico to reprocess this transaction even when the series data above is
-            // identical to last time (see AXIS_SCALE_KEY doc) — otherwise scrolling/zooming
-            // would re-submit the same partials and get silently skipped, never picking up the
-            // updated primaryRangeProvider.
-            extras {
-                it[AXIS_SCALE_KEY] = axisScale
-                processedIobTreatments.maxManualBolus?.let { max -> it[MAX_MANUAL_BOLUS_KEY] = max }
-                processedCarbs.maxOfOrNull { carbs -> carbs.second }?.let { max -> it[MAX_CARBS_KEY] = max }
+                // Forces Vico to reprocess this transaction even when the series data above is
+                // identical to last time (see AXIS_SCALE_KEY doc) — otherwise scrolling/zooming
+                // would re-submit the same partials and get silently skipped, never picking up the
+                // updated range providers.
+                extras {
+                    it[AXIS_SCALE_KEY] = input.axisScale
+                    input.maxManualBolus?.let { max -> it[MAX_MANUAL_BOLUS_KEY] = max }
+                    input.maxCarbs?.let { max -> it[MAX_CARBS_KEY] = max }
+                }
             }
         }
     }
@@ -836,6 +594,16 @@ fun SecondaryGraphCompose(
             minWidth = TextComponent.MinWidth.fixed(30.dp)
         ),
         guideline = LineComponent(fill = Fill(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)))
+    )
+    // The right axis has its labels inside the plot, in the color of its series, and no line, tick or
+    // grid of its own. So it takes no width, and the hour lines stay under those of the BG graph.
+    val endAxis = VerticalAxis.rememberEnd(
+        line = null,
+        label = rememberTextComponent(style = TextStyle(color = seriesColors.colorFor(sides.right.firstOrNull() ?: SeriesType.COB))),
+        horizontalLabelPosition = VerticalAxis.HorizontalLabelPosition.Inside,
+        tick = null,
+        guideline = null,
+        itemPlacer = endAxisItemPlacer
     )
     // No time labels: the BG graph above shows them, and the hour lines stay aligned with it.
     // This keeps the graphs below BG compact.
@@ -852,63 +620,62 @@ fun SecondaryGraphCompose(
     val defaultMarkerController = CartesianMarkerController.rememberShowOnPress()
     val markerController = inspect?.controller ?: defaultMarkerController
 
-    if (hasBasalLayer) {
-        val basalLayer = rememberLineCartesianLayer(
-            lineProvider = LineCartesianLayer.LineProvider.series(basalLines),
-            rangeProvider = basalRangeProvider,
-            verticalAxisPosition = Axis.Position.Vertical.End
-        )
-        CartesianChartHost(
-            chart = rememberCartesianChart(
-                primaryLayer, basalLayer,
-                startAxis = startAxis,
-                bottomAxis = bottomAxis, decorations = decorations, getXStep = { _, _, _ -> 1.0 },
-                marker = inspectMarker, markerVisibilityListener = inspect?.visibilityListener, markerController = markerController
-            ),
-            modelProducer = modelProducer,
-            modifier = modifier.fillMaxWidth(),
-            scrollState = scrollState, zoomState = zoomState
-        )
-    } else if (isDualAxis) {
-        val secondaryLayer = rememberLineCartesianLayer(
-            lineProvider = LineCartesianLayer.LineProvider.series(secondaryAxisLines),
-            rangeProvider = secondaryRangeProvider,
-            verticalAxisPosition = Axis.Position.Vertical.End
-        )
-        CartesianChartHost(
-            chart = rememberCartesianChart(
-                primaryLayer, secondaryLayer,
-                startAxis = startAxis,
-                bottomAxis = bottomAxis, decorations = decorations, getXStep = { _, _, _ -> 1.0 },
-                marker = inspectMarker, markerVisibilityListener = inspect?.visibilityListener, markerController = markerController
-            ),
-            modelProducer = modelProducer,
-            modifier = modifier.fillMaxWidth(),
-            scrollState = scrollState, zoomState = zoomState
-        )
-    } else {
-        CartesianChartHost(
-            chart = rememberCartesianChart(
-                primaryLayer,
-                startAxis = startAxis,
-                bottomAxis = bottomAxis, decorations = decorations, getXStep = { _, _, _ -> 1.0 },
-                marker = inspectMarker, markerVisibilityListener = inspect?.visibilityListener, markerController = markerController
-            ),
-            modelProducer = modelProducer,
-            modifier = modifier.fillMaxWidth(),
-            scrollState = scrollState, zoomState = zoomState
-        )
+    val layers = when {
+        hasBasalLayer  -> listOf(leftLayer, basalLayer)
+        !hasRightAxis  -> listOf(leftLayer)
+        rightFirst     -> listOf(rightLayer, leftLayer)
+        else           -> listOf(leftLayer, rightLayer)
     }
+    CartesianChartHost(
+        chart = rememberCartesianChart(
+            *layers.toTypedArray(),
+            startAxis = startAxis,
+            endAxis = endAxis.takeIf { rightRange != null },
+            bottomAxis = bottomAxis, decorations = decorations, getXStep = { _, _, _ -> 1.0 },
+            marker = inspectMarker, markerVisibilityListener = inspect?.visibilityListener, markerController = markerController
+        ),
+        modelProducer = modelProducer,
+        modifier = modifier.fillMaxWidth(),
+        scrollState = scrollState, zoomState = zoomState
+    )
+}
+
+/** The two series a basal layer always needs, for a basal with fewer than two points. */
+private val EMPTY_BASAL = listOf(0.0, 1.0) to listOf(0.0, 0.0)
+
+/** The line style of one series. */
+private fun lineFor(slot: SeriesSlot, colors: SeriesColors, iobStyles: IobLineStyles, cobStyles: CobLineStyles): LineCartesianLayer.Line = when (slot) {
+    is SeriesSlot.DeviationLine -> createDeviationLine(slot.type)
+    SeriesSlot.IobLine          -> iobStyles.iobLine
+    SeriesSlot.SmallSmb         -> iobStyles.smallSmbLine
+    SeriesSlot.MediumSmb        -> iobStyles.mediumSmbLine
+    SeriesSlot.LargeSmb         -> iobStyles.largeSmbLine
+    SeriesSlot.NormalBolus      -> iobStyles.bolusLine
+    SeriesSlot.ExtBolus         -> iobStyles.extBolusLine
+    SeriesSlot.CobLine          -> cobStyles.cobLine
+    SeriesSlot.FailoverDots     -> cobStyles.failoverDotsLine
+    SeriesSlot.CarbsMarker      -> cobStyles.carbsLine
+    SeriesSlot.DevSlopeMin      -> createDevSlopeMinLine()
+    SeriesSlot.ActivityOverlay  -> createSeriesLine(SeriesType.ACTIVITY, colors)
+    is SeriesSlot.SimpleLine    -> createSeriesLine(slot.type, colors)
 }
 
 // =========================================================================
 // Series slot identifiers (for matching line styles to data series)
 // =========================================================================
 
-/** One primary-layer series: its x/y data plus the slot that selects its line style. */
-private class PrimarySeriesSpec(val x: List<Double>, val y: List<Double>, val slot: SeriesSlot)
+/**
+ * One drawn series: its x/y data plus the slot that selects its line style. [countsForRange] is
+ * false for a series drawn in the units of another one (the activity overlay in IOB units).
+ */
+internal class SeriesSpec(val x: List<Double>, val y: List<Double>, val slot: SeriesSlot, val countsForRange: Boolean = true)
 
-private sealed class SeriesSlot {
+/** Adds [points] as one series, unless there are none. */
+private fun MutableList<SeriesSpec>.addPoints(points: List<Pair<Double, Double>>, slot: SeriesSlot, countsForRange: Boolean = true) {
+    if (points.isNotEmpty()) add(SeriesSpec(points.map { it.first }, points.map { it.second }, slot, countsForRange))
+}
+
+internal sealed class SeriesSlot {
     data class DeviationLine(val type: DeviationType) : SeriesSlot()
     data object IobLine : SeriesSlot()
     data object SmallSmb : SeriesSlot()
@@ -949,54 +716,16 @@ internal fun stepValueAt(points: List<Pair<Double, Double>>, x: Double): Double?
     points.lastOrNull { it.first <= x }?.second ?: points.firstOrNull()?.second
 
 /**
- * Union of y-values across all primary-layer series (IOB, COB, simple series, DevSlope-min,
- * deviation lines), restricted to [visibleMinX]..[visibleMaxX]. Falls back to the full
- * (unwindowed) union when the visible window currently has no points across ANY of these series
- * (e.g. scrolled into a future gap with no data) — the union is computed first, then the fallback
- * applies to the whole set, so windowed points from one series are never mixed with unwindowed
- * points from another.
- *
- * [processedDeviationLines] stores y-values per type without paired x, so pairs are reconstituted
- * by zipping each type's y-array against the shared allX before filtering.
+ * The y values of the [series] that count for an axis, inside [visibleMinX]..[visibleMaxX]. When none
+ * of them has a point there (e.g. scrolled into a future gap with no data), all their values: the
+ * fallback applies to the whole set, so windowed points of one series are never mixed with all the
+ * points of another.
  */
-internal fun windowedPrimaryY(
-    visibleMinX: Double?,
-    visibleMaxX: Double?,
-    processedIob: List<Pair<Double, Double>>,
-    processedCobY: List<Pair<Double, Double>>,
-    processedCarbs: List<Pair<Double, Double>>,
-    processedSimpleSeries: List<Pair<SeriesType, List<Pair<Double, Double>>>>,
-    processedDevSlopeMin: List<Pair<Double, Double>>,
-    processedDeviationLines: ProcessedDeviationLines?
-): List<Double> {
+internal fun windowedValues(series: List<SeriesSpec>, visibleMinX: Double?, visibleMaxX: Double?): List<Double> {
     fun inWindow(x: Double) = visibleMinX == null || visibleMaxX == null || x in visibleMinX..visibleMaxX
-    fun deviationY(filterToWindow: Boolean): List<Double> =
-        processedDeviationLines?.let { lines ->
-            lines.series.values.flatMap { ys ->
-                lines.allX.zip(ys)
-                    .filter { (x, _) -> !filterToWindow || inWindow(x) }
-                    .map { it.second }
-            }
-        } ?: emptyList()
-
-    val windowed = buildList {
-        addAll(processedIob.filter { inWindow(it.first) }.map { it.second })
-        addAll(processedCobY.filter { inWindow(it.first) }.map { it.second })
-        addAll(processedCarbs.filter { inWindow(it.first) }.map { it.second })
-        for ((_, pts) in processedSimpleSeries) addAll(pts.filter { inWindow(it.first) }.map { it.second })
-        addAll(processedDevSlopeMin.filter { inWindow(it.first) }.map { it.second })
-        addAll(deviationY(filterToWindow = true))
-    }
-    return windowed.ifEmpty {
-        buildList {
-            addAll(processedIob.map { it.second })
-            addAll(processedCobY.map { it.second })
-            addAll(processedCarbs.map { it.second })
-            for ((_, pts) in processedSimpleSeries) addAll(pts.map { it.second })
-            addAll(processedDevSlopeMin.map { it.second })
-            addAll(deviationY(filterToWindow = false))
-        }
-    }
+    val counted = series.filter { it.countsForRange }
+    return counted.flatMap { spec -> spec.x.indices.filter { inWindow(spec.x[it]) }.map { spec.y[it] } }
+        .ifEmpty { counted.flatMap { it.y } }
 }
 
 @Suppress("SameParameterValue")
@@ -1387,115 +1116,3 @@ internal data class ProcessedDeviationLines(
     val allX: List<Double>,
     val series: Map<DeviationType, List<Double>>
 )
-
-/**
- * Aligned y-ranges for primary (a*) and secondary (b*) axes — zeros share the same fractional
- * position. [primaryLabelFloor], when set, is primary's own real floor (below which its axis was
- * artificially extended purely for zero-alignment) — the start axis' tick placer clamps labels to
- * it so primary never shows a fake tick below a value it can actually reach.
- */
-internal data class AlignedRanges(val aMin: Double, val aMax: Double, val bMin: Double, val bMax: Double, val primaryLabelFloor: Double? = null)
-
-/** Result of [pivotZeroFloorPairing]: the pivot side's full nice range, and the zero-floor side's symmetric container (half-width, and its own real floor for label clamping). */
-internal data class PivotZeroFloorPairing(val pivotNice: NiceScale, val zeroFloorHalf: Double, val zeroFloorMin: Double)
-
-/**
- * Builds the two ranges for a dual-axis combo where exactly one side is pivot-centered
- * (SENS/DEV_SLOPE) and the other is zero-floor-style (e.g. COB, BGI): the pivot side gets a full
- * nice-scaled symmetric range around [pivot] — unconditionally, no branching on where its bounds
- * happen to sit relative to the pivot, so it never flips between "centered" and "pinned" between
- * recomputes. The zero-floor side gets a symmetric (-half,+half) container sized from its own
- * zero-floor nice range, so its zero lands exactly at the pivot's center (same pixel row) and its
- * curve — normally never negative — fills only the upper half, scaled nicely up to its own real
- * max (any rare negative sliver still fits, just not symmetric-looking, since half also covers it).
- */
-internal fun pivotZeroFloorPairing(pivotY: List<Double>, zeroFloorY: List<Double>, pivot: Double, minDeviation: Double): PivotZeroFloorPairing {
-    val pivotNice = niceScaleAroundPivot(pivotY.min(), pivotY.max(), pivot, minDeviation)
-    val zeroFloorNice = zeroFloorNiceRange(zeroFloorY.min(), zeroFloorY.max().coerceAtLeast(0.1))
-    val zeroFloorHalf = maxOf(-zeroFloorNice.min, zeroFloorNice.max)
-    return PivotZeroFloorPairing(pivotNice, zeroFloorHalf, zeroFloorNice.min)
-}
-
-/**
- * Adjusts two y-ranges so [aPivot]/[bPivot] land at the same fractional height on both axes.
- * Pivots default to 0.0 (true zero) for every series except SENSITIVITY, whose "no change" value
- * is 100% — treating 100 as SENSITIVITY's pivot lets it align with another series' zero exactly
- * like two zero-crossing series would (e.g. SENS at 100% and IOB at 0 both land in the middle).
- *
- * Implemented by shifting both ranges into pivot-relative space, reusing the plain zero-based
- * alignment logic, then shifting the result back.
- */
-internal fun alignZeros(aMin: Double, aMax: Double, bMin: Double, bMax: Double, aPivot: Double = 0.0, bPivot: Double = 0.0): AlignedRanges? {
-    val shifted = alignZerosAtOrigin(aMin - aPivot, aMax - aPivot, bMin - bPivot, bMax - bPivot) ?: return null
-    return AlignedRanges(shifted.aMin + aPivot, shifted.aMax + aPivot, shifted.bMin + bPivot, shifted.bMax + bPivot)
-}
-
-/**
- * Adjusts two y-ranges so y=0 lands at the same fractional height on both axes.
- *
- * Strategy: whenever either series crosses (or touches) zero, symmetrize each
- * axis around zero independently — both zeros then sit at the mid of their
- * own axis, so they share the same pixel row regardless of the individual
- * scales. When both series are strictly positive or strictly negative, zero
- * is pinned to the edge and no stretching is needed.
- *
- * Why this over a "shared zero fraction p" approach: an extension-only
- * alignment breaks down when one series is all-negative and the other is
- * bipolar (target p → 1 requires clipping positive data). Symmetrize-on-cross
- * is simpler, always works without clipping, and matches how the old
- * OverviewFragment aligned bipolar series (see GraphData.kt lines 150/151).
- */
-internal fun alignZerosAtOrigin(aMin: Double, aMax: Double, bMin: Double, bMax: Double): AlignedRanges? {
-    // Treat touching zero (min=0 or max=0) as crossing — the zero line is in-range either way.
-    val aCrosses = aMin <= 0 && aMax >= 0
-    val bCrosses = bMin <= 0 && bMax >= 0
-    return when {
-        // At least one series straddles zero → symmetrize both around zero so zeros align at mid.
-        // Degenerate case: if one side is all zeros (half=0) we still symmetrize it using the
-        // other side's half (or 1.0 if both are all zero) so Vico gets a non-empty range and the
-        // zero line still lands at mid.
-        aCrosses || bCrosses -> {
-            val aHalfRaw = maxOf(-aMin, aMax)
-            val bHalfRaw = maxOf(-bMin, bMax)
-            if (aHalfRaw <= 0 && bHalfRaw <= 0) return null // both completely flat at zero
-            val fallback = maxOf(aHalfRaw, bHalfRaw, 1.0)
-            val aHalf = if (aHalfRaw > 0) aHalfRaw else fallback
-            val bHalf = if (bHalfRaw > 0) bHalfRaw else fallback
-            AlignedRanges(-aHalf, aHalf, -bHalf, bHalf)
-        }
-        // Both strictly positive → pin zeros to bottom (use 0 as shared floor).
-        aMin > 0 && bMin > 0 -> AlignedRanges(0.0, aMax, 0.0, bMax)
-        // Both strictly negative → pin zeros to top (use 0 as shared ceiling).
-        aMax < 0 && bMax < 0 -> AlignedRanges(aMin, 0.0, bMin, 0.0)
-        // One all-positive, one all-negative (neither touches zero) → no useful shared alignment.
-        else                 -> null
-    }
-}
-
-/**
- * Builds an axis range that keeps [dataMin, dataMax] fully in view while placing zero at
- * [targetFraction] of the axis height. Anchors at dataMin first, stretching only the max to hit
- * the fraction; if that would still clip dataMax, anchors at dataMax instead and stretches the
- * min further negative. Either branch guarantees no clipping, for any fraction in range.
- */
-internal fun fractionAlignedRange(dataMin: Double, dataMax: Double, targetFraction: Double): Pair<Double, Double> {
-    val fraction = targetFraction.coerceIn(0.0, 0.9)
-    if (fraction <= 0.0) return dataMin.coerceAtMost(0.0) to dataMax
-    val candidateMax = dataMin * (fraction - 1.0) / fraction
-    return if (candidateMax >= dataMax) dataMin to candidateMax
-    else (-fraction / (1.0 - fraction) * dataMax) to dataMax
-}
-
-/**
- * Same construction as [fractionAlignedRange], but whichever bound ends up stretched to hit
- * [targetFraction] is rounded to a nice value too — used for the primary axis, which must stay
- * nice-scaled even when its range is widened to align with a secondary axis' zero.
- */
-internal fun fractionAlignedNiceRange(niceMin: Double, niceMax: Double, targetFraction: Double): Pair<Double, Double> {
-    val fraction = targetFraction.coerceIn(0.0, 0.9)
-    if (fraction <= 0.0) return niceMin to niceMax
-    val candidateMax = niceMin * (fraction - 1.0) / fraction
-    return if (candidateMax >= niceMax) niceMin to niceUp(candidateMax)
-    else -niceUp(fraction / (1.0 - fraction) * niceMax) to niceMax
-}
-
