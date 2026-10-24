@@ -104,6 +104,7 @@
     <string name="wrong_pump_data">Data kommer fra en anden pumpe. Skift pumpedriver for at nulstille pumpetilstand.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibrering</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="cgm">CGM</string>
     <string name="duration_label">Varighed</string>
     <string name="shortgramm">g</string>

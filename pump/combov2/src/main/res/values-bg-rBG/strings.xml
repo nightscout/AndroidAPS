@@ -81,7 +81,6 @@
     <string name="combov2_bolus_delivery_failed">Болусът беше неуспешен.  За да сте сигурни, моля, проверете помпата, за да избегнете повторение на вече доставен болус. За да се избегнат бъгове болусите не се повтарят автоматично.</string>
     <string name="combov2_bolus_not_delivered">Болусът не е доставен</string>
     <string name="combov2_cannot_access_pump_data">Няма достъп до данните на помпата; помпата трябва да се сдвои отново</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Открити са неотчетени доставки на болус. Отмяна на болуса от съображения за безопасност.</string>
     <string name="combov2_incorrect_active_basal_profile">Некоректен активен базален профил; профил 1 трябва да е активен, а не профил %1$d</string>
     <string name="combov2_unrecognized_alert">Неразпознат Combo сигнал</string>
     <string name="combov2_combo_alert">Combo предупреждение</string>

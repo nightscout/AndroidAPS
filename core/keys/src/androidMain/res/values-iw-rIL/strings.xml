@@ -46,6 +46,7 @@
     <string name="pref_title_aps_use_smb_with_high_tt">אפשר SMB עם ערך מטרה זמני גבוה</string>
     <string name="pref_summary_aps_use_smb_with_high_tt">אפשר SMB כאשר ערך מטרה זמני גבוה פעיל.</string>
     <string name="pref_title_aps_use_smb_always">אפשר SMB תמיד</string>
+    <string name="pref_summary_aps_use_smb_always">הפעלת SMB בכל התנאים ללא קשר לבולוס או לפחמימות הפעילות (COB).</string>
     <string name="pref_summary_aps_use_smb_with_cob">אפשר SMB כאשר קיימות פחמימות פעילות.</string>
     <string name="pref_title_aps_sensitivity_raises_target">רגישות מעלה את ערך המטרה</string>
     <string name="pref_summary_aps_sensitivity_raises_target">כאשר מזוהה רגישות מוגברת, העלה את ערך מטרת הסוכר.</string>
@@ -112,7 +113,6 @@
     <string name="pref_title_ns_use_ws">שימוש ב־WebSockets</string>
     <string name="pref_summary_ns_use_ws">השתמש ב־WebSockets לתקשורת בזמן אמת עם Nightscout.</string>
     <string name="pref_title_ns_allow_client_control">אפשר שליטה ממכשיר לקוח</string>
-    <string name="pref_summary_ns_allow_client_control">אפשר למכשירי לקוח מצומדים לשלוח פקודות חתומות, כגון הפעלה או עצירה של תרחישים, דרך Nightscout.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Wi‑Fi בלבד</string>
     <string name="pref_title_openhumans_charging_only">רק בזמן טעינה</string>

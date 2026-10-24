@@ -81,7 +81,6 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
     <string name="combov2_bolus_delivery_failed">Provádění bolusu selhalo. Zdá se, že žádný bolus nebyl podán. Zkontrolujte pumpu a případně pošlete bolus znovu. Jako bezpečnostní opatření podání bolusu není opakováno.</string>
     <string name="combov2_bolus_not_delivered">Bolus nebyl podán</string>
     <string name="combov2_cannot_access_pump_data">Nelze získat přístup k datům pumpy; pumpa musí být znovu spárována</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Zjištěny nečekané bolusy. Z bezpečnostních důvodů bolus zrušen.</string>
     <string name="combov2_incorrect_active_basal_profile">Nesprávný aktivní bazální profil; profil 1 musí být aktivní, ne profil %1$d</string>
     <string name="combov2_unrecognized_alert">Nerozpoznaná Combo výstraha</string>
     <string name="combov2_combo_alert">Combo výstraha</string>

@@ -175,6 +175,11 @@
     <string name="wrong_pump_data">Les données proviennent de différentes pompes. Changer le pilote de la pompe pour réinitialiser l\'état de la pompe.</string>
     <string name="bg_label">Gly</string>
     <string name="calibration">Étalonnage</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Calibration non sauvegardée : la glycémie change trop vite (Δ %1$s %3$s par 5 min, limite %2$s). Réessayez lorsque la glycémie est stable.</string>
+    <string name="cal_reject_no_pair">Calibration non sauvegardée : aucune lecture MGC trouvée dans les 10 minutes précédentes.</string>
+    <string name="cal_reject_warmup">Calibration non sauvegardée : le capteur est toujours dans la fenêtre pré-chauffage de 2 heures.</string>
+    <string name="cal_reject_no_session">Calibration non enregistrée: aucune session de capteur n\'est active. Effectuez d\'abord un changement de capteur.</string>
     <string name="cgm">MGC</string>
     <string name="treatmentdeliveryerror">Erreur lors du Bolus. Vérifiez manuellement la quantité réellement injectée ainsi que les glucides actifs</string>
     <string name="bolus_reminder">Rappeler le bolus quand la Gly remonte</string>
@@ -196,6 +201,12 @@
     <string name="a11y_arrow_none">aucun</string>
     <string name="a11y_arrow_unknown">inconnu</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">réduire %1$s par %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">incrémenter %1$s par %2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">ouvrir %1$s pour taper</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">fermer %1$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Monter</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Descendre</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Étape %1$d sur %2$d</string>
     <string name="decrement">diminuer</string>
     <string name="increment">augmenter</string>
     <string name="a11y_high">haut</string>
@@ -213,6 +224,7 @@
     <string name="percentage_label">Pourcentage</string>
     <string name="timeshift_label">Décalage horaire</string>
     <string name="confirm_remove_multiple_items">Êtes-vous sûr de vouloir supprimer %1$d entrée(s)</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Le maître n\'a pas %1$d de ces entrées. Elles ne sont pas supprimées.</string>
     <string name="overview_treatment_label">Traitement</string>
     <string name="copytolocalprofile">Créer un nouveau profil à partir de ce profil ?</string>
     <string name="wear_wizard_settings">Paramètres Assistant sur la Montre</string>
@@ -222,6 +234,9 @@
     <string name="login">Connexion</string>
     <string name="logout">Déconnexion</string>
     <string name="prime_fill">Amorcer/Remplir</string>
+    <string name="prime_not_available">Cette pompe se remplit et s\'amorce elle-même pendant l\'activation. Amorcer/Remplir à partir d\'AAPS n\'est pas disponible.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Changer</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Remplir</string>
     <string name="site_rotation">Rotation du site</string>
     <string name="edit_site">Éditer</string>
     <string name="select_arrow">Sélectionner flèche</string>
@@ -285,6 +300,7 @@
     <!--    Insulin / Concentration-->
     <string name="ins_concentration_confirmed">Insuline %1$s confirmée</string>
     <string name="current_insulin">Insuline Active</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Sera activé</string>
     <string name="change_insulin">Changer</string>
     <string name="select_insulin_description">Sélectionnez l\'insuline avec laquelle vous remplissez la pompe. Un changement de profil sera appliqué après l\'activation / amorçage.</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
@@ -293,7 +309,7 @@
     <string name="record_insulin_hint">Si vous injectez l\'insuline avec un stylo, sélectionnez le bon type d\'insuline ci-dessous. La dose est toujours en Unité Internationale.</string>
     <!--       Stats -->
     <string name="average">Moyenne</string>
-    <string name="tir">Temps dans la cible</string>
+    <string name="tir">TIR</string>
     <string name="below" comment="below &quot;in range&quot;">En-dessous</string>
     <string name="in_range">Dans la cible</string>
     <string name="veryLow" comment="below 3.1">Très bas</string>
@@ -311,6 +327,7 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">Contrôle Glycémie</string>
     <string name="careportal_mbg">Gly manuelle/Calib.</string>
     <string name="careportal_announcement">Notification</string>
@@ -322,6 +339,7 @@
     <string name="careportal_note_message">Note : %1$s</string>
     <string name="careportal_question_message">Question : %1$s</string>
     <string name="careportal_exercise_message">Exercice : %1$s</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Changement du site de la pompe : %1$s</string>
     <string name="careportal_pump_site_change">Changement de site</string>
     <string name="cgm_sensor_insert">Insertion Capteur</string>
     <string name="careportal_pump_site_management">Sites de la pompe</string>
@@ -344,6 +362,7 @@
     <string name="temporary_target">Cible Temp</string>
     <string name="temporary_targets">Cibles Temporaires</string>
     <string name="running_mode">Mode</string>
+    <string name="running_mode_desc">Fermer ou ouvrir la boucle, la suspendre ou déconnecter la pompe</string>
     <string name="running_mode_change_not_allowed">Changement de mode non disponible</string>
     <string name="pump_reconnect">Reconnecter la pompe</string>
     <string name="scene">Scénario</string>
@@ -354,6 +373,8 @@
     <string name="scene_active">Actif</string>
     <string name="scene_ended">Scénario terminé</string>
     <string name="scene_end_active">Fin du scénario actif</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Aller à</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">La scène suivante %1$s ne démarrera pas</string>
     <string name="scene_confirm_activate">Activer le scénario \"%1$s \" ?</string>
     <string name="scene_confirm_deactivate">Mettre fin au scénario \"%1$s\" et annuler les modifications ?</string>
     <string name="scene_conflict_active_tt">La cible temporaire active sera remplacée</string>
@@ -361,6 +382,7 @@
     <string name="scene_conflict_active_running_mode">Le mode actif sera remplacé</string>
     <string name="scene_conflict_active_scene">Le scénario actif «%1$s» sera terminée en premier</string>
     <string name="scene_action_tt">Cible Temp : %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil : %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profil : %1$d%%</string>
     <string name="scene_action_smb_on">Activer SMB</string>
     <string name="scene_action_smb_off">Désactiver SMB</string>
@@ -383,6 +405,8 @@
     <string name="scene_editor_enabled">Activé</string>
     <string name="scene_editor_disabled">Désactivé</string>
     <string name="scene_summary">%1$d actions, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_duration_indefinite">Indéfini (fin manuelle)</string>
     <string name="scene_some_actions_failed">Certaines actions ont échouées</string>
     <string name="scene_no_active">Aucun scénario actif</string>
@@ -394,6 +418,19 @@
     <string name="scene_lock_banner_control_disabled">Master a désactivé le contrôle à distance. Les contrôles du scénario reprendront lorsqu\'il sera réactivé sur le maître.</string>
     <string name="master_offline_banner">Appareil maître inaccessible. Les modifications sont désactivées jusqu\'à ce que la connexion soit rétablie.</string>
     <string name="master_control_disabled_banner">Le maître a désactivé le contrôle à distance. L\'édition est désactivée jusqu\'à ce qu\'elle soit réactivée sur le maître.</string>
+    <string name="hardened_mode_on">Mode renforcé activé</string>
+    <string name="hardened_mode_title">Mode renforcé</string>
+    <string name="hardened_mode_info_open">À propos du mode renforcé</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Lecture seule</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Repas</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Aidant</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Administrateur</string>
+    <string name="client_role_title">Rôle</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Rôle : %1$s</string>
+    <string name="client_roles_info_open">À propos des rôles</string>
+    <string name="client_roles_info">Chaque téléphone appairé a un rôle. Le téléphone principal le vérifie pour chaque commande, et le téléphone ne montre que ce que son rôle permet. Un nouveau rôle prend effet immédiatement, sans besoin de s\'appairer à nouveau.\n\nEn lecture seule : le téléphone reste appairé, mais n\'affiche que les données.\n\nRepas: bolus, assistant de bolus, QuickWizard et glucides. Il peut également arrêter un bolus en cours d\'injection. Les glucides entrés ici fait que la boucle donne plus d\'insuline.\n\nAidant: tout ce qu\'un utilisateur fait dans AAPS, comme les cibles temporaires, les changements de profil et d\'insuline, état de la boucle, basal temporaire, bolus étendus, scenarii, événements du careportail, calibrations et suppression d\'enregistrements. Il ne peut pas modifier les paramètres ou préréglages.\n\nAdmin: tout, paramètres et préréglages inclus (QuickWizard, paramétragedes cibles temporaires, scenarii, profiles, automation, insulin).</string>
+    <string name="client_read_only_banner">Ce téléphone est en mode lecture seule sur le téléphone principal.</string>
+    <string name="hardened_mode_info">Le téléphone principal n\'accepte les changements que de la part des clients appairés. Il n\'accepte pas de traitements, cibles temporaires, changements de profil, les modifications du mode en cours d\'exécution ou suppressions qui sont effectuées directement dans Nightscout, par le site Web ou dans d\'autres applications. Les paramètres pour accepter les données de Nightscout sont masqués lorsque le mode renforcé est activé. Les commandes par SMS ne sont pas affectées.\n\nLe téléphone principal télécharge toujours toutes les données dans Nightscout, glycémie incluse. Si elle obtient sa glycémie de Nightscout, elle prend quand même la glycémie de là.\n\nPour charger l\'historique sur un nouveau téléphone principal, utilisez la synchronisation complète dans NSClient. La synchronisation complète prend tout ce qui se trouve dans Nightscout, les profils inclus.\n\nLe contrôle à distance des clients a besoin d\'une connexion WebSocket fonctionnelle à Nightscout, sur le téléphone principal et sur les clients appairés. Le mode simple active toujours le mode renforcé. Pour le désactiver, quittez le mode simple et arrêtez le contrôle du client sur le téléphone principal.</string>
     <string name="scene_lock_reason_master_offline">Maître déconnecté</string>
     <string name="scene_lock_reason_control_disabled">Contrôle à distance désactivé</string>
     <string name="scene_lock_reason_scene_active">Arrêter d\'abord le scénario en cours d\'exécution</string>
@@ -418,7 +455,12 @@
     <string name="clientcontrol_fail_scene_disabled">Scénario désactivé.</string>
     <string name="clientcontrol_fail_partial">Certaines actions n\'ont pas pu être appliquées.</string>
     <string name="clientcontrol_fail_execution">Le maître n\'a pas pu l\'appliquer.</string>
+    <string name="clientcontrol_fail_cancelled">La commande a été annulée avant qu\'elle ne soit exécutée. Aucune commande n\'a été envoyée à la pompe.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus annulé. Aucune insuline n\'a été injectée.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Annulée</string>
     <string name="clientcontrol_fail_control_disabled">La commande à distance est désactivée sur le maître.</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">Le rôle de ce téléphone sur le maître ne permet pas cela.</string>
+    <string name="clientcontrol_fail_other_token">Le maître l\'a refusé: ce téléphone écrit sur Nightscout avec un autre jeton que le sien. Sur le maître, retirez ce téléphone et ajoutez-le à nouveau.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Le bolus préparé a expiré ou a été remplacé. Appuyez à nouveau sur le bouton.</string>
     <string name="clientcontrol_fail_bolus_compute">Le maître n\'a pas pu calculer le bolus (glycémie / profil manquant, ou pompe pas prête).</string>
     <string name="clientcontrol_fail_internal">Un problème est survenu.</string>
@@ -448,6 +490,7 @@
     <string name="treatment_insulin_desc">Injecter le bolus manuellement</string>
     <string name="treatment_carbs_desc">Enregistrer les glucides sans insuline</string>
     <string name="treatment_calculator_desc">Calculer le bolus</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Paramètres Insuline</string>
     <string name="manage_insulin_desc">Gérer et activer les insulines</string>
     <string name="concentration_disable_blocked">Impossible de désactiver la gestion de la concentration alors que les insulines non-U100 existent. Supprimez toutes les insulines non-U100 et activez une insuline U100 d\'abord.</string>
     <string name="simple_mode_blocked_by_concentration">Impossible d\'activer le mode simple en utilisant une insuline non-U100. Passez d\'abord à l\'insuline U100.</string>
@@ -469,6 +512,7 @@
     <string name="treatment_cannula_change_desc">Enregistrer le changement de site d\'injection</string>
     <string name="treatment_fill_desc">Amorcer et remplir la canule</string>
     <string name="temp_basal">Basale Temp</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Aucun</string>
     <string name="user_entry">Entrées utilisateur</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Doigt</string>
@@ -649,6 +693,7 @@
     <string name="uel_scene_deactivated">SCÉNARIO DÉSACTIVÉ</string>
     <string name="uel_remote_config_changed">CONFIG DISTANTE CHANGÉE</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Valeur basse de la Cible Temporaire</string>
     <string name="temp_target_high_target">Valeur haute de Cible Temp.</string>
     <string name="temp_target_value">Valeur de Cible Temporaire</string>
     <string name="insulin_dia">Valeur DAI de l\'insuline</string>
@@ -662,6 +707,7 @@
     <string name="missing_profile_name">Nom de profil manquant</string>
     <string name="profile_not_saved_activate">Profil non enregistré. Veuillez enregistrer le profil avant de l\'activer.</string>
     <string name="profile_basal_not_compatible_with_pump">Le débit de base n\'est pas compatible avec la pompe actuelle et ne peut pas être activé. Réduisez le pourcentage ou ajustez le débit de basel.</string>
+    <string name="profile_basal_below_pump_minimum">Le débit de base n\'est pas compatible avec la pompe actuelle et ne peut pas être activé. Augmentez le pourcentage ou ajustez le débit de base.</string>
     <string name="profile_pump_incompatible_label">Limite de la pompe</string>
     <string name="error_in_ic_values">Erreur dans les valeurs de G/I</string>
     <string name="error_in_isf_values">Erreur dans les valeurs de SI</string>
@@ -696,6 +742,7 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensibilité</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens désactivé</string>
     <string name="isf_for_carbs">SI moyen pour l\'Assistant et le calcul GA: %1$.1f</string>
     <string name="isf_profile">SI Profil : %1$.1f</string>
     <string name="isf_variable">SI Variable : %1$.1f</string>
@@ -723,6 +770,7 @@
     <string name="wizard_carb_time">Décalage horaire</string>
     <string name="carb_time_now">Maintenant</string>
     <string name="change">Changer</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s :</string>
     <string name="grant">Autoriser</string>
     <string name="set">Appliquer</string>
     <string name="wizard_set_alarm">Régler l\'alarme</string>
@@ -733,6 +781,7 @@
     <string name="wizard_include_iob">Inclure IA</string>
     <string name="wizard_include_cob">Inclure GA</string>
     <string name="wizard_calculation">Calcul</string>
+    <string name="no_action_selected">Aucune action sélectionnée, rien ne se passera.</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Suppression max : %1$d g (glucides actifs)</string>
     <string name="wizard_no_insulin_required">Pas d\'insuline requise</string>
     <string name="wizard_no_actual_bg">Pas de glycémie récente pour calculer !</string>
@@ -782,6 +831,8 @@
     <string name="initializing">Initialisation…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Attention</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Critique</string>
+    <string name="alert" comment="Generic alert dialog title">Alerte</string>
     <string name="retry" comment="Button label to retry a failed operation">Réessayer</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Terminer</string>
     <string name="firmware" comment="Pump firmware version label">Firmware</string>
@@ -805,6 +856,7 @@
     <string name="close">Fermer</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">Ok</string>
     <string name="export_warning">Avertissement</string>
     <string name="export_expired">Expiré</string>
     <string name="export_disabled">Désactivé</string>
@@ -871,6 +923,7 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Demande utilisateur</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Appairer</string>
     <string name="pump_unpair">Dissocier</string>
     <string name="pump_unpair_confirm_title">Désappairer la pompe ?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompe appairée</string>
@@ -1029,11 +1082,18 @@
     <string name="import_wrong_password">Mot de passe incorrect</string>
     <string name="import_btn">Import</string>
     <string name="import_anyway_btn">Importer quand même</string>
+    <string name="import_apply_title">Appliquer les paramètres importés ?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_waiting">En attente de la pompe…</string>
+    <string name="import_apply_pump_busy">La pompe est toujours occupée, donc les paramètres n\'ont pas été appliqués.</string>
+    <string name="import_apply_retry_question">Réessayez maintenant ?</string>
+    <string name="import_applied_title">Paramètres appliqués</string>
+    <string name="import_applied_message">Les paramètres importés sont maintenant utilisés.</string>
+    <string name="import_apply_pump_changed">Annulé : la pompe a été changée par l\'importation des paramètres</string>
     <string name="import_source_local">Local</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Charger plus</string>
@@ -1046,6 +1106,7 @@
     <string name="nav_resetdb">Réinitialiser les Bases de Données</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="step_ble_scan">Trouver la Pompe</string>
+    <string name="ble_scan_select_pump">Sélectionnez votre pompe dans la liste ci-dessous</string>
     <string name="ble_scan_scanning">Recherche d\'appareils…</string>
     <!-- Graph configuration -->
     <string name="graph_add">Ajouter graphique</string>
@@ -1074,7 +1135,11 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
+    <string name="units_format_hours_double">%1$.1f h</string>
+    <string name="units_format_hours_double_range">%1$.1f h (%2$.1f - %3$.1f)</string>
     <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f U</string>
     <string name="units_format_insulin_int">%1$d U</string>

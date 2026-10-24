@@ -163,6 +163,10 @@
     <string name="wrong_pump_data">Данните идват от различна помпа. Сменете драйвера на помпата, за да възстановите състоянието на помпата.</string>
     <string name="bg_label">КЗ</string>
     <string name="calibration">Калибрация</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">Калибрацията е невъзможна: Няма данни за КЗ в последните 10 мин.</string>
+    <string name="cal_reject_warmup">Калибрацията е невъзможна: Сензорът още загрява.</string>
+    <string name="cal_reject_no_session">Калибрацията невъзможна: Няма стартирана сесия. Първо пуснете смяна на сензор.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Помпата върна грешка. Проверете ръчно за реално доставените инсулин и въглехидрати</string>
     <string name="bolus_reminder">Напомни ми за болус когато КЗ е нормална</string>
@@ -207,6 +211,9 @@
     <string name="login">Вход</string>
     <string name="logout">Изход</string>
     <string name="prime_fill">Смяна/Пълнене</string>
+    <string name="prime_not_available">Помпата се пълни сама при активация. Пълнене не е възможно през AAPS.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Смяна</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Смяна</string>
     <string name="site_rotation">Смяна на мястото</string>
     <string name="edit_site">Редакция</string>
     <string name="select_arrow">Изберете стрелка</string>

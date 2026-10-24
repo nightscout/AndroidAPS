@@ -78,6 +78,7 @@
     <string name="objectives_open_exam">Отворете изпит</string>
     <string name="objectives_exam_question_progress">Въпрос %1$d от %2$d</string>
     <string name="objectives_exam_reset">Нулирай</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Готово</string>
     <string name="objectives_exam_previous">Предишен</string>
     <string name="objectives_exam_next">Следващ</string>
     <string name="objectives_exam_next_unanswered">Следващия неотговорен</string>

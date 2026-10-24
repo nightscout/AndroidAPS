@@ -80,7 +80,6 @@
     <string name="combov2_bolus_delivery_failed">Η έγχυση bolus απέτυχε. Δεν φαίνεται να παραδόθηκε κάποιο bolus. Για να σιγουρευτείτε, ελέγξτε την αντλία για να αποφευχθεί διπλό bolus. Για ασφάλεια σε λάθος του προγράμματος, δεν επιτρέπετε ξανά bolus αυτόματα.</string>
     <string name="combov2_bolus_not_delivered">Το Bolus δεν παραδόθηκε</string>
     <string name="combov2_cannot_access_pump_data">Δεν είναι δυνατή η πρόσβαση στα δεδομένα της αντλίας. Η αντλία πρέπει να συζευχθεί ξανά</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Ανιχνεύθηκαν μη υπολογισμένες χορηγήσεις bolus. Ακύρωση bolus για λόγους ασφαλείας.</string>
     <string name="combov2_incorrect_active_basal_profile">Λανθασμένο ενεργό προφίλ βασικού ρυθμού, το προφίλ 1 πρέπει να είναι ενεργό, όχι το προφίλ %1$d</string>
     <string name="combov2_unrecognized_alert">Μη αναγνωρίσιμη ειδοποίηση Combo</string>
     <string name="combov2_combo_alert">Ειδοποίηση Combo</string>

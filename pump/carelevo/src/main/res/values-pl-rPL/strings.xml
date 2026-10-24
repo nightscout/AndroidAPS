@@ -174,6 +174,8 @@
     <string name="alarm_feat_btn_resume_infusion">Wznów podawanie insuliny</string>
     <!-- General Messages -->
     <string name="alarm_feat_msg_check_patch_connect">Sprawdź połączenie z Patchem.</string>
+    <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">Nie można podać bolusa. Dostępny bolus: %1$s</string>
+    <string name="carelevo_bolus_rejected_exceed_limit_none">Nie można podać bolusa. Pozostało za mało insuliny.</string>
     <!--    notification -->
     <string name="alarm_notification_desc_warning_low_insulin">Pozostało mniej niż 10 U insuliny; dostarczanie insuliny zostało zatrzymane. Naciśnij przycisk [Dezaktywuj Patch] i zmień Patch teraz.</string>
     <string name="alarm_notification_desc_warning_expired_patch">Patch wygasł; podawanie insuliny zostało zatrzymane. Naciśnij przycisk [Dezaktywuj Patch] i zmień patch teraz.</string>
@@ -208,5 +210,6 @@
     <string name="alarm_notification_desc_notice_lgs_error">Sprawdź połączenie patcha i CGM.</string>
     <string name="carelevo_profile_update_skip_comment">Pominięto: aktualizacja zbyt wcześnie.</string>
     <string name="carelevo_bolus_stop_not_confirmed">Patch nie potwierdził zatrzymania. Czekam na zakończenie bolusa…</string>
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">Niezapisany bolus został teraz dodany. Sprawdź IOB, a następnie spróbuj ponownie.</string>
     <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Patch nie potwierdził zatrzymania. Pełny bolus wynoszący %1$s został zapisany.</string>
 </resources>

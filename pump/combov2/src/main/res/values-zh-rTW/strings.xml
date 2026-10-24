@@ -81,7 +81,6 @@
     <string name="combov2_bolus_delivery_failed">注射失敗。似乎沒有注射成功。為確保無誤，請檢查幫浦以避免雙重注射，然後重新注射。為防止錯誤，不會自動重試注射。</string>
     <string name="combov2_bolus_not_delivered">注射未完成</string>
     <string name="combov2_cannot_access_pump_data">無法查看幫浦資料；必須重新配對幫浦</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">偵測到未計入的注射。為安全起見，取消注射。</string>
     <string name="combov2_incorrect_active_basal_profile">活動基礎速率配置錯誤；必須是配置 1 為活動配置，而不是配置 %1$d</string>
     <string name="combov2_unrecognized_alert">未識別的 Combo 警報</string>
     <string name="combov2_combo_alert">Combo 警報</string>

@@ -80,7 +80,6 @@ samtidigt för att avbryta parkoppling)\n
     <string name="combov2_bolus_delivery_failed">Bolus avbruten. Det verkar som om ingen bolus levererades. För att vara säker, vänligen kontrollera pumpen för att undvika dubbel bolus och prova sedan vid behov igen. För att förhindra fel orsakade av mjukvaran, försöker inte mjukvaran igen automatiskt.</string>
     <string name="combov2_bolus_not_delivered">Bolus ej levererad</string>
     <string name="combov2_cannot_access_pump_data">Kan inte hämta pumpdata. Pumpen måste parkopplas på nytt</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Ej redovisade bolusleveranser upptäckta. Avbryter bolus av säkerhetsskäl.</string>
     <string name="combov2_incorrect_active_basal_profile">Felaktig aktiv basalprofil. Profil 1 måste vara aktiv, inte profil %1$d</string>
     <string name="combov2_unrecognized_alert">Okänd Combo-varning</string>
     <string name="combov2_combo_alert">Combo-varning</string>

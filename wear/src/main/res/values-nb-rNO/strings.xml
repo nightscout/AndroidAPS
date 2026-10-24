@@ -61,6 +61,7 @@
     <string name="pref_prime_in_menu">Prime i menyen</string>
     <string name="pref_single_target">Enkelt målverdi</string>
     <string name="pref_wizard_percentage">Kalkulatorprosent</string>
+    <string name="pref_wizard_carbs_type">Kalkulator måltidstype</string>
     <string name="pref_complication_tap_action">Handling ved trykk på komplikasjon</string>
     <string name="pref_complication_bg_graph_hours">BS-graf tidsintervall</string>
     <string name="duration_1_hour">1 time</string>
@@ -282,6 +283,11 @@
     <string name="title_activity_disconnect_pump">Koble fra pumpen</string>
     <string name="title_activity_suspend_loop">Pause loop</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="wizard_carbs_type">Måltidstype</string>
+    <string name="wizard_carbs_type_bread">Brød</string>
+    <string name="wizard_carbs_type_cake">Kake</string>
+    <string name="wizard_carbs_type_pizza">Pizza</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">E</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f E</string>

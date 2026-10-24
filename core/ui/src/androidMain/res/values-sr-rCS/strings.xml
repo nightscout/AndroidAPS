@@ -22,6 +22,7 @@
     <string name="exit">Izađi</string>
     <string name="iob">IOB</string>
     <string name="bg_label">GUK</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="duration_label">Trajanje</string>
     <string name="profile">Profil</string>
     <string name="overview_treatment_label">Tretman</string>

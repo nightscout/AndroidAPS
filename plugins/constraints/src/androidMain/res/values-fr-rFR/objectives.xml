@@ -24,6 +24,7 @@
     <string name="maxiobset">IA Max définie correctement (pas nécessaire en mode simple)</string>
     <string name="objectives_autosens_objective">Ajustement des débits Basal et des ratios si nécessaire, puis activation de la fonction auto-sens</string>
     <string name="objectives_autosens_gate">1 semaine de Boucle Fermée en journée en saisissant régulièrement les glucides</string>
+    <string name="objectives_autosens_learned">Si le résultat de votre autosens n\'est pas autour de 100%, votre profil est probablement erroné.</string>
     <string name="objectives_smb_objective">Activation de fonctionnalités supplémentaires pour l\'utilisation en journée, telles que la fonction SMB</string>
     <string name="objectives_smb_gate">Vous devez lire le wiki et augmenter le maxIA pour faire fonctionner les SMB ! Un bon début est maxIA = moyenne des bolus repas + 3 fois le basal le plus élevé</string>
     <string name="objectives_smb_learned">L\'utilisation de SMB est votre objectif. L\'algorithme Oref1 a été conçu pour vous aider également avec vos bolus. Vous ne devriez pas donner un bolus complet pour votre nourriture, mais seulement une partie de celui-ci et laisser AAPS vous donner le reste si nécessaire. De cette façon, vous avez plus de latitude pour les glucides mal calculés. Saviez-vous que vous pouvez définir un pourcentage à appliquer au résultat de la calculatrice de bolus pour réduire la taille du bolus ?</string>
@@ -36,6 +37,7 @@
     <string name="accomplished">Accompli : %1$s</string>
     <string name="objectives_usage_objective">Apprendre comment contrôler AAPS</string>
     <string name="objectives_usage_gate">Effectuer différentes actions dans AAPS</string>
+    <string name="objectives_usage_learned">Vous avez appris les bases de AAPS. La plupart des contrôles se trouvent sur l\'écran Aperçu. D\'autres actions se trouvent dans les menus Traitements et Gestion en bas de l\'écran, et dans le menu latéral.</string>
     <string name="objectives_useprofileswitch">Définir le profil 90% pendant 10 min</string>
     <string name="objectives_usedisconnectpump">Simuler une douche. Débranchez la pompe pendant 1h</string>
     <string name="objectives_usereconnectpump">... et reconnectez la pompe de la même façon</string>
@@ -43,24 +45,30 @@
     <string name="objectives_useloop">Affichage du contenu du plugin Boucle</string>
     <string name="objectives_usescale">Utiliser le défilement ou le zoom sur le graphique de glycémie</string>
     <string name="objectives_exam_objective">Prouver ses connaissances</string>
+    <string name="objectives_exam_gate">Étudier les questions. Chaque question a plusieurs réponses possibles, et plus d\'une réponse peut être correcte. Cochez toutes les réponses correctes et sélectionnez VÉRIFIER.</string>
+    <string name="objectives_exam_learned_prerequisites">Vous n\'avez pas besoin d\'être un développeur. Vous avez besoin de Nightscout ou de Tidepool pour passer les objectifs, une pompe compatible, et un moyen de construire AAPS (dans un navigateur web ou avec Android Studio) pour la première installation et pour chaque mise à jour.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS peut être exécuté hors ligne.</string>
     <string name="objectives_exam_learned_basaltest">Le profil doit être ajusté et mis à jour. Un meilleur profil = de meilleurs résultats.</string>
     <string name="objectives_exam_learned_dia">La DAI avec une boucle a une signification différente (temps jusqu\'à ce que l\'insuline soit absorbée en totalité) comparé à la thérapie par pompe classique (temps jusqu\'à ce que la majeure partie de l\'insuline soit absorbée).</string>
     <string name="objectives_exam_learned_isf">Vous avez appris la signification de la valeur SI et comment elle impacte la quantité d\'insuline utilisée pour corriger la glycémie.</string>
     <string name="objectives_exam_learned_ic">Vous avez appris la signification de la valeur G/I et comment elle impacte la quantité d\'insuline nécessaire pour couvrir les glucides.</string>
     <string name="objectives_exam_learned_hypott">La cible temp Hypo est utilisée uniquement pour prévenir la surcorrection après une hypo, lorsqu\'il y a généralement des IA négatives. Des actions supplémentaires devraient être évaluées afin d\'éviter que cette situation ne se reproduise à l\'avenir.</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">L\'utilisation du pourcentage n\'affecte pas les cibles glycémiques, mais la basale, la SI et le G/I sont ajustés pour donner plus d\'insuline (supérieure à 100%) ou moins d\'insuline (inférieure à 100%).</string>
     <string name="objectives_exam_learned_profileswitchtime">En utilisant le décalage horaire dans le changement de profil, vous pouvez adapter le profil circadien aux irrégularités comme un réveil tardif.</string>
     <string name="objectives_exam_learned_profileswitch4">Modifier seulement le profil n\'est pas suffisant pour effectuer un changement. Vous devez toujours effectuer un changement de profil pour activer les modifications.</string>
     <string name="objectives_exam_learned_exercise">Vous devriez réduire la quantité d\'insuline dans le corps au moins 1 heure avant de commencer l\'exercice en sélectionnant un profil inférieur à 100%.</string>
     <string name="objectives_exam_learned_exercise2">Fixer une cible temp plus élevée au moins 1 heure avant l\'exercice aide également à réduire la quantité d\'insuline dans le corps.</string>
     <string name="objectives_exam_learned_noisycgm">Si vous ne pouvez pas faire confiance aux valeurs MGC, vous ne devriez pas utiliser de boucle sans surveillance.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS doit savoir si la pompe n\'est pas connectée pour comptabiliser correctement l\'IA (IOB).</string>
+    <string name="objectives_exam_learned_insulin">AAPS doit savoir quelle insuline est dans la pompe, car elle affecte le calcul de l\'IA .</string>
     <string name="objectives_exam_learned_sensitivity">La détection de sensibilité fait partie de l\'algorithme qui permet d\'adapter la posologie de l\'insuline à différentes situations.</string>
     <string name="objectives_exam_learned_objectives">Votre progression dans les objectifs est enregistrée avec les autres paramètres et elle doit être sauvegardée.</string>
     <string name="objectives_exam_learned_objectives2">Gardez toujours les paramètres exportés et l\'APK généré ailleurs que sur le téléphone. Le téléphone peut être perdu, endommagé, etc. Un bon endroit peut être n\'importe quel disque sur le cloud accessible depuis le téléphone. Dans ce cas, vous pourrez restaurer AAPS sur un autre appareil en quelques minutes. La bonne pratique est aussi de stocker le mot de passe maître utilisé dans un endroit sûr. Sans cela, votre sauvegarde est inutile, il en va de même pour les clés de signature (fichier .jks) et les mots de passe utilisés pour construire AAPS. Le reste n\'est pas important - cela peut être téléchargé à tout moment à partir d\'Internet à nouveau.</string>
     <string name="objectives_exam_learned_wrongcarbs">Si vous avez fait une entrée incorrecte dans AAPS ou si cela ne correspond pas à la réalité, résolvez-la dès que possible. Cela pourrait conduire à un surdosage. AAPS doit toujours être informé de la meilleure façon possible sur les glucides, l\'insuline, etc.</string>
+    <string name="objectives_exam_learned_iob">Si vous voulez vérifier que AAPS fonctionne bien pour vous, regarder le graphe IA peut vous donner beaucoup d\'informations utiles.</string>
     <string name="objectives_exam_learned_breadgrams">Seuls les grammes sont autorisés pour l\'entrée des glucides.</string>
     <string name="objectives_exam_learned_ecarbs">Les E-glucides remplacent les bolus étendus dans le monde de la pompe.</string>
+    <string name="objectives_exam_learned_nsclient">Vous pouvez suivre AAPS à distance avec AAPSClient ou Nightscout. Lorsque AAPSClient est jumelé avec le téléphone principal, vous pouvez également contrôler AAPS à distance.</string>
     <string name="objectives_exam_learned_concentration2" formatted="false">Passer de l\'U200 avec un profil de 50 % à U200 avec la fonction de concentration d\'insuline nécessite de créer un nouveau profil plus agressif, désactiver DynISF pendant une semaine et entraîner le cerveau à penser en Unités Internationales.</string>
     <string name="objectives_exam_learned_concentration3">La concentration de l\'insuline ne peut être modifiée que lorsque l\'insuline ou le patch sont changés. Mais le plus important, en particulier pour les pompes à tubes, est de ne jamais utiliser l\'interface utilisateur de la pompe pour injecter des bolus directement depuis la pompe.</string>
     <string name="answerdisabledto">Réponse désactivée jusqu\'à : %1$s</string>
@@ -82,6 +90,9 @@
     <string name="objectives_open_exam">Ouvrir l\'examen</string>
     <string name="objectives_exam_question_progress">Question %1$d sur %2$d</string>
     <string name="objectives_exam_reset">Réinitialiser</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Terminé</string>
+    <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">En cours</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">réponse correcte</string>
     <string name="objectives_exam_previous">Précédent</string>
     <string name="objectives_exam_next">Suivant</string>
     <string name="objectives_exam_next_unanswered">Suivant sans réponse</string>

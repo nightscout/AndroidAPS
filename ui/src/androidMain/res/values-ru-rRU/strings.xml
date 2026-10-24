@@ -287,11 +287,6 @@
     <string name="widget_rm_disabled">Отключено</string>
     <string name="widget_rm_suspended">Помпа остановлена</string>
     <string name="widget_rm_resume">Возобновить</string>
-    <!-- Calibration entry rejection reasons -->
-    <string name="cal_reject_delta_too_high">Калибровка не сохранена: ГК меняется слишком быстро (Δ %1$s %3$s за 5 минут, предел %2$s). Повторите попытку, когда глюкоза стабилизируется.</string>
-    <string name="cal_reject_no_pair">Калибровка не сохранена: последние 10 минут не было показаний.</string>
-    <string name="cal_reject_warmup">Калибровка не сохранена: датчик все еще находится в 2-х часовом прогреве.</string>
-    <string name="cal_reject_no_session">Калибровка не сохранена: нет активных сессий датчика. Сперва сделайте отметку о его замене.</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
     <string name="cal_precheck_warmup">Датчик все еще прогревается. Калибровка доступна в %1$s.</string>
     <string name="cal_precheck_no_session">Нет активных сессий датчика.</string>

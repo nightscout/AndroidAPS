@@ -61,7 +61,6 @@
     <string name="patch_communication_succeed">통신 성공</string>
     <string name="patch_communication_succeed_message">Patch와 연결됨</string>
     <string name="patch_cancel_pairing">페어링 취소</string>
-    <string name="all_dose_unit">&#160;U</string>
     <string name="insulin_suspend_msg1">중지 시, 현재 주입 중인 bolus &amp; 임시 basal이 취소됩니다. \n\n주입량 : %1$s U/hr\n남은 시간  : %2$s\n&amp; 남은 인슐린 : %3$.2f U</string>
     <string name="insulin_suspend_msg2">중지 시, 현재 주입 중인 bolus가 취소됩니다. \n\n남은 인슐린 : %1$.2f U</string>
     <string name="insulin_suspend_msg3">중지 시, 현재 주입 중인 임시 basal이 취소됩니다. \n\n주입량 : %1$s U/hr\n남은 시간  : %2$s</string>

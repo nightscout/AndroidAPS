@@ -184,6 +184,7 @@
         <item quantity="other">Pod varsler: %1$s</item>
     </plurals>
     <string name="omnipod_common_overview_pod_hard_end_date">Pod avslutter</string>
+    <string name="omnipod_common_overview_pod_hard_end_value" comment="%1$s=date and time when the pod stops delivering insulin, %2$s=time left until then. Example: 21.10.2026 18:34 (17m remaining)">%1$s (%2$s)</string>
     <!-- Omnipod - History -->
     <string name="omnipod_common_history_tbr_value">%1$.2f E/t, %2$d minutter</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f E</string>

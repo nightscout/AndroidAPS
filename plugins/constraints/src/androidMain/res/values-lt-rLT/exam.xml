@@ -84,6 +84,7 @@
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="troubleshooting_hint4">https://github.com/nightscout/AndroidAPS/issues</string>
+    <string name="insulin_plugins">Insulino nustatymai</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>

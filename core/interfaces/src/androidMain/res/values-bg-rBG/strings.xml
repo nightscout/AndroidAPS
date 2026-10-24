@@ -46,13 +46,20 @@
     <string name="unit_days">дни</string>
     <string name="unit_weeks">седмици</string>
     <string name="shortminute">м</string>
-    <string name="shortday">д</string>
     <string name="time_remaining_h_m">%1$dч %2$dмин остават</string>
     <string name="time_remaining_m">%1$dмин остават</string>
     <string name="later_today">По-късно днес</string>
     <string name="tomorrow">Утре</string>
     <string name="today">Днес</string>
     <string name="yesterday">Вчера</string>
+    <string name="values_with_dash" comment="Two values with a dash between them, for a range or a day and its date. Example: 6:00 - 10:00, or Today - 10/23/2026">%1$s - %2$s</string>
+    <string name="values_with_comma" comment="Two parts of one text with a comma between them. Example: BG: 7.5, Delta: +0.3">%1$s, %2$s</string>
+    <string name="values_with_slash" comment="Two values with a slash between them. Example: 0.01 / 0.05">%1$s / %2$s</string>
+    <string name="value_with_detail" comment="A value and a detail about it in brackets. Example: 0.85 U/h (STD), or 20 g (-15 min)">%1$s (%2$s)</string>
+    <string name="time_frame_hours_minutes" comment="A duration, short. h=hours, the mark after the minutes means minutes. %1$d=hours, %2$d=minutes. Example: 1h 30'">%1$dh %2$d\'</string>
+    <string name="time_frame_minutes" comment="A duration in minutes, short. The mark after the number means minutes. %1$d=minutes. Example: 30'">%1$d\'</string>
+    <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
+    <string name="time_value_with_unit" comment="%1$s=a number, %2$s=the time unit, like minutes or days. Example: 5 minutes">%1$s %2$s</string>
     <!-- Rx -->
     <string name="connecting_for">Свързване %1$d сек</string>
     <string name="handshaking">Сдвояване</string>
@@ -87,6 +94,11 @@
     <string name="pref_show_week_number">Показване на номер седмица</string>
     <string name="pref_show_date">Покажи дата</string>
     <string name="pref_show_seconds">Покажи секунди</string>
+    <string name="pref_show_complication1">Покажи усложнение 1</string>
+    <string name="pref_show_complication2">Покажи усложнение 2</string>
+    <string name="pref_show_complication3">Покажи усложнение 3</string>
+    <string name="pref_show_complication4">Покажи усложнение 4</string>
+    <string name="pref_show_complication5">Покажи усложнение 5</string>
     <string name="default_custom_watchface_comment">Watchface по подразбиране, можете да изберете бутон ЕКСПОРТИРАНЕ НА WATCHFACE за създаване на шаблон</string>
     <string name="default_custom_watchface_external_comment">Циферблат по подразбиране вкл такива за последователи. Натиснете ЕКСПОРТ бутона за да се генерира темплейт</string>
     <string name="wear_default_watchface">Watchface по подразбиране</string>
@@ -94,7 +106,6 @@
     <string name="temp_basal_absolute_rate">%1$.2f Е/ч в %2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% в %2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">Уд болус %1$.2f Е/ч в %2$s %3$d/%4$d мин</string>
-    <string name="forever">Вечно</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">Bluetooth</string>
     <string name="permission_bluetooth_description">Приложението се нуждае от bluetooth достъп за свързване с помпа</string>
@@ -129,6 +140,7 @@
     <string name="maximumbasalvaluereplaced">Базалната стойност е заместена от максимално поддържаната стойност %1$s</string>
     <string name="profile_ins_units_per_hour">Е/ч</string>
     <string name="profile_carbs_per_unit">гр/Е</string>
+    <string name="mins">%1$d мин</string>
     <string name="record">Запиши</string>
     <string name="bolus">Болус</string>
     <string name="uel_extended_carbs">УДЪЛЖЕН БОЛУС</string>
@@ -144,4 +156,8 @@
     <string name="bolus_recorded_only">Само запиши (без да да го стартираш в помпата)</string>
     <string name="advisoralarm">Аларма, когато е време за хранене</string>
     <string name="format_insulin_units">%1$.2fЕ</string>
+    <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
+    <string name="carbs_with_time_later" comment="Carbs eaten later. %1$s=carbs with unit, %2$s=minutes from now, with unit. Example: 20 g (+15 min)">%1$s (+%2$s)</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Плъгин %1$s не се стартира и не работи. Рестартирайте AAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Грешка в плъгин %1$s и част от него не работи. Рестартирайте AAPS.</string>
 </resources>
