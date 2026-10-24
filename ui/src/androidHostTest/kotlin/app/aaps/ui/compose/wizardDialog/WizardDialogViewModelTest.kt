@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
@@ -67,7 +68,9 @@ internal class WizardDialogViewModelTest {
     @Mock private lateinit var automation: Automation
     @Mock private lateinit var wizardExecutor: WizardExecutor
     @Mock private lateinit var rxBus: RxBus
+    @Mock private lateinit var commandQueue: CommandQueue
 
+    private val smbBeingDelivered = MutableStateFlow(false)
     private val bolusWizardProvider: () -> BolusWizard = mock()
 
     private lateinit var sut: WizardDialogViewModel
@@ -84,13 +87,32 @@ internal class WizardDialogViewModelTest {
         // Stubbed before construction: init { } queues initialize() on the shared scheduler, so it runs
         // before any test body. With no profile store it returns straight away, which is all these tests need.
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(null))
+        whenever(commandQueue.smbBeingDelivered).thenReturn(smbBeingDelivered)
         Dispatchers.setMain(mainDispatcher)
         sut = WizardDialogViewModel(
             SavedStateHandle(), bolusWizardProvider, constraintChecker, profileFunction, profileUtil,
             profileRepository, activePlugin, ch, iobCobCalculator, persistenceLayer, preferences, config,
             rh, dateUtil, decimalFormatter, aapsLogger, runningModeGuard, automation, wizardExecutor, rxBus,
-            CoroutineScope(UnconfinedTestDispatcher())
+            CoroutineScope(UnconfinedTestDispatcher()), commandQueue
         )
+    }
+
+    // #5381: the master calculates the dose only after the SMB has finished, with the SMB in IOB.
+    @Test
+    fun `OK waits while an SMB is being delivered`() {
+        mainDispatcher.scheduler.advanceUntilIdle()
+        smbBeingDelivered.value = true
+        mainDispatcher.scheduler.advanceUntilIdle()
+        assertThat(sut.uiState.value.smbBeingDelivered).isTrue()
+
+        val withInsulin = sut.uiState.value.copy(totalInsulin = 1.5)
+        assertThat(withInsulin.waitsForSmb).isTrue()
+        assertThat(withInsulin.copy(forcedRecordOnly = true).waitsForSmb).isFalse()
+        assertThat(withInsulin.copy(totalInsulin = 0.0).waitsForSmb).isFalse()
+
+        smbBeingDelivered.value = false
+        mainDispatcher.scheduler.advanceUntilIdle()
+        assertThat(sut.uiState.value.smbBeingDelivered).isFalse()
     }
 
     @AfterEach

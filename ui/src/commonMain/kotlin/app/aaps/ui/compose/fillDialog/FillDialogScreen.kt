@@ -75,6 +75,7 @@ import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.EVENT_TIME_OFFSET_RANGE_MINUTES
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
+import app.aaps.ui.compose.components.SmbBeingDeliveredBanner
 
 /**
  * @see PreviewSiteChange
@@ -242,28 +243,31 @@ internal fun FillDialogContent(
 
     Scaffold(
         topBar = {
-            AapsTopAppBar(
-                title = { Text((stringResourceOrNull(ElementType.FILL.label()) ?: "")) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(CoreUiStrings.close)
-                        )
-                    }
-                },
-                actions = {
-                    if (onSettingsClick != null) {
-                        IconButton(onClick = onSettingsClick) {
+            Column {
+                AapsTopAppBar(
+                    title = { Text((stringResourceOrNull(ElementType.FILL.label()) ?: "")) },
+                    navigationIcon = {
+                        IconButton(onClick = onNavigateBack) {
                             Icon(
-                                imageVector = Icons.Default.Settings,
-                                contentDescription = stringResource(CoreUiStrings.settings),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = stringResource(CoreUiStrings.close)
                             )
                         }
+                    },
+                    actions = {
+                        if (onSettingsClick != null) {
+                            IconButton(onClick = onSettingsClick) {
+                                Icon(
+                                    imageVector = Icons.Default.Settings,
+                                    contentDescription = stringResource(CoreUiStrings.settings),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
                     }
-                }
-            )
+                )
+                if (uiState.waitsForSmb) SmbBeingDeliveredBanner()
+            }
         },
         bottomBar = {
             // The button shows only a value, so a screen reader would say just the amount and never
@@ -275,7 +279,7 @@ internal fun FillDialogContent(
                     focusManager.clearFocus()
                     onConfirmClick()
                 },
-                enabled = uiState.hasAction,
+                enabled = uiState.hasAction && !uiState.waitsForSmb,
                 modifier = Modifier
                     .fillMaxWidth()
                     .bottomBarSafeArea()

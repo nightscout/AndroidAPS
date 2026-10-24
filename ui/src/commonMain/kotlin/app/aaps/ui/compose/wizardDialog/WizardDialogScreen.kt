@@ -118,6 +118,7 @@ import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.components.RecordOnlyBanner
+import app.aaps.ui.compose.components.SmbBeingDeliveredBanner
 import kotlinx.coroutines.launch
 
 @Composable
@@ -282,6 +283,7 @@ internal fun WizardDialogContent(
                     }
                 )
                 if (uiState.forcedRecordOnly) RecordOnlyBanner()
+                if (uiState.waitsForSmb) SmbBeingDeliveredBanner()
             }
         },
         bottomBar = {
@@ -295,7 +297,7 @@ internal fun WizardDialogContent(
                     focusManager.clearFocus()
                     onConfirmClick()
                 },
-                enabled = uiState.okVisible,
+                enabled = uiState.okVisible && !uiState.waitsForSmb,
                 modifier = Modifier
                     .fillMaxWidth()
                     .bottomBarSafeArea()

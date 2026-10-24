@@ -29,6 +29,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
@@ -88,7 +89,8 @@ class FillDialogViewModel(
     private val rxBus: RxBus,
     // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
     // binds the same instance under both names.
-    private val appScope: CoroutineScope
+    private val appScope: CoroutineScope,
+    commandQueue: CommandQueue
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FillDialogUiState())
@@ -167,6 +169,9 @@ class FillDialogViewModel(
         }
         loadLastSiteLocation()
         observeConcentrationEnabled()
+        commandQueue.smbBeingDelivered
+            .onEach { delivering -> _uiState.update { it.copy(smbBeingDelivered = delivering) } }
+            .launchIn(viewModelScope)
     }
 
     // The concentration-support flag is a synced preference (it can change from another device while

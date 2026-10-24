@@ -23,6 +23,8 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
@@ -51,10 +53,14 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.concurrent.Volatile
 import kotlin.math.max
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -82,7 +88,8 @@ class InsulinDialogViewModel(
     // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
     // binds the same instance under both names.
     private val appScope: CoroutineScope,
-    nsClient: NsClient
+    nsClient: NsClient,
+    commandQueue: CommandQueue
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(InsulinDialogUiState())
@@ -92,8 +99,11 @@ class InsulinDialogViewModel(
         data class ShowDeliveryError(val comment: String) : SideEffect()
         data object ShowNoActionDialog : SideEffect()
 
-        /** The MASTER prepared the batch and returned its merged confirmation [lines]; show them, then [commit] [bolusId]. */
-        data class ShowConfirmation(val bolusId: Long, val lines: List<ConfirmationLine>) : SideEffect()
+        /**
+         * The MASTER prepared the batch and returned its merged confirmation [lines]; show them, then [commit] [bolusId],
+         * or [discard] it on Cancel. Close it at [closeAt]: the master's SMB pause for the dose has run out by then.
+         */
+        data class ShowConfirmation(val bolusId: Long, val lines: List<ConfirmationLine>, val closeAt: TimeMark) : SideEffect()
     }
 
     private val _sideEffect = MutableSharedFlow<SideEffect>(
@@ -162,6 +172,9 @@ class InsulinDialogViewModel(
                 )
             }
         }
+        commandQueue.smbBeingDelivered
+            .onEach { delivering -> _uiState.update { it.copy(smbBeingDelivered = delivering) } }
+            .launchIn(viewModelScope)
     }
 
     private suspend fun getRunningIcfg() = profileFunction.getRunningOrRequestedICfg()
@@ -245,6 +258,8 @@ class InsulinDialogViewModel(
      * viewModelScope) while the round-trip is in flight.
      */
     fun prepareAndConfirm() {
+        // Counted from before the prepare, so on a client the confirmation closes before the master's pause ends.
+        val closeAt = TimeSource.Monotonic.markNow() + SmbPause.MAX_DURATION
         appScope.launch {
             val state = uiState.value
             confirmedState = state
@@ -254,7 +269,7 @@ class InsulinDialogViewModel(
                 return@launch
             }
             when (val prepared = batchExecutor.prepare(actions, Sources.InsulinDialog, rh.gs(InterfacesStrings.bolus))) {
-                is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
+                is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines, closeAt))
                 // Offline block (and a master-local failure) surface here; a client round-trip failure already showed
                 // on the app-level modal, so only re-surface NotReachable or a master-side detail message.
                 is ActionProgress.Rejected -> when {
@@ -271,6 +286,9 @@ class InsulinDialogViewModel(
             }
         }
     }
+
+    /** The confirmation was cancelled or closed itself: drop the prepared batch, so the loop can give SMBs again. */
+    fun discard(bolusId: Long) = batchExecutor.discard(bolusId)
 
     /** Confirm the master's prepared batch: deliver the parked bundle exactly once. */
     fun commit(bolusId: Long) {

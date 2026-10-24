@@ -2,6 +2,7 @@ package app.aaps.ui.compose.insulinDialog
 
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -17,6 +18,8 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.PumpWithConcentration
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sync.NsClient
@@ -31,10 +34,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -44,9 +49,12 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.stub
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class InsulinDialogViewModelTest {
@@ -68,8 +76,11 @@ internal class InsulinDialogViewModelTest {
     @Mock private lateinit var batchExecutor: BatchExecutor
     @Mock private lateinit var rxBus: RxBus
     @Mock private lateinit var nsClient: NsClient
+    @Mock private lateinit var commandQueue: CommandQueue
 
     private val role = MutableStateFlow(ClientRole.Admin)
+    private val smbBeingDelivered = MutableStateFlow(false)
+    private val main = StandardTestDispatcher()
     private val pump: PumpWithConcentration = mock()
     private val pumpDescription: PumpDescription = mock()
     private val maxBolusConstraint: Constraint<Double> = mock()
@@ -81,7 +92,8 @@ internal class InsulinDialogViewModelTest {
         MockitoAnnotations.openMocks(this)
         // StandardTestDispatcher defers only the loop-mode check launched in init; the synchronous init body
         // below still runs at construction, so its collaborators must be stubbed.
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(main)
+        whenever(commandQueue.smbBeingDelivered).thenReturn(smbBeingDelivered)
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.pumpDescription).thenReturn(pumpDescription)
         whenever(pumpDescription.bolusStep).thenReturn(0.1)
@@ -93,13 +105,15 @@ internal class InsulinDialogViewModelTest {
         // ttTargetMgdl/ttDurationMinutes parse this preset string in init; "[]" -> empty -> use defaults.
         whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("[]")
         whenever(nsClient.clientRole).thenReturn(role)
+        // For the tests that run Main: runTest runs the loop-mode check that init queued before the test body.
+        loop.stub { onBlocking { runningMode() } doReturn RM.Mode.CLOSED_LOOP }
         sut = create()
     }
 
     private fun create() = InsulinDialogViewModel(
         constraintChecker, profileFunction, profileUtil, activePlugin, ch, insulinManager,
         config, automation, decimalFormatter, loop, preferences, rh, dateUtil, hardLimits, batchExecutor,
-        rxBus, CoroutineScope(UnconfinedTestDispatcher()), nsClient
+        rxBus, CoroutineScope(UnconfinedTestDispatcher()), nsClient, commandQueue
     )
 
     @Test
@@ -193,5 +207,61 @@ internal class InsulinDialogViewModelTest {
 
         assertThat(sut.uiState.value.eatingSoonTtChecked).isTrue()
         assertThat(sut.uiState.value.notes).isEqualTo("correction")
+    }
+
+    // ---- #5381: OK waits while an SMB is being delivered, and the confirmation is good for the SMB pause only ----
+
+    @Test
+    fun `OK waits while an SMB is being delivered and works again when it has finished`() {
+        whenever(pump.isInitialized()).thenReturn(true)
+        sut = create()
+        main.scheduler.advanceUntilIdle()
+        sut.updateInsulin(1.0)
+        assertThat(sut.uiState.value.confirmEnabled).isTrue()
+
+        smbBeingDelivered.value = true
+        main.scheduler.advanceUntilIdle()
+        assertThat(sut.uiState.value.waitsForSmb).isTrue()
+        assertThat(sut.uiState.value.confirmEnabled).isFalse()
+        // The input stays: only OK waits.
+        assertThat(sut.uiState.value.insulin).isEqualTo(1.0)
+
+        smbBeingDelivered.value = false
+        main.scheduler.advanceUntilIdle()
+        assertThat(sut.uiState.value.confirmEnabled).isTrue()
+    }
+
+    @Test
+    fun `nothing waits for an SMB when the pump gives nothing`() {
+        // A pen dose and an eating soon target alone never reach the queue.
+        val recordOnly = InsulinDialogUiState(insulin = 1.0, recordOnlyChecked = true, smbBeingDelivered = true)
+        val targetOnly = InsulinDialogUiState(insulin = 0.0, eatingSoonTtChecked = true, smbBeingDelivered = true)
+        assertThat(recordOnly.confirmEnabled).isTrue()
+        assertThat(targetOnly.confirmEnabled).isTrue()
+    }
+
+    @Test
+    fun `the confirmation closes before the SMB pause of the master runs out`() = runTest {
+        whenever(ch.bolusStep(any())).thenReturn(0.1)
+        whenever(batchExecutor.prepare(any(), any(), anyOrNull())).thenReturn(ActionProgress.Prepared(7L))
+        val shown = mutableListOf<InsulinDialogViewModel.SideEffect>()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { sut.sideEffect.collect { shown += it } }
+        sut.updateRecordOnly(false)
+        sut.updateInsulin(1.0)
+
+        sut.prepareAndConfirm()
+
+        val confirmation = shown.filterIsInstance<InsulinDialogViewModel.SideEffect.ShowConfirmation>().single()
+        assertThat(confirmation.bolusId).isEqualTo(7L)
+        // Counted from before the prepare, so it ends before the pause the master started after it.
+        val left = -confirmation.closeAt.elapsedNow()
+        assertThat(left).isAtMost(SmbPause.MAX_DURATION)
+        assertThat(left).isGreaterThan(SmbPause.MAX_DURATION - 10.seconds)
+    }
+
+    @Test
+    fun `cancel drops the prepared bolus so the loop can give SMBs again`() {
+        sut.discard(7L)
+        verify(batchExecutor).discard(7L)
     }
 }

@@ -25,6 +25,8 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
@@ -63,6 +65,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.math.abs
+import kotlin.time.TimeSource
 
 @Stable
 @AssistedInject
@@ -89,7 +92,8 @@ class WizardDialogViewModel(
     private val rxBus: RxBus,
     // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
     // binds the same instance under both names.
-    private val appScope: CoroutineScope
+    private val appScope: CoroutineScope,
+    private val commandQueue: CommandQueue
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WizardDialogUiState())
@@ -125,7 +129,11 @@ class WizardDialogViewModel(
     private var appliedPercentagePreference: Int? = null
 
     init {
-        viewModelScope.launch { initialize() }
+        viewModelScope.launch {
+            initialize()
+            // After initialize(), which builds a new state and would drop the flag again.
+            commandQueue.smbBeingDelivered.collect { delivering -> _uiState.update { it.copy(smbBeingDelivered = delivering) } }
+        }
     }
 
     /**
@@ -559,10 +567,16 @@ class WizardDialogViewModel(
             profileName = profileName
         )
         val label = rh.gs(CoreUiStrings.clientcontrol_action_deliver_bolus)
+        // Counted from before the prepare, so on a client the confirmation closes before the master's pause ends.
+        val closeAt = TimeSource.Monotonic.markNow() + SmbPause.MAX_DURATION
         appScope.launch {
             when (val prepared = wizardExecutor.prepare(WizardExecutor.WizardSource.Manual(inputs), label)) {
                 is ActionProgress.Prepared ->
-                    showWizardBolusConfirmation(rxBus, rh, rh.gs(CoreUiStrings.boluswizard), IcCalculator, prepared.advisorApplies, prepared.lines, prepared.advisorLines) { asAdvisor ->
+                    showWizardBolusConfirmation(
+                        rxBus, rh, rh.gs(CoreUiStrings.boluswizard), IcCalculator, prepared.advisorApplies, prepared.lines, prepared.advisorLines,
+                        closeAt = closeAt,
+                        onCancel = { wizardExecutor.discard(prepared.id) }
+                    ) { asAdvisor ->
                         // Confirmed → close the wizard (Cancel leaves it open with inputs intact, like the insulin dialog).
                         _sideEffect.tryEmit(SideEffect.NavigateBack)
                         appScope.launch {

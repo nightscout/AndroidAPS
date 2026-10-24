@@ -41,6 +41,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
@@ -105,6 +106,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.TimeSource
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -508,9 +510,15 @@ class MainViewModel(
      */
     private suspend fun executeWizardQuickWizard(entry: QuickWizardEntry, guid: String) {
         val label = rh.gs(CoreUiStrings.clientcontrol_action_deliver_bolus)
+        // Counted from before the prepare, so on a client the confirmation closes before the master's SMB pause ends.
+        val closeAt = TimeSource.Monotonic.markNow() + SmbPause.MAX_DURATION
         when (val prepared = wizardExecutor.prepare(WizardExecutor.WizardSource.QuickWizard(guid), label)) {
             is ActionProgress.Prepared ->
-                showWizardBolusConfirmation(rxBus, rh, entry.buttonText(), IcQuickwizard, prepared.advisorApplies, prepared.lines, prepared.advisorLines) { asAdvisor ->
+                showWizardBolusConfirmation(
+                    rxBus, rh, entry.buttonText(), IcQuickwizard, prepared.advisorApplies, prepared.lines, prepared.advisorLines,
+                    closeAt = closeAt,
+                    onCancel = { wizardExecutor.discard(prepared.id) }
+                ) { asAdvisor ->
                     // The async delivery failure is alarmed once, centrally, from the executor — no local alarm here (it would double).
                     appScope.launch { wizardExecutor.commit(prepared.id, asAdvisor, Sources.QuickWizard, label) }
                 }
@@ -534,6 +542,8 @@ class MainViewModel(
         // markAsUsed itself: that writes the Bidirectional QuickWizard pref, which a paired client would push back over
         // the signed round-trip and collide with this commit → "Update settings … Another action is already in progress".
         val tagged = actions.map { if (it is BatchAction.Bolus) it.copy(quickWizardGuid = entry.guid()) else it }
+        // Counted from before the prepare, so on a client the confirmation closes before the master's SMB pause ends.
+        val closeAt = TimeSource.Monotonic.markNow() + SmbPause.MAX_DURATION
         when (val prepared = batchExecutor.prepare(tagged, Sources.QuickWizard, label)) {
             is ActionProgress.Prepared ->
                 rxBus.send(
@@ -541,7 +551,9 @@ class MainViewModel(
                         title = entry.buttonText(), message = "", confirmationLines = prepared.lines, icon = icon,
                         onOk = {
                             appScope.launch { batchExecutor.commit(prepared.id, Sources.QuickWizard, label) }
-                        }
+                        },
+                        onCancel = { batchExecutor.discard(prepared.id) },
+                        closeAt = closeAt
                     )
                 )
             // A master-local failure (no modal) or a client offline pre-check surfaces here; a client round-trip failure already showed on the app modal.

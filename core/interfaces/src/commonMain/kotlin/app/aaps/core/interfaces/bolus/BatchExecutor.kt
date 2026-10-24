@@ -29,4 +29,10 @@ interface BatchExecutor {
      * instead of giving up early. Leave false for a bolus/carbs commit (fast queue-ack + progress mirror).
      */
     suspend fun commit(id: Long, source: Sources, label: String, pumpDirect: Boolean = false): ActionProgress
+
+    /**
+     * The user cancelled the confirmation of [id]. On a master the parked bundle is dropped and the loop can give
+     * SMBs again at once; a client sends nothing, and the master's SMB pause runs out by itself.
+     */
+    fun discard(id: Long)
 }

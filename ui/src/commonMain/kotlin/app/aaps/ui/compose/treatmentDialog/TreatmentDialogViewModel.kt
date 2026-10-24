@@ -17,6 +17,8 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
@@ -38,9 +40,13 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.concurrent.Volatile
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -62,7 +68,8 @@ class TreatmentDialogViewModel(
     private val rxBus: RxBus,
     // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
     // binds the same instance under both names.
-    private val appScope: CoroutineScope
+    private val appScope: CoroutineScope,
+    commandQueue: CommandQueue
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TreatmentDialogUiState())
@@ -72,8 +79,11 @@ class TreatmentDialogViewModel(
         data class ShowDeliveryError(val comment: String) : SideEffect()
         data object ShowNoActionDialog : SideEffect()
 
-        /** The MASTER prepared the treatment and returned its merged confirmation [lines]; show them, then [commit] [bolusId]. */
-        data class ShowConfirmation(val bolusId: Long, val lines: List<ConfirmationLine>) : SideEffect()
+        /**
+         * The MASTER prepared the treatment and returned its merged confirmation [lines]; show them, then [commit]
+         * [bolusId], or [discard] it on Cancel. Close it at [closeAt]: the master's SMB pause for the dose has run out by then.
+         */
+        data class ShowConfirmation(val bolusId: Long, val lines: List<ConfirmationLine>, val closeAt: TimeMark) : SideEffect()
     }
 
     private val _sideEffect = MutableSharedFlow<SideEffect>(
@@ -115,6 +125,9 @@ class TreatmentDialogViewModel(
             val forcedRecordOnly = if (isAapsClient) false else (cantDeliverBolus || !pumpInitialized)
             _uiState.update { it.copy(forcedRecordOnly = forcedRecordOnly) }
         }
+        commandQueue.smbBeingDelivered
+            .onEach { delivering -> _uiState.update { it.copy(smbBeingDelivered = delivering) } }
+            .launchIn(viewModelScope)
     }
 
     fun updateInsulin(value: Double) {
@@ -133,6 +146,8 @@ class TreatmentDialogViewModel(
      * own numbers) and [commit] delivers. A forced record-only (master can't deliver) records insulin + carbs as given.
      */
     fun prepareAndConfirm() {
+        // Counted from before the prepare, so on a client the confirmation closes before the master's pause ends.
+        val closeAt = TimeSource.Monotonic.markNow() + SmbPause.MAX_DURATION
         appScope.launch {
             val state = uiState.value
             confirmedState = state
@@ -142,7 +157,7 @@ class TreatmentDialogViewModel(
                 return@launch
             }
             when (val prepared = batchExecutor.prepare(actions, Sources.TreatmentDialog, rh.gs(InterfacesStrings.bolus))) {
-                is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
+                is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines, closeAt))
                 is ActionProgress.Rejected -> when {
                     // No-op after caps (e.g. the bolus was constraint-capped to 0): neutral message, NOT the bolus-error alarm.
                     prepared.reason == FailureReason.NoAction -> _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
@@ -157,6 +172,9 @@ class TreatmentDialogViewModel(
             }
         }
     }
+
+    /** The confirmation was cancelled or closed itself: drop the prepared treatment, so the loop can give SMBs again. */
+    fun discard(bolusId: Long) = batchExecutor.discard(bolusId)
 
     /** Confirm the master's prepared treatment: deliver/record the parked bundle exactly once. */
     fun commit(bolusId: Long) {

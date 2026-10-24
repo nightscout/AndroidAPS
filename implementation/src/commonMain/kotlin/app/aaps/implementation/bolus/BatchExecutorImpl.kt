@@ -36,4 +36,6 @@ class BatchExecutorImpl(
             // Decision-B bundle order (bolus + TT) lives in the executor's confirm().
             masterActionExecutor.confirm(id, source, onError)
         }
+
+    override fun discard(id: Long) = roleBranch.discard { masterActionExecutor.discard(id) }
 }

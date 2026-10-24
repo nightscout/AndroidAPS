@@ -79,6 +79,9 @@ interface MasterActionExecutor {
      * [caller] must be the one the entry was prepared for (null: the master itself); anyone else gets
      * [ConfirmResult.NoPending] and the entry stays for its owner. If the caller's role no longer allows what was
      * prepared, the entry is dropped and [ConfirmResult.NotAllowed] is returned.
+     *
+     * A dose the pump gives is good only while its [app.aaps.core.interfaces.queue.SmbPause] runs: after that an SMB
+     * may have been given that the dose does not include. A later confirm gets [ConfirmResult.NoPending].
      */
     suspend fun confirm(
         bolusId: Long,
@@ -89,6 +92,12 @@ interface MasterActionExecutor {
         caller: RemoteCaller? = null,
         onSuccess: () -> Unit = {}
     ): ConfirmResult
+
+    /**
+     * The user cancelled the confirmation of [bolusId], prepared on this phone. Drops the parked entry and ends its
+     * SMB pause, so the loop can give SMBs again at once.
+     */
+    fun discard(bolusId: Long)
 
     /**
      * Canonical wizard / quick-wizard bolus — a type-specific entry point taking exactly the wizard

@@ -81,8 +81,17 @@ data class WizardDialogUiState(
     val bgAgeMinutes: Int = 0,
 
     /** True when the entry must be recorded only (no pump delivery): pump unavailable or the mode forbids bolus. (A client delivers via the master, not record-only.) */
-    val forcedRecordOnly: Boolean = false
+    val forcedRecordOnly: Boolean = false,
+    /** An SMB is being delivered on this phone (always false on a client: its master decides). */
+    val smbBeingDelivered: Boolean = false
 )
+
+/**
+ * OK waits: the pump would give this bolus, and an SMB is being delivered right now (#5381). The master calculates
+ * the dose after the SMB has finished, with the SMB in IOB.
+ */
+val WizardDialogUiState.waitsForSmb: Boolean
+    get() = smbBeingDelivered && totalInsulin > 0.0 && !forcedRecordOnly
 
 val WizardDialogUiState.isMgdl: Boolean
     get() = units == GlucoseUnit.MGDL

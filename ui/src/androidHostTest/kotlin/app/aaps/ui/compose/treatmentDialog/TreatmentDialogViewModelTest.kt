@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpWithConcentration
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -20,6 +21,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -51,7 +53,9 @@ internal class TreatmentDialogViewModelTest {
     @Mock private lateinit var loop: Loop
     @Mock private lateinit var batchExecutor: BatchExecutor
     @Mock private lateinit var rxBus: RxBus
+    @Mock private lateinit var commandQueue: CommandQueue
 
+    private val smbBeingDelivered = MutableStateFlow(false)
     private val pump: PumpWithConcentration = mock()
     private val pumpDescription: PumpDescription = mock()
     private val maxBolus: Constraint<Double> = mock()
@@ -73,12 +77,13 @@ internal class TreatmentDialogViewModelTest {
         whenever(maxCarbs.value()).thenReturn(100)
         whenever(constraintChecker.getMaxCarbsAllowed()).thenReturn(maxCarbs)
         runBlocking { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
+        whenever(commandQueue.smbBeingDelivered).thenReturn(smbBeingDelivered)
         sut = createSut()
     }
 
     private fun createSut() = TreatmentDialogViewModel(
         constraintChecker, activePlugin, ch, config, decimalFormatter, rh,
-        profileFunction, hardLimits, loop, batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher())
+        profileFunction, hardLimits, loop, batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher()), commandQueue
     )
 
     @AfterEach
@@ -123,5 +128,36 @@ internal class TreatmentDialogViewModelTest {
         sut.updateInsulin(1.33)
 
         assertThat(preparedInsulin()).isWithin(1e-9).of(1.3)
+    }
+
+    // #5381: the queue would refuse the bolus after the dialog has closed, so OK waits here, with the input kept.
+    @Test
+    fun `OK waits for an SMB only when the pump gives insulin`() {
+        whenever(pump.isInitialized()).thenReturn(true)
+        sut = createSut()
+        smbBeingDelivered.value = true
+        mainDispatcher.scheduler.advanceUntilIdle()
+
+        sut.updateCarbs(30)
+        assertThat(sut.uiState.value.waitsForSmb).isFalse()
+        sut.updateInsulin(2.0)
+        assertThat(sut.uiState.value.waitsForSmb).isTrue()
+
+        smbBeingDelivered.value = false
+        mainDispatcher.scheduler.advanceUntilIdle()
+        assertThat(sut.uiState.value.waitsForSmb).isFalse()
+        assertThat(sut.uiState.value.insulin).isEqualTo(2.0)
+    }
+
+    @Test
+    fun `a dose only recorded does not wait for an SMB`() {
+        val recorded = TreatmentDialogUiState(insulin = 2.0, forcedRecordOnly = true, smbBeingDelivered = true)
+        assertThat(recorded.waitsForSmb).isFalse()
+    }
+
+    @Test
+    fun `cancel drops the prepared treatment`() {
+        sut.discard(9L)
+        verify(batchExecutor).discard(9L)
     }
 }

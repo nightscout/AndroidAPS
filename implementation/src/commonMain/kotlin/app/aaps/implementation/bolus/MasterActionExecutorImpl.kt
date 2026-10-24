@@ -42,7 +42,9 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -58,6 +60,7 @@ import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.formatMinutesAsDuration
+import app.aaps.implementation.ImplementationStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -100,7 +103,8 @@ class MasterActionExecutorImpl(
     // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
     // commonMain. AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
     private val appScope: CoroutineScope,
-    private val masterRecordWriter: MasterRecordWriter
+    private val masterRecordWriter: MasterRecordWriter,
+    private val smbPause: SmbPause
 ) : MasterActionExecutor {
 
     /**
@@ -154,7 +158,9 @@ class MasterActionExecutorImpl(
         // Who it was prepared for (null: the master itself) and the lowest role its content needs. Only that caller
         // may commit it, and only while its role still allows it (see RemoteCaller).
         val caller: RemoteCaller? = null,
-        val requiredRole: ClientRole = ClientRole.MealAssistant
+        val requiredRole: ClientRole = ClientRole.MealAssistant,
+        // The SmbPause of a dose the pump gives; null when nothing goes to the pump. See pauseSmb.
+        val smbPause: Long? = null
     )
 
     // Consume-once slots keyed by bolusId — a map, NOT a single var, so prepares from different actors (the
@@ -234,6 +240,30 @@ class MasterActionExecutorImpl(
         evictStalePending()
     }
 
+    override fun discard(bolusId: Long) {
+        pending.takeFor(bolusId, owner = null)?.smbPause?.let { smbPause.end(it) }
+    }
+
+    /**
+     * Starts an [SmbPause] for a dose the pump will give, and drops an SMB that waits in the queue: that SMB was
+     * calculated without this bolus. A wizard calls this before it calculates, so the dose sees every SMB given so far.
+     *
+     * Returns null, with no pause, when an SMB is being delivered right now. It cannot be stopped and it is not in IOB
+     * yet, so the caller refuses, and the user tries again when it has finished. Refused here, while the dialog with
+     * the user's input is still open, and not later in the queue, after the dialog has closed (#5381).
+     */
+    private fun pauseSmb(): Long? {
+        val pause = smbPause.begin()
+        commandQueue.dropWaitingSmb()
+        if (commandQueue.isRunning(Command.CommandType.SMB_BOLUS)) {
+            smbPause.end(pause)
+            return null
+        }
+        return pause
+    }
+
+    private fun smbBeingDelivered() = MasterActionExecutor.PrepareResult.Error(rh.gs(ImplementationStrings.smb_being_delivered))
+
     override suspend fun prepareQuickWizard(guid: String, caller: RemoteCaller?): MasterActionExecutor.PrepareResult {
         // Reject before plugins are wired up: a remote prepare (client-control) can land while the master is still
         // initializing — before ConfigBuilder.initialize() ran verifySelectionInCategories(). At that point activeAPS
@@ -253,29 +283,38 @@ class MasterActionExecutorImpl(
         val pump = activePlugin.activePump
         if (!pump.isInitialized()) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_pump_not_available))
 
+        val pause = pauseSmb() ?: return smbBeingDelivered()
+        fun refused(message: String): MasterActionExecutor.PrepareResult {
+            smbPause.end(pause)
+            return MasterActionExecutor.PrepareResult.Error(message)
+        }
         val wizard = entry.doCalc(profile, profileName, actualBg)
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
-        if (carbsAfterConstraints != entry.carbs()) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
+        if (carbsAfterConstraints != entry.carbs()) return refused(rh.gs(CoreUiStrings.wizard_carbs_constraint))
         // The eCarbs amount is STORED in the preset, so the carbs limit may have been lowered after it was entered
         // (also: a settings import, or a preset synced from a device with a higher limit). Re-check it exactly like
         // the immediate carbs above — a preset that no longer fits the limit is refused, never silently trimmed.
         val eCarbsGrams = entry.eCarbsGrams()
         if (constraintChecker.applyCarbsConstraints(ConstraintObject(eCarbsGrams, aapsLogger)).value() != eCarbsGrams)
-            return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
+            return refused(rh.gs(CoreUiStrings.wizard_carbs_constraint))
         val insulinAfterConstraints = wizard.insulinAfterConstraints
         if (Round.isMoreThanRounding(wizard.calculatedTotalInsulin, insulinAfterConstraints, pump.bolusStepSize(insulinAfterConstraints)))
-            return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
+            return refused(rh.gs(CoreUiStrings.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
         // A correction-only QuickWizard (0 carbs) that nets to nothing → reject rather than show an empty confirm.
         if (wizard.calculatedTotalInsulin <= 0.0 && wizard.carbs <= 0)
-            return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_insulin_required))
+            return refused(rh.gs(CoreUiStrings.wizard_no_insulin_required))
+        // Carbs only: nothing goes to the pump, so nothing to hold back.
+        val givesInsulin = wizard.calculatedTotalInsulin > 0.0
+        if (!givesInsulin) smbPause.end(pause)
 
         evictStalePending()
         pending.park(
             wizard.timeStamp,
             PendingBolus(
                 wizard.unclampedCalculatedInsulin, wizard.carbs, wizard.createBolusCalculatorResult(), wizard.timeStamp, entry,
-                carbTimeMinutes = entry.carbTime(), notes = entry.buttonText(), caller = caller, requiredRole = ClientRole.MealAssistant
+                carbTimeMinutes = entry.carbTime(), notes = entry.buttonText(), caller = caller, requiredRole = ClientRole.MealAssistant,
+                smbPause = pause.takeIf { givesInsulin }
             )
         )
         // Build the master's color-coded confirmation lines here so the client renders the master's EXACT
@@ -328,6 +367,11 @@ class MasterActionExecutorImpl(
         val cob = if (inputs.useCob) iobCobCalculator.getCobInfo("WizardPrepare").displayCob ?: 0.0 else 0.0
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(inputs.carbs, aapsLogger)).value()
         if (carbsAfterConstraints != inputs.carbs) return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
+        val pause = pauseSmb() ?: return smbBeingDelivered()
+        fun refused(message: String): MasterActionExecutor.PrepareResult {
+            smbPause.end(pause)
+            return MasterActionExecutor.PrepareResult.Error(message)
+        }
         val wizard = bolusWizardProvider().doCalc(
             profile, profileName, tempTarget, carbsAfterConstraints, cob, inputs.bg, inputs.directCorrection, inputs.percentage,
             inputs.useBg, inputs.useCob, inputs.useIob, inputs.useIob, false, inputs.useTt, inputs.useTrend, inputs.alarm, inputs.notes, inputs.carbTime
@@ -343,10 +387,13 @@ class MasterActionExecutorImpl(
         // "no insulin required" instead of an empty confirmation. The guard lives here so every surface that recomputes
         // through this path — phone wizard dialog, client relay, watch — gets it (it was previously only in the wear handler).
         if (wizard.calculatedTotalInsulin <= 0.0 && wizard.carbs <= 0)
-            return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_no_insulin_required))
+            return refused(rh.gs(CoreUiStrings.wizard_no_insulin_required))
         // A limit that leaves no insulin at all, and there are no carbs either: nothing would be given.
         if (capped && insulinAfterConstraints <= 0.0 && wizard.carbs <= 0)
-            return MasterActionExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
+            return refused(rh.gs(CoreUiStrings.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
+        // Carbs only: nothing goes to the pump, so nothing to hold back.
+        val givesInsulin = baseInsulin > 0.0
+        if (!givesInsulin) smbPause.end(pause)
         evictStalePending()
         pending.park(wizard.timeStamp,
             PendingBolus(
@@ -362,7 +409,8 @@ class MasterActionExecutorImpl(
                 eCarbsDelayMinutes = inputs.eCarbsDelayMinutes,
                 eCarbsDurationHours = inputs.eCarbsDurationHours,
                 caller = caller,
-                requiredRole = ClientRole.MealAssistant
+                requiredRole = ClientRole.MealAssistant,
+                smbPause = pause.takeIf { givesInsulin }
             )
         )
         val advisorApplies = wizard.needsBolusAdvisor()
@@ -545,6 +593,9 @@ class MasterActionExecutorImpl(
         // Nothing to do after caps/clamps (e.g. negative carbs with no COB to remove): a no-op, NOT a delivery
         // error — the caller renders the neutral "no action selected" message, never the bolus-error title.
             return MasterActionExecutor.PrepareResult.NoAction
+        // Only a dose the pump gives waits for SMBs. The amounts are fixed, not calculated, so the pause can start
+        // here, after every check: a temp target or a record-only entry is never held up by an SMB.
+        val pause = if (!recordOnly && insulin > 0.0) pauseSmb() ?: return smbBeingDelivered() else null
         evictStalePending()
         val bolusId = nextPendingId()
         pending.park(
@@ -558,7 +609,7 @@ class MasterActionExecutorImpl(
                 tempBasal = cappedTb, extendedBolus = cappedEb, cancelTempBasal = ctb != null, cancelExtendedBolus = ceb != null,
                 insulinActivate = ia, therapyEvents = tes, therapyEventEdits = teEdits,
                 removals = removals, removeStartEvents = rse != null, calibration = cal,
-                caller = caller, requiredRole = actions.requiredRole
+                caller = caller, requiredRole = actions.requiredRole, smbPause = pause
             )
         )
         // The master is the SOLE author of the confirmation: build the MERGED lines for the whole batch here, so the
@@ -595,7 +646,19 @@ class MasterActionExecutorImpl(
         // another caller, removes nothing, leaving other actors' parked doses intact.
         val p = pending.takeFor(bolusId, caller?.clientId) ?: return MasterActionExecutor.ConfirmResult.NoPending
         // The role is checked again now: it may have been lowered on the master since the prepare.
-        if (caller != null && !caller.role.allows(p.requiredRole)) return MasterActionExecutor.ConfirmResult.NotAllowed
+        if (caller != null && !caller.role.allows(p.requiredRole)) {
+            p.smbPause?.let { smbPause.end(it) }
+            return MasterActionExecutor.ConfirmResult.NotAllowed
+        }
+        // After its pause the loop may have given an SMB that this dose does not include. The confirmation closes
+        // itself when the pause runs out, so this is a late commit, mostly from a client: the user taps again.
+        p.smbPause?.let { pause ->
+            if (!smbPause.isActive(pause)) {
+                aapsLogger.debug(LTag.PUMPQUEUE, "Bolus $bolusId not given: its SMB pause ran out")
+                return MasterActionExecutor.ConfirmResult.NoPending
+            }
+            smbPause.handOver(pause)
+        }
 
         val notes = p.notes
 

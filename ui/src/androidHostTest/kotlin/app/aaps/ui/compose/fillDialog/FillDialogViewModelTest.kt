@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpWithConcentration
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
@@ -72,6 +73,7 @@ internal class FillDialogViewModelTest {
     @Mock private lateinit var masterActionExecutor: MasterActionExecutor
     @Mock private lateinit var batchExecutor: BatchExecutor
     @Mock private lateinit var rxBus: RxBus
+    @Mock private lateinit var commandQueue: CommandQueue
 
     private val pump: PumpWithConcentration = mock()
     private val pumpDescription: PumpDescription = mock()
@@ -102,13 +104,14 @@ internal class FillDialogViewModelTest {
         // observeConcentrationEnabled() builds a flow from preferences.observe(key) in init (collection deferred).
         whenever(preferences.observe(BooleanKey.GeneralInsulinConcentration)).thenReturn(MutableStateFlow(false))
         whenever(dateUtil.now()).thenReturn(NOW)
+        whenever(commandQueue.smbBeingDelivered).thenReturn(MutableStateFlow(false))
         sut = buildSut()
     }
 
     private fun buildSut() = FillDialogViewModel(
         SavedStateHandle(), constraintChecker, activePlugin, persistenceLayer, preferences, config,
         decimalFormatter, rh, dateUtil, translator, aapsLogger, ch, insulinManager, profileFunction,
-        masterActionExecutor, batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher())
+        masterActionExecutor, batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher()), commandQueue
     )
 
     @AfterEach
