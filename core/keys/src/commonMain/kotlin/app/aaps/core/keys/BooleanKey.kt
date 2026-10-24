@@ -217,6 +217,8 @@ enum class BooleanKey(
 
     SmsAllowRemoteCommands("smscommunicator_remotecommandsallowed", false, KeysStrings.pref_title_sms_allow_remote_commands),
     SmsReportPumpUnreachable("smscommunicator_report_pump_unreachable", true, KeysStrings.pref_title_sms_report_pump_unreachable, KeysStrings.pref_summary_sms_report_pump_unreachable),
+    NfcAllowRemoteCommands("nfccommunicator_remotecommandsallowed", false, KeysStrings.pref_title_nfc_allow_remote_commands),
+    NfcForegroundPriority("nfccommunicator_foreground_priority", false, KeysStrings.pref_title_nfc_foreground_priority),
 
     VirtualPumpStatusUpload("virtualpump_uploadstatus", false, KeysStrings.pref_title_virtual_pump_status_upload, showInNsClientMode = false),
     // Hardened mode forces the upload and accept settings to their defaults (upload on, accept off) and hides them,
