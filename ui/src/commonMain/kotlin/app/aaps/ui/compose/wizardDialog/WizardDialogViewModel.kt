@@ -29,6 +29,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -128,12 +129,30 @@ class WizardDialogViewModel(
      */
     private var appliedPercentagePreference: Int? = null
 
+    // The time of the reading in the BG field, so a recalculation that brings no new reading changes nothing.
+    private var followedReading: Long? = null
+
     init {
         viewModelScope.launch {
             initialize()
-            // After initialize(), which builds a new state and would drop the flag again.
+            // Both after initialize(), which builds a new state and would drop what they set.
+            // Not EventBucketedDataCreated: it comes while the calculation still works on its own copy of the data,
+            // and iobCobCalculator.ads gives the reading before. The finished copy is published before this one.
+            launch { rxBus.toFlow(EventAutosensCalculationFinished::class).collect { followNewReading() } }
             commandQueue.smbBeingDelivered.collect { delivering -> _uiState.update { it.copy(smbBeingDelivered = delivering) } }
         }
+    }
+
+    /** A calculation has finished; take its reading if it is new. See [withNewReading]. */
+    private fun followNewReading() {
+        val state = uiState.value
+        if (!state.initialized || state.bgEdited) return
+        val reading = iobCobCalculator.ads.actualBg() ?: return
+        if (reading.timestamp == followedReading) return
+        followedReading = reading.timestamp
+        val ageMinutes = ((dateUtil.now() - reading.timestamp) / 60000).toInt()
+        _uiState.update { it.withNewReading(reading.valueToUnits(it.units), ageMinutes) }
+        recalculate()
     }
 
     /**
@@ -180,6 +199,7 @@ class WizardDialogViewModel(
 
         // Current BG
         val actualBg = iobCobCalculator.ads.actualBg()
+        followedReading = actualBg?.timestamp
         val hasBgData = actualBg != null
         val currentBg = actualBg?.valueToUnits(units) ?: 0.0
         val bgAgeMinutes = if (actualBg != null) ((dateUtil.now() - actualBg.timestamp) / 60000).toInt() else 0
@@ -244,7 +264,8 @@ class WizardDialogViewModel(
         val state = uiState.value
         val range = if (state.isMgdl) 0.0..500.0 else 0.0..30.0
         val clamped = value.coerceIn(range)
-        _uiState.update { it.copy(bg = clamped) }
+        // A change only: focusing the field and leaving it is not an edit, and the field keeps following readings.
+        _uiState.update { it.copy(bg = clamped, bgEdited = it.bgEdited || clamped != it.bg) }
         recalculate()
     }
 

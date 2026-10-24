@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanKey
@@ -32,6 +33,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -88,6 +90,7 @@ internal class WizardDialogViewModelTest {
         // before any test body. With no profile store it returns straight away, which is all these tests need.
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(null))
         whenever(commandQueue.smbBeingDelivered).thenReturn(smbBeingDelivered)
+        whenever(rxBus.toFlow(EventAutosensCalculationFinished::class)).thenReturn(MutableSharedFlow())
         Dispatchers.setMain(mainDispatcher)
         sut = WizardDialogViewModel(
             SavedStateHandle(), bolusWizardProvider, constraintChecker, profileFunction, profileUtil,
@@ -95,6 +98,30 @@ internal class WizardDialogViewModelTest {
             rh, dateUtil, decimalFormatter, aapsLogger, runningModeGuard, automation, wizardExecutor, rxBus,
             CoroutineScope(UnconfinedTestDispatcher()), commandQueue
         )
+    }
+
+    // The BG field is sent to the master with the other inputs. Filled once when the wizard opened, it dosed on a BG
+    // from minutes ago when the user came back to the wizard later.
+    @Test
+    fun `the BG field follows new readings until the user edits it`() {
+        val opened = WizardDialogUiState(bg = 6.1, bgAgeMinutes = 4, hasBgData = true)
+
+        val followed = opened.withNewReading(bg = 7.3, ageMinutes = 0)
+        assertThat(followed.bg).isEqualTo(7.3)
+        assertThat(followed.bgAgeMinutes).isEqualTo(0)
+
+        val edited = opened.copy(bg = 5.0, bgEdited = true)
+        assertThat(edited.withNewReading(bg = 7.3, ageMinutes = 0)).isEqualTo(edited)
+    }
+
+    @Test
+    fun `only a changed BG counts as edited`() {
+        val shown = sut.uiState.value.bg
+        sut.updateBg(shown)
+        assertThat(sut.uiState.value.bgEdited).isFalse()
+
+        sut.updateBg(shown + 1.0)
+        assertThat(sut.uiState.value.bgEdited).isTrue()
     }
 
     // #5381: the master calculates the dose only after the SMB has finished, with the SMB in IOB.
