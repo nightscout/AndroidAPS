@@ -37,7 +37,7 @@ data class CommandReceiveSuccess(val result: Response) : CommandReceiveResult()
 
 /**
  * The command failed, but [result] is non-null when the pod still sent a well-formed reply
- * saying so - a NAK, or an alarm-status response reporting a fault.
+ * saying so - a NAK, or an Omnipod 5 alarm-status response reporting a fault.
  *
  * Carrying it matters: a fault arrives *as* a failed command, so discarding the response
  * discards the only notice that the pod has faulted. Callers should still report the command
@@ -121,7 +121,8 @@ class Session(
         if (sendResult !is MessageSendSuccess) {
             return CommandAckError(response, "Could not ACK the response: $sendResult")
         }
-        if (response is NakResponse || response is AlarmStatusResponse) {
+        // Dash needs a received response and normal completion to update state and show its alarm.
+        if (response is NakResponse || (response is AlarmStatusResponse && commandSigner != null)) {
             return CommandReceiveError("Pod rejected command or reported a fault: $response", response)
         }
         return CommandReceiveSuccess(response)
