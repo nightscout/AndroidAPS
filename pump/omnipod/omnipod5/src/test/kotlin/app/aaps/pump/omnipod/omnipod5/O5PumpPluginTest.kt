@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.pump.omnipod.omnipod5.bledriver.comm.O5BleManager
 import app.aaps.pump.omnipod.common.bledriver.event.PodEvent
+import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.MessageIOException
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlarmType
@@ -76,6 +77,7 @@ import org.mockito.kotlin.timeout
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.util.EnumSet
 
 /**
  * Covers the safety-relevant gating logic and simple property surface of [O5PumpPlugin] -
@@ -113,6 +115,9 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(R.string.omnipod_5_error_no_active_profile)).thenReturn("No active profile")
         whenever(rh.gs(R.string.omnipod_5_error_no_active_alerts)).thenReturn("No active alerts")
         whenever(rh.gs(R.string.omnipod_5_error_unresolved_dose_pending)).thenReturn("Earlier dose unconfirmed")
+        whenever(rh.gs(R.string.omnipod_5_error_cancel_temp_basal_result_is_uncertain)).thenReturn("Temp basal cancellation is uncertain")
+        whenever(rh.gs(R.string.omnipod_5_error_bolus_delivery_status_uncertain)).thenReturn("Bolus delivery is uncertain")
+        whenever(rh.gs(R.string.omnipod_5_error_setting_basal_profile_might_have_failed)).thenReturn("Basal profile update is uncertain")
         whenever(rh.gs(R.string.omnipod_common_pod_status_pod_fault_description)).thenReturn("Pod Fault: %1\$03d %2\$s")
         whenever(rh.gs(R.string.omnipod_common_pdm_ref)).thenReturn("Ref: %1\$s")
         whenever(history.createRecord(any(), any(), any(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(Single.just(1L))
@@ -775,6 +780,137 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         order.verify(pumpSync).insertAnnouncement(eq(fault), any<Long>(), eq(PumpType.OMNIPOD_5), eq("9999"))
         order.verify(podStateManager).alarmSynced = true
         verify(pumpSync, times(1)).insertAnnouncement(any(), anyOrNull(), any(), any())
+    }
+
+    @Test
+    fun `a rejected temp basal cancel returns the fault and reference without throwing`() = runBlocking {
+        val description = stubExpiredPodResponse()
+        whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.TEMP_BASAL_ACTIVE)
+
+        val result = plugin.cancelTempBasal(false)
+
+        assertThat(result.success).isFalse()
+        assertThat(result.enacted).isFalse()
+        assertThat(result.comment).isEqualTo(description)
+        verify(pumpSync).insertAnnouncement(eq(description), any<Long>(), eq(PumpType.OMNIPOD_5), eq("9999"))
+        verify(podStateManager).alarmSynced = true
+        verify(notificationManager).post(
+            eq(NotificationId.OMNIPOD_POD_FAULT), eq(description), level = any(), validMinutes = any(),
+            sound = eq(AlarmSound.BOLUS_ERROR), actions = any(), validityCheck = anyOrNull()
+        )
+    }
+
+    @Test
+    fun `a rejected temp basal start returns and saves the fault details`() = runBlocking {
+        val description = stubExpiredPodResponse()
+
+        val result = plugin.setTempBasalAbsolute(0.2, 30, false, PumpSync.TemporaryBasalType.NORMAL)
+
+        assertThat(result.success).isFalse()
+        assertThat(result.enacted).isFalse()
+        assertThat(result.comment).isEqualTo(description)
+        verify(pumpSync).insertAnnouncement(eq(description), any<Long>(), eq(PumpType.OMNIPOD_5), eq("9999"))
+    }
+
+    @Test
+    fun `a failed status poll still saves the returned alarm and records zero delivery`() = runBlocking {
+        val description = stubExpiredPodResponse()
+        whenever(podStateManager.ltk).thenReturn(ByteArray(16))
+        whenever(bleManager.connect()).thenReturn(Observable.empty())
+
+        plugin.getPumpStatus("Fault")
+        plugin.getPumpStatus("Fault")
+
+        verify(pumpSync, times(1)).insertAnnouncement(eq(description), any<Long>(), eq(PumpType.OMNIPOD_5), eq("9999"))
+        verify(podStateManager, times(1)).alarmSynced = true
+        verify(pumpSync, times(2)).syncTemporaryBasalWithPumpId(
+            any(), argThat { cU == 0.0 }, any(), eq(true), eq(PumpSync.TemporaryBasalType.PUMP_SUSPEND),
+            any(), eq(PumpType.OMNIPOD_5), eq("9999")
+        )
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["deactivate", "suspend", "silence", "beep"])
+    fun `a rejected custom command returns and saves the fault details`(command: String) = runBlocking {
+        val description = stubExpiredPodResponse()
+        whenever(podStateManager.activeAlerts).thenReturn(EnumSet.of(AlertType.LOW_RESERVOIR))
+        val customCommand = when (command) {
+            "deactivate" -> CommandDeactivatePod()
+            "suspend"    -> CommandSuspendDelivery()
+            "silence"    -> CommandSilenceAlerts()
+            "beep"       -> CommandPlayTestBeep()
+            else         -> error("Unknown test command: $command")
+        }
+
+        val result = plugin.executeCustomCommand(customCommand)
+
+        assertThat(result.success).isFalse()
+        assertThat(result.enacted).isFalse()
+        assertThat(result.comment).isEqualTo(description)
+        verify(pumpSync).insertAnnouncement(eq(description), any<Long>(), eq(PumpType.OMNIPOD_5), eq("9999"))
+        verify(podStateManager, never()).reset()
+        verify(bleManager, never()).removeBond()
+    }
+
+    @Test
+    fun `a failed fault write does not escape the command error handler or lose its description`() = runBlocking {
+        val description = stubExpiredPodResponse()
+        whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.TEMP_BASAL_ACTIVE)
+        whenever(pumpSync.insertAnnouncement(any(), anyOrNull(), any(), any()))
+            .thenThrow(IllegalStateException("Database unavailable"))
+            .thenAnswer { Unit }
+
+        val first = plugin.cancelTempBasal(false)
+
+        assertThat(first.success).isFalse()
+        assertThat(first.comment).isEqualTo(description)
+        verify(podStateManager, never()).alarmSynced = true
+
+        val retry = plugin.cancelTempBasal(false)
+
+        assertThat(retry.success).isFalse()
+        assertThat(retry.comment).isEqualTo(description)
+        verify(pumpSync, times(2)).insertAnnouncement(eq(description), any<Long>(), eq(PumpType.OMNIPOD_5), eq("9999"))
+        verify(podStateManager).alarmSynced = true
+    }
+
+    @Test
+    fun `a connection error without a pod fault returns a nonempty cancellation message`() = runBlocking {
+        whenever(podStateManager.podId).thenReturn(9999L)
+        whenever(podStateManager.deliveryStatus).thenReturn(DeliveryStatus.TEMP_BASAL_ACTIVE)
+        whenever(bleManager.sendCommand(any(), any())).thenReturn(Observable.error(MessageIOException("No response")))
+
+        val result = plugin.cancelTempBasal(false)
+
+        assertThat(result.success).isFalse()
+        assertThat(result.enacted).isFalse()
+        assertThat(result.comment).isEqualTo("Temp basal cancellation is uncertain")
+        verify(pumpSync, never()).insertAnnouncement(any(), anyOrNull(), any(), any())
+        verify(podStateManager, never()).alarmSynced = true
+    }
+
+    private suspend fun stubExpiredPodResponse(): String {
+        val alarm = AlarmType.ALARM_PUMP_EXPIRED
+        val fault = "Pod Fault: 028 $alarm"
+        val ref = "16-00000-00000-028"
+        whenever(podStateManager.podId).thenReturn(9999L)
+        whenever(pumpSync.expectedPumpState()).thenReturn(pumpState())
+        whenever(rh.gs(R.string.omnipod_common_pod_status_pod_fault_description, alarm.code, alarm.toString())).thenReturn(fault)
+        whenever(rh.gs(R.string.omnipod_common_pdm_ref, ref)).thenReturn("Ref: $ref")
+        var alarmSynced = false
+        whenever(podStateManager.alarmSynced).thenAnswer { alarmSynced }
+        doAnswer {
+            alarmSynced = it.getArgument(0)
+            null
+        }.whenever(podStateManager).alarmSynced = any()
+        whenever(bleManager.sendCommand(any(), any())).thenAnswer {
+            whenever(podStateManager.alarmType).thenReturn(alarm)
+            whenever(podStateManager.pdmRef).thenReturn(ref)
+            whenever(podStateManager.podStatus).thenReturn(PodStatus.ALARM)
+            whenever(podStateManager.isPodKaput).thenReturn(true)
+            Observable.error<PodEvent>(MessageIOException("Pod reported a fault"))
+        }
+        return "$fault\nRef: $ref"
     }
 
     @Test
