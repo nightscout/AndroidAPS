@@ -768,7 +768,7 @@ fun BgGraphCompose(
                     style = TextStyle(color = MaterialTheme.colorScheme.onSurface),
                     minWidth = TextComponent.MinWidth.fixed(30.dp)
                 ),
-                guideline = LineComponent(fill = Fill(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)))
+                guideline = LineComponent(fill = Fill(AapsTheme.generalColors.graphGrid))
             ),
             bottomAxis = HorizontalAxis.rememberBottom(
                 valueFormatter = timeFormatter,
@@ -776,7 +776,7 @@ fun BgGraphCompose(
                 label = rememberTextComponent(
                     style = TextStyle(color = MaterialTheme.colorScheme.onSurface)
                 ),
-                guideline = LineComponent(fill = Fill(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)))
+                guideline = LineComponent(fill = Fill(AapsTheme.generalColors.graphGrid))
             ),
             decorations = decorations,
             getXStep = { _, _, _ -> 1.0 },
