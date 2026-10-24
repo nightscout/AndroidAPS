@@ -105,6 +105,26 @@ class BasalProgramTest {
         assertThat(a).isNotEqualTo(different)
     }
 
+    /**
+     * Pins the actual JSON key this class reads/writes, not just that some key round-trips:
+     * Gson serializes by field name (or `@SerializedName`) and this class's backing field has
+     * already been renamed once without keeping the annotation in sync, which silently
+     * dropped a saved basal program for any user who upgraded across that change (the renamed
+     * field never matched their on-disk "segments" key, so it quietly came back empty).
+     */
+    @Test
+    fun `segments round-trips through Gson under the "segments" JSON key, surviving a field rename`() {
+        val program = BasalProgram(listOf(BasalProgram.Segment(0, 48, 100)))
+
+        val json = Gson().toJson(program)
+        val restoredFromOwnJson = Gson().fromJson(json, BasalProgram::class.java)
+        val restoredFromOldFormat = Gson().fromJson("""{"segments":[{"startSlotIndex":0,"endSlotIndex":48,"basalRateInHundredthUnitsPerHour":100}]}""", BasalProgram::class.java)
+
+        assertThat(json).contains("\"segments\"")
+        assertThat(restoredFromOwnJson.segments).isEqualTo(program.segments)
+        assertThat(restoredFromOldFormat.segments).isEqualTo(program.segments)
+    }
+
     @Test
     fun `segments self-heals instead of crashing when Gson deserialization bypasses the constructor`() {
         val deserialized = Gson().fromJson("{}", BasalProgram::class.java)
