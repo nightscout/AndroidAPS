@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.nfcCommands
 
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -29,13 +29,13 @@ class NfcRuntimeState() {
      *
      * Keyed by the action's parameters, because one tag may carry more than one wizard command.
      */
-    private val wizardPreviews = mutableMapOf<String, WizardBolusExecutor.PrepareResult.Preview>()
+    private val wizardPreviews = mutableMapOf<String, MasterActionExecutor.PrepareResult.Preview>()
 
-    fun setWizardPreview(key: String, preview: WizardBolusExecutor.PrepareResult.Preview) {
+    fun setWizardPreview(key: String, preview: MasterActionExecutor.PrepareResult.Preview) {
         wizardPreviews[key] = preview
     }
 
-    fun getWizardPreview(key: String): WizardBolusExecutor.PrepareResult.Preview? = wizardPreviews[key]
+    fun getWizardPreview(key: String): MasterActionExecutor.PrepareResult.Preview? = wizardPreviews[key]
 
     /** Called before a chain starts and after it finishes, so nothing leaks between scans. */
     fun clearWizardPreviews() {

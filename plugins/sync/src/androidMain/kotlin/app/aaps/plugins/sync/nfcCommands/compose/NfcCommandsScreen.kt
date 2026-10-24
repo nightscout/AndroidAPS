@@ -335,7 +335,7 @@ private fun NfcTagsScreen(
             },
             dismissButton = {
                 TextButton(onClick = { deleteTarget = null }) {
-                    Text(stringResource(SyncStrings.cancel))
+                    Text(stringResource(CoreUiStrings.cancel))
                 }
             },
         )

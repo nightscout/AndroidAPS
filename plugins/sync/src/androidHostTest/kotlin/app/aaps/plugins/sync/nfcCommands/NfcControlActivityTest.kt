@@ -45,7 +45,7 @@ class NfcControlActivityTest : TestBaseWithProfile() {
             configBuilder = mock(),
             rxBus = mock(),
             uel = mock(),
-            wizardBolusExecutor = mock(),
+            masterActionExecutor = mock(),
             iobCobCalculator = iobCobCalculator,
             bolusProgressData = mock(),
             glucoseStatusProvider = mock(),
@@ -73,7 +73,7 @@ class NfcControlActivityTest : TestBaseWithProfile() {
                 sceneAutomationApi = mock(),
                 sceneIconResolver = mock(),
                 uel = mock(),
-                wizardBolusExecutor = mock()
+                masterActionExecutor = mock()
             ),
         )
         // The base class resolves the plugin name through the mocked rh when the plugin is enabled.

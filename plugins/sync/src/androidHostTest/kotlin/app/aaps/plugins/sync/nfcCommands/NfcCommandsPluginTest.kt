@@ -7,7 +7,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -38,6 +38,7 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.isNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -50,7 +51,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var mockProfileStore: ProfileStore
     @Mock lateinit var uel: UserEntryLogger
-    @Mock lateinit var wizardBolusExecutor: WizardBolusExecutor
+    @Mock lateinit var masterActionExecutor: MasterActionExecutor
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Mock lateinit var sceneAutomationApi: SceneAutomationApi
     @Mock lateinit var bolusProgressData: BolusProgressData
@@ -81,7 +82,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 configBuilder = configBuilder,
                 rxBus = rxBus,
                 uel = uel,
-                wizardBolusExecutor = wizardBolusExecutor,
+                masterActionExecutor = masterActionExecutor,
                 iobCobCalculator = iobCobCalculator,
                 bolusProgressData = bolusProgressData,
                 glucoseStatusProvider = glucoseStatusProvider,
@@ -109,7 +110,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                     sceneAutomationApi = sceneAutomationApi,
                     sceneIconResolver = sceneIconResolver,
                     uel = uel,
-                    wizardBolusExecutor = wizardBolusExecutor
+                    masterActionExecutor = masterActionExecutor
                 ),
             )
         // The base class resolves the plugin name through the mocked rh when the plugin is enabled.
@@ -571,18 +572,18 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand BOLUS_WIZARD should execute wizard bolus`() {
         val params = NfcParams(carbs = 20, percent = 100)
         
-        val prepared = WizardBolusExecutor.PrepareResult.Preview(insulin = 1.5, carbs = 20, bolusId = 123L)
+        val prepared = MasterActionExecutor.PrepareResult.Preview(insulin = 1.5, carbs = 20, bolusId = 123L)
         runtimeState.setWizardPreview(params.toString(), prepared)
         runTest { 
             whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
-            whenever(wizardBolusExecutor.confirm(eq(123L), any(), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
+            whenever(masterActionExecutor.confirm(eq(123L), any(), any(), any(), any(), isNull(), any())).thenReturn(MasterActionExecutor.ConfirmResult.Delivered)
         }
         whenever(rh.gs(refNamed(SyncStrings.smscommunicator_bolus_delivered))).thenReturn("Bolus delivered")
 
         val result = execute(NfcCommandCode.BOLUS_WIZARD, params)
 
         assertThat(result.success).isTrue()
-        runTest { verify(wizardBolusExecutor).confirm(eq(123L), eq(Sources.NfcCommands), any(), any(), any(), any()) }
+        runTest { verify(masterActionExecutor).confirm(eq(123L), eq(Sources.NfcCommands), any(), any(), any(), isNull(), any()) }
     }
 
     @Test
@@ -592,15 +593,15 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         action.params = params
 
         whenever(profileFunction.getOriginalProfileName()).thenReturn("Default")
-        val prepared = WizardBolusExecutor.PrepareResult.Preview(insulin = 1.5, carbs = 20, bolusId = 123L)
-        whenever(wizardBolusExecutor.prepareWizard(any())).thenReturn(prepared)
+        val prepared = MasterActionExecutor.PrepareResult.Preview(insulin = 1.5, carbs = 20, bolusId = 123L)
+        whenever(masterActionExecutor.prepareWizard(any(), isNull())).thenReturn(prepared)
         whenever(rh.gs(refNamed(CoreUiStrings.goingtodeliver))).thenReturn("Going to deliver 1.5U")
         whenever(rh.gs(refNamed(InterfacesStrings.format_carbs))).thenReturn("20g carbs")
 
         val result = action.formatParams("Test tag")
 
         assertThat(result).contains("Going to deliver")
-        verify(wizardBolusExecutor).prepareWizard(any())
+        verify(masterActionExecutor).prepareWizard(any(), isNull())
         assertThat(runtimeState.getWizardPreview(params.toString())).isEqualTo(prepared)
     }
 

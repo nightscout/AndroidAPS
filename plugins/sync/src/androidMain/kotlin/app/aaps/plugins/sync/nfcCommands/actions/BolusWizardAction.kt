@@ -4,7 +4,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -41,7 +41,7 @@ class BolusWizardAction(
     private val preferences: Preferences,
     private val profileUtil: ProfileUtil,
     private val runtimeState: NfcRuntimeState,
-    private val wizardBolusExecutor: WizardBolusExecutor
+    private val masterActionExecutor: MasterActionExecutor
 ) : NfcAction(aapsLogger, rh, uel) {
     override val label: TextRef = CoreUiStrings.boluswizard
     override val elementType = ElementType.BOLUS_WIZARD
@@ -73,17 +73,17 @@ class BolusWizardAction(
     override suspend fun formatParams(tagName: String): String? {
         val amount = (params.carbs ?: NfcDefaults.CARBS_GRAMS)
         return when (val prepared = prepareWizard(tagName)) {
-            is WizardBolusExecutor.PrepareResult.Preview -> {
+            is MasterActionExecutor.PrepareResult.Preview -> {
                 // Park the SAME preview (bolusId + computed insulin) the confirm dialog just displayed —
-                // execute() commits it by id through the shared WizardBolusExecutor (identical to wear /
+                // execute() commits it by id through the shared MasterActionExecutor (identical to wear /
                 // client-control), instead of re-driving a shared/leftover BolusWizard instance.
                 runtimeState.setWizardPreview(params.toString(), prepared)
                 val base = rh.gs(CoreUiStrings.goingtodeliver, prepared.insulin)
                 val carbs = rh.gs(InterfacesStrings.format_carbs, amount)
                 "$base ($carbs)"
             }
-            is WizardBolusExecutor.PrepareResult.Error   -> prepared.message
-            WizardBolusExecutor.PrepareResult.NoAction   -> null
+            is MasterActionExecutor.PrepareResult.Error   -> prepared.message
+            MasterActionExecutor.PrepareResult.NoAction   -> null
         }
     }
 
@@ -105,14 +105,14 @@ class BolusWizardAction(
         }
 
         // Commit the parked dose by id — the SAME consume-once relay wear/client-control use
-        // (WizardBolusExecutor.confirm). A stale/already-consumed id returns NoPending instead of
+        // (MasterActionExecutor.confirm). A stale/already-consumed id returns NoPending instead of
         // silently re-delivering or no-op'ing without telling the caller.
-        val result = wizardBolusExecutor.confirm(
+        val result = masterActionExecutor.confirm(
             bolusId = prepared.bolusId,
             source = source,
             onError = { aapsLogger.error(LTag.NFC, "Calculator bolus failed: $it") }
         )
-        if (result is WizardBolusExecutor.ConfirmResult.NoPending) {
+        if (result is MasterActionExecutor.ConfirmResult.NoPending) {
             aapsLogger.debug(LTag.NFC, "BolusWizard confirm: no pending dose for id ${prepared.bolusId}")
             return commandNotPossible()
         }
@@ -122,12 +122,12 @@ class BolusWizardAction(
     }
 
     /**
-     * Recompute + cap + park the dose through the shared [WizardBolusExecutor] — the SAME "prepare" entry
+     * Recompute + cap + park the dose through the shared [MasterActionExecutor] — the SAME "prepare" entry
      * point wear uses (DataHandlerMobile.handleWizardPreCheck) and client-control. This always builds a
      * FRESH BolusWizard internally (via Provider), so the wizard's one-shot `accepted` delivery guard can
      * never leak across NFC scans, unlike the previous design which reused one shared instance forever.
      */
-    private suspend fun prepareWizard(tagName: String): WizardBolusExecutor.PrepareResult {
+    private suspend fun prepareWizard(tagName: String): MasterActionExecutor.PrepareResult {
         val carbs = (params.carbs ?: NfcDefaults.CARBS_GRAMS)
         val percentage = (params.percent ?: NfcDefaults.WIZARD_PERCENTAGE)
         val useBg = params.useBg
@@ -137,8 +137,8 @@ class BolusWizardAction(
         val useCOB = params.useCob
         val bgMgdl = glucoseStatusProvider.glucoseStatusData?.glucose ?: 0.0
 
-        return wizardBolusExecutor.prepareWizard(
-            WizardBolusExecutor.WizardInputs(
+        return masterActionExecutor.prepareWizard(
+            MasterActionExecutor.WizardInputs(
                 bg = profileUtil.fromMgdlToUnits(bgMgdl),
                 carbs = carbs,
                 percentage = percentage,

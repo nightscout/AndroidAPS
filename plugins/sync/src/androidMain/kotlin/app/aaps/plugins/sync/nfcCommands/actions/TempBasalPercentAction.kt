@@ -49,7 +49,7 @@ class TempBasalPercentAction(
         val rawDuration = (params.duration ?: durationStep)
         val duration = roundUpToStep(rawDuration, durationStep)
 
-        val pct = rh.gs(CoreUiStrings.format_percent, tempBasalPct)
+        val pct = rh.gs(CoreUiStrings.units_format_percent, tempBasalPct)
         val mins = rh.gs(CoreUiStrings.format_mins, duration)
         return "$pct $mins"
     }

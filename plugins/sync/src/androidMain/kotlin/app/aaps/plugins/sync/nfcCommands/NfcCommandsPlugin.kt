@@ -7,7 +7,7 @@ import android.nfc.NfcAdapter
 import android.nfc.Tag
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -103,7 +103,7 @@ class NfcCommandsPlugin(
     val configBuilder: ConfigBuilder,
     val rxBus: RxBus,
     val uel: UserEntryLogger,
-    val wizardBolusExecutor: WizardBolusExecutor,
+    val masterActionExecutor: MasterActionExecutor,
     val iobCobCalculator: IobCobCalculator,
     val bolusProgressData: BolusProgressData,
     val glucoseStatusProvider: GlucoseStatusProvider,

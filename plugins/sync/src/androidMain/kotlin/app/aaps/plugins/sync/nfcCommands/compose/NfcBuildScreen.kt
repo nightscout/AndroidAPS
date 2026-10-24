@@ -262,7 +262,7 @@ fun NfcBuildScreen(
             },
             dismissButton = {
                 TextButton(onClick = { state.showDiscardConfirm = false }) {
-                    Text(stringResource(SyncStrings.cancel))
+                    Text(stringResource(CoreUiStrings.cancel))
                 }
             },
         )
@@ -356,7 +356,7 @@ fun NfcBuildScreen(
             },
             dismissButton = {
                 TextButton(onClick = { state.showBlankNameDialog = false }) {
-                    Text(stringResource(SyncStrings.cancel))
+                    Text(stringResource(CoreUiStrings.cancel))
                 }
             },
         )
@@ -764,7 +764,7 @@ private fun NfcWriteDialog(
         },
         confirmButton = {},
         dismissButton = {
-            TextButton(onClick = onCancel) { Text(stringResource(SyncStrings.cancel)) }
+            TextButton(onClick = onCancel) { Text(stringResource(CoreUiStrings.cancel)) }
         },
     )
 }

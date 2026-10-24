@@ -1,7 +1,7 @@
 package app.aaps.plugins.sync.nfcCommands
 
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -82,7 +82,7 @@ class NfcActionFactory(
     private val sceneAutomationApi: SceneAutomationApi,
     private val sceneIconResolver: SceneIconResolver,
     private val uel: UserEntryLogger,
-    private val wizardBolusExecutor: WizardBolusExecutor
+    private val masterActionExecutor: MasterActionExecutor
 ) {
 
     /** The action for [code], with its parameters unset. */
@@ -99,7 +99,7 @@ class NfcActionFactory(
         NfcCommandCode.BASAL_PCT       -> TempBasalPercentAction(aapsLogger, rh, uel, activePlugin, commandQueue, constraintChecker, profileFunction)
         NfcCommandCode.BOLUS           -> BolusAction(aapsLogger, rh, uel, bolusProgressData, commandQueue, constraintChecker, dateUtil, loop, persistenceLayer, preferences, profileFunction, profileUtil, runtimeState)
         NfcCommandCode.CARBS           -> CarbsAction(aapsLogger, rh, uel, commandQueue, constraintChecker, dateUtil)
-        NfcCommandCode.BOLUS_WIZARD    -> BolusWizardAction(aapsLogger, rh, uel, commandQueue, dateUtil, glucoseStatusProvider, loop, persistenceLayer, preferences, profileUtil, runtimeState, wizardBolusExecutor)
+        NfcCommandCode.BOLUS_WIZARD    -> BolusWizardAction(aapsLogger, rh, uel, commandQueue, dateUtil, glucoseStatusProvider, loop, persistenceLayer, preferences, profileUtil, runtimeState, masterActionExecutor)
         NfcCommandCode.EXTENDED_STOP   -> ExtendedCancelAction(aapsLogger, rh, uel, commandQueue)
         NfcCommandCode.EXTENDED_SET    -> ExtendedSetAction(aapsLogger, rh, uel, commandQueue, constraintChecker, decimalFormatter)
         NfcCommandCode.PROFILE_SWITCH  -> ProfileSwitchAction(aapsLogger, rh, uel, dateUtil, profileFunction, profileRepository)
