@@ -82,14 +82,16 @@ import kotlinx.coroutines.flow.collectLatest
 private const val INSPECT_MATCH_MS = 5 * 60_000L
 
 /**
- * Max distance from the snapped time for a treatment, in ms.
+ * Max distance from the snapped time for a treatment, in ms, when the snapped time is not a reading.
  *
- * Matched against the time the pill snapped to, not against the finger, so the treatments change
- * together with the reading and the dot, once per reading. Matched against the finger they changed
- * at their own times in between, and the pill showed a reading with the SMB of its neighbour.
- * Half a reading interval, so a treatment belongs to the nearest reading only. After the last
- * reading, or with no reading within [INSPECT_MATCH_MS], the snapped time is the finger's own, so a
- * treatment in a gap is still found when it is held.
+ * Treatments are matched against the time the pill snapped to, not against the finger, so they
+ * change together with the reading and the dot, once per reading. Matched against the finger they
+ * changed at their own times in between, and the pill showed a reading with the SMB of its
+ * neighbour. At a reading, a treatment is listed when that reading is the nearest reading to it,
+ * so every treatment belongs to exactly one reading, also when readings come more than five
+ * minutes apart: a fixed half interval left a bolus in the middle of such a gap unlisted at both
+ * sides. After the last reading, or with no reading within [INSPECT_MATCH_MS], the snapped time is
+ * the finger's own, and this window finds a treatment in a gap when it is held.
  */
 private const val INSPECT_TREATMENT_MS = 150_000L
 
@@ -352,6 +354,10 @@ fun inspectDataAt(
     // of a pixel. Only a reading has a glucose value to show.
     val bg = bgReadings.nearest(timestamp) { it.timestamp }
     val time = bg?.timestamp ?: predictions.nearest(timestamp) { it.timestamp }?.timestamp ?: timestamp
+    // A treatment belongs to the nearest reading, see INSPECT_TREATMENT_MS
+    fun belongsHere(at: Long): Boolean =
+        if (bg != null) bgReadings.nearest(at) { it.timestamp }?.timestamp == time
+        else abs(at - time) <= INSPECT_TREATMENT_MS
     // Basal is stored at each change
     val basal = actualBasal.lastOrNull { it.timestamp <= time }?.value
     return InspectData(
@@ -361,15 +367,13 @@ fun inspectDataAt(
         cob = cob.nearest(time) { it.timestamp }?.value,
         basal = basal,
         tbrState = tbrState(basal, profileBasal.lastOrNull { it.timestamp <= time }?.value),
-        // Treatments are matched against the snapped time, like every other value, see
-        // INSPECT_TREATMENT_MS
-        boluses = boluses.filter { it.isValid && abs(it.timestamp - time) <= INSPECT_TREATMENT_MS },
-        carbs = carbs.filter { it.isValid && abs(it.timestamp - time) <= INSPECT_TREATMENT_MS },
+        boluses = boluses.filter { it.isValid && belongsHere(it.timestamp) },
+        carbs = carbs.filter { it.isValid && belongsHere(it.timestamp) },
         measured = calibrations
-            .filter { it.isValid && abs(it.timestamp - time) <= INSPECT_TREATMENT_MS }
+            .filter { it.isValid && belongsHere(it.timestamp) }
             .map { it.label } +
             therapyEvents
-                .filter { it.glucoseUserUnits != null && abs(it.timestamp - time) <= INSPECT_TREATMENT_MS }
+                .filter { it.glucoseUserUnits != null && belongsHere(it.timestamp) }
                 .map { it.label }
     )
 }

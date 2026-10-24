@@ -172,6 +172,32 @@ class GraphInspectTest {
     }
 
     @Test
+    fun `a bolus in the middle of a gap longer than five minutes is listed at the nearer reading`() {
+        // Readings 5:05 apart, as a drifting source delivers them. The bolus is 2:40 after the first
+        // and 2:25 before the second, outside a fixed half interval of 2:30 from both.
+        val first = BgDataPoint(t0, 5.0, BgRange.IN_RANGE, BgType.REGULAR)
+        val second = BgDataPoint(t0 + 305_000L, 5.5, BgRange.IN_RANGE, BgType.REGULAR)
+        val bolus = BolusGraphPoint(t0 + 160_000L, 1.0, BolusType.NORMAL, isValid = true, label = "1.00 U")
+
+        fun dataAt(timestamp: Long) = inspectDataAt(
+            timestamp = timestamp,
+            bgReadings = listOf(first, second),
+            predictions = emptyList(),
+            iob = emptyList(),
+            cob = emptyList(),
+            actualBasal = emptyList(),
+            profileBasal = emptyList(),
+            boluses = listOf(bolus),
+            carbs = emptyList(),
+            calibrations = emptyList(),
+            therapyEvents = emptyList()
+        )
+
+        assertThat(dataAt(second.timestamp).boluses).containsExactly(bolus)
+        assertThat(dataAt(first.timestamp).boluses).isEmpty()
+    }
+
+    @Test
     fun `a calibration and a BG check at the snapped reading are listed with their value`() {
         val calibration = CalibrationGraphPoint(t0 + 6 * minute, 7.2, isValid = true, label = "7.2 mmol/L")
         val invalid = CalibrationGraphPoint(t0 + 6 * minute, 9.9, isValid = false, label = "9.9 mmol/L")
