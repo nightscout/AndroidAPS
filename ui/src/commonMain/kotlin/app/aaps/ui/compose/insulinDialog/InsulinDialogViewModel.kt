@@ -277,7 +277,8 @@ class InsulinDialogViewModel(
                     prepared.reason == FailureReason.NoAction -> _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
                     prepared.reason.isNotDeliveryError()      -> rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = rh.gs(prepared.reason.failText())))
                     config.AAPSCLIENT                         -> Unit
-                    else                                      -> prepared.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
+                    // Nothing was sent to the pump and the dialog keeps its values: a plain message, not the bolus-error alarm.
+                    else                                      -> rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
                 }
 
                 else                       -> Unit // Unconfirmed → app-level modal

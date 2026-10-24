@@ -4,6 +4,7 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchAction
@@ -23,6 +24,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -277,9 +279,11 @@ internal class InsulinDialogViewModelTest {
         assertThat(shown).isEmpty()
     }
 
+    // Nothing was sent to the pump, so the bolus-error alarm would be wrong: a plain message with the master's text.
     @Test
-    fun `the master reports its own refusal`() = runTest {
+    fun `the master reports its own refusal as a message, not as the bolus-error alarm`() = runTest {
         whenever(config.AAPSCLIENT).thenReturn(false)
+        whenever(rh.gs(InterfacesStrings.bolus)).thenReturn("Bolus")
         whenever(ch.bolusStep(any())).thenReturn(0.1)
         whenever(batchExecutor.prepare(any(), any(), anyOrNull())).thenReturn(ActionProgress.Rejected(FailureReason.ExecutionFailed, SMB_BEING_DELIVERED))
         val shown = mutableListOf<InsulinDialogViewModel.SideEffect>()
@@ -288,7 +292,8 @@ internal class InsulinDialogViewModelTest {
 
         sut.prepareAndConfirm()
 
-        assertThat(shown).containsExactly(InsulinDialogViewModel.SideEffect.ShowDeliveryError(SMB_BEING_DELIVERED))
+        verify(rxBus).send(EventShowDialog.Ok(title = "Bolus", message = SMB_BEING_DELIVERED))
+        assertThat(shown).isEmpty()
     }
 
     @Test

@@ -164,7 +164,8 @@ class TreatmentDialogViewModel(
                     prepared.reason.isNotDeliveryError()      -> rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = rh.gs(prepared.reason.failText())))
                     // A client's app-level modal has shown the master's own text already.
                     config.AAPSCLIENT                         -> Unit
-                    else                                      -> prepared.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
+                    // Nothing was sent to the pump and the dialog keeps its values: a plain message, not the bolus-error alarm.
+                    else                                      -> rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
                 }
 
                 else                       -> Unit // Unconfirmed → app-level modal

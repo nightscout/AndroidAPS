@@ -2,9 +2,12 @@ package app.aaps.ui.compose.treatmentDialog
 
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -15,6 +18,7 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import com.google.common.truth.Truth.assertThat
@@ -22,10 +26,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -159,5 +165,26 @@ internal class TreatmentDialogViewModelTest {
     fun `cancel drops the prepared treatment`() {
         sut.discard(9L)
         verify(batchExecutor).discard(9L)
+    }
+
+    // Nothing was sent to the pump, so the bolus-error alarm would be wrong: a plain message with the master's text.
+    @Test
+    fun `the master reports its own refusal as a message, not as the bolus-error alarm`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(false)
+        whenever(rh.gs(InterfacesStrings.bolus)).thenReturn("Bolus")
+        whenever(batchExecutor.prepare(any(), any(), anyOrNull())).thenReturn(ActionProgress.Rejected(FailureReason.ExecutionFailed, PUMP_NOT_AVAILABLE))
+        val shown = mutableListOf<TreatmentDialogViewModel.SideEffect>()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { sut.sideEffect.collect { shown += it } }
+        sut.updateInsulin(1.0)
+
+        sut.prepareAndConfirm()
+
+        verify(rxBus).send(EventShowDialog.Ok(title = "Bolus", message = PUMP_NOT_AVAILABLE))
+        assertThat(shown).isEmpty()
+    }
+
+    private companion object {
+
+        const val PUMP_NOT_AVAILABLE = "Pump not available"
     }
 }
