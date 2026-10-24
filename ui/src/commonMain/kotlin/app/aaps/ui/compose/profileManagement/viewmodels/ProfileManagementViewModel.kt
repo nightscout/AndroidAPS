@@ -685,10 +685,11 @@ class ProfileManagementViewModel(
                                         withContext(Dispatchers.Main) { onSuccess() }
                                     }
 
+                                    // A client's app-level modal has shown the master's own text already.
                                     is ActionProgress.Rejected ->
                                         if (result.reason.isNotDeliveryError())
                                             rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(result.reason.failText())))
-                                        else result.detail?.let { detail ->
+                                        else if (!config.AAPSCLIENT) result.detail?.let { detail ->
                                             rxBus.send(EventShowDialog.Ok(title = label, message = detail))
                                         }
 
@@ -701,11 +702,12 @@ class ProfileManagementViewModel(
                 true
             }
 
-            // Master-local pre-check failure, or a client offline; a client round-trip failure already showed on the app modal.
+            // Master-local pre-check failure, or a client offline; a client round-trip failure already showed on the app modal,
+            // with the master's own text.
             is ActionProgress.Rejected -> {
                 if (prepared.reason.isNotDeliveryError())
                     rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(prepared.reason.failText())))
-                else prepared.detail?.let { detail ->
+                else if (!config.AAPSCLIENT) prepared.detail?.let { detail ->
                     rxBus.send(EventShowDialog.Ok(title = label, message = detail))
                 }
                 false

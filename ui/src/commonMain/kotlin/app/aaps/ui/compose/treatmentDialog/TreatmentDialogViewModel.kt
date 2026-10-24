@@ -162,10 +162,9 @@ class TreatmentDialogViewModel(
                     // No-op after caps (e.g. the bolus was constraint-capped to 0): neutral message, NOT the bolus-error alarm.
                     prepared.reason == FailureReason.NoAction -> _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
                     prepared.reason.isNotDeliveryError()      -> rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = rh.gs(prepared.reason.failText())))
-                    else                                      -> prepared.detail?.let { detail ->
-                        if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = detail))
-                        else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
-                    }
+                    // A client's app-level modal has shown the master's own text already.
+                    config.AAPSCLIENT                         -> Unit
+                    else                                      -> prepared.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
                 }
 
                 else                       -> Unit // Unconfirmed → app-level modal
@@ -181,14 +180,12 @@ class TreatmentDialogViewModel(
         appScope.launch {
             val result = batchExecutor.commit(bolusId, Sources.TreatmentDialog, rh.gs(InterfacesStrings.bolus))
             // Surface a failed commit. NotReachable → the offline message; any other Rejected (ExecutionFailed,
-            // NoPendingBolus, …) → the master's detail. Unconfirmed (state unknown) rides the round-trip's app-level modal.
+            // NoPendingBolus, …) → the master's detail, which a client's app-level modal has shown already.
+            // Unconfirmed (state unknown) rides the round-trip's app-level modal.
             if (result is ActionProgress.Rejected) {
                 if (result.reason.isNotDeliveryError())
                     rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = rh.gs(result.reason.failText())))
-                else result.detail?.let { detail ->
-                    if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = detail))
-                    else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
-                }
+                else if (!config.AAPSCLIENT) result.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
             }
         }
     }

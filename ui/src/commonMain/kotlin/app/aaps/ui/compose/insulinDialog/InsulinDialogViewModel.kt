@@ -270,16 +270,14 @@ class InsulinDialogViewModel(
             }
             when (val prepared = batchExecutor.prepare(actions, Sources.InsulinDialog, rh.gs(InterfacesStrings.bolus))) {
                 is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines, closeAt))
-                // Offline block (and a master-local failure) surface here; a client round-trip failure already showed
-                // on the app-level modal, so only re-surface NotReachable or a master-side detail message.
+                // Offline block (and a master-local failure) surface here. A client's round-trip failure already showed
+                // on the app-level modal, with the master's own text, so a client re-surfaces only NotReachable.
                 is ActionProgress.Rejected -> when {
                     // No-op after caps (e.g. the bolus was constraint-capped to 0): neutral message, NOT the bolus-error alarm.
                     prepared.reason == FailureReason.NoAction -> _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
                     prepared.reason.isNotDeliveryError()      -> rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = rh.gs(prepared.reason.failText())))
-                    else                                      -> prepared.detail?.let { detail ->
-                        if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = detail))
-                        else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
-                    }
+                    config.AAPSCLIENT                         -> Unit
+                    else                                      -> prepared.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
                 }
 
                 else                       -> Unit // Unconfirmed → app-level modal
@@ -299,14 +297,12 @@ class InsulinDialogViewModel(
             if (result is ActionProgress.Applied && (state == null || !state.recordOnlyChecked || state.timeOffsetMinutes == 0))
                 automation.removeAutomationEventBolusReminder()
             // Surface a failed commit. NotReachable → the offline message; any other Rejected (ExecutionFailed,
-            // NoPendingBolus, …) → the master's detail. Unconfirmed (state unknown) rides the round-trip's app-level modal.
+            // NoPendingBolus, …) → the master's detail, which a client's app-level modal has shown already.
+            // Unconfirmed (state unknown) rides the round-trip's app-level modal.
             if (result is ActionProgress.Rejected) {
                 if (result.reason.isNotDeliveryError())
                     rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = rh.gs(result.reason.failText())))
-                else result.detail?.let { detail ->
-                    if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = detail))
-                    else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
-                }
+                else if (!config.AAPSCLIENT) result.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
             }
         }
     }

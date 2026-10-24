@@ -803,7 +803,8 @@ class MainViewModel(
             if (result is ActionProgress.Rejected) {
                 if (result.reason.isNotDeliveryError())
                     rxBus.send(EventShowDialog.Ok(title = title, message = rh.gs(result.reason.failText())))
-                else result.detail?.let { detail ->
+                // A client's app-level modal has shown the master's own text already.
+                else if (!config.AAPSCLIENT) result.detail?.let { detail ->
                     rxBus.send(EventShowDialog.Ok(title = title, message = detail))
                 }
             }

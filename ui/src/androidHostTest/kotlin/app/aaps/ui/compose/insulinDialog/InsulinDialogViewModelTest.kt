@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.FailureReason
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -51,6 +52,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.stub
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -259,9 +261,44 @@ internal class InsulinDialogViewModelTest {
         assertThat(left).isGreaterThan(SmbPause.MAX_DURATION - 10.seconds)
     }
 
+    // On a client the round-trip dialog shows the master's text; a second dialog with the same text was noise.
+    @Test
+    fun `a client does not repeat the master's refusal`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        whenever(ch.bolusStep(any())).thenReturn(0.1)
+        whenever(batchExecutor.prepare(any(), any(), anyOrNull())).thenReturn(ActionProgress.Rejected(FailureReason.BolusComputeFailed, SMB_BEING_DELIVERED))
+        val shown = mutableListOf<InsulinDialogViewModel.SideEffect>()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { sut.sideEffect.collect { shown += it } }
+        sut.updateInsulin(1.0)
+
+        sut.prepareAndConfirm()
+
+        verify(rxBus, never()).send(any())
+        assertThat(shown).isEmpty()
+    }
+
+    @Test
+    fun `the master reports its own refusal`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(false)
+        whenever(ch.bolusStep(any())).thenReturn(0.1)
+        whenever(batchExecutor.prepare(any(), any(), anyOrNull())).thenReturn(ActionProgress.Rejected(FailureReason.ExecutionFailed, SMB_BEING_DELIVERED))
+        val shown = mutableListOf<InsulinDialogViewModel.SideEffect>()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { sut.sideEffect.collect { shown += it } }
+        sut.updateInsulin(1.0)
+
+        sut.prepareAndConfirm()
+
+        assertThat(shown).containsExactly(InsulinDialogViewModel.SideEffect.ShowDeliveryError(SMB_BEING_DELIVERED))
+    }
+
     @Test
     fun `cancel drops the prepared bolus so the loop can give SMBs again`() {
         sut.discard(7L)
         verify(batchExecutor).discard(7L)
+    }
+
+    private companion object {
+
+        const val SMB_BEING_DELIVERED = "An SMB is being delivered right now. Try again when it has finished."
     }
 }
