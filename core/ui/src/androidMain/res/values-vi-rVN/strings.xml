@@ -463,6 +463,8 @@
     <string name="clientcontrol_fail_cancelled">Lệnh đã bị hủy trước khi thực thi. Không có lệnh nào được gửi đến bơm.</string>
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Liều bolus đã bị hủy. Không có insulin nào được cấp.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Đã Hủy</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">Không phân phối SMB khi đang chờ xác nhận liều bolus</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">SMB đang được phân phối. Bạn có thể xác nhận khi quá trình phân phối hoàn tất.</string>
     <string name="clientcontrol_fail_control_disabled">Điều khiển từ xa đang bị tắt trên thiết bị chính.</string>
     <string name="clientcontrol_fail_not_allowed_for_role">Vai trò của điện thoại này trên thiết bị chính không cho phép thực hiện thao tác này.</string>
     <string name="clientcontrol_fail_other_token">Thiết bị chính đã từ chối lệnh: Điện thoại này ghi dữ liệu lên Nightscout bằng token không thuộc về chính nó. Hãy xóa điện thoại này khỏi danh sách trên thiết bị chính rồi thêm lại.</string>
