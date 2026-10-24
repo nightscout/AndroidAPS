@@ -1,5 +1,6 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.definition
 
+import com.google.gson.annotations.SerializedName
 import java.util.Calendar
 import java.util.Collections
 
@@ -7,6 +8,12 @@ class BasalProgram(
     segments: List<Segment>
 ) {
 
+    // @SerializedName pins the JSON key to "segments" regardless of this field's Kotlin name,
+    // so Gson (de)serializing the whole Pod state (see OmnipodDashPodStateManagerImpl.store())
+    // keeps reading/writing the same key a user's saved Pod state already has on disk. Without
+    // it, renaming this field - as this one already was once - silently drops a confirmed
+    // basal program on the next load: Gson finds no field named "segments" to write into.
+    @SerializedName("segments")
     private var mutableSegmentsOrNull: MutableList<Segment>? = segments.toMutableList()
     private val mutableSegments: MutableList<Segment>
         get() = mutableSegmentsOrNull ?: mutableListOf<Segment>().also { mutableSegmentsOrNull = it }
