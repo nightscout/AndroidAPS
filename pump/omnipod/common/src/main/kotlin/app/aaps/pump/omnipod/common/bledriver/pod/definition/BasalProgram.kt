@@ -8,12 +8,9 @@ class BasalProgram(
     segments: List<Segment>
 ) {
 
-    // @SerializedName pins the JSON key to "segments" regardless of this field's Kotlin name,
-    // so Gson (de)serializing the whole Pod state (see OmnipodDashPodStateManagerImpl.store())
-    // keeps reading/writing the same key a user's saved Pod state already has on disk. Without
-    // it, renaming this field - as this one already was once - silently drops a confirmed
-    // basal program on the next load: Gson finds no field named "segments" to write into.
-    @SerializedName("segments")
+    // Keeps the JSON key "segments" so saved Pod state keeps deserializing across this field's rename.
+    // Alternate can be removed once all users have upgraded from the O5 beta builds.
+    @SerializedName(value = "segments", alternate = ["mutableSegmentsOrNull"])
     private var mutableSegmentsOrNull: MutableList<Segment>? = segments.toMutableList()
     private val mutableSegments: MutableList<Segment>
         get() = mutableSegmentsOrNull ?: mutableListOf<Segment>().also { mutableSegmentsOrNull = it }
