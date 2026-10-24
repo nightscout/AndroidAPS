@@ -22,6 +22,7 @@
     <string name="omnipod_common_error_failed_to_set_time">Failed to set time</string>
     <string name="omnipod_common_error_failed_to_resume_delivery">Failed to resume delivery</string>
     <string name="omnipod_common_error_failed_to_initialize_pod">Failed to initialize the Pod</string>
+    <string name="omnipod_common_error_failed_to_deactivate_pod">Failed to deactivate the Pod</string>
     <string name="omnipod_common_error_failed_to_insert_cannula">Failed to insert cannula</string>
     <string name="omnipod_common_error_pod_fault_activation_time_exceeded">The Pod\'s activation time has been exceeded. This Pod can no longer be activated.</string>
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Failed to verify activation progress. Please retry.</string>
@@ -226,6 +227,7 @@
     <string name="omnipod_5_error_uncertain_smb" comment="%1$s=requested SMB amount in units, e.g. 0.55">Unable to verify whether the SMB bolus (%1$s U) succeeded. Refresh pod status to confirm or deny this command.</string>
     <string name="omnipod_5_error_bolus_delivery_status_uncertain">Bolus delivery status is uncertain. Refresh pod status to confirm or deny this command.</string>
     <string name="omnipod_5_error_setting_temp_basal_might_have_failed">Setting the temp basal might have failed. Refresh pod status to confirm or deny this.</string>
+    <string name="omnipod_5_error_failed_to_update_alert_configuration">Failed to update Pod alert settings.</string>
     <string name="omnipod_5_error_cancel_temp_basal_result_is_uncertain">Cancelling the temp basal result is uncertain. Refresh pod status to confirm or deny this.</string>
     <string name="omnipod_5_error_unresolved_dose_pending">An earlier dose could not be confirmed with the pod, so a new one was not sent. Refresh pod status once the pod is reachable again.</string>
     <string name="omnipod_5_error_extended_bolus_not_supported">Omnipod 5 driver does not support extended boluses</string>
