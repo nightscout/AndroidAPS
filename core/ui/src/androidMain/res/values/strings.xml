@@ -474,6 +474,8 @@
     <string name="clientcontrol_fail_cancelled">The command was cancelled before it ran. Nothing was sent to the pump.</string>
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus cancelled. No insulin was given.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Cancelled</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">No SMB while a bolus is waiting for confirmation</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">An SMB is being delivered. You can confirm when it has finished.</string>
     <string name="clientcontrol_fail_control_disabled">Remote control is turned off on the master.</string>
     <string name="clientcontrol_fail_not_allowed_for_role">This phone\'s role on the master does not allow this.</string>
     <string name="clientcontrol_fail_other_token">The master refused it: this phone writes to Nightscout with another token than its own. On the master, remove this phone and add it again.</string>
