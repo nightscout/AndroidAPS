@@ -6,6 +6,7 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import app.aaps.core.interfaces.utils.usesTwelveHourClock
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import kotlin.math.max
 import kotlin.math.min
 
 /** A desktop window has no system bars to style. */
@@ -21,6 +22,14 @@ actual fun smallestScreenWidthDp(): Int {
     val size = LocalWindowInfo.current.containerSize
     val density = LocalDensity.current
     return with(density) { min(size.width, size.height).toDp().value.toInt() }
+}
+
+/** From the window, like [smallestScreenWidthDp]. */
+@Composable
+actual fun longestScreenSideDp(): Int {
+    val size = LocalWindowInfo.current.containerSize
+    val density = LocalDensity.current
+    return with(density) { max(size.width, size.height).toDp().value.toInt() }
 }
 
 /** No device orientation on desktop, so the window's own shape is the answer. */

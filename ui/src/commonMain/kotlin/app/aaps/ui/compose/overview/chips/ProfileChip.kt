@@ -19,9 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.style.TextOverflow
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalAapsScale
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.stringResourceOrNull
@@ -60,7 +62,7 @@ fun ProfileChip(
         color = containerColor,
         modifier = modifier
             .fillMaxWidth()
-            .height(AapsSpacing.chipHeight)
+            .height(AapsSpacing.chipHeight * LocalAapsScale.current)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Row(
@@ -75,11 +77,17 @@ fun ProfileChip(
                     tint = contentColor,
                     modifier = Modifier.size(AapsSpacing.chipIconSize)
                 )
+                // One line: the chip has a fixed height, so a second line was cut in half. The weight
+                // keeps the scene badge on the chip when the name is long.
                 Text(
                     text = profileName,
                     style = MaterialTheme.typography.bodyMedium,
                     color = contentColor,
-                    modifier = Modifier.padding(start = AapsSpacing.medium)
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .weight(1f, fill = false)
+                        .padding(start = AapsSpacing.medium)
                 )
                 if (sceneManaged) {
                     SceneBadge(modifier = Modifier.padding(start = AapsSpacing.small))

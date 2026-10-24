@@ -39,7 +39,6 @@ import app.aaps.implementation.maintenance.PrefsFileLister
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.implementation.notifications.CommonNotificationManager
 import app.aaps.implementation.resources.GeneratedTextResolver
-import app.aaps.implementation.resources.isCompactScreen
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.objectives.DurationText
 import app.aaps.plugins.constraints.objectives.objectives.Objective
@@ -120,7 +119,7 @@ object ClientGraphBindings {
      */
     @Provides
     @SingleIn(AppScope::class)
-    fun textResolver(): TextResolver = GeneratedTextResolver(compactScreen = isCompactScreen())
+    fun textResolver(): TextResolver = GeneratedTextResolver()
 
     /**
      * Settings export and import, for iOS and desktop.

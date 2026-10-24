@@ -187,6 +187,7 @@ class StatusViewModel(
         return StatusItem(
             label = rh.gs(CoreUiStrings.sensor_label),
             age = event?.let { formatAge(it.timestamp) } ?: "-",
+            ageShort = event?.let { formatAgeShort(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewSageWarning, IntKey.OverviewSageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewSageCritical) } ?: 0f,
             level = level,
@@ -222,6 +223,7 @@ class StatusViewModel(
         return StatusItem(
             label = rh.gs(CoreUiStrings.insulin_label),
             age = event?.let { formatAge(it.timestamp) } ?: "-",
+            ageShort = event?.let { formatAgeShort(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewIageWarning, IntKey.OverviewIageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewIageCritical) } ?: 0f,
             level = level,
@@ -246,6 +248,7 @@ class StatusViewModel(
         return StatusItem(
             label = label,
             age = event?.let { formatAge(it.timestamp) } ?: "-",
+            ageShort = event?.let { formatAgeShort(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewCageWarning, IntKey.OverviewCageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewCageCritical) } ?: 0f,
             level = if (usage > 0) rh.gs(CoreUiStrings.value_with_unit, decimalFormatter.to0Decimal(usage), rh.gs(CoreUiStrings.insulin_unit_shortname)) else null,
@@ -283,6 +286,7 @@ class StatusViewModel(
         return StatusItem(
             label = rh.gs(CoreUiStrings.pb_label),
             age = event?.let { formatAge(it.timestamp) } ?: "-",
+            ageShort = event?.let { formatAgeShort(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewBageWarning, IntKey.OverviewBageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewBageCritical) } ?: 0f,
             level = if (showLevel) rh.gs(CoreUiStrings.units_format_percent, batteryLevelValue.toInt()) else null,
@@ -295,16 +299,19 @@ class StatusViewModel(
         )
     }
 
+    // Both forms are built, and the screen shows the long one where it fits (see `LongOrShort`).
     private fun formatAge(timestamp: Long): String {
         val diff = dateUtil.computeDiff(timestamp, dateUtil.now())
-        val days = diff.days
-        val hours = diff.hours
-        return if (rh.shortTextMode()) rh.gs(UiStrings.status_age_short, days, hours)
-        else rh.gs(
+        return rh.gs(
             CoreUiStrings.value_with_unit,
-            rh.gs(CoreUiStrings.value_with_unit, days.toString(), rh.gs(InterfacesStrings.days)),
-            rh.gs(CoreUiStrings.value_with_unit, hours.toString(), rh.gs(InterfacesStrings.hours))
+            rh.gs(CoreUiStrings.value_with_unit, diff.days.toString(), rh.gs(InterfacesStrings.days)),
+            rh.gs(CoreUiStrings.value_with_unit, diff.hours.toString(), rh.gs(InterfacesStrings.hours))
         )
+    }
+
+    private fun formatAgeShort(timestamp: Long): String {
+        val diff = dateUtil.computeDiff(timestamp, dateUtil.now())
+        return rh.gs(UiStrings.status_age_short, diff.days, diff.hours)
     }
 
     private fun getAgeStatus(timestamp: Long, warnKey: IntPreferenceKey, urgentKey: IntPreferenceKey): StatusLevel {

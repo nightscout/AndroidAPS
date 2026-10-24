@@ -1463,6 +1463,5 @@ class DateUtilImplTest {
         // --- Dummy implementations for the rest of the interface ---
         override fun gq(id: Int, quantity: Int, vararg args: Any?): String = ""
         override fun gsNotLocalised(id: Int, vararg args: Any?): String = ""
-        override fun shortTextMode(): Boolean = true
     }
 }

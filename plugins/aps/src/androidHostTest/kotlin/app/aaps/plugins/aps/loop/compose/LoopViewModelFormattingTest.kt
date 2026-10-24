@@ -341,7 +341,6 @@ internal class LoopViewModelFormattingTest {
         override fun gs(id: Int, vararg args: Any?): String = String.format(Locale.US, gs(id), *args)
         override fun gq(id: Int, quantity: Int, vararg args: Any?): String = gs(id)
         override fun gsNotLocalised(id: Int, vararg args: Any?): String = gs(id)
-        override fun shortTextMode(): Boolean = false
 
         override fun gs(ref: TextRef): String = when (ref) {
             is TextRef.Literal    -> ref.text
