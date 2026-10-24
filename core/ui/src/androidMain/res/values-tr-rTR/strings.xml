@@ -68,6 +68,7 @@
     <string name="stop">Dur</string>
     <string name="invalid_profile">Geçersiz profil!</string>
     <string name="no_profile_set">PROFİL AYARLANMADI</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">%1$s senaryosu sona erdi ancak profili hâlâ kullanımda. %2$s Bir profili manuel olarak etkinleştirin.</string>
     <string name="active"><![CDATA[<Aktif>]]></string>
     <string name="date">Tarih</string>
     <string name="units_label">Birim</string>
@@ -230,7 +231,9 @@
     <string name="pump_battery_change">Pompa Pil Değişimi</string>
     <string name="temporary_target">Geçici hedef</string>
     <string name="running_mode">Çalışma modu</string>
+    <string name="client_roles_info">Eşleştirilmiş her telefonun bir rolü vardır. Ana telefon her komut için bunu kontrol eder ve telefon yalnızca rolünün izin verdiği bilgileri gösterir. Yeni bir rol, tekrar eşleştirmeye gerek kalmadan hemen yürürlüğe girer.\n\nSalt okunur: Telefon eşleştirilmiş halde kalır, ancak yalnızca verileri gösterir.\n\nÖğünler: Bolus, bolus sihirbazı, Hızlı Sihirbaz ve karbonhidratlar. Ayrıca devam eden bir bolusu durdurabilir. Buraya girilen karbonhidratlar, döngünün daha fazla insülin vermesini sağlayabilir.\n\nBakıcı: Kullanıcının AAPS\'de yaptığı her şey, örneğin geçici hedefler, profil ve insülin değiştirme, döngü modu, geçici bazal, uzatılmış bolus, senaryolar, bakım portalı olayları, kalibrasyonlar ve kayıtların silinmesi. Ayarları veya ön ayarları değiştiremez.\n\nYönetici: Ayarlar ve ön ayarlar dahil her şey (Hızlı Sihirbaz, geçici hedef ön ayarları, sahneler, profiller, otomasyon, insülin).</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_deactivate_scene">Senaryoyu sonlandır</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="careportal_temporarytargetvalue">Geçici hedef değeri</string>
     <string name="careportal_temporarytargetcancel">Geçici hedef iptali</string>
