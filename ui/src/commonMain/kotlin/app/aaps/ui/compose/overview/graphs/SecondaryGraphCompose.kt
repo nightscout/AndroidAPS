@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -74,6 +75,21 @@ private data class AxisScale(
     val basal: CartesianLayerRangeProvider,
     val startAxisItemPlacer: VerticalAxis.ItemPlacer,
     val endAxisItemPlacer: VerticalAxis.ItemPlacer
+)
+
+/** Everything the chart model of a graph is built from. Equal values give the same model. */
+private data class ModelInput(
+    val leftSpecs: List<SeriesSpec>,
+    val rightSpecs: List<SeriesSpec>,
+    val basalProfile: List<Pair<Double, Double>>,
+    val basalActual: List<Pair<Double, Double>>,
+    val hasBasalLayer: Boolean,
+    val hasRightAxis: Boolean,
+    val rightFirst: Boolean,
+    val maxX: Double,
+    val axisScale: AxisScale,
+    val maxManualBolus: Double?,
+    val maxCarbs: Double?
 )
 
 /**
@@ -405,11 +421,16 @@ fun SecondaryGraphCompose(
     val cobLineStyle = rememberCobLineStyles()
     val normalizerLine = remember { createNormalizerLine() }
 
+    // The normalizer comes first, here and in the model below. Vico pairs lines and series by index,
+    // and when the series of this graph change, it draws the new lines with the old model until the
+    // new model is built. With the normalizer at index 0 it is still paired with itself then, so the
+    // point spacing stays the same as in the other graphs. When it came last, the spacing shrank for
+    // that moment, Vico cut the scroll down to the new end, and the graph stayed shifted sideways.
     val leftLines = remember(leftSpecs, seriesColors, iobLineStyle, cobLineStyle, normalizerLine) {
-        leftSpecs.map { lineFor(it.slot, seriesColors, iobLineStyle, cobLineStyle) } + normalizerLine
+        listOf(normalizerLine) + leftSpecs.map { lineFor(it.slot, seriesColors, iobLineStyle, cobLineStyle) }
     }
     val rightLines = remember(rightSpecs, seriesColors, iobLineStyle, cobLineStyle, normalizerLine) {
-        rightSpecs.map { lineFor(it.slot, seriesColors, iobLineStyle, cobLineStyle) } + normalizerLine
+        listOf(normalizerLine) + rightSpecs.map { lineFor(it.slot, seriesColors, iobLineStyle, cobLineStyle) }
     }
 
     // Basal layer line styles — same as BG graph (profile dashed, actual solid with fill)
@@ -515,38 +536,53 @@ fun SecondaryGraphCompose(
 
     // Rebuilt only when the data or the axes change, not on every scroll step
     val axisScale = AxisScale(leftRangeProvider, rightRangeProvider, basalRangeProvider, startAxisItemPlacer, endAxisItemPlacer)
-    LaunchedEffect(leftSpecs, rightSpecs, processedBasalProfile, processedBasalActual, hasBasalLayer, hasRightAxis, rightFirst, maxX, axisScale) {
-        // Always populate the model — even with no data / no real time range — so the chart frame
-        // (axes, grid, now-line) renders the empty-state normalizer series instead of staying blank.
-        // (Matches TreatmentBeltGraphCompose.) When data is absent the processed* lists are empty,
-        // so only the normalizer is emitted; the left range provider anchors an empty 0..1 axis.
-        // Each layer gets its series in the exact order of its specs, so the line styles (built
-        // from the same lists) map 1:1 to the series. The normalizer keeps the maxPointSize the
-        // same across all charts.
-        val normalizer = normalizerX(maxX) to NORMALIZER_Y
-        val left = leftSpecs.map { it.x to it.y } + normalizer
-        val end = when {
-            hasBasalLayer -> listOf(
-                if (processedBasalActual.size >= 2) processedBasalActual.map { it.first } to processedBasalActual.map { it.second } else EMPTY_BASAL,
-                if (processedBasalProfile.size >= 2) processedBasalProfile.map { it.first } to processedBasalProfile.map { it.second } else EMPTY_BASAL
-            )
+    val modelInput = ModelInput(
+        leftSpecs, rightSpecs, processedBasalProfile, processedBasalActual, hasBasalLayer, hasRightAxis, rightFirst, maxX, axisScale,
+        maxManualBolus = processedIobTreatments.maxManualBolus,
+        maxCarbs = processedCarbs.maxOfOrNull { it.second }
+    )
+    val latestModelInput by rememberUpdatedState(modelInput)
+    // One transaction after the other, and none is cancelled half-way. When the input changes during a
+    // transaction, the newest input waits for it, and the inputs in between are skipped. An effect keyed
+    // on the input cancelled the running transaction instead. When that came just after Vico had
+    // stopped the animation of the transaction before, the lines stayed where the animation stopped,
+    // part-way between the old and the new scale, while the labels showed the new scale. If the next
+    // input was equal to the last finished one (axes going A, B, A), Vico skipped it as a repeat, and
+    // the lines stayed like that.
+    LaunchedEffect(modelProducer) {
+        snapshotFlow { latestModelInput }.collect { input ->
+            // Always populate the model — even with no data / no real time range — so the chart frame
+            // (axes, grid, now-line) renders the empty-state normalizer series instead of staying blank.
+            // (Matches TreatmentBeltGraphCompose.) When data is absent the processed* lists are empty,
+            // so only the normalizer is emitted; the left range provider anchors an empty 0..1 axis.
+            // Each layer gets the normalizer first and then its series in the exact order of its specs,
+            // so the line styles (built from the same lists) map 1:1 to the series. The normalizer keeps
+            // the maxPointSize the same across all charts, see leftLines.
+            val normalizer = normalizerX(input.maxX) to NORMALIZER_Y
+            val left = listOf(normalizer) + input.leftSpecs.map { it.x to it.y }
+            val end = when {
+                input.hasBasalLayer -> listOf(
+                    if (input.basalActual.size >= 2) input.basalActual.map { it.first } to input.basalActual.map { it.second } else EMPTY_BASAL,
+                    if (input.basalProfile.size >= 2) input.basalProfile.map { it.first } to input.basalProfile.map { it.second } else EMPTY_BASAL
+                )
 
-            hasRightAxis  -> rightSpecs.map { it.x to it.y } + normalizer
-            else          -> null
-        }
-        // The same order as the layers handed to the chart below
-        val layerSeries = if (end != null && rightFirst) listOf(end, left) else listOfNotNull(left, end)
-        modelProducer.runTransaction {
-            for (seriesOfLayer in layerSeries) lineModel { seriesOfLayer.forEach { (x, y) -> series(x = x, y = y) } }
+                input.hasRightAxis  -> listOf(normalizer) + input.rightSpecs.map { it.x to it.y }
+                else                -> null
+            }
+            // The same order as the layers handed to the chart below
+            val layerSeries = if (end != null && input.rightFirst) listOf(end, left) else listOfNotNull(left, end)
+            modelProducer.runTransaction {
+                for (seriesOfLayer in layerSeries) lineModel { seriesOfLayer.forEach { (x, y) -> series(x = x, y = y) } }
 
-            // Forces Vico to reprocess this transaction even when the series data above is
-            // identical to last time (see AXIS_SCALE_KEY doc) — otherwise scrolling/zooming
-            // would re-submit the same partials and get silently skipped, never picking up the
-            // updated range providers.
-            extras {
-                it[AXIS_SCALE_KEY] = axisScale
-                processedIobTreatments.maxManualBolus?.let { max -> it[MAX_MANUAL_BOLUS_KEY] = max }
-                processedCarbs.maxOfOrNull { carbs -> carbs.second }?.let { max -> it[MAX_CARBS_KEY] = max }
+                // Forces Vico to reprocess this transaction even when the series data above is
+                // identical to last time (see AXIS_SCALE_KEY doc) — otherwise scrolling/zooming
+                // would re-submit the same partials and get silently skipped, never picking up the
+                // updated range providers.
+                extras {
+                    it[AXIS_SCALE_KEY] = input.axisScale
+                    input.maxManualBolus?.let { max -> it[MAX_MANUAL_BOLUS_KEY] = max }
+                    input.maxCarbs?.let { max -> it[MAX_CARBS_KEY] = max }
+                }
             }
         }
     }
