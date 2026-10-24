@@ -14,10 +14,9 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 
 /**
- * Regression coverage for [SecondaryGraphCompose]'s dual-axis / windowing helper functions,
- * extracted (private -> internal) during the Step 4 graph-scale refactor specifically so they
- * could be unit tested. Each test ties back to a specific bug found and fixed during that work —
- * see the KDoc on the function under test for the full rationale.
+ * Regression coverage for the axis and windowing helpers of [SecondaryGraphCompose] and
+ * SecondaryGraphAxes.kt. Each test ties back to a specific bug or rule — see the KDoc on the
+ * function under test for the full rationale.
  */
 internal class SecondaryGraphScaleHelpersTest {
 
@@ -125,42 +124,32 @@ internal class SecondaryGraphScaleHelpersTest {
     }
 
     @Nested
-    inner class WindowedPrimaryYTest {
+    inner class WindowedValuesTest {
+
+        private fun spec(vararg points: Pair<Double, Double>, slot: SeriesSlot = SeriesSlot.IobLine, countsForRange: Boolean = true) =
+            SeriesSpec(points.map { it.first }, points.map { it.second }, slot, countsForRange)
 
         @Test
-        fun `unions y-values across all primary-layer series, windowed`() {
-            val iob = listOf(0.0 to 1.0, 10.0 to 2.0)
-            val cob = listOf(0.0 to 5.0, 10.0 to 6.0)
-            val simple = listOf(SeriesType.BGI to listOf(0.0 to 7.0, 10.0 to 8.0))
-            val devSlopeMin = listOf(0.0 to -1.0, 10.0 to -2.0)
-            val deviations = ProcessedDeviationLines(allX = listOf(0.0, 10.0), series = mapOf(DeviationType.POSITIVE to listOf(3.0, 4.0)))
+        fun `unions the values of the series of one axis, windowed`() {
+            val deviations = SeriesSpec(listOf(0.0, 10.0), listOf(3.0, 4.0), SeriesSlot.DeviationLine(DeviationType.POSITIVE))
+            val bgi = spec(0.0 to 7.0, 10.0 to 8.0, slot = SeriesSlot.SimpleLine(SeriesType.BGI))
 
-            val result = windowedPrimaryY(5.0, 10.0, iob, cob, emptyList(), simple, devSlopeMin, deviations)
-
-            assertThat(result).containsExactly(2.0, 6.0, 8.0, -2.0, 4.0)
+            assertThat(windowedValues(listOf(deviations, bgi), 5.0, 10.0)).containsExactly(4.0, 8.0)
         }
 
         @Test
         fun `a series with nothing in-window contributes nothing, without triggering a whole-set fallback`() {
-            // Documents the key property: windowed points from one series are never mixed with
-            // unwindowed points from another. IOB has no point in [5,10]; COB does. The union as a
-            // whole is non-empty (thanks to COB), so IOB must NOT fall back to its own full range.
-            val iob = listOf(0.0 to 1.0, 2.0 to 1.5)
-            val cob = listOf(0.0 to 5.0, 10.0 to 6.0)
+            // Windowed points from one series are never mixed with unwindowed points from another.
+            // IOB has no point in [5,10]; COB does. The union as a whole is non-empty (thanks to COB),
+            // so IOB must NOT fall back to its own full range.
+            val iob = spec(0.0 to 1.0, 2.0 to 1.5)
+            val cob = spec(0.0 to 5.0, 10.0 to 6.0, slot = SeriesSlot.CobLine)
 
-            val result = windowedPrimaryY(5.0, 10.0, iob, cob, emptyList(), emptyList(), emptyList(), null)
-
-            assertThat(result).containsExactly(6.0)
+            assertThat(windowedValues(listOf(iob, cob), 5.0, 10.0)).containsExactly(6.0)
         }
 
         /**
          * Carb markers count towards the axis, because they are drawn on it.
-         *
-         * `hasPrimaryData` is taken from the model, which includes the carb markers, so a graph
-         * holding nothing else still claims to have data - and the "no data" branch that would
-         * anchor a 0..1 axis is skipped. If the range union left the markers out it was empty, so
-         * every branch needing it returned null too and the axis fell through to Vico's raw
-         * auto-range over the model.
          *
          * That gap is open on every cold start: carb markers come straight from the database while
          * COB waits for the calculation workflow. Measured on a Pixel with COB+ABS after a restart -
@@ -169,175 +158,185 @@ internal class SecondaryGraphScaleHelpersTest {
          */
         @Test
         fun `carb markers alone still give the axis something to scale to`() {
-            val carbs = listOf(6.0 to 36.0, 8.0 to 43.0)
+            val carbs = spec(6.0 to 36.0, 8.0 to 43.0, slot = SeriesSlot.CarbsMarker)
 
-            val result = windowedPrimaryY(5.0, 10.0, emptyList(), emptyList(), carbs, emptyList(), emptyList(), null)
-
-            assertThat(result).containsExactly(36.0, 43.0)
+            assertThat(windowedValues(listOf(carbs), 5.0, 10.0)).containsExactly(36.0, 43.0)
         }
 
         @Test
         fun `falls back to the full union only when every series is empty in-window`() {
-            val iob = listOf(0.0 to 1.0, 10.0 to 2.0)
-            val cob = listOf(0.0 to 5.0, 10.0 to 6.0)
+            val iob = spec(0.0 to 1.0, 10.0 to 2.0)
+            val cob = spec(0.0 to 5.0, 10.0 to 6.0, slot = SeriesSlot.CobLine)
 
-            val result = windowedPrimaryY(1000.0, 2000.0, iob, cob, emptyList(), emptyList(), emptyList(), null)
+            assertThat(windowedValues(listOf(iob, cob), 1000.0, 2000.0)).containsExactly(1.0, 2.0, 5.0, 6.0)
+        }
 
-            assertThat(result).containsExactly(1.0, 2.0, 5.0, 6.0)
+        // The activity overlay is drawn in IOB units, scaled from the IOB axis: counting it would be circular
+        @Test
+        fun `a series drawn in the units of another one does not count`() {
+            val iob = spec(0.0 to 1.0, 10.0 to 2.0)
+            val overlay = spec(0.0 to 9.0, slot = SeriesSlot.ActivityOverlay, countsForRange = false)
+
+            assertThat(windowedValues(listOf(iob, overlay), null, null)).containsExactly(1.0, 2.0)
         }
     }
 
     @Nested
-    inner class FractionAlignedRangeTest {
+    inner class GraphSidesTest {
 
+        /** The series a user can put on a graph below BG. */
+        private val configurable = SeriesType.entries - SeriesType.IOB - SeriesType.PREDICTIONS
+
+        // #5376: DEV was moved to the left, COB drew a plain line on the right and the numbers were DEV's
         @Test
-        fun `zero-floor data (min 0) is stretched downward to hit the target fraction`() {
-            val (min, max) = fractionAlignedRange(dataMin = 0.0, dataMax = 82.0, targetFraction = 0.2)
-            assertThat(min).isEqualTo(-20.5)
-            assertThat(max).isEqualTo(82.0)
+        fun `the first series takes the left axis and the second the right one`() {
+            assertThat(graphSides(listOf(SeriesType.COB, SeriesType.DEVIATIONS))).isEqualTo(GraphSides(listOf(SeriesType.COB), listOf(SeriesType.DEVIATIONS)))
+            assertThat(graphSides(listOf(SeriesType.DEVIATIONS, SeriesType.COB))).isEqualTo(GraphSides(listOf(SeriesType.DEVIATIONS), listOf(SeriesType.COB)))
         }
 
         @Test
-        fun `tighten-at-min branch keeps the real min and only expands the max`() {
-            val (min, max) = fractionAlignedRange(dataMin = -5.0, dataMax = 100.0, targetFraction = 0.03)
-            assertThat(min).isEqualTo(-5.0)
-            assertThat(max).isWithin(1e-9).of(161.66666666666666)
+        fun `two series with the same unit share the left axis`() {
+            assertThat(graphSides(listOf(SeriesType.BGI, SeriesType.DEVIATIONS))).isEqualTo(GraphSides(listOf(SeriesType.BGI, SeriesType.DEVIATIONS), emptyList()))
+            assertThat(graphSides(listOf(SeriesType.DEVIATIONS, SeriesType.BGI))).isEqualTo(GraphSides(listOf(SeriesType.DEVIATIONS, SeriesType.BGI), emptyList()))
         }
 
         @Test
-        fun `zero target fraction keeps the real data unchanged (except coercing a positive min to 0)`() {
-            assertThat(fractionAlignedRange(5.0, 82.0, 0.0)).isEqualTo(0.0 to 82.0)
-            assertThat(fractionAlignedRange(-3.0, 82.0, 0.0)).isEqualTo(-3.0 to 82.0)
+        fun `one series takes the left axis`() {
+            assertThat(graphSides(listOf(SeriesType.IOB))).isEqualTo(GraphSides(listOf(SeriesType.IOB), emptyList()))
         }
 
         @Test
-        fun `never clips the real data, across a range of fractions and data shapes`() {
-            val cases = listOf(
-                Triple(0.0, 82.0, 0.2),
-                Triple(-5.0, 100.0, 0.03),
-                Triple(-1.0, 1.0, 0.5),
-                Triple(0.0, 0.1, 0.4),
-            )
-            for ((dataMin, dataMax, fraction) in cases) {
-                val (min, max) = fractionAlignedRange(dataMin, dataMax, fraction)
-                assertThat(min).isAtMost(dataMin)
-                assertThat(max).isAtLeast(dataMax)
+        fun `every pair keeps both series, the first one on the left`() {
+            for (first in configurable) for (second in configurable - first) {
+                val sides = graphSides(listOf(first, second))
+                assertThat(sides.left.first()).isEqualTo(first)
+                assertThat(sides.left + sides.right).containsExactly(first, second)
             }
         }
     }
 
     @Nested
-    inner class FractionAlignedNiceRangeTest {
+    inner class AxisRangeTest {
 
         @Test
-        fun `stretched bound is rounded out, not left as a raw fraction result`() {
-            // 0.2 of the height asks for -25; rounded out on the grid of 25 that is -26
-            val (min, max) = fractionAlignedNiceRange(niceMin = 0.0, niceMax = 100.0, targetFraction = 0.2)
-            assertThat(min).isEqualTo(-26.0)
-            assertThat(max).isEqualTo(100.0)
+        fun `a zero-floor axis starts at zero`() {
+            assertThat(axisRange(AxisRule.ZeroFloor, listOf(12.0, 82.0))).isEqualTo(AxisRange(0.0, 90.0, 0.0))
         }
 
         @Test
-        fun `larger fraction stretches further, still nice`() {
-            val (min, max) = fractionAlignedNiceRange(niceMin = 0.0, niceMax = 50.0, targetFraction = 0.5)
-            assertThat(min).isEqualTo(-50.0)
-            assertThat(max).isEqualTo(50.0)
+        fun `a zero-floor axis keeps a small negative part`() {
+            assertThat(axisRange(AxisRule.ZeroFloor, listOf(-0.5, 12.0))).isEqualTo(AxisRange(-0.5, 12.0, 0.0))
+        }
+
+        // BGI is mostly below zero: its axis has to show the zero it is measured from
+        @Test
+        fun `a zero-floor axis of values all below zero still reaches zero`() {
+            val range = axisRange(AxisRule.ZeroFloor, listOf(-10.0, -2.0))!!
+
+            assertThat(range.min).isEqualTo(-10.0)
+            // Rounding up to the grid gives -0.0 here, which is the same number
+            assertThat(range.max).isWithin(0.0).of(0.0)
         }
 
         @Test
-        fun `zero target fraction leaves the nice range untouched`() {
-            assertThat(fractionAlignedNiceRange(0.0, 100.0, 0.0)).isEqualTo(0.0 to 100.0)
+        fun `a pivot axis is centered on its pivot`() {
+            assertThat(axisRange(axisRuleOf(SeriesType.SENSITIVITY), listOf(60.0, 108.0))).isEqualTo(AxisRange(60.0, 140.0, 100.0))
         }
 
         @Test
-        fun `never clips the original nice bounds`() {
-            val (min, max) = fractionAlignedNiceRange(niceMin = -10.0, niceMax = 100.0, targetFraction = 0.3)
-            assertThat(min).isAtMost(-10.0)
-            assertThat(max).isAtLeast(100.0)
-        }
-    }
-
-    @Nested
-    inner class PivotZeroFloorPairingTest {
-
-        @Test
-        fun `SENS pivot flat at 100 paired with COB snaps to 95-100-105, COB half covers its own max`() {
-            val pairing = pivotZeroFloorPairing(
-                pivotY = listOf(100.0, 100.0), zeroFloorY = listOf(0.0, 82.0), pivot = 100.0, minDeviation = 5.0
-            )
-            assertThat(pairing.pivotNice.min).isEqualTo(95.0)
-            assertThat(pairing.pivotNice.max).isEqualTo(105.0)
-            assertThat(pairing.zeroFloorHalf).isEqualTo(90.0)
-            assertThat(pairing.zeroFloorMin).isEqualTo(0.0)
+        fun `a free axis follows the values only`() {
+            assertThat(axisRange(axisRuleOf(SeriesType.HEART_RATE), listOf(62.0, 118.0))).isEqualTo(AxisRange(60.0, 120.0, null))
         }
 
         @Test
-        fun `DEV_SLOPE pivot paired with a BGI-style series that has its own small negative sliver`() {
-            val pairing = pivotZeroFloorPairing(
-                pivotY = listOf(-2.0, 3.0), zeroFloorY = listOf(-0.5, 12.0), pivot = 0.0, minDeviation = 0.0
-            )
-            assertThat(pairing.pivotNice.min).isWithin(1e-9).of(-3.0)
-            assertThat(pairing.pivotNice.max).isWithin(1e-9).of(3.0)
-            assertThat(pairing.zeroFloorHalf).isEqualTo(12.0)
-            // The zero-floor side's own negative sliver must be preserved, not silently discarded
-            assertThat(pairing.zeroFloorMin).isEqualTo(-0.5)
-        }
-
-        @Test
-        fun `pivot side is always exactly centered on its own pivot`() {
-            val pairing = pivotZeroFloorPairing(
-                pivotY = listOf(60.0, 108.0), zeroFloorY = listOf(0.0, 20.0), pivot = 100.0, minDeviation = 5.0
-            )
-            assertThat((pairing.pivotNice.min + pairing.pivotNice.max) / 2.0).isEqualTo(100.0)
+        fun `no values, no range`() {
+            assertThat(axisRange(AxisRule.ZeroFloor, emptyList())).isNull()
         }
     }
 
     @Nested
-    inner class AlignZerosTest {
+    inner class AlignReferencesTest {
+
+        private fun AxisBounds.fractionOf(value: Double) = (value - min) / (max - min)
 
         @Test
-        fun `both series crossing zero symmetrize independently, zero at 50 percent of each own axis`() {
-            val result = alignZerosAtOrigin(aMin = -2.0, aMax = 8.0, bMin = -1.0, bMax = 1.0)
-            assertThat(result).isEqualTo(AlignedRanges(-8.0, 8.0, -1.0, 1.0))
+        fun `both zeros meet halfway, one axis stretched down and the other up`() {
+            val cob = AxisRange(0.0, 90.0, 0.0)
+            val deviations = AxisRange(-10.0, 20.0, 0.0)
+
+            val (left, right) = alignReferences(cob, deviations)
+
+            assertThat(left.min).isWithin(1e-9).of(-18.0)
+            assertThat(left.max).isEqualTo(90.0)
+            assertThat(right.min).isEqualTo(-10.0)
+            assertThat(right.max).isWithin(1e-9).of(50.0)
         }
 
         @Test
-        fun `both strictly positive pins zero to the bottom of both axes`() {
-            val result = alignZerosAtOrigin(aMin = 1.0, aMax = 5.0, bMin = 2.0, bMax = 10.0)
-            assertThat(result).isEqualTo(AlignedRanges(0.0, 5.0, 0.0, 10.0))
+        fun `a pivot meets the zero of the other axis`() {
+            val sensitivity = AxisRange(60.0, 140.0, 100.0)
+            val cob = AxisRange(0.0, 90.0, 0.0)
+
+            val (left, right) = alignReferences(sensitivity, cob)
+
+            assertThat(left.fractionOf(100.0)).isWithin(1e-9).of(right.fractionOf(0.0))
         }
 
         @Test
-        fun `both strictly negative pins zero to the top of both axes`() {
-            val result = alignZerosAtOrigin(aMin = -5.0, aMax = -1.0, bMin = -10.0, bMax = -2.0)
-            assertThat(result).isEqualTo(AlignedRanges(-5.0, 0.0, -10.0, 0.0))
+        fun `the references end on one height and nothing is cut off`() {
+            val ranges = listOf(
+                AxisRange(0.0, 90.0, 0.0), AxisRange(-10.0, 20.0, 0.0), AxisRange(-10.0, 0.0, 0.0),
+                AxisRange(60.0, 140.0, 100.0), AxisRange(-0.5, 12.0, 0.0), AxisRange(-3.0, 3.0, 0.0)
+            )
+            for (a in ranges) for (b in ranges) {
+                val (left, right) = alignReferences(a, b)
+                assertThat(left.fractionOf(a.reference!!)).isWithin(1e-9).of(right.fractionOf(b.reference!!))
+                assertThat(left.min).isAtMost(a.min)
+                assertThat(left.max).isAtLeast(a.max)
+                assertThat(right.min).isAtMost(b.min)
+                assertThat(right.max).isAtLeast(b.max)
+            }
+        }
+
+        // A heart rate of 60..120 has no zero worth lining up with anything
+        @Test
+        fun `an axis without a reference is not moved`() {
+            val heartRate = AxisRange(60.0, 120.0, null)
+            val cob = AxisRange(0.0, 90.0, 0.0)
+
+            assertThat(alignReferences(heartRate, cob)).isEqualTo(heartRate.bounds to cob.bounds)
+        }
+    }
+
+    @Nested
+    inner class GraphAxesTest {
+
+        @Test
+        fun `a graph without values gets an empty frame`() {
+            assertThat(graphAxes(null, null, basalBand = false)).isEqualTo(GraphAxes(EMPTY_AXIS, null))
         }
 
         @Test
-        fun `one all-positive and one all-negative has no useful shared alignment`() {
-            assertThat(alignZerosAtOrigin(aMin = 1.0, aMax = 5.0, bMin = -10.0, bMax = -2.0)).isNull()
+        fun `the IOB graph leaves the top of its height to the basal band`() {
+            val axes = graphAxes(AxisRange(0.0, 3.0, 0.0), null, basalBand = true)
+
+            assertThat(axes.left).isEqualTo(AxisBounds(0.0, 3.0 / IOB_HEIGHT_FRACTION))
+            assertThat(axes.right).isNull()
         }
 
         @Test
-        fun `both completely flat at zero is degenerate and returns null`() {
-            assertThat(alignZerosAtOrigin(aMin = 0.0, aMax = 0.0, bMin = 0.0, bMax = 0.0)).isNull()
+        fun `one series keeps its own range`() {
+            assertThat(graphAxes(AxisRange(0.0, 90.0, 0.0), null, basalBand = false)).isEqualTo(GraphAxes(AxisBounds(0.0, 90.0), null))
         }
 
         @Test
-        fun `one side flat at zero borrows the other side's half so the zero line still lands at mid`() {
-            val result = alignZerosAtOrigin(aMin = 0.0, aMax = 0.0, bMin = -5.0, bMax = 5.0)
-            assertThat(result).isEqualTo(AlignedRanges(-5.0, 5.0, -5.0, 5.0))
-        }
+        fun `two series are lined up at their zeros`() {
+            val cob = AxisRange(0.0, 90.0, 0.0)
+            val deviations = AxisRange(-10.0, 20.0, 0.0)
 
-        @Test
-        fun `pivot-shifted alignment lands the pivot and the zero at the same fraction`() {
-            // SENS (90-110%, pivot 100) combined with IOB (-5..50, pivot 0)
-            val result = alignZeros(aMin = 90.0, aMax = 110.0, bMin = -5.0, bMax = 50.0, aPivot = 100.0, bPivot = 0.0)
-            assertThat(result).isEqualTo(AlignedRanges(90.0, 110.0, -50.0, 50.0))
-            val nonNull = requireNotNull(result)
-            val pivotFraction = (100.0 - nonNull.aMin) / (nonNull.aMax - nonNull.aMin)
-            val zeroFraction = (0.0 - nonNull.bMin) / (nonNull.bMax - nonNull.bMin)
-            assertThat(pivotFraction).isWithin(1e-9).of(zeroFraction)
+            val (left, right) = alignReferences(cob, deviations)
+
+            assertThat(graphAxes(cob, deviations, basalBand = false)).isEqualTo(GraphAxes(left, right))
         }
     }
 
@@ -388,6 +387,16 @@ internal class SecondaryGraphScaleHelpersTest {
         fun `placers with the same limits are equal`() {
             assertThat(NiceVerticalAxisItemPlacer(labelMax = 3.0)).isEqualTo(NiceVerticalAxisItemPlacer(labelMax = 3.0))
             assertThat(NiceVerticalAxisItemPlacer(labelMax = 3.0)).isNotEqualTo(NiceVerticalAxisItemPlacer(labelMax = 4.0))
+        }
+
+        // Seen on the phone: an empty heart rate graph showed 0, 0.5 and 1 next to a series on the right,
+        // which read as that series' scale
+        @Test
+        fun `an axis without values shows no labels but keeps its width`() {
+            val context = context(0.0, 1.0)
+
+            assertThat(NoLabelsAxisItemPlacer.getLabelValues(context, 200f, 20f, Axis.Position.Vertical.Start)).isEmpty()
+            assertThat(NoLabelsAxisItemPlacer.getWidthMeasurementLabelValues(context, 200f, 20f, Axis.Position.Vertical.Start)).containsExactly(0.0)
         }
     }
 }
