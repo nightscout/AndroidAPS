@@ -1,6 +1,5 @@
 package app.aaps.pump.eopatch.vo
 
-import app.aaps.pump.eopatch.AppConstant
 import app.aaps.pump.eopatch.core.code.BolusType
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach

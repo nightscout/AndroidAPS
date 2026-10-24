@@ -12,8 +12,21 @@ class EquilIntPreferenceKeyTest : TestBase() {
     @Test
     fun `all enum values should be accessible`() {
         val allKeys = EquilIntPreferenceKey.entries
-        assertEquals(1, allKeys.size)
+        assertEquals(2, allKeys.size)
         assert(allKeys.contains(EquilIntPreferenceKey.EquilTone))
+        assert(allKeys.contains(EquilIntPreferenceKey.EquilBolusSpeed))
+    }
+
+    @Test
+    fun `bolus speed defaults to the standard 1_5 U per min and offers only tested speeds`() {
+        val speed = EquilIntPreferenceKey.EquilBolusSpeed
+        assertEquals("key_equil_bolus_speed", speed.key)
+        // Seconds per unit. 40 = 1.5 U/min, the speed AAPS always used.
+        assertEquals(40, speed.defaultValue)
+        assertEquals(setOf(40, 20, 10, 5), speed.entries.keys)
+        // 5 s/U = 12 U/min is the fastest tested on a real pump; 30 U/min was refused.
+        assertEquals(5, speed.min)
+        assertEquals(40, speed.max)
     }
 
     @Test
@@ -104,13 +117,6 @@ class EquilIntPreferenceKeyTest : TestBase() {
             "Key should start with 'key_equil_'"
         )
     }
-
-    @Test
-    fun `enum should implement IntPreferenceKey`() {
-        val key = EquilIntPreferenceKey.EquilTone
-        assert(key is app.aaps.core.keys.interfaces.IntPreferenceKey)
-    }
-
     @Test
     fun `EquilTone range should be valid for alarm mode values`() {
         // Based on AlarmMode enum (MUTE=0, TONE=1, SHAKE=2, TONE_AND_SHAKE=3)

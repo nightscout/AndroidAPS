@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_oref1">Sensibilidade Oref1</string>
+    <string name="sensitivity_aaps">Sensibilidade AAPS</string>
+    <string name="sensitivity_weighted_average">Média ponderada da Sensibilidade</string>
+    <string name="description_sensitivity_aaps">A sensibilidade é calculada da mesma forma que Oref0, mas você pode especificar um período de tempo no passado. A absorção mínima de carboidratos é calculada a partir do tempo de absorção máxima especificado nas preferências.</string>
+    <string name="description_sensitivity_oref1">A sensibilidade é calculada a partir de dados de 8h ou 24h no passado (usando o que é mais sensível). Carboidratos (se não absorvidos) são cortados após o tempo especificado nas preferências. O plugin também calcula o UAM.</string>
+    <string name="description_sensitivity_weighted_average">A sensibilidade é calculada como uma média ponderada de desvios. Desvios mais recentes têm maior peso. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências. Este algoritmo é o mais rápido em seguir as mudanças de sensibilidade.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM desativado porque confia no plugin de sensibilidade Oref1</string>
+    <string name="absorption_settings_title">Configurações de absorção</string>
+</resources>

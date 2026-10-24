@@ -3,9 +3,14 @@ package app.aaps.pump.omnipod.common.bledriver.pod.command
 import app.aaps.pump.omnipod.common.bledriver.pod.command.base.CommandType
 import app.aaps.pump.omnipod.common.bledriver.pod.command.base.NonceEnabledCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.base.builder.NonceEnabledCommandBuilder
-import app.aaps.pump.omnipod.common.bledriver.pod.definition.*
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertConfiguration
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertTrigger
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BeepRepetitionType
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BeepType
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.Encodable
 import java.nio.ByteBuffer
-import java.util.*
+import java.util.BitSet
 
 // StopDelivery.ALL followed by ProgramAlerts
 class SuspendDeliveryCommand private constructor(

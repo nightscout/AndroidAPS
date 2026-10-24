@@ -1,7 +1,5 @@
 package app.aaps.wear.comm
 
-import app.aaps.wear.interaction.actions.WizardResultActivity
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -14,12 +12,13 @@ import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.wear.activity.ConfirmationActivity
 import androidx.wear.tiles.TileService
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventWearDataToMobile
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -29,318 +28,316 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
+import app.aaps.wear.complications.BgGraphComplication
 import app.aaps.wear.complications.BrCobIobComplication
 import app.aaps.wear.complications.BrCobIobComplicationExt1
 import app.aaps.wear.complications.BrCobIobComplicationExt2
 import app.aaps.wear.complications.BrComplication
 import app.aaps.wear.complications.BrIobComplication
+import app.aaps.wear.complications.BrTtComplication
 import app.aaps.wear.complications.CobDetailedComplication
 import app.aaps.wear.complications.CobIconComplication
 import app.aaps.wear.complications.CobIobComplication
+import app.aaps.wear.complications.CwfAmbientBgComplication
+import app.aaps.wear.complications.CwfAmbientStatusComplication
 import app.aaps.wear.complications.IobDetailedComplication
 import app.aaps.wear.complications.IobIconComplication
 import app.aaps.wear.complications.LongStatusComplication
 import app.aaps.wear.complications.LongStatusFlippedComplication
+import app.aaps.wear.complications.RunningModeComplication
 import app.aaps.wear.complications.SgvComplication
 import app.aaps.wear.complications.SgvComplicationExt1
 import app.aaps.wear.complications.SgvComplicationExt2
+import app.aaps.wear.complications.SgvLargeComplication
+import app.aaps.wear.complications.TargetComplication
 import app.aaps.wear.complications.UploaderBatteryComplication
 import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
 import app.aaps.wear.interaction.actions.AcceptActivity
+import app.aaps.wear.interaction.actions.ContactingMasterActivity
 import app.aaps.wear.interaction.actions.ProfileSwitchActivity
+import app.aaps.wear.interaction.menus.PreferenceMenuActivity
 import app.aaps.wear.tile.ActionsTileService
-import app.aaps.wear.tile.LoopStateTileService
+import app.aaps.wear.tile.BgGraphTileService
 import app.aaps.wear.tile.QuickWizardTileService
+import app.aaps.wear.tile.RunningModeTileService
+import app.aaps.wear.tile.SceneTileService
 import app.aaps.wear.tile.TempTargetTileService
 import app.aaps.wear.tile.UserActionTileService
+import app.aaps.wear.watchfaces.PushedFace
+import app.aaps.wear.watchfaces.WatchFacePushHelper
 import com.google.android.gms.wearable.WearableListenerService
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
+import kotlinx.serialization.json.Json
 
-@Singleton
-class DataHandlerWear @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class DataHandlerWear(
     private val context: Context,
     private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
-    private val complicationDataRepository: ComplicationDataRepository
+    private val complicationDataRepository: ComplicationDataRepository,
+    private val watchFacePushHelper: WatchFacePushHelper
 ) {
 
     // Coroutine scope for DataStore operations
     private val dataStoreScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    private val disposable = CompositeDisposable()
 
     init {
         setupBus()
     }
 
-    private fun setupBus() {
-        disposable += rxBus
-            .toObservable(EventData.ActionPing::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "Ping received from ${it.sourceNodeId}")
-                rxBus.send(EventWearToMobile(EventData.ActionPong(System.currentTimeMillis(), Build.VERSION.SDK_INT)))
-            }
-        disposable += rxBus
-            .toObservable(EventData.ConfirmAction::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "ConfirmAction received from ${it.sourceNodeId}")
-                context.startActivity(Intent(context, AcceptActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    putExtras(
-                        Bundle().also { bundle ->
-                            bundle.putString(DataLayerListenerServiceWear.KEY_TITLE, it.title)
-                            bundle.putString(DataLayerListenerServiceWear.KEY_MESSAGE, it.message)
-                            bundle.putString(DataLayerListenerServiceWear.KEY_ACTION_DATA, it.returnCommand?.serialize())
-                        }
-                    )
-                })
-            }
-        disposable += rxBus
-            .toObservable(EventData.ActionWizardResult::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { event ->
-                aapsLogger.debug(LTag.WEAR, "ActionWizardResult received from ${event.sourceNodeId}")
-
-                try {
-                    val resultIntent = Intent(context, WizardResultActivity::class.java).apply {
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        putExtra("timestamp", event.timestamp)
-                        putExtra("total_insulin", event.totalInsulin)
-                        putExtra("carbs", event.carbs)
-                        putExtra("ic", event.ic)
-                        putExtra("sens", event.sens)
-                        putExtra("insulin_carbs", event.insulinFromCarbs)
-                        putExtra("insulin_bg", event.insulinFromBG ?: Double.NaN)
-                        putExtra("insulin_cob", event.insulinFromCOB ?: Double.NaN)
-                        putExtra("insulin_bolus_iob", event.insulinFromBolusIOB ?: Double.NaN)
-                        putExtra("insulin_basal_iob", event.insulinFromBasalIOB ?: Double.NaN)
-                        putExtra("insulin_trend", event.insulinFromTrend ?: Double.NaN)
-                        putExtra("insulin_superbolus", event.insulinFromSuperBolus ?: Double.NaN)
-                        putExtra("temp_target", event.tempTarget ?: "")
-                        putExtra("percentage", event.percentageCorrection ?: 100)
-                        putExtra("total_before_percentage", event.totalBeforePercentage ?: Double.NaN)
-                        putExtra("cob", event.cob)
-                    }
-
-                    context.startActivity(resultIntent)
-                    aapsLogger.debug(LTag.WEAR, "WizardResultActivity started successfully")
-                } catch (e: Exception) {
-                    aapsLogger.error(LTag.WEAR, "Error starting WizardResultActivity", e)
-                }
-            }
-        disposable += rxBus
-            .toObservable(EventData.CancelNotification::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "ActionCancelNotification received from ${it.sourceNodeId}")
-                (context.getSystemService(WearableListenerService.NOTIFICATION_SERVICE) as NotificationManager).cancel(DataLayerListenerServiceWear.CHANGE_NOTIF_ID)
-            }
-        disposable += rxBus
-            .toObservable(EventData.OpenLoopRequest::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "OpenLoopRequest received from ${it.sourceNodeId}")
-                handleOpenLoopRequest(it)
-            }
-        disposable += rxBus
-            .toObservable(EventData.OpenSettings::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "ActionOpenSettings received from ${it.sourceNodeId}")
-                context.startActivity(Intent(context, WatchfaceConfigurationActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
-            }
-        disposable += rxBus
-            .toObservable(EventData.ActionProfileSwitchOpenActivity::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { event ->
-                aapsLogger.debug(LTag.WEAR, "ActionProfileSwitchOpenActivity received from ${event.sourceNodeId}")
-                context.startActivity(Intent(context, ProfileSwitchActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    putExtras(Bundle().also { bundle ->
-                        bundle.putInt("percentage", event.percentage)
-                        bundle.putInt("timeshift", event.timeShift)
-                    })
-                })
-            }
-        disposable += rxBus
-            .toObservable(EventData.BolusProgress::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "Bolus progress received from ${it.sourceNodeId}")
-                handleBolusProgress(it)
-            }
-        disposable += rxBus
-            .toObservable(EventData.Status::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "Status received: dataset=${it.dataset} iob=${it.iobSum} cob=${it.cob}")
-                // Store in DataStore - supports all datasets (0, 1, 2)
-                dataStoreScope.launch {
-                    complicationDataRepository.updateStatusData(it)
-
-                    // Trigger complications AFTER DataStore write completes
-                    // This ensures complications showing IOB/COB/BR update immediately
-                    triggerComplicationUpdates()
-                }
-                LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
-            }
-        disposable += rxBus
-            .toObservable(EventData.SingleBg::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "BG received: dataset=${it.dataset} sgv=${it.sgvString} arrow=${it.slopeArrow}")
-
-                // Store in DataStore - supports all datasets (0, 1, 2)
-                dataStoreScope.launch {
-                    complicationDataRepository.updateBgData(it)
-
-                    // Trigger complications AFTER DataStore write completes
-                    triggerComplicationUpdates()
-                }
-
-                LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
-            }
-        disposable += rxBus
-            .toObservable(EventData.GraphData::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "GraphData received from ${it.sourceNodeId}")
-                // Store in DataStore
-                dataStoreScope.launch {
-                    complicationDataRepository.updateGraphData(it)
-                }
-                LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
-            }
-        disposable += rxBus
-            .toObservable(EventData.TreatmentData::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "TreatmentData received from ${it.sourceNodeId}")
-                // Store in DataStore
-                dataStoreScope.launch {
-                    complicationDataRepository.updateTreatmentData(it)
-                }
-                LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
-            }
-        disposable += rxBus
-            .toObservable(EventData.Preferences::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "Preferences received from ${it.sourceNodeId}")
-                if (it.wearControl != preferences.get(BooleanKey.WearControl)) {
-                    preferences.put(BooleanKey.WearControl, it.wearControl)
-                    TileService.getUpdater(context).requestUpdate(ActionsTileService::class.java)
-                    TileService.getUpdater(context).requestUpdate(TempTargetTileService::class.java)
-                    TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
-                }
-                sp.putBoolean(R.string.key_units_mgdl, it.unitsMgdl)
-                sp.putInt(R.string.key_bolus_wizard_percentage, it.bolusPercentage)
-                sp.putInt(R.string.key_treatments_safety_max_carbs, it.maxCarbs)
-                sp.putDouble(R.string.key_treatments_safety_max_bolus, it.maxBolus)
-                preferences.put(DoubleKey.OverviewInsulinButtonIncrement1, it.insulinButtonIncrement1)
-                preferences.put(DoubleKey.OverviewInsulinButtonIncrement2, it.insulinButtonIncrement2)
-                preferences.put(IntKey.OverviewCarbsButtonIncrement1, it.carbsButtonIncrement1)
-                preferences.put(IntKey.OverviewCarbsButtonIncrement2, it.carbsButtonIncrement2)
-            }
-        disposable += rxBus
-            .toObservable(EventData.QuickWizard::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "QuickWizard received from ${it.sourceNodeId}")
-                val serialized = it.serialize()
-                if (serialized != sp.getString(R.string.key_quick_wizard_data, "")) {
-                    sp.putString(R.string.key_quick_wizard_data, serialized)
-                    TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
-                }
-            }
-        disposable += rxBus
-            .toObservable(EventData.UserAction::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "UserAction received from ${it.sourceNodeId}")
-                val serialized = it.serialize()
-                if (serialized != sp.getString(R.string.key_user_action_data, "")) {
-                    sp.putString(R.string.key_user_action_data, serialized)
-                    TileService.getUpdater(context).requestUpdate(UserActionTileService::class.java)
-                }
-            }
-        disposable += rxBus
-            .toObservable(EventData.LoopStatesList::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "Loop states received from ${it.sourceNodeId}")
-                val serialized = it.serialize()
-                if (serialized != sp.getString(R.string.key_loop_states_data, "")) {
-                    sp.putString(R.string.key_loop_states_data, serialized)
-                    TileService.getUpdater(context).requestUpdate(LoopStateTileService::class.java)
-                }
-            }
-        disposable += rxBus
-            .toObservable(EventData.ActionSetCustomWatchface::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${it.sourceNodeId}")
-                dataStoreScope.launch {
-                    complicationDataRepository.storeCustomWatchface(it.customWatchfaceData)
-                    complicationDataRepository.getSimplifiedCustomWatchface()?.let { cwf ->
-                        rxBus.send(EventWearDataToMobile(EventData.ActionGetCustomWatchface(EventData.ActionSetCustomWatchface(cwf), false)))
-                    }
-                }
-            }
-        disposable += rxBus
-            .toObservable(EventData.ActionUpdateCustomWatchface::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "Custom Watchface metadata update received from ${it.sourceNodeId}")
-                dataStoreScope.launch {
-                    complicationDataRepository.updateCustomWatchfaceMetadata(it.customWatchfaceData.metadata)
-                    complicationDataRepository.getSimplifiedCustomWatchface()?.let { cwf ->
-                        rxBus.send(EventWearDataToMobile(EventData.ActionGetCustomWatchface(EventData.ActionSetCustomWatchface(cwf), false)))
-                    }
-                }
-            }
-        disposable += rxBus
-            .toObservable(EventData.ActionrequestSetDefaultWatchface::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe {
-                aapsLogger.debug(LTag.WEAR, "Set Default Watchface received from ${it.sourceNodeId}")
-                dataStoreScope.launch {
-                    complicationDataRepository.setDefaultWatchface()
-                    complicationDataRepository.getCustomWatchface()?.let { cwf ->
-                        rxBus.send(EventWearDataToMobile(EventData.ActionGetCustomWatchface(EventData.ActionSetCustomWatchface(cwf), false)))
-                    }
-                }
-            }
-        disposable += rxBus
-            .toObservable(EventData.ActionrequestCustomWatchface::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { eventData ->
-                aapsLogger.debug(LTag.WEAR, "Custom Watchface requested from ${eventData.sourceNodeId} export ${eventData.exportFile}")
-                dataStoreScope.launch {
-                    complicationDataRepository.getSimplifiedCustomWatchface(eventData.exportFile)?.let { cwf ->
-                        rxBus.send(EventWearDataToMobile(EventData.ActionGetCustomWatchface(EventData.ActionSetCustomWatchface(cwf), eventData.exportFile)))
-                    }
-                }
+    /**
+     * Registers a [handler] for one [EventData] subtype arriving from the phone.
+     *
+     * Mirrors the per-type subscription shape used across [setupBus] and emits a uniform
+     * "<Type> received from <node>" debug line so call sites stay one-liners. Handlers that want
+     * extra diagnostics append them via [detail] (e.g. dataset/sgv/scene state). Only the debounced
+     * batch streams (heart-rate / steps) keep a bespoke subscription.
+     */
+    private inline fun <reified T : EventData> onEvent(
+        crossinline detail: (T) -> String = { "" },
+        crossinline handler: (T) -> Unit
+    ) {
+        // dataStoreScope is Dispatchers.IO, matching observeOn(aapsSchedulers.io). UNDISPATCHED because
+        // these subscribe from setupBus() on a replay-0 bus: a scheduled collector could miss anything
+        // sent before it started.
+        rxBus.toFlow(T::class)
+            .collectResilient(dataStoreScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
+                aapsLogger.debug(LTag.WEAR, "${T::class.java.simpleName} received from ${event.sourceNodeId}${detail(event)}")
+                handler(event)
             }
     }
 
+    private fun setupBus() {
+        onEvent<EventData.ActionPing> {
+            rxBus.send(EventWearToMobile(EventData.ActionPong(System.currentTimeMillis(), Build.VERSION.SDK_INT)))
+            // The phone pings when it (re)connects, also after its app restarted and lost what the
+            // watch last told it. The syncs in between only report a changed status.
+            dataStoreScope.launch { watchFacePushHelper.reportStatus() }
+        }
+        onEvent<EventData.ConfirmAction> {
+            // The resolving terminal (master-authored lines, or an error) arrived → dismiss the "contacting master"
+            // spinner if one is up (prepare round-trip finished), then show the confirm/error screen.
+            ContactingMasterActivity.dismiss()
+            context.startActivity(Intent(context, AcceptActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                putExtras(
+                    Bundle().also { bundle ->
+                        bundle.putString(DataLayerListenerServiceWear.KEY_TITLE, it.title)
+                        bundle.putString(DataLayerListenerServiceWear.KEY_MESSAGE, it.message)
+                        bundle.putString(DataLayerListenerServiceWear.KEY_ACTION_DATA, it.returnCommand?.serialize())
+                        if (it.lines.isNotEmpty()) {
+                            bundle.putStringArray(DataLayerListenerServiceWear.KEY_LINE_ROLES, it.lines.map { l -> l.role }.toTypedArray())
+                            bundle.putStringArray(DataLayerListenerServiceWear.KEY_LINE_TEXTS, it.lines.map { l -> l.text }.toTypedArray())
+                        }
+                        bundle.putBoolean(DataLayerListenerServiceWear.KEY_IS_ERROR, it.returnCommand is EventData.Error)
+                        // CLIENT relay: the ✓ must NOT flash success — it shows the spinner + waits for the master's
+                        // real commit terminal ([RemoteDelivered] / error). False on a master (instant local success).
+                        bundle.putBoolean(DataLayerListenerServiceWear.KEY_DEFER_CONFIRM, it.deferConfirm)
+                        it.wizardDetail?.let { d ->
+                            bundle.putString(DataLayerListenerServiceWear.KEY_WIZARD_DETAIL, Json.encodeToString(EventData.WizardDetail.serializer(), d))
+                        }
+                    }
+                )
+            })
+        }
+        onEvent<EventData.ContactingMaster> {
+            ContactingMasterActivity.show(context)
+        }
+        onEvent<EventData.RemoteDelivered> {
+            // A deferred (relayed) commit was APPLIED on the master → dismiss the spinner + show the success animation.
+            ContactingMasterActivity.dismiss()
+            context.startActivity(
+                Intent(context, ConfirmationActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION)
+                    putExtra(ConfirmationActivity.EXTRA_MESSAGE, context.getString(R.string.wizard_confirmation_sent))
+                }
+            )
+        }
+        onEvent<EventData.CancelNotification> {
+            (context.getSystemService(WearableListenerService.NOTIFICATION_SERVICE) as NotificationManager).cancel(DataLayerListenerServiceWear.CHANGE_NOTIF_ID)
+        }
+        onEvent<EventData.OpenLoopRequest> { handleOpenLoopRequest(it) }
+        onEvent<EventData.OpenSettings> {
+            // The Display screen holds the settings of the code-based faces. With the complications
+            // face installed through Watch Face Push nothing there is the wearer's, so the phone's
+            // button opens the main settings menu instead, from which every screen is reachable
+            val target =
+                if (watchFacePushHelper.isSupported() && watchFacePushHelper.selectedFace == PushedFace.WFS) PreferenceMenuActivity::class.java
+                else WatchfaceConfigurationActivity::class.java
+            context.startActivity(Intent(context, target).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+        }
+        onEvent<EventData.ActionProfileSwitchOpenActivity> { event ->
+            context.startActivity(Intent(context, ProfileSwitchActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                putExtras(Bundle().also { bundle ->
+                    bundle.putInt("percentage", event.percentage)
+                    bundle.putInt("timeshift", event.timeShift)
+                })
+            })
+        }
+        onEvent<EventData.BolusProgress> { handleBolusProgress(it) }
+        onEvent<EventData.Status>(detail = { " dataset=${it.dataset} iob=${it.iobSum} cob=${it.cob}" }) {
+            // The temp target tile shows its Cancel button only while a temp target runs. Only the
+            // own dataset counts; the tile cannot cancel a temp target on an external instance.
+            if (it.dataset == 0) {
+                val tempTargetActive = it.tempTargetDuration >= 0
+                if (tempTargetActive != sp.getBoolean(R.string.key_temp_target_active, false)) {
+                    sp.putBoolean(R.string.key_temp_target_active, tempTargetActive)
+                    TileService.getUpdater(context).requestUpdate(TempTargetTileService::class.java)
+                }
+            }
+            // Store in DataStore - supports all datasets (0, 1, 2)
+            dataStoreScope.launch {
+                complicationDataRepository.updateStatusData(it)
+
+                // The one complication refresh of a sync, AFTER the DataStore write. Status is the last
+                // data message of a resend and SingleBg is only ever sent inside one, so refreshing here
+                // covers both; refreshing on SingleBg too rebuilt all 23 complications twice per sync.
+                triggerComplicationUpdates()
+            }
+            LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
+        }
+        onEvent<EventData.SingleBg>(detail = { " dataset=${it.dataset} sgv=${it.sgvString} arrow=${it.slopeArrow}" }) {
+            // Store in DataStore - supports all datasets (0, 1, 2)
+            dataStoreScope.launch {
+                complicationDataRepository.updateBgData(it)
+                // Complications are refreshed once, on Status (see above); the graph tile draws from
+                // the BG data alone, so it refreshes here.
+                TileService.getUpdater(context).requestUpdate(BgGraphTileService::class.java)
+            }
+
+            LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
+        }
+        onEvent<EventData.GraphData> {
+            // Store in DataStore
+            dataStoreScope.launch {
+                complicationDataRepository.updateGraphData(it)
+            }
+            LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
+        }
+        onEvent<EventData.TreatmentData> {
+            // Store in DataStore
+            dataStoreScope.launch {
+                complicationDataRepository.updateTreatmentData(it)
+            }
+            LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
+        }
+        onEvent<EventData.Preferences> {
+            if (it.wearControl != preferences.get(BooleanKey.WearControl)) {
+                preferences.put(BooleanKey.WearControl, it.wearControl)
+                // Every TileBase tile renders the disabled state itself, but only when asked to render.
+                // A tile missing here keeps its cached buttons until its own data changes.
+                TileService.getUpdater(context).requestUpdate(ActionsTileService::class.java)
+                TileService.getUpdater(context).requestUpdate(TempTargetTileService::class.java)
+                TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
+                TileService.getUpdater(context).requestUpdate(RunningModeTileService::class.java)
+                TileService.getUpdater(context).requestUpdate(SceneTileService::class.java)
+                TileService.getUpdater(context).requestUpdate(UserActionTileService::class.java)
+            }
+            sp.putBoolean(R.string.key_units_mgdl, it.unitsMgdl)
+            sp.putInt(R.string.key_bolus_wizard_percentage, it.bolusPercentage)
+            sp.putInt(R.string.key_treatments_safety_max_carbs, it.maxCarbs)
+            sp.putDouble(R.string.key_treatments_safety_max_bolus, it.maxBolus)
+            preferences.put(DoubleKey.OverviewInsulinButtonIncrement1, it.insulinButtonIncrement1)
+            preferences.put(DoubleKey.OverviewInsulinButtonIncrement2, it.insulinButtonIncrement2)
+            preferences.put(IntKey.OverviewCarbsButtonIncrement1, it.carbsButtonIncrement1)
+            preferences.put(IntKey.OverviewCarbsButtonIncrement2, it.carbsButtonIncrement2)
+            // The Watch Face Push face the wearer chose on the phone. Stored whatever the watch
+            // can do with it, so a watch updated to Wear OS 6 later installs the chosen face on
+            // its next start; swapped now when the watch can. Either way the phone is told what
+            // the watch has, which is what lets its screen show the choice only where it applies.
+            // These preferences come with every sync, so the reply goes out only when the status
+            // changed; the phone's ping (connect, app restart) and an install always get one.
+            val faceChanged = watchFacePushHelper.selectFace(it.pushedWatchface)
+            dataStoreScope.launch {
+                if (faceChanged) watchFacePushHelper.installOrUpdate()
+                else watchFacePushHelper.reportStatusIfChanged()
+            }
+        }
+        onEvent<EventData.QuickWizard> {
+            val serialized = it.serialize()
+            if (serialized != sp.getString(R.string.key_quick_wizard_data, "")) {
+                sp.putString(R.string.key_quick_wizard_data, serialized)
+                TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
+            }
+        }
+        onEvent<EventData.UserAction> {
+            val serialized = it.serialize()
+            if (serialized != sp.getString(R.string.key_user_action_data, "")) {
+                sp.putString(R.string.key_user_action_data, serialized)
+                TileService.getUpdater(context).requestUpdate(UserActionTileService::class.java)
+            }
+        }
+        onEvent<EventData.SceneList> {
+            val serialized = it.serialize()
+            if (serialized != sp.getString(R.string.key_scene_data, "")) {
+                sp.putString(R.string.key_scene_data, serialized)
+                TileService.getUpdater(context).requestUpdate(SceneTileService::class.java)
+            }
+        }
+        onEvent<EventData.ActiveSceneState>(detail = { " active=${it.active}" }) {
+            val serialized = it.serialize()
+            if (serialized != sp.getString(R.string.key_active_scene_state, "")) {
+                sp.putString(R.string.key_active_scene_state, serialized)
+                TileService.getUpdater(context).requestUpdate(SceneTileService::class.java)
+            }
+        }
+        onEvent<EventData.RunningModeList> {
+            val serialized = it.serialize()
+            if (serialized != sp.getString(R.string.key_running_mode_data, "")) {
+                sp.putString(R.string.key_running_mode_data, serialized)
+                TileService.getUpdater(context).requestUpdate(RunningModeTileService::class.java)
+            }
+        }
+        onEvent<EventData.ActionSetCustomWatchface> {
+            dataStoreScope.launch {
+                complicationDataRepository.storeCustomWatchface(it.customWatchfaceData)
+                complicationDataRepository.getSimplifiedCustomWatchface()?.let { cwf ->
+                    rxBus.send(EventWearDataToMobile(EventData.ActionGetCustomWatchface(EventData.ActionSetCustomWatchface(cwf), false)))
+                }
+            }
+        }
+        onEvent<EventData.ActionUpdateCustomWatchface> {
+            dataStoreScope.launch {
+                complicationDataRepository.updateCustomWatchfaceMetadata(it.customWatchfaceData.metadata)
+                complicationDataRepository.getSimplifiedCustomWatchface()?.let { cwf ->
+                    rxBus.send(EventWearDataToMobile(EventData.ActionGetCustomWatchface(EventData.ActionSetCustomWatchface(cwf), false)))
+                }
+            }
+        }
+        onEvent<EventData.ActionrequestSetDefaultWatchface> {
+            dataStoreScope.launch {
+                complicationDataRepository.setDefaultWatchface()
+                complicationDataRepository.getCustomWatchface()?.let { cwf ->
+                    rxBus.send(EventWearDataToMobile(EventData.ActionGetCustomWatchface(EventData.ActionSetCustomWatchface(cwf), false)))
+                }
+            }
+        }
+        onEvent<EventData.ActionrequestCustomWatchface>(detail = { " export=${it.exportFile}" }) {
+            dataStoreScope.launch {
+                complicationDataRepository.getSimplifiedCustomWatchface(it.exportFile)?.let { cwf ->
+                    rxBus.send(EventWearDataToMobile(EventData.ActionGetCustomWatchface(EventData.ActionSetCustomWatchface(cwf), it.exportFile)))
+                }
+            }
+        }
+    }
+
     private fun handleBolusProgress(bolusProgress: EventData.BolusProgress) {
-        val vibratePattern: LongArray
+        // The vibration comes from the channel (see createBolusProgressChannels)
         val vibrate = sp.getBoolean("vibrateOnBolus", true)
-        vibratePattern = if (vibrate) longArrayOf(0, 50, 1000) else longArrayOf(0, 1, 1000)
 
         createBolusProgressChannels()
         val cancelIntent = Intent(context, DataLayerListenerServiceWear::class.java)
@@ -357,7 +354,6 @@ class DataHandlerWear @Inject constructor(
                 .setSubText(context.getString(R.string.press_to_cancel))
                 .setContentIntent(cancelPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setVibrate(vibratePattern)
                 .setOnlyAlertOnce(true)
                 .addAction(R.drawable.ic_cancel, context.getString(R.string.cancel_bolus), cancelPendingIntent)
         val notificationManager = NotificationManagerCompat.from(context)
@@ -398,22 +394,22 @@ class DataHandlerWear @Inject constructor(
     }
 
     private fun handleOpenLoopRequest(command: EventData.OpenLoopRequest) {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        val name: CharSequence = "AAPS Open Loop"
-        val description = "Open Loop request notification"
-        val channel = NotificationChannel(DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP, name, NotificationManager.IMPORTANCE_HIGH)
-        channel.description = description
-        channel.enableVibration(true)
-
-        // Register the channel with the system; you can't change the importance
-        // or other notification behaviors after this
-        context.getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+        // The vibration pattern must be on the channel: a pattern set on the notification is ignored. The
+        // old channel had the default pattern, and an app cannot change an existing channel, so this one
+        // has a new id (#5217).
+        context.getSystemService(NotificationManager::class.java)
+            .deleteNotificationChannel(DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP_OLD)
+        createNotificationChannel(
+            longArrayOf(1000, 1000, 1000, 1000, 1000),
+            DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP,
+            context.getString(R.string.open_loop_channel_name),
+            context.getString(R.string.open_loop_channel_description),
+            NotificationManager.IMPORTANCE_HIGH
+        )
         var builder = NotificationCompat.Builder(context, DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP)
             .setSmallIcon(R.drawable.notif_icon)
             .setContentTitle(command.title)
             .setContentText(command.message)
-            .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
         // Creates an explicit intent for an Activity in your app
@@ -453,6 +449,14 @@ class DataHandlerWear @Inject constructor(
             SgvComplication::class.java,
             SgvComplicationExt1::class.java,
             SgvComplicationExt2::class.java,
+            SgvLargeComplication::class.java,
+            // BG graph image complication (for WFF watchfaces on watches without CWF support)
+            BgGraphComplication::class.java,
+            // Ambient readouts of the pushed Watch Face Format face. Without these they refresh
+            // only on their own 300 second period, and the ambient glucose was seen 4 minutes
+            // behind the value drawn in the face itself.
+            CwfAmbientBgComplication::class.java,
+            CwfAmbientStatusComplication::class.java,
             // Long status complications (show detailed glucose + status info)
             LongStatusComplication::class.java,
             LongStatusFlippedComplication::class.java,
@@ -466,11 +470,15 @@ class DataHandlerWear @Inject constructor(
             // Basal rate complications
             BrComplication::class.java,
             BrIobComplication::class.java,
+            BrTtComplication::class.java,
+            TargetComplication::class.java,
             BrCobIobComplication::class.java,
             BrCobIobComplicationExt1::class.java,
             BrCobIobComplicationExt2::class.java,
             // Battery complication
-            UploaderBatteryComplication::class.java
+            UploaderBatteryComplication::class.java,
+            // Running mode complication
+            RunningModeComplication::class.java
             // Note: WallpaperComplication is abstract, subclasses will auto-update
         )
 

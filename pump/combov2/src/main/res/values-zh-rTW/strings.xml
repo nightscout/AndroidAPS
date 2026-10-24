@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">與幫浦配對</string>
     <string name="combov2_unpair_pump_title">取消幫浦配對</string>
     <string name="combov2_driver_state_label">驅動狀態</string>
-    <string name="combov2_current_activity_label">目前活動</string>
     <string name="bluetooth_address">藍牙地址</string>
     <string name="combov2_start_pairing">開始配對</string>
     <string name="combov2_pairing_in_progress">Combo 配對進行中</string>
@@ -40,13 +39,14 @@
 3. 再次嘗試配對</string>
     <string name="combov2_enter_pin">輸入 PIN</string>
     <string name="combov2_cancel_pairing">取消配對</string>
+    <string name="combov2_confirm_cancel_pairing_message">確定要取消配對嗎？</string>
+    <string name="combov2_confirm_unpair_message">確定要解除與幫浦的配對嗎？</string>
     <string name="combov2_pin_hint">10 位數 PIN</string>
     <string name="combov2_pairing_finished_successfully">成功與 Combo 配對</string>
     <string name="combov2_pairing_cancelled">用戶取消了與 Combo 的配對</string>
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo 掃描逾時已達</string>
     <string name="combov2_pairing_failed_due_to_error">由於錯誤而導致配對失敗：%1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">因未知原因中止配對</string>
-    <string name="combov2_pairing_invalid_pin_length">"無效的配對 PIN 長度：需要 %1$d 位數字，得到 %2$d 位"</string>
     <string name="combov2_scanning_for_pump">正在掃描幫浦</string>
     <string name="combov2_establishing_bt_connection">正在建立藍牙連線（第 %1$d 次嘗試）</string>
     <string name="combov2_pairing_performing_handshake">正在與幫浦進行交握</string>
@@ -66,7 +66,6 @@
     <string name="combov2_setting_basal_profile_cmddesc">正在設定基礎速率配置</string>
     <string name="combov2_setting_tbr_cmddesc">設定 %1$d%% 的臨時基礎速率，持續 %2$d 分鐘</string>
     <string name="combov2_cancelling_tbr">取消正在進行的臨時基礎速率</string>
-    <string name="combov2_delivering_bolus_cmddesc">正在注射 %1$.1f U 胰島素</string>
     <string name="combov2_fetching_tdd_history_cmddesc">正在獲取每日總劑量歷史紀錄</string>
     <string name="combov2_updating_pump_datetime_cmddesc">正在更新幫浦日期時間</string>
     <string name="combov2_updating_pump_status_cmddesc">正在更新幫浦狀態</string>
@@ -90,6 +89,9 @@
     <string name="combov2_current_tbr_less_than_1min">%1$d%%（剩餘不到 1 分鐘）</string>
     <string name="combov2_load_tdds_cancelled">載入每日總劑量已取消</string>
     <string name="combov2_retrieving_tdds_failed">檢索每日總劑量失敗</string>
+    <string name="combov2_battery_empty">空</string>
+    <string name="combov2_battery_low">低</string>
+    <string name="combov2_battery_full">滿</string>
     <string name="combov2_battery_low_warning">幫浦電池電量低</string>
     <string name="combov2_reservoir_low_warning">幫浦儲液器液位低</string>
     <string name="combov2_setting_tbr_succeeded">設定臨時基礎率成功</string>
@@ -99,7 +101,6 @@
     <string name="combov2_ignoring_redundant_100_tbr">忽略多餘的 100% 臨時基礎率請求</string>
     <string name="combov2_hit_unexpected_tbr_limit">調整臨時基礎率時遇到意外限制：目標百分比為 %1$d%%，達到 %2$d%% 的限制</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">如果基礎速率為零，則無法設定絕對臨時基礎率</string>
-    <string name="combov2_pair_with_pump_summary">將 AndroidAPS 和 Android 與目前未配對的 Accu-Chek Combo 幫浦配對</string>
     <string name="combov2_unpair_pump_summary">將 AndroidAPS 和 Android 與目前配對的 Accu-Chek Combo 幫浦取消配對</string>
     <string name="combov2_unknown_tbr_detected">偵測到未知的臨時基礎率並已停止；百分比：%1$d%%；剩餘持續時間：%2$s</string>
     <string name="combov2_connection_error">連線錯誤：%1$s</string>

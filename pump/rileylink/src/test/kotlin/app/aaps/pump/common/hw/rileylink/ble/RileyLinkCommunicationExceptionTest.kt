@@ -83,14 +83,6 @@ class RileyLinkCommunicationExceptionTest {
             assertEquals(RileyLinkBLEError.Timeout, e.errorCode)
         }
     }
-
-    @Test
-    fun `exception is instance of Exception`() {
-        val exception = RileyLinkCommunicationException(RileyLinkBLEError.Timeout)
-
-        assert(exception is Exception)
-    }
-
     @Test
     fun `different error codes create different exceptions`() {
         val exception1 = RileyLinkCommunicationException(RileyLinkBLEError.Timeout)
@@ -179,7 +171,7 @@ class RileyLinkCommunicationExceptionTest {
 
     @Test
     fun `exception can be re-thrown`() {
-        var caught = false
+        var caught: Boolean
 
         try {
             try {

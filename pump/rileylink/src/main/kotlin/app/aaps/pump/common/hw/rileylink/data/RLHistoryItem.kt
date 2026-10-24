@@ -3,7 +3,6 @@ package app.aaps.pump.common.hw.rileylink.data
 import app.aaps.core.interfaces.pump.defs.PumpDeviceState
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.pump.common.extensions.stringResource
-import app.aaps.pump.common.hw.rileylink.data.RLHistoryItem.RLHistoryItemSource
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
@@ -29,8 +28,12 @@ open class RLHistoryItem(val dateTime: LocalDateTime = LocalDateTime(), val sour
 
     open fun getDescription(rh: ResourceHelper): String {
         return when (this.source) {
-            RLHistoryItemSource.RileyLink     -> "State: " + rh.gs(serviceState.resourceId) +
-                if (this.errorCode == null) "" else ", Error Code: $errorCode"
+            // "State" and "Error Code" were never translated; the separators are.
+            RLHistoryItemSource.RileyLink     -> {
+                val state = rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, "State", rh.gs(serviceState.resourceId))
+                errorCode?.let { rh.gs(app.aaps.core.interfaces.R.string.values_with_comma, state, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, "Error Code", it.toString())) }
+                    ?: state
+            }
 
             RLHistoryItemSource.MedtronicPump -> rh.gs(pumpDeviceState.stringResource())
             else                              -> "Unknown Description"

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_oref1">Gevoeligheid Oref1</string>
+    <string name="sensitivity_aaps">Gevoeligheid AAPS</string>
+    <string name="sensitivity_weighted_average">Gemiddelde gevoeligheid</string>
+    <string name="description_sensitivity_aaps">Gevoeligheid wordt berekend op dezelfde manier als Oref0, maar je kunt zelf instellen hoeveel uren AAPS terugkijkt. Minimale koolhydraat absorptie is berekend op basis van max koolhydraat absorptie tijd zoals in jouw instellingen.</string>
+    <string name="description_sensitivity_oref1">Gevoeligheid wordt berekend met gegevens van de afgelopen 8 of 24 uur (de meest gevoelige van die twee) en koolhydraten (indien niet geabsorbeerd) worden hiervan afgehaald, na de duur die is opgegeven in de instellingen. Berekent ook UAM.</string>
+    <string name="description_sensitivity_weighted_average">Gevoeligheid wordt berekend als een gewogen gemiddelde van afwijkingen. Nieuwere afwijkingen wegen hierbij zwaarder. Minimale koolhydraat absorptie is berekend op basis van de max koolhydraat absorptie tijd uit jouw instellingen. Dit algoritme is de snelste in het volgen van wijzigingen van de gevoeligheid.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM gedeactiveerd omdat het Oref1 gevoeligheid plugin nodig heeft</string>
+    <string name="absorption_settings_title">Opname instellingen</string>
+</resources>

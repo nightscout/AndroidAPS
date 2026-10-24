@@ -2,7 +2,10 @@ package app.aaps.pump.equil.manager.command
 
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.keys.EquilStringKey
+import app.aaps.pump.equil.manager.AESUtil
 import app.aaps.pump.equil.manager.EquilManager
+import app.aaps.pump.equil.manager.EquilPacketCodec
+import app.aaps.pump.equil.manager.Utils
 import app.aaps.shared.tests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -217,5 +220,54 @@ class BaseSettingTest : TestBaseWithProfile() {
     @Test
     fun `statusDescription should be class name`() {
         assertTrue(testSetting.statusDescription.contains("TestBaseSetting"))
+    }
+
+    @Test
+    fun `getEquilResponse should produce valid framed packets`() {
+        val response = testSetting.getEquilResponse()
+        assertNotNull(response)
+        assertTrue(response!!.send.size > 0)
+
+        // Every packet must have valid CRC8
+        for (buf in response.send) {
+            val bytes = buf.array()
+            val expectedCrc = app.aaps.pump.equil.manager.Crc.crc8Maxim(bytes.copyOfRange(0, 5))
+            assertEquals(expectedCrc.toByte(), bytes[5], "CRC8 mismatch on framed packet")
+        }
+
+        // Last packet must have end bit set
+        val lastBytes = response.send.last.array()
+        assertTrue(EquilPacketCodec.isEnd(lastBytes[4]), "Last packet should have end bit set")
+    }
+
+    @Test
+    fun `responseCmd and decodeModel should round-trip an EquilCmdModel`() {
+        // Encrypt some test data
+        val pwd = Utils.hexStringToBytes(testSetting.getEquilPassWord())
+        val testData = byteArrayOf(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08)
+        val encrypted = AESUtil.aesEncrypt(pwd, testData)
+
+        // Build packets via responseCmd (which delegates to EquilPacketCodec.buildPackets)
+        val port = "0F0F0000"
+        testSetting.response = app.aaps.pump.equil.manager.EquilResponse(testSetting.createTime)
+        val builtResponse = testSetting.responseCmd(encrypted, port)
+
+        // Simulate receiving: store in response field, then parse
+        testSetting.response = builtResponse
+        val parsed = testSetting.decodeModel()
+
+        // Verify round-trip preserves the encrypted model
+        assertEquals(encrypted.tag?.lowercase(), parsed.tag)
+        assertEquals(encrypted.iv?.lowercase(), parsed.iv)
+        assertEquals(encrypted.ciphertext?.lowercase(), parsed.ciphertext)
+
+        // Verify we can decrypt back to original data
+        val decrypted = AESUtil.decrypt(parsed, pwd)
+        val decryptedBytes = Utils.hexStringToBytes(decrypted)
+        assertNotNull(decryptedBytes)
+        assertEquals(testData.size, decryptedBytes.size)
+        for (i in testData.indices) {
+            assertEquals(testData[i], decryptedBytes[i], "Decrypted byte $i mismatch")
+        }
     }
 }

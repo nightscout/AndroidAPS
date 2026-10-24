@@ -8,11 +8,16 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
 import app.aaps.wear.interaction.actions.BackgroundActionActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
-import javax.inject.Inject
-import javax.inject.Singleton
+import app.aaps.wear.tile.Action
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
-class TempTargetSource @Inject constructor(context: Context, sp: SP, aapsLogger: AAPSLogger) : StaticTileSource(context, sp, aapsLogger) {
+private const val SETTING_CANCEL = "cancel"
+
+@SingleIn(AppScope::class)
+@Inject
+class TempTargetSource(context: Context, sp: SP, aapsLogger: AAPSLogger) : StaticTileSource(context, sp, aapsLogger) {
 
     override val preferencePrefix = "tile_tempt_"
 
@@ -57,7 +62,7 @@ class TempTargetSource @Inject constructor(context: Context, sp: SP, aapsLogger:
                 action = null
             ),
             StaticAction(
-                settingName = "cancel",
+                settingName = SETTING_CANCEL,
                 buttonText = resources.getString(R.string.temp_target_cancel),
                 iconRes = R.drawable.ic_target_cancel,
                 activityClass = BackgroundActionActivity::class.java.name,
@@ -66,6 +71,16 @@ class TempTargetSource @Inject constructor(context: Context, sp: SP, aapsLogger:
                 action = EventData.ActionTempTargetPreCheck(EventData.ActionTempTargetPreCheck.TempTargetCommand.CANCEL)
             )
         )
+    }
+
+    /**
+     * The Cancel button is shown only while a temp target runs, like on the phone. The flag is
+     * written by `DataHandlerWear` from the phone's status, which also refreshes this tile.
+     */
+    override fun getSelectedActions(): List<Action> {
+        val selected = super.getSelectedActions()
+        if (sp.getBoolean(R.string.key_temp_target_active, false)) return selected
+        return selected.filterNot { it is StaticAction && it.settingName == SETTING_CANCEL }
     }
 
     override fun getResourceReferences(resources: Resources): List<Int> {

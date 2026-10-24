@@ -38,6 +38,24 @@ class CmdLargeBasalSetTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun `stepTime follows the chosen bolus speed (#5142)`() {
+        // Seconds per unit: 40 = 1.5 U/min, 20 = 3, 10 = 6, 5 = 12 U/min. Measured on a real pump.
+        assertEquals(480, CmdLargeBasalSet(12.0, aapsLogger, preferences, equilManager, 40).stepTime)
+        assertEquals(20, CmdLargeBasalSet(1.0, aapsLogger, preferences, equilManager, 20).stepTime)
+        assertEquals(10, CmdLargeBasalSet(1.0, aapsLogger, preferences, equilManager, 10).stepTime)
+        assertEquals(5, CmdLargeBasalSet(1.0, aapsLogger, preferences, equilManager, 5).stepTime)
+        // The amount does not depend on the speed.
+        assertEquals(160, CmdLargeBasalSet(1.0, aapsLogger, preferences, equilManager, 5).step)
+    }
+
+    @Test
+    fun `a small fast bolus gets at least 1 second`() {
+        // 0.05 U at 12 U/min would be 0.25 s, sent as 0 s.
+        assertEquals(1, CmdLargeBasalSet(0.05, aapsLogger, preferences, equilManager, 5).stepTime)
+        assertEquals(2, CmdLargeBasalSet(0.05, aapsLogger, preferences, equilManager, 40).stepTime)
+    }
+
+    @Test
     fun `constructor should handle zero insulin`() {
         val cmd = CmdLargeBasalSet(0.0, aapsLogger, preferences, equilManager)
         assertEquals(0, cmd.step)
