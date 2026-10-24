@@ -86,7 +86,7 @@ internal class O5OverviewViewModelTest {
         "ALARM_OCCLUDED, occluded",
         "ALARM_SYNC_WITHOUT_CLOSED_LOOP, pod_error"
     )
-    fun faultCategory_showsPdmTextAndReference(alarm: AlarmType, resourceSuffix: String) {
+    fun faultCategory_showsPdmText_andOnlyExpectedCategoriesShowReference(alarm: AlarmType, resourceSuffix: String) {
         val ref = "19-00006-02251-152"
         val templateRes = when (resourceSuffix) {
             "reservoir_empty" -> R.string.omnipod_o5_pdm_notification_reservoir_empty
@@ -102,11 +102,17 @@ internal class O5OverviewViewModelTest {
         whenever(rh.gs(any<Int>())).thenAnswer { invocation ->
             if (invocation.getArgument<Int>(0) == CommonR.string.omnipod_common_pdm_notification_label) "PDM Notification" else "label"
         }
-        whenever(rh.gs(templateRes, ref)).thenReturn("templated $resourceSuffix: $ref")
+        whenever(rh.gs(templateRes)).thenReturn("templated $resourceSuffix")
+        whenever(rh.gs(CommonR.string.omnipod_common_pdm_ref, ref)).thenReturn("Ref: $ref")
 
         val row = createViewModel().uiState.value.infoRows.filterIsInstance<PumpInfoRow>().single { it.label == "PDM Notification" }
 
-        assertThat(row.value).isEqualTo("templated $resourceSuffix: $ref")
+        val expected = if (resourceSuffix == "pod_expired" || resourceSuffix == "pod_error") {
+            "templated $resourceSuffix\n\nRef: $ref"
+        } else {
+            "templated $resourceSuffix"
+        }
+        assertThat(row.value).isEqualTo(expected)
     }
 
     @ParameterizedTest
