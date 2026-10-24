@@ -74,7 +74,7 @@ private fun DanaHistoryItem(
                     ) {
                         Text(text = record.bolusType, style = MaterialTheme.typography.bodySmall)
                         Text(
-                            text = viewModel.formatValue(record) + " U",
+                            text = stringResource(app.aaps.core.ui.R.string.value_with_unit, viewModel.formatValue(record), stringResource(app.aaps.core.ui.R.string.insulin_unit_shortname)),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium
                         )

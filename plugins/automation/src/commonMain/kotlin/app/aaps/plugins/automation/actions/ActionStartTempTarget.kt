@@ -5,6 +5,7 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.navigation.ElementType
@@ -53,7 +54,8 @@ class ActionStartTempTarget(
     override var precondition: Trigger? = TriggerTempTarget(triggerDeps, ComparatorExists.Compare.NOT_EXISTS)
 
     override fun friendlyName(): TextRef = AutomationStrings.starttemptarget
-    override fun shortDescription(): String = rh.gs(AutomationStrings.starttemptarget) + ": " + tt().friendlyDescription(value.units, rh, profileUtil)
+    override fun shortDescription(): String =
+        rh.gs(InterfacesStrings.confirmation_line, rh.gs(AutomationStrings.starttemptarget), tt().friendlyDescription(value.units, rh, profileUtil))
     override fun composeIcon() = IcTtHigh
     override fun elementType() = ElementType.TEMP_TARGET_MANAGEMENT
 

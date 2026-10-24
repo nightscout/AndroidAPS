@@ -166,8 +166,7 @@ class AutomationComposeContent(
 
         deleteTarget?.let { pos ->
             val target = holder.eventAt(pos)
-            val message = stringResource(CoreUiStrings.removerecord) +
-                (target?.let { " " + it.title } ?: "")
+            val message = target?.let { stringResource(CoreUiStrings.value_with_unit, stringResource(CoreUiStrings.removerecord), it.title) } ?: stringResource(CoreUiStrings.removerecord)
             AlertDialog(
                 onDismissRequest = { deleteTarget = null },
                 title = { Text(stringResource(CoreUiStrings.removerecord)) },

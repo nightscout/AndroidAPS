@@ -279,7 +279,7 @@ private fun WizardConfirmScreen(carbs: Int, carbsType: CarbsType?, percentage: I
         )
         if (percentage != null) {
             Text(
-                text = "$percentage%",
+                text = stringResource(R.string.wizard_result_correction_percentage, percentage),
                 color = WearSecondaryText,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold

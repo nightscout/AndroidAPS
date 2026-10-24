@@ -51,6 +51,7 @@ internal class CareDialogViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher())
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         whenever(profileUtil.fromMgdlToUnits(any(), any())).thenReturn(0.0)
+        whenever(dateUtil.now()).thenReturn(NOW)
         sut = CareDialogViewModel(
             SavedStateHandle(), persistenceLayer, batchExecutor, profileFunction, profileUtil,
             glucoseStatusProvider, translator, preferences, rh, dateUtil, aapsLogger,
@@ -86,5 +87,49 @@ internal class CareDialogViewModelTest {
 
         assertThat(sut.uiState.value.eventTime).isEqualTo(123_456L)
         assertThat(sut.uiState.value.eventTimeChanged).isTrue()
+    }
+
+    @Test
+    fun `the dialog opens at now, with no offset`() {
+        assertThat(sut.uiState.value.eventTime).isEqualTo(NOW)
+        assertThat(sut.uiState.value.timeOffsetMinutes).isEqualTo(0)
+        assertThat(sut.uiState.value.eventTimeChanged).isFalse()
+    }
+
+    /** The -/+ buttons, the same as in the bolus wizard, the carbs and the insulin dialog (#5353). */
+    @Test
+    fun `the minus and plus buttons move the time in minutes from now`() {
+        sut.updateTimeOffset(-5)
+        assertThat(sut.uiState.value.eventTime).isEqualTo(NOW - 5 * MINUTE)
+        assertThat(sut.uiState.value.eventTimeChanged).isTrue()
+
+        sut.updateTimeOffset(0)
+        assertThat(sut.uiState.value.eventTime).isEqualTo(NOW)
+        assertThat(sut.uiState.value.eventTimeChanged).isFalse()
+    }
+
+    @Test
+    fun `the buttons stop at a week back and half a day ahead`() {
+        sut.updateTimeOffset(-8 * 24 * 60)
+        assertThat(sut.uiState.value.timeOffsetMinutes).isEqualTo(-7 * 24 * 60)
+        assertThat(sut.uiState.value.eventTime).isEqualTo(NOW - 7 * 24 * 60 * MINUTE)
+
+        sut.updateTimeOffset(13 * 60)
+        assertThat(sut.uiState.value.timeOffsetMinutes).isEqualTo(12 * 60)
+    }
+
+    @Test
+    fun `a picked time sets the offset, so the buttons go on from it`() {
+        sut.updateEventTime(NOW - 37 * MINUTE)
+        assertThat(sut.uiState.value.timeOffsetMinutes).isEqualTo(-37)
+
+        sut.updateTimeOffset(sut.uiState.value.timeOffsetMinutes - 5)
+        assertThat(sut.uiState.value.eventTime).isEqualTo(NOW - 42 * MINUTE)
+    }
+
+    private companion object {
+
+        const val NOW = 1_700_000_000_000L
+        const val MINUTE = 60_000L
     }
 }

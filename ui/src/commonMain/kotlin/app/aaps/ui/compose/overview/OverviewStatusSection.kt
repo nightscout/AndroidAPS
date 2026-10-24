@@ -47,6 +47,7 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.LocalClientRole
+import app.aaps.core.ui.compose.LongOrShort
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
@@ -128,17 +129,15 @@ fun OverviewStatusSection(
                         modifier = Modifier.clickable { onExpandedChange(false) }
                     )
                 } else {
-                    FlowRow(
+                    // The long ages where all of them fit on one line, otherwise the short ones. The line
+                    // wraps only when even the short ones do not fit.
+                    LongOrShort(
+                        long = { CompactStatusItems(items = compactItems, shortAge = false) },
+                        short = { CompactStatusItems(items = compactItems, shortAge = true) },
                         modifier = Modifier
                             .weight(1f)
-                            .clickable { onExpandedChange(true) },
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        compactItems.forEach { item ->
-                            CompactStatusItem(item = item)
-                        }
-                    }
+                            .clickable { onExpandedChange(true) }
+                    )
                     Icon(
                         imageVector = Icons.Filled.ExpandMore,
                         contentDescription = stringResource(CoreUiStrings.expand),
@@ -225,7 +224,20 @@ internal fun StatusLightsSettingsContent(settingsDef: PreferenceSubScreenDef) {
 }
 
 @Composable
-private fun CompactStatusItem(item: StatusItem) {
+private fun CompactStatusItems(items: List<StatusItem>, shortAge: Boolean) {
+    FlowRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        items.forEach { item ->
+            CompactStatusItem(item = item, age = if (shortAge) item.ageShort else item.age)
+        }
+    }
+}
+
+@Composable
+private fun CompactStatusItem(item: StatusItem, age: String) {
     val showAge = item.compactAge
     val showLevel = item.compactLevel && item.level != null
     if (!showAge && !showLevel) return
@@ -270,7 +282,7 @@ private fun CompactStatusItem(item: StatusItem) {
             text = buildAnnotatedString {
                 if (showAge) {
                     withStyle(SpanStyle(color = ageColor)) {
-                        append(item.age)
+                        append(age)
                     }
                 }
                 if (showLevel) {

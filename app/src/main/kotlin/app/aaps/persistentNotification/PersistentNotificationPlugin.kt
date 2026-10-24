@@ -73,6 +73,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlin.math.round
 import kotlin.time.Duration.Companion.seconds
 import android.app.NotificationManager as AndroidNotificationManager
+import app.aaps.core.interfaces.R as InterfacesR
+import app.aaps.core.ui.R as CoreUiR
 
 @Suppress("PrivatePropertyName", "DEPRECATION")
 // Registers itself into the every-build plugin bucket at order 0, replacing the @Binds @IntKey(0) in
@@ -282,22 +284,23 @@ class PersistentNotificationPlugin(
                     line1 += " " + rh.gs(R.string.old_data)
                 }
             } else {
-                line1 = rh.gs(app.aaps.core.ui.R.string.missed_bg_readings)
-                line1WithDelta = rh.gs(app.aaps.core.ui.R.string.missed_bg_readings)
+                line1 = rh.gs(CoreUiR.string.missed_bg_readings)
+                line1WithDelta = rh.gs(CoreUiR.string.missed_bg_readings)
             }
             val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
             line1 += if (activeTemp != null) {
                 " • " + activeTemp.toStringShort(rh) + " "
             } else {
-                " • " + rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, ch.fromPump(pump.baseBasalRate)) + " "
+                " • " + rh.gs(CoreUiR.string.pump_base_basal_rate, ch.fromPump(pump.baseBasalRate)) + " "
             }
             val profileName = profileFunction.getProfileName()
             //IOB
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             val cobInfo = iobCobCalculator.getCobInfo("PersistentNotificationPlugin")
-            line2 =
-                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(R.string.notification_iob_short, bolusIob.iob + basalIob.basaliob) + " • " + rh.gs(app.aaps.core.ui.R.string.cob) + ": " + cobInfo.generateCOBString(decimalFormatter)
+            val iobText = rh.gs(CoreUiR.string.value_with_unit, rh.gs(CoreUiR.string.treatments_iob_label_string), rh.gs(R.string.notification_iob_short, bolusIob.iob + basalIob.basaliob))
+            val cobText = rh.gs(InterfacesR.string.confirmation_line, rh.gs(CoreUiR.string.cob), cobInfo.generateCOBString(decimalFormatter))
+            line2 = "$iobText • $cobText"
             metricValue?.let {
                 bgMetric = Metric(
                     it,
@@ -337,8 +340,9 @@ class PersistentNotificationPlugin(
                 val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
                 if (tempTarget != null) {
                     // A target without an end (a scene without a duration) shows no remaining time, like the overview chip.
-                    aaTarget = profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) +
-                        if (tempTarget.hasEnd) " " + dateUtil.untilString(tempTarget.end, rh) else ""
+                    val range = profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units)
+                    aaTarget = if (tempTarget.hasEnd) rh.gs(InterfacesR.string.value_with_detail, range, dateUtil.untilString(tempTarget.end, rh, withParentheses = false))
+                    else range
                 } else {
                     profileFunction.getProfile()?.let { profile ->
                         val adjustedTarget = profile.apsAdjustedTargetMgdl(loop, config, processedDeviceStatusData)
@@ -349,7 +353,7 @@ class PersistentNotificationPlugin(
                         }
                     }
                 }
-                val aaMsg = decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname) +
+                val aaMsg = rh.gs(InterfacesR.string.format_insulin_units, bolusIob.iob + basalIob.basaliob) +
                     " • " + cobInfo.generateCOBString(decimalFormatter) +
                     " • " + aaTarget +
                     " • " + profileName
@@ -361,8 +365,8 @@ class PersistentNotificationPlugin(
             }
             /// End Android Auto
         } else {
-            line1 = rh.gs(app.aaps.core.ui.R.string.no_profile_set)
-            line1WithDelta = rh.gs(app.aaps.core.ui.R.string.no_profile_set)
+            line1 = rh.gs(CoreUiR.string.no_profile_set)
+            line1WithDelta = rh.gs(CoreUiR.string.no_profile_set)
         }
         val content = "$line1|$line2|$line3"
         if (includeAuto && content == lastAutoNotificationContent) return

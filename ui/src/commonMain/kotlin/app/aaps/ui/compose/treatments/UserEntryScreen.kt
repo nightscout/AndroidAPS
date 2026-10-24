@@ -41,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.UE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.navigation.ElementType
@@ -52,10 +53,12 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.MenuItemData
 import app.aaps.core.ui.compose.SelectableListToolbar
+import app.aaps.core.ui.compose.StyledArg
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.styledStringResource
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.treatments.viewmodels.UserEntryViewModel
 
@@ -114,7 +117,7 @@ fun UserEntryScreen(
     if (showExportDialog) {
         OkCancelDialog(
             title = stringResource(CoreUiStrings.confirm),
-            message = stringResource(CoreUiStrings.ue_export_to_csv) + "?",
+            message = stringResource(CoreUiStrings.value_question, stringResource(CoreUiStrings.ue_export_to_csv)),
             onConfirm = {
                 uel.log(Action.EXPORT_CSV, Sources.Treatments)
                 importExportPrefs.exportUserEntriesCsv()
@@ -237,7 +240,7 @@ private fun UserEntryItem(
                 // Source Icon
                 Image(
                     painter = rememberVectorPainter(userEntryPresentationHelper.icon(userEntry.source)),
-                    contentDescription = "${stringResource(CoreUiStrings.ue_source)}: ${userEntry.source}",
+                    contentDescription = stringResource(InterfacesStrings.confirmation_line, stringResource(CoreUiStrings.ue_source), translator.translate(userEntry.source)),
                     modifier = Modifier
                         .size(20.dp)
                         .padding(end = 4.dp),
@@ -296,15 +299,11 @@ private fun actionToAnnotatedString(
     action: Action,
     translator: Translator
 ): AnnotatedString = when (action) {
-    Action.TREATMENT -> buildAnnotatedString {
-        withStyle(style = SpanStyle(color = Action.BOLUS.colorGroup.toElementColor())) {
-            append(translator.translate(Action.BOLUS))
-        }
-        append(" + ")
-        withStyle(style = SpanStyle(color = Action.CARBS.colorGroup.toElementColor())) {
-            append(translator.translate(Action.CARBS))
-        }
-    }
+    Action.TREATMENT -> styledStringResource(
+        UiStrings.values_with_plus,
+        StyledArg(translator.translate(Action.BOLUS), SpanStyle(color = Action.BOLUS.colorGroup.toElementColor())),
+        StyledArg(translator.translate(Action.CARBS), SpanStyle(color = Action.CARBS.colorGroup.toElementColor()))
+    )
 
     else             -> buildAnnotatedString {
         withStyle(style = SpanStyle(color = action.colorGroup.toElementColor())) {

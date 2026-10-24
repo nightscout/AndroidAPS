@@ -39,8 +39,9 @@ class CommandBolus(
     }
 
     override fun status(): String {
-        return (if (detailedBolusInfo.insulin > 0) rh.gs(CoreUiStrings.bolus_u_min, detailedBolusInfo.insulin) else "") +
-            if (detailedBolusInfo.carbs > 0) rh.gs(CoreUiStrings.carbs_g, detailedBolusInfo.carbs.toInt()) else ""
+        val bolus = if (detailedBolusInfo.insulin > 0) rh.gs(CoreUiStrings.bolus_u_min, detailedBolusInfo.insulin) else ""
+        val carbs = if (detailedBolusInfo.carbs > 0) rh.gs(CoreUiStrings.carbs_g, detailedBolusInfo.carbs.toInt()) else ""
+        return if (bolus.isNotEmpty() && carbs.isNotEmpty()) rh.gs(InterfacesStrings.values_with_comma, bolus, carbs) else bolus + carbs
     }
 
     override fun log(): String {

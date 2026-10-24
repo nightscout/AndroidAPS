@@ -21,7 +21,9 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.UiStrings
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 /**
  * Compose dialog showing the calculation breakdown of a Bolus Calculator Result.
@@ -78,7 +80,11 @@ internal fun WizardInfoDialogContent(
         // BG with ISF
         if (bcr.wasGlucoseUsed) {
             CalcRow(
-                label = stringResource(CoreUiStrings.wizard_bg_label) + " $bgString (ISF: ${decimalFormatter.to1Decimal(isfInUnits)})",
+                label = stringResource(
+                    UiStrings.wizard_calc_with_isf,
+                    stringResource(CoreUiStrings.value_with_unit, stringResource(CoreUiStrings.wizard_bg_label), bgString),
+                    decimalFormatter.to1Decimal(isfInUnits)
+                ),
                 value = stringResource(InterfacesStrings.format_insulin_units, bcr.glucoseInsulin)
             )
             if (bcr.wasTempTargetUsed) {
@@ -92,7 +98,11 @@ internal fun WizardInfoDialogContent(
         // Trend
         if (bcr.wasTrendUsed) {
             CalcRow(
-                label = stringResource(CoreUiStrings.wizard_bg_label) + " \u039415m: $trendString",
+                label = stringResource(
+                    InterfacesStrings.confirmation_line,
+                    stringResource(CoreUiStrings.value_with_unit, stringResource(CoreUiStrings.wizard_bg_label), "Δ15m"),
+                    trendString
+                ),
                 value = stringResource(InterfacesStrings.format_insulin_units, bcr.trendInsulin)
             )
         }
@@ -100,7 +110,12 @@ internal fun WizardInfoDialogContent(
         // COB with IC
         if (bcr.wasCOBUsed) {
             CalcRow(
-                label = stringResource(CoreUiStrings.cob) + " ${decimalFormatter.to1Decimal(bcr.cob)}g (IC: ${decimalFormatter.to1Decimal(bcr.ic)})",
+                label = stringResource(
+                    UiStrings.wizard_calc_carbs_with_ic,
+                    stringResource(CoreUiStrings.cob),
+                    stringResource(CoreUiStrings.value_with_unit, decimalFormatter.to1Decimal(bcr.cob), stringResource(CoreUiStrings.units_grams)),
+                    decimalFormatter.to1Decimal(bcr.ic)
+                ),
                 value = stringResource(InterfacesStrings.format_insulin_units, bcr.cobInsulin)
             )
         }
@@ -108,7 +123,12 @@ internal fun WizardInfoDialogContent(
         // Carbs with IC
         if (bcr.wereCarbsUsed) {
             CalcRow(
-                label = stringResource(InterfacesStrings.carbs) + " ${decimalFormatter.to0Decimal(bcr.carbs)}g (IC: ${decimalFormatter.to1Decimal(bcr.ic)})",
+                label = stringResource(
+                    UiStrings.wizard_calc_carbs_with_ic,
+                    stringResource(InterfacesStrings.carbs),
+                    stringResource(InterfacesStrings.format_carbs, bcr.carbs.roundToInt()),
+                    decimalFormatter.to1Decimal(bcr.ic)
+                ),
                 value = stringResource(InterfacesStrings.format_insulin_units, bcr.carbsInsulin)
             )
         }
@@ -123,7 +143,7 @@ internal fun WizardInfoDialogContent(
             )
             val afterPercentage = scaledSubtotal * bcr.percentageCorrection / 100.0
             CalcRow(
-                label = stringResource(CoreUiStrings.format_percent, bcr.percentageCorrection),
+                label = stringResource(CoreUiStrings.units_format_percent, bcr.percentageCorrection),
                 value = stringResource(InterfacesStrings.format_insulin_units, afterPercentage)
             )
         }
@@ -173,13 +193,13 @@ internal fun WizardInfoDialogContent(
         // === Footer ===
         HorizontalDivider(modifier = Modifier.padding(vertical = AapsSpacing.small))
         Text(
-            text = stringResource(CoreUiStrings.profile) + ": " + bcr.profileName,
+            text = stringResource(InterfacesStrings.confirmation_line, stringResource(CoreUiStrings.profile), bcr.profileName),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         if (bcr.note.isNotEmpty()) {
             Text(
-                text = stringResource(CoreUiStrings.notes_label) + ": " + bcr.note,
+                text = stringResource(InterfacesStrings.confirmation_line, stringResource(CoreUiStrings.notes_label), bcr.note),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

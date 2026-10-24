@@ -185,7 +185,7 @@ private fun TreatmentConfirmScreen(insulin: Double, carbs: Int, onConfirm: () ->
         Spacer(Modifier.height(4.dp))
         if (insulin > 0.0) {
             Text(
-                text = "${fmt.format(insulin)} ${stringResource(R.string.insulin_unit_short)}",
+                text = stringResource(R.string.wizard_insulin_format, fmt.format(insulin)),
                 color = InsulinBlue,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold

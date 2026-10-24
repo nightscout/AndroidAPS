@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.ComparatorConnect
@@ -53,7 +54,7 @@ fun ComparatorEditor(
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             Comparator.Compare.entries.forEach { cmp ->
                 DropdownMenuItem(
-                    text = { Text("${cmp.glyph()}   ${stringResource(cmp.stringRes)}") },
+                    text = { Text(stringResource(CoreUiStrings.value_with_unit, cmp.glyph(), stringResource(cmp.stringRes))) },
                     onClick = { onValueChange(cmp); expanded = false }
                 )
             }

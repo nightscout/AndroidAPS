@@ -33,6 +33,12 @@ import app.aaps.ui.UiStrings
  * master→client failure reads in the client's locale. [ActionProgress.Applied] is handled by the caller
  * (dismiss + confirm), so it never reaches this dialog.
  *
+ * A refusal the master explained ([ActionProgress.Rejected.detail]) shows the master's own text instead, in the
+ * master's language: the code alone is too coarse. Every bolus prepare the master refuses comes back as
+ * [FailureReason.BolusComputeFailed], whose text blames a missing glucose or profile also when the reason was an
+ * SMB being delivered or a limit (#5381). This dialog is the only place a client shows that text; the screens do
+ * not repeat it.
+ *
  * Modal: back-press and tap-outside are disabled — a stray tap can't silently drop a therapy action.
  *
  * The dialog changes state in place, so the body line is one node in every state and is an assertive
@@ -73,7 +79,8 @@ fun ClientControlPendingDialog(
             // bolus, heard "waiting", and was never told that the master had refused it.
             val bodyText = when {
                 partial                                -> stringResource(UiStrings.clientcontrol_pending_partial_format, pending.label)
-                progress is ActionProgress.Rejected    -> stringResource(UiStrings.clientcontrol_pending_failed_format, pending.label, reasonText(progress.reason))
+                progress is ActionProgress.Rejected    ->
+                    stringResource(UiStrings.clientcontrol_pending_failed_format, pending.label, progress.detail?.takeIf { it.isNotBlank() } ?: reasonText(progress.reason))
                 progress is ActionProgress.Unconfirmed -> stringResource(UiStrings.clientcontrol_pending_unconfirmed_format, pending.label, reasonText(progress.reason))
                 else                                   -> stringResource(UiStrings.clientcontrol_pending_working_text) // Sending/MasterExecuting
             }

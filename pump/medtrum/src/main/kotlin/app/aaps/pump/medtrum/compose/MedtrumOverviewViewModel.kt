@@ -376,10 +376,16 @@ class MedtrumOverviewViewModel(
                 val daysLeft = T.msecs(timeLeft).days()
                 val hoursLeft = T.msecs(timeLeft).hours() % 24
 
-                val daysString = if (daysLeft > 0) "$daysLeft ${rh.gs(app.aaps.core.interfaces.R.string.days)} " else ""
-                val hoursString = "$hoursLeft ${rh.gs(app.aaps.core.interfaces.R.string.hours)}"
-
-                dateUtil.dateAndTimeString(expiry) + "\n(" + daysString + hoursString + ")"
+                val hoursText = rh.gs(app.aaps.core.ui.R.string.value_with_unit, hoursLeft.toString(), rh.gs(app.aaps.core.interfaces.R.string.hours))
+                val timeLeftText =
+                    if (daysLeft > 0) rh.gs(
+                        app.aaps.core.ui.R.string.value_with_unit,
+                        rh.gs(app.aaps.core.ui.R.string.value_with_unit, daysLeft.toString(), rh.gs(app.aaps.core.interfaces.R.string.days)),
+                        hoursText
+                    )
+                    else hoursText
+                // The time left goes on a new line, under the date
+                dateUtil.dateAndTimeString(expiry) + "\n" + rh.gs(app.aaps.core.ui.R.string.value_in_parentheses, timeLeftText)
             }
         } else {
             rh.gs(R.string.expiry_not_enabled)

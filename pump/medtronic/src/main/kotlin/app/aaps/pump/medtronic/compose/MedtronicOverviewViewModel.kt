@@ -57,6 +57,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Locale
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.common.hw.rileylink.R as RileyLinkR
 
@@ -154,7 +155,7 @@ class MedtronicOverviewViewModel(
 
         // RileyLink battery (conditional)
         if (rileyLinkServiceData.showBatteryLevel) {
-            val batteryText = rileyLinkServiceData.batteryLevel?.let { "$it%" } ?: "?"
+            val batteryText = rileyLinkServiceData.batteryLevel?.let { rh.gs(CoreUiR.string.units_format_percent, it) } ?: "?"
             add(PumpInfoRow(label = rh.gs(R.string.rl_battery_label), value = batteryText))
         }
 
@@ -172,7 +173,7 @@ class MedtronicOverviewViewModel(
         }
 
         // Base basal rate
-        val basalText = "${ch.basalRateString(medtronicPumpPlugin.baseBasalRate, true)} (${medtronicPumpStatus.activeProfileName})"
+        val basalText = rh.gs(InterfacesR.string.value_with_detail, ch.basalRateString(medtronicPumpPlugin.baseBasalRate, true), medtronicPumpStatus.activeProfileName)
         add(PumpInfoRow(label = rh.gs(CoreUiR.string.base_basal_rate_label), value = basalText))
 
         // Temp basal
@@ -239,12 +240,12 @@ class MedtronicOverviewViewModel(
 
                     min < 1440 -> {
                         val h = (min / 60).toInt()
-                        rh.gq(RileyLinkR.plurals.duration_hours, h, h) + " " + rh.gs(R.string.ago)
+                        rh.gs(CoreUiR.string.value_with_unit, rh.gq(RileyLinkR.plurals.duration_hours, h, h), rh.gs(R.string.ago))
                     }
 
                     else       -> {
                         val d = (min / 60 / 24).toInt()
-                        rh.gq(RileyLinkR.plurals.duration_days, d, d) + " " + rh.gs(R.string.ago)
+                        rh.gs(CoreUiR.string.value_with_unit, rh.gq(RileyLinkR.plurals.duration_days, d, d), rh.gs(R.string.ago))
                     }
                 }
                 text to StatusLevel.WARNING
@@ -273,10 +274,13 @@ class MedtronicOverviewViewModel(
     private fun buildBattery(): Pair<String, StatusLevel> {
         val remaining = medtronicPumpStatus.batteryRemaining
         val text = if (medtronicPumpStatus.batteryType == BatteryType.None || medtronicPumpStatus.batteryVoltage == null) {
-            remaining?.let { "$it%" } ?: rh.gs(CoreUiR.string.unknown)
+            remaining?.let { rh.gs(CoreUiR.string.units_format_percent, it) } ?: rh.gs(CoreUiR.string.unknown)
         } else {
-            (remaining?.let { "$it%  " } ?: "") +
-                String.format(Locale.getDefault(), "(%.2f V)", medtronicPumpStatus.batteryVoltage)
+            val voltage = rh.gs(
+                CoreUiR.string.value_in_parentheses,
+                rh.gs(CoreUiR.string.value_with_unit, String.format(Locale.getDefault(), "%.2f", medtronicPumpStatus.batteryVoltage), "V")
+            )
+            remaining?.let { rh.gs(CoreUiR.string.value_with_unit, rh.gs(CoreUiR.string.units_format_percent, it), voltage) } ?: voltage
         }
         val level = when {
             remaining == null -> StatusLevel.NORMAL

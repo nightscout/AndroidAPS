@@ -57,6 +57,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.whenever
 
 /**
@@ -98,7 +99,7 @@ class BLECommIntegrationTest : TestBase() {
     fun setup() {
         // Mock basics
         whenever(rh.gs(anyInt())).thenReturn("test")
-        whenever(rh.gs(anyInt(), any())).thenReturn("test")
+        whenever(rh.gs(anyInt(), anyVararg())).thenReturn("test")
         whenever(preferences.get(any<DanaStringNonKey>())).thenReturn("")
         whenever(preferences.get(any<StringComposedNonPreferenceKey>(), any())).thenReturn("")
         // Pump password "0000" matches emulator default

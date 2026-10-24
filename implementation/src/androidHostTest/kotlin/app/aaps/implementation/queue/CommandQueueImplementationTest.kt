@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CustomCommand
+import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
@@ -89,6 +90,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
     private val bolusProgressData by lazy { BolusProgressData(ch, testScope) }
     private val profileSwitchSilentGate = ProfileSwitchSilentGate()
+    private val smbPause by lazy { SmbPauseImpl(aapsLogger, dateUtil) }
 
     class CommandQueueMocked(
         aapsLogger: AAPSLogger,
@@ -111,11 +113,13 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         smsCommunicator: () -> SmsCommunicator,
         commandExecutor: () -> CommandExecutor,
         appScope: CoroutineScope,
-        bolusProgressData: BolusProgressData
+        bolusProgressData: BolusProgressData,
+        smbPause: SmbPause
     ) : CommandQueueImplementation(
         aapsLogger, rxBus, rh, constraintChecker, profileFunction,
         activePlugin, config, dateUtil, fabricPrivacy,
-        notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, preferences, profileSwitchSilentGate, localAlertUtils, smsCommunicator, commandExecutor, appScope, bolusProgressData
+        notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, pumpSync, preferences, profileSwitchSilentGate, localAlertUtils, smsCommunicator, commandExecutor, appScope, bolusProgressData,
+        smbPause
     ) {
 
         override fun notifyAboutNewCommand(): Boolean = true
@@ -150,7 +154,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             smsCommunicatorProvider,
             commandExecutorProvider,
             appScope,
-            bolusProgressData
+            bolusProgressData,
+            smbPause
         )
 
     @BeforeEach
@@ -198,7 +203,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
             fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
-            { executor }, testScope, bolusProgressData
+            { executor }, testScope, bolusProgressData, smbPause
         )
         // Real executor sharing this queue: notifyAboutNewCommand() signals it and it drains on its own thread.
         executor = CommandExecutor(
@@ -245,7 +250,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
             fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
-            { executor }, testScope, bolusProgressData
+            { executor }, testScope, bolusProgressData, smbPause
         )
         executor = CommandExecutor(
             aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform()
@@ -273,7 +278,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
             fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
-            { executor }, testScope, bolusProgressData
+            { executor }, testScope, bolusProgressData, smbPause
         )
         executor = CommandExecutor(
             aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform()
@@ -895,6 +900,82 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.performing()?.commandType).isEqualTo(Command.CommandType.SMB_BOLUS)
         assertThat(smbResult).isNull()
         assertThat(bolusProgressData.state.value?.isSMB).isTrue()
+    }
+
+    // ---- #5381: the bolus screens see an SMB being delivered, and no SMB starts while a bolus is confirmed ----
+
+    @Test
+    fun `smbBeingDelivered is true only while an SMB is the running command`() = runTest {
+        val smb = DetailedBolusInfo().apply {
+            bolusType = BS.Type.SMB
+            lastKnownBolusTime = System.currentTimeMillis()
+        }
+        backgroundScope.launch { commandQueue.bolus(smb) }
+        yield()
+        // Waiting in the queue: it can still be dropped, so nothing waits for it.
+        assertThat(commandQueue.smbBeingDelivered.value).isFalse()
+
+        commandQueue.pickup()
+        assertThat(commandQueue.smbBeingDelivered.value).isTrue()
+
+        commandQueue.resetPerforming()
+        assertThat(commandQueue.smbBeingDelivered.value).isFalse()
+    }
+
+    @Test
+    fun `no SMB is queued while a bolus is waiting for confirmation`() = runTest {
+        val pause = smbPause.begin()
+        val smb = DetailedBolusInfo().apply {
+            bolusType = BS.Type.SMB
+            lastKnownBolusTime = System.currentTimeMillis()
+        }
+
+        val refused = commandQueue.bolus(smb)
+
+        assertThat(refused.success).isFalse()
+        assertThat(refused.enacted).isFalse()
+        assertThat(commandQueue.size()).isEqualTo(0)
+
+        // Confirmed or dropped: SMBs are queued again.
+        smbPause.end(pause)
+        backgroundScope.launch { commandQueue.bolus(smb) }
+        yield()
+        assertThat(commandQueue.size()).isEqualTo(1)
+    }
+
+    @Test
+    fun `dropWaitingSmb drops a waiting SMB and tells the loop it was not given`() = runTest {
+        var smbResult: PumpEnactResult? = null
+        val smb = DetailedBolusInfo().apply {
+            bolusType = BS.Type.SMB
+            lastKnownBolusTime = System.currentTimeMillis()
+        }
+        backgroundScope.launch { smbResult = commandQueue.bolus(smb) }
+        yield()
+        assertThat(commandQueue.size()).isEqualTo(1)
+
+        commandQueue.dropWaitingSmb()
+        yield()
+
+        assertThat(commandQueue.size()).isEqualTo(0)
+        assertThat(smbResult!!.success).isFalse()
+        // Not a delivery failure: the loop runs again with a temp basal, and no alarm rings
+        assertThat(smbResult!!.cancelled).isTrue()
+    }
+
+    @Test
+    fun `dropWaitingSmb leaves an SMB that is being delivered alone`() = runTest {
+        val smb = DetailedBolusInfo().apply {
+            bolusType = BS.Type.SMB
+            lastKnownBolusTime = System.currentTimeMillis()
+        }
+        backgroundScope.launch { commandQueue.bolus(smb) }
+        yield()
+        commandQueue.pickup()
+
+        commandQueue.dropWaitingSmb()
+
+        assertThat(commandQueue.isRunning(Command.CommandType.SMB_BOLUS)).isTrue()
     }
 
     @Test

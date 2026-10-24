@@ -23,6 +23,7 @@ internal fun CareDialogScreenPreview() {
             onBgValueChange = {},
             onDurationChange = {},
             onNotesChange = {},
+            onTimeOffsetChange = {},
             onNavigateBack = {},
             onConfirmClick = {},
             onDateClick = {},

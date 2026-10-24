@@ -45,7 +45,7 @@ class UploaderBatteryComplication : ModernBaseComplicationProviderService() {
             try {
                 level = statusData.battery.toInt()
                 level = max(min(level, 100), 0)
-                levelStr = "$level%"
+                levelStr = getString(R.string.loop_status_profile_percentage_value, level)
                 var iconNo = floor(level / 10.0).toInt()
                 if (level > 95) {
                     iconNo = 10

@@ -171,7 +171,7 @@ class EquilOverviewViewModel(
             )
         )
         add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_connection_label), value = dateUtil.dateAndTimeAndSecondsString(state.lastDataTime)))
-        add(PumpInfoRow(label = rh.gs(CoreUiR.string.battery_label), value = state.battery?.let { rh.gs(CoreUiR.string.format_percent, it) } ?: "-"))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.battery_label), value = state.battery?.let { rh.gs(CoreUiR.string.units_format_percent, it) } ?: "-"))
         add(PumpInfoRow(label = rh.gs(R.string.equil_insulin_reservoir), value = ch.insulinAmountString(PumpInsulin(state.currentInsulin.toDouble()))))
         add(
             PumpInfoRow(

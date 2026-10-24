@@ -49,6 +49,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcPluginCombo
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import dev.zacsweers.metro.AppScope
@@ -2355,8 +2356,7 @@ class ComboV2Plugin(
                     else -> ""
                 }
 
-                "${rh.gs(R.string.combov2_warning)} W${alert.code}" +
-                    if (desc.isEmpty()) "" else ": $desc"
+                alertText(rh.gs(R.string.combov2_warning), "W${alert.code}", desc)
             }
 
             is AlertScreenContent.Error   -> {
@@ -2374,18 +2374,23 @@ class ComboV2Plugin(
                     else -> ""
                 }
 
-                "${rh.gs(R.string.combov2_error)} E${alert.code}" +
-                    if (desc.isEmpty()) "" else ": $desc"
+                alertText(rh.gs(R.string.combov2_error), "E${alert.code}", desc)
             }
 
             else                          -> rh.gs(R.string.combov2_unrecognized_alert)
         }
 
+    /** "Combo warning W10: Temp basal over", or "Combo warning W7" when the code has no description. */
+    private fun alertText(kind: String, code: String, description: String): String {
+        val name = rh.gs(CoreUiStrings.value_with_unit, kind, code)
+        return if (description.isEmpty()) name else rh.gs(InterfacesStrings.confirmation_line, name, description)
+    }
+
     @VisibleForTesting
     internal fun notifyAboutComboAlert(alert: AlertScreenContent) {
         notificationManager.post(
             NotificationId.COMBO_PUMP_ALARM,
-            text = "${rh.gs(R.string.combov2_combo_alert)}: ${getAlertDescription(alert)}",
+            text = rh.gs(InterfacesStrings.confirmation_line, rh.gs(R.string.combov2_combo_alert), getAlertDescription(alert)),
             level = if (alert is AlertScreenContent.Warning) NotificationLevel.NORMAL else NotificationLevel.IMPORTANT
         )
 

@@ -20,5 +20,4 @@ internal object ProbeTextResolver : TextResolver {
 
     override fun gs(ref: TextRef, vararg args: Any?): String = gs(ref)
     override fun gsNotLocalised(ref: TextRef): String = gs(ref)
-    override fun shortTextMode(): Boolean = false
 }

@@ -51,8 +51,6 @@ interface ResourceHelper : TextResolver {
             ?.let { gsNotLocalised(it, *ref.args.toTypedArray()) }
             ?: ref.name
     }
-
-    override fun shortTextMode(): Boolean
 }
 
 /**

@@ -37,6 +37,7 @@ import org.mockito.Mock
 import org.mockito.MockedStatic
 import org.mockito.Mockito
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.whenever
 
 /**
@@ -85,7 +86,7 @@ class BLECommRSv3IntegrationTest : TestBase() {
         }
 
         whenever(rh.gs(anyInt())).thenReturn("test")
-        whenever(rh.gs(anyInt(), any())).thenReturn("test")
+        whenever(rh.gs(anyInt(), anyVararg())).thenReturn("test")
         whenever(preferences.get(any<DanaStringNonKey>())).thenReturn("")
         whenever(preferences.get(any<StringComposedNonPreferenceKey>(), any())).thenReturn("")
         whenever(preferences.get(DanaStringNonKey.Password)).thenReturn("0000")

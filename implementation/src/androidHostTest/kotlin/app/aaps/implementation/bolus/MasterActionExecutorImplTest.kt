@@ -37,7 +37,9 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.defs.fillFor
+import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -47,6 +49,7 @@ import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.implementation.queue.SmbPauseImpl
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -86,10 +89,13 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
     @Mock lateinit var bolusProgressData: BolusProgressData
     @Mock lateinit var masterRecordWriter: MasterRecordWriter
 
+    // Real: the tests below read whether a pause is on, and confirm() checks it.
+    private val smbPause by lazy { SmbPauseImpl(aapsLogger, dateUtil) }
+
     private fun create() = MasterActionExecutorImpl(
         aapsLogger, baseText, config, quickWizard, bolusWizardProvider, profileFunction, profileRepository, iobCobCalculator, constraintsChecker, activePlugin,
         runningModeGuard, commandQueue, persistenceLayer, uel, loop, dateUtil, decimalFormatter, profileUtil, automation, notificationManager, bolusProgressData,
-        CoroutineScope(Dispatchers.Unconfined), masterRecordWriter
+        CoroutineScope(Dispatchers.Unconfined), masterRecordWriter, smbPause
     )
 
     // The base mocks ConstraintsChecker without a default answer; the FIXED/batch cap path needs a passthrough.
@@ -1799,5 +1805,133 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         executor.confirm(prepared.bolusId, Sources.NSClient, { })
 
         verify(masterRecordWriter).addCalibration(eq(BatchAction.Calibration(120.0)), eq(Sources.NSClient), any())
+    }
+
+    // ---- #5381: no SMB between the calculation of a bolus and its confirmation ----
+
+    @Test
+    fun prepareBatch_bolus_pausesSmbsAndDropsAWaitingSmb() = runTest {
+        stubPassthroughConstraints()
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+
+        create().prepareBatch(listOf(bolusAction))
+
+        // The waiting SMB was calculated without this bolus, and no new one may start before the user confirms.
+        verify(commandQueue).dropWaitingSmb()
+        assertThat(smbPause.isActive()).isTrue()
+    }
+
+    @Test
+    fun prepareBatch_whileAnSmbIsBeingDelivered_isRefusedBeforeTheDialogCloses() = runTest {
+        stubPassthroughConstraints()
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.isRunning(Command.CommandType.SMB_BOLUS)).thenReturn(true)
+        val executor = create()
+
+        val result = executor.prepareBatch(listOf(bolusAction))
+
+        assertThat(result).isEqualTo(MasterActionExecutor.PrepareResult.Error("An SMB is being delivered right now. Try again when it has finished."))
+        // Nothing parked and no pause left behind: the SMBs of the loop are not held up by a refused bolus.
+        assertThat(smbPause.isActive()).isFalse()
+    }
+
+    @Test
+    fun prepareBatch_withoutInsulinForThePump_neverWaitsForAnSmb() = runTest {
+        stubPassthroughConstraints()
+        whenever(commandQueue.isRunning(Command.CommandType.SMB_BOLUS)).thenReturn(true)
+        val executor = create()
+        val recordOnly = bolusAction.copy(recordOnly = true, iCfg = ICfg("Pen", 75, 6.0, 1.0))
+
+        // A temp target, and a pen dose that is only recorded, never reach the pump.
+        assertThat(executor.prepareBatch(listOf(targetAction))).isInstanceOf(MasterActionExecutor.PrepareResult.Preview::class.java)
+        assertThat(executor.prepareBatch(listOf(recordOnly))).isInstanceOf(MasterActionExecutor.PrepareResult.Preview::class.java)
+        assertThat(smbPause.isActive()).isFalse()
+        verify(commandQueue, never()).dropWaitingSmb()
+    }
+
+    @Test
+    fun confirm_handsThePauseOverToTheQueue() = runTest {
+        stubPassthroughConstraints()
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        val executor = create()
+        val prepared = executor.prepareBatch(listOf(bolusAction)) as MasterActionExecutor.PrepareResult.Preview
+
+        assertThat(executor.confirm(prepared.bolusId, Sources.InsulinDialog, { })).isEqualTo(MasterActionExecutor.ConfirmResult.Delivered)
+
+        // Still on for the moment it takes to put the bolus into the queue, which holds back SMBs from then on ...
+        assertThat(smbPause.isActive()).isTrue()
+        // ... and not for the rest of the two minutes.
+        whenever(dateUtil.now()).thenReturn(now + SmbPause.HAND_OVER.inWholeMilliseconds)
+        assertThat(smbPause.isActive()).isFalse()
+    }
+
+    @Test
+    fun confirm_afterThePauseRanOut_givesNothing() = runTest {
+        stubPassthroughConstraints()
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        val executor = create()
+        val prepared = executor.prepareBatch(listOf(bolusAction)) as MasterActionExecutor.PrepareResult.Preview
+        // The loop may have given an SMB since then that the dose does not include.
+        whenever(dateUtil.now()).thenReturn(now + SmbPause.MAX_DURATION.inWholeMilliseconds)
+
+        val result = executor.confirm(prepared.bolusId, Sources.NSClient, { })
+
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
+        verify(commandQueue, never()).bolus(anyOrNull())
+    }
+
+    @Test
+    fun discard_endsThePauseAtOnce() = runTest {
+        stubPassthroughConstraints()
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        val executor = create()
+        val prepared = executor.prepareBatch(listOf(bolusAction)) as MasterActionExecutor.PrepareResult.Preview
+
+        executor.discard(prepared.bolusId)
+
+        assertThat(smbPause.isActive()).isFalse()
+        assertThat(executor.confirm(prepared.bolusId, Sources.InsulinDialog, { })).isEqualTo(MasterActionExecutor.ConfirmResult.NoPending)
+    }
+
+    @Test
+    fun confirm_whenTheRoleNoLongerAllowsIt_endsThePause() = runTest {
+        stubPassthroughConstraints()
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        val executor = create()
+        val prepared = executor.prepareBatch(listOf(bolusAction), RemoteCaller("a", ClientRole.Caregiver)) as MasterActionExecutor.PrepareResult.Preview
+
+        val result = executor.confirm(prepared.bolusId, Sources.NSClient, { }, caller = RemoteCaller("a", ClientRole.ReadOnly))
+
+        assertThat(result).isEqualTo(MasterActionExecutor.ConfirmResult.NotAllowed)
+        assertThat(smbPause.isActive()).isFalse()
+    }
+
+    @Test
+    fun prepareWizard_pausesBeforeItCalculates_andARefusalEndsThePause() = runTest {
+        whenever(commandQueue.isRunning(Command.CommandType.SMB_BOLUS)).thenReturn(true)
+
+        val refused = preparedManualWizard(calculated = 2.0, afterConstraints = 2.0)
+
+        assertThat(refused).isEqualTo(MasterActionExecutor.PrepareResult.Error("An SMB is being delivered right now. Try again when it has finished."))
+        // Refused before the calculation: the SMB is not in IOB yet.
+        verify(bolusWizardProvider, never()).invoke()
+        assertThat(smbPause.isActive()).isFalse()
+    }
+
+    @Test
+    fun prepareWizard_noInsulinRequired_leavesNoPause() = runTest {
+        val result = preparedManualWizard(calculated = 0.0, afterConstraints = 0.0, carbs = 0)
+
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Error::class.java)
+        assertThat(smbPause.isActive()).isFalse()
+    }
+
+    @Test
+    fun prepareWizard_aDose_keepsThePauseUntilConfirmed() = runTest {
+        val result = preparedManualWizard(calculated = 2.0, afterConstraints = 2.0)
+
+        assertThat(result).isInstanceOf(MasterActionExecutor.PrepareResult.Preview::class.java)
+        assertThat(smbPause.isActive()).isTrue()
     }
 }

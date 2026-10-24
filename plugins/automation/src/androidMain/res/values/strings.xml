@@ -149,7 +149,7 @@
     <string name="triggerStepsCountLabel">Steps Count</string>
     <string name="triggerStepsCountDesc">Steps count per %1$s minutes %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Measurement Duration</string>
-
+    <string name="automation_log_entry" comment="One line of the automation run log. %1$s=time, %2$s=a symbol for success or failure, %3$s=rule name (bold), %4$s=what the action did, %5$s=its result. Example: 21:15 ☺ Night low: Start temp target: 8.0mmol/L@60 min(Automation): OK">%1$s %2$s %3$s: %4$s: %5$s</string>
     <!--    SMB mode-->
     <string name="changeSmbState">Enable/disable SMB</string>
     <string name="changeSmbTo">Change SMB to %1$s</string>

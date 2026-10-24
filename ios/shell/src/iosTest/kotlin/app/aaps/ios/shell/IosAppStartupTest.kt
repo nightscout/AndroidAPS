@@ -46,7 +46,6 @@ class IosAppStartupTest {
         override fun gs(ref: TextRef): String = ""
         override fun gs(ref: TextRef, vararg args: Any?): String = ""
         override fun gsNotLocalised(ref: TextRef): String = ""
-        override fun shortTextMode(): Boolean = false
     }
 
     private object SilentLogger : AAPSLogger {

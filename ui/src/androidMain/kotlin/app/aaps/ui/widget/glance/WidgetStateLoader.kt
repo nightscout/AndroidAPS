@@ -97,7 +97,7 @@ class WidgetStateLoader(
             if (constraintsProcessed.carbsReq > 0) {
                 val lastCarbsTime = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
                 if (lastCarbsTime < lastRun.lastAPSRun) {
-                    cobText += "\n" + constraintsProcessed.carbsReq + " " + rh.gs(CoreUiStrings.required)
+                    cobText += "\n" + rh.gs(CoreUiStrings.value_with_unit, constraintsProcessed.carbsReq.toString(), rh.gs(CoreUiStrings.required))
                     cobActive = true
                 }
             }
@@ -116,8 +116,9 @@ class WidgetStateLoader(
         var tempTargetActive = false
         if (tempTarget != null) {
             // A target without an end (a scene without a duration) shows no remaining time, like the overview chip.
-            tempTargetText = profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) +
-                if (tempTarget.hasEnd) " " + dateUtil.untilString(tempTarget.end, rh) else ""
+            val range = profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units)
+            tempTargetText = if (tempTarget.hasEnd) rh.gs(InterfacesStrings.value_with_detail, range, dateUtil.untilString(tempTarget.end, rh, withParentheses = false))
+            else range
             tempTargetColor = tempTarget.reason.ttReasonColor(DarkGeneralColors).toArgb()
             tempTargetActive = true
         } else {
@@ -218,7 +219,7 @@ class WidgetStateLoader(
             tbrDescription = tbrDescription,
             iobLabel = rh.gs(CoreUiStrings.iob),
             cobLabel = rh.gs(CoreUiStrings.cob),
-            bgSpoken = if (strikeThrough) listOf(bgText, rh.gs(UiStrings.a11y_bg_old_reading)).joinToString(", ") else bgText,
+            bgSpoken = if (strikeThrough) rh.gs(InterfacesStrings.values_with_comma, bgText, rh.gs(UiStrings.a11y_bg_old_reading)) else bgText,
             deltaText = deltaText,
             timeAgoText = timeAgoText,
             iobText = iobText,
