@@ -211,6 +211,9 @@
     <string name="login">Вход</string>
     <string name="logout">Изход</string>
     <string name="prime_fill">Смяна/Пълнене</string>
+    <string name="prime_not_available">Помпата се пълни сама при активация. Пълнене не е възможно през AAPS.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Смяна</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Смяна</string>
     <string name="site_rotation">Смяна на мястото</string>
     <string name="edit_site">Редакция</string>
     <string name="select_arrow">Изберете стрелка</string>
