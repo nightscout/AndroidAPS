@@ -28,6 +28,9 @@ import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.TimeZone
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class HistoryViewModelTest {
@@ -58,8 +61,81 @@ internal class HistoryViewModelTest {
         sut = HistoryViewModel(historyScope, calculationWorkflow, dateUtil, graphViewModelFactory)
     }
 
+    // Some tests below pin a zone with daylight saving time. MidnightTime reads the JVM default.
+    private val originalZone: TimeZone = TimeZone.getDefault()
+
     @AfterEach
-    fun tearDown() = Dispatchers.resetMain()
+    fun tearDown() {
+        Dispatchers.resetMain()
+        TimeZone.setDefault(originalZone)
+    }
+
+    /** A real window rather than the mock above: these tests read back what the view model wrote. */
+    private class FakeOverviewData : OverviewData {
+
+        override var toTime = 0L
+        override var fromTime = 0L
+        override var endTime = 0L
+    }
+
+    private fun viewModelAt(now: Long, window: OverviewData): HistoryViewModel {
+        whenever(historyScope.overviewData).thenReturn(window)
+        whenever(dateUtil.now()).thenReturn(now)
+        whenever(dateUtil.dateString(any())).thenReturn("date")
+        return HistoryViewModel(historyScope, calculationWorkflow, dateUtil, graphViewModelFactory)
+    }
+
+    /** Where a window for [date] must start: its local midnight plus the nudge. */
+    private fun windowStart(date: LocalDate): Long =
+        date.atStartOfDay(ZoneId.of(PRAGUE)).toInstant().toEpochMilli() + HistoryViewModel.WINDOW_NUDGE_MS
+
+    private fun noonIn(date: LocalDate): Long = date.atTime(12, 0).atZone(ZoneId.of(PRAGUE)).toInstant().toEpochMilli()
+
+    /**
+     * The window used to move 100 s later on every tap, because each step started from `fromTime`,
+     * which already carries the nudge, and then added it again. After ten taps back it started at
+     * 00:16:40.
+     */
+    @Test
+    fun `stepping through days keeps every window just after midnight`() {
+        TimeZone.setDefault(TimeZone.getTimeZone(PRAGUE))
+        val today = LocalDate.of(2026, 10, 14)
+        val window = FakeOverviewData()
+        val vm = viewModelAt(noonIn(today), window)
+
+        assertThat(window.fromTime).isEqualTo(windowStart(today))
+        repeat(10) { vm.previousWindow() }
+        assertThat(window.fromTime).isEqualTo(windowStart(today.minusDays(10)))
+        repeat(10) { vm.nextWindow() }
+        assertThat(window.fromTime).isEqualTo(windowStart(today))
+        assertThat(window.toTime - window.fromTime).isEqualTo(24 * 3600 * 1000L)
+    }
+
+    /** 29 March 2026 has 23 hours. Going back 24 hours from the 30th landed on the 28th and skipped it. */
+    @Test
+    fun `stepping back over the spring clock change does not skip a day`() {
+        TimeZone.setDefault(TimeZone.getTimeZone(PRAGUE))
+        val window = FakeOverviewData()
+        val vm = viewModelAt(noonIn(LocalDate.of(2026, 3, 30)), window)
+
+        vm.previousWindow()
+        assertThat(window.fromTime).isEqualTo(windowStart(LocalDate.of(2026, 3, 29)))
+        vm.previousWindow()
+        assertThat(window.fromTime).isEqualTo(windowStart(LocalDate.of(2026, 3, 28)))
+    }
+
+    /** 25 October 2026 has 25 hours. Going forward 24 hours from its midnight stayed on the 25th. */
+    @Test
+    fun `stepping forward over the autumn clock change does not stay on the same day`() {
+        TimeZone.setDefault(TimeZone.getTimeZone(PRAGUE))
+        val window = FakeOverviewData()
+        val vm = viewModelAt(noonIn(LocalDate.of(2026, 10, 24)), window)
+
+        vm.nextWindow()
+        assertThat(window.fromTime).isEqualTo(windowStart(LocalDate.of(2026, 10, 25)))
+        vm.nextWindow()
+        assertThat(window.fromTime).isEqualTo(windowStart(LocalDate.of(2026, 10, 26)))
+    }
 
     @Test
     fun `default uiState is empty date and at-now, progress starts idle`() {
@@ -116,5 +192,11 @@ internal class HistoryViewModelTest {
         advanceUntilIdle()
 
         verify(cache).reset()
+    }
+
+    private companion object {
+
+        /** Has daylight saving time, so the two clock-change days can be tested. */
+        const val PRAGUE = "Europe/Prague"
     }
 }

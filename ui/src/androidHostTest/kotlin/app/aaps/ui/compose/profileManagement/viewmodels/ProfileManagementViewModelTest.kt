@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.singleBlock
 import app.aaps.core.objects.extensions.singleTargetBlock
@@ -104,6 +105,7 @@ internal class ProfileManagementViewModelTest {
         // Pairing and reachability are inputs of uiState, so the combine needs real flows here.
         whenever(nsClient.masterOrPairedClientFlow).thenReturn(MutableStateFlow(true))
         whenever(nsClient.masterReachable).thenReturn(MutableStateFlow(true))
+        whenever(nsClient.clientRole).thenReturn(MutableStateFlow(ClientRole.Admin))
         sut = ProfileManagementViewModel(
             profileRepository, profileFunction, rh, dateUtil, aapsLogger, activePlugin,
             profileUtil, decimalFormatter, persistenceLayer, insulinManager, preferences, config,

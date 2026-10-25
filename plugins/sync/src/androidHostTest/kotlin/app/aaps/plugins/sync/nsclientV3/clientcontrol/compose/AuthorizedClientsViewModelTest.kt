@@ -3,10 +3,13 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.clientcontrol.AuthorizedClient
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientTokens
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.MasterSigningKey
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferPublisher
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -38,9 +41,11 @@ internal class AuthorizedClientsViewModelTest {
 
     @Mock private lateinit var repository: AuthorizedClientsRepository
     @Mock private lateinit var offerPublisher: PairingOfferPublisher
+    @Mock private lateinit var clientTokens: ClientTokens
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var preferences: Preferences
+    @Mock private lateinit var masterSigningKey: MasterSigningKey
 
     private lateinit var sut: AuthorizedClientsViewModel
 
@@ -50,10 +55,11 @@ internal class AuthorizedClientsViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher())
         // Field-initializers build StateFlows over these collaborators at construction.
         whenever(repository.observe()).thenReturn(emptyFlow())
-        whenever(preferences.observe(BooleanKey.NsClientAllowClientControl)).thenReturn(MutableStateFlow(false))
+        whenever(preferences.observe(BooleanKey.HardenedMode)).thenReturn(MutableStateFlow(false))
         whenever(preferences.observe(BooleanKey.GeneralSimpleMode)).thenReturn(MutableStateFlow(false))
-        whenever(preferences.get(BooleanKey.NsClientAllowClientControl)).thenReturn(false)
-        sut = AuthorizedClientsViewModel(repository, offerPublisher, dateUtil, rh, preferences)
+        whenever(preferences.observe(StringNonKey.NsClientControlClientId)).thenReturn(MutableStateFlow(""))
+        whenever(preferences.get(BooleanKey.HardenedMode)).thenReturn(false)
+        sut = AuthorizedClientsViewModel(repository, offerPublisher, clientTokens, dateUtil, rh, preferences, masterSigningKey)
     }
 
     @AfterEach
@@ -95,7 +101,7 @@ internal class AuthorizedClientsViewModelTest {
     fun `setClientControlEnabled writes the allow-client-control preference`() {
         sut.setClientControlEnabled(true)
 
-        verify(preferences).put(BooleanKey.NsClientAllowClientControl, true)
+        verify(preferences).put(BooleanKey.HardenedMode, true)
     }
 
     @Test

@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.stringResource
@@ -195,8 +196,9 @@ private fun SearchResultItem(
     val isEnabled = remember(revision, entry) { entry.item.plugin?.isEnabled() ?: true }
     // Synced single-select selections (APS/Sensitivity/Smoothing/Calibration) drive the master's active plugin,
     // so on a client with the master offline they must not be changed from here — same gate as the Config Builder
-    // (see PluginCategoryScreen). Non-synced categories (SYNC/GENERAL/pump/…) stay editable offline.
-    val editableWhenSynced = masterEditingEnabled()
+    // (see PluginCategoryScreen). Non-synced categories (SYNC/GENERAL/pump/…) stay editable offline. Changing the
+    // master's plugin selection is a setting, so a client also needs the admin role for it.
+    val editableWhenSynced = masterEditingEnabled(ClientRole.Admin)
     // Whether this plugin can be flipped from here: enforced plugins are locked, an already-active
     // single-select plugin can't be turned off (only replaced by enabling another), and a synced selection is
     // gated while the master is offline.
@@ -306,7 +308,7 @@ private fun WikiLoadingIndicator(modifier: Modifier = Modifier) {
         CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
         Spacer(modifier = Modifier.width(12.dp))
         Text(
-            text = stringResource(CoreUiStrings.search_category_wiki) + "\u2026",
+            text = stringResource(CoreUiStrings.search_category_wiki),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

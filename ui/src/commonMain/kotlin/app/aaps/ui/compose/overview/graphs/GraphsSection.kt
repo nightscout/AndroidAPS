@@ -38,11 +38,14 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
@@ -72,6 +75,9 @@ import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlin.math.abs
 
 /**
@@ -81,7 +87,7 @@ import kotlin.math.abs
  * - Each graph has its OWN VicoScrollState and VicoZoomState
  * - BG graph: Interactive - user can scroll/zoom
  * - Secondary graphs: Non-interactive - scroll/zoom disabled
- * - LaunchedEffect observes BG graph's state changes and syncs to secondary
+ * - One LaunchedEffect observes BG graph's state changes and syncs to secondary
  *
  * Synchronization Implementation:
  * - snapshotFlow observes scroll/zoom values from BG graph
@@ -106,6 +112,12 @@ private val SIMPLE_MODE_CONFIG = GraphConfig(
  * turning the description into a list nobody will sit through.
  */
 private const val RECENT_VALUES_SPOKEN = 5
+
+/** A graph below BG whose zoom differs from the zoom of BG by less than this part of it is not zoomed again. */
+private const val ZOOM_SYNC_TOLERANCE = 1e-4f
+
+/** A graph below BG whose scroll differs from the scroll of BG by less than this is not scrolled again. */
+private const val SCROLL_SYNC_TOLERANCE_PX = 0.5f
 
 /** Moves the pill up over the treatment belt (48 dp, of which 16 dp overlap the BG graph). */
 private val INSPECT_PILL_OFFSET = (-32).dp
@@ -213,7 +225,9 @@ fun GraphsSection(
      * announcing them beside a past day would state something untrue about insulin.
      */
     iobText: String? = null,
-    cobText: String? = null
+    cobText: String? = null,
+    /** Height of the bars drawn over the end of this section (the overview's preview mode), added to the space at its end. */
+    overlaidBarsHeight: Dp = 0.dp
 ) {
     val dateUtil = LocalDateUtil.current
     val savedGraphConfig by graphViewModel.graphConfigFlow.collectAsStateWithLifecycle()
@@ -252,7 +266,12 @@ fun GraphsSection(
     // objects forever, comparing live secondary-graph state against a frozen stale value and
     // firing wrong corrections (this caused the secondary graphs to visibly "dance"/flash on the
     // first attempt at this).
-    var bgViewportResetTrigger by remember { mutableIntStateOf(0) }
+    // Saved, not only remembered. The overview leaves the composition behind every other screen,
+    // and Vico saves the scroll under the key of the state that is alive then, key(N). With a plain
+    // remember the trigger came back as 0, key(0) had nothing saved, the scroll started at the end
+    // of the axis again, and with the predictions already loaded that end is hours in the future:
+    // "now" sat in the middle of the graph after every trip to the wizard, until the next reading.
+    var bgViewportResetTrigger by rememberSaveable { mutableIntStateOf(0) }
     val (bgScrollState, bgZoomState) = key(bgViewportResetTrigger) {
         rememberVicoScrollState(
             scrollEnabled = true,
@@ -264,6 +283,8 @@ fun GraphsSection(
             maxZoom = bgMaxZoom
         )
     }
+    // A sideways drag on a graph below BG scrolls BG, and they all follow it
+    val bgScrollForwarder = rememberBgScrollForwarder(bgScrollState)
 
     // Pre-allocate secondary graph scroll/zoom states (up to MAX_SECONDARY_GRAPHS)
     // These are always created to keep Compose's remember slots stable
@@ -341,8 +362,12 @@ fun GraphsSection(
         arrayOf(sec0zoom, sec1zoom, sec2zoom, sec3zoom, sec4zoom)
     }
 
-    // Observe BG graph scroll/zoom and sync to belt + active secondary graphs
-    // Keys include ALL state objects — identical pattern to the original working sync
+    // Keep the belt, the IOB graph and the active graphs below BG on the scroll and zoom of BG.
+    // Keys include ALL state objects, so new state objects (a reset of BG) restart this.
+    // One effect does all of it, so our zoom() and scroll() calls never run at the same time. Vico's
+    // zoom() holds a lock while it waits, and a second zoom() on the same graph cancels the first one
+    // by throwing a CancellationException into its caller. With two effects this silently ended one
+    // of them for good, and the graphs below stayed shifted sideways until BG was scrolled again.
     LaunchedEffect(
         bgScrollState, bgZoomState, beltScrollState, beltZoomState,
         iobScrollState, iobZoomState,
@@ -353,28 +378,41 @@ fun GraphsSection(
         // Do not report a user interaction from here: the scroll/zoom values also change without the user
         // (viewport reset on a new BG, the prediction nudge, Vico's initial scroll to the end). Real gestures
         // are reported by onScrollOrZoomGesture on the BG chart.
-        var syncedZoom: Float? = null
-        var syncedCount = -1
-        snapshotFlow { bgScrollState.value to bgZoomState.value }
-            .conflate()
-            .collect { (scroll, zoom) ->
-                val count = activeCount
-                // Zoom first, then scroll, with no wait in between. Vico's zoom() also scrolls the graph,
-                // around its own centre and starting from the scroll it last drew, and that scroll is done
-                // when zoom() returns. Our scroll corrects it before the next frame is drawn. A wait here
-                // let a frame be drawn with Vico's scroll, the next zoom() started from that wrong value,
-                // and during a pinch the graphs drifted sideways (up to an hour near the edge).
-                if (zoom != syncedZoom || count != syncedCount) {
-                    beltZoomState.zoom(Zoom.fixed(zoom))
-                    iobZoomState.zoom(Zoom.fixed(zoom))
-                    for (i in 0 until count) secZoomStates[i].zoom(Zoom.fixed(zoom))
-                    syncedZoom = zoom
-                    syncedCount = count
-                }
-                beltScrollState.scroll(Scroll.Absolute.pixels(scroll))
-                iobScrollState.scroll(Scroll.Absolute.pixels(scroll))
-                for (i in 0 until count) secScrollStates[i].scroll(Scroll.Absolute.pixels(scroll))
+        suspend fun followBg() {
+            val scroll = bgScrollState.value
+            val zoom = bgZoomState.value
+            // BG is not measured yet. Its zoom of 0 would zoom the other graphs fully out.
+            if (zoom <= 0f) return
+            val count = activeCount
+            // Zoom first, then scroll, with no wait in between. Vico's zoom() also scrolls the graph,
+            // around its own centre and starting from the scroll it last drew, and that scroll is done
+            // when zoom() returns. Our scroll corrects it before the next frame is drawn. A wait here
+            // let a frame be drawn with Vico's scroll, the next zoom() started from that wrong value,
+            // and during a pinch the graphs drifted sideways (up to an hour near the edge).
+            // A zoom that is off only by rounding is left alone: zooming it would make Vico scroll it
+            // a tiny bit, which would bring us here again.
+            for (state in listOf(beltZoomState, iobZoomState) + secZoomStates.take(count))
+                if (abs(state.value - zoom) > zoom * ZOOM_SYNC_TOLERANCE) state.zoom(Zoom.fixed(zoom))
+            for (state in listOf(beltScrollState, iobScrollState) + secScrollStates.take(count))
+                if (abs(state.value - scroll) > SCROLL_SYNC_TOLERANCE_PX) state.scroll(Scroll.Absolute.pixels(scroll))
+        }
+
+        // BG moved: follow it at once, on every frame
+        val bgMoved = snapshotFlow { bgScrollState.value to bgZoomState.value }.map { }
+        // A graph below changed by itself: check it again when it has settled. Vico moves the scroll of
+        // a graph when its content or zoom changes, and cuts it down when its scroll limit (maxValue)
+        // gets smaller. The limit is watched too: when it grows back, the scroll stays where it was
+        // cut, and nothing else changes that would bring us here.
+        val belowChanged = snapshotFlow {
+            // Only read states that are attached to a chart (belt + IOB fixed + active secondary)
+            val count = activeCount
+            buildList {
+                add(Triple(beltScrollState.value, beltScrollState.maxValue, beltZoomState.value))
+                add(Triple(iobScrollState.value, iobScrollState.maxValue, iobZoomState.value))
+                for (i in 0 until count) add(Triple(secScrollStates[i].value, secScrollStates[i].maxValue, secZoomStates[i].value))
             }
+        }.debounce(100).map { }
+        merge(bgMoved, belowChanged).conflate().collect { followBg() }
     }
 
     // Auto-scroll when new BG value arrives
@@ -403,58 +441,29 @@ fun GraphsSection(
     // are visible, nudge it further so "now + 2h" sits at the right edge instead, leaving room to
     // see the forecast — same positioning as before, reapplied once the fresh scrollState (a new
     // instance, since it's keyed on bgViewportResetTrigger too) is composed and ready.
+    // Once per reset: the trigger survives a trip to another screen (see above), and so must the
+    // fact that this reset was handled, or coming back would nudge the restored scroll away from
+    // where the user left it.
+    var nudgedResetTrigger by rememberSaveable { mutableIntStateOf(0) }
     LaunchedEffect(bgViewportResetTrigger, bgScrollState) {
-        if (bgViewportResetTrigger == 0) return@LaunchedEffect
+        if (bgViewportResetTrigger == nudgedResetTrigger) return@LaunchedEffect
         val showPredictions = SeriesType.PREDICTIONS in graphConfig.bgOverlays
         val timeRange = derivedTimeRange
         if (showPredictions && predictions.isNotEmpty() && timeRange != null) {
+            // Vico drops a scroll on a state the chart has not measured yet, with no error. That is
+            // the case on return from another screen with a new reading waiting: the model producer
+            // is new, the chart shows its placeholder until the first model is built, and the reading
+            // bumps the trigger inside that window. The fresh state then stayed at the end of the axis,
+            // "now" in the middle. maxValue is set by the first measurement, so wait for it.
+            snapshotFlow { bgScrollState.maxValue }.first { it > 0f }
             val (minTimestamp, _) = timeRange
             val nowX = timestampToX(dateUtil.now(), minTimestamp)
             bgScrollState.animateScroll(Scroll.Absolute.x(nowX + 120.0, bias = 1f))
         }
+        // Only after the scroll is done. Leaving the overview during the wait cancels this effect,
+        // and the scroll must then run again on return, not count as handled.
+        nudgedResetTrigger = bgViewportResetTrigger
     }
-
-    // Correct secondary graph scroll drift — Vico may internally adjust scroll
-    // when model producers fire. Watch for any divergence and re-sync to BG.
-    // No isSyncing guard needed: primary sync only reads BG state, so writing to
-    // secondary states here cannot trigger primary sync (no feedback loop).
-    // Keyed on bgScrollState/bgZoomState (not Unit) — MUST restart when they're recreated by a
-    // reset, otherwise this keeps comparing secondary graphs against a stale, abandoned pre-reset
-    // reference forever and fires wrong corrections (the actual cause of the "dancing" regression
-    // in the first attempt at this feature).
-    LaunchedEffect(bgScrollState, bgZoomState) {
-        snapshotFlow {
-            // Only read states that are attached to a chart (belt + IOB fixed + active secondary)
-            val count = activeCount
-            buildList {
-                add(beltScrollState.value to beltZoomState.value)
-                add(iobScrollState.value to iobZoomState.value)
-                for (i in 0 until count) {
-                    add(secScrollStates[i].value to secZoomStates[i].value)
-                }
-            }
-        }
-            .debounce(100) // Let Vico settle after model update
-            .collect { states ->
-                val bgScroll = bgScrollState.value
-                val bgZoom = bgZoomState.value
-                val threshold = 1f
-                val needsSync = states.any { (scroll, zoom) ->
-                    abs(scroll - bgScroll) > threshold || abs(zoom - bgZoom) > 0.001f
-                }
-                if (needsSync) {
-                    val count = activeCount
-                    beltZoomState.zoom(Zoom.fixed(bgZoom))
-                    iobZoomState.zoom(Zoom.fixed(bgZoom))
-                    for (i in 0 until count) secZoomStates[i].zoom(Zoom.fixed(bgZoom))
-                    // No wait between zoom and scroll, see the sync above
-                    beltScrollState.scroll(Scroll.Absolute.pixels(bgScroll))
-                    iobScrollState.scroll(Scroll.Absolute.pixels(bgScroll))
-                    for (i in 0 until count) secScrollStates[i].scroll(Scroll.Absolute.pixels(bgScroll))
-                }
-            }
-    }
-
 
     // Set by the BG graph, read by every graph
     val inspect = remember { GraphInspectState() }
@@ -463,6 +472,7 @@ fun GraphsSection(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
+            .stopsBgFling(bgScrollForwarder)
     ) {
         // Treatment Belt Graph - running mode background + therapy events
         TreatmentBeltGraphCompose(
@@ -626,7 +636,12 @@ fun GraphsSection(
         }
         // Fixed IOB graph (Graph 1) with optional Activity overlay
         var editingIobOverlays by remember { mutableStateOf(false) }
-        Box(modifier = Modifier.pullUp(IOB_GRAPH_PULL_UP)) {
+        Box(
+            modifier = Modifier
+                .pullUp(IOB_GRAPH_PULL_UP)
+                .graphInspectTouch(inspect)
+                .scrollsBgGraph(bgScrollForwarder, inspect, graphViewModel::onGraphInteraction)
+        ) {
             SecondaryGraphCompose(
                 viewModel = graphViewModel,
                 seriesTypes = listOf(SeriesType.IOB),
@@ -642,7 +657,7 @@ fun GraphsSection(
                     .height(graphConfig.iobHeight.dp - REMOVED_TIME_LABELS_HEIGHT)
             )
             GraphNameRow(
-                name = stringResource(CoreUiStrings.iob) + " / " + stringResource(CoreUiStrings.basal_shortname),
+                name = stringResource(InterfacesStrings.values_with_slash, stringResource(CoreUiStrings.iob), stringResource(CoreUiStrings.basal_shortname)),
                 editName = stringResource(CoreUiStrings.iob),
                 onEdit = if (isSimpleMode) null else ({ editingIobOverlays = true }),
                 modifier = Modifier
@@ -652,7 +667,7 @@ fun GraphsSection(
         }
         if (editingIobOverlays) {
             GraphSeriesBottomSheet(
-                title = stringResource(CoreUiStrings.iob) + " / " + stringResource(CoreUiStrings.basal_shortname),
+                title = stringResource(InterfacesStrings.values_with_slash, stringResource(CoreUiStrings.iob), stringResource(CoreUiStrings.basal_shortname)),
                 selectedSeries = graphConfig.iobOverlays,
                 availableSeries = listOf(SeriesType.ACTIVITY),
                 height = graphConfig.iobHeight,
@@ -672,7 +687,12 @@ fun GraphsSection(
         var editingGraphIndex by remember { mutableIntStateOf(-1) }
         for (i in 0 until activeCount) {
             val secondary = graphConfig.secondaryGraphs[i]
-            Box(modifier = Modifier.pullUp(GRAPH_OVERLAP)) {
+            Box(
+                modifier = Modifier
+                    .pullUp(GRAPH_OVERLAP)
+                    .graphInspectTouch(inspect)
+                    .scrollsBgGraph(bgScrollForwarder, inspect, graphViewModel::onGraphInteraction)
+            ) {
                 SecondaryGraphCompose(
                     viewModel = graphViewModel,
                     inspect = inspect,
@@ -738,51 +758,54 @@ fun GraphsSection(
                 onDismiss = { editingGraphIndex = -1 }
             )
         }
-        // Add graph button (hidden in simple mode)
-        if (!isSimpleMode && activeCount < GraphConfig.MAX_SECONDARY_GRAPHS) {
-            var showAddSheet by remember { mutableStateOf(false) }
-            TextButton(
-                onClick = { showAddSheet = true },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text(stringResource(CoreUiStrings.graph_add), style = MaterialTheme.typography.labelMedium)
-            }
-            if (showAddSheet) {
-                var newGraphSeries by remember { mutableStateOf(emptyList<SeriesType>()) }
-                var newGraphHeight by remember { mutableIntStateOf(GraphConfig.DEFAULT_GRAPH_HEIGHT_DP) }
-                GraphSeriesBottomSheet(
-                    title = stringResource(CoreUiStrings.graph_new),
-                    selectedSeries = newGraphSeries,
-                    availableSeries = CONFIGURABLE_SERIES,
-                    height = newGraphHeight,
-                    onHeightChange = { newGraphHeight = it },
-                    onToggle = { type ->
-                        val current = newGraphSeries.toMutableList()
-                        if (type in current) {
-                            current.remove(type)
-                        } else {
-                            current.add(type)
-                            if (current.size > 2) current.removeAt(0)
-                        }
-                        newGraphSeries = current
-                    },
-                    onDismiss = {
-                        if (newGraphSeries.isNotEmpty()) {
-                            val graphs = graphConfig.secondaryGraphs.toMutableList()
-                            graphs.add(SecondaryGraph(newGraphSeries, newGraphHeight))
-                            graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
-                        }
-                        newGraphSeries = emptyList()
-                        newGraphHeight = GraphConfig.DEFAULT_GRAPH_HEIGHT_DP
-                        showAddSheet = false
+        // Add graph button. In simple mode, or with all graphs added, it stays as an invisible placeholder: its height
+        // is part of the space below the last graph, and the spacer alone is lower than the QuickLaunch toolbar.
+        val canAddGraph = !isSimpleMode && activeCount < GraphConfig.MAX_SECONDARY_GRAPHS
+        var showAddSheet by remember { mutableStateOf(false) }
+        TextButton(
+            onClick = { showAddSheet = true },
+            enabled = canAddGraph,
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(if (canAddGraph) Modifier else Modifier.alpha(0f).clearAndSetSemantics {})
+        ) {
+            Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+            Spacer(Modifier.width(4.dp))
+            Text(stringResource(CoreUiStrings.graph_add), style = MaterialTheme.typography.labelMedium)
+        }
+        if (canAddGraph && showAddSheet) {
+            var newGraphSeries by remember { mutableStateOf(emptyList<SeriesType>()) }
+            var newGraphHeight by remember { mutableIntStateOf(GraphConfig.DEFAULT_GRAPH_HEIGHT_DP) }
+            GraphSeriesBottomSheet(
+                title = stringResource(CoreUiStrings.graph_new),
+                selectedSeries = newGraphSeries,
+                availableSeries = CONFIGURABLE_SERIES,
+                height = newGraphHeight,
+                onHeightChange = { newGraphHeight = it },
+                onToggle = { type ->
+                    val current = newGraphSeries.toMutableList()
+                    if (type in current) {
+                        current.remove(type)
+                    } else {
+                        current.add(type)
+                        if (current.size > 2) current.removeAt(0)
                     }
-                )
-            }
+                    newGraphSeries = current
+                },
+                onDismiss = {
+                    if (newGraphSeries.isNotEmpty()) {
+                        val graphs = graphConfig.secondaryGraphs.toMutableList()
+                        graphs.add(SecondaryGraph(newGraphSeries, newGraphHeight))
+                        graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
+                    }
+                    newGraphSeries = emptyList()
+                    newGraphHeight = GraphConfig.DEFAULT_GRAPH_HEIGHT_DP
+                    showAddSheet = false
+                }
+            )
         }
         // Spacer so the last graph / Add button isn't covered by QuickLaunch toolbar
-        Spacer(Modifier.height(48.dp))
+        Spacer(Modifier.height(48.dp + overlaidBarsHeight))
     }
 }
 

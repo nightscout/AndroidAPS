@@ -4,6 +4,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GV
@@ -41,6 +42,7 @@ import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.BgiGraphData
 import app.aaps.core.interfaces.overview.graph.BolusGraphPoint
 import app.aaps.core.interfaces.overview.graph.BolusType
+import app.aaps.core.interfaces.overview.graph.CalibrationGraphPoint
 import app.aaps.core.interfaces.overview.graph.CarbsGraphPoint
 import app.aaps.core.interfaces.overview.graph.CobGraphData
 import app.aaps.core.interfaces.overview.graph.DevSlopeGraphData
@@ -270,7 +272,7 @@ class OverviewDataCacheImpl(
     override val heartRateGraphFlow: StateFlow<HeartRateGraphData> = _heartRateGraphFlow.asStateFlow()
     private val _stepsGraphFlow = MutableStateFlow(StepsGraphData(emptyList()))
     override val stepsGraphFlow: StateFlow<StepsGraphData> = _stepsGraphFlow.asStateFlow()
-    private val _treatmentGraphFlow = MutableStateFlow(TreatmentGraphData(emptyList(), emptyList(), emptyList(), emptyList()))
+    private val _treatmentGraphFlow = MutableStateFlow(TreatmentGraphData(emptyList(), emptyList(), emptyList(), emptyList(), emptyList()))
     override val treatmentGraphFlow: StateFlow<TreatmentGraphData> = _treatmentGraphFlow.asStateFlow()
     private val _epsGraphFlow = MutableStateFlow<List<EpsGraphPoint>>(emptyList())
     override val epsGraphFlow: StateFlow<List<EpsGraphPoint>> = _epsGraphFlow.asStateFlow()
@@ -418,7 +420,7 @@ class OverviewDataCacheImpl(
 
             // Observe treatment-related DB changes
             for (type in listOf(
-                BS::class, CA::class, EB::class, TE::class
+                BS::class, CA::class, EB::class, TE::class, CAL::class
             )) {
                 scope.launch {
                     persistenceLayer.observeChanges(type)
@@ -930,7 +932,20 @@ class OverviewDataCacheImpl(
                     timestamp = te.timestamp,
                     eventType = teType,
                     label = therapyEventLabel(te, translator.translate(te.type), profileUtil, rh),
-                    duration = te.duration
+                    duration = te.duration,
+                    glucoseUserUnits = te.glucose?.let { profileUtil.fromMgdlToUnits(profileUtil.convertToMgdl(it, te.glucoseUnit)) }
+                )
+            }
+
+        // Calibration pairs — only the finger value is drawn, at its own glucose value
+        val calibrationPoints = persistenceLayer.getValidCalibrationEntriesSince(fromTime)
+            .filter { it.timestamp <= toTime }
+            .map { cal ->
+                CalibrationGraphPoint(
+                    timestamp = cal.timestamp,
+                    fingerstickUserUnits = profileUtil.fromMgdlToUnits(cal.fingerstickMgdl),
+                    isValid = cal.isValid,
+                    label = profileUtil.fromMgdlToStringWithUnits(cal.fingerstickMgdl)
                 )
             }
 
@@ -938,7 +953,8 @@ class OverviewDataCacheImpl(
             boluses = bolusPoints,
             carbs = carbsPoints,
             extendedBoluses = extendedBolusPoints,
-            therapyEvents = therapyEventPoints
+            therapyEvents = therapyEventPoints,
+            calibrations = calibrationPoints
         )
     }
 
@@ -946,10 +962,14 @@ class OverviewDataCacheImpl(
         val (fromTime, toTime) = graphTimeRange() ?: return
         _epsGraphFlow.value = persistenceLayer.getEffectiveProfileSwitchesFromTimeToTime(fromTime, toTime, true)
             .map { eps ->
-                val label = buildString {
-                    if (eps.originalPercentage != 100) append("${eps.originalPercentage}%")
-                    if (eps.originalPercentage != 100 && eps.originalTimeshift != 0L) append(",")
-                    if (eps.originalTimeshift != 0L) append("${T.msecs(eps.originalTimeshift).hours()}${rh.gs(InterfacesStrings.shorthour)}")
+                val hours = T.msecs(eps.originalTimeshift).hours()
+                val label = when {
+                    eps.originalPercentage != 100 && eps.originalTimeshift != 0L ->
+                        rh.gs(InterfacesStrings.values_with_comma, rh.gs(CoreUiStrings.units_format_percent, eps.originalPercentage), rh.gs(UiStrings.agp_hours, hours))
+
+                    eps.originalPercentage != 100                                -> rh.gs(CoreUiStrings.units_format_percent, eps.originalPercentage)
+                    eps.originalTimeshift != 0L                                  -> rh.gs(UiStrings.agp_hours, hours)
+                    else                                                         -> ""
                 }
                 EpsGraphPoint(
                     timestamp = eps.timestamp,
@@ -1138,11 +1158,13 @@ class OverviewDataCacheImpl(
                 else                                                                              -> AapsClientLevel.INFO
             }
             // Format: "75% 3 min ago" (running mode excluded — already shown in RunningMode chip)
-            val value = buildString {
-                if (pumpData.isPercent) append("${pumpData.percent}% ")
-                if (!pumpData.isPercent && pumpData.voltage > 0) append("${Round.roundTo(pumpData.voltage, 0.001)} ")
-                append(dateUtil.minAgo(rh, pumpData.clock))
-            }.trim()
+            val battery = when {
+                pumpData.isPercent      -> rh.gs(CoreUiStrings.units_format_percent, pumpData.percent)
+                pumpData.voltage > 0    -> Round.roundTo(pumpData.voltage, 0.001).toString()
+                else                    -> null
+            }
+            val age = dateUtil.minAgo(rh, pumpData.clock)
+            val value = battery?.let { rh.gs(CoreUiStrings.value_with_unit, it, age) } ?: age
             val dialogText = buildString {
                 pumpData.extended?.let {
                     append(it.trim())
@@ -1168,17 +1190,13 @@ class OverviewDataCacheImpl(
             val clockEnacted = processedDeviceStatusData.openAPSData.clockEnacted
             val enacted = processedDeviceStatusData.openAPSData.enacted
             val sameCycle = enacted != null && clockSuggested - clockEnacted <= 60_000L
-            val dialogText = buildString {
-                if (sameCycle) {
-                    append("Enacted: ${dateUtil.minAgo(rh, clockEnacted)}")
-                    append(" ${enacted.reason}")
-                } else {
-                    processedDeviceStatusData.openAPSData.suggested?.let {
-                        append("Suggested: ${dateUtil.minAgo(rh, clockSuggested)}")
-                        append(" ${it.reason}")
-                    }
-                }
-            }
+            // "Suggested" has no translated string yet, so it stays the English word it always was.
+            val dialogText =
+                if (sameCycle)
+                    rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.enacted), rh.gs(CoreUiStrings.value_with_unit, dateUtil.minAgo(rh, clockEnacted), enacted.reason))
+                else processedDeviceStatusData.openAPSData.suggested?.let {
+                    rh.gs(InterfacesStrings.confirmation_line, "Suggested", rh.gs(CoreUiStrings.value_with_unit, dateUtil.minAgo(rh, clockSuggested), it.reason))
+                } ?: ""
             AapsClientStatusItem(
                 label = rh.gs(CoreUiStrings.openaps_short),
                 value = value,
@@ -1198,17 +1216,12 @@ class OverviewDataCacheImpl(
                 }
             }
             // Match original format: "ᴪ 93%" or "93%"
-            val value = buildString {
-                if (isCharging) append("\u26A1")
-                append("$minBattery%")
+            val minBatteryText = rh.gs(CoreUiStrings.units_format_percent, minBattery)
+            val value = if (isCharging) rh.gs(CoreUiStrings.value_with_unit, "⚡", minBatteryText) else minBatteryText
+            val dialogText = processedDeviceStatusData.uploaderMap.entries.joinToString("\n") { (device, uploader) ->
+                val line = rh.gs(InterfacesStrings.confirmation_line, device, rh.gs(CoreUiStrings.units_format_percent, uploader.battery))
+                if (uploader.isCharging == true) rh.gs(CoreUiStrings.value_with_unit, line, "⚡") else line
             }
-            val dialogText = buildString {
-                for ((device, uploader) in processedDeviceStatusData.uploaderMap) {
-                    append("$device: ${uploader.battery}%")
-                    if (uploader.isCharging == true) append(" \u26A1")
-                    append("\n")
-                }
-            }.trimEnd()
             AapsClientStatusItem(
                 label = rh.gs(CoreUiStrings.uploader_short),
                 value = value,
@@ -1262,7 +1275,7 @@ class OverviewDataCacheImpl(
         _varSensGraphFlow.value = VarSensGraphData(emptyList())
         _heartRateGraphFlow.value = HeartRateGraphData(emptyList())
         _stepsGraphFlow.value = StepsGraphData(emptyList())
-        _treatmentGraphFlow.value = TreatmentGraphData(emptyList(), emptyList(), emptyList(), emptyList())
+        _treatmentGraphFlow.value = TreatmentGraphData(emptyList(), emptyList(), emptyList(), emptyList(), emptyList())
         _epsGraphFlow.value = emptyList()
         _basalGraphFlow.value = BasalGraphData(emptyList(), emptyList(), 0.0)
         _targetLineFlow.value = TargetLineData(emptyList())

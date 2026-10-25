@@ -33,6 +33,12 @@ interface WizardExecutor {
      */
     suspend fun commit(bolusId: Long, asAdvisor: Boolean, source: Sources, label: String, correctionU: Double = 0.0): ActionProgress
 
+    /**
+     * The user cancelled the confirmation of [bolusId]. On a master the parked dose is dropped and the loop can give
+     * SMBs again at once; a client sends nothing, and the master's SMB pause runs out by itself.
+     */
+    fun discard(bolusId: Long)
+
     /** What to recompute: a synced QuickWizard entry by guid, or the manual wizard's raw inputs. */
     sealed interface WizardSource {
 
@@ -40,6 +46,6 @@ interface WizardExecutor {
         data class QuickWizard(val guid: String) : WizardSource
 
         /** The manual Bolus Wizard; the master recomputes from the user's raw [inputs] (incl. the profile selection). */
-        data class Manual(val inputs: WizardBolusExecutor.WizardInputs) : WizardSource
+        data class Manual(val inputs: MasterActionExecutor.WizardInputs) : WizardSource
     }
 }

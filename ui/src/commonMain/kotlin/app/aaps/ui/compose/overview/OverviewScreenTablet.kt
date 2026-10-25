@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,6 +19,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.ActiveSceneState
@@ -40,9 +44,8 @@ import app.aaps.ui.compose.scenes.ActiveSceneBanner
 /**
  * Tablet variant of the overview screen.
  *
- * Differs from [OverviewScreenSplit] (phone landscape) by hoisting [LargeClock]
- * to a full-width top row above the BG/chips row, so it can grow much larger
- * without competing with chip width.
+ * Differs from [OverviewScreenSplit] (phone landscape) by a larger [LargeClock] that carries the age
+ * of the BG reading, so the BG circle leaves its own age line out. Both put the clock above the chips.
  */
 @Composable
 fun OverviewScreenTablet(
@@ -80,6 +83,8 @@ fun OverviewScreenTablet(
     endSceneEnabled: Boolean = true,
     commandsAllowed: Boolean = true,
     formatDuration: (Long) -> String = { ms -> "${(ms / 60000L).toInt()}m" },
+    /** Height of the bars drawn over the content in preview mode; both columns need it as extra space at their end. */
+    overlaidBarsHeight: Dp = 0.dp,
     modifier: Modifier = Modifier
 ) {
     val config = LocalConfig.current
@@ -198,6 +203,9 @@ fun OverviewScreenTablet(
                         flavorTint = flavorTint
                     )
                 }
+                // The QuickLaunch toolbar is centred over both columns, so this one needs space at its end too,
+                // like the graphs column has
+                Spacer(Modifier.height(AapsSpacing.fabClearance + overlaidBarsHeight))
             }
 
             // Right column — graphs, own scroll
@@ -208,7 +216,10 @@ fun OverviewScreenTablet(
                     .verticalScroll(rememberScrollState())
                     .padding(start = AapsSpacing.small)
             ) {
-                GraphsSection(graphViewModel = graphViewModel, isSimpleMode = isSimpleMode, iobText = iobUiState.text, cobText = cobUiState.text)
+                GraphsSection(
+                    graphViewModel = graphViewModel, isSimpleMode = isSimpleMode, iobText = iobUiState.text, cobText = cobUiState.text,
+                    overlaidBarsHeight = overlaidBarsHeight
+                )
             }
         }
     }

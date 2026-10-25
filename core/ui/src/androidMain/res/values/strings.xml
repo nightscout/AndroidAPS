@@ -110,6 +110,8 @@
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
+    <string name="value_question" comment="Asks if this should be done. %1$s=what will be done. Example: Send logs?">%1$s?</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
@@ -178,6 +180,11 @@
     <string name="wrong_pump_data">Data is coming from different pump. Change pump driver to reset pump state.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Calibration</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Calibration not saved: BG is changing too fast (Δ %1$s %3$s per 5 min, limit %2$s). Try again when glucose is stable.</string>
+    <string name="cal_reject_no_pair">Calibration not saved: no CGM reading found in the 10 minutes before now.</string>
+    <string name="cal_reject_warmup">Calibration not saved: sensor is still in the 2-hour warm-up window.</string>
+    <string name="cal_reject_no_session">Calibration not saved: no sensor session is active. Mark a sensor change first.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Bolus reported an error. Manually check real delivered insulin and carb amount</string>
     <string name="bolus_reminder">Remind for bolus when BG recovers</string>
@@ -222,12 +229,12 @@
     <string name="percentage_label">Percentage</string>
     <string name="timeshift_label">Time shift</string>
     <string name="confirm_remove_multiple_items">Are you sure you want to remove %1$d items</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">The master does not have %1$d of these entries. They are not removed.</string>
     <string name="overview_treatment_label">Treatment</string>
     <string name="copytolocalprofile">Create new profile from this profile?</string>
     <string name="wear_wizard_settings">Wear Wizard Settings</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
-    <string name="format_percent" translatable="false">%1$d%%</string>
     <string name="invalid">INVALID</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
@@ -425,6 +432,19 @@
     <string name="scene_lock_banner_control_disabled">Master has disabled remote control. Scene controls will resume when it is re-enabled on the master.</string>
     <string name="master_offline_banner">Master device unreachable. Editing is disabled until the connection is restored.</string>
     <string name="master_control_disabled_banner">Master has disabled remote control. Editing is disabled until it is re-enabled on the master.</string>
+    <string name="hardened_mode_on">Hardened mode on</string>
+    <string name="hardened_mode_title">Hardened mode</string>
+    <string name="hardened_mode_info_open">About hardened mode</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Read-only</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Meals</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Caregiver</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Admin</string>
+    <string name="client_role_title">Role</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Role: %1$s</string>
+    <string name="client_roles_info_open">About roles</string>
+    <string name="client_roles_info">Each paired phone has a role. The main phone checks it for every command, and the phone shows only what its role allows. A new role takes effect at once, without pairing again.\n\nRead-only: the phone stays paired, but only shows data.\n\nMeals: bolus, bolus wizard, QuickWizard and carbs. It can also stop a running bolus. Carbs entered here can make the loop give more insulin.\n\nCaregiver: everything a user does in AAPS, like temp targets, profile and insulin switches, loop mode, temp basal, extended bolus, scenes, careportal events, calibrations and removing records. It cannot change settings or presets.\n\nAdmin: everything, settings and presets included (QuickWizard, temp target presets, scenes, profiles, automation, insulin).</string>
+    <string name="client_read_only_banner">This phone is in read-only mode on the main phone.</string>
+    <string name="hardened_mode_info">The main phone takes changes only from paired clients. It does not take treatments, temp targets, profile changes, running mode changes or deletes that are made directly in Nightscout, for example on the website or in other apps. The settings for accepting data from Nightscout are hidden while hardened mode is on. SMS commands are not affected.\n\nThe main phone still uploads all data to Nightscout, BG included. If it gets its BG from Nightscout, it still takes BG from there.\n\nTo load the history on a new main phone, use Full sync in NSClient. Full sync takes everything that is in Nightscout, profiles included.\n\nRemote control from clients needs a working WebSocket connection to Nightscout, on the main phone and on paired clients. Simple mode always turns hardened mode on. To turn it off, leave simple mode and turn off client control on the main phone.</string>
     <string name="scene_lock_reason_master_offline">Master disconnected</string>
     <string name="scene_lock_reason_control_disabled">Remote control disabled</string>
     <string name="scene_lock_reason_scene_active">Stop the running scene first</string>
@@ -454,7 +474,11 @@
     <string name="clientcontrol_fail_cancelled">The command was cancelled before it ran. Nothing was sent to the pump.</string>
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus cancelled. No insulin was given.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Cancelled</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">No SMB while a bolus is waiting for confirmation</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">An SMB is being delivered. You can confirm when it has finished.</string>
     <string name="clientcontrol_fail_control_disabled">Remote control is turned off on the master.</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">This phone\'s role on the master does not allow this.</string>
+    <string name="clientcontrol_fail_other_token">The master refused it: this phone writes to Nightscout with another token than its own. On the master, remove this phone and add it again.</string>
     <string name="clientcontrol_fail_no_pending_bolus">The prepared bolus expired or was superseded. Tap the button again.</string>
     <string name="clientcontrol_fail_bolus_compute">The master couldn\'t calculate the bolus (missing glucose / profile, or pump not ready).</string>
     <string name="clientcontrol_fail_internal">Something went wrong.</string>
@@ -860,6 +884,7 @@
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
     <string name="pumplimit">pump limit</string>
     <string name="limitingpercentrate">Limiting max percent rate to %1$d%% because of %2$s</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Percent rate %1$d%% recalculated to %2$s U/h with current basal %3$s U/h</string>
     <string name="itmustbepositivevalue">it must be positive value</string>
     <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
 
@@ -1212,6 +1237,7 @@
     <string name="units_format_min">%1$d min</string>
     <string name="units_format_min_range">%1$d min (%2$d - %3$d)</string>
     <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
     <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
     <string name="units_format_sec">%1$d sec</string>
     <string name="units_format_sec_range">%1$d sec (%2$d - %3$d)</string>

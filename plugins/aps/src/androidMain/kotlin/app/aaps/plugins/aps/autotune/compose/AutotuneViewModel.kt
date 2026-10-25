@@ -11,6 +11,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.graph.profile.ProfileViewerData
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
@@ -26,6 +27,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcCompareProfiles
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.ui.elements.WeekDay
@@ -160,6 +162,7 @@ class AutotuneViewModel(
     private val rxBus: RxBus,
     private val uel: UserEntryLogger,
     private val loop: Loop,
+    private val config: Config,
     private val profileStoreProvider: () -> ProfileStore,
     private val atProfileProvider: () -> ATProfile,
     private val scope: CoroutineScope
@@ -244,7 +247,7 @@ class AutotuneViewModel(
     // --- Dialog actions ---
 
     fun onCopyLocalClick() {
-        val localName = rh.gs(R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(autotunePlugin.lastRun)
+        val localName = rh.gs(CoreUiStrings.value_with_unit, rh.gs(R.string.autotune_tunedprofile_name), dateUtil.dateAndTimeString(autotunePlugin.lastRun))
         _uiState.value = _uiState.value.copy(dialogState = DialogState.CopyLocal(localName))
     }
 
@@ -483,7 +486,7 @@ class AutotuneViewModel(
     }
 
     private fun formatRow(label: String, input: Double, tuned: Double, format: String, missing: String = ""): ResultRow {
-        val percent = if (input != 0.0) Round.roundTo(tuned / input * 100 - 100, 1.0).toInt().toString() + "%" else ""
+        val percent = if (input != 0.0) rh.gs(CoreUiStrings.units_format_percent, Round.roundTo(tuned / input * 100 - 100, 1.0).toInt()) else ""
         return ResultRow(
             label = label,
             profileValue = String.format(Locale.getDefault(), format, input),
@@ -531,7 +534,9 @@ class AutotuneViewModel(
             showCopyLocal = autotunePlugin.lastRunSuccess,
             showUpdateProfile = autotunePlugin.lastRunSuccess && autotunePlugin.updateButtonVisibility == View.VISIBLE,
             showRevertProfile = autotunePlugin.lastRunSuccess && autotunePlugin.updateButtonVisibility != View.VISIBLE,
-            showProfileSwitch = autotunePlugin.lastRunSuccess,
+            // A switch made here would stay on a client and never reach the master. The tuned profile can still be
+            // copied into the profile store, which is synced.
+            showProfileSwitch = autotunePlugin.lastRunSuccess && !config.AAPSCLIENT,
             showCompare = autotunePlugin.lastRunSuccess,
             showResultsCard = !(autotunePlugin.calculationRunning && autotunePlugin.result.isEmpty()),
             showCalcDays = daysBack.toInt() != calcDays,

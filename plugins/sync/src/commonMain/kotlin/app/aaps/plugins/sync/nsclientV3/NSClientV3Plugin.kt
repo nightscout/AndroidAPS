@@ -35,13 +35,16 @@ import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.scenes.ClientControlSendResult
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.observeEffective
 import app.aaps.core.nssdk.NSAndroidClientImpl
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
@@ -56,6 +59,7 @@ import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlReceiver
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlRoundTrip
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.PreferencesClientPublisher
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.storeClientControlSwitchIfUnset
 import app.aaps.plugins.sync.nsclientV3.compose.NSClientComposeContent
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSBolus
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSBolusWizard
@@ -95,7 +99,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
@@ -116,8 +119,10 @@ import kotlinx.serialization.json.encodeToJsonElement
 import kotlin.concurrent.Volatile
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
-import kotlin.time.Duration.Companion.milliseconds
 import dev.zacsweers.metro.IntKey as MetroIntKey
+
+/** The Nightscout address as the setting holds it, in the form `NSAndroidClientImpl` takes: no scheme, no last slash. */
+internal fun nsClientBaseUrl(url: String): String = url.lowercase().replace("https://", "").replace(Regex("/$"), "")
 
 // The new atomics are still experimental; pendingLoop/pendingUpload use load/store/compareAndSet.
 @OptIn(ExperimentalAtomicApi::class)
@@ -178,7 +183,6 @@ class NSClientV3Plugin(
     companion object {
 
         const val RECORDS_TO_LOAD = 500
-        private val CLIENT_CONTROL_POLL_MS = T.mins(5).msecs()
 
         // Rate-limit for requestMasterProbe so screen recompositions / banner flaps / reconnect bursts
         // don't spam pings + settings re-fetches at the master.
@@ -205,18 +209,22 @@ class NSClientV3Plugin(
             when {
                 preferences.get(NsclientBooleanKey.NsPaused)                                          -> rh.gs(CoreUiStrings.paused)
                 isAllowed.not()                                                                       -> blockingReason
-                preferences.get(BooleanKey.NsClient3UseWs) && nsConnection.socketConnected == true  -> "WS: " + rh.gs(InterfacesStrings.connected)
-                preferences.get(BooleanKey.NsClient3UseWs) && nsConnection.socketConnected == false -> "WS: " + rh.gs(SyncStrings.not_connected)
+                preferences.get(BooleanKey.NsClient3UseWs) && nsConnection.socketConnected == true  -> rh.gs(InterfacesStrings.confirmation_line, "WS", rh.gs(InterfacesStrings.connected))
+                preferences.get(BooleanKey.NsClient3UseWs) && nsConnection.socketConnected == false -> rh.gs(InterfacesStrings.confirmation_line, "WS", rh.gs(SyncStrings.not_connected))
                 lastOperationError != null                                                            -> rh.gs(CoreUiStrings.error)
                 nsAndroidClient?.lastStatus == null                                                   -> rh.gs(SyncStrings.not_connected)
                 nsLoadExecutor.isRunning                                                                       -> rh.gs(SyncStrings.working)
-                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                         -> rh.gs(InterfacesStrings.authorized)
+                hasWritePermission                                                                    -> rh.gs(InterfacesStrings.authorized)
                 nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                         -> rh.gs(SyncStrings.read_only)
                 else                                                                                  -> rh.gs(CoreUiStrings.unknown)
             }
     var lastOperationError: String? = null
 
     internal var nsAndroidClient: NSAndroidClient? = null
+
+    // The address and token nsAndroidClient was made with: a change to either one makes it again.
+    @Volatile private var clientUrl: String? = null
+    @Volatile private var clientAccessToken: String? = null
 
     internal val isAllowed get() = receiverDelegate.allowed
     internal val blockingReason get() = receiverDelegate.blockingReason
@@ -256,32 +264,27 @@ class NSClientV3Plugin(
         scope = CoroutineScope(aapsIoDispatcher + SupervisorJob())
         runningConfigurationPublisher.start(scope)
         preferencesClientPublisher.start(scope)
-        // Master-side: fallback poll for inbound client-control envelopes. Primary path is the
-        // WS settings-collection listener in NSClientV3Service that calls into
-        // [handleClientControlSettingsEvent]; this loop only catches docs that arrived while
-        // WS was disconnected. Cadence mirrors the main NS refresh interval.
-        // Reactive to the toggle — enabling fires up the loop, disabling cancels it via
-        // collectLatest cancelling the previous emission's body.
-        scope.launch {
-            preferences.observe(BooleanKey.NsClientAllowClientControl)
-                .collectLatest { enabled ->
-                    if (!enabled) return@collectLatest
-                    while (isActive) {
-                        // Skip the tick when WS is up — the listener has already delivered any
-                        // docs in real time. Mirrors the main runLoop pattern in this file.
-                        if (!preferences.get(BooleanKey.NsClient3UseWs)) {
-                            runCatching { clientControlReceiver.processPending() }
-                                .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl poll failed: ${it.message}", it) }
-                        }
-                        delay(CLIENT_CONTROL_POLL_MS.milliseconds)
-                    }
-                }
+        // A one-time convenience: if it fails, log it and go on - it must never stop the plugin from starting.
+        if (!config.AAPSCLIENT) scope.launch {
+            runCatching { storeClientControlSwitchForPairedClients() }
+                .onFailure { aapsLogger.error(LTag.NSCLIENT, "Storing the client-control switch failed: ${it.message}", it) }
         }
         // Client: probe the master the moment the WS (re)connects — the pong clears the offline banner
         // fast, and the bundled config re-fetch picks up anything missed while disconnected.
         if (config.AAPSCLIENT) {
             scope.launch {
-                wsConnectedFlow.collect { connected -> if (connected) requestMasterProbe() }
+                wsConnectedFlow.collect { connected ->
+                    if (!connected) return@collect
+                    // A pairing secret still to be replaced: the hello with a key exchange goes out now. Before the
+                    // probe, and awaited: the master takes the counters in order, so a hello signed before a ping it
+                    // has already taken would be refused as a replay.
+                    when (clientControlRoundTrip.sendHelloIfDue()) {
+                        null                              -> Unit
+                        ClientControlSendResult.Success -> nsClientRepository.addLog("► CLIENTCTL", "hello with a new key")
+                        else                              -> aapsLogger.warn(LTag.NSCLIENT, "ClientControl: hello not sent, trying again with the next probe")
+                    }
+                    requestMasterProbe()
+                }
             }
         }
         rxBus.toFlow(EventAppExit::class)
@@ -336,9 +339,17 @@ class NSClientV3Plugin(
 
         // Resilient collection (from dev). forceNew args dropped: this branch replaced the
         // forceNew mechanism with the WorkManager re-run watchdog above (see executeUpload).
-        preferences.observe(StringKey.NsClientAccessToken).drop(1).collectResilient(scope, aapsLogger, LTag.NSCLIENT, block = restartOnChange)
-        preferences.observe(StringKey.NsClientUrl).drop(1).collectResilient(scope, aapsLogger, LTag.NSCLIENT, block = restartOnChange)
-        preferences.observe(BooleanKey.NsClient3UseWs).drop(1).collectResilient(scope, aapsLogger, LTag.NSCLIENT, block = restartOnChange)
+        // Against the values the client was made with, not drop(1): a value written between setClient() above and this
+        // subscription is the first one seen, and drop(1) lost it. The client then kept the old address until the next
+        // start (a fresh client set up from a QR code sent its hello to "https://api/...").
+        preferences.observe(StringKey.NsClientAccessToken).filter { it != clientAccessToken }
+            .collectResilient(scope, aapsLogger, LTag.NSCLIENT, block = restartOnChange)
+        preferences.observe(StringKey.NsClientUrl).filter { it != clientUrl }
+            .collectResilient(scope, aapsLogger, LTag.NSCLIENT, block = restartOnChange)
+        // The value in use, not the stored one: simple mode and hardened mode force the WebSocket on, and turning
+        // one of them on must start it now. It fires only on a real change, because a needless restart drops
+        // client-control commands sent during the reconnect.
+        preferences.observeEffective(BooleanKey.NsClient3UseWs).drop(1).collectResilient(scope, aapsLogger, LTag.NSCLIENT, block = restartOnChange)
         preferences.observe(NsclientBooleanKey.NsPaused).drop(1).collectResilient(scope, aapsLogger, LTag.NSCLIENT, block = restartOnChange)
         preferences.observe(BooleanKey.NsClientNotificationsFromAlarms).drop(1).collectResilient(scope, aapsLogger, LTag.NSCLIENT, block = restartOnChange)
         preferences.observe(BooleanKey.NsClientNotificationsFromAnnouncements).drop(1).collectResilient(scope, aapsLogger, LTag.NSCLIENT, block = restartOnChange)
@@ -366,9 +377,7 @@ class NSClientV3Plugin(
                             refreshInterval = T.mins(1).msecs()
                         }
                     }
-                // Polls when websockets are switched off, and also when the platform has none at all -
-                // otherwise a desktop client would wait for pushes that can never arrive.
-                if (!preferences.get(BooleanKey.NsClient3UseWs) || !nsConnection.supportsWebsocket)
+                if (needsPolling())
                     executeLoop("MAIN_LOOP")
                 else
                     nsClientRepository.addLog("● TICK", "")
@@ -378,9 +387,32 @@ class NSClientV3Plugin(
     }
 
     /**
+     * Master: clients paired before the switch was stored at pairing get it stored now, once
+     * (see [storeClientControlSwitchIfUnset]). After that the switch is stored and this does nothing.
+     */
+    @VisibleForTesting
+    internal suspend fun storeClientControlSwitchForPairedClients() {
+        if (authorizedClientsRepository.current(dateUtil.now()).any { it.state == ClientState.Active })
+            preferences.storeClientControlSwitchIfUnset()
+    }
+
+    /**
+     * Whether data has to be fetched from Nightscout by polling, because no websocket delivers it.
+     *
+     * True when websockets are switched off, when the platform has none at all (a desktop client
+     * would otherwise wait for pushes that can never arrive), and when the socket is not connected right
+     * now. The last case matters because simple mode and hardened mode keep the websocket setting on: a
+     * Nightscout host whose websocket does not work would otherwise give no data at all. While the socket
+     * is up, a poll would only repeat what the pushes already deliver.
+     */
+    @VisibleForTesting
+    internal fun needsPolling(): Boolean =
+        !preferences.get(BooleanKey.NsClient3UseWs) || !nsConnection.supportsWebsocket || !nsConnection.connected.value
+
+    /**
      * WS-push entry for client-control envelopes. NSClientV3Service routes settings-collection
      * create/update events here. The receiver verifies every envelope and — when the master toggle is off —
-     * rejects cleanly with a signed ACK (one place, also covering the poll fallback) rather than silently
+     * rejects cleanly with a signed ACK (one place) rather than silently
      * dropping it, which would time a client out into a false "master offline" alarm in the toggle race window.
      */
     suspend fun handleClientControlSettingsEvent(identifier: String, doc: JsonObject) {
@@ -421,8 +453,12 @@ class NSClientV3Plugin(
         if (now - lastProbeAt < PROBE_MIN_INTERVAL_MS) return
         lastProbeAt = now
         reachableScope.launch {
-            runCatching { clientControlRoundTrip.sendPing() }
-                .onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl ping failed: ${it.message}") }
+            // A hello that did not go out is tried again here too, before the ping: a new client stays offline
+            // without it, so the screen asks for this probe again and again.
+            runCatching {
+                clientControlRoundTrip.sendHelloIfDue()
+                clientControlRoundTrip.sendPing()
+            }.onFailure { aapsLogger.error(LTag.NSCLIENT, "ClientControl ping failed: ${it.message}") }
         }
         // Pull any config we missed while disconnected (the worker no-ops on master / GETs both docs on client).
         nsLoadExecutor.runDetached(NsLoadStep.SETTINGS)
@@ -487,7 +523,9 @@ class NSClientV3Plugin(
         }
     }
 
-    override val hasWritePermission: Boolean get() = nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true
+    // The rights this phone needs: a master writes every collection, a client only reads and writes to settings.
+    override val hasWritePermission: Boolean
+        get() = nsAndroidClient?.lastStatus?.apiPermissions?.let { if (config.AAPSCLIENT) it.isClient() else it.isFull() } == true
     override val connected: Boolean get() = nsAndroidClient?.lastStatus != null
 
     // Canonical WS-state holder. It lives on NsConnection, the singleton that survives service
@@ -573,9 +611,10 @@ class NSClientV3Plugin(
             _lastMasterSignalAt.freshness(thresholdMs = heartbeatStaleMs, scope = reachableScope, tickMs = heartbeatTickMs, pristine = false, now = dateUtil::now),
             preferences.observe(StringNonKey.NsClientControlClientId).map { it.isNotEmpty() },
             orphanDetector.authorized,
-            // Master's "allow client control" switch, synced master→client (effective value — see
-            // RunningConfigurationImpl). Off ⇒ master silently drops commands, so block fast here instead.
-            preferences.observe(BooleanKey.NsClientAllowClientControl)
+            // Master's "allow client control" switch, synced master→client. Read with the same rule the master
+            // uses (simple mode forces it on; simple mode is synced too), so both phones get the same answer.
+            // Off ⇒ master rejects commands, so block fast here instead.
+            preferences.observeEffective(BooleanKey.HardenedMode)
         ) { ws, fresh, paired, authorized, controlAllowed ->
             val reachable = ws && fresh && paired && authorized && controlAllowed
             // Diagnostic (lazy — string built only when NSCLIENT logging is on): shows WHICH term gates.
@@ -602,15 +641,27 @@ class NSClientV3Plugin(
 
     // See [NsClient.masterControlAllowed]. Master: always true. Client: true unless paired AND the master's
     // synced "allow client control" switch is off — so an UNPAIRED client shows the generic unreachable banner,
-    // not this one. UI-only (the offline banner picks its message from this); masterReachable folds the raw
-    // synced term in directly. Seed true so the initial/unpaired state never flashes the control-disabled message.
+    // not this one. UI-only (the offline banner picks its message from this); masterReachable folds the same
+    // term in directly. Seed true so the initial/unpaired state never flashes the control-disabled message.
     override val masterControlAllowed: StateFlow<Boolean> =
         if (!config.AAPSCLIENT) MutableStateFlow(true).asStateFlow()
         else combine(
             preferences.observe(StringNonKey.NsClientControlClientId).map { it.isNotEmpty() },
-            preferences.observe(BooleanKey.NsClientAllowClientControl)
+            preferences.observeEffective(BooleanKey.HardenedMode)
         ) { paired, control -> !paired || control }
             .stateIn(reachableScope, SharingStarted.WhileSubscribed(5000), true)
+
+    // See [NsClient.clientRole]. Master: always Admin. Client: the role the pairing came with, then the one
+    // OrphanDetector stores from the master's roster; an empty store (a pairing without a role, roster not seen
+    // yet) reads as ReadOnly, so it shows as little as possible until the master says more. Eagerly, because the
+    // visibility context reads `.value` with no collector of its own.
+    override val clientRole: StateFlow<ClientRole> =
+        if (!config.AAPSCLIENT) MutableStateFlow(ClientRole.Admin).asStateFlow()
+        else preferences.observe(StringNonKey.NsClientControlRole)
+            .map { storedClientRole(it) }
+            .stateIn(reachableScope, SharingStarted.Eagerly, storedClientRole(preferences.get(StringNonKey.NsClientControlRole)))
+
+    private fun storedClientRole(name: String): ClientRole = if (name.isEmpty()) ClientRole.ReadOnly else ClientRole.of(name)
 
     override val pairedClientCountFlow: StateFlow<Int> by lazy {
         if (config.AAPSCLIENT) MutableStateFlow(0).asStateFlow()
@@ -624,13 +675,18 @@ class NSClientV3Plugin(
     }
 
     private fun setClient() {
-        if (nsAndroidClient == null)
+        if (nsAndroidClient == null) {
+            val url = preferences.get(StringKey.NsClientUrl)
+            val accessToken = preferences.get(StringKey.NsClientAccessToken)
             nsAndroidClient = NSAndroidClientImpl(
-                baseUrl = preferences.get(StringKey.NsClientUrl).lowercase().replace("https://", "").replace(Regex("/$"), ""),
-                accessToken = preferences.get(StringKey.NsClientAccessToken),
+                baseUrl = nsClientBaseUrl(url),
+                accessToken = accessToken,
                 logging = l.findByName(LTag.NSCLIENT.tag).enabled && (config.isEngineeringMode() || config.isDev()),
                 logger = { msg -> aapsLogger.debug(LTag.HTTP, msg) }
             )
+            clientUrl = url
+            clientAccessToken = accessToken
+        }
         // start() is idempotent: it connects if nothing is up, and re-checks the sockets if
         // something already is. It also keeps the NsClient3UseWs check, so this stays one call.
         nsConnection.start("setClient")
@@ -638,10 +694,10 @@ class NSClientV3Plugin(
     }
 
     override fun resend(reason: String) {
-        // If WS is enabled, download is triggered by changes in NS. Thus, uploadOnly
+        // If WS is up, download is triggered by changes in NS. Thus, uploadOnly
         // Exception is after reset to full sync (initialLoadFinished == false), where
         // older data must be loaded directly and then continue over WS
-        if (preferences.get(BooleanKey.NsClient3UseWs) && initialLoadFinished)
+        if (initialLoadFinished && !needsPolling())
             executeUpload("START $reason")
         else
             executeLoop("START $reason")
@@ -1125,7 +1181,8 @@ class NSClientV3Plugin(
     }
 
     internal fun executeLoop(origin: String) {
-        if (preferences.get(BooleanKey.NsClient3UseWs) && initialLoadFinished) return
+        // After the first load, data comes over the websocket while it is up; the loop is needed only without it.
+        if (initialLoadFinished && !needsPolling()) return
         if (preferences.get(NsclientBooleanKey.NsPaused)) {
             nsClientRepository.addLog("● RUN", "paused  $origin")
             return
@@ -1232,7 +1289,7 @@ class NSClientV3Plugin(
                 key = "ns_client_remote_control",
                 title = SyncStrings.ns_remote_control_options,
                 items = listOf(
-                    BooleanKey.NsClientAllowClientControl
+                    BooleanKey.HardenedMode
                 )
             ),
             PreferenceSubScreenDef(

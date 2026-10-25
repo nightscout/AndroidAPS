@@ -29,6 +29,7 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.interfaces.pump.BolusProgressState
+import app.aaps.core.ui.compose.PHONE_COLUMN_MIN_WIDTH_DP
 import app.aaps.core.ui.compose.TABLET_MIN_SW_DP
 import app.aaps.core.ui.compose.isLandscape
 import app.aaps.core.ui.compose.navigation.NavigationRequest
@@ -45,7 +46,7 @@ import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.compose.overview.statusLights.StatusViewModel
 import kotlinx.coroutines.delay
 
-private val SPLIT_LAYOUT_MIN_WIDTH: Dp = 720.dp
+private val SPLIT_LAYOUT_MIN_WIDTH: Dp = (2 * PHONE_COLUMN_MIN_WIDTH_DP).dp
 
 @Composable
 fun OverviewScreen(
@@ -91,6 +92,11 @@ fun OverviewScreen(
     formatDuration: (Long) -> String = { ms -> "${(ms / 60000L).toInt()}m" },
     paddingValues: PaddingValues,
     fabBottomOffset: Dp = 0.dp,
+    /**
+     * Height of the bars drawn over the content instead of beside it (preview mode). The columns add it to the
+     * space at their end, so their last row can be scrolled clear of the bars and the toolbar while these show.
+     */
+    overlaidBarsHeight: Dp = 0.dp,
     bolusState: BolusProgressState? = null,
     pumpStatusText: String = "",
     queueStatusText: AnnotatedString? = null,
@@ -135,48 +141,53 @@ fun OverviewScreen(
         ?.let { it == profilePsId && it > 0 } == true
 
     val isLandscape = isLandscape()
-    val isTablet = smallestScreenWidthDp() >= TABLET_MIN_SW_DP && isLandscape
+    val isTablet = smallestScreenWidthDp() >= TABLET_MIN_SW_DP
 
     Box(modifier = modifier.fillMaxSize()) {
-        if (isTablet) {
-            OverviewScreenTablet(
-                profileName = profileName,
-                isProfileModified = isProfileModified,
-                profileProgress = profileProgress,
-                profileSceneManaged = profileSceneManaged,
-                tempTargetText = tempTargetText,
-                tempTargetState = tempTargetState,
-                tempTargetProgress = tempTargetProgress,
-                tempTargetReason = tempTargetReason,
-                tempTargetSceneManaged = tempTargetSceneManaged,
-                runningMode = runningMode,
-                runningModeText = runningModeText,
-                runningModeRemaining = runningModeRemaining,
-                runningModeProgress = runningModeProgress,
-                runningModeSceneManaged = runningModeSceneManaged,
-                tbrState = tbrState,
-                smbEnabled = smbEnabled,
-                isSimpleMode = isSimpleMode,
-                graphViewModel = graphViewModel,
-                chipsViewModel = chipsViewModel,
-                manageViewModel = manageViewModel,
-                statusViewModel = statusViewModel,
-                statusLightsDef = statusLightsDef,
-                onNavigate = onNavigate,
-                onTbrChipClick = onTbrChipClick,
-                onIobChipClick = onIobChipClick,
-                paddingValues = paddingValues,
-                activeSceneState = activeSceneState,
-                sceneExpired = sceneExpired,
-                activeSceneChainTargetName = activeSceneChainTargetName,
-                onEndScene = onEndScene,
-                onDismissScene = onDismissScene,
-                endSceneEnabled = endSceneEnabled,
-                commandsAllowed = commandsAllowed,
-                formatDuration = formatDuration
-            )
-        } else BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-            if (isLandscape && maxWidth >= SPLIT_LAYOUT_MIN_WIDTH) {
+        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+            // Two columns only where each one gets the width of a phone column. The text scale keeps that
+            // true for the larger tablet text (see `typographyScaleFor`). Without the width check a nearly
+            // square tablet window got two columns narrower than any phone has.
+            val twoColumns = isLandscape && maxWidth >= SPLIT_LAYOUT_MIN_WIDTH
+            if (twoColumns && isTablet) {
+                OverviewScreenTablet(
+                    profileName = profileName,
+                    isProfileModified = isProfileModified,
+                    profileProgress = profileProgress,
+                    profileSceneManaged = profileSceneManaged,
+                    tempTargetText = tempTargetText,
+                    tempTargetState = tempTargetState,
+                    tempTargetProgress = tempTargetProgress,
+                    tempTargetReason = tempTargetReason,
+                    tempTargetSceneManaged = tempTargetSceneManaged,
+                    runningMode = runningMode,
+                    runningModeText = runningModeText,
+                    runningModeRemaining = runningModeRemaining,
+                    runningModeProgress = runningModeProgress,
+                    runningModeSceneManaged = runningModeSceneManaged,
+                    tbrState = tbrState,
+                    smbEnabled = smbEnabled,
+                    isSimpleMode = isSimpleMode,
+                    graphViewModel = graphViewModel,
+                    chipsViewModel = chipsViewModel,
+                    manageViewModel = manageViewModel,
+                    statusViewModel = statusViewModel,
+                    statusLightsDef = statusLightsDef,
+                    onNavigate = onNavigate,
+                    onTbrChipClick = onTbrChipClick,
+                    onIobChipClick = onIobChipClick,
+                    paddingValues = paddingValues,
+                    activeSceneState = activeSceneState,
+                    sceneExpired = sceneExpired,
+                    activeSceneChainTargetName = activeSceneChainTargetName,
+                    onEndScene = onEndScene,
+                    onDismissScene = onDismissScene,
+                    endSceneEnabled = endSceneEnabled,
+                    commandsAllowed = commandsAllowed,
+                    formatDuration = formatDuration,
+                    overlaidBarsHeight = overlaidBarsHeight
+                )
+            } else if (twoColumns) {
                 OverviewScreenSplit(
                     profileName = profileName,
                     isProfileModified = isProfileModified,
@@ -211,7 +222,8 @@ fun OverviewScreen(
                     onDismissScene = onDismissScene,
                     endSceneEnabled = endSceneEnabled,
                     commandsAllowed = commandsAllowed,
-                    formatDuration = formatDuration
+                    formatDuration = formatDuration,
+                    overlaidBarsHeight = overlaidBarsHeight
                 )
             } else {
                 OverviewScreenStacked(
@@ -248,7 +260,8 @@ fun OverviewScreen(
                     onDismissScene = onDismissScene,
                     endSceneEnabled = endSceneEnabled,
                     commandsAllowed = commandsAllowed,
-                    formatDuration = formatDuration
+                    formatDuration = formatDuration,
+                    overlaidBarsHeight = overlaidBarsHeight
                 )
             }
         }

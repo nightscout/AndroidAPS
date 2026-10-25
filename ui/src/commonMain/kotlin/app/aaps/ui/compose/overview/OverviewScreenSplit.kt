@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,12 +19,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.overview.graph.TbrState
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.navigation.NavigationRequest
@@ -72,6 +76,8 @@ fun OverviewScreenSplit(
     endSceneEnabled: Boolean = true,
     commandsAllowed: Boolean = true,
     formatDuration: (Long) -> String = { ms -> "${(ms / 60000L).toInt()}m" },
+    /** Height of the bars drawn over the content in preview mode; both columns need it as extra space at their end. */
+    overlaidBarsHeight: Dp = 0.dp,
     modifier: Modifier = Modifier
 ) {
     val config = LocalConfig.current
@@ -125,40 +131,45 @@ fun OverviewScreenSplit(
                         )
                     }
 
-                    OverviewChipsColumn(
-                        runningMode = runningMode,
-                        runningModeText = runningModeText,
-                        runningModeRemaining = runningModeRemaining,
-                        runningModeProgress = runningModeProgress,
-                        runningModeSceneManaged = runningModeSceneManaged,
-                        smbEnabled = smbEnabled,
-                        profileName = profileName,
-                        isProfileModified = isProfileModified,
-                        profileProgress = profileProgress,
-                        profileSceneManaged = profileSceneManaged,
-                        tempTargetText = tempTargetText,
-                        tempTargetState = tempTargetState,
-                        tempTargetProgress = tempTargetProgress,
-                        tempTargetReason = tempTargetReason,
-                        tempTargetSceneManaged = tempTargetSceneManaged,
-                        tbrState = tbrState,
-                        iobUiState = iobUiState,
-                        cobUiState = cobUiState,
-                        sensitivityUiState = sensitivityUiState,
-                        onNavigate = onNavigate,
-                        onTbrChipClick = onTbrChipClick,
-                        onIobChipClick = onIobChipClick,
-                        commandsAllowed = commandsAllowed,
+                    Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = 8.dp),
-                        trailingContent = {
-                            LargeClock(
-                                bgTimestamp = bgInfoState.bgInfo?.timestamp,
-                                modifier = Modifier.padding(start = 8.dp)
-                            )
-                        }
-                    )
+                            .padding(start = 8.dp)
+                    ) {
+                        // Above the chips, as in the tablet layout. Beside them it had only the width the
+                        // chips left over and was cut off on a narrow screen ("23:36("). No BG age: the
+                        // BG circle here already shows it.
+                        LargeClock(
+                            bgTimestamp = bgInfoState.bgInfo?.timestamp,
+                            showBgAge = false,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        OverviewChipsColumn(
+                            runningMode = runningMode,
+                            runningModeText = runningModeText,
+                            runningModeRemaining = runningModeRemaining,
+                            runningModeProgress = runningModeProgress,
+                            runningModeSceneManaged = runningModeSceneManaged,
+                            smbEnabled = smbEnabled,
+                            profileName = profileName,
+                            isProfileModified = isProfileModified,
+                            profileProgress = profileProgress,
+                            profileSceneManaged = profileSceneManaged,
+                            tempTargetText = tempTargetText,
+                            tempTargetState = tempTargetState,
+                            tempTargetProgress = tempTargetProgress,
+                            tempTargetReason = tempTargetReason,
+                            tempTargetSceneManaged = tempTargetSceneManaged,
+                            tbrState = tbrState,
+                            iobUiState = iobUiState,
+                            cobUiState = cobUiState,
+                            sensitivityUiState = sensitivityUiState,
+                            onNavigate = onNavigate,
+                            onTbrChipClick = onTbrChipClick,
+                            onIobChipClick = onIobChipClick,
+                            commandsAllowed = commandsAllowed
+                        )
+                    }
                 }
 
                 OverviewStatusSection(
@@ -187,6 +198,9 @@ fun OverviewScreenSplit(
                         flavorTint = flavorTint
                     )
                 }
+                // The QuickLaunch toolbar is centred over both columns, so this one needs space at its end too,
+                // like the graphs column has
+                Spacer(Modifier.height(AapsSpacing.fabClearance + overlaidBarsHeight))
             }
 
             // Right column — graphs, own scroll
@@ -197,7 +211,10 @@ fun OverviewScreenSplit(
                     .verticalScroll(rememberScrollState())
                     .padding(start = 4.dp)
             ) {
-                GraphsSection(graphViewModel = graphViewModel, isSimpleMode = isSimpleMode, iobText = iobUiState.text, cobText = cobUiState.text)
+                GraphsSection(
+                    graphViewModel = graphViewModel, isSimpleMode = isSimpleMode, iobText = iobUiState.text, cobText = cobUiState.text,
+                    overlaidBarsHeight = overlaidBarsHeight
+                )
             }
         }
     }

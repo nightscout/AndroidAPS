@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
-import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
@@ -71,6 +70,7 @@ import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
 import app.aaps.ui.compose.components.DialogStatusBar
 import app.aaps.ui.compose.components.RecordOnlyBanner
+import app.aaps.ui.compose.components.SmbBeingDeliveredBanner
 import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
@@ -93,7 +93,7 @@ fun InsulinDialogScreen(
 
     // Dialog states
     // The master's prepared confirmation (bolusId + its merged lines), set via the ShowConfirmation side effect.
-    var confirmation by remember { mutableStateOf<Pair<Long, List<ConfirmationLine>>?>(null) }
+    var confirmation by remember { mutableStateOf<InsulinDialogViewModel.SideEffect.ShowConfirmation?>(null) }
     var showNoAction by rememberSaveable { mutableStateOf(false) }
 
     // Observe side effects
@@ -109,7 +109,9 @@ fun InsulinDialogScreen(
                 }
 
                 is InsulinDialogViewModel.SideEffect.ShowConfirmation -> {
-                    confirmation = effect.bolusId to effect.lines
+                    // A newer prepare replaces one still shown (a second tap): drop the old one on the master.
+                    confirmation?.let { viewModel.discard(it.bolusId) }
+                    confirmation = effect
                 }
             }
         }
@@ -119,16 +121,20 @@ fun InsulinDialogScreen(
     var showButtonSettings by rememberSaveable { mutableStateOf(false) }
 
     // Confirmation dialog — renders the MASTER's prepared lines (set via the ShowConfirmation side effect after prepare()).
-    confirmation?.let { (bolusId, lines) ->
+    confirmation?.let { shown ->
         ElementConfirmationDialog(
             elementType = ElementType.INSULIN,
-            lines = lines,
+            lines = shown.lines,
             onConfirm = {
-                viewModel.commit(bolusId)
+                viewModel.commit(shown.bolusId)
                 confirmation = null
                 onNavigateBack()
             },
-            onDismiss = { confirmation = null }
+            onDismiss = {
+                viewModel.discard(shown.bolusId)
+                confirmation = null
+            },
+            closeAt = shown.closeAt
         )
     }
 
@@ -253,6 +259,7 @@ internal fun InsulinDialogContent(
                 // Same as the treatment dialog. Here it was only a red label, so a screen reader user
                 // was never told that this insulin will be recorded and NOT given by the pump.
                 if (uiState.forcedRecordOnly) RecordOnlyBanner()
+                if (uiState.waitsForSmb) SmbBeingDeliveredBanner()
             }
         },
         bottomBar = {
@@ -307,7 +314,7 @@ internal fun InsulinDialogContent(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    LabeledSwitch(
+                    if (uiState.canSetTempTarget) LabeledSwitch(
                         label = stringResource(UiStrings.start_eating_soon_tt),
                         checked = uiState.eatingSoonTtChecked,
                         onCheckedChange = onEatingSoonChange

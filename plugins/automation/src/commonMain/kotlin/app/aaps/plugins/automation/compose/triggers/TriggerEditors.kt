@@ -469,7 +469,7 @@ fun TriggerStepsCountEditor(t: TriggerStepsCount, onChange: () -> Unit, tick: In
     @Suppress("UNUSED_EXPRESSION") tick
     val durations = listOf("5", "10", "15", "30", "60", "180")
     LabelWithElementRow(
-        textPre = stringResource(AutomationStrings.triggerStepsCountDropdownLabel) + ":",
+        textPre = stringResource(CoreUiStrings.label_with_colon, stringResource(AutomationStrings.triggerStepsCountDropdownLabel)),
         textPost = stringResource(InterfacesStrings.unit_minutes)
     ) {
         AutomationDropdown(

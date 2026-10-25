@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.loop.compose
 
 import androidx.compose.runtime.Immutable
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -8,9 +9,9 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import kotlinx.coroutines.CoroutineScope
@@ -43,7 +44,6 @@ class LoopViewModel(
     private val rxBus: RxBus,
     private val rh: TextResolver,
     private val dateUtil: DateUtil,
-    private val decimalFormatter: DecimalFormatter,
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val scope: CoroutineScope
@@ -112,40 +112,40 @@ class LoopViewModel(
     }
 
     private fun PumpEnactResult.toPlainText(): String {
-        var ret = rh.gs(CoreUiStrings.success) + ": " + success
-        if (queued) {
-            ret = rh.gs(CoreUiStrings.waitingforpumpresult)
-        } else if (enacted) {
+        if (queued) return rh.gs(CoreUiStrings.waitingforpumpresult)
+        fun line(label: TextRef, value: String) = rh.gs(InterfacesStrings.confirmation_line, rh.gs(label), value)
+        val lines = mutableListOf(line(CoreUiStrings.success, success.toString()))
+        if (enacted) {
             when {
                 bolusDelivered > 0         -> {
-                    ret += "\n" + rh.gs(CoreUiStrings.enacted) + ": " + enacted
-                    if (comment.isNotEmpty()) ret += "\n" + rh.gs(CoreUiStrings.comment) + ": " + comment
-                    ret += "\n" + rh.gs(CoreUiStrings.smb_shortname) + ": " + bolusDelivered + " " + rh.gs(CoreUiStrings.insulin_unit_shortname)
+                    lines += line(CoreUiStrings.enacted, enacted.toString())
+                    if (comment.isNotEmpty()) lines += line(CoreUiStrings.comment, comment)
+                    lines += line(CoreUiStrings.smb_shortname, rh.gs(InterfacesStrings.format_insulin_units, bolusDelivered))
                 }
 
                 isTempCancel               -> {
-                    ret += "\n" + rh.gs(CoreUiStrings.enacted) + ": " + enacted
-                    ret += "\n" + rh.gs(CoreUiStrings.comment) + ": " + comment +
-                        "\n" + rh.gs(CoreUiStrings.cancel_temp)
+                    lines += line(CoreUiStrings.enacted, enacted.toString())
+                    lines += line(CoreUiStrings.comment, comment)
+                    lines += rh.gs(CoreUiStrings.cancel_temp)
                 }
 
                 isPercent && percent != -1 -> {
-                    ret += "\n" + rh.gs(CoreUiStrings.enacted) + ": " + enacted
-                    if (comment.isNotEmpty()) ret += "\n" + rh.gs(CoreUiStrings.comment) + ": " + comment
-                    ret += "\n" + rh.gs(CoreUiStrings.duration) + ": " + duration + " min"
-                    ret += "\n" + rh.gs(CoreUiStrings.percent) + ": " + percent + "%"
+                    lines += line(CoreUiStrings.enacted, enacted.toString())
+                    if (comment.isNotEmpty()) lines += line(CoreUiStrings.comment, comment)
+                    lines += line(CoreUiStrings.duration, rh.gs(CoreUiStrings.format_mins, duration))
+                    lines += line(CoreUiStrings.percent, rh.gs(CoreUiStrings.units_format_percent, percent))
                 }
 
                 absolute != -1.0           -> {
-                    ret += "\n" + rh.gs(CoreUiStrings.enacted) + ": " + enacted
-                    if (comment.isNotEmpty()) ret += "\n" + rh.gs(CoreUiStrings.comment) + ": " + comment
-                    ret += "\n" + rh.gs(CoreUiStrings.duration) + ": " + duration + " min"
-                    ret += "\n" + rh.gs(CoreUiStrings.absolute) + ": " + decimalFormatter.to2Decimal(absolute) + " U/h"
+                    lines += line(CoreUiStrings.enacted, enacted.toString())
+                    if (comment.isNotEmpty()) lines += line(CoreUiStrings.comment, comment)
+                    lines += line(CoreUiStrings.duration, rh.gs(CoreUiStrings.format_mins, duration))
+                    lines += line(CoreUiStrings.absolute, rh.gs(CoreUiStrings.pump_base_basal_rate, absolute))
                 }
             }
         } else {
-            if (comment.isNotEmpty()) ret += "\n" + rh.gs(CoreUiStrings.comment) + ": " + comment
+            if (comment.isNotEmpty()) lines += line(CoreUiStrings.comment, comment)
         }
-        return ret
+        return lines.joinToString("\n")
     }
 }

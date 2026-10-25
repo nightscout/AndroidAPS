@@ -70,6 +70,8 @@ enum class StringNonKey(
     QuickLaunchActions(key = "quick_launch_actions", defaultValue = "[{\"type\":\"wizard\"},{\"type\":\"quick_launch_config\"}]"),
     InsulinConfiguration("insulin_configuration", "{}", sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     ComposeGraphConfig("compose_graphconfig", ""),
+    // The tab the Statistics screen opens on: the last one used (per-device UI state, not a user-facing preference)
+    StatsTab(key = "stats_tab", defaultValue = "", exportable = false),
 
     // Synthetic mirror of the active plugin per single-select category (value = plugin pluginId, defaults to
     // javaClass.simpleName). Bidirectional for APS/SENSITIVITY/SMOOTHING/CALIBRATION (a client may switch the
@@ -98,5 +100,22 @@ enum class StringNonKey(
     NsClientControlMasterInstallId(key = "nsclient_control_master_install_id", defaultValue = "", exportable = false),
     NsClientControlClientId(key = "nsclient_control_client_id", defaultValue = "", exportable = false),
     NsClientControlMasterSecretEnc(key = "nsclient_control_master_secret_enc", defaultValue = "", exportable = false),
+    // Client: this phone's role on the master (ClientRole name), read from the master's roster. Empty = not known
+    // yet (just paired); the client then shows as little as ReadOnly until the roster arrives. Cleared on unpair.
+    NsClientControlRole(key = "nsclient_control_role", defaultValue = "", exportable = false),
+    // Client: the secret before the key exchange replaced it, wrapped like the current one. Kept only to check answers
+    // the master signed before it took the new secret; dropped at the first answer signed with the new one.
+    NsClientControlPreviousSecretEnc(key = "nsclient_control_previous_secret_enc", defaultValue = "", exportable = false),
+    // Client: the key exchange started by the last hello. The public key (not secret) and the private key, wrapped.
+    NsClientControlKeyExchangePublic(key = "nsclient_control_key_exchange_public", defaultValue = "", exportable = false),
+    NsClientControlKeyExchangePrivateEnc(key = "nsclient_control_key_exchange_private_enc", defaultValue = "", exportable = false),
+    // Master: its key for signing the settings docs (MasterSigningKey). The public key (not secret) and the private key,
+    // wrapped. Not exported: a new phone makes its own, and its clients pair again anyway.
+    NsClientControlSigningPublic(key = "nsclient_control_signing_public", defaultValue = "", exportable = false),
+    NsClientControlSigningPrivateEnc(key = "nsclient_control_signing_private_enc", defaultValue = "", exportable = false),
+    // Client: the master's public key for its settings docs (MasterDocVerifier), from a pong or the QR code, and the
+    // Nightscout address it belongs to: with another address it is not used.
+    NsClientControlMasterSigningKey(key = "nsclient_control_master_signing_key", defaultValue = "", exportable = false),
+    NsClientControlMasterSigningKeyUrl(key = "nsclient_control_master_signing_key_url", defaultValue = "", exportable = false),
 
 }

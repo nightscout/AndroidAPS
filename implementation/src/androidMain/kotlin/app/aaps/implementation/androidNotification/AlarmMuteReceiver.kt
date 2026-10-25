@@ -8,11 +8,11 @@ import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import dev.zacsweers.metro.Inject
 
 /**
- * Handles the "Mute" action on the background alarm notification: silences every audible alarm
- * (the looping [app.aaps.core.interfaces.notifications.AlarmSoundPlayer] plus the alarm
- * notifications) via [UiInteraction.stopAlarm], without the user having to open the alarm screen.
- * Primary use: the case where `ErrorActivity` could not be brought to the foreground (another app on
- * top) so the user's only lock-screen surface is the notification.
+ * Handles the "Mute" action on the background alarm notification, and a swipe of that notification:
+ * silences every audible alarm (the looping [app.aaps.core.interfaces.notifications.AlarmSoundPlayer]
+ * plus the alarm notifications) via [UiInteraction.stopAlarm], without the user having to open the
+ * alarm screen. Primary use: the case where `ErrorActivity` could not be brought to the foreground
+ * (another app on top) so the user's only lock-screen surface is the notification.
  *
  * A manifest [BroadcastReceiver] is not injected by the system, so it asks the graph itself - the
  * same way the other receivers in this module do.
@@ -23,6 +23,13 @@ class AlarmMuteReceiver : MetroBroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-        uiInteraction.stopAlarm("Notification mute action")
+        val swiped = intent.getBooleanExtra(EXTRA_SWIPED, false)
+        uiInteraction.stopAlarm(if (swiped) "Notification swiped away" else "Notification mute action")
+    }
+
+    companion object {
+
+        /** True when the user swiped the notification away instead of pressing Mute. Only changes the log. */
+        const val EXTRA_SWIPED = "app.aaps.implementation.alarmMute.swiped"
     }
 }

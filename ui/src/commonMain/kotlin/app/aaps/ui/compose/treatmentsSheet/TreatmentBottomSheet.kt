@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.ElementVisibility
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.LocalClientRole
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.TonalIcon
 import app.aaps.core.ui.compose.consumeOverscroll
@@ -161,8 +162,9 @@ internal fun TreatmentSelectionContent(
 
         val disabledAlpha = 0.38f
 
-        // QuickWizard entries
-        quickWizardItems.forEach { item ->
+        // QuickWizard entries (left out, with their divider, for a role below meal assistant)
+        val quickWizardShown = if (LocalClientRole.current.allows(ElementType.QUICK_WIZARD.role)) quickWizardItems else emptyList()
+        quickWizardShown.forEach { item ->
             val itemEnabled = item.isEnabled && editingEnabled
             val itemIcon = when (item.mode) {
                 1    -> IcBolus    // INSULIN
@@ -212,7 +214,7 @@ internal fun TreatmentSelectionContent(
         }
 
         // Divider between QuickWizard and other buttons
-        if (quickWizardItems.isNotEmpty()) {
+        if (quickWizardShown.isNotEmpty()) {
             HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
         }
 
@@ -321,6 +323,8 @@ private fun TreatmentItem(
     onDismiss: () -> Unit,
     onClick: () -> Unit
 ) {
+    // Not offered to a client whose role cannot use it: the master would refuse it.
+    if (!LocalClientRole.current.allows(elementType.role)) return
     val color = elementType.color()
     val desc = elementType.description()
     // A relayed action (visible only to master/paired-client) is also DISABLED when the master is unreachable or

@@ -46,15 +46,18 @@ import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.BolusGraphPoint
 import app.aaps.core.interfaces.overview.graph.BolusType
+import app.aaps.core.interfaces.overview.graph.CalibrationGraphPoint
 import app.aaps.core.interfaces.overview.graph.CarbsGraphPoint
 import app.aaps.core.interfaces.overview.graph.GraphDataPoint
 import app.aaps.core.interfaces.overview.graph.TbrState
+import app.aaps.core.interfaces.overview.graph.TherapyEventGraphPoint
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.LocalProfileUtil
+import app.aaps.core.ui.compose.icons.IcBgCheck
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.stringResource
@@ -73,12 +76,23 @@ import kotlin.math.roundToInt
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
-// Press and hold on the BG graph: a dot on the reading, a line in every graph and a pill with the values.
+// Press and hold on any graph: a dot on the reading in the BG graph, a line in every graph and a pill with the values.
 
 /** Max distance from the finger's time for a reading or value, in ms. */
 private const val INSPECT_MATCH_MS = 5 * 60_000L
 
-/** Max distance from the reading for a bolus or carbs entry (half a reading interval), in ms. */
+/**
+ * Max distance from the snapped time for a treatment, in ms, when the snapped time is not a reading.
+ *
+ * Treatments are matched against the time the pill snapped to, not against the finger, so they
+ * change together with the reading and the dot, once per reading. Matched against the finger they
+ * changed at their own times in between, and the pill showed a reading with the SMB of its
+ * neighbour. At a reading, a treatment is listed when that reading is the nearest reading to it,
+ * so every treatment belongs to exactly one reading, also when readings come more than five
+ * minutes apart: a fixed half interval left a bolus in the middle of such a gap unlisted at both
+ * sides. After the last reading, or with no reading within [INSPECT_MATCH_MS], the snapped time is
+ * the finger's own, and this window finds a treatment in a gap when it is held.
+ */
 private const val INSPECT_TREATMENT_MS = 150_000L
 
 /** How long the pill stays after the finger is lifted. */
@@ -90,8 +104,8 @@ private val PILL_ICON_SIZE = 14.dp
 private val PILL_COB_ICON_SIZE = 12.dp
 
 /**
- * Shared between Vico and the compose side. Vico sets [targetX]; the compose side snaps it to a
- * reading and sets [shownX], [dotValue] and [dotColor].
+ * Shared between Vico and the compose side. The [controller] sets [targetX] from the finger; the
+ * compose side snaps it to a reading and sets [shownX], [dotValue] and [dotColor].
  */
 @Stable
 class GraphInspectState {
@@ -101,6 +115,14 @@ class GraphInspectState {
 
     /** Set by the touch layer. Not a state: only read in callbacks. */
     var pointerDown = false
+
+    /**
+     * How the graphs map x to pixels, set by [InspectLine] on every draw and read only in
+     * [fingerX]. Not state. The graphs share one x axis, so the last graph drawn speaks for all.
+     */
+    var pxPerX = 0f
+    var minX = 0.0
+    var maxX = 0.0
 
     /** Graph x under the finger, in minutes from the start of the graph. */
     var targetX by mutableStateOf<Double?>(null)
@@ -127,19 +149,24 @@ class GraphInspectState {
         override fun shouldShowMarker(interaction: Interaction, targets: List<CartesianMarker.Target>): Boolean {
             val show = interaction is Interaction.LongPress || interaction is Interaction.Move
             fingerDown = show
+            if (show) targetX = fingerX(interaction.point.x, targets.firstOrNull())
             return show
         }
     }
 
+    /**
+     * The graph x under the finger. Vico snaps to the nearest point of the held graph, and that
+     * stops at its last point: the COB graph has nothing after now, the BG graph has predictions.
+     * The finger's distance from that point in pixels gives the finger's own x, so a hold on any
+     * graph reaches as far as the BG graph. Clamped to the graph's range.
+     */
+    internal fun fingerX(fingerPx: Float, nearest: CartesianMarker.Target?): Double? {
+        nearest ?: return null
+        if (pxPerX <= 0f || maxX < minX) return nearest.x
+        return (nearest.x + (fingerPx - nearest.canvasX) / pxPerX).coerceIn(minX, maxX)
+    }
+
     val visibilityListener: CartesianMarkerVisibilityListener = object : CartesianMarkerVisibilityListener {
-        override fun onShown(marker: CartesianMarker, targets: List<CartesianMarker.Target>) {
-            targetX = targets.firstOrNull()?.x
-        }
-
-        override fun onUpdated(marker: CartesianMarker, targets: List<CartesianMarker.Target>) {
-            targetX = targets.firstOrNull()?.x
-        }
-
         // Vico also hides the marker when the finger leaves the plotted area. Keep inspecting while it is down.
         override fun onHidden(marker: CartesianMarker) {
             if (!pointerDown) fingerDown = false
@@ -148,48 +175,38 @@ class GraphInspectState {
 }
 
 /**
- * The dot on the shown reading. Vico puts the marker at its own nearest point (it can be a basal or
- * prediction point), so the dot is moved to the reading.
+ * The marker of every graph. It draws nothing: it is only there so Vico delivers the time under
+ * the finger to the shared [GraphInspectState], whichever graph the user presses and holds. The
+ * line and the dot are drawn by [InspectLine], so they show in every graph no matter which one
+ * is held.
  */
-class GraphInspectMarker(
-    private val state: GraphInspectState
-) : CartesianMarker {
+object SilentInspectMarker : CartesianMarker
 
-    private val dotCenter = ShapeComponent(fill = Fill(Color.White), shape = CircleShape)
-
-    override fun drawOverLayers(context: CartesianDrawingContext, targets: List<CartesianMarker.Target>) {
-        if (!state.fingerDown) return
-        val target = targets.firstOrNull() ?: return
-        val x = state.shownX ?: return
-        with(context) {
-            val canvasX = target.canvasX + ((x - target.x) / ranges.xStep).toFloat() * layerDimensions.xSpacing
-            if (canvasX < layerBounds.left || canvasX > layerBounds.right) return
-            val value = state.dotValue ?: return
-            val yRange = ranges.getYRange(Axis.Position.Vertical.Start)
-            val canvasY = layerBounds.bottom - ((value - yRange.minY) / yRange.length).toFloat() * layerBounds.height
-            val outer = 7.dp.pixels
-            val inner = 3.dp.pixels
-            ShapeComponent(fill = Fill(state.dotColor), shape = CircleShape)
-                .draw(context, canvasX - outer, canvasY - outer, canvasX + outer, canvasY + outer)
-            dotCenter.draw(context, canvasX - inner, canvasY - inner, canvasX + inner, canvasY + inner)
-        }
-    }
-}
-
-/** The dashed line at the shown reading, in every graph. Drawn like [NowLine]. */
+/**
+ * The dashed line at the shown reading, in every graph, drawn like [NowLine]. With [dotOnReading]
+ * also the dot on the reading, for the BG graph. Vico snaps the finger to its own nearest point
+ * (it can be a basal or an IOB point), so the x comes from the state, which holds the reading.
+ */
 class InspectLine(
     private val state: GraphInspectState,
     private val color: Color,
+    private val dotOnReading: Boolean = false,
     private val strokeWidthPx: Float = 2f,
     private val dashLengthPx: Float = 6f,
     private val gapLengthPx: Float = 4f
 ) : Decoration {
 
+    private val dotCenter = ShapeComponent(fill = Fill(Color.White), shape = CircleShape)
+
     override fun drawOverLayers(context: CartesianDrawingContext) {
-        val x = state.lineX ?: return
         with(context) {
             val xStep = ranges.xStep
             if (xStep == 0.0) return
+            // Before the line itself, so the mapping is fresh when the long press comes, see GraphInspectState.fingerX
+            state.pxPerX = (layerDimensions.xSpacing / xStep).toFloat()
+            state.minX = ranges.minX
+            state.maxX = ranges.maxX
+            val x = state.lineX ?: return
             val canvasX = layerBounds.left +
                 layerDimensions.startPadding +
                 layerDimensions.xSpacing * ((x - ranges.minX) / xStep).toFloat() -
@@ -204,15 +221,24 @@ class InspectLine(
                     pathEffect = PathEffect.dashPathEffect(floatArrayOf(dashLengthPx, gapLengthPx), 0f)
                 )
             }
+            if (!dotOnReading) return
+            val value = state.dotValue ?: return
+            val yRange = ranges.getYRange(Axis.Position.Vertical.Start)
+            val canvasY = layerBounds.bottom - ((value - yRange.minY) / yRange.length).toFloat() * layerBounds.height
+            val outer = 7.dp.pixels
+            val inner = 3.dp.pixels
+            ShapeComponent(fill = Fill(state.dotColor), shape = CircleShape)
+                .draw(context, canvasX - outer, canvasY - outer, canvasX + outer, canvasY + outer)
+            dotCenter.draw(context, canvasX - inner, canvasY - inner, canvasX + inner, canvasY + inner)
         }
     }
 }
 
-/** The [InspectLine] for one graph, or null when [state] is null. */
+/** The [InspectLine] for one graph, or null when [state] is null. [dotOnReading] is true for the BG graph only. */
 @Composable
-fun rememberInspectLine(state: GraphInspectState?): InspectLine? {
+fun rememberInspectLine(state: GraphInspectState?, dotOnReading: Boolean = false): InspectLine? {
     val color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-    return remember(state, color) { state?.let { InspectLine(it, color) } }
+    return remember(state, color, dotOnReading) { state?.let { InspectLine(it, color, dotOnReading) } }
 }
 
 /**
@@ -250,6 +276,7 @@ fun GraphInspectOverlay(
     val cobGraph by graphViewModel.cobGraphFlow.collectAsStateWithLifecycle()
     val basalGraph by graphViewModel.basalGraphFlow.collectAsStateWithLifecycle()
     val treatmentGraph by graphViewModel.treatmentGraphFlow.collectAsStateWithLifecycle()
+    val predictions by graphViewModel.predictionsFlow.collectAsStateWithLifecycle()
     val currentBgReadings by rememberUpdatedState(bgReadings)
     val currentMinTimestamp by rememberUpdatedState(minTimestamp)
     val haptic = LocalHapticFeedback.current
@@ -261,12 +288,15 @@ fun GraphInspectOverlay(
             val data = inspectDataAt(
                 timestamp = min + (x * 60_000).toLong(),
                 bgReadings = currentBgReadings,
+                predictions = predictions,
                 iob = iobGraph.iob,
                 cob = cobGraph.cob,
                 actualBasal = basalGraph.actualBasal,
                 profileBasal = basalGraph.profileBasal,
                 boluses = treatmentGraph.boluses,
-                carbs = treatmentGraph.carbs
+                carbs = treatmentGraph.carbs,
+                calibrations = treatmentGraph.calibrations,
+                therapyEvents = treatmentGraph.therapyEvents
             )
             if (data.timestamp != inspectData?.timestamp) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
             inspect.shownX = timestampToX(data.timestamp, min)
@@ -301,22 +331,33 @@ data class InspectData(
     val basal: Double?,
     val tbrState: TbrState,
     val boluses: List<BolusGraphPoint>,
-    val carbs: List<CarbsGraphPoint>
+    val carbs: List<CarbsGraphPoint>,
+    val measured: List<String>
 )
 
 /** The nearest reading to [timestamp], with the values and treatments at its time. */
 fun inspectDataAt(
     timestamp: Long,
     bgReadings: List<BgDataPoint>,
+    predictions: List<BgDataPoint>,
     iob: List<GraphDataPoint>,
     cob: List<GraphDataPoint>,
     actualBasal: List<GraphDataPoint>,
     profileBasal: List<GraphDataPoint>,
     boluses: List<BolusGraphPoint>,
-    carbs: List<CarbsGraphPoint>
+    carbs: List<CarbsGraphPoint>,
+    calibrations: List<CalibrationGraphPoint>,
+    therapyEvents: List<TherapyEventGraphPoint>
 ): InspectData {
+    // The time snaps to a reading or, after the last reading, to a prediction point. So a hold on
+    // any graph steps through the same times as a hold on the BG graph, in steps of a reading, not
+    // of a pixel. Only a reading has a glucose value to show.
     val bg = bgReadings.nearest(timestamp) { it.timestamp }
-    val time = bg?.timestamp ?: timestamp
+    val time = bg?.timestamp ?: predictions.nearest(timestamp) { it.timestamp }?.timestamp ?: timestamp
+    // A treatment belongs to the nearest reading, see INSPECT_TREATMENT_MS
+    fun belongsHere(at: Long): Boolean =
+        if (bg != null) bgReadings.nearest(at) { it.timestamp }?.timestamp == time
+        else abs(at - time) <= INSPECT_TREATMENT_MS
     // Basal is stored at each change
     val basal = actualBasal.lastOrNull { it.timestamp <= time }?.value
     return InspectData(
@@ -326,8 +367,14 @@ fun inspectDataAt(
         cob = cob.nearest(time) { it.timestamp }?.value,
         basal = basal,
         tbrState = tbrState(basal, profileBasal.lastOrNull { it.timestamp <= time }?.value),
-        boluses = boluses.filter { it.isValid && abs(it.timestamp - time) <= INSPECT_TREATMENT_MS },
-        carbs = carbs.filter { it.isValid && abs(it.timestamp - time) <= INSPECT_TREATMENT_MS }
+        boluses = boluses.filter { it.isValid && belongsHere(it.timestamp) },
+        carbs = carbs.filter { it.isValid && belongsHere(it.timestamp) },
+        measured = calibrations
+            .filter { it.isValid && belongsHere(it.timestamp) }
+            .map { it.label } +
+            therapyEvents
+                .filter { it.glucoseUserUnits != null && belongsHere(it.timestamp) }
+                .map { it.label }
     )
 }
 
@@ -391,11 +438,15 @@ fun GraphInspectPill(
                 data.basal?.let {
                     PillItem(data.tbrState.toIcon(), stringResource(CoreUiStrings.pump_base_basal_rate, it), ElementType.TEMP_BASAL.color())
                 }
-                // Same triangles as the IOB and COB graphs
+                // Same triangles as the BG and IOB graphs: a manual bolus down, an SMB up, carbs up
                 data.boluses.forEach { bolus ->
                     PillTriangleItem(pointsUp = bolus.bolusType == BolusType.SMB, text = bolus.label, color = ElementType.INSULIN.color())
                 }
-                data.carbs.forEach { carbs -> PillTriangleItem(pointsUp = false, text = carbs.label, color = ElementType.CARBS.color()) }
+                data.carbs.forEach { carbs -> PillTriangleItem(pointsUp = true, text = carbs.label, color = ElementType.CARBS.color()) }
+                // Calibration or BG check, same icon as on the BG graph
+                data.measured.forEach { label ->
+                    PillItem(IcBgCheck, label, AapsTheme.elementColors.bgCheck)
+                }
             }
         }
     }

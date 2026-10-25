@@ -36,7 +36,7 @@ class HistoryViewModel(
     val uiState: StateFlow<HistoryUiState> = _uiState.asStateFlow()
 
     init {
-        // Always start at "today" on (re-)entry. HistoryBrowserData is app-scoped @SingleIn(AppScope::class)
+        // Always start at "today" on (re-)entry. The HistoryScope is app-scoped @SingleIn(AppScope::class)
         // so its time fields persist across VM lifetimes; reinitialising here avoids stale
         // windows flashing while the first calculation is in flight.
         setTime(dateUtil.now())
@@ -47,13 +47,17 @@ class HistoryViewModel(
     fun createGraphViewModel(): GraphViewModel =
         graphViewModelFactory.create(historyScope.cache, fullWindow = true)
 
+    // One calendar day from the window's midnight, not WINDOW_MS from `fromTime`. `fromTime` carries
+    // the nudge below, so stepping from it added the nudge again on every tap and the window drifted
+    // 100 s later each day. And a day with a clock change is 23 or 25 hours long, so a fixed 24 hours
+    // from its midnight lands in the wrong day.
     fun previousWindow() {
-        adjustTimeRange(historyScope.overviewData.fromTime - WINDOW_MS)
+        setTime(MidnightTime.calcDaysBack(windowMidnight(), 1))
         runCalculation("previousWindow")
     }
 
     fun nextWindow() {
-        adjustTimeRange(historyScope.overviewData.fromTime + WINDOW_MS)
+        setTime(MidnightTime.calcDaysBack(windowMidnight(), -1))
         runCalculation("nextWindow")
     }
 
@@ -85,12 +89,15 @@ class HistoryViewModel(
         adjustTimeRange(MidnightTime.calc(start))
     }
 
-    // The +100000 ms nudge here comes from the legacy GraphView era where exact boundary
+    /** The midnight the current window starts at, without the nudge. */
+    private fun windowMidnight(): Long = MidnightTime.calc(historyScope.overviewData.fromTime)
+
+    // The nudge here comes from the legacy GraphView era where exact boundary
     // timestamps produced off-by-one rounding at axis labels. Compose/Vico doesn't need it,
     // but workers still expect this window to match what they were given, so we keep it
     // until the calculation pipeline itself gets cleaned up.
     private fun adjustTimeRange(start: Long) {
-        historyScope.overviewData.fromTime = start + 100000
+        historyScope.overviewData.fromTime = start + WINDOW_NUDGE_MS
         historyScope.overviewData.toTime = historyScope.overviewData.fromTime + WINDOW_MS
         historyScope.overviewData.endTime = historyScope.overviewData.toTime
         _uiState.value = buildState()
@@ -130,5 +137,8 @@ class HistoryViewModel(
     companion object {
 
         private val WINDOW_MS = T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
+
+        /** How far after midnight a window starts. See `adjustTimeRange`. Internal for the tests. */
+        internal const val WINDOW_NUDGE_MS = 100_000L
     }
 }

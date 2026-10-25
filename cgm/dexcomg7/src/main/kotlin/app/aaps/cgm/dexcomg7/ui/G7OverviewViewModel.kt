@@ -31,9 +31,8 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.pump.ActionCategory
-import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.StatusBanner
@@ -111,31 +110,31 @@ class G7OverviewViewModel(
                 ?: banner(state, lifecycle, status, now),
             infoRows = rows(state, lifecycle, status, now) + watchRows(state, watch, now),
             primaryActions = listOf(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(R.string.dexcom_g7_alarm_acknowledge),
                     icon = Icons.Filled.NotificationsOff,
                     visible = raised != null,
                     onClick = { alarms.acknowledge() }
                 ),
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(R.string.dexcom_g7_pair_new_sensor),
                     icon = Icons.Filled.Add,
                     onClick = { events.tryEmit(G7OverviewEvent.StartPairing) }
                 ),
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(R.string.dexcom_g7_calibrate),
                     icon = Icons.Filled.WaterDrop,
                     enabled = lifecycle == G7LifecycleState.OK,
                     visible = state.isPaired,
                     onClick = { events.tryEmit(G7OverviewEvent.Calibrate) }
                 ),
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(if (watch.enabled) R.string.dexcom_g7_watch_direct_turn_off else R.string.dexcom_g7_watch_direct_turn_on),
                     icon = Icons.Filled.Watch,
                     visible = watchHandover.isAvailable(state),
                     onClick = { watchHandover.setEnabled(!watch.enabled) }
                 ),
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(R.string.dexcom_g7_cancel_calibration),
                     icon = Icons.Filled.Close,
                     visible = state.calibration?.outcome == G7CalibrationRecord.Outcome.PENDING,
@@ -143,16 +142,14 @@ class G7OverviewViewModel(
                 )
             ),
             managementActions = listOf(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(R.string.dexcom_g7_communication_log),
                     icon = Icons.AutoMirrored.Filled.List,
-                    category = ActionCategory.MANAGEMENT,
                     onClick = { events.tryEmit(G7OverviewEvent.ShowLog) }
                 ),
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(R.string.dexcom_g7_forget_sensor),
                     icon = Icons.Filled.BluetoothDisabled,
-                    category = ActionCategory.MANAGEMENT,
                     visible = state.isPaired,
                     onClick = { events.tryEmit(G7OverviewEvent.ConfirmForget) }
                 )

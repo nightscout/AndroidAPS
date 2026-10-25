@@ -8,29 +8,41 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
 /**
- * Regression coverage for the "nice numbers" axis-scaling math (Heckbert's algorithm and its
- * pivot/zero-floor variants), extracted during the Step 4 graph-scale refactor. Expected values
- * verified by direct calculation against the algorithm, not guessed — several were hand-verified
- * during that work and are pinned here so a future change can't silently re-break them.
+ * Regression coverage for the axis scaling math: the bounds, rounded out a little from the data,
+ * and the round label values, which are placed apart from the bounds. Expected values worked out
+ * by hand from the functions, not guessed, and pinned here so a later change cannot quietly
+ * break them.
  */
 internal class GraphUtilsTest {
 
     @Nested
     inner class NiceScaleTest {
 
-        @ParameterizedTest(name = "max just above {0} rounds to a clean ({1}, {2})")
+        @ParameterizedTest(name = "max {0} rounds out to {1}")
         @CsvSource(
-            "195.0, 200.0, 50.0",
-            "210.0, 250.0, 50.0", // the 2.5-tier fix: without it this jumps straight to 300/100
-            "250.0, 250.0, 50.0",
-            "260.0, 300.0, 100.0",
-            "310.0, 400.0, 100.0",
+            "195.0, 200.0",
+            "210.0, 220.0",
+            "250.0, 260.0",
+            "310.0, 350.0",
+            // IOB. With the labels as the bounds, 2.9 U got an axis up to 4 U
+            "2.9, 3.0",
+            "2.1, 2.2",
+            "1.05, 1.1",
+            "0.6, 0.6",
         )
-        fun `BG max rounds to the expected clean ceiling and step`(input: Double, expectedMax: Double, expectedStep: Double) {
+        fun `the max rounds out to the next multiple of about a tenth of the range`(input: Double, expectedMax: Double) {
             val scale = niceScale(0.0, input)
             assertThat(scale.min).isEqualTo(0.0)
-            assertThat(scale.max).isEqualTo(expectedMax)
-            assertThat(scale.step).isEqualTo(expectedStep)
+            assertThat(scale.max).isWithin(TOLERANCE).of(expectedMax)
+        }
+
+        @Test
+        fun `a bound lies at most a sixth of the range beyond the data, and never inside it`() {
+            for (max in listOf(0.13, 0.6, 1.05, 2.1, 2.9, 4.4, 7.3, 9.9, 30.1, 55.0, 148.0, 210.0, 399.0)) {
+                val scale = niceScale(0.0, max)
+                assertWithMessage("max=$max").that(scale.max).isAtLeast(max)
+                assertWithMessage("max=$max").that(scale.max - max).isAtMost(max / 6.0 + TOLERANCE)
+            }
         }
 
         @Test
@@ -38,14 +50,12 @@ internal class GraphUtilsTest {
             val scale = niceScale(12.39, 57.39)
             assertThat(scale.min).isEqualTo(10.0)
             assertThat(scale.max).isEqualTo(60.0)
-            assertThat(scale.step).isEqualTo(10.0)
         }
 
         @Test
         fun `degenerate range (min equals max) still produces a usable non-empty scale`() {
             val scale = niceScale(5.0, 5.0)
             assertThat(scale.max).isGreaterThan(scale.min)
-            assertThat(scale.step).isGreaterThan(0.0)
         }
     }
 
@@ -60,30 +70,14 @@ internal class GraphUtilsTest {
 
         @Test
         fun `rounds up, never down, and never below the input`() {
-            assertThat(niceUp(82.0)).isEqualTo(100.0)
+            assertThat(niceUp(82.0)).isEqualTo(90.0)
             assertThat(niceUp(82.0)).isAtLeast(82.0)
         }
-    }
-
-    @Nested
-    inner class NiceNegativeSliverTest {
 
         @Test
-        fun `non-negative values return zero`() {
-            assertThat(niceNegativeSliver(0.0)).isEqualTo(0.0)
-            assertThat(niceNegativeSliver(5.0)).isEqualTo(0.0)
-        }
-
-        @Test
-        fun `rounds further negative, never toward zero`() {
-            assertThat(niceNegativeSliver(-0.3)).isEqualTo(-0.5)
-            assertThat(niceNegativeSliver(-0.07)).isEqualTo(-0.1)
-        }
-
-        @Test
-        fun `a value already nice is left unchanged`() {
-            // 0.05 is itself on the 1/2/2.5/5/10 ladder, so it must not get bumped to 0.1
-            assertThat(niceNegativeSliver(-0.05)).isEqualTo(-0.05)
+        fun `a value already on its grid is left unchanged`() {
+            // 0.05 / 0.005 comes out a hair above 10, and must not be rounded up to 0.055
+            assertThat(niceUp(0.05)).isWithin(TOLERANCE).of(0.05)
         }
     }
 
@@ -93,8 +87,8 @@ internal class GraphUtilsTest {
         @Test
         fun `pivot always sits exactly at the midpoint regardless of input asymmetry`() {
             val scale = niceScaleAroundPivot(min = 60.0, max = 108.0, pivot = 100.0)
-            assertThat(scale.min).isEqualTo(40.0)
-            assertThat(scale.max).isEqualTo(160.0)
+            assertThat(scale.min).isEqualTo(60.0)
+            assertThat(scale.max).isEqualTo(140.0)
             assertThat((scale.min + scale.max) / 2.0).isEqualTo(100.0)
         }
 
@@ -108,8 +102,8 @@ internal class GraphUtilsTest {
         @Test
         fun `DEV_SLOPE-style pivot at zero centers correctly`() {
             val scale = niceScaleAroundPivot(min = -3.0, max = 1.0, pivot = 0.0)
-            assertThat(scale.min).isEqualTo(-6.0)
-            assertThat(scale.max).isEqualTo(6.0)
+            assertThat(scale.min).isWithin(TOLERANCE).of(-3.0)
+            assertThat(scale.max).isWithin(TOLERANCE).of(3.0)
         }
 
         @Test
@@ -119,24 +113,13 @@ internal class GraphUtilsTest {
             val scale = niceScaleAroundPivot(min = 100.0, max = 100.0, pivot = 100.0, minDeviation = 5.0)
             assertThat(scale.min).isEqualTo(95.0)
             assertThat(scale.max).isEqualTo(105.0)
-            assertThat(scale.step).isEqualTo(5.0)
         }
 
         @Test
-        fun `deviation above the minDeviation floor ignores the floor and nice-ifies normally`() {
+        fun `deviation above the minDeviation floor ignores the floor and rounds normally`() {
             val scale = niceScaleAroundPivot(min = 40.0, max = 160.0, pivot = 100.0, minDeviation = 5.0)
-            assertThat(scale.min).isEqualTo(0.0)
-            assertThat(scale.max).isEqualTo(200.0)
-        }
-
-        @Test
-        fun `requesting 3 ticks always produces exactly 3 (pivot guaranteed to be one of them)`() {
-            // The SENS_PIVOT_TICK_COUNT fix: side-steps Vico's step-thinning entirely by never
-            // requesting more ticks than always fit.
-            val scale = niceScaleAroundPivot(min = 40.0, max = 160.0, pivot = 100.0, maxTickCount = 3)
-            val tickCount = Math.round((scale.max - scale.min) / scale.step) + 1
-            assertThat(tickCount).isEqualTo(3L)
-            assertThat(scale.min + (scale.max - scale.min) / 2.0).isEqualTo(100.0)
+            assertThat(scale.min).isEqualTo(40.0)
+            assertThat(scale.max).isEqualTo(160.0)
         }
     }
 
@@ -147,24 +130,41 @@ internal class GraphUtilsTest {
         fun `all-positive data floors at exactly zero`() {
             val scale = zeroFloorNiceRange(dataMin = 5.0, dataMax = 82.0)
             assertThat(scale.min).isEqualTo(0.0)
-            assertThat(scale.max).isEqualTo(100.0)
+            assertThat(scale.max).isEqualTo(90.0)
         }
 
         @Test
         fun `tiny negative excursion relative to a large positive side gets its own independent sliver`() {
             // ratio (8.0 / 0.05 = 160) is far above the default disparityRatio of 10 — the negative
-            // sliver must stay tight (its own nice magnitude), not stretched to match the positive step.
+            // sliver must stay tight (its own grid), not rounded out to the grid of the whole range.
             val scale = zeroFloorNiceRange(dataMin = -0.05, dataMax = 8.0)
-            assertThat(scale.min).isEqualTo(-0.05)
-            assertThat(scale.max).isEqualTo(10.0)
+            assertThat(scale.min).isWithin(TOLERANCE).of(-0.05)
+            assertThat(scale.max).isEqualTo(8.0)
+        }
+
+        /**
+         * The IOB of the screenshot in PR #5352: a hair of negative IOB in view took this branch, which
+         * rounded 2.9 U up to 5 U, so IOB used little more than half of its own part of the graph.
+         */
+        @Test
+        fun `a little negative IOB does not blow the top up`() {
+            val scale = zeroFloorNiceRange(dataMin = -0.05, dataMax = 2.9)
+            assertThat(scale.min).isWithin(TOLERANCE).of(-0.05)
+            assertThat(scale.max).isWithin(TOLERANCE).of(3.0)
         }
 
         @Test
-        fun `comparable-magnitude negative and positive share one unified nice scale`() {
+        fun `a negative sliver is rounded on its own grid`() {
+            val scale = zeroFloorNiceRange(dataMin = -0.3, dataMax = 8.0)
+            assertThat(scale.min).isWithin(TOLERANCE).of(-0.3)
+            assertThat(scale.max).isEqualTo(8.0)
+        }
+
+        @Test
+        fun `comparable-magnitude negative and positive are rounded on one grid`() {
             val scale = zeroFloorNiceRange(dataMin = -4.0, dataMax = 6.0)
             assertThat(scale.min).isEqualTo(-4.0)
             assertThat(scale.max).isEqualTo(6.0)
-            assertThat(scale.step).isEqualTo(2.0)
         }
 
         @Test
@@ -174,7 +174,6 @@ internal class GraphUtilsTest {
             val scale = zeroFloorNiceRange(dataMin = -1.0, dataMax = 10.0)
             assertThat(scale.min).isEqualTo(-1.0)
             assertThat(scale.max).isEqualTo(10.0)
-            assertThat(scale.step).isEqualTo(2.0)
         }
 
         @Test
@@ -182,6 +181,84 @@ internal class GraphUtilsTest {
             val scale = zeroFloorNiceRange(dataMin = -12.0, dataMax = 3.0)
             assertThat(scale.min).isAtMost(-12.0)
             assertThat(scale.max).isAtLeast(3.0)
+        }
+    }
+
+    @Nested
+    inner class NiceAxisLabelValuesTest {
+
+        /** The IOB axis of a 2.9 U IOB: top 3 U, divided by IOB_HEIGHT_FRACTION. Labels stop at the IOB top. */
+        private fun iobLabels(axisHeight: Float) = niceAxisLabelValues(0.0, 4.0, axisHeight, labelHeight = 20f, labelMax = 3.0)
+
+        @Test
+        fun `a short graph gets a coarse step, a tall one a fine step`() {
+            assertThat(iobLabels(100f)).containsExactly(0.0, 2.0).inOrder()
+            assertThat(iobLabels(200f)).containsExactly(0.0, 1.0, 2.0, 3.0).inOrder()
+            assertThat(iobLabels(400f)).containsExactly(0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0).inOrder()
+        }
+
+        @Test
+        fun `labels are round multiples of the step, not steps counted from the bound`() {
+            // A BG axis of 3.5..10 mmol/L
+            assertThat(niceAxisLabelValues(3.5, 10.0, axisHeight = 300f, labelHeight = 20f))
+                .containsExactly(4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0).inOrder()
+        }
+
+        @Test
+        fun `zero is a label on an axis with a negative sliver, and nothing below it`() {
+            assertThat(niceAxisLabelValues(-0.05, 4.0, axisHeight = 100f, labelHeight = 20f, labelMax = 3.0)).containsExactly(0.0, 2.0).inOrder()
+        }
+
+        @Test
+        fun `the SENS pivot of 100 percent is a label`() {
+            assertThat(niceAxisLabelValues(95.0, 105.0, axisHeight = 100f, labelHeight = 20f)).containsExactly(95.0, 100.0, 105.0).inOrder()
+        }
+
+        @Test
+        fun `labelMin keeps labels off the part below the series' own floor`() {
+            // COB pushed into -82..82 to line its zero up with a pivot series
+            assertThat(niceAxisLabelValues(-82.0, 82.0, axisHeight = 200f, labelHeight = 20f, labelMin = 0.0)).containsExactly(0.0, 50.0).inOrder()
+        }
+
+        /**
+         * Measured on the Pixel 9a: the 100 dp IOB graph is 148 px high and a label is 42 px. An IOB of
+         * 4.4 U has its top at 4.5 and its axis at 6, so the step for the full spacing is 5, and the
+         * labels stop at 4.5 - only "0" was left.
+         */
+        @Test
+        fun `labels come closer rather than leave a single one`() {
+            assertThat(niceAxisLabelValues(0.0, 6.0, axisHeight = 148f, labelHeight = 42f, labelMax = 4.5)).containsExactly(0.0, 2.0, 4.0).inOrder()
+            // And a high IOB of 9.4 U, top 9.5
+            assertThat(niceAxisLabelValues(0.0, 9.5 / IOB_HEIGHT_FRACTION, axisHeight = 148f, labelHeight = 42f, labelMax = 9.5)).containsExactly(0.0, 5.0).inOrder()
+        }
+
+        @Test
+        fun `labels never overlap, and an axis from zero always gets at least two`() {
+            // From zero: IOB-like, with labels to the top or, as on the IOB/BAS graph, to the IOB top only
+            val fromZero = listOf(0.0 to 0.7, 0.0 to 4.0, -0.05 to 13.3)
+                .flatMap { (min, max) -> listOf(Triple(min, max, max), Triple(min, max, max * IOB_HEIGHT_FRACTION)) }
+            val free = listOf(3.5 to 10.0, 40.0 to 260.0, 95.0 to 105.0).map { (min, max) -> Triple(min, max, max) }
+            for (axisHeight in listOf(60f, 100f, 170f, 250f, 600f)) {
+                for ((min, max, labelMax) in fromZero + free) {
+                    val labels = niceAxisLabelValues(min, max, axisHeight, labelHeight = 20f, labelMax = labelMax)
+                    val label = "axis=$min..$max height=$axisHeight labelMax=$labelMax labels=$labels"
+                    if (min <= 0.0) assertWithMessage(label).that(labels.size).isAtLeast(2)
+                    else assertWithMessage(label).that(labels).isNotEmpty()
+                    labels.zipWithNext { a, b ->
+                        assertWithMessage(label).that((b - a) / (max - min) * axisHeight).isAtLeast(20.0 - TOLERANCE)
+                    }
+                }
+            }
+        }
+
+        @Test
+        fun `before the axis has a height the labels are still round`() {
+            assertThat(niceAxisLabelValues(0.0, 4.0, axisHeight = 0f, labelHeight = 0f)).containsExactly(0.0, 1.0, 2.0, 3.0, 4.0).inOrder()
+        }
+
+        @Test
+        fun `an empty range has no labels`() {
+            assertThat(niceAxisLabelValues(5.0, 5.0, axisHeight = 100f, labelHeight = 20f)).isEmpty()
         }
     }
 
@@ -231,9 +308,9 @@ internal class GraphUtilsTest {
 
         @Test
         fun `with no room below, the positive side keeps its full scale`() {
-            // Reachable on the BG graph whenever the low mark is an exact multiple of the BG axis
-            // step and the window holds no BG below it (80/90/100 mg/dL, 4 or 5 mmol/L). The
-            // negative tail is clipped there; the positive side must NOT be shrunk to compensate.
+            // The usual case on the BG graph: while the window holds no BG below the low mark, the
+            // axis floor lands on it (70/80/90/100 mg/dL, 4 or 5 mmol/L). The negative tail is
+            // clipped there; the positive side must NOT be shrunk to compensate.
             val scale = activityOverlayScale(
                 activityMin = -4.0, activityMax = 6.0,
                 zeroLevel = 0.0, roomAbove = 100.0, roomBelow = 0.0

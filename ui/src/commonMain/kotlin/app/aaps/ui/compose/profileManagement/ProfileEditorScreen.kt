@@ -364,7 +364,7 @@ private fun ProfileNameHeader(
 
             // Units display
             Text(
-                text = "${stringResource(CoreUiStrings.units_colon)} $units",
+                text = stringResource(CoreUiStrings.value_with_unit, stringResource(CoreUiStrings.units_colon), units),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -490,7 +490,7 @@ private fun IsfContent(
                 valueRange = state.isfRange,
                 step = if (profile.mgdl) 1.0 else 0.1,
                 valueFormat = if (profile.mgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1,
-                unitLabel = "${state.units}/${stringResource(CoreUiStrings.insulin_unit_shortname)}",
+                unitLabel = stringResource(if (profile.mgdl) InterfacesStrings.profile_isf_units_mgdl else InterfacesStrings.profile_isf_units_mmol),
                 modifier = Modifier.padding(16.dp)
             )
         }
@@ -533,12 +533,12 @@ private fun BasalContent(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "${stringResource(CoreUiStrings.basal_long_label)} [${stringResource(InterfacesStrings.profile_ins_units_per_hour)}]",
+                        text = stringResource(InterfacesStrings.value_with_detail, stringResource(CoreUiStrings.basal_long_label), stringResource(InterfacesStrings.profile_ins_units_per_hour)),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "∑ ${stringResource(InterfacesStrings.format_insulin_units, state.basalSum)}",
+                        text = stringResource(CoreUiStrings.value_with_unit, "∑", stringResource(InterfacesStrings.format_insulin_units, state.basalSum)),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )

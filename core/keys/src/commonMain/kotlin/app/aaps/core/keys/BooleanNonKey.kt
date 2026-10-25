@@ -36,14 +36,13 @@ enum class BooleanNonKey(
 
     AllowHardwarePump("allow_hardware_pump", false),
 
-    // Statistics screen section expanded/collapsed states (per-device UI state, not user-facing preferences)
-    StatsTddExpanded("stats_tdd_expanded", true, exportable = false),
-    StatsTirExpanded("stats_tir_expanded", true, exportable = false),
-    StatsDexcomTirExpanded("stats_dexcom_tir_expanded", true, exportable = false),
-    StatsTddCycleExpanded("stats_tdd_cycle_expanded", false, exportable = false),
-
     // Set (committed) right before a startup VACUUM and cleared after it finishes. If it is still
     // set on the next launch, the previous VACUUM died below the JVM (native abort / OOM) — used to
     // break the boot-crash loop. Transient device state, not a user setting → not exportable.
     VacuumInProgress("vacuum_in_progress", false, exportable = false),
+
+    // Client: the pairing secret has been replaced by the key exchange in the hello. Until then the client sends a hello
+    // with a key on each connection, which is also how a phone paired from a QR code says hello at all. Belongs to the
+    // pairing.
+    NsClientControlSecretReplaced("nsclient_control_secret_replaced", false, exportable = false),
 }

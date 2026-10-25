@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.scenes.ActiveSceneSnapshot
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
-import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
@@ -82,11 +81,14 @@ class RunningConfigurationImpl(
             // activePumpInternal because a client only has VirtualPump (not the PumpWithConcentration wrapper).
             // Stays a real JSON boolean, as it was with org.json - everything under syncedPrefs is a string, this is not.
             put("isFakingTempsByExtendedBoluses", pumpInterface.isFakingTempsByExtendedBoluses)
+            // Computed from cold settings (the autosens and dynamic ISF switches, the APS plugin), so it goes in the cold
+            // doc, which is sent when they change. The hot doc is sent only when the scene changes.
+            put("usedAutosensOnMainPhone", constraintsChecker.isAutosensModeEnabled().value())
             put("version", config.VERSION_NAME)
         }
     }
 
-    // called in AAPS mode only — the small "hot" doc: active scene (if any) + computed runtime flags.
+    // called in AAPS mode only — the small "hot" doc: the active scene, if any.
     override fun activeSceneConfiguration(): JsonObject = buildJsonObject {
         activeSceneSync.activeSceneSnapshot()?.let { snapshot ->
             // Serialize from the wire DTO so the field set stays in lockstep with
@@ -106,16 +108,12 @@ class RunningConfigurationImpl(
             // could not read a kotlinx tree.
             put("activeScene", wireJson.encodeToJsonElement(NSActiveScene.serializer(), wire))
         }
-        put("usedAutosensOnMainPhone", constraintsChecker.isAutosensModeEnabled().value())
     }
 
     // All cold-synced values (plugin selection, plugin settings, scene/quick-wizard/automation/insulin
     // definitions) are declared via SyncSpec — a change to any republishes the cold doc. Their domain
     // objects self-reload from the key, so there's no reloadInternalState hook.
-    // NsClient3UseWs carries no SyncSpec of its own, but the published value of
-    // NsClientAllowClientControl is masked by it (a master with the WebSocket off cannot serve
-    // commands in time), so flipping it has to trigger a republish like any other cold change.
-    override fun observableKeys(): List<NonPreferenceKey> = coldSyncKeys() + BooleanKey.NsClient3UseWs
+    override fun observableKeys(): List<NonPreferenceKey> = coldSyncKeys()
 
     /** Plain preference keys declared to ride the cold running-config doc via [SyncChannel.Cold]. */
     private fun coldSyncKeys(): List<NonPreferenceKey> =
@@ -129,8 +127,10 @@ class RunningConfigurationImpl(
     // COMPUTED default (calculatedDefaultValue) when unset, but WITHOUT simple-mode presentation forcing.
     // Rationale: simple-mode / defaultedBySM is a per-device presentation choice, so the underlying user setting
     // must travel and each device re-applies its own mode logic on read — hence NOT the full effective getter.
-    // But a plain raw read would publish the literal default for computed-default keys (NsClientAllowClientControl,
+    // But a plain raw read would publish the literal default for computed-default keys (HardenedMode,
     // AutosensPeriod, …), mis-telling clients the master's operative value; forSync uses the computed default instead.
+    // The client-control switch (HardenedMode) follows the same rule: simple mode is synced too, so the client
+    // applies the same simple-mode forcing and gets the master's answer.
     // Every value here is written as a JSON *string*, including numbers and booleans. That is the
     // existing wire format and the client parses it back that way, so it is kept as is.
     private fun buildSyncedPrefs(): JsonObject = buildJsonObject {
@@ -202,9 +202,10 @@ class RunningConfigurationImpl(
         // (incl. false, so turning it off on the master propagates); null = older master → leave the client flag as-is.
         // activePumpInternal (the real plugin) — NOT activePump, which is a PumpWithConcentration wrapper that isn't a VirtualPump.
         configuration.isFakingTempsByExtendedBoluses?.let { (activePlugin.activePumpInternal as? VirtualPump)?.fakeDataDetected = it }
+        configuration.usedAutosensOnMainPhone?.let { preferences.put(BooleanNonKey.AutosensUsedOnMainPhone, it) }
     }
 
-    // called in NSClient mode only — apply the hot doc (active scene + computed runtime flags).
+    // called in NSClient mode only — apply the hot doc (the active scene).
     // Kept separate from [applyCold] so a cold-doc apply (which carries no activeScene) never
     // clears a running scene.
     override fun applyHot(configuration: NSRunningConfiguration) {
@@ -215,7 +216,6 @@ class RunningConfigurationImpl(
         // activeScene: null on the wire means "no scene active" — clear locally.
         // Always pass through (even null) so master-side dismissal propagates.
         activeSceneSync.applyActiveScene(configuration.activeScene?.toSnapshot())
-        configuration.usedAutosensOnMainPhone?.let { preferences.put(BooleanNonKey.AutosensUsedOnMainPhone, it) }
     }
 
     private fun NSActiveScene.toSnapshot() =

@@ -29,9 +29,8 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.pump.ActionCategory
-import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
@@ -195,14 +194,13 @@ open class DanaOverviewViewModel(
     /**
      * Override in subclasses to add variant-specific management actions (e.g., BLE pair/unpair for DanaRS).
      */
-    protected open fun buildManagementActions(pump: DanaPump, isInitialized: Boolean, isConfigured: Boolean): List<PumpAction> = buildList {
+    protected open fun buildManagementActions(pump: DanaPump, isInitialized: Boolean, isConfigured: Boolean): List<ScreenAction> = buildList {
         // User Settings (only for non-Korean, non-legacy-DanaR firmware)
         if (pump.hwModel != 1 && pump.protocol != 0x00) {
             add(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(R.string.danar_user_options),
                     icon = Icons.Filled.Settings,
-                    category = ActionCategory.MANAGEMENT,
                     visible = isInitialized,
                     onClick = { onUserSettingsClick() }
                 )
@@ -212,19 +210,17 @@ open class DanaOverviewViewModel(
         // Pair / Unpair
         if (isConfigured) {
             add(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(CoreUiR.string.pump_unpair),
                     icon = Icons.Filled.Bluetooth,
-                    category = ActionCategory.MANAGEMENT,
                     onClick = { onUnpairClick() }
                 )
             )
         } else {
             add(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(CoreUiR.string.pairing),
                     icon = Icons.Filled.Bluetooth,
-                    category = ActionCategory.MANAGEMENT,
                     onClick = { onPairClick() }
                 )
             )
@@ -260,7 +256,7 @@ open class DanaOverviewViewModel(
         // Last connection
         val lastConnection = if (lastConnectionTime != 0L) {
             val agoMinutes = ((System.currentTimeMillis() - lastConnectionTime) / 60_000).toInt()
-            dateUtil.timeString(lastConnectionTime) + " (" + rh.gs(app.aaps.core.interfaces.R.string.minago, agoMinutes) + ")"
+            rh.gs(app.aaps.core.interfaces.R.string.value_with_detail, dateUtil.timeString(lastConnectionTime), rh.gs(app.aaps.core.interfaces.R.string.minago, agoMinutes))
         } else ""
 
         // Last bolus
@@ -272,8 +268,12 @@ open class DanaOverviewViewModel(
         } else null
 
         // Base basal rate
-        val baseBasalRate = "( ${pump.activeProfile + 1} )  " +
+        // "(1) 0.85 U/h": the number of the basal profile in the pump, then the rate
+        val baseBasalRate = rh.gs(
+            CoreUiR.string.value_with_unit,
+            rh.gs(CoreUiR.string.value_in_parentheses, (pump.activeProfile + 1).toString()),
             ch.basalRateString(activePump.baseBasalRate, true)
+        )
 
         // Temp basal
         val tempBasalText = pump.temporaryBasalToString()
@@ -282,7 +282,7 @@ open class DanaOverviewViewModel(
         val extendedBolusText = extendedBolusToString()
 
         // Battery
-        val batteryText = battery?.let { "${it}%" }
+        val batteryText = battery?.let { rh.gs(CoreUiR.string.units_format_percent, it) }
 
         // Reservoir
         val reservoirText = if (reservoir > 0.0)
@@ -378,7 +378,7 @@ open class DanaOverviewViewModel(
             }
 
             // 10. Basal/bolus step
-            add(PumpInfoRow(label = rh.gs(R.string.basal_bolus_step), value = "${pump.basalStep} / ${pump.bolusStep}"))
+            add(PumpInfoRow(label = rh.gs(R.string.basal_bolus_step), value = rh.gs(app.aaps.core.interfaces.R.string.values_with_slash, pump.basalStep.toString(), pump.bolusStep.toString())))
 
             // Easy mode, only for pump variants that have it
             if (pump.hasEasyMode)
@@ -397,17 +397,15 @@ open class DanaOverviewViewModel(
 
         // Actions
         val primaryActions = listOf(
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CoreUiR.string.refresh),
                 icon = Icons.Filled.Refresh,
-                category = ActionCategory.PRIMARY,
                 visible = isInitialized,
                 onClick = { onRefreshClick() }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CoreUiR.string.pump_history),
                 icon = Icons.AutoMirrored.Filled.List,
-                category = ActionCategory.PRIMARY,
                 visible = isInitialized,
                 onClick = { onHistoryClick() }
             )

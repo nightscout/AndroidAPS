@@ -159,7 +159,7 @@ internal class InsightOverviewStateTest {
             it.activeBasalRate = 0.8
             it.activeBasalProfileName = "Profile A"
         })
-        whenever(rh.gs(eq(CoreUiR.string.format_percent), any())).thenReturn("75%")
+        whenever(rh.gs(eq(CoreUiR.string.units_format_percent), any())).thenReturn("75%")
         whenever(ch.insulinAmountString(any())).thenReturn("1.23 U")
         whenever(ch.basalRateString(any(), any(), any())).thenReturn("0.80 U/h")
 

@@ -7,10 +7,10 @@ import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.time.T
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
+import app.aaps.core.interfaces.bolus.BatchAction
+import app.aaps.core.interfaces.bolus.BatchExecutor
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.clientcontrol.RecordRemoval
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
@@ -49,7 +49,9 @@ class ProfileSwitchViewModel(
     val rh: TextResolver,
     val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    batchExecutor: BatchExecutor,
+    config: Config
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileSwitchUiState())
@@ -173,50 +175,22 @@ class ProfileSwitchViewModel(
      */
     fun getActiveProfile(): ProfileSealed? = uiState.value.activeProfile
 
-    /**
-     * Prepare delete confirmation message
-     */
-    fun getDeleteConfirmationMessage(): String {
-        val selected = uiState.value.selectedItems
-        if (selected.isEmpty()) return ""
+    /** Removing the selected items: the master describes and removes them, on every role. */
+    val removal = RecordRemoval(batchExecutor, rh, rxBus, config, viewModelScope, Sources.Treatments)
 
-        return if (selected.size == 1) {
-            val ps = selected.first()
-            "${rh.gs(CoreUiStrings.careportal_profileswitch)}: ${ps.profileName}\n${dateUtil.dateAndTimeString(ps.timestamp)}"
-        } else {
-            rh.gs(CoreUiStrings.confirm_remove_multiple_items, selected.size)
-        }
+    /**
+     * Ask the master to describe removing the selected items; the screen then shows its confirmation. Only a profile
+     * switch can be removed, not the effective profile switch made from it.
+     */
+    fun requestDelete() {
+        val switches = uiState.value.selectedItems.filterIsInstance<ProfileSealed.PS>().map { it.value }
+        removal.request(listOfNotNull(BatchAction.Remove.of(BatchAction.Remove.Kind.PROFILE_SWITCH, switches)))
     }
 
-    /**
-     * Delete selected items (only PS can be deleted, not EPS)
-     */
-    fun deleteSelected() {
-        val selected = uiState.value.selectedItems
-        if (selected.isEmpty()) return
-
-        viewModelScope.launch(aapsIoDispatcher) {
-            try {
-                selected.forEach { profileSwitch ->
-                    if (profileSwitch is ProfileSealed.PS) {
-                        persistenceLayer.invalidateProfileSwitch(
-                            id = profileSwitch.id,
-                            action = Action.PROFILE_SWITCH_REMOVED,
-                            source = Sources.Treatments,
-                            note = profileSwitch.profileName,
-                            listValues = listOf(
-                                ValueWithUnit.Timestamp(profileSwitch.timestamp)
-                            )
-                        )
-                    }
-                }
-                exitSelectionMode()
-                loadData()
-            } catch (e: Exception) {
-                aapsLogger.error(LTag.UI, "Failed to delete profile switches", e)
-                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting profile switches", EventShowSnackbar.Type.Error))
-            }
-        }
+    /** The master removed them. */
+    fun onRemoved() {
+        exitSelectionMode()
+        loadData()
     }
 
     /**

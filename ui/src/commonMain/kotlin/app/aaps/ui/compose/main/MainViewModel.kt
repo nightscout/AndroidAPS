@@ -41,6 +41,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
@@ -105,6 +106,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.TimeSource
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -190,15 +192,16 @@ class MainViewModel(
      */
     val quickLaunchItems: StateFlow<List<ResolvedQuickLaunchItem>> =
         combine(
-            _quickLaunchItems, masterReachable, masterOrPairedClient,
+            _quickLaunchItems, masterReachable, combine(masterOrPairedClient, nsClient.clientRole) { paired, role -> paired to role },
             // Re-check the QuickWizard time window every tick, and at once when an entry is used or edited
             // (its cool-down starts on use).
             progressTicker, quickWizard.changes
         ) { items, reachable, _, _, _ ->
             items
-                // (1) Hide mode-gated actions. masterOrPairedClient is combined in only to re-emit on a pairing
-                // flip; the predicate reads the current state through visibilityContext.
-                .filter { it.action.elementType?.visibility?.isVisible(visibilityContext) ?: true }
+                // (1) Hide mode-gated actions and those the client's role cannot use. masterOrPairedClient and the
+                // role are combined in only to re-emit on a change; the predicate reads the current state through
+                // visibilityContext.
+                .filter { it.action.elementType?.isAvailable(visibilityContext) ?: true }
                 // (2) Hide QuickWizard entries that are not active now.
                 .filter { quickLaunchResolver.isShownNow(it.action) }
                 // (3) Scene actions disable while the master is transiently unreachable.
@@ -313,7 +316,7 @@ class MainViewModel(
 
         val ttText = if (ttData != null && !ttExpired) {
             if (ttIsFinite) {
-                "${ttData.targetRangeText} ${dateUtil.untilString(ttData.timestamp + ttData.duration, rh)}"
+                rh.gs(InterfacesStrings.value_with_detail, ttData.targetRangeText, dateUtil.untilString(ttData.timestamp + ttData.duration, rh, withParentheses = false))
             } else {
                 ttData.targetRangeText
             }
@@ -327,7 +330,7 @@ class MainViewModel(
 
         val profileText = if (profileData != null && profileData.profileName.isNotEmpty()) {
             if (profileData.duration > 0 && !profileExpired) {
-                "${profileData.profileName} ${dateUtil.untilString(profileData.timestamp + profileData.duration, rh)}"
+                rh.gs(InterfacesStrings.value_with_detail, profileData.profileName, dateUtil.untilString(profileData.timestamp + profileData.duration, rh, withParentheses = false))
             } else {
                 profileData.profileName
             }
@@ -349,7 +352,7 @@ class MainViewModel(
             val modeName = getModeNameString(rmData.mode)
             // Full text kept for the icon's content description (accessibility).
             if (rmIsTemporaryFinite) {
-                "$modeName ${dateUtil.untilString(rmData.timestamp + rmData.duration, rh)}"
+                rh.gs(InterfacesStrings.value_with_detail, modeName, rmRemaining)
             } else {
                 modeName
             }
@@ -464,8 +467,11 @@ class MainViewModel(
         if (wizard.calculatedTotalInsulin <= 0.0)
             return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, disabledReason = rh.gs(UiStrings.wizard_no_insulin_required))
 
-        val detail = rh.gs(InterfacesStrings.format_carbs, entry.carbs()) +
-            " " + rh.gs(InterfacesStrings.format_insulin_units, wizard.calculatedTotalInsulin)
+        val detail = rh.gs(
+            CoreUiStrings.value_with_unit,
+            rh.gs(InterfacesStrings.format_carbs, entry.carbs()),
+            rh.gs(InterfacesStrings.format_insulin_units, wizard.calculatedTotalInsulin)
+        )
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != entry.carbs())
@@ -504,9 +510,15 @@ class MainViewModel(
      */
     private suspend fun executeWizardQuickWizard(entry: QuickWizardEntry, guid: String) {
         val label = rh.gs(CoreUiStrings.clientcontrol_action_deliver_bolus)
+        // Counted from before the prepare, so on a client the confirmation closes before the master's SMB pause ends.
+        val closeAt = TimeSource.Monotonic.markNow() + SmbPause.MAX_DURATION
         when (val prepared = wizardExecutor.prepare(WizardExecutor.WizardSource.QuickWizard(guid), label)) {
             is ActionProgress.Prepared ->
-                showWizardBolusConfirmation(rxBus, rh, entry.buttonText(), IcQuickwizard, prepared.advisorApplies, prepared.lines, prepared.advisorLines) { asAdvisor ->
+                showWizardBolusConfirmation(
+                    rxBus, rh, entry.buttonText(), IcQuickwizard, prepared.advisorApplies, prepared.lines, prepared.advisorLines,
+                    closeAt = closeAt,
+                    onCancel = { wizardExecutor.discard(prepared.id) }
+                ) { asAdvisor ->
                     // The async delivery failure is alarmed once, centrally, from the executor — no local alarm here (it would double).
                     appScope.launch { wizardExecutor.commit(prepared.id, asAdvisor, Sources.QuickWizard, label) }
                 }
@@ -530,6 +542,8 @@ class MainViewModel(
         // markAsUsed itself: that writes the Bidirectional QuickWizard pref, which a paired client would push back over
         // the signed round-trip and collide with this commit → "Update settings … Another action is already in progress".
         val tagged = actions.map { if (it is BatchAction.Bolus) it.copy(quickWizardGuid = entry.guid()) else it }
+        // Counted from before the prepare, so on a client the confirmation closes before the master's SMB pause ends.
+        val closeAt = TimeSource.Monotonic.markNow() + SmbPause.MAX_DURATION
         when (val prepared = batchExecutor.prepare(tagged, Sources.QuickWizard, label)) {
             is ActionProgress.Prepared ->
                 rxBus.send(
@@ -537,7 +551,9 @@ class MainViewModel(
                         title = entry.buttonText(), message = "", confirmationLines = prepared.lines, icon = icon,
                         onOk = {
                             appScope.launch { batchExecutor.commit(prepared.id, Sources.QuickWizard, label) }
-                        }
+                        },
+                        onCancel = { batchExecutor.discard(prepared.id) },
+                        closeAt = closeAt
                     )
                 )
             // A master-local failure (no modal) or a client offline pre-check surfaces here; a client round-trip failure already showed on the app modal.
@@ -669,7 +685,7 @@ class MainViewModel(
         // predates the property, such as a test double, which then omits the line rather than
         // claiming a platform.
         if (config.PLATFORM.isNotEmpty()) message += "Platform: ${config.PLATFORM}\n"
-        message += "${rh.gs(CoreUiStrings.configbuilder_nightscoutversion_label)} ${nsClient.detectedNsVersion() ?: rh.gs(CoreUiStrings.not_available_full)}"
+        message += rh.gs(CoreUiStrings.value_with_unit, rh.gs(CoreUiStrings.configbuilder_nightscoutversion_label), nsClient.detectedNsVersion() ?: rh.gs(CoreUiStrings.not_available_full))
         if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(CoreUiStrings.fabric_upload_disabled)}"
         val enabledOptions = ExternalOptions.entries.filter { config.isEnabled(it) }
         message += rh.gs(CoreUiStrings.about_link_urls)
@@ -787,7 +803,8 @@ class MainViewModel(
             if (result is ActionProgress.Rejected) {
                 if (result.reason.isNotDeliveryError())
                     rxBus.send(EventShowDialog.Ok(title = title, message = rh.gs(result.reason.failText())))
-                else result.detail?.let { detail ->
+                // A client's app-level modal has shown the master's own text already.
+                else if (!config.AAPSCLIENT) result.detail?.let { detail ->
                     rxBus.send(EventShowDialog.Ok(title = title, message = detail))
                 }
             }

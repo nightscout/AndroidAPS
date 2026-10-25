@@ -2,9 +2,7 @@ package app.aaps.plugins.automation
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
@@ -41,6 +39,8 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.ComposablePluginContent
+import app.aaps.core.ui.compose.StyledArg
+import app.aaps.core.ui.compose.styledString
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionFactory
 import app.aaps.plugins.automation.compose.AutomationComposeContent
@@ -580,11 +580,16 @@ class AutomationRuntime(
         val iterator = eventsLock.withLock { automationEvents.toMutableList().iterator() }
         while (iterator.hasNext()) {
             val event = iterator.next()
-            if (event.isEnabled && !event.userAction && event.shouldRun())
-                if (event.systemAction || commonEventsEnabled) {
-                    processEvent(event)
-                    if (event.hasStopProcessing()) break
-                }
+            if (!event.isEnabled || event.userAction) continue
+            if (!event.systemAction && !commonEventsEnabled) continue
+            val ran = event.shouldRun() && runEvent(event)
+            // "Stop processing" stops the rules below for as long as this rule's conditions are true.
+            // It used to stop them after every check of the rule, so the rules below never ran while
+            // the conditions were false, and they did run in the 5 minutes after the rule ran, because
+            // shouldRun() skips the rule then. The 5 minute limit is for the actions, not for the stop.
+            // A rule that ran stops the rest without a second check: its own actions can have changed
+            // its conditions. A rule switched off by runEvent (an action that cannot run) stops nothing.
+            if (event.isEnabled && event.hasStopProcessing() && (ran || event.canRun() && event.preconditionCanRun())) break
         }
 
         /*
@@ -605,8 +610,12 @@ class AutomationRuntime(
     }
 
     override suspend fun processEvent(someEvent: AutomationEvent) {
-        if (!config.APS) return // execution is master-only — guards every UI entry point (wear, quick launch, scenes, run-now)
-        val event = someEvent as AutomationEventObject
+        runEvent(someEvent as AutomationEventObject)
+    }
+
+    /** Runs the actions of [event] when its conditions are true. Returns true when they ran. */
+    private suspend fun runEvent(event: AutomationEventObject): Boolean {
+        if (!config.APS) return false // execution is master-only — guards every UI entry point (wear, quick launch, scenes, run-now)
 
         // A rule with an action that cannot run is switched off here, before any of it runs, rather
         // than half-executed. This decision used to live in `areActionsValid()`, which the Compose
@@ -617,12 +626,12 @@ class AutomationRuntime(
         if (!event.areActionsValid()) {
             event.isEnabled = false
             for (action in event.actions.filterNot { it.isValid() }) {
-                executionLog.add(AnnotatedString("Invalid action: ${action.shortDescription()}"))
+                executionLog.add(AnnotatedString(rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.invalid), action.shortDescription())))
                 aapsLogger.debug(LTag.AUTOMATION, "Invalid action: ${action.shortDescription()}")
             }
             markEdited() // the rule is now disabled - store that and refresh the list
             rxBus.send(EventAutomationUpdateGui())
-            return
+            return false
         }
 
         if (event.canRun() && event.preconditionCanRun()) {
@@ -630,24 +639,23 @@ class AutomationRuntime(
             for (action in actions) {
                 action.title = event.title
                 val result = action.doAction()
-                val entry = buildAnnotatedString {
-                    append(dateUtil.timeString(dateUtil.now()))
-                    append(" ")
-                    append(if (result.success) "☺" else "▼")
-                    append(" ")
-                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append("${event.title}:") }
-                    append(" ")
-                    append(action.shortDescription())
-                    append(": ")
-                    append(result.comment)
-                }
+                val entry = rh.styledString(
+                    AutomationStrings.automation_log_entry,
+                    StyledArg(dateUtil.timeString(dateUtil.now())),
+                    StyledArg(if (result.success) "☺" else "▼"),
+                    StyledArg(event.title, SpanStyle(fontWeight = FontWeight.Bold)),
+                    StyledArg(action.shortDescription()),
+                    StyledArg(result.comment)
+                )
                 executionLog.add(entry)
                 aapsLogger.debug(LTag.AUTOMATION, "Executed: ${entry.text}")
                 rxBus.send(EventAutomationUpdateGui())
             }
             event.lastRun = dateUtil.now()
             if (event.autoRemove) remove(event)
+            return true
         }
+        return false
     }
 
     fun add(event: AutomationEventObject) {

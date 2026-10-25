@@ -453,18 +453,20 @@ class StoreDataForDbImpl(
                     invalidated.add(PS::class.label, result.invalidated.size)
                     sendLog("ProfileSwitch", PS::class.label)
                 }
-            persistenceLayer.getBolusCalculatorResultByNSId(id)?.let { bcr ->
-                val result = persistenceLayer.invalidateBolusCalculatorResult(bcr.id, Action.BOLUS_CALCULATOR_RESULT_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(bcr.timestamp)))
-                invalidated.add(BCR::class.label, result.invalidated.size)
-                sendLog("BolusCalculatorResult", BCR::class.label)
-            }
+            // A bolus wizard result belongs to its bolus, so it follows the insulin setting.
+            if (preferences.get(BooleanKey.NsClientAcceptInsulin) || config.AAPSCLIENT)
+                persistenceLayer.getBolusCalculatorResultByNSId(id)?.let { bcr ->
+                    val result = persistenceLayer.invalidateBolusCalculatorResult(bcr.id, Action.BOLUS_CALCULATOR_RESULT_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(bcr.timestamp)))
+                    invalidated.add(BCR::class.label, result.invalidated.size)
+                    sendLog("BolusCalculatorResult", BCR::class.label)
+                }
             if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.AAPSCLIENT)
                 persistenceLayer.getTherapyEventByNSId(id)?.let { te ->
                     val result = persistenceLayer.invalidateTherapyEvent(te.id, Action.TREATMENT_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(te.timestamp)))
                     invalidated.add(TE::class.label, result.invalidated.size)
                     sendLog("TherapyEvent", TE::class.label)
                 }
-            if (preferences.get(BooleanKey.NsClientAcceptRunningMode) && config.isEngineeringMode() || config.AAPSCLIENT)
+            if (preferences.get(BooleanKey.NsClientAcceptRunningMode) || config.AAPSCLIENT)
                 persistenceLayer.getRunningModeByNSId(id)?.let { rm ->
                     val result = persistenceLayer.invalidateRunningMode(rm.id, Action.TREATMENT_REMOVED, Sources.NSClient, null, listValues = listOf(ValueWithUnit.Timestamp(rm.timestamp)))
                     invalidated.add(RM::class.label, result.invalidated.size)

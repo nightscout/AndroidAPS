@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.utils.usesTwelveHourClock
 import platform.Foundation.NSDateFormatter
 import platform.Foundation.NSDateFormatterNoStyle
 import platform.Foundation.NSDateFormatterShortStyle
+import kotlin.math.max
 import kotlin.math.min
 
 /** iOS styles its status bar through the view controller, not from inside the composition. */
@@ -22,6 +23,14 @@ actual fun smallestScreenWidthDp(): Int {
     val size = LocalWindowInfo.current.containerSize
     val density = LocalDensity.current
     return with(density) { min(size.width, size.height).toDp().value.toInt() }
+}
+
+/** From the window, like [smallestScreenWidthDp]. */
+@Composable
+actual fun longestScreenSideDp(): Int {
+    val size = LocalWindowInfo.current.containerSize
+    val density = LocalDensity.current
+    return with(density) { max(size.width, size.height).toDp().value.toInt() }
 }
 
 /** No device orientation to consult, so the window's own shape is the answer. */

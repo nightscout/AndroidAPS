@@ -17,9 +17,10 @@ data class FillDialogUiState(
     val insulinCartridgeChange: Boolean = false,
     val notes: String = "",
 
-    // Date/Time
+    // Date/Time. The time the dialog opened, and the offset from it in minutes.
     val eventTime: Long = 0L,
-    val eventTimeChanged: Boolean = false,
+    val eventTimeOriginal: Long = 0L,
+    val timeOffsetMinutes: Int = 0,
 
     // Config values (set once on init)
     val maxInsulin: Double = 0.0,
@@ -53,8 +54,13 @@ data class FillDialogUiState(
     val primeAvailable: Boolean = true,
     val showNotesFromPreferences: Boolean = false,
     val simpleMode: Boolean = true,
-    val concentrationEnabled: Boolean = false
+    val concentrationEnabled: Boolean = false,
+    /** An SMB is being delivered. The queue refuses a prime meanwhile, as it refuses a bolus. */
+    val smbBeingDelivered: Boolean = false
 ) {
+
+    val eventTimeChanged: Boolean
+        get() = eventTime != eventTimeOriginal
 
     /** Whether a prime will be delivered */
     val hasPrime: Boolean
@@ -63,6 +69,10 @@ data class FillDialogUiState(
     /** Whether any actionable item is selected */
     val hasAction: Boolean
         get() = hasPrime || siteChange || insulinCartridgeChange
+
+    /** OK waits: a prime would go to the pump while an SMB is being delivered (#5381). */
+    val waitsForSmb: Boolean
+        get() = smbBeingDelivered && hasPrime
 
     /** Show insulin change section when: cartridge change checked, multiple insulins, time not changed (now) */
     val showInsulinChange: Boolean

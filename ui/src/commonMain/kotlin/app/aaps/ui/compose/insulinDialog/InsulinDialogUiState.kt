@@ -10,6 +10,8 @@ data class InsulinDialogUiState(
     val insulin: Double = 0.0,
     val timeOffsetMinutes: Int = 0,
     val eatingSoonTtChecked: Boolean = false,
+    /** False on a client whose role may give insulin but not set a temp target: the switch is not offered. */
+    val canSetTempTarget: Boolean = true,
     val recordOnlyChecked: Boolean = false,
     val notes: String = "",
     val eventTime: Long = 0L,
@@ -29,7 +31,9 @@ data class InsulinDialogUiState(
     val showNotesFromPreferences: Boolean = false,
     val simpleMode: Boolean = true,
     val isAapsClient: Boolean = false,
-    val forcedRecordOnly: Boolean = false
+    val forcedRecordOnly: Boolean = false,
+    /** An SMB is being delivered on this phone (always false on a client: its master decides). */
+    val smbBeingDelivered: Boolean = false
 )
 
 val InsulinDialogUiState.eventTimeChanged: Boolean
@@ -44,7 +48,11 @@ val InsulinDialogUiState.recordOnlyEnabled: Boolean
     get() = !forcedRecordOnly
 
 val InsulinDialogUiState.confirmEnabled: Boolean
-    get() = insulin > 0.0 || eatingSoonTtChecked
+    get() = (insulin > 0.0 || eatingSoonTtChecked) && !waitsForSmb
+
+/** OK waits: the pump would give this bolus, and an SMB is being delivered right now (#5381). */
+val InsulinDialogUiState.waitsForSmb: Boolean
+    get() = smbBeingDelivered && insulin > 0.0 && !recordOnlyChecked
 
 /**
  * The step the amount field is formatted with. A record-only dose is kept as typed (a pen can give 1.33 U), so it

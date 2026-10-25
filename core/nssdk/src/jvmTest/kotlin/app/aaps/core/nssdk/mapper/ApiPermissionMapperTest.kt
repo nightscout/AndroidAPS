@@ -44,4 +44,24 @@ class ApiPermissionMapperTest {
         assertThat(local.settings.delete).isTrue()
         assertThat(local.settings.create).isFalse()
     }
+
+    /**
+     * The `aaps-client` role: read everywhere, create and update on settings (`v3/status` itself shows only the reads;
+     * `NSAndroidClientImpl.getStatus` asks for the settings rights). Enough for a client, not for a master.
+     */
+    @Test
+    fun aClientTokenIsEnoughForAClientOnly() {
+        val client = RemoteApiPermissions(deviceStatus = "r", entries = "r", food = "r", profile = "r", settings = "cru", treatments = "r").toLocal()
+
+        assertThat(client.isClient()).isTrue()
+        assertThat(client.isFull()).isFalse()
+    }
+
+    /** The built-in `readable` role cannot write to settings, so a client could not reach its master with it. */
+    @Test
+    fun aReadOnlyTokenIsNotEnoughForAClient() {
+        val readable = RemoteApiPermissions(deviceStatus = "r", entries = "r", food = "r", profile = "r", settings = "r", treatments = "r").toLocal()
+
+        assertThat(readable.isClient()).isFalse()
+    }
 }

@@ -64,7 +64,7 @@ class LoadTreatmentsRunner(
                         nsClientRepository.addLog("◄ $action", "${treatments.size} TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}")
                         // Schedule processing of fetched data and continue of loading
                         continueLoading =
-                            !cursorStalled && nsIncomingDataProcessor.processTreatments(response.values, nsClientV3Plugin.doingFullSync)
+                            !cursorStalled && nsIncomingDataProcessor.processTreatments(response.values, nsClientV3Plugin.doingFullSync, advanceInitialLoadCursor = true)
                     } else {
                         // End first load
                         if (isFirstLoad) {

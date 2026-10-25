@@ -22,8 +22,10 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
@@ -71,7 +73,8 @@ class CarbsDialogViewModel(
     private val rxBus: RxBus,
     // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
     // binds the same instance under both, so this is the same application scope.
-    private val appScope: CoroutineScope
+    private val appScope: CoroutineScope,
+    private val nsClient: NsClient
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CarbsDialogUiState())
@@ -103,8 +106,11 @@ class CarbsDialogViewModel(
         // COB removal limit: a negative entry may remove at most the carbs currently on board (floored, ≥0).
         val cobLimit = (iobCobCalculator.getCobInfo("carbsDialog").displayCob ?: 0.0).toInt().coerceAtLeast(0)
 
+        // A temp target needs a higher role than carbs. Without it the hypo target is not ticked for the user,
+        // or the carbs for a low would be refused together with it.
+        val canSetTempTarget = nsClient.clientRole.value.allows(ElementType.TEMP_TARGET_MANAGEMENT.role)
         // Auto-detect hypo condition
-        val autoHypo = detectAutoHypo(now)
+        val autoHypo = canSetTempTarget && detectAutoHypo(now)
 
         _uiState.update {
             CarbsDialogUiState(
@@ -112,6 +118,7 @@ class CarbsDialogViewModel(
                 timeOffsetMinutes = 0,
                 durationHours = 0,
                 hypoTtChecked = autoHypo,
+                canSetTempTarget = canSetTempTarget,
                 eatingSoonTtChecked = false,
                 activityTtChecked = false,
                 alarmChecked = false,
@@ -154,7 +161,7 @@ class CarbsDialogViewModel(
         if (activeTT != null) {
             val activeTarget = activeTT.highTarget
             val remainingDurationMin = ((activeTT.timestamp + activeTT.duration) - now) / 60000
-            if (activeTarget > Constants.NORMAL_TARGET_MGDL && remainingDurationMin > hypoTTDuration) {
+            if (Constants.isAboveNormalTarget(activeTarget) && remainingDurationMin > hypoTTDuration) {
                 return false
             }
         }
@@ -305,10 +312,10 @@ class CarbsDialogViewModel(
                     // No-op (e.g. nothing left to remove after a COB-shrink between open and confirm): neutral message, NOT the bolus-error alarm.
                     prepared.reason == FailureReason.NoAction -> _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
                     prepared.reason.isNotDeliveryError()      -> rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.carbs), message = rh.gs(prepared.reason.failText())))
-                    else                                      -> prepared.detail?.let { detail ->
-                        if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.carbs), message = detail))
-                        else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
-                    }
+                    // A client's app-level modal has shown the master's own text already.
+                    config.AAPSCLIENT                         -> Unit
+                    // Nothing was sent to the pump and the dialog keeps its values: a plain message, not the bolus-error alarm.
+                    else                                      -> rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.carbs), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
                 }
 
                 else                       -> Unit // Unconfirmed → app-level modal
@@ -325,14 +332,12 @@ class CarbsDialogViewModel(
             if (result is ActionProgress.Applied && preferences.get(BooleanKey.OverviewUseBolusReminder) && state?.bolusReminderChecked == true)
                 automation.scheduleAutomationEventBolusReminder()
             // Surface a failed commit. NotReachable → the offline message; any other Rejected (ExecutionFailed,
-            // NoPendingBolus, …) → the master's detail. Unconfirmed (state unknown) rides the round-trip's app-level modal.
+            // NoPendingBolus, …) → the master's detail, which a client's app-level modal has shown already.
+            // Unconfirmed (state unknown) rides the round-trip's app-level modal.
             if (result is ActionProgress.Rejected) {
                 if (result.reason.isNotDeliveryError())
                     rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.carbs), message = rh.gs(result.reason.failText())))
-                else result.detail?.let { detail ->
-                    if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.carbs), message = detail))
-                    else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
-                }
+                else if (!config.AAPSCLIENT) result.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
             }
             automation.removeAutomationEventEatReminder()
             // Device-local "time to eat" alarm — on confirm, when configured.

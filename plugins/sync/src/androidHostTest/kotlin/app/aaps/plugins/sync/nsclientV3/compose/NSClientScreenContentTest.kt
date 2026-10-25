@@ -4,9 +4,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import app.aaps.core.interfaces.sync.SyncLogEntry
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.plugins.sync.SyncStringIds
+import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -71,4 +73,26 @@ class NSClientScreenContentTest {
         compose.onNodeWithText("7").assertIsDisplayed()
         compose.onNodeWithText("UPLOAD", substring = true).assertIsDisplayed()
     }
+
+    @Test
+    fun actionsAreButtonsAtTheBottom() {
+        val clicks = mutableListOf<String>()
+        compose.setContent {
+            MaterialTheme {
+                NSClientScreenContent(
+                    uiState = NSClientUiState(),
+                    onSendNow = { clicks += "send" },
+                    onFullSync = { clicks += "full" },
+                    onClearLog = { clicks += "clear" }
+                )
+            }
+        }
+
+        compose.onNodeWithText(sync("deliver_now")).performClick()
+        compose.onNodeWithText(sync("full_sync")).performClick()
+        compose.onNodeWithText(sync("clear_log")).performClick()
+        assertThat(clicks).containsExactly("send", "full", "clear").inOrder()
+    }
+
+    private fun sync(name: String): String = RuntimeEnvironment.getApplication().getString(SyncStringIds.idOf(name)!!)
 }

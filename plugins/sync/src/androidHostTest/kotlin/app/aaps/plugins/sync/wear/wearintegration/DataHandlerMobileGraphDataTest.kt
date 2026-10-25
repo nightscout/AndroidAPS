@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchExecutor
-import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
@@ -47,7 +47,7 @@ class DataHandlerMobileGraphDataTest : TestBaseWithProfile() {
     @Mock private lateinit var importExportPrefs: ImportExportPrefs
     @Mock private lateinit var pumpStatusProvider: PumpStatusProvider
     @Mock private lateinit var runningModeGuard: RunningModeGuard
-    @Mock private lateinit var wizardBolusExecutor: WizardBolusExecutor
+    @Mock private lateinit var masterActionExecutor: MasterActionExecutor
     @Mock private lateinit var batchExecutor: BatchExecutor
     @Mock private lateinit var wizardExecutor: WizardExecutor
     @Mock private lateinit var automation: Automation
@@ -61,7 +61,7 @@ class DataHandlerMobileGraphDataTest : TestBaseWithProfile() {
             loop, processedDeviceStatusData, receiverStatusStore, quickWizard, trendCalculator, dateUtil,
             constraintsChecker, activePlugin, commandQueue, fabricPrivacy, uiInteraction,
             persistenceLayer, importExportPrefs, decimalFormatter, pumpStatusProvider,
-            ch, runningModeGuard, wizardBolusExecutor, batchExecutor, wizardExecutor
+            ch, runningModeGuard, masterActionExecutor, batchExecutor, wizardExecutor
         )
         sut.automation = automation
         whenever(iobCobCalculator.ads).thenReturn(ads)

@@ -16,7 +16,9 @@ import app.aaps.core.objects.extensions.observeChange
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.AuthorizedClientsRepository
-import app.aaps.plugins.sync.nsclientV3.clientcontrol.clientControlOperational
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.MasterDocVerifier
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.MasterSigningKey
+import app.aaps.plugins.sync.nsclientV3.clientcontrol.clientRole
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher.Companion.COLD_DEBOUNCE_MS
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher.Companion.HOT_DEBOUNCE_MS
 import dev.zacsweers.metro.AppScope
@@ -39,6 +41,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import kotlin.concurrent.Volatile
 
 /**
  * Master-side publisher for the NS running-config `settings` documents.
@@ -46,11 +49,13 @@ import kotlinx.serialization.json.put
  * Splits the config across two docs by write-frequency (see [SettingsIdentifiers]):
  *  - Cold ([SettingsIdentifiers.COLD]): plugin config + overview + definitions + authorized
  *    clients. Triggered by [RunningConfigurationKeys.observableKeys] changes, plugin switches
- *    ([EventConfigBuilderChange]) and authorized-client changes; debounced [COLD_DEBOUNCE_MS].
- *  - Hot ([SettingsIdentifiers.STATE]): active scene + computed runtime flags. Triggered by
+ *    ([EventConfigBuilderChange]) and authorized-client changes; debounced [COLD_DEBOUNCE_MS]. One that could not be
+ *    published is tried again later (`publishColdOrRetry`).
+ *  - Hot ([SettingsIdentifiers.STATE]): the active scene only. Triggered by
  *    [RunningConfigurationKeys.hotKeys] (scene lifecycle); debounced [HOT_DEBOUNCE_MS].
  *
- * Document shape (both): `{ schemaVersion: 1, runningConfig: <…> }`, upserted via `updateSettings`.
+ * Document shape (both): `{ schemaVersion: 2, signed: "<{ signedAt, runningConfig } as text>", signature: <…> }`,
+ * signed by [MasterSigningKey] and opened on a client by [MasterDocVerifier], upserted via `updateSettings`.
  *
  * Started by [NSClientV3Plugin.onStart] and stopped by `onStop`.
  * Only active when `config.APS` is true (master role); no-op on aapsclient.
@@ -69,9 +74,15 @@ class RunningConfigurationPublisher(
     private val config: Config,
     private val dateUtil: DateUtil,
     private val authorizedRepository: AuthorizedClientsRepository,
+    private val masterSigningKey: MasterSigningKey,
 ) {
 
     private var job: Job? = null
+
+    // The waiting retry of a cold doc that was not published, and how long the next one waits. Set from the cold
+    // collector and the WS-connect collector, which can run on different threads.
+    @Volatile private var coldRetry: Job? = null
+    @Volatile private var coldRetryDelayMs = COLD_RETRY_FIRST_MS
 
     // Force a cold republish on demand. Used after the master applies an inbound client pref command so
     // the client always gets the authoritative value back — even when LWW dropped the pushed value as a
@@ -103,16 +114,8 @@ class RunningConfigurationPublisher(
             // connected). In poll mode there is no WS connect event to hook, so fall back to a start-time
             // publish there.
             if (!preferences.get(BooleanKey.NsClient3UseWs)) {
-                val coldPublished = publishCold()
+                publishColdOrRetry()
                 publishHot()
-                // Poll-mode race: the pump may not be initialized yet at start, so the initial cold publish
-                // emits an empty payload and is skipped — leaving a poll-mode client config-less (no WS-connect
-                // event to retry on). Schedule one delayed retry via the existing cold collector so it picks up
-                // once the pump is ready.
-                if (!coldPublished) launch {
-                    delay(POLL_INITIAL_RETRY_MS)
-                    requestColdRepublish()
-                }
             }
 
             val switchTrigger: Flow<Unit> = rxBus.toFlow(EventConfigBuilderChange::class).map { }
@@ -128,7 +131,7 @@ class RunningConfigurationPublisher(
             launch {
                 (coldKeyTriggers + switchTrigger + authorizedClientsTrigger + forceColdRepublish).merge()
                     .debounce(COLD_DEBOUNCE_MS)
-                    .collect { publishCold() }
+                    .collect { publishColdOrRetry() }
             }
             // Hot doc: scene lifecycle. Short debounce so a scene shows on clients quickly.
             launch {
@@ -146,7 +149,7 @@ class RunningConfigurationPublisher(
                     .filter { it }
                     .debounce(WS_RECONNECT_DEBOUNCE_MS)
                     .collect {
-                        publishCold()
+                        publishColdOrRetry()
                         publishHot()
                     }
             }
@@ -156,51 +159,83 @@ class RunningConfigurationPublisher(
     fun stop() {
         job?.cancel()
         job = null
+        coldRetry = null
+        coldRetryDelayMs = COLD_RETRY_FIRST_MS
+    }
+
+    /**
+     * Publishes the cold doc, or tries again later when it could not. A cold publish that is lost is not repeated by
+     * anything else until the next change, and that can be much later: a new client then waited minutes for the
+     * roster with its role. Each failure in a row doubles the wait, up to [COLD_RETRY_MAX_MS].
+     */
+    private suspend fun CoroutineScope.publishColdOrRetry() {
+        if (publishCold()) {
+            coldRetry?.cancel()
+            coldRetry = null
+            coldRetryDelayMs = COLD_RETRY_FIRST_MS
+            return
+        }
+        // One retry waits already (two publishes failed close together, like the start and the WS connect): keep it.
+        // Doubling for each of them pushed the first retry back to a minute on the phone.
+        if (coldRetry?.isActive == true) return
+        val wait = coldRetryDelayMs
+        coldRetryDelayMs = (wait * 2).coerceAtMost(COLD_RETRY_MAX_MS)
+        aapsLogger.debug(LTag.NSCLIENT, "Running configuration not published, trying again in ${wait / 1000} s")
+        coldRetry = launch {
+            delay(wait)
+            requestColdRepublish()
+        }
     }
 
     // Cold doc: full plugin/overview/definition config + the authorized-clients roster.
-    // Returns true if a doc was published, false if skipped because the pump is not initialized yet.
+    // Returns true if a doc was published, false if it was not (pump not initialized yet, no Nightscout client, or the
+    // upload failed).
     private suspend fun publishCold(): Boolean {
         val base = runningConfiguration.configuration()
-        if (base.isEmpty()) return false // pump not initialized yet
+        if (base.isEmpty()) {
+            aapsLogger.debug(LTag.NSCLIENT, "Running configuration empty: the pump is not initialized yet")
+            return false
+        }
         // Append the authorized-clients roster directly on the runningConfig doc — the
         // canonical RunningConfiguration plugin (in :plugins:configuration) cannot reach
         // AuthorizedClientsRepository without a new inter-module dependency, so we attach
         // this master-local block here instead. Only Active entries are exposed.
-        val activeClientIds = authorizedRepository.current(dateUtil.now())
+        val activeClients = authorizedRepository.current(dateUtil.now())
             .filter { it.state == ClientState.Active }
-            .map { it.clientId }
-        // kotlinx JsonObject is immutable, so the doc is rebuilt instead of edited in place. Same
-        // result: the original keys in their original order, syncedPrefs carrying the masked value,
-        // and authorizedClients appended last.
+        // kotlinx JsonObject is immutable, so the doc is rebuilt instead of edited in place: the original
+        // keys in their original order, and authorizedClients appended last. The client-control switch
+        // travels in syncedPrefs like every other cold key; nothing here changes it. Hardened mode keeps
+        // the WebSocket on while the switch is on, so "on" always means the master can serve commands.
         val payload = buildJsonObject {
-            base.forEach { (key, value) ->
-                // Advertise whether commands can actually be served, not just whether the user allows them.
-                // With the WebSocket off this master sees a command minutes late, past its validity, so it must
-                // not tell clients it is accepting: they fold this value into masterReachable and would keep
-                // offering edit UI for commands that can only expire. Only the PUBLISHED value is masked — the
-                // user's stored switch is untouched, and turning the WebSocket back on republishes it as true.
-                if (key == SYNCED_PREFS && value is JsonObject)
-                    put(
-                        key,
-                        JsonObject(value + (BooleanKey.NsClientAllowClientControl.key to JsonPrimitive(preferences.clientControlOperational().toString())))
-                    )
-                else
-                    put(key, value)
-            }
-            put("authorizedClients", buildJsonObject { put("clientIds", JsonArray(activeClientIds.map { JsonPrimitive(it) })) })
+            base.forEach { (key, value) -> put(key, value) }
+            put("authorizedClients", buildJsonObject {
+                put("clientIds", JsonArray(activeClients.map { JsonPrimitive(it.clientId) }))
+                // Each client reads its own role to know which controls to show; the master enforces it anyway.
+                put("roles", buildJsonObject { activeClients.forEach { put(it.clientId, it.clientRole.name) } })
+            })
         }
-        putSettings(SettingsIdentifiers.COLD, payload)
-        return true
+        return putSettings(SettingsIdentifiers.COLD, payload)
     }
 
-    // Hot doc: active scene + computed runtime flags. Small and frequently republished.
+    // Hot doc: the active scene. Small, and sent on every scene change.
     private suspend fun publishHot() {
         putSettings(SettingsIdentifiers.STATE, runningConfiguration.activeSceneConfiguration())
     }
 
-    private suspend fun putSettings(identifier: String, runningConfig: JsonObject) {
-        val client = nsClientV3Plugin().nsAndroidClient ?: return
+    /** True when Nightscout took the doc. */
+    private suspend fun putSettings(identifier: String, runningConfig: JsonObject): Boolean {
+        val client = nsClientV3Plugin().nsAndroidClient ?: run {
+            aapsLogger.debug(LTag.NSCLIENT, "updateSettings($identifier) skipped: no Nightscout client yet")
+            return false
+        }
+        // Signed by the master (MasterSigningKey), as text: Nightscout keeps a string as it is, a JSON object it may
+        // change. The text carries the time of signing, so a client can refuse an older doc put back by somebody else.
+        val signed = masterSigningKey.sign(identifier) { signedAt ->
+            buildJsonObject {
+                put(MasterDocVerifier.SIGNED_AT, signedAt)
+                put(MasterDocVerifier.RUNNING_CONFIG, runningConfig)
+            }.toString()
+        }
         val doc = buildJsonObject {
             // NS APIv3 validateCommon requires date / utcOffset / app on UPDATE; all three are
             // immutable after first create, so pick stable constants — the doc represents a
@@ -209,9 +244,10 @@ class RunningConfigurationPublisher(
             put("utcOffset", 0)
             put("app", "AAPS")
             put("schemaVersion", SCHEMA_VERSION)
-            put("runningConfig", runningConfig)
+            put(MasterDocVerifier.SIGNED, signed.text)
+            signed.signature?.let { put(MasterDocVerifier.SIGNATURE, it) }
         }
-        runCatching { client.updateSettings(identifier, doc) }
+        return runCatching { client.updateSettings(identifier, doc) }
             .onSuccess { resp ->
                 if (resp.response in 200..299) {
                     val ts = resp.lastModified?.let { dateUtil.dateAndTimeAndSecondsString(it) } ?: "?"
@@ -225,25 +261,24 @@ class RunningConfigurationPublisher(
                 aapsLogger.error(LTag.NSCLIENT, "updateSettings($identifier) failed", e)
                 nsClientRepository.addLog("✕ SETTINGS", "$identifier ${e.message}")
             }
+            .getOrNull()?.response in 200..299
     }
 
     companion object {
 
-        private const val SCHEMA_VERSION = 1
+        // 2: the configuration travels signed, as text (MasterDocVerifier); 1 had it as an object, unsigned.
+        private const val SCHEMA_VERSION = 2
         private const val COLD_DEBOUNCE_MS = 5_000L
         private const val HOT_DEBOUNCE_MS = 1_000L
         private const val WS_RECONNECT_DEBOUNCE_MS = 3_000L
 
-        // Poll-mode only: delay before retrying the initial cold publish when the pump was not yet
-        // initialized at start. One shot, fed through the debounced cold collector via requestColdRepublish().
-        private const val POLL_INITIAL_RETRY_MS = 10_000L
+        // Waits before a cold doc that was not published is tried again: the first, and the longest one it doubles to.
+        // The first is short because a new client waits for the roster in it.
+        private const val COLD_RETRY_FIRST_MS = 30_000L
+        private const val COLD_RETRY_MAX_MS = 10L * 60L * 1000L
 
         // 1 ms past NS APIv3 MIN_TIMESTAMP (946684800000 = 2000-01-01 UTC). Required by
         // validateCommon and immutable after create — kept constant so every update matches.
         private const val DOC_DATE = 946684800001L
-
-        // Flat block of cold-synced preference values inside the running-config doc, written by
-        // RunningConfigurationImpl.configuration(). Part of the wire format — do not rename.
-        private const val SYNCED_PREFS = "syncedPrefs"
     }
 }

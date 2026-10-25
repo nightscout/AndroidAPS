@@ -151,8 +151,4 @@ class ResourceHelperImpl(
             setLocale(Locale.ENGLISH)
             context.createConfigurationContext(this).getString(id, *args)
         }
-
-    // Reads the bool resource directly. It used to go through gb(), which was dropped from the
-    // interface because this was its only caller.
-    override fun shortTextMode(): Boolean = !context.resources.getBoolean(app.aaps.core.ui.R.bool.isTablet)
 }

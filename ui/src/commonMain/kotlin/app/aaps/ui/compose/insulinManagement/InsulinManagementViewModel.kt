@@ -499,10 +499,10 @@ class InsulinManagementViewModel(
                 when (val prepared = batchExecutor.prepare(listOf(BatchAction.InsulinActivate(iCfg)), Sources.Insulin, label)) {
                     is ActionProgress.Prepared -> _sideEffect.emit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
                     // Offline block (and a master-local failure, e.g. no active profile) surface here; a client round-trip
-                    // failure already showed on the app-level modal.
+                    // failure already showed on the app-level modal, with the master's own text.
                     is ActionProgress.Rejected ->
                         if (prepared.reason.isNotDeliveryError()) showSnackbar(rh.gs(prepared.reason.failText()))
-                        else prepared.detail?.let { showSnackbar(it) }
+                        else if (!config.AAPSCLIENT) prepared.detail?.let { showSnackbar(it) }
 
                     else                       -> Unit // Unconfirmed → app-level modal
                 }
@@ -523,7 +523,8 @@ class InsulinManagementViewModel(
                 }
 
                 result is ActionProgress.Rejected && (result.reason.isNotDeliveryError()) -> showSnackbar(rh.gs(result.reason.failText()))
-                result is ActionProgress.Rejected                                                -> result.detail?.let { showSnackbar(it) }
+                // A client's app-level modal has shown the master's own text already.
+                result is ActionProgress.Rejected && !config.AAPSCLIENT                          -> result.detail?.let { showSnackbar(it) }
             }
         }
     }

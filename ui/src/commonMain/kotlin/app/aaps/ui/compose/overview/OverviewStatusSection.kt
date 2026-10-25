@@ -21,8 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,6 +45,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsCard
+import app.aaps.core.ui.compose.LocalClientRole
+import app.aaps.core.ui.compose.LongOrShort
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
@@ -87,14 +88,10 @@ fun OverviewStatusSection(
     var showSettingsSheet by rememberSaveable { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    ElevatedCard(
+    AapsCard(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
-        colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-        )
+            .padding(horizontal = 4.dp)
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
@@ -132,17 +129,15 @@ fun OverviewStatusSection(
                         modifier = Modifier.clickable { onExpandedChange(false) }
                     )
                 } else {
-                    FlowRow(
+                    // The long ages where all of them fit on one line, otherwise the short ones. The line
+                    // wraps only when even the short ones do not fit.
+                    LongOrShort(
+                        long = { CompactStatusItems(items = compactItems, shortAge = false) },
+                        short = { CompactStatusItems(items = compactItems, shortAge = true) },
                         modifier = Modifier
                             .weight(1f)
-                            .clickable { onExpandedChange(true) },
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        compactItems.forEach { item ->
-                            CompactStatusItem(item = item)
-                        }
-                    }
+                            .clickable { onExpandedChange(true) }
+                    )
                     Icon(
                         imageVector = Icons.Filled.ExpandMore,
                         contentDescription = stringResource(CoreUiStrings.expand),
@@ -158,21 +153,23 @@ fun OverviewStatusSection(
                 exit = fadeOut() + shrinkVertically()
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    // Each button also needs this phone's role to allow what it opens (the master would refuse it).
+                    val role = LocalClientRole.current
                     StatusSectionContent(
                         sensorStatus = sensorStatus,
                         insulinStatus = insulinStatus,
                         cannulaStatus = cannulaStatus,
                         batteryStatus = batteryStatus,
-                        onSensorInsertClick = if (commandsAllowed) {
+                        onSensorInsertClick = if (commandsAllowed && role.allows(ElementType.SENSOR_INSERT.role)) {
                             { onNavigate(NavigationRequest.Element(ElementType.SENSOR_INSERT)) }
                         } else null,
-                        onFillClick = if (showFill && commandsAllowed) {
+                        onFillClick = if (showFill && commandsAllowed && role.allows(ElementType.CANNULA_CHANGE.role)) {
                             { onNavigate(NavigationRequest.Element(ElementType.CANNULA_CHANGE)) }
                         } else null,
-                        onInsulinChangeClick = if (showFill && commandsAllowed) {
+                        onInsulinChangeClick = if (showFill && commandsAllowed && role.allows(ElementType.FILL.role)) {
                             { onNavigate(NavigationRequest.Element(ElementType.FILL)) }
                         } else null,
-                        onBatteryChangeClick = if (showPumpBatteryChange && commandsAllowed) {
+                        onBatteryChangeClick = if (showPumpBatteryChange && commandsAllowed && role.allows(ElementType.BATTERY_CHANGE.role)) {
                             { onNavigate(NavigationRequest.Element(ElementType.BATTERY_CHANGE)) }
                         } else null
                     )
@@ -227,7 +224,20 @@ internal fun StatusLightsSettingsContent(settingsDef: PreferenceSubScreenDef) {
 }
 
 @Composable
-private fun CompactStatusItem(item: StatusItem) {
+private fun CompactStatusItems(items: List<StatusItem>, shortAge: Boolean) {
+    FlowRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        items.forEach { item ->
+            CompactStatusItem(item = item, age = if (shortAge) item.ageShort else item.age)
+        }
+    }
+}
+
+@Composable
+private fun CompactStatusItem(item: StatusItem, age: String) {
     val showAge = item.compactAge
     val showLevel = item.compactLevel && item.level != null
     if (!showAge && !showLevel) return
@@ -272,7 +282,7 @@ private fun CompactStatusItem(item: StatusItem) {
             text = buildAnnotatedString {
                 if (showAge) {
                     withStyle(SpanStyle(color = ageColor)) {
-                        append(item.age)
+                        append(age)
                     }
                 }
                 if (showLevel) {

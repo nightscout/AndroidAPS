@@ -21,9 +21,8 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.icons.IcLoopPaused
-import app.aaps.core.ui.compose.pump.ActionCategory
-import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewStateBuilder
@@ -90,17 +89,15 @@ class VirtualPumpViewModel(
             queueStatus = communicationStatus.queueStatus(),
             infoRows = emptyList(),
             managementActions = listOf(
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(CoreUiStrings.pump_suspend),
                     icon = IcLoopPaused,
-                    category = ActionCategory.MANAGEMENT,
                     visible = !isSuspended,
                     onClick = { onSuspendToggle(true) }
                 ),
-                PumpAction(
+                ScreenAction(
                     label = rh.gs(CoreUiStrings.pump_resume),
                     icon = Icons.Filled.PlayArrow,
-                    category = ActionCategory.MANAGEMENT,
                     visible = isSuspended,
                     onClick = { onSuspendToggle(false) }
                 )
@@ -150,7 +147,7 @@ class VirtualPumpViewModel(
         }
 
         val battery = virtualPumpPlugin.batteryLevel.value?.let { level ->
-            rh.gs(CoreUiStrings.format_percent, level)
+            rh.gs(CoreUiStrings.units_format_percent, level)
         }
 
         val reservoir = ch.insulinAmountString(virtualPumpPlugin.reservoirLevel.value)
@@ -186,17 +183,15 @@ class VirtualPumpViewModel(
         }
 
         val managementActions = listOf(
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CoreUiStrings.pump_suspend),
                 icon = IcLoopPaused,
-                category = ActionCategory.MANAGEMENT,
                 visible = !isSuspended,
                 onClick = { onSuspendToggle(true) }
             ),
-            PumpAction(
+            ScreenAction(
                 label = rh.gs(CoreUiStrings.pump_resume),
                 icon = Icons.Filled.PlayArrow,
-                category = ActionCategory.MANAGEMENT,
                 visible = isSuspended,
                 onClick = { onSuspendToggle(false) }
             )

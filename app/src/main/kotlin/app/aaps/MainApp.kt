@@ -13,7 +13,6 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.work.Configuration
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
@@ -23,7 +22,6 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.db.VacuumResult
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -43,8 +41,11 @@ import app.aaps.di.ExternalOptionsOverride
 import app.aaps.di.GeneratedStringOwners
 import app.aaps.di.metro.MetroGraphs
 import app.aaps.di.metro.MetroWorkerFactory
-import app.aaps.implementation.maintenance.migration.LegacyPreferenceValue
+import app.aaps.implementation.maintenance.migration.InsulinMigration
+import app.aaps.implementation.maintenance.migration.InsulinMigrationPlan
+import app.aaps.implementation.maintenance.migration.LegacyInsulin
 import app.aaps.implementation.maintenance.migration.PreferenceMigrations
+import app.aaps.implementation.maintenance.migration.ProfileDiaHarvest
 import app.aaps.implementation.receivers.BTReceiver
 import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.KeepAliveWorker
@@ -76,6 +77,8 @@ import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
+import app.aaps.core.interfaces.R as InterfacesR
+import app.aaps.core.ui.R as CoreUiR
 
 class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, Configuration.Provider {
 
@@ -159,24 +162,27 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private val snackbarNotificationFallback get() = metroGraphs.snackbarNotificationFallback
     private val appScope get() = metroGraphs.applicationScope
 
-    private lateinit var insulinLabel: String
-    private var insulinPeakTime: Long = 0L
-    private var profileNameToDia: Map<String, Double> = emptyMap()
+    /** The rules; the two fields below are what this app's start-up sequence carries between its steps. */
+    private val insulinMigration get() = InsulinMigration(aapsLogger, hardLimits, rh)
 
     /**
-     * The raw profile keys that [profileNameToDia] was built from, still in the old store.
+     * The v3 insulin plugin selection, read before the migrations delete its keys. Null when there was none.
+     */
+    private var legacyInsulin: LegacyInsulin? = null
+
+    /**
+     * The DIA each v3 profile was using, with the raw keys those values came from still in the old store.
      *
-     * `doMigrations` used to remove them as it read them, which put the only copy of those DIA
-     * values in the map above - a field, in memory. `dataMigrations` is the only consumer and runs
-     * much later, after `vacuumDatabaseIfDue` (which documents that it can take the process down
-     * below the JVM, where no `catch` reaches) and after the plugins start. A death anywhere in that
-     * gap lost the DIA values for good: the next start finds no keys, takes the empty branch and
-     * stamps the old records with a substituted insulin instead. That is wrong IOB on historical
-     * records and it is one-way - the sentinel is consumed and those rows are never revisited.
+     * `doMigrations` used to remove those keys as it read them, which put the only copy of the DIA values
+     * in a field, in memory. `dataMigrations` is the only consumer and runs much later, after
+     * `vacuumDatabaseIfDue` (which documents that it can take the process down below the JVM, where no
+     * `catch` reaches) and after the plugins start. A death anywhere in that gap lost the DIA values for
+     * good: the next start finds no keys and stamps the old records with a guess instead. That is wrong IOB
+     * on historical records and it is one-way - the sentinel is consumed and those rows are never revisited.
      *
      * So they are removed only once the value they carry is safely in the insulin list.
      */
-    private var legacyProfileKeysToRemove: List<String> = emptyList()
+    private var profileDia: ProfileDiaHarvest = ProfileDiaHarvest(emptyMap(), emptyList())
 
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshWidget: Runnable
@@ -381,7 +387,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                             therapyEvent = TE(
                                 timestamp = dateUtil.now(),
                                 type = TE.Type.NOTE,
-                                note = rh.gs(app.aaps.core.ui.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
+                                note = rh.gs(InterfacesR.string.values_with_dash, rh.gs(CoreUiR.string.androidaps_start), "${Build.MANUFACTURER} ${Build.MODEL}"),
                                 glucoseUnit = GlucoseUnit.MGDL
                             ),
                             action = Action.START_AAPS,
@@ -458,7 +464,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private suspend fun passwordResetCheck() {
         val fh = fileListProvider.ensureExtraDirExists()?.findFile("PasswordReset")
         if (fh?.exists() == true) {
-            config.updateInitProgress(getString(app.aaps.core.ui.R.string.waiting_for_pump))
+            config.updateInitProgress(getString(CoreUiR.string.waiting_for_pump))
             val serialNumber = withTimeoutOrNull(30_000.milliseconds) {
                 while (activePlugin.activePump.serialNumber().isEmpty()) {
                     delay(100.milliseconds)
@@ -561,8 +567,8 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private suspend fun doMigrations() {
         // Which insulin curve the old records were delivered with, for the database migration in
         // dataMigrations(). Read BEFORE the migrations, because the migration that deletes these dead
-        // ConfigBuilder rows is one of them now.
-        readInsulinForDataMigration()
+        // ConfigBuilder rows is one of them now. InsulinMigrationTest pins that order.
+        legacyInsulin = insulinMigration.readLegacyInsulin(sp)
 
         // The preference migrations, in order, against this device's store.
         //
@@ -585,89 +591,17 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         if (!config.AAPSCLIENT && preferences.getIfExists(BooleanKey.GeneralSimpleMode) == null)
             preferences.put(BooleanKey.GeneralSimpleMode, !preferences.get(BooleanNonKey.GeneralSetupWizardProcessed))
 
-        val keys: Map<String, *> = sp.getAll()
         // Harvest the DIA each old profile was using, for the database migration in dataMigrations().
         //
-        // NOT a key migration and deliberately not in PreferenceMigrations: it fills fields this class
+        // NOT a key migration and deliberately not in PreferenceMigrations: it fills a field this class
         // reads much later. The migration writes the new `_name` key but leaves the raw one, exactly so
-        // this can still pair a profile with its DIA - see legacyProfileKeysToRemove, which collects
-        // those names here and drops them there, once the values they carry are safely in the insulin
-        // list.
-        val indexToName = mutableMapOf<Int, String>()
-        val indexToDia = mutableMapOf<Int, Double>()
-        val stillNeeded = mutableListOf<String>()
-        for ((key, value) in keys) {
-            val parts = key.split("_")
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_name"))
-                parts.getOrNull(1)?.toIntOrNull()?.let { number ->
-                    LegacyPreferenceValue.asString(value)?.let { name ->
-                        indexToName[number] = name
-                        stillNeeded += key
-                    }
-                }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_name_"))
-                parts.getOrNull(2)?.toIntOrNull()?.let { number ->
-                    LegacyPreferenceValue.asString(value)?.let { indexToName[number] = it }
-                }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_dia"))
-                parts.getOrNull(1)?.toIntOrNull()?.let { number ->
-                    LegacyPreferenceValue.asDouble(value)?.let { dia ->
-                        indexToDia[number] = dia
-                        stillNeeded += key
-                    }
-                }
-            // The later spelling of the same thing. No key in this build owns it any more - the DIA
-            // belongs to the insulin now - so it is collected for removal exactly like the raw one
-            // above, and for the same reason: only once dataMigrations() has used the value.
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_dia_"))
-                parts.getOrNull(2)?.toIntOrNull()?.let { number ->
-                    LegacyPreferenceValue.asDouble(value)?.let { dia ->
-                        indexToDia[number] = dia
-                        stillNeeded += key
-                    }
-                }
-        }
-        profileNameToDia = indexToDia.mapNotNull { (index, dia) ->
-            indexToName[index]?.let { name -> name to dia }
-        }.toMap()
-        legacyProfileKeysToRemove = stillNeeded
+        // this can still pair a profile with its DIA - see profileDia, whose keys are dropped in
+        // dataMigrations(), once the values they carry are safely in the insulin list.
+        profileDia = insulinMigration.harvestProfileDia(sp)
 
         // Rebuilding them from the old keys is a migration and has already run above. This only fills
         // in the three factory presets for an install that has none.
         seedTempTargetPresets()
-    }
-
-    /**
-     * Which insulin curve the old records were delivered with, for the database migration.
-     *
-     * Checks BOTH spellings - the legacy `ConfigBuilder_INSULIN_<X>_Enabled` and the
-     * `ConfigBuilder_Enabled_INSULIN_<X>` the rename produces - so it no longer matters whether the
-     * migrations have been past yet. That used to be an unwritten order dependency inside
-     * doMigrations: the rename had to run before this, and the sweep after it.
-     *
-     * Not a migration itself. It fills fields this class reads much later, and an import has no legacy
-     * database rows to stamp - there is no database import in AAPS.
-     */
-    private fun readInsulinForDataMigration() {
-        fun selected(plugin: String) =
-            sp.getBoolean("ConfigBuilder_Enabled_INSULIN_$plugin", false) || sp.getBoolean("ConfigBuilder_INSULIN_${plugin}_Enabled", false)
-
-        insulinLabel = rh.gs(
-            when {
-                selected("InsulinOrefRapidActingPlugin")      -> InsulinType.OREF_RAPID_ACTING.label
-                selected("InsulinOrefUltraRapidActingPlugin") -> InsulinType.OREF_ULTRA_RAPID_ACTING.label
-                selected("InsulinOrefFreePeakPlugin")         -> InsulinType.OREF_FREE_PEAK.label
-                selected("InsulinLyumjevPlugin")              -> InsulinType.OREF_LYUMJEV.label
-                else                                          -> InsulinType.OREF_RAPID_ACTING.label
-            }
-        )
-        insulinPeakTime = when {
-            selected("InsulinOrefRapidActingPlugin")      -> InsulinType.OREF_RAPID_ACTING.insulinPeakTime
-            selected("InsulinOrefUltraRapidActingPlugin") -> InsulinType.OREF_ULTRA_RAPID_ACTING.insulinPeakTime
-            selected("InsulinOrefFreePeakPlugin")         -> (sp.getInt("insulin_oref_peak", 75) * 60 * 1000).toLong()
-            selected("InsulinLyumjevPlugin")              -> InsulinType.OREF_LYUMJEV.insulinPeakTime
-            else                                          -> InsulinType.OREF_RAPID_ACTING.insulinPeakTime
-        }
     }
 
     /**
@@ -716,38 +650,37 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         // is computed from the clamped math floors in ICfg.iobCalcForTreatment — which under-counts IOB.
         // Stamping them makes the insulin curve a property of the record, as v33 intends.
         //
-        // The value must be the insulin those records were actually delivered with. Legacy preferences
-        // (below) reconstruct it; failing that the running profile owns the authoritative iCfg. Only when
-        // there is neither is a substitute used — declared to the user rather than guessed silently, and
-        // never taken from the insulin list, whose first entry is a positional accident, not "the current
-        // insulin". Note this is one-way: once stamped the sentinel is consumed and these records are not
-        // revisited, which is why the notification says so.
-        val runningICfg = if (profileNameToDia.isEmpty())
-            profileFunction.getRunningOrRequestedICfg() ?: substituteICfgForMigration()
-        else {
-            // The record, not profileFunction.getProfile(): this runs before app init completes, and no
-            // profile is handed out until then. ProfileSealed.EPS.profileName is this same field.
-            val dia = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())?.originalProfileName?.let { profileName ->
-                profileNameToDia[profileName]
-            }
-            val insulinEndTime = ((dia ?: hardLimits.diaRange().endInclusive) * 3600 * 1000).toLong()
-            ICfg("", insulinEndTime, insulinPeakTime, 1.0).also {
-                it.insulinNickname = insulinLabel
-                it.insulinLabel = "$insulinLabel ${localInsulinManager.buildSuffix(it.peak, it.dia, it.concentration)}"
-            }
-        }
-
-        // Runs at every start, so it must match by curve, not by label. The running profile keeps the label it
-        // was made with, and the list rebuilds every label at start. A label match failed every time for a
-        // profile with an older label, and added one more copy of the same insulin at each start.
-        if (!localInsulinManager.insulinWithSameCurveExists(runningICfg))
-            localInsulinManager.addNewInsulin(runningICfg, keepName = true)
+        // The value must be the insulin those records were actually delivered with, and InsulinMigration
+        // owns that decision - see its KDoc for the order it asks in and why. The record's own insulin wins:
+        // migration32to33 carries the v3 columns across, so for a profile switch the row already knows. The
+        // legacy preferences answer the rows that have nothing, boluses above all - v3 never stamped one.
+        //
+        // The record, not profileFunction.getProfile(): this runs before app init completes, and no profile
+        // is handed out until then. getRunningOrRequestedICfg() rejects an unusable iCfg, so a running row
+        // that still carries the sentinel falls through instead of writing the sentinel back over itself.
+        val plan = insulinMigration.plan(
+            recordICfg = profileFunction.getRunningOrRequestedICfg(),
+            legacy = legacyInsulin,
+            harvest = profileDia,
+            activeProfileName = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())?.originalProfileName
+        )
+        // Puts it in the catalogue and gives back the stored copy, whose label the records are stamped with.
+        // On a v3 install this REPLACES the default the first load invented, so the user does not come out
+        // of the upgrade with an insulin they never had sitting in front of their own.
+        //
+        // NO_LEGACY_DATA is the exception, and a fresh install is why: nothing from v3, no profile yet and
+        // no records to stamp all look the same from here. So that plan is used for the stamping below -
+        // which then changes nothing - and the catalogue is left alone, because the default already in it
+        // is just as good and a second invented insulin beside the first is not.
+        val runningICfg =
+            if (plan.source == InsulinMigrationPlan.Source.NO_LEGACY_DATA) plan.iCfg
+            else localInsulinManager.seedFromMigration(plan.iCfg)
 
         // The DIA these keys carry is now in the insulin list, so the old copies can go. This is the
-        // first point where losing them costs nothing - see legacyProfileKeysToRemove for why they
-        // were not dropped when they were read.
-        legacyProfileKeysToRemove.forEach { sp.remove(it) }
-        legacyProfileKeysToRemove = emptyList()
+        // first point where losing them costs nothing - see profileDia for why they were not dropped
+        // when they were read.
+        profileDia.keysToRemove.forEach { sp.remove(it) }
+        profileDia = ProfileDiaHarvest(emptyMap(), emptyList())
 
         val label = runningICfg.insulinLabel
         val end = runningICfg.insulinEndTime
@@ -765,6 +698,11 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
 
         val totalMigrated = migratedPs + migratedEps + migratedBoluses
         if (totalMigrated > 0) {
+            // Part of the value was invented, and records really were stamped with it, so say so. The count
+            // is what makes this quiet on an install with nothing to migrate - a fresh one above all, which
+            // used to be told its "older records" had no insulin configuration. It is one-way: the sentinel
+            // is consumed, so these records are not revisited, which is why the notification says that too.
+            if (plan.isGuess) reportGuessedInsulinMigration(plan)
             profileFunction.invalidateCache()
             aapsLogger.debug(LTag.CORE, "Migration to DB 33 complete: $totalMigrated records updated")
             persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
@@ -783,29 +721,28 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     }
 
     /**
-     * Insulin config stamped onto legacy records when neither legacy preferences nor a running profile
-     * can tell us what was actually used: no active profile switch at first start, or — the case that
-     * matters — a running profile whose own row still carries the v33 sentinel.
-     * That second case is why this must not read the running profile unguarded. The SQL step of the
-     * migration stamps `insulinEndTime = -1` onto every pre-ICfg row *including the active one*, so
-     * reading it back yields a DIA of 0.0 and writes the sentinel straight back over itself. The rows stay
-     * unmigrated, the profile keeps reporting a zero DIA, and the APS hard-limit check aborts every loop
-     * cycle. [app.aaps.core.interfaces.profile.ProfileFunction.getRunningOrRequestedICfg] rejects an
-     * unusable [ICfg] so that path lands here instead — and because the repair re-runs on every start and
-     * still matches the sentinel rows, an install already broken this way heals on its next launch.
-     * Ultra-rapid: an 8h DIA is the same across every [InsulinType] template, so the only real choice is
-     * the peak. Concentration is 1.0 by construction, which is not a guess — these records predate
-     * concentration entirely, so 1.0 is the identity that leaves historical doses unscaled.
+     * Tells the user that part of the insulin stamped onto their old records was invented.
+     *
+     * Both cases are permanent: the stamp consumes the v33 sentinel, so these records are never revisited
+     * and the value is not corrected later. That is why this is a notification and not only a log line.
+     *
+     * [InsulinMigrationPlan.Source.GUESSED_DIA] is the one that used to be silent. The insulin itself is
+     * right - the v3 plugin selection said so - but no DIA could be found for it, so the hard-limit maximum
+     * stands in, which is 9 h for an adult. On an install with one local profile, or several that agree,
+     * `ProfileDiaHarvest.diaFor` now answers and this does not fire at all.
      */
-    private fun substituteICfgForMigration(): ICfg =
-        InsulinType.OREF_ULTRA_RAPID_ACTING.getICfg(rh).also {
-            aapsLogger.warn(LTag.CORE, "Migration to DB 33: no profile and no legacy DIA, substituting ${it.insulinLabel}")
-            notificationManager.post(
-                id = NotificationId.INSULIN_MIGRATION_DEFAULT_USED,
-                rh.gs(R.string.insulin_migration_default_used, it.insulinLabel),
-                level = NotificationLevel.IMPORTANT
-            )
-        }
+    private fun reportGuessedInsulinMigration(plan: InsulinMigrationPlan) {
+        val label = plan.iCfg.insulinLabel.ifBlank { plan.iCfg.insulinNickname }
+        aapsLogger.warn(LTag.CORE, "Migration to DB 33: ${plan.source}, stamping $label with ${plan.iCfg.dia} h DIA")
+        val text =
+            if (plan.source == InsulinMigrationPlan.Source.GUESSED_DIA) rh.gs(R.string.insulin_migration_default_dia_used, plan.iCfg.dia, label)
+            else rh.gs(R.string.insulin_migration_default_used, label)
+        notificationManager.post(
+            id = NotificationId.INSULIN_MIGRATION_DEFAULT_USED,
+            text,
+            level = NotificationLevel.IMPORTANT
+        )
+    }
 
     private val timeDateReceiver = TimeDateOrTZChangeReceiver()
     private val networkReceiver = NetworkChangeReceiver()

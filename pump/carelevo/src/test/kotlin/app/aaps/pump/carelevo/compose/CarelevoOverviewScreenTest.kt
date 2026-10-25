@@ -15,9 +15,8 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.text.AnnotatedString
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.pump.ActionCategory
-import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.StatusBanner
@@ -131,7 +130,7 @@ class CarelevoOverviewScreenTest {
         compose.waitForIdle()
     }
 
-    private fun stateWith(vararg actions: PumpAction) = PumpOverviewUiState(
+    private fun stateWith(vararg actions: ScreenAction) = PumpOverviewUiState(
         statusBanner = StatusBanner(text = "Connected", level = StatusLevel.NORMAL),
         managementActions = actions.toList()
     )
@@ -195,7 +194,7 @@ class CarelevoOverviewScreenTest {
         val connectLabel = context.getString(R.string.carelevo_overview_connect_btn_label)
         overviewState.value = PumpOverviewUiState(
             statusBanner = StatusBanner(text = context.getString(R.string.carelevo_state_none_value), level = StatusLevel.WARNING),
-            primaryActions = listOf(PumpAction(label = connectLabel, category = ActionCategory.PRIMARY, onClick = {}))
+            primaryActions = listOf(ScreenAction(label = connectLabel, onClick = {}))
         )
 
         setContent()
@@ -223,7 +222,7 @@ class CarelevoOverviewScreenTest {
     fun actionClick_invokesActionCallback() {
         var clicks = 0
         overviewState.value = stateWith(
-            PumpAction(label = "Discard Patch", category = ActionCategory.MANAGEMENT, onClick = { clicks++ })
+            ScreenAction(label = "Discard Patch", onClick = { clicks++ })
         )
 
         setContent()
@@ -236,7 +235,7 @@ class CarelevoOverviewScreenTest {
     @Test
     fun disabledAction_isRenderedButNotEnabled() {
         overviewState.value = stateWith(
-            PumpAction(label = "Discard Patch", category = ActionCategory.MANAGEMENT, enabled = false, onClick = {})
+            ScreenAction(label = "Discard Patch", enabled = false, onClick = {})
         )
 
         setContent()
@@ -282,7 +281,7 @@ class CarelevoOverviewScreenTest {
     fun loadingOverlay_consumesTaps_soActionUnderneathCannotReFire() {
         var clicks = 0
         overviewState.value = stateWith(
-            PumpAction(label = "Discard Patch", category = ActionCategory.MANAGEMENT, onClick = { clicks++ })
+            ScreenAction(label = "Discard Patch", onClick = { clicks++ })
         )
         actionState.value = UiState.Loading
 

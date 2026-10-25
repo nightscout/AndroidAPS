@@ -29,6 +29,7 @@ class NightscoutExceptionTest {
         InvalidAccessTokenException("m"),
         InvalidFormatNightscoutException("m"),
         InvalidParameterNightscoutException("m"),
+        NotAllowedNightscoutException("m"),
         UnknownResponseNightscoutException("m"),
         UnsuccessfulNightscoutException("m")
     )

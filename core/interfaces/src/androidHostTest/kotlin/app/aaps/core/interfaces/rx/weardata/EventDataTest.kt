@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.rx.weardata
 
+import app.aaps.core.data.model.CarbsType
 import com.google.common.truth.Truth.assertThat
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.junit.jupiter.api.BeforeEach
@@ -77,6 +78,10 @@ class EventDataTest {
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
         EventData.ActionWizardPreCheck(1, 2).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.ActionWizardPreCheck(1, 2, CarbsType.PIZZA).let {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
@@ -348,5 +353,15 @@ class EventDataTest {
         assertThat(legacyJson).doesNotContain("loopMode")
         val restored = EventData.deserialize(legacyJson) as EventData.Status
         assertThat(restored.loopMode).isEqualTo(LoopStatusData.LoopMode.UNKNOWN)
+    }
+
+    @Test
+    fun wizardPreCheckFromAWatchWithoutTheMealTypeIsBread() {
+        // The meal type came later. A watch from before sends no carbsType, and the default is bread, which
+        // is what every wizard entry was before: all carbs now, no eCarbs. The default is not written on the
+        // wire, so serializing without it is the old message.
+        val old = EventData.ActionWizardPreCheck(30, 100).serialize()
+        assertThat(old).doesNotContain("carbsType")
+        assertThat(EventData.deserialize(old)).isEqualTo(EventData.ActionWizardPreCheck(30, 100, CarbsType.BREAD))
     }
 }

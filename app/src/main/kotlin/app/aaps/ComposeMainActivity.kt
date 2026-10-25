@@ -93,6 +93,7 @@ import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.utils.isRunningRealPumpTest
+import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import app.aaps.implementation.plugin.PluginPermissionsImpl
 import app.aaps.implementation.protection.BiometricCheck
 import app.aaps.plugins.automation.AutomationRuntime
@@ -165,6 +166,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var prefFileList: FileListProvider
     @Inject lateinit var notificationManager: NotificationManager
+    @Inject lateinit var alarmNotificationManager: AlarmNotificationManager
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var builtInSearchables: BuiltInSearchables
     @Inject lateinit var bolusProgressData: BolusProgressData
@@ -582,6 +584,15 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // A background alarm the user has not answered: nothing in this screen can stop it, so show
+        // its alarm screen again (#5338). In onStart and not in onResume: the alarm screen is
+        // translucent, so leaving it with Back resumes this activity without starting it, and the
+        // alarm screen does not come straight back.
+        alarmNotificationManager.unansweredAlarmIntent()?.let { startActivity(it) }
     }
 
     override fun onResume() {

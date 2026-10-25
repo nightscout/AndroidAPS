@@ -71,6 +71,9 @@ kotlin {
         // phone and on a desktop. Only the JSON implementation under it differs - see jvmMain.
         jvmSharedMain.dependencies {
             implementation(libs.io.socket.client)
+            // The client set-up QR code on the master (and the SMS Communicator OTP code on Android). Plain Java, so
+            // the same on a desktop.
+            implementation(libs.com.google.zxing.core)
         }
 
         // Tests of shared code belong here, not in a per-target set: NsWsPayloadTest lived in
@@ -144,12 +147,15 @@ kotlin {
                 // DataLayerListenerService
                 api(libs.com.google.android.gms.playservices.wearable)
 
-                // SMS Communicator (OTP + QR code)
+                // SMS Communicator (OTP + QR code). ZXing itself comes from jvmSharedMain.
                 implementation(libs.com.eatthepath.java.otp)
                 implementation(libs.com.github.kenglxn.qrgen.android)
-                // ZXing is pulled transitively by qrgen but SmsCommunicatorOtpScreen imports
-                // ErrorCorrectionLevel directly - declare it so a qrgen upgrade cannot drop it.
-                implementation(libs.com.google.zxing.core)
+
+                // The camera of a client reading the master's set-up QR code
+                implementation(libs.androidx.camera.camera2)
+                implementation(libs.androidx.camera.core)
+                implementation(libs.androidx.camera.lifecycle)
+                implementation(libs.androidx.camera.view)
 
                 // Garmin
             }

@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -23,7 +22,9 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCgmInsert
@@ -180,12 +181,13 @@ class StatusViewModel(
         val bgSource = activePlugin.activeBgSource
         // Sensor battery: not shown in Overview (compact), shown in Actions (expanded) unless AAPSCLIENT
         val hasBattery = !config.AAPSCLIENT && bgSource.sensorBatteryLevel != -1
-        val level = if (hasBattery) "${bgSource.sensorBatteryLevel}%" else null
+        val level = if (hasBattery) rh.gs(CoreUiStrings.units_format_percent, bgSource.sensorBatteryLevel) else null
         val levelPercent = if (hasBattery) bgSource.sensorBatteryLevel / 100f else -1f
 
         return StatusItem(
             label = rh.gs(CoreUiStrings.sensor_label),
             age = event?.let { formatAge(it.timestamp) } ?: "-",
+            ageShort = event?.let { formatAgeShort(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewSageWarning, IntKey.OverviewSageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewSageCritical) } ?: 0f,
             level = level,
@@ -210,19 +212,18 @@ class StatusViewModel(
             // takes the existing "-" / UNSPECIFIED branch below rather than showing a mis-scaled figure.
             profileFunction.getProfile()?.let { activePlugin.activePump.reservoirLevel.value.iU(it.insulinConcentration()) } ?: 0.0
         }
-        val insulinUnit = rh.gs(CoreUiStrings.insulin_unit_shortname)
-
         val level: String? = if (reservoirLevel > 0) {
             if (!config.AAPSCLIENT && isPatchPump && reservoirLevel >= maxReading) {
-                "${decimalFormatter.to0Decimal(maxReading)}+ $insulinUnit"
+                rh.gs(CoreUiStrings.value_with_unit, decimalFormatter.to0Decimal(maxReading) + "+", rh.gs(CoreUiStrings.insulin_unit_shortname))
             } else {
-                decimalFormatter.to0Decimal(reservoirLevel, insulinUnit)
+                rh.gs(CoreUiStrings.value_with_unit, decimalFormatter.to0Decimal(reservoirLevel), rh.gs(CoreUiStrings.insulin_unit_shortname))
             }
         } else null
 
         return StatusItem(
             label = rh.gs(CoreUiStrings.insulin_label),
             age = event?.let { formatAge(it.timestamp) } ?: "-",
+            ageShort = event?.let { formatAgeShort(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewIageWarning, IntKey.OverviewIageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewIageCritical) } ?: 0f,
             level = level,
@@ -234,8 +235,6 @@ class StatusViewModel(
     }
 
     private suspend fun buildCannulaStatus(event: TE?, isPatchPump: Boolean, includeTddCalculation: Boolean): StatusItem {
-        val insulinUnit = rh.gs(CoreUiStrings.insulin_unit_shortname)
-
         // Calculate usage since last cannula change (expensive - can be deferred)
         val usage = if (includeTddCalculation && event != null) {
             withContext(aapsIoDispatcher) {
@@ -249,9 +248,10 @@ class StatusViewModel(
         return StatusItem(
             label = label,
             age = event?.let { formatAge(it.timestamp) } ?: "-",
+            ageShort = event?.let { formatAgeShort(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewCageWarning, IntKey.OverviewCageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewCageCritical) } ?: 0f,
-            level = if (usage > 0) decimalFormatter.to0Decimal(usage, insulinUnit) else null,
+            level = if (usage > 0) rh.gs(CoreUiStrings.value_with_unit, decimalFormatter.to0Decimal(usage), rh.gs(CoreUiStrings.insulin_unit_shortname)) else null,
             levelStatus = StatusLevel.UNSPECIFIED, // Usage doesn't have warning thresholds
             levelPercent = -1f,
             icon = icon,
@@ -286,9 +286,10 @@ class StatusViewModel(
         return StatusItem(
             label = rh.gs(CoreUiStrings.pb_label),
             age = event?.let { formatAge(it.timestamp) } ?: "-",
+            ageShort = event?.let { formatAgeShort(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewBageWarning, IntKey.OverviewBageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewBageCritical) } ?: 0f,
-            level = if (showLevel) "${batteryLevelValue.toInt()}%" else null,
+            level = if (showLevel) rh.gs(CoreUiStrings.units_format_percent, batteryLevelValue.toInt()) else null,
             levelStatus = if (showLevel) getLevelStatus(batteryLevelValue, IntKey.OverviewBattWarning, IntKey.OverviewBattCritical) else StatusLevel.UNSPECIFIED,
             levelPercent = if (showLevel) 1f - (batteryLevelValue.toFloat() / 100f) else -1f,
             icon = IcPumpBattery,
@@ -298,15 +299,19 @@ class StatusViewModel(
         )
     }
 
+    // Both forms are built, and the screen shows the long one where it fits (see `LongOrShort`).
     private fun formatAge(timestamp: Long): String {
         val diff = dateUtil.computeDiff(timestamp, dateUtil.now())
-        val days = diff.days
-        val hours = diff.hours
-        return if (rh.shortTextMode()) {
-            "${days}${rh.gs(InterfacesStrings.shortday)}${hours}${rh.gs(InterfacesStrings.shorthour)}"
-        } else {
-            "$days ${rh.gs(InterfacesStrings.days)} $hours ${rh.gs(InterfacesStrings.hours)}"
-        }
+        return rh.gs(
+            CoreUiStrings.value_with_unit,
+            rh.gs(CoreUiStrings.value_with_unit, diff.days.toString(), rh.gs(InterfacesStrings.days)),
+            rh.gs(CoreUiStrings.value_with_unit, diff.hours.toString(), rh.gs(InterfacesStrings.hours))
+        )
+    }
+
+    private fun formatAgeShort(timestamp: Long): String {
+        val diff = dateUtil.computeDiff(timestamp, dateUtil.now())
+        return rh.gs(UiStrings.status_age_short, diff.days, diff.hours)
     }
 
     private fun getAgeStatus(timestamp: Long, warnKey: IntPreferenceKey, urgentKey: IntPreferenceKey): StatusLevel {

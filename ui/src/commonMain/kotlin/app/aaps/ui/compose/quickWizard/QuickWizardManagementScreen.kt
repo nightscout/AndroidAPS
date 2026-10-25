@@ -1,10 +1,8 @@
 package app.aaps.ui.compose.quickWizard
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -20,19 +17,15 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -48,7 +41,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
@@ -56,8 +48,14 @@ import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsFab
+import app.aaps.core.ui.compose.AapsFloatingToolbar
+import app.aaps.core.ui.compose.AapsFloatingToolbarDeleteButton
+import app.aaps.core.ui.compose.AapsFloatingToolbarRow
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.keys.interfaces.ClientRole
+import app.aaps.core.ui.compose.LocalClientRole
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.clearFocusOnTap
@@ -97,7 +95,10 @@ fun QuickWizardManagementScreen(
     // at startup and flips the instant reachability changes. Master is never gated. Both edits AND the
     // master-bound Execute FAB are gated by this on a client.
     val editingEnabled = masterEditingEnabled()
-    val isPlayMode = uiState.screenMode == ScreenMode.PLAY || !editingEnabled
+    // Running a QuickWizard is a caregiver's here (this screen needs one to open); changing the entries is an admin's.
+    // Below admin the screen stays VIEW-ONLY, like an unreachable master.
+    val canDefine = LocalClientRole.current.allows(ClientRole.Admin)
+    val isPlayMode = uiState.screenMode == ScreenMode.PLAY || !editingEnabled || !canDefine
 
     // Set initial screen mode
     LaunchedEffect(initialMode) {
@@ -128,7 +129,7 @@ fun QuickWizardManagementScreen(
         val entry = uiState.entries.getOrNull(uiState.selectedIndex)
         OkCancelDialog(
             title = stringResource(CoreUiStrings.removerecord),
-            message = "${stringResource(CoreUiStrings.delete)} ${entry?.buttonText() ?: ""}?",
+            message = stringResource(CoreUiStrings.value_question, stringResource(CoreUiStrings.value_with_unit, stringResource(CoreUiStrings.delete), entry?.buttonText() ?: "")),
             onConfirm = {
                 viewModel.deleteCurrentEntry()
                 showDeleteDialog = false
@@ -172,7 +173,6 @@ fun QuickWizardManagementScreen(
     val isReorderMode = reorderOrder != null
     val canEnterReorder = !isPlayMode && editingEnabled && viewModel.canReorder()
     val scope = rememberCoroutineScope()
-    var showOverflowMenu by remember { mutableStateOf(false) }
 
     // Back leaves sort mode rather than the screen, so a reshuffle isn't silently discarded. Takes
     // precedence over the unsaved-changes handler below: sorting does not touch the editor.
@@ -245,8 +245,8 @@ fun QuickWizardManagementScreen(
                         },
                         actions = {
                             if (isPlayMode) {
-                                // Edit mode button (shown in PLAY mode)
-                                IconButton(onClick = onRequestEditMode, enabled = editingEnabled) {
+                                // Edit mode button (shown in PLAY mode, to a role that may change the entries)
+                                if (canDefine) IconButton(onClick = onRequestEditMode, enabled = editingEnabled) {
                                     Icon(
                                         imageVector = Icons.Filled.Edit,
                                         contentDescription = stringResource(CoreUiStrings.switch_to_edit)
@@ -266,30 +266,20 @@ fun QuickWizardManagementScreen(
                                         )
                                     }
                                 }
-                                // Menu entry as well as the long-press: the long-press is
+                                // A button as well as the long-press: the long-press is
                                 // undiscoverable on its own, and this is the only route a screen
                                 // reader can take.
-                                Box {
-                                    IconButton(onClick = { showOverflowMenu = true }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.MoreVert,
-                                            contentDescription = stringResource(CoreUiStrings.more_options)
-                                        )
-                                    }
-                                    DropdownMenu(
-                                        expanded = showOverflowMenu,
-                                        onDismissRequest = { showOverflowMenu = false }
-                                    ) {
-                                        DropdownMenuItem(
-                                            text = { Text(stringResource(CoreUiStrings.reorder)) },
-                                            enabled = canEnterReorder,
-                                            onClick = {
-                                                showOverflowMenu = false
-                                                focusManager.clearFocus()
-                                                viewModel.enterReorderMode()
-                                            }
-                                        )
-                                    }
+                                IconButton(
+                                    onClick = {
+                                        focusManager.clearFocus()
+                                        viewModel.enterReorderMode()
+                                    },
+                                    enabled = canEnterReorder
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.SwapVert,
+                                        contentDescription = stringResource(CoreUiStrings.reorder)
+                                    )
                                 }
                             }
                         }
@@ -470,68 +460,39 @@ fun QuickWizardManagementScreen(
                                     )
                                 }
                                 // Extra space for floating toolbar
-                                Spacer(modifier = Modifier.height(80.dp))
+                                Spacer(modifier = Modifier.height(AapsSpacing.fabClearance))
                             }
                         }
                     }
 
                     // Floating Toolbar with FAB (M3 style) — both are absolutely positioned over the
                     // cards, so they are hidden while sorting rather than left floating over the sort controls.
-                    if (!isReorderMode) Row(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    if (!isReorderMode) AapsFloatingToolbarRow(modifier = Modifier.align(Alignment.BottomCenter)) {
                         // Floating Toolbar — hidden in PLAY mode
                         if (!isPlayMode) {
-                            Surface(
-                                shape = RoundedCornerShape(percent = 50),
-                                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                shadowElevation = 6.dp,
-                                tonalElevation = 6.dp
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(horizontal = 4.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    // Add button
-                                    IconButton(onClick = { viewModel.addNewEntry() }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Add,
-                                            contentDescription = stringResource(CoreUiStrings.add)
-                                        )
-                                    }
-                                    // Clone button
-                                    IconButton(
-                                        onClick = { viewModel.cloneCurrentEntry() },
-                                        enabled = uiState.entries.isNotEmpty()
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.ContentCopy,
-                                            contentDescription = stringResource(UiStrings.clone_label),
-                                            tint = if (uiState.entries.isNotEmpty())
-                                                MaterialTheme.colorScheme.onSurface
-                                            else
-                                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                        )
-                                    }
-                                    // Delete button
-                                    IconButton(
-                                        onClick = { showDeleteDialog = true },
-                                        enabled = uiState.entries.isNotEmpty()
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Delete,
-                                            contentDescription = stringResource(UiStrings.remove_label),
-                                            tint = if (uiState.entries.isNotEmpty())
-                                                MaterialTheme.colorScheme.error
-                                            else
-                                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                        )
-                                    }
+                            AapsFloatingToolbar {
+                                // Add button
+                                IconButton(onClick = { viewModel.addNewEntry() }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Add,
+                                        contentDescription = stringResource(CoreUiStrings.add)
+                                    )
                                 }
+                                // Clone button
+                                IconButton(
+                                    onClick = { viewModel.cloneCurrentEntry() },
+                                    enabled = uiState.entries.isNotEmpty()
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.ContentCopy,
+                                        contentDescription = stringResource(UiStrings.clone_label)
+                                    )
+                                }
+                                AapsFloatingToolbarDeleteButton(
+                                    onClick = { showDeleteDialog = true },
+                                    enabled = uiState.entries.isNotEmpty(),
+                                    contentDescription = stringResource(UiStrings.remove_label)
+                                )
                             }
                         }
 

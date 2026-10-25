@@ -2,10 +2,8 @@ package app.aaps.ui.compose.profileManagement
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -21,19 +18,14 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -57,6 +49,10 @@ import app.aaps.core.graph.profile.ProfileSingleContent
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsFab
+import app.aaps.core.ui.compose.AapsFloatingToolbar
+import app.aaps.core.ui.compose.AapsFloatingToolbarDeleteButton
+import app.aaps.core.ui.compose.AapsFloatingToolbarRow
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ScreenMode
@@ -107,7 +103,6 @@ fun ProfileManagementScreen(
     val isReorderMode = reorderOrder != null
     val canReorder = !isPlayMode && uiState.profileNames.size > 1
     val scope = rememberCoroutineScope()
-    var showOverflowMenu by remember { mutableStateOf(false) }
 
     // Back leaves sort mode rather than the screen, so a reshuffle isn't silently discarded.
     NavigationBackHandler(
@@ -220,7 +215,7 @@ fun ProfileManagementScreen(
                                 // unpaired client is read-only for a different reason (no master to send
                                 // edits to) and the view model refuses the switch, so it gets no action
                                 // here at all.
-                                if (uiState.commandsAllowed) {
+                                if (uiState.editAllowed) {
                                     IconButton(onClick = onRequestEditMode) {
                                         Icon(
                                             imageVector = Icons.Filled.Edit,
@@ -229,28 +224,13 @@ fun ProfileManagementScreen(
                                     }
                                 }
                             } else {
-                                // Menu entry as well as the long-press: the long-press is undiscoverable
+                                // A button as well as the long-press: the long-press is undiscoverable
                                 // on its own, and this is the only route a screen reader can take.
-                                Box {
-                                    IconButton(onClick = { showOverflowMenu = true }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.MoreVert,
-                                            contentDescription = stringResource(CoreUiStrings.more_options)
-                                        )
-                                    }
-                                    DropdownMenu(
-                                        expanded = showOverflowMenu,
-                                        onDismissRequest = { showOverflowMenu = false }
-                                    ) {
-                                        DropdownMenuItem(
-                                            text = { Text(stringResource(CoreUiStrings.reorder)) },
-                                            enabled = canReorder,
-                                            onClick = {
-                                                showOverflowMenu = false
-                                                viewModel.enterReorderMode()
-                                            }
-                                        )
-                                    }
+                                IconButton(onClick = { viewModel.enterReorderMode() }, enabled = canReorder) {
+                                    Icon(
+                                        imageVector = Icons.Filled.SwapVert,
+                                        contentDescription = stringResource(CoreUiStrings.reorder)
+                                    )
                                 }
                             }
                         }
@@ -423,7 +403,7 @@ fun ProfileManagementScreen(
                                         )
                                     }
                                     // Extra space for floating toolbar
-                                    Spacer(modifier = Modifier.height(80.dp))
+                                    Spacer(modifier = Modifier.height(AapsSpacing.fabClearance))
                                 }
                             }
                         }
@@ -432,65 +412,40 @@ fun ProfileManagementScreen(
 
                 // Floating Toolbar with FAB (M3 style) — both are absolutely positioned over the
                 // cards, so they are hidden while sorting rather than left floating over the sort controls.
-                if (!isReorderMode) Row(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                if (!isReorderMode) AapsFloatingToolbarRow(modifier = Modifier.align(Alignment.BottomCenter)) {
                     // Floating Toolbar — hidden in PLAY mode
                     if (!isPlayMode) {
-                        Surface(
-                            shape = RoundedCornerShape(percent = 50),
-                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                            shadowElevation = 6.dp,
-                            tonalElevation = 6.dp
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(horizontal = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                IconButton(onClick = onAddProfile) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Add,
-                                        contentDescription = stringResource(UiStrings.add_new_profile)
-                                    )
-                                }
-                                IconButton(onClick = { onEditProfile(currentPage) }) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Edit,
-                                        contentDescription = stringResource(UiStrings.edit_label)
-                                    )
-                                }
-                                IconButton(onClick = {
-                                    profileToClone = currentPage
-                                    showCloneDialog = true
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Filled.ContentCopy,
-                                        contentDescription = stringResource(UiStrings.clone_label)
-                                    )
-                                }
-                                val canDelete = uiState.profileNames.size > 1
-                                    && uiState.profileNames.getOrNull(currentPage) != uiState.activeProfileName
-                                IconButton(
-                                    onClick = {
-                                        profileToDelete = currentPage
-                                        showDeleteDialog = true
-                                    },
-                                    enabled = canDelete
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Delete,
-                                        contentDescription = stringResource(UiStrings.remove_label),
-                                        tint = if (canDelete)
-                                            MaterialTheme.colorScheme.error
-                                        else
-                                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                    )
-                                }
+                        AapsFloatingToolbar {
+                            IconButton(onClick = onAddProfile) {
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = stringResource(UiStrings.add_new_profile)
+                                )
                             }
+                            IconButton(onClick = { onEditProfile(currentPage) }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = stringResource(UiStrings.edit_label)
+                                )
+                            }
+                            IconButton(onClick = {
+                                profileToClone = currentPage
+                                showCloneDialog = true
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Filled.ContentCopy,
+                                    contentDescription = stringResource(UiStrings.clone_label)
+                                )
+                            }
+                            AapsFloatingToolbarDeleteButton(
+                                onClick = {
+                                    profileToDelete = currentPage
+                                    showDeleteDialog = true
+                                },
+                                enabled = uiState.profileNames.size > 1
+                                    && uiState.profileNames.getOrNull(currentPage) != uiState.activeProfileName,
+                                contentDescription = stringResource(UiStrings.remove_label)
+                            )
                         }
                     }
 
