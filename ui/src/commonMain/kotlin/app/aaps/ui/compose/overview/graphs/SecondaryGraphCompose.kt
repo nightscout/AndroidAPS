@@ -593,7 +593,7 @@ fun SecondaryGraphCompose(
             style = TextStyle(color = MaterialTheme.colorScheme.onSurface),
             minWidth = TextComponent.MinWidth.fixed(30.dp)
         ),
-        guideline = LineComponent(fill = Fill(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)))
+        guideline = LineComponent(fill = Fill(AapsTheme.generalColors.graphGrid))
     )
     // The right axis has its labels inside the plot, in the color of its series, and no line, tick or
     // grid of its own. So it takes no width, and the hour lines stay under those of the BG graph.
@@ -611,7 +611,7 @@ fun SecondaryGraphCompose(
         itemPlacer = bottomAxisItemPlacer,
         label = null,
         tick = null,
-        guideline = LineComponent(fill = Fill(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)))
+        guideline = LineComponent(fill = Fill(AapsTheme.generalColors.graphGrid))
     )
 
     // Press and hold works here too. The marker draws nothing, it only hands the time under the
