@@ -1143,6 +1143,18 @@
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">PASOS</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Insulina en cuerpo (IOB)</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Insulina absoluta</string>
+    <string name="graph_series_cob">Hidratos de carbono en cuerpo (COB)</string>
+    <string name="graph_series_bgi">Impacto de la glucosa en sangre</string>
+    <string name="graph_series_deviations">Desviaciones</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Cambio de sensibilidad</string>
+    <string name="graph_series_variable_sens">Sensibilidad variable</string>
+    <string name="graph_series_deviation_slope">Pendiente de desviación</string>
+    <string name="graph_series_heart_rate">Frecuencia cardíaca</string>
+    <string name="graph_series_steps">Pasos</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Actividad</string>
+    <string name="graph_series_predictions">Predicciones</string>
     <string name="units_days">días</string>
     <string name="units_format_days">%1$d días</string>
     <string name="units_format_days_range">%1$d días (%2$d - %3$d)</string>
