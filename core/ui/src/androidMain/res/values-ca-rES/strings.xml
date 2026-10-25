@@ -59,7 +59,6 @@
     <string name="stop">Stop</string>
     <string name="active"><![CDATA[<Actiu>]]></string>
     <string name="date">Data</string>
-    <string name="units_label">Unitats</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
