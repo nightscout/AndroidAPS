@@ -34,6 +34,8 @@
     <string name="alarm_channel_silent">Allarme (modalità volume-rampa)</string>
     <string name="alarm_channel_silent_description">Usato quando \'Aumenta gradualmente il volume delle notifiche\' è acceso. La schermata di allarme riproduce il suono.</string>
     <string name="ongoing_channel_name">Stato in corso</string>
+    <string name="eat_reminder_channel">Conto alla rovescia per mangiare</string>
+    <string name="eat_reminder_channel_description">Mostra il tempo rimasto fino a quando è il momento di mangiare. Non emette suono; lo fa l\'allarme alla fine.</string>
     <string name="notifications_channel_name">Notifiche AAPS</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
