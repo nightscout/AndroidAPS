@@ -1141,6 +1141,7 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="units_days">天</string>
     <string name="units_format_days">%1$d 天</string>
     <string name="units_format_days_range">%1$d 天 (%2$d - %3$d)</string>
