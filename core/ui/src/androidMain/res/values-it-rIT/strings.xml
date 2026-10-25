@@ -446,6 +446,7 @@
     <string name="clientcontrol_action_deactivate_scene">Fine Scena</string>
     <string name="clientcontrol_action_update_settings">Aggiorna le impostazioni</string>
     <string name="clientcontrol_action_deliver_bolus">Eroga bolo</string>
+    <string name="clientcontrol_action_eat_reminder">Cambia promemoria del pasto</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Questo dispositivo non è abbinato a un master.</string>
     <string name="clientcontrol_fail_not_reachable">Il master è offline.</string>
@@ -783,6 +784,12 @@
     <string name="grant">Concedi</string>
     <string name="set">Imposta</string>
     <string name="wizard_set_alarm">Imposta allarme</string>
+    <string name="eat_reminder_title">Tempo per mangiare</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_set_duration" comment="The length of the eat reminder the user set. %1$s=length with unit. Example: Set: 20 min">Set: %1$s</string>
+    <string name="eat_reminder_rung">Il tempo è scaduto</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="eat_reminder_not_set">Non è stato possibile impostare il promemoria del pasto. Consenti ad AAPS di impostare avvisi e promemoria nelle impostazioni di Android.</string>
     <string name="wizard_use_percentage">Uso percentuale</string>
     <string name="wizard_include_bg">Includi Glicemia</string>
     <string name="wizard_include_tt">Includi TempTarget</string>
@@ -1143,6 +1150,18 @@
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Insulina attiva</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Insulina assoluta</string>
+    <string name="graph_series_cob">CHO attivi</string>
+    <string name="graph_series_bgi">Impatto sulla glicemia</string>
+    <string name="graph_series_deviations">Deviazioni</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Variazione di sensibilità</string>
+    <string name="graph_series_variable_sens">Sensibilità variabile</string>
+    <string name="graph_series_deviation_slope">Pendenza deviazione</string>
+    <string name="graph_series_heart_rate">Frequenza cardiaca</string>
+    <string name="graph_series_steps">Passi</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Attività fisica</string>
+    <string name="graph_series_predictions">Previsioni</string>
     <string name="units_days">giorni</string>
     <string name="units_format_days">%1$d giorni</string>
     <string name="units_format_days_range">%1$d giorni (%2$d - %3$d)</string>
