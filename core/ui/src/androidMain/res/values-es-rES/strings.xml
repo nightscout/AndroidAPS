@@ -446,6 +446,7 @@
     <string name="clientcontrol_action_deactivate_scene">Finalizar escena</string>
     <string name="clientcontrol_action_update_settings">Actualizar ajustes</string>
     <string name="clientcontrol_action_deliver_bolus">Administrar bolo</string>
+    <string name="clientcontrol_action_eat_reminder">Cambiar recordatorio de comida</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Este dispositivo no está emparejado con un máster</string>
     <string name="clientcontrol_fail_not_reachable">El máster está fuera de línea</string>
@@ -783,6 +784,12 @@
     <string name="grant">Conceder</string>
     <string name="set">Establecer</string>
     <string name="wizard_set_alarm">Establecer alarma</string>
+    <string name="eat_reminder_title">Hora de comer</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_set_duration" comment="The length of the eat reminder the user set. %1$s=length with unit. Example: Set: 20 min">Establecer: %1$s</string>
+    <string name="eat_reminder_rung">Se acabó el tiempo</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="eat_reminder_not_set">No se pudo establecer el recordatorio de comida. Permita que AAPS establezca alarmas y recordatorios en los ajustes de Android</string>
     <string name="wizard_use_percentage">Porcentaje de uso</string>
     <string name="wizard_include_bg">Incluir glucosa</string>
     <string name="wizard_include_tt">Incluir objetivo temporal</string>
