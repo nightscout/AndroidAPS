@@ -61,6 +61,7 @@
     <string name="pref_prime_in_menu">選單中的預填充</string>
     <string name="pref_single_target">單一目標</string>
     <string name="pref_wizard_percentage">計算機百分比</string>
+    <string name="pref_wizard_carbs_type">計算機 餐點類型</string>
     <string name="pref_complication_tap_action">輕觸錶面小工具時執行的動作</string>
     <string name="pref_complication_bg_graph_hours">血糖圖表時間範圍</string>
     <string name="duration_1_hour">1 小時</string>
@@ -282,6 +283,11 @@
     <string name="title_activity_disconnect_pump">中斷幫浦連線</string>
     <string name="title_activity_suspend_loop">暫停循環</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d 克</string>
+    <string name="wizard_carbs_type">餐點類型</string>
+    <string name="wizard_carbs_type_bread">麵包</string>
+    <string name="wizard_carbs_type_cake">蛋糕</string>
+    <string name="wizard_carbs_type_pizza">披薩</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
