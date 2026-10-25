@@ -44,6 +44,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.InterfacesStrings
@@ -181,6 +182,7 @@ fun CarbsDialogScreen(
         onHypoChange = viewModel::updateHypoTt,
         onEatingSoonChange = viewModel::updateEatingSoonTt,
         onActivityChange = viewModel::updateActivityTt,
+        onHypoCarbsChange = viewModel::updateHypoCarbs,
         onCarbsChange = { viewModel.updateCarbs(it.toInt()) },
         onAddCarbs = viewModel::addCarbs,
         onTimeOffsetChange = { viewModel.updateTimeOffset(it.toInt()) },
@@ -212,6 +214,7 @@ internal fun CarbsDialogContent(
     onHypoChange: (Boolean) -> Unit,
     onEatingSoonChange: (Boolean) -> Unit,
     onActivityChange: (Boolean) -> Unit,
+    onHypoCarbsChange: (Boolean) -> Unit,
     onCarbsChange: (Double) -> Unit,
     onAddCarbs: (Int) -> Unit,
     onTimeOffsetChange: (Double) -> Unit,
@@ -315,6 +318,8 @@ internal fun CarbsDialogContent(
                     onHypoChange = onHypoChange,
                     onEatingSoonChange = onEatingSoonChange,
                     onActivityChange = onActivityChange,
+                    hypoCarbsChecked = uiState.hypoCarbsChecked,
+                    onHypoCarbsChange = onHypoCarbsChange,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
@@ -426,15 +431,22 @@ private fun TempTargetCheckboxes(
     hypoChecked: Boolean,
     eatingSoonChecked: Boolean,
     activityChecked: Boolean,
+    hypoCarbsChecked: Boolean,
     onHypoChange: (Boolean) -> Unit,
     onEatingSoonChange: (Boolean) -> Unit,
     onActivityChange: (Boolean) -> Unit,
+    onHypoCarbsChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
         LabeledSwitch(label = stringResource(UiStrings.start_hypo_tt), checked = hypoChecked, onCheckedChange = onHypoChange)
         LabeledSwitch(label = stringResource(UiStrings.start_eating_soon_tt), checked = eatingSoonChecked, onCheckedChange = onEatingSoonChange)
         LabeledSwitch(label = stringResource(UiStrings.start_activity_tt), checked = activityChecked, onCheckedChange = onActivityChange)
+        LabeledSwitch(
+            label = stringResource(UiStrings.mark_hypo_carbs_ignored, Constants.HYPO_CARB_IGNORE_MINUTES),
+            checked = hypoCarbsChecked,
+            onCheckedChange = onHypoCarbsChange
+        )
     }
 }
 

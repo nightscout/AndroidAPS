@@ -29,6 +29,7 @@ internal fun CarbsDialogScreenPreview() {
             onHypoChange = {},
             onEatingSoonChange = {},
             onActivityChange = {},
+            onHypoCarbsChange = {},
             onCarbsChange = {},
             onAddCarbs = {},
             onTimeOffsetChange = {},
