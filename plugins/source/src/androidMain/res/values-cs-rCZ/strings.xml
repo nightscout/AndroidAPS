@@ -22,6 +22,7 @@
     <string name="random_bg">Náhodná glykémie</string>
     <string name="description_source_random_bg">Generovat náhodná data glykémie (pouze režim Demo)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
     <string name="description_source_patched_syai_tag_app">Přijímat glykémie z aplikace Syai/Ottai.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">Aplikace SI</string>
@@ -50,4 +51,5 @@
     <string name="aidex_sensor_stabilizing">Senzor se stabilizuje, počkejte prosím…</string>
     <string name="aidex_sensor_replace">Vyžadována výměna senzoru, prosím nahraďte novým senzorem co nejdříve</string>
     <string name="aidex_signal_lost">Ztráta signálu, zkontrolujte prosím připojení</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">duplicitní hodnoty</string>
 </resources>
