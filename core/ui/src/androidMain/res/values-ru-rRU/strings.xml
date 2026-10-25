@@ -64,7 +64,6 @@
     <string name="no_profile_set">ПРОФИЛЬ НЕ ЗАДАН</string>
     <string name="active"><![CDATA[Активен]]></string>
     <string name="date">Дата</string>
-    <string name="units_label">единицы</string>
     <string name="dia_label">DIA (время действия инсулина)</string>
     <string name="ic_label">Углеводный коэффициент IC (ГУ/ед. инс)</string>
     <string name="isf_label">ISF (чувствительность к инсулину)</string>
