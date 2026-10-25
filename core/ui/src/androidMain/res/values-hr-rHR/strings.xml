@@ -286,4 +286,5 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
 </resources>
