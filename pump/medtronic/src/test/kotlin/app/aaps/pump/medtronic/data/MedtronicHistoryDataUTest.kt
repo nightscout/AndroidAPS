@@ -13,7 +13,6 @@ import app.aaps.pump.medtronic.defs.MedtronicDeviceType
 import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import app.aaps.pump.medtronic.util.MedtronicUtil
 import com.google.gson.Gson
-import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
@@ -62,7 +61,7 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
         val yourClassList: MutableList<PumpHistoryEntry> = gson.fromJson(fileText, listType)
 
         for (pumpHistoryEntry in yourClassList) {
-            val stringObject = pumpHistoryEntry.decodedData["Object"] as LinkedTreeMap<String, Any>
+            val stringObject = pumpHistoryEntry.decodedData["Object"] as Map<String, Any>
 
             val rate: Double = stringObject["insulinRate"] as Double
             val durationMinutes: Double = stringObject["durationMinutes"] as Double
@@ -99,7 +98,7 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
         val yourClassList: MutableList<PumpHistoryEntry> = gson.fromJson(fileText, listType)
 
         for (pumpHistoryEntry in yourClassList) {
-            val stringObject = pumpHistoryEntry.decodedData["Object"] as LinkedTreeMap<String, Any>
+            val stringObject = pumpHistoryEntry.decodedData["Object"] as Map<String, Any>
 
             val rate: Double = stringObject["insulinRate"] as Double
             val durationMinutes: Double = stringObject["durationMinutes"] as Double
