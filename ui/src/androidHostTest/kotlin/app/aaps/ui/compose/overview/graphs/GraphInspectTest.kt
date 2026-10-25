@@ -122,13 +122,14 @@ class GraphInspectTest {
      * nothing".
      */
     @Test
-    fun `only valid treatments within 5 minutes of the finger are listed`() {
-        val near = BolusGraphPoint(t0 + 8 * minute, 0.4, BolusType.SMB, isValid = true, label = "0.40 U")
-        val far = BolusGraphPoint(t0 + 13 * minute, 1.0, BolusType.NORMAL, isValid = true, label = "1.00 U")
-        val invalid = BolusGraphPoint(t0 + 7 * minute, 2.0, BolusType.NORMAL, isValid = false, label = "2.00 U")
-        val carbs = CarbsGraphPoint(t0 + 6 * minute, 20.0, isValid = true, label = "20 g")
+    fun `only valid treatments at the snapped reading are listed, not those nearer the finger`() {
+        val near = BolusGraphPoint(t0 + 6 * minute, 0.4, BolusType.SMB, isValid = true, label = "0.40 U")
+        // Nearer the finger than `near`, but it belongs to the reading at minute 10
+        val far = BolusGraphPoint(t0 + 8 * minute, 1.0, BolusType.NORMAL, isValid = true, label = "1.00 U")
+        val invalid = BolusGraphPoint(t0 + 5 * minute, 2.0, BolusType.NORMAL, isValid = false, label = "2.00 U")
+        val carbs = CarbsGraphPoint(t0 + 4 * minute, 20.0, isValid = true, label = "20 g")
 
-        // The finger is at minute 7, between the readings at minute 5 and minute 10
+        // The finger is at minute 7, so the pill snaps to the reading at minute 5
         val data = inspectDataAt(
             timestamp = t0 + 7 * minute,
             bgReadings = readings,
@@ -148,13 +149,63 @@ class GraphInspectTest {
     }
 
     @Test
-    fun `a calibration and a BG check near the finger are listed with their value`() {
+    fun `between two readings with an SMB each, only the SMB of the nearer one is listed`() {
+        val smbAt5 = BolusGraphPoint(t0 + 5 * minute, 0.3, BolusType.SMB, isValid = true, label = "0.30 U")
+        val smbAt10 = BolusGraphPoint(t0 + 10 * minute, 0.5, BolusType.SMB, isValid = true, label = "0.50 U")
+
+        // The finger is at minute 7, so the pill snaps to the reading at minute 5 and lists its SMB
+        val data = inspectDataAt(
+            timestamp = t0 + 7 * minute,
+            bgReadings = readings,
+            predictions = emptyList(),
+            iob = emptyList(),
+            cob = emptyList(),
+            actualBasal = emptyList(),
+            profileBasal = emptyList(),
+            boluses = listOf(smbAt5, smbAt10),
+            carbs = emptyList(),
+            calibrations = emptyList(),
+            therapyEvents = emptyList()
+        )
+
+        assertThat(data.boluses).containsExactly(smbAt5)
+    }
+
+    @Test
+    fun `a bolus in the middle of a gap longer than five minutes is listed at the nearer reading`() {
+        // Readings 5:05 apart, as a drifting source delivers them. The bolus is 2:40 after the first
+        // and 2:25 before the second, outside a fixed half interval of 2:30 from both.
+        val first = BgDataPoint(t0, 5.0, BgRange.IN_RANGE, BgType.REGULAR)
+        val second = BgDataPoint(t0 + 305_000L, 5.5, BgRange.IN_RANGE, BgType.REGULAR)
+        val bolus = BolusGraphPoint(t0 + 160_000L, 1.0, BolusType.NORMAL, isValid = true, label = "1.00 U")
+
+        fun dataAt(timestamp: Long) = inspectDataAt(
+            timestamp = timestamp,
+            bgReadings = listOf(first, second),
+            predictions = emptyList(),
+            iob = emptyList(),
+            cob = emptyList(),
+            actualBasal = emptyList(),
+            profileBasal = emptyList(),
+            boluses = listOf(bolus),
+            carbs = emptyList(),
+            calibrations = emptyList(),
+            therapyEvents = emptyList()
+        )
+
+        assertThat(dataAt(second.timestamp).boluses).containsExactly(bolus)
+        assertThat(dataAt(first.timestamp).boluses).isEmpty()
+    }
+
+    @Test
+    fun `a calibration and a BG check at the snapped reading are listed with their value`() {
         val calibration = CalibrationGraphPoint(t0 + 6 * minute, 7.2, isValid = true, label = "7.2 mmol/L")
         val invalid = CalibrationGraphPoint(t0 + 6 * minute, 9.9, isValid = false, label = "9.9 mmol/L")
-        val check = TherapyEventGraphPoint(t0 + 8 * minute, TherapyEventType.FINGER_STICK, "6.8 mmol/L", 0, 6.8)
-        val note = TherapyEventGraphPoint(t0 + 8 * minute, TherapyEventType.GENERAL, "sensor changed", 0, null)
+        val check = TherapyEventGraphPoint(t0 + 4 * minute, TherapyEventType.FINGER_STICK, "6.8 mmol/L", 0, 6.8)
+        val note = TherapyEventGraphPoint(t0 + 4 * minute, TherapyEventType.GENERAL, "sensor changed", 0, null)
         val far = TherapyEventGraphPoint(t0 + 20 * minute, TherapyEventType.MBG, "5.0 mmol/L", 0, 5.0)
 
+        // The finger is at minute 7, so the pill snaps to the reading at minute 5
         val data = inspectDataAt(
             timestamp = t0 + 7 * minute,
             bgReadings = readings,
