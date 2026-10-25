@@ -47,6 +47,7 @@
     <string name="authorized_clients_qr_ns_instructions">Skann denne koden på den nye telefonen, enten i oppsettsveiviseren eller under Koble til hovedenhet. Den konfigurerer Nightscout. Telefonen blir ikke sammenkoblet.</string>
     <string name="authorized_clients_qr_keep_private">Alle som ser denne koden, kan lese dataene dine i Nightscout. Vis den bare til den nye telefonen.</string>
     <string name="authorized_clients_token_problem_title">Ingen QR-kode</string>
+    <string name="authorized_clients_not_added_title">Klient ikke lagt til</string>
     <string name="authorized_clients_token_problem_not_connected">Denne telefonen er ikke koblet til Nightscout og kan derfor ikke opprette et token for klienten.</string>
     <string name="authorized_clients_token_problem_not_allowed">Nightscout-tokenet på denne telefonen er ikke et administratortoken og kan derfor ikke opprette et token for klienten. Bruk et administratortoken her, eller legg til klienten med PIN-koden.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout har allerede et token med dette navnet og andre rettigheter. Velg et annet navn.</string>
