@@ -6,9 +6,6 @@
     <string name="start_eating_soon_tt">Start Eating soon TT</string>
     <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="time_offset">Time offset</string>
-    <string name="graph_clock_change">Clock change</string>
-    <string name="graph_clock_forward" comment="%1$d=minutes moved forward, %2$s=old UTC offset, %3$s=new UTC offset. Example: Clocks moved forward by 60 minutes (UTC to UTC+1).">Clocks moved forward by %1$d minutes (%2$s to %3$s).</string>
-    <string name="graph_clock_backward" comment="%1$d=minutes moved back, %2$s=old UTC offset, %3$s=new UTC offset. Example: Clocks moved back by 60 minutes (UTC+1 to UTC).">Clocks moved back by %1$d minutes (%2$s to %3$s).</string>
     <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
     <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dd%2$dh</string>
 

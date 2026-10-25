@@ -1,52 +1,33 @@
 package app.aaps.ui.compose.overview.graphs
 
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.unit.IntOffset
-import app.aaps.core.ui.CoreUiStrings
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import app.aaps.core.ui.compose.AapsSpacing
-import app.aaps.core.ui.compose.icons.IcGlobalClock
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.datetime.TimeZone
-import kotlin.math.abs
-import kotlin.math.roundToInt
+import kotlinx.datetime.UtcOffset
+import kotlinx.datetime.offsetAt
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant
 
 internal class GraphClockChangeDecoration(
     private val minTimestamp: Long,
     private val changes: List<GraphClockChange>,
-    private val color: Color
+    private val color: Color,
+    private val icon: PainterComponent?
 ) : Decoration {
 
-    // Like VisibleRangeHolder, publish after drawing rather than mutating Compose state in a draw.
-    val positions = MutableStateFlow<List<Pair<GraphClockChange, Offset>>>(emptyList())
-
     override fun drawOverLayers(context: CartesianDrawingContext) {
-        val visible = mutableListOf<Pair<GraphClockChange, Offset>>()
         with(context) {
-            if (ranges.xStep == 0.0) {
-                positions.value = emptyList()
-                return
-            }
+            if (ranges.xStep == 0.0) return
             for (change in changes) {
                 val x = (change.timestamp - minTimestamp) / 60_000.0
                 val canvasX = layerBounds.left + layerDimensions.startPadding +
@@ -61,67 +42,75 @@ internal class GraphClockChangeDecoration(
                         pathEffect = PathEffect.dashPathEffect(floatArrayOf(4 * density, 4 * density))
                     )
                 }
-                // Keep the touch target inside the plot even when the line is near an edge.
-                val halfButton = AapsSpacing.xxLarge.pixels
-                val centerX = if (layerBounds.width >= 2 * halfButton)
-                    canvasX.coerceIn(layerBounds.left + halfButton, layerBounds.right - halfButton)
-                else layerBounds.left + layerBounds.width / 2
-                visible += change to Offset(centerX - halfButton, layerBounds.bottom - 2 * halfButton)
+                icon?.let {
+                    val size = minOf(AapsSpacing.chipIconSize.pixels, layerBounds.width, layerBounds.height)
+                    val gap = AapsSpacing.small.pixels
+                    val left = (if (canvasX + gap + size <= layerBounds.right) canvasX + gap else canvasX - gap - size)
+                        .coerceIn(layerBounds.left, layerBounds.right - size)
+                    it.draw(context, left, layerBounds.bottom - size, left + size, layerBounds.bottom)
+                }
             }
         }
-        positions.value = visible
     }
 }
 
 @Composable
-internal fun rememberClockChangeDecoration(minTimestamp: Long, maxTimestamp: Long): GraphClockChangeDecoration {
+internal fun rememberClockChangeDecoration(minTimestamp: Long, maxTimestamp: Long, showIcon: Boolean = false): GraphClockChangeDecoration {
     val timeZone = TimeZone.currentSystemDefault()
     val changes = remember(minTimestamp, maxTimestamp, timeZone) {
         graphClockChanges(minTimestamp, maxTimestamp, timeZone)
     }
     val color = MaterialTheme.colorScheme.onSurfaceVariant
-    return remember(minTimestamp, changes, color) { GraphClockChangeDecoration(minTimestamp, changes, color) }
+    val painter = if (showIcon) rememberVectorPainter(Icons.Filled.Schedule) else null
+    return remember(minTimestamp, changes, color, painter) {
+        GraphClockChangeDecoration(minTimestamp, changes, color, painter?.let { PainterComponent(it, color) })
+    }
 }
 
-/** The glucose chart owns the buttons; all other charts only draw the aligned line. */
-@Composable
-internal fun GraphClockChangeIndicators(decoration: GraphClockChangeDecoration) {
-    val positions by decoration.positions.collectAsState()
-    var selected by remember(decoration) { mutableStateOf<GraphClockChange?>(null) }
-    for ((change, position) in positions) {
-        val description = clockChangeDescription(change)
-        IconButton(
-            onClick = { selected = change },
-            modifier = Modifier
-                .offset { IntOffset(position.x.roundToInt(), position.y.roundToInt()) }
-                .size(AapsSpacing.xxLarge * 2)
-        ) {
-            Icon(
-                imageVector = IcGlobalClock,
-                contentDescription = description,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(AapsSpacing.chipIconSize)
-            )
+private const val HOUR_MS = 3_600_000L
+
+internal data class GraphClockChange(
+    val timestamp: Long,
+    val before: UtcOffset,
+    val after: UtcOffset
+) {
+    val minutes: Int get() = (after.totalSeconds - before.totalSeconds) / 60
+}
+
+/** Finds offset changes in the axis time zone without changing elapsed-time coordinates. */
+internal fun graphClockChanges(start: Long, end: Long, timeZone: TimeZone): List<GraphClockChange> {
+    if (end <= start) return emptyList()
+    val changes = mutableListOf<GraphClockChange>()
+    var cursor = start
+    var offset = timeZone.offsetAt(Instant.fromEpochMilliseconds(start - 1))
+    while (cursor <= end) {
+        val next = minOf(cursor + HOUR_MS, end)
+        val nextOffset = timeZone.offsetAt(Instant.fromEpochMilliseconds(next))
+        if (offset != nextOffset) {
+            var low = cursor
+            var high = next
+            while (low < high) {
+                val middle = low + (high - low) / 2
+                if (timeZone.offsetAt(Instant.fromEpochMilliseconds(middle)) == offset) low = middle + 1
+                else high = middle
+            }
+            changes += GraphClockChange(low, offset, nextOffset)
+        }
+        if (next == end) break
+        cursor = next
+        offset = nextOffset
+    }
+    return changes
+}
+
+internal fun graphTimeLabel(timestamp: Long, timeZone: TimeZone): String {
+    val instant = Instant.fromEpochMilliseconds(timestamp)
+    val local = instant.toLocalDateTime(timeZone)
+    return buildString {
+        append(local.hour.toString().padStart(2, '0'))
+        if (local.minute != 0) {
+            append(':')
+            append(local.minute.toString().padStart(2, '0'))
         }
     }
-    selected?.let { change ->
-        AlertDialog(
-            onDismissRequest = { selected = null },
-            icon = { Icon(IcGlobalClock, contentDescription = null) },
-            title = { Text(stringResource(UiStrings.graph_clock_change)) },
-            text = { Text(clockChangeDescription(change)) },
-            confirmButton = {
-                TextButton(onClick = { selected = null }) { Text(stringResource(CoreUiStrings.ok)) }
-            }
-        )
-    }
 }
-
-@Composable
-private fun clockChangeDescription(change: GraphClockChange): String =
-    stringResource(
-        if (change.minutes > 0) UiStrings.graph_clock_forward else UiStrings.graph_clock_backward,
-        abs(change.minutes),
-        clockUtcOffset(change.before),
-        clockUtcOffset(change.after)
-    )
