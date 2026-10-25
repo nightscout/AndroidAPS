@@ -618,7 +618,10 @@ fun SecondaryGraphCompose(
     val nowLineColor = MaterialTheme.colorScheme.onSurface
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val inspectLine = rememberInspectLine(inspect)
-    val decorations = remember(nowLine, visibleRangeReporter, inspectLine) { listOfNotNull(nowLine, visibleRangeReporter, inspectLine) }
+    val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp)
+    val decorations = remember(nowLine, visibleRangeReporter, clockChanges, inspectLine) {
+        listOfNotNull(nowLine, visibleRangeReporter, clockChanges, inspectLine)
+    }
 
     // Dual-axis zero alignment.
     // Why: Vico computes each vertical axis range independently, so y=0 on the
@@ -1567,4 +1570,3 @@ internal fun fractionAlignedNiceRange(niceMin: Double, niceMax: Double, targetFr
     return if (candidateMax >= niceMax) niceMin to niceUp(candidateMax)
     else niceNegativeSliver(-fraction / (1.0 - fraction) * niceMax) to niceMax
 }
-

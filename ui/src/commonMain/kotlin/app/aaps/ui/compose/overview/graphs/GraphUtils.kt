@@ -83,14 +83,13 @@ fun timestampToX(timestamp: Long, minTimestamp: Long): Double =
  */
 @Composable
 fun rememberTimeFormatter(minTimestamp: Long): CartesianValueFormatter {
-    return remember(minTimestamp) {
+    val timeZone = TimeZone.currentSystemDefault()
+    return remember(minTimestamp, timeZone) {
         CartesianValueFormatter { _, value, _ ->
             val timestamp = minTimestamp + (value * 60000).toLong()
             // Always 24 hour, as SimpleDateFormat("HH") was: on an axis a bare 12 hour label would
             // not say which half of the day it belongs to.
-            Instant.fromEpochMilliseconds(timestamp)
-                .toLocalDateTime(TimeZone.currentSystemDefault())
-                .hour.toString().padStart(2, '0')
+            graphTimeLabel(timestamp, timeZone)
         }
     }
 }
@@ -106,9 +105,10 @@ fun rememberTimeFormatter(minTimestamp: Long): CartesianValueFormatter {
 @OptIn(ExperimentalTime::class)
 @Composable
 fun rememberBottomAxisItemPlacer(minTimestamp: Long): HorizontalAxis.ItemPlacer {
-    return remember(minTimestamp) {
+    val timeZone = TimeZone.currentSystemDefault()
+    return remember(minTimestamp, timeZone) {
         val instant = Instant.fromEpochMilliseconds(minTimestamp)
-        val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+        val localDateTime = instant.toLocalDateTime(timeZone)
         val minutesIntoHour = localDateTime.minute
         val offsetToNextHour = if (minutesIntoHour == 0) 0 else 60 - minutesIntoHour
 
