@@ -27,6 +27,7 @@
     <string name="constraint_applied">Приложено ограничение!</string>
     <string name="tt_label">Вр.цел</string>
     <string name="pump_unreachable">Помпата е недостъпна</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Драйверът на помпата не отговаря. \"%1$s\" работи %2$d мин и друга команда не може да бъде изпълнена. Проверете помпата и рестартирайте AAPS.</string>
     <string name="insulin_unit_shortname">Ед.</string>
     <string name="pump_base_basal_rate">%1$.2f Е/ч</string>
     <string name="pump_base_basal_rate_dynamic">%1$s Е/ч</string>
@@ -63,6 +64,8 @@
     <string name="configbuilder_switch_confirmation">Това ще изключи %1$s и включи %2$s.</string>
     <string name="expand">Разшири</string>
     <string name="collapse">Свий</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Завършено</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Разширени</string>
     <string name="no_compose_preferences">Няма настройки за този плъгин</string>
     <string name="confirm_password_hint">Пордете парола</string>
     <string name="confirm_pin_hint">Потвърдете ПИН</string>
