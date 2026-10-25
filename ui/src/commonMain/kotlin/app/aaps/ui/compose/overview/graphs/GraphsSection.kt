@@ -473,8 +473,9 @@ fun GraphsSection(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .stopsBgFling(bgScrollForwarder)
+            .closesInspectPillOnTouch(inspect)
     ) {
-        // Treatment Belt Graph - running mode background + therapy events
+        // Treatment Belt Graph - running mode background + therapy events. A hold or a tap shows the pill.
         TreatmentBeltGraphCompose(
             viewModel = graphViewModel,
             inspect = inspect,
@@ -482,7 +483,9 @@ fun GraphsSection(
             zoomState = beltZoomState,
             derivedTimeRange = derivedTimeRange,
             nowTimestamp = nowTimestamp,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .graphInspectTouch(inspect)
         )
         // BG Graph - primary interactive graph
         var editingBgOverlays by remember { mutableStateOf(false) }

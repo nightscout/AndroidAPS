@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.overview.graphs
 
+import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.BgType
@@ -8,11 +9,14 @@ import app.aaps.core.interfaces.overview.graph.BolusType
 import app.aaps.core.interfaces.overview.graph.CalibrationGraphPoint
 import app.aaps.core.interfaces.overview.graph.CarbsGraphPoint
 import app.aaps.core.interfaces.overview.graph.GraphDataPoint
+import app.aaps.core.interfaces.overview.graph.RunningModeSegment
 import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.interfaces.overview.graph.TherapyEventGraphPoint
 import app.aaps.core.interfaces.overview.graph.TherapyEventType
 import com.google.common.truth.Truth.assertThat
 import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarker
+import com.patrykandpatrick.vico.compose.cartesian.marker.Interaction
+import com.patrykandpatrick.vico.compose.common.Point
 import org.junit.jupiter.api.Test
 
 /** The values shown when holding the BG graph. */
@@ -100,7 +104,7 @@ class GraphInspectTest {
 
     @Test
     fun `the finger's x comes from its distance to the nearest point, clamped to the graph`() {
-        val state = GraphInspectState().apply { pxPerX = 2f; minX = 0.0; maxX = 100.0 }
+        val state = GraphInspectState().apply { pxPerX = 2f; originPx = 10f; minX = 0.0; maxX = 100.0 }
         // Vico snaps to the last point of the held graph, here at x = 60, drawn at 120 px
         val lastPoint = object : CartesianMarker.Target {
             override val x = 60.0
@@ -110,9 +114,11 @@ class GraphInspectTest {
         assertThat(state.fingerX(130f, lastPoint)).isEqualTo(65.0)
         assertThat(state.fingerX(300f, lastPoint)).isEqualTo(100.0)
         assertThat(state.fingerX(-500f, lastPoint)).isEqualTo(0.0)
-        assertThat(state.fingerX(130f, null)).isNull()
-        // Nothing drawn yet: the point itself, as before
+        // No point (Vico clears them when it measures the chart): the graph's own geometry
+        assertThat(state.fingerX(130f, null)).isEqualTo(60.0)
+        // Nothing drawn yet: the point itself, as before, and nothing without a point
         assertThat(GraphInspectState().fingerX(130f, lastPoint)).isEqualTo(60.0)
+        assertThat(GraphInspectState().fingerX(130f, null)).isNull()
     }
 
     /**
@@ -248,6 +254,145 @@ class GraphInspectTest {
         state.visibilityListener.onHidden(marker)
         assertThat(state.fingerDown).isFalse()
     }
+
+    /** The pill is drawn over the treatment belt, so it lists what the belt shows at that time. */
+    @Test
+    fun `belt events at the snapped reading are listed and a duration event at every reading it covers`() {
+        val note = TherapyEventGraphPoint(t0 + 4 * minute, TherapyEventType.GENERAL, "sensor changed", 0)
+        val check = TherapyEventGraphPoint(t0 + 4 * minute, TherapyEventType.FINGER_STICK, "6.8 mmol/L", 0, 6.8)
+        // Belongs to the reading at minute 10
+        val announcement = TherapyEventGraphPoint(t0 + 9 * minute, TherapyEventType.ANNOUNCEMENT, "pump alarm", 0)
+        val exercise = TherapyEventGraphPoint(t0 - 30 * minute, TherapyEventType.EXERCISE, "Exercise", 60 * minute)
+        val ended = TherapyEventGraphPoint(t0 - 60 * minute, TherapyEventType.EXERCISE, "Exercise", 30 * minute)
+
+        // The finger is at minute 7, so the pill snaps to the reading at minute 5
+        val data = inspectDataAt(
+            timestamp = t0 + 7 * minute,
+            bgReadings = readings,
+            predictions = emptyList(),
+            iob = emptyList(),
+            cob = emptyList(),
+            actualBasal = emptyList(),
+            profileBasal = emptyList(),
+            boluses = emptyList(),
+            carbs = emptyList(),
+            calibrations = emptyList(),
+            therapyEvents = listOf(note, check, announcement, exercise, ended)
+        )
+
+        assertThat(data.events).containsExactly(note, exercise)
+        // A BG check stays where it was, with its value
+        assertThat(data.measured).containsExactly("6.8 mmol/L")
+    }
+
+    @Test
+    fun `the running mode is listed only when it is not closed loop`() {
+        val modes = listOf(
+            RunningModeSegment(RM.Mode.CLOSED_LOOP, t0 - 60 * minute, t0 + 3 * minute),
+            RunningModeSegment(RM.Mode.SUSPENDED_BY_USER, t0 + 3 * minute, t0 + 8 * minute),
+            RunningModeSegment(RM.Mode.CLOSED_LOOP, t0 + 8 * minute, t0 + 20 * minute)
+        )
+
+        fun modeAt(minutes: Int) = inspectDataAt(
+            timestamp = t0 + minutes * minute,
+            bgReadings = readings,
+            predictions = emptyList(),
+            iob = emptyList(),
+            cob = emptyList(),
+            actualBasal = emptyList(),
+            profileBasal = emptyList(),
+            boluses = emptyList(),
+            carbs = emptyList(),
+            calibrations = emptyList(),
+            therapyEvents = emptyList(),
+            runningModes = modes
+        ).runningMode
+
+        // Snaps to the reading at minute 5, inside the suspension
+        assertThat(modeAt(6)).isEqualTo(RM.Mode.SUSPENDED_BY_USER)
+        // Snaps to the reading at minute 10, closed loop again
+        assertThat(modeAt(11)).isNull()
+    }
+
+    /**
+     * An icon is about 17 minutes wide on a 6 h graph. The time under the finger snapped to a reading
+     * the tapped note did not belong to, and the pill did not list it (seen on a phone).
+     */
+    @Test
+    fun `a tap on a belt icon stands for its event's time and a tap beside the icons for the finger's time`() {
+        val note = TherapyEventGraphPoint(t0, TherapyEventType.GENERAL, "note", 0)
+        val exercise = TherapyEventGraphPoint(t0 + 60 * minute, TherapyEventType.EXERCISE, "Exercise", 30 * minute)
+        // Drawn in the BG graph, not on the belt
+        val check = TherapyEventGraphPoint(t0 + 20 * minute, TherapyEventType.FINGER_STICK, "6.8 mmol/L", 0, 6.8)
+        val events = listOf(note, exercise, check)
+        val radius = 8 * minute
+
+        assertThat(beltTapTimestamp(t0 + 3 * minute, radius, events)).isEqualTo(t0)
+        // Both ends of a duration event have an icon
+        assertThat(beltTapTimestamp(t0 + 86 * minute, radius, events)).isEqualTo(t0 + 90 * minute)
+        assertThat(beltTapTimestamp(t0 + 20 * minute, radius, events)).isEqualTo(t0 + 20 * minute)
+        assertThat(beltTapTimestamp(t0 + 40 * minute, radius, events)).isEqualTo(t0 + 40 * minute)
+    }
+
+    /** Vico clears its targets whenever the chart is measured, and the belt seldom draws. */
+    @Test
+    fun `a tap on the belt takes its time from the graph's geometry and not from Vico's targets`() {
+        val state = GraphInspectState().apply { pxPerX = 2f; originPx = 4f; minX = 0.0; maxX = 100.0 }
+        val controller = state.beltController(iconRadiusPx = 20f)
+
+        controller.shouldShowMarker(Interaction.Tap(Point(64f, 10f)), emptyList())
+
+        assertThat(state.tapX).isEqualTo(30.0)
+        assertThat(state.tapRadiusX).isEqualTo(10.0)
+    }
+
+    @Test
+    fun `a tap on the belt shows the tapped time and the next touch closes the pill`() {
+        val state = GraphInspectState().apply { pxPerX = 2f; originPx = 4f; minX = 0.0; maxX = 100.0; shownX = 30.0 }
+        val controller = state.beltController(iconRadiusPx = 20f)
+        val tap = Interaction.Tap(Point(64f, 10f))
+
+        assertThat(controller.shouldAcceptInteraction(tap, emptyList())).isTrue()
+        // No Vico marker: the pill shows the time
+        assertThat(controller.shouldShowMarker(tap, emptyList())).isFalse()
+        assertThat(state.tapX).isEqualTo(30.0)
+        assertThat(state.fingerDown).isFalse()
+
+        // The line shows the tapped time while the pill is up
+        assertThat(state.lineX).isNull()
+        state.pill = pillData
+        assertThat(state.lineX).isEqualTo(30.0)
+
+        state.onTouchDown()
+        assertThat(state.pill).isNull()
+        assertThat(state.tapX).isNull()
+        assertThat(state.lineX).isNull()
+    }
+
+    @Test
+    fun `a hold on the belt works as on every graph and a touch does not close its pill`() {
+        val state = GraphInspectState()
+        val target = object : CartesianMarker.Target {
+            override val x = 30.0
+            override val canvasX = 60f
+        }
+        val longPress = Interaction.LongPress(Point(60f, 10f))
+        val controller = state.beltController(iconRadiusPx = 20f)
+
+        assertThat(controller.shouldAcceptInteraction(longPress, listOf(target))).isTrue()
+        assertThat(controller.shouldShowMarker(longPress, listOf(target))).isTrue()
+        assertThat(state.fingerDown).isTrue()
+        assertThat(state.tapX).isNull()
+
+        state.pill = pillData
+        state.onTouchDown()
+        assertThat(state.pill).isEqualTo(pillData)
+    }
+
+    private val pillData = InspectData(
+        timestamp = t0, bg = null, iob = null, cob = null, basal = null, tbrState = TbrState.NONE,
+        boluses = emptyList(), carbs = emptyList(), measured = emptyList()
+    )
 
     @Test
     fun `TBR state follows the overview rule`() {
