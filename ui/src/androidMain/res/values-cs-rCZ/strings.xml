@@ -6,6 +6,8 @@
     <string name="start_eating_soon_tt">Spustit dočasný cíl Před jídlem</string>
     <string name="start_hypo_tt">Spustit dočasný cíl Hypoglykémie</string>
     <string name="time_offset">Časový posun</string>
+    <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
+    <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dd%2$dh</string>
     <!--    Widget-->
     <string name="configure">Konfigurovat průhlednost</string>
     <string name="widget_description">Widget AAPS</string>
@@ -15,6 +17,30 @@
     <string name="widget_small_description">AAPS malé</string>
     <!--     Activities-->
     <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="agp" comment="Section title: Ambulatory Glucose Profile">AGP</string>
+    <string name="agp_title">Ambulantní profil glukózy</string>
+    <string name="agp_glycemic_overview">Glykémický přehled</string>
+    <string name="agp_today">Dnes</string>
+    <string name="agp_hours" comment="%1$d=number of hours. Example: 24h">%1$dh</string>
+    <string name="agp_days" comment="%1$d=number of days. Example: 7d">%1$dd</string>
+    <string name="agp_no_data">Pro tento rozsah nejsou k dispozici žádná data glykémie.</string>
+    <string name="agp_load_failed">Nelze načíst AGP statistiky. Zkuste to prosím znovu.</string>
+    <string name="agp_chart_description">Graf percentilu glukózy</string>
+    <string name="agp_tir_chart">Graf času v cíli</string>
+    <string name="agp_percentile_10_90" comment="Glucose percentile band from the 10th to the 90th percentile">10–90%</string>
+    <string name="agp_percentile_25_75" comment="Glucose percentile band from the 25th to the 75th percentile">25–75%</string>
+    <string name="agp_percent" comment="%1$.1f=percentage value. Example: 72.4%">%1$.1f%%</string>
+    <string name="agp_range" comment="%1$s=lower glucose value, %2$s=upper glucose value. Example: 3.9–10.0">%1$s–%2$s</string>
+    <string name="agp_above" comment="%1$s=upper glucose limit. Example: &gt; 10.0">&gt; %1$s</string>
+    <string name="agp_below" comment="%1$s=lower glucose limit. Example: &lt; 3.9">&lt; %1$s</string>
+    <string name="agp_average">Průměr</string>
+    <string name="agp_median">Medián</string>
+    <string name="agp_ea1c" comment="Estimated HbA1c">eA1c</string>
+    <string name="agp_gmi" comment="Glucose management indicator">GMI</string>
+    <string name="agp_standard_deviation" comment="Standard deviation of glucose values">SO</string>
+    <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
+    <string name="agp_available_days">Dnů</string>
+    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as eA1c, GMI or days of glucose data. Example: 13.8">%1$.1f</string>
     <string name="cgp_title">Glukózový pentagon (CGP) – 14 dní</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
     <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
@@ -281,6 +307,7 @@
     <string name="permission_directory_picker_error">Nelze spustit výběr adresáře. Obvykle problém Androidu nebo Family Link.</string>
     <string name="permission_nav_label">Oprávnění</string>
     <!--    TDD Cycle Pattern -->
+    <string name="stats_tab_cycle" comment="Short tab label on the Statistics screen. The tab shows daily insulin totals laid over 28-day cycles (TDD Cycle Pattern).">Cyklus</string>
     <string name="cycle_offset">Posun cyklu</string>
     <string name="raw_tdd">Surová CDD</string>
     <string name="cleaned_tdd">Očištěná CDD</string>
