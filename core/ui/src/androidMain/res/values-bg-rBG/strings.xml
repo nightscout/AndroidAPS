@@ -1141,6 +1141,7 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">ЧУВСТВ%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">ПРОМ ЧУВСТВ</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">КРАЧКИ</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="units_days">дни</string>
     <string name="units_format_days">%1$d дни</string>
     <string name="units_format_days_range">%1$d дни (%2$d - %3$d)</string>
