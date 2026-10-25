@@ -49,6 +49,7 @@
     <string name="authorized_clients_qr_ns_instructions">Scan this code on the new phone, in the setup wizard or in Pair with master. It sets up Nightscout. The phone is not paired.</string>
     <string name="authorized_clients_qr_keep_private">Anyone who sees this code can read your Nightscout. Show it only to the new phone.</string>
     <string name="authorized_clients_token_problem_title">No QR code</string>
+    <string name="authorized_clients_not_added_title">Client not added</string>
     <string name="authorized_clients_token_problem_not_connected">This phone is not connected to Nightscout, so it cannot make a token for the client.</string>
     <string name="authorized_clients_token_problem_not_allowed">The Nightscout token of this phone is not an admin token, so it cannot make a token for the client. Use an admin token here, or add the client with the PIN.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout has a token with this name and other rights. Choose another name.</string>
