@@ -2,6 +2,7 @@ package app.aaps.di.metro
 
 import android.content.Context
 import android.content.SharedPreferences
+import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -280,6 +281,7 @@ class MetroGraphs(
     val notificationManager: NotificationManager get() = root.notificationManager
     val profileSwitchScheduler: ProfileSwitchScheduler get() = root.profileSwitchScheduler
     val snackbarNotificationFallback: SnackbarNotificationFallback get() = root.snackbarNotificationFallback
+    val eatReminder: EatReminder get() = root.eatReminder
     val activePlugin: ActivePlugin get() = root.activePlugin
     val pluginStore: PluginStore get() = root.pluginStore
     val maintenance: Maintenance get() = root.maintenance

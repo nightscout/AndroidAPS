@@ -16,6 +16,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchAction
@@ -104,7 +105,8 @@ class MasterActionExecutorImpl(
     // commonMain. AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
     private val appScope: CoroutineScope,
     private val masterRecordWriter: MasterRecordWriter,
-    private val smbPause: SmbPause
+    private val smbPause: SmbPause,
+    private val eatReminder: EatReminder
 ) : MasterActionExecutor {
 
     /**
@@ -123,9 +125,9 @@ class MasterActionExecutorImpl(
         val bolusId: Long,
         val entry: QuickWizardEntry?,
         val carbTimeMinutes: Int = 0,
-        // Manual-wizard "time to eat" reminder flag. A QuickWizard ignores this and reads its own
-        // entry.useAlarm() at confirm() instead; parked here so a MANUAL wizard (entry == null) can
-        // still schedule the reminder on the master — without it the manual-wizard alarm was dropped.
+        // "Time to eat" timer flag of a manual wizard and of a fixed (carbs dialog) entry. A QuickWizard ignores
+        // this and reads its own entry.useAlarm() at confirm() instead; parked here so the timer still starts on
+        // the master when the request came from a client.
         val useAlarm: Boolean = false,
         val notes: String? = null,
         val mode: BolusMode = BolusMode.WIZARD,
@@ -602,7 +604,7 @@ class MasterActionExecutorImpl(
             bolusId,
             PendingBolus(
                 insulin = insulin, carbs = carbs, bcr = null, bolusId = bolusId, entry = entry,
-                carbTimeMinutes = bolus?.carbsTimeOffsetMinutes ?: 0, notes = bolus?.notes, mode = BolusMode.FIXED,
+                carbTimeMinutes = bolus?.carbsTimeOffsetMinutes ?: 0, useAlarm = bolus?.alarm == true, notes = bolus?.notes, mode = BolusMode.FIXED,
                 eventType = eventType, carbsDurationHours = bolus?.carbsDurationHours ?: 0,
                 eCarbsGrams = bolus?.eCarbsGrams ?: 0, eCarbsDelayMinutes = bolus?.eCarbsDelayMinutes ?: 0, eCarbsDurationHours = bolus?.eCarbsDurationHours ?: 0,
                 tempTarget = tt, profileSwitch = ps, runningMode = rm, recordOnly = recordOnly, iCfg = bolus?.iCfg, bolusTimestamp = bolus?.timestamp?.takeIf { it > 0L },
@@ -665,6 +667,8 @@ class MasterActionExecutorImpl(
         // Fixed-amount bolus/carbs (Insulin / Treatment / Carbs dialogs): deliver the parked amounts as-is through
         // the shared core — no wizard recompute, no super-bolus/eCarbs/advisor (all wizard-only).
         if (p.mode == BolusMode.FIXED) {
+            // The carbs dialog's "time to eat" timer starts when the entry is done, like the wizard's below.
+            val fixedOnSuccess = withEatReminder(p.useAlarm && p.carbs > 0, p.carbTimeMinutes, onSuccess)
             // A FIXED entry may carry a batch TempTarget. Decision-B order: a target-RAISING TT (hypo/activity) is
             // applied FIRST + unconditional; a target-LOWERING (eating-soon) TT applies only if the bolus passed the
             // SYNCHRONOUS gate (see `accepted` below).
@@ -696,7 +700,7 @@ class MasterActionExecutorImpl(
                         recordOnly = true,
                         iCfg = p.iCfg,
                         timestamp = p.bolusTimestamp,
-                        onSuccess = onSuccess
+                        onSuccess = fixedOnSuccess
                     )
                 }
 
@@ -705,7 +709,7 @@ class MasterActionExecutorImpl(
                     // Carbs dialog uses, so a client carb entry and a master carb entry are identical (TE.Type, duration,
                     // delay) — not the generic deliver() which would tag it CARBS_CORRECTION instead of deliverECarbs's
                     // CORRECTION_BOLUS convention.
-                    deliverECarbs(p.carbs, dateUtil.now() + T.mins(p.carbTimeMinutes.toLong()).msecs(), p.carbsDurationHours, p.carbTimeMinutes, notes, source, wrapped, onSuccess)
+                    deliverECarbs(p.carbs, dateUtil.now() + T.mins(p.carbTimeMinutes.toLong()).msecs(), p.carbsDurationHours, p.carbTimeMinutes, notes, source, wrapped, fixedOnSuccess)
 
                 else                             -> {
                     // Insulin (± carbs): deliver the parked amounts as-is. carbsTime = now + offset; carbsDuration in hours.
@@ -713,7 +717,7 @@ class MasterActionExecutorImpl(
                     val carbsTime = if (p.carbs > 0) dateUtil.now() + T.mins(p.carbTimeMinutes.toLong()).msecs() else null
                     deliver(
                         p.insulin, p.carbs, carbsTime = carbsTime, carbsDuration = p.carbsDurationHours, bolusCalculatorResult = p.bcr, notes = notes, source = source,
-                        onError = wrapped, eventType = p.eventType, onSuccess = onSuccess
+                        onError = wrapped, eventType = p.eventType, onSuccess = fixedOnSuccess
                     )
                 }
             }
@@ -819,10 +823,14 @@ class MasterActionExecutorImpl(
                 totalInsulin = correctedInsulin  // actual delivered amount (already coerced ≥ 0)
             )
         else p.bcr
-        executeWizardBolus(correctedInsulin, p.carbs, carbTimeOffset.toInt(), p.bcr?.glucoseValue, correctedBcr, notes, source, onError, onSuccess)
+        // The "time to eat" timer counts from the end of the bolus, as it did in 3.x: with a slow pump the
+        // delivery takes minutes. It is not started when the bolus fails; it is when the user stopped the bolus,
+        // because part of the insulin is in and the carbs are recorded.
+        executeWizardBolus(
+            correctedInsulin, p.carbs, carbTimeOffset.toInt(), p.bcr?.glucoseValue, correctedBcr, notes, source, onError,
+            withEatReminder(useAlarm && p.carbs > 0, carbTimeOffset.toInt(), onSuccess)
+        )
         if (carbs2 > 0) deliverECarbs(carbs2, eventTime, duration, eCarbsDelay, notes, source, onError)
-        if (useAlarm && p.carbs > 0 && carbTimeOffset > 0)
-            automation.scheduleTimeToEatReminder(T.mins(carbTimeOffset).secs().toInt())
         p.entry?.markAsUsed()
         return MasterActionExecutor.ConfirmResult.Delivered
     }
@@ -1300,6 +1308,18 @@ class MasterActionExecutorImpl(
         source: Sources,
         onError: (MasterActionExecutor.Failure) -> Unit
     ) = executeWizardBolus(insulin, carbs, carbTimeMinutes, mgdlGlucose, bolusCalculatorResult, notes, source, onError, onSuccess = {})
+
+    /**
+     * [onSuccess], which first starts the "time to eat" timer when [start] is true and the carbs are
+     * [carbTimeMinutes] in the future. The success callback runs after the pump finished the bolus.
+     */
+    private fun withEatReminder(start: Boolean, carbTimeMinutes: Int, onSuccess: () -> Unit): () -> Unit =
+        if (start && carbTimeMinutes > 0) {
+            {
+                eatReminder.start(T.mins(carbTimeMinutes.toLong()).msecs())
+                onSuccess()
+            }
+        } else onSuccess
 
     /** [deliverWizardBolus] with an [onSuccess], for [confirm]'s caller. */
     private suspend fun executeWizardBolus(

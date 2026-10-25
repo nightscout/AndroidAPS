@@ -33,7 +33,7 @@ class ReminderSchedulerImpl(
      * Uses AlarmManager + [TimerReminderReceiver] → [app.aaps.core.interfaces.ui.UiInteraction.runAlarm] (a
      * background-safe alarm) instead of the system Clock app's `ACTION_SET_TIMER`: that needs
      * `startActivity`, which Android blocks from the background, so a reminder scheduled while AAPS is
-     * backgrounded (e.g. a client-relayed Bolus-Wizard "Set alarm" delivered on the master) was silently lost.
+     * backgrounded (e.g. an automation alarm action) was silently lost.
      * `setAlarmClock` is exact and fires while the device is idle, but it needs `SCHEDULE_EXACT_ALARM` unless
      * AAPS is excluded from battery optimization. Without either, the call is not made and the user is told
      * the reminder could not be set; `PluginPermissionsImpl` asks for the permission.

@@ -229,6 +229,8 @@ private fun startPlugins(graph: DesktopAppGraph) {
     // A snackbar sent while no window is showing one becomes a system notification instead of being
     // lost. The same shared class Android and iOS start.
     graph.snackbarNotificationFallback.start()
+    // The "time to eat" alarm lives in this process; set it again when a timer was running. Master only.
+    graph.eatReminder.restore()
     graph.logger.debug(LTag.CORE, "Registered ${plugins.size} plugins and verified selections")
 }
 

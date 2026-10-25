@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.automation.Automation
+import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
@@ -46,6 +47,7 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
@@ -212,6 +214,47 @@ internal class CarbsDialogViewModelTest {
         assertThat(state.notes).isEqualTo("late dinner")
         assertThat(state.alarmChecked).isTrue()
         assertThat(state.bolusReminderChecked).isTrue()
+    }
+
+    // #5327: carbs later turn the "time to eat" alarm on, as in the wizard. A manual untick is kept while the time changes.
+    @Test
+    fun `carbs later tick the alarm, and an untick stays while the time changes`() {
+        sut.updateTimeOffset(30)
+        assertThat(sut.uiState.value.alarmChecked).isTrue()
+
+        sut.updateAlarm(false)
+        sut.updateTimeOffset(45)
+        assertThat(sut.uiState.value.alarmChecked).isFalse()
+
+        sut.updateTimeOffset(-10)
+        sut.updateTimeOffset(15)
+        assertThat(sut.uiState.value.alarmChecked).isTrue()
+    }
+
+    @Test
+    fun `carbs in the past do not tick the alarm`() {
+        sut.updateTimeOffset(-30)
+
+        assertThat(sut.uiState.value.alarmChecked).isFalse()
+    }
+
+    /** The master starts the timer, so the flag travels in the batch; the client no longer sets one itself. */
+    @Test
+    fun `the alarm travels to the master with the carbs`() {
+        whenever(config.AAPSCLIENT).thenReturn(false)
+        whenever(rh.gs(InterfacesStrings.carbs)).thenReturn("Carbs")
+        runBlocking { whenever(batchExecutor.prepare(any(), any(), anyOrNull())).thenReturn(ActionProgress.Rejected(FailureReason.ExecutionFailed, REFUSAL)) }
+        val dialog = openWhileLow(ClientRole.MealAssistant)
+        dialog.updateCarbs(20)
+        dialog.updateTimeOffset(30)
+
+        dialog.prepareAndConfirm()
+
+        val actions = argumentCaptor<List<BatchAction>>()
+        runBlocking { verify(batchExecutor).prepare(actions.capture(), any(), anyOrNull()) }
+        val bolus = actions.firstValue.filterIsInstance<BatchAction.Bolus>().single()
+        assertThat(bolus.alarm).isTrue()
+        assertThat(bolus.carbsTimeOffsetMinutes).isEqualTo(30)
     }
 
     /** `glucose + 3 * delta < 70` is the "heading low" test the reminder row is gated on. */

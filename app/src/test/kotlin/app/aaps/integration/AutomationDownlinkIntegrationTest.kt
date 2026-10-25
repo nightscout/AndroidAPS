@@ -1,6 +1,5 @@
 package app.aaps.integration
 
-import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.location.LocationServiceController
@@ -76,7 +75,6 @@ class AutomationDownlinkIntegrationTest : TestBaseWithProfile() {
     // AutomationRuntime deps not provided by the base.
     @Mock private lateinit var loop: Loop
     @Mock private lateinit var locationServiceController: LocationServiceController
-    @Mock private lateinit var reminderScheduler: ReminderScheduler
     @Mock private lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock private lateinit var uel: UserEntryLogger
     @Mock private lateinit var sceneApi: SceneAutomationApi
@@ -118,17 +116,17 @@ class AutomationDownlinkIntegrationTest : TestBaseWithProfile() {
 
         masterRuntime = AutomationRuntime(
             mock<LocationPermissions>(), eventFactory, aapsLogger, rh, masterPreferences, loop, rxBus, constraintsChecker,
-            masterConfig, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
+            masterConfig, locationServiceController, dateUtil, activePlugin, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
             uel, profileRepository, sceneApi, mock()
         )
         clientRuntime = AutomationRuntime(
             mock<LocationPermissions>(), eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintsChecker,
-            config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
+            config, locationServiceController, dateUtil, activePlugin, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
             uel, profileRepository, sceneApi, mock()
         )
         runningConfig = RunningConfigurationImpl(
             activePlugin, activeSceneSync, preferences, aapsLogger, config,
-            pumpSync, notificationManager, nsClientRepository, constraintsChecker
+            pumpSync, notificationManager, nsClientRepository, constraintsChecker, mock()
         )
     }
 

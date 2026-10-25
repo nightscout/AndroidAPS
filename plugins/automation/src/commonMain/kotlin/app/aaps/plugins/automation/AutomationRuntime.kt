@@ -7,7 +7,6 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.automation.AutomationEvent
@@ -143,7 +142,6 @@ class AutomationRuntime(
     private val locationServiceController: LocationServiceController,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
-    private val reminderScheduler: ReminderScheduler,
     private val actionFactory: ActionFactory,
     private val triggerFactory: TriggerFactory,
     private val triggerDeps: TriggerDeps,
@@ -786,14 +784,6 @@ class AutomationRuntime(
 
         return triggers.toList()
     }
-
-    /**
-     * Generate reminder via [ReminderScheduler]
-     *
-     * @param seconds seconds to the future
-     */
-    override fun scheduleTimeToEatReminder(seconds: Int) =
-        reminderScheduler.scheduleReminder(seconds, rh.gs(AutomationStrings.time_to_eat))
 
     /**
      * Create new Automation event to alarm when is time to eat

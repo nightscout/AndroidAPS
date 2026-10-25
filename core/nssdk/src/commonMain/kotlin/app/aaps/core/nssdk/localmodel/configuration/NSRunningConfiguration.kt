@@ -21,12 +21,14 @@ data class NSRunningConfiguration(
     // publish it → client leaves its own flag untouched.
     val isFakingTempsByExtendedBoluses: Boolean? = null,
     val activeScene: NSActiveScene? = null,
+    // Hot doc, like [activeScene]: the master's running "time to eat" timer. Null = none (or an older master).
+    val eatReminder: NSEatReminder? = null,
     // Flat block of cold-channel synced preference values (key string → value serialized as string),
     // driven by each key's SyncSpec. Applied with "master wins" on the client; client→master edits
     // travel separately via the signed Client-Control PreferencesUpdate channel.
     val syncedPrefs: Map<String, String>? = null,
     // Whether autosens is in use on the master, computed there from cold settings. In the cold doc, because the hot doc
-    // ([activeScene]) is sent only when the scene changes.
+    // ([activeScene], [eatReminder]) is sent only when one of them changes.
     val usedAutosensOnMainPhone: Boolean? = null,
     val authorizedClients: NSAuthorizedClients? = null
 )
@@ -82,4 +84,16 @@ data class NSActiveScene(
     val psNsId: String? = null,
     val rmNsId: String? = null,
     val teNsId: String? = null
+)
+
+/**
+ * Wire view of the master's running "time to eat" timer, so a client can show it. Times are the master's clock.
+ * [durationMs] is the length the user set; [endsAt] moves later with each +5 min. The master drops the block when
+ * the timer ends.
+ */
+@Serializable
+data class NSEatReminder(
+    val startedAt: Long,
+    val endsAt: Long,
+    val durationMs: Long
 )

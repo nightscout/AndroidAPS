@@ -11,6 +11,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
@@ -41,13 +42,19 @@ class UiInteractionImpl(
     private val aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,
     private val config: Config,
-    @ApplicationScope private val appScope: CoroutineScope
+    @ApplicationScope private val appScope: CoroutineScope,
+    // A provider: EatReminder needs UiInteraction back to silence its alarm.
+    private val eatReminder: () -> EatReminder
 ) : UiInteraction {
 
     override val mainActivity: KClass<*> = ComposeMainActivity::class
     override val errorHelperActivity: KClass<*> = ErrorActivity::class
 
-    override fun runAlarm(status: String, title: String, sound: AlarmSound?) {
+    override fun runAlarm(status: String, title: String, sound: AlarmSound?) = runAlarm(status, title, sound, eatReminder = false)
+
+    override fun runEatReminderAlarm(status: String, title: String) = runAlarm(status, title, AlarmSound.ALARM, eatReminder = true)
+
+    private fun runAlarm(status: String, title: String, sound: AlarmSound?, eatReminder: Boolean) {
         // Persist the error as an announcement at fire time — gated by the NS-announcement
         // preference + APS build. Done here (not in ErrorActivity) so the record is written for
         // every alarm with the true trigger time, regardless of whether/how it is later
@@ -69,7 +76,7 @@ class UiInteractionImpl(
         // entirely and use the FSI path, which is safe from any thread.
         if (Looper.myLooper() != Looper.getMainLooper()) {
             aapsLogger.debug(LTag.CORE, "runAlarm (off-main → FSI): $title - $status (sound=$sound)")
-            alarmNotificationManager.postFullScreenAlarm(status = status, title = title, sound = sound)
+            alarmNotificationManager.postFullScreenAlarm(status = status, title = title, sound = sound, eatReminder = eatReminder)
             return
         }
 
@@ -84,6 +91,7 @@ class UiInteractionImpl(
                 putExtra(AlarmIntent.EXTRA_SOUND, sound?.name)
                 putExtra(AlarmIntent.EXTRA_STATUS, status)
                 putExtra(AlarmIntent.EXTRA_TITLE, title)
+                putExtra(AlarmIntent.EXTRA_EAT_REMINDER, eatReminder)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             }
             try {
@@ -92,7 +100,7 @@ class UiInteractionImpl(
                 // Defensive: if the activity start is rejected for any reason, fall back to
                 // the FSI notification path so the alert is never silently lost.
                 aapsLogger.error(LTag.CORE, "runAlarm: direct startActivity failed, falling back to FSI", ex)
-                postFsiFallback(status, title, sound)
+                postFsiFallback(status, title, sound, eatReminder)
             }
         } else {
             // Background path — the full-screen alarm ("FSI" in the names here, although it no
@@ -100,7 +108,7 @@ class UiInteractionImpl(
             // alarm sound, and a setAlarmClock screen wake that brings up the activity when exact
             // alarms are allowed.
             aapsLogger.debug(LTag.CORE, "runAlarm (background via FSI): $title - $status (sound=$sound)")
-            alarmNotificationManager.postFullScreenAlarm(status = status, title = title, sound = sound)
+            alarmNotificationManager.postFullScreenAlarm(status = status, title = title, sound = sound, eatReminder = eatReminder)
         }
     }
 
@@ -110,6 +118,9 @@ class UiInteractionImpl(
         // internal AlarmSoundPlayer (Wear snooze used to only cancel the system notification, leaving
         // the ramping audio playing), stops the full-screen audio, and cancels the notifications.
         notificationManager().muteAllAlarms()
+        // Every way of stopping an alarm comes here (alarm screen, notification Mute or swipe, watch). When
+        // the "time to eat" timer has rung, this was its alarm and the timer ends, as with Stop on its bar.
+        eatReminder().onAlarmStopped()
     }
 
     /**
@@ -119,8 +130,8 @@ class UiInteractionImpl(
      * visible signal that something tried to alarm. Best-effort; Toast can also fail (e.g.
      * if a system overlay permission is denied) but it costs nothing to try.
      */
-    private fun postFsiFallback(status: String, title: String, sound: AlarmSound?) {
-        alarmNotificationManager.postFullScreenAlarm(status = status, title = title, sound = sound)
+    private fun postFsiFallback(status: String, title: String, sound: AlarmSound?, eatReminder: Boolean) {
+        alarmNotificationManager.postFullScreenAlarm(status = status, title = title, sound = sound, eatReminder = eatReminder)
         // Toast must be created on the main thread (we are — runAlarm guards above).
         runCatching {
             Toast.makeText(context, "ALARM: $title — $status", Toast.LENGTH_LONG).show()

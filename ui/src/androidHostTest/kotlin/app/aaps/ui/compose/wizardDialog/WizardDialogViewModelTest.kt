@@ -154,6 +154,31 @@ internal class WizardDialogViewModelTest {
         assertThat(sut.uiState.value.alarmChecked).isTrue()
     }
 
+    // #5327: eating later turns the "time to eat" alarm on, as in 3.x. A manual untick is kept while the minutes change.
+    @Test
+    fun `eating later ticks the alarm, and an untick stays while the time changes`() {
+        assertThat(sut.uiState.value.alarmChecked).isFalse()
+
+        sut.updateCarbTime(15)
+        assertThat(sut.uiState.value.alarmChecked).isTrue()
+
+        sut.toggleAlarm(false)
+        sut.updateCarbTime(20)
+        assertThat(sut.uiState.value.alarmChecked).isFalse()
+
+        // Back to now and later again: a new decision, so it is ticked again.
+        sut.updateCarbTime(0)
+        sut.updateCarbTime(10)
+        assertThat(sut.uiState.value.alarmChecked).isTrue()
+    }
+
+    @Test
+    fun `eating earlier does not tick the alarm`() {
+        sut.updateCarbTime(-15)
+
+        assertThat(sut.uiState.value.alarmChecked).isFalse()
+    }
+
     /**
      * `initialize()` and `recalculateSuspend()` both return as soon as there is no profile store, so
      * these tests reach the percentage decision without standing up the whole wizard.

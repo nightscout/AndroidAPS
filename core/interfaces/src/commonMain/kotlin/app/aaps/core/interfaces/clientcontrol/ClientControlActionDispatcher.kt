@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.clientcontrol
 
+import app.aaps.core.interfaces.alerts.EatReminderAction
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import kotlinx.coroutines.flow.Flow
@@ -93,6 +94,9 @@ interface ClientControlActionDispatcher {
 
         /** PREPARE a multi-action batch on the master — TWO-STEP: master caps + returns the MERGED confirmation; commit via [BolusCommit]. */
         data class BatchPrepare(val actions: List<BatchAction>) : Command
+
+        /** Stop or extend the master's "time to eat" timer. */
+        data class EatReminderControl(val action: EatReminderAction) : Command
     }
 
     companion object {

@@ -160,6 +160,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private val profileSwitchScheduler get() = metroGraphs.profileSwitchScheduler
     private val automationRuntime get() = metroGraphs.automationRuntime
     private val snackbarNotificationFallback get() = metroGraphs.snackbarNotificationFallback
+    private val eatReminder get() = metroGraphs.eatReminder
     private val appScope get() = metroGraphs.applicationScope
 
     /** The rules; the two fields below are what this app's start-up sequence carries between its steps. */
@@ -212,17 +213,20 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         // the iOS and desktop shells start the same class. Started here, before the migrations
         // below, so messages sent during startup are covered too.
         snackbarNotificationFallback.start()
-        // Configure LeakCanary with Firebase reporting
-        // Memory leaks will be uploaded to Firebase Crashlytics via FabricPrivacy.logException
-        configureLeakCanary(
-            isEnabled = !config.isEnabled(ExternalOptions.DISABLE_LEAK_CANARY),
-            fabricPrivacy = fabricPrivacy
-        )
 
         // All initialization in background thread to avoid blocking main thread
         // (ComposeMainActivity shows splash screen until initProgress.done)
         scope.launch {
             try {
+                // Configure LeakCanary with Firebase reporting. Memory leaks are uploaded to Firebase
+                // Crashlytics via FabricPrivacy.logException. Not on the main thread: reading the
+                // DISABLE_LEAK_CANARY marker lists the AAPS directory through SAF, and on slow phones
+                // that held up app start long enough for an ANR (4.0.0-rc1).
+                configureLeakCanary(
+                    isEnabled = { !config.isEnabled(ExternalOptions.DISABLE_LEAK_CANARY) },
+                    fabricPrivacy = fabricPrivacy
+                )
+
                 config.updateInitProgress(getString(R.string.migrating_preferences))
                 doMigrations()
 
@@ -265,6 +269,9 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 // Standalone automation runtime (no longer a plugin). Loads definitions on all
                 // flavors; the processing loop + location service are master-only (gated internally).
                 automationRuntime.start()
+                // A reboot or a force stop removes the alarm of a running "time to eat" timer; set it again.
+                // Master only (gated internally).
+                eatReminder.restore()
 
                 // Data migrations (DB I/O)
                 dataMigrations()

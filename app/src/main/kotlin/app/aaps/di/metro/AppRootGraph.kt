@@ -3,6 +3,7 @@ package app.aaps.di.metro
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.work.WorkManager
+import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensData
@@ -354,6 +355,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val profileSwitchSilentGate: ProfileSwitchSilentGate
     val profileSwitchScheduler: ProfileSwitchScheduler
     val snackbarNotificationFallback: SnackbarNotificationFallback
+    val eatReminder: EatReminder
     val runningConfiguration: RunningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys
     val activePlugin: ActivePlugin

@@ -64,6 +64,7 @@ import app.aaps.ui.compose.maintenance.MaintenanceDialogs
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel
 import app.aaps.ui.compose.manageSheet.ManageSheetState
 import app.aaps.ui.compose.manageSheet.ManageViewModel
+import app.aaps.ui.compose.overview.EatReminderBanner
 import app.aaps.ui.compose.overview.OverviewScreen
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
@@ -250,6 +251,7 @@ fun MainScreen(
                 val activeSceneState by mainViewModel.activeSceneState.collectAsStateWithLifecycle()
                 val sceneExpired by mainViewModel.sceneExpired.collectAsStateWithLifecycle()
                 val activeSceneChainTargetName by mainViewModel.activeSceneChainTargetName.collectAsStateWithLifecycle()
+                val eatReminderState by mainViewModel.eatReminderState.collectAsStateWithLifecycle()
                 val masterReachable by mainViewModel.masterReachable.collectAsStateWithLifecycle()
                 // Stable pairing signal — hides the mutating nav buttons on an unpaired client.
                 val masterOrPairedClient by mainViewModel.masterOrPairedClient.collectAsStateWithLifecycle()
@@ -297,6 +299,15 @@ fun MainScreen(
                         endSceneEnabled = masterReachable,
                         commandsAllowed = masterOrPairedClient,
                         formatDuration = mainViewModel::formatDuration,
+                        eatReminderBanner = {
+                            EatReminderBanner(
+                                state = eatReminderState,
+                                onStop = mainViewModel::stopEatReminder,
+                                onExtend = mainViewModel::extendEatReminder,
+                                // Like End scene: a client's buttons ask the master, which needs the connection.
+                                controlsEnabled = masterReachable
+                            )
+                        },
                         paddingValues = contentPadding,
                         fabBottomOffset = if (hasToolbar && showChrome) 56.dp else 0.dp,
                         // In preview mode the bottom bar lies over the content instead of above it, so the end of each

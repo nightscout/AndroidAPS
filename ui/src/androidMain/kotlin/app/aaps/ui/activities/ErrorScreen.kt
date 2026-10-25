@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 
@@ -51,7 +52,9 @@ fun ErrorScreen(
     onOk: () -> Unit,
     onMute: () -> Unit,
     onMute5Min: () -> Unit,
-    onStart: () -> Unit
+    onStart: () -> Unit,
+    /** The alarm of the "time to eat" timer: the first button moves the timer 5 minutes instead of muting for 5 minutes. */
+    eatReminder: Boolean = false
 ) {
     DisposableEffect(Unit) {
         onStart()
@@ -132,12 +135,15 @@ fun ErrorScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Mute 5 min button
+                // Mute 5 min button (+5 min for the eat timer)
                 Button(
                     onClick = onMute5Min,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(CoreUiStrings.mute5min))
+                    Text(
+                        if (eatReminder) stringResource(CoreUiStrings.eat_reminder_extend, EatReminder.EXTEND_MINUTES)
+                        else stringResource(CoreUiStrings.mute5min)
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))

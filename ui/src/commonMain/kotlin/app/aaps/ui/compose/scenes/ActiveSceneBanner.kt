@@ -5,16 +5,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,17 +14,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.objects.extensions.tickerFlow
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalClientRole
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.ui.compose.overview.OverviewBannerCard
 
 /**
  * Banner showing the currently active scene with name, time remaining, progress, and End button.
@@ -98,80 +88,35 @@ internal fun ActiveSceneBannerContent(
     val remainingMs = state.remainingMs(now)
     val totalMs = state.durationMs
 
-    ElevatedCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = AapsSpacing.medium, vertical = AapsSpacing.small)
-    ) {
-        Column(modifier = Modifier.padding(AapsSpacing.large)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = SceneIcons.fromKey(state.scene.icon).icon,
-                    contentDescription = null,
-                    tint = if (expired) MaterialTheme.colorScheme.onSurfaceVariant else AapsTheme.elementColors.scene,
-                    modifier = Modifier.size(AapsSpacing.chipIconSize)
-                )
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = state.scene.name,
-                        style = MaterialTheme.typography.titleSmall,
-                        color = if (expired) MaterialTheme.colorScheme.onSurfaceVariant else AapsTheme.elementColors.scene
-                    )
-                    if (expired) {
-                        Text(
-                            text = stringResource(CoreUiStrings.scene_ended),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    } else if (remainingMs != null && remainingMs > 0 && totalMs > 0) {
-                        Text(
-                            text = formatDuration(remainingMs),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(CoreUiStrings.scene_active),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    // What the scene sets in motion when it ends, as the scene list shows it
-                    if (!expired && chainTargetName != null) {
-                        Text(
-                            text = stringResource(CoreUiStrings.scene_chain_indicator, chainTargetName),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
+    val status = when {
+        expired                                              -> stringResource(CoreUiStrings.scene_ended)
+        remainingMs != null && remainingMs > 0 && totalMs > 0 -> formatDuration(remainingMs)
+        else                                                 -> stringResource(CoreUiStrings.scene_active)
+    }
+    // What the scene sets in motion when it ends, as the scene list shows it
+    val chain = if (!expired && chainTargetName != null) stringResource(CoreUiStrings.scene_chain_indicator, chainTargetName) else null
+    OverviewBannerCard(
+        icon = SceneIcons.fromKey(state.scene.icon).icon,
+        color = if (expired) MaterialTheme.colorScheme.onSurfaceVariant else AapsTheme.elementColors.scene,
+        title = state.scene.name,
+        lines = listOfNotNull(status, chain),
+        // Progress bar (only if duration-based and not expired)
+        progress = if (!expired && remainingMs != null && totalMs > 0) 1f - (remainingMs.toFloat() / totalMs.toFloat()) else null,
+        modifier = modifier,
+        trailing = {
+            if (expired) {
+                FilledTonalButton(onClick = onDismiss) {
+                    Text(stringResource(CoreUiStrings.close))
                 }
-                if (expired) {
-                    FilledTonalButton(onClick = onDismiss) {
-                        Text(stringResource(CoreUiStrings.close))
-                    }
-                } else if (LocalClientRole.current.allows(ElementType.SCENE.role)) {
-                    // Active scene's End button — disabled on AAPSCLIENT while WS is down,
-                    // since the scene_stop envelope can't reach the master. Master is the
-                    // authoritative actor; locally faking "ended" would desync the chip.
-                    // Not shown at all for a role the master would refuse it for.
-                    FilledTonalButton(onClick = onEndClick, enabled = endEnabled) {
-                        Text(stringResource(CoreUiStrings.scene_deactivate))
-                    }
+            } else if (LocalClientRole.current.allows(ElementType.SCENE.role)) {
+                // Active scene's End button — disabled on AAPSCLIENT while WS is down,
+                // since the scene_stop envelope can't reach the master. Master is the
+                // authoritative actor; locally faking "ended" would desync the chip.
+                // Not shown at all for a role the master would refuse it for.
+                FilledTonalButton(onClick = onEndClick, enabled = endEnabled) {
+                    Text(stringResource(CoreUiStrings.scene_deactivate))
                 }
-            }
-            // Progress bar (only if duration-based and not expired)
-            if (!expired && remainingMs != null && totalMs > 0) {
-                LinearProgressIndicator(
-                    progress = { 1f - (remainingMs.toFloat() / totalMs.toFloat()) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = AapsSpacing.medium)
-                )
             }
         }
-    }
+    )
 }

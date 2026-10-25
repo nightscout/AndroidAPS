@@ -608,7 +608,15 @@ private fun ClientQrDialog(
 
         is AuthorizedClientsViewModel.QrDialog.Problem -> AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text(stringResource(SyncStrings.authorized_clients_token_problem_title)) },
+            // A name in use stops the PIN way too, and that way has no QR code.
+            title = {
+                Text(
+                    stringResource(
+                        if (dialog.problem == AuthorizedClientsViewModel.TokenProblem.NameInUse) SyncStrings.authorized_clients_not_added_title
+                        else SyncStrings.authorized_clients_token_problem_title
+                    )
+                )
+            },
             text = { Text(tokenProblemText(dialog.problem)) },
             confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.ok)) } }
         )

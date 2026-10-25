@@ -126,7 +126,10 @@ class AuthorizedClientsViewModel(
         list.associate { client -> client.clientId to tokenKind(client, state) }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000L), emptyMap())
 
-    /** The QR code for a new client, or the step before it (making the token) or what stopped it. */
+    /**
+     * The QR code for a new client, or the step before it (making the token) or what stopped it. The PIN way uses it
+     * only to say that the name is in use.
+     */
     private val _qrDialog = MutableStateFlow<QrDialog?>(null)
     val qrDialog: StateFlow<QrDialog?> = _qrDialog.asStateFlow()
 
@@ -171,7 +174,11 @@ class AuthorizedClientsViewModel(
         _dialogState.value = DialogState.EnterName
     }
 
-    /** True when a client with this name is in the list already; a QR code needs a name of its own for its token. */
+    /**
+     * True when a client with this name is in the list already. Every way of adding a client checks this: the master
+     * gives a client its Nightscout token by name (`ClientControlReceiver.ownTokenFor`), so two clients of one name
+     * would share one token, and removing one would cut off the other.
+     */
     private suspend fun nameInUse(name: String): Boolean =
         repository.current(dateUtil.now()).any { it.name.trim().equals(name.trim(), ignoreCase = true) }
 
@@ -293,6 +300,10 @@ class AuthorizedClientsViewModel(
         // click handler, and viewModelScope is Main.immediate, so the state writes below still land
         // on this frame unless the mutex is actually contended.
         publishJob = viewModelScope.launch {
+            if (nameInUse(name)) {
+                _qrDialog.value = QrDialog.Problem(TokenProblem.NameInUse)
+                return@launch
+            }
             val now = dateUtil.now()
             val result = repository.addPending(name.trim(), role, PAIR_TTL_MS, now)
             val payload = PairingPayload(
