@@ -116,6 +116,7 @@
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Opplæringsmål</string>
     <string name="please_wait">Vennligst vent…</string>
     <string name="stop">Stopp</string>
@@ -192,7 +193,7 @@
     <string name="shortgramm">g</string>
     <string name="pump_running">Pumpe i drift</string>
     <string name="notconfigured">Ikke konfigurert</string>
-    <string name="loop_suspended_by_dst">Loop suspendert av DST (Sommertid)</string>
+    <string name="loop_suspended_by_dst">Loop pauset pga. klokkeomstilling</string>
     <string name="required">nødv</string>
     <string name="a11y_arrow_triple_down">faller svært raskt</string>
     <string name="a11y_arrow_double_down">synker raskt</string>
