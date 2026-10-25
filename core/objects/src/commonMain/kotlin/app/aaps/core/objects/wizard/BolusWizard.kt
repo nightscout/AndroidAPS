@@ -376,29 +376,26 @@ class BolusWizard(
     ): List<ConfirmationLine> =
         confirmationLines {
             if (insulinAfterConstraints > 0) {
-                val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
+                val insulin = rh.gs(InterfacesStrings.format_insulin_units, insulinAfterConstraints)
                 line(
                     ConfirmationRole.BOLUS,
                     rh.gs(
                         InterfacesStrings.confirmation_line,
                         rh.gs(InterfacesStrings.bolus),
-                        rh.gs(InterfacesStrings.format_insulin_units, insulinAfterConstraints) + pct
+                        if (percentageCorrection != 100) rh.gs(InterfacesStrings.insulin_with_percentage, insulin, percentageCorrection) else insulin
                     )
                 )
             }
             if (carbs > 0 && !advisor) {
-                val timeShift = when {
-                    carbTime > 0 -> " (+" + rh.gs(InterfacesStrings.mins, carbTime) + ")"
-                    carbTime < 0 -> " (" + rh.gs(InterfacesStrings.mins, carbTime) + ")"
-                    else         -> ""
+                val carbsText = rh.gs(InterfacesStrings.format_carbs, carbs)
+                val carbsWithTime = when {
+                    carbTime > 0 -> rh.gs(InterfacesStrings.carbs_with_time_later, carbsText, rh.gs(InterfacesStrings.mins, carbTime))
+                    carbTime < 0 -> rh.gs(InterfacesStrings.value_with_detail, carbsText, rh.gs(InterfacesStrings.mins, carbTime))
+                    else         -> carbsText
                 }
                 line(
                     ConfirmationRole.CARBS,
-                    rh.gs(
-                        InterfacesStrings.confirmation_line,
-                        rh.gs(InterfacesStrings.carbs),
-                        rh.gs(InterfacesStrings.format_carbs, carbs) + timeShift
-                    )
+                    rh.gs(InterfacesStrings.confirmation_line, rh.gs(InterfacesStrings.carbs), carbsWithTime)
                 )
             }
             if (insulinFromCOB > 0) {
@@ -438,8 +435,7 @@ class BolusWizard(
                     val duration = quickWizardEntry.duration()
                     val carbs2 = quickWizardEntry.carbs2()
                     if (carbs2 > 0) {
-                        val ecarbsMessage = rh.gs(InterfacesStrings.format_carbs, carbs2) + "/" + duration + "h (+" + timeOffset + "min)"
-                        line(ConfirmationRole.INFO, rh.gs(InterfacesStrings.confirmation_line, rh.gs(InterfacesStrings.uel_extended_carbs), ecarbsMessage))
+                        line(ConfirmationRole.INFO, rh.gs(InterfacesStrings.wizard_ecarbs, carbs2, duration, timeOffset))
                     }
                 }
             }
@@ -584,7 +580,7 @@ class BolusWizard(
                         bolus = detailedBolusInfo.createBolus(recordIcfg),
                         action = action,
                         source = source,
-                        note = rh.gs(InterfacesStrings.record) + if (notes.isNotEmpty()) ": $notes" else ""
+                        note = if (notes.isNotEmpty()) rh.gs(InterfacesStrings.confirmation_line, rh.gs(InterfacesStrings.record), notes) else rh.gs(InterfacesStrings.record)
                     )
                 }
                 if (carbs > 0) {

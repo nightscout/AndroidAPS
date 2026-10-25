@@ -25,7 +25,4 @@ interface TextResolver {
 
     /** Same, but always in English - used for data that is stored or uploaded, not displayed. */
     fun gsNotLocalised(ref: TextRef): String
-
-    /** True on a small screen, where the UI uses shorter texts. */
-    fun shortTextMode(): Boolean
 }

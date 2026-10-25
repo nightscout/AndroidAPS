@@ -53,6 +53,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.FD
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSearchField
 import app.aaps.core.ui.compose.AapsSpacing
@@ -246,7 +247,7 @@ private fun FoodItem(
                     style = MaterialTheme.typography.titleSmall
                 )
                 val details = buildString {
-                    if (food.portion > 0) append("${food.portion} ${food.unit}")
+                    if (food.portion > 0) append(stringResource(CoreUiStrings.value_with_unit, food.portion.toString(), food.unit))
                     if (food.category != null) {
                         if (isNotEmpty()) append(" · ")
                         append(food.category)
@@ -263,14 +264,16 @@ private fun FoodItem(
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    text = "${food.carbs}g",
+                    text = stringResource(InterfacesStrings.format_carbs, food.carbs),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
                 val extras = buildList {
-                    food.fat?.let { if (it > 0) add("F:${it}g") }
-                    food.protein?.let { if (it > 0) add("P:${it}g") }
-                    food.energy?.let { if (it > 0) add("${it}kJ") }
+                    // F and P were never translated; only the separator and the unit are.
+                    val grams = stringResource(CoreUiStrings.units_grams)
+                    food.fat?.let { if (it > 0) add(stringResource(InterfacesStrings.confirmation_line, "F", stringResource(CoreUiStrings.value_with_unit, it.toString(), grams))) }
+                    food.protein?.let { if (it > 0) add(stringResource(InterfacesStrings.confirmation_line, "P", stringResource(CoreUiStrings.value_with_unit, it.toString(), grams))) }
+                    food.energy?.let { if (it > 0) add(stringResource(CoreUiStrings.value_with_unit, it.toString(), "kJ")) }
                 }
                 if (extras.isNotEmpty()) {
                     Text(

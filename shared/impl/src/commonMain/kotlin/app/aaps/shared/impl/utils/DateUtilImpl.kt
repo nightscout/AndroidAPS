@@ -120,9 +120,9 @@ class DateUtilImpl(
         val startOfTodayMillis = beginOfDay(nowMillis)
         return if (mills < nowMillis) { // Past
             when {
-                mills > startOfTodayMillis                             -> "${rh.gs(InterfacesStrings.today)} - ${dateString(mills)}"
-                mills > startOfTodayMillis - 1.days.inWholeMilliseconds -> "${rh.gs(InterfacesStrings.yesterday)} - ${dateString(mills)}"
-                mills > startOfTodayMillis - 7.days.inWholeMilliseconds -> "${dayAgo(mills, rh, true)} - ${dateString(mills)}"
+                mills > startOfTodayMillis                             -> rh.gs(InterfacesStrings.values_with_dash, rh.gs(InterfacesStrings.today), dateString(mills))
+                mills > startOfTodayMillis - 1.days.inWholeMilliseconds -> rh.gs(InterfacesStrings.values_with_dash, rh.gs(InterfacesStrings.yesterday), dateString(mills))
+                mills > startOfTodayMillis - 7.days.inWholeMilliseconds -> rh.gs(InterfacesStrings.values_with_dash, dayAgo(mills, rh, true), dateString(mills))
                 else                                                   -> dateString(mills)
             }
         } else { // Future
@@ -252,10 +252,10 @@ class DateUtilImpl(
         val body = if (duration.isInfinite()) "∞" else {
             val totalHours = duration.inWholeHours
             val remainingMinutes = (duration - totalHours.hours).inWholeMinutes
-            val hoursPart = if (totalHours > 0) "$totalHours${rh.gs(InterfacesStrings.shorthour)} " else ""
-            "$hoursPart$remainingMinutes'"
+            if (totalHours > 0) rh.gs(InterfacesStrings.time_frame_hours_minutes, totalHours, remainingMinutes)
+            else rh.gs(InterfacesStrings.time_frame_minutes, remainingMinutes)
         }
-        return if (withParentheses) "($body)" else body
+        return if (withParentheses) rh.gs(InterfacesStrings.time_frame_in_parentheses, body) else body
     }
 
     override fun sinceString(timestamp: Long, rh: TextResolver): String =
@@ -317,22 +317,6 @@ class DateUtilImpl(
         }
     }
 
-    override fun age(milliseconds: Long, useShortText: Boolean, rh: TextResolver): String {
-        val duration = milliseconds.milliseconds
-        if (duration.inWholeDays > 1000) return rh.gs(InterfacesStrings.forever)
-        val daysUnit = if (useShortText) rh.gs(InterfacesStrings.shortday) else rh.gs(InterfacesStrings.days)
-        val hoursUnit = if (useShortText) rh.gs(InterfacesStrings.shorthour) else rh.gs(InterfacesStrings.hours)
-        val minutesUnit = if (useShortText) rh.gs(InterfacesStrings.shortminute) else rh.gs(InterfacesStrings.unit_minutes)
-        val days = duration.inWholeDays
-        val hours = (duration - days.days).inWholeHours
-        val minutes = (duration - days.days - hours.hours).inWholeMinutes
-        return when {
-            days > 0  -> "$days $daysUnit $hours $hoursUnit "
-            hours > 0 -> "$hours $hoursUnit $minutes $minutesUnit "
-            else      -> "${duration.inWholeMinutes} $minutesUnit"
-        }
-    }
-
     override fun niceTimeScalar(time: Long, rh: TextResolver): String {
         val duration = time.milliseconds
         val (value, unit) = when {
@@ -357,7 +341,7 @@ class DateUtilImpl(
                 seconds to if (seconds == 1L) InterfacesStrings.unit_second else InterfacesStrings.unit_seconds
             }
         }
-        return "${qs(value.toDouble(), 0)} ${rh.gs(unit)}"
+        return rh.gs(InterfacesStrings.time_value_with_unit, qs(value.toDouble(), 0), rh.gs(unit))
     }
 
     override fun qs(x: Double, numDigits: Int): String {

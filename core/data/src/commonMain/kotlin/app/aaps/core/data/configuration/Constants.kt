@@ -1,5 +1,7 @@
 package app.aaps.core.data.configuration
 
+import kotlin.math.round
+
 /**
  * Created by mike on 07.06.2016.
  */
@@ -12,6 +14,18 @@ object Constants {
 
     // OpenAPS algorithm
     const val NORMAL_TARGET_MGDL = 99 // 5.5 mmol/l = 99.1 mg/dL; use 99 to ensure consistent behavior across mg/dL and mmol/l units
+
+    /**
+     * True when [targetMgdl] is a high target: above 5.5 mmol/L or 99 mg/dL.
+     *
+     * The target is rounded to whole mg/dL first. A 5.5 mmol/L target is stored as 99.09 mg/dL
+     * with the current unit factor, and it must stay a normal target, as it was when the factor
+     * was 18.0 and the same target was stored as 99.0. Rows stored by either factor land on 99.
+     */
+    fun isAboveNormalTarget(targetMgdl: Double): Boolean = round(targetMgdl) > NORMAL_TARGET_MGDL
+
+    /** True when [targetMgdl] is a low target: below 5.5 mmol/L or 99 mg/dL. See [isAboveNormalTarget]. */
+    fun isBelowNormalTarget(targetMgdl: Double): Boolean = round(targetMgdl) < NORMAL_TARGET_MGDL
 
     /**
      * A BG older than this is not actual: the overview strikes it through and the loop does not use it.

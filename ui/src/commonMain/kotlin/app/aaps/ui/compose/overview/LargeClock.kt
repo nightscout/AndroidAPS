@@ -20,23 +20,29 @@ import androidx.compose.ui.unit.sp
 import app.aaps.core.ui.compose.LocalDateUtil
 import kotlinx.coroutines.delay
 
+/**
+ * @param showBgAge adds the age of the BG reading after the time, "21:33(-5)". Off where the BG
+ *   circle next to the clock already shows the age.
+ */
 @Composable
 fun LargeClock(
     bgTimestamp: Long?,
     modifier: Modifier = Modifier,
-    maxFontSize: TextUnit = 56.sp
+    maxFontSize: TextUnit = 56.sp,
+    showBgAge: Boolean = true
 ) {
     val dateUtil = LocalDateUtil.current
+    val bgAge = { if (showBgAge) dateUtil.minAgoShort(bgTimestamp) else "" }
     var timeText by remember { mutableStateOf(dateUtil.timeString()) }
-    var agoText by remember(bgTimestamp) { mutableStateOf(dateUtil.minAgoShort(bgTimestamp)) }
+    var agoText by remember(bgTimestamp, showBgAge) { mutableStateOf(bgAge()) }
 
-    LaunchedEffect(bgTimestamp) {
+    LaunchedEffect(bgTimestamp, showBgAge) {
         while (true) {
             val now = dateUtil.now()
             val msToNextMinute = 60_000L - (now % 60_000L)
             delay(msToNextMinute)
             timeText = dateUtil.timeString()
-            agoText = dateUtil.minAgoShort(bgTimestamp)
+            agoText = bgAge()
         }
     }
 

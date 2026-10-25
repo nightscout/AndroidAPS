@@ -25,9 +25,8 @@ data class NSRunningConfiguration(
     // driven by each key's SyncSpec. Applied with "master wins" on the client; client→master edits
     // travel separately via the signed Client-Control PreferencesUpdate channel.
     val syncedPrefs: Map<String, String>? = null,
-    // Computed runtime flag carried in the "hot" doc alongside [activeScene] — whether autosens
-    // is actually in use on the master. Top-level so it can ride the small hot doc and refresh on
-    // scene lifecycle events.
+    // Whether autosens is in use on the master, computed there from cold settings. In the cold doc, because the hot doc
+    // ([activeScene]) is sent only when the scene changes.
     val usedAutosensOnMainPhone: Boolean? = null,
     val authorizedClients: NSAuthorizedClients? = null
 )

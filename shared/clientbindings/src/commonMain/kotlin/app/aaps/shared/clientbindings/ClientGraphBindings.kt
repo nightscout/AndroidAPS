@@ -39,7 +39,6 @@ import app.aaps.implementation.maintenance.PrefsFileLister
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.implementation.notifications.CommonNotificationManager
 import app.aaps.implementation.resources.GeneratedTextResolver
-import app.aaps.implementation.resources.isCompactScreen
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.objectives.DurationText
 import app.aaps.plugins.constraints.objectives.objectives.Objective
@@ -49,6 +48,7 @@ import app.aaps.plugins.sync.nsclientV3.ws.NsConnection
 import app.aaps.plugins.sync.nsclientV3.ws.SocketNsConnection
 import app.aaps.shared.impl.logging.LImpl
 import app.aaps.shared.impl.rx.bus.RxBusImpl
+import app.aaps.ui.compose.history.HistoryScope
 import app.aaps.workflow.CalculationExecutor
 import app.aaps.workflow.LazyCalculationExecutor
 import app.aaps.workflow.PostCalculationRunner
@@ -119,7 +119,7 @@ object ClientGraphBindings {
      */
     @Provides
     @SingleIn(AppScope::class)
-    fun textResolver(): TextResolver = GeneratedTextResolver(compactScreen = isCompactScreen())
+    fun textResolver(): TextResolver = GeneratedTextResolver()
 
     /**
      * Settings export and import, for iOS and desktop.
@@ -224,6 +224,20 @@ object ClientGraphBindings {
     @IntoMap
     @IntKey(10)
     fun iobCobCalculatorEntry(plugin: IobCobCalculatorPlugin): PluginBase = plugin
+
+    /**
+     * One history browsing window, app-scoped so every injection point sees the same one.
+     *
+     * Unscoped would hand out a fresh window per injection point, which quietly undoes the isolation
+     * the extension exists for: two windows calculating over different ranges, with the screen
+     * reading one and writing the other.
+     *
+     * The factory comes from the graph's own `historyWindowFactory` accessor, which each shell states.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun historyScope(windowFactory: ClientHistoryWindowGraph.Factory): HistoryScope =
+        ClientHistoryScope(windowFactory.create())
 
     /** The ten objectives in order, for `ObjectivesPlugin` to read. */
     @Provides

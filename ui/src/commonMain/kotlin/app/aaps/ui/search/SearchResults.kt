@@ -308,7 +308,7 @@ private fun WikiLoadingIndicator(modifier: Modifier = Modifier) {
         CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
         Spacer(modifier = Modifier.width(12.dp))
         Text(
-            text = stringResource(CoreUiStrings.search_category_wiki) + "\u2026",
+            text = stringResource(CoreUiStrings.search_category_wiki),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

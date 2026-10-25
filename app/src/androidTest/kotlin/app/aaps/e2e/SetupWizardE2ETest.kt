@@ -17,7 +17,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
-import app.aaps.ui.compose.wizardDialog.CarbsType
+import app.aaps.core.data.model.CarbsType
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

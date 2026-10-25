@@ -112,7 +112,7 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     fun `entries document is processed as glucose and queued for storage`() = runTest {
         sut.onDataCreateUpdate(envelope("entries", sgvDoc()))
 
-        verify(nsIncomingDataProcessor).processSgvs(any(), eq(false))
+        verify(nsIncomingDataProcessor).processSgvs(any(), eq(false), eq(false))
         verify(storeDataForDb).requestStoreGlucoseValues()
     }
 

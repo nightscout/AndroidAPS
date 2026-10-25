@@ -82,6 +82,14 @@ class RoleBranch(
     }
 
     /**
+     * Drop a prepared entry the user cancelled: [masterDiscard] on a master. A client sends nothing - the master's
+     * entry and its SMB pause run out by themselves.
+     */
+    fun discard(masterDiscard: () -> Unit) {
+        if (!config.AAPSCLIENT) masterDiscard()
+    }
+
+    /**
      * Why a client request is blocked, when [NsClient.masterReachable] is false. [NsClient.masterControlAllowed]
      * folds into masterReachable, so here it is the discriminator: the master is reachable but has remote control
      * turned OFF ([FailureReason.ControlDisabled]) vs. simply unreachable/unpaired ([FailureReason.NotReachable]).

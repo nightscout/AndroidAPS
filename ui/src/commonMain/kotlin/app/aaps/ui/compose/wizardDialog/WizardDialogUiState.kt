@@ -1,19 +1,8 @@
 package app.aaps.ui.compose.wizardDialog
 
 import androidx.compose.runtime.Immutable
+import app.aaps.core.data.model.CarbsType
 import app.aaps.core.data.model.GlucoseUnit
-
-enum class CarbsType(
-    val carbsPercent: Int,
-    val eCarbsPercent: Int,
-    val eCarbsDelayMinutes: Int,
-    val eCarbsDurationHours: Int
-) {
-
-    BREAD(carbsPercent = 100, eCarbsPercent = 0, eCarbsDelayMinutes = 0, eCarbsDurationHours = 0),
-    CAKE(carbsPercent = 90, eCarbsPercent = 20, eCarbsDelayMinutes = 60, eCarbsDurationHours = 2),
-    PIZZA(carbsPercent = 80, eCarbsPercent = 35, eCarbsDelayMinutes = 60, eCarbsDurationHours = 3)
-}
 
 @Immutable
 data class WizardDialogUiState(
@@ -92,8 +81,26 @@ data class WizardDialogUiState(
     val bgAgeMinutes: Int = 0,
 
     /** True when the entry must be recorded only (no pump delivery): pump unavailable or the mode forbids bolus. (A client delivers via the master, not record-only.) */
-    val forcedRecordOnly: Boolean = false
+    val forcedRecordOnly: Boolean = false,
+    /** An SMB is being delivered on this phone (always false on a client: its master decides). */
+    val smbBeingDelivered: Boolean = false,
+    /** The user has changed the BG field. From then on it keeps their value and no longer follows new readings. */
+    val bgEdited: Boolean = false
 )
+
+/**
+ * A new sensor reading came in. The BG field follows it until the user has edited the field: the BG is sent to the
+ * master with the other inputs, so a field filled when the wizard opened would dose on a BG from minutes ago.
+ */
+fun WizardDialogUiState.withNewReading(bg: Double, ageMinutes: Int): WizardDialogUiState =
+    if (bgEdited) this else copy(bg = bg, bgAgeMinutes = ageMinutes, hasBgData = true)
+
+/**
+ * OK waits: the pump would give this bolus, and an SMB is being delivered right now (#5381). The master calculates
+ * the dose after the SMB has finished, with the SMB in IOB.
+ */
+val WizardDialogUiState.waitsForSmb: Boolean
+    get() = smbBeingDelivered && totalInsulin > 0.0 && !forcedRecordOnly
 
 val WizardDialogUiState.isMgdl: Boolean
     get() = units == GlucoseUnit.MGDL

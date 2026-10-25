@@ -40,6 +40,7 @@ import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.Command.CommandType
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
+import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
@@ -86,6 +87,9 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
@@ -128,7 +132,8 @@ class CommandQueueImplementation(
     // Plain CoroutineScope, not @ApplicationScope: that qualifier is javax and cannot appear in
     // commonMain. AppCoroutineBindings.unqualifiedAppScope binds the very same scope without it.
     private val appScope: CoroutineScope,
-    private val bolusProgressData: BolusProgressData
+    private val bolusProgressData: BolusProgressData,
+    private val smbPause: SmbPause
 ) : CommandQueue {
 
     private val queue = ArrayDeque<Command>()
@@ -147,7 +152,14 @@ class CommandQueueImplementation(
     private val enqueueLock = AapsLock()
     override var waitingForDisconnect = false
 
+    private val _smbBeingDelivered = MutableStateFlow(false)
+    override val smbBeingDelivered: StateFlow<Boolean> = _smbBeingDelivered.asStateFlow()
+
     @Volatile var performing: Command? = null
+        set(value) {
+            field = value
+            _smbBeingDelivered.value = value?.commandType == CommandType.SMB_BOLUS
+        }
 
     // Upper bound for a single pump profile push. A normal connection failure resolves the command
     // (and the awaited completion) on its own; this only guards the pathological lost-completion case so a
@@ -617,6 +629,12 @@ class CommandQueueImplementation(
         }
     }
 
+    // Under enqueueLock, like the SMB checks in bolus(): an SMB that passed them before an SmbPause began is in the
+    // queue by now and is dropped here, and one that comes later sees the pause and is refused.
+    override fun dropWaitingSmb() {
+        enqueueLock.withLock { removeAll(CommandType.SMB_BOLUS, success = false, cancelled = true) }
+    }
+
     override suspend fun bolus(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         val originalCarbs = detailedBolusInfo.carbs
         // Carbs-only path: store and return without queuing a pump command.
@@ -649,6 +667,12 @@ class CommandQueueImplementation(
                 if (bolusInQueue()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting SMB since a bolus is queue/running")
                     return pumpEnactResultProvider().enacted(false).success(false)
+                }
+                // The user is confirming a bolus that was calculated without this SMB. LoopPlugin checks this too,
+                // but a pause can begin between its check and this one. See dropWaitingSmb for the other order.
+                if (smbPause.isActive()) {
+                    aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting SMB since a bolus is waiting for confirmation")
+                    return pumpEnactResultProvider().enacted(false).success(false).comment(CoreUiStrings.smb_paused_for_bolus)
                 }
                 if (detailedBolusInfo.lastKnownBolusTime < lastBolusTime) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting bolus, another bolus was issued since request time")

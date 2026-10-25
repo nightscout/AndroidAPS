@@ -19,8 +19,8 @@ import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.ui.compose.ComposablePluginContent
+import app.aaps.core.ui.compose.ScreenAction
 import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.StatusBanner
@@ -179,8 +179,8 @@ class CarelevoComposeContentTest {
                 PumpInfoRow(label = "Reservoir", value = "298.0 U", level = StatusLevel.WARNING),
                 PumpInfoRow(label = "Hidden row", value = "hidden value", visible = false)
             ),
-            primaryActions = listOf(PumpAction(label = "Connect", onClick = {})),
-            managementActions = listOf(PumpAction(label = "Discard", onClick = {}))
+            primaryActions = listOf(ScreenAction(label = "Connect", onClick = {})),
+            managementActions = listOf(ScreenAction(label = "Discard", onClick = {}))
         )
 
         renderOverviewRoute()

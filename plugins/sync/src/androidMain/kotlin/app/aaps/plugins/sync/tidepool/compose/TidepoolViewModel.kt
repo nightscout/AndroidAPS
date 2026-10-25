@@ -19,7 +19,9 @@ import kotlinx.coroutines.launch
 
 @Immutable
 data class TidepoolUiState(
-    val connectionStatus: String = "",
+    val connectionStatus: AuthFlowOut.ConnectionStatus = AuthFlowOut.ConnectionStatus.NONE,
+    /** A login is saved and can still be used: the toolbar offers Logout, otherwise Login. */
+    val loggedIn: Boolean = false,
     val logList: List<SyncLogEntry> = emptyList()
 )
 
@@ -38,7 +40,9 @@ class TidepoolViewModel(
     init {
         viewModelScope.launch {
             tidepoolRepository.connectionStatus.collect { status ->
-                _uiState.update { it.copy(connectionStatus = status.name) }
+                // NOT_LOGGED_IN is also set when the saved token stopped working. Then only a new login helps.
+                val loggedIn = status != AuthFlowOut.ConnectionStatus.NOT_LOGGED_IN && authFlowOut.hasSavedLogin
+                _uiState.update { it.copy(connectionStatus = status, loggedIn = loggedIn) }
             }
         }
         viewModelScope.launch {

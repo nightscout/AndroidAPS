@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -60,10 +61,10 @@ class TempTargetManagementScreenTest {
     private lateinit var context: Context
 
     private lateinit var switchToEdit: String
-    private lateinit var moreOptions: String
     private lateinit var removeLabel: String
     private lateinit var activateLabel: String
     private lateinit var cancelLabel: String
+    private lateinit var cancelTargetLabel: String
     private lateinit var saveLabel: String
     private lateinit var reorderLabel: String
     private lateinit var okLabel: String
@@ -81,10 +82,10 @@ class TempTargetManagementScreenTest {
         viewModels = TempTargetManagementViewModelFixture(screen)
         context = RuntimeEnvironment.getApplication()
         switchToEdit = context.getString(app.aaps.core.ui.R.string.switch_to_edit)
-        moreOptions = context.getString(app.aaps.core.ui.R.string.more_options)
         removeLabel = context.getString(app.aaps.ui.R.string.remove_label)
         activateLabel = context.getString(app.aaps.ui.R.string.activate_label)
         cancelLabel = context.getString(app.aaps.core.ui.R.string.cancel)
+        cancelTargetLabel = context.getString(app.aaps.core.ui.R.string.clientcontrol_action_cancel_temp_target)
         saveLabel = context.getString(app.aaps.core.ui.R.string.save)
         reorderLabel = context.getString(app.aaps.core.ui.R.string.reorder)
         okLabel = context.getString(app.aaps.core.ui.R.string.ok)
@@ -141,7 +142,7 @@ class TempTargetManagementScreenTest {
     fun editModeOffersTheEditToolbarAndTheActivateButton() {
         setScreen(viewModels.build(presets = builtIns))
 
-        compose.onNodeWithContentDescription(moreOptions).assertIsDisplayed()
+        compose.onNodeWithContentDescription(reorderLabel).assertIsDisplayed()
         compose.onNodeWithContentDescription(removeLabel).assertIsDisplayed()
         compose.onNodeWithContentDescription(activateLabel).assertIsDisplayed()
         compose.onNodeWithContentDescription(switchToEdit).assertDoesNotExist()
@@ -154,7 +155,7 @@ class TempTargetManagementScreenTest {
         compose.onNodeWithContentDescription(switchToEdit).assertIsDisplayed()
         // The whole editing toolbar is gone, not merely disabled.
         compose.onNodeWithContentDescription(removeLabel).assertDoesNotExist()
-        compose.onNodeWithContentDescription(moreOptions).assertDoesNotExist()
+        compose.onNodeWithContentDescription(reorderLabel).assertDoesNotExist()
         // Activating is still allowed from play mode.
         compose.onNodeWithContentDescription(activateLabel).assertIsDisplayed()
     }
@@ -224,14 +225,41 @@ class TempTargetManagementScreenTest {
     fun theCancelButtonIsOnlyThereWhileATargetIsRunning() {
         setScreen(viewModels.build(presets = builtIns))
 
-        compose.onNodeWithContentDescription(cancelLabel).assertDoesNotExist()
+        compose.onNodeWithContentDescription(cancelTargetLabel).assertDoesNotExist()
     }
 
     @Test
     fun aRunningTargetCanBeCancelled() {
         setScreen(viewModels.build(presets = builtIns, activeTT = activeTt()))
 
-        compose.onNodeWithContentDescription(cancelLabel).assertIsDisplayed()
+        compose.onNodeWithContentDescription(cancelTargetLabel).assertIsDisplayed()
+    }
+
+    @Test
+    fun theCancelButtonSitsInTheToolbarNextToActivate() {
+        // Users missed it when it floated beside the time field (4.0 beta). M3 allows one FAB next to
+        // a toolbar, so Cancel is the last toolbar button: left of Activate, on the same line.
+        setScreen(viewModels.build(presets = builtIns, activeTT = activeTt()))
+
+        // A button merges its icon's description into its own node, so these are the button bounds.
+        val cancel = compose.onNodeWithContentDescription(cancelTargetLabel).getBoundsInRoot()
+        val activate = compose.onNodeWithContentDescription(activateLabel).getBoundsInRoot()
+        val remove = compose.onNodeWithContentDescription(removeLabel).getBoundsInRoot()
+        assertThat(cancel.right).isLessThan(activate.left)
+        assertThat(cancel.left).isGreaterThan(remove.right)
+        assertThat(cancel.top).isGreaterThan(activate.top)
+        assertThat(cancel.bottom).isLessThan(activate.bottom)
+    }
+
+    @Test
+    fun playModeKeepsOnlyTheCancelButtonInTheToolbar() {
+        // Starting and stopping a target is what the screen is used for most; the edit actions can go
+        // in play mode, Cancel cannot.
+        setScreen(viewModels.build(presets = builtIns, activeTT = activeTt()), initialMode = ScreenMode.PLAY)
+
+        compose.onNodeWithContentDescription(cancelTargetLabel).assertIsDisplayed()
+        compose.onNodeWithContentDescription(removeLabel).assertDoesNotExist()
+        compose.onNodeWithContentDescription(activateLabel).assertIsDisplayed()
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -247,7 +275,7 @@ class TempTargetManagementScreenTest {
         compose.onNodeWithText(offlineBanner).assertIsDisplayed()
         // Activate and Cancel both go to the master, so neither may be offered.
         compose.onNodeWithContentDescription(activateLabel).assertDoesNotExist()
-        compose.onNodeWithContentDescription(cancelLabel).assertDoesNotExist()
+        compose.onNodeWithContentDescription(cancelTargetLabel).assertDoesNotExist()
         // The editor is hidden too: nothing typed there could be saved or activated.
         compose.onNodeWithText(presetSettings).assertDoesNotExist()
         // Offline forces play mode, so the edit toolbar is gone as well.
@@ -263,7 +291,7 @@ class TempTargetManagementScreenTest {
 
         compose.onNodeWithText(offlineBanner).assertDoesNotExist()
         compose.onNodeWithContentDescription(activateLabel).assertIsDisplayed()
-        compose.onNodeWithContentDescription(cancelLabel).assertIsDisplayed()
+        compose.onNodeWithContentDescription(cancelTargetLabel).assertIsDisplayed()
         compose.onNodeWithText(presetSettings).assertIsDisplayed()
     }
 
@@ -283,23 +311,20 @@ class TempTargetManagementScreenTest {
         // Only the three built-ins: they keep their positions, so there is no move to make.
         setScreen(viewModels.build(presets = builtIns))
 
-        compose.onNodeWithContentDescription(moreOptions).performClick()
-
-        compose.onNodeWithText(reorderLabel).assertIsNotEnabled()
+        compose.onNodeWithContentDescription(reorderLabel).assertIsNotEnabled()
     }
 
     @Test
     fun sortModeReplacesTheTopBarAndHidesTheFloatingActions() {
         setScreen(viewModels.build(presets = builtIns + listOf(custom("a"), custom("b"))))
 
-        compose.onNodeWithContentDescription(moreOptions).performClick()
-        compose.onNodeWithText(reorderLabel).assertIsEnabled()
-        compose.onNodeWithText(reorderLabel).performClick()
+        compose.onNodeWithContentDescription(reorderLabel).assertIsEnabled()
+        compose.onNodeWithContentDescription(reorderLabel).performClick()
 
-        // Confirm and cancel replace back and the overflow menu.
+        // Confirm and cancel replace back and the reorder button.
         compose.onNodeWithContentDescription(okLabel).assertIsDisplayed()
         compose.onNodeWithContentDescription(cancelLabel).assertIsDisplayed()
-        compose.onNodeWithContentDescription(moreOptions).assertDoesNotExist()
+        compose.onNodeWithContentDescription(reorderLabel).assertDoesNotExist()
         // The buttons that float over the cards would sit on top of the sort controls.
         compose.onNodeWithContentDescription(activateLabel).assertDoesNotExist()
         compose.onNodeWithContentDescription(removeLabel).assertDoesNotExist()

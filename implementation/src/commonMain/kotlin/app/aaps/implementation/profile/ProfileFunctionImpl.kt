@@ -137,7 +137,7 @@ class ProfileFunctionImpl(
         if (profileSwitch != null) {
             profileName = if (customized) profileSwitch.originalCustomizedName else profileSwitch.originalProfileName
             if (showRemainingTime && profileSwitch.originalDuration != 0L) {
-                profileName += dateUtil.untilString(profileSwitch.originalEnd, rh)
+                profileName = rh.gs(InterfacesStrings.value_with_detail, profileName, dateUtil.untilString(profileSwitch.originalEnd, rh, withParentheses = false))
             }
         }
         return profileName

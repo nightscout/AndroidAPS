@@ -87,6 +87,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.model.CarbsType
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -117,6 +118,7 @@ import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.components.RecordOnlyBanner
+import app.aaps.ui.compose.components.SmbBeingDeliveredBanner
 import kotlinx.coroutines.launch
 
 @Composable
@@ -281,6 +283,7 @@ internal fun WizardDialogContent(
                     }
                 )
                 if (uiState.forcedRecordOnly) RecordOnlyBanner()
+                if (uiState.waitsForSmb) SmbBeingDeliveredBanner()
             }
         },
         bottomBar = {
@@ -294,7 +297,7 @@ internal fun WizardDialogContent(
                     focusManager.clearFocus()
                     onConfirmClick()
                 },
-                enabled = uiState.okVisible,
+                enabled = uiState.okVisible && !uiState.waitsForSmb,
                 modifier = Modifier
                     .fillMaxWidth()
                     .bottomBarSafeArea()
@@ -394,7 +397,7 @@ internal fun WizardDialogContent(
                                 val hasPercentage = uiState.percentage != 100
                                 val hasCorrection = uiState.directCorrection != 0.0
                                 if (hasPercentage || hasCorrection) {
-                                    val percentageText = stringResource(CoreUiStrings.format_percent, uiState.percentage)
+                                    val percentageText = stringResource(CoreUiStrings.units_format_percent, uiState.percentage)
                                     val correctionText = stringResource(CoreUiStrings.format_insulin_units_signed, uiState.directCorrection)
                                     val extras = when {
                                         hasPercentage && hasCorrection -> stringResource(UiStrings.wizard_percentage_and_correction, percentageText, correctionText)
@@ -600,7 +603,7 @@ internal fun WizardDialogContent(
                                     )
                                     val afterPercentage = scaledSubtotal * uiState.percentage / 100.0
                                     CalcRow(
-                                        label = stringResource(CoreUiStrings.format_percent, uiState.percentage),
+                                        label = stringResource(CoreUiStrings.units_format_percent, uiState.percentage),
                                         value = stringResource(InterfacesStrings.format_insulin_units, afterPercentage)
                                     )
                                 }
@@ -831,7 +834,7 @@ internal fun WizardDialogContent(
                         // The percent sign sits in its own format resource here, not after the number.
                         valueContent = {
                             Text(
-                                text = stringResource(CoreUiStrings.format_percent, uiState.percentage),
+                                text = stringResource(CoreUiStrings.units_format_percent, uiState.percentage),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )

@@ -33,6 +33,7 @@ import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.qrScannerAvailable
 import app.aaps.plugins.configuration.ConfigurationStrings
 import app.aaps.plugins.configuration.setupwizard.elements.SWBreak
 import app.aaps.plugins.configuration.setupwizard.elements.SWButton
@@ -249,8 +250,11 @@ class SWDefinition(
 
     // Client side, before Nightscout: the master can show a QR code with the Nightscout address and the client's own
     // token, and the pairing too. One scan does this step and the next two, so a used code finishes the wizard
-    // (AppNavGraph). Android only: the scanner is not built for iOS yet, and a desktop has no camera to point at the
-    // master.
+    // (AppNavGraph). Shown wherever the camera can read a code, which is what qrScannerAvailable answers - not which
+    // shell is running. Asking it that way is deliberate: AppPlatform says of itself that it is not a device
+    // capability, after a desktop build once asked for a Bluetooth permission because the question had been put that
+    // way. A device that has no camera to offer right now still reaches the step, and the scanner says so there,
+    // where there is room to explain it.
     private val screenSetupFromMaster
         get() = swScreenProvider().with(ConfigurationStrings.setupwizard_setup_from_master_title)
             .skippable(true)
@@ -263,7 +267,7 @@ class SWDefinition(
             )
             .add(swBreakProvider())
             .add(swPairingStatusProvider())
-            .visibility { config.platform in AppPlatform.ANDROID_ONLY }
+            .visibility { qrScannerAvailable }
 
     // Client side: explain pairing with a master and open the "Pair with master" (PIN entry) screen. After Nightscout,
     // because the PIN offer comes through Nightscout. A pairing finishes the wizard (AppNavGraph).

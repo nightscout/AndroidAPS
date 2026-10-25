@@ -110,12 +110,16 @@ class NsFrameHandler(
             nsClientV3Plugin().storeLastLoadedSrvModified()
         }
 
+        // advanceInitialLoadCursor = false below, for the same reason as the guard above: a live
+        // record must not move the first-load cursor either. It carries the time of "now", so
+        // during a first load it would make the REST load start at now and the history behind it -
+        // profile switches included - would never be read.
         when (collection) {
             "devicestatus" -> nsDeviceStatusHandler.handleNewData(arrayOf(docString.toNSDeviceStatus()), live = true)
 
             "entries"      -> {
                 docString.toNSSgvV3()?.let {
-                    nsIncomingDataProcessor().processSgvs(listOf(it), doFullSync = false)
+                    nsIncomingDataProcessor().processSgvs(listOf(it), doFullSync = false, advanceInitialLoadCursor = false)
                     storeDataForDb.requestStoreGlucoseValues()
                 }
                 // The same collection also carries AAPS calibration entries.
@@ -128,7 +132,7 @@ class NsFrameHandler(
             "profile"      -> appScope.launch { nsIncomingDataProcessor().processProfile(doc, doFullSync = false) }
 
             "treatments"   -> docString.toNSTreatment()?.let {
-                nsIncomingDataProcessor().processTreatments(listOf(it), doFullSync = false)
+                nsIncomingDataProcessor().processTreatments(listOf(it), doFullSync = false, advanceInitialLoadCursor = false)
                 storeDataForDb.requestStoreTreatments(fullSync = false)
             }
 
@@ -159,7 +163,7 @@ class NsFrameHandler(
                     nsClientV3Plugin().bumpMasterSignal(opened.signedAt ?: srvModified)
                 }
 
-            // Client: hot state doc - the active scene and runtime flags only. Kept apart from the
+            // Client: hot state doc - the active scene only. Kept apart from the
             // cold branch so this can never clear a running scene.
             config.AAPSCLIENT && identifier == SettingsIdentifiers.STATE                                  ->
                 masterDocVerifier().open(identifier, doc)?.let { opened ->

@@ -4,12 +4,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -168,8 +166,7 @@ class AutomationComposeContent(
 
         deleteTarget?.let { pos ->
             val target = holder.eventAt(pos)
-            val message = stringResource(CoreUiStrings.removerecord) +
-                (target?.let { " " + it.title } ?: "")
+            val message = target?.let { stringResource(CoreUiStrings.value_with_unit, stringResource(CoreUiStrings.removerecord), it.title) } ?: stringResource(CoreUiStrings.removerecord)
             AlertDialog(
                 onDismissRequest = { deleteTarget = null },
                 title = { Text(stringResource(CoreUiStrings.removerecord)) },
@@ -494,26 +491,16 @@ private fun buildListToolbar(
         }
     },
     actions = {
+        // "Run now" is master-only — automation does not execute on a client.
+        if (showRun) {
+            IconButton(onClick = onRun) {
+                Icon(Icons.Default.PlayArrow, contentDescription = stringResource(AutomationStrings.run_automations))
+            }
+        }
         if (onSettings != null) {
             IconButton(onClick = onSettings) {
                 Icon(Icons.Default.Settings, contentDescription = settingsDesc)
             }
         }
-        // "Run now" is master-only — automation does not execute on a client.
-        if (showRun) AutomationOverflow(onRun)
     }
 )
-
-@Composable
-private fun AutomationOverflow(onRun: () -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-    IconButton(onClick = { expanded = true }) {
-        Icon(Icons.Default.MoreVert, contentDescription = stringResource(CoreUiStrings.more_options))
-    }
-    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-        DropdownMenuItem(
-            text = { Text(stringResource(AutomationStrings.run_automations)) },
-            onClick = { expanded = false; onRun() }
-        )
-    }
-}

@@ -49,6 +49,10 @@ kotlin {
                 implementation(project(":plugins:main"))
                 implementation(project(":plugins:sync"))
                 implementation(project(":workflow"))
+                // For the history window: the cache it builds comes from `OverviewDataCacheFactory`,
+                // and what it hands to the screen is a `HistoryScope`. Both live in :ui, and both
+                // shells depend on :ui already, so this adds no new module to either of them.
+                implementation(project(":ui"))
 
                 implementation(libs.kotlinx.coroutines.core)
                 // For ClientViewModelFactory - the shells both need one and it is the same one.

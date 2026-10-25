@@ -6,9 +6,11 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.PrefsFileInfo
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -30,6 +32,7 @@ import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.interfaces.ui.UrlOpener
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.di.CoreObjectsGraph
@@ -44,6 +47,8 @@ import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.shared.clientbindings.ClientGraphBindings
+import app.aaps.shared.clientbindings.ClientHistoryWindowGraph
+import app.aaps.ui.compose.history.HistoryScope
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.search.BuiltInSearchables
@@ -156,6 +161,28 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
     val graphViewModelFactory: GraphViewModel.Factory
     val chipsViewModelFactory: ChipsViewModel.Factory
     val overviewDataCache: OverviewDataCache
+
+    /**
+     * The factory for a history browsing window, the same one iOS uses.
+     *
+     * Declared here rather than discovered: a `@GraphExtension` is only reachable through an accessor
+     * its parent graph states. Without it `ClientGraphBindings.historyScope` has no factory to call.
+     * Each window is a separate scope with its own calculation objects - see
+     * [ClientHistoryWindowGraph] for why that matters.
+     */
+    val historyWindowFactory: ClientHistoryWindowGraph.Factory
+
+    /** The loop's own calculator, exposed so a test can prove a window does not share it. */
+    val iobCobCalculator: IobCobCalculator
+
+    /** The loop's own overview data, exposed for the same test. */
+    val overviewData: OverviewData
+
+    /** The loop's own calculation signals, exposed for the same test. */
+    val calculationSignals: CalculationSignalsEmitter
+
+    /** What the History Browser is given, exposed so a test can check it is a window and not the loop. */
+    val historyScope: HistoryScope
 
     /** The app's own database, inside this client's own data directory so two clients never share one. */
     @Provides

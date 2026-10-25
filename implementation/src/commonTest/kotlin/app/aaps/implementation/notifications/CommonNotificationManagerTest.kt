@@ -74,7 +74,6 @@ class CommonNotificationManagerTest {
         override fun gs(ref: TextRef): String = (ref as? TextRef.Literal)?.text ?: "title"
         override fun gs(ref: TextRef, vararg args: Any?): String = gs(ref)
         override fun gsNotLocalised(ref: TextRef): String = gs(ref)
-        override fun shortTextMode(): Boolean = false
     }
 
     private object SilentLogger : AAPSLogger {

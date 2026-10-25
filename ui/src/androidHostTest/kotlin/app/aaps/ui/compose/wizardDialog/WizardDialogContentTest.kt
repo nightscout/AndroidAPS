@@ -81,7 +81,7 @@ class WizardDialogContentTest {
             CoreUiR.string.value_in_parentheses,
             ctx.getString(
                 UiR.string.wizard_percentage_and_correction,
-                ctx.getString(CoreUiR.string.format_percent, 71),
+                ctx.getString(CoreUiR.string.units_format_percent, 71),
                 ctx.getString(CoreUiR.string.format_insulin_units_signed, 1.0)
             )
         )

@@ -130,7 +130,6 @@ class PluginBaseStartFailureTest {
         override fun gs(ref: TextRef): String = "text"
         override fun gs(ref: TextRef, vararg args: Any?): String = "failed: " + args.joinToString()
         override fun gsNotLocalised(ref: TextRef): String = "text"
-        override fun shortTextMode(): Boolean = false
     }
 
     private class TestPlugin(

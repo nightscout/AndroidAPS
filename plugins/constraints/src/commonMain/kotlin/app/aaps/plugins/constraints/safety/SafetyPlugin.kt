@@ -125,9 +125,8 @@ class SafetyPlugin(
         val currentBasal = profile.getBasal()
         val absoluteRate = currentBasal * (percentRate.originalValue().toDouble() / 100)
         percentRate.addReason(
-            "Percent rate " + percentRate.originalValue() + "% recalculated to " + decimalFormatter.to2Decimal(absoluteRate) + " U/h with current basal " + decimalFormatter.to2Decimal(
-                currentBasal
-            ) + " U/h", this
+            rh.gs(CoreUiStrings.percent_rate_recalculated, percentRate.originalValue(), decimalFormatter.to2Decimal(absoluteRate), decimalFormatter.to2Decimal(currentBasal)),
+            this
         )
         val absoluteConstraint = ConstraintObject(absoluteRate, aapsLogger)
         applyBasalConstraints(absoluteConstraint, profile)

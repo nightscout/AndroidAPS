@@ -113,6 +113,66 @@ class NsIncomingDataProcessorTest : TestBaseWithProfile() {
         })
     }
 
+    /**
+     * The first-load cursor moves only when the caller asks for it.
+     *
+     * The REST load pages forward through history and must move it, so the next page starts after
+     * this one. A live websocket record must not: it carries the time of "now", so during a first
+     * load it would make the next page start at now and the history behind it would never be read.
+     */
+    @Test
+    fun `processSgvs moves the first load cursor only when asked`() {
+        val sgvTime = now - T.mins(2).msecs()
+        val sgvList = listOf(sgvAt(sgvTime))
+
+        processor.processSgvs(sgvList, doFullSync = false, advanceInitialLoadCursor = false)
+        verify(nsClient, never()).updateLatestBgReceivedIfNewer(any())
+
+        processor.processSgvs(sgvList, doFullSync = false, advanceInitialLoadCursor = true)
+        verify(nsClient).updateLatestBgReceivedIfNewer(sgvTime)
+    }
+
+    @Test
+    fun `processTreatments moves the first load cursor only when asked`() {
+        val carbTime = now - T.mins(10).msecs()
+        val treatments = listOf<NSTreatment>(carbsAt(carbTime))
+
+        processor.processTreatments(treatments, doFullSync = false, advanceInitialLoadCursor = false)
+        verify(nsClient, never()).updateLatestTreatmentReceivedIfNewer(any())
+
+        processor.processTreatments(treatments, doFullSync = false, advanceInitialLoadCursor = true)
+        verify(nsClient).updateLatestTreatmentReceivedIfNewer(carbTime)
+    }
+
+    private fun sgvAt(time: Long) = NSSgvV3(
+        device = "share2",
+        date = time,
+        identifier = "cursor_sgv",
+        utcOffset = null,
+        isValid = true,
+        units = NsUnits.MG_DL,
+        sgv = 130.0,
+        direction = Direction.FORTY_FIVE_UP,
+        noise = 1.0,
+        filtered = 132.0,
+        unfiltered = 131.0
+    )
+
+    private fun carbsAt(time: Long) = NSCarbs(
+        identifier = "cursor_carb",
+        date = time,
+        carbs = 20.0,
+        duration = 0,
+        utcOffset = null,
+        isValid = true,
+        eventType = EventType.CARBS_CORRECTION,
+        notes = null,
+        pumpId = null,
+        endId = null,
+        pumpType = null,
+        pumpSerial = null
+    )
+
     // BG from Nightscout, new readings and removed ones alike, is taken when any of the three holds.
     @Test
     fun `acceptsGlucose when Nightscout is the BG source`() {

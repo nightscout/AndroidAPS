@@ -51,7 +51,7 @@ import kotlin.concurrent.Volatile
  *    clients. Triggered by [RunningConfigurationKeys.observableKeys] changes, plugin switches
  *    ([EventConfigBuilderChange]) and authorized-client changes; debounced [COLD_DEBOUNCE_MS]. One that could not be
  *    published is tried again later (`publishColdOrRetry`).
- *  - Hot ([SettingsIdentifiers.STATE]): active scene + computed runtime flags. Triggered by
+ *  - Hot ([SettingsIdentifiers.STATE]): the active scene only. Triggered by
  *    [RunningConfigurationKeys.hotKeys] (scene lifecycle); debounced [HOT_DEBOUNCE_MS].
  *
  * Document shape (both): `{ schemaVersion: 2, signed: "<{ signedAt, runningConfig } as text>", signature: <…> }`,
@@ -217,7 +217,7 @@ class RunningConfigurationPublisher(
         return putSettings(SettingsIdentifiers.COLD, payload)
     }
 
-    // Hot doc: active scene + computed runtime flags. Small and frequently republished.
+    // Hot doc: the active scene. Small, and sent on every scene change.
     private suspend fun publishHot() {
         putSettings(SettingsIdentifiers.STATE, runningConfiguration.activeSceneConfiguration())
     }

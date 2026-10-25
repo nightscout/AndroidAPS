@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.toArgb
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.ActiveSceneState
+import app.aaps.core.data.ui.MarkerSizeClasses
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
@@ -597,8 +598,11 @@ class DataHandlerMobile(
         val historyList = getTDDList(dummies)
         if (isOldData(historyList)) {
             val busy = activePump.isBusy()
-            val message = rh.gs(CoreUiStrings.tdd_old_data) + ", " +
+            val message = rh.gs(
+                InterfacesStrings.values_with_comma,
+                rh.gs(CoreUiStrings.tdd_old_data),
                 if (busy) rh.gs(CoreUiStrings.pump_busy) else rh.gs(SyncStrings.pump_fetching_data)
+            )
             sendToWear(EventData.ConfirmAction(rh.gs(CoreUiStrings.tdd_short), message, returnCommand = null))
             if (!busy) {
                 commandQueue.loadTDDs()
@@ -698,7 +702,8 @@ class DataHandlerMobile(
         }
         val inputs = MasterActionExecutor.WizardInputs(
             bg = bgReading.valueToUnits(profileFunction.getUnits()),
-            carbs = command.carbs,
+            // The meal type splits the grams like the phone wizard does: part now, part as eCarbs.
+            carbs = command.carbsType.carbsNow(command.carbs),
             percentage = command.percentage,
             directCorrection = 0.0,
             carbTime = 0,
@@ -709,6 +714,9 @@ class DataHandlerMobile(
             useTrend = preferences.get(BooleanKey.WearWizardTrend),
             alarm = false,
             notes = "",
+            eCarbsGrams = command.carbsType.eCarbs(command.carbs),
+            eCarbsDelayMinutes = command.carbsType.eCarbsDelayMinutes,
+            eCarbsDurationHours = command.carbsType.eCarbsDurationHours,
             source = Sources.Wear
         )
         contacting()
@@ -998,7 +1006,7 @@ class DataHandlerMobile(
         }
         // A prime is in pump units.
         val insulinAfterConstraints = constraintChecker.applyPrimingConstraints(PumpInsulin(amount)).cU
-        var message = rh.gs(CoreUiStrings.prime_fill) + ": " + insulinAfterConstraints + rh.gs(SyncStrings.units_short)
+        var message = rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.prime_fill), rh.gs(InterfacesStrings.format_insulin_units, insulinAfterConstraints))
         if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(CoreUiStrings.constraint_applied)
         sendToWear(
             EventData.ConfirmAction(
@@ -1017,7 +1025,7 @@ class DataHandlerMobile(
         }
         // A prime is in pump units.
         val insulinAfterConstraints = constraintChecker.applyPrimingConstraints(PumpInsulin(command.insulin)).cU
-        var message = rh.gs(CoreUiStrings.prime_fill) + ": " + insulinAfterConstraints + rh.gs(SyncStrings.units_short)
+        var message = rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.prime_fill), rh.gs(InterfacesStrings.format_insulin_units, insulinAfterConstraints))
         if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(CoreUiStrings.constraint_applied)
         sendToWear(
             EventData.ConfirmAction(
@@ -1473,12 +1481,19 @@ class DataHandlerMobile(
                 temps.add(EventData.TreatmentData.TempBasal(now - 60 * 1000, endBasalValue, runningTime + 5 * 60 * 1000, currentAmount, currentAmount))
             }
         }
-        persistenceLayer.getBolusesFromTimeIncludingInvalid(startTimeWindow, true)
-            .stream()
-            .filter { (_, _, _, _, _, _, _, _, _, type) -> type !== BS.Type.PRIMING }
-            .forEach { (_, _, _, isValid, _, _, timestamp, _, amount, type) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, amount, 0.0, type === BS.Type.SMB, isValid)) }
-        persistenceLayer.getCarbsFromTimeExpanded(startTimeWindow, true)
-            .forEach { (_, _, _, isValid, _, _, timestamp, _, _, amount) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, 0.0, amount, false, isValid)) }
+        // A day of boluses and carbs: the last hours go to the watch, the whole day sets the size
+        // cuts, the same day the phone's graphs take them from
+        val dayStart = now - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
+        val dayBoluses = persistenceLayer.getBolusesFromTimeIncludingInvalid(dayStart, true)
+            .filter { it.type != BS.Type.PRIMING }
+        dayBoluses.filter { it.timestamp >= startTimeWindow }
+            .forEach { boluses.add(EventData.TreatmentData.Treatment(it.timestamp, it.amount, 0.0, it.type == BS.Type.SMB, it.isValid)) }
+        val smbSizeClasses = MarkerSizeClasses.ofMax(dayBoluses.filter { it.isValid && it.type == BS.Type.SMB && it.amount > 0 }.map { it.amount })
+        val bolusSizeClasses = MarkerSizeClasses.ofMax(dayBoluses.filter { it.isValid && it.type == BS.Type.NORMAL }.map { it.amount })
+        val dayCarbs = persistenceLayer.getCarbsFromTimeExpanded(dayStart, true)
+        dayCarbs.filter { it.timestamp >= startTimeWindow }
+            .forEach { boluses.add(EventData.TreatmentData.Treatment(it.timestamp, 0.0, it.amount, false, it.isValid)) }
+        val carbsSizeClasses = MarkerSizeClasses.ofMax(dayCarbs.filter { it.isValid && it.amount > 0 }.map { it.amount })
         val apsResult = if (config.APS) {
             val lastRun = loop.lastRun
             if (lastRun?.request?.hasPredictions == true) {
@@ -1504,7 +1519,17 @@ class DataHandlerMobile(
                     )
                 )
             }
-        sendToWear(EventData.TreatmentData(temps, basals, boluses, predictions))
+        sendToWear(
+            EventData.TreatmentData(
+                temps, basals, boluses, predictions,
+                smbSmallBelow = smbSizeClasses?.smallBelow ?: -1.0,
+                smbLargeFrom = smbSizeClasses?.largeFrom ?: -1.0,
+                bolusSmallBelow = bolusSizeClasses?.smallBelow ?: -1.0,
+                bolusLargeFrom = bolusSizeClasses?.largeFrom ?: -1.0,
+                carbsSmallBelow = carbsSizeClasses?.smallBelow ?: -1.0,
+                carbsLargeFrom = carbsSizeClasses?.largeFrom ?: -1.0
+            )
+        )
     }
 
     private fun predictionColor(data: GV): Int {
@@ -1785,7 +1810,7 @@ class DataHandlerMobile(
             val tdd = historyList[0].total
             historyList.removeAt(0)
 
-            message += rh.gs(SyncStrings.today) + ": " + rh.gs(SyncStrings.tdd_line, tdd, 100 * tdd / refTDD) + "\n"
+            message += rh.gs(InterfacesStrings.confirmation_line, rh.gs(SyncStrings.today), rh.gs(SyncStrings.tdd_line, tdd, 100 * tdd / refTDD)) + "\n"
             message += "\n"
         }
         var weighted03 = 0.0
@@ -1804,17 +1829,17 @@ class DataHandlerMobile(
                 weighted03 = weighted03 * 0.7 + tdd * 0.3
             }
         }
-        message += rh.gs(SyncStrings.weighted) + ":\n"
-        message += "0.3: " + rh.gs(SyncStrings.tdd_line, weighted03, 100 * weighted03 / refTDD) + "\n"
-        message += "0.5: " + rh.gs(SyncStrings.tdd_line, weighted05, 100 * weighted05 / refTDD) + "\n"
-        message += "0.7: " + rh.gs(SyncStrings.tdd_line, weighted07, 100 * weighted07 / refTDD) + "\n"
+        message += rh.gs(CoreUiStrings.label_with_colon, rh.gs(SyncStrings.weighted)) + "\n"
+        for ((weight, value) in listOf("0.3" to weighted03, "0.5" to weighted05, "0.7" to weighted07))
+            message += rh.gs(InterfacesStrings.confirmation_line, weight, rh.gs(SyncStrings.tdd_line, value, 100 * value / refTDD)) + "\n"
         message += "\n"
         historyList.reverse()
         // add TDDs:
         for (record in historyList) {
             val tdd = record.total
-            message += df.format(Date(record.timestamp)) + " " + rh.gs(SyncStrings.tdd_line, tdd, 100 * tdd / refTDD)
-            message += (if (dummies.contains(record)) "x" else "") + "\n"
+            val dayLine = rh.gs(CoreUiStrings.value_with_unit, df.format(Date(record.timestamp)), rh.gs(SyncStrings.tdd_line, tdd, 100 * tdd / refTDD))
+            // x marks a day that is estimated, not read from the pump
+            message += (if (dummies.contains(record)) rh.gs(CoreUiStrings.value_with_unit, dayLine, "x") else dayLine) + "\n"
         }
         return message
     }

@@ -21,9 +21,6 @@ internal expect fun qrModules(text: String): QrModules?
 /** True where this platform can show a QR code. Asked by making a tiny one, so it cannot disagree with [qrModules]. */
 internal val qrCodeAvailable: Boolean by lazy { qrModules("AAPS") != null }
 
-/** True where this platform can read a QR code with the camera. Android only for now; iOS has to follow. */
-internal expect val qrScannerAvailable: Boolean
-
 /**
  * The camera picture, calling [onScanned] with the text of every QR code it sees (the same code many times). Asks for
  * the camera permission itself and shows why when it is refused.

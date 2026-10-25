@@ -186,7 +186,7 @@ private fun TempBasalItem(
                     if (tempBasal.isAbsolute) {
                         append(stringResource(CoreUiStrings.pump_base_basal_rate, tempBasal.rate))
                     } else {
-                        append(stringResource(CoreUiStrings.format_percent, tempBasal.rate.toInt()))
+                        append(stringResource(CoreUiStrings.units_format_percent, tempBasal.rate.toInt()))
                     }
                     // IOB in color
                     if (iob.basaliob != 0.0) {

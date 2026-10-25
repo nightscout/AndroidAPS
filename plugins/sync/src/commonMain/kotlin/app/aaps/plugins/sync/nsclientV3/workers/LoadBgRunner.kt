@@ -81,7 +81,7 @@ class LoadBgRunner(
                         val action = if (isFirstLoad) "RCV-F" else "RCV"
                         nsClientRepository.addLog("◄ $action", "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}")
                         // Schedule processing of fetched data and continue of loading
-                        continueLoading = !cursorStalled && nsIncomingDataProcessor.processSgvs(sgvs, nsClientV3Plugin.doingFullSync)
+                        continueLoading = !cursorStalled && nsIncomingDataProcessor.processSgvs(sgvs, nsClientV3Plugin.doingFullSync, advanceInitialLoadCursor = true)
                     } else {
                         // End first load
                         if (isFirstLoad) {

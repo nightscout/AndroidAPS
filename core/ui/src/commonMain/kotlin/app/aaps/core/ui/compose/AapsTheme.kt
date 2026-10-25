@@ -30,6 +30,7 @@ import app.aaps.core.ui.compose.navigation.DarkElementColors
 import app.aaps.core.ui.compose.navigation.ElementColors
 import app.aaps.core.ui.compose.navigation.LightElementColors
 import app.aaps.core.ui.compose.navigation.LocalElementColors
+import kotlin.math.min
 
 /**
  * Smallest-screen-width threshold (in dp) above which the device is treated as a tablet.
@@ -39,8 +40,41 @@ import app.aaps.core.ui.compose.navigation.LocalElementColors
 const val TABLET_MIN_SW_DP = 600
 
 /**
+ * Width one column of a phone layout needs, in dp. The overview shows two columns from twice this
+ * width on, so a phone layout always has at least this much per column.
+ */
+const val PHONE_COLUMN_MIN_WIDTH_DP = 360
+
+/** The scale moves in steps of 1/[SCALE_STEPS]: resizing a desktop window then does not build a new typography for every pixel. */
+private const val SCALE_STEPS = 20
+
+/** Largest text scale, for a tablet that has the room for it: 1.5. */
+private const val TABLET_MAX_SCALE_STEPS = 30
+
+/**
+ * Text scale for a screen whose sides are [shortSideDp] and [longSideDp].
+ *
+ * Bigger text on a tablet, but only as far as the room allows: after scaling, every column must still
+ * have the [PHONE_COLUMN_MIN_WIDTH_DP] a phone layout needs. In landscape the tablet layout splits the
+ * long side into two columns, so the room is the short side or half of the long side, whichever is
+ * smaller. It does not depend on the orientation, so the text does not jump when the device turns.
+ *
+ * It used to be a fixed 1.5 from 600 dp on. A folding phone opened up is just over 600 dp, and its
+ * columns, after scaling, were narrower than any phone's: words broke in the middle and the status
+ * rows were cut off. This rule asks the size, not the kind of device, so the next new shape of screen
+ * gets an answer that fits.
+ */
+fun typographyScaleFor(shortSideDp: Int, longSideDp: Int): Float {
+    if (shortSideDp < TABLET_MIN_SW_DP) return 1f
+    val room = min(shortSideDp, longSideDp / 2)
+    // Whole numbers, rounded down, so a column is never narrower than the rule asks.
+    val steps = (room * SCALE_STEPS / PHONE_COLUMN_MIN_WIDTH_DP).coerceIn(SCALE_STEPS, TABLET_MAX_SCALE_STEPS)
+    return steps.toFloat() / SCALE_STEPS
+}
+
+/**
  * CompositionLocal providing the tablet typography/dimension scale factor.
- * 1f on phones, larger (e.g. 1.5f) on tablets. Use to scale dp dimensions
+ * 1f on phones, up to 1.5f on tablets, see [typographyScaleFor]. Use to scale dp dimensions
  * (icon sizes, custom shapes) so they match the scaled typography.
  */
 val LocalAapsScale = compositionLocalOf { 1f }
@@ -307,9 +341,8 @@ fun AapsTheme(
     val generalColors = if (isDark) DarkGeneralColors else LightGeneralColors
     val snackbarColors = if (isDark) DarkSnackbarColors else LightSnackbarColors
 
-    // Scale typography up on tablets. Orientation-independent (smallest-width signal).
-    val isTablet = smallestScreenWidthDp() >= TABLET_MIN_SW_DP
-    val typographyScale = if (isTablet) 1.5f else 1f
+    // Scale typography up on tablets, as far as the room allows. Orientation-independent.
+    val typographyScale = typographyScaleFor(smallestScreenWidthDp(), longestScreenSideDp())
     val scaledMaterialTypography = remember(typographyScale) { Typography().withoutFontPadding().scaled(typographyScale) }
 
     CompositionLocalProvider(

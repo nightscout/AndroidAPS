@@ -457,10 +457,7 @@ snooze_dst_in24h|DstHelperLongKey|true
 snooze_loop_disabled|DstHelperLongKey|true
 snoozedTo%s|LongComposedKey|true
 startupwizard_processed|BooleanNonKey|true
-stats_dexcom_tir_expanded|BooleanNonKey|false
-stats_tdd_cycle_expanded|BooleanNonKey|false
-stats_tdd_expanded|BooleanNonKey|false
-stats_tir_expanded|BooleanNonKey|false
+stats_tab|StringNonKey|false
 statuslights_bage_critical|IntKey|true
 statuslights_bage_warning|IntKey|true
 statuslights_bat_critical|IntKey|true
