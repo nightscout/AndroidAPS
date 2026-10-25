@@ -47,6 +47,7 @@
     <string name="authorized_clients_qr_ns_instructions">Scansiona questo codice sul nuovo telefono, nella procedura guidata di installazione o in coppia con master. Imposta Nightscout e abbina il telefono.</string>
     <string name="authorized_clients_qr_keep_private">Chiunque veda questo codice può leggere il tuo Nightscout. Mostralo solo al nuovo telefono.</string>
     <string name="authorized_clients_token_problem_title">No QR code</string>
+    <string name="authorized_clients_not_added_title">Client non aggiunto</string>
     <string name="authorized_clients_token_problem_not_connected">Questo telefono non è connesso a Nightscout, quindi non può creare un token per il client.</string>
     <string name="authorized_clients_token_problem_not_allowed">Il token Nightscout di questo telefono non è un token di amministrazione, quindi non può fare un token per il client. Utilizzare un token di amministrazione qui, o aggiungere il client con il PIN.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout ha un token con questo nome e altri diritti. Scegli un altro nome.</string>
