@@ -9,7 +9,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import app.aaps.core.interfaces.utils.TimeZoneChange
+import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.ui.compose.AapsSpacing
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
@@ -59,12 +59,12 @@ internal class GraphClockChangeDecoration(
 internal fun rememberClockChangeDecoration(
     minTimestamp: Long,
     maxTimestamp: Long,
-    history: List<TimeZoneChange>,
+    readings: List<BgDataPoint>,
     showIcon: Boolean = false
 ): GraphClockChangeDecoration {
     val timeZone = TimeZone.currentSystemDefault()
-    val changes = remember(minTimestamp, maxTimestamp, timeZone, history) {
-        graphClockChanges(minTimestamp, maxTimestamp, timeZone, history)
+    val changes = remember(minTimestamp, maxTimestamp, timeZone, readings) {
+        graphClockChanges(minTimestamp, maxTimestamp, timeZone, readings)
     }
     val color = MaterialTheme.colorScheme.onSurfaceVariant
     val painter = if (showIcon) rememberVectorPainter(Icons.Filled.Schedule) else null
@@ -83,12 +83,12 @@ internal data class GraphClockChange(
     val minutes: Int get() = (after.totalSeconds - before.totalSeconds) / 60
 }
 
-/** Finds offset changes in the axis time zone without changing elapsed-time coordinates. */
+/** Merges stored reading offsets with exact axis-zone DST changes, keeping elapsed-time coordinates. */
 internal fun graphClockChanges(
     start: Long,
     end: Long,
     timeZone: TimeZone,
-    history: List<TimeZoneChange> = emptyList()
+    readings: List<BgDataPoint> = emptyList()
 ): List<GraphClockChange> {
     if (end <= start) return emptyList()
     val changes = mutableListOf<GraphClockChange>()
@@ -111,8 +111,14 @@ internal fun graphClockChanges(
         cursor = next
         offset = nextOffset
     }
-    val switches = history.filter { it.timestamp in start..end }.map {
-        GraphClockChange(it.timestamp, UtcOffset(seconds = it.beforeSeconds), UtcOffset(seconds = it.afterSeconds))
+    val switches = readings.sortedBy { it.timestamp }.distinctBy { it.timestamp }.zipWithNext().mapNotNull { (before, after) ->
+        val oldOffset = before.utcOffset ?: return@mapNotNull null
+        val newOffset = after.utcOffset ?: return@mapNotNull null
+        if (oldOffset == newOffset || after.timestamp !in start..end) return@mapNotNull null
+        // A DST transition falls between readings: use its exact line, not a second line at the next reading.
+        if (changes.any { it.timestamp > before.timestamp && it.timestamp <= after.timestamp &&
+                it.before.totalSeconds * 1000L == oldOffset && it.after.totalSeconds * 1000L == newOffset }) return@mapNotNull null
+        GraphClockChange(after.timestamp, UtcOffset(seconds = (oldOffset / 1000).toInt()), UtcOffset(seconds = (newOffset / 1000).toInt()))
     }
     return (switches + changes).distinctBy { it.timestamp }.sortedBy { it.timestamp }
 }

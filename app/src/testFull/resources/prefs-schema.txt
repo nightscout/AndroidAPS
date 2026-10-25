@@ -486,7 +486,6 @@ tidepool_subscription_id|TidepoolStringNonKey|true
 tidepool_use_ns_connection|TidepoolBooleanKey|true
 tidepool_wifi_ssids|TidepoolStringKey|true
 tidepool_wifi|TidepoolBooleanKey|true
-time_zone_change_history|StringNonKey|false
 treatmentssafety_maxbolus|DoubleKey|true
 treatmentssafety_maxcarbs|IntKey|true
 uamsmbmaxminutes|IntKey|true

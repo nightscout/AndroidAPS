@@ -59,7 +59,6 @@ import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.data.ExtraStore
-import kotlinx.datetime.TimeZone
 import kotlin.concurrent.Volatile
 
 /** Series identifiers */
@@ -260,9 +259,8 @@ fun BgGraphCompose(
     }
 
     // Time formatter and axis configuration
-    val timeZoneHistory by viewModel.timeZoneHistoryFlow.collectAsStateWithLifecycle()
-    val timeFormatter = rememberTimeFormatter(minTimestamp, TimeZone.currentSystemDefault())
-    val bottomAxisItemPlacer = rememberBottomAxisItemPlacer(minTimestamp, TimeZone.currentSystemDefault())
+    val timeFormatter = rememberTimeFormatter(minTimestamp)
+    val bottomAxisItemPlacer = rememberBottomAxisItemPlacer(minTimestamp)
 
     // =========================================================================
     // BG layer lines (layer 0)
@@ -469,7 +467,7 @@ fun BgGraphCompose(
     val defaultMarkerController = CartesianMarkerController.rememberShowOnPress()
     val inspectLine = rememberInspectLine(inspect, dotOnReading = true)
 
-    val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp, timeZoneHistory, showIcon = true)
+    val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp, bgReadings, showIcon = true)
     val decorations = remember(inRangeBox, nowLine, clockChanges, inspectLine) {
         listOfNotNull(inRangeBox, nowLine, clockChanges, inspectLine)
     }
