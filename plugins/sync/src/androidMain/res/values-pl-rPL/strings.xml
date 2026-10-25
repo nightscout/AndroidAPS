@@ -47,6 +47,7 @@
     <string name="authorized_clients_qr_ns_instructions">Zeskanuj ten kod na nowym telefonie, w kreatorze konfiguracji lub w opcji „Paruj z telefonem pacjenta”. Ustawia Nightscout. Telefon nie jest sparowany do zdalnego sterowania.</string>
     <string name="authorized_clients_qr_keep_private">Każdy, kto zobaczy ten kod, może odczytać Twój Nightscout. Pokaż go wyłącznie nowemu telefonowi opiekuna.</string>
     <string name="authorized_clients_token_problem_title">Nie można wygenerować kodu QR</string>
+    <string name="authorized_clients_not_added_title">Nie dodano urządzenia opiekuna</string>
     <string name="authorized_clients_token_problem_not_connected">Ten telefon pacjenta nie jest połączony z Nightscout, więc nie może utworzyć tokenu dla urządzenia opiekuna.</string>
     <string name="authorized_clients_token_problem_not_allowed">Token Nightscout tego telefonu nie jest tokenem administratora, więc nie może utworzyć tokenu dla klienta. Użyj tutaj tokenu administratora albo dodaj klienta za pomocą PIN.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout ma już token o takiej samej nazwie ale innych uprawnieniach. Wybierz inną nazwę.</string>
