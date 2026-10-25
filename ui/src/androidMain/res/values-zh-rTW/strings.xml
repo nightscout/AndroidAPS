@@ -6,6 +6,8 @@
     <string name="start_eating_soon_tt">即將開始用餐 (臨時目標)</string>
     <string name="start_hypo_tt">開始低血糖(臨時目標)</string>
     <string name="time_offset">時間偏移</string>
+    <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
+    <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$d天%2$d小時</string>
     <!--    Widget-->
     <string name="configure">配置透明度</string>
     <string name="widget_description">AAPS 小工具</string>
@@ -15,6 +17,30 @@
     <string name="widget_small_description">AAPS 小型</string>
     <!--     Activities-->
     <string name="dexcom_tir">Dexcom 目標範圍內</string>
+    <string name="agp" comment="Section title: Ambulatory Glucose Profile">AGP</string>
+    <string name="agp_title">行動血糖概況</string>
+    <string name="agp_glycemic_overview">血糖總覽</string>
+    <string name="agp_today">今天</string>
+    <string name="agp_hours" comment="%1$d=number of hours. Example: 24h">%1$d小時</string>
+    <string name="agp_days" comment="%1$d=number of days. Example: 7d">%1$d天</string>
+    <string name="agp_no_data">此範圍內沒有可用的血糖資料。</string>
+    <string name="agp_load_failed">無法載入 AGP 統計資料。請再試一次。</string>
+    <string name="agp_chart_description">血糖百分位數圖表</string>
+    <string name="agp_tir_chart">目標範圍內時間圖表</string>
+    <string name="agp_percentile_10_90" comment="Glucose percentile band from the 10th to the 90th percentile">10–90%</string>
+    <string name="agp_percentile_25_75" comment="Glucose percentile band from the 25th to the 75th percentile">25–75%</string>
+    <string name="agp_percent" comment="%1$.1f=percentage value. Example: 72.4%">%1$.1f%%</string>
+    <string name="agp_range" comment="%1$s=lower glucose value, %2$s=upper glucose value. Example: 3.9–10.0">%1$s–%2$s</string>
+    <string name="agp_above" comment="%1$s=upper glucose limit. Example: &gt; 10.0">&gt; %1$s</string>
+    <string name="agp_below" comment="%1$s=lower glucose limit. Example: &lt; 3.9">&lt; %1$s</string>
+    <string name="agp_average">平均</string>
+    <string name="agp_median">中位數</string>
+    <string name="agp_ea1c" comment="Estimated HbA1c">eA1c</string>
+    <string name="agp_gmi" comment="Glucose management indicator">GMI</string>
+    <string name="agp_standard_deviation" comment="Standard deviation of glucose values">標準差</string>
+    <string name="agp_cv" comment="Coefficient of variation of glucose values">變異係數</string>
+    <string name="agp_available_days">天數</string>
+    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as eA1c, GMI or days of glucose data. Example: 13.8">%1$.1f</string>
     <string name="cgp_title">血糖五邊形 (CGP) — 14 天</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
     <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
@@ -285,6 +311,7 @@ Check the active state.</string>
     <string name="permission_directory_picker_error">無法開啟目錄選擇器。通常是 Android 或 Family Link 的問題。</string>
     <string name="permission_nav_label">權限</string>
     <!--    TDD Cycle Pattern -->
+    <string name="stats_tab_cycle" comment="Short tab label on the Statistics screen. The tab shows daily insulin totals laid over 28-day cycles (TDD Cycle Pattern).">週期</string>
     <string name="cycle_offset">循環偏移</string>
     <string name="raw_tdd">原始 TDD</string>
     <string name="cleaned_tdd">清理後 TDD</string>
