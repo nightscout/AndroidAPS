@@ -136,7 +136,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n Инсулинът не е сменен.</string>
     <string name="active"><![CDATA[<Активно>]]></string>
     <string name="date">Дата</string>
-    <string name="units_label">Единици</string>
     <string name="insulin_nickname_label">Никнейм на инсулин</string>
     <string name="concentration_label">Концентрация</string>
     <string name="peak_label">Пик</string>
