@@ -68,7 +68,6 @@
     <string name="no_profile_set">ΔΕΝ ΟΡΙΣΤΗΚΕ ΠΡΟΦΙΛ</string>
     <string name="active"><![CDATA[<Ενεργή>]]></string>
     <string name="date">Ημερομηνία</string>
-    <string name="units_label">Μονάδες</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
