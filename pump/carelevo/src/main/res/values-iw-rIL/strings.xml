@@ -83,4 +83,6 @@
     <!--    notification -->
     <string name="alarm_notification_desc_notice_lgs_error">נא לבדוק את החיבור לפאץ\' ול־CGM.</string>
     <string name="carelevo_profile_update_skip_comment">דולג: העדכון הקודם בוצע לפני זמן קצר מדי.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">הפאצ\' לא אישר עצירה. ממתין לסיום הבולוס…</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">הפאצ\' לא אישר את העצירה. נרשם הבולוס השלם של %1$s יח\'.</string>
 </resources>

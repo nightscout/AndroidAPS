@@ -110,6 +110,9 @@
     <string name="format_hours">%1$.2f val.</string>
     <string name="format_mins">%1$d min</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
+    <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
     <string name="objectives">Mokymo etapai</string>
     <string name="please_wait">Palaukite…</string>
     <string name="stop">Stop</string>
@@ -168,6 +171,10 @@
     <string name="wrong_pump_data">Duomenys gaunami iš kitos pompos. Pakeiskite pompos valdiklį.</string>
     <string name="bg_label">Glikemija</string>
     <string name="calibration">Kalibravimas</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">Kalibravimas neįrašytas: per pastarąsias 10 minučių nerastas nė vienas jutiklio rodmuo.</string>
+    <string name="cal_reject_warmup">Kalibravimas neįrašytas: jutiklis vis dar šyla.</string>
+    <string name="cal_reject_no_session">Kalibravimas neįrašytas: nėra aktyvaus jutiklio. Pirmiausia pažymėkite jutiklio pakeitimą.</string>
     <string name="cgm">NGJ</string>
     <string name="treatmentdeliveryerror">Boluso suleidimo klaida. Patikrinkite faktiškai suleistą insulino kiekį ir įvestą angliavandenių skaičių</string>
     <string name="bolus_reminder">Priminti apie bolusą, kai glikemija atsistato</string>
@@ -190,6 +197,7 @@
     <string name="a11y_arrow_unknown">nežinoma</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">sumažėjimas %1$s per %2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">padidėjimas %1$s per %2$s</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">%1$d žingsnis iš %2$d</string>
     <string name="decrement">mažėjimas</string>
     <string name="increment">didėjimas</string>
     <string name="a11y_high">hiper</string>
@@ -728,6 +736,7 @@
     <string name="wizard_carb_time">Angliavandenių laikas</string>
     <string name="carb_time_now">Dabar</string>
     <string name="change">Keisti</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
     <string name="grant">Suteikti</string>
     <string name="set">Nustatyti</string>
     <string name="wizard_set_alarm">Nustatyti įspėjimą</string>

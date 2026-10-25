@@ -126,7 +126,7 @@
     <string name="pref_title_ns_use_ws">Użyj websockets</string>
     <string name="pref_summary_ns_use_ws">Użyj websockets do komunikacji w czasie rzeczywistym z Nightscout.</string>
     <string name="pref_title_ns_allow_client_control">Zezwalaj na kontrolę klienta</string>
-    <string name="pref_summary_ns_allow_client_control">Pozwól sparowanym klientom wysyłać podpisane polecenia (np. uruchomienie/zatrzymanie sceny) przez Nightscout.</string>
+    <string name="pref_summary_ns_allow_client_control">Umożliwia sparowanym urządzeniom opiekuna wysyłanie podpisanych poleceń (np. uruchamianie i zatrzymywanie scen) przez Nightscout. To włącza też tryb silniejszych zabezpieczeń: zmiany wprowadzone bezpośrednio w Nightscout nie będą już uwzględniane.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Tylko przez WiFi</string>
     <string name="pref_title_openhumans_charging_only">Tylko podczas ładowania</string>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="equil_name">Eşitlik</string>
     <string name="equil_pump_description">Equil 5.3 veya daha yeni Patch Pompa </string>
     <!--  start  -->
     <string name="equil_basal_speed">Temel Bazal</string>
@@ -15,6 +16,8 @@
     <string name="equil_stop">Dur</string>
     <string name="equil_success">Başarılı</string>
     <string name="equil_title_dressing">Kartuşu değiştir</string>
+    <string name="equil_title_assemble">Pompayı birleştirin</string>
+    <string name="equil_title_serial">Cihazı eşleştir</string>
     <string name="equil_title_history_events">Olay Geçmişi</string>
     <string name="equil_tone">Uyarı tonu</string>
     <string name="equil_bolus_speed">Bolus hızı</string>

@@ -4,10 +4,16 @@
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">Hastalık— Kusma</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">LGS ile azaltılmış profil- yiyecek sindiremediğiniz standart hastalık gününün tam tersidir.</string>
+    <string name="scene_wizard_info_sick_day_vomiting">Yiyecekleri midenizde tutamadığınızda, standart hastalık günü yaklaşımı olan insülin dozunu artırmak tehlikeli olabilir. Kusma, karbonhidratların emilmediği anlamına gelir, bu nedenle kan şekeri yükselmek yerine düşebilir. Azaltılmış profil (%60) insülin dozunu düşürür ve LGS modu, glikoz düştüğünde insülini durdurarak ek bir güvenlik ağı sağlar. SMB\'yi devre dışı bırakmak, ek bolus dozlarını önler. Sık sık izleyin — kan şekerini her 1-2 saatte bir ve ketonları her 2-4 saatte bir kontrol edin. Kusma birkaç saatten fazla sürerse veya ketonlar 1,5 mmol/L\'nin üzerine çıkarsa tıbbi yardım alın.</string>
     <!-- Sleep: no default actions — 8h -->
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">Alkol</string>
+    <string name="scene_wizard_alcohol_desc">LGS modu, azaltılmış profil, SMB kapalı — gecikmeli alkol kaynaklı hipoglisemilere karşı koruma sağlar.</string>
+    <string name="scene_wizard_info_alcohol">Alkol, tip 1 diyabetli kişiler için en tehlikeli durumlardan biridir. Karaciğer, glikoz salınımından ziyade alkolün işlenmesine öncelik verir, bu da 6-24 saat sonra, genellikle siz uyurken gece boyunca gecikmiş hipoglisemiye neden olabilir. LGS modu, glikoz seviyesi düştüğünde insülin iletimini azaltarak insülin birikimini önler. Azaltılmış profil ve devre dışı bırakılmış SMB, vücuttaki insülin miktarını daha da sınırlar. Uykudan önce her zaman kan şekerinizi kontrol edin ve gece yarısı KŞ kontrolü için bir alarm kurmayı unutmayın.</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
     <string name="scene_wizard_info_bathing">Pompanızın bağlantısını kestiğinizde insülin iletimi tamamen durur. Bazal, bolus veya düzeltme verilmez. Algoritma, bağlantı kesik moduna geçer ve herhangi bir ayar yapmayı durdurur. Duş alma, banyo yapma veya yüzme gibi kısa süreli durumlar için bu normaldir. Söz konusu durum sona erdiğinde pompa yeniden bağlanır ve algoritma otomatik olarak çalışmaya devam eder. Bağlantıyı kısa süreli tutmaya özen gösterin çünkü bazal insülin alınmadığında kan şekeri 1–2 saat içinde yükselmeye başlayacaktır.</string>
@@ -16,6 +22,7 @@
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
     <!-- Blank: no actions — 1h -->
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_loop_mode_info">Çalışma modu algoritmanın ne kadar otonom olduğunu belirler. Kapalı Döngü modunda, insülin dozunu otomatik olarak ayarlar. LGS (Düşük Glikoz Duraklatma) modu, glikoz seviyesi düşmeye başladığında insülini azaltır veya durdurur; dozu artırmaz. Açık Döngü modu ise öneriler hesaplar ancak her birini onaylamanızı bekler.</string>
     <!-- Scene wizard: UI labels -->
     <!-- Scene wizard: chain step -->
     <!-- Scene list: chain indicator -->

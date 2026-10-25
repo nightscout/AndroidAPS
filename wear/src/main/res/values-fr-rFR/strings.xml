@@ -61,6 +61,7 @@
     <string name="pref_prime_in_menu">Amorcer dans Menu</string>
     <string name="pref_single_target">Cible Unique</string>
     <string name="pref_wizard_percentage">Pourcentage de l\'Assistant</string>
+    <string name="pref_wizard_carbs_type">Calculatrice Type de repas</string>
     <string name="pref_complication_tap_action">Action Appui Complication</string>
     <string name="pref_complication_bg_graph_hours">Intervalle de temps du graphique glycémie</string>
     <string name="duration_1_hour">1 heure</string>
@@ -280,6 +281,11 @@
     <string name="title_activity_disconnect_pump">Déconnecter la pompe</string>
     <string name="title_activity_suspend_loop">Suspendre la boucle</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="wizard_carbs_type">Type de repas</string>
+    <string name="wizard_carbs_type_bread">Pain</string>
+    <string name="wizard_carbs_type_cake">Gâteau</string>
+    <string name="wizard_carbs_type_pizza">Pizza</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>

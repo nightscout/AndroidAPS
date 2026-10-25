@@ -7,6 +7,9 @@
     <!-- Alert preferences -->
     <!-- BG Source preferences -->
     <!-- APS preferences -->
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Hassasiyet ayarı için otoduyarlılık yerine DinamikİDF kullanın.</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">DinamikİDF hassasiyet ayarı</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">DinamikİDF kullanırken hassasiyet hesaplamalarını ayarlayın.</string>
     <!-- Maintenance preferences -->
     <!-- Autotune preferences -->
     <!-- SMS preferences -->
@@ -34,6 +37,7 @@
     <string name="carbs_req_threshold_summary">Bir karbonhidrat öneri uyarısı görüntülemek için minimum karbonhidrat gramı. Bu sayının altındaki karbonhidrat önerileri bildirilmeyecektir.</string>
     <string name="half_basal_exercise_target_summary">Örneğin 160 gibi bir sayıya ayarlayın; bunun anlamı, geçici hedef 160 mg/dL olduğunda ve Yüksek geçici hedef duyarlılığı arttırır= doğru olduğunda, bu seviyede 50%% bazal çalışır (120 = 75%%; 140 = 60%%).</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">SMB\'lerin devre dışı bırakılacağı maksAİNS yüzdesi.\nVarsayılan değer: %100\n Bu özellik %100 değeri ile devre dışıdır.</string>
+    <string name="pref_title_dynisf_adjustment_factor">DinamikİDF ayarlama faktörü</string>
     <string name="dyn_isf_adjust_summary" formatted="false">DinamikİDF için ayarlama faktörü. Daha agresif düzeltme dozları için %100\'ün üzerine, daha az agresif düzeltmeler için %100\'ün altına ayarlayın.</string>
     <string name="openapsama_autosens_period_summary">Duyarlılık tespiti için geçmesi gereken süre (saat) miktarı (karbonhidrat emilim süresi hariç)</string>
     <!-- IntKey: Maintenance preferences -->
@@ -94,6 +98,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="openapsama_smb_max_range_extension_summary">Varsayılan değer: 1 Bu, OpenAPS\'in bir diğer önemli güvenlik sınırıdır ve normalde 120 dakika olan maxSMB/maxUAM süresini hangi faktörle aşabileceğinizi belirtir. Bu deneysel değeri yavaşça ve dikkatli bir şekilde artırın.</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="pref_title_lgs_threshold">LGS Eşiği</string>
     <string name="lgs_threshold_summary">Altına düştüğünde insülinin askıya alındığı KŞ değeri. Varsayılan değer, standart hedef modeli kullanır. Kullanıcı değeri 60mg/dl (3,3mmol/l) ile 100mg/dl(5.5mmol/l) arasında ayarlayabilir. 65/3,6\'nın altındaki değerler varsayılan modelin kullanılmasına neden olur</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->

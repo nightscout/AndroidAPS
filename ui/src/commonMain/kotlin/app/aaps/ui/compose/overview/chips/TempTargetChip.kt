@@ -30,6 +30,7 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalAapsScale
+import app.aaps.core.ui.compose.icons.IcTarget
 import app.aaps.core.ui.compose.icons.IcTtActivity
 import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHypo
@@ -100,7 +101,9 @@ fun TempTargetChip(
                     .padding(horizontal = AapsSpacing.medium, vertical = AapsSpacing.small)
             ) {
                 Icon(
-                    imageVector = reason.toIcon(),
+                    // With no temp target the chip shows the profile target, which is not a manual
+                    // target, so it gets the plain target and not the one with the pencil (#5336).
+                    imageVector = if (state == TempTargetChipState.Active) reason.toIcon() else IcTarget,
                     contentDescription = stringResourceOrNull(ElementType.TEMP_TARGET_MANAGEMENT.label()),
                     tint = iconColor,
                     modifier = Modifier.size(AapsSpacing.chipIconSize)

@@ -29,5 +29,8 @@
     <string name="scan_on_connection_error_title">סריקה בשגיאת חיבור</string>
     <string name="scan_on_connection_error_summary">אזהרה: הפעילו רק אם נתקלתם בבעיות תקשורת. אם הפונקציה מופעלת, מנהל ההתקן יסרוק שוב את המשאבה לפני שינסה להתחבר אליה מחדש. ודאו שיש לכם הרשאת מיקום שמוגדרת ל\"אפשר תמיד\" </string>
     <!-- treatment state-->
+    <string name="syncing_records">מסנכרן רשומות, %1$d נותרו לסיום</string>
+    <string name="getting_bolus_status">מקבל סטטוס בולוס</string>
     <!-- bolus-->
+    <string name="bolus_error_reason_pump_error">שגיאת משאבה</string>
 </resources>

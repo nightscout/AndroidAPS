@@ -40,7 +40,6 @@
     <string name="setupwizard_client_control_info">צמדו מכשירי עוקבים כדי שיוכלו לשלוח פקודות חתומות למכשיר ראשי זה דרך Nightscout. זו הדרך החדשה והמומלצת לשלוט ב־AAPS מרחוק.</string>
     <string name="setupwizard_ns_receive_info">קבלת טיפולים ונתונים ישירות מ־Nightscout (דרך מאובטחת פחות) כבויה כעת כברירת מחדל. פתחו את ההגדרות שלהלן רק אם עדיין יש בכך צורך. אפשרות זו נחוצה להזנת נתונים דרך NS או אפליקציות צד שלישי.</string>
     <string name="setupwizard_open_ns_receive_settings">קבלת נתונים מ־Nightscout</string>
-    <string name="setupwizard_pair_with_master_info">צמדו מכשיר עוקב זה ל־AAPS הראשי שלכם כדי שיוכל לשלוח פקודות בערוץ מאובטח.</string>
     <string name="setupwizard_pairing_ws_warning">חיבור WebSocket ל־Nightscout נדרש לצימוד. יש לחזור לשלב הקודם ולהפעיל אותו תחילה.</string>
     <string name="setupwizard_pairing_status_master">מכשירים עוקבים מצומדים: %1$d</string>
     <string name="setupwizard_pairing_status_master_none">עדיין אין מכשירי מעקב מצומדים</string>

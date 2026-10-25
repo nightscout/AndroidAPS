@@ -68,7 +68,6 @@
     <string name="patch_communication_succeed">Успешно свързване</string>
     <string name="patch_communication_succeed_message">Свързанo с Patch.</string>
     <string name="patch_cancel_pairing">Отмени сдвояване</string>
-    <string name="all_dose_unit">&#160;Е</string>
     <string name="insulin_suspend_msg1">При спиране, текущо доставяният болус &amp; Временният базал ще бъде отменен. \n\nСкорост: %1$s Е/час\nОставащо време: %2$s\n&amp; Оставащ инсулин: %3$.2f Е</string>
     <string name="insulin_suspend_msg2">При спиране, доставяният в момента болус ще бъде отменен. \n\nОставащ инсулин: %1$.2f Е</string>
     <string name="insulin_suspend_msg3">При спиране, доставяният в момента Временен базал ще бъде отменен. \n\nСкорост : %1$s Е/час\nОставащо време: %2$s</string>

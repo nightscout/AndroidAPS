@@ -104,6 +104,7 @@
     <string name="wrong_pump_data">Os dados vêm de uma bomba diferente. Altera o driver da bomba para redefinir o seu estado.</string>
     <string name="bg_label">GLIC</string>
     <string name="calibration">Calibração</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="cgm">CGM</string>
     <string name="duration_label">Duração</string>
     <string name="shortgramm">g</string>

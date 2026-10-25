@@ -40,12 +40,12 @@
     <string name="setupwizard_client_control_info">Susiekite kliento įrenginius, kad jie per Nightscout galėtų siųsti pasirašytas komandas šiam pagrindiniam įrenginiui. Tai naujas rekomenduojamas nuotolinio AAPS valdymo būdas.</string>
     <string name="setupwizard_ns_receive_info">Tiesioginis terapijos įrašų ir duomenų priėmimas iš Nightscout (mažiau saugus būdas) dabar pagal numatytuosius nustatymus yra išjungtas. Žemiau esančius nustatymus įjunkite tik jei ši funkcija vis dar reikalinga. Ji būtina, jei duomenis norite įvesti per Nightscout arba trečiųjų šalių programėles.</string>
     <string name="setupwizard_open_ns_receive_settings">Nightscout duomenų priėmimas</string>
-    <string name="setupwizard_pair_with_master_info">Susiekite šį klientą su pagrindiniu AAPS įrenginiu, kad jis galėtų saugiu kanalu siųsti komandas.</string>
     <string name="setupwizard_pairing_ws_warning">Norint susieti, būtinas Nightscout WebSocket ryšys. Grįžkite į ankstesnį veiksmą ir pirmiausia jį įjunkite.</string>
     <string name="setupwizard_pairing_status_master">Susietų klientų: %1$d</string>
     <string name="setupwizard_pairing_status_master_none">Nėra susietų klientų</string>
     <string name="setupwizard_pairing_status_client_paired">Susieta su pagrindiniu įrenginiu</string>
     <string name="setupwizard_pairing_status_client_not_paired">Dar nesusieta</string>
+    <string name="setupwizard_instance_name_title">Kas naudoja šį telefoną?</string>
     <string name="readstatus">Būsenos nuskaitymas</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Šis įrenginys nepalaiko baterijos optimizavimo išimčių - galite patirti veikimo nesklandumų.</string>

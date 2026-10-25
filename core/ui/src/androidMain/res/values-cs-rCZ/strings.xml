@@ -110,6 +110,8 @@
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$dg</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
+    <string name="value_question" comment="Asks if this should be done. %1$s=what will be done. Example: Send logs?">%1$s?</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
@@ -178,6 +180,11 @@
     <string name="wrong_pump_data">Data přicházejí z jiné pumpy. Změňte ovladač pro obnovení stavu pumpy.</string>
     <string name="bg_label">Gly</string>
     <string name="calibration">Kalibrace</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Kalibrace nebyla uložena: glykémie se mění příliš rychle (Δ %1$s %3$s za 5 minut, limit %2$s). Zkuste to znovu, když je glykémie stabilní.</string>
+    <string name="cal_reject_no_pair">Kalibrace nebyla uložena: 10 minut zpět nenalezena žádná glykémie.</string>
+    <string name="cal_reject_warmup">Kalibrace nebyla uložena: senzor je stále v dvouhodinovém zahřívacím okně.</string>
+    <string name="cal_reject_no_session">Kalibrace nebyla uložena: není aktivní žádná relace. Zadejte nejdříve změnu senzoru.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Podání bolusu skončilo chybou. Ručně zkontrolujte, kolik inzulinu a sacharidů se skutečně vydalo</string>
     <string name="bolus_reminder">Připomenout bolus při obnovení glykémie</string>
@@ -222,6 +229,7 @@
     <string name="percentage_label">Procenta</string>
     <string name="timeshift_label">Posun času</string>
     <string name="confirm_remove_multiple_items">Opravdu chcete odstranit %1$d položek</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Hlavní zařízení nemá %1$d těchto záznamů. Nejsou odstraněny.</string>
     <string name="overview_treatment_label">Ošetření</string>
     <string name="copytolocalprofile">Vytvořit z tohoto profilu nový profil?</string>
     <string name="wear_wizard_settings">Nastavení průvodce na hodinkách</string>
@@ -415,6 +423,19 @@
     <string name="scene_lock_banner_control_disabled">Hlavní zařízení má vypnuté vzdálené ovládání. Ovládání scén se obnoví, jakmile bude znovu povoleno.</string>
     <string name="master_offline_banner">Hlavní zařízení je nedostupné. Úprava je zakázána, dokud není připojení obnoveno.</string>
     <string name="master_control_disabled_banner">Hlavní zařízení má zakázáno vzdálené ovládání. Úprava je zakázána, dokud nebude znovu povoleno na hlavním zařízení.</string>
+    <string name="hardened_mode_on">Zabezpečený režim zapnutý</string>
+    <string name="hardened_mode_title">Zabezpečený režim</string>
+    <string name="hardened_mode_info_open">O zabezpečeném režimu</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Pouze pro čtení</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Jídlo</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Pečovatel</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Admin</string>
+    <string name="client_role_title">Role</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Role: %1$s</string>
+    <string name="client_roles_info_open">O rolích</string>
+    <string name="client_roles_info">Každý spárovaný telefon má přidělenou roli. Hlavní zařízení kontroluje každý příkaz podle přidělené role. Role se dá změnit bez nového párování.\n\nPro čtení: telenon zůstává připárovaný, ale pouze zobrazuje data.\n\nJídlo: bolus, kalkulačka, rychlý bolus a sacharidy. Také může zastavit probíhající bolus. Zadané sacharidy ovlivňují smyčku.\n\nPečovatel: vš co člověk dělá v AAPS, jako dočasné cíle, přepnutí profilu a inzulínu, režím smyčky, dočasné bazály, prodloužené bolusy, scény, záznamy ošetření. Nemůže měnit nastavení a předdefinované hodnoty.\n\nAdmin: muže měnit vše včetne nastavení a předdefinovaných hodnot (rychlé bolusy, dočasné cíle, scény, profily, automatizace, inzulín).</string>
+    <string name="client_read_only_banner">Tento telefon je v režimu jen pro čtení na hlavním telefonu.</string>
+    <string name="hardened_mode_info">Hlavní telefon provádí změny pouze od spárovaných klientů. nebere v úvahu ošetření, dočasné cíle, změny profilu, změny v režimu běhu nebo vymazání provedené přímo v Nightscoutu, například na webu nebo v jiných aplikacích. Nastavení pro přijímání dat z Nightscoutu jsou skryta, když je zapnutý zabepečený režim. SMS příkazy nejsou dotčeny.\n\nHlavní telefon stále nahrává všechna data do Nightscoutu, glykémie včetně. Pokud jsou nastaveny glykémie z Nightscoutu, načítá i glykémie.\n\nChcete-li načíst historii na novém hlavním telefonu, použijte plnou synchronizaci v NSClientu. Plná synchronizace načte všechno, co je v Nightscoutu, včetně profilů.\n\nDálkové ovládání od klientů potřebuje funkční připojení k Nightscoutu na hlavním telefonu a na spárovaných klientech. Jednoduchý režim vždy zapne zabezpečený režim. Chcete-li jej vypnout, ponechte v hlavním telefonu jednoduchý režim a vypněte ovládání z klienta.</string>
     <string name="scene_lock_reason_master_offline">Hlavní zařízení odpojeno</string>
     <string name="scene_lock_reason_control_disabled">Vzdálené ovládání zakázáno</string>
     <string name="scene_lock_reason_scene_active">Nejdříve zastavte běh scény</string>
@@ -442,7 +463,11 @@
     <string name="clientcontrol_fail_cancelled">Příkaz byl zrušen dříve, než byl spuštěn. Nic nebylo odesláno do pumpy.</string>
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus byl zrušen. Nebyl poskytnut žádný inzulín.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Zrušeno</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">Žádné SMB, když bolus čeká na potvrzení</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">Právě nyní se vydává SMB. Zkuste to znovu po dokončení výdeje.</string>
     <string name="clientcontrol_fail_control_disabled">Vzdálené ovládání je vypnuto na hlavním zařízení.</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">Tato role telefonu na hlavním zařízení to neumožňuje.</string>
+    <string name="clientcontrol_fail_other_token">Hlavní zařízení odmítlo příkaz: tento telefon zapisuje do Nightscoutu s jiným tokenem, než je jeho vlastní. Na hlavním zařízení odeberte telefon a přidejte jej znovu.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Připravený bolus vypršel nebo byl nahrazen. Klepněte znovu na tlačítko.</string>
     <string name="clientcontrol_fail_bolus_compute">Hlavní zařízení nemohlo vypočítat bolus (chybí glykémie / profil nebo pumpa není připravena).</string>
     <string name="clientcontrol_fail_internal">Něco se pokazilo.</string>
@@ -827,6 +852,7 @@
     <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
     <string name="limitingpercentrate">Bazál omezen na %1$d%%: %2$s</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Procento %1$d%% přepočítáno na %2$s U/h s aktuálním bazálem %3$s U/h</string>
     <string name="itmustbepositivevalue">požadována kladná hodnota</string>
     <string name="limitingbolus">Bolus omezen na %1$.1f U: %2$s</string>
     <!--    Dialogs-->
@@ -1148,6 +1174,7 @@
     <string name="units_format_min">%1$d min</string>
     <string name="units_format_min_range">%1$d min (%2$d - %3$d)</string>
     <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
     <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
     <string name="units_format_sec">%1$d s</string>
     <string name="units_format_sec_range">%1$d s (%2$d - %3$d)</string>

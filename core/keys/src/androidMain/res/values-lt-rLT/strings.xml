@@ -126,7 +126,7 @@
     <string name="pref_title_ns_use_ws">Naudoti WebSocket</string>
     <string name="pref_summary_ns_use_ws">Naudoti WebSocket realiojo laiko ryšiui su Nightscout.</string>
     <string name="pref_title_ns_allow_client_control">Leisti valdyti iš kliento</string>
-    <string name="pref_summary_ns_allow_client_control">Leisti susietiems kliento įrenginiams per Nightscout siųsti pasirašytas komandas (pvz., paleisti ar sustabdyti scenarijus).</string>
+    <string name="pref_summary_ns_allow_client_control">Leisti susietiems klientų įrenginiams siųsti pasirašytas komandas per Nightscout, pavyzdžiui, paleisti ar sustabdyti scenarijus. Įjungus šią parinktį taip pat aktyvuojamas sustiprintos apsaugos režimas – tiesiogiai Nightscout atlikti pakeitimai nebebus priimami.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Tik per Wi‑Fi</string>
     <string name="pref_title_openhumans_charging_only">Tik įkraunant</string>
@@ -203,7 +203,7 @@
     <string name="pref_title_uam_smb_max_minutes">Maksimalus bazės minučių skaičius NDM SMB ribai</string>
     <string name="uam_smb_max_minutes">NDM SMB maks. minutės</string>
     <string name="pref_title_carbs_request_threshold">Angliavandenių poreikio riba</string>
-    <string name="carbs_req_threshold_summary">Minimalus angliavandenių kiekis gramais, apie kurį reikia įspėti. Angliavandenių pasiūlymai, mažesni už šį kiekį, nebus pranešami.</string>
+    <string name="carbs_req_threshold_summary">Mažiausias angliavandenių kiekis gramais, nuo kurio rodomas siūlymas suvartoti angliavandenių. Jei siūlomas kiekis mažesnis už šią reikšmę, pranešimas nebus rodomas.</string>
     <string name="pref_title_half_basal_exercise_target">Sporto laikinas tikslas, kurį įjungus bazė mažinama perpus</string>
     <string name="half_basal_exercise_target_summary">Nustatykite skaičių, pvz., 8,0, kuris reiškia, kad kai laikinas tikslas yra 8,0 mmol/l ir aukštas laikinas tikslas padidina jautrumą = TAIP, nustatykite 50%% laikiną bazę šiame lygyje (6,0 = 75%%; 4,8 = 60%%).</string>
     <string name="pref_title_iob_threshold_percent">AIO ribos procentas</string>
@@ -267,6 +267,8 @@
     <string name="lang_tr">Turkish</string>
     <string name="lang_zh_tw">Chinese, Traditional</string>
     <string name="lang_zh_cn">Chinese, Simplified</string>
+    <string name="pref_title_patient_name">Vardas</string>
+    <string name="pref_summary_patient_name">Šį telefoną naudojančio asmens vardas. Jis padeda atskirti šią AAPS sistemą ataskaitose ir sinchronizuojant.</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">AAPS aplankas</string>
     <!-- StringKey: Protection preferences -->

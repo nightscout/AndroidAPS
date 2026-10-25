@@ -15,7 +15,6 @@
     <string name="authorized_clients_add">添加客户端</string>
     <string name="authorized_clients_comm_switch_title">允许客户端控制</string>
     <string name="authorized_clients_comm_switch_summary">允许已配对的客户端通过 Nightscout 发送已签名的命令。关闭此选项可在不移除客户端的情况下停止通信。</string>
-    <string name="authorized_clients_needs_websocket">WebSocket 已关闭，因此无法接收来自客户端的命令。在您开启 WebSocket 之前，客户端会认为此主机不接受命令。</string>
     <string name="authorized_clients_state_active">已激活</string>
     <string name="authorized_clients_state_pending">等待中</string>
     <string name="authorized_clients_last_seen">上次活跃时间 %1$s</string>
@@ -57,6 +56,7 @@
     <string name="pair_with_master_already_paired_master">当前已与主机 %1$s 配对。请先取消配对再输入新 PIN 码。</string>
     <string name="pair_with_master_unpair">取消配对</string>
     <string name="pair_with_master_sending">正在发送配对消息…</string>
+    <!-- Client set-up from the master's QR code -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">主机 AAPS 不再识别此设备。请打开“管理界面” → “与主机配对”以重新配对。</string>
     <string name="ns_client">NSClient</string>
@@ -74,6 +74,8 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">如果启用，上传将转到测试服务器而不是常规服务器</string>
     <string name="title_tidepool_dev_servers">使用集成（测试）服务器</string>
+    <string name="title_tidepool_use_ns_connection">使用 Nightscout 连接设置</string>
+    <string name="summary_tidepool_use_ns_connection">关闭此选项，可为 Tidepool 设置独立的连接设置</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">数据上传到Tidepool</string>
     <string name="upload_now">现在上传</string>
@@ -156,6 +158,7 @@
     <string name="aps">APS</string>
     <string name="last_run">上次运行</string>
     <string name="last_enact">上次应用</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fU %2$.0f%%</string>
     <string name="today">今天</string>
     <string name="weighted">权重</string>
     <string name="full_xdrip_sync_comment">完全同步？可能需要一段时间，直到完成之前，您将不会在 xDrip+ 中看到新的数据。</string>

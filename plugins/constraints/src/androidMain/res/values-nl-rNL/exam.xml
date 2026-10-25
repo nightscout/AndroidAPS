@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dia_whatmeansdia">Wat is waar over DIA?</string>
-    <string name="dia_label_exam">Duur van insuline activiteit (DIA)</string>
-    <string name="dia_minimumis5h">De minimumwaarde is 5 uur.</string>
+    <string name="dia_profile">Je moet de waarde voor DIA instellen bij de insuline-instellingen (Beheren → Insuline-instellingen), niet in het profiel.</string>
     <string name="dia_hint1">https://wiki.aaps.app/nl/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">Als je tevreden bent met de waarde voor DIA die je in je pomp gebruikte voordat je AndroidAPS ging gebruiken goed werkte, dan is het niet nodig om deze te wijzigen als je begint met loopen.</string>
     <string name="dia_valuemustbedetermined">Je moet voor jezelf de juiste waarde voor DIA bepalen.</string>
@@ -27,6 +25,7 @@
     <string name="objectives_afterchange">Exporteer je instellingen na het wijzigen van instellingen.</string>
     <string name="objectives_afterinitialsetup">Exporteer je instellingen nadat je de initiële instellingen hebt voltooid en je voorkeuren hebt ingesteld.</string>
     <string name="objectives2_maintenance">Exporteer je instellingen lokaal via het Onderhoud-menu.</string>
+    <string name="objectives2_internalstorage">Je instellingenbestand wordt opgeslagen in de map \"preferences\" binnen de AAPS-map die je op je telefoon hebt geselecteerd.</string>
     <string name="objectives2_cloud">Kopieer je instellingenbestand naar een veilige locatie buiten je telefoon (bijvoorbeeld met behulp van een cloudopslagdienst, door je telefoon met een kabel met de computer te verbinden, per e-mail, etc.)</string>
     <string name="objectives2_easyrestore">Als je telefoon beschadigd of verloren raakt, zijn er eenvoudige manieren om zonder back-up op afstand je instellingen te herstellen.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/nl/latest/Maintenance/ExportImportSettings.html</string>
@@ -36,6 +35,7 @@
     <string name="noisycgm_nothing">Niets, AAPS lost het op.</string>
     <string name="noisycgm_pause">Schakel de closed loop uit om te voorkomen dat de closed loop over- of onderdoseert.</string>
     <string name="noisycgm_replacesensor">Vervang sensoren die consequent ruis geven of inaccuraat zijn.</string>
+    <string name="noisycgm_checksmoothing">Zorg ervoor dat je glucosegegevens worden afgevlakt, hetzij door je CGM-app, hetzij door een afvlakkings-plugin in AAPS.</string>
     <string name="noisycgm_hint1">https://wiki.aaps.app/nl/latest/CompatibleCgms/SmoothingBloodGlucoseData.html</string>
     <string name="exerciseprofile_label">Beweging en profielen</string>
     <string name="exerciseprofile_whattodo">Hoe kun je profielen gebruiken om het systeem het beste te helpen omgaan met conditietraining?</string>
@@ -62,16 +62,20 @@
     <string name="prerequisites_what">Wat is minimaal nodig om AAPS in te stellen en te gebruiken?</string>
     <string name="prerequisites_build">Methode om AAPS te bouwen. Ofwel via een web browser of een computer met Android Studio geïnstalleerd.</string>
     <string name="prerequisites_pump">Een ondersteunde insulinepomp als je van plan bent een closed loop te gebruiken.</string>
+    <string name="prerequisites_nightscout">Nightscout of Tidepool, om uw gegevens bij te houden</string>
     <string name="prerequisites_beanandroiddeveloper">Ervaar met programmeren of code aanpassen.</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/nl/latest/Getting-Started/ComponentOverview.html</string>
     <string name="prerequisites2_label">Vereisten</string>
     <string name="prerequisites2_what">Wat is minimaal nodig om AAPS in te stellen en te gebruiken?</string>
+    <string name="prerequisites2_profile">Gevalideerde waarden voor uw profiel (basale snelheden, ISF, I:C-verhouding) en voor uw insuline (DIA).</string>
     <string name="prerequisites2_device">Een ondersteund Android apparaat (bijvoorbeeld een mobiele telefoon, volledig Android-horloge of een tablet).</string>
     <string name="prerequisites2_internet">AndroidAPS heeft een internetverbinding nodig om in closed loop modus te kunnen werken.</string>
     <string name="prerequisites2_supportedcgm">Een ondersteunde CGM en geschikte app om bloedglucosewaarden te ontvangen op je telefoon/apparaat.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/nl/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">AAPS bijwerken</string>
+    <string name="update_git">Om met Android Studio te bouwen, moet Git op je computer zijn geïnstalleerd en geconfigureerd. Voor een browser-build is geen Git nodig.</string>
     <string name="update_asap">Wanneer nieuwe versies van AndroidAPS zijn uitgebracht, kunnen eerdere versies na een bepaalde tijd van afstand beperkt worden.</string>
+    <string name="update_keys">Als je bouwt met Android Studio, moet je de locatie van je keystore opslaan en noteren, en voor updates dezelfde ondertekeningssleutel gebruiken als voor je vorige installatie.</string>
     <string name="update_askfriend">Als je moeite hebt met het bouwen van de apk, kun je een apk installeren die is gebouwd door een vriend.</string>
     <string name="update_hint1">https://wiki.aaps.app/nl/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Probleemoplossing</string>
@@ -79,11 +83,14 @@
     <string name="troubleshooting_fb">Je kunt om advies vragen in de AndroidAPS Users Facebookgroep.</string>
     <string name="troubleshooting_wiki">Je moet de AndroidAPS documentatie lezen (en opnieuw lezen).</string>
     <string name="troubleshooting_discord">Je kunt op AAPS Discord om advies vragen, technische problemen en aanvragen voor nieuwe functies bespreken.</string>
+    <string name="troubleshooting_github">Je kunt problemen zoals bugs en verzoeken voor nieuwe functies indienen op GitHub.</string>
     <string name="troubleshooting_yourendo">Je moet hulp vragen aan je behandelteam.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/nl/latest/GettingHelp/WhereCanIGetHelp.html</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="troubleshooting_hint4">https://github.com/nightscout/AndroidAPS/issues</string>
+    <string name="insulin_plugins">Insuline-instellingen</string>
+    <string name="insulin_ultrarapid">Bij de insuline-instellingen: voor welke van deze insulines moet de ultra-snelle piektijd van 55 minuten worden gebruikt?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
@@ -98,13 +105,28 @@
     <string name="sensitivity_hint2">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/KeyAapsFeatures.html#open-aps-features-autosens</string>
     <string name="wrongcarbs_label">Koolhydraatinvoerfouten</string>
     <string name="wrongcarbs_whattodo">Wat moet u doen als u een onjuiste hoeveelheid koolhydraten hebt ingevoerd?</string>
+    <string name="wrongcarbs_treatmentstab">Verwijder de onjuiste invoer in de behandelgeschiedenis en voer de juiste koolhydraatwaarde in.</string>
+    <string name="wrongcarbs_addinsulin">Dien een insulinebolus toe via het menu \'Prime/Fill\'.</string>
     <string name="wrongcarbs_donothing">Doe niets – AndroidAPS zal de juiste aanpassingen maken.</string>
+    <string name="wrongcarbs_bolus">Dien een insulinebolus toe via de knop \'Insuline\' in het menu \'Behandelingen\'.</string>
     <string name="wronginsulin_label">Insulinetoediening/-invoerfouten</string>
     <string name="wronginsulin_whattodo">Wat moet je doen wanneer je minder insuline toegediend hebt gekregen dan de geschiedenis van de pomp suggereert, bijvoorbeeld vanwege een verstopping, een lekkende canule of door het vergeten de pomp opnieuw aan te koppelen na een douche?</string>
     <string name="wronginsulin_careportal">Verwijder de insulinegegevens uit het Nightscout Careportal om deze uit de pompgeschiedenis te verwijderen.</string>
     <string name="wronginsulin_compare">Vergelijk de waarden in AndroidAPS en pompgeschiedenis (als de pomp dit ondersteunt).</string>
     <string name="wronginsulin_prime">Bolus een deel van je berekende \'gemiste\' insuline door een injectiespuit/pen of door de uitvulfunctie te gebruiken.</string>
     <string name="cob_label">Koolhydraten aan boord (COB)</string>
+    <string name="cob_question">Welke invloed heeft het wijzigen van de ISF-waarde op de COB-berekening in AAPS?</string>
+    <string name="cob_longer">Het verhogen van de ISF zorgt voor een langere berekende opnametijd van koolhydraten.</string>
+    <string name="cob_shorter">Een verhoging van de ISF zorgt voor een kortere berekende opnametijd van koolhydraten.</string>
+    <string name="cob_no_effect">Het verhogen van de ISF heeft geen invloed op de berekende koolhydraatabsorptie.</string>
+    <string name="cob2_question">Welke invloed heeft het wijzigen van de IC-waarde op de COB-berekening?</string>
+    <string name="cob2_longer">Een hogere IC-waarde zorgt ervoor dat de berekende koolhydraatabsorptietijd langer wordt.</string>
+    <string name="cob2_shorter">Een hogere IC-waarde verkort de berekende koolhydraatabsorptietijd.</string>
+    <string name="cob2_no_effect">Een verhoging van de IC heeft geen invloed op de berekende koolhydraatabsorptie.</string>
+    <string name="cob3_question">Welke invloed heeft het wijzigen van het profielpercentage op de COB-berekening?</string>
+    <string name="cob3_longer">Door het profiel op 150% in te stellen, wordt de berekende opnametijd van koolhydraten verlengd.</string>
+    <string name="cob3_shorter">Door het profiel op 150% in te stellen, wordt de berekende opnametijd van koolhydraten korter.</string>
+    <string name="cob3_no_effect">Het instellen van het profiel op 150% heeft geen invloed op de berekende koolhydraatabsorptie.</string>
     <string name="cob_hint1">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/CobCalculation.html</string>
     <string name="iob_value">De IOB-waarde wordt beïnvloed door eerdere tijdelijke basaalstanden.</string>
     <string name="iob_hightemp">Een hoge tijdelijke basaal zal niet worden ingesteld wanneer je bloedsuiker onder het streefdoel ligt.</string>
@@ -124,6 +146,12 @@
     <string name="extendedcarbs_fat">e-carbs (verdeeld in de toekomst) kunnen AndroidAPS helpen bij het omgaan met maaltijden met een hoog vet-/eiwitgehalte.</string>
     <string name="extendedcarbs_rescue">Voor het vastleggen van reddingskoolhydraten die je gebruikt voor de behandeling van een lage bloedglucose.</string>
     <string name="extendedcarbs_hint1">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/ExtendedCarbs.html</string>
+    <string name="nsclient_label">Monitoring en besturing op afstand</string>
+    <string name="nsclient_howcanyou">Hoe kun je AAPS op afstand volgen en aansturen (bijvoorbeeld voor je kind)?</string>
+    <string name="nsclient_nightscout">Met AAPSClient, de Nightscout-app en de Nightscout-webpagina kun je AAPS allemaal op afstand volgen.</string>
+    <string name="nsclient_dexcomfollow">Andere apps (zoals Dexcom Follow of xDrip+ in \'follower\'-modus) maken het mogelijk om bepaalde gegevens, zoals glucosewaarden, op afstand te volgen. Deze apps tonen mogelijk geen IOB of COB, of berekenen deze op een andere manier.</string>
+    <string name="nsclient_data">Om AAPS op afstand te volgen of te bedienen, hebben beide telefoons internettoegang nodig (bijvoorbeeld wifi of mobiele data).</string>
+    <string name="nsclient_fullcontrol">Wanneer AAPSClient is gekoppeld aan de hoofdtelefoon, kun je AAPS ook op afstand bedienen, bijvoorbeeld voor bolussen, koolhydraten, tijdelijke streefwaarden, profielwisselingen en de loop-modus.</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/nl/latest/RemoteFeatures/RemoteMonitoring.html</string>
     <string name="nsclient_hint2">https://wiki.aaps.app/nl/latest/RemoteFeatures/RemoteControl.html</string>
     <string name="isf_label_exam">Insulinegevoeligheidsfactor (ISF)</string>
@@ -166,4 +194,20 @@
     <string name="other_medication_label">Andere medicijnen. Lees de verklaring hieronder en vink het vakje aan om de verklaring te accepteren.</string>
     <string name="other_medication_text">AndroidAPS vermindert de basaalstanden of stopt de insulinetoediening om de bloedsuiker te verhogen. Medicijnen in de klasse SGLT2-remmers (gliflozines) kunnen een stijging van bloedglucose voorkomen en kunnen daardoor een gevaarlijk insulinetekort veroorzaken dat leidt tot diabetische ketoacidose.
 \nBekende merknamen zijn: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nIk verklaar dat ik dergelijke medicijnen niet zal gebruiken wanneer ik AndroidAPS gebruik, of dat ik de loop zal deactiveren voordat ik met deze medicijnen start.</string>
+    <string name="concentration_feature_label">Insuline Concentratie Management</string>
+    <string name="u200_with_profile">Voordat AAPS insulineconcentraties ondersteunde, paste gebruikers U200 toe door een profiel van 50% in te stellen om alle waarden te halveren. In dat systeem zijn welke antwoorden waar?</string>
+    <string name="u200_with_profile_reports">De gegevens in mijn AAPS-database en NS-rapporten kloppen niet meer. Alle waarden (boli, doseringssnelheden, TDD) moeten met 2 worden vermenigvuldigd om de werkelijke waarden te zien, vooral voor artsen en het zorgteam.</string>
+    <string name="u200_with_profile_pens">Ik hoef niets om te rekenen tussen AAPS en de pen als ik een U200-pen gebruik om een ​​externe bolus toe te dienen.</string>
+    <string name="u200_with_profile_pens2">Welke pen ik ook gebruik voor een externe bolus (U100 of U200), ik moet bij elke externe bolus omrekenen tussen de door AAPS berekende hoeveelheid en de hoeveelheid die ik op de pen instel.</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
+    <string name="switch_u200_profile">Je gebruikt de workaround met het 50%-profiel voor U200 en wilt overstappen op de functie voor insulineconcentratie. Welke antwoorden zijn juist?</string>
+    <string name="switch_u200_profile_any_time">Ik kan op elk moment overstappen, omdat ik de juiste U200-insuline al in mijn pomp heb zitten.</string>
+    <string name="switch_u200_profile_ps">Ik moet een profiel twee keer zo agressief (200% in vergelijking met het huidige standaardprofiel) opstellen en dit nieuwe profiel synchroniseren na de volgende verandering van Patch/Reservoir wanneer de U200 insuline is geselecteerd.</string>
+    <string name="switch_u200_profile_dynisf">Ik moet de DynISF-functie voor ten minste een week uitschakelen voordat de TDD perfect consistent is met de werkelijke TDD-waarde berekend in Internationale eenheden.</string>
+    <string name="switch_u200_profile_mental">Na de overgang, zal ik gedurende enkele weken zeer voorzichtig moeten zijn om mijn hersenen te laten denken in internationale eenheden met betrekking tot bolussen, basaalstanden en TDD waarden.</string>
+    <string name="switch_u100_u200">U gebruikt momenteel U100 en bent van plan over te stappen op een andere concentratie met behulp van de functie voor insulineconcentratie. Welke antwoorden zijn juist?</string>
+    <string name="switch_u100_u200_profile">Ik moet mijn profiel wijzigen.</string>
+    <string name="switch_u100_u200_tube">Ik moet nooit gebruik maken van de pomp gebruikersinterface (voor tube pomps) om bolussen aan te bieden.</string>
+    <string name="switch_u100_u200_pen">Ik moet na de overschakeling nog steeds de conversie tussen AAPS en externe bolussen met Pen beheren.</string>
+    <string name="switch_u100_u200_change">De insulineconcentratie kan alleen worden veranderd als de insuline in het reservoir wordt veranderd of als er een Patch/Pod wordt veranderd.</string>
 </resources>

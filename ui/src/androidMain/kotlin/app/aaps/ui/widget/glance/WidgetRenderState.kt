@@ -17,6 +17,8 @@ data class WidgetRenderState(
     val iobActive: Boolean,
     val cobText: String,
     val cobActive: Boolean,
+    /** The loop asks for carbs. The only COB state that colours its chip. */
+    val carbsRequired: Boolean,
     val tempTargetText: String,
     @ColorInt val tempTargetColor: Int,
     val tempTargetActive: Boolean,
@@ -31,15 +33,22 @@ data class WidgetRenderState(
     @DrawableRes val runningModeIconResId: Int,
     val runningModeActive: Boolean,
     @DrawableRes val sensitivityIconResId: Int,
+    // The same values as the overview sensitivity chip, see SensitivityOverviewData: the autosens
+    // percentage (empty at 100%) and the step from the profile ISF to the ISF in use (empty when the
+    // algorithm uses the profile ISF unchanged).
     val sensitivityText: String,
+    val isfFromText: String,
+    val isfToText: String,
+    @DrawableRes val isfStepIconResId: Int,
+    val isfStepDescription: String?,
     @DrawableRes val tbrIconResId: Int,
     @ColorInt val backgroundColor: Int,
     // Spoken names for the icons that a screen reader would otherwise get nothing from. Resolved
     // here rather than in the widget, because everything else the widget shows is resolved here too
     // and a Glance composable has no injected resources of its own.
     //
-    // The trend arrow and the temp basal icon have NO text beside them at all, so without these they
-    // were silent. The insulin and carb icons have a value beside them but no noun, so a screen
+    // The trend arrow, the temp basal icon and the loop icon have NO text beside them at all, so
+    // without these they were silent. For the loop it is runningModeText. The insulin and carb icons have a value beside them but no noun, so a screen
     // reader read out a bare "1.20 U" with nothing saying what it measured.
     val arrowDescription: String?,
     val tbrDescription: String,

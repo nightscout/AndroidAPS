@@ -67,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">停用Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">按 <b>下一步</b>以停用Pod。\n\n<b>注意:</b>这将暂停所有胰岛素输注并停用Pod。</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">已停用的 Pod 无法再次使用。是否立即停用此 Pod？</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">停用Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">停用Pod。\n\n停用成功完成后，您可以按<b>下一步</b>。</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod 已停用</string>
@@ -180,10 +181,15 @@
     </plurals>
     <string name="omnipod_common_overview_pod_hard_end_date">Pod 硬性终止</string>
     <!-- Omnipod - History -->
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d 分</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
     <string name="omnipod_common_bolus_type_smb">SMB</string>
     <string name="omnipod_common_bolus_type_basal_correction">基础率校正</string>
     <string name="omnipod_common_bolus_type_priming">充盈中</string>
     <string name="omnipod_common_history_total_delivered">总输注: %1$.2f U</string>
+    <string name="omnipod_common_failed_to_send">发送命令失败</string>
+    <string name="omnipod_common_command_not_sent">命令未发送</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">Pod 未收到命令</string>
+    <string name="omnipod_common_unknown">命令状态未知</string>
 </resources>

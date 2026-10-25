@@ -159,6 +159,15 @@
         <item quantity="other">Pod Alarmları: %1$s</item>
     </plurals>
     <!-- Omnipod - History -->
+    <string name="omnipod_common_history_tbr_value">%1$.2f Ü/s, %2$d dakika</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f Ü</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Bazal düzeltme</string>
+    <string name="omnipod_common_bolus_type_priming">Hazırlanıyor</string>
     <string name="omnipod_common_history_total_delivered">Toplam gönderilen: %1$.2f Ü</string>
+    <string name="omnipod_common_failed_to_send">Komut gönderilirken hata</string>
+    <string name="omnipod_common_command_not_sent">Komut gönderilmedi</string>
+    <string name="omnipod_common_command_not_received_by_the_pod">Pod\'dan komut alınmadı</string>
+    <string name="omnipod_common_unknown">Bilinmeyen komut durumu</string>
 </resources>

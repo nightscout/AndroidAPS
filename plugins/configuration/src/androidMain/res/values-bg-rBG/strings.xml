@@ -26,6 +26,7 @@
     <string name="doprofileswitch">Смени профил</string>
     <string name="exitwizard">Пропусни съветника за настройка</string>
     <string name="setupwizard_sensitivity_description">Модула за чувствителност се използва за определяне на чувствителността и COB изчисления. За повече информация посетете:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Изберете един от възможните алгоритми. Те са сортирани от стар към най-нов. Новите са обикновено по-добри. Не забравяйте да прочетете документацията и да конфигурирате преди да го използвате.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Конфигурация на RileyLink. След избиране на RileyLink, ще е възможно неговото конфигуриране, след като статуса му е \"Свързан\". Може да отнеме време \n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Заб:</b> Можете да продължите след като помпата се инициализира.\n</string>
@@ -39,12 +40,16 @@
     <string name="setupwizard_client_control_info">Свързване на клиентско приложение, така че да може то да изпраща команди то главния телефон през Найтскаут. Това е най-новият и препърчан начин за отдалечен контрол.</string>
     <string name="setupwizard_ns_receive_info">Приемане на лечения и данни от Nightscout (несигурен начин) е изключено по подразбиране. Отворете настройките долу само ако Ви трябва. Необходимо ако Ви трябва въвеждане на данни през Nightscout или друго приложение.</string>
     <string name="setupwizard_open_ns_receive_settings">Приемане на данни от Nightscout</string>
-    <string name="setupwizard_pair_with_master_info">Свържете този клиент с главният ААПС, за да може да изпраща команди по сигурен начин.</string>
+    <string name="setupwizard_pair_with_master_info">Свържете този клиент с главният AAPS, за да може да изпраща команди по сигурен начин. След свързването завършва настройката.</string>
+    <string name="setupwizard_setup_from_master_title">Найстройване в главния телефон</string>
+    <string name="setupwizard_setup_from_master_info">В главния отворете Оторизирани клиенти и добавете този с QR код. Сканерането му настройва Nightscout с личен токен и може също да се свърже телефона също. Настройката приключва със сканирането. Без QR кода, пропуснете тази стъпка и настройте Nightscout ръчно.</string>
+    <string name="setupwizard_scan_master_qr">Сканирайте QR кода</string>
     <string name="setupwizard_pairing_ws_warning">Нужна е Nightscout WebSocket връзка. Върнете се на предната стъпка и я разрешете.</string>
     <string name="setupwizard_pairing_status_master">Свързани клиенти: %1$d</string>
     <string name="setupwizard_pairing_status_master_none">Няма свързани клиенти</string>
     <string name="setupwizard_pairing_status_client_paired">Свързано с главния</string>
     <string name="setupwizard_pairing_status_client_not_paired">Още не е свързан</string>
+    <string name="setupwizard_instance_name_title">Кой използва този телефон?</string>
     <string name="readstatus">Получавам състоянието на помпата</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Вашият телефон не поддържа оптимизация на батерията - може да се появят проблеми!</string>

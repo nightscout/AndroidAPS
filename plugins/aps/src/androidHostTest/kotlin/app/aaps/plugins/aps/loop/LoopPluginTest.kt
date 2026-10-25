@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.loop
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.DS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
@@ -19,6 +20,7 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.profile.EffectiveProfile
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpStatusProvider
@@ -27,6 +29,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.profile.ProfileSealed
@@ -186,6 +189,40 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(RM(timestamp = 0, mode = RM.Mode.CLOSED_LOOP, duration = 0))
 
         val result = loopPlugin.applySMBRequest(mock<APSResult>())
+
+        assertThat(result.success).isFalse()
+        assertThat(result.enacted).isFalse()
+        verifyNoInteractions(uel)
+        verify(commandQueue, never()).bolus(any())
+    }
+
+    // #5362: the APS allows an SMB 6 s before the full interval, and this check runs later. It must allow the same.
+    @Test
+    fun `SMB is queued when the last bolus is 5 s short of the interval`() = runTest {
+        whenever(preferences.get(IntKey.ApsMaxSmbFrequency)).thenReturn(3)
+        val lastBolusTime = dateUtil.now() - T.mins(3).msecs() + T.secs(5).msecs()
+        whenever(persistenceLayer.getNewestBolus()).thenReturn(BS(timestamp = lastBolusTime, type = BS.Type.SMB, amount = 0.3, iCfg = someICfg))
+        whenever(virtualPumpPlugin.isInitialized()).thenReturn(true)
+        whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(RM(timestamp = 0, mode = RM.Mode.CLOSED_LOOP, duration = 0))
+        val queued = pumpEnactResultProvider().success(true).enacted(true)
+        commandQueue.stub { onBlocking { bolus(any()) } doReturn queued }
+
+        val result = loopPlugin.applySMBRequest(mock<APSResult> { on { smb } doReturn 0.5 })
+
+        assertThat(result).isSameInstanceAs(queued)
+        val captor = argumentCaptor<DetailedBolusInfo>()
+        verify(commandQueue).bolus(captor.capture())
+        // The queue refuses the SMB if a bolus newer than this one comes in before it is queued.
+        assertThat(captor.firstValue.lastKnownBolusTime).isEqualTo(lastBolusTime)
+    }
+
+    @Test
+    fun `no SMB and no SMB log entry when the last bolus is 7 s short of the interval`() = runTest {
+        whenever(preferences.get(IntKey.ApsMaxSmbFrequency)).thenReturn(3)
+        val lastBolusTime = dateUtil.now() - T.mins(3).msecs() + T.secs(7).msecs()
+        whenever(persistenceLayer.getNewestBolus()).thenReturn(BS(timestamp = lastBolusTime, type = BS.Type.SMB, amount = 0.3, iCfg = someICfg))
+
+        val result = loopPlugin.applySMBRequest(mock<APSResult> { on { smb } doReturn 0.5 })
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()

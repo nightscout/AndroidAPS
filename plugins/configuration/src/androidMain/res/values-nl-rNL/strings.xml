@@ -20,22 +20,39 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Gebruik de waarden van je grootste maaltijd die je gewoonlijk eet\n</string>
     <string name="syncinfotext">Gegevens naar de cloud synchroniseren. Je kan dit deel nu overslaan, maar je kan pas verder met de doelen wanneer je een Nightscout of Tidepool client hebt ingesteld.</string>
+    <string name="status_label">Status:</string>
     <string name="diawarning">Onthoud: nieuwe insuline profielen vereisen een minimale DIA van 5 uur. DIA 5 – 6h op nieuw profiel is gelijk aan DIA 3h op oude insuline profielen.</string>
     <string name="profile">Profiel</string>
     <string name="doprofileswitch">Profiel wissel uitvoeren</string>
     <string name="exitwizard">De installatiewizard overslaan</string>
     <string name="setupwizard_sensitivity_description">Gevoeligheid plugin wordt gebruikt voor de detectie van de gevoeligheid en COB berekening. Voor meer info bezoek:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Selecteer één van de beschikbare algoritmen. Ze zijn gesorteerd van oud naar nieuw. Nieuwere algoritmen zijn meestal krachtiger. Vergeet niet de OpenAPS‑documentatie te lezen en het algoritme te configureren voordat je het gebruikt.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureer uw RileyLink hieronder. Na het selecteren van een RileyLink, kun je doorgaan zodra de RileyLink status \"Verbonden\" is. Dit kan even duren.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Opmerking:</b> Je kunt doorgaan zodra de pomp is ingesteld.\n</string>
     <string name="startobjective">Start je eerste Doel</string>
+    <string name="open_objectives">Open Doelen</string>
+    <string name="setupwizard_permissions">Machtigingen</string>
+    <string name="setupwizard_profile_info">Maak een profiel aan met jouw basaalstanden, IC, ISF en doelwaarden. Je kan later meerdere profielen toevoegen.</string>
+    <string name="setupwizard_permissions_info">AAPS heeft toegang nodig tot de opslag en permissies om goed te werken. Verleen de vereiste machtigingen hieronder.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
+    <string name="setupwizard_client_control_title">Client besturing</string>
+    <string name="setupwizard_client_control_info">Koppel \'client\' apparaten zodat ze ondertekende commando\'s via Nightscout naar deze \'master\' kunnen sturen. Dit is de nieuwe aanbevolen manier om AAPS op afstand te beheren.</string>
+    <string name="setupwizard_ns_receive_info">Het rechtstreeks accepteren van behandelingen en gegevens van Nightscout (een minder veilige methode) is nu standaard uitgeschakeld. Open de onderstaande instellingen alleen als u dit nog steeds nodig hebt. Dit is noodzakelijk als u gegevens via NS of apps van derden moet invoeren.</string>
+    <string name="setupwizard_open_ns_receive_settings">Nightscout-gegevensacceptatie</string>
+    <string name="setupwizard_pairing_ws_warning">Voor het koppelen is de Nightscout WebSocket-verbinding vereist. Ga terug naar de vorige stap en schakel deze eerst in.</string>
+    <string name="setupwizard_pairing_status_master">Gekoppelde clients: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Er zijn nog geen clients gekoppeld</string>
+    <string name="setupwizard_pairing_status_client_paired">Gekoppeld aan een \'master\'</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Nog niet gekoppeld</string>
+    <string name="setupwizard_instance_name_title">Wie gebruikt deze telefoon?</string>
     <string name="readstatus">Lees status</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Dit apparaat lijkt geen ondersteuning te bieden voor whitelisten voor batterijoptimalisatie - u kunt prestatieproblemen ervaren.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Welke pomp wilt u gebruiken met AAPS?</string>
     <string name="configbuilder_aps_description">Welk APS algoritme moet therapie aanpassingen maken?</string>
+    <string name="configbuilder_sync_description">Data upload, synchroniseren en communicatie plugins.</string>
     <string name="configbuilder_bgsource_description">Waar moet de AAPS zijn gegevens vandaan halen?</string>
     <string name="configbuilder_sensitivity_description">Welk gevoeligheid algoritme moet worden gebruikt?</string>
     <string name="allow_hardware_pump_text">Let op: als u activeert en verbinding maakt met een hardwarepomp, kopieert AndroidAPS de basale instellingen van het profiel naar de pomp en overschrijft de bestaande basaal snelheid die in de pomp is opgeslagen. Zorg ervoor dat u de juiste basaal instelling hebt in AndroidAPS. Als u niet zeker weet of niet wilt dat de basaal instellingen op uw pomp worden overschreven, drukt u op Annuleren en herhaalt u het overschakelen naar de pomp op een later tijdstip.</string>

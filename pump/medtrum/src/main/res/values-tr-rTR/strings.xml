@@ -12,6 +12,7 @@
     <string name="patch_not_active">Patch etkinleştirilemedi</string>
     <string name="pump_setting_failed">Kullanıcı ayarlarının pompada ayarlanması başarısız oldu!</string>
     <string name="pump_sync_error">Geçmiş senkronize edilirken hata oluştu; bir kayıt atlandı. Bolusun doğru şekilde senkronize edilip edilmediğini kontrol etmek için tedavi sekmesini kontrol edin. Erteleyin ve hata tekrarlanmaya devam ederse patch veya pompa tabanını değiştirin.</string>
+    <string name="patch_reset_after_primed_error">Patch kendiliğinden yeniden başladı ve oturumunu kaybetti. Artık insülin veremiyor. Patch\'i çıkarın ve yenisini takın.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Aktif bolus</string>
     <string name="pump_state_label">Pompa durumu</string>
@@ -21,6 +22,7 @@
     <string name="fw_version_label">Sürüm</string>
     <string name="patch_no_label">Patch no</string>
     <string name="patch_expiry_label">Patch süresi doluyor</string>
+    <string name="patch_activation_time_label">Etkinleştirme</string>
     <string name="reset_alarms_label">Alarmları sıfırla</string>
     <string name="change_patch_label">Patch\'i Değiştir</string>
     <string name="requested_by_user" comment="26 characters max for translation">Kullanıcı talebi</string>
@@ -47,10 +49,19 @@
     <string name="pump_time_update_failed">Pompa saat dilimi güncellenemedi, mesaj ertelendi ve manuel olarak yenilendi.</string>
     <string name="bolus_error">Bolus hatası</string>
     <!-- Status strings -->
+    <string name="status_idle">Boşta</string>
+    <string name="status_filled">Dolduruldu</string>
+    <string name="status_priming">Hazırlanıyor</string>
+    <string name="status_primed">Hazırlandı</string>
+    <string name="status_ejecting">Çıkarılıyor</string>
+    <string name="status_ejected">Çıkarıldı</string>
+    <string name="status_active">Etkin</string>
+    <string name="status_stopped">Durduruldu</string>
     <!-- wizard-->
     <string name="retry">Tekrar dene</string>
     <string name="step_prepare_patch">Pompa Etkinleştirme</string>
     <string name="step_prepare_patch_connect">Bağlan ve Doldur</string>
+    <string name="step_select_insulin">İnsülin Seçin</string>
     <string name="step_prime">Doldur</string>
     <string name="step_priming">Hazırlanıyor</string>
     <string name="step_priming_complete">Hazırlama-dolum tamamlandı</string>
@@ -60,9 +71,12 @@
     <string name="step_deactivate">Patch Devre Dışı Bırakma</string>
     <string name="step_deactivating">Devre dışı bırakılıyor...</string>
     <string name="step_deactivate_complete">Patch devre dışı bırakıldı</string>
+    <string name="unpair_confirm_message">Bu işlem, kayıtlı pompa seri numarasını silecek ve bağlantıyı kesecektir. Bir pompa taraması başlatmak için yeni bir patch etkinleştirin.</string>
     <string name="step_retry_activation">Etkinleştirme devam ediyor</string>
     <string name="unexpected_state">Beklenmeyen durum: %1$s</string>
+    <string name="ble_scan_connect_pump_base_first">Pompa tabanını çalıştırmak için yeni bir patch bağlayın, ardından aşağıdaki listeden seçin.</string>
     <string name="patch_begin_activation">Aktif patch yok. Etkinleştirme işlemine başlamak için <b>İleri</b>\'ye basın.</string>
+    <string name="connect_pump_base">Pompa tabanının Patch\'e bağlı olduğundan emin olun, içindeki havayı çıkarın ve insülinle doldurun, ardından <b>İleri</b> butonuna basın.</string>
     <string name="note_min_70_units">Not: Etkinleştirme için minimum 70 ünite gereklidir.</string>
     <string name="reservoir_text_and_level">Rezervuar: %.2f U</string>
     <string name="do_not_attach_to_body">Patch\'i henüz gövdeye takmayın.</string>
@@ -90,6 +104,14 @@
     <!-- settings-->
     <string name="alarm_setting_title">Alarm Ayarları</string>
     <string name="alarm_setting_summary">Tercih ettiğiniz pompa alarm ayarlarını seçin.</string>
+    <string name="alarm_setting_light_vibrate_beep">Işık, titreşim ve bip sesi</string>
+    <string name="alarm_setting_light_vibrate">Işık ve titreşim</string>
+    <string name="alarm_setting_light_beep">Işık ve bip sesi</string>
+    <string name="alarm_setting_light">Işık</string>
+    <string name="alarm_setting_vibrate_beep">Titreşim ve bip sesi</string>
+    <string name="alarm_setting_vibrate">Titreşim</string>
+    <string name="alarm_setting_beep">Bip sesi</string>
+    <string name="alarm_setting_silent">Sessiz</string>
     <string name="pump_warning_notification_title">Pompa uyarısı hakkında bildirim</string>
     <string name="pump_warning_notification_summary">Kritik olmayan pompa uyarılarıyla ilgili bildirimi göster: düşük pil, düşük rezervuar (20 birim) ve yakında süresi doluyor. Pompa alarmları sessize ayarlandığında etkin bırakılması önerilir.</string>
     <string name="pump_warning_expiry_hour_title">Pompa sona erme süresi uyarısı [hours]</string>

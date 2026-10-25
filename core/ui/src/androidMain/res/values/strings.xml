@@ -116,6 +116,7 @@
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Objectives</string>
     <string name="please_wait">Please wait…</string>
     <string name="stop">Stop</string>
@@ -136,7 +137,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nThe insulin was also not switched.</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Date</string>
-    <string name="units_label">Units</string>
     <string name="insulin_nickname_label">Insulin nickname</string>
     <string name="concentration_label">Concentration</string>
     <string name="peak_label">Peak</string>
@@ -1209,6 +1209,19 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Insulin On Board</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Absolute insulin</string>
+    <string name="graph_series_cob">Carbs On Board</string>
+    <string name="graph_series_bgi">Blood Glucose Impact</string>
+    <string name="graph_series_deviations">Deviations</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Sensitivity change</string>
+    <string name="graph_series_variable_sens">Variable sensitivity</string>
+    <string name="graph_series_deviation_slope">Deviation slope</string>
+    <string name="graph_series_heart_rate">Heart Rate</string>
+    <string name="graph_series_steps">Steps</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Activity</string>
+    <string name="graph_series_predictions">Predictions</string>
 
 
     <string name="units_days">days</string>

@@ -41,4 +41,5 @@
     <string name="doyouwantresetstart">Görevleri sıfırlamak istiyor musunuz? Tüm yaptıklarınızı kaybedeceksiniz.</string>
     <string name="objectives_button_unfinish">Bitmiş durumu sıfırla</string>
     <string name="objectives_button_unstart">Başlatma durumunu sıfırla</string>
+    <string name="bg_doubled_lgs">KŞ kaynağında iki katına çıkmış değerler nedeniyle LGS modu</string>
 </resources>

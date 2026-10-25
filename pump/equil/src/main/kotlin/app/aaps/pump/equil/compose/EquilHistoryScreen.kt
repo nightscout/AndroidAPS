@@ -271,7 +271,7 @@ private fun PumpEventTab(events: List<PumpEventItem>) {
         }
     } else {
         LazyColumn(Modifier.fillMaxSize()) {
-            items(events, key = { "${it.timestamp}_${it::class.simpleName}_${it.hashCode()}" }) { item ->
+            items(events, key = { it.listKey }) { item ->
                 PumpEventRow(item)
                 HorizontalDivider()
             }

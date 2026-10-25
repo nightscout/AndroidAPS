@@ -93,7 +93,6 @@
     <string name="default_custom_watchface_external_comment">Mostrador padrão incluindo visualizações externas para seguidores; você pode clicar no botão EXPORT WATCHFACE para gerar um modelo.</string>
     <string name="wear_default_watchface">Watchface padrão</string>
     <string name="wear_more_watchfaces">Mais mostradores</string>
-    <string name="forever">Para sempre</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_description">O aplicativo precisa de permissão para Bluetooth para se comunicar com a bomba</string>
     <!-- Insulin -->

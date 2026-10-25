@@ -2,7 +2,9 @@ package app.aaps.core.nssdk.remotemodel
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonTransformingSerializer
 
 /**
  * DeviceStatus coming from uploader or AAPS
@@ -24,7 +26,7 @@ internal data class RemoteDeviceStatus(
     @SerialName("isCharging") val isCharging: Boolean? = null,
     @SerialName("device") val device: String? = null,               // "openaps://samsung SM-G970F"
 
-    @SerialName("uploader") val uploader: Uploader? = null,
+    @SerialName("uploader") @Serializable(with = LenientUploaderSerializer::class) val uploader: Uploader? = null,
     @SerialName("pump") val pump: Pump? = null,
     @SerialName("openaps") val openaps: OpenAps? = null
 ) {
@@ -63,4 +65,20 @@ internal data class RemoteDeviceStatus(
     data class Uploader(
         @SerialName("battery") val battery: Int? = null
     )
+}
+
+/**
+ * Reads [RemoteDeviceStatus.Uploader] from an object as usual. Anything else - a string, a number,
+ * an array - reads as an uploader with no battery. Writing is not changed.
+ *
+ * Not every uploader writes an object here: one in the field writes `"uploader":"GG-Host"`, a plain
+ * name. AAPS only takes the battery from this field, so a different shape must not make the whole
+ * device status unreadable. It did: on the websocket the exception crashed the app every time such a
+ * document arrived (4.0.0-dev-e), and on the REST load one such document fails the whole list it is
+ * in.
+ */
+internal object LenientUploaderSerializer : JsonTransformingSerializer<RemoteDeviceStatus.Uploader>(RemoteDeviceStatus.Uploader.serializer()) {
+
+    override fun transformDeserialize(element: JsonElement): JsonElement =
+        element as? JsonObject ?: JsonObject(emptyMap())
 }
