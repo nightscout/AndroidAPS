@@ -716,6 +716,26 @@ fun niceScale(min: Double, max: Double): NiceScale {
     return NiceScale(floorToGrid(min, grid), ceilToGrid(safeMax, grid))
 }
 
+/**
+ * How far above the real data a predicted curve may pull the top of the BG axis, in mg/dl.
+ * Converted to the user's units where it is used.
+ */
+const val PREDICTION_AXIS_HEADROOM_MGDL = 54.0
+
+/**
+ * The value the top of the BG axis is fitted to. A real value ([realMax]: readings, calibrations,
+ * BG checks) widens the axis freely, and so does [highMark]. A predicted value ([predictionMax])
+ * counts only up to [headroom] above the higher of those two: a COB curve that runs off towards
+ * 20 mmol/L used to pull the axis up to 20 and press the real readings together at the bottom of
+ * the graph. Above the cap the curve is clipped at the top edge, which still shows that it is
+ * heading there. Downwards there is no cap, a predicted low must stay in view.
+ */
+fun bgAxisTop(realMax: Double?, predictionMax: Double?, highMark: Double, headroom: Double): Double {
+    val realTop = maxOf(realMax ?: highMark, highMark)
+    val predictionTop = predictionMax?.coerceAtMost(realTop + headroom) ?: realTop
+    return maxOf(realTop, predictionTop)
+}
+
 /** Rounds [value] up to [boundGrid] of itself, for a lone bound. 0 for a value that is not positive. */
 fun niceUp(value: Double): Double {
     if (value <= 0.0) return 0.0

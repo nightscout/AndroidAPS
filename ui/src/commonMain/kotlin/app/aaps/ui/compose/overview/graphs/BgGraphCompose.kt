@@ -35,6 +35,7 @@ import app.aaps.core.interfaces.overview.graph.TargetLineData
 import app.aaps.core.interfaces.overview.graph.TreatmentGraphData
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.icons.IcBgCheck
 import app.aaps.core.ui.compose.icons.IcProfile
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
@@ -171,6 +172,8 @@ fun BgGraphCompose(
     val showPredictions = SeriesType.PREDICTIONS in bgOverlays
     val rawPredictions by viewModel.predictionsFlow.collectAsStateWithLifecycle()
     val predictions = if (showPredictions) rawPredictions else emptyList()
+    val profileUtil = LocalProfileUtil.current
+    val predictionHeadroom = remember(profileUtil.units) { profileUtil.fromMgdlToUnits(PREDICTION_AXIS_HEADROOM_MGDL) }
     val rawBasalData by viewModel.basalGraphFlow.collectAsStateWithLifecycle()
     val targetData by viewModel.targetLineFlow.collectAsStateWithLifecycle()
     val treatmentData by viewModel.treatmentGraphFlow.collectAsStateWithLifecycle()
@@ -237,7 +240,7 @@ fun BgGraphCompose(
     // it as a repeat, and the lines stayed like that. Same as in SecondaryGraphCompose.
     val modelInput = BgModelInput(
         bgReadings, bucketedData, predictions, basalData, targetData, epsPoints, activityData, showActivity, chartConfig,
-        minTimestamp, maxX, visibleTimeRange, treatmentData
+        minTimestamp, maxX, visibleTimeRange, treatmentData, predictionHeadroom
     )
     val latestModelInput by rememberUpdatedState(modelInput)
     LaunchedEffect(modelProducer) {
@@ -565,7 +568,9 @@ private data class BgModelInput(
     val minTimestamp: Long,
     val maxX: Double,
     val visibleTimeRange: Pair<Long, Long>?,
-    val treatmentData: TreatmentGraphData
+    val treatmentData: TreatmentGraphData,
+    /** How far a prediction may widen the top of the axis above the real data, in the units of the graph */
+    val predictionHeadroom: Double
 )
 
 /**
@@ -614,13 +619,16 @@ private suspend fun submitBgModel(
     // well off the curve, so it widens the axis like a reading — otherwise it would be clamped
     // to the edge and lie about what the meter said.
     val measuredPoints = measuredGlucosePoints(treatmentData.calibrations, treatmentData.therapyEvents)
-    val bgAndPredictions = input.bgReadings + input.bucketedData + input.predictions
-    val allBgAndPredictionValues = bgAndPredictions.map { it.value } + measuredPoints.map { it.second }
-    val windowedValues = bgAndPredictions.filter { inWindow(it.timestamp) }.map { it.value } +
-        measuredPoints.filter { inWindow(it.first) }.map { it.second }
-    val windowedOrFull = windowedValues.ifEmpty { allBgAndPredictionValues }
-    val dataMax = maxOf(windowedOrFull.maxOrNull() ?: chartConfig.highMark, chartConfig.highMark)
-    val dataMin = minOf(windowedOrFull.minOrNull() ?: chartConfig.lowMark, chartConfig.lowMark)
+    // Real values and predicted ones apart: a prediction may pull the top of the axis only so
+    // far above the real data, see bgAxisTop. The window fallback is decided for both together.
+    val realPoints = (input.bgReadings + input.bucketedData).map { it.timestamp to it.value } + measuredPoints
+    val predictionPoints = input.predictions.map { it.timestamp to it.value }
+    val windowHasData = (realPoints + predictionPoints).any { inWindow(it.first) }
+    fun List<Pair<Long, Double>>.axisValues() = if (windowHasData) filter { inWindow(it.first) }.map { it.second } else map { it.second }
+    val realValues = realPoints.axisValues()
+    val predictionValues = predictionPoints.axisValues()
+    val dataMax = bgAxisTop(realValues.maxOrNull(), predictionValues.maxOrNull(), chartConfig.highMark, input.predictionHeadroom)
+    val dataMin = minOf(realValues.minOrNull() ?: chartConfig.lowMark, predictionValues.minOrNull() ?: chartConfig.lowMark, chartConfig.lowMark)
     val niceBgScale = niceScale(dataMin, dataMax)
     startAxisRangeProvider.maxX = input.maxX
     startAxisRangeProvider.minY = niceBgScale.min
