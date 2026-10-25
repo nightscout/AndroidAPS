@@ -54,6 +54,7 @@ import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 import kotlinx.coroutines.delay
+import kotlinx.datetime.TimeZone
 
 /**
  * CartesianChartModelProducer.update() skips notifying receivers (and thus skips recomputing axis
@@ -464,11 +465,12 @@ fun SecondaryGraphCompose(
     // Chart rendering
     // =========================================================================
 
-    val bottomAxisItemPlacer = rememberBottomAxisItemPlacer(minTimestamp)
+    val timeZoneHistory by viewModel.timeZoneHistoryFlow.collectAsStateWithLifecycle()
+    val bottomAxisItemPlacer = rememberBottomAxisItemPlacer(minTimestamp, TimeZone.currentSystemDefault())
     val nowLineColor = MaterialTheme.colorScheme.onSurface
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val inspectLine = rememberInspectLine(inspect)
-    val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp)
+    val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp, timeZoneHistory)
     val decorations = remember(nowLine, visibleRangeReporter, clockChanges, inspectLine) {
         listOfNotNull(nowLine, visibleRangeReporter, clockChanges, inspectLine)
     }

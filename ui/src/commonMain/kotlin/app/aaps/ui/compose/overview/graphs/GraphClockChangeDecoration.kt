@@ -9,6 +9,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import app.aaps.core.interfaces.utils.TimeZoneChange
 import app.aaps.core.ui.compose.AapsSpacing
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
@@ -55,10 +56,15 @@ internal class GraphClockChangeDecoration(
 }
 
 @Composable
-internal fun rememberClockChangeDecoration(minTimestamp: Long, maxTimestamp: Long, showIcon: Boolean = false): GraphClockChangeDecoration {
+internal fun rememberClockChangeDecoration(
+    minTimestamp: Long,
+    maxTimestamp: Long,
+    history: List<TimeZoneChange>,
+    showIcon: Boolean = false
+): GraphClockChangeDecoration {
     val timeZone = TimeZone.currentSystemDefault()
-    val changes = remember(minTimestamp, maxTimestamp, timeZone) {
-        graphClockChanges(minTimestamp, maxTimestamp, timeZone)
+    val changes = remember(minTimestamp, maxTimestamp, timeZone, history) {
+        graphClockChanges(minTimestamp, maxTimestamp, timeZone, history)
     }
     val color = MaterialTheme.colorScheme.onSurfaceVariant
     val painter = if (showIcon) rememberVectorPainter(Icons.Filled.Schedule) else null
@@ -78,7 +84,12 @@ internal data class GraphClockChange(
 }
 
 /** Finds offset changes in the axis time zone without changing elapsed-time coordinates. */
-internal fun graphClockChanges(start: Long, end: Long, timeZone: TimeZone): List<GraphClockChange> {
+internal fun graphClockChanges(
+    start: Long,
+    end: Long,
+    timeZone: TimeZone,
+    history: List<TimeZoneChange> = emptyList()
+): List<GraphClockChange> {
     if (end <= start) return emptyList()
     val changes = mutableListOf<GraphClockChange>()
     var cursor = start
@@ -100,7 +111,10 @@ internal fun graphClockChanges(start: Long, end: Long, timeZone: TimeZone): List
         cursor = next
         offset = nextOffset
     }
-    return changes
+    val switches = history.filter { it.timestamp in start..end }.map {
+        GraphClockChange(it.timestamp, UtcOffset(seconds = it.beforeSeconds), UtcOffset(seconds = it.afterSeconds))
+    }
+    return (switches + changes).distinctBy { it.timestamp }.sortedBy { it.timestamp }
 }
 
 internal fun graphTimeLabel(timestamp: Long, timeZone: TimeZone): String {

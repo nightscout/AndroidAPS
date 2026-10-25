@@ -13,7 +13,10 @@ import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.overview.graph.SeriesType
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.TimeZoneChange
+import app.aaps.core.interfaces.utils.readTimeZoneChanges
 import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import dev.zacsweers.metro.Assisted
@@ -140,6 +143,13 @@ class GraphViewModel(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = dateUtil.now()
+    )
+    val timeZoneHistoryFlow: StateFlow<List<TimeZoneChange>> = combine(preferences.observe(StringNonKey.TimeZoneChangeHistory), nowTimestamp) { _, _ ->
+        preferences.readTimeZoneChanges(dateUtil.now(), aapsLogger)
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        preferences.readTimeZoneChanges(dateUtil.now(), aapsLogger)
     )
 
     // BG info UI state - combines bgInfo with periodic timeAgo updates

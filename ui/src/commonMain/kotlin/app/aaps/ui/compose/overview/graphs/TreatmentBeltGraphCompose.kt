@@ -52,6 +52,7 @@ import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.component.Component
 import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
+import kotlinx.datetime.TimeZone
 
 /** How near to an icon a tap has to be to show that icon's event: half the icon and a little more. */
 private val BELT_ICON_TAP_RADIUS = 12.dp
@@ -383,8 +384,9 @@ fun TreatmentBeltGraphCompose(
     }
 
     // Time formatter and axis config — same as other graphs for alignment
-    val timeFormatter = rememberTimeFormatter(minTimestamp)
-    val bottomAxisItemPlacer = rememberBottomAxisItemPlacer(minTimestamp)
+    val timeZoneHistory by viewModel.timeZoneHistoryFlow.collectAsStateWithLifecycle()
+    val timeFormatter = rememberTimeFormatter(minTimestamp, TimeZone.currentSystemDefault())
+    val bottomAxisItemPlacer = rememberBottomAxisItemPlacer(minTimestamp, TimeZone.currentSystemDefault())
 
     // Press and hold, or a tap, shows the inspect pill. The marker draws nothing, it only hands the
     // time under the finger to the shared inspect state.
@@ -398,7 +400,7 @@ fun TreatmentBeltGraphCompose(
     val nowLineColor = MaterialTheme.colorScheme.onSurface
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val inspectLine = rememberInspectLine(inspect)
-    val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp)
+    val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp, timeZoneHistory)
     val beltDecorations = remember(nowLine, clockChanges, inspectLine) { listOfNotNull(nowLine, clockChanges, inspectLine) }
 
     val rangeProvider = remember(maxX) {

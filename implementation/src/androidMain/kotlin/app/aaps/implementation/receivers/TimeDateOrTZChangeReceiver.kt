@@ -10,11 +10,18 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventTimeZoneChanged
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.TimeZoneChange
+import app.aaps.core.interfaces.utils.readTimeZoneChanges
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import app.aaps.core.utils.receivers.BundleLogger
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.util.Date
 import java.util.TimeZone
 
@@ -24,8 +31,11 @@ class TimeDateOrTZChangeReceiver : MetroBroadcastReceiver() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var appScope: CoroutineScope
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var preferences: Preferences
+    @Inject lateinit var dateUtil: DateUtil
 
     private var isDST = calculateDST()
+    private var previousTimeZone = TimeZone.getDefault()
 
     private fun calculateDST(): Boolean {
         val timeZone = TimeZone.getDefault()
@@ -56,6 +66,14 @@ class TimeDateOrTZChangeReceiver : MetroBroadcastReceiver() {
             }
 
             Intent.ACTION_TIMEZONE_CHANGED == action -> {
+                val zone = TimeZone.getDefault()
+                if (zone.id != previousTimeZone.id) {
+                    val now = dateUtil.now()
+                    val change = TimeZoneChange(now, previousTimeZone.getOffset(now) / 1000, zone.getOffset(now) / 1000)
+                    val history = preferences.readTimeZoneChanges(now, aapsLogger)
+                    preferences.put(StringNonKey.TimeZoneChangeHistory, Json.encodeToString(history + change))
+                    previousTimeZone = zone
+                }
                 aapsLogger.info(LTag.PUMP, "TimeDateOrTZChangeReceiver::Timezone changed. Notifying pump driver.")
                 appScope.launch { activePump.timezoneOrDSTChanged(TimeChangeType.TimezoneChanged) }
                 // The IOB calculation reads the basal profile in the current time zone, so its cached

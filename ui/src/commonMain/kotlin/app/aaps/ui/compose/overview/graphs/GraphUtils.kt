@@ -104,8 +104,7 @@ fun timestampToX(timestamp: Long, minTimestamp: Long): Double =
  * @return CartesianValueFormatter that converts x-values back to time labels
  */
 @Composable
-fun rememberTimeFormatter(minTimestamp: Long): CartesianValueFormatter {
-    val timeZone = TimeZone.currentSystemDefault()
+fun rememberTimeFormatter(minTimestamp: Long, timeZone: TimeZone = TimeZone.currentSystemDefault()): CartesianValueFormatter {
     return remember(minTimestamp, timeZone) {
         CartesianValueFormatter { _, value, _ ->
             val timestamp = minTimestamp + (value * 60000).toLong()
@@ -126,8 +125,7 @@ fun rememberTimeFormatter(minTimestamp: Long): CartesianValueFormatter {
  */
 @OptIn(ExperimentalTime::class)
 @Composable
-fun rememberBottomAxisItemPlacer(minTimestamp: Long): HorizontalAxis.ItemPlacer {
-    val timeZone = TimeZone.currentSystemDefault()
+fun rememberBottomAxisItemPlacer(minTimestamp: Long, timeZone: TimeZone = TimeZone.currentSystemDefault()): HorizontalAxis.ItemPlacer {
     return remember(minTimestamp, timeZone) {
         val instant = Instant.fromEpochMilliseconds(minTimestamp)
         val localDateTime = instant.toLocalDateTime(timeZone)

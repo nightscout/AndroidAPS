@@ -49,6 +49,8 @@ class TimeDateOrTZChangeReceiverTest : TestBaseWithProfile() {
         it.activePlugin = activePlugin
         it.appScope = CoroutineScope(Dispatchers.Unconfined)
         it.rxBus = rxBus
+        it.preferences = preferences
+        it.dateUtil = dateUtil
     }
 
     /** Collects every EventTimeZoneChanged sent while the test runs. */
