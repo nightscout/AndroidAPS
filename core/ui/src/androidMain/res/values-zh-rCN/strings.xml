@@ -134,7 +134,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n胰岛素也未切换。</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">日期</string>
-    <string name="units_label">单位</string>
     <string name="insulin_nickname_label">胰岛素昵称</string>
     <string name="concentration_label">浓度</string>
     <string name="peak_label">峰值</string>
