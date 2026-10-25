@@ -1209,6 +1209,19 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Insulin On Board</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Absolute insulin</string>
+    <string name="graph_series_cob">Carbs On Board</string>
+    <string name="graph_series_bgi">Blood Glucose Impact</string>
+    <string name="graph_series_deviations">Deviations</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Sensitivity change</string>
+    <string name="graph_series_variable_sens">Variable sensitivity</string>
+    <string name="graph_series_deviation_slope">Deviation slope</string>
+    <string name="graph_series_heart_rate">Heart Rate</string>
+    <string name="graph_series_steps">Steps</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Activity</string>
+    <string name="graph_series_predictions">Predictions</string>
 
 
     <string name="units_days">days</string>
