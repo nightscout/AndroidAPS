@@ -69,7 +69,6 @@
     <string name="no_profile_set">프로파일 설정되지 않음</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">날짜</string>
-    <string name="units_label">단위</string>
     <string name="dia_label">인슐린활동시간(DIA):</string>
     <string name="ic_label">인슐린 대 탄수화물 비율(IC):</string>
     <string name="isf_label">인슐린 민감도(ISF):</string>
