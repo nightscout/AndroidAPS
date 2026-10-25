@@ -49,6 +49,7 @@ import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandSuspendDelivery
+import app.aaps.pump.omnipod.common.ui.compose.podExpiryRows
 import app.aaps.pump.omnipod.common.ui.wizard.compose.ActivationType
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodOverviewEvent
 import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
@@ -83,6 +84,7 @@ import org.joda.time.DateTime
 import org.joda.time.Duration
 import java.util.Locale
 import java.util.TimeZone
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.common.hw.rileylink.R as RileyLinkR
 import app.aaps.pump.omnipod.common.R as CommonR
@@ -213,17 +215,15 @@ class ErosOverviewViewModel(
             val timeLevel = if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) StatusLevel.WARNING else StatusLevel.NORMAL
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_time_on_pod), value = timeOnPodValue, level = timeLevel))
 
-            // Pod expiry
+            // Pod expiry and pod hard end (end of the grace period following expiry)
             val expiresAt = podStateManager.expiresAt
-            val expiryValue = expiresAt?.let { readableZonedTime(it) } ?: PLACEHOLDER
-            val expiryLevel = if (expiresAt != null && DateTime.now().isAfter(expiresAt)) StatusLevel.CRITICAL else StatusLevel.NORMAL
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_expiry_date), value = expiryValue, level = expiryLevel))
-
-            // Pod hard end (end of the grace period following expiry)
-            val hardEndAt = expiresAt?.plus(POD_GRACE_PERIOD)
-            val hardEndValue = hardEndAt?.let { readableZonedTime(it) } ?: PLACEHOLDER
-            val hardEndLevel = if (hardEndAt != null && DateTime.now().isAfter(hardEndAt)) StatusLevel.CRITICAL else StatusLevel.NORMAL
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_hard_end_date), value = hardEndValue, level = hardEndLevel))
+            addAll(
+                podExpiryRows(
+                    rh, dateUtil, dateUtil.now(),
+                    expiresAt = expiresAt?.millis,
+                    hardEndAt = expiresAt?.plus(POD_GRACE_PERIOD)?.millis
+                ) { readableZonedTime(DateTime(it, podStateManager.timeZone)) }
+            )
 
             // Pod status
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_status), value = buildPodStatusText(), level = buildPodStatusLevel()))
@@ -444,7 +444,7 @@ class ErosOverviewViewModel(
                     rh.gs(CommonR.string.omnipod_common_pod_status_running)
                 }
                 if (!podStateManager.isBasalCertain) {
-                    status += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"
+                    status = rh.gs(InterfacesR.string.value_with_detail, status, rh.gs(CommonR.string.omnipod_common_uncertain))
                 }
                 status
             } else if (podStateManager.podProgressStatus == PodProgressStatus.FAULT_EVENT_OCCURRED) {
@@ -482,7 +482,7 @@ class ErosOverviewViewModel(
             )
             text?.let {
                 if (!podStateManager.isLastBolusCertain) {
-                    text += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"
+                    text = rh.gs(InterfacesR.string.value_with_detail, text, rh.gs(CommonR.string.omnipod_common_uncertain))
                     return text to StatusLevel.CRITICAL
                 }
                 return text to StatusLevel.NORMAL
@@ -502,7 +502,7 @@ class ErosOverviewViewModel(
                 durationInMin = podStateManager.tempBasalDuration.standardMinutes.toInt()
             )
             if (!podStateManager.isTempBasalCertain) {
-                text += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"
+                text = rh.gs(InterfacesR.string.value_with_detail, text, rh.gs(CommonR.string.omnipod_common_uncertain))
                 return text to StatusLevel.CRITICAL
             }
             return text to StatusLevel.NORMAL
@@ -510,7 +510,7 @@ class ErosOverviewViewModel(
 
         // Not running
         if (podStateManager.isPodActivationCompleted && !podStateManager.isTempBasalCertain) {
-            return "$PLACEHOLDER (${rh.gs(CommonR.string.omnipod_common_uncertain)})" to StatusLevel.CRITICAL
+            return rh.gs(InterfacesR.string.value_with_detail, PLACEHOLDER, rh.gs(CommonR.string.omnipod_common_uncertain)) to StatusLevel.CRITICAL
         }
         return PLACEHOLDER to StatusLevel.NORMAL
     }

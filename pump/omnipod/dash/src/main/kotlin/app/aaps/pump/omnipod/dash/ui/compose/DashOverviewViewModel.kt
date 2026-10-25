@@ -48,6 +48,7 @@ import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandSuspendDelivery
+import app.aaps.pump.omnipod.common.ui.compose.podExpiryRows
 import app.aaps.pump.omnipod.common.ui.wizard.compose.ActivationType
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodOverviewEvent
 import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
@@ -70,10 +71,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Duration
-import java.time.ZonedDateTime
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.omnipod.common.R as CommonR
 
@@ -241,25 +242,15 @@ class DashOverviewViewModel(
             }
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_time_on_pod), value = timeOnPodValue, level = timeLevel))
 
-            // Pod expiry
+            // Pod expiry and pod hard end (end of the grace period following expiry)
             val expiresAt = podStateManager.expiry
-            val expiryValue = expiresAt?.let { dateUtil.dateAndTimeString(it.toEpochSecond() * 1000) } ?: PLACEHOLDER
-            val expiryLevel = when {
-                expiresAt != null && ZonedDateTime.now().isAfter(expiresAt)               -> StatusLevel.CRITICAL
-                expiresAt != null && ZonedDateTime.now().isAfter(expiresAt.minusHours(4)) -> StatusLevel.WARNING
-                else                                                                      -> StatusLevel.NORMAL
-            }
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_expiry_date), value = expiryValue, level = expiryLevel))
-
-            // Pod hard end (end of the grace period following expiry)
-            val hardEndAt = expiresAt?.plusHours(POD_GRACE_PERIOD_HOURS)
-            val hardEndValue = hardEndAt?.let { dateUtil.dateAndTimeString(it.toEpochSecond() * 1000) } ?: PLACEHOLDER
-            val hardEndLevel = when {
-                hardEndAt != null && ZonedDateTime.now().isAfter(hardEndAt)               -> StatusLevel.CRITICAL
-                hardEndAt != null && ZonedDateTime.now().isAfter(hardEndAt.minusHours(4)) -> StatusLevel.WARNING
-                else                                                                      -> StatusLevel.NORMAL
-            }
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_hard_end_date), value = hardEndValue, level = hardEndLevel))
+            addAll(
+                podExpiryRows(
+                    rh, dateUtil, dateUtil.now(),
+                    expiresAt = expiresAt?.toInstant()?.toEpochMilli(),
+                    hardEndAt = expiresAt?.plusHours(POD_GRACE_PERIOD_HOURS)?.toInstant()?.toEpochMilli()
+                ) { dateUtil.dateAndTimeString(it) }
+            )
 
             // Pod status
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_status), value = buildPodStatusText(), level = buildPodStatusLevel()))
@@ -497,7 +488,7 @@ class DashOverviewViewModel(
                     PumpInsulin(omnipodDashPumpPlugin.model().determineCorrectBolusSize(requestedBolus)),
                     it.createdRealtime
                 )
-                text += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"
+                text = rh.gs(InterfacesR.string.value_with_detail, text, rh.gs(CommonR.string.omnipod_common_uncertain))
                 return text to StatusLevel.CRITICAL
             }
         }

@@ -639,33 +639,6 @@ class DateUtilImplTest {
     }
 
     @Test
-    fun `age works for duration over a day and matches old behavior`() {
-        val millis = 95400 * 1000L // 1 day, 2 hours, 30 minutes
-        val rh = FakeResourceHelper()
-        val expected = "1 d 2 h "
-        val newResult = dateUtilImpl.age(millis, true, rh)
-        val oldResult = dateUtilOldImpl.age(millis, true, rh)
-
-        assertThat(newResult).isEqualTo(expected)
-        assertThat(newResult).isEqualTo(oldResult)
-//TODO: age: Check if trailing whitespaces are needed
-        // expected                           : 1 d 2 h
-        // but was missing trailing whitespace: ␣
-    }
-
-    @Test
-    fun `age works for duration less than a day and matches old behavior`() {
-        val millis = 12600 * 1000L // 3 hours, 30 minutes
-        val rh = FakeResourceHelper()
-        val expected = "3 h 30 m "
-        val newResult = dateUtilImpl.age(millis, true, rh)
-        val oldResult = dateUtilOldImpl.age(millis, true, rh)
-
-        assertThat(newResult).isEqualTo(expected)
-        assertThat(newResult).isEqualTo(oldResult)
-    }
-
-    @Test
     fun `niceTimeScalar works works correctly now`() {
         // ARRANGE
         val rh = FakeResourceHelper()
@@ -1305,42 +1278,6 @@ class DateUtilImplTest {
     }
 
     @Test
-    fun `age calculation is correct across DST spring forward and matches old behavior`() {
-        // A duration that starts just before the DST gap and ends just after.
-        // In New York on March 12, 2023, time jumps from 1:59:59 EST to 3:00:00 EDT.
-        // The duration between 1:00 AM EST and 3:00 AM EDT is only ONE hour, not two.
-        val startTime = 1678599600000L // 2023-03-12 01:00:00 EST
-        val endTime = 1678606800000L   // 2023-03-12 03:00:00 EDT
-        val durationMillis = endTime - startTime
-        val rh = FakeResourceHelper()
-        val expected = "2 h 0 m "
-// TODO: age calculation should be evaluated - only one hour passes but the clock jumps two.
-        val newResult = dateUtilImpl.age(durationMillis, true, rh)
-        val oldResult = dateUtilOldImpl.age(durationMillis, true, rh)
-
-        assertThat(newResult).isEqualTo(expected)
-        assertThat(newResult).isEqualTo(oldResult)
-    }
-
-    @Test
-    fun `age calculation is correct across DST fall back and matches old behavior`() {
-        // In New York on Nov 5, 2023, the clock goes from 1:59 EDT to 1:00 EST.
-        // The real-world elapsed time between 1:00 EDT and 2:00 EST is 2 hours,
-        // but the raw millisecond duration is 3 hours.
-// TODO: check what The age() function's output should actually be.
-        val startTime = 1699160400000L // 2023-11-05 01:00:00 EDT
-        val endTime = 1699171200000L   // 2023-11-05 02:00:00 EST
-        val durationMillis = endTime - startTime // This value is 10,800,000
-        val rh = FakeResourceHelper()
-        val expected = "3 h 0 m "
-        val newResult = dateUtilImpl.age(durationMillis, true, rh)
-        val oldResult = dateUtilOldImpl.age(durationMillis, true, rh)
-
-        assertThat(newResult).isEqualTo(expected)
-        assertThat(newResult).isEqualTo(oldResult)
-    }
-
-    @Test
     fun `isSameDay is false for times just under 24 hours apart across DST and matches old behavior`() {
         // Spring forward day (March 12) is only 23 hours long.
         val startOfDay = 1678597200000L // Mar 12, 00:00:00 EST
@@ -1496,6 +1433,11 @@ class DateUtilImplTest {
                 app.aaps.core.interfaces.R.string.hoursago       -> String.format(Locale.US, "%1$.1fh ago", *args)
                 app.aaps.core.interfaces.R.string.days_ago       -> String.format(Locale.US, "%1$.1f days ago", *args)
                 app.aaps.core.interfaces.R.string.days_ago_round -> String.format(Locale.US, "%1$.0f days ago", *args)
+                app.aaps.core.interfaces.R.string.values_with_dash    -> String.format(Locale.US, "%1\$s - %2\$s", *args)
+                app.aaps.core.interfaces.R.string.time_frame_hours_minutes  -> String.format(Locale.US, "%1\$dh %2\$d'", *args)
+                app.aaps.core.interfaces.R.string.time_frame_minutes        -> String.format(Locale.US, "%1\$d'", *args)
+                app.aaps.core.interfaces.R.string.time_frame_in_parentheses -> String.format(Locale.US, "(%1\$s)", *args)
+                app.aaps.core.interfaces.R.string.time_value_with_unit      -> String.format(Locale.US, "%1\$s %2\$s", *args)
                 // Add more formatted strings here as needed by other tests
                 else                                          -> getStringForId(id)
             }
@@ -1503,7 +1445,6 @@ class DateUtilImplTest {
 
         private fun getStringForId(id: Int): String {
             return when (id) {
-                app.aaps.core.interfaces.R.string.shortday     -> "d"
                 app.aaps.core.interfaces.R.string.shorthour    -> "h"
                 app.aaps.core.interfaces.R.string.shortminute  -> "m"
                 app.aaps.core.interfaces.R.string.unit_seconds -> "seconds"
@@ -1511,7 +1452,6 @@ class DateUtilImplTest {
                 app.aaps.core.interfaces.R.string.unit_hours   -> "hours"
                 app.aaps.core.interfaces.R.string.unit_days    -> "days"
                 app.aaps.core.interfaces.R.string.unit_weeks   -> "weeks"
-                app.aaps.core.interfaces.R.string.hours        -> "hours"
                 app.aaps.core.interfaces.R.string.today        -> "Today"
                 app.aaps.core.interfaces.R.string.yesterday    -> "Yesterday"
                 app.aaps.core.interfaces.R.string.tomorrow     -> "Tomorrow"
@@ -1523,6 +1463,5 @@ class DateUtilImplTest {
         // --- Dummy implementations for the rest of the interface ---
         override fun gq(id: Int, quantity: Int, vararg args: Any?): String = ""
         override fun gsNotLocalised(id: Int, vararg args: Any?): String = ""
-        override fun shortTextMode(): Boolean = true
     }
 }

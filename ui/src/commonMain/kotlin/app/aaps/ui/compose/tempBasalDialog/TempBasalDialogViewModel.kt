@@ -132,13 +132,11 @@ class TempBasalDialogViewModel(
                 val label = rh.gs(CoreUiStrings.tempbasal_label)
                 when (val prepared = batchExecutor.prepare(listOf(action), Sources.TempBasalDialog, label)) {
                     is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
-                    // Offline block (and a master-local failure) surface here; a client round-trip failure already showed on the modal.
+                    // Offline block (and a master-local failure) surface here; a client round-trip failure already showed on the
+                    // modal, with the master's own text.
                     is ActionProgress.Rejected ->
                         if (prepared.reason.isNotDeliveryError()) rxBus.send(EventShowDialog.Ok(title = rh.gs(CoreUiStrings.tempbasal_label), message = rh.gs(prepared.reason.failText())))
-                        else prepared.detail?.let { detail ->
-                            if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(CoreUiStrings.tempbasal_label), message = detail))
-                            else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
-                        }
+                        else if (!config.AAPSCLIENT) prepared.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
 
                     else                       -> Unit // Unconfirmed → app-level modal
                 }
@@ -152,12 +150,10 @@ class TempBasalDialogViewModel(
     fun commit(bolusId: Long) {
         appScope.launch {
             val result = batchExecutor.commit(bolusId, Sources.TempBasalDialog, rh.gs(CoreUiStrings.tempbasal_label), pumpDirect = true)
+            // A client's modal has shown the master's own text already.
             if (result is ActionProgress.Rejected)
                 if (result.reason.isNotDeliveryError()) rxBus.send(EventShowDialog.Ok(title = rh.gs(CoreUiStrings.tempbasal_label), message = rh.gs(result.reason.failText())))
-                else result.detail?.let { detail ->
-                    if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(CoreUiStrings.tempbasal_label), message = detail))
-                    else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
-                }
+                else if (!config.AAPSCLIENT) result.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
         }
     }
 }

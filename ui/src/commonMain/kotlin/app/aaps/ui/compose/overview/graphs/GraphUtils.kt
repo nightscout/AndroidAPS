@@ -1,9 +1,17 @@
 package app.aaps.ui.compose.overview.graphs
 
+import androidx.compose.animation.core.AnimationState
+import androidx.compose.animation.core.DecayAnimationSpec
+import androidx.compose.animation.core.animateDecay
+import androidx.compose.animation.rememberSplineBasedDecay
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -12,17 +20,30 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.util.VelocityTracker
+import androidx.compose.ui.input.pointer.util.addPointerInputChange
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import app.aaps.core.interfaces.overview.graph.SeriesType
+import app.aaps.core.data.ui.MarkerTier
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
+import com.patrykandpatrick.vico.compose.cartesian.CartesianMeasuringContext
+import com.patrykandpatrick.vico.compose.cartesian.Scroll
+import com.patrykandpatrick.vico.compose.cartesian.VicoScrollState
+import com.patrykandpatrick.vico.compose.cartesian.axis.Axis
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.compose.cartesian.data.LineCartesianLayerModel
 import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
+import com.patrykandpatrick.vico.compose.common.data.ExtraStore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.datetime.TimeZone
@@ -50,7 +71,8 @@ import kotlin.time.Instant
  *
  * **Scroll/Zoom Synchronization:**
  * - BG graph (primary): scrollEnabled = true, zoomEnabled = true
- * - Secondary graphs: scrollEnabled = false, zoomEnabled = false
+ * - Secondary graphs: scrollEnabled = false, zoomEnabled = false. A sideways drag on them scrolls
+ *   the BG graph instead ([BgScrollForwarder]), and they follow it like for a drag on BG.
  * - Pixel-based sync: snapshotFlow { bgScrollState.value to bgZoomState.value }
  * - See OverviewGraphsSection for full implementation
  *
@@ -177,19 +199,139 @@ fun Modifier.onScrollOrZoomGesture(onGesture: () -> Unit): Modifier = pointerInp
 }
 
 /**
+ * Scrolls the BG graph for a sideways drag on a graph below it, see [scrollsBgGraph]. One for the
+ * screen, shared by those graphs.
+ *
+ * The drag is not applied to the graph it is on. The graphs below BG follow BG's scroll on every
+ * frame already, so scrolling BG moves all of them, the same as a drag on BG itself. Their own Vico
+ * scroll stays off, for two reasons: graphs that each scroll themselves would have to be synced in
+ * both directions and could pull against each other, and a chart that takes gestures must not get a
+ * new range provider in the middle of one (see `MutableYRangeProvider` in BgGraphCompose), which
+ * these graphs do whenever their axis changes.
+ */
+@Stable
+class BgScrollForwarder internal constructor(private val scope: CoroutineScope, private val decay: DecayAnimationSpec<Float>) {
+
+    /** The BG graph's scroll state. It is recreated by a viewport reset, so it is set on every composition. */
+    internal var target: VicoScrollState? = null
+
+    /**
+     * Pixel deltas, applied one after the other. [VicoScrollState.scroll] suspends and a drag
+     * delivers its moves faster than one scroll may take, so they wait in line instead of one
+     * cancelling the other.
+     */
+    private val deltas = Channel<Float>(Channel.UNLIMITED)
+    private var fling: Job? = null
+
+    init {
+        scope.launch {
+            for (delta in deltas) target?.scroll(Scroll.Relative.pixels(delta))
+        }
+    }
+
+    /** A finger move of [dragAmount] px. Moving the finger to the right shows earlier times, as on BG. */
+    internal fun drag(dragAmount: Float) {
+        deltas.trySend(-dragAmount)
+    }
+
+    /** Goes on after the lift with the finger's speed and slows down, the same fling as on BG. */
+    internal fun fling(velocityX: Float) {
+        stopFling()
+        if (velocityX == 0f) return
+        fling = scope.launch {
+            var last = 0f
+            AnimationState(initialValue = 0f, initialVelocity = velocityX).animateDecay(decay) {
+                drag(value - last)
+                last = value
+            }
+        }
+    }
+
+    /** Stops a fling, at any new touch on the graphs: also one on BG, whose own scroll it would fight. */
+    internal fun stopFling() {
+        fling?.cancel()
+        fling = null
+    }
+}
+
+/** The [BgScrollForwarder] of the screen, scrolling [bgScrollState]. */
+@Composable
+fun rememberBgScrollForwarder(bgScrollState: VicoScrollState): BgScrollForwarder {
+    val scope = rememberCoroutineScope()
+    val decay = rememberSplineBasedDecay<Float>()
+    val forwarder = remember(scope, decay) { BgScrollForwarder(scope, decay) }
+    SideEffect { forwarder.target = bgScrollState }
+    return forwarder
+}
+
+/**
+ * A sideways drag on this graph scrolls all graphs, through [forwarder]. Calls [onGesture] when the
+ * drag starts and ends, like [onScrollOrZoomGesture] does on BG, so a new reading does not reset the
+ * view in the middle of it.
+ *
+ * Only a drag that is clearly sideways is taken, so a vertical swipe still scrolls the page, and a
+ * press that does not move still turns into the press and hold of [inspect]. While inspecting the
+ * moves belong to the finger, not to the scroll.
+ */
+fun Modifier.scrollsBgGraph(forwarder: BgScrollForwarder, inspect: GraphInspectState, onGesture: () -> Unit): Modifier =
+    pointerInput(forwarder, inspect, onGesture) {
+        val velocityTracker = VelocityTracker()
+        detectHorizontalDragGestures(
+            onDragStart = {
+                forwarder.stopFling()
+                velocityTracker.resetTracking()
+                onGesture()
+            },
+            onDragEnd = {
+                onGesture()
+                forwarder.fling(velocityTracker.calculateVelocity().x)
+            },
+            onDragCancel = { onGesture() },
+            onHorizontalDrag = { change, dragAmount ->
+                if (!inspect.fingerDown) {
+                    change.consume()
+                    velocityTracker.addPointerInputChange(change)
+                    forwarder.drag(dragAmount)
+                }
+            }
+        )
+    }
+
+/**
+ * Stops a running fling of [forwarder] at any new touch on the graphs. Observed in the
+ * [PointerEventPass.Initial] pass and never consumed, so the graphs still get every event.
+ */
+fun Modifier.stopsBgFling(forwarder: BgScrollForwarder): Modifier = pointerInput(forwarder) {
+    awaitPointerEventScope {
+        while (true) {
+            val event = awaitPointerEvent(PointerEventPass.Initial)
+            if (event.type == PointerEventType.Press) forwarder.stopFling()
+        }
+    }
+}
+
+/**
  * Fraction of the graph height occupied by the basal overlay.
  *
- * The basal layer lives on its own (end) axis; the rest of the height is left for the primary data.
- * Two coupled formulas derive from this single value and MUST stay in sync — keep them expressed in
- * terms of this constant rather than hard-coded numbers:
- * - Basal axis max  = `maxBasal / BASAL_HEIGHT_FRACTION` → maxBasal plots at this fraction of the height.
- * - Primary axis max = `dataMax / (1 - BASAL_HEIGHT_FRACTION)` → primary (IOB) data fills the remaining
- *   height, reserving the basal fraction at the edge. Used by SecondaryGraphCompose (basal at top);
- *   BgGraphCompose overlays basal at the bottom and has no primary reservation.
+ * The basal layer lives on its own (end) axis: basal axis max = `maxBasal / BASAL_HEIGHT_FRACTION`,
+ * so the highest basal of the visible window plots at this fraction of the height. BgGraphCompose
+ * draws it up from the bottom, SecondaryGraphCompose down from the top.
  *
- * e.g. 0.5 → basal occupies half the height, the primary data the other half.
+ * e.g. 0.5 → basal occupies half the height.
  */
 const val BASAL_HEIGHT_FRACTION = 0.5
+
+/**
+ * Fraction of the IOB/BAS graph height for IOB and the bolus markers, counted from the bottom.
+ * IOB axis max = `dataMax / IOB_HEIGHT_FRACTION`.
+ *
+ * It overlaps the basal band from the top ([BASAL_HEIGHT_FRACTION]), between 50% and 75% of the
+ * height. Both meet there only when a high temp basal runs with a high IOB; the loop sets a low or
+ * zero temp most of the time, and basal then stays at the top. IOB gets the room in return: with
+ * no overlap it had only the lower half. The free quarter above holds the label of a bolus given
+ * at the IOB peak.
+ */
+const val IOB_HEIGHT_FRACTION = 0.75
 
 /**
  * Filters data points to only include those within the valid x-axis range.
@@ -214,7 +356,8 @@ fun filterToRange(
 
 /**
  * Target point size for layout normalization across all synchronized graphs.
- * Must be >= the largest actual point size used in any graph (currently 22dp from IOB SMB/bolus markers).
+ * Must be >= the largest actual point size used in any graph (currently 30 dp: the largest BG graph
+ * marker, 22 dp, in a box grown by the tip gap on both sides, see `MARKER_TIP_GAP`).
  *
  * Every graph includes an invisible normalizer line with this point size (via [createNormalizerLine]).
  * This ensures all charts have the same maxPointSize, which makes Vico compute identical:
@@ -223,7 +366,7 @@ fun filterToRange(
  *
  * Without this, each chart's different point sizes cause different layout, breaking pixel-based sync.
  */
-val NORMALIZER_POINT_SIZE: Dp = 22.dp
+val NORMALIZER_POINT_SIZE: Dp = 30.dp
 
 /**
  * Creates an invisible line with [NORMALIZER_POINT_SIZE] transparent points.
@@ -273,35 +416,83 @@ val TriangleShape: Shape = GenericShape { size, _ ->
 /**
  * Inverted triangle shape pointing downward (flat base at top, apex at bottom).
  *
- * Used for rendering carbs markers on graphs. The apex sits at the data point's
- * y-coordinate with the base above it.
+ * Used for a manual bolus on the BG and IOB graphs, and for carbs on the COB graph. The apex sits at the data point's
+ * y-coordinate with the base above it, so it points at the value.
  */
-val InvertedTriangleShape: Shape = GenericShape { size, _ ->
-    val baseHalf = size.width * 0.3f         // Narrow base for sharper triangle
+val InvertedTriangleShape: Shape = invertedTriangleShape()
+
+/**
+ * [InvertedTriangleShape] with its apex [tipInset] of the box above the box centre, so the tip
+ * stops short of the data point. The base is narrowed by the same share: in a box grown by twice
+ * the inset the triangle keeps the proportions of the plain shape and only moves away from the
+ * point. The BG graph uses it to keep a marker's tip outside the reading dot.
+ */
+fun invertedTriangleShape(tipInset: Float = 0f): Shape = GenericShape { size, _ ->
+    val baseHalf = size.width * 0.3f * (1f - 2f * tipInset)   // Narrow base for sharper triangle
     val cx = size.width / 2f
-    moveTo(cx - baseHalf, 0f)               // Top left (base)
-    lineTo(cx + baseHalf, 0f)               // Top right (base)
-    lineTo(cx, size.height / 2f)            // Bottom center (apex)
+    moveTo(cx - baseHalf, 0f)                                 // Top left (base)
+    lineTo(cx + baseHalf, 0f)                                 // Top right (base)
+    lineTo(cx, size.height * (0.5f - tipInset))               // Bottom center (apex)
     close()
 }
 
 /**
- * Triangle pointing downward, drawn in the lower half of its box: flat base at the data point's
- * y-coordinate, apex below it.
+ * Triangle pointing upward, drawn in the lower half of its box: apex at the data point's
+ * y-coordinate, flat base below it.
  *
  * Vico centers a point component on its data point, and both [TriangleShape] and
- * [InvertedTriangleShape] draw in the upper half of the box, so neither can hang below a point.
- * This one does, which is what the carbs half of a treatment marker on the BG graph needs:
- * insulin grows upward from the reading ([TriangleShape]) and carbs downward from it.
+ * [InvertedTriangleShape] draw in the upper half of the box, so neither can sit below a point.
+ * This one does, which is what the carbs half of a treatment marker on the BG graph needs: the
+ * bolus points down at the reading from above ([InvertedTriangleShape]) and the carbs point up at
+ * it from below, so both tips meet at the moment on the curve.
  * Same proportions as the other two.
  */
-val TriangleBelowShape: Shape = GenericShape { size, _ ->
-    val baseHalf = size.width * 0.3f         // Narrow base for sharper triangle
+val TriangleBelowShape: Shape = triangleBelowShape()
+
+/** [TriangleBelowShape] with its apex [tipInset] of the box below the box centre, see [invertedTriangleShape]. */
+fun triangleBelowShape(tipInset: Float = 0f): Shape = GenericShape { size, _ ->
+    val baseHalf = size.width * 0.3f * (1f - 2f * tipInset)   // Narrow base for sharper triangle
     val cx = size.width / 2f
-    moveTo(cx - baseHalf, size.height / 2f)  // Left base, at the data point
-    lineTo(cx + baseHalf, size.height / 2f)  // Right base, at the data point
-    lineTo(cx, size.height)                  // Bottom center (apex)
+    moveTo(cx, size.height * (0.5f + tipInset))               // Top center (apex), at the data point
+    lineTo(cx + baseHalf, size.height)                        // Right base
+    lineTo(cx - baseHalf, size.height)                        // Left base
     close()
+}
+
+/**
+ * Size of a treatment marker (manual bolus, carbs) per [MarkerTier], the same on every graph.
+ * The largest, with the BG graph's tip gap added on both sides, must stay within [NORMALIZER_POINT_SIZE].
+ */
+internal val MarkerTier.markerSize: Dp
+    get() = when (this) {
+        MarkerTier.SMALL  -> 12.dp
+        MarkerTier.MEDIUM -> 17.dp
+        MarkerTier.LARGE  -> 22.dp
+    }
+
+/**
+ * Draws every point of a treatment series in the size of its amount: [tierOf] against the largest
+ * amount of its kind in the loaded range, which the chart model carries under [maxAmountKey]. The
+ * y of a point is its amount.
+ *
+ * One series with a size per point, not one series per size: Vico shortens a label only against
+ * its neighbours in the same series, so with three series the labels of two close boluses of
+ * different size would be drawn over each other.
+ */
+internal data class TieredPointProvider(
+    private val shape: Shape,
+    private val color: Color,
+    private val maxAmountKey: ExtraStore.Key<Double>
+) : LineCartesianLayer.PointProvider {
+
+    private val points = MarkerTier.entries.associateWith { tier ->
+        LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(color), shape = shape), size = tier.markerSize)
+    }
+
+    override fun getPoint(entry: LineCartesianLayerModel.Entry, extraStore: ExtraStore): LineCartesianLayer.Point =
+        points.getValue(tierOf(entry.y, extraStore.getOrNull(maxAmountKey)))
+
+    override fun getLargestPoint(extraStore: ExtraStore): LineCartesianLayer.Point = points.getValue(MarkerTier.LARGE)
 }
 
 /**
@@ -459,30 +650,29 @@ fun rememberVisibleRangeReporter(holder: VisibleRangeHolder): VisibleRangeReport
 }
 
 // =========================================================================
-// Nice-numbers axis scaling ("Nice Numbers for Graph Labels", Paul Heckbert)
+// Axis scaling: tight bounds, round labels
 // =========================================================================
 //
-// Vico's default Y-axis item placer divides a fixed [minY, maxY] range into evenly-spaced
-// ticks with no rounding, so an arbitrary data-driven range (e.g. 12.39..57.39) produces ugly
-// tick labels (12.39, 27.39, 42.39...). These helpers snap axis bounds and tick spacing to
-// round numbers (1, 2, 5, 10, 20, 50... times a power of ten) instead.
+// Every Y range follows its data in the visible window. The bounds and the labels are two
+// separate things:
+// - a bound is rounded out only a little (see [boundGrid]), so the curve fills its graph,
+// - the labels sit on round values, as many as fit the height of the graph (see
+//   [NiceVerticalAxisItemPlacer]). A bound does not need to carry a label.
+//
+// Before, one "nice numbers" scale (Paul Heckbert) did both. The bounds had to be label values,
+// and a short graph has room for only a few labels, so a bound could land almost twice as far out
+// as the data: an IOB of 2.9 U got an axis up to 4 or even 5 U.
 
-/** A "nice" axis range: bounds and tick spacing all rounded to 1/2/5/10 x 10^n. */
-data class NiceScale(val min: Double, val max: Double, val step: Double)
+/** A Y range, rounded out from the data. See [niceScale]. */
+data class NiceScale(val min: Double, val max: Double)
 
 /**
- * Rounds [range] to a value of the form 1/2/2.5/5/10 x 10^n. [round] chooses the nearest such
- * value (used for tick spacing) vs. always rounding up (used for axis bounds, so the bound never
- * clips inside the data). [range] must be > 0.
- *
- * The round-up variant includes a 2.5 tier (a known variant of Heckbert's original {1,2,5,10}
- * set) to avoid an overly coarse jump between the 2 and 5 tiers — e.g. without it, a BG max of
- * 210 would round all the way up to 300 (skipping straight from a 50-step scale to a 100-step
- * one); with it, 210 rounds to 250 first, only reaching 300 once the value exceeds 250.
+ * Rounds [value] to 1, 2, 5 or 10 x 10^n: the nearest one when [round], else the smallest one
+ * that is not below [value]. [value] must be > 0.
  */
-private fun niceNum(range: Double, round: Boolean): Double {
-    val exponent = floor(log10(range))
-    val fraction = range / 10.0.pow(exponent)
+private fun niceNum(value: Double, round: Boolean): Double {
+    val exponent = floor(log10(value))
+    val fraction = value / 10.0.pow(exponent)
     val niceFraction = if (round) {
         when {
             fraction < 1.5 -> 1.0
@@ -494,7 +684,6 @@ private fun niceNum(range: Double, round: Boolean): Double {
         when {
             fraction <= 1.0 -> 1.0
             fraction <= 2.0 -> 2.0
-            fraction <= 2.5 -> 2.5
             fraction <= 5.0 -> 5.0
             else            -> 10.0
         }
@@ -503,31 +692,34 @@ private fun niceNum(range: Double, round: Boolean): Double {
 }
 
 /**
- * Standard nice-ify: snaps [min, max] and the tick spacing to round numbers. Free-range, no
- * zero or pivot anchoring — used for series like VAR_SENSITIVITY and HEART_RATE.
+ * A bound is rounded out to a multiple of this: about a tenth of [span], as 1, 2 or 5 x 10^n.
+ * So it lies at most about a sixth of the span beyond the data, and it still moves in steps, not
+ * with every scroll.
  */
-fun niceScale(min: Double, max: Double, maxTickCount: Int = 5): NiceScale {
-    val safeMax = if (max > min) max else min + 1.0
-    val range = niceNum(safeMax - min, round = false)
-    val step = niceNum(range / (maxTickCount - 1), round = true)
-    return NiceScale(floor(min / step) * step, ceil(safeMax / step) * step, step)
-}
+private fun boundGrid(span: Double): Double = niceNum(span / 10.0, round = true)
 
-/** Rounds [value] up to the nearest nice number (1/2/5/10 x 10^n). Used for a lone axis bound. */
-fun niceUp(value: Double): Double {
-    if (value <= 0.0) return 0.0
-    return niceNum(value, round = false)
-}
+/** A value on the grid that is off by a floating point error must not move one grid step further. */
+private const val GRID_EPSILON = 1e-9
+
+private fun ceilToGrid(value: Double, grid: Double): Double = ceil(value / grid - GRID_EPSILON) * grid
+
+private fun floorToGrid(value: Double, grid: Double): Double = floor(value / grid + GRID_EPSILON) * grid
 
 /**
- * Rounds [value] (expected negative) further negative to the nearest nice magnitude — e.g.
- * -0.3 -> -0.5, -0.07 -> -0.1 (but -0.05 is already nice and is left unchanged). Used to give a
- * small negative excursion its own clean bound, decoupled from a much larger positive-side scale
- * (see [zeroFloorNiceRange]).
+ * [min] and [max] rounded out to [boundGrid] of the span. Free range, no zero or pivot anchor:
+ * used for BG and for series like VAR_SENSITIVITY and HEART_RATE. A zero-width range is widened
+ * by 1, so the axis never collapses.
  */
-fun niceNegativeSliver(value: Double): Double {
-    if (value >= 0.0) return 0.0
-    return -niceNum(-value, round = false)
+fun niceScale(min: Double, max: Double): NiceScale {
+    val safeMax = if (max > min) max else min + 1.0
+    val grid = boundGrid(safeMax - min)
+    return NiceScale(floorToGrid(min, grid), ceilToGrid(safeMax, grid))
+}
+
+/** Rounds [value] up to [boundGrid] of itself, for a lone bound. 0 for a value that is not positive. */
+fun niceUp(value: Double): Double {
+    if (value <= 0.0) return 0.0
+    return ceilToGrid(value, boundGrid(value))
 }
 
 /**
@@ -538,52 +730,123 @@ fun niceNegativeSliver(value: Double): Double {
 const val SENS_MIN_DEVIATION = 5.0
 
 /**
- * Nice-ify a symmetric deviation around [pivot] (e.g. SENSITIVITY around 100%, DEV_SLOPE
- * around 0), so [pivot] always lands exactly in the middle of the axis. Nice-ifying [min, max]
- * directly (via [niceScale]) would not preserve that centering.
+ * A range symmetric around [pivot] (e.g. SENSITIVITY around 100%, DEV_SLOPE around 0), so
+ * [pivot] always lands exactly in the middle of the axis. Rounding [min] and [max] on their own
+ * (via [niceScale]) would not keep it there.
  */
-fun niceScaleAroundPivot(min: Double, max: Double, pivot: Double, maxTickCount: Int = 5, minDeviation: Double = 0.0): NiceScale {
+fun niceScaleAroundPivot(min: Double, max: Double, pivot: Double, minDeviation: Double = 0.0): NiceScale {
     val rawDeviation = maxOf(abs(pivot - min), abs(max - pivot))
-    // Below the floor (e.g. SENS sitting flat around 100%): snap to a fixed 3-tick scale
-    // (pivot-minDeviation, pivot, pivot+minDeviation) instead of nice-ifying a near-zero range,
-    // which would otherwise produce an overly tight, non-round scale (e.g. 99/99.5/100/100.5/101).
-    if (minDeviation > 0.0 && rawDeviation <= minDeviation) return NiceScale(pivot - minDeviation, pivot + minDeviation, minDeviation)
-    val deviation = if (rawDeviation > 0.0) rawDeviation else 1.0
-    val niceDeviation = niceNum(deviation, round = false)
-    val step = niceNum(2 * niceDeviation / (maxTickCount - 1), round = true)
-    val steppedDeviation = ceil(niceDeviation / step) * step
-    return NiceScale(pivot - steppedDeviation, pivot + steppedDeviation, step)
+    // Below the floor (e.g. SENS sitting flat around 100%): a fixed pivot ± minDeviation
+    // (95..105%) instead of a range tight around a near-zero deviation (e.g. 99.5..100.5).
+    if (minDeviation > 0.0 && rawDeviation <= minDeviation) return NiceScale(pivot - minDeviation, pivot + minDeviation)
+    val deviation = niceUp(if (rawDeviation > 0.0) rawDeviation else 1.0)
+    return NiceScale(pivot - deviation, pivot + deviation)
 }
 
 /**
- * Series that are 0-floored by default (see [zeroFloorNiceRange]): mostly-positive, allowing a
- * disparity-aware negative excursion without ever centering zero. IOB follows the same rule but
- * isn't included here — its basal-overlay combo graph has its own dedicated range computation
- * (SecondaryGraphCompose's `primaryYMaxResult`) that calls [zeroFloorNiceRange] directly.
+ * Zero-floor axis range, disparity-aware. When the negative excursion is tiny next to the
+ * positive side (ratio >= [disparityRatio]), the two sides are rounded each on its own, so the
+ * negative part stays a thin sliver instead of being rounded out to the grid of the whole range.
+ * When the two sides are comparable, both are rounded on one grid.
+ * Used by [AxisRule.ZeroFloor].
  */
-val ZERO_FLOOR_SERIES_TYPES = setOf(SeriesType.BGI, SeriesType.DEVIATIONS, SeriesType.ACTIVITY, SeriesType.STEPS, SeriesType.ABS_IOB)
-
-/**
- * Zero-floor axis range, disparity-aware: when the negative excursion is tiny relative to the
- * positive side (ratio >= [disparityRatio]), one shared nice tick spacing across the whole
- * range would make the small negative part look arbitrary — so the two sides are nice-ified
- * independently instead (a small negative sliver just large enough to show the excursion, plus
- * a normal positive-side scale). When the two sides are comparable in magnitude, a single
- * unified nice scale spans the whole range, negative and positive sharing the same tick step.
- * Used for IOB and [ZERO_FLOOR_SERIES_TYPES].
- */
-fun zeroFloorNiceRange(dataMin: Double, dataMax: Double, maxTickCount: Int = 5, disparityRatio: Double = 10.0): NiceScale {
-    if (dataMin >= 0.0) return niceScale(0.0, dataMax, maxTickCount)
+fun zeroFloorNiceRange(dataMin: Double, dataMax: Double, disparityRatio: Double = 10.0): NiceScale {
+    if (dataMin >= 0.0) return niceScale(0.0, dataMax)
     val absMin = -dataMin
     val ratio = if (absMin > 0.0) dataMax / absMin else Double.MAX_VALUE
-    return if (ratio >= disparityRatio) {
-        val niceMax = niceUp(dataMax)
-        val niceMin = niceNegativeSliver(dataMin)
-        val step = niceNum(niceMax / (maxTickCount - 1), round = true)
-        NiceScale(niceMin, niceMax, step)
-    } else {
-        niceScale(dataMin, dataMax, maxTickCount)
+    return if (ratio >= disparityRatio) NiceScale(-niceUp(absMin), niceUp(dataMax))
+    else niceScale(dataMin, dataMax)
+}
+
+/**
+ * Labels are at least this many label heights apart, which leaves half a label of free space
+ * between two of them. Vico packs labels with no space at all, and on a short graph that reads as
+ * one block of numbers.
+ */
+internal const val AXIS_LABEL_SPACING = 1.5
+
+/**
+ * The values to label on an axis from [min] to [max] that is [axisHeight] px high, with labels
+ * [labelHeight] px high: the multiples of the smallest 1, 2 or 5 x 10^n step that keeps the labels
+ * [AXIS_LABEL_SPACING] label heights apart. A taller graph gets a finer step: 0, 0.5, 1, 1.5 U
+ * instead of 0, 1 U.
+ *
+ * Multiples of the step, not steps counted from [min], so the labels are round numbers whatever the
+ * bounds are, and 0 is a label whenever it is on the axis (SENS' 100% too, for any step up to 100).
+ * Only the values in [labelMin]..[labelMax] are returned.
+ *
+ * When that spacing leaves fewer than two labels, they may come closer, down to just touching. One
+ * label alone says nothing about the scale. On the 100 dp IOB graph an IOB of 4.4 U would otherwise
+ * get only "0": the step is 5, and the labels stop at the IOB top of 4.5.
+ */
+internal fun niceAxisLabelValues(
+    min: Double,
+    max: Double,
+    axisHeight: Float,
+    labelHeight: Float,
+    labelMin: Double = Double.NEGATIVE_INFINITY,
+    labelMax: Double = Double.POSITIVE_INFINITY
+): List<Double> {
+    val span = max - min
+    if (!(span > 0.0)) return emptyList()
+    val low = maxOf(min, labelMin)
+    val high = minOf(max, labelMax)
+    if (low > high) return emptyList()
+
+    fun labels(spacing: Double): List<Double> {
+        // While the axis is measured for its width there may be no height yet. Any round step does
+        // there: the widest label is at one end of the axis either way.
+        val minStep = if (axisHeight > 0f && labelHeight > 0f) span * labelHeight * spacing / axisHeight else span / 4.0
+        val step = niceNum(minStep, round = false)
+        val first = ceil(low / step - GRID_EPSILON).toLong()
+        val last = floor(high / step + GRID_EPSILON).toLong()
+        return (first..last).map { it * step }
     }
+
+    return labels(AXIS_LABEL_SPACING).takeIf { it.size >= 2 } ?: labels(spacing = 1.0)
+}
+
+/**
+ * Places the labels and grid lines of a vertical axis on [niceAxisLabelValues]. The margins come
+ * from Vico's own step placer.
+ *
+ * [labelMin] and [labelMax] keep labels off a part of the axis the series does not reach: the IOB
+ * axis goes on above IOB to leave room for basal (see [graphAxes]), and a zero-aligned axis can
+ * reach below the series' own floor, where a label would suggest a value it never has.
+ *
+ * A data class, so two placers with the same limits are equal and the graph does not redraw
+ * when nothing changed.
+ */
+internal data class NiceVerticalAxisItemPlacer(
+    private val labelMin: Double = Double.NEGATIVE_INFINITY,
+    private val labelMax: Double = Double.POSITIVE_INFINITY
+) : VerticalAxis.ItemPlacer by VerticalAxis.ItemPlacer.step() {
+
+    override fun getLabelValues(context: CartesianDrawingContext, axisHeight: Float, maxLabelHeight: Float, position: Axis.Position.Vertical): List<Double> =
+        labelValues(context, axisHeight, maxLabelHeight, position)
+
+    override fun getWidthMeasurementLabelValues(context: CartesianMeasuringContext, axisHeight: Float, maxLabelHeight: Float, position: Axis.Position.Vertical): List<Double> =
+        labelValues(context, axisHeight, maxLabelHeight, position)
+
+    private fun labelValues(context: CartesianMeasuringContext, axisHeight: Float, maxLabelHeight: Float, position: Axis.Position.Vertical): List<Double> {
+        val range = context.ranges.getYRange(position)
+        return niceAxisLabelValues(range.minY, range.maxY, axisHeight, maxLabelHeight, labelMin, labelMax)
+    }
+}
+
+/**
+ * The labels of an axis whose series has no values: none, so an empty frame does not show a scale
+ * it does not have (next to a series on the other axis it was read as that one's scale). The axis
+ * is still measured with one label, so it keeps its width and the hour lines stay under those of
+ * the other graphs.
+ */
+internal object NoLabelsAxisItemPlacer : VerticalAxis.ItemPlacer by VerticalAxis.ItemPlacer.step() {
+
+    override fun getLabelValues(context: CartesianDrawingContext, axisHeight: Float, maxLabelHeight: Float, position: Axis.Position.Vertical): List<Double> =
+        emptyList()
+
+    override fun getWidthMeasurementLabelValues(context: CartesianMeasuringContext, axisHeight: Float, maxLabelHeight: Float, position: Axis.Position.Vertical): List<Double> =
+        listOf(0.0)
 }
 
 // =========================================================================
@@ -629,10 +892,10 @@ data class ActivityOverlayScale(val zeroLevel: Double, val scale: Double) {
  * A window holding only negative activity is scaled by its negative side alone.
  *
  * When [roomBelow] is 0 the negative side is ignored and the positive side keeps its full scale;
- * the negative tail is then clipped at the host's floor. This is reachable on the BG graph: the BG
- * axis floor is `floor(dataMin / step) * step` and `dataMin` is itself floored at the low mark, so
- * a low mark that is an exact multiple of the step (80/90/100 mg/dL, 4.0/5.0 mmol/L) lands the axis
- * floor exactly on the low mark whenever the visible window holds no BG below it. Accepted: the
+ * the negative tail is then clipped at the host's floor. This is the usual case on the BG graph: the
+ * BG axis floor is `dataMin` rounded down to a grid of about a tenth of the range, and `dataMin` is
+ * itself floored at the low mark, so the floor lands on the low mark (70/80/90/100 mg/dL, 4.0/5.0
+ * mmol/L) or just under it whenever the visible window holds no BG below it. Accepted: the
  * alternative would move the BG scale, which must stay untouched.
  *
  * [activityMin] and [activityMax] are taken from the visible window only, like every other scale in
@@ -651,12 +914,12 @@ fun activityOverlayScale(
 ): ActivityOverlayScale {
     // Activity is zero across the whole window (no insulin on board) — there is no curve to draw.
     // This has to be caught before the nice-ification: zeroFloorNiceRange(0.0, 0.0) comes back as
-    // 0..1, because niceScale widens a zero-width range by 1 so that it always has a usable tick
-    // step. That would give a positive scale and draw a flat line on [zeroLevel] — on the BG graph
+    // 0..1, because niceScale widens a zero-width range by 1 so that the axis never collapses.
+    // That would give a positive scale and draw a flat line on [zeroLevel] — on the BG graph
     // that is the low mark, the bottom edge of the in-range belt, where it reads as a second
     // target line.
     if (activityMin == 0.0 && activityMax == 0.0) return ActivityOverlayScale(zeroLevel, 0.0)
-    val nice = zeroFloorNiceRange(activityMin, activityMax, SECONDARY_GRAPH_TICK_COUNT)
+    val nice = zeroFloorNiceRange(activityMin, activityMax)
     val positiveLimit = if (nice.max > 0.0) roomAbove * heightFraction / nice.max else Double.MAX_VALUE
     val negativeLimit = if (nice.min < 0.0 && roomBelow > 0.0) roomBelow / -nice.min else Double.MAX_VALUE
     val scale = minOf(positiveLimit, negativeLimit)

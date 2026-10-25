@@ -41,6 +41,7 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import app.aaps.core.ui.R as CoreUiR
@@ -79,6 +80,7 @@ internal class MedtronicOverviewViewModelTest {
         // Catch-all so every info-row / action label resolves to a non-null String (PumpInfoRow.label
         // and ScreenAction.label are non-null; an unstubbed rh.gs() would return null and NPE at build).
         whenever(rh.gs(anyInt())).thenReturn("txt")
+        whenever(rh.gs(anyInt(), anyVararg())).thenReturn("txt") // texts with values, such as the battery
 
         // rx wiring touched at construction: PumpCommunicationStatus init + the three medtronicRefresh
         // collectors launched in viewModelScope (UnconfinedTestDispatcher runs them eagerly).

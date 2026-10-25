@@ -2,9 +2,7 @@ package app.aaps.plugins.automation
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
@@ -41,6 +39,8 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.ComposablePluginContent
+import app.aaps.core.ui.compose.StyledArg
+import app.aaps.core.ui.compose.styledString
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionFactory
 import app.aaps.plugins.automation.compose.AutomationComposeContent
@@ -617,7 +617,7 @@ class AutomationRuntime(
         if (!event.areActionsValid()) {
             event.isEnabled = false
             for (action in event.actions.filterNot { it.isValid() }) {
-                executionLog.add(AnnotatedString("Invalid action: ${action.shortDescription()}"))
+                executionLog.add(AnnotatedString(rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.invalid), action.shortDescription())))
                 aapsLogger.debug(LTag.AUTOMATION, "Invalid action: ${action.shortDescription()}")
             }
             markEdited() // the rule is now disabled - store that and refresh the list
@@ -630,17 +630,14 @@ class AutomationRuntime(
             for (action in actions) {
                 action.title = event.title
                 val result = action.doAction()
-                val entry = buildAnnotatedString {
-                    append(dateUtil.timeString(dateUtil.now()))
-                    append(" ")
-                    append(if (result.success) "☺" else "▼")
-                    append(" ")
-                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append("${event.title}:") }
-                    append(" ")
-                    append(action.shortDescription())
-                    append(": ")
-                    append(result.comment)
-                }
+                val entry = rh.styledString(
+                    AutomationStrings.automation_log_entry,
+                    StyledArg(dateUtil.timeString(dateUtil.now())),
+                    StyledArg(if (result.success) "☺" else "▼"),
+                    StyledArg(event.title, SpanStyle(fontWeight = FontWeight.Bold)),
+                    StyledArg(action.shortDescription()),
+                    StyledArg(result.comment)
+                )
                 executionLog.add(entry)
                 aapsLogger.debug(LTag.AUTOMATION, "Executed: ${entry.text}")
                 rxBus.send(EventAutomationUpdateGui())

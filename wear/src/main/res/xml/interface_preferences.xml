@@ -3,12 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="showWizard"
-        android:summary="Calculator from watch possible"
+        android:defaultValue="false"
+        android:key="@string/key_wizard_carbs_type"
         android:summaryOn="@string/on"
         android:summaryOff="@string/off"
-        android:title="@string/pref_wizard_in_menu"
+        android:title="@string/pref_wizard_carbs_type"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_wizard_percentage"
+        android:summary="Percentage correction."
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
+        android:title="@string/pref_wizard_percentage"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
@@ -31,6 +40,16 @@
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showWizard"
+        android:summary="Calculator from watch possible"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
+        android:title="@string/pref_wizard_in_menu"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
         android:defaultValue="false"
         android:key="primefill"
         android:summary="Prime/Fill from watch possible"
@@ -47,16 +66,6 @@
         android:summaryOn="@string/on"
         android:summaryOff="@string/off"
         android:title="@string/pref_single_target"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
-
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/key_wizard_percentage"
-        android:summary="Percentage correction."
-        android:summaryOn="@string/on"
-        android:summaryOff="@string/off"
-        android:title="@string/pref_wizard_percentage"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 </PreferenceScreen>

@@ -75,7 +75,6 @@
     <string name="patch_communication_succeed">Communication success</string>
     <string name="patch_communication_succeed_message">Connected with the Patch.</string>
     <string name="patch_cancel_pairing">Cancel pairing</string>
-    <string name="all_dose_unit">&#160;U</string>
     <string name="insulin_suspend_msg1">Upon the suspend, the currently delivering Bolus &amp; Temp basal will be canceled. \n\nRate : %1$s U/hr\nRemaining time  : %2$s\n&amp; Insulin to go : %3$.2f U</string>
     <string name="insulin_suspend_msg2">Upon the suspend, the currently delivering Bolus will be canceled. \n\nInsulin to go : %1$.2f U</string>
     <string name="insulin_suspend_msg3">Upon the suspend, the currently delivering Temp Basal will be canceled. \n\nRate : %1$s U/hr\nRemaining time  : %2$s</string>

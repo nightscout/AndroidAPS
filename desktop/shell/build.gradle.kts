@@ -233,7 +233,18 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
-tasks.withType<Test> { useJUnitPlatform() }
+tasks.withType<Test> {
+    useJUnitPlatform()
+    // Where the tests see the home directory. `DesktopFolders` puts the preference store, the log and
+    // the database under `user.home`. A test that builds the real graph opens all three, so without
+    // this a test run would write into the developer's own `~/.aaps`, the same folder the running app
+    // uses. Emptied before each run, so one run cannot leave state behind for the next.
+    // A local File, not a value of the script: `doFirst` keeps what it uses until the task runs, and a
+    // reference to the build script there breaks the configuration cache.
+    val testHome = project.layout.buildDirectory.dir("test-home").get().asFile
+    systemProperty("user.home", testHome.absolutePath)
+    doFirst { testHome.deleteRecursively() }
+}
 
 compose.desktop {
     application {

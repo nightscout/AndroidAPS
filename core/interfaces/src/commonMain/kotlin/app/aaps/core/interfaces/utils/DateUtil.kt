@@ -432,15 +432,6 @@ interface DateUtil {
     fun computeDiff(date1: Long, date2: Long): TimeDiff
 
     /**
-     * Converts a duration in milliseconds into a human-readable "age" string (e.g., "5 days 3 hours").
-     * @param milliseconds The duration to format.
-     * @param useShortText If true, uses abbreviated units (e.g., "d", "h"). If false, uses full names (e.g., "days", "hours").
-     * @param rh Resource helper to get localized unit strings.
-     * @return The formatted age string.
-     */
-    fun age(milliseconds: Long, useShortText: Boolean, rh: TextResolver): String
-
-    /**
      * Converts a duration in milliseconds into a simplified, human-readable string with the largest appropriate unit.
      * (e.g., 120000ms becomes "2 minutes"). It handles pluralization for different languages.
      * @param time The duration in milliseconds.

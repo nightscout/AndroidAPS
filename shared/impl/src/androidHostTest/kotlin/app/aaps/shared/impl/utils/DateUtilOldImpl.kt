@@ -349,24 +349,6 @@ class DateUtilOldImpl(private val context: Context) {
         return result
     }
 
-    fun age(milliseconds: Long, useShortText: Boolean, rh: ResourceHelper): String {
-        val diff = computeDiff(0L, milliseconds)
-        var days = " " + rh.gs(R.string.days) + " "
-        var hours = " " + rh.gs(R.string.hours) + " "
-        var minutes = " " + rh.gs(R.string.unit_minutes) + " "
-        if (useShortText) {
-            days = " " + rh.gs(R.string.shortday) + " "
-            hours = " " + rh.gs(R.string.shorthour) + " "
-            minutes = " " + rh.gs(R.string.shortminute) + " "
-        }
-        if (T.msecs(milliseconds).days() > 1000) return rh.gs(R.string.forever)
-        var result = ""
-        if (diff.getOrDefault(TimeUnit.DAYS, -1) > 0) result += diff[TimeUnit.DAYS].toString() + days
-        if (diff.getOrDefault(TimeUnit.HOURS, -1) > 0) result += diff[TimeUnit.HOURS].toString() + hours
-        if (diff[TimeUnit.DAYS] == 0L) result += diff[TimeUnit.MINUTES].toString() + minutes
-        return result
-    }
-
     fun niceTimeScalar(time: Long, rh: ResourceHelper): String {
         var t = time
         var unit = rh.gs(R.string.unit_second)

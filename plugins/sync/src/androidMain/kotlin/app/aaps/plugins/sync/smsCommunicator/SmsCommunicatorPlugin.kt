@@ -51,6 +51,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withCompose
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.round
@@ -395,22 +396,25 @@ class SmsCommunicatorPlugin(
     private suspend fun processBG(receivedSms: Sms) {
         val actualBG = iobCobCalculator.ads.actualBg()
         val lastBG = iobCobCalculator.ads.lastBg()
-        var reply = ""
+        val parts = mutableListOf<String>()
         val units = profileUtil.units
+        // Each part is a translated label and its value, so no text is joined in code
+        fun labelled(label: TextRef, value: String) = rh.gs(CoreUiStrings.value_with_unit, rh.gs(label), value)
         if (actualBG != null) {
-            reply = rh.gs(SyncStrings.sms_actual_bg) + " " + profileUtil.fromMgdlToStringInUnits(actualBG.recalculated) + ", "
+            parts += labelled(SyncStrings.sms_actual_bg, profileUtil.fromMgdlToStringInUnits(actualBG.recalculated))
         } else if (lastBG != null) {
             val agoMilliseconds = dateUtil.now() - lastBG.timestamp
             val agoMin = (agoMilliseconds / 60.0 / 1000.0).toInt()
-            reply = rh.gs(SyncStrings.sms_last_bg) + " " + profileUtil.valueInCurrentUnitsDetect(lastBG.recalculated) + " " + rh.gs(SyncStrings.sms_min_ago, agoMin) + ", "
+            parts += labelled(SyncStrings.sms_last_bg, rh.gs(CoreUiStrings.value_with_unit, profileUtil.valueInCurrentUnitsDetect(lastBG.recalculated), rh.gs(SyncStrings.sms_min_ago, agoMin)))
         }
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
-        if (glucoseStatus != null) reply += rh.gs(SyncStrings.sms_delta) + " " + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta) + " " + units + ", "
+        if (glucoseStatus != null) parts += labelled(SyncStrings.sms_delta, rh.gs(CoreUiStrings.value_with_unit, profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta), units))
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         val cobInfo = iobCobCalculator.getCobInfo("SMS COB")
-        reply += (rh.gs(SyncStrings.sms_iob) + " " + decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U, "
-            + rh.gs(CoreUiStrings.cob) + ": " + cobInfo.generateCOBString(decimalFormatter))
+        parts += labelled(SyncStrings.sms_iob, rh.gs(CoreUiStrings.value_with_unit, decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob), rh.gs(SyncStrings.units_short)))
+        parts += rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.cob), cobInfo.generateCOBString(decimalFormatter))
+        val reply = parts.reduce { joined, part -> rh.gs(InterfacesStrings.values_with_comma, joined, part) }
         sendSMS(Sms(receivedSms.phoneNumber, reply))
         receivedSms.processed = true
     }
@@ -454,9 +458,9 @@ class SmsCommunicatorPlugin(
                 val reply =
                     when (loop.runningMode()) {
                         RM.Mode.DISABLED_LOOP     -> rh.gs(CoreUiStrings.loopisdisabled)
-                        RM.Mode.OPEN_LOOP         -> rh.gs(SyncStrings.smscommunicator_loop_is_enabled) + " - " + rh.gs(CoreUiStrings.openloop)
-                        RM.Mode.CLOSED_LOOP       -> rh.gs(SyncStrings.smscommunicator_loop_is_enabled) + " - " + rh.gs(CoreUiStrings.closedloop)
-                        RM.Mode.CLOSED_LOOP_LGS   -> rh.gs(SyncStrings.smscommunicator_loop_is_enabled) + " - " + rh.gs(CoreUiStrings.lowglucosesuspend)
+                        RM.Mode.OPEN_LOOP         -> rh.gs(InterfacesStrings.values_with_dash, rh.gs(SyncStrings.smscommunicator_loop_is_enabled), rh.gs(CoreUiStrings.openloop))
+                        RM.Mode.CLOSED_LOOP       -> rh.gs(InterfacesStrings.values_with_dash, rh.gs(SyncStrings.smscommunicator_loop_is_enabled), rh.gs(CoreUiStrings.closedloop))
+                        RM.Mode.CLOSED_LOOP_LGS   -> rh.gs(InterfacesStrings.values_with_dash, rh.gs(SyncStrings.smscommunicator_loop_is_enabled), rh.gs(CoreUiStrings.lowglucosesuspend))
                         RM.Mode.SUPER_BOLUS       -> rh.gs(CoreUiStrings.superbolus)
                         RM.Mode.DISCONNECTED_PUMP -> rh.gs(InterfacesStrings.pump_disconnected)
                         RM.Mode.SUSPENDED_BY_PUMP -> rh.gs(InterfacesStrings.pumpsuspended)

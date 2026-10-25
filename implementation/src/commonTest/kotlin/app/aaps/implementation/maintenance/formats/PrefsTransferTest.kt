@@ -33,7 +33,6 @@ class PrefsTransferTest {
             override fun gs(ref: TextRef): String = "t"
             override fun gs(ref: TextRef, vararg args: Any?): String = "t"
             override fun gsNotLocalised(ref: TextRef): String = "t"
-            override fun shortTextMode(): Boolean = false
         },
         object : SecureEncrypt {
             override fun encrypt(plaintextSecret: String, keystoreAlias: String): String = plaintextSecret

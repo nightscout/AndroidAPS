@@ -256,7 +256,7 @@ open class DanaOverviewViewModel(
         // Last connection
         val lastConnection = if (lastConnectionTime != 0L) {
             val agoMinutes = ((System.currentTimeMillis() - lastConnectionTime) / 60_000).toInt()
-            dateUtil.timeString(lastConnectionTime) + " (" + rh.gs(app.aaps.core.interfaces.R.string.minago, agoMinutes) + ")"
+            rh.gs(app.aaps.core.interfaces.R.string.value_with_detail, dateUtil.timeString(lastConnectionTime), rh.gs(app.aaps.core.interfaces.R.string.minago, agoMinutes))
         } else ""
 
         // Last bolus
@@ -268,8 +268,12 @@ open class DanaOverviewViewModel(
         } else null
 
         // Base basal rate
-        val baseBasalRate = "( ${pump.activeProfile + 1} )  " +
+        // "(1) 0.85 U/h": the number of the basal profile in the pump, then the rate
+        val baseBasalRate = rh.gs(
+            CoreUiR.string.value_with_unit,
+            rh.gs(CoreUiR.string.value_in_parentheses, (pump.activeProfile + 1).toString()),
             ch.basalRateString(activePump.baseBasalRate, true)
+        )
 
         // Temp basal
         val tempBasalText = pump.temporaryBasalToString()
@@ -278,7 +282,7 @@ open class DanaOverviewViewModel(
         val extendedBolusText = extendedBolusToString()
 
         // Battery
-        val batteryText = battery?.let { "${it}%" }
+        val batteryText = battery?.let { rh.gs(CoreUiR.string.units_format_percent, it) }
 
         // Reservoir
         val reservoirText = if (reservoir > 0.0)
@@ -374,7 +378,7 @@ open class DanaOverviewViewModel(
             }
 
             // 10. Basal/bolus step
-            add(PumpInfoRow(label = rh.gs(R.string.basal_bolus_step), value = "${pump.basalStep} / ${pump.bolusStep}"))
+            add(PumpInfoRow(label = rh.gs(R.string.basal_bolus_step), value = rh.gs(app.aaps.core.interfaces.R.string.values_with_slash, pump.basalStep.toString(), pump.bolusStep.toString())))
 
             // Easy mode, only for pump variants that have it
             if (pump.hasEasyMode)

@@ -148,7 +148,7 @@ internal fun CalibrationDialogContent(
             val bgFormat = remember(uiState.isMgdl) { if (uiState.isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1 }
             // One value for both the visible label and the spoken name, so they can never drift apart.
             val confirmLabel =
-                if (uiState.hasValidBg) "${bgFormat.format(uiState.bg)} ${uiState.unitLabel}"
+                if (uiState.hasValidBg) stringResource(CoreUiStrings.value_with_unit, bgFormat.format(uiState.bg), uiState.unitLabel)
                 else stringResource(CoreUiStrings.ok)
             // A Button merges its children, so a bare name would hide the value. Carry the value in the name.
             val confirmDescription = stringResource(CoreUiStrings.confirm)

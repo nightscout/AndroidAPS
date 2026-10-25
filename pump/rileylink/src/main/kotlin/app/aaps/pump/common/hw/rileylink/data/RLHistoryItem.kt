@@ -28,8 +28,12 @@ open class RLHistoryItem(val dateTime: LocalDateTime = LocalDateTime(), val sour
 
     open fun getDescription(rh: ResourceHelper): String {
         return when (this.source) {
-            RLHistoryItemSource.RileyLink     -> "State: " + rh.gs(serviceState.resourceId) +
-                if (this.errorCode == null) "" else ", Error Code: $errorCode"
+            // "State" and "Error Code" were never translated; the separators are.
+            RLHistoryItemSource.RileyLink     -> {
+                val state = rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, "State", rh.gs(serviceState.resourceId))
+                errorCode?.let { rh.gs(app.aaps.core.interfaces.R.string.values_with_comma, state, rh.gs(app.aaps.core.interfaces.R.string.confirmation_line, "Error Code", it.toString())) }
+                    ?: state
+            }
 
             RLHistoryItemSource.MedtronicPump -> rh.gs(pumpDeviceState.stringResource())
             else                              -> "Unknown Description"

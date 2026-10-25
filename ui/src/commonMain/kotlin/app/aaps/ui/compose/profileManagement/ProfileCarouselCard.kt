@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
@@ -167,7 +168,8 @@ internal fun ProfileCarouselCard(
 
                     // Show "ACTIVE -> Next: profile" when there's a next profile, otherwise just "ACTIVE"
                     val activeText = if (hasDuration && nextProfileName != null) {
-                        "${stringResource(UiStrings.active_profile_indicator)} → $nextProfileName"
+                        // Same "now → next" form as a scene that starts another one
+                        stringResource(CoreUiStrings.scene_summary_with_chain, stringResource(UiStrings.active_profile_indicator), nextProfileName)
                     } else {
                         stringResource(UiStrings.active_profile_indicator)
                     }
@@ -182,15 +184,18 @@ internal fun ProfileCarouselCard(
 
                     // Percentage and timeshift for active profile
                     activeProfileSwitch?.let { eps ->
-                        val details = buildString {
-                            if (eps.originalPercentage != 100) {
-                                append("${eps.originalPercentage}%")
-                            }
-                            val timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt()
-                            if (timeshiftHours != 0) {
-                                if (isNotEmpty()) append(" ")
-                                append(if (timeshiftHours > 0) "+${timeshiftHours}h" else "${timeshiftHours}h")
-                            }
+                        val timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt()
+                        val timeshift = stringResource(
+                            CoreUiStrings.value_with_unit,
+                            if (timeshiftHours > 0) "+$timeshiftHours" else "$timeshiftHours",
+                            stringResource(InterfacesStrings.shorthour)
+                        )
+                        val percentage = stringResource(CoreUiStrings.units_format_percent, eps.originalPercentage)
+                        val details = when {
+                            eps.originalPercentage != 100 && timeshiftHours != 0 -> stringResource(CoreUiStrings.value_with_unit, percentage, timeshift)
+                            eps.originalPercentage != 100                        -> percentage
+                            timeshiftHours != 0                                  -> timeshift
+                            else                                                 -> ""
                         }
                         if (details.isNotEmpty()) {
                             Text(

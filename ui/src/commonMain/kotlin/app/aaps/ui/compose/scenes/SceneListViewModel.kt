@@ -9,6 +9,7 @@ import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.SceneEndAction
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.isNotDeliveryError
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileRepository
@@ -228,8 +229,11 @@ class SceneListViewModel(
                 is ActionProgress.Prepared -> _dialogState.value =
                     DialogState.ConfirmActivation(scene, prepared.lines.map { it.text }, conflicts, prepared.id)
 
+                // A client's round-trip failure already showed on the app-level modal, with the master's own text;
+                // only the offline block comes here without one.
                 is ActionProgress.Rejected ->
-                    _dialogState.value = DialogState.ValidationError(prepared.detail ?: rh.gs(prepared.reason.failText()))
+                    if (!config.AAPSCLIENT || prepared.reason.isNotDeliveryError())
+                        _dialogState.value = DialogState.ValidationError(prepared.detail ?: rh.gs(prepared.reason.failText()))
 
                 else                       -> Unit // Unconfirmed → the round-trip's app-level modal already showed it
             }

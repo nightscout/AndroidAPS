@@ -13,5 +13,11 @@ data class TreatmentDialogUiState(
     val bolusStep: Double = 0.1,
     val isAapsClient: Boolean = false,
     /** True when the entry must be recorded only (no pump delivery): pump unavailable or the mode forbids bolus. (A client delivers via the master, not record-only.) */
-    val forcedRecordOnly: Boolean = false
+    val forcedRecordOnly: Boolean = false,
+    /** An SMB is being delivered on this phone (always false on a client: its master decides). */
+    val smbBeingDelivered: Boolean = false
 )
+
+/** OK waits: the pump would give this bolus, and an SMB is being delivered right now (#5381). */
+val TreatmentDialogUiState.waitsForSmb: Boolean
+    get() = smbBeingDelivered && insulin > 0.0 && !forcedRecordOnly
