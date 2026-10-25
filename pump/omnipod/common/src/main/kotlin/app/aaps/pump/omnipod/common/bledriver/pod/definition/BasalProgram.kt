@@ -1,5 +1,6 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.definition
 
+import com.google.gson.annotations.SerializedName
 import java.util.Calendar
 import java.util.Collections
 
@@ -7,6 +8,9 @@ class BasalProgram(
     segments: List<Segment>
 ) {
 
+    // Keeps the JSON key "segments" so saved Pod state keeps deserializing across this field's rename.
+    // Alternate can be removed once all users have upgraded from the O5 beta builds.
+    @SerializedName(value = "segments", alternate = ["mutableSegmentsOrNull"])
     private var mutableSegmentsOrNull: MutableList<Segment>? = segments.toMutableList()
     private val mutableSegments: MutableList<Segment>
         get() = mutableSegmentsOrNull ?: mutableListOf<Segment>().also { mutableSegmentsOrNull = it }
