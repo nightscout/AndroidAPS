@@ -1,32 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Командата се изпълнява в момента</string>
+    <string name="smb_being_delivered">В момента се доставя SMB. Опитайте отново, когато приключи.</string>
     <string name="basal_value_below_minimum">Базалните стойности са под минимума. Не е зададен профил!</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Базалният профил в помпата е обновен. Помпата закръглява базала до собствената си стъпка: подава %1$s на ден вместо %2$s.</string>
+    <string name="basal_reported_far_from_profile">Помпата отчита базал, който е далеч от профила. AAPS запазва базала от профила. Проверете базалните стойности в помпата.</string>
     <!--       Stats -->
-    <string name="carbs_short" comment="max 6 characters">Въглехидрати</string>
+    <string name="carbs_short" comment="max 6 characters">Въгл.</string>
     <!--    PumpStatusGenerator-->
-    <string name="short_status_last_connection">Последно свързване: преди %1$d минути</string>
-    <string name="short_status_last_bolus">ПоследенБолус: %1$sЕ @ %2$s</string>
-    <string name="short_status_temp_basal">Врем базал: %1$s</string>
+    <string name="short_status_last_connection">Последно свързване: преди %1$d мин</string>
+    <string name="short_status_last_bolus">Последен болус: %1$sЕ @ %2$s</string>
+    <string name="short_status_temp_basal">Врем. базал: %1$s</string>
     <string name="short_status_battery">Бат: %1$d%%</string>
     <string name="short_status_not_initialized">Помпата не е инициализирана</string>
     <!--    Permissions-->
     <string name="permission_battery_title">Оптимизиране на батерията</string>
-    <string name="permission_battery_description">Приложението трябва да бъде изключено от оптимизацията на батерия в Андроид за да работи пълноценно.</string>
+    <string name="permission_battery_description">Приложението трябва да бъде изключено от оптимизацията на батерията в Андроид, за да работи пълноценно.</string>
     <string name="permission_directory_title">AAPS директория</string>
     <string name="permission_directory_description">Изберете директория за настройки и логове</string>
     <string name="permission_notifications_title">Нотификации</string>
-    <string name="permission_notifications_description">Нужно за да показва съобщения, аларми и статуси на помпата</string>
+    <string name="permission_notifications_description">Нужно е, за да показва съобщения, аларми и статуси на помпата</string>
+    <string name="permission_schedule_exact_alarm_title">Аларми и напомняния</string>
+    <string name="permission_schedule_exact_alarm_description">Необходимо, за да могат алармите да включват екрана, докато AAPS работи във фонов режим, и напомнянията да звънят навреме</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">AAPS аларми</string>
+    <string name="alarm_channel_standard">Стандартна аларма</string>
+    <string name="alarm_channel_bolus_error">Грешка при болус</string>
+    <string name="alarm_channel_error">Обща грешка</string>
+    <string name="alarm_channel_urgent">Спешна аларма</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (заобикаля „Не безпокойте“)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (спазва „Не безпокойте“)</string>
+    <string name="alarm_channel_silent_urgent">Спешна аларма (режим с нарастваща сила на звука)</string>
+    <string name="alarm_channel_silent">Аларма (режим с нарастваща сила на звука)</string>
+    <string name="alarm_channel_silent_description">Използва се, когато е включено „Постепенно увеличаване на силата на звука на известията“. Екранът на алармата възпроизвежда звука.</string>
+    <string name="ongoing_channel_name">Текущ статус</string>
+    <string name="notifications_channel_name">AAPS нотификации</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0Е (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">Е%1$d</string>
     <string name="concentration_format">%1$s (%2$s)</string>
     <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
     <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
-    <string name="concentration_etbr_format">Eд %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_etbr_format">Ед %1$s @%2$s %3$d/%4$d\'</string>
     <string name="concentration_delivered_format">%1$s/%2$s</string>
-    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CЕд/ч</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0СЕд/ч</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported_to_cloud">Настройките са експортирани в клауда</string>
     <string name="export_to_cloud_failed">Неуспешно експортиране в клауда</string>
@@ -38,13 +55,13 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">от преди %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">от %1$s</string>
     <string name="exported_less_than_hour_ago">от преди по-малко от час</string>
-    <string name="metadata_warning_different_flavour">Настройките са създадени с различен вариант на AAPS (%1$s) докато Вие сте с: %2$s.\n\nНякои настройки може да липсват или са невалидни!След импортиране, моля, проверете и актуализирайте своите настройки.</string>
+    <string name="metadata_warning_different_flavour">Настройките са създадени с различен вариант на AAPS (%1$s) докато Вие сте с: %2$s.\n\nНякои настройки може да липсват или са невалидни! След импортиране, моля, проверете и актуализирайте своите настройки.</string>
     <string name="metadata_warning_different_device">Настройките са създадени на друго устройство. Това е ОК, ако импортирате от по-стар/различен телефон, но се уверете, че тези настройки са правилни!</string>
-    <string name="metadata_warning_old_export">Импортираните настройки са стари %1$s дни! Може би имате по-актуални настройки или сте избрали грешен файл? Не забравяйте да експортирате настройки редовно!</string>
+    <string name="metadata_warning_old_export">Импортираните настройки са на %1$s дни! Може би имате по-актуални настройки или сте избрали грешен файл? Не забравяйте да експортирате настройки редовно!</string>
     <string name="metadata_warning_date_format">Невалиден формат на датата!</string>
-    <string name="metadata_warning_different_version">Настройки от различна под-версия на приложението. Това е ОК, ако импортирате след надстройка, но проверете след импорта, дали настройките са все още правилни!</string>
-    <string name="metadata_urgent_different_version">Настройки от различна главна версия на приложението. Основните версии се различават значително и могат да имат несъвместими настройки! Уверете се, че след импорт, че настройките са все още правилни!</string>
-    <string name="prefdecrypt_settings_tampered">Файлът с настройки е преправян</string>
+    <string name="metadata_warning_different_version">Настройки от различна подверсия на приложението. Това е ОК, ако импортирате след надстройка, но проверете след импорта дали настройките са все още правилни!</string>
+    <string name="metadata_urgent_different_version">Настройки от различна главна версия на приложението. Основните версии се различават значително и могат да имат несъвместими настройки! Уверете се, че след импорта настройките са все още правилни!</string>
+    <string name="prefdecrypt_settings_tampered">Файлът с настройки е подправен</string>
     <string name="prefdecrypt_settings_secure">Файлът с настройки е сигурен</string>
     <string name="prefdecrypt_settings_unencrypted">Използване на нешифровани настройки е рисково</string>
     <string name="prefdecrypt_wrong_json">Грешка във формат JSON, липсва поле (формат, съдържание, метаданни или сигурност)</string>
@@ -74,12 +91,12 @@
     <string name="google_drive_token_refresh_failed">Не мога да опресня Google Drive токена</string>
     <string name="google_drive_token_refresh_error">Не мога да опресня Google Drive токен: %1$s</string>
     <string name="google_drive_connection_test_failed">Неуспешна връзка с клауда</string>
-    <string name="google_drive_connect_error">Не мога да се вържа с Google Drive: %1$s</string>
+    <string name="google_drive_connect_error">Не мога да се свържа с Google Drive: %1$s</string>
     <string name="google_drive_list_folders_failed">Не мога да си листна Google Drive папките</string>
     <string name="google_drive_list_folders_error">Грешка при листване на папки: %1$s</string>
-    <string name="google_drive_upload_no_id">Успешен ъплойд но не се върна id</string>
-    <string name="google_drive_upload_verify_failed">Грешка при проверка на ъплоуда</string>
-    <string name="google_drive_upload_failed">Ъплоуда се издъни: %1$s</string>
+    <string name="google_drive_upload_no_id">Качването е успешно, но не е върнат id</string>
+    <string name="google_drive_upload_verify_failed">Грешка при проверка на качването</string>
+    <string name="google_drive_upload_failed">Качването се издъни: %1$s</string>
     <string name="google_drive_upload_error">Грешка при качването на файла: %1$s</string>
     <string name="google_drive_folder_access_error">Не успях да създам или намеря папка: %1$s</string>
     <string name="google_drive_list_settings_failed">Не мога да листна файловете с настройки</string>
