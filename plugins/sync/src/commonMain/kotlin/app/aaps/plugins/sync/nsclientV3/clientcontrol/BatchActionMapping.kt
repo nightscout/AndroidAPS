@@ -19,7 +19,7 @@ internal fun BatchAction.toDto(): BatchActionDto = when (this) {
         carbsDurationHours = carbsDurationHours, recordOnly = recordOnly, notes = notes, timestamp = timestamp,
         iCfgJson = iCfg?.toJsonObject()?.toString(),
         eCarbsGrams = eCarbsGrams, eCarbsDelayMinutes = eCarbsDelayMinutes, eCarbsDurationHours = eCarbsDurationHours,
-        quickWizardGuid = quickWizardGuid
+        quickWizardGuid = quickWizardGuid, alarm = alarm
     )
 
     is BatchAction.TempTarget          -> BatchActionDto(
@@ -96,7 +96,7 @@ internal fun BatchActionDto.toDomain(): BatchAction? = when (type) {
         carbsDurationHours = carbsDurationHours, recordOnly = recordOnly, notes = notes, timestamp = timestamp,
         iCfg = iCfgJson.toICfgOrNull(),
         eCarbsGrams = eCarbsGrams, eCarbsDelayMinutes = eCarbsDelayMinutes, eCarbsDurationHours = eCarbsDurationHours,
-        quickWizardGuid = quickWizardGuid
+        quickWizardGuid = quickWizardGuid, alarm = alarm
     )
 
     BatchActionDto.TYPE_TEMP_TARGET           -> reason?.let { BatchAction.TempTarget(it, lowMgdl, highMgdl, durationMinutes, startOffsetMinutes, notes.ifEmpty { null }) }

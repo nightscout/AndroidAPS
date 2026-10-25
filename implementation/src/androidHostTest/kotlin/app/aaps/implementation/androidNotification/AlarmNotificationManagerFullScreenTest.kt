@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.implementation.alerts.EatReminderReceiver
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -85,6 +86,35 @@ class AlarmNotificationManagerFullScreenTest {
         val mute = shadowOf(checkNotNull(postedNotification().actions.single().actionIntent))
         assertThat(mute.savedIntent.component?.className).isEqualTo(AlarmMuteReceiver::class.java.name)
         assertThat(mute.savedIntent.getBooleanExtra(AlarmMuteReceiver.EXTRA_SWIPED, false)).isFalse()
+    }
+
+    /** The "time to eat" alarm can be moved 5 minutes from the lock screen, next to Mute. */
+    @Test
+    fun theEatReminderAlarmHasPlus5MinNextToMute() {
+        sut().postFullScreenAlarm(status = "Time to eat", title = "AAPS", sound = AlarmSound.ALARM, eatReminder = true)
+
+        val actions = postedNotification().actions
+        assertThat(actions).hasLength(2)
+        val extend = shadowOf(checkNotNull(actions[1].actionIntent))
+        assertThat(extend.savedIntent.component?.className).isEqualTo(EatReminderReceiver::class.java.name)
+        assertThat(extend.savedIntent.action).isEqualTo(EatReminderReceiver.ACTION_EXTEND)
+    }
+
+    /** ... and its alarm screen is told, so it offers +5 min instead of muting for 5 minutes. */
+    @Test
+    fun theEatReminderFlagReachesTheAlarmScreen() {
+        val sut = sut()
+
+        sut.postFullScreenAlarm(status = "Time to eat", title = "AAPS", sound = AlarmSound.ALARM, eatReminder = true)
+
+        assertThat(checkNotNull(sut.unansweredAlarmIntent()).getBooleanExtra(AlarmIntent.EXTRA_EAT_REMINDER, false)).isTrue()
+    }
+
+    @Test
+    fun anOtherAlarmHasOnlyMute() {
+        sut().postFullScreenAlarm(status = "Check BG", title = "AAPS", sound = AlarmSound.ALARM)
+
+        assertThat(postedNotification().actions).hasLength(1)
     }
 
     @Test

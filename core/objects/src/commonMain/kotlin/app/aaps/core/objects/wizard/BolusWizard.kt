@@ -14,6 +14,7 @@ import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.data.ui.confirmationLines
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -65,6 +66,7 @@ class BolusWizard(
     private val config: Config,
     private val uel: UserEntryLogger,
     private val automation: Automation,
+    private val eatReminder: EatReminder,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val persistenceLayer: PersistenceLayer,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
@@ -548,10 +550,11 @@ class BolusWizard(
                 else                           -> Action.TREATMENT
             }
             val bolusCalculatorResult = createBolusCalculatorResult()
-            // Schedule carb timer before bolus delivery. Scheduling in the bolus completion callback
-            // fails when the screen is off because Android blocks startActivity() from the background.
-            if (useAlarm && carbs > 0 && carbTime > 0) {
-                automation.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())
+            // A record-only entry has no pump delivery to wait for, so its "time to eat" timer starts now.
+            // A delivered wizard bolus does not come here: it goes through WizardExecutor to the master's
+            // confirm(), which starts the timer once the pump finished the bolus.
+            if (forcedRecordOnly && useAlarm && carbs > 0 && carbTime > 0) {
+                eatReminder.start(T.mins(carbTime.toLong()).msecs())
             }
             if (forcedRecordOnly) {
                 uel.log(

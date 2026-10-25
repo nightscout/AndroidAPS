@@ -155,7 +155,8 @@ class ClientControlPublisher(
             is ClientControlMessage.BolusPrepare,
             is ClientControlMessage.BolusCommit,
             is ClientControlMessage.WizardPrepare,
-            is ClientControlMessage.BatchPrepare -> "$IDENTIFIER_CMD_PREFIX${type}_${pairing.clientId}"
+            is ClientControlMessage.BatchPrepare,
+            is ClientControlMessage.EatReminderControl -> "$IDENTIFIER_CMD_PREFIX${type}_${pairing.clientId}"
         }
         val result = uploadEnvelope(identifier, envelope)
         return TrackedPublish(result, if (result is ClientControlSendResult.Success) envelope.counter else null)

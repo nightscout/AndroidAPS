@@ -13,12 +13,16 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.alerts.EatReminder
+import app.aaps.core.interfaces.alerts.EatReminderAction
+import app.aaps.core.interfaces.alerts.EatReminderState
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.clientcontrol.isNotDeliveryError
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.appInitializedFlow
@@ -145,7 +149,9 @@ class MainViewModel(
     private val visibilityContext: VisibilityContext,
     // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph
     // binds the same instance under both names.
-    private val appScope: CoroutineScope
+    private val appScope: CoroutineScope,
+    private val eatReminder: EatReminder,
+    private val clientControlDispatcher: ClientControlActionDispatcher
 ) : ViewModel() {
 
     // Event-driven state (drawer, dialogs, simple-mode preference). Imperative .update{} calls
@@ -885,6 +891,28 @@ class MainViewModel(
 
     /** Format milliseconds to a localized "time remaining" string (e.g., "1h 30m remaining"). */
     fun formatDuration(ms: Long): String = dateUtil.timeRemainingString(ms, rh)
+
+    /** The running "time to eat" timer, for its bar. On a client, the master's timer. */
+    val eatReminderState: StateFlow<EatReminderState?> = eatReminder.state
+
+    /** Stop of the timer bar (Dismiss once it rang). */
+    fun stopEatReminder() = controlEatReminder(EatReminderAction.STOP) { eatReminder.stop() }
+
+    /** +5 min of the timer bar. */
+    fun extendEatReminder() = controlEatReminder(EatReminderAction.EXTEND) { eatReminder.extend() }
+
+    // On the master the timer changes here; a client asks the master, and its bar follows with the next sync.
+    private fun controlEatReminder(action: EatReminderAction, onMaster: () -> Unit) {
+        viewModelScope.launch {
+            clientControlDispatcher.execute(
+                ClientControlActionDispatcher.Command.EatReminderControl(action),
+                rh.gs(CoreUiStrings.clientcontrol_action_eat_reminder)
+            ) {
+                onMaster()
+                ActionProgress.Applied
+            }
+        }
+    }
 
     /** QuickLaunch scene → ask the MASTER to PREPARE it, render the master's authored confirmation lines, commit on OK (role-transparent). */
     /** The icon the user picked for the scene, or the generic scene icon when the scene is not known. */

@@ -129,6 +129,9 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
     // with Android and desktop; started after the delegate above, because it posts through it.
     graph.snackbarNotificationFallback.start()
 
+    // Sets the alarm of a running "time to eat" timer again. Master only, so a no-op in the client app today.
+    graph.eatReminder.restore()
+
     // Same placement and the same reason: this touches UIKit, so it cannot live in the graph or in
     // `IosAppStartup`. Until this ran, Nightscout sync was blocked forever - see `startBatteryWatch`.
     graph.receiverStatusStore.startBatteryWatch()

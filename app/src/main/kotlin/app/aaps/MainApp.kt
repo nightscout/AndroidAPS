@@ -160,6 +160,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private val profileSwitchScheduler get() = metroGraphs.profileSwitchScheduler
     private val automationRuntime get() = metroGraphs.automationRuntime
     private val snackbarNotificationFallback get() = metroGraphs.snackbarNotificationFallback
+    private val eatReminder get() = metroGraphs.eatReminder
     private val appScope get() = metroGraphs.applicationScope
 
     /** The rules; the two fields below are what this app's start-up sequence carries between its steps. */
@@ -268,6 +269,9 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 // Standalone automation runtime (no longer a plugin). Loads definitions on all
                 // flavors; the processing loop + location service are master-only (gated internally).
                 automationRuntime.start()
+                // A reboot or a force stop removes the alarm of a running "time to eat" timer; set it again.
+                // Master only (gated internally).
+                eatReminder.restore()
 
                 // Data migrations (DB I/O)
                 dataMigrations()

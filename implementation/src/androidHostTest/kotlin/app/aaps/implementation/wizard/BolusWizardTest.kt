@@ -1,6 +1,7 @@
 package app.aaps.implementation.wizard
 
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.Loop
@@ -44,6 +45,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     @Mock lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var automation: Automation
+    @Mock lateinit var eatReminder: EatReminder
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
@@ -92,7 +94,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     }
 
     private fun createWizard() = BolusWizard(
-        aapsLogger, rh, rxBus, preferences, profileFunction, profileUtil, constraintChecker, loop, iobCobCalculator, dateUtil, config, uel, automation,
+        aapsLogger, rh, rxBus, preferences, profileFunction, profileUtil, constraintChecker, loop, iobCobCalculator, dateUtil, config, uel, automation, eatReminder,
         glucoseStatusProvider, persistenceLayer, processedDeviceStatusData, runningModeGuard,
         ch, masterActionExecutor, CoroutineScope(Dispatchers.Unconfined)
     )

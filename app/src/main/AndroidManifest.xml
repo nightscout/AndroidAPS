@@ -89,6 +89,11 @@
             android:name="app.aaps.implementation.androidNotification.AlarmMuteReceiver"
             android:exported="false" />
 
+        <!-- "Time to eat" timer: its alarm (setAlarmClock) and the Stop / +5 min notification buttons. -->
+        <receiver
+            android:name="app.aaps.implementation.alerts.EatReminderReceiver"
+            android:exported="false" />
+
         <!-- Receive new BG readings from other local apps -->
         <receiver
             android:name="app.aaps.receivers.DataReceiver"

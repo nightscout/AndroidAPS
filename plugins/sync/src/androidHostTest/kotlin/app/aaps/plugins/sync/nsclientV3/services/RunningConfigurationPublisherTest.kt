@@ -125,7 +125,7 @@ class RunningConfigurationPublisherTest {
         // WebSocket off: the start-time publish path, the one that used to rewrite the switch to off.
         whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(false)
         whenever(runningConfiguration.configuration()).thenReturn(buildJsonObject { put("syncedPrefs", syncedPrefs) })
-        whenever(runningConfiguration.activeSceneConfiguration()).thenReturn(JsonObject(emptyMap()))
+        whenever(runningConfiguration.hotConfiguration()).thenReturn(JsonObject(emptyMap()))
         whenever(authorizedRepository.observe()).thenReturn(emptyFlow())
         whenever(authorizedRepository.current(any())).thenReturn(
             listOf(client("active", ClientState.Active), client("meals", ClientState.Active, ClientRole.MealAssistant), client("pending", ClientState.Pending))
@@ -158,7 +158,7 @@ class RunningConfigurationPublisherTest {
         whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(false)
         whenever(runningConfiguration.configuration()).thenReturn(buildJsonObject { put("syncedPrefs", syncedPrefs) })
         val scene = buildJsonObject { put("sceneId", "scene-1") }
-        whenever(runningConfiguration.activeSceneConfiguration()).thenReturn(buildJsonObject { put("activeScene", scene) })
+        whenever(runningConfiguration.hotConfiguration()).thenReturn(buildJsonObject { put("activeScene", scene) })
         whenever(authorizedRepository.observe()).thenReturn(emptyFlow())
         whenever(authorizedRepository.current(any())).thenReturn(emptyList())
         whenever(nsAndroidClient.updateSettings(any(), any())).thenReturn(response(200))
@@ -183,7 +183,7 @@ class RunningConfigurationPublisherTest {
     /** WebSocket off, so start() publishes at once. */
     private fun stubPollMode() {
         whenever(preferences.get(BooleanKey.NsClient3UseWs)).thenReturn(false)
-        whenever(runningConfiguration.activeSceneConfiguration()).thenReturn(JsonObject(emptyMap()))
+        whenever(runningConfiguration.hotConfiguration()).thenReturn(JsonObject(emptyMap()))
         whenever(authorizedRepository.observe()).thenReturn(emptyFlow())
     }
 

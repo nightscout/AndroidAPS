@@ -137,6 +137,7 @@ class GraphScopeStabilityTest {
             "dexcomTirCalculator",
             "dstHelper",
             "dstHelperPlugin",
+            "eatReminder",
             "exportPasswordDataStore",
             "fabricPrivacy",
             "fabricPrivacyImpl",

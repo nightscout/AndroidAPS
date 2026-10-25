@@ -26,6 +26,23 @@ class BatchActionMappingTest {
         assertThat(original.toDto().toDomain()).isEqualTo(original)
     }
 
+    /** The carbs dialog's "time to eat" timer is started by the master, so its flag must reach it. */
+    @Test
+    fun bolusRoundTripsTheEatReminderFlag() {
+        val original = BatchAction.Bolus(
+            insulin = 0.0, carbs = 30, carbsTimeOffsetMinutes = 20, carbsDurationHours = 0,
+            recordOnly = false, notes = "", timestamp = 0L, iCfg = null, alarm = true
+        )
+        assertThat(original.toDto().toDomain()).isEqualTo(original)
+    }
+
+    /** An older client does not send the flag: no timer, as before. */
+    @Test
+    fun aBolusWithoutTheFlagHasNoEatReminder() {
+        val fromOlderClient = BatchActionDto(type = BatchActionDto.TYPE_BOLUS, carbs = 30, carbsTimeOffsetMinutes = 20)
+        assertThat((fromOlderClient.toDomain() as BatchAction.Bolus).alarm).isFalse()
+    }
+
     @Test
     fun tempBasalPercentRoundTrips() {
         val original = BatchAction.TempBasal(rate = 150.0, isPercent = true, durationMinutes = 30)
