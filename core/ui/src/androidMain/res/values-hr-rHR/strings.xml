@@ -46,7 +46,6 @@
     <string name="stop">Zaustavi</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Datum</string>
-    <string name="units_label">Jedinice</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
