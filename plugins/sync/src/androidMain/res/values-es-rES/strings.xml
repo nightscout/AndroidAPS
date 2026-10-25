@@ -47,6 +47,7 @@
     <string name="authorized_clients_qr_ns_instructions">Escanee este código en el nuevo teléfono, en el asistente de configuración o en Emparejar con el master. Configura Nightscout. El teléfono no está emparejado</string>
     <string name="authorized_clients_qr_keep_private">Cualquiera que vea este código podrá leer su Nightscout. Muéstrelo únicamente en el nuevo teléfono</string>
     <string name="authorized_clients_token_problem_title">Sin código QR</string>
+    <string name="authorized_clients_not_added_title">Cliente no añadido</string>
     <string name="authorized_clients_token_problem_not_connected">Este teléfono no está conectado a Nightscout, por lo que no puede generar un token para el cliente</string>
     <string name="authorized_clients_token_problem_not_allowed">El token de Nightscout de este teléfono no es un token de administrador, por lo que no puede generar un token para el cliente. Utilice un token de administrador aquí, o añada el cliente con el PIN</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout tiene un token con este nombre y otros permisos. Elija otro nombre</string>
