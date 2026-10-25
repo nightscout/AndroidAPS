@@ -126,6 +126,7 @@
     <string name="pref_title_ns_use_ws">Използвай websockets</string>
     <string name="pref_summary_ns_use_ws">Използвай websockets за комуникация с NS в реално време.</string>
     <string name="pref_title_ns_allow_client_control">Позволете контол от друг телефон</string>
+    <string name="pref_summary_ns_allow_client_control">Позволява свързаните устройства да пращат команди (напр. пусни/спри сцена) чрез Nightscout. Това също включва сигурен режим: промени направени директно в Nightscout вече няма да се прилагат.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Само с WiFi</string>
     <string name="pref_title_openhumans_charging_only">Само когато телефона се зарежда</string>
@@ -144,6 +145,9 @@
     <string name="pref_title_wear_wizard_cob">Включвай COB в съветника</string>
     <string name="pref_title_wear_wizard_iob">Включвай IOB в съветника</string>
     <string name="pref_title_wear_custom_watchface_authorization">Оторизация на други циферблати</string>
+    <string name="pref_title_wear_pushed_watchface">Успрешна инсталация в часовник</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Циферблат с усложнения</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Персонализиран Watchface</string>
     <string name="pref_title_wear_notify_on_smb">Нотификация при SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Показвай нотификация при пускане на SMB.</string>
     <string name="pref_title_wear_broadcast_data">Изпращай данни към часовник</string>
@@ -177,6 +181,7 @@
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Таймаут за Защита</string>
     <string name="pref_title_protection_type_application">Ниво 0: Защита на приложението</string>
+    <string name="pref_summary_protection_type_application">Стартиране на приложението. Независимо от другите нива</string>
     <string name="pref_title_protection_type_bolus">Ниво 1: Защита при болус</string>
     <string name="pref_summary_protection_type_bolus">Лечения, смяна на профил. Иска ниво 2.</string>
     <string name="pref_title_protection_type_settings">Ниво 2: Защита на настройките</string>
@@ -235,6 +240,7 @@
     <string name="pref_title_units">Единици</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">Език</string>
     <string name="lang_default">Системния</string>
     <string name="lang_en">English</string>
     <string name="lang_af">Afrikaans</string>
@@ -261,6 +267,8 @@
     <string name="lang_tr">Turkish</string>
     <string name="lang_zh_tw">Chinese, Traditional</string>
     <string name="lang_zh_cn">Chinese, Simplified</string>
+    <string name="pref_title_patient_name">Име на инстанцията</string>
+    <string name="pref_summary_patient_name">Име на тази инстанция на AAPS (използвана в доклади и синхронизация).</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">AAPS директория</string>
     <!-- StringKey: Protection preferences -->
