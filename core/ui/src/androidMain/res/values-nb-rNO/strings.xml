@@ -446,6 +446,7 @@
     <string name="clientcontrol_action_deactivate_scene">Avslutt scene</string>
     <string name="clientcontrol_action_update_settings">Oppdater innstillinger</string>
     <string name="clientcontrol_action_deliver_bolus">Lever bolus</string>
+    <string name="clientcontrol_action_eat_reminder">Endre spisepåminnelse</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Denne enheten er ikke koblet til en hovedenhet.</string>
     <string name="clientcontrol_fail_not_reachable">Hovedenheten er frakoblet.</string>
@@ -783,6 +784,12 @@
     <string name="grant">Tillat</string>
     <string name="set">Angi</string>
     <string name="wizard_set_alarm">Sett alarm</string>
+    <string name="eat_reminder_title">Tid for å spise</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_set_duration" comment="The length of the eat reminder the user set. %1$s=length with unit. Example: Set: 20 min">Angitt: %1$s</string>
+    <string name="eat_reminder_rung">Tiden er ute</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="eat_reminder_not_set">Kunne ikke stille inn spisepåminnelsen. Gi AAPS tillatelse til å stille inn alarmer og påminnelser i Android-innstillingene.</string>
     <string name="wizard_use_percentage">Bruk prosent</string>
     <string name="wizard_include_bg">Inkluder BS</string>
     <string name="wizard_include_tt">Inkluder midlertidig mål</string>
