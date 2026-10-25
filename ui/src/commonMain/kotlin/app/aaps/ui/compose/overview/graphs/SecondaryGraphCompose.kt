@@ -464,11 +464,12 @@ fun SecondaryGraphCompose(
     // Chart rendering
     // =========================================================================
 
+    val bgReadings by viewModel.bgReadingsFlow.collectAsStateWithLifecycle()
     val bottomAxisItemPlacer = rememberBottomAxisItemPlacer(minTimestamp)
     val nowLineColor = MaterialTheme.colorScheme.onSurface
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val inspectLine = rememberInspectLine(inspect)
-    val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp)
+    val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp, bgReadings)
     val decorations = remember(nowLine, visibleRangeReporter, clockChanges, inspectLine) {
         listOfNotNull(nowLine, visibleRangeReporter, clockChanges, inspectLine)
     }

@@ -253,7 +253,8 @@ class PrepareGraphDataRunner(
                         valueInUnits < lowMarkInUnits  -> BgRange.LOW
                         else                           -> BgRange.IN_RANGE
                     },
-                    type = BgType.REGULAR
+                    type = BgType.REGULAR,
+                    utcOffset = bg.utcOffset
                 )
             }
 
