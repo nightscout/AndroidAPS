@@ -52,7 +52,6 @@
     <string name="no_profile_set">KEIN PROFIL GESETZT</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Datum</string>
-    <string name="units_label">Einheiten</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
