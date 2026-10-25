@@ -14,11 +14,11 @@
     <!-- Worded as if the Dash PDM itself had shown it, so the user can report the fault to Insulet as
          if they had used a PDM. One message per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
-    <string name="omnipod_dash_pdm_notification_reservoir_empty" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020.">Empty Reservoir\nInsulin delivery stopped.\nChange Pod now.\n\nRef: %1$s</string>
-    <string name="omnipod_dash_pdm_notification_auto_off" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020.">Auto-Off\nInsulin delivery stopped.\nYour PDM and Pod have not communicated in the last 4 hours. To resume insulin delivery, change Pod now.\n\nRef: %1$s</string>
-    <string name="omnipod_dash_pdm_notification_pod_expired" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020.">Pod Expired\nInsulin delivery stopped.\nChange Pod now.\n\nRef: %1$s</string>
-    <string name="omnipod_dash_pdm_notification_occluded" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020.">Occlusion Detected\nInsulin delivery stopped.\nChange Pod now.\nCheck your BG\n\nRef: %1$s</string>
-    <string name="omnipod_dash_pdm_notification_pod_error" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020.">Pod error\nInsulin delivery stopped.\nChange Pod now.\n\nRef: %1$s</string>
+    <string name="omnipod_dash_pdm_notification_reservoir_empty">Empty Reservoir\nInsulin delivery stopped.\nChange Pod now.</string>
+    <string name="omnipod_dash_pdm_notification_auto_off">Auto-Off\nInsulin delivery stopped.\nYour PDM and Pod have not communicated in the last 4 hours. To resume insulin delivery, change Pod now.</string>
+    <string name="omnipod_dash_pdm_notification_pod_expired">Pod Expired\nInsulin delivery stopped.\nChange Pod now.</string>
+    <string name="omnipod_dash_pdm_notification_occluded">Occlusion Detected\nInsulin delivery stopped.\nChange Pod now.\nCheck your BG</string>
+    <string name="omnipod_dash_pdm_notification_pod_error">Pod error\nInsulin delivery stopped.\nChange Pod now.</string>
 
     <!-- Omnipod Dash - Pod Activation Wizard -->
     <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Fill a new Pod

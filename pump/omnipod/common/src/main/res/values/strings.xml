@@ -123,10 +123,8 @@
     <string name="omnipod_common_pod_fault_time_label">Fault Occurred</string>
 
     <!-- Omnipod - PDM Notification -->
-    <!-- The row label and the plain "Ref: ..." line used elsewhere (e.g. the fault announcement) are
-         shared. The per-category fault message itself (header + explanation + optional Ref code) is
-         owned by each pump module (see omnipod_dash_pdm_notification_* / omnipod_o5_pdm_notification_*),
-         so Dash and Omnipod 5 can word it differently. -->
+    <!-- The row label and the plain "Ref: ..." line are shared. Each pump module owns its
+         per-category fault message and decides whether to add the Ref line. -->
     <string name="omnipod_common_pdm_notification_label">PDM Notification</string>
     <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
 
