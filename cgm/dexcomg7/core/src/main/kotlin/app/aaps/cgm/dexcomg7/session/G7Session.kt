@@ -121,7 +121,6 @@ class G7Session(
 
     private fun log(text: String) = commLog.add(text)
 
-    // ------------------------------------------------------------------------------------ control
 
     fun start() = scope.launch {
         if (running) return@launch
@@ -256,7 +255,6 @@ class G7Session(
         _status.value = G7ConnectionStatus.WAITING
     }
 
-    // ----------------------------------------------------------------------------- GATT events
 
     override fun onReady(client: G7GattClient) {
         scope.launch { handleReady(client) }
@@ -276,11 +274,10 @@ class G7Session(
         if (isRightAfterReading()) {
             // The sensor still advertises for a moment after it ends a cycle, and the standing
             // connection request picks that up. A handshake now fails anyway, so leave it for the next
-            // reading. Keep the link open and idle rather than hanging up: hanging up re-armed the request
-            // at once, the sensor was still advertising, and phone and sensor went round that loop about
-            // a hundred times a second. The sensor ends an idle link itself; the job below is only a
-            // fallback in case it does not. It happens after almost every reading, so it is counted and
-            // logged once when the quiet minute is over, not line by line.
+            // reading. Keep the link open and idle rather than hanging up: hanging up re-arms the request
+            // at once while the sensor still advertises, which loops very fast. The sensor ends an idle
+            // link itself; the job below is only a fallback. This happens after almost every reading, so
+            // it is counted and logged once when the quiet minute is over.
             if (cameBack++ == 0) {
                 cameBackJob?.cancel()
                 cameBackJob = scope.launch {
@@ -423,7 +420,6 @@ class G7Session(
 
     private fun isRightAfterReading(): Boolean = System.currentTimeMillis() - lastReadingReceivedAt < QUIET_AFTER_READING_MS
 
-    // ----------------------------------------------------------------------------- the session
 
     /** Subscribes to readings and backfill and asks for a reading straight away, like the Dexcom app does. */
     private suspend fun beginSession(c: G7GattClient) {
@@ -629,7 +625,6 @@ class G7Session(
         _readings.tryEmit(readings)
     }
 
-    // ---------------------------------------------------------------------------------- watchdog
 
     /**
      * Opens the link again when nothing has come for a long time. The disconnect callback covers the
@@ -694,7 +689,6 @@ class G7Session(
         }
     }
 
-    // ------------------------------------------------------------------------ Bluetooth on/off
 
     private var receiverRegistered = false
 

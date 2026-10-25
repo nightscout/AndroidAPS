@@ -44,7 +44,6 @@ class G7CommLog(
         aapsLogger.debug(LTag.BGSOURCE, "DexcomG7: $text")
         ensureLoaded()
         val now = System.currentTimeMillis()
-        // One line of text per entry: the file format is one line each.
         val entry = Entry(now, text.replace('\n', ' '))
         synchronized(lock) {
             _entries.value = keep(_entries.value + entry, now)

@@ -10,7 +10,6 @@ import app.aaps.cgm.dexcomg7.session.G7Session
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 
-/** Text for the screens. */
 object DexcomG7Formatting {
 
     /** "3 days 4 h", "5 h 10 min", "12 min". Negative durations show as 0 min. */
@@ -38,7 +37,7 @@ object DexcomG7Formatting {
     /**
      * Date and time in a fixed form, such as "30/09 10:22". The usual long date follows the locale, and
      * the locale changes when an AAPS screen applies the app language, so texts made in the background
-     * and texts made later did not match.
+     * and texts made later would not match.
      */
     fun dateTime(rh: ResourceHelper, dateUtil: DateUtil, mills: Long): String =
         rh.gs(R.string.dexcom_g7_date_time, dateUtil.dateStringShort(mills), dateUtil.timeString(mills))

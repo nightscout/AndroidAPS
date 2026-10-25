@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap
  * Android allows one GATT operation at a time and reports the end of each on a callback. So every
  * write and every subscription holds [operationLock] until its callback arrives (or it times out).
  * Sending two writes together silently loses the second, and the handshake sends certificates in
- * 20-byte pieces where losing one means it never finishes. (Learned the hard way in Watch-APS.)
+ * 20-byte pieces where losing one means it never finishes.
  *
  * A sensor does not keep a link open between readings. It advertises, delivers, and drops, about every
  * five minutes. So a disconnect is the normal case. [reconnect] asks the stack to connect again the
@@ -92,8 +92,7 @@ class G7GattClient(
      *
      * A client opened with a direct connect (pairing, or after a scan) is replaced by a background one.
      * Re-arming it would repeat the direct connect, which gives up after about 10 seconds (status 147)
-     * unless the sensor happens to advertise in that time. After a sensor change this cost many
-     * readings and once 20 minutes of silence, until the watchdog opened a new client.
+     * unless the sensor happens to advertise in that time.
      */
     fun reconnect() {
         if (closed) return

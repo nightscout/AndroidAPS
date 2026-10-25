@@ -149,7 +149,6 @@ class ComplicationDataRepository(
         }
     }
 
-    /** The stored data as it is now. */
     suspend fun current(): ComplicationData = complicationData.first()
 
     /**

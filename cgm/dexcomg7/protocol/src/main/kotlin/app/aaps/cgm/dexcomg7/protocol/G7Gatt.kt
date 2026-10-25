@@ -60,8 +60,8 @@ object G7Opcode {
 
 /**
  * What kind of display a sensor is talking to. A sensor keeps one slot per display type, so a phone
- * and a watch can both have a session with it, but two phones cannot. This driver always takes
- * [PHONE].
+ * and a watch can both have a session with it, but two phones cannot. The phone takes [PHONE],
+ * direct-to-watch takes [WATCH].
  */
 enum class G7DisplayType(val code: Int) {
 

@@ -39,7 +39,7 @@ class G7AlarmPlayer(
     private val handler = Handler(Looper.getMainLooper())
     private val audioManager get() = context.getSystemService(AudioManager::class.java)
 
-    // --- main looper only ---
+    // Only touched on the main looper.
     private var player: MediaPlayer? = null
     private var volumeBefore: Int? = null
     private var volumeSet: Int? = null

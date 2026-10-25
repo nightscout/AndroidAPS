@@ -80,7 +80,7 @@ class G7Alarms(
     private var job: Job? = null
     private var receiverRegistered = false
 
-    // --- only touched from [scope], which runs one thing at a time ---
+    // Only touched from scope, which runs one thing at a time.
     private var playing: G7AlarmType? = null
 
     private val _runtime = MutableStateFlow(load())

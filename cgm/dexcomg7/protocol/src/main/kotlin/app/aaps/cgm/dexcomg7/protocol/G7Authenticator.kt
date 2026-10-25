@@ -129,7 +129,6 @@ class G7Authenticator(
         return Result(sharedKey, didExchangeKeys)
     }
 
-    // ---------------------------------------------------------------------------------------- EC-JPAKE
 
     private suspend fun exchangeKeys(link: G7Link): ByteArray {
         val code = pairingCode ?: throw G7AuthException.NoCredentials()
@@ -141,7 +140,7 @@ class G7Authenticator(
 
         // Advisory only: the AES challenge below is the real check. On hardware the sensor's proofs do
         // not verify under our transcript format (which the sensor accepts from us), so the sensor hashes
-        // something differently. Noted, not acted on.
+        // something differently.
         val proofsVerified = jpake.validateRound1Or2(sensorRound1) && jpake.validateRound1Or2(sensorRound2) &&
             jpake.validateRound3(sensorRound1, sensorRound3)
         if (!proofsVerified) log("Key exchange: the sensor's proofs do not match our format; this is normal, the key challenge is the real check")
@@ -164,7 +163,6 @@ class G7Authenticator(
         return G7PCert.decode(data)
     }
 
-    // ----------------------------------------------------------------------------------- AES challenge
 
     private suspend fun proveSharedKey(link: G7Link, authentication: MessageBuffer, sharedKey: ByteArray): AuthStatusMessage {
         val step = "challenge"
@@ -190,7 +188,6 @@ class G7Authenticator(
         return status
     }
 
-    // ---------------------------------------------------------------------------- certificate exchange
 
     private suspend fun exchangeCertificates(link: G7Link, authentication: MessageBuffer) {
         val certificates = G7DexcomCredentials.certificates
@@ -221,7 +218,6 @@ class G7Authenticator(
         writeCertificateBytes(link, certificate)
     }
 
-    // ----------------------------------------------------------------------------------- key challenge
 
     private suspend fun answerKeyChallenge(link: G7Link, authentication: MessageBuffer) {
         val step = "key challenge"
@@ -240,7 +236,6 @@ class G7Authenticator(
         writeCertificateBytes(link, signature)
     }
 
-    // ---------------------------------------------------------------------------------------- finalize
 
     private suspend fun finalizeAndBond(link: G7Link, authentication: MessageBuffer) {
         log("Finalizing")
@@ -267,7 +262,6 @@ class G7Authenticator(
         }
     }
 
-    // ----------------------------------------------------------------------------------------- waiting
 
     private suspend fun waitForAuthentication(buffer: MessageBuffer, prefix: Int, step: String): ByteArray {
         val (match, discarded) = buffer.waitFor(stepTimeoutMs) { it.isNotEmpty() && it.u8(0) == prefix } ?: throw G7AuthException.Timeout(step)
