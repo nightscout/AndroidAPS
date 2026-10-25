@@ -5,93 +5,114 @@ import androidx.annotation.StringRes
 import app.aaps.cgm.dexcomg7.R
 
 /**
- * Which alarm a Dexcom sound was made for. Each alarm offers its own family first, then the extra
- * sounds, the same way the Dexcom app does.
+ * Which alarm a sound set was written for. Several of our alarms share a set where Trio has none of
+ * their own: the rate alarms use the low soon and high sets, and every sensor alarm but "failed" uses
+ * the time-sensitive device set.
  */
-enum class G7SoundFamily {
+enum class G7SoundSet {
 
-    URGENT_LOW, URGENT_LOW_SOON, LOW, FALL_RATE, HIGH, RISE_RATE, SIGNAL_LOSS, SENSOR_ISSUE, SYSTEM, TECHNICAL
+    URGENT_LOW, LOW, LOW_SOON, HIGH, DEVICE_CRITICAL, DEVICE_TIME_SENSITIVE
+}
+
+/** The two styles each set comes in. */
+enum class G7SoundTheme(@StringRes val label: Int) {
+
+    ACOUSTIC(R.string.dexcom_g7_sound_acoustic),
+    ELECTRONIC(R.string.dexcom_g7_sound_electronic)
 }
 
 /**
- * The alarm sounds taken from the Dexcom app. Every alarm comes in soft, medium and intense, most also
- * in the short classic style, and there is a set of extra sounds any alarm may use.
+ * How urgent a sound is. Each level is its own recording, with its own sound, loudness and length,
+ * not the same recording played louder.
+ */
+enum class G7SoundLevel(@StringRes val label: Int) {
+
+    MILD(R.string.dexcom_g7_sound_mild),
+    MEDIUM(R.string.dexcom_g7_sound_medium),
+    HARSH(R.string.dexcom_g7_sound_harsh)
+}
+
+/**
+ * The alarm sounds. They were made for Trio and come from nightscout/Trio pull request 1645 (MIT
+ * licence), see `cgm/dexcomg7/SOUNDS.md`. Each [G7SoundSet] comes in both [G7SoundTheme]s at three
+ * [G7SoundLevel]s, and there are some extra tones that any alarm may use.
  *
  * [id] is what the settings store, so it must not change once released.
  */
-enum class G7AlarmSound(val id: String, @RawRes val rawRes: Int, @StringRes val label: Int, val family: G7SoundFamily?) {
+enum class G7AlarmSound(
+    @RawRes val rawRes: Int,
+    @StringRes val label: Int,
+    /** Null for an extra tone, which any alarm may use. */
+    val set: G7SoundSet? = null,
+    val theme: G7SoundTheme? = null,
+    val level: G7SoundLevel? = null
+) {
 
-    URGENT_LOW_SOFT("urgent_low_soft", R.raw.g7_urgent_low_soft, R.string.dexcom_g7_sound_soft, G7SoundFamily.URGENT_LOW),
-    URGENT_LOW_MEDIUM("urgent_low_medium", R.raw.g7_urgent_low_medium, R.string.dexcom_g7_sound_medium, G7SoundFamily.URGENT_LOW),
-    URGENT_LOW_INTENSE("urgent_low_intense", R.raw.g7_urgent_low_intense, R.string.dexcom_g7_sound_intense, G7SoundFamily.URGENT_LOW),
-    URGENT_LOW_CLASSIC("urgent_low_classic", R.raw.g7_urgent_low_classic, R.string.dexcom_g7_sound_classic, G7SoundFamily.URGENT_LOW),
-    URGENT_LOW_CLASSIC_2("urgent_low_classic_2", R.raw.g7_urgent_low_classic_2, R.string.dexcom_g7_sound_classic_2, G7SoundFamily.URGENT_LOW),
+    ACOUSTIC_URGENT_LOW_MILD(R.raw.g7_acoustic_ulg_mild, R.string.dexcom_g7_sound_acoustic_mild, G7SoundSet.URGENT_LOW, G7SoundTheme.ACOUSTIC, G7SoundLevel.MILD),
+    ACOUSTIC_URGENT_LOW_MEDIUM(R.raw.g7_acoustic_ulg_medium, R.string.dexcom_g7_sound_acoustic_medium, G7SoundSet.URGENT_LOW, G7SoundTheme.ACOUSTIC, G7SoundLevel.MEDIUM),
+    ACOUSTIC_URGENT_LOW_HARSH(R.raw.g7_acoustic_ulg_harsh, R.string.dexcom_g7_sound_acoustic_harsh, G7SoundSet.URGENT_LOW, G7SoundTheme.ACOUSTIC, G7SoundLevel.HARSH),
+    ACOUSTIC_LOW_MILD(R.raw.g7_acoustic_lg_mild, R.string.dexcom_g7_sound_acoustic_mild, G7SoundSet.LOW, G7SoundTheme.ACOUSTIC, G7SoundLevel.MILD),
+    ACOUSTIC_LOW_MEDIUM(R.raw.g7_acoustic_lg_medium, R.string.dexcom_g7_sound_acoustic_medium, G7SoundSet.LOW, G7SoundTheme.ACOUSTIC, G7SoundLevel.MEDIUM),
+    ACOUSTIC_LOW_HARSH(R.raw.g7_acoustic_lg_harsh, R.string.dexcom_g7_sound_acoustic_harsh, G7SoundSet.LOW, G7SoundTheme.ACOUSTIC, G7SoundLevel.HARSH),
+    ACOUSTIC_LOW_SOON_MILD(R.raw.g7_acoustic_lgs_mild, R.string.dexcom_g7_sound_acoustic_mild, G7SoundSet.LOW_SOON, G7SoundTheme.ACOUSTIC, G7SoundLevel.MILD),
+    ACOUSTIC_LOW_SOON_MEDIUM(R.raw.g7_acoustic_lgs_medium, R.string.dexcom_g7_sound_acoustic_medium, G7SoundSet.LOW_SOON, G7SoundTheme.ACOUSTIC, G7SoundLevel.MEDIUM),
+    ACOUSTIC_LOW_SOON_HARSH(R.raw.g7_acoustic_lgs_harsh, R.string.dexcom_g7_sound_acoustic_harsh, G7SoundSet.LOW_SOON, G7SoundTheme.ACOUSTIC, G7SoundLevel.HARSH),
+    ACOUSTIC_HIGH_MILD(R.raw.g7_acoustic_hg_mild, R.string.dexcom_g7_sound_acoustic_mild, G7SoundSet.HIGH, G7SoundTheme.ACOUSTIC, G7SoundLevel.MILD),
+    ACOUSTIC_HIGH_MEDIUM(R.raw.g7_acoustic_hg_medium, R.string.dexcom_g7_sound_acoustic_medium, G7SoundSet.HIGH, G7SoundTheme.ACOUSTIC, G7SoundLevel.MEDIUM),
+    ACOUSTIC_HIGH_HARSH(R.raw.g7_acoustic_hg_harsh, R.string.dexcom_g7_sound_acoustic_harsh, G7SoundSet.HIGH, G7SoundTheme.ACOUSTIC, G7SoundLevel.HARSH),
+    ACOUSTIC_DEVICE_CRITICAL_MILD(R.raw.g7_acoustic_dcr_mild, R.string.dexcom_g7_sound_acoustic_mild, G7SoundSet.DEVICE_CRITICAL, G7SoundTheme.ACOUSTIC, G7SoundLevel.MILD),
+    ACOUSTIC_DEVICE_CRITICAL_MEDIUM(R.raw.g7_acoustic_dcr_medium, R.string.dexcom_g7_sound_acoustic_medium, G7SoundSet.DEVICE_CRITICAL, G7SoundTheme.ACOUSTIC, G7SoundLevel.MEDIUM),
+    ACOUSTIC_DEVICE_CRITICAL_HARSH(R.raw.g7_acoustic_dcr_harsh, R.string.dexcom_g7_sound_acoustic_harsh, G7SoundSet.DEVICE_CRITICAL, G7SoundTheme.ACOUSTIC, G7SoundLevel.HARSH),
+    ACOUSTIC_DEVICE_TIME_SENSITIVE_MILD(R.raw.g7_acoustic_dts_mild, R.string.dexcom_g7_sound_acoustic_mild, G7SoundSet.DEVICE_TIME_SENSITIVE, G7SoundTheme.ACOUSTIC, G7SoundLevel.MILD),
+    ACOUSTIC_DEVICE_TIME_SENSITIVE_MEDIUM(R.raw.g7_acoustic_dts_medium, R.string.dexcom_g7_sound_acoustic_medium, G7SoundSet.DEVICE_TIME_SENSITIVE, G7SoundTheme.ACOUSTIC, G7SoundLevel.MEDIUM),
+    ACOUSTIC_DEVICE_TIME_SENSITIVE_HARSH(R.raw.g7_acoustic_dts_harsh, R.string.dexcom_g7_sound_acoustic_harsh, G7SoundSet.DEVICE_TIME_SENSITIVE, G7SoundTheme.ACOUSTIC, G7SoundLevel.HARSH),
 
-    URGENT_LOW_SOON_SOFT("urgent_low_soon_soft", R.raw.g7_urgent_low_soon_soft, R.string.dexcom_g7_sound_soft, G7SoundFamily.URGENT_LOW_SOON),
-    URGENT_LOW_SOON_MEDIUM("urgent_low_soon_medium", R.raw.g7_urgent_low_soon_medium, R.string.dexcom_g7_sound_medium, G7SoundFamily.URGENT_LOW_SOON),
-    URGENT_LOW_SOON_INTENSE("urgent_low_soon_intense", R.raw.g7_urgent_low_soon_intense, R.string.dexcom_g7_sound_intense, G7SoundFamily.URGENT_LOW_SOON),
-    URGENT_LOW_SOON_CLASSIC("urgent_low_soon_classic", R.raw.g7_urgent_low_soon_classic, R.string.dexcom_g7_sound_classic, G7SoundFamily.URGENT_LOW_SOON),
+    ELECTRONIC_URGENT_LOW_MILD(R.raw.g7_electronic_ulg_mild, R.string.dexcom_g7_sound_electronic_mild, G7SoundSet.URGENT_LOW, G7SoundTheme.ELECTRONIC, G7SoundLevel.MILD),
+    ELECTRONIC_URGENT_LOW_MEDIUM(R.raw.g7_electronic_ulg_medium, R.string.dexcom_g7_sound_electronic_medium, G7SoundSet.URGENT_LOW, G7SoundTheme.ELECTRONIC, G7SoundLevel.MEDIUM),
+    ELECTRONIC_URGENT_LOW_HARSH(R.raw.g7_electronic_ulg_harsh, R.string.dexcom_g7_sound_electronic_harsh, G7SoundSet.URGENT_LOW, G7SoundTheme.ELECTRONIC, G7SoundLevel.HARSH),
+    ELECTRONIC_LOW_MILD(R.raw.g7_electronic_lg_mild, R.string.dexcom_g7_sound_electronic_mild, G7SoundSet.LOW, G7SoundTheme.ELECTRONIC, G7SoundLevel.MILD),
+    ELECTRONIC_LOW_MEDIUM(R.raw.g7_electronic_lg_medium, R.string.dexcom_g7_sound_electronic_medium, G7SoundSet.LOW, G7SoundTheme.ELECTRONIC, G7SoundLevel.MEDIUM),
+    ELECTRONIC_LOW_HARSH(R.raw.g7_electronic_lg_harsh, R.string.dexcom_g7_sound_electronic_harsh, G7SoundSet.LOW, G7SoundTheme.ELECTRONIC, G7SoundLevel.HARSH),
+    ELECTRONIC_LOW_SOON_MILD(R.raw.g7_electronic_lgs_mild, R.string.dexcom_g7_sound_electronic_mild, G7SoundSet.LOW_SOON, G7SoundTheme.ELECTRONIC, G7SoundLevel.MILD),
+    ELECTRONIC_LOW_SOON_MEDIUM(R.raw.g7_electronic_lgs_medium, R.string.dexcom_g7_sound_electronic_medium, G7SoundSet.LOW_SOON, G7SoundTheme.ELECTRONIC, G7SoundLevel.MEDIUM),
+    ELECTRONIC_LOW_SOON_HARSH(R.raw.g7_electronic_lgs_harsh, R.string.dexcom_g7_sound_electronic_harsh, G7SoundSet.LOW_SOON, G7SoundTheme.ELECTRONIC, G7SoundLevel.HARSH),
+    ELECTRONIC_HIGH_MILD(R.raw.g7_electronic_hg_mild, R.string.dexcom_g7_sound_electronic_mild, G7SoundSet.HIGH, G7SoundTheme.ELECTRONIC, G7SoundLevel.MILD),
+    ELECTRONIC_HIGH_MEDIUM(R.raw.g7_electronic_hg_medium, R.string.dexcom_g7_sound_electronic_medium, G7SoundSet.HIGH, G7SoundTheme.ELECTRONIC, G7SoundLevel.MEDIUM),
+    ELECTRONIC_HIGH_HARSH(R.raw.g7_electronic_hg_harsh, R.string.dexcom_g7_sound_electronic_harsh, G7SoundSet.HIGH, G7SoundTheme.ELECTRONIC, G7SoundLevel.HARSH),
+    ELECTRONIC_DEVICE_CRITICAL_MILD(R.raw.g7_electronic_dcr_mild, R.string.dexcom_g7_sound_electronic_mild, G7SoundSet.DEVICE_CRITICAL, G7SoundTheme.ELECTRONIC, G7SoundLevel.MILD),
+    ELECTRONIC_DEVICE_CRITICAL_MEDIUM(R.raw.g7_electronic_dcr_medium, R.string.dexcom_g7_sound_electronic_medium, G7SoundSet.DEVICE_CRITICAL, G7SoundTheme.ELECTRONIC, G7SoundLevel.MEDIUM),
+    ELECTRONIC_DEVICE_CRITICAL_HARSH(R.raw.g7_electronic_dcr_harsh, R.string.dexcom_g7_sound_electronic_harsh, G7SoundSet.DEVICE_CRITICAL, G7SoundTheme.ELECTRONIC, G7SoundLevel.HARSH),
+    ELECTRONIC_DEVICE_TIME_SENSITIVE_MILD(R.raw.g7_electronic_dts_mild, R.string.dexcom_g7_sound_electronic_mild, G7SoundSet.DEVICE_TIME_SENSITIVE, G7SoundTheme.ELECTRONIC, G7SoundLevel.MILD),
+    ELECTRONIC_DEVICE_TIME_SENSITIVE_MEDIUM(R.raw.g7_electronic_dts_medium, R.string.dexcom_g7_sound_electronic_medium, G7SoundSet.DEVICE_TIME_SENSITIVE, G7SoundTheme.ELECTRONIC, G7SoundLevel.MEDIUM),
+    ELECTRONIC_DEVICE_TIME_SENSITIVE_HARSH(R.raw.g7_electronic_dts_harsh, R.string.dexcom_g7_sound_electronic_harsh, G7SoundSet.DEVICE_TIME_SENSITIVE, G7SoundTheme.ELECTRONIC, G7SoundLevel.HARSH),
 
-    LOW_SOFT("low_soft", R.raw.g7_low_soft, R.string.dexcom_g7_sound_soft, G7SoundFamily.LOW),
-    LOW_MEDIUM("low_medium", R.raw.g7_low_medium, R.string.dexcom_g7_sound_medium, G7SoundFamily.LOW),
-    LOW_INTENSE("low_intense", R.raw.g7_low_intense, R.string.dexcom_g7_sound_intense, G7SoundFamily.LOW),
-    LOW_CLASSIC("low_classic", R.raw.g7_low_classic, R.string.dexcom_g7_sound_classic, G7SoundFamily.LOW),
-    LOW_CLASSIC_2("low_classic_2", R.raw.g7_low_classic_2, R.string.dexcom_g7_sound_classic_2, G7SoundFamily.LOW),
+    TONE_GLASS_BELL(R.raw.g7_tone_glass_bell, R.string.dexcom_g7_sound_glass_bell),
+    TONE_HARP(R.raw.g7_tone_harp, R.string.dexcom_g7_sound_harp),
+    TONE_MEOW(R.raw.g7_tone_meow, R.string.dexcom_g7_sound_meow),
+    TONE_SAW_WAVE(R.raw.g7_tone_saw_wave, R.string.dexcom_g7_sound_saw_wave),
+    TONE_HARD_SAW_WAVE(R.raw.g7_tone_hard_saw_wave, R.string.dexcom_g7_sound_hard_saw_wave),
+    TONE_SINE_WAVE(R.raw.g7_tone_sine_wave, R.string.dexcom_g7_sound_sine_wave),
+    TONE_OPEN_CAN(R.raw.g7_tone_open_can, R.string.dexcom_g7_sound_open_can),
+    TONE_OPEN_WRAPPER(R.raw.g7_tone_open_wrapper, R.string.dexcom_g7_sound_open_wrapper);
 
-    FALL_RATE_SOFT("fall_rate_soft", R.raw.g7_fall_rate_soft, R.string.dexcom_g7_sound_soft, G7SoundFamily.FALL_RATE),
-    FALL_RATE_MEDIUM("fall_rate_medium", R.raw.g7_fall_rate_medium, R.string.dexcom_g7_sound_medium, G7SoundFamily.FALL_RATE),
-    FALL_RATE_INTENSE("fall_rate_intense", R.raw.g7_fall_rate_intense, R.string.dexcom_g7_sound_intense, G7SoundFamily.FALL_RATE),
-    FALL_RATE_CLASSIC("fall_rate_classic", R.raw.g7_fall_rate_classic, R.string.dexcom_g7_sound_classic, G7SoundFamily.FALL_RATE),
-
-    HIGH_SOFT("high_soft", R.raw.g7_high_soft, R.string.dexcom_g7_sound_soft, G7SoundFamily.HIGH),
-    HIGH_MEDIUM("high_medium", R.raw.g7_high_medium, R.string.dexcom_g7_sound_medium, G7SoundFamily.HIGH),
-    HIGH_INTENSE("high_intense", R.raw.g7_high_intense, R.string.dexcom_g7_sound_intense, G7SoundFamily.HIGH),
-    HIGH_CLASSIC("high_classic", R.raw.g7_high_classic, R.string.dexcom_g7_sound_classic, G7SoundFamily.HIGH),
-    HIGH_CLASSIC_2("high_classic_2", R.raw.g7_high_classic_2, R.string.dexcom_g7_sound_classic_2, G7SoundFamily.HIGH),
-
-    RISE_RATE_SOFT("rise_rate_soft", R.raw.g7_rise_rate_soft, R.string.dexcom_g7_sound_soft, G7SoundFamily.RISE_RATE),
-    RISE_RATE_MEDIUM("rise_rate_medium", R.raw.g7_rise_rate_medium, R.string.dexcom_g7_sound_medium, G7SoundFamily.RISE_RATE),
-    RISE_RATE_INTENSE("rise_rate_intense", R.raw.g7_rise_rate_intense, R.string.dexcom_g7_sound_intense, G7SoundFamily.RISE_RATE),
-    RISE_RATE_CLASSIC("rise_rate_classic", R.raw.g7_rise_rate_classic, R.string.dexcom_g7_sound_classic, G7SoundFamily.RISE_RATE),
-
-    // The Dexcom app ships the signal loss sounds as copies of the system alert sounds.
-    SIGNAL_LOSS_SOFT("signal_loss_soft", R.raw.g7_system_soft, R.string.dexcom_g7_sound_soft, G7SoundFamily.SIGNAL_LOSS),
-    SIGNAL_LOSS_MEDIUM("signal_loss_medium", R.raw.g7_system_medium, R.string.dexcom_g7_sound_medium, G7SoundFamily.SIGNAL_LOSS),
-    SIGNAL_LOSS_INTENSE("signal_loss_intense", R.raw.g7_system_intense, R.string.dexcom_g7_sound_intense, G7SoundFamily.SIGNAL_LOSS),
-    SIGNAL_LOSS_CLASSIC("signal_loss_classic", R.raw.g7_signal_loss_classic, R.string.dexcom_g7_sound_classic, G7SoundFamily.SIGNAL_LOSS),
-
-    SENSOR_ISSUE_SOFT("sensor_issue_soft", R.raw.g7_sensor_issue_soft, R.string.dexcom_g7_sound_soft, G7SoundFamily.SENSOR_ISSUE),
-    SENSOR_ISSUE_MEDIUM("sensor_issue_medium", R.raw.g7_sensor_issue_medium, R.string.dexcom_g7_sound_medium, G7SoundFamily.SENSOR_ISSUE),
-    SENSOR_ISSUE_INTENSE("sensor_issue_intense", R.raw.g7_sensor_issue_intense, R.string.dexcom_g7_sound_intense, G7SoundFamily.SENSOR_ISSUE),
-
-    SYSTEM_SOFT("system_soft", R.raw.g7_system_soft, R.string.dexcom_g7_sound_soft, G7SoundFamily.SYSTEM),
-    SYSTEM_MEDIUM("system_medium", R.raw.g7_system_medium, R.string.dexcom_g7_sound_medium, G7SoundFamily.SYSTEM),
-    SYSTEM_INTENSE("system_intense", R.raw.g7_system_intense, R.string.dexcom_g7_sound_intense, G7SoundFamily.SYSTEM),
-
-    TECHNICAL_SOFT("technical_soft", R.raw.g7_technical_soft, R.string.dexcom_g7_sound_soft, G7SoundFamily.TECHNICAL),
-    TECHNICAL_MEDIUM("technical_medium", R.raw.g7_technical_medium, R.string.dexcom_g7_sound_medium, G7SoundFamily.TECHNICAL),
-    TECHNICAL_INTENSE("technical_intense", R.raw.g7_technical_intense, R.string.dexcom_g7_sound_intense, G7SoundFamily.TECHNICAL),
-
-    EXTRA_BABY_CRY("extra_baby_cry", R.raw.g7_extra_baby_cry, R.string.dexcom_g7_sound_baby_cry, null),
-    EXTRA_BEEP("extra_beep", R.raw.g7_extra_beep, R.string.dexcom_g7_sound_beep, null),
-    EXTRA_BLAMO_DINGS("extra_blamo_dings", R.raw.g7_extra_blamo_dings, R.string.dexcom_g7_sound_blamo_dings, null),
-    EXTRA_BUZZER_ALARM_CLOCK("extra_buzzer_alarm_clock", R.raw.g7_extra_buzzer_alarm_clock, R.string.dexcom_g7_sound_buzzer_alarm_clock, null),
-    EXTRA_DINGING("extra_dinging", R.raw.g7_extra_dinging, R.string.dexcom_g7_sound_dinging, null),
-    EXTRA_DOOR_BELL("extra_door_bell", R.raw.g7_extra_door_bell, R.string.dexcom_g7_sound_door_bell, null),
-    EXTRA_NERD_ALERT("extra_nerd_alert", R.raw.g7_extra_nerd_alert, R.string.dexcom_g7_sound_nerd_alert, null),
-    EXTRA_POLICE_SIREN("extra_police_siren", R.raw.g7_extra_police_siren, R.string.dexcom_g7_sound_police_siren, null),
-    EXTRA_SHORT_BEEPS("extra_short_beeps", R.raw.g7_extra_short_beeps, R.string.dexcom_g7_sound_short_beeps, null),
-    EXTRA_SONAR_HORN("extra_sonar_horn", R.raw.g7_extra_sonar_horn, R.string.dexcom_g7_sound_sonar_horn, null),
-    EXTRA_TACATACA("extra_tacataca", R.raw.g7_extra_tacataca, R.string.dexcom_g7_sound_tacataca, null),
-    EXTRA_TRUCK_SIREN("extra_truck_siren", R.raw.g7_extra_truck_siren, R.string.dexcom_g7_sound_truck_siren, null),
-    EXTRA_UH_OH("extra_uh_oh", R.raw.g7_extra_uh_oh, R.string.dexcom_g7_sound_uh_oh, null);
+    val id: String = name.lowercase()
 
     companion object {
 
+        val tones: List<G7AlarmSound> = entries.filter { it.set == null }
+
         fun byId(id: String): G7AlarmSound? = entries.firstOrNull { it.id == id }
 
-        /** The sounds offered for one alarm: its own, then the extras. */
-        fun choicesFor(family: G7SoundFamily): List<G7AlarmSound> =
-            entries.filter { it.family == family } + entries.filter { it.family == null }
+        fun of(set: G7SoundSet, theme: G7SoundTheme, level: G7SoundLevel): G7AlarmSound =
+            entries.first { it.set == set && it.theme == theme && it.level == level }
+
+        /** The style and level every alarm starts with. */
+        val defaultTheme: G7SoundTheme = G7SoundTheme.ELECTRONIC
+        val defaultLevel: G7SoundLevel = G7SoundLevel.MILD
+
+        fun defaultFor(set: G7SoundSet): G7AlarmSound = of(set, defaultTheme, defaultLevel)
+
+        /** The sounds offered for one alarm: its own set, then the extra tones. */
+        fun choicesFor(set: G7SoundSet): List<G7AlarmSound> = entries.filter { it.set == set } + tones
     }
 }

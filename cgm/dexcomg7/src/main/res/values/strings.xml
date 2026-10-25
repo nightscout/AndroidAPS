@@ -141,7 +141,7 @@
     <string name="dexcom_g7_alarms_general">Alarms: General</string>
     <string name="dexcom_g7_alarm_section" comment="%1$s=alarm name. Example: Alarm: Urgent low">Alarm: %1$s</string>
     <string name="dexcom_g7_alarms_enabled">Use Dexcom G7 alarms</string>
-    <string name="dexcom_g7_alarms_enabled_summary">Glucose and sensor alarms like in the Dexcom G7 app. They sound even when the phone is on silent or vibrate.</string>
+    <string name="dexcom_g7_alarms_enabled_summary">Glucose and sensor alarms. They sound even when the phone is on silent or vibrate.</string>
     <string name="dexcom_g7_alarm_minimum_volume">Minimum alarm volume</string>
     <string name="dexcom_g7_alarm_minimum_volume_summary">Alarms use the phone\'s alarm volume. If it is lower than this, it is raised while an alarm sounds and put back afterwards.</string>
     <string name="dexcom_g7_alarm_minimum_volume_off">Use the phone\'s alarm volume</string>
@@ -204,22 +204,29 @@
     <string name="dexcom_g7_minutes" comment="%1$d=number of minutes. Example: 15 min">%1$d min</string>
     <string name="dexcom_g7_hours" comment="%1$d=number of hours. Example: 2 h">%1$d h</string>
 
-    <string name="dexcom_g7_sound_soft">Dexcom soft</string>
-    <string name="dexcom_g7_sound_medium">Dexcom medium</string>
-    <string name="dexcom_g7_sound_intense">Dexcom intense</string>
-    <string name="dexcom_g7_sound_classic">Dexcom classic</string>
-    <string name="dexcom_g7_sound_classic_2">Dexcom classic 2</string>
-    <string name="dexcom_g7_sound_baby_cry">Baby cry</string>
-    <string name="dexcom_g7_sound_beep">Beep</string>
-    <string name="dexcom_g7_sound_blamo_dings">Blamo dings</string>
-    <string name="dexcom_g7_sound_buzzer_alarm_clock">Buzzer alarm clock</string>
-    <string name="dexcom_g7_sound_dinging">Dinging</string>
-    <string name="dexcom_g7_sound_door_bell">Door bell</string>
-    <string name="dexcom_g7_sound_nerd_alert">Nerd alert</string>
-    <string name="dexcom_g7_sound_police_siren">Police siren</string>
-    <string name="dexcom_g7_sound_short_beeps">Short beeps</string>
-    <string name="dexcom_g7_sound_sonar_horn">Sonar horn</string>
-    <string name="dexcom_g7_sound_tacataca">Tacataca</string>
-    <string name="dexcom_g7_sound_truck_siren">Truck siren</string>
-    <string name="dexcom_g7_sound_uh_oh">Uh oh</string>
+    <string name="dexcom_g7_sound_acoustic" comment="Name of a style of alarm sounds, played on real instruments">Acoustic</string>
+    <string name="dexcom_g7_sound_electronic" comment="Name of a style of alarm sounds, made with a synthesizer">Electronic</string>
+    <string name="dexcom_g7_sound_mild" comment="Urgency level of an alarm sound, the lowest of three">Mild</string>
+    <string name="dexcom_g7_sound_medium" comment="Urgency level of an alarm sound, the middle of three">Medium</string>
+    <string name="dexcom_g7_sound_harsh" comment="Urgency level of an alarm sound, the highest of three">Harsh</string>
+    <string name="dexcom_g7_sound_acoustic_mild">Acoustic, mild</string>
+    <string name="dexcom_g7_sound_acoustic_medium">Acoustic, medium</string>
+    <string name="dexcom_g7_sound_acoustic_harsh">Acoustic, harsh</string>
+    <string name="dexcom_g7_sound_electronic_mild">Electronic, mild</string>
+    <string name="dexcom_g7_sound_electronic_medium">Electronic, medium</string>
+    <string name="dexcom_g7_sound_electronic_harsh">Electronic, harsh</string>
+    <string name="dexcom_g7_sound_glass_bell">Glass bell</string>
+    <string name="dexcom_g7_sound_harp">Harp</string>
+    <string name="dexcom_g7_sound_meow">Meow</string>
+    <string name="dexcom_g7_sound_saw_wave">Saw wave</string>
+    <string name="dexcom_g7_sound_hard_saw_wave">Hard saw wave</string>
+    <string name="dexcom_g7_sound_sine_wave">Sine wave</string>
+    <string name="dexcom_g7_sound_open_can">Open can</string>
+    <string name="dexcom_g7_sound_open_wrapper">Open wrapper</string>
+    <string name="dexcom_g7_sound_for_this_alarm">Made for this alarm</string>
+    <string name="dexcom_g7_sound_other">Other sounds</string>
+    <string name="dexcom_g7_sound_urgency">Urgency level</string>
+    <string name="dexcom_g7_sound_play">Play</string>
+    <string name="dexcom_g7_sound_stop">Stop</string>
+    <string name="dexcom_g7_sound_preview_summary">Play plays the sound once at your alarm volume.</string>
 </resources>

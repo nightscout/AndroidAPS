@@ -2,6 +2,8 @@ package app.aaps.cgm.dexcomg7
 
 import android.content.Context
 import app.aaps.cgm.dexcomg7.alarm.G7AlarmKeys
+import app.aaps.cgm.dexcomg7.alarm.G7AlarmScreenKey
+import app.aaps.cgm.dexcomg7.alarm.G7AlarmType
 import app.aaps.cgm.dexcomg7.alarm.G7Alarms
 import app.aaps.cgm.dexcomg7.data.G7State
 import app.aaps.cgm.dexcomg7.data.G7StateStore
@@ -120,14 +122,19 @@ class DexcomG7DirectPluginTest : TestBase() {
 
     /**
      * The settings screen draws the plugin card and the sections in it, and silently drops a section
-     * inside a section. So no section may hold another, and every alarm setting must be in one of them.
+     * inside a section. So no section may hold another, and every alarm setting must be in one of them,
+     * itself or through the screen that edits it (the sound).
      */
     @Test
     fun everyAlarmSettingIsOnTheScreen() {
         val screen = plugin.getPreferenceScreenContent()
         val sections = screen.items.filterIsInstance<PreferenceSubScreenDef>()
         sections.forEach { assertThat(it.items.filterIsInstance<PreferenceSubScreenDef>()).isEmpty() }
-        val shown = (screen.items + sections.flatMap { it.items }).filterIsInstance<PreferenceKey>().map { it.key }
+        val items = screen.items + sections.flatMap { it.items }
+        val shown = items.filterIsInstance<PreferenceKey>().map { it.key } + items.filterIsInstance<G7AlarmScreenKey>().map { it.target.key }
         assertThat(shown).containsAtLeastElementsIn(G7AlarmKeys.all.map { it.key })
+        // The sound has the picker only, not the old drop-down list as well.
+        val soundKeys = G7AlarmType.entries.map { G7AlarmKeys.of(it).sound.key }
+        assertThat(items.filterIsInstance<PreferenceKey>().map { it.key }).containsNoneIn(soundKeys)
     }
 }

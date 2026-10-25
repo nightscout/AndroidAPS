@@ -16,6 +16,9 @@ import app.aaps.core.interfaces.logging.LTag
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlin.math.ceil
 
 /**
@@ -43,6 +46,11 @@ class G7AlarmPlayer(
     private var player: MediaPlayer? = null
     private var volumeBefore: Int? = null
     private var volumeSet: Int? = null
+
+    private val _playing = MutableStateFlow<G7AlarmSound?>(null)
+
+    /** The sound playing now, or null. The sound picker shows Stop for it. */
+    val playing: StateFlow<G7AlarmSound?> = _playing.asStateFlow()
 
     /**
      * Play [sound] once. An alarm that is not acknowledged plays it again as its 5-minute reminder, like
@@ -92,6 +100,7 @@ class G7AlarmPlayer(
                 true
             }
             player = mp
+            _playing.value = sound
             mp.prepareAsync()
         } catch (e: Exception) {
             aapsLogger.error(LTag.BGSOURCE, "Dexcom G7: alarm sound could not play", e)
@@ -109,6 +118,7 @@ class G7AlarmPlayer(
             mp.release()
         }
         player = null
+        _playing.value = null
         restoreVolume()
     }
 

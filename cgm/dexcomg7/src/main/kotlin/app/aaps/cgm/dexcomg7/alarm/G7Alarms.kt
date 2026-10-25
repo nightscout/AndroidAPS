@@ -149,6 +149,21 @@ class G7Alarms(
         player.vibrate(type.urgent)
     }
 
+    /** The sound the picker is playing, or null. */
+    val previewing: StateFlow<G7AlarmSound?> get() = player.playing
+
+    /**
+     * Plays [sound] once for the sound picker, at the alarm volume as it is. Not while an alarm is
+     * going off: one sound plays at a time, and a preview must not cut off a real alarm.
+     */
+    fun preview(sound: G7AlarmSound) {
+        scope.launch { if (playing == null) player.play(sound, minimumVolumePercent = 0) }
+    }
+
+    fun stopPreview() {
+        scope.launch { if (playing == null) player.stop() }
+    }
+
     /** [where] is for the log: where the acknowledge came from. */
     private fun doAcknowledge(type: G7AlarmType?, where: String) {
         val config = config()

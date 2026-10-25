@@ -2,8 +2,12 @@ package app.aaps.cgm.dexcomg7
 
 import android.Manifest
 import android.content.Context
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.cgm.dexcomg7.alarm.G7AlarmActionKey
 import app.aaps.cgm.dexcomg7.alarm.G7AlarmKeys
+import app.aaps.cgm.dexcomg7.alarm.G7AlarmScreenKey
+import app.aaps.cgm.dexcomg7.alarm.G7AlarmSound
 import app.aaps.cgm.dexcomg7.alarm.G7AlarmType
 import app.aaps.cgm.dexcomg7.alarm.G7Alarms
 import app.aaps.cgm.dexcomg7.data.G7StateStore
@@ -13,6 +17,7 @@ import app.aaps.cgm.dexcomg7.session.G7PairingService
 import app.aaps.cgm.dexcomg7.session.G7Reading
 import app.aaps.cgm.dexcomg7.session.G7Session
 import app.aaps.cgm.dexcomg7.ui.G7ComposeContent
+import app.aaps.cgm.dexcomg7.ui.G7SoundPickerScreen
 import app.aaps.cgm.dexcomg7.watch.G7BooleanNonKey
 import app.aaps.cgm.dexcomg7.watch.G7WatchHandover
 import app.aaps.cgm.dexcomg7.protocol.G7LifecycleState
@@ -35,6 +40,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.cgm.dexcomg7.ui.IcDexcomG7
+import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -121,13 +127,36 @@ class DexcomG7DirectPlugin(
         key = "dexcom_g7_alarm_${type.id}",
         title = TextRef.AndroidRes(R.string.dexcom_g7_alarm_section, listOf(rh.gs(TextRef.AndroidRes(type.title)))),
         summary = TextRef.AndroidRes(type.summary),
-        items = G7AlarmKeys.of(type).all + G7AlarmActionKey(
+        // The sound is chosen on a screen of its own, in the place of its list.
+        items = G7AlarmKeys.of(type).all.map { if (it == G7AlarmKeys.of(type).sound) soundPicker(type) else it } + G7AlarmActionKey(
             key = "dexcom_g7_alarm_${type.id}_test",
             title = TextRef.AndroidRes(R.string.dexcom_g7_alarm_test),
             summary = TextRef.AndroidRes(R.string.dexcom_g7_alarm_test_summary),
             onClick = { alarms.testSound(type) }
         )
     )
+
+    private fun soundPicker(type: G7AlarmType): G7AlarmScreenKey {
+        val key = G7AlarmKeys.of(type).sound
+        fun current() = G7AlarmSound.byId(preferences.get(key))?.takeIf { it in G7AlarmSound.choicesFor(type.soundSet) } ?: type.defaultSound
+        return G7AlarmScreenKey(
+            target = key,
+            summaryOf = { TextRef.AndroidRes(current().label) },
+            composeScreen = ComposeScreenContent { onBack ->
+                val playing by alarms.previewing.collectAsStateWithLifecycle()
+                G7SoundPickerScreen(
+                    title = rh.gs(TextRef.AndroidRes(type.title)),
+                    set = type.soundSet,
+                    initial = current(),
+                    playing = playing,
+                    onSelect = { preferences.put(key, it.id) },
+                    onPlay = alarms::preview,
+                    onStop = alarms::stopPreview,
+                    onBack = onBack
+                )
+            }
+        )
+    }
 
     override fun requiredPermissions(): List<PermissionGroup> = listOf(
         PermissionGroup(

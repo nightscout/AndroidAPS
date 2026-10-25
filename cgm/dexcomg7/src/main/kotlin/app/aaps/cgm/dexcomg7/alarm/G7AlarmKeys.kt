@@ -71,6 +71,24 @@ class G7AlarmActionKey(
     override val preferenceType: PreferenceType = PreferenceType.CLICK
 }
 
+/**
+ * Edits [target] on a screen of its own, where a list would not do: the sound picker. [summaryOf] is
+ * asked each time the settings are drawn, so the summary shows the current choice when the user
+ * comes back.
+ */
+class G7AlarmScreenKey(
+    val target: PreferenceKey,
+    private val summaryOf: () -> TextRef?,
+    override val composeScreen: Any
+) : IntentPreferenceKey {
+
+    override val key: String = "${target.key}_screen"
+    override val title: TextRef = target.title
+    override val dependency: BooleanPreferenceKey? = target.dependency
+    override val summary: TextRef? get() = summaryOf()
+    override val preferenceType: PreferenceType = PreferenceType.CLICK
+}
+
 /** The settings of one alarm. Null where that alarm does not have the setting. */
 class G7AlarmTypeKeys(val type: G7AlarmType) {
 
@@ -110,7 +128,7 @@ class G7AlarmTypeKeys(val type: G7AlarmType) {
 
     val sound = G7AlarmStringKey(
         "${prefix}_sound", type.defaultSound.id, TextRef.AndroidRes(R.string.dexcom_g7_alarm_sound),
-        G7AlarmSound.choicesFor(type.family).associate { it.id to TextRef.AndroidRes(it.label) },
+        G7AlarmSound.choicesFor(type.soundSet).associate { it.id to TextRef.AndroidRes(it.label) },
         dependency = enabled
     )
 

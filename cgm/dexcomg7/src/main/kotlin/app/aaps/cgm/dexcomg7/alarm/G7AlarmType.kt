@@ -31,12 +31,11 @@ enum class G7AlarmType(
     @StringRes val title: Int,
     @StringRes val summary: Int,
     val group: G7AlarmGroup,
-    val family: G7SoundFamily,
+    val soundSet: G7SoundSet,
     val canTurnOff: Boolean,
     val defaultEnabled: Boolean,
     /** Minutes after an acknowledge before the alarm may go off again while the condition lasts. 0 = never. */
     val defaultRepeatMinutes: Int,
-    val defaultSound: G7AlarmSound,
     /** Stronger vibration. */
     val urgent: Boolean,
     val delay: G7AlarmDelay? = null
@@ -47,11 +46,10 @@ enum class G7AlarmType(
         title = R.string.dexcom_g7_alarm_urgent_low,
         summary = R.string.dexcom_g7_alarm_urgent_low_summary,
         group = G7AlarmGroup.LOW,
-        family = G7SoundFamily.URGENT_LOW,
+        soundSet = G7SoundSet.URGENT_LOW,
         canTurnOff = false,
         defaultEnabled = true,
         defaultRepeatMinutes = 30,
-        defaultSound = G7AlarmSound.URGENT_LOW_INTENSE,
         urgent = true
     ),
     SENSOR_FAILED(
@@ -59,11 +57,10 @@ enum class G7AlarmType(
         title = R.string.dexcom_g7_alarm_sensor_failed,
         summary = R.string.dexcom_g7_alarm_sensor_failed_summary,
         group = G7AlarmGroup.SENSOR,
-        family = G7SoundFamily.TECHNICAL,
+        soundSet = G7SoundSet.DEVICE_CRITICAL,
         canTurnOff = false,
         defaultEnabled = true,
         defaultRepeatMinutes = 0,
-        defaultSound = G7AlarmSound.TECHNICAL_MEDIUM,
         urgent = true
     ),
     URGENT_LOW_SOON(
@@ -71,11 +68,10 @@ enum class G7AlarmType(
         title = R.string.dexcom_g7_alarm_urgent_low_soon,
         summary = R.string.dexcom_g7_alarm_urgent_low_soon_summary,
         group = G7AlarmGroup.LOW,
-        family = G7SoundFamily.URGENT_LOW_SOON,
+        soundSet = G7SoundSet.LOW_SOON,
         canTurnOff = true,
         defaultEnabled = true,
         defaultRepeatMinutes = 30,
-        defaultSound = G7AlarmSound.URGENT_LOW_SOON_MEDIUM,
         urgent = false
     ),
     LOW(
@@ -83,11 +79,10 @@ enum class G7AlarmType(
         title = R.string.dexcom_g7_alarm_low,
         summary = R.string.dexcom_g7_alarm_low_summary,
         group = G7AlarmGroup.LOW,
-        family = G7SoundFamily.LOW,
+        soundSet = G7SoundSet.LOW,
         canTurnOff = true,
         defaultEnabled = true,
         defaultRepeatMinutes = 15,
-        defaultSound = G7AlarmSound.LOW_MEDIUM,
         urgent = false
     ),
     FALL_RATE(
@@ -95,11 +90,10 @@ enum class G7AlarmType(
         title = R.string.dexcom_g7_alarm_fall_rate,
         summary = R.string.dexcom_g7_alarm_fall_rate_summary,
         group = G7AlarmGroup.LOW,
-        family = G7SoundFamily.FALL_RATE,
+        soundSet = G7SoundSet.LOW_SOON,
         canTurnOff = true,
         defaultEnabled = false,
         defaultRepeatMinutes = 0,
-        defaultSound = G7AlarmSound.FALL_RATE_MEDIUM,
         urgent = false
     ),
     HIGH(
@@ -107,11 +101,10 @@ enum class G7AlarmType(
         title = R.string.dexcom_g7_alarm_high,
         summary = R.string.dexcom_g7_alarm_high_summary,
         group = G7AlarmGroup.HIGH,
-        family = G7SoundFamily.HIGH,
+        soundSet = G7SoundSet.HIGH,
         canTurnOff = true,
         defaultEnabled = true,
         defaultRepeatMinutes = 120,
-        defaultSound = G7AlarmSound.HIGH_MEDIUM,
         urgent = false,
         delay = G7AlarmDelay(R.string.dexcom_g7_alarm_delay_first, 0, listOf(0, 15, 30, 45, 60, 90, 120, 180, 240))
     ),
@@ -120,11 +113,10 @@ enum class G7AlarmType(
         title = R.string.dexcom_g7_alarm_rise_rate,
         summary = R.string.dexcom_g7_alarm_rise_rate_summary,
         group = G7AlarmGroup.HIGH,
-        family = G7SoundFamily.RISE_RATE,
+        soundSet = G7SoundSet.HIGH,
         canTurnOff = true,
         defaultEnabled = false,
         defaultRepeatMinutes = 0,
-        defaultSound = G7AlarmSound.RISE_RATE_MEDIUM,
         urgent = false
     ),
     /**
@@ -138,11 +130,10 @@ enum class G7AlarmType(
         title = R.string.dexcom_g7_alarm_sensor_end,
         summary = R.string.dexcom_g7_alarm_sensor_end_summary,
         group = G7AlarmGroup.SENSOR,
-        family = G7SoundFamily.SYSTEM,
+        soundSet = G7SoundSet.DEVICE_TIME_SENSITIVE,
         canTurnOff = true,
         defaultEnabled = true,
         defaultRepeatMinutes = 0,
-        defaultSound = G7AlarmSound.SYSTEM_MEDIUM,
         urgent = false
     ),
     SIGNAL_LOSS(
@@ -150,11 +141,10 @@ enum class G7AlarmType(
         title = R.string.dexcom_g7_alarm_signal_loss,
         summary = R.string.dexcom_g7_alarm_signal_loss_summary,
         group = G7AlarmGroup.SENSOR,
-        family = G7SoundFamily.SIGNAL_LOSS,
+        soundSet = G7SoundSet.DEVICE_TIME_SENSITIVE,
         canTurnOff = true,
         defaultEnabled = true,
         defaultRepeatMinutes = 30,
-        defaultSound = G7AlarmSound.SIGNAL_LOSS_MEDIUM,
         urgent = false,
         delay = G7AlarmDelay(R.string.dexcom_g7_alarm_delay_for_more_than, 20, listOf(10, 15, 20, 30, 45, 60, 90, 120))
     ),
@@ -163,14 +153,15 @@ enum class G7AlarmType(
         title = R.string.dexcom_g7_alarm_sensor_issue,
         summary = R.string.dexcom_g7_alarm_sensor_issue_summary,
         group = G7AlarmGroup.SENSOR,
-        family = G7SoundFamily.SENSOR_ISSUE,
+        soundSet = G7SoundSet.DEVICE_TIME_SENSITIVE,
         canTurnOff = true,
         defaultEnabled = true,
         defaultRepeatMinutes = 30,
-        defaultSound = G7AlarmSound.SENSOR_ISSUE_MEDIUM,
         urgent = false,
         delay = G7AlarmDelay(R.string.dexcom_g7_alarm_delay_for_more_than, 20, listOf(0, 10, 15, 20, 30, 45, 60))
     );
+
+    val defaultSound: G7AlarmSound get() = G7AlarmSound.defaultFor(soundSet)
 
     companion object {
 

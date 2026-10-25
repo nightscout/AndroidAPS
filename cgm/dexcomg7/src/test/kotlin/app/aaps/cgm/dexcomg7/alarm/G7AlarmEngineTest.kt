@@ -233,9 +233,24 @@ class G7AlarmEngineTest {
     @Test
     fun everyAlarmHasSoundsAndItsDefaultIsOneOfThem() {
         G7AlarmType.entries.forEach { type ->
-            assertThat(G7AlarmSound.choicesFor(type.family)).contains(type.defaultSound)
-            assertThat(type.defaultSound.family).isEqualTo(type.family)
+            assertThat(G7AlarmSound.choicesFor(type.soundSet)).contains(type.defaultSound)
+            assertThat(type.defaultSound.set).isEqualTo(type.soundSet)
+            assertThat(type.defaultSound.theme).isEqualTo(G7SoundTheme.ELECTRONIC)
+            assertThat(type.defaultSound.level).isEqualTo(G7SoundLevel.MILD)
         }
+    }
+
+    @Test
+    fun everySoundSetHasEveryThemeAndLevel() {
+        G7SoundSet.entries.forEach { set ->
+            G7SoundTheme.entries.forEach { theme ->
+                G7SoundLevel.entries.forEach { level ->
+                    val sound = G7AlarmSound.of(set, theme, level)
+                    assertThat(listOf(sound.set, sound.theme, sound.level)).containsExactly(set, theme, level).inOrder()
+                }
+            }
+        }
+        assertThat(G7AlarmSound.tones.map { it.theme }).containsNoneOf(G7SoundTheme.ACOUSTIC, G7SoundTheme.ELECTRONIC)
     }
 
     @Test
