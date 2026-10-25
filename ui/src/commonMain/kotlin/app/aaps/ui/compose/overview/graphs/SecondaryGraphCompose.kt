@@ -468,7 +468,10 @@ fun SecondaryGraphCompose(
     val nowLineColor = MaterialTheme.colorScheme.onSurface
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val inspectLine = rememberInspectLine(inspect)
-    val decorations = remember(nowLine, visibleRangeReporter, inspectLine) { listOfNotNull(nowLine, visibleRangeReporter, inspectLine) }
+    val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp)
+    val decorations = remember(nowLine, visibleRangeReporter, clockChanges, inspectLine) {
+        listOfNotNull(nowLine, visibleRangeReporter, clockChanges, inspectLine)
+    }
 
     val leftRangeProvider = remember(maxX, axes.left) {
         CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = axes.left.min, maxY = axes.left.max)

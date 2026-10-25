@@ -464,7 +464,10 @@ fun BgGraphCompose(
     val defaultMarkerController = CartesianMarkerController.rememberShowOnPress()
     val inspectLine = rememberInspectLine(inspect, dotOnReading = true)
 
-    val decorations = remember(inRangeBox, nowLine, inspectLine) { listOfNotNull(inRangeBox, nowLine, inspectLine) }
+    val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp, showIcon = true)
+    val decorations = remember(inRangeBox, nowLine, clockChanges, inspectLine) {
+        listOfNotNull(inRangeBox, nowLine, clockChanges, inspectLine)
+    }
 
     // =========================================================================
     // Range providers — hoisted out of rememberCartesianChart so keys are re-evaluated on recomposition
