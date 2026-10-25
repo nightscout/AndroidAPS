@@ -60,6 +60,7 @@
     <string name="authorized_clients_delete_dialog_token">其 Nightscout 權杖也已被刪除，因此將無法再讀取 Nightscout。</string>
     <string name="authorized_clients_uses_client_token">擁有自己的 Nightscout 權杖</string>
     <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">正在使用 Nightscout 權杖 %1$s，其權限多於客戶端所需。</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">使用 Nightscout 權杖 %1$s，而非其自身的權杖：其指令已被拒絕。請將其移除後再重新新增。</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">與主裝置配對</string>
     <string name="pair_with_master_pin_entry_title">輸入配對 PIN</string>
@@ -87,6 +88,10 @@
     <string name="client_setup_scan_title">掃描主裝置的 QR Code</string>
     <string name="client_setup_scan_instructions">在主裝置上開啟「已授權的客戶端」，使用 QR Code 新增此手機。將相機對準該 QR Code。</string>
     <string name="client_setup_scan_camera_refused">需要相機才能讀取 QR Code。請允許使用，或改用 PIN 配對。</string>
+    <string name="client_setup_scan_camera_denied">AAPS 的相機存取已關閉。請在系統設定中開啟，或改用 PIN 配對。</string>
+    <string name="client_setup_scan_camera_blocked">此裝置不允許使用相機。請改用 PIN 配對。</string>
+    <string name="client_setup_scan_camera_unavailable">此裝置無法使用相機。請改用 PIN 配對。</string>
+    <string name="client_setup_scan_open_settings">開啟設定</string>
     <string name="client_setup_scan_not_a_code">這不是來自 AAPS 的 QR Code。</string>
     <string name="client_setup_scan_other_version">此代碼來自另一個 AAPS 版本。主裝置與此手機必須執行相同版本。</string>
     <string name="client_setup_scan_expired">此代碼已過期。請在主裝置上建立新的代碼。</string>
@@ -124,6 +129,12 @@
     <string name="tidepool_purge_data">清除所有資料</string>
     <string name="tidepool_purge_data_confirm">要刪除 AAPS 已上傳至 Tidepool 的所有資料嗎？此操作無法復原。
 此功能可用來移除舊版本所造成的損毀資料。刪除後，請執行「完整同步」以重新上傳資料。</string>
+    <string name="tidepool_full_sync_comment">要進行完整同步嗎？AAPS 會再次將所有資料上傳至 Tidepool。這可能需要一些時間。</string>
+    <string name="tidepool_logout_confirm">要登出 Tidepool 嗎？在你再次登入前，上傳將會停止。</string>
+    <string name="tidepool_status_not_logged_in">尚未登入</string>
+    <string name="tidepool_status_no_session">已登入，尚未連線</string>
+    <string name="tidepool_status_blocked">被連線設定阻擋</string>
+    <string name="tidepool_status_failed">失敗。請查看下方記錄。</string>
     <string name="not_connected">未連線</string>
     <string name="read_only">唯讀</string>
     <string name="working">工作中</string>
