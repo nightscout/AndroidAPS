@@ -134,7 +134,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInzulín tiež nebol prepnutý.</string>
     <string name="active"><![CDATA[<Aktívny>]]></string>
     <string name="date">Dátum</string>
-    <string name="units_label">Jednotky</string>
     <string name="insulin_nickname_label">Prezývka inzulínu</string>
     <string name="concentration_label">Koncentrácia</string>
     <string name="peak_label">Vrchol</string>
