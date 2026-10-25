@@ -52,7 +52,6 @@
     <string name="no_profile_set">INGEN PROFIL VALD</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Datum</string>
-    <string name="units_label">Enheter</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">CR</string>
     <string name="isf_label">ISF</string>
