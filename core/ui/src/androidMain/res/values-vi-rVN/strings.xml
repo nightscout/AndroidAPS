@@ -116,6 +116,7 @@
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Mục tiêu học tập</string>
     <string name="please_wait">Vui lòng chờ…</string>
     <string name="stop">Dừng lại</string>
@@ -136,7 +137,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nLoại insulin cũng chưa được chuyển đổi.</string>
     <string name="active"><![CDATA[<Đang hoạt động>]]></string>
     <string name="date">Ngày</string>
-    <string name="units_label">Đơn vị</string>
     <string name="insulin_nickname_label">Tên gọi insulin</string>
     <string name="concentration_label">Tập trung</string>
     <string name="peak_label">Đỉnh (Peak)</string>
