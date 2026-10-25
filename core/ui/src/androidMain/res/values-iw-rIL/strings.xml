@@ -1088,6 +1088,7 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">רגישות%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">רג\' משתנה</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">צעדים</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="units_days">ימים</string>
     <string name="units_format_days">%1$d ימים</string>
     <string name="units_format_days_range">%1$d ימים (%2$d - %3$d)</string>
