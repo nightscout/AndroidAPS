@@ -49,7 +49,6 @@
     <string name="unit_days">ימים</string>
     <string name="unit_weeks">שבועות</string>
     <string name="shortminute">דקה</string>
-    <string name="shortday">י\'</string>
     <string name="time_remaining_h_m">נותרו %1$d שעות ו- %2$d דקות</string>
     <string name="time_remaining_m">נותרו %1$d דקות</string>
     <string name="later_today">מאוחר יותר היום</string>
@@ -102,7 +101,6 @@
     <string name="temp_basal_absolute_rate">%1$.2f. יח\' ב-%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% ב-%2$s %3$d/%4$d</string>
     <string name="temp_basal_extended_bolus">ממושך %1$.2f יח\'\ש\' ב-%2$s %3$d/%4$d דק\'</string>
-    <string name="forever">לנצח</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">בלוטות\'</string>
     <string name="permission_bluetooth_description">האפליקציה זקוקה להרשאת בלוטות\' כדי לתקשר עם המשאבה</string>

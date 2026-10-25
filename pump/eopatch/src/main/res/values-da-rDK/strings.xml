@@ -61,7 +61,6 @@
     <string name="patch_communication_succeed">Kommunikation lykkedes</string>
     <string name="patch_communication_succeed_message">Forbundet med Patchen.</string>
     <string name="patch_cancel_pairing">Annullér parring</string>
-    <string name="all_dose_unit">&#160;IE</string>
     <string name="insulin_suspend_msg1">Efter suspenderingen vil den nuværende leverende Bolus &amp; Midlertidig basal vil blive annulleret. \n\nRate : %1$s IE/t\nResterende tid : %2$s\n&amp; Insulin tilbage: %3$.2f IE</string>
     <string name="insulin_suspend_msg2">Efter suspenderingen vil den aktuelt leverende Bolus blive annulleret. \n\nInsulin tilbage: %1$.2f IE</string>
     <string name="insulin_suspend_msg3">Efter suspenderingen vil den nuværende leverende Midlertidige Basal blive annulleret. \nRate : %1$s IE/t\nResterende tid : %2$s</string>

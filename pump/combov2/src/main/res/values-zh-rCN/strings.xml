@@ -81,7 +81,6 @@
     <string name="combov2_bolus_delivery_failed">大剂量输注失败，看起来好像没有大剂量被输注。安全起见，请检查泵，避免重复输注大剂量。软件考虑安全因素，不会再自动重试大剂量输注.</string>
     <string name="combov2_bolus_not_delivered">胰岛素未输注</string>
     <string name="combov2_cannot_access_pump_data">无法获取泵数据；必须重新配对</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">检查到未计入的注射，为安全起见，取消注射。</string>
     <string name="combov2_incorrect_active_basal_profile">活动基础率配置错误；必须是配置 1 为活动配置，而不是配置 %1$d</string>
     <string name="combov2_unrecognized_alert">无法识别的 Combo 警报</string>
     <string name="combov2_combo_alert">Combo 警告</string>

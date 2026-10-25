@@ -43,7 +43,6 @@
     <string name="unit_days">天</string>
     <string name="unit_weeks">周</string>
     <string name="shortminute">m</string>
-    <string name="shortday">d</string>
     <string name="time_remaining_h_m">剩余 %1$dh %2$dm</string>
     <string name="time_remaining_m">剩余 %1$dm</string>
     <string name="later_today">今天稍后</string>
@@ -96,7 +95,6 @@
     <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
-    <string name="forever">永久</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">蓝牙</string>
     <string name="permission_bluetooth_description">应用程序需要蓝牙权限才能通过泵进行通信</string>
@@ -111,6 +109,7 @@
     <string name="insulin_peak_time">峰值时间 [min]</string>
     <!-- Concentration -->
     <string name="u10">U10</string>
+    <string name="u20">U20</string>
     <string name="u40">U40</string>
     <string name="u50">U50</string>
     <string name="u100">U100</string>
@@ -148,6 +147,7 @@
     <string name="bolus_constraint_applied_warn">已应用推注限制： %1$.2f U 到 %2$.2f U</string>
     <string name="bolus_recorded_only">仅记录大剂量数值(泵不会输注)</string>
     <string name="advisoralarm">在应当吃饭时提醒</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs %1$d g / %2$d h (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f U</string>
     <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">插件 %1$s 启动失败，可能无法正常工作。请重启 AAPS。</string>
     <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">插件 %1$s 发生错误，部分功能已停止。请重启 AAPS。</string>

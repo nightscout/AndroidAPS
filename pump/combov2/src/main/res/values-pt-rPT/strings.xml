@@ -79,7 +79,6 @@ para cancelar o emparelhamento)\n
     <string name="combov2_bolus_delivery_failed">Administração de bólus falhou. Nenhum bólus parece ter sido administrado. Para confirmar, por favor verifique a bomba de forma a evitar uma dupla administração de bólus e programe novamente o bólus. De forma a evitar qualquer problema, os bólus não são reprogramados de forma automática.</string>
     <string name="combov2_bolus_not_delivered">Bólus não administrado</string>
     <string name="combov2_cannot_access_pump_data">Não é possível aceder aos dados da bomba; a bomba deve ser emparelhada novamente</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Detetadas administrações de bólus não registadas. A cancelar bólus por razões de segurança.</string>
     <string name="combov2_incorrect_active_basal_profile">Perfil basal ativo incorreto; perfil 1 deve ser o ativo e não o perfil %1$d</string>
     <string name="combov2_unrecognized_alert">Alerta da Combo não reconhecido</string>
     <string name="combov2_combo_alert">Alerta da Combo</string>

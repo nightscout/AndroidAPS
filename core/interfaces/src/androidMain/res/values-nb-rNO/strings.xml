@@ -46,13 +46,20 @@
     <string name="unit_days">dager</string>
     <string name="unit_weeks">uker</string>
     <string name="shortminute">m</string>
-    <string name="shortday">d</string>
     <string name="time_remaining_h_m">%1$dt %2$dm gjenstår</string>
     <string name="time_remaining_m">%1$dm gjenstår</string>
     <string name="later_today">Senere i dag</string>
     <string name="tomorrow">I morgen</string>
     <string name="today">Idag</string>
     <string name="yesterday">I går</string>
+    <string name="values_with_dash" comment="Two values with a dash between them, for a range or a day and its date. Example: 6:00 - 10:00, or Today - 10/23/2026">%1$s - %2$s</string>
+    <string name="values_with_comma" comment="Two parts of one text with a comma between them. Example: BG: 7.5, Delta: +0.3">%1$s, %2$s</string>
+    <string name="values_with_slash" comment="Two values with a slash between them. Example: 0.01 / 0.05">%1$s / %2$s</string>
+    <string name="value_with_detail" comment="A value and a detail about it in brackets. Example: 0.85 U/h (STD), or 20 g (-15 min)">%1$s (%2$s)</string>
+    <string name="time_frame_hours_minutes" comment="A duration, short. h=hours, the mark after the minutes means minutes. %1$d=hours, %2$d=minutes. Example: 1h 30'">%1$dt %2$d\'</string>
+    <string name="time_frame_minutes" comment="A duration in minutes, short. The mark after the number means minutes. %1$d=minutes. Example: 30'">%1$d\'</string>
+    <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
+    <string name="time_value_with_unit" comment="%1$s=a number, %2$s=the time unit, like minutes or days. Example: 5 minutes">%1$s %2$s</string>
     <!-- Rx -->
     <string name="connecting_for">Tilkobler i %1$d sek</string>
     <string name="handshaking">Tilkobling verifiseres</string>
@@ -99,7 +106,6 @@
     <string name="temp_basal_absolute_rate">%1$.2f E/t @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">F %1$.2f E/t @%2$s %3$d/%4$d min</string>
-    <string name="forever">Alltid</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">Bluetooth</string>
     <string name="permission_bluetooth_description">Appen trenger Bluetooth-tillatelse for å kommunisere med pumpen</string>
@@ -154,6 +160,8 @@
     <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
     <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eKarbo %1$d g / %2$d t (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f E</string>
+    <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
+    <string name="carbs_with_time_later" comment="Carbs eaten later. %1$s=carbs with unit, %2$s=minutes from now, with unit. Example: 20 g (+15 min)">%1$s (+%2$s)</string>
     <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Plugin %1$s kunne ikke starte og vil kanskje ikke fungere. Start AAPS på nytt.</string>
     <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Plugin %1$s støtte på en feil, og deler av den har stoppet. Vennligst start AAPS på nytt.</string>
 </resources>

@@ -15,7 +15,6 @@
     <string name="authorized_clients_add">Pridėti klientą</string>
     <string name="authorized_clients_comm_switch_title">Leisti valdyti iš kliento</string>
     <string name="authorized_clients_comm_switch_summary">Leisti susietiems klientams siųsti pasirašytas komandas per Nightscout. Išjunkite, jei norite sustabdyti ryšį jų nepašalindami.</string>
-    <string name="authorized_clients_needs_websocket">WebSocket ryšys išjungtas, todėl klientų komandų gauti negalima. Kol neįjungsite WebSocket ryšio, klientai matys, kad šis pagrindinis įrenginys nepriima komandų.</string>
     <string name="authorized_clients_state_active">Aktyvus</string>
     <string name="authorized_clients_state_pending">Laukiama</string>
     <string name="authorized_clients_last_seen">Paskutinį kartą matytas %1$s</string>
@@ -56,6 +55,7 @@
     <string name="pair_with_master_already_paired_master">Šiuo metu susieta su pagrindiniu įrenginiu %1$s. Norėdami įvesti naują PIN, pirmiausia atsiekite.</string>
     <string name="pair_with_master_unpair">Atsieti</string>
     <string name="pair_with_master_sending">Siunčiamas susiejimo pranešimas…</string>
+    <!-- Client set-up from the master's QR code -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">Pagrindinis AAPS įrenginys šio įrenginio nebeatpažįsta. Atverkite Valdymas → Susieti su pagrindiniu įrenginiu ir susiekite iš naujo.</string>
     <string name="ns_client">NSClient</string>
@@ -255,6 +255,8 @@
     <string name="sms_read_status_failed">Statuso nuskaityti nepavyko</string>
     <string name="sms_profile_switch_created">Profilio keitimas sukurtas</string>
     <string name="sms_wrong_tbr_duration">Laikinos bazės trukmė turi būti %1$d min kartotinė ir didesnė nei 0.</string>
+    <string name="sms_tbr_percent_only">Ši pompa laikiną bazę nustato procentais, o ne V/val.</string>
+    <string name="sms_tbr_absolute_only">Ši pompa laikiną bazę nustato V/val., o ne procentais.</string>
     <string name="a11y_otp_qr_code">QR kodas vienkartinio slaptažodžio nustatymui</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">Programai reikia SMS leidimo nuotoliniam valdymui tekstinėmis žinutėmis</string>

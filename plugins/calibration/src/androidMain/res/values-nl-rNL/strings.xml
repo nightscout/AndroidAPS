@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_calibration_name">Geen kalibratie</string>
+    <string name="description_no_calibration">"Geen kalibratie‑override toegepast. Sensorwaarden worden onveranderd gebruikt. Gebruik dit wanneer de sensor al fabrieksgekalibreerd en nauwkeurig is."</string>
+    <string name="linear_calibration_name">Lineaire kalibratie</string>
+    <string name="description_linear_calibration">"Per‑sensor lineaire kalibratie‑override (helling en offset) berekend op basis van je vingerprikmetingen. Recente metingen wegen zwaarder mee. De override wordt toegepast vanaf de start van de huidige sensorsessie; de eerste 2 uur worden overgeslagen als warm‑up."</string>
+    <string name="sensor_change_detected_text">Mogelijke sensor wijziging gedetecteerd op %1$s. Markeer als nieuwe sensor?</string>
+    <string name="sensor_change_detected_action">Markeer sensor wijziging</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Log een sensor wijziging om kalibratie mogelijk te maken.</string>
+    <string name="cal_status_warmup">Sensor opwarmen - kalibratie actief na %1$s.</string>
+    <string name="cal_status_need_more_entries">Minimaal 2 vingerprikmetingen zijn vereist (momenteel %1$d).</string>
+    <string name="cal_status_unsafe_fit">Buiten het veilige bereik - kalibratie niet toegepast.</string>
+    <string name="cal_status_applied">Kalibratie toegepast.</string>
+    <string name="cal_status_applied_offset_only">Alleen offsetkalibratie toegepast - sensorbereik is te smal voor de helling.</string>
+    <string name="cal_status_applied_slope_clamped">Kalibratie toegepast — helling is binnen een veilige bandbreedte vastgezet. Voeg meer metingen toe om deze beperking te versoepelen.</string>
+    <string name="cal_slope_offset">Helling %1$.2f, correctie middenbereik %2$s</string>
+    <string name="cal_session_started">Sessie gestart: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Log sensor wijziging</string>
+    <string name="cal_add_calibration">Kalibratie toevoegen</string>
+    <string name="cal_entries_header">Vingerprikmetingen (%1$d)</string>
+    <string name="cal_no_entries">No geen vingerprikmetingen.</string>
+    <string name="cal_entry_pair">Vingerprikmetingen %1$s → sensor %2$s (Δ %3$s)</string>
+    <string name="cal_chart_entry_readout">Invoer %1$d/%2$d · %3$s · sensor %4$s → BG %5$s</string>
 </resources>

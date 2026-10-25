@@ -69,7 +69,6 @@
     <string name="patch_communication_succeed">Comunicación exitosa</string>
     <string name="patch_communication_succeed_message">Conectado con el parche.</string>
     <string name="patch_cancel_pairing">Cancelar emparejamiento</string>
-    <string name="all_dose_unit">&#160;U</string>
     <string name="insulin_suspend_msg1">Al suspender, se cancelará la entrega de bolo actual &amp; La basal temporal se cancelará. \n\nTasa: %1$s U/hr \nTiempo restante: %2$s\n&amp; Insulina por administrar: %3$.2f U</string>
     <string name="insulin_suspend_msg2">Al suspender, se cancelará el bolo que se esté administrando en ese momento \n\nInsulina para completar: %1$.2f U</string>
     <string name="insulin_suspend_msg3">Al suspender, se cancelará la basal temporal que se esté suministrando en ese momento \n\nTasa : %1$s U/hr\nTiempo restante: %2$s</string>

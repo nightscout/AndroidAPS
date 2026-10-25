@@ -20,6 +20,11 @@
     <string name="permission_schedule_exact_alarm_title">Signalai ir priminimai</string>
     <string name="permission_schedule_exact_alarm_description">Reikalinga, kad AAPS veikiant fone įspėjimai galėtų įjungti ekraną, o priminimai nuskambėtų laiku</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">AAPS įspėjimai</string>
+    <string name="alarm_channel_standard">Standartiniai įspėjimai</string>
+    <string name="alarm_channel_bolus_error">Boluso klaida</string>
+    <string name="alarm_channel_error">Bendra klaida</string>
+    <string name="alarm_channel_urgent">Kritinis įspėjimas</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0V (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">V%1$d</string>

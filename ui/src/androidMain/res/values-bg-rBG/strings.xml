@@ -289,11 +289,6 @@
     <string name="widget_rm_disabled">Забранено</string>
     <string name="widget_rm_suspended">Изключен</string>
     <string name="widget_rm_resume">Възстанови</string>
-    <!-- Calibration entry rejection reasons -->
-    <string name="cal_reject_delta_too_high">Калибр не е запазена: КЗ се променя твърде бързо (Δ %1$s %3$s на 5 мин, лимит %2$s). Опитайте при стабилна захар.</string>
-    <string name="cal_reject_no_pair">Калибрацията е невъзможна: Няма данни за КЗ в последните 10 мин.</string>
-    <string name="cal_reject_warmup">Калибрацията е невъзможна: Сензорът още загрява.</string>
-    <string name="cal_reject_no_session">Калибрацията невъзможна: Няма стартирана сесия. Първо пуснете смяна на сензор.</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
     <string name="cal_precheck_warmup">Сензорът още загрява. Калибрация ще е възможна в %1$s.</string>
     <string name="cal_precheck_no_session">Няма активна сесия.</string>

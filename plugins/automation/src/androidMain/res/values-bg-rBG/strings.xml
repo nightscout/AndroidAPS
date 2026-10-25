@@ -108,6 +108,8 @@
     <string name="triggerCannulaAgeDesc">Иглата е на %1$s %2$.1f часа</string>
     <string name="triggerPodChangeLabel">Активиране на под</string>
     <string name="triggerPodChangeDesc">Подът е активиран</string>
+    <string name="triggerUnknownLabel">Неизвестен спусък</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Неизвестен спусък %1$s - никога не е възможен</string>
     <string name="triggerInsulinAgeLabel">Инсулин на</string>
     <string name="triggerInsulinAgeDesc">Инсулин на %1$s %2$.1f часа</string>
     <string name="triggerPumpBatteryAgeLabel">Батерия на</string>
@@ -144,6 +146,7 @@
     <string name="triggerStepsCountLabel">Стъпки</string>
     <string name="triggerStepsCountDesc">Стъпки за %1$s мин %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Измерено за</string>
+    <string name="automation_log_entry" comment="One line of the automation run log. %1$s=time, %2$s=a symbol for success or failure, %3$s=rule name (bold), %4$s=what the action did, %5$s=its result. Example: 21:15 ☺ Night low: Start temp target: 8.0mmol/L@60 min(Automation): OK">%1$s %2$s %3$s: %4$s: %5$s</string>
     <!--    SMB mode-->
     <string name="changeSmbState">Пусни/спри SMB</string>
     <string name="changeSmbTo">Смени SMB режим на %1$s</string>
@@ -151,6 +154,11 @@
     <string name="on">ВКЛ</string>
     <string name="off">ИЗКЛ</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">Смени изглаждане</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Смени изглаждането на %1$s</string>
+    <string name="smoothing_label">Изглаждане</string>
+    <string name="precondition_smoothing_not_active_name">Няма активно изглаждане</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">Изглаждане %1$s е неактивно</string>
     <!--    Map Picker (OpenStreetMap)-->
     <string name="pick_from_map">Избери на карта</string>
     <string name="tap_to_select_location">Чукни на картата за избор на локация</string>

@@ -103,6 +103,10 @@
     <string name="wrong_pump_data">Данные поступают с другой помпы. Измените драйвер помпы, чтобы сбросить ее состояние.</string>
     <string name="bg_label">ГК</string>
     <string name="calibration">Калибровка</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">Калибровка не сохранена: последние 10 минут не было показаний.</string>
+    <string name="cal_reject_warmup">Калибровка не сохранена: датчик все еще находится в 2-х часовом прогреве.</string>
+    <string name="cal_reject_no_session">Калибровка не сохранена: нет активных сессий датчика. Сперва сделайте отметку о его замене.</string>
     <string name="cgm">Мониторинг ГК</string>
     <string name="treatmentdeliveryerror">Возможная ошибка подачи болюса. Проверьте количество реально поданного инсулина и углеводов</string>
     <string name="duration_label">Длительность действия</string>

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="carelevo_bluetooth_state_key">État du Bluetooth</string>
+    <string name="carelevo_serial_number_key">N° de série</string>
+    <string name="carelevo_boot_date_time_key">Date d’activation</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%1$d h %2$d min</string>
+    <string name="common_unit_remain_min_sec">%1$d min %2$02d sec restantes</string>
     <!-- Connection -->
     <!-- Profile -->
     <!-- Needle Insertion -->
@@ -12,5 +17,12 @@
     <!-- Notice Titles -->
     <!-- Action Buttons -->
     <!-- General Messages -->
+    <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">Bolus ne peut pas être injecté. Bolus disponible: %1$s</string>
+    <string name="carelevo_bolus_rejected_exceed_limit_none">Bolus ne peut pas être injecté. Il ne reste pas assez d\'insuline.</string>
     <!--    notification -->
+    <string name="alarm_notification_desc_notice_expired_patch">La durée d\'utilisation du patch est %1$s jours %2$s heures. À garder à l\'esprit pendant l\'utilisation.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">Le fuseau horaire est passé de %1$s(UTC %2$s) à %3$s(UTC %4$s).</string>
+    <string name="carelevo_bolus_stop_not_confirmed">Le patch n\'a pas confirmé l\'arrêt. En attente de la fin du bolus…</string>
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">Un bolus qui n\'a pas été enregistré a été ajouté maintenant. Vérifiez l\'IA puis réessayez.</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Le patch n\'a pas confirmé l\'arrêt. Le bolus complet de %1$s est enregistré.</string>
 </resources>

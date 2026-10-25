@@ -155,6 +155,10 @@
     <string name="wrong_pump_data">Os dados estão vindo de uma bomba diferente. Alterar o driver da bomba para redefinir o estado da bomba.</string>
     <string name="bg_label">Glicemia</string>
     <string name="calibration">Calibração</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">Calibração não salva: nenhuma leitura do CGM foi encontrada nos 10 minutos anteriores.</string>
+    <string name="cal_reject_warmup">Calibração não salva: o sensor ainda está na janela de aquecimento de 2 horas.</string>
+    <string name="cal_reject_no_session">Calibração não salva: não há uma sessão de sensor ativa. Registre primeiro uma troca de sensor.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">O bolus reportou um erro. Verifique manualmente a insulina realmente administrada e a quantidade de carboidratos</string>
     <string name="bolus_reminder">Lembrar do bolus quando a glicemia voltar ao normal</string>

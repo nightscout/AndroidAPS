@@ -52,7 +52,6 @@
     <string name="unit_days">дн</string>
     <string name="unit_weeks">нед</string>
     <string name="shortminute">м</string>
-    <string name="shortday">д</string>
     <string name="time_remaining_h_m">%1$d ч %2$d мин осталось</string>
     <string name="time_remaining_m">%1$d мин осталось</string>
     <string name="later_today">Позднее сегодня</string>
@@ -100,7 +99,6 @@
     <string name="temp_basal_absolute_rate">%1$.2f ед/ч @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f ед/ч @%2$s %3$d/%4$d мин</string>
-    <string name="forever">Навсегда</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">Bluetooth</string>
     <string name="permission_bluetooth_description">Приложению требуется разрешение Bluetooth для связи с помпой</string>

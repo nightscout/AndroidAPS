@@ -52,7 +52,6 @@
     <string name="unit_days">dni</string>
     <string name="unit_weeks">tygodni</string>
     <string name="shortminute">m</string>
-    <string name="shortday">d</string>
     <string name="time_remaining_h_m">pozostało %1$dh %2$dm</string>
     <string name="time_remaining_m">pozostało %1$d m</string>
     <string name="later_today">Dzisiaj, później</string>
@@ -105,7 +104,6 @@
     <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
-    <string name="forever">Na zawsze</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">Bluetooth</string>
     <string name="permission_bluetooth_description">Aplikacja wymaga uprawnień Bluetooth do komunikowania się z pompą</string>

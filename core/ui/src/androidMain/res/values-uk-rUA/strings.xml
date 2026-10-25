@@ -5,6 +5,7 @@
     <string name="settings">Налаштування</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="profile">Профіль</string>
     <string name="next">Далі</string>
     <!--    Protection-->

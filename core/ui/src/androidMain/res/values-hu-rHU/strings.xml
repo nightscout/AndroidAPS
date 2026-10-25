@@ -44,6 +44,7 @@
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="bg_label">VC</string>
     <string name="calibration">Kalibrálás</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="cgm">CGM</string>
     <string name="duration_label">Időtartam</string>
     <string name="shortgramm">g</string>

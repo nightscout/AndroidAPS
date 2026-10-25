@@ -79,7 +79,6 @@
     <string name="combov2_bolus_delivery_failed">Bolus 주입이 실패하였습니다. 주입된 Bolus가 없는 것으로 보입니다. 이중으로 Bolus가 주입되는 것을 방지하기 위해 펌프를 확인한 다음 다시 Bolus를 주입하세요. 버그를 방지하기 위해 Bolus 주입이 자동으로 재시도되지 않습니다.</string>
     <string name="combov2_bolus_not_delivered">Bolus가 주입되지 않음</string>
     <string name="combov2_cannot_access_pump_data">펌프 데이터에 접근할 수 없음; 펌프를 다시 페어링해야 함</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">설명되지 않는 bolus 주입이 감지됨. 안정상의 이유로 bolus를 취소함.</string>
     <string name="combov2_incorrect_active_basal_profile">활성 basal 프로파일 잘못 선택됨; 프로파일 %1$d이 아닌 프로파일 1이 활성 프로파일이어야 함</string>
     <string name="combov2_unrecognized_alert">인식할 수 없는 Combo 경고</string>
     <string name="combov2_combo_alert">Combo 경고</string>

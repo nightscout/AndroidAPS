@@ -69,7 +69,6 @@
     <string name="patch_communication_succeed">Komunikace byla úspěšná</string>
     <string name="patch_communication_succeed_message">Připojeno k pumpě.</string>
     <string name="patch_cancel_pairing">Zrušit párování</string>
-    <string name="all_dose_unit">&#160;U</string>
     <string name="insulin_suspend_msg1">Po pozastavení bude nyní zrušen bolus &amp; dočasný bazál. \n\nHodnota: %1$s U/h\nZbývající čas : %2$s\n&amp; Zbývající Inzulin: %3$.2f U</string>
     <string name="insulin_suspend_msg2">Po pozastavení bude nyní zrušen bolus. \n\nZbývající Inzulin: %1$.2f U</string>
     <string name="insulin_suspend_msg3">Po pozastavení bude nyní zrušen dočasný bazál. \n\nHodnota: %1$s U/h\nZbývající čas : %2$s</string>

@@ -105,6 +105,7 @@
     <string name="wrong_pump_data">다른 펌프에서 전송된 데이터. 펌프 상태 재설정을 위해 펌프 드라이버를 바꾸세요.</string>
     <string name="bg_label">혈당</string>
     <string name="calibration">보정</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="cgm">CGM</string>
     <string name="duration_label">기간</string>
     <string name="shortgramm">g</string>

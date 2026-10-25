@@ -19,7 +19,6 @@
     <string name="unit_days">dies</string>
     <string name="unit_weeks">setmanes</string>
     <string name="shortminute">m</string>
-    <string name="shortday">d</string>
     <!-- Rx -->
     <string name="connecting_for">Connectant %1$d s</string>
     <string name="handshaking">Establint comunicació</string>

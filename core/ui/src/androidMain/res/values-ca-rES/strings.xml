@@ -91,6 +91,7 @@
     <string name="wrong_pump_data">Dades procedents d\'una altra bomba. Canvieu el driver de la bomba per restablir el seu estat.</string>
     <string name="bg_label">Glucèmia</string>
     <string name="calibration">Calibració</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="cgm">CGM</string>
     <string name="duration_label">Durada</string>
     <string name="shortgramm">g</string>
