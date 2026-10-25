@@ -23,9 +23,8 @@ import org.junit.jupiter.api.assertThrows
  * > long..."
  *
  * So mixed types in that field are not hypothetical, they are the documented reason the field looks
- * the way it does. A strict parser would start throwing on records that parse fine today, and
- * because `NSClientV3Service.onDataCreateUpdate` is a socket.io listener with no try/catch, that
- * would escape onto the socket callback thread and drop the record.
+ * the way it does. A strict parser would start throwing on records that parse fine today, and the
+ * websocket handler (`NsFrameHandler.onDataCreateUpdate`) would drop each of those records.
  *
  * These tests record today's behaviour. After the converter switch they must still pass - if one
  * cannot, that is a deliberate decision to make, not something to discover in the field.

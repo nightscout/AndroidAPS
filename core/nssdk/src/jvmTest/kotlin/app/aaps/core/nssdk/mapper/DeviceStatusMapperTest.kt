@@ -173,9 +173,8 @@ class DeviceStatusMapperTest {
      * type rejected `JsonNull` rather than mapping it to `null`, so an absent key was fine and a
      * written `null` threw. kotlinx maps it to `null`, which is what the declared type says.
      *
-     * Changed on purpose, and it is an improvement: the caller
-     * `NSClientV3Service.onDataCreateUpdate` is a socket.io listener with no try/catch, so the old
-     * exception escaped onto the socket callback thread and lost the whole device status. AAPS never
+     * Changed on purpose, and it is an improvement: an exception here loses the whole device status
+     * (at that time it also escaped the socket.io listener, which had no try/catch). AAPS never
      * writes `null` here, but nothing stops another uploader from doing so.
      */
     @Test
