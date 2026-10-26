@@ -337,6 +337,7 @@
     <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
     <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+d ч</string>
     <string name="loop_status_sensitivity">Чувствителност</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Стартиван от сценарий</string>
     <string name="loop_status">Статус на кръга</string>
     <string name="loop_status_refresh">Обнови</string>
     <string name="confirm">Потвърждаване</string>
