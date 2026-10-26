@@ -1273,4 +1273,5 @@
     <string name="units_sec">sec</string>
     <string name="units_years">y</string>
     <string name="prefs_range_title">Range for visualization</string>
+    <string name="secrets_not_protected">No system key store was found on this computer. The keys that protect your settings and the pairing with the master are kept in files next to the data, so anyone who gets a copy of your files gets them too. On Linux, install and start a keyring (for example GNOME Keyring or KWallet), then start AAPS again.</string>
 </resources>

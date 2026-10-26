@@ -5,15 +5,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -35,16 +40,21 @@ import app.aaps.appshell.navigation.handleSearchResultClick
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.LanguageTag
 import app.aaps.core.interfaces.resources.TextRefValueRegistry
 import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalMetroViewModelFactory
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.desktop.shell.config.GeneratedBuildInfo
 import app.aaps.desktop.shell.di.DesktopAppGraph
 import app.aaps.desktop.shell.di.GeneratedStringOwners
+import app.aaps.desktop.shell.secure.DesktopStorage
+import app.aaps.desktop.shell.secure.KeyVaultUnavailableException
+import app.aaps.desktop.shell.secure.StoreUnreadableException
 import app.aaps.implementation.logging.AAPSLoggerDesktop
 import app.aaps.desktop.shell.platform.openFolder
 import app.aaps.implementation.maintenance.DesktopFolders
@@ -97,27 +107,24 @@ fun main() {
     // directory all of them use. Each client keeps its own, the way each Android client is a
     // separate app with its own private storage, so two can run at once against two sites.
     DesktopFolders.client = GeneratedBuildInfo.CLIENT
-    val startup = runCatching {
-        // Then the lock, before the graph, because the graph opens the database. Two copies of the
-        // *same* client sharing one database is what is being prevented - a different client has its
-        // own directory by the line above, and its own lock inside it, so it is unaffected.
-        claimSingleInstance()
-        val graph = createGraphFactory<DesktopAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
-        startPlugins(graph)
-        graph
-    }
-    // Which icon and which name depend on what kind of build this is, so both are read after the
-    // graph. A failed startup still gets a window, and that window still gets an icon and a title.
-    val graph = startup.getOrNull()
-    val iconPath = graph?.let { appIconResource(it.config) } ?: DEFAULT_APP_ICON
-    val appIcon = loadAppIcon(iconPath)
-    val appName = graph?.let { it.textResolver.gs(it.config.appName) } ?: DEFAULT_APP_NAME
+    // Then the lock, before the graph, because the graph opens the database. Two copies of the
+    // *same* client sharing one database is what is being prevented - a different client has its
+    // own directory by the line above, and its own lock inside it, so it is unaffected.
+    val startup = runCatching { claimSingleInstance() }.mapCatching { startApp() }
+    // Which icon depends on what kind of build this is, so it is read after the graph. A failed startup
+    // still gets a window, and that window still gets an icon and a title.
+    val iconPath = startup.getOrNull()?.let { appIconResource(it.config) } ?: DEFAULT_APP_ICON
 
     // Before the window, because macOS reads the Dock icon once as the app starts. Does nothing on
     // the other platforms, where `Window(icon = ...)` below already covers the taskbar.
     applyDockIcon(iconPath)
 
     application {
+        // State, because "Start fresh" on the failure screen starts the app a second time in place.
+        var current by remember { mutableStateOf(startup) }
+        val graph = current.getOrNull()
+        val appIcon = remember(graph) { loadAppIcon(graph?.let { appIconResource(it.config) } ?: iconPath) }
+        val appName = remember(graph) { graph?.let { it.textResolver.gs(it.config.appName) } ?: DEFAULT_APP_NAME }
         Window(
             onCloseRequest = ::exitApplication,
             title = appName,
@@ -125,12 +132,39 @@ fun main() {
             // made the app look like a sample project rather than AAPS.
             icon = appIcon
         ) {
-            startup.fold(
+            current.fold(
                 onSuccess = { AapsDesktopApp(it, appIcon, appName) },
-                onFailure = { MaterialTheme { Failed(it) } }
+                onFailure = { error ->
+                    MaterialTheme {
+                        Failed(error, onStartFresh = {
+                            // A failure of the start fresh itself lands on this same screen.
+                            current = runCatching {
+                                DesktopStorage.startFresh()
+                                startApp()
+                            }
+                        })
+                    }
+                }
             )
         }
     }
+}
+
+/**
+ * Opens the settings store, then builds the graph on top of it.
+ *
+ * The store first and on its own, so that a store that cannot be opened stops here with its own message,
+ * which the failure screen can act on, instead of failing somewhere inside the first screen. And so that
+ * the screen can call this again after the user chose to start fresh.
+ */
+private fun startApp(): DesktopAppGraph {
+    val storage = DesktopStorage.open()
+    val graph = createGraphFactory<DesktopAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
+    startPlugins(graph)
+    // Said in the app, not only in the log: the user is the one who can fix it, by installing a keyring.
+    if (storage.fallbackReason != null)
+        graph.notificationManager.post(NotificationId.SECRETS_NOT_PROTECTED, graph.textResolver.gs(CoreUiStrings.secrets_not_protected))
+    return graph
 }
 
 /**
@@ -469,14 +503,55 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
     }
 }
 
-/** The graph could not be built. The message is the useful part, so it is shown in full. */
+/**
+ * The graph could not be built. The message is the useful part, so it is shown in full.
+ *
+ * Two failures of the settings store get words a user can act on, because both are normal events rather
+ * than bugs. The text is English only, like the rest of this screen: it shows before the graph exists,
+ * so before the translated strings are loaded.
+ */
 @Composable
-private fun Failed(error: Throwable) {
+private fun Failed(error: Throwable, onStartFresh: () -> Unit) {
+    var confirmStartFresh by remember { mutableStateOf(false) }
     Column(Modifier.padding(16.dp).verticalScroll(rememberScrollState())) {
         Text("AAPS desktop - startup failed", style = MaterialTheme.typography.headlineSmall)
+        when (error) {
+            is StoreUnreadableException     -> {
+                Text(
+                    "Your settings on this computer cannot be read. They are encrypted with a key kept in the system key store, " +
+                        "and that key does not open them. This happens when the AAPS folder was copied from another computer or " +
+                        "another user, when the key store was reset, or when the file is damaged.",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    "Start fresh moves the old file aside (it is kept) and starts with empty settings. " +
+                        "You then need to set up the connection to the master again.",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Button(onClick = { confirmStartFresh = true }) { Text("Start fresh") }
+            }
+
+            is KeyVaultUnavailableException -> Text(
+                "The system key store did not answer. AAPS keeps the key to your settings there. Unlock it - log in to " +
+                    "the desktop session, or unlock the keyring - and start AAPS again.",
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
         Text(error::class.simpleName ?: "error", style = MaterialTheme.typography.titleMedium)
         Text(error.message ?: "no message", style = MaterialTheme.typography.bodyMedium)
     }
+    if (confirmStartFresh) AlertDialog(
+        onDismissRequest = { confirmStartFresh = false },
+        title = { Text("Start with empty settings?") },
+        text = { Text("The unreadable settings file is renamed and kept. All settings start from their defaults.") },
+        confirmButton = {
+            TextButton(onClick = {
+                confirmStartFresh = false
+                onStartFresh()
+            }) { Text("Start fresh") }
+        },
+        dismissButton = { TextButton(onClick = { confirmStartFresh = false }) { Text("Cancel") } }
+    )
 }
 
 /** One line, one shape, so a run makes it obvious which platform callbacks are still placeholders. */

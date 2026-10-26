@@ -47,6 +47,9 @@ kotlin {
                 implementation(project(":core:data"))
                 implementation(project(":core:interfaces"))
                 implementation(project(":core:keys"))
+                // EncryptedKeyValueStore. The multiplatform core only, not datastore-preferences: the
+                // store has its own encrypted file format instead of the preferences protobuf.
+                api(libs.androidx.datastore.core)
             }
         }
 
@@ -55,6 +58,7 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
 

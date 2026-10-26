@@ -20,6 +20,7 @@ ktor = "3.6.0"
 cryptographyKotlin = "0.6.0"
 work = "2.12.0"
 datastorePreferences = "1.3.0"
+jna = "5.19.1"
 # CameraX: the client reads the master's set-up QR code with the camera (no Play services needed).
 cameraX = "1.6.2"
 
@@ -118,6 +119,9 @@ androidx-collection = { group = "androidx.collection", name = "collection", vers
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.2.2" }
 androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.19.1" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastorePreferences" }
+androidx-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "datastorePreferences" }
+jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
+jna-platform = { module = "net.java.dev.jna:jna-platform", version.ref = "jna" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-legacy-support = { group = "androidx.legacy", name = "legacy-support-v13", version = "1.0.0" }
 androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycleRuntimeKtx" }
