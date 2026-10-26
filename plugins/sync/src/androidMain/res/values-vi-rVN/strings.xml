@@ -47,6 +47,7 @@
     <string name="authorized_clients_qr_ns_instructions">Quét mã này trên điện thoại mới, trong trình hướng dẫn thiết lập hoặc mục Ghép đôi với thiết bị chính. Mã sẽ thiết lập Nightscout nhưng không ghép đôi điện thoại.</string>
     <string name="authorized_clients_qr_keep_private">Bất kỳ ai nhìn thấy mã này đều có thể đọc dữ liệu Nightscout của bạn. Chỉ hiển thị mã này trên điện thoại mới.</string>
     <string name="authorized_clients_token_problem_title">Không có mã QR</string>
+    <string name="authorized_clients_not_added_title">Chưa thêm thiết bị phụ</string>
     <string name="authorized_clients_token_problem_not_connected">Điện thoại này chưa được kết nối với Nightscout nên không thể tạo token cho thiết bị phụ.</string>
     <string name="authorized_clients_token_problem_not_allowed">Token Nightscout của điện thoại này không phải token quản trị nên không thể tạo token cho thiết bị phụ. Hãy sử dụng token quản trị tại đây hoặc thêm thiết bị phụ bằng mã PIN.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout đã có token mang tên này nhưng có quyền khác. Hãy chọn tên khác.</string>
