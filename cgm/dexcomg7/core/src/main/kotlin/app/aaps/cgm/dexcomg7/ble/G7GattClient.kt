@@ -210,7 +210,8 @@ class G7GattClient(
             if (!g.setCharacteristicNotification(target, true)) throw G7LinkException("Could not enable notifications for $characteristic")
             val descriptor = target.getDescriptor(UUID.fromString(G7Gatt.CLIENT_CHARACTERISTIC_CONFIG)) ?: throw G7LinkException("$characteristic has no configuration descriptor")
             // iOS picks indications or notifications by itself; here we have to choose. Indications where
-            // offered, except on the certificate stream, where xDrip uses notifications.
+            // offered, except on the certificate stream: a Dexcom ONE+ offers both there, and with
+            // indications it sends the first piece of the key exchange and then drops the link.
             val canNotify = target.properties and BluetoothGattCharacteristic.PROPERTY_NOTIFY != 0
             val canIndicate = target.properties and BluetoothGattCharacteristic.PROPERTY_INDICATE != 0
             val indicate = canIndicate && !(characteristic == G7Characteristic.CERTIFICATE && canNotify)
