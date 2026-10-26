@@ -1204,4 +1204,5 @@
     <string name="units_sec">sec</string>
     <string name="units_years">y</string>
     <string name="prefs_range_title">Intervallo di visualizzazione</string>
+    <string name="secrets_not_protected">Nessun archivio di chiavi di sistema è stato trovato su questo computer. Le chiavi che proteggono le impostazioni e l\'accoppiamento con il master sono conservate nei file accanto ai dati, così chiunque ottiene una copia dei tuoi file li ottiene troppo. Su Linux, installa e avvia un portachiavi (ad esempio GNOME Keyring o KWallet), quindi riavvia AAPS.</string>
 </resources>
