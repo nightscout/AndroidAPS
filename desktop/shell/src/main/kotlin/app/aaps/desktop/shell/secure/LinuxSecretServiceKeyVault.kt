@@ -22,6 +22,10 @@ import java.util.Base64
  * example because it stays locked, it may hold the real keys: [KeyVaultUnavailableException], and the
  * app does not start until it answers. A second key made in a file meanwhile would compete with the
  * real one.
+ *
+ * The same holds for a read: libsecret answers a read with "nothing found" when the keyring is locked
+ * and nobody answered the unlock dialog. [load] checks the lock in that case and reports
+ * [KeyVaultUnavailableException] instead of "no key".
  */
 class LinuxSecretServiceKeyVault(private val namespace: String) : KeyVault {
 
@@ -32,13 +36,20 @@ class LinuxSecretServiceKeyVault(private val namespace: String) : KeyVault {
     // constructor, which sends it to the file vault.
     private val secret: LibSecret = Native.load("secret-1", LibSecret::class.java)
     private val glib: GLib = Native.load("glib-2.0", GLib::class.java)
+    private val gobject: GObject = Native.load("gobject-2.0", GObject::class.java)
     private val schema = SecretSchema.create(SCHEMA_NAME, ATTRIBUTE)
 
     override fun load(alias: String): ByteArray? {
         val error = PointerByReference()
         val found = secret.secret_password_lookup_sync(schema, null, error, ATTRIBUTE, attribute(alias), null)
         check(error, "read the key for $alias")
-        if (found == null) return null
+        if (found == null) {
+            // libsecret also answers "nothing found" when the keyring is locked and nobody answered its unlock
+            // dialog (checked in WSL with GNOME Keyring, 2026-10-26). A locked keyring may hold the key, and
+            // "no key" would make a new one that replaces it as soon as the keyring is unlocked.
+            if (defaultCollectionLocked()) throw KeyVaultUnavailableException("The keyring is locked, so the key for $alias could not be read")
+            return null
+        }
         return try {
             Base64.getDecoder().decode(found.getString(0))
         } finally {
@@ -61,6 +72,28 @@ class LinuxSecretServiceKeyVault(private val namespace: String) : KeyVault {
     }
 
     private fun attribute(alias: String) = "$namespace/$alias"
+
+    /** True when the default collection, where the keys are stored, exists and is locked. */
+    private fun defaultCollectionLocked(): Boolean {
+        // A fresh error holder for each call: GLib requires an empty one.
+        val serviceError = PointerByReference()
+        val service = secret.secret_service_get_sync(SECRET_SERVICE_NONE, null, serviceError)
+        check(serviceError, "reach the keyring")
+        if (service == null) return false
+        try {
+            val collectionError = PointerByReference()
+            val collection = secret.secret_collection_for_alias_sync(service, DEFAULT_COLLECTION, SECRET_COLLECTION_NONE, null, collectionError)
+            check(collectionError, "find the default keyring")
+            if (collection == null) return false
+            try {
+                return secret.secret_collection_get_locked(collection)
+            } finally {
+                gobject.g_object_unref(collection)
+            }
+        } finally {
+            gobject.g_object_unref(service)
+        }
+    }
 
     /** Turns a GError into the right exception, and frees it. */
     private fun check(error: PointerByReference, what: String) {
@@ -88,6 +121,9 @@ class LinuxSecretServiceKeyVault(private val namespace: String) : KeyVault {
         fun secret_password_lookup_sync(schema: SecretSchema, cancellable: Pointer?, error: PointerByReference, vararg attributes: Any?): Pointer?
         fun secret_password_clear_sync(schema: SecretSchema, cancellable: Pointer?, error: PointerByReference, vararg attributes: Any?): Boolean
         fun secret_password_free(password: Pointer?)
+        fun secret_service_get_sync(flags: Int, cancellable: Pointer?, error: PointerByReference): Pointer?
+        fun secret_collection_for_alias_sync(service: Pointer, alias: String, flags: Int, cancellable: Pointer?, error: PointerByReference): Pointer?
+        fun secret_collection_get_locked(collection: Pointer): Boolean
     }
 
     @Suppress("FunctionName")
@@ -95,6 +131,12 @@ class LinuxSecretServiceKeyVault(private val namespace: String) : KeyVault {
 
         fun g_quark_to_string(quark: Int): String?
         fun g_error_free(error: Pointer)
+    }
+
+    @Suppress("FunctionName")
+    private interface GObject : Library {
+
+        fun g_object_unref(obj: Pointer)
     }
 
     /** `SecretSchemaAttribute` from libsecret. */
@@ -145,6 +187,9 @@ class LinuxSecretServiceKeyVault(private val namespace: String) : KeyVault {
         private const val ATTRIBUTE_SLOTS = 32
         private const val SECRET_SCHEMA_NONE = 0
         private const val SECRET_SCHEMA_ATTRIBUTE_STRING = 0
+        private const val SECRET_SERVICE_NONE = 0
+        private const val SECRET_COLLECTION_NONE = 0
+        private const val DEFAULT_COLLECTION = "default"
 
         private const val DBUS_ERROR_DOMAIN = "g-dbus-error-quark"
         private const val IO_ERROR_DOMAIN = "g-io-error-quark"
