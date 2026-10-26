@@ -22,6 +22,8 @@ import java.util.UUID
  *
  * The self-test stores a random value under a random alias, reads it back and deletes it. A fixed alias
  * could clash with another copy of AAPS (another desktop client) testing at the same moment.
+ *
+ * A vault that asks the user once per item (the macOS Keychain) is handed out as a [OneItemKeyVault].
  */
 object KeyVaults {
 
@@ -51,7 +53,8 @@ object KeyVaults {
         } catch (e: Exception) {
             throw KeyVaultUnavailableException("${vault.name} did not work: ${e.message}", e)
         }
-        return Choice(vault, null)
+        // The self-test above used the vault itself, so a start never rewrites the item that holds the keys.
+        return Choice(if (vault.promptsPerItem) OneItemKeyVault(vault) else vault, null)
     }
 
     /** The vault for [osName], or null when the desktop has none for it. Throws [LinkageError] when its library is missing. */

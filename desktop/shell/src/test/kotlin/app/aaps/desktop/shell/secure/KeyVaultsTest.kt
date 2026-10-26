@@ -43,6 +43,16 @@ class KeyVaultsTest {
         assertTrue(vault.keys.isEmpty(), "the self-test must leave nothing behind")
     }
 
+    @Test fun `a key store that asks once per item keeps all keys in one item`() {
+        val vault = FakeKeyVault(promptsPerItem = true)
+
+        val choice = KeyVaults.pick("Mac OS X", dir, "client1") { vault }
+
+        assertTrue(choice.vault is OneItemKeyVault)
+        assertNull(choice.fallbackReason)
+        assertTrue(vault.keys.isEmpty(), "the self-test must use the key store itself and leave nothing behind")
+    }
+
     @Test fun `the system property forces the file vault`() {
         System.setProperty(KeyVaults.VAULT_PROPERTY, "file")
 

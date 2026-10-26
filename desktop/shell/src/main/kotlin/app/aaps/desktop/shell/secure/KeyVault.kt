@@ -25,6 +25,12 @@ interface KeyVault {
     val isOsBacked: Boolean
 
     /**
+     * True when the user may be asked once per stored key, as the macOS Keychain asks after an update of
+     * an app that is not signed. [KeyVaults.pick] then keeps all keys in one item ([OneItemKeyVault]).
+     */
+    val promptsPerItem: Boolean get() = false
+
+    /**
      * The key stored under [alias], or null when there is none.
      *
      * Throws [KeyVaultUnavailableException] when the vault exists but does not answer right now, for
