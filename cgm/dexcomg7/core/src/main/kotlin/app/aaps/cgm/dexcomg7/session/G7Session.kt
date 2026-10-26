@@ -92,6 +92,7 @@ class G7Session(
 
     /** Links the sensor opened right after the current reading. Logged as one line, see [logCameBack]. */
     private var cameBack = 0
+    private val cameBackEndings = mutableListOf<Int>()
     private var cameBackJob: Job? = null
     private var followUps: Job? = null
 
@@ -115,6 +116,9 @@ class G7Session(
     private var startedAt = 0L
     private var lastRestartAt = 0L
     private var restartsSinceReading = 0
+
+    /** The silence the missed reading check already acted on, so it opens the link once per silence. */
+    private var missedReadingHandledFor = 0L
 
     /** After a refusal we leave the sensor alone for a while: four refusals in a row lock it. */
     private var retryNotBefore = 0L
@@ -164,6 +168,8 @@ class G7Session(
         resetSessionMemory()
         restartsSinceReading = 0
         retryNotBefore = 0
+        // The handshake just now counts as hearing from the sensor, or the watchdog sees old silence.
+        lastPacketAt = System.currentTimeMillis()
         client = pairedClient
         pairedClient.events = this@G7Session
         if (!running) {
@@ -385,6 +391,7 @@ class G7Session(
         backfillPending = false
         val hadReading = gotReadingThisConnection
         gotReadingThisConnection = false
+        if (!hadReading && cameBack > 0) cameBackEndings.add(status)
         // The sensor comes back a few times in the next seconds. The client leaves those links out of the log.
         if (hadReading) c.quietUntil = lastReadingReceivedAt + QUIET_AFTER_READING_MS
         if (!running || paused) return
@@ -414,8 +421,10 @@ class G7Session(
         cameBackJob?.cancel()
         cameBackJob = null
         if (cameBack == 0) return
-        log("The sensor came back $cameBack ${if (cameBack == 1) "time" else "times"} right after its reading; the links were left idle")
+        val endings = if (cameBackEndings.isEmpty()) "" else " (ended with status ${cameBackEndings.joinToString(", ")})"
+        log("The sensor came back $cameBack ${if (cameBack == 1) "time" else "times"} right after its reading; the links were left idle$endings")
         cameBack = 0
+        cameBackEndings.clear()
     }
 
     private fun isRightAfterReading(): Boolean = System.currentTimeMillis() - lastReadingReceivedAt < QUIET_AFTER_READING_MS
@@ -640,6 +649,14 @@ class G7Session(
                 if (!running || paused || store.value.address == null) continue
                 val now = System.currentTimeMillis()
                 val heardFrom = maxOf(lastPacketAt, store.value.latestReadingAt ?: 0, startedAt)
+                // The sensor connects every 5 minutes. Some phones (seen on a Samsung S22) quietly lose the
+                // re-armed request after a reading, and a new one connects at once. So do not wait 20 minutes.
+                if (now - heardFrom > MISSED_READING_MS && missedReadingHandledFor != heardFrom && client?.isConnected != true && now >= retryNotBefore) {
+                    missedReadingHandledFor = heardFrom
+                    log("Nothing from the sensor for ${(now - heardFrom) / 60_000} minutes, a reading was missed; opening the link again")
+                    connectToPairedSensor()
+                    continue
+                }
                 if (now - heardFrom > SILENCE_BEFORE_RESTART_MS && now - lastRestartAt > SILENCE_BEFORE_RESTART_MS && now >= retryNotBefore) {
                     lastRestartAt = now
                     restartsSinceReading++
@@ -732,6 +749,7 @@ class G7Session(
         const val BACKFILL_TIMEOUT_MS = 10_000L
         const val WATCHDOG_INTERVAL_MS = 60_000L
         const val SILENCE_BEFORE_RESTART_MS = 20 * 60_000L
+        const val MISSED_READING_MS = 7 * 60_000L
         const val RESTARTS_BEFORE_SCAN = 2
         const val SCAN_FOR_SENSOR_MS = 6 * 60_000L
 

@@ -106,7 +106,13 @@ class G7GattClient(
             }
             return connect(autoConnect = true)
         }
-        runCatching { g.connect() }.onFailure { log("Re-arming the connection failed: ${it.message}") }
+        val accepted = runCatching { g.connect() }.onFailure { log("Re-arming the connection failed: ${it.message}") }.getOrDefault(false)
+        if (!accepted) {
+            log("Bluetooth did not accept the re-armed connection; opening a new connection request")
+            runCatching { g.close() }
+            gatt = null
+            connect(autoConnect = true)
+        }
     }
 
     fun disconnect() {
