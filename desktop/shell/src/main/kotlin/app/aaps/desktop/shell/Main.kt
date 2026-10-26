@@ -40,6 +40,7 @@ import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalMetroViewModelFactory
 import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.desktop.shell.config.DesktopClientConfig
 import app.aaps.desktop.shell.config.GeneratedBuildInfo
 import app.aaps.desktop.shell.di.DesktopAppGraph
 import app.aaps.desktop.shell.di.GeneratedStringOwners
@@ -83,39 +84,40 @@ import java.io.RandomAccessFile
 import java.nio.channels.FileChannel
 import java.nio.channels.FileLock
 import java.util.Locale
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.concurrent.thread
 
 /**
  * Starts the desktop app.
  *
- * The graph is built **before** the window opens, on purpose. Metro proves at compile time that a
+ * The graph is built **before** the app is shown, on purpose. Metro proves at compile time that a
  * binding exists, not that the object behind it can be constructed - a class that reads a file or
  * opens a database in its initializer fails here, at the first attempt, rather than from somewhere
  * that hides it. A failure is shown in the window as well as thrown, because a stack trace on a
  * terminal nobody is watching is how a broken launch gets mistaken for a working one.
+ *
+ * The window itself opens first, and the start runs on a thread of its own ([DesktopStartup]): opening
+ * the settings store can wait for a key store dialog for as long as nobody answers it, and the window
+ * says so.
  */
 fun main() {
     // Before everything, including the lock and the logger below, because it decides which data
     // directory all of them use. Each client keeps its own, the way each Android client is a
     // separate app with its own private storage, so two can run at once against two sites.
     DesktopFolders.client = GeneratedBuildInfo.CLIENT
-    // Then the lock, before the graph, because the graph opens the database. Two copies of the
-    // *same* client sharing one database is what is being prevented - a different client has its
-    // own directory by the line above, and its own lock inside it, so it is unaffected.
-    val startup = runCatching { claimSingleInstance() }.mapCatching { startApp() }
-    // Which icon depends on what kind of build this is, so it is read after the graph. A failed startup
-    // still gets a window, and that window still gets an icon and a title.
-    val iconPath = startup.getOrNull()?.let { appIconResource(it.config) } ?: DEFAULT_APP_ICON
+    // The icon and the name follow the kind of build, which the build itself says. Not from the graph,
+    // so the window has them before the graph exists, and keeps them when the start fails.
+    val buildConfig = DesktopClientConfig()
+    val iconPath = appIconResource(buildConfig)
+    val appName = buildConfig.appNameText
 
     // Before the window, because macOS reads the Dock icon once as the app starts. Does nothing on
     // the other platforms, where `Window(icon = ...)` below already covers the taskbar.
     applyDockIcon(iconPath)
 
     application {
-        // State, because "Start fresh" on the failure screen starts the app a second time in place.
-        var current by remember { mutableStateOf(startup) }
-        val graph = current.getOrNull()
-        val appIcon = remember(graph) { loadAppIcon(graph?.let { appIconResource(it.config) } ?: iconPath) }
-        val appName = remember(graph) { graph?.let { it.textResolver.gs(it.config.appName) } ?: DEFAULT_APP_NAME }
+        val startup = remember { DesktopStartup() }
+        val appIcon = remember { loadAppIcon(iconPath) }
         Window(
             onCloseRequest = ::exitApplication,
             title = appName,
@@ -123,39 +125,92 @@ fun main() {
             // made the app look like a sample project rather than AAPS.
             icon = appIcon
         ) {
-            current.fold(
-                onSuccess = { AapsDesktopApp(it, appIcon, appName) },
-                onFailure = { error ->
-                    MaterialTheme {
-                        StartupFailedScreen(
-                            title = "AAPS desktop - startup failed",
-                            explanation = failureExplanation(error),
-                            error = error,
-                            // A failure of either one lands on this same screen again.
-                            onRetry = if (error is KeyVaultUnavailableException) ({ current = runCatching { startApp() } }) else null,
-                            onStartFresh = if (error is StoreUnreadableException) ({
-                                current = runCatching {
-                                    DesktopStorage.startFresh()
-                                    startApp()
-                                }
-                            }) else null
-                        )
+            // Started from inside the window, so the window is on screen before the start can wait for a
+            // dialog. The lock first, before the graph, because the graph opens the database. Two copies of
+            // the *same* client sharing one database is what is being prevented - a different client has
+            // its own directory by the first line of main(), and its own lock inside it, so it is unaffected.
+            LaunchedEffect(Unit) { startup.start { claimSingleInstance() } }
+            when (val result = startup.result) {
+                null -> MaterialTheme { StartupWaitingScreen(startup.openingKeyStore) }
+
+                else -> result.fold(
+                    onSuccess = { AapsDesktopApp(it, appIcon, appName) },
+                    onFailure = { error ->
+                        MaterialTheme {
+                            StartupFailedScreen(
+                                title = "AAPS desktop - startup failed",
+                                explanation = failureExplanation(error),
+                                error = error,
+                                // A failure of either one lands on this same screen again. Not the lock
+                                // again: this process holds it already.
+                                onRetry = if (error is KeyVaultUnavailableException) ({ startup.start() }) else null,
+                                onStartFresh = if (error is StoreUnreadableException) ({ startup.start { DesktopStorage.startFresh() } }) else null
+                            )
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
 
 /**
- * Opens the settings store, then builds the graph on top of it.
+ * The start of the app, on a thread of its own, so the window can show what the start waits for.
  *
- * The store first and on its own, so that a store that cannot be opened stops here with its own message,
- * which the failure screen can act on, instead of failing somewhere inside the first screen. And so that
- * the screen can call this again after the user chose to start fresh.
+ * Opening the settings store can wait for the user without end. The system key store may show a dialog
+ * first: the macOS Keychain asks for the login password after an update of the app, and a locked Linux
+ * keyring asks to be unlocked. The native call has no time limit and cannot be cancelled. Run on the
+ * main thread before the window existed, it left an app with nothing on screen for hours.
+ *
+ * There is no time limit here, on purpose. The store is sealed with the key in the key store, so no other
+ * key can open it, and a second key would compete with the real one. A retry would only start a second
+ * read while the first dialog is still open.
+ *
+ * A plain daemon thread, not a coroutine of the window: the window's coroutines must end before the app
+ * can exit, and this one cannot end before the native call returns. Closing the window during the wait
+ * would leave a process with no window that still holds the single-instance lock.
  */
-private fun startApp(): DesktopAppGraph {
-    val storage = DesktopStorage.open()
+private class DesktopStartup {
+
+    /** Null while a start runs. State, because "Try again" and "Start fresh" start the app again in place. */
+    var result: Result<DesktopAppGraph>? by mutableStateOf(null)
+        private set
+
+    /** True while the key store and the settings store are being opened, which is where a dialog can come. */
+    var openingKeyStore: Boolean by mutableStateOf(false)
+        private set
+
+    private val running = AtomicBoolean(false)
+
+    /** Runs [first], then the start. Does nothing while a start is running, so a double click starts once. */
+    fun start(first: () -> Unit = {}) {
+        if (!running.compareAndSet(false, true)) return
+        result = null
+        thread(name = "aaps-start", isDaemon = true) {
+            val outcome = runCatching {
+                first()
+                openingKeyStore = true
+                val storage = try {
+                    DesktopStorage.open()
+                } finally {
+                    openingKeyStore = false
+                }
+                startApp(storage)
+            }
+            running.set(false)
+            result = outcome
+        }
+    }
+}
+
+/**
+ * Builds the graph on top of the opened settings store, and starts the plugins.
+ *
+ * The store is opened before and on its own, so that a store that cannot be opened stops the start with
+ * its own message, which the failure screen can act on, instead of failing somewhere inside the first
+ * screen.
+ */
+private fun startApp(storage: DesktopStorage.Opened): DesktopAppGraph {
     val graph = createGraphFactory<DesktopAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
     startPlugins(graph)
     // Said in the app, not only in the log: the user is the one who can fix it, by installing a keyring.
