@@ -122,7 +122,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private val pluginStore get() = metroGraphs.pluginStore
     private val aapsLogger get() = metroGraphs.aapsLogger
     private val versionCheckersUtils get() = metroGraphs.versionCheckerUtils
-    private val sp get() = metroGraphs.sp
+    private val sp get() = metroGraphs.keyValueStore
     private val preferences get() = metroGraphs.preferences
     private val config get() = metroGraphs.config
     private val configBuilder get() = metroGraphs.configBuilder

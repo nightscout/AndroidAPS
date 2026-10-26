@@ -1,13 +1,11 @@
 package app.aaps.di.metro
 
 import android.content.Context
-import android.content.SharedPreferences
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.impl.logging.AAPSLoggerProduction
@@ -15,6 +13,7 @@ import app.aaps.shared.impl.logging.LImpl
 import app.aaps.shared.impl.rx.AapsSchedulersImpl
 import app.aaps.shared.impl.rx.bus.RxBusImpl
 import app.aaps.shared.impl.sharedPreferences.SPImpl
+import app.aaps.shared.impl.sharedPreferences.defaultPreferences
 import app.aaps.shared.impl.utils.DateUtilImpl
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
@@ -33,20 +32,13 @@ import dev.zacsweers.metro.SingleIn
 @BindingContainer
 object SharedImplBindings {
 
-    /** Takes the [SharedPreferences] from `AppAndroidBindings` rather than opening the file twice. */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun sp(sharedPreferences: SharedPreferences, context: Context): SP = SPImpl(sharedPreferences, context)
-
     /**
-     * The same object, seen as the platform neutral half of itself.
-     * Common code such as `PreferencesImpl` asks for [KeyValueStore] rather than [SP], because a
-     * resource id overload means nothing off Android. `SP` extends it, so this hands over the one
-     * instance rather than building a second store.
+     * The preference store. The phone uses only the string-keyed [KeyValueStore]: no phone code names a
+     * key by resource id any more, so `SP` is not bound here. `SPImpl` still implements it for wear.
      */
     @Provides
     @SingleIn(AppScope::class)
-    fun keyValueStore(sp: SP): KeyValueStore = sp
+    fun keyValueStore(context: Context): KeyValueStore = SPImpl(defaultPreferences(context), context)
 
     /** Deferred: [L] reads its log settings back out of [Preferences]. */
     @Provides

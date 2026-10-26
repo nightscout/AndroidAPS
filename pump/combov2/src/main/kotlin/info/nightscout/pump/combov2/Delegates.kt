@@ -1,6 +1,6 @@
 package info.nightscout.pump.combov2
 
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -19,7 +19,7 @@ Then, accessing myValue works by simply using the Kotlin setters & getters:
 */
 
 class SPDelegateBoolean(
-    private val sp: SP,
+    private val sp: KeyValueStore,
     private val key: String,
     private val defaultValue: Boolean = false,
     private val commit: Boolean = false
@@ -33,7 +33,7 @@ class SPDelegateBoolean(
 }
 
 class SPDelegateDouble(
-    private val sp: SP,
+    private val sp: KeyValueStore,
     private val key: String,
     private val defaultValue: Double = 0.0,
     private val commit: Boolean = false
@@ -47,7 +47,7 @@ class SPDelegateDouble(
 }
 
 class SPDelegateLong(
-    private val sp: SP,
+    private val sp: KeyValueStore,
     private val key: String,
     private val defaultValue: Long = 0,
     private val commit: Boolean = false
@@ -61,7 +61,7 @@ class SPDelegateLong(
 }
 
 class SPDelegateInt(
-    private val sp: SP,
+    private val sp: KeyValueStore,
     private val key: String,
     private val defaultValue: Int = 0,
     private val commit: Boolean = false
@@ -75,7 +75,7 @@ class SPDelegateInt(
 }
 
 class SPDelegateString(
-    private val sp: SP,
+    private val sp: KeyValueStore,
     private val key: String,
     private val defaultValue: String = "",
     private val commit: Boolean = false

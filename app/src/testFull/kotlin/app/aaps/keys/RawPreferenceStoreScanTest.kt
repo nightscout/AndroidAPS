@@ -95,7 +95,6 @@ class RawPreferenceStoreScanTest {
         "core/ui/src/androidMain/kotlin/app/aaps/core/ui/locale/LocaleHelper.kt" to "reads the language before DI exists",
 
         // --- Wiring, which hands the store to the things above ---
-        "app/src/main/kotlin/app/aaps/di/metro/AppAndroidBindings.kt" to "DI wiring",
         "app/src/main/kotlin/app/aaps/di/metro/AppRootGraph.kt" to "DI wiring",
         "app/src/main/kotlin/app/aaps/di/metro/MetroGraphs.kt" to "DI wiring",
         "app/src/main/kotlin/app/aaps/di/metro/SharedImplBindings.kt" to "DI wiring",
