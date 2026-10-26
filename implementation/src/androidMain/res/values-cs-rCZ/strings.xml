@@ -34,6 +34,8 @@
     <string name="alarm_channel_silent">Alarm (režim zvyšování hlasitosti)</string>
     <string name="alarm_channel_silent_description">Používá se při zapnuté funkci \'Postupně zvýšovat hlasitost oznámení\'. Obrazovka alarmu přehraje zvuk.</string>
     <string name="ongoing_channel_name">Průběžný stav</string>
+    <string name="eat_reminder_channel">Odpočet připomenutí času jídla</string>
+    <string name="eat_reminder_channel_description">Zobrazuje čas, který zbývá do jídla. Není to žádný zvuk; pouze budík na konci.</string>
     <string name="notifications_channel_name">AAPS oznámení</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
