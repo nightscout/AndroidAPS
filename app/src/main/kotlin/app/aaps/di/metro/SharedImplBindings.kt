@@ -11,9 +11,8 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.impl.logging.AAPSLoggerProduction
 import app.aaps.shared.impl.logging.LImpl
 import app.aaps.shared.impl.rx.AapsSchedulersImpl
+import app.aaps.settingsstore.AndroidStorage
 import app.aaps.shared.impl.rx.bus.RxBusImpl
-import app.aaps.shared.impl.sharedPreferences.SPImpl
-import app.aaps.shared.impl.sharedPreferences.defaultPreferences
 import app.aaps.shared.impl.utils.DateUtilImpl
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
@@ -33,12 +32,12 @@ import dev.zacsweers.metro.SingleIn
 object SharedImplBindings {
 
     /**
-     * The preference store. The phone uses only the string-keyed [KeyValueStore]: no phone code names a
-     * key by resource id any more, so `SP` is not bound here. `SPImpl` still implements it for wear.
+     * The preference store: the encrypted one [AndroidStorage] opened when the app started, or the empty one
+     * in memory when that failed. Wear keeps its own store, `SPImpl` (see `SharedImplModule`).
      */
     @Provides
     @SingleIn(AppScope::class)
-    fun keyValueStore(context: Context): KeyValueStore = SPImpl(defaultPreferences(context), context)
+    fun keyValueStore(context: Context): KeyValueStore = AndroidStorage.open(context).store
 
     /** Deferred: [L] reads its log settings back out of [Preferences]. */
     @Provides

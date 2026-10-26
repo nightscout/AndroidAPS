@@ -24,11 +24,24 @@ import androidx.compose.ui.Modifier
 import app.aaps.core.ui.compose.AapsSpacing
 
 /**
- * Shown instead of the app when the start failed, in the desktop and the iOS shell.
+ * The words on the buttons and in the confirmation of [StartupFailedScreen].
  *
- * The text is English only: this screen shows before the graph exists, so before the translated strings
- * are loaded. The error itself is always shown in full, because for a failure nobody expected it is the
- * useful part.
+ * English by default, for desktop and iOS, which show the screen before any translated text is loaded.
+ * Android has its strings at that point and passes them in.
+ */
+class StartupFailedLabels(
+    val tryAgain: String = "Try again",
+    val startFresh: String = "Start fresh",
+    val confirmStartFreshTitle: String = "Start with empty settings?",
+    val confirmStartFreshText: String = "The unreadable settings file is renamed and kept. All settings start from their defaults.",
+    val cancel: String = "Cancel"
+)
+
+/**
+ * Shown instead of the app when the start failed, in the desktop and the iOS shell, and on Android when the
+ * settings cannot be opened.
+ *
+ * The error itself is always shown in full, because for a failure nobody expected it is the useful part.
  *
  * @param explanation what happened and what to do, for a failure that is a normal event rather than a
  *   bug - such as settings that cannot be read. Empty for any other failure.
@@ -43,7 +56,8 @@ fun StartupFailedScreen(
     explanation: List<String>,
     error: Throwable,
     onRetry: (() -> Unit)? = null,
-    onStartFresh: (() -> Unit)? = null
+    onStartFresh: (() -> Unit)? = null,
+    labels: StartupFailedLabels = StartupFailedLabels()
 ) {
     var confirmStartFresh by remember { mutableStateOf(false) }
     // A surface for the background and text colour, and the safe area because iOS draws the app under
@@ -56,8 +70,8 @@ fun StartupFailedScreen(
             Text(title, style = MaterialTheme.typography.headlineSmall)
             explanation.forEach { Text(it, style = MaterialTheme.typography.bodyLarge) }
             Row(horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
-                if (onRetry != null) OutlinedButton(onClick = onRetry) { Text("Try again") }
-                if (onStartFresh != null) Button(onClick = { confirmStartFresh = true }) { Text("Start fresh") }
+                if (onRetry != null) OutlinedButton(onClick = onRetry) { Text(labels.tryAgain) }
+                if (onStartFresh != null) Button(onClick = { confirmStartFresh = true }) { Text(labels.startFresh) }
             }
             Text(error::class.simpleName ?: "error", style = MaterialTheme.typography.titleMedium)
             Text(error.message ?: "no message", style = MaterialTheme.typography.bodyMedium)
@@ -65,14 +79,14 @@ fun StartupFailedScreen(
     }
     if (confirmStartFresh && onStartFresh != null) AlertDialog(
         onDismissRequest = { confirmStartFresh = false },
-        title = { Text("Start with empty settings?") },
-        text = { Text("The unreadable settings file is renamed and kept. All settings start from their defaults.") },
+        title = { Text(labels.confirmStartFreshTitle) },
+        text = { Text(labels.confirmStartFreshText) },
         confirmButton = {
             TextButton(onClick = {
                 confirmStartFresh = false
                 onStartFresh()
-            }) { Text("Start fresh") }
+            }) { Text(labels.startFresh) }
         },
-        dismissButton = { TextButton(onClick = { confirmStartFresh = false }) { Text("Cancel") } }
+        dismissButton = { TextButton(onClick = { confirmStartFresh = false }) { Text(labels.cancel) } }
     )
 }

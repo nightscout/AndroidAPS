@@ -106,6 +106,17 @@ class EncryptedKeyValueStoreTest {
     }
 
     @Test
+    fun `text with a decimal comma or a Unicode minus reads the way the phone's old store read it`() = runTest {
+        // The phone's old settings screens saved decimals as text, and a comma keyboard gave "0,5".
+        val store = store(MemoryBackend(mapOf("maxBolus" to "0,5", "offset" to "−2", "dia" to "−3", "since" to "−7")))
+
+        assertEquals(0.5, store.getDouble("maxBolus", 9.0))
+        assertEquals(-2.0, store.getDouble("offset", 9.0))
+        assertEquals(-3, store.getInt("dia", 9))
+        assertEquals(-7L, store.getLong("since", 9L))
+    }
+
+    @Test
     fun `a value that does not convert gives the default and not zero`() = runTest {
         val store = store(MemoryBackend(mapOf("dia" to "not a number", "big" to Long.MAX_VALUE)))
 

@@ -2,6 +2,7 @@ package app.aaps.shared.impl.sharedPreferences
 
 import androidx.datastore.core.DataStore
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
+import app.aaps.core.interfaces.utils.SafeParse
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -39,8 +40,8 @@ internal class DataStoreBackend(private val dataStore: DataStore<Map<String, Any
 }
 
 /**
- * The preference store, kept in one encrypted file (see [StoreCodec]). Replaces `DesktopSp` and
- * `IosSp`, and is meant to replace `SPImpl` later.
+ * The preference store, kept in one encrypted file (see [StoreCodec]). Replaces `DesktopSp`, `IosSp`
+ * and, on the phone, `SPImpl`, which only wear still uses.
  *
  * ## Reads and writes
  *
@@ -133,9 +134,11 @@ class EncryptedKeyValueStore internal constructor(
     override fun contains(key: String): Boolean = values.load().containsKey(key)
     override fun remove(key: String) = change { it - key }
 
-    // Lenient on purpose, the way `DesktopSp` was: a value stored as text (every value a properties file
-    // migrated) still reads as the type asked for, and a value that will not convert answers the
-    // caller's default instead of zero.
+    // Lenient on purpose, the way `DesktopSp` and `SPImpl` were: a value stored as text (every value a
+    // properties file migrated, and every decimal the phone's old settings screens saved) still reads as
+    // the type asked for, and a value that will not convert answers the caller's default instead of zero.
+    // Text goes through SafeParse like in `SPImpl`, which also takes a decimal comma ("0,5") and the
+    // Unicode minus sign: a phone with a comma keyboard saved max bolus and max basal that way.
     override fun getString(key: String, defaultValue: String): String = raw(key)?.toString() ?: defaultValue
     override fun getStringOrNull(key: String, defaultValue: String?): String? = raw(key)?.toString() ?: defaultValue
 
@@ -149,21 +152,21 @@ class EncryptedKeyValueStore internal constructor(
         is Double -> value
         is Int    -> value.toDouble()
         is Long   -> value.toDouble()
-        is String -> value.toDoubleOrNull() ?: defaultValue
+        is String -> SafeParse.stringToDouble(value, defaultValue)
         else      -> defaultValue
     }
 
     override fun getInt(key: String, defaultValue: Int): Int = when (val value = raw(key)) {
         is Int    -> value
         is Long   -> if (value in Int.MIN_VALUE..Int.MAX_VALUE) value.toInt() else defaultValue
-        is String -> value.toIntOrNull() ?: defaultValue
+        is String -> SafeParse.stringToInt(value, defaultValue)
         else      -> defaultValue
     }
 
     override fun getLong(key: String, defaultValue: Long): Long = when (val value = raw(key)) {
         is Long   -> value
         is Int    -> value.toLong()
-        is String -> value.toLongOrNull() ?: defaultValue
+        is String -> SafeParse.stringToLong(value, defaultValue)
         else      -> defaultValue
     }
 
@@ -179,14 +182,14 @@ class EncryptedKeyValueStore internal constructor(
 
     private fun intOf(value: Any?): Int = when (value) {
         is Int    -> value
-        is String -> value.toIntOrNull() ?: 0
+        is String -> SafeParse.stringToInt(value, 0)
         else      -> 0
     }
 
     private fun longOf(value: Any?): Long = when (value) {
         is Long   -> value
         is Int    -> value.toLong()
-        is String -> value.toLongOrNull() ?: 0L
+        is String -> SafeParse.stringToLong(value, 0L)
         else      -> 0L
     }
 
@@ -209,5 +212,20 @@ class EncryptedKeyValueStore internal constructor(
 
         internal fun open(backend: StoreBackend, scope: CoroutineScope, onSaveFailure: (Throwable) -> Unit): EncryptedKeyValueStore =
             EncryptedKeyValueStore(backend, runBlocking { backend.read() }, scope, onSaveFailure)
+
+        /**
+         * An empty store that keeps its values in memory only and never writes a file.
+         *
+         * For a start whose real store could not be opened: the app can still run, and nothing it writes
+         * can replace the file that could not be read.
+         */
+        fun inMemory(scope: CoroutineScope): EncryptedKeyValueStore = EncryptedKeyValueStore(MemoryOnly, emptyMap(), scope) {}
+    }
+
+    /** Holds nothing: the values stay in the store's own memory. */
+    private object MemoryOnly : StoreBackend {
+
+        override suspend fun read(): Map<String, Any> = emptyMap()
+        override suspend fun write(values: Map<String, Any>) {}
     }
 }

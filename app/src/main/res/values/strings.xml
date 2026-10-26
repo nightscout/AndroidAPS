@@ -13,5 +13,14 @@
     <string name="migrating_boluses">Migrating boluses…</string>
     <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Older records had no insulin configuration and no profile was active, so %1$s was used for them. Check your insulin settings — already migrated records are not updated afterwards.</string>
     <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Older records had no insulin duration, so %1$.1f hours was used for %2$s. Check your insulin settings — already migrated records are not updated afterwards.</string>
+    <string name="settings_unreadable_title">AAPS settings cannot be read</string>
+    <string name="settings_unreadable_key_explanation">Your settings on this phone are encrypted with a key that Android keeps for AAPS, and that key does not open them any more. This can happen after the key store of the phone was reset.</string>
+    <string name="settings_unreadable_keystore_explanation">The key store of the phone did not answer, so AAPS could not open its settings.</string>
+    <string name="settings_unreadable_not_running">AAPS is not running and does not control the pump. A temporary basal that is running ends at its time, and then the pump gives its own basal.</string>
+    <string name="settings_unreadable_what_to_do">Retry closes AAPS and starts it again. If AAPS does not open by itself, open it again. If that does not help, restart the phone. Choose Start fresh only when nothing else helps: it sets the unreadable settings aside, and AAPS starts with empty settings. Then import your last settings export in the setup wizard.</string>
+    <string name="settings_unreadable_start_fresh">Start fresh</string>
+    <string name="settings_unreadable_confirm_title">Start with empty settings?</string>
+    <string name="settings_unreadable_confirm_text">The unreadable settings file is renamed and kept. All settings start from their defaults. Then you set up AAPS again or import a settings export.</string>
+    <string name="settings_unreadable_notification">AAPS is not running. Open AAPS to see what to do.</string>
 
 </resources>

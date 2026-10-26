@@ -6,7 +6,9 @@
     and they come back from an AAPS settings export.
 
     allowBackup="false" in the manifest stops the Google backup. On phones of some makers it does not stop
-    a transfer to a new phone, so the settings are excluded here for both.
+    a transfer to a new phone, so the settings are excluded here for both. The encrypted settings store is
+    in the no_backup folder, which Android never copies; the rules below cover the old plain settings file
+    and the SharedPreferences files some pump drivers keep their own state in.
 -->
 <data-extraction-rules>
     <cloud-backup>

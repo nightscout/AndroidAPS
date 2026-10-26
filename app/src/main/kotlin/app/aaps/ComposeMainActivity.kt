@@ -100,6 +100,8 @@ import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
+import app.aaps.settingsstore.AndroidStorage
+import app.aaps.settingsstore.SettingsUnreadableActivity
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
@@ -231,6 +233,14 @@ class ComposeMainActivity : MetroAppCompatActivity() {
     private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (AndroidStorage.failure != null) {
+            // The settings cannot be opened, and AAPS is not started. This activity is not injected then (see
+            // MainApp.injectMembers): it only hands over. finish() here skips onStart and onResume.
+            super.onCreate(savedInstanceState)
+            startActivity(Intent(this, SettingsUnreadableActivity::class.java))
+            finish()
+            return
+        }
         // Bar icon color is kept in sync with the AAPS-effective theme reactively
         // from inside AapsTheme via a SideEffect on WindowInsetsControllerCompat,
         // so a plain enableEdgeToEdge() here is enough.

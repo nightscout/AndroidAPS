@@ -48,7 +48,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
-import java.io.File
 
 /**
  * Drives the **real Equil activation wizard** against the in-tree Equil emulator, headlessly (no
@@ -494,13 +493,7 @@ class EquilEmulatorActivationTest {
         return null
     }
 
-    private fun clearAllSharedPrefs() {
-        val ctx = instrumentation.targetContext
-        File(ctx.applicationInfo.dataDir, "shared_prefs").listFiles()?.forEach { f ->
-            if (f.name.endsWith(".xml"))
-                ctx.getSharedPreferences(f.name.removeSuffix(".xml"), Context.MODE_PRIVATE).edit().clear().commit()
-        }
-    }
+    private fun clearAllSharedPrefs() = clearAppSettings(instrumentation.targetContext)
 
     companion object {
 

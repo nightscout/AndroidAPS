@@ -79,6 +79,12 @@
             </intent-filter>
         </activity>
 
+        <!-- Shown instead of the app when its settings cannot be opened. -->
+        <activity
+            android:name="app.aaps.settingsstore.SettingsUnreadableActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <!-- Powers the screen on for a background alarm without USE_FULL_SCREEN_INTENT.
              Fired by AlarmManager.setAlarmClock() from AlarmNotificationManager. -->
         <receiver

@@ -48,7 +48,8 @@ class RawPreferenceStoreScanTest {
     private val allowed: Map<String, String> = mapOf(
         // --- It IS the store ---
         "shared/impl/src/androidMain/kotlin/app/aaps/shared/impl/sharedPreferences/SPImpl.kt" to "the Android store implementation",
-        "shared/impl/src/commonMain/kotlin/app/aaps/shared/impl/sharedPreferences/EncryptedKeyValueStore.kt" to "the encrypted store implementation (desktop and iOS)",
+        "shared/impl/src/commonMain/kotlin/app/aaps/shared/impl/sharedPreferences/EncryptedKeyValueStore.kt" to "the encrypted store implementation (phone, desktop and iOS)",
+        "app/src/main/kotlin/app/aaps/settingsstore/AndroidStorage.kt" to "opens the phone's store, before the graph that hands it out exists",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/sharedPreferences/PreferencesImpl.kt" to "Preferences itself, which is what everything else is supposed to use",
         "shared/tests/src/androidMain/kotlin/app/aaps/shared/tests/SharedPreferencesMock.kt" to "the test double for the store; it lives in a main source set so tests in other modules can use it",
 
