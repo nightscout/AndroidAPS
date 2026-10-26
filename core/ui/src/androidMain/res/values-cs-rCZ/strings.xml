@@ -1210,4 +1210,5 @@
     <string name="units_sec">s</string>
     <string name="units_years">r</string>
     <string name="prefs_range_title">Rozsah pro zobrazení</string>
+    <string name="secrets_not_protected">Na tomto počítači nebylo nalezeno žádné úložiště s klíči. Klíče, které chrání vaše nastavení a párování s hlavním zařízením, jsou uloženy v souborech vedle dat, takže každý, kdo dostane kopii vašich souborů, je také získá. Na Linuxu, nainstalujte a spusťte klávesnici (například GNOME Keyring nebo KWallet), poté znovu spusťte AAPS.</string>
 </resources>
