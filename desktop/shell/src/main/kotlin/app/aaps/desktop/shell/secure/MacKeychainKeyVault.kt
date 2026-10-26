@@ -21,10 +21,11 @@ import com.sun.jna.ptr.PointerByReference
  * An item belongs to the program that made it, and macOS asks the user before another program reads
  * it. For an app that is not signed, every new version is another program: checked on a Mac on
  * 2026-10-26 with a packaged build, a build with a new code signature stopped at the first read of a key
- * an older build had stored, until the user answered. Restarting the same build does not ask. macOS
- * asks once per item, so [promptsPerItem] is true and the keys are kept in one item
- * ([OneItemKeyVault]): one question per update. A build signed with a stable Developer ID is not asked
- * at all.
+ * an older build had stored, until the user answered. Restarting the same build does not ask after
+ * "Always Allow"; after "Allow" it asks again at the next start. macOS asks for each item, with two dialogs
+ * for the same item: one to use its data, one to access the key. So [promptsPerItem] is true and the keys
+ * are kept in one item ([OneItemKeyVault]): two dialogs per update, not two per key. A build signed with a
+ * stable Developer ID is not asked at all.
  */
 class MacKeychainKeyVault(private val service: String) : KeyVault {
 

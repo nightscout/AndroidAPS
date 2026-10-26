@@ -4,11 +4,13 @@ import app.aaps.core.utils.hexStringToByteArray
 import app.aaps.core.utils.toHex
 
 /**
- * Keeps every key of this client in one item of [inner], so that the user is asked at most once.
+ * Keeps every key of this client in one item of [inner], so that the user is asked for one item only.
  *
  * Used where [KeyVault.promptsPerItem] is true. The macOS Keychain asks before a new version of an app
- * that is not signed reads an item, and it asks once per item. A desktop client has two or three keys
- * (the settings store, the pairing, maybe the export password); in one item, an update asks once.
+ * that is not signed reads an item, and it asks for each item: two dialogs, one to use the data and one to
+ * access the key, both wanting the login password (seen on a Mac, 2026-10-26). A desktop client has two or
+ * three keys (the settings store, the pairing, maybe the export password); in one item, an update asks
+ * twice in total instead of twice per key.
  *
  * The item is read once and its keys are kept in memory, so later reads do not reach the key store. A
  * write rewrites the one item, which the key store changes in place.

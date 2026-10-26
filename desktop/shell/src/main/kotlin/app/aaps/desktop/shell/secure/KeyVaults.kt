@@ -23,7 +23,7 @@ import java.util.UUID
  * The self-test stores a random value under a random alias, reads it back and deletes it. A fixed alias
  * could clash with another copy of AAPS (another desktop client) testing at the same moment.
  *
- * A vault that asks the user once per item (the macOS Keychain) is handed out as a [OneItemKeyVault].
+ * A vault that asks the user for each item (the macOS Keychain) is handed out as a [OneItemKeyVault].
  */
 object KeyVaults {
 

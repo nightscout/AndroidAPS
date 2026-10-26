@@ -60,9 +60,10 @@ internal fun StartupWaitingScreen(openingKeyStore: Boolean) {
 internal fun keyStoreWaitExplanation(osName: String): List<String> {
     val os = osName.lowercase()
     return when {
+        // Checked on a Mac: the dialog opens in front of this window, and after an update it comes twice.
         os.contains("mac") || os.contains("darwin") -> listOf(
-            "macOS asks for your login password so that AAPS can read its keys.",
-            "If you do not see that dialog, look behind this window.",
+            "macOS asks for your login password so that AAPS can read its keys. After an update it can ask twice.",
+            "The dialog opens in front of this window.",
             "Choose Always Allow. With Allow, macOS asks again at the next start."
         )
 
