@@ -1201,4 +1201,5 @@
     <string name="units_sec">giây</string>
     <string name="units_years">y</string>
     <string name="prefs_range_title">Phạm vi để hiển thị</string>
+    <string name="secrets_not_protected">Không tìm thấy kho khóa hệ thống trên máy tính này. Các khóa bảo vệ cài đặt và thông tin ghép đôi với thiết bị chính được lưu trong các tệp cùng thư mục với dữ liệu. Vì vậy, bất kỳ ai có bản sao các tệp của bạn cũng có thể lấy được những khóa này. Trên Linux, hãy cài đặt và khởi chạy một trình quản lý khóa (ví dụ: GNOME Keyring hoặc KWallet), sau đó khởi động lại AAPS.</string>
 </resources>
