@@ -47,6 +47,7 @@
     <string name="authorized_clients_qr_ns_instructions">請在新手機上的設定嚮導或「與主裝置配對」中掃描此 QR Code。它會設定 Nightscout。該手機不會配對。</string>
     <string name="authorized_clients_qr_keep_private">任何看到此代碼的人都能讀取你的 Nightscout。只將它顯示給新手機。</string>
     <string name="authorized_clients_token_problem_title">沒有 QR Code</string>
+    <string name="authorized_clients_not_added_title">尚未新增用戶端</string>
     <string name="authorized_clients_token_problem_not_connected">此手機未連線到 Nightscout，因此無法為客戶端建立權杖。</string>
     <string name="authorized_clients_token_problem_not_allowed">此手機的 Nightscout 權杖不是管理員權杖，因此無法為客戶端建立權杖。請在此使用管理員權杖，或使用 PIN 新增該客戶端。</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout 已有同名但權限不同的權杖。請選擇其他名稱。</string>
