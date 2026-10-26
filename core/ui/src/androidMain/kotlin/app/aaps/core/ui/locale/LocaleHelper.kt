@@ -5,20 +5,30 @@ import android.content.ContextWrapper
 import android.content.res.Configuration
 import android.os.LocaleList
 import app.aaps.core.interfaces.resources.LanguageTag
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.StringKey
 import java.util.Locale
 
 object LocaleHelper {
 
-    private fun defaultSharedPreferences(context: Context) =
-        context.getSharedPreferences("${context.packageName}_preferences", Context.MODE_PRIVATE)
+    /**
+     * The settings store the picked language is read from.
+     *
+     * Set by the app at the start of `Application.onCreate`. Android runs that before it creates any
+     * activity, so it is set before the first `attachBaseContext`, which is where injection is not
+     * possible yet. Until then, and in a test that does not set it, the phone language is used.
+     *
+     * The store, not its file: the store decides where the settings are kept, and a direct read of a
+     * file the store no longer writes would keep returning an old language.
+     */
+    @Volatile var settings: KeyValueStore? = null
 
-    private fun selectedLanguage(context: Context): String =
-        // do not use the key name "language" from :core:keys here, to avoid a module dependency
-        if (defaultSharedPreferences(context).getBoolean("simple_mode", true)) "default"
-        else defaultSharedPreferences(context).getString("language", "default")
-            ?: "default"
-    // injection not possible because of use in attachBaseContext
-    //preferences.get(R.string.key_language, Locale.getDefault().language)
+    private fun selectedLanguage(): String {
+        val store = settings ?: return "default"
+        return if (store.getBoolean(BooleanKey.GeneralSimpleMode.key, BooleanKey.GeneralSimpleMode.defaultValue)) "default"
+        else store.getString(StringKey.GeneralLanguage.key, StringKey.GeneralLanguage.defaultValue)
+    }
 
     // The language list has offered "dk" for Danish from the start, but "dk" is a country code,
     // not a language code. The ISO 639 code is "da", and every Danish translation lives in a
@@ -38,10 +48,10 @@ object LocaleHelper {
      * the default locale to the selected language, so after either of them has run such a comparison
      * says "already right" for a context that is still in the phone language.
      */
-    fun isSystemDefault(context: Context): Boolean = selectedLanguage(context) == "default"
+    fun isSystemDefault(): Boolean = selectedLanguage() == "default"
 
-    fun currentLocale(context: Context): Locale {
-        val language = selectedLanguage(context)
+    fun currentLocale(): Locale {
+        val language = selectedLanguage()
         if (language == "default") return Locale.getDefault()
 
         return if (language.contains("_")) {
@@ -54,20 +64,20 @@ object LocaleHelper {
         }
     }
 
-    fun update(context: Context) {
+    fun update() {
         // no action for system default language
-        if (isSystemDefault(context)) return
+        if (isSystemDefault()) return
 
-        val locale = currentLocale(context)
+        val locale = currentLocale()
         Locale.setDefault(locale)
     }
 
     fun wrap(ctx: Context): Context {
         // no action for system default language
-        if (isSystemDefault(ctx)) return ctx
+        if (isSystemDefault()) return ctx
 
         val configuration = Configuration(ctx.resources.configuration)
-        val newLocale = currentLocale(ctx)
+        val newLocale = currentLocale()
         configuration.setLocale(newLocale)
         val localeList = LocaleList(newLocale)
         LocaleList.setDefault(localeList)

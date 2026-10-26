@@ -192,6 +192,9 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     override fun onCreate() {
         super.onCreate()
 
+        // First, because every activity asks for the language in attachBaseContext, before it can be
+        // injected, and Android creates the first activity only after this method returns.
+        LocaleHelper.settings = sp
         GeneratedStringOwners.registerAll()
         resourceHelperImpl.start()
         // Applies the analytics opt-out. Must come before configureLeakCanary below, which reports
@@ -362,7 +365,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         aapsLogger.debug("doInit")
         RxDogTag.install()
         setRxErrorHandler()
-        LocaleHelper.update(this@MainApp)
+        LocaleHelper.update()
 
         var gitRemote: String? = config.REMOTE
         var commitHash: String? = BuildConfig.HEAD
