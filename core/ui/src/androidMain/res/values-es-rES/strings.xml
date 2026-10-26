@@ -1204,4 +1204,5 @@
     <string name="units_sec">seg</string>
     <string name="units_years">a</string>
     <string name="prefs_range_title">Rango de visualización</string>
+    <string name="secrets_not_protected">No se ha encontrado ningún almacén de claves del sistema en este equipo. Las claves que protegen su configuración y el emparejamiento con el master se guardan en archivos junto a los datos, por lo que cualquiera que obtenga una copia de sus archivos también las obtendrá. En Linux, instale e inicie un depósito de claves (por ejemplo, GNOME Keyring o KWallet) y vuelva a iniciar AAPS</string>
 </resources>
