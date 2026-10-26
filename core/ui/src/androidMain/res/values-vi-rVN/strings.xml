@@ -446,6 +446,7 @@
     <string name="clientcontrol_action_deactivate_scene">Kết thúc ngữ cảnh</string>
     <string name="clientcontrol_action_update_settings">Cập nhật cài đặt</string>
     <string name="clientcontrol_action_deliver_bolus">Tiêm liều bolus</string>
+    <string name="clientcontrol_action_eat_reminder">Thay đổi nhắc nhở ăn uống</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Thiết bị này chưa được ghép đôi với thiết bị chính.</string>
     <string name="clientcontrol_fail_not_reachable">Thiết bị chính đang ngoại tuyến.</string>
@@ -783,6 +784,12 @@
     <string name="grant">Cấp quyền</string>
     <string name="set">Cài đặt</string>
     <string name="wizard_set_alarm">Đặt báo thức</string>
+    <string name="eat_reminder_title">Đến giờ ăn</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_set_duration" comment="The length of the eat reminder the user set. %1$s=length with unit. Example: Set: 20 min">Thiết lập: %1$s</string>
+    <string name="eat_reminder_rung">Đã hết thời gian</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d phút</string>
+    <string name="eat_reminder_not_set">Không thể thiết lập nhắc nhở ăn uống. Hãy cho phép AAPS đặt báo thức và lời nhắc trong phần Cài đặt Android.</string>
     <string name="wizard_use_percentage">Sử dụng phần trăm</string>
     <string name="wizard_include_bg">Bao gồm BG</string>
     <string name="wizard_include_tt">Bao gồm Mục tiêu tạm thời</string>
@@ -1140,6 +1147,18 @@
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Insulin còn tác dụng</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Insulin tuyệt đối</string>
+    <string name="graph_series_cob">Carb còn tác dụng</string>
+    <string name="graph_series_bgi">Mức ảnh hưởng đến đường huyết</string>
+    <string name="graph_series_deviations">Độ lệch</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Thay đổi độ nhạy</string>
+    <string name="graph_series_variable_sens">Độ nhạy thay đổi</string>
+    <string name="graph_series_deviation_slope">Độ dốc độ lệch</string>
+    <string name="graph_series_heart_rate">Heart Rate</string>
+    <string name="graph_series_steps">Steps</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Hoạt động</string>
+    <string name="graph_series_predictions">Dự đoán</string>
     <string name="units_days">ngày</string>
     <string name="units_format_days">%1$d ngày</string>
     <string name="units_format_days_range">%1$d ngày (%2$d - %3$d)</string>
