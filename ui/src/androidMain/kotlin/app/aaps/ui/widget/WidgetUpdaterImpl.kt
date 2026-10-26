@@ -5,9 +5,12 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.hardware.display.DisplayManager
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.SizeF
 import android.view.Display
+import androidx.core.os.BundleCompat
 import androidx.glance.ExperimentalGlanceApi
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
@@ -63,6 +66,9 @@ class WidgetUpdaterImpl(
      * same time. Not the main thread: drawing a widget takes a few hundred ms and runs every minute.
      */
     private val glanceDispatcher = Dispatchers.Default.limitedParallelism(1)
+
+    /** Last size each widget reported, by app widget id. Only used on [glanceDispatcher]. */
+    private val reportedSizes = mutableMapOf<Int, String>()
 
     init {
         displayManager.registerDisplayListener(
@@ -139,10 +145,12 @@ class WidgetUpdaterImpl(
             val appWidgetManager = AppWidgetManager.getInstance(context)
             for (glanceId in glanceManager.getGlanceIds(widget.javaClass)) {
                 val appWidgetId = glanceManager.getAppWidgetId(glanceId)
+                val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
+                logReportedSize(name, appWidgetId, options)
                 coroutineScope {
                     val frames = Channel<Unit>(Channel.CONFLATED)
                     val session = launch {
-                        widget.runComposition(context, glanceId, appWidgetManager.getAppWidgetOptions(appWidgetId))
+                        widget.runComposition(context, glanceId, options)
                             .collect { views ->
                                 appWidgetManager.updateAppWidget(appWidgetId, views)
                                 frames.send(Unit)
@@ -162,6 +170,23 @@ class WidgetUpdaterImpl(
         } catch (e: Exception) {
             aapsLogger.error(LTag.WIDGET, "updateWidget $name failed: ${e.message}", e)
         }
+    }
+
+    /**
+     * Logs the size the launcher reports for a widget, when it changes. Glance lays the widget out for
+     * these sizes, and they are not always the real size: on a Galaxy S23+ the widget was laid out for
+     * about half of its real height. Without a reported size Glance uses the minimum size from the
+     * widget info.
+     */
+    private fun logReportedSize(name: String?, appWidgetId: Int, options: Bundle) {
+        val sizes = BundleCompat.getParcelableArrayList(options, AppWidgetManager.OPTION_APPWIDGET_SIZES, SizeF::class.java)
+        val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
+        val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
+        val maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH)
+        val maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
+        val reported = "sizes=$sizes min=${minWidth}x$minHeight max=${maxWidth}x$maxHeight"
+        if (reportedSizes.put(appWidgetId, reported) != reported)
+            aapsLogger.debug(LTag.WIDGET, "updateWidget $name id=$appWidgetId launcher reports $reported")
     }
 
     /**
