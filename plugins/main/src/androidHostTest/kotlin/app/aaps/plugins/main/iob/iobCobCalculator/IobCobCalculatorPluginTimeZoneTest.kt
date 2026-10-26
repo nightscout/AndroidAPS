@@ -24,7 +24,9 @@ import app.aaps.shared.tests.AAPSLoggerTest
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -72,7 +74,13 @@ class IobCobCalculatorPluginTimeZoneTest {
             mock<CalculationSignalsEmitter>(), mock<NotificationManager>()
         ) { mock<OverviewDataCache>() }
         sut.timeZoneResetDebounce = DEBOUNCE
-        runBlocking { sut.onStart() }
+        runBlocking {
+            sut.onStart()
+            // `debounce` collects its source in a coroutine of its own, which starts a moment after onStart
+            // returns. An event sent before that is dropped - the flow keeps nothing for a late listener -
+            // and the reset never comes. That failed on a slow CI runner.
+            withTimeout(WAIT_MS) { timeZoneEvents.subscriptionCount.first { it > 0 } }
+        }
     }
 
     @AfterEach
