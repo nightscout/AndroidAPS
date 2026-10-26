@@ -11,10 +11,8 @@ import app.aaps.core.ui.compose.StatusLevel
  */
 data class StatusItem(
     val label: String,
-    /** "3 days 4 hours". Shown where it fits, see `LongOrShort`. */
+    /** "3d4h", or "4h" while there is no full day yet. Always short, so every screen size reads the same. */
     val age: String,
-    /** "3d4h", for where [age] does not fit. */
-    val ageShort: String = age,
     val ageStatus: StatusLevel = StatusLevel.UNSPECIFIED,
     val agePercent: Float = -1f, // 0-1 progress toward critical threshold
     val level: String? = null,
