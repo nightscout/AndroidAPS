@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The settings never leave the phone: not in a Google backup, not in a transfer to a new phone. They hold
+    the Nightscout token and the API secret, and the pairing keys in them are sealed with a key that stays
+    on this phone, so a copy would not work on another one anyway. A new phone starts with no settings,
+    and they come back from an AAPS settings export.
+
+    allowBackup="false" in the manifest stops the Google backup. On phones of some makers it does not stop
+    a transfer to a new phone, so the settings are excluded here for both.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="sharedpref" path="." />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="sharedpref" path="." />
+    </device-transfer>
+</data-extraction-rules>
