@@ -116,6 +116,7 @@
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Cíle</string>
     <string name="please_wait">Počkejte prosím…</string>
     <string name="stop">Stop</string>
@@ -445,6 +446,7 @@
     <string name="clientcontrol_action_deactivate_scene">Ukončit scénu</string>
     <string name="clientcontrol_action_update_settings">Aktualizovat nastavení</string>
     <string name="clientcontrol_action_deliver_bolus">Odeslat bolus</string>
+    <string name="clientcontrol_action_eat_reminder">Změnit připomenutí jídla</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Toto zařízení není spárováno s hlavním zařízením.</string>
     <string name="clientcontrol_fail_not_reachable">Hlavní zařízení je nedostupné.</string>
@@ -782,6 +784,12 @@
     <string name="grant">Udělit</string>
     <string name="set">Nastavit</string>
     <string name="wizard_set_alarm">Nastavit alarm</string>
+    <string name="eat_reminder_title">Čas na jídlo</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_set_duration" comment="The length of the eat reminder the user set. %1$s=length with unit. Example: Set: 20 min">Nastavit: %1$s</string>
+    <string name="eat_reminder_rung">Čas vypršel</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="eat_reminder_not_set">Nelze nastavit připomenutí jídla. Povolte AAPS nastavit budíky a připomenutí v nastavení Androidu.</string>
     <string name="wizard_use_percentage">Použít procenta</string>
     <string name="wizard_include_bg">Zahrnout glykémii</string>
     <string name="wizard_include_tt">Zahrnout dočasný cíl</string>
@@ -1148,6 +1156,18 @@
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSEN</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">KROKY</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Zbývající inzulín</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Absolutní inzulin</string>
+    <string name="graph_series_cob">Zbývající sacharidy</string>
+    <string name="graph_series_bgi">Vliv na hladinu glukózy</string>
+    <string name="graph_series_deviations">Odchylky</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Změna citlivosti</string>
+    <string name="graph_series_variable_sens">Proměnná citlivost</string>
+    <string name="graph_series_deviation_slope">Odchylka sklonu</string>
+    <string name="graph_series_heart_rate">Tepová frekvence</string>
+    <string name="graph_series_steps">Kroky</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Aktivita</string>
+    <string name="graph_series_predictions">Předpovědi</string>
     <string name="units_days">dní</string>
     <string name="units_format_days">%1$d dní</string>
     <string name="units_format_days_range">%1$d dní (%2$d - %3$d)</string>
