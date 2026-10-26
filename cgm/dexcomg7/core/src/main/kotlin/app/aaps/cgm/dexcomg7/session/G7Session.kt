@@ -90,6 +90,12 @@ class G7Session(
     private var rearmJob: Job? = null
     private var idleJob: Job? = null
 
+    /** The handshake and session on the current link. Stopped when the client is closed. */
+    private var linkJob: Job? = null
+
+    /** True from the first ready of a link until it disconnects, so a second ready cannot start another handshake. */
+    private var linkInUse = false
+
     /** Links the sensor opened right after the current reading. Logged as one line, see [logCameBack]. */
     private var cameBack = 0
     private val cameBackEndings = mutableListOf<Int>()
@@ -172,6 +178,7 @@ class G7Session(
         lastPacketAt = System.currentTimeMillis()
         client = pairedClient
         pairedClient.events = this@G7Session
+        linkInUse = pairedClient.isConnected
         if (!running) {
             // Paired while the source is off: keep the key, drop the link. It opens when the source starts.
             closeClient()
@@ -229,6 +236,9 @@ class G7Session(
         rearmJob?.cancel()
         idleJob?.cancel()
         followUps?.cancel()
+        linkJob?.cancel()
+        linkJob = null
+        linkInUse = false
         logCameBack()
         client?.let {
             it.events = null
@@ -263,7 +273,17 @@ class G7Session(
 
 
     override fun onReady(client: G7GattClient) {
-        scope.launch { handleReady(client) }
+        scope.launch {
+            if (client !== this@G7Session.client) return@launch
+            // Seen on a watch: a second "connected" for the same link while the key exchange ran. A second
+            // handshake on top of the first mixes up both, and the sensor drops the link.
+            if (linkInUse) {
+                log("Connected again while the link is in use; ignoring")
+                return@launch
+            }
+            linkInUse = true
+            linkJob = scope.launch { handleReady(client) }
+        }
     }
 
     override fun onDisconnected(client: G7GattClient, status: Int) {
@@ -383,6 +403,7 @@ class G7Session(
 
     private fun handleDisconnected(c: G7GattClient, status: Int) {
         if (c !== client) return
+        linkInUse = false
         idleJob?.cancel()
         flushBackfill()
         followUps?.cancel()

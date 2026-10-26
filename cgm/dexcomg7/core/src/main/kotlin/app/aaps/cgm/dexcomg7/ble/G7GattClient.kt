@@ -58,6 +58,9 @@ class G7GattClient(
     /** How the current client was opened. A plain re-arm keeps that mode, so [reconnect] checks it. */
     @Volatile private var autoConnect = true
 
+    /** The last connect failed before the link was ready (status 133 and the like). */
+    @Volatile private var lastConnectFailed = false
+
     /**
      * Until then, normal connects and disconnects are not logged. The sensor opens a few short links
      * right after each reading; the session counts those and logs them as one line.
@@ -82,6 +85,7 @@ class G7GattClient(
      */
     fun connect(autoConnect: Boolean) {
         closed = false
+        lastConnectFailed = false
         this.autoConnect = autoConnect
         gatt = device.connectGatt(context, autoConnect, callback, BluetoothDevice.TRANSPORT_LE)
         if (gatt == null) log("Bluetooth refused to open a connection to $address")
@@ -94,13 +98,18 @@ class G7GattClient(
      * A client opened with a direct connect (pairing, or after a scan) is replaced by a background one.
      * Re-arming it would repeat the direct connect, which gives up after about 10 seconds (status 147)
      * unless the sensor happens to advertise in that time.
+     *
+     * After a connect that failed before the link was ready, the client is replaced too. Re-arming then
+     * adds a request instead of replacing it (seen on a watch: one more status 133 each minute), and
+     * the extra requests later report the same link as connected again.
      */
     fun reconnect() {
         if (closed) return
         val g = gatt
-        if (g == null || !autoConnect) {
+        if (g == null || !autoConnect || lastConnectFailed) {
             if (g != null) {
-                log("Switching to a background connection request")
+                if (autoConnect) log("Opening a new connection request after a failed connect")
+                else log("Switching to a background connection request")
                 runCatching { g.close() }
                 gatt = null
             }
@@ -148,6 +157,7 @@ class G7GattClient(
                 BluetoothProfile.STATE_DISCONNECTED -> {
                     val wasConnected = connected
                     connected = false
+                    lastConnectFailed = !wasConnected && status != BluetoothGatt.GATT_SUCCESS
                     failPending(STATUS_DISCONNECTED)
                     val normal = status == BluetoothGatt.GATT_SUCCESS || status == STATUS_REMOTE_ENDED
                     if ((wasConnected || status != BluetoothGatt.GATT_SUCCESS) && !(normal && isQuiet())) log("Disconnected from $address (status $status)")
