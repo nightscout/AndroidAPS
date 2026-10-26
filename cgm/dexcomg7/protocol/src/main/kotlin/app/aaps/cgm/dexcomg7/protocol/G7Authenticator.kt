@@ -96,6 +96,9 @@ class G7Authenticator(
             if (e.insufficientAuthentication) log("The link could not be encrypted; the phone's bond with this sensor may be out of date")
             throw e
         }
+        if (storedSharedKey == null) {
+            log("Characteristics: ${link.describe(G7Characteristic.AUTHENTICATION)}; ${link.describe(G7Characteristic.CERTIFICATE)}; ${link.describe(G7Characteristic.CONTROL)}")
+        }
 
         // Collect authentication traffic for the whole handshake. An answer can arrive while our own
         // write is still pending, and a wait started after the write would miss it.

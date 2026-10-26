@@ -19,6 +19,9 @@ interface G7Link {
     /** Turns on notifications (or indications, whichever the characteristic offers). */
     suspend fun enableNotifications(characteristic: G7Characteristic)
 
+    /** What [characteristic] offers and how we subscribed to it, for the log. */
+    fun describe(characteristic: G7Characteristic): String = characteristic.name
+
     suspend fun write(characteristic: G7Characteristic, value: ByteArray, withResponse: Boolean)
 
     /**

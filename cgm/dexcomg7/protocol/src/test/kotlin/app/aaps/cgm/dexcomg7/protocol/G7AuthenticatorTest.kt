@@ -29,6 +29,7 @@ class G7AuthenticatorTest {
         assertThat(sensor.bondRequested).isTrue()
         assertThat(sensor.enabled).containsExactly(G7Characteristic.AUTHENTICATION, G7Characteristic.CERTIFICATE)
         assertThat(logs.joinToString()).doesNotContain("1155")
+        assertThat(logs).contains("Characteristics: AUTHENTICATION; CERTIFICATE; CONTROL")
     }
 
     @Test
