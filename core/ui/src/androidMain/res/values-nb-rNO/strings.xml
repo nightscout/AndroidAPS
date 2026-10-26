@@ -1204,4 +1204,5 @@
     <string name="units_sec">sek</string>
     <string name="units_years">år</string>
     <string name="prefs_range_title">Område for visualisering</string>
+    <string name="secrets_not_protected">Det ble ikke funnet noe systemlager for nøkler på denne datamaskinen. Nøklene som beskytter innstillingene dine og paringen med hovedenheten, lagres i filer sammen med dataene; det betyr at alle som får en kopi av filene dine, også får tilgang til disse nøklene. På Linux må du installere og starte en nøkkelring (for eksempel GNOME Keyring eller KWallet), og deretter starte AAPS på nytt.</string>
 </resources>
