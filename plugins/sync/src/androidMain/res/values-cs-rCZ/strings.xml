@@ -47,6 +47,7 @@
     <string name="authorized_clients_qr_ns_instructions">Naskenujte tento kód na novém telefonu, v průvodci nastavením nebo v párování klienta. Nastaví Nightscout. Telefon není spárován.</string>
     <string name="authorized_clients_qr_keep_private">Každý, kdo vidí tento kód, může číst váš Nightscout. Ukaž ho pouze novému telefonu.</string>
     <string name="authorized_clients_token_problem_title">Nemáte QR kód</string>
+    <string name="authorized_clients_not_added_title">Klient nebyl přidán</string>
     <string name="authorized_clients_token_problem_not_connected">Tento telefon není připojen k Nightscoutu, takže nemůže vytvořit token pro klienta.</string>
     <string name="authorized_clients_token_problem_not_allowed">Nightscout token tohoto telefonu není token administrátora, takže nemůže vytvořit token pro klienta. Použijte admin token, nebo přidejte klienta s PINem.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout již má token s tímto jménem a dalšími právy. Zvolte jiné jméno.</string>
