@@ -236,6 +236,10 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         // so a plain enableEdgeToEdge() here is enough.
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        // Other apps may not draw over AAPS: an overlay could hide what a tap really does, for example on a bolus
+        // confirmation. It also covers the dialogs, because this window stays visible under them. System and
+        // accessibility overlays still show. Needs HIDE_OVERLAY_WINDOWS.
+        window.setHideOverlayWindows(true)
 
         // Activity result launchers (from base class)
         accessTree = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
