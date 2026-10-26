@@ -165,4 +165,29 @@ class G7PairingPlannerTest {
         planner.addCandidate(a, "only", false)
         assertThat(planner.abandonCurrentCandidate("wrong code")).isInstanceOf(G7PairingPlanner.Action.GiveUp::class.java)
     }
+
+    @Test
+    fun missedConnectionsDoNotUseUpAttempts() {
+        val planner = G7PairingPlanner()
+        planner.addCandidate(a, "A", false)
+        planner.addCandidate(b, "B", false)
+        for (missed in 1 until G7PairingPlanner.MISSED_CONNECTIONS_PER_CANDIDATE) {
+            assertThat(planner.recordMissedConnection()).isEqualTo(G7PairingPlanner.Action.RetryCurrent)
+            assertThat(planner.nextAttemptNumber).isEqualTo(1)
+        }
+        assertThat(planner.recordMissedConnection()).isEqualTo(G7PairingPlanner.Action.AdvanceToNext)
+        assertThat(planner.currentCandidate?.id).isEqualTo(b)
+        assertThat(planner.details).containsExactly("A: did not connect ${G7PairingPlanner.MISSED_CONNECTIONS_PER_CANDIDATE} times")
+    }
+
+    @Test
+    fun detailsTellFailuresFromCodeMismatches() {
+        val planner = G7PairingPlanner(keepScanningWhenExhausted = true)
+        planner.addCandidate(a, "A", false)
+        planner.addCandidate(b, "B", false)
+        repeat(G7PairingPlanner.ATTEMPTS_PER_CANDIDATE) { planner.recordFailure() }
+        assertThat(planner.recordCodeMismatch()).isEqualTo(G7PairingPlanner.Action.KeepScanning)
+        assertThat(planner.codeMismatches).isEqualTo(1)
+        assertThat(planner.details).containsExactly("A: failed ${G7PairingPlanner.ATTEMPTS_PER_CANDIDATE} times", "B: does not match the code").inOrder()
+    }
 }

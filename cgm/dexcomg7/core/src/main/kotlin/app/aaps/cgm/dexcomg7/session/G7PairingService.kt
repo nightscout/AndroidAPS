@@ -87,6 +87,11 @@ class G7PairingService(
     private var scanStartedAt = 0L
     private var active = false
 
+    /** When each sensor was last heard advertising, and when our last try with it ended. */
+    private val lastAdvertisedAt = mutableMapOf<String, Long>()
+    private val lastAttemptEndedAt = mutableMapOf<String, Long>()
+    private var waitingFor: String? = null
+
     private fun log(text: String) = commLog.add(text)
 
     /**
@@ -116,6 +121,9 @@ class G7PairingService(
             excludedAddress = if (current.pairingCode != trimmed) current.address else null
             // With a scanned serial a mismatch means a wrong code. With a typed code, it may be a neighbour's sensor.
             planner = G7PairingPlanner(keepScanningWhenExhausted = expectedSerial == null)
+            lastAdvertisedAt.clear()
+            lastAttemptEndedAt.clear()
+            waitingFor = null
             active = true
             scanStartedAt = System.currentTimeMillis()
             _state.value = G7PairingState.Scanning(emptyList(), scanStartedAt)
@@ -185,6 +193,7 @@ class G7PairingService(
         }
         if (result.address == excludedAddress) return
         expectedSerial?.let { serial -> if (!advertisement.couldHaveSerial(serial)) return }
+        lastAdvertisedAt[result.address] = System.currentTimeMillis()
         val rssi = if (result.rssi < 0) result.rssi else G7PairingPlanner.UNKNOWN_RSSI
         val held = advertisement.isSlotHeld(displayType)
         if (planner.addCandidate(result.address, advertisement.name, held ?: false, rssi)) {
@@ -203,6 +212,18 @@ class G7PairingService(
             handleAction(planner.abandonCurrentCandidate("not a valid address"))
             return
         }
+        // A sensor only accepts a connection while it advertises, a few seconds around each reading. A
+        // connect at any other time fails after about 10 seconds, so wait for the next advertisement.
+        val advertisedAt = lastAdvertisedAt[candidate.id] ?: 0L
+        val fresh = advertisedAt > (lastAttemptEndedAt[candidate.id] ?: 0L) && System.currentTimeMillis() - advertisedAt <= ADVERTISEMENT_FRESH_MS
+        if (!fresh) {
+            if (waitingFor != candidate.id) {
+                waitingFor = candidate.id
+                log("Waiting for ${candidate.name} to advertise again")
+            }
+            return
+        }
+        waitingFor = null
         val attempt = planner.nextAttemptNumber
         _state.value = G7PairingState.Authenticating(candidate.name, attempt, System.currentTimeMillis())
         log("Trying ${candidate.name}, attempt $attempt")
@@ -222,11 +243,11 @@ class G7PairingService(
             val connected = withTimeoutOrNull(CANDIDATE_TIMEOUT_MS) { ready.await() } == true
             if (!connected) {
                 log("${candidate.name} did not connect in time")
-                finishAttempt(candidateClient, planner.recordFailure())
+                finishAttempt(candidate, candidateClient, planner.recordMissedConnection())
                 return@launch
             }
             if (!candidateClient.hasCgmService()) {
-                finishAttempt(candidateClient, planner.abandonCurrentCandidate("no Dexcom CGM service"))
+                finishAttempt(candidate, candidateClient, planner.abandonCurrentCandidate("no Dexcom CGM service"))
                 return@launch
             }
             val authenticator = G7Authenticator(pairingCode, null, G7Authenticator.PAIRING_STEP_TIMEOUT_MS, displayType, log = ::log)
@@ -234,7 +255,7 @@ class G7PairingService(
                 val result = withTimeoutOrNull(AUTHENTICATION_TIMEOUT_MS) { authenticator.authenticate(candidateClient) }
                 if (result == null) {
                     log("${candidate.name} attempt $attempt took too long")
-                    finishAttempt(candidateClient, planner.recordFailure())
+                    finishAttempt(candidate, candidateClient, planner.recordFailure())
                     return@launch
                 }
                 succeed(candidateClient, candidate, result.sharedKey)
@@ -244,24 +265,25 @@ class G7PairingService(
                     // Final for this sensor, and trying again invites the lockout.
                     is G7AuthException.Rejected          -> planner.abandonCurrentCandidate(e.message ?: "refused")
                     // Proof that this sensor does not belong to the code.
-                    is G7AuthException.ChallengeMismatch -> planner.abandonCurrentCandidate("does not match the code")
+                    is G7AuthException.ChallengeMismatch -> planner.recordCodeMismatch()
                     else                                 -> planner.recordFailure()
                 }
-                finishAttempt(candidateClient, action)
+                finishAttempt(candidate, candidateClient, action)
             } catch (e: G7LinkException) {
                 log("${candidate.name} attempt $attempt: link problem: ${e.message}")
                 if (e.insufficientAuthentication) {
                     log("The phone holds an old Bluetooth bond with ${candidate.name}; removing it")
                     candidateClient.removeBond()
                 }
-                finishAttempt(candidateClient, planner.recordFailure())
+                finishAttempt(candidate, candidateClient, planner.recordFailure())
             }
         }
     }
 
-    private suspend fun finishAttempt(candidateClient: G7GattClient, action: G7PairingPlanner.Action) {
+    private suspend fun finishAttempt(candidate: G7PairingPlanner.Candidate, candidateClient: G7GattClient, action: G7PairingPlanner.Action) {
         candidateClient.close()
         if (client === candidateClient) client = null
+        lastAttemptEndedAt[candidate.id] = System.currentTimeMillis()
         // Give the sensor a moment to notice the disconnect before the next try.
         delay(RETRY_PAUSE_MS)
         handleAction(action)
@@ -277,7 +299,8 @@ class G7PairingService(
             }
 
             G7PairingPlanner.Action.KeepScanning                                         -> {
-                log("None of the sensors seen so far match the code; still scanning")
+                if (planner.codeMismatches == planner.candidates.size) log("None of the sensors seen so far match the code; still scanning")
+                else log("Could not pair with any sensor seen so far (${planner.details.joinToString("; ")}); still scanning for other sensors. Start pairing again to try these once more")
                 _state.value = G7PairingState.Scanning(planner.candidates.map { it.name }, scanStartedAt)
             }
 
@@ -324,6 +347,7 @@ class G7PairingService(
         const val CANDIDATE_TIMEOUT_MS = 20_000L
         const val AUTHENTICATION_TIMEOUT_MS = 90_000L
         const val RETRY_PAUSE_MS = 2_000L
+        const val ADVERTISEMENT_FRESH_MS = 5_000L
 
         fun isValidPairingCode(code: String): Boolean = code.length == 4 && code.all { it in '0'..'9' }
     }

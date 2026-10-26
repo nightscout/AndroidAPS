@@ -6,9 +6,11 @@ import app.aaps.cgm.dexcomg7.protocol.crypto.G7DexcomCredentials
 import app.aaps.cgm.dexcomg7.protocol.crypto.G7JPake
 import app.aaps.cgm.dexcomg7.protocol.crypto.G7PCert
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import java.io.ByteArrayOutputStream
 
@@ -16,6 +18,9 @@ import java.io.ByteArrayOutputStream
 sealed class G7AuthException(message: String) : Exception(message) {
 
     class Timeout(val step: String) : G7AuthException("Timed out waiting for the sensor during $step")
+
+    /** The link went down while we waited for the sensor. */
+    class LinkLost(val step: String) : G7AuthException("The link was lost during $step")
 
     class UnexpectedResponse(val step: String, val response: ByteArray) : G7AuthException("Unexpected response during $step: ${response.toHex()}")
 
@@ -170,7 +175,7 @@ class G7Authenticator(
         log("Challenge: sending ours as display type $displayType")
         link.write(G7Characteristic.AUTHENTICATION, byteArrayOf(0x02) + challenge + byteArrayOf(displayType.code.toByte()), withResponse = true)
 
-        val response = waitForAuthentication(authentication, 0x03, step)
+        val response = waitForAuthentication(link, authentication, 0x03, step)
         if (response.size < 17) throw G7AuthException.UnexpectedResponse(step, response)
         if (!G7Aes.encryptChallenge(challenge, sharedKey).contentEquals(response.copyOfRange(1, 9))) {
             log("Challenge: the sensor's answer does not match our key")
@@ -181,7 +186,7 @@ class G7Authenticator(
         val answer = G7Aes.encryptChallenge(response.copyOfRange(9, 17), sharedKey)
         link.write(G7Characteristic.AUTHENTICATION, byteArrayOf(0x04) + answer, withResponse = true)
 
-        val verdict = waitForAuthentication(authentication, 0x05, step)
+        val verdict = waitForAuthentication(link, authentication, 0x05, step)
         val status = AuthStatusMessage.parse(verdict) ?: throw G7AuthException.UnexpectedResponse(step, verdict)
         log("Challenge: verdict auth=${status.authStatus} bond=${status.bondStatus}")
         if (status.isRejected) throw G7AuthException.Rejected(status.authStatus, status.failureCode)
@@ -196,7 +201,7 @@ class G7Authenticator(
         // Terminator: one entry past the last, declared zero length.
         log("Certificates: sending the terminator")
         link.write(G7Characteristic.AUTHENTICATION, byteArrayOf(0x0B, certificates.size.toByte()) + 0L.u32leBytes(), withResponse = true)
-        waitForAuthentication(authentication, 0x0B, "certificate terminator")
+        waitForAuthentication(link, authentication, 0x0B, "certificate terminator")
     }
 
     private suspend fun exchangeCertificate(link: G7Link, authentication: MessageBuffer, index: Int, certificate: ByteArray) {
@@ -205,7 +210,7 @@ class G7Authenticator(
         val buffer = installCertificateBuffer(link)
         link.write(G7Characteristic.AUTHENTICATION, byteArrayOf(0x0B, index.toByte()) + certificate.size.toLong().u32leBytes(), withResponse = true)
 
-        val acknowledgement = waitForAuthentication(authentication, 0x0B, step)
+        val acknowledgement = waitForAuthentication(link, authentication, 0x0B, step)
         // `0B 00 <index> <length u16 LE>`. The sensor's certificates are not the size of ours.
         val expectedLength = if (acknowledgement.size >= 5) {
             acknowledgement.u16le(3).takeIf { it > 0 } ?: certificate.size
@@ -225,7 +230,7 @@ class G7Authenticator(
         val buffer = installCertificateBuffer(link)
         link.write(G7Characteristic.AUTHENTICATION, byteArrayOf(0x0C) + random(16), withResponse = true)
 
-        val acknowledgement = waitForAuthentication(authentication, 0x0C, step)
+        val acknowledgement = waitForAuthentication(link, authentication, 0x0C, step)
         if (acknowledgement.size < 18) throw G7AuthException.UnexpectedResponse(step, acknowledgement)
 
         // The sensor's own 64-byte block comes alongside. We do not check it: the sensor is checking us.
@@ -240,11 +245,11 @@ class G7Authenticator(
     private suspend fun finalizeAndBond(link: G7Link, authentication: MessageBuffer) {
         log("Finalizing")
         link.write(G7Characteristic.AUTHENTICATION, byteArrayOf(0x06, 0x1E), withResponse = true)
-        waitForAuthentication(authentication, 0x06, "finalize")
+        waitForAuthentication(link, authentication, 0x06, "finalize")
 
         log("Finalizing: the sensor starts Bluetooth bonding now; Android may ask to pair")
         link.write(G7Characteristic.AUTHENTICATION, byteArrayOf(0x07), withResponse = true)
-        waitForAuthentication(authentication, 0x07, "bond request")
+        waitForAuthentication(link, authentication, 0x07, "bond request")
         link.onBondRequested()
 
         // The sensor confirms once the link is encrypted. A silent sensor counts as success: the key
@@ -263,8 +268,9 @@ class G7Authenticator(
     }
 
 
-    private suspend fun waitForAuthentication(buffer: MessageBuffer, prefix: Int, step: String): ByteArray {
-        val (match, discarded) = buffer.waitFor(stepTimeoutMs) { it.isNotEmpty() && it.u8(0) == prefix } ?: throw G7AuthException.Timeout(step)
+    private suspend fun waitForAuthentication(link: G7Link, buffer: MessageBuffer, prefix: Int, step: String): ByteArray {
+        val (match, discarded) = whileConnected(link, step) { buffer.waitFor(stepTimeoutMs) { it.isNotEmpty() && it.u8(0) == prefix } }
+            ?: throw G7AuthException.Timeout(step)
         // The 0A acknowledgements of our round requests arrive after the bytes we wait for. Skipping them is normal.
         discarded.filter { it.isEmpty() || it.u8(0) != 0x0A }.forEach { log("Skipping an unexpected message: ${it.toHex()}") }
         return match
@@ -278,12 +284,34 @@ class G7Authenticator(
 
     private suspend fun waitForCertificateBytes(link: G7Link, buffer: ChunkBuffer, count: Int, step: String): ByteArray {
         try {
-            return buffer.waitFor(count, stepTimeoutMs) ?: run {
+            val data = try {
+                whileConnected(link, step) { buffer.waitFor(count, stepTimeoutMs) }
+            } catch (e: G7AuthException.LinkLost) {
+                log("$step: the link was lost with ${buffer.size} of $count bytes")
+                throw e
+            }
+            return data ?: run {
                 log("$step: timed out with ${buffer.size} of $count bytes")
                 throw G7AuthException.Timeout(step)
             }
         } finally {
             link.setListener(G7Characteristic.CERTIFICATE, null)
+        }
+    }
+
+    /**
+     * Runs [block], but throws [G7AuthException.LinkLost] as soon as [link] goes down. Without this a
+     * dropped link is only noticed when the step times out, and by then the sensor has stopped advertising.
+     */
+    private suspend fun <T> whileConnected(link: G7Link, step: String, block: suspend () -> T): T = coroutineScope {
+        val watch = launch {
+            while (link.isConnected) delay(LINK_CHECK_INTERVAL_MS)
+            throw G7AuthException.LinkLost(step)
+        }
+        try {
+            block()
+        } finally {
+            watch.cancel()
         }
     }
 
@@ -308,6 +336,8 @@ class G7Authenticator(
         const val PAIRING_STEP_TIMEOUT_MS = 60_000L
 
         const val BOND_CONFIRMATION_TIMEOUT_MS = 20_000L
+
+        const val LINK_CHECK_INTERVAL_MS = 250L
 
         /** The sensor rebuilds data by byte count; 20 is the classic ATT size and a larger MTU buys nothing. */
         const val CERTIFICATE_CHUNK_SIZE = 20

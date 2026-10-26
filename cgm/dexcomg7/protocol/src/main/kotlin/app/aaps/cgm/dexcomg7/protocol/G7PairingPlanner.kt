@@ -8,7 +8,8 @@ package app.aaps.cgm.dexcomg7.protocol
  * refusals in a row make a sensor stop accepting connections for a while. So free sensors go first, and
  * within a group the strongest signal goes first, because the phone is usually held close to the new
  * sensor. A sensor that refuses us is dropped, not retried. Ordinary failures (a dropped link, a
- * timeout) get a few retries before moving on.
+ * timeout) get a few retries before moving on. A connection that never came up says nothing about
+ * the sensor, so it has its own, larger limit.
  *
  * Only bookkeeping, no Bluetooth, so the rules can be tested on their own.
  */
@@ -53,9 +54,17 @@ class G7PairingPlanner(
     var currentIndex = 0
         private set
     private var attemptsOnCurrent = 0
+    private var missedConnectionsOnCurrent = 0
 
     /** Why candidates were dropped, for the failure message. */
     private val abandonmentReasons = mutableListOf<String>()
+
+    /** How many candidates were dropped because their answer proved the code is not theirs. */
+    var codeMismatches = 0
+        private set
+
+    /** Why each tried candidate was dropped, for the log. */
+    val details: List<String> get() = abandonmentReasons.toList()
 
     val currentCandidate: Candidate? get() = _candidates.getOrNull(currentIndex)
 
@@ -106,7 +115,22 @@ class G7PairingPlanner(
         if (currentCandidate == null) return exhausted()
         attemptsOnCurrent++
         if (attemptsOnCurrent < ATTEMPTS_PER_CANDIDATE) return Action.RetryCurrent
-        return advance()
+        return abandonCurrentCandidate("failed $ATTEMPTS_PER_CANDIDATE times")
+    }
+
+    /** The connection did not come up. Does not use up an attempt, but a sensor we never reach is left after a while. */
+    fun recordMissedConnection(): Action {
+        if (currentCandidate == null) return exhausted()
+        missedConnectionsOnCurrent++
+        if (missedConnectionsOnCurrent < MISSED_CONNECTIONS_PER_CANDIDATE) return Action.RetryCurrent
+        return abandonCurrentCandidate("did not connect $MISSED_CONNECTIONS_PER_CANDIDATE times")
+    }
+
+    /** The sensor's answer proved that the code is not for it. */
+    fun recordCodeMismatch(): Action {
+        if (currentCandidate == null) return exhausted()
+        codeMismatches++
+        return abandonCurrentCandidate("does not match the code")
     }
 
     /** The current candidate cannot succeed (it refused us, or it is not this code's sensor). */
@@ -119,6 +143,7 @@ class G7PairingPlanner(
     private fun advance(): Action {
         currentIndex++
         attemptsOnCurrent = 0
+        missedConnectionsOnCurrent = 0
         return if (currentCandidate != null) Action.AdvanceToNext else exhausted()
     }
 
@@ -137,5 +162,8 @@ class G7PairingPlanner(
 
         /** Ordinary failures allowed per candidate before moving on. */
         const val ATTEMPTS_PER_CANDIDATE = 3
+
+        /** Connections that did not come up, allowed per candidate before moving on. */
+        const val MISSED_CONNECTIONS_PER_CANDIDATE = 5
     }
 }

@@ -1,7 +1,9 @@
 package app.aaps.cgm.dexcomg7.protocol
 
+import app.aaps.cgm.dexcomg7.protocol.crypto.G7PCert
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.currentTime
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -102,5 +104,28 @@ class G7AuthenticatorTest {
         }
         val error = runCatching { authenticator(null, ByteArray(16)).authenticate(silent) }.exceptionOrNull()
         assertThat(error).isInstanceOf(G7AuthException.Timeout::class.java)
+    }
+
+    @Test
+    fun droppedLinkEndsTheWaitAtOnce() = runTest {
+        val dropping = object : G7Link {
+            override val address = "AA:BB:CC:DD:EE:FF"
+            override val name = "DX02XL"
+            override var isConnected = true
+            private var certificateListener: ((ByteArray) -> Unit)? = null
+            override suspend fun enableNotifications(characteristic: G7Characteristic) {}
+            override suspend fun write(characteristic: G7Characteristic, value: ByteArray, withResponse: Boolean) {
+                certificateListener?.invoke(ByteArray(20))
+                isConnected = false
+            }
+
+            override fun setListener(characteristic: G7Characteristic, listener: ((ByteArray) -> Unit)?) {
+                if (characteristic == G7Characteristic.CERTIFICATE) certificateListener = listener
+            }
+        }
+        val error = runCatching { authenticator("1155", null).authenticate(dropping) }.exceptionOrNull()
+        assertThat(error).isInstanceOf(G7AuthException.LinkLost::class.java)
+        assertThat(currentTime).isLessThan(G7Authenticator.PAIRING_STEP_TIMEOUT_MS)
+        assertThat(logs).contains("key exchange round 1: the link was lost with 20 of ${G7PCert.BYTE_COUNT} bytes")
     }
 }
