@@ -110,10 +110,13 @@
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
+    <string name="value_question" comment="Asks if this should be done. %1$s=what will be done. Example: Send logs?">%1$s?</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Ciele</string>
     <string name="please_wait">Čakajte prosím...</string>
     <string name="stop">Stop</string>
@@ -443,6 +446,7 @@
     <string name="clientcontrol_action_deactivate_scene">Ukončiť scénu</string>
     <string name="clientcontrol_action_update_settings">Aktualizovať nastavenia</string>
     <string name="clientcontrol_action_deliver_bolus">Podať bolus</string>
+    <string name="clientcontrol_action_eat_reminder">Zmeniť pripomienku jedla</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Toto zariadenie nie je spárované s hlavným zariadením.</string>
     <string name="clientcontrol_fail_not_reachable">Hlavné zariadenie je offline.</string>
@@ -460,6 +464,8 @@
     <string name="clientcontrol_fail_cancelled">Príkaz bol zrušený skôr, ako sa vykonal. Do pumpy nebolo nič odoslané.</string>
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus zrušený. Nebol podaný žiadny inzulín.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Zrušené</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">SMB sa nepodáva, kým sa čaká na potvrdenie bolusu</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">Prebieha podávanie SMB. Po jeho dokončení budete môcť bolus potvrdiť.</string>
     <string name="clientcontrol_fail_control_disabled">Diaľkové ovládanie je vypnuté na hlavnom zariadení.</string>
     <string name="clientcontrol_fail_not_allowed_for_role">Rola priradená tomuto telefónu na hlavnom zariadení to neumožňuje.</string>
     <string name="clientcontrol_fail_other_token">Hlavné zariadenie požiadavku odmietlo: tento telefón zapisuje do Nightscoutu pomocou iného tokenu, než vlastného. Na hlavnom zariadení odstráňte tento telefón a znova ho pridajte.</string>
@@ -778,6 +784,12 @@
     <string name="grant">Povoliť</string>
     <string name="set">Nastaviť</string>
     <string name="wizard_set_alarm">Nastav upozornenie</string>
+    <string name="eat_reminder_title">Čas na jedlo</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_set_duration" comment="The length of the eat reminder the user set. %1$s=length with unit. Example: Set: 20 min">Nastaviť: %1$s</string>
+    <string name="eat_reminder_rung">Čas vypršal</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="eat_reminder_not_set">Pripomienku jedla sa nepodarilo nastaviť. V nastaveniach systému Android povoľte aplikácii AAPS nastavovať budíky a pripomienky.</string>
     <string name="wizard_use_percentage">Použiť percento</string>
     <string name="wizard_include_bg">Zahŕňa glykémiu</string>
     <string name="wizard_include_tt">Zahŕňa dočasný cieľ</string>
@@ -847,6 +859,7 @@
     <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f U/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
     <string name="limitingpercentrate">Bazál obmedzený na %1$d%%: %2$s</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Percentuálna bazálna dávka %1$d%% prepočítaná na %2$s U/h pri aktuálnej bazálnej dávke %3$s U/h</string>
     <string name="itmustbepositivevalue">požadovaná kladná hodnota</string>
     <string name="limitingbolus">Bolus obmedzený na %1$.1f U: %2$s</string>
     <!--    Dialogs-->
@@ -1143,6 +1156,18 @@
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">KROKY</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Aktívny inzulín</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Celkový inzulín</string>
+    <string name="graph_series_cob">Aktívne sacharidy</string>
+    <string name="graph_series_bgi">Vplyv na glykémiu</string>
+    <string name="graph_series_deviations">Odchýlky</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Zmena citlivosti</string>
+    <string name="graph_series_variable_sens">Premenlivá citlivosť</string>
+    <string name="graph_series_deviation_slope">Odchýlka sklonu</string>
+    <string name="graph_series_heart_rate">Srdcový tep</string>
+    <string name="graph_series_steps">Kroky</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Aktivita</string>
+    <string name="graph_series_predictions">Predpovede</string>
     <string name="units_days">dní</string>
     <string name="units_format_days">%1$d dní</string>
     <string name="units_format_days_range">%1$d dní (%2$d - %3$d)</string>
@@ -1169,6 +1194,7 @@
     <string name="units_format_min">%1$d min</string>
     <string name="units_format_min_range">%1$d min (%2$d - %3$d)</string>
     <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
     <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
     <string name="units_format_sec">%1$d sek</string>
     <string name="units_format_sec_range">%1$d s (%2$d - %3$d)</string>
