@@ -672,7 +672,9 @@ class G7Session(
                 val heardFrom = maxOf(lastPacketAt, store.value.latestReadingAt ?: 0, startedAt)
                 // The sensor connects every 5 minutes. Some phones (seen on a Samsung S22) quietly lose the
                 // re-armed request after a reading, and a new one connects at once. So do not wait 20 minutes.
-                if (now - heardFrom > MISSED_READING_MS && missedReadingHandledFor != heardFrom && client?.isConnected != true && now >= retryNotBefore) {
+                // Only once the sensor has sent something: while pairing there is no reading to miss.
+                val hadData = lastPacketAt > 0 || store.value.latestReadingAt != null
+                if (hadData && now - heardFrom > MISSED_READING_MS && missedReadingHandledFor != heardFrom && client?.isConnected != true && now >= retryNotBefore) {
                     missedReadingHandledFor = heardFrom
                     log("Nothing from the sensor for ${(now - heardFrom) / 60_000} minutes, a reading was missed; opening the link again")
                     connectToPairedSensor()
