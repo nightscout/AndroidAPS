@@ -50,6 +50,8 @@ kotlin {
                 // EncryptedKeyValueStore. The multiplatform core only, not datastore-preferences: the
                 // store has its own encrypted file format instead of the preferences protobuf.
                 api(libs.androidx.datastore.core)
+                // The file storage. DataStore has no other one on iOS, so all platforms use this one.
+                implementation(libs.androidx.datastore.core.okio)
             }
         }
 

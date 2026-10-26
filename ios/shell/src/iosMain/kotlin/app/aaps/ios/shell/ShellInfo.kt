@@ -8,7 +8,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.implementation.logging.AAPSLoggerIos
 import app.aaps.ios.shell.di.IosProbeGraph
-import app.aaps.ios.shell.prefs.IosSp
+import app.aaps.ios.shell.prefs.IosStorage
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import dev.zacsweers.metro.createGraphFactory
 import kotlinx.datetime.TimeZone
@@ -99,22 +99,20 @@ object ShellInfo {
     }
 
     /**
-     * Exercises the NSUserDefaults backed store.
+     * Exercises the encrypted settings store, in the real app with the real Keychain - which a test
+     * binary does not have.
      *
-     * The reason this is a runtime check and not a unit test yet is the failure it is looking for.
-     * `NSUserDefaults` answers a missing key with a zero value rather than saying it is missing, so
-     * a store written the obvious way returns `false` and `0.0` instead of the caller's defaults.
-     * That version compiles, links, runs, and quietly replaces every AAPS default with zero. So the
-     * first case below is the important one.
+     * An absent key must answer the caller's default. The store this replaced, `NSUserDefaults`,
+     * answered zero instead, which would quietly replace every AAPS default; the first case keeps that
+     * checked.
      *
      * @return one line per check, or the failure.
      */
     fun checkPrefs(): String = try {
-        val sp = IosSp()
+        val sp = IosStorage.open()
         val key = "aaps.ios.probe"
         sp.remove(key)
 
-        // The trap: absent key must give the caller's default, not NSUserDefaults' zero.
         val absentBool = sp.getBoolean(key, defaultValue = true)
         val absentDouble = sp.getDouble(key, defaultValue = 5.5)
         val absentInt = sp.getInt(key, defaultValue = 42)

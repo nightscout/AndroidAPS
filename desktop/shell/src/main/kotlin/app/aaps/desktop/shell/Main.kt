@@ -1,15 +1,7 @@
 package app.aaps.desktop.shell
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -20,10 +12,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -31,6 +21,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.compose.NavHost
 import app.aaps.appshell.AapsAppRoot
+import app.aaps.appshell.StartupFailedScreen
 import app.aaps.appshell.navigation.AppRoute
 import app.aaps.appshell.navigation.ElementNavigator
 import app.aaps.appshell.navigation.appNavGraph
@@ -54,12 +45,12 @@ import app.aaps.desktop.shell.di.DesktopAppGraph
 import app.aaps.desktop.shell.di.GeneratedStringOwners
 import app.aaps.desktop.shell.secure.DesktopStorage
 import app.aaps.desktop.shell.secure.KeyVaultUnavailableException
-import app.aaps.desktop.shell.secure.StoreUnreadableException
 import app.aaps.implementation.logging.AAPSLoggerDesktop
 import app.aaps.desktop.shell.platform.openFolder
 import app.aaps.implementation.maintenance.DesktopFolders
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.shared.clientbindings.ClientViewModelFactory
+import app.aaps.shared.impl.sharedPreferences.StoreUnreadableException
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
@@ -136,13 +127,19 @@ fun main() {
                 onSuccess = { AapsDesktopApp(it, appIcon, appName) },
                 onFailure = { error ->
                     MaterialTheme {
-                        Failed(error, onStartFresh = {
-                            // A failure of the start fresh itself lands on this same screen.
-                            current = runCatching {
-                                DesktopStorage.startFresh()
-                                startApp()
-                            }
-                        })
+                        StartupFailedScreen(
+                            title = "AAPS desktop - startup failed",
+                            explanation = failureExplanation(error),
+                            error = error,
+                            // A failure of either one lands on this same screen again.
+                            onRetry = if (error is KeyVaultUnavailableException) ({ current = runCatching { startApp() } }) else null,
+                            onStartFresh = if (error is StoreUnreadableException) ({
+                                current = runCatching {
+                                    DesktopStorage.startFresh()
+                                    startApp()
+                                }
+                            }) else null
+                        )
                     }
                 }
             )
@@ -504,54 +501,24 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
 }
 
 /**
- * The graph could not be built. The message is the useful part, so it is shown in full.
- *
- * Two failures of the settings store get words a user can act on, because both are normal events rather
- * than bugs. The text is English only, like the rest of this screen: it shows before the graph exists,
- * so before the translated strings are loaded.
+ * Words a user can act on, for the two failures of the settings store. Both are normal events rather
+ * than bugs. Any other failure gets none: its message is the useful part, and the screen shows it.
  */
-@Composable
-private fun Failed(error: Throwable, onStartFresh: () -> Unit) {
-    var confirmStartFresh by remember { mutableStateOf(false) }
-    Column(Modifier.padding(16.dp).verticalScroll(rememberScrollState())) {
-        Text("AAPS desktop - startup failed", style = MaterialTheme.typography.headlineSmall)
-        when (error) {
-            is StoreUnreadableException     -> {
-                Text(
-                    "Your settings on this computer cannot be read. They are encrypted with a key kept in the system key store, " +
-                        "and that key does not open them. This happens when the AAPS folder was copied from another computer or " +
-                        "another user, when the key store was reset, or when the file is damaged.",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    "Start fresh moves the old file aside (it is kept) and starts with empty settings. " +
-                        "You then need to set up the connection to the master again.",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Button(onClick = { confirmStartFresh = true }) { Text("Start fresh") }
-            }
-
-            is KeyVaultUnavailableException -> Text(
-                "The system key store did not answer. AAPS keeps the key to your settings there. Unlock it - log in to " +
-                    "the desktop session, or unlock the keyring - and start AAPS again.",
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-        Text(error::class.simpleName ?: "error", style = MaterialTheme.typography.titleMedium)
-        Text(error.message ?: "no message", style = MaterialTheme.typography.bodyMedium)
-    }
-    if (confirmStartFresh) AlertDialog(
-        onDismissRequest = { confirmStartFresh = false },
-        title = { Text("Start with empty settings?") },
-        text = { Text("The unreadable settings file is renamed and kept. All settings start from their defaults.") },
-        confirmButton = {
-            TextButton(onClick = {
-                confirmStartFresh = false
-                onStartFresh()
-            }) { Text("Start fresh") }
-        },
-        dismissButton = { TextButton(onClick = { confirmStartFresh = false }) { Text("Cancel") } }
+private fun failureExplanation(error: Throwable): List<String> = when (error) {
+    is StoreUnreadableException     -> listOf(
+        "Your settings on this computer cannot be read. They are encrypted with a key kept in the system key store, " +
+            "and that key does not open them. This happens when the AAPS folder was copied from another computer or " +
+            "another user, when the key store was reset, or when the file is damaged.",
+        "Start fresh moves the old file aside (it is kept) and starts with empty settings. " +
+            "You then need to set up the connection to the master again."
     )
+
+    is KeyVaultUnavailableException -> listOf(
+        "The system key store did not answer. AAPS keeps the key to your settings there. Unlock it - log in to " +
+            "the desktop session, or unlock the keyring - and try again."
+    )
+
+    else                            -> emptyList()
 }
 
 /** One line, one shape, so a run makes it obvious which platform callbacks are still placeholders. */

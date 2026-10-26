@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.implementation.logging.AAPSLoggerDesktop
 import app.aaps.implementation.maintenance.DesktopFolders
 import app.aaps.shared.impl.sharedPreferences.EncryptedKeyValueStore
+import app.aaps.shared.impl.sharedPreferences.StoreUnreadableException
 import app.aaps.shared.impl.sharedPreferences.openEncryptedStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -60,7 +61,7 @@ object DesktopStorage {
         val job = SupervisorJob()
         val store = try {
             openEncryptedStore(
-                file = storeFile,
+                path = storeFile.absolutePath,
                 cipher = cipher,
                 migrations = listOf(PropertiesFileMigration(propertiesFile, storeFile, cipher, log)),
                 scope = CoroutineScope(Dispatchers.IO + job),
@@ -100,7 +101,7 @@ object DesktopStorage {
         var cause: Throwable? = e
         while (cause != null) {
             when (cause) {
-                is CorruptionException          -> return StoreUnreadableException(storeFile, cause)
+                is CorruptionException          -> return StoreUnreadableException(storeFile.path, cause)
                 is KeyVaultUnavailableException -> return cause
             }
             cause = cause.cause
@@ -108,7 +109,3 @@ object DesktopStorage {
         return e
     }
 }
-
-/** The settings store exists, but cannot be opened with the key this computer has. Starting fresh is the way out. */
-class StoreUnreadableException(val file: File, cause: Throwable) :
-    Exception("The settings in ${file.path} cannot be read: ${cause.message}", cause)

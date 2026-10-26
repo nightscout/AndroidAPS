@@ -39,8 +39,8 @@ internal class DataStoreBackend(private val dataStore: DataStore<Map<String, Any
 }
 
 /**
- * The preference store, kept in one encrypted file (see [StoreCodec]). Replaces `DesktopSp` now, and
- * is meant to replace `SPImpl` and `IosSp` later.
+ * The preference store, kept in one encrypted file (see [StoreCodec]). Replaces `DesktopSp` and
+ * `IosSp`, and is meant to replace `SPImpl` later.
  *
  * ## Reads and writes
  *
