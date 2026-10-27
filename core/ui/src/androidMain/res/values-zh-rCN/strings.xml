@@ -916,7 +916,6 @@
     <string name="pump_paired" comment="26 characters max for translation">泵已配对</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">不支持蓝牙低能量。</string>
-    <string name="ble_not_supported_or_not_paired">蓝牙低电量或设备未配对。</string>
     <string name="ble_not_enabled">蓝牙未启用</string>
     <string name="ble_permissions_missing">蓝牙权限未授予。请在应用程序设置中授予这些权限。</string>
     <!--    Preferences -->
