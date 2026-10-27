@@ -948,7 +948,6 @@
     <string name="pump_paired" comment="26 characters max for translation">幫浦已配對</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">不支援藍牙低功耗。</string>
-    <string name="ble_not_supported_or_not_paired">不支援藍牙低功耗或設備未配對。</string>
     <string name="ble_not_enabled">藍牙未啟用。</string>
     <string name="ble_permissions_missing">藍牙權限未授予。請在應用程式設定中授予。</string>
     <!--    Preferences -->
