@@ -1209,4 +1209,5 @@
     <string name="units_sec">sek</string>
     <string name="units_years">r</string>
     <string name="prefs_range_title">Zakres do wizualizacji (na wykresie)</string>
+    <string name="secrets_not_protected">Na tym komputerze nie znaleziono systemowego magazynu kluczy. Klucze chroniące ustawienia i parowanie z urządzeniem pacjenta są przechowywane w plikach obok danych, więc każdy, kto dostanie kopię Twoich plików, dostanie też te klucze. W systemie Linux zainstaluj i uruchom menedżer kluczy (na przykład GNOME Keyring lub KWallet), a następnie uruchom AAPS ponownie.</string>
 </resources>
