@@ -3,6 +3,8 @@ package app.aaps.wear.di
 import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.wear.WearApp
 import app.aaps.wear.comm.DataLayerListenerServiceWear
+import app.aaps.wear.eatreminder.EatReminderActivity
+import app.aaps.wear.eatreminder.EatReminderReceiver
 import app.aaps.wear.complications.BgGraphComplication
 import app.aaps.wear.complications.BrCobIobComplication
 import app.aaps.wear.complications.BrCobIobComplicationExt1
@@ -286,6 +288,18 @@ object WearMemberInjectors {
     @IntoMap
     @ClassKey(ECarbActivity::class)
     fun bindECarbActivity(injector: MembersInjector<ECarbActivity>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(EatReminderActivity::class)
+    fun bindEatReminderActivity(injector: MembersInjector<EatReminderActivity>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(EatReminderReceiver::class)
+    fun bindEatReminderReceiver(injector: MembersInjector<EatReminderReceiver>): MembersInjector<*> = injector
 
     @Provides
     @FeatureMemberInjectors

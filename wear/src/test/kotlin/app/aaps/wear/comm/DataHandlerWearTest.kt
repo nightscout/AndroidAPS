@@ -12,6 +12,7 @@ import app.aaps.wear.AAPSLoggerTest
 import app.aaps.wear.R
 import app.aaps.wear.WearTestBase
 import app.aaps.wear.data.ComplicationDataRepository
+import app.aaps.wear.eatreminder.EatReminderWatch
 import app.aaps.wear.watchfaces.WatchFacePushHelper
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CompletableDeferred
@@ -40,6 +41,7 @@ internal class DataHandlerWearTest : WearTestBase() {
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var complicationDataRepository: ComplicationDataRepository
     @Mock lateinit var watchFacePushHelper: WatchFacePushHelper
+    @Mock lateinit var eatReminderWatch: EatReminderWatch
 
     private val logger = AAPSLoggerTest()
     private lateinit var rxBus: RxBus
@@ -48,7 +50,7 @@ internal class DataHandlerWearTest : WearTestBase() {
     @BeforeEach
     fun setupHandler() {
         rxBus = RxBusImpl(logger)
-        sut = DataHandlerWear(context, rxBus, sp, preferences, logger, complicationDataRepository, watchFacePushHelper)
+        sut = DataHandlerWear(context, rxBus, sp, preferences, logger, complicationDataRepository, watchFacePushHelper, eatReminderWatch)
     }
 
     @Test

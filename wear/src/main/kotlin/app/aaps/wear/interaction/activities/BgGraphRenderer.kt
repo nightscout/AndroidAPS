@@ -4,9 +4,11 @@ import android.graphics.Paint
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.ui.MarkerSizeClasses
 import app.aaps.core.data.ui.MarkerTier
@@ -151,8 +153,18 @@ internal fun markerAnchorTime(time: Long, partners: List<Long>): Long {
     return if (partner != null && partner < time) partner else time
 }
 
-internal fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int, showNowLabel: Boolean = true) {
-    val now = System.currentTimeMillis()
+/**
+ * [now] is the moment the graph is drawn for; a screen that ticks passes its own clock, so the drawing
+ * follows it. [minutesText] writes the minutes left of the "time to eat" timer at its end line; null
+ * leaves the timer out.
+ */
+internal fun DrawScope.renderBgGraph(
+    data: ComplicationData,
+    historyHours: Int,
+    showNowLabel: Boolean = true,
+    now: Long = System.currentTimeMillis(),
+    minutesText: ((Int) -> String)? = null
+) {
     val historyMs = historyHours * 60 * 60 * 1000L
     // Cap predictions at the history span so short ranges (1h) aren't dominated by the prediction area
     val predictionMs = min(90 * 60 * 1000L, historyMs)
@@ -241,6 +253,35 @@ internal fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int, 
             }
             val nowLabel = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(now))
             canvas.nativeCanvas.drawText(nowLabel, nowX, pad + nowPaint.textSize + 2f, nowPaint)
+        }
+    }
+
+    // The "time to eat" timer: a dashed line where it rings, with the minutes left at it, one line under
+    // the now label so the two never meet. Past the window's end the line stands at the edge
+    val eatAt = data.statusData.eatReminderEndsAt
+    if (minutesText != null && eatAt != null && eatAt > now) {
+        val x = timeToX(min(eatAt, endTime))
+        drawLine(
+            color = CarbsOrange,
+            start = Offset(x, pad),
+            end = Offset(x, pad + graphH),
+            strokeWidth = 1.dp.toPx(),
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(4.dp.toPx(), 3.dp.toPx()))
+        )
+        val minutesLeft = ((eatAt - now + 59_999L) / 60_000L).toInt()
+        drawIntoCanvas { canvas ->
+            val paint = Paint().apply {
+                color = CarbsOrange.toArgb()
+                textSize = 8.dp.toPx()
+                isAntiAlias = true
+                isFakeBoldText = true
+            }
+            val text = minutesText(minutesLeft)
+            val margin = 2.dp.toPx()
+            // Right of the line when there is room, else left of it
+            val fits = x + margin + paint.measureText(text) <= pad + drawW
+            paint.textAlign = if (fits) Paint.Align.LEFT else Paint.Align.RIGHT
+            canvas.nativeCanvas.drawText(text, if (fits) x + margin else x - margin, pad + paint.textSize * 2 + 4f, paint)
         }
     }
 
