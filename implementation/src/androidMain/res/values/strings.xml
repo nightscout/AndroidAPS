@@ -32,6 +32,7 @@
     <string name="alarm_channel_bolus_error">Bolus error</string>
     <string name="alarm_channel_error">General error</string>
     <string name="alarm_channel_urgent">Urgent alarm</string>
+    <string name="alarm_channel_eat_reminder">Time to eat</string>
     <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (override Do Not Disturb)</string>
     <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (respects Do Not Disturb)</string>
     <string name="alarm_channel_silent_urgent">Urgent alarm (volume-ramp mode)</string>
