@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.overview.graph.BolusType
 import app.aaps.core.interfaces.overview.graph.TreatmentGraphData
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
@@ -46,20 +45,11 @@ class IobOverlaysTest {
     }
 
     @Test
-    fun `manual boluses are not counted with the SMBs and the largest one sets their scale`() {
+    fun `manual boluses are not counted with the SMBs`() {
         val result = overlays(smb(10, 0.3), manual(20, 1.0), manual(40, 6.0))
 
         assertEquals(listOf(10.0), result.largeSmbs.map { it.first })
         assertEquals(listOf(20.0 to 1.0, 40.0 to 6.0), result.normalBoluses)
-        assertEquals(6.0, result.maxManualBolus)
-        // The sizes the IOB graph draws them in, the same as on the BG graph
-        assertEquals(MarkerTier.SMALL, tierOf(1.0, result.maxManualBolus))
-        assertEquals(MarkerTier.LARGE, tierOf(6.0, result.maxManualBolus))
-    }
-
-    @Test
-    fun `without a manual bolus there is no largest one`() {
-        assertNull(overlays(smb(10, 0.3)).maxManualBolus)
     }
 
     @Test

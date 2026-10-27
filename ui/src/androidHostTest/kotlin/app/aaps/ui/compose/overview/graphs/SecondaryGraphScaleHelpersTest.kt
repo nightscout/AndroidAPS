@@ -148,21 +148,6 @@ internal class SecondaryGraphScaleHelpersTest {
             assertThat(windowedValues(listOf(iob, cob), 5.0, 10.0)).containsExactly(6.0)
         }
 
-        /**
-         * Carb markers count towards the axis, because they are drawn on it.
-         *
-         * That gap is open on every cold start: carb markers come straight from the database while
-         * COB waits for the calculation workflow. Measured on a Pixel with COB+ABS after a restart -
-         * `primaryY=[null..null] n=0` against `modelY=[0.0..43.0] slots=[CarbsMarker]` - and the COB
-         * curve, once it arrived at 148, was drawn straight through the top of a 0..44 axis.
-         */
-        @Test
-        fun `carb markers alone still give the axis something to scale to`() {
-            val carbs = spec(6.0 to 36.0, 8.0 to 43.0, slot = SeriesSlot.CarbsMarker)
-
-            assertThat(windowedValues(listOf(carbs), 5.0, 10.0)).containsExactly(36.0, 43.0)
-        }
-
         @Test
         fun `falls back to the full union only when every series is empty in-window`() {
             val iob = spec(0.0 to 1.0, 10.0 to 2.0)

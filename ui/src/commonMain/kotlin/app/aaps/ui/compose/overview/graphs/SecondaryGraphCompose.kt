@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,10 +65,6 @@ import kotlinx.coroutines.delay
  */
 private val AXIS_SCALE_KEY = ExtraStore.Key<AxisScale>()
 
-/** The largest manual bolus and carbs entry of the loaded range: the markers are sized against them, see [TieredPointProvider]. */
-private val MAX_MANUAL_BOLUS_KEY = ExtraStore.Key<Double>()
-private val MAX_CARBS_KEY = ExtraStore.Key<Double>()
-
 /** The axis setup that a scroll or zoom can change. Equal values mean the axes did not change. */
 private data class AxisScale(
     val left: CartesianLayerRangeProvider,
@@ -88,16 +85,16 @@ private data class ModelInput(
     val rightFirst: Boolean,
     val maxX: Double,
     val axisScale: AxisScale,
-    val maxManualBolus: Double?,
-    val maxCarbs: Double?
+    /** The amounts over the curve steps, see [AmountLabelDecoration]. */
+    val amountLabels: AmountLabels
 )
 
 /**
  * General-purpose secondary graph composable.
  *
  * Shows one or two series. Every series draws the same way, on either axis:
- * - IOB: Blue line with area fill + bolus markers (SMBs, normal boluses, extended boluses)
- * - COB: Orange adaptive-step line with area fill + carbs markers + failover dots
+ * - IOB: Blue line with area fill + SMB and extended bolus markers, and the amount of each manual bolus over its step
+ * - COB: Orange adaptive-step line with area fill + failover dots, and the amount of each carbs entry over its step
  * - Simple line series (AbsIOB, BGI, Sensitivity, VarSens, DevSlope, HR, Steps): Colored line with gradient fill
  * - Deviations: Per-type colored step lines with gradient fill (POSITIVE/NEGATIVE/EQUAL/UAM/CSF)
  *
@@ -304,7 +301,6 @@ fun SecondaryGraphCompose(
                         addPoints(processedIobTreatments.smallSmbs, SeriesSlot.SmallSmb)
                         addPoints(processedIobTreatments.mediumSmbs, SeriesSlot.MediumSmb)
                         addPoints(processedIobTreatments.largeSmbs, SeriesSlot.LargeSmb)
-                        addPoints(processedIobTreatments.normalBoluses, SeriesSlot.NormalBolus)
                         processedIobTreatments.extBoluses.forEach { (start, end, amount) ->
                             add(SeriesSpec(listOf(start, end), listOf(amount, amount), SeriesSlot.ExtBolus))
                         }
@@ -313,7 +309,6 @@ fun SecondaryGraphCompose(
                     SeriesType.COB        -> {
                         addPoints(processedCob.first, SeriesSlot.CobLine)
                         addPoints(processedCob.second, SeriesSlot.FailoverDots)
-                        addPoints(processedCarbs, SeriesSlot.CarbsMarker)
                     }
 
                     else                  -> {
@@ -470,8 +465,16 @@ fun SecondaryGraphCompose(
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val inspectLine = rememberInspectLine(inspect)
     val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp, bgReadings)
-    val decorations = remember(nowLine, visibleRangeReporter, clockChanges, inspectLine) {
-        listOfNotNull(nowLine, visibleRangeReporter, clockChanges, inspectLine)
+    // The amounts over the curve steps, see AmountLabelDecoration
+    val insulinColor = AapsTheme.elementColors.insulin
+    val carbsColor = AapsTheme.elementColors.carbs
+    val labelBackground = MaterialTheme.colorScheme.surface
+    val haloBlur = with(LocalDensity.current) { AMOUNT_LABEL_HALO_BLUR.toPx() }
+    val amountDecoration = remember(insulinColor, carbsColor, labelBackground, haloBlur) {
+        AmountLabelDecoration(insulin = amountLabelText(insulinColor, labelBackground, haloBlur), carbs = amountLabelText(carbsColor, labelBackground, haloBlur))
+    }
+    val decorations = remember(nowLine, visibleRangeReporter, clockChanges, inspectLine, amountDecoration) {
+        listOfNotNull(nowLine, visibleRangeReporter, clockChanges, inspectLine, amountDecoration)
     }
 
     val leftRangeProvider = remember(maxX, axes.left) {
@@ -538,12 +541,23 @@ fun SecondaryGraphCompose(
         rightRange?.let { NiceVerticalAxisItemPlacer(labelMin = it.min, labelMax = it.max) } ?: NoLabelsAxisItemPlacer
     }
 
+    // The amount of a bolus or carbs entry stands over the step it makes in the curve, clear of the SMB
+    // triangles, see AmountLabelDecoration. Each on the axis of its own series.
+    val decimalFormatter = LocalDecimalFormatter.current
+    val amountLabels = remember(sides, processedIob, processedIobTreatments, processedCob, processedCarbs, decimalFormatter) {
+        if (!hasRealTimeRange) AmountLabels.EMPTY
+        else AmountLabels(
+            insulin = amountLabelsOn(processedIob, processedIobTreatments.normalBoluses, sides.axisOf(SeriesType.IOB)) { formatBolusLabel(it, decimalFormatter) },
+            carbs = amountLabelsOn(processedCob.first, processedCarbs, sides.axisOf(SeriesType.COB)) { formatCarbsLabel(it, decimalFormatter) },
+            keepClear = smbMarkerBoxes(processedIobTreatments, sides.axisOf(SeriesType.IOB))
+        )
+    }
+
     // Rebuilt only when the data or the axes change, not on every scroll step
     val axisScale = AxisScale(leftRangeProvider, rightRangeProvider, basalRangeProvider, startAxisItemPlacer, endAxisItemPlacer)
     val modelInput = ModelInput(
         leftSpecs, rightSpecs, processedBasalProfile, processedBasalActual, hasBasalLayer, hasRightAxis, rightFirst, maxX, axisScale,
-        maxManualBolus = processedIobTreatments.maxManualBolus,
-        maxCarbs = processedCarbs.maxOfOrNull { it.second }
+        amountLabels = amountLabels
     )
     val latestModelInput by rememberUpdatedState(modelInput)
     // One transaction after the other, and none is cancelled half-way. When the input changes during a
@@ -584,8 +598,7 @@ fun SecondaryGraphCompose(
                 // updated range providers.
                 extras {
                     it[AXIS_SCALE_KEY] = input.axisScale
-                    input.maxManualBolus?.let { max -> it[MAX_MANUAL_BOLUS_KEY] = max }
-                    input.maxCarbs?.let { max -> it[MAX_CARBS_KEY] = max }
+                    it[AMOUNT_LABELS_KEY] = input.amountLabels
                 }
             }
         }
@@ -654,11 +667,9 @@ private fun lineFor(slot: SeriesSlot, colors: SeriesColors, iobStyles: IobLineSt
     SeriesSlot.SmallSmb         -> iobStyles.smallSmbLine
     SeriesSlot.MediumSmb        -> iobStyles.mediumSmbLine
     SeriesSlot.LargeSmb         -> iobStyles.largeSmbLine
-    SeriesSlot.NormalBolus      -> iobStyles.bolusLine
     SeriesSlot.ExtBolus         -> iobStyles.extBolusLine
     SeriesSlot.CobLine          -> cobStyles.cobLine
     SeriesSlot.FailoverDots     -> cobStyles.failoverDotsLine
-    SeriesSlot.CarbsMarker      -> cobStyles.carbsLine
     SeriesSlot.DevSlopeMin      -> createDevSlopeMinLine()
     SeriesSlot.ActivityOverlay  -> createSeriesLine(SeriesType.ACTIVITY, colors)
     is SeriesSlot.SimpleLine    -> createSeriesLine(slot.type, colors)
@@ -685,11 +696,9 @@ internal sealed class SeriesSlot {
     data object SmallSmb : SeriesSlot()
     data object MediumSmb : SeriesSlot()
     data object LargeSmb : SeriesSlot()
-    data object NormalBolus : SeriesSlot()
     data object ExtBolus : SeriesSlot()
     data object CobLine : SeriesSlot()
     data object FailoverDots : SeriesSlot()
-    data object CarbsMarker : SeriesSlot()
     data class SimpleLine(val type: SeriesType) : SeriesSlot()
     data object DevSlopeMin : SeriesSlot()
     data object ActivityOverlay : SeriesSlot()
@@ -767,8 +776,7 @@ internal fun processStepPoints(points: List<GraphDataPoint>, minTimestamp: Long,
 
 /**
  * Process IOB treatment overlays: split SMBs by size, extract boluses and extended boluses.
- * An SMB is sized like a treatment marker ([tierOf]) against the largest SMB of the loaded range,
- * a manual bolus against the largest manual bolus (see [ProcessedIobOverlays.maxManualBolus]).
+ * An SMB is sized like a treatment marker ([tierOf]) against the largest SMB of the loaded range.
  */
 @Suppress("SameParameterValue")
 internal fun processIobOverlays(data: TreatmentGraphData, minTimestamp: Long, minX: Double, maxX: Double): ProcessedIobOverlays {
@@ -808,13 +816,10 @@ internal data class ProcessedIobOverlays(
     val smallSmbs: List<Pair<Double, Double>>,
     val mediumSmbs: List<Pair<Double, Double>>,
     val largeSmbs: List<Pair<Double, Double>>,
-    /** (x, amount) of each manual bolus, drawn at its amount and sized by it, see [TieredPointProvider]. */
+    /** (x, amount) of each manual bolus, for the amount label over its step in the curve. */
     val normalBoluses: List<Pair<Double, Double>>,
     val extBoluses: List<Triple<Double, Double, Double>>
 ) {
-
-    /** The largest manual bolus of the loaded range, which the sizes of the manual bolus markers are measured against. */
-    val maxManualBolus: Double? get() = normalBoluses.maxOfOrNull { it.second }
 
     companion object {
 
@@ -926,7 +931,7 @@ fun createSeriesLine(type: SeriesType, colors: SeriesColors): LineCartesianLayer
 }
 
 // =========================================================================
-// IOB line styles (bolus markers)
+// IOB line styles (SMB and extended bolus markers)
 // =========================================================================
 
 data class IobLineStyles(
@@ -934,17 +939,25 @@ data class IobLineStyles(
     val smallSmbLine: LineCartesianLayer.Line,
     val mediumSmbLine: LineCartesianLayer.Line,
     val largeSmbLine: LineCartesianLayer.Line,
-    val bolusLine: LineCartesianLayer.Line,
     val extBolusLine: LineCartesianLayer.Line
 )
 
 /**
- * One size for the bolus and carbs labels on the graphs. Vico gives a label no more width than the
- * gap to its neighbour in the same series and ends it with "..." when the text is wider. The bolus
- * labels used 16 sp and lost that race far more often than the 14 sp carbs labels, so both use the
- * smaller size now.
+ * The size of the extended bolus label. Vico gives a label no more width than the gap to its
+ * neighbour in the same series and ends it with "..." when the text is wider, so it is not large.
  */
-private val TREATMENT_LABEL_FONT_SIZE = 14.sp
+private val EXT_BOLUS_LABEL_FONT_SIZE = 14.sp
+
+/** The SMB triangles on the IOB graph, by tier. The amount labels keep clear of them, see [AmountLabels.keepClear]. */
+private val SMALL_SMB_MARKER = 10.dp
+private val MEDIUM_SMB_MARKER = 16.dp
+private val LARGE_SMB_MARKER = 22.dp
+
+/** The box of each SMB triangle, centered on its point and sized by its tier, for the amount labels to keep clear of. */
+private fun smbMarkerBoxes(treatments: ProcessedIobOverlays, axis: Axis.Position.Vertical): List<MarkerBox> =
+    treatments.smallSmbs.map { (x, y) -> MarkerBox(x, y, axis, SMALL_SMB_MARKER) } +
+        treatments.mediumSmbs.map { (x, y) -> MarkerBox(x, y, axis, MEDIUM_SMB_MARKER) } +
+        treatments.largeSmbs.map { (x, y) -> MarkerBox(x, y, axis, LARGE_SMB_MARKER) }
 
 @Composable
 fun rememberIobLineStyles(): IobLineStyles {
@@ -953,20 +966,14 @@ fun rememberIobLineStyles(): IobLineStyles {
     val extBolusColor = AapsTheme.elementColors.extendedBolus
     val decimalFormatter = LocalDecimalFormatter.current
 
-    val bolusLabelComponent = remember(smbColor) {
-        TextComponent(textStyle = TextStyle(color = smbColor, fontSize = TREATMENT_LABEL_FONT_SIZE))
-    }
-    val bolusValueFormatter = remember {
-        CartesianValueFormatter { _, value, _ -> formatBolusLabel(value, decimalFormatter) }
-    }
     val extBolusLabelComponent = remember(extBolusColor) {
-        TextComponent(textStyle = TextStyle(color = extBolusColor, fontSize = TREATMENT_LABEL_FONT_SIZE))
+        TextComponent(textStyle = TextStyle(color = extBolusColor, fontSize = EXT_BOLUS_LABEL_FONT_SIZE))
     }
     val extBolusValueFormatter = remember {
         CartesianValueFormatter { _, value, _ -> formatBolusLabel(value, decimalFormatter) }
     }
 
-    return remember(iobColor, smbColor, extBolusColor, bolusLabelComponent, bolusValueFormatter, extBolusLabelComponent, extBolusValueFormatter) {
+    return remember(iobColor, smbColor, extBolusColor, extBolusLabelComponent, extBolusValueFormatter) {
         IobLineStyles(
             iobLine = LineCartesianLayer.Line(
                 fill = LineCartesianLayer.LineFill.single(Fill(iobColor)),
@@ -979,32 +986,22 @@ fun rememberIobLineStyles(): IobLineStyles {
                 fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
                 areaFill = null,
                 pointProvider = LineCartesianLayer.PointProvider.single(
-                    LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(smbColor), shape = TriangleShape), size = 10.dp)
+                    LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(smbColor), shape = TriangleShape), size = SMALL_SMB_MARKER)
                 )
             ),
             mediumSmbLine = LineCartesianLayer.Line(
                 fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
                 areaFill = null,
                 pointProvider = LineCartesianLayer.PointProvider.single(
-                    LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(smbColor), shape = TriangleShape), size = 16.dp)
+                    LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(smbColor), shape = TriangleShape), size = MEDIUM_SMB_MARKER)
                 )
             ),
             largeSmbLine = LineCartesianLayer.Line(
                 fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
                 areaFill = null,
                 pointProvider = LineCartesianLayer.PointProvider.single(
-                    LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(smbColor), shape = TriangleShape), size = 22.dp)
+                    LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(smbColor), shape = TriangleShape), size = LARGE_SMB_MARKER)
                 )
-            ),
-            // A manual bolus points down, with its tip on its amount, the same as on the BG graph. SMBs
-            // point up, so a manual bolus among them still reads as one. Sized as on the BG graph
-            bolusLine = LineCartesianLayer.Line(
-                fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
-                areaFill = null,
-                pointProvider = TieredPointProvider(InvertedTriangleShape, smbColor, MAX_MANUAL_BOLUS_KEY),
-                dataLabel = bolusLabelComponent,
-                dataLabelPosition = Position.Vertical.Top,
-                dataLabelValueFormatter = bolusValueFormatter
             ),
             extBolusLine = LineCartesianLayer.Line(
                 fill = LineCartesianLayer.LineFill.single(Fill(extBolusColor)),
@@ -1018,29 +1015,19 @@ fun rememberIobLineStyles(): IobLineStyles {
 }
 
 // =========================================================================
-// COB line styles (carbs markers)
+// COB line styles
 // =========================================================================
 
 data class CobLineStyles(
     val cobLine: LineCartesianLayer.Line,
-    val failoverDotsLine: LineCartesianLayer.Line,
-    val carbsLine: LineCartesianLayer.Line
+    val failoverDotsLine: LineCartesianLayer.Line
 )
 
 @Composable
 fun rememberCobLineStyles(): CobLineStyles {
     val cobColor = AapsTheme.generalColors.cobPrediction
-    val carbsColor = AapsTheme.elementColors.carbs
-    val decimalFormatter = LocalDecimalFormatter.current
 
-    val carbsLabelComponent = remember(carbsColor) {
-        TextComponent(textStyle = TextStyle(color = carbsColor, fontSize = TREATMENT_LABEL_FONT_SIZE))
-    }
-    val carbsValueFormatter = remember {
-        CartesianValueFormatter { _, value, _ -> formatCarbsLabel(value, decimalFormatter) }
-    }
-
-    return remember(cobColor, carbsColor, carbsLabelComponent, carbsValueFormatter) {
+    return remember(cobColor) {
         CobLineStyles(
             cobLine = LineCartesianLayer.Line(
                 fill = LineCartesianLayer.LineFill.single(Fill(cobColor)),
@@ -1055,29 +1042,19 @@ fun rememberCobLineStyles(): CobLineStyles {
                 pointProvider = LineCartesianLayer.PointProvider.single(
                     LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(cobColor), shape = CircleShape), size = 6.dp)
                 )
-            ),
-            // Sized as on the BG graph
-            carbsLine = LineCartesianLayer.Line(
-                fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
-                areaFill = null,
-                pointProvider = TieredPointProvider(InvertedTriangleShape, carbsColor, MAX_CARBS_KEY),
-                dataLabel = carbsLabelComponent,
-                dataLabelPosition = Position.Vertical.Top,
-                dataLabelValueFormatter = carbsValueFormatter
             )
         )
     }
 }
 
 // =========================================================================
-// Label formatters (shared with IOB/COB graph composables)
+// Label formatters
 // =========================================================================
 
-/** Formats bolus amount: 1.0->"1", 1.2->"1.2", 0.8->".8" (drop leading zero) */
+/** Formats bolus amount: 1.0->"1", 1.2->"1.2", 0.4->"0.4" */
 private fun formatBolusLabel(value: Double, decimalFormatter: DecimalFormatter): String {
     if (value == 0.0) return ""
-    val formatted = decimalFormatter.to2Decimal(value).trimEnd('0').trimEnd('.').trimEnd(',')
-    return if (formatted.startsWith("0.")) formatted.substring(1) else formatted
+    return decimalFormatter.to2Decimal(value).trimEnd('0').trimEnd('.').trimEnd(',')
 }
 
 /** Formats carbs amount: 45.0->"45", 7.5->"7.5", 0.0->"" */

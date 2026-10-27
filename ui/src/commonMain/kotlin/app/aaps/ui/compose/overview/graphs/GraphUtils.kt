@@ -33,12 +33,10 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.Axis
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
-import com.patrykandpatrick.vico.compose.cartesian.data.LineCartesianLayerModel
 import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
-import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -469,31 +467,6 @@ internal val MarkerTier.markerSize: Dp
         MarkerTier.MEDIUM -> 17.dp
         MarkerTier.LARGE  -> 22.dp
     }
-
-/**
- * Draws every point of a treatment series in the size of its amount: [tierOf] against the largest
- * amount of its kind in the loaded range, which the chart model carries under [maxAmountKey]. The
- * y of a point is its amount.
- *
- * One series with a size per point, not one series per size: Vico shortens a label only against
- * its neighbours in the same series, so with three series the labels of two close boluses of
- * different size would be drawn over each other.
- */
-internal data class TieredPointProvider(
-    private val shape: Shape,
-    private val color: Color,
-    private val maxAmountKey: ExtraStore.Key<Double>
-) : LineCartesianLayer.PointProvider {
-
-    private val points = MarkerTier.entries.associateWith { tier ->
-        LineCartesianLayer.Point(component = ShapeComponent(fill = Fill(color), shape = shape), size = tier.markerSize)
-    }
-
-    override fun getPoint(entry: LineCartesianLayerModel.Entry, extraStore: ExtraStore): LineCartesianLayer.Point =
-        points.getValue(tierOf(entry.y, extraStore.getOrNull(maxAmountKey)))
-
-    override fun getLargestPoint(extraStore: ExtraStore): LineCartesianLayer.Point = points.getValue(MarkerTier.LARGE)
-}
 
 /**
  * Creates a line for BG prediction series.
