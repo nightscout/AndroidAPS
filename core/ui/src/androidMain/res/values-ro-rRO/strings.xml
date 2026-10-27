@@ -890,7 +890,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pompă asociată</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">BLE nu este suportat.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nu este acceptat sau dispozitivul nu este asociat.</string>
     <string name="ble_not_enabled">Bluetooth dezactivat.</string>
     <string name="ble_permissions_missing">Permisiunile Bluetooth nu sunt acordate. Vă rugăm să le acordați în setările aplicației.</string>
     <!--    Preferences -->
