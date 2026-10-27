@@ -994,7 +994,6 @@
 
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy not supported.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy not supported or device not paired.</string>
     <string name="ble_not_enabled">Bluetooth not enabled.</string>
     <string name="ble_permissions_missing">Bluetooth permissions are not granted. Please grant them in the app settings.</string>
 
