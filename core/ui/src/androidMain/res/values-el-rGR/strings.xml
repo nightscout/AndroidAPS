@@ -456,7 +456,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Αντλία σε ζεύξη</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Χαμηλή ενέργεια Bluetooth δεν υποστηρίζεται.</string>
-    <string name="ble_not_supported_or_not_paired">Το Bluetooth Low Energy δεν υποστηρίζεται ή η συσκευή δεν είναι συνδεδεμένη.</string>
     <string name="ble_not_enabled">Bluetooth μη ενεργοποιημένο.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Επιλογές προσθήκης</string>
