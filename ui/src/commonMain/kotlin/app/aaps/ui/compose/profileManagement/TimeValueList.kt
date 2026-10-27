@@ -36,6 +36,11 @@ import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.profileManagement.viewmodels.TimeValue
 
+/**
+ * @param title name of the list. A screen reader says it with every row ("Basal [U/h] at 08:00").
+ * @param showTitle false when the screen shows the name itself, for example next to a sum. The rows
+ *   still need it for the screen reader.
+ */
 @Composable
 fun TimeValueList(
     title: String,
@@ -47,6 +52,7 @@ fun TimeValueList(
     step: Double = 0.1,
     valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
     unitLabel: String = "",
+    showTitle: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     // Row whose time is being edited, -1 for none.
@@ -54,7 +60,7 @@ fun TimeValueList(
 
     val header = if (unitLabel.isNotEmpty()) "$title [$unitLabel]" else title
     Column(modifier = modifier.fillMaxWidth()) {
-        if (title.isNotEmpty()) {
+        if (showTitle && title.isNotEmpty()) {
             Text(
                 text = header,
                 style = MaterialTheme.typography.titleMedium,

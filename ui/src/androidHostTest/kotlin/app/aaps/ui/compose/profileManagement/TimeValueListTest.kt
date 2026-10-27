@@ -7,6 +7,7 @@ import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isPopup
 import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
@@ -102,6 +103,32 @@ class TimeValueListTest {
         compose.onNodeWithText("04:00").performClick()
         compose.onNode(inWheel("05:00")).performClick()
         assertThat(changes.last()).isEqualTo(Triple(2, TimeValue(5 * HOUR, 1.2), TimeValue(5 * HOUR, 3.2)))
+    }
+
+    /**
+     * The basal tab draws its name itself, next to the sum, so the list does not draw it again. The rows
+     * must still carry it for a screen reader: with an empty title each one was read only as "at 08:00".
+     */
+    @Test
+    fun aHiddenTitleStillNamesTheRowsForAScreenReader() {
+        compose.setContent {
+            CompositionLocalProvider(LocalDateUtil provides dateUtil) {
+                MaterialTheme {
+                    TimeValueList(
+                        title = "Basal",
+                        entries = entries,
+                        onEntryChange = { _, _ -> },
+                        onAddEntry = {},
+                        onRemoveEntry = {},
+                        valueRange = 0.0..10.0,
+                        unitLabel = "U/h",
+                        showTitle = false
+                    )
+                }
+            }
+        }
+        compose.onNodeWithText("Basal [U/h]").assertDoesNotExist()
+        assertThat(compose.onAllNodesWithContentDescription("Basal [U/h]", substring = true).fetchSemanticsNodes()).isNotEmpty()
     }
 
     /** An hour label inside the popup wheel, as opposed to the same text on a chip in the list. */

@@ -144,7 +144,7 @@ class ProfileEditorViewModel(
                 } else {
                     // Somebody else changed this profile (NS push, master edit, editor reset).
                     // Reload — discards in-flight edits.
-                    editingProfile = stored
+                    editingProfile = stored?.withShownBasal()
                     locallyEdited = false
                     lastSaved = null
                     loadState()
@@ -228,10 +228,20 @@ class ProfileEditorViewModel(
     fun selectProfile(index: Int) {
         isNewDraft = false
         editingIndex = index
-        editingProfile = profileRepository.profiles.value.getOrNull(index)
+        editingProfile = profileRepository.profiles.value.getOrNull(index)?.withShownBasal()
         locallyEdited = false
         viewModelScope.launch { loadState() }
     }
+
+    /**
+     * The profile with its basal rates rounded to [BASAL_STEP], the precision the rows show. A profile
+     * from autotune has three decimals, and the editor then stepped and summed digits the user could
+     * not see (#5401, #5402). No pump AAPS drives takes a finer basal step, so nothing is lost.
+     *
+     * Not an edit on its own: opening a profile does not offer Save, and the next save stores it.
+     */
+    private fun SingleProfile.withShownBasal(): SingleProfile =
+        copy(basal = basal.map { it.copy(amount = Round.roundTo(it.amount, BASAL_STEP)) })
 
     /**
      * Begin editing a brand-new, unpersisted profile. The draft is empty (and therefore invalid, so
@@ -254,8 +264,9 @@ class ProfileEditorViewModel(
     fun updateIsfEntry(index: Int, timeValue: TimeValue) =
         editProfile { it.copy(isf = it.isf.timeValues().updateAt(index, timeValue).toBlocks()) }
 
+    // Rounded like a loaded profile (see withShownBasal): a typed 1.125 would be a hidden third digit again
     fun updateBasalEntry(index: Int, timeValue: TimeValue) =
-        editProfile { it.copy(basal = it.basal.timeValues().updateAt(index, timeValue).toBlocks()) }
+        editProfile { it.copy(basal = it.basal.timeValues().updateAt(index, timeValue.copy(value = Round.roundTo(timeValue.value, BASAL_STEP))).toBlocks()) }
 
     fun updateTargetEntry(index: Int, low: TimeValue, high: TimeValue) =
         editProfile {
@@ -437,6 +448,9 @@ class ProfileEditorViewModel(
         // [profileRepository.profiles]; the subscriber re-clones editingProfile from the
         // freshly-loaded list and refreshes the UI. Drops any local edits, matching the
         // legacy "discard changes" semantics.
+        // After a save the reloaded profile is the one we saved, and the subscriber would take it for
+        // the echo of that save and keep the edits. A reset always wants the reload.
+        lastSaved = null
         viewModelScope.launch { profileRepository.reset() }
     }
 
@@ -451,8 +465,11 @@ class ProfileEditorViewModel(
             targetHigh = target.highTimeValues()
         )
 
-    private companion object {
+    companion object {
 
-        const val DAY_SECONDS = 24 * 3600
+        private const val DAY_SECONDS = 24 * 3600
+
+        /** Basal rates are edited and stored in 0.01 U/h, the finest step of any pump AAPS drives. */
+        const val BASAL_STEP = 0.01
     }
 }
