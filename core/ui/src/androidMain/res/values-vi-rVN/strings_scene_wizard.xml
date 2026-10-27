@@ -66,16 +66,12 @@
     <string name="scene_wizard_finish">Kết thúc</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Theo dõi ngữ cảnh</string>
-    <string name="scene_wizard_chain_info">Tùy chọn nối thêm một tình huống khác để tự động kích hoạt khi tình huống này hết thời gian. Bạn cũng có thể chuyển sang tình huống đó khi kết thúc sớm. Tình huống tiếp theo chỉ chạy nếu mục tiêu được bật và bơm insulin sẵn sàng; nếu không, bạn sẽ nhận được thông báo.</string>
     <string name="scene_chain_none">Không</string>
     <string name="scene_skip_to_format">Chuyển sang %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
     <string name="scene_chain_target_missing">Ngữ cảnh liên kết đã bị xóa</string>
-    <!-- Scene expiry: chain result notifications -->
-    <string name="scene_ended_format">Ngữ cảnh \"%1$s\" đã kết thúc</string>
-    <string name="scene_chained_format">Ngữ cảnh liên kết: %1$s → %2$s</string>
-    <string name="scene_chain_ended_with_skip">%1$s đã kết thúc — bỏ qua bước tiếp theo: %2$s</string>
+    <!-- Scene expiry: what the banner says, and the chain error notification -->
     <string name="scene_chain_skipped_deleted">ngữ cảnh mục tiêu đã bị xóa</string>
     <string name="scene_chain_skipped_disabled">\"%1$s\" đã bị vô hiệu hóa</string>
     <string name="scene_chain_error_summary">%1$s → %2$s: %3$d trong %4$d hành động thất bại</string>
