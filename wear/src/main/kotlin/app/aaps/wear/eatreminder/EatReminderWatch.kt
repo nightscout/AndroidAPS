@@ -27,9 +27,10 @@ import kotlin.math.max
  *
  * The phone owns the timer and sends its end time with every status. The watch draws the end in its BG
  * graph and sets its own alarm at that time, so it rings also when the phone is out of reach at that
- * moment. The ring is a vibrating notification with Silence and +5 min, and [EatReminderActivity] over
- * it. Both buttons go to the phone, which stops or moves the timer, and the next status brings the
- * result back. Until then the watch acts on its own copy, so it reads right also with the phone away.
+ * moment. The ring is a vibrating notification with Silence and +5 min; a screen of its own was tried,
+ * but Android does not open one from an alarm in the background. Both buttons go to the phone, which
+ * stops or moves the timer, and the next status brings the result back. Until then the watch acts on
+ * its own copy, so it reads right also with the phone away.
  */
 @SingleIn(AppScope::class)
 @Inject
@@ -75,15 +76,6 @@ class EatReminderWatch(
         }
         aapsLogger.debug(LTag.WEAR, "Eat reminder rings")
         postRingNotification()
-        try {
-            context.startActivity(
-                Intent(context, EatReminderActivity::class.java)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            )
-        } catch (e: Exception) {
-            // Android may refuse a start from the background; the notification has the same buttons
-            aapsLogger.error(LTag.WEAR, "Eat reminder screen not opened", e)
-        }
     }
 
     /** Silence: the timer ends. The phone silences its own alarm too. */
@@ -119,7 +111,6 @@ class EatReminderWatch(
 
     private fun clearRing() {
         notificationManager.cancel(NOTIFICATION_ID)
-        EatReminderActivity.close()
     }
 
     private fun postRingNotification() {
@@ -134,12 +125,6 @@ class EatReminderWatch(
             .setContentTitle(context.getString(R.string.eat_reminder_title))
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setContentIntent(
-                PendingIntent.getActivity(
-                    context, OPEN_REQUEST_CODE, Intent(context, EatReminderActivity::class.java),
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-            )
             .addAction(0, context.getString(R.string.eat_reminder_silence), actionIntent(EatReminderReceiver.ACTION_STOP, STOP_REQUEST_CODE))
             .addAction(0, context.getString(R.string.eat_reminder_extend, EatReminder.EXTEND_MINUTES), actionIntent(EatReminderReceiver.ACTION_EXTEND, EXTEND_REQUEST_CODE))
             .build()
@@ -162,7 +147,6 @@ class EatReminderWatch(
         const val RING_REQUEST_CODE = 4720
         const val STOP_REQUEST_CODE = 4721
         const val EXTEND_REQUEST_CODE = 4722
-        const val OPEN_REQUEST_CODE = 4723
         const val EXTEND_MS = EatReminder.EXTEND_MINUTES * 60_000L
 
         /** An alarm may come a little early or late; further from the end it belongs to an older timer. */

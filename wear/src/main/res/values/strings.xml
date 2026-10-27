@@ -370,7 +370,7 @@
     <string name="wizard_carbs_type_bread">Bread</string>
     <string name="wizard_carbs_type_cake">Cake</string>
     <string name="wizard_carbs_type_pizza">Pizza</string>
-    <string name="wizard_carb_time">Carb time\n[minutes]</string>
+    <string name="wizard_carb_time">Carb time\n[min]</string>
     <string name="wizard_carb_time_now">Now</string>
     <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
     <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>

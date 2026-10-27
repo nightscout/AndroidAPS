@@ -156,7 +156,7 @@ internal fun markerAnchorTime(time: Long, partners: List<Long>): Long {
 /**
  * [now] is the moment the graph is drawn for; a screen that ticks passes its own clock, so the drawing
  * follows it. [minutesText] writes the minutes left of the "time to eat" timer at its end line; null
- * leaves the timer out.
+ * leaves the minutes out, the line stays.
  */
 internal fun DrawScope.renderBgGraph(
     data: ComplicationData,
@@ -259,7 +259,7 @@ internal fun DrawScope.renderBgGraph(
     // The "time to eat" timer: a dashed line where it rings, with the minutes left at it, one line under
     // the now label so the two never meet. Past the window's end the line stands at the edge
     val eatAt = data.statusData.eatReminderEndsAt
-    if (minutesText != null && eatAt != null && eatAt > now) {
+    if (eatAt != null && eatAt > now) {
         val x = timeToX(min(eatAt, endTime))
         drawLine(
             color = CarbsOrange,
@@ -269,7 +269,7 @@ internal fun DrawScope.renderBgGraph(
             pathEffect = PathEffect.dashPathEffect(floatArrayOf(4.dp.toPx(), 3.dp.toPx()))
         )
         val minutesLeft = ((eatAt - now + 59_999L) / 60_000L).toInt()
-        drawIntoCanvas { canvas ->
+        if (minutesText != null) drawIntoCanvas { canvas ->
             val paint = Paint().apply {
                 color = CarbsOrange.toArgb()
                 textSize = 8.dp.toPx()

@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -133,9 +134,8 @@ class WizardActivity : WearMetroActivity() {
                                 simpleMode = true,
                                 enabled = !pagerState.isScrollInProgress,
                                 title = stringResource(R.string.menu_wizard),
-                                footer = if (carbTime > 0) {
-                                    { AlarmToggle(checked = alarm, onToggle = { alarm = it }, enabled = !pagerState.isScrollInProgress) }
-                                } else null,
+                                // Always in the layout, so the value does not jump when the bell comes and goes
+                                footer = { AlarmToggle(checked = alarm, onToggle = { alarm = it }, visible = carbTime > 0, enabled = !pagerState.isScrollInProgress) },
                             )
                             Page.PERCENTAGE -> PlusMinusInputScreen(
                                 value = percentage,
@@ -248,15 +248,19 @@ private fun CarbsTypeScreen(carbs: Int, selected: CarbsType, onSelect: (CarbsTyp
     }
 }
 
-/** The "time to eat" alarm of the carb time page: a bell that is lit when the alarm is on. One tap flips it. */
+/**
+ * The "time to eat" alarm of the carb time page: a bell that is lit when the alarm is on. One tap flips it.
+ * Not [visible] while the carbs are not later, but still in the layout, so the page does not move.
+ */
 @Composable
-private fun AlarmToggle(checked: Boolean, onToggle: (Boolean) -> Unit, enabled: Boolean) {
+private fun AlarmToggle(checked: Boolean, onToggle: (Boolean) -> Unit, visible: Boolean, enabled: Boolean) {
     val haptic = LocalHapticFeedback.current
     Row(
         modifier = Modifier
             .padding(top = 4.dp)
+            .alpha(if (visible) 1f else 0f)
             .clip(CircleShape)
-            .clickable(enabled = enabled) {
+            .clickable(enabled = enabled && visible) {
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 onToggle(!checked)
             }
@@ -274,7 +278,8 @@ private fun AlarmToggle(checked: Boolean, onToggle: (Boolean) -> Unit, enabled: 
         Text(
             text = stringResource(R.string.wizard_set_alarm),
             color = if (checked) Color.White else WearSecondaryText,
-            fontSize = 12.sp
+            fontSize = 12.sp,
+            maxLines = 1
         )
     }
 }
