@@ -408,7 +408,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pump parkopplad</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Enheten stöder inte BLE.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy stöds inte, eller så är enheten inte parkopplad.</string>
     <string name="ble_not_enabled">Bluetooth är avstängt.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Inställningar för insticksprogram</string>
