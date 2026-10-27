@@ -66,16 +66,12 @@
     <string name="scene_wizard_finish">Dokončit</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Navazující scéna</string>
-    <string name="scene_wizard_chain_info">Volitelně připojte další scénu, která se automaticky aktivuje po vypršení této. Můžete na ni také přeskočit při předčasném ukončení. Navazující scéna se spustí, pouze pokud je cíl povolen a pumpa je dostupná; v opačném případě obdržíte upozornění.</string>
     <string name="scene_chain_none">Žádná</string>
     <string name="scene_skip_to_format">Přeskočit na %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
     <string name="scene_chain_target_missing">Navazující scéna byla smazána</string>
-    <!-- Scene expiry: chain result notifications -->
-    <string name="scene_ended_format">Scéna „%1$s“ skončila</string>
-    <string name="scene_chained_format">Scéna navázána: %1$s → %2$s</string>
-    <string name="scene_chain_ended_with_skip">%1$s skončila — navazující scéna přeskočena: %2$s</string>
+    <!-- Scene expiry: what the banner says, and the chain error notification -->
     <string name="scene_chain_skipped_deleted">cílová scéna byla smazána</string>
     <string name="scene_chain_skipped_disabled">„%1$s“ je zakázána</string>
     <string name="scene_chain_error_summary">%1$s → %2$s: %3$d z %4$d akcí selhalo</string>
