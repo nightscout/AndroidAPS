@@ -66,16 +66,12 @@
     <string name="scene_wizard_finish">Termina</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Segui scena</string>
-    <string name="scene_wizard_chain_info">Opzionalmente concatenare un\'altra scena per attivare automaticamente quando questa scade. Puoi anche saltare ad essa quando finisci presto. Il follow-up viene eseguito solo se l\'obiettivo è abilitato e il micro è disponibile; altrimenti riceverai una notifica.</string>
     <string name="scene_chain_none">Nessuno</string>
     <string name="scene_skip_to_format">Salta a %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
     <string name="scene_chain_target_missing">Scena concatenata eliminata</string>
-    <!-- Scene expiry: chain result notifications -->
-    <string name="scene_ended_format">Scena \"%1$s\" terminata</string>
-    <string name="scene_chained_format">Scena concatenata: %1$s → %2$s</string>
-    <string name="scene_chain_ended_with_skip">%1$s terminato — seguito saltato: %2$s</string>
+    <!-- Scene expiry: what the banner says, and the chain error notification -->
     <string name="scene_chain_skipped_deleted">la scena target è stata eliminata</string>
     <string name="scene_chain_skipped_disabled">\"%1$s\" è disabilitato</string>
     <string name="scene_chain_error_summary">%1$s → %2$s: %3$d di azioni %4$d fallite</string>
