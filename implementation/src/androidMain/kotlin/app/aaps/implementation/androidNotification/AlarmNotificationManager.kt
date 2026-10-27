@@ -121,14 +121,16 @@ class AlarmNotificationManager(
             AlarmSound.ALARM to "alarm",
             AlarmSound.BOLUS_ERROR to "boluserror",
             AlarmSound.ERROR to "error",
-            AlarmSound.URGENT_ALARM to "urgentalarm"
+            AlarmSound.URGENT_ALARM to "urgentalarm",
+            AlarmSound.EAT_REMINDER to "eatreminder"
         )
 
         private val DISPLAY_NAMES: Map<AlarmSound, Int> = mapOf(
             AlarmSound.ALARM to R.string.alarm_channel_standard,
             AlarmSound.BOLUS_ERROR to R.string.alarm_channel_bolus_error,
             AlarmSound.ERROR to R.string.alarm_channel_error,
-            AlarmSound.URGENT_ALARM to R.string.alarm_channel_urgent
+            AlarmSound.URGENT_ALARM to R.string.alarm_channel_urgent,
+            AlarmSound.EAT_REMINDER to R.string.alarm_channel_eat_reminder
         )
     }
 

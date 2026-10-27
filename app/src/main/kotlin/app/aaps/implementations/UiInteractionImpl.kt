@@ -52,7 +52,7 @@ class UiInteractionImpl(
 
     override fun runAlarm(status: String, title: String, sound: AlarmSound?) = runAlarm(status, title, sound, eatReminder = false)
 
-    override fun runEatReminderAlarm(status: String, title: String) = runAlarm(status, title, AlarmSound.ALARM, eatReminder = true)
+    override fun runEatReminderAlarm(status: String, title: String) = runAlarm(status, title, AlarmSound.EAT_REMINDER, eatReminder = true)
 
     private fun runAlarm(status: String, title: String, sound: AlarmSound?, eatReminder: Boolean) {
         // Persist the error as an announcement at fire time — gated by the NS-announcement

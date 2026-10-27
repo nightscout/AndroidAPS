@@ -179,14 +179,14 @@ object ShellInfo {
     /**
      * Looks for the alarm audio, and starts one briefly.
      *
-     * Two things here can fail without any compiler noticing. The four MP3s are copied into the
+     * Two things here can fail without any compiler noticing. The five MP3s are copied into the
      * bundle by a script in the Xcode project, so a rename on the Android side leaves them missing,
      * and `AVAudioPlayer` refuses to start for reasons - a bad file, a session it cannot activate -
      * that only show at run time. Both would end as an alarm that stays silent, which is the worst
      * way for this to break.
      */
     fun checkAlarm(): String = try {
-        val found = listOf("alarm", "urgentalarm", "error", "boluserror")
+        val found = listOf("alarm", "urgentalarm", "error", "boluserror", "eatreminder")
             .count { NSBundle.mainBundle.URLForResource(it, withExtension = "mp3") != null }
         val graph = createGraphFactory<IosProbeGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
         val player = graph.alarmSoundPlayer
@@ -196,7 +196,7 @@ object ShellInfo {
         // Not "the alarm works": play() is asynchronous, so this only says the call was accepted.
         // Whether AVAudioPlayer actually started is in the log, and on the simulator it does not.
         listOf(
-            "alarm sounds bundled: $found of 4",
+            "alarm sounds bundled: $found of 5",
             "play requested: yes (see the log for whether audio started)"
         ).joinToString("\n")
     } catch (e: Throwable) {

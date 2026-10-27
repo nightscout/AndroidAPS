@@ -28,7 +28,7 @@ interface UiInteraction {
      * [runAlarm], but its screen and notification offer +5 min. Where a platform has no such button, it is
      * a plain alarm.
      */
-    fun runEatReminderAlarm(status: String, title: String) = runAlarm(status, title, AlarmSound.ALARM)
+    fun runEatReminderAlarm(status: String, title: String) = runAlarm(status, title, AlarmSound.EAT_REMINDER)
 
     /**
      * Stops any currently playing alarm (cancels FSI + all sound notifications).
