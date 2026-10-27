@@ -536,7 +536,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Помпа сопряжена</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth с низким энергопотреблением не поддерживается.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy не поддерживается или устройство не сопряжено.</string>
     <string name="ble_not_enabled">Bluetooth не включен.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Настройки расширений</string>
