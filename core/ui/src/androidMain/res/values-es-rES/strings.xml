@@ -946,7 +946,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Bomba emparejada</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth de baja energía no soportado.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy no compatible o dispositivo no emparejado.</string>
     <string name="ble_not_enabled">Bluetooth no activado</string>
     <string name="ble_permissions_missing">No se han concedido los permisos de Bluetooth. Por favor, concédalos en los ajustes de la aplicación.</string>
     <!--    Preferences -->
