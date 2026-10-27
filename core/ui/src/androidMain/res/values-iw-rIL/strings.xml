@@ -892,7 +892,6 @@
     <string name="pump_paired" comment="26 characters max for translation">המשאבה צומדה</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">בלוטות\' באנרגיה נמוכה לא נתמך.</string>
-    <string name="ble_not_supported_or_not_paired">בלוטות\' באנרגיה נמוכה (BLE) לא נתמך או שהמכשיר אינו מצומד.</string>
     <string name="ble_not_enabled">בלוטות אינו מופעל.</string>
     <string name="ble_permissions_missing">לא ניתנו הרשאות בלוטות . יש לאפשר אותן בהגדרות האפליקציה.</string>
     <!--    Preferences -->
