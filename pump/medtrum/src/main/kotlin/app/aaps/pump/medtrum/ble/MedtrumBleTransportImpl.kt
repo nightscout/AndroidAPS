@@ -143,6 +143,7 @@ class MedtrumBleTransportImpl(
             return false
         }
         if (bluetoothAdapter == null) {
+            rxBus.send(EventShowSnackbar(context.getString(app.aaps.core.ui.R.string.ble_not_supported), EventShowSnackbar.Type.Error))
             aapsLogger.error(LTag.PUMPBTCOMM, "no BluetoothAdapter: $from")
             return false
         }
