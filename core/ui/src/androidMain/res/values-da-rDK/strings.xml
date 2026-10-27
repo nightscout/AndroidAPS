@@ -457,7 +457,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pumpe parret</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy understøttes ikke.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy understøttes ikke eller enheden er ikke parret.</string>
     <string name="ble_not_enabled">Bluetooth er deaktiveret.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin indstillinger</string>
