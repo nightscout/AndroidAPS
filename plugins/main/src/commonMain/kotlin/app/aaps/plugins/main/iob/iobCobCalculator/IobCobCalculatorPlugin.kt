@@ -44,7 +44,6 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventCalibrationChanged
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
-import app.aaps.core.interfaces.rx.events.EventMasterCarbsIsfArrived
 import app.aaps.core.interfaces.rx.events.EventTimeZoneChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -117,10 +116,6 @@ class IobCobCalculatorPlugin(
     // should. kotlin.concurrent.Volatile, which works in common code.
     @Volatile override var ads: AutosensDataStore = AutosensDataStoreObject()
 
-    // Written by the calculation (PrepareGraphDataRunner.loadCarbsIsfHistory) and read by the collector of
-    // EventMasterCarbsIsfArrived on another thread, so @Volatile for the same reason as ads above.
-    @Volatile override var usedProfileIsfForCarbs: Boolean = false
-
     // Guards iobTable, every read and every write. Internal only so a test can hold it.
     internal val dataLock = AapsLock()
 
@@ -132,17 +127,6 @@ class IobCobCalculatorPlugin(
         // EventConfigBuilderChange
         rxBus.toFlow(EventConfigBuilderChange::class)
             .collectResilient(newScope, aapsLogger, LTag.AUTOSENS, start = CoroutineStart.UNDISPATCHED) { resetDataAndRunCalculation("onEventConfigBuilderChange") }
-        // AAPSCLIENT: the COB calculation takes the master's ISF for carbs of each bucket's own time from
-        // the results that came with the device statuses. A client that has none stored, a new install or
-        // one after a database reset, has to use the profile ISF instead, and those buckets would stay in
-        // the cache. So start over when the master's value first arrives - but only then. A client with
-        // stored results reads them at every run, is right from the start, and a reset here would only
-        // calculate the same numbers again (issue #5404).
-        rxBus.toFlow(EventMasterCarbsIsfArrived::class)
-            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS) {
-                if (usedProfileIsfForCarbs) resetDataAndRunCalculation("onMasterCarbsIsfArrived")
-                else aapsLogger.debug(LTag.AUTOSENS, "Master ISF for carbs arrived, nothing cached used the profile ISF")
-            }
         // EventTimeZoneChanged: the basal profile is read in the current time zone, so every cached IOB,
         // basal and autosens value of the past would now be calculated differently. Until the past is
         // calculated with the offset of its own time (_docs/IOB_TIME_ZONE.md), start again from scratch.
@@ -256,9 +240,6 @@ class IobCobCalculatorPlugin(
         calculationWorkflow.stopCalculation(CalculationWorkflow.MAIN_CALCULATION, reason)
         clearCache()
         ads.reset()
-        // The buckets that used the profile ISF for carbs are gone with the cache. The run below finds out
-        // again whether the client has the master's values, and sets it back if it still has none.
-        usedProfileIsfForCarbs = false
         calculationWorkflow.runCalculation(
             job = CalculationWorkflow.MAIN_CALCULATION,
             iobCobCalculator = this,
@@ -512,6 +493,17 @@ class IobCobCalculatorPlugin(
 
     suspend fun scheduleHistoryDataChange(oldDataTimestamp: Long, reloadBgData: Boolean, triggeredByNewBG: Boolean = false) =
         historyScheduler.schedule(oldDataTimestamp, reloadBgData, triggeredByNewBG)
+
+    override suspend fun apsResultsStored(oldest: Long) {
+        // A bucket counts the results up to its own BG reading, so one after the newest reading is not late
+        val store = ads
+        val newestReading = store.dataLock.withLock { store.bucketedData?.firstOrNull()?.timestamp } ?: return
+        if (oldest > newestReading) return
+        aapsLogger.debug(LTag.AUTOSENS) {
+            "Loop results from ${dateUtil.dateAndTimeAndSecondsString(oldest)} came after the BG of ${dateUtil.dateAndTimeAndSecondsString(newestReading)}, calculating again from there"
+        }
+        scheduleHistoryDataChange(oldest, reloadBgData = false)
+    }
 
     // When historical data is changed (coming from NS etc.) finished calculations after this date must be invalidated
     private suspend fun newHistoryData(oldDataTimestamp: Long, bgDataReload: Boolean, triggeredByNewBG: Boolean) {

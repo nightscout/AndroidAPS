@@ -1776,20 +1776,26 @@ interface PersistenceLayer {
     )
 
     /**
-     * The ISF for carbs of every APSResult in an interval, oldest first. On an AAPSClient these are the
-     * master's results as they came with the device statuses, so this is the ISF the master used for
-     * carbs at each time. Reads only the time and the value, like [getVariableSensitivities]. Results
-     * without the value are left out.
+     * Every APSResult in an interval with its variable sensitivity, oldest first. This is the input of the
+     * ISF for carbs. On an AAPSClient these are the master's results as they came with the device statuses.
+     *
+     * Unlike [getVariableSensitivities] a result without a value is kept, because it says something too:
+     * that loop run used no variable sensitivity. Reads only the time and the value, like
+     * [getVariableSensitivities].
      *
      * @param start from
      * @param end to
-     * @return list of values in mg/dL
+     * @return one row for every result
      */
-    suspend fun getCarbsIsfs(start: Long, end: Long): List<CarbsIsf>
+    suspend fun getLoopSensitivities(start: Long, end: Long): List<LoopSensitivity>
 
-    data class CarbsIsf(
+    /**
+     * [variableSensMgdl] is null when the result has no value. An older result can have 0.0 there, and a
+     * broken one a value that is not finite. Both mean "no value" too.
+     */
+    data class LoopSensitivity(
         val timestamp: Long,
-        val valueMgdl: Double
+        val variableSensMgdl: Double?
     )
 
     /**

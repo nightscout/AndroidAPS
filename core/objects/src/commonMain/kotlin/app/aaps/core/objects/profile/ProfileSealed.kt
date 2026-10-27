@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
@@ -347,23 +346,6 @@ sealed class ProfileSealed(
         if (aps?.usingDynamicIsf() ?: error("APS not defined"))
             aps.getIsfMgdl(this, caller) ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
         else getProfileIsfMgdl()
-
-    /**
-     * On an AAPSCLIENT this answers with the master's newest value and ignores [timestamp], because a
-     * device status carries one value and no history. That is right for now - the wizard, the overview -
-     * but not for a past time: the master's own value is the average of the 24 hours before each bucket,
-     * so it moves through the day. The IOB/COB calculation must therefore not ask here for a past bucket.
-     * It reads the master's stored value of each bucket's own time instead, see
-     * `PrepareGraphDataRunner.isfMgdlForCarbsAt`.
-     */
-    override fun getIsfMgdlForCarbs(timestamp: Long, caller: String, config: Config, processedDeviceStatusData: ProcessedDeviceStatusData): Double =
-        if (config.AAPSCLIENT) {
-            processedDeviceStatusData.getAPSResult()?.isfMgdlForCarbs ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
-        } else {
-            if (aps?.usingDynamicIsf() ?: error("APS not defined"))
-                aps.getAverageIsfMgdl(timestamp, caller) ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
-            else toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
-        }
 
     override fun getTargetMgdl(): Double = toMgdl(targetBlocks.targetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)
     override fun getTargetLowMgdl(): Double = toMgdl(targetBlocks.lowTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)

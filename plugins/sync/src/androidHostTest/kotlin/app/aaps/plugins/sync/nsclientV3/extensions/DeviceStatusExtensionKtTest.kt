@@ -4,6 +4,7 @@ import app.aaps.core.data.model.DS
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -18,9 +19,11 @@ import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 
 @Suppress("SpellCheckingInspection")
@@ -35,6 +38,7 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
     @Mock lateinit var overviewData: OverviewData
     @Mock lateinit var calculationWorkflow: CalculationWorkflow
     @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
+    @Mock lateinit var iobCobCalculator: IobCobCalculator
     private lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     private lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
@@ -45,9 +49,13 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
         nsDeviceStatusHandler = NSDeviceStatusHandler(
             preferences, config, dateUtil, processedDeviceStatusData, aapsLogger,
             persistenceLayer, overviewData, calculationWorkflow, rxBus, testScope,
-            { nsClientV3Plugin }
+            { nsClientV3Plugin }, { apsResult }, { iobCobCalculator }
         )
         whenever(config.AAPSCLIENT).thenReturn(true)
+        // The handler stores the loop result of the device status
+        whenever(apsResult.with(any())).thenReturn(apsResult)
+        whenever(apsResult.algorithm).thenReturn(APSResult.Algorithm.SMB)
+        runBlocking { whenever(persistenceLayer.getLoopSensitivities(any(), any())).thenReturn(emptyList()) }
     }
 
     @Test

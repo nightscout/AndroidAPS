@@ -181,9 +181,11 @@ internal class NightscoutApi(
             nsUrl("v3", "devicestatus"); jsonBody(remoteDeviceStatus)
         }
 
-    suspend fun getDeviceStatusModifiedSince(from: Long) =
+    suspend fun getDeviceStatusModifiedSince(from: Long, limit: Int) =
         call(HttpMethod.Get, NSResponse.serializer(ListSerializer(RemoteDeviceStatus.serializer()))) {
-            nsUrl("v3", "devicestatus", "history", from.toString())
+            nsUrl("v3", "devicestatus", "history", from.toString()) {
+                encodedParameters.append("limit", limit.toString())
+            }
         }
 
     // ---------------------------------------------------------------- food

@@ -4,12 +4,12 @@ import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventMasterCarbsIsfArrived
 import app.aaps.core.interfaces.rx.events.EventNsClientStatusUpdated
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
@@ -24,6 +24,10 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlin.math.max
+import kotlin.math.min
 
 /*
 {
@@ -92,21 +96,27 @@ class NSDeviceStatusHandler(
     private val rxBus: RxBus,
     // Plain CoroutineScope: @ApplicationScope is a javax qualifier and cannot appear in commonMain.
     private val appScope: CoroutineScope,
-    private val nsClientV3Plugin: () -> NSClientV3Plugin
+    private val nsClientV3Plugin: () -> NSClientV3Plugin,
+    private val apsResultProvider: () -> APSResult,
+    // Deferred: the calculation reaches the plugins, and this handler belongs to one of them
+    private val iobCobCalculator: () -> IobCobCalculator
 ) {
+
+    /** One batch is stored at a time, so the check for results already stored sees the batch before. */
+    private val storeLock = Mutex()
 
     /**
      * @param live true only for a real-time WS push (a devicestatus the master just created), false for the
      *   REST catch-up/initial batch load. Only a live push bumps the master-alive heartbeat — see below.
      */
     fun handleNewData(deviceStatuses: Array<NSDeviceStatus>, live: Boolean = false) {
-        val hadCarbsIsf = config.AAPSCLIENT && processedDeviceStatusData.getAPSResult()?.isfMgdlForCarbs != null
+        val apsResults = mutableListOf<ReceivedResult>()
         for (i in deviceStatuses.size - 1 downTo 0) {
             val nsDeviceStatus = deviceStatuses[i]
             if (config.AAPSCLIENT) {
                 updatePumpData(nsDeviceStatus)
                 updateDeviceData(nsDeviceStatus)
-                updateOpenApsData(nsDeviceStatus)
+                updateOpenApsData(nsDeviceStatus, apsResults)
                 updateUploaderData(nsDeviceStatus)
             }
             if (config.APS) {
@@ -130,13 +140,35 @@ class NSDeviceStatusHandler(
             }
             // Once per batch, not once per document: the predictions are read from the newest data only (#5247)
             appScope.launch { calculationWorkflow.runOnReceivedPredictions(overviewData) }
-            // The master's ISF for carbs came with the APS result above, for the first time in this run.
-            // Said once, because every later device status carries it too. Whether that is worth a full
-            // recalculation is for the COB calculation to decide - it starts over only if it had to use
-            // the profile ISF, see IobCobCalculator.usedProfileIsfForCarbs.
-            if (!hadCarbsIsf && processedDeviceStatusData.getAPSResult()?.isfMgdlForCarbs != null) rxBus.send(EventMasterCarbsIsfArrived())
+            if (apsResults.isNotEmpty()) appScope.launch { storeApsResults(apsResults) }
             rxBus.send(EventNsClientStatusUpdated())
         }
+    }
+
+    /**
+     * A loop result as it came with a device status. Older clients stored it with [deviceStatusTime], not
+     * with the master's own time, so a result stored by them is found by that time.
+     */
+    private class ReceivedResult(val apsResult: APSResult, val deviceStatusTime: Long)
+
+    /**
+     * Stores the master's loop results that are not stored yet, then tells the calculation about them.
+     *
+     * The ISF for carbs is worked out from these, on the master from its own (`IsfForCarbs`), so the client
+     * needs every one of them, older ones too: those that come with the 48 hours loaded after a start, and
+     * those the master sent while this phone was offline. A result already stored comes again with every
+     * load after a start and is skipped by its time.
+     */
+    private suspend fun storeApsResults(received: List<ReceivedResult>) = storeLock.withLock {
+        val from = received.minOf { min(it.apsResult.date, it.deviceStatusTime) }
+        val to = received.maxOf { max(it.apsResult.date, it.deviceStatusTime) }
+        val stored = persistenceLayer.getLoopSensitivities(from, to).map { it.timestamp }.toSet()
+        val newResults = received
+            .filter { it.apsResult.date !in stored && it.deviceStatusTime !in stored }
+            .map { it.apsResult }
+            .distinctBy { it.date }
+        newResults.forEach { persistenceLayer.insertOrUpdateApsResult(it) }
+        newResults.minOfOrNull { it.date }?.let { iobCobCalculator().apsResultsStored(it) }
     }
 
     private fun updateDeviceData(deviceStatus: NSDeviceStatus) {
@@ -181,26 +213,36 @@ class NSDeviceStatusHandler(
         }
     }
 
-    private fun updateOpenApsData(nsDeviceStatus: NSDeviceStatus) {
+    /** @param apsResults collects the loop result of this device status, to be stored with the batch */
+    private fun updateOpenApsData(nsDeviceStatus: NSDeviceStatus, apsResults: MutableList<ReceivedResult>) {
         nsDeviceStatus.openaps?.suggested?.let {
             it.safeGetString("timestamp")?.let { timestamp ->
                 val clock = dateUtil.fromISODateString(timestamp)
+                val suggested = try {
+                    RT.deserialize(it.toString()).apply { this.timestamp = clock }
+                } catch (e: Exception) {
+                    aapsLogger.error(LTag.NSCLIENT, e.stackTraceToString())
+                    null
+                }
                 // check if this is new data
                 if (clock > processedDeviceStatusData.openAPSData.clockSuggested) {
-                    try {
-                        processedDeviceStatusData.openAPSData.suggested = RT.deserialize(it.toString()).apply { this.timestamp = clock }
-                    } catch (e: Exception) {
-                        aapsLogger.error(LTag.NSCLIENT, e.stackTraceToString())
-                    }
+                    suggested?.let { rt -> processedDeviceStatusData.openAPSData.suggested = rt }
                     processedDeviceStatusData.openAPSData.clockSuggested = clock
-                    processedDeviceStatusData.getAPSResult()?.let { apsResult ->
-                        // A result that does not say which algorithm made it cannot be stored: `toDb` throws,
-                        // and in this scope that would end the app. It is still shown from the data above.
-                        if (apsResult.algorithm == APSResult.Algorithm.UNKNOWN)
-                            aapsLogger.debug(LTag.NSCLIENT, "APS result without algorithm from ${nsDeviceStatus.device}, not stored")
-                        else
-                            appScope.launch { persistenceLayer.insertOrUpdateApsResult(apsResult) }
+                }
+                // Stored also when older than the newest one, see storeApsResults
+                suggested?.let { rt ->
+                    val apsResult = apsResultProvider().with(rt).apply {
+                        // The time the master stored it with. The device status carries the time the loop
+                        // finished, up to a few seconds later. The ISF for carbs puts every result into a
+                        // 5 minute slot and a 24 hour window, and only the same time puts it into the same one.
+                        rt.deliverAt?.let { date = it }
                     }
+                    // A result that does not say which algorithm made it cannot be stored: `toDb` throws,
+                    // and in this scope that would end the app. It is still shown from the data above.
+                    if (apsResult.algorithm == APSResult.Algorithm.UNKNOWN)
+                        aapsLogger.debug(LTag.NSCLIENT, "APS result without algorithm from ${nsDeviceStatus.device}, not stored")
+                    else
+                        apsResults.add(ReceivedResult(apsResult, clock))
                 }
             }
         }

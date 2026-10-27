@@ -15,16 +15,15 @@ interface IobCobCalculator {
     var ads: AutosensDataStore
 
     /**
-     * AAPSCLIENT only. True when the calculation had to use the profile ISF for carbs, because the client
-     * has not stored any of the master's ISF values for the calculated time yet - a new install, or after a
-     * database reset. On a master that uses dynamic ISF the profile ISF is much higher, so carbs decay too
-     * slowly and COB stays too high.
+     * Loop results with times from [oldest] on were stored. A client calls this for the master's results
+     * that came with the device statuses.
      *
-     * Only in this state does a device status that brings the master's ISF change the result, so only then
-     * is a full reset worth its cost. Set by the calculation, stays set until the calculation is reset,
-     * because the buckets calculated that way stay in the cache.
+     * Each result changes the ISF for carbs from its own time on (`IsfForCarbs`). A new result is newer than
+     * every calculated bucket, and the next run reads it anyway. One that came late - after a newer BG was
+     * calculated, or with the 48 hours a client loads after a start - leaves the buckets from its time on
+     * calculated without it, so the calculation starts again from there.
      */
-    var usedProfileIsfForCarbs: Boolean
+    suspend fun apsResultsStored(oldest: Long)
 
     suspend fun getMealDataWithWaitingForCalculationFinish(): MealData
     suspend fun getLastAutosensDataWithWaitForCalculationFinish(reason: String): AutosensData?

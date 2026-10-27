@@ -446,7 +446,9 @@ class DetermineBasalSMB(
             sensitivityRatio = sensitivityRatio, // autosens ratio (fraction of normal basal)
             consoleLog = consoleLog,
             consoleError = consoleError,
-            variable_sens = profile.variable_sens
+            // Null, not 0.0, when this run used no variable sensitivity, so the stored result says that
+            // plainly. The ISF for carbs falls back to the profile ISF on it (IsfForCarbs).
+            variable_sens = if (dynIsfMode) profile.variable_sens else null
         )
 
         // generate predicted future BGs based on IOB, COB, and current absorption rate

@@ -1,7 +1,6 @@
 package app.aaps.plugins.aps.openAPSSMB
 
 import androidx.collection.LongSparseArray
-import androidx.collection.forEach
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.getPassedDurationToTimeInMinutes
@@ -124,21 +123,6 @@ open class OpenAPSSMBPlugin(
     aapsLogger, rh, preferences, notificationManager
 ), APS, PluginConstraints {
 
-    override suspend fun onStart() {
-        super.onStart()
-        var count = 0
-        val apsResults = persistenceLayer.getApsResults(dateUtil.now() - T.days(1).msecs(), dateUtil.now())
-        apsResults.forEach {
-            val glucose = it.glucoseStatus?.glucose ?: return@forEach
-            val variableSens = it.variableSens ?: return@forEach
-            val timestamp = it.date
-            val key = timestamp - timestamp % T.mins(30).msecs() + glucose.toLong()
-            if (variableSens > 0) isfCacheLock.withLock { dynIsfCache.put(key, variableSens) }
-            count++
-        }
-        aapsLogger.debug(LTag.APS, "Loaded $count variable sensitivity values from database")
-    }
-
     // last values
     override var lastAPSRun: Long = 0
     override val algorithm = APSResult.Algorithm.SMB
@@ -162,23 +146,6 @@ open class OpenAPSSMBPlugin(
             notificationManager.dismiss(NotificationId.DYN_ISF_FALLBACK)
         profiler.log(LTag.APS, "getIsfMgdl() multiplier=${multiplier} reason=${sensitivity.first} sensitivity=${sensitivity.second} caller=$caller", start)
         return sensitivity.second
-    }
-
-    override fun getAverageIsfMgdl(timestamp: Long, caller: String): Double? {
-        var count = 0
-        var sum = 0.0
-        val start = timestamp - T.hours(24).msecs()
-        isfCacheLock.withLock {
-            dynIsfCache.forEach { key, value ->
-                if (key in start..timestamp) {
-                    count++
-                    sum += value
-                }
-            }
-        }
-        val sensitivity = if (count == 0) null else sum / count
-        aapsLogger.debug(LTag.APS, "getAverageIsfMgdl() $sensitivity from $count values ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $caller")
-        return sensitivity
     }
 
     // No temp basal check here. A pump that cannot do temp basals is handled by

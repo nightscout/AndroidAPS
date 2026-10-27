@@ -11,11 +11,9 @@ import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.calibration.CalibrationContext
 import app.aaps.core.interfaces.concurrent.withLock
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.graph.AbsIobGraphData
 import app.aaps.core.interfaces.overview.graph.ActivityGraphData
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
@@ -47,9 +45,9 @@ import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.aps.IsfForCarbs
 import app.aaps.core.objects.extensions.combine
 import app.aaps.core.objects.workflow.WorkOutcome
-import app.aaps.workflow.iob.CarbsIsfHistory
 import app.aaps.workflow.iob.fromCarbs
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -82,10 +80,8 @@ class PrepareGraphDataRunner(
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val preferences: Preferences,
-    private val config: Config,
     private val profiler: Profiler,
     private val decimalFormatter: DecimalFormatter,
-    private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val scope: CoroutineScope,
     private val autosensDataProvider: () -> AutosensData
 ) : CalculationPhase {
@@ -307,9 +303,8 @@ class PrepareGraphDataRunner(
                 ads.roundUpTime(bucketedData[0].timestamp),
                 true
             )
-            // A client takes the master's ISF for carbs from the results it stored, at each bucket's own time,
-            // the way the master had it then, see isfMgdlForCarbsAt
-            val carbsIsfHistory = loadCarbsIsfHistory(data, bucketedData[bucketedData.size - 1].timestamp)
+            // Loaded when the first bucket needs it, see isfForCarbsFrom
+            var isfForCarbs: IsfForCarbs? = null
             // start from oldest to be able sub cob
             for (i in bucketedData.size - 4 downTo 0) {
                 data.signals.emitProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt())
@@ -346,7 +341,8 @@ class PrepareGraphDataRunner(
                 autosensData.bg = bg
                 delta = bg - bucketedData[i + 1].recalculated
                 avgDelta = (bg - bucketedData[i + 3].recalculated) / 3
-                val sens = isfMgdlForCarbsAt(profile, bgTime, "iobCobOref1Worker", carbsIsfHistory)
+                val carbsIsf = isfForCarbs ?: isfForCarbsFrom(bucketedData[i].timestamp).also { isfForCarbs = it }
+                val sens = bucketIsfForCarbs(carbsIsf, profile, bgTime, bucketedData[i].timestamp, i)
                 val iob = data.iobCobCalculator.calculateFromTreatmentsAndTemps(bgTime, profile)
                 val bgi = -iob.activity * sens * 5
                 val deviation = delta - bgi
@@ -390,7 +386,7 @@ class PrepareGraphDataRunner(
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
                     if (recentCarbTreatment.amount > 0) {
-                        val sensForCarbs = isfMgdlForCarbsAt(profile, recentCarbTreatment.timestamp, "fromCarbs", carbsIsfHistory)
+                        val sensForCarbs = carbsIsf.isfMgdl(profile, recentCarbTreatment.timestamp)
                         val ic = profile.getIc(recentCarbTreatment.timestamp)
                         autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isOref1 = true, isAAPSOrWeighted, sensForCarbs, ic, aapsLogger, dateUtil, preferences))
                     }
@@ -537,8 +533,8 @@ class PrepareGraphDataRunner(
                 ads.roundUpTime(bucketedData[0].timestamp),
                 true
             )
-            // The master's stored ISF for carbs, as in the first calculation block above
-            val carbsIsfHistory = loadCarbsIsfHistory(data, bucketedData[bucketedData.size - 1].timestamp)
+            // Loaded when the first bucket needs it, see isfForCarbsFrom
+            var isfForCarbs: IsfForCarbs? = null
             // start from oldest to be able to sub cob
             for (i in bucketedData.size - 4 downTo 0) {
                 data.signals.emitProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt())
@@ -575,7 +571,8 @@ class PrepareGraphDataRunner(
                 autosensData.bg = bg
                 delta = bg - bucketedData[i + 1].recalculated
                 avgDelta = (bg - bucketedData[i + 3].recalculated) / 3
-                val sens = isfMgdlForCarbsAt(profile, bgTime, "IobCobOrefWorker", carbsIsfHistory)
+                val carbsIsf = isfForCarbs ?: isfForCarbsFrom(bucketedData[i].timestamp).also { isfForCarbs = it }
+                val sens = bucketIsfForCarbs(carbsIsf, profile, bgTime, bucketedData[i].timestamp, i)
                 val iob = data.iobCobCalculator.calculateFromTreatmentsAndTemps(bgTime, profile)
                 val bgi = -iob.activity * sens * 5
                 val deviation = delta - bgi
@@ -617,7 +614,7 @@ class PrepareGraphDataRunner(
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
                     if (recentCarbTreatment.amount > 0) {
-                        val sensForCarbs = isfMgdlForCarbsAt(profile, recentCarbTreatment.timestamp, "fromCarbs", carbsIsfHistory)
+                        val sensForCarbs = carbsIsf.isfMgdl(profile, recentCarbTreatment.timestamp)
                         val ic = profile.getIc(recentCarbTreatment.timestamp)
                         autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isOref1 = false, isAAPSOrWeighted, sensForCarbs, ic, aapsLogger, dateUtil, preferences))
                     }
@@ -722,36 +719,28 @@ class PrepareGraphDataRunner(
     }
 
     /**
-     * AAPSCLIENT: the master's ISF for carbs from the results the client stored, from an hour before
-     * [oldest] to now, so the oldest bucket has a result before it. Empty on a master.
-     *
-     * A client with nothing stored has to use the profile ISF, which is far from the master's value, so it
-     * says so. The flag is only set, never cleared here: a later run that does find stored values does not
-     * make the buckets already in the cache right. [app.aaps.core.interfaces.iob.IobCobCalculator] clears
-     * it when the cache goes.
+     * The stored loop results the buckets from [oldestReading] on need. Loaded when the first bucket is
+     * calculated: the buckets go from the oldest, and most runs calculate only the newest one or two, so
+     * this reads about one day of results and not the whole span of the cache. The 5 minutes before cover
+     * the carbs of that first bucket.
      */
-    private suspend fun loadCarbsIsfHistory(data: PrepareGraphData, oldest: Long): CarbsIsfHistory {
-        if (!config.AAPSCLIENT) return CarbsIsfHistory.EMPTY
-        val history = CarbsIsfHistory(persistenceLayer.getCarbsIsfs(oldest - T.hours(1).msecs(), dateUtil.now()))
-        if (history.isEmpty) {
-            aapsLogger.debug(LTag.AUTOSENS, "No stored ISF for carbs from the master, using the profile ISF")
-            data.iobCobCalculator.usedProfileIsfForCarbs = true
-        }
-        return history
-    }
+    private suspend fun isfForCarbsFrom(oldestReading: Long): IsfForCarbs =
+        IsfForCarbs.load(persistenceLayer, oldestReading - T.mins(5).msecs(), dateUtil.now())
 
     /**
-     * The ISF for carbs at [timestamp]: on a client the master's stored value in force then, else as
-     * [app.aaps.core.interfaces.profile.Profile.getIsfMgdlForCarbs] gives it. One value for every bucket,
-     * the newest, decayed the carbs slower than the master whenever the ISF had risen since, so COB
-     * stayed higher after a restart.
+     * The ISF for carbs of one bucket, the same on a master and on its clients (issue #5404).
      *
-     * The profile call stays the fallback for a master, and for a client with nothing stored. Note it
-     * answers a client with the master's newest value, which is right for now but not for a past bucket -
-     * that is what [history] is for.
+     * The loop results count up to the bucket's own reading, [readingTime], not up to [bgTime], which is
+     * rounded up to the next minute. The loop run that this reading starts ends inside that minute. It would
+     * count or not depending on whether it had finished when the bucket was calculated, and a master
+     * calculates the bucket before its loop runs. The profile ISF, when it applies, is read at [bgTime], as
+     * it always was.
      */
-    private fun isfMgdlForCarbsAt(profile: EffectiveProfile, timestamp: Long, caller: String, history: CarbsIsfHistory): Double =
-        history.at(timestamp) ?: profile.getIsfMgdlForCarbs(timestamp, caller, config, processedDeviceStatusData)
+    private fun bucketIsfForCarbs(isfForCarbs: IsfForCarbs, profile: EffectiveProfile, bgTime: Long, readingTime: Long, index: Int): Double =
+        isfForCarbs.isfMgdl(profile, bgTime, resultsUntil = readingTime).also {
+            // The newest bucket only, once per run: enough to compare a master and its client
+            if (index == 0) aapsLogger.debug(LTag.AUTOSENS) { "ISF for carbs at ${dateUtil.dateAndTimeAndSecondsString(readingTime)}: $it" }
+        }
 
     // ---------- Phase 5: IOB/autosens graph data (was PrepareIobAutosensGraphDataWorker) ----------
 
