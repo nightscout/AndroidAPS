@@ -67,16 +67,12 @@
     <string name="scene_wizard_finish">Baigti</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Tolesnis scenarijus</string>
-    <string name="scene_wizard_chain_info">Jei norite, galite nustatyti kitą scenarijų, kuris automatiškai įsijungs šiam pasibaigus. Į jį taip pat galėsite pereiti anksčiau, jei dabartinį scenarijų baigsite prieš laiką. Kitas scenarijus bus paleistas tik tuo atveju, jei jo gliukozės tikslas įjungtas ir pompa pasiekiama. Jei ne, gausite pranešimą.</string>
     <string name="scene_chain_none">Nėra</string>
     <string name="scene_skip_to_format">Pereiti prie %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
     <string name="scene_chain_target_missing">Susietas scenarijus pašalintas</string>
-    <!-- Scene expiry: chain result notifications -->
-    <string name="scene_ended_format">Scenarijus „%1$s“ baigtas</string>
-    <string name="scene_chained_format">Scenarijai susieti: %1$s → %2$s</string>
-    <string name="scene_chain_ended_with_skip">%1$s baigtas — tolesnis scenarijus praleistas: %2$s</string>
+    <!-- Scene expiry: what the banner says, and the chain error notification -->
     <string name="scene_chain_skipped_deleted">tikslo scenarijus pašalintas</string>
     <string name="scene_chain_skipped_disabled">„%1$s“ išjungtas</string>
     <string name="scene_chain_error_summary">%1$s → %2$s: nepavyko %3$d iš %4$d veiksmų</string>
