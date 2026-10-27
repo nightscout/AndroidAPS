@@ -500,7 +500,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pompa eşleştirildi</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Düşük Enerji Bluetooth desteklenmez.</string>
-    <string name="ble_not_supported_or_not_paired">Düşük Enerji Bluetooth desteklenmiyor veya cihaz eşleştirilmedi.</string>
     <string name="ble_not_enabled">Bluetooth etkin değil.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Eklenti tercihleri</string>
