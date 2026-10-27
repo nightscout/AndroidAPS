@@ -83,7 +83,13 @@ data class NSActiveScene(
     val ttNsId: String? = null,
     val psNsId: String? = null,
     val rmNsId: String? = null,
-    val teNsId: String? = null
+    val teNsId: String? = null,
+    /**
+     * Why the follow-up scene did not start, in the master's words. Null when there was no follow-up,
+     * when it started, or when the master pre-dates this field. The client shows it on the banner of
+     * the ended scene, which is the only place it is said.
+     */
+    val chainSkipReason: String? = null
 )
 
 /**

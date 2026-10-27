@@ -180,6 +180,25 @@ internal class RunningConfigurationImplTest {
     }
 
     /**
+     * The skipped follow-up is said on the banner and nowhere else, so a client that does not carry the
+     * reason over would show an ended scene with no word about the scene that never started.
+     */
+    @Test
+    fun theReasonAFollowUpDidNotStartTravelsToTheClient() {
+        whenever(activeSceneSync.activeSceneSnapshot()).thenReturn(
+            ActiveSceneSnapshot(sceneId = "scene-1", activatedAt = 1_000L, durationMs = 60_000L, chainSkipReason = "the next scene is disabled")
+        )
+
+        val wire = sut.hotConfiguration()["activeScene"]?.jsonObject
+        assertEquals(JsonPrimitive("the next scene is disabled"), wire?.get("chainSkipReason"))
+
+        sut.applyHot(NSRunningConfiguration(activeScene = NSActiveScene(sceneId = "scene-1", activatedAt = 1_000L, durationMs = 60_000L, chainSkipReason = "the next scene is disabled")))
+        verify(activeSceneSync).applyActiveScene(
+            eq(ActiveSceneSnapshot(sceneId = "scene-1", activatedAt = 1_000L, durationMs = 60_000L, chainSkipReason = "the next scene is disabled"))
+        )
+    }
+
+    /**
      * A String cold-channel key carried in the cold doc's `syncedPrefs` (e.g. AutomationEvents, which
      * moved onto the generic channel) must be adopted via `putRemote` — master-wins, version floored to
      * 0, no client→master echo — not a plain `put`. Guards the downlink apply path at the config layer.

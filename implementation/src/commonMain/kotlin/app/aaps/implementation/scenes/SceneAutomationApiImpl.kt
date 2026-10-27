@@ -110,23 +110,14 @@ class SceneAutomationApiImpl(
         // delegate to the single canonical stop+start path (which TOCTOU-re-checks preconditions).
         val targetId = (activeSceneManager.getActiveState()?.scene?.endAction as? SceneEndAction.ChainScene)?.sceneId
         val result = if (targetId != null) stopActiveSceneAndStartScene(targetId) else stopActiveScene()
-        // Chain-completion notification — posted here so it fires identically whether the chain was
-        // triggered from the End-Scene dialog or a client's scene.stop(triggerChain) command.
-        if (result is SceneAutomationResult.ChainCompleted) {
-            // Read into a local: the format arguments are non-null now, and a public property of
-            // another module cannot be smart cast.
-            val endedSceneName = result.endedSceneName
-            if (result.failedCount == 0 && endedSceneName != null)
-                notificationManager.post(
-                    id = NotificationId.SCENE_CHAINED,
-                    text = rh.gs(CoreUiStrings.scene_chained_format, endedSceneName, result.targetSceneName)
-                )
-            else if (result.failedCount > 0)
-                notificationManager.post(
-                    id = NotificationId.SCENE_CHAIN_ERROR,
-                    text = rh.gs(CoreUiStrings.scene_chain_error_summary, endedSceneName ?: "", result.targetSceneName, result.failedCount, result.totalCount)
-                )
-        }
+        // Only a chain that went wrong is worth a notification: a follow-up that started is its own
+        // banner. Posted here so it fires identically whether the chain was triggered from the
+        // End-Scene dialog or a client's scene.stop(triggerChain) command.
+        if (result is SceneAutomationResult.ChainCompleted && result.failedCount > 0)
+            notificationManager.post(
+                id = NotificationId.SCENE_CHAIN_ERROR,
+                text = rh.gs(CoreUiStrings.scene_chain_error_summary, result.endedSceneName ?: "", result.targetSceneName, result.failedCount, result.totalCount)
+            )
         return result
     }
 

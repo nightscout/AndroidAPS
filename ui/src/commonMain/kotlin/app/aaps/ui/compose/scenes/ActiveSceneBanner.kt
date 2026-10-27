@@ -95,11 +95,13 @@ internal fun ActiveSceneBannerContent(
     }
     // What the scene sets in motion when it ends, as the scene list shows it
     val chain = if (!expired && chainTargetName != null) stringResource(CoreUiStrings.scene_chain_indicator, chainTargetName) else null
+    // The follow-up did not start. Only here: the scene is over, so there is no notification saying it.
+    val skipped = state.chainSkipReason?.takeIf { expired }?.let { stringResource(CoreUiStrings.scene_chain_skipped_line, it) }
     OverviewBannerCard(
         icon = SceneIcons.fromKey(state.scene.icon).icon,
         color = if (expired) MaterialTheme.colorScheme.onSurfaceVariant else AapsTheme.elementColors.scene,
         title = state.scene.name,
-        lines = listOfNotNull(status, chain),
+        lines = listOfNotNull(status, chain, skipped),
         // Progress bar (only if duration-based and not expired)
         progress = if (!expired && remainingMs != null && totalMs > 0) 1f - (remainingMs.toFloat() / totalMs.toFloat()) else null,
         modifier = modifier,

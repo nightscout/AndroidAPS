@@ -29,7 +29,13 @@ data class ActiveSceneState(
     /** SMB enabled state before activation (null if scene didn't change SMB) */
     val priorSmb: Boolean? = null,
     /** Records created by this scene at activation */
-    val scopedRecords: ScopedRecords = ScopedRecords()
+    val scopedRecords: ScopedRecords = ScopedRecords(),
+    /**
+     * Why the follow-up scene did not start, already in the user's words, or null when there was no
+     * follow-up or it started. The expired banner shows it: without it the follow-up would be lost
+     * with nothing to see. Set by the master when the scene ends.
+     */
+    val chainSkipReason: String? = null
 ) {
 
     /** Calculated end time (null if indefinite) */

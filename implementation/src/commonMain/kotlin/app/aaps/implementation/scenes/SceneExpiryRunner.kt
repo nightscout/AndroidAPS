@@ -84,11 +84,9 @@ class SceneExpiryRunner(
         val endAction = activeState.scene.endAction
         sceneExecutor.onExpiry()
 
-        if (endAction is SceneEndAction.ChainScene) {
-            runChain(sceneName, endAction.sceneId)
-        } else {
-            postEndedNotification(sceneName)
-        }
+        // A plain end says everything it has to say on the banner, which stays until the user closes
+        // it, so it gets no notification of its own.
+        if (endAction is SceneEndAction.ChainScene) runChain(sceneName, endAction.sceneId)
 
         return WorkOutcome.Success
     }
@@ -96,7 +94,7 @@ class SceneExpiryRunner(
     private suspend fun runChain(endedName: String, targetId: String) {
         val target = sceneRepository.getScene(targetId)
         if (target == null) {
-            postEndedWithSkip(endedName, rh.gs(CoreUiStrings.scene_chain_skipped_deleted))
+            keepSkipReason(rh.gs(CoreUiStrings.scene_chain_skipped_deleted))
             return
         }
 
@@ -115,15 +113,14 @@ class SceneExpiryRunner(
         }
 
         if (skipReason != null) {
-            postEndedWithSkip(endedName, skipReason)
+            keepSkipReason(skipReason)
             return
         }
 
         val result = sceneExecutor.activate(target)
 
-        if (result.success) {
-            postChainSuccess(endedName, target.name)
-        } else {
+        // A follow-up that started is its own banner now, so nothing has to be said about it.
+        if (!result.success) {
             val failed = result.actionResults.filter { !it.success }
             val details = failed.joinToString("; ") {
                 "${it.action::class.simpleName}${it.errorMessage?.let { e -> ": $e" } ?: ""}"
@@ -133,25 +130,12 @@ class SceneExpiryRunner(
         }
     }
 
-    private fun postEndedNotification(sceneName: String) {
-        notificationManager.post(
-            id = NotificationId.SCENE_ENDED,
-            text = rh.gs(CoreUiStrings.scene_ended_format, sceneName)
-        )
-    }
-
-    private fun postChainSuccess(endedName: String, nextName: String) {
-        notificationManager.post(
-            id = NotificationId.SCENE_CHAINED,
-            text = rh.gs(CoreUiStrings.scene_chained_format, endedName, nextName)
-        )
-    }
-
-    private fun postEndedWithSkip(endedName: String, reason: String) {
-        notificationManager.post(
-            id = NotificationId.SCENE_CHAIN_SKIPPED,
-            text = rh.gs(CoreUiStrings.scene_chain_ended_with_skip, endedName, reason)
-        )
+    /**
+     * The follow-up did not start. The reason goes on the expired banner, which the user has to close
+     * anyway - a notification next to it would be the same news twice, and two things to confirm.
+     */
+    private fun keepSkipReason(reason: String) {
+        activeSceneManager.setChainSkipReason(reason)
     }
 
     private fun postChainError(endedName: String, nextName: String, failedCount: Int, totalCount: Int, details: String) {
