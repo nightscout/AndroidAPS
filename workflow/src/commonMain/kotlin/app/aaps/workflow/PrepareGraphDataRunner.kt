@@ -34,6 +34,7 @@ import app.aaps.core.interfaces.overview.graph.RatioGraphData
 import app.aaps.core.interfaces.overview.graph.TimeRange
 import app.aaps.core.interfaces.overview.graph.VarSensGraphData
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profiling.Profiler
@@ -48,6 +49,7 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.combine
 import app.aaps.core.objects.workflow.WorkOutcome
+import app.aaps.workflow.iob.CarbsIsfHistory
 import app.aaps.workflow.iob.fromCarbs
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -305,6 +307,9 @@ class PrepareGraphDataRunner(
                 ads.roundUpTime(bucketedData[0].timestamp),
                 true
             )
+            // A client takes the master's ISF for carbs from the results it stored, at each bucket's own time,
+            // the way the master had it then, see isfMgdlForCarbsAt
+            val carbsIsfHistory = loadCarbsIsfHistory(bucketedData[bucketedData.size - 1].timestamp)
             // start from oldest to be able sub cob
             for (i in bucketedData.size - 4 downTo 0) {
                 data.signals.emitProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt())
@@ -341,7 +346,7 @@ class PrepareGraphDataRunner(
                 autosensData.bg = bg
                 delta = bg - bucketedData[i + 1].recalculated
                 avgDelta = (bg - bucketedData[i + 3].recalculated) / 3
-                val sens = profile.getIsfMgdlForCarbs(bgTime, "iobCobOref1Worker", config, processedDeviceStatusData)
+                val sens = isfMgdlForCarbsAt(profile, bgTime, "iobCobOref1Worker", carbsIsfHistory)
                 val iob = data.iobCobCalculator.calculateFromTreatmentsAndTemps(bgTime, profile)
                 val bgi = -iob.activity * sens * 5
                 val deviation = delta - bgi
@@ -385,7 +390,7 @@ class PrepareGraphDataRunner(
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
                     if (recentCarbTreatment.amount > 0) {
-                        val sensForCarbs = profile.getIsfMgdlForCarbs(recentCarbTreatment.timestamp, "fromCarbs", config, processedDeviceStatusData)
+                        val sensForCarbs = isfMgdlForCarbsAt(profile, recentCarbTreatment.timestamp, "fromCarbs", carbsIsfHistory)
                         val ic = profile.getIc(recentCarbTreatment.timestamp)
                         autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isOref1 = true, isAAPSOrWeighted, sensForCarbs, ic, aapsLogger, dateUtil, preferences))
                     }
@@ -532,6 +537,8 @@ class PrepareGraphDataRunner(
                 ads.roundUpTime(bucketedData[0].timestamp),
                 true
             )
+            // The master's stored ISF for carbs, as in the first calculation block above
+            val carbsIsfHistory = loadCarbsIsfHistory(bucketedData[bucketedData.size - 1].timestamp)
             // start from oldest to be able to sub cob
             for (i in bucketedData.size - 4 downTo 0) {
                 data.signals.emitProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt())
@@ -568,7 +575,7 @@ class PrepareGraphDataRunner(
                 autosensData.bg = bg
                 delta = bg - bucketedData[i + 1].recalculated
                 avgDelta = (bg - bucketedData[i + 3].recalculated) / 3
-                val sens = profile.getIsfMgdlForCarbs(bgTime, "IobCobOrefWorker", config, processedDeviceStatusData)
+                val sens = isfMgdlForCarbsAt(profile, bgTime, "IobCobOrefWorker", carbsIsfHistory)
                 val iob = data.iobCobCalculator.calculateFromTreatmentsAndTemps(bgTime, profile)
                 val bgi = -iob.activity * sens * 5
                 val deviation = delta - bgi
@@ -610,7 +617,7 @@ class PrepareGraphDataRunner(
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
                     if (recentCarbTreatment.amount > 0) {
-                        val sensForCarbs = profile.getIsfMgdlForCarbs(recentCarbTreatment.timestamp, "fromCarbs", config, processedDeviceStatusData)
+                        val sensForCarbs = isfMgdlForCarbsAt(profile, recentCarbTreatment.timestamp, "fromCarbs", carbsIsfHistory)
                         val ic = profile.getIc(recentCarbTreatment.timestamp)
                         autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isOref1 = false, isAAPSOrWeighted, sensForCarbs, ic, aapsLogger, dateUtil, preferences))
                     }
@@ -713,6 +720,22 @@ class PrepareGraphDataRunner(
             rxBus.send(EventAutosensCalculationFinished(data.triggeredByNewBG))
         }
     }
+
+    /**
+     * AAPSClient: the master's ISF for carbs from the results the client stored, from an hour before
+     * [oldest] to now, so the oldest bucket has a result before it. Empty on a master.
+     */
+    private suspend fun loadCarbsIsfHistory(oldest: Long): CarbsIsfHistory =
+        if (config.AAPSCLIENT) CarbsIsfHistory(persistenceLayer.getCarbsIsfs(oldest - T.hours(1).msecs(), dateUtil.now())) else CarbsIsfHistory.EMPTY
+
+    /**
+     * The ISF for carbs at [timestamp]: on a client the master's stored value in force then, else as
+     * [app.aaps.core.interfaces.profile.Profile.getIsfMgdlForCarbs] gives it. One value for every bucket,
+     * the newest, decayed the carbs slower than the master whenever the ISF had risen since, so COB
+     * stayed higher after a restart.
+     */
+    private fun isfMgdlForCarbsAt(profile: EffectiveProfile, timestamp: Long, caller: String, history: CarbsIsfHistory): Double =
+        history.at(timestamp) ?: profile.getIsfMgdlForCarbs(timestamp, caller, config, processedDeviceStatusData)
 
     // ---------- Phase 5: IOB/autosens graph data (was PrepareIobAutosensGraphDataWorker) ----------
 

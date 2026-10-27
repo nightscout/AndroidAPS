@@ -39,10 +39,23 @@ internal interface APSResultDao : TraceableDao<APSResult> {
      */
     @Query("SELECT timestamp, json_extract(resultJson, '\$.variable_sens') AS variableSens FROM $TABLE_APS_RESULTS WHERE timestamp >= :start AND timestamp <= :end ORDER BY timestamp ASC")
     suspend fun getVariableSens(start: Long, end: Long): List<ApsResultVariableSens>
+
+    /**
+     * Only the time and the ISF for carbs of each result, read in SQLite like [getVariableSens]. On a
+     * client it is the master's value that came with each device status.
+     */
+    @Query("SELECT timestamp, json_extract(resultJson, '\$.isfMgdlForCarbs') AS isfMgdlForCarbs FROM $TABLE_APS_RESULTS WHERE timestamp >= :start AND timestamp <= :end ORDER BY timestamp ASC")
+    suspend fun getIsfForCarbs(start: Long, end: Long): List<ApsResultIsfForCarbs>
 }
 
 /** One row of [APSResultDao.getVariableSens]. [variableSens] is in mg/dL, null when the result has no value. */
 data class ApsResultVariableSens(
     val timestamp: Long,
     val variableSens: Double?
+)
+
+/** One row of [APSResultDao.getIsfForCarbs]. [isfMgdlForCarbs] is in mg/dL, null when the result has no value. */
+data class ApsResultIsfForCarbs(
+    val timestamp: Long,
+    val isfMgdlForCarbs: Double?
 )

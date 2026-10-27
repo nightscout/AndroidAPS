@@ -2648,6 +2648,10 @@ class PersistenceLayerImpl(
         repository.getApsResultVariableSens(start, end).mapNotNull { row -> row.variableSens?.let { PersistenceLayer.VariableSensitivity(row.timestamp, it) } }
     }
 
+    override suspend fun getCarbsIsfs(start: Long, end: Long): List<PersistenceLayer.CarbsIsf> = withContext(aapsIoDispatcher) {
+        repository.getApsResultIsfForCarbs(start, end).mapNotNull { row -> row.isfMgdlForCarbs?.let { PersistenceLayer.CarbsIsf(row.timestamp, it) } }
+    }
+
     private val nonFiniteFieldRegex = Regex("(\\w+)=(NaN|Infinity|-Infinity)\\b")
 
     // Diagnostic only — must never let a reporting failure block persistence of the APSResult, so the whole

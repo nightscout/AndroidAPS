@@ -1776,6 +1776,23 @@ interface PersistenceLayer {
     )
 
     /**
+     * The ISF for carbs of every APSResult in an interval, oldest first. On an AAPSClient these are the
+     * master's results as they came with the device statuses, so this is the ISF the master used for
+     * carbs at each time. Reads only the time and the value, like [getVariableSensitivities]. Results
+     * without the value are left out.
+     *
+     * @param start from
+     * @param end to
+     * @return list of values in mg/dL
+     */
+    suspend fun getCarbsIsfs(start: Long, end: Long): List<CarbsIsf>
+
+    data class CarbsIsf(
+        val timestamp: Long,
+        val valueMgdl: Double
+    )
+
+    /**
      * Insert or update ApsResult record
      *
      * @param apsResult record
