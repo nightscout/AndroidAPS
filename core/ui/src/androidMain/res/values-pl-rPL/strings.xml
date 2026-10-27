@@ -946,7 +946,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pompa sparowana</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nie jest obsługiwany.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nie jest obsługiwany lub urządzenie nie jest sparowane.</string>
     <string name="ble_not_enabled">Bluetooth nie jest włączony.</string>
     <string name="ble_permissions_missing">Brak uprawnień Bluetooth. Nadaj je w ustawieniach aplikacji.</string>
     <!--    Preferences -->
