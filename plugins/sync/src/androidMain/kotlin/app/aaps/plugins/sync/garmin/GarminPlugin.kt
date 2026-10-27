@@ -53,7 +53,7 @@ import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.math.roundToInt
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import kotlinx.coroutines.runBlocking
 
 /** Support communication with Garmin devices.
@@ -73,7 +73,7 @@ class GarminPlugin(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
     preferences: Preferences,
-    private val sp: SP,
+    private val keyValueStore: KeyValueStore,
     private val context: Context,
     private val loopHub: LoopHub,
     private val persistenceLayer: PersistenceLayer,
@@ -575,12 +575,12 @@ class GarminPlugin(
         val none = 0
 
         val now = System.currentTimeMillis()
-        val lastTotal = sp.getInt(PREF_GARMIN_LAST_STEPS, -1)
+        val lastTotal = keyValueStore.getInt(PREF_GARMIN_LAST_STEPS, -1)
 
         // First ever value → store baseline only
         if (lastTotal < 0) {
-            sp.putInt(PREF_GARMIN_LAST_STEPS, totalSteps)
-            sp.putLong(PREF_GARMIN_LAST_TS, now)
+            keyValueStore.putInt(PREF_GARMIN_LAST_STEPS, totalSteps)
+            keyValueStore.putLong(PREF_GARMIN_LAST_TS, now)
             aapsLogger.info(LTag.GARMIN, "[GarminHTTP] baseline steps=$totalSteps")
             return
         }
@@ -599,8 +599,8 @@ class GarminPlugin(
                 "[GarminHTTP] negative / 0 step delta=$delta (total=$totalSteps last=$lastTotal)"
             )
             if (totalSteps > 0 && delta == 0) {
-                sp.putInt(PREF_GARMIN_LAST_STEPS, totalSteps)
-                sp.putLong(PREF_GARMIN_LAST_TS, now)
+                keyValueStore.putInt(PREF_GARMIN_LAST_STEPS, totalSteps)
+                keyValueStore.putLong(PREF_GARMIN_LAST_TS, now)
                 val midnight = LocalDate.now()
                     .atStartOfDay(ZoneId.systemDefault())
                     .toInstant()
@@ -633,8 +633,8 @@ class GarminPlugin(
                     LTag.GARMIN,
                     "[GarminHTTP] takeover initial total=$totalSteps "
                 )
-                sp.putInt(PREF_GARMIN_LAST_STEPS, totalSteps)
-                sp.putLong(PREF_GARMIN_LAST_TS, now)
+                keyValueStore.putInt(PREF_GARMIN_LAST_STEPS, totalSteps)
+                keyValueStore.putLong(PREF_GARMIN_LAST_TS, now)
                 loopHub.storeStepsCount(
                     Instant.ofEpochSecond(samplingStart),
                     Instant.ofEpochSecond(samplingEnd),
@@ -655,8 +655,8 @@ class GarminPlugin(
             "[GarminHTTP] steps delta=$delta (${Instant.ofEpochSecond(samplingStart)} → ${Instant.ofEpochSecond(samplingEnd)}) Total: $totalSteps"
         )
 
-        sp.putInt(PREF_GARMIN_LAST_STEPS, totalSteps)
-        sp.putLong(PREF_GARMIN_LAST_TS, now)
+        keyValueStore.putInt(PREF_GARMIN_LAST_STEPS, totalSteps)
+        keyValueStore.putLong(PREF_GARMIN_LAST_TS, now)
         loopHub.storeStepsCount(
             Instant.ofEpochSecond(samplingStart),
             Instant.ofEpochSecond(samplingEnd),

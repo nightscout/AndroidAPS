@@ -6,6 +6,7 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.StringNonKey
@@ -54,11 +55,12 @@ class GarminPluginTest : TestBaseWithProfile() {
 
     @Mock private lateinit var loopHub: LoopHub
     @Mock private lateinit var persistenceLayer: PersistenceLayer
+    @Mock private lateinit var keyValueStore: KeyValueStore
     private val clock = Clock.fixed(Instant.ofEpochMilli(10_000), ZoneId.of("UTC"))
 
     @BeforeEach
     fun setup() {
-        gp = GarminPlugin(aapsLogger, rh, preferences, context, loopHub, persistenceLayer, config, notificationManager)
+        gp = GarminPlugin(aapsLogger, rh, preferences, keyValueStore, context, loopHub, persistenceLayer, config, notificationManager)
         gp.clock = clock
         whenever(loopHub.currentProfileName).thenReturn("Default")
         whenever(preferences.get(GarminIntKey.LocalHttpPort)).thenReturn(28890)
@@ -400,7 +402,7 @@ class GarminPluginTest : TestBaseWithProfile() {
     private fun clientPlugin(): GarminPlugin {
         whenever(config.AAPSCLIENT).thenReturn(true)
         val text = generatedTextResolver("sync" to SyncStringsValues::textOf)
-        return GarminPlugin(aapsLogger, text, preferences, context, loopHub, persistenceLayer, config, notificationManager)
+        return GarminPlugin(aapsLogger, text, preferences, keyValueStore, context, loopHub, persistenceLayer, config, notificationManager)
     }
 
     private fun postedNotice(): String {
