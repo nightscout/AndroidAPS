@@ -523,7 +523,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pomp gekoppeld</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy wordt niet ondersteund.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy wordt niet ondersteund of het apparaat is niet gekoppeld.</string>
     <string name="ble_not_enabled">Bluetooth niet ingeschakeld.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin instellingen</string>
