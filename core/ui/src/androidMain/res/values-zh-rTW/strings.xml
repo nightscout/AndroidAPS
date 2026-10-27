@@ -788,7 +788,6 @@
     <string name="wizard_set_alarm">設定鬧鐘</string>
     <string name="eat_reminder_title">用餐時間</string>
     <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
-    <string name="eat_reminder_set_duration" comment="The length of the eat reminder the user set. %1$s=length with unit. Example: Set: 20 min">設定：%1$s</string>
     <string name="eat_reminder_rung">時間到了</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d 分鐘</string>
     <string name="eat_reminder_not_set">無法設定用餐提醒。請在 Android 設定中允許 AAPS 設定鬧鐘和提醒。</string>
