@@ -894,7 +894,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pompa susieta</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nepalaikoma.</string>
-    <string name="ble_not_supported_or_not_paired">Nepalaikomas BLE arba įrenginys nesusietas.</string>
     <string name="ble_not_enabled">Bluetooth neįjungta.</string>
     <string name="ble_permissions_missing">Bluetooth leidimas nesuteiktas. Suteikite jį programos nustatymuose.</string>
     <!--    Preferences -->
