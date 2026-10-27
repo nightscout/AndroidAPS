@@ -12,19 +12,53 @@
     <string name="pref_title_show_insulin_button">Toon insuline knop</string>
     <string name="pref_title_show_carbs_button">Toon Koolhydraten knop</string>
     <string name="pref_title_show_cgm_button">Toon CGM knop</string>
+    <string name="pref_summary_show_cgm_button">Opent xDrip+ of de Dexcom App (je kunt de terug knop gebruiken om terug te keren naar AAPS).</string>
     <string name="pref_title_show_calibration_button">Toon kalibratieknop</string>
+    <string name="pref_summary_show_calibration_button">Verzend een kalibratie naar xDrip+ (zorg ervoor dat \'Accept Calibrations\' is ingeschakeld in xDrip+ onder Inter-App instellingen).</string>
+    <string name="pref_title_show_notes_in_dialogs">Notities weergeven in dialogen</string>
+    <string name="pref_title_use_bolus_advisor">Gebruik de bolusadviseur</string>
+    <string name="pref_summary_use_bolus_advisor">Schakel de bolusadviseur in om te helpen bij bolusberekeningen wanneer je glucosewaarden verhoogd zijn.</string>
+    <string name="pref_title_use_bolus_reminder">Gebruik bolus herinnering</string>
+    <string name="pref_summary_use_bolus_reminder">Activeer bolus notificatie om insuline administratie te volgen.</string>
+    <string name="pref_title_use_super_bolus">Gebruik super bolus</string>
+    <string name="pref_summary_use_super_bolus">Inschakelen van super bolus functie die insuline leent van basaal voor onmiddellijke levering.</string>
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">BT Watchdog</string>
+    <string name="pref_summary_bt_watchdog">Zet de bluetooth van de telefoon even kort uit en weer aan als er geen verbinding met de pomp is. Dit kan op sommige telefoons een vastgelopen bluetooth service verhelpen.</string>
     <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">Alarm als er geen BG data wordt ontvangen</string>
+    <string name="pref_title_alert_pump_unreachable">Alarm als de pomp niet bereikbaar is</string>
+    <string name="pref_title_alert_carbs_required">Alarm op koolhydraten vereist</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Geef dringende alarmen als Android meldingen</string>
+    <string name="pref_title_alert_increase_volume">Geleidelijk volume voor meldingen verhogen</string>
     <string name="pref_title_alert_override_dnd">Niet storen stand overschrijven</string>
+    <string name="pref_summary_alert_override_dnd">Wanneer ingeschakeld, AAPS alarm geluid, zelfs als de telefoon op stil staat of in \'Niet storen\'. Wanneer uitgeschakeld, blijven alarmen stil in deze modi.</string>
     <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">Upload data naar NS</string>
+    <string name="pref_title_bg_source_create_sensor_change">Log sensor wijziging</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Creëer sensor wissel therapie event wanneer de sensor is geplaatst.</string>
     <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">Gebruik dynamische gevoeligheid</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Gebruik DynamicISF voor gevoeligheid aanpassingen in plaats van Autosens.</string>
+    <string name="pref_title_aps_use_autosens">Gebruik Autosens</string>
+    <string name="pref_title_aps_use_smb">Activeer SMB</string>
+    <string name="pref_summary_aps_use_smb">Schakel Super Micro Bolus in. SMB levert onmiddellijk insuline om te reageren op stijgende bloedglucose.</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Gebruik SMB met een hoog tijdelijk streefdoel</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">SMB toestaan wanneer hoog tijdelijk streefdoel actief is.</string>
+    <string name="pref_title_aps_use_smb_always">Activeer SMB altijd</string>
+    <string name="pref_summary_aps_use_smb_always">Activeer SMB in alle omstandigheden, ongeacht bolus of COB.</string>
+    <string name="pref_title_aps_use_smb_with_cob">Activeer SMB met COB</string>
+    <string name="pref_summary_aps_use_smb_with_cob">Sta SMB toe wanneer er koolhydraten aan boord zijn.</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Gebruik SMB met een laag tijdelijk streefdoel</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">SMB toestaan wanneer een laag tijdelijk streefdoel actief is.</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Activeer SMB na koolhydraten</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">Gebruik SMB voor een periode nadat koolhydraten zijn ingevoerd.</string>
     <!-- Maintenance preferences -->
     <!-- Autotune preferences -->
     <!-- SMS preferences -->
     <!-- Virtual pump preferences -->
     <!-- NS Client preferences -->
     <string name="pref_title_ns_allow_client_control">Client controle toestaan</string>
-    <string name="pref_summary_ns_allow_client_control">Laat gekoppelde client apparaten ondertekende opdrachten verzenden (bijvoorbeeld scènes starten/stoppen) via Nightscout.</string>
     <!-- OpenHumans preferences -->
     <!-- xDrip preferences -->
     <!-- Wear preferences -->

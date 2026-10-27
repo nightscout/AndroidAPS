@@ -5,10 +5,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -30,8 +32,10 @@ import app.aaps.core.interfaces.overview.graph.BgType
 import app.aaps.core.interfaces.overview.graph.EpsGraphPoint
 import app.aaps.core.interfaces.overview.graph.SeriesType
 import app.aaps.core.interfaces.overview.graph.TargetLineData
+import app.aaps.core.interfaces.overview.graph.TreatmentGraphData
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.icons.IcBgCheck
 import app.aaps.core.ui.compose.icons.IcProfile
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
@@ -70,8 +74,14 @@ private const val SERIES_PRED_ACOB = "pred_acob"
 private const val SERIES_PRED_UAM = "pred_uam"
 private const val SERIES_PRED_ZT = "pred_zt"
 
-/** All prediction series identifiers */
-private val PREDICTION_SERIES = listOf(SERIES_PRED_IOB, SERIES_PRED_COB, SERIES_PRED_ACOB, SERIES_PRED_UAM, SERIES_PRED_ZT)
+/** All prediction series identifiers, each with the type of prediction it draws */
+private val PREDICTION_SERIES = listOf(
+    SERIES_PRED_IOB to BgType.IOB_PREDICTION,
+    SERIES_PRED_COB to BgType.COB_PREDICTION,
+    SERIES_PRED_ACOB to BgType.A_COB_PREDICTION,
+    SERIES_PRED_UAM to BgType.UAM_PREDICTION,
+    SERIES_PRED_ZT to BgType.ZT_PREDICTION
+)
 
 /**
  * From the centre of a reading to the tip of the marker that points at it: the 6 dp dot's radius
@@ -162,6 +172,8 @@ fun BgGraphCompose(
     val showPredictions = SeriesType.PREDICTIONS in bgOverlays
     val rawPredictions by viewModel.predictionsFlow.collectAsStateWithLifecycle()
     val predictions = if (showPredictions) rawPredictions else emptyList()
+    val profileUtil = LocalProfileUtil.current
+    val predictionHeadroom = remember(profileUtil.units) { profileUtil.fromMgdlToUnits(PREDICTION_AXIS_HEADROOM_MGDL) }
     val rawBasalData by viewModel.basalGraphFlow.collectAsStateWithLifecycle()
     val targetData by viewModel.targetLineFlow.collectAsStateWithLifecycle()
     val treatmentData by viewModel.treatmentGraphFlow.collectAsStateWithLifecycle()
@@ -184,9 +196,6 @@ fun BgGraphCompose(
 
     // Single model producer shared by all layers
     val modelProducer = remember { CartesianChartModelProducer() }
-
-    // Series registry - tracks current data for each series
-    val seriesRegistry = remember { mutableStateMapOf<String, List<BgDataPoint>>() }
 
     // Colors from theme (stable - won't change)
     val regularColor = AapsTheme.generalColors.originalBgValue
@@ -213,7 +222,7 @@ fun BgGraphCompose(
     }
 
     // Stable range-provider instance for the start (BG) axis — created once, mutated in place by
-    // the LaunchedEffect below rather than recreated (see MutableYRangeProvider).
+    // submitBgModel rather than recreated (see MutableYRangeProvider).
     val startAxisRangeProvider = remember {
         val initialScale = niceScale(chartConfig.lowMark, chartConfig.highMark)
         MutableYRangeProvider(maxX = maxX, minY = initialScale.min, maxY = initialScale.max)
@@ -222,272 +231,22 @@ fun BgGraphCompose(
     // Track which series are currently included (for matching LineProvider)
     val activeSeriesState = remember { mutableStateOf(listOf<String>()) }
 
-    // Stable time range - only changes when timestamps change by more than 1 minute
-    val stableTimeRange = remember(minTimestamp / 60000, maxTimestamp / 60000) {
-        minTimestamp to maxTimestamp
-    }
-
-    // Function to rebuild chart from registry
-    suspend fun rebuildChart(
-        currentBasalData: BasalGraphData,
-        currentTargetData: TargetLineData,
-        currentEpsPoints: List<EpsGraphPoint>,
-        currentActivityData: ActivityGraphData,
-        currentActivityScale: ActivityOverlayScale,
-        currentMinBgY: Double,
-        currentMaxBgY: Double,
-        currentMarkers: TreatmentMarkers,
-        currentVisibleTimeRange: Pair<Long, Long>?
-    ) {
-        val regularPoints = seriesRegistry[SERIES_REGULAR] ?: emptyList()
-        val bucketedPoints = seriesRegistry[SERIES_BUCKETED] ?: emptyList()
-
-        // Note: do NOT early-return when there are no BG points. With a clean DB the chart must
-        // still build its frame (axes, now-line, in-range belt) via the normalizer + dummy layers,
-        // matching the COB graph. The per-layer logic below already handles empty series.
-
-        modelProducer.runTransaction {
-            // Block 1 → BG layer (layer 0, start axis)
-            lineModel {
-                val activeSeries = mutableListOf<String>()
-
-                if (regularPoints.isNotEmpty()) {
-                    val dataPoints = regularPoints
-                        .map { timestampToX(it.timestamp, minTimestamp) to it.value }
-                        .sortedBy { it.first }
-                    series(x = dataPoints.map { it.first }, y = dataPoints.map { it.second })
-                    activeSeries.add(SERIES_REGULAR)
-                }
-
-                if (bucketedPoints.isNotEmpty()) {
-                    val dataPoints = bucketedPoints
-                        .map { timestampToX(it.timestamp, minTimestamp) to it.value }
-                        .sortedBy { it.first }
-                    series(x = dataPoints.map { it.first }, y = dataPoints.map { it.second })
-                    activeSeries.add(SERIES_BUCKETED)
-                }
-
-                // Prediction series - each type as a separate line
-                for (predSeries in PREDICTION_SERIES) {
-                    val predPoints = seriesRegistry[predSeries]
-                    if (!predPoints.isNullOrEmpty()) {
-                        val dataPoints = predPoints
-                            .map { timestampToX(it.timestamp, minTimestamp) to it.value }
-                            .sortedBy { it.first }
-                        series(x = dataPoints.map { it.first }, y = dataPoints.map { it.second })
-                        activeSeries.add(predSeries)
-                    }
-                }
-
-                // Normalizer series
-                series(x = normalizerX(maxX), y = NORMALIZER_Y)
-
-                activeSeriesState.value = activeSeries.toList()
-            }
-
-            // Block 2 → Basal layer (layer 1, end axis)
-            lineModel {
-                if (currentBasalData.profileBasal.size >= 2) {
-                    val pts = currentBasalData.profileBasal
-                        .map { timestampToX(it.timestamp, minTimestamp) to it.value }
-                        .sortedBy { it.first }
-                    series(x = pts.map { it.first }, y = pts.map { it.second })
-                } else {
-                    // Dummy series - invisible at y=0
-                    series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
-                }
-
-                if (currentBasalData.actualBasal.size >= 2) {
-                    val pts = currentBasalData.actualBasal
-                        .map { timestampToX(it.timestamp, minTimestamp) to it.value }
-                        .sortedBy { it.first }
-                    series(x = pts.map { it.first }, y = pts.map { it.second })
-                } else {
-                    // Dummy series - invisible at y=0
-                    series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
-                }
-            }
-
-            // Block 3 → Target line layer (layer 2, start axis)
-            lineModel {
-                if (currentTargetData.targets.size >= 2) {
-                    val pts = currentTargetData.targets
-                        .map { timestampToX(it.timestamp, minTimestamp) to it.value }
-                        .sortedBy { it.first }
-                    series(x = pts.map { it.first }, y = pts.map { it.second })
-                } else {
-                    // Dummy series - invisible at y=0
-                    series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
-                }
-            }
-
-            // Block 4 → EPS layer (layer 3, start axis — Y based on profile %, scaled into BG coordinate space)
-            // Same principle as legacy (originalPercentage/100 * baseline); baseline = 75% of the BG axis
-            // height. Anchored at currentMinBgY (not 0) — since the axis floor is no longer fixed at 0,
-            // a 0%-profile point must sit at the axis' actual bottom, not fall below it and disappear.
-            lineModel {
-                if (currentEpsPoints.isNotEmpty()) {
-                    val epsBaseline = (currentMaxBgY - currentMinBgY) * 0.75
-                    val pts = currentEpsPoints
-                        .map { eps -> timestampToX(eps.timestamp, minTimestamp) to (currentMinBgY + eps.originalPercentage / 100.0 * epsBaseline) }
-                        .sortedBy { it.first }
-                    series(x = pts.map { it.first }, y = pts.map { it.second })
-                } else {
-                    // Dummy series - invisible at y=0
-                    series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
-                }
-            }
-
-            // Block 5 → Activity layer (layer 4, start axis — Y-values mapped into BG coordinate space)
-            // Zero activity is drawn at the low mark, the bottom edge of the green in-range belt:
-            // a natural horizontal reference, with the room between it and the BG axis floor left
-            // for the rare negative excursion. Scale comes from the visible window only — see
-            // activityOverlayScale and the LaunchedEffect below.
-            lineModel {
-                if (!showActivity || currentActivityScale.scale <= 0.0 || currentActivityData.activity.size < 2) {
-                    // Activity disabled or no data — emit dummy series (history + prediction)
-                    series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
-                    series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
-                    return@lineModel
-                }
-
-                val pts = currentActivityData.activity
-                    .map { timestampToX(it.timestamp, minTimestamp) to currentActivityScale.map(it.value) }
-                    .sortedBy { it.first }
-                series(x = pts.map { it.first }, y = pts.map { it.second })
-
-                if (currentActivityData.activityPrediction.size >= 2) {
-                    val predPts = currentActivityData.activityPrediction
-                        .map { timestampToX(it.timestamp, minTimestamp) to currentActivityScale.map(it.value) }
-                        .sortedBy { it.first }
-                    series(x = predPts.map { it.first }, y = predPts.map { it.second })
-                } else {
-                    series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
-                }
-            }
-
-            // Block 6 → Treatment markers (layer 5, start axis — drawn at the glucose value of the
-            // moment they happened, see TreatmentMarkers.kt). Insulin points down at the reading from
-            // above and carbs point up at it from below, so a meal entered with its bolus is one marker
-            // with both tips on the curve; a measured value sits on its own value.
-            // Drawn last on purpose: a carbs marker reaches into the curve, and under the BG layer it
-            // was covered by the reading dots and the profile icon. It does cover the one reading
-            // it sits on.
-            // Fixed series order, always all 7: insulin small/medium/large, carbs small/medium/large,
-            // measured glucose. An empty slot gets a clipped dummy, so the line list below is a
-            // plain fixed list instead of something that has to be matched to the data.
-            lineModel {
-                fun markerSeries(markers: List<TreatmentMarker>) {
-                    if (markers.isEmpty()) series(x = listOf(0.0, 1.0), y = MARKER_EMPTY_Y)
-                    else series(x = markers.map { it.x }, y = markers.map { it.y })
-                }
-                for (tier in MarkerTier.entries) markerSeries(currentMarkers.insulin.filter { it.tier == tier })
-                for (tier in MarkerTier.entries) markerSeries(currentMarkers.carbs.filter { it.tier == tier })
-                val measured = currentMarkers.calibrations
-                if (measured.isEmpty()) series(x = listOf(0.0, 1.0), y = MARKER_EMPTY_Y)
-                else series(x = measured.map { it.first }, y = measured.map { it.second })
-            }
-
-            // Forces Vico to reprocess this transaction even when the series data above is
-            // identical to last time (see BG_VISIBLE_RANGE_KEY doc) — otherwise scrolling/zooming
-            // would re-submit the same partials and get silently skipped, never picking up the
-            // updated startAxisRangeProvider.
-            extras { it[BG_VISIBLE_RANGE_KEY] = currentVisibleTimeRange?.first to currentVisibleTimeRange?.second }
+    // One transaction after the other, and none is cancelled half-way. When the input changes during a
+    // transaction, the newest input waits for it, and the inputs in between are skipped. An effect keyed
+    // on the input cancelled the running transaction instead, and every scroll or zoom of BG changes the
+    // input. When that came just after Vico had stopped the animation of the transaction before, the
+    // lines stayed where the animation stopped, part-way between the old and the new scale, while the
+    // labels showed the new scale. If the next input was equal to the last finished one, Vico skipped
+    // it as a repeat, and the lines stayed like that. Same as in SecondaryGraphCompose.
+    val modelInput = BgModelInput(
+        bgReadings, bucketedData, predictions, basalData, targetData, epsPoints, activityData, showActivity, chartConfig,
+        minTimestamp, maxX, visibleTimeRange, treatmentData, predictionHeadroom
+    )
+    val latestModelInput by rememberUpdatedState(modelInput)
+    LaunchedEffect(modelProducer) {
+        snapshotFlow { latestModelInput }.collect { input ->
+            submitBgModel(modelProducer, startAxisRangeProvider, activeSeriesState, input)
         }
-    }
-
-    // Split predictions by type into registry
-    val predictionsByType = remember(predictions) {
-        mapOf(
-            SERIES_PRED_IOB to predictions.filter { it.type == BgType.IOB_PREDICTION },
-            SERIES_PRED_COB to predictions.filter { it.type == BgType.COB_PREDICTION },
-            SERIES_PRED_ACOB to predictions.filter { it.type == BgType.A_COB_PREDICTION },
-            SERIES_PRED_UAM to predictions.filter { it.type == BgType.UAM_PREDICTION },
-            SERIES_PRED_ZT to predictions.filter { it.type == BgType.ZT_PREDICTION }
-        )
-    }
-
-    // Single LaunchedEffect for all data - ensures atomic updates
-    LaunchedEffect(
-        bgReadings, bucketedData, predictionsByType, basalData, targetData, epsPoints, activityData, showActivity, chartConfig, stableTimeRange,
-        visibleTimeRange, treatmentData
-    ) {
-        seriesRegistry[SERIES_REGULAR] = bgReadings
-        seriesRegistry[SERIES_BUCKETED] = bucketedData
-        for ((key, points) in predictionsByType) {
-            seriesRegistry[key] = points
-        }
-        // maxBgY/minBgY clamped against highMark/lowMark (same as legacy GraphData.maxY logic) —
-        // used only for the EPS baseline, NOT the axis range itself (see below for that — windowed,
-        // unlike these full-range values).
-        val allBgValues = (bgReadings + bucketedData).map { it.value }
-        val maxBgY = if (allBgValues.isNotEmpty()) maxOf(allBgValues.max(), chartConfig.highMark) else chartConfig.highMark
-        val minBgY = if (allBgValues.isNotEmpty()) minOf(allBgValues.min(), chartConfig.lowMark) else chartConfig.lowMark
-
-        // Windowed axis min/max: BG values within the visible scroll/zoom window (not the full
-        // loaded range), floored/ceiled at chartConfig.lowMark/highMark (the "Low mark"/"High mark"
-        // target-range preferences) so the axis never shrinks past the configured target range —
-        // but also never stays locked at a fixed 0 floor when real data sits well above it, which
-        // used to leave a large empty band under the curve. niceScale(...) rounds both bounds out
-        // a little, to a grid of about a tenth of the range, instead of using the raw data values;
-        // the labels are placed apart from that (NiceVerticalAxisItemPlacer).
-        // Mutate the stable provider in place (see MutableYRangeProvider) — Vico picks
-        // up the new values when it processes the transaction submitted below, without ever
-        // recreating BG's chart object.
-        // Includes predictions (when shown) — otherwise scrolling into a region with only future
-        // prediction data (no real BG readings) makes the windowed set empty, falling back to the
-        // full unwindowed history's max instead of the actually-visible prediction values.
-        fun inWindow(timestamp: Long) = visibleTimeRange == null || timestamp in visibleTimeRange.first..visibleTimeRange.second
-        // A measured value (calibration, BG check) is drawn at its own glucose value and can sit
-        // well off the curve, so it widens the axis like a reading — otherwise it would be clamped
-        // to the edge and lie about what the meter said.
-        val measuredPoints = measuredGlucosePoints(treatmentData.calibrations, treatmentData.therapyEvents)
-        val allBgAndPredictionValues = (bgReadings + bucketedData + predictions).map { it.value } + measuredPoints.map { it.second }
-        val windowedValues = (bgReadings + bucketedData + predictions).filter { inWindow(it.timestamp) }.map { it.value } +
-            measuredPoints.filter { inWindow(it.first) }.map { it.second }
-        val windowedOrFull = windowedValues.ifEmpty { allBgAndPredictionValues }
-        val dataMax = maxOf(windowedOrFull.maxOrNull() ?: chartConfig.highMark, chartConfig.highMark)
-        val dataMin = minOf(windowedOrFull.minOrNull() ?: chartConfig.lowMark, chartConfig.lowMark)
-        val niceBgScale = niceScale(dataMin, dataMax)
-        startAxisRangeProvider.maxX = maxX
-        startAxisRangeProvider.minY = niceBgScale.min
-        startAxisRangeProvider.maxY = niceBgScale.max
-
-        // Activity overlay: zero anchored on the low mark (bottom edge of the green in-range belt),
-        // scaled from the visible window like every other curve. The BG axis above is never changed
-        // to fit it — the activity is fitted into the room the BG axis already leaves on each side
-        // of the low mark. Prediction points count too, same reason as for the BG values above.
-        val windowedActivity = (activityData.activity + activityData.activityPrediction)
-            .filter { inWindow(it.timestamp) }
-            .map { it.value }
-            .ifEmpty { (activityData.activity + activityData.activityPrediction).map { it.value } }
-        val activityScale = activityOverlayScale(
-            activityMin = windowedActivity.minOrNull() ?: 0.0,
-            activityMax = windowedActivity.maxOrNull() ?: 0.0,
-            zeroLevel = chartConfig.lowMark,
-            roomAbove = niceBgScale.max - chartConfig.lowMark,
-            roomBelow = chartConfig.lowMark - niceBgScale.min
-        )
-
-        // Treatment markers: heights come from the curve itself, so they are rebuilt with the axis
-        val axisSpan = niceBgScale.max - niceBgScale.min
-        val markers = treatmentMarkers(
-            boluses = treatmentData.boluses,
-            carbs = treatmentData.carbs,
-            calibrations = treatmentData.calibrations,
-            therapyEvents = treatmentData.therapyEvents,
-            readings = bucketedData.ifEmpty { bgReadings },
-            minTimestamp = minTimestamp,
-            minX = 0.0,
-            maxX = maxX,
-            minY = niceBgScale.min,
-            maxY = niceBgScale.max,
-            // The markers sit on the reading itself; the space to it is in the shapes, see MARKER_TIP_GAP
-            gap = 0.0,
-            fallbackY = niceBgScale.min + axisSpan * MARKER_FALLBACK_FRACTION
-        )
-
-        rebuildChart(basalData, targetData, epsPoints, activityData, activityScale, minBgY, maxBgY, markers, visibleTimeRange)
     }
 
     // Build lookup map for BUCKETED points: x-value -> BgDataPoint (for PointProvider)
@@ -656,7 +415,7 @@ fun BgGraphCompose(
     }
 
     // =========================================================================
-    // Treatment marker lines (layer 5) — order must match block 6 in rebuildChart
+    // Treatment marker lines (layer 5) — order must match block 6 in submitBgModel
     // =========================================================================
 
     val bgCheckPainter = rememberVectorPainter(IcBgCheck)
@@ -708,14 +467,17 @@ fun BgGraphCompose(
     val defaultMarkerController = CartesianMarkerController.rememberShowOnPress()
     val inspectLine = rememberInspectLine(inspect, dotOnReading = true)
 
-    val decorations = remember(inRangeBox, nowLine, inspectLine) { listOfNotNull(inRangeBox, nowLine, inspectLine) }
+    val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp, bgReadings, showIcon = true)
+    val decorations = remember(inRangeBox, nowLine, clockChanges, inspectLine) {
+        listOfNotNull(inRangeBox, nowLine, clockChanges, inspectLine)
+    }
 
     // =========================================================================
     // Range providers — hoisted out of rememberCartesianChart so keys are re-evaluated on recomposition
     // =========================================================================
 
     // startAxisRangeProvider (BG axis) is created once, further up, and mutated in place — see
-    // MutableYRangeProvider and the LaunchedEffect above.
+    // MutableYRangeProvider and submitBgModel.
     val endAxisRangeProvider = remember(maxX, basalMaxY) {
         CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = basalMaxY)
     }
@@ -750,7 +512,7 @@ fun BgGraphCompose(
                 rangeProvider = startAxisRangeProvider,
                 verticalAxisPosition = Axis.Position.Vertical.Start
             ),
-            // Layer 4: Activity (start axis — shares BG Y-axis range, values normalized in rebuildChart)
+            // Layer 4: Activity (start axis — shares BG Y-axis range, values normalized in submitBgModel)
             rememberLineCartesianLayer(
                 lineProvider = LineCartesianLayer.LineProvider.series(activityLines),
                 rangeProvider = startAxisRangeProvider,
@@ -768,7 +530,7 @@ fun BgGraphCompose(
                     style = TextStyle(color = MaterialTheme.colorScheme.onSurface),
                     minWidth = TextComponent.MinWidth.fixed(30.dp)
                 ),
-                guideline = LineComponent(fill = Fill(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)))
+                guideline = LineComponent(fill = Fill(AapsTheme.generalColors.graphGrid))
             ),
             bottomAxis = HorizontalAxis.rememberBottom(
                 valueFormatter = timeFormatter,
@@ -776,7 +538,7 @@ fun BgGraphCompose(
                 label = rememberTextComponent(
                     style = TextStyle(color = MaterialTheme.colorScheme.onSurface)
                 ),
-                guideline = LineComponent(fill = Fill(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)))
+                guideline = LineComponent(fill = Fill(AapsTheme.generalColors.graphGrid))
             ),
             decorations = decorations,
             getXStep = { _, _, _ -> 1.0 },
@@ -789,6 +551,275 @@ fun BgGraphCompose(
         scrollState = scrollState,
         zoomState = zoomState
     )
+}
+
+/** Everything the chart model of the BG graph is built from. Equal values give the same model. */
+private data class BgModelInput(
+    val bgReadings: List<BgDataPoint>,
+    val bucketedData: List<BgDataPoint>,
+    /** Empty when the predictions are not shown */
+    val predictions: List<BgDataPoint>,
+    val basalData: BasalGraphData,
+    val targetData: TargetLineData,
+    val epsPoints: List<EpsGraphPoint>,
+    val activityData: ActivityGraphData,
+    val showActivity: Boolean,
+    val chartConfig: ChartConfig,
+    val minTimestamp: Long,
+    val maxX: Double,
+    val visibleTimeRange: Pair<Long, Long>?,
+    val treatmentData: TreatmentGraphData,
+    /** How far a prediction may widen the top of the axis above the real data, in the units of the graph */
+    val predictionHeadroom: Double
+)
+
+/**
+ * Sets the BG axis for [input] on [startAxisRangeProvider] and sends the chart model built from
+ * [input] to [modelProducer]. [activeSeries] gets the series of the BG layer that have data, so the
+ * lines of that layer can match them.
+ *
+ * Outside the composable on purpose: it runs in a collector that lives as long as the graph, so a
+ * value read from a composition would be the one of the first composition. Everything comes in
+ * through the parameters.
+ */
+private suspend fun submitBgModel(
+    modelProducer: CartesianChartModelProducer,
+    startAxisRangeProvider: MutableYRangeProvider,
+    activeSeries: MutableState<List<String>>,
+    input: BgModelInput
+) {
+    val minTimestamp = input.minTimestamp
+    val chartConfig = input.chartConfig
+    val visibleTimeRange = input.visibleTimeRange
+    val activityData = input.activityData
+    val treatmentData = input.treatmentData
+
+    // maxBgY/minBgY clamped against highMark/lowMark (same as legacy GraphData.maxY logic) —
+    // used only for the EPS baseline, NOT the axis range itself (see below for that — windowed,
+    // unlike these full-range values).
+    val allBgValues = (input.bgReadings + input.bucketedData).map { it.value }
+    val maxBgY = if (allBgValues.isNotEmpty()) maxOf(allBgValues.max(), chartConfig.highMark) else chartConfig.highMark
+    val minBgY = if (allBgValues.isNotEmpty()) minOf(allBgValues.min(), chartConfig.lowMark) else chartConfig.lowMark
+
+    // Windowed axis min/max: BG values within the visible scroll/zoom window (not the full
+    // loaded range), floored/ceiled at chartConfig.lowMark/highMark (the "Low mark"/"High mark"
+    // target-range preferences) so the axis never shrinks past the configured target range —
+    // but also never stays locked at a fixed 0 floor when real data sits well above it, which
+    // used to leave a large empty band under the curve. niceScale(...) rounds both bounds out
+    // a little, to a grid of about a tenth of the range, instead of using the raw data values;
+    // the labels are placed apart from that (NiceVerticalAxisItemPlacer).
+    // Mutate the stable provider in place (see MutableYRangeProvider) — Vico picks
+    // up the new values when it processes the transaction submitted below, without ever
+    // recreating BG's chart object.
+    // Includes predictions (when shown) — otherwise scrolling into a region with only future
+    // prediction data (no real BG readings) makes the windowed set empty, falling back to the
+    // full unwindowed history's max instead of the actually-visible prediction values.
+    fun inWindow(timestamp: Long) = visibleTimeRange == null || timestamp in visibleTimeRange.first..visibleTimeRange.second
+    // A measured value (calibration, BG check) is drawn at its own glucose value and can sit
+    // well off the curve, so it widens the axis like a reading — otherwise it would be clamped
+    // to the edge and lie about what the meter said.
+    val measuredPoints = measuredGlucosePoints(treatmentData.calibrations, treatmentData.therapyEvents)
+    // Real values and predicted ones apart: a prediction may pull the top of the axis only so
+    // far above the real data, see bgAxisTop. The window fallback is decided for both together.
+    val realPoints = (input.bgReadings + input.bucketedData).map { it.timestamp to it.value } + measuredPoints
+    val predictionPoints = input.predictions.map { it.timestamp to it.value }
+    val windowHasData = (realPoints + predictionPoints).any { inWindow(it.first) }
+    fun List<Pair<Long, Double>>.axisValues() = if (windowHasData) filter { inWindow(it.first) }.map { it.second } else map { it.second }
+    val realValues = realPoints.axisValues()
+    val predictionValues = predictionPoints.axisValues()
+    val dataMax = bgAxisTop(realValues.maxOrNull(), predictionValues.maxOrNull(), chartConfig.highMark, input.predictionHeadroom)
+    val dataMin = minOf(realValues.minOrNull() ?: chartConfig.lowMark, predictionValues.minOrNull() ?: chartConfig.lowMark, chartConfig.lowMark)
+    val niceBgScale = niceScale(dataMin, dataMax)
+    startAxisRangeProvider.maxX = input.maxX
+    startAxisRangeProvider.minY = niceBgScale.min
+    startAxisRangeProvider.maxY = niceBgScale.max
+
+    // Activity overlay: zero anchored on the low mark (bottom edge of the green in-range belt),
+    // scaled from the visible window like every other curve. The BG axis above is never changed
+    // to fit it — the activity is fitted into the room the BG axis already leaves on each side
+    // of the low mark. Prediction points count too, same reason as for the BG values above.
+    val windowedActivity = (activityData.activity + activityData.activityPrediction)
+        .filter { inWindow(it.timestamp) }
+        .map { it.value }
+        .ifEmpty { (activityData.activity + activityData.activityPrediction).map { it.value } }
+    val activityScale = activityOverlayScale(
+        activityMin = windowedActivity.minOrNull() ?: 0.0,
+        activityMax = windowedActivity.maxOrNull() ?: 0.0,
+        zeroLevel = chartConfig.lowMark,
+        roomAbove = niceBgScale.max - chartConfig.lowMark,
+        roomBelow = chartConfig.lowMark - niceBgScale.min
+    )
+
+    // Treatment markers: heights come from the curve itself, so they are rebuilt with the axis
+    val axisSpan = niceBgScale.max - niceBgScale.min
+    val markers = treatmentMarkers(
+        boluses = treatmentData.boluses,
+        carbs = treatmentData.carbs,
+        calibrations = treatmentData.calibrations,
+        therapyEvents = treatmentData.therapyEvents,
+        readings = input.bucketedData.ifEmpty { input.bgReadings },
+        minTimestamp = minTimestamp,
+        minX = 0.0,
+        maxX = input.maxX,
+        minY = niceBgScale.min,
+        maxY = niceBgScale.max,
+        // The markers sit on the reading itself; the space to it is in the shapes, see MARKER_TIP_GAP
+        gap = 0.0,
+        fallbackY = niceBgScale.min + axisSpan * MARKER_FALLBACK_FRACTION
+    )
+
+    // Note: do NOT early-return when there are no BG points. With a clean DB the chart must
+    // still build its frame (axes, now-line, in-range belt) via the normalizer + dummy layers,
+    // matching the COB graph. The per-layer logic below already handles empty series.
+
+    modelProducer.runTransaction {
+        // Block 1 → BG layer (layer 0, start axis)
+        lineModel {
+            val withData = mutableListOf<String>()
+
+            if (input.bgReadings.isNotEmpty()) {
+                val dataPoints = input.bgReadings
+                    .map { timestampToX(it.timestamp, minTimestamp) to it.value }
+                    .sortedBy { it.first }
+                series(x = dataPoints.map { it.first }, y = dataPoints.map { it.second })
+                withData.add(SERIES_REGULAR)
+            }
+
+            if (input.bucketedData.isNotEmpty()) {
+                val dataPoints = input.bucketedData
+                    .map { timestampToX(it.timestamp, minTimestamp) to it.value }
+                    .sortedBy { it.first }
+                series(x = dataPoints.map { it.first }, y = dataPoints.map { it.second })
+                withData.add(SERIES_BUCKETED)
+            }
+
+            // Prediction series - each type as a separate line
+            for ((predSeries, type) in PREDICTION_SERIES) {
+                val predPoints = input.predictions.filter { it.type == type }
+                if (predPoints.isNotEmpty()) {
+                    val dataPoints = predPoints
+                        .map { timestampToX(it.timestamp, minTimestamp) to it.value }
+                        .sortedBy { it.first }
+                    series(x = dataPoints.map { it.first }, y = dataPoints.map { it.second })
+                    withData.add(predSeries)
+                }
+            }
+
+            // Normalizer series
+            series(x = normalizerX(input.maxX), y = NORMALIZER_Y)
+
+            activeSeries.value = withData.toList()
+        }
+
+        // Block 2 → Basal layer (layer 1, end axis)
+        lineModel {
+            if (input.basalData.profileBasal.size >= 2) {
+                val pts = input.basalData.profileBasal
+                    .map { timestampToX(it.timestamp, minTimestamp) to it.value }
+                    .sortedBy { it.first }
+                series(x = pts.map { it.first }, y = pts.map { it.second })
+            } else {
+                // Dummy series - invisible at y=0
+                series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
+            }
+
+            if (input.basalData.actualBasal.size >= 2) {
+                val pts = input.basalData.actualBasal
+                    .map { timestampToX(it.timestamp, minTimestamp) to it.value }
+                    .sortedBy { it.first }
+                series(x = pts.map { it.first }, y = pts.map { it.second })
+            } else {
+                // Dummy series - invisible at y=0
+                series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
+            }
+        }
+
+        // Block 3 → Target line layer (layer 2, start axis)
+        lineModel {
+            if (input.targetData.targets.size >= 2) {
+                val pts = input.targetData.targets
+                    .map { timestampToX(it.timestamp, minTimestamp) to it.value }
+                    .sortedBy { it.first }
+                series(x = pts.map { it.first }, y = pts.map { it.second })
+            } else {
+                // Dummy series - invisible at y=0
+                series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
+            }
+        }
+
+        // Block 4 → EPS layer (layer 3, start axis — Y based on profile %, scaled into BG coordinate space)
+        // Same principle as legacy (originalPercentage/100 * baseline); baseline = 75% of the BG axis
+        // height. Anchored at minBgY (not 0) — since the axis floor is no longer fixed at 0,
+        // a 0%-profile point must sit at the axis' actual bottom, not fall below it and disappear.
+        lineModel {
+            if (input.epsPoints.isNotEmpty()) {
+                val epsBaseline = (maxBgY - minBgY) * 0.75
+                val pts = input.epsPoints
+                    .map { eps -> timestampToX(eps.timestamp, minTimestamp) to (minBgY + eps.originalPercentage / 100.0 * epsBaseline) }
+                    .sortedBy { it.first }
+                series(x = pts.map { it.first }, y = pts.map { it.second })
+            } else {
+                // Dummy series - invisible at y=0
+                series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
+            }
+        }
+
+        // Block 5 → Activity layer (layer 4, start axis — Y-values mapped into BG coordinate space)
+        // Zero activity is drawn at the low mark, the bottom edge of the green in-range belt:
+        // a natural horizontal reference, with the room between it and the BG axis floor left
+        // for the rare negative excursion. Scale comes from the visible window only — see
+        // activityOverlayScale and activityScale above.
+        lineModel {
+            if (!input.showActivity || activityScale.scale <= 0.0 || activityData.activity.size < 2) {
+                // Activity disabled or no data — emit dummy series (history + prediction)
+                series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
+                series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
+                return@lineModel
+            }
+
+            val pts = activityData.activity
+                .map { timestampToX(it.timestamp, minTimestamp) to activityScale.map(it.value) }
+                .sortedBy { it.first }
+            series(x = pts.map { it.first }, y = pts.map { it.second })
+
+            if (activityData.activityPrediction.size >= 2) {
+                val predPts = activityData.activityPrediction
+                    .map { timestampToX(it.timestamp, minTimestamp) to activityScale.map(it.value) }
+                    .sortedBy { it.first }
+                series(x = predPts.map { it.first }, y = predPts.map { it.second })
+            } else {
+                series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
+            }
+        }
+
+        // Block 6 → Treatment markers (layer 5, start axis — drawn at the glucose value of the
+        // moment they happened, see TreatmentMarkers.kt). Insulin points down at the reading from
+        // above and carbs point up at it from below, so a meal entered with its bolus is one marker
+        // with both tips on the curve; a measured value sits on its own value.
+        // Drawn last on purpose: a carbs marker reaches into the curve, and under the BG layer it
+        // was covered by the reading dots and the profile icon. It does cover the one reading
+        // it sits on.
+        // Fixed series order, always all 7: insulin small/medium/large, carbs small/medium/large,
+        // measured glucose. An empty slot gets a clipped dummy, so the line list below is a
+        // plain fixed list instead of something that has to be matched to the data.
+        lineModel {
+            fun markerSeries(markersOfTier: List<TreatmentMarker>) {
+                if (markersOfTier.isEmpty()) series(x = listOf(0.0, 1.0), y = MARKER_EMPTY_Y)
+                else series(x = markersOfTier.map { it.x }, y = markersOfTier.map { it.y })
+            }
+            for (tier in MarkerTier.entries) markerSeries(markers.insulin.filter { it.tier == tier })
+            for (tier in MarkerTier.entries) markerSeries(markers.carbs.filter { it.tier == tier })
+            val measured = markers.calibrations
+            if (measured.isEmpty()) series(x = listOf(0.0, 1.0), y = MARKER_EMPTY_Y)
+            else series(x = measured.map { it.first }, y = measured.map { it.second })
+        }
+
+        // Forces Vico to reprocess this transaction even when the series data above is
+        // identical to last time (see BG_VISIBLE_RANGE_KEY doc) — otherwise scrolling/zooming
+        // would re-submit the same partials and get silently skipped, never picking up the
+        // updated startAxisRangeProvider.
+        extras { it[BG_VISIBLE_RANGE_KEY] = visibleTimeRange?.first to visibleTimeRange?.second }
+    }
 }
 
 /**

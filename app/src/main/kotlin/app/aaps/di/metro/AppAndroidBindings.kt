@@ -1,13 +1,11 @@
 package app.aaps.di.metro
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.telephony.SmsManager
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.history.HistoryBrowserData
-import app.aaps.shared.impl.sharedPreferences.defaultPreferences
 import app.aaps.ui.compose.history.HistoryScope
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
@@ -24,12 +22,6 @@ import dev.zacsweers.metro.SingleIn
 @ContributesTo(AppScope::class)
 @BindingContainer
 object AppAndroidBindings {
-
-    /** The app's preferences file. */
-    @Provides
-    @SingleIn(AppScope::class)
-    fun sharedPreferences(context: Context): SharedPreferences =
-        defaultPreferences(context)
 
     /**
      * Metro would construct this by itself - it has an `@Inject` constructor - but only the scope makes

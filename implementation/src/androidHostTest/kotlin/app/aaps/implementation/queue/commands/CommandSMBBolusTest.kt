@@ -51,6 +51,36 @@ class CommandSMBBolusTest : TestBaseWithProfile() {
         verify(bolusProgressData).clear(BOLUS_GENERATION)
     }
 
+    // #5362: the APS allows an SMB 6 s before the full interval. The queue runs later, so it must allow it too.
+    @Test
+    fun `execute calls pump when the last bolus is 5 s short of the interval`() = runTest {
+        whenever(preferences.get(IntKey.ApsMaxSmbFrequency)).thenReturn(3)
+        val lastBolus = BS(timestamp = dateUtil.now() - T.mins(3).msecs() + T.secs(5).msecs(), type = BS.Type.SMB, amount = 0.3, iCfg = someICfg)
+        whenever(persistenceLayer.getNewestBolus()).thenReturn(lastBolus)
+        val info = smbInfo()
+        val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
+        val pump = mock<PumpWithConcentration> {
+            on { deliverTreatment(info) } doReturn pumpResult
+        }
+        whenever(activePlugin.activePump).thenReturn(pump)
+
+        val result = newCommand(info).execute()
+
+        assertThat(result).isSameInstanceAs(pumpResult)
+    }
+
+    @Test
+    fun `execute rejects when the last bolus is 7 s short of the interval`() = runTest {
+        whenever(preferences.get(IntKey.ApsMaxSmbFrequency)).thenReturn(3)
+        val lastBolus = BS(timestamp = dateUtil.now() - T.mins(3).msecs() + T.secs(7).msecs(), type = BS.Type.SMB, amount = 0.3, iCfg = someICfg)
+        whenever(persistenceLayer.getNewestBolus()).thenReturn(lastBolus)
+
+        val result = newCommand(smbInfo()).execute()
+
+        assertThat(result.success).isFalse()
+        assertThat(result.enacted).isFalse()
+    }
+
     @Test
     fun `execute calls pump when deliverAtTheLatest is recent enough`() = runTest {
         whenever(preferences.get(IntKey.ApsMaxSmbFrequency)).thenReturn(3)

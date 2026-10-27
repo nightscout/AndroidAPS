@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.Loop.LastRun
+import app.aaps.core.interfaces.aps.SmbIntervalGate
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -29,7 +30,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -59,6 +59,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.aps.IsfForCarbs
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.objects.extensions.convertedToAbsolute
@@ -123,7 +124,6 @@ class LoopPlugin(
     private val persistenceLayer: PersistenceLayer,
     notificationManager: NotificationManager,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
-    private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val pumpStatusProvider: PumpStatusProvider,
     private val ch: ConcentrationHelper,
     private val loopNotifier: LoopNotifier,
@@ -607,12 +607,6 @@ class LoopPlugin(
             resultAfterConstraints.smbConstraint = ConstraintObject(resultAfterConstraints.smb, aapsLogger)
             resultAfterConstraints.smb = constraintChecker.applyBolusConstraints(resultAfterConstraints.smbConstraint!!).value()
 
-            // safety check for multiple SMBs
-            val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
-            if (lastBolusTime != 0L && lastBolusTime + T.mins(preferences.get(IntKey.ApsMaxSmbFrequency).toLong()).msecs() > dateUtil.now()) {
-                aapsLogger.debug(LTag.APS, "SMB requested but still in ${preferences.get(IntKey.ApsMaxSmbFrequency)} min interval")
-                resultAfterConstraints.smb = 0.0
-            }
             prevCarbsreq = lastRun?.constraintsProcessed?.carbsReq ?: prevCarbsreq
             if (lastRun == null) lastRun = LastRun()
             lastRun?.let { lastRun ->
@@ -944,8 +938,10 @@ class LoopPlugin(
     // Internal for the tests of its checks, without driving a whole loop run to the SMB branch.
     internal suspend fun applySMBRequest(request: APSResult): PumpEnactResult {
         val pump = activePlugin.activePump
+        // Safety check for multiple SMBs, independent of the APS. It runs after the temp basal, so it also
+        // sees a bolus the pump driver wrote while the temp basal was being set.
         val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
-        if (lastBolusTime != 0L && lastBolusTime + T.mins(preferences.get(IntKey.ApsMaxSmbFrequency).toLong()).msecs() > dateUtil.now()) {
+        if (SmbIntervalGate.tooSoon(lastBolusTime, preferences.get(IntKey.ApsMaxSmbFrequency), dateUtil.now())) {
             aapsLogger.debug(LTag.APS, "SMB requested but still in ${preferences.get(IntKey.ApsMaxSmbFrequency)} min interval")
             return pumpEnactResultProvider().comment(ApsStrings.smb_frequency_exceeded).enacted(false).success(false)
         }
@@ -967,7 +963,7 @@ class LoopPlugin(
 
         // deliver SMB
         val detailedBolusInfo = DetailedBolusInfo()
-        detailedBolusInfo.lastKnownBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
+        detailedBolusInfo.lastKnownBolusTime = lastBolusTime
         detailedBolusInfo.eventType = TE.Type.CORRECTION_BOLUS
         detailedBolusInfo.insulin = request.smb
         detailedBolusInfo.bolusType = BS.Type.SMB
@@ -1062,9 +1058,13 @@ class LoopPlugin(
         lastRun?.let { lastRun ->
             if (lastRun.lastAPSRun > dateUtil.now() - 300 * 1000L) {
                 // do not send if result is older than 1 min
+                // A client of this version works the ISF for carbs out itself from the stored results
+                // (IsfForCarbs). The finished value stays in the device status for older clients.
+                val now = dateUtil.now()
+                val isfMgdlForCarbs = IsfForCarbs.load(persistenceLayer, now, now).isfMgdl(profile, now)
                 apsResult = lastRun.request?.json()?.with {
                     put("timestamp", dateUtil.toISOString(lastRun.lastAPSRun))
-                    put("isfMgdlForCarbs", profile.getIsfMgdlForCarbs(dateUtil.now(), "LoopPlugin", config, processedDeviceStatusData))
+                    put("isfMgdlForCarbs", isfMgdlForCarbs)
                 }
                 iob = lastRun.request?.iob?.jsonObject(dateUtil)?.with {
                     put("time", dateUtil.toISOString(lastRun.lastAPSRun))

@@ -135,6 +135,38 @@ class NSClientV3ServiceHandlersTest : TestBaseWithProfile() {
     }
 
     /**
+     * Seen on 4.0.0-dev-e: an uploader that writes `"uploader":"GG-Host"`, a name where an object is
+     * expected. Every such document crashed the app. It is now read, with no uploader battery.
+     */
+    @Test
+    fun `devicestatus with the uploader written as a string is still handled`() = runTest {
+        val doc = """{"identifier":"d1","srvModified":1000,"uploaderBattery":100,"uploader":"GG-Host"}"""
+
+        sut.onDataCreateUpdate(envelope("devicestatus", doc))
+
+        verify(nsDeviceStatusHandler).handleNewData(any(), eq(true))
+    }
+
+    /**
+     * Any uploader can write to Nightscout, so a document AAPS cannot decode is dropped. It used to
+     * throw out of the socket.io listener and crash the app.
+     */
+    @Test
+    fun `a devicestatus that cannot be decoded is dropped, not thrown`() = runTest {
+        sut.onDataCreateUpdate(envelope("devicestatus", """{"identifier":"d1","srvModified":1000,"pump":"broken"}"""))
+
+        verify(nsDeviceStatusHandler, never()).handleNewData(any(), any())
+    }
+
+    /** The same for every collection that is decoded into a model, not only device status. */
+    @Test
+    fun `a treatment that cannot be decoded is dropped, not thrown`() = runTest {
+        sut.onDataCreateUpdate(envelope("treatments", """{"identifier":"t1","srvModified":1000,"date":{"x":1},"eventType":"Note"}"""))
+
+        verify(storeDataForDb, never()).requestStoreTreatments(any())
+    }
+
+    /**
      * The high-water mark must not move while the catch-up load after a (re)connect is still
      * running. If it did, the Load*Worker chain would ask for "modified since <just bumped>" and
      * skip exactly the offline window it is there to backfill.

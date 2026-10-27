@@ -22,6 +22,7 @@
     <string name="random_bg">随机血糖</string>
     <string name="description_source_random_bg">生成随机血糖数据（仅限demo演示模式）</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/欧态</string>
     <string name="description_source_patched_syai_tag_app">从 Syai/欧态 App 接收血糖数据。</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">SI App</string>
@@ -50,4 +51,5 @@
     <string name="aidex_sensor_stabilizing">传感器正在稳定中，请稍候…</string>
     <string name="aidex_sensor_replace">需要更换传感器，请尽快替换新传感器</string>
     <string name="aidex_signal_lost">传感器信号丢失，请检查连接</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">重复读数</string>
 </resources>

@@ -387,6 +387,50 @@ internal class GraphUtilsTest {
         }
     }
 
+    @Nested
+    inner class BgAxisTopTest {
+
+        // mmol/L, default high mark 10 and 3 mmol/L of headroom for predictions
+
+        @Test
+        fun `a prediction a little above the real data widens the axis to it`() {
+            assertThat(bgAxisTop(realMax = 9.3, predictionMax = 12.0, highMark = 10.0, headroom = 3.0)).isEqualTo(12.0)
+        }
+
+        @Test
+        fun `a prediction far above the real data is capped at the headroom`() {
+            // The screenshot case: readings up to 9.3, COB curve to 18. Before, the axis went to 18.
+            assertThat(bgAxisTop(realMax = 9.3, predictionMax = 18.0, highMark = 10.0, headroom = 3.0)).isEqualTo(13.0)
+        }
+
+        @Test
+        fun `the headroom counts from the real data when that is above the high mark`() {
+            assertThat(bgAxisTop(realMax = 14.0, predictionMax = 25.0, highMark = 10.0, headroom = 3.0)).isEqualTo(17.0)
+        }
+
+        @Test
+        fun `a real value is never capped`() {
+            assertThat(bgAxisTop(realMax = 20.0, predictionMax = null, highMark = 10.0, headroom = 3.0)).isEqualTo(20.0)
+        }
+
+        @Test
+        fun `without real data the high mark is the base`() {
+            // Scrolled into the future: only prediction points in the window.
+            assertThat(bgAxisTop(realMax = null, predictionMax = 11.0, highMark = 10.0, headroom = 3.0)).isEqualTo(11.0)
+            assertThat(bgAxisTop(realMax = null, predictionMax = 19.0, highMark = 10.0, headroom = 3.0)).isEqualTo(13.0)
+        }
+
+        @Test
+        fun `a prediction below the real data changes nothing`() {
+            assertThat(bgAxisTop(realMax = 9.3, predictionMax = 5.0, highMark = 10.0, headroom = 3.0)).isEqualTo(10.0)
+        }
+
+        @Test
+        fun `nothing at all gives the high mark`() {
+            assertThat(bgAxisTop(realMax = null, predictionMax = null, highMark = 10.0, headroom = 3.0)).isEqualTo(10.0)
+        }
+    }
+
     private companion object {
 
         /** These results come out of log10/pow, so compare with a tolerance rather than exactly. */

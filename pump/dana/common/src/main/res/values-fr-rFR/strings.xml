@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Délai d\'appairage expiré</string>
+    <string name="danars_bonding_failed">L\'appairage Bluetooth avec la pompe a échoué ou a été annulé. Réessayez et entrez le code PIN affiché sur la pompe.</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="description_pump_dana_rs">Intégration des pompes DANA Diabecare RS et Dana-i</string>
     <string name="maxbolusviolation">Violation bolus Max</string>
@@ -8,6 +9,12 @@
     <string name="speederror">Erreur de vitesse</string>
     <string name="insulinlimitviolation">Violation limite d\'insuline</string>
     <string name="boluserrorcode">Demandé : %1$.2fU Injecté : %2$.2fU code d’erreur : %3$s</string>
+    <string name="danai2_bolus_error_no_prime">La pompe n\'est pas amorcée</string>
+    <string name="danai2_bolus_error_not_enough_insulin">Pas assez d\'insuline restante dans le réservoir</string>
+    <string name="danai2_bolus_error_easy_sleep">Mode de sommeil facile est activé dans la pompe</string>
+    <string name="danai2_pump_check_error">Erreur de vérification de la pompe</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Mode simple</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Verrouillage automatique</string>
     <string name="danar_valuenotsetproperly">Valeur incorrecte définie</string>
     <string name="danar_setbasalstep001">Régler incrément basal à 0,01 U/h</string>
     <string name="resetpairing">Réinitialiser l\'appairage ?</string>
@@ -17,6 +24,7 @@
     <string name="danar_disablebolusblock">Le blocage du bolus est activé sur la pompe. AAPS ne peut pas délivrer d\'insuline tant qu\'il est actif. Désactiver le blocage du bolus dans les paramètres de la pompe.</string>
     <string name="overview_bolusprogress_stoped">Arrêté</string>
     <string name="unsupportedfirmware">Firmware pompe incompatible </string>
+    <string name="danars_unsupported_model">Modèle de pompe non pris en charge (code %1$s)</string>
     <string name="pumperror">Erreur Pompe</string>
     <string name="lowbattery">Piles Faibles</string>
     <string name="basalcompare">Injection inférieure au débit de basal</string>

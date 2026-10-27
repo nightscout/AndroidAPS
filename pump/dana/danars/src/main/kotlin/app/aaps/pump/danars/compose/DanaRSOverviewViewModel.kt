@@ -88,7 +88,9 @@ class DanaRSOverviewViewModel(
         if (!isConfigured) return null
         val address = preferences.get(DanaStringNonKey.MacAddress)
         if (address.isBlank() || bleTransport.adapter.isDeviceBonded(address)) return null
-        return StatusBanner(rh.gs(app.aaps.core.ui.R.string.ble_not_supported_or_not_paired), StatusLevel.CRITICAL)
+        // The pump has an address but is not bonded, so this is only about pairing. It used to say
+        // "BLE not supported or device not paired", although BLE support is not tested here at all.
+        return StatusBanner(rh.gs(R.string.pairfirst), StatusLevel.CRITICAL)
     }
 
     override fun buildManagementActions(pump: DanaPump, isInitialized: Boolean, isConfigured: Boolean): List<ScreenAction> = buildList {

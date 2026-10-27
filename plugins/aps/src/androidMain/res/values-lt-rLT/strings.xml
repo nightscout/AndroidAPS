@@ -42,6 +42,7 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Bolusas buvo suleistas per paskutines 3 minutes, SMB praleidžiamas</string>
     <string name="pump_not_initialized">Pompa neprijungta!</string>
+    <string name="zero_basal_not_set">Pompa nepriėmė nulinės laikinos bazės. Bazinis insulinas vis dar gali būti tiekiamas. Patikrinkite pompą.</string>
     <string name="description_loop">Aktyvuoja arba deaktyvuoja Ciklo paleidimą.</string>
     <string name="no_aps_selected">NEPASIRINKTA DKS ARBA NĖRA REZULTATO</string>
     <string name="ignore5m">Ignoruoti 5 min</string>
@@ -49,6 +50,8 @@
     <string name="ignore30m">Ignoruoti 30 min</string>
     <string name="carbs_suggestion">AV pasiūlymas</string>
     <string name="open_loop_new_suggestion">Gautas naujas pasiūlymas</string>
+    <string name="loop_notification_channel_name">Ciklo rekomendacijos</string>
+    <string name="open_loop_suggestion_too_old">Rekomendacija per sena, todėl į pompą nebus siunčiama. Palaukite sekančios.</string>
     <string name="basal_set_correctly">Bazė nustatyta teisingai</string>
     <string name="last_run_label">Paskutinį kartą vykdyta</string>
     <string name="loop_aps_label">DKS</string>

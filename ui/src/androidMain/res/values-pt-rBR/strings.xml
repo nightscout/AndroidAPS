@@ -270,11 +270,6 @@
     <string name="widget_rm_disabled">Desativado</string>
     <string name="widget_rm_suspended">Suspenso</string>
     <string name="widget_rm_resume">Retomar</string>
-    <!-- Calibration entry rejection reasons -->
-    <string name="cal_reject_delta_too_high">Calibração não salva: a glicemia está mudando rápido demais (Δ %1$s %3$s por 5 min, limite %2$s). Tente novamente quando a glicemia estiver estável.</string>
-    <string name="cal_reject_no_pair">Calibração não salva: nenhuma leitura do CGM foi encontrada nos 10 minutos anteriores.</string>
-    <string name="cal_reject_warmup">Calibração não salva: o sensor ainda está na janela de aquecimento de 2 horas.</string>
-    <string name="cal_reject_no_session">Calibração não salva: não há uma sessão de sensor ativa. Registre primeiro uma troca de sensor.</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
     <string name="cal_precheck_warmup">O sensor ainda está aquecendo. A calibração estará disponível às %1$s.</string>
     <string name="cal_precheck_no_session">Nenhuma sessão de sensor está ativa.</string>

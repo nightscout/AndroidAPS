@@ -473,8 +473,9 @@ fun GraphsSection(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .stopsBgFling(bgScrollForwarder)
+            .closesInspectPillOnTouch(inspect)
     ) {
-        // Treatment Belt Graph - running mode background + therapy events
+        // Treatment Belt Graph - running mode background + therapy events. A hold or a tap shows the pill.
         TreatmentBeltGraphCompose(
             viewModel = graphViewModel,
             inspect = inspect,
@@ -482,7 +483,9 @@ fun GraphsSection(
             zoomState = beltZoomState,
             derivedTimeRange = derivedTimeRange,
             nowTimestamp = nowTimestamp,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .graphInspectTouch(inspect)
         )
         // BG Graph - primary interactive graph
         var editingBgOverlays by remember { mutableStateOf(false) }
@@ -863,6 +866,22 @@ private fun seriesShortNameId(type: SeriesType): TextRef = when (type) {
     SeriesType.PREDICTIONS     -> CoreUiStrings.predictions_shortname
 }
 
+/** String resource ID for the full name of a series type, for the graph settings where there is room (#5336) */
+private fun seriesNameId(type: SeriesType): TextRef = when (type) {
+    SeriesType.IOB             -> CoreUiStrings.graph_series_iob
+    SeriesType.ABS_IOB         -> CoreUiStrings.graph_series_abs_insulin
+    SeriesType.COB             -> CoreUiStrings.graph_series_cob
+    SeriesType.BGI             -> CoreUiStrings.graph_series_bgi
+    SeriesType.DEVIATIONS      -> CoreUiStrings.graph_series_deviations
+    SeriesType.SENSITIVITY     -> CoreUiStrings.graph_series_sensitivity
+    SeriesType.VAR_SENSITIVITY -> CoreUiStrings.graph_series_variable_sens
+    SeriesType.DEV_SLOPE       -> CoreUiStrings.graph_series_deviation_slope
+    SeriesType.HEART_RATE      -> CoreUiStrings.graph_series_heart_rate
+    SeriesType.STEPS           -> CoreUiStrings.graph_series_steps
+    SeriesType.ACTIVITY        -> CoreUiStrings.graph_series_activity
+    SeriesType.PREDICTIONS     -> CoreUiStrings.graph_series_predictions
+}
+
 // =========================================================================
 // Graph edit button + series picker bottom sheet
 // =========================================================================
@@ -974,7 +993,7 @@ private fun GraphSeriesBottomSheet(
                     FilterChip(
                         selected = type in selectedSeries,
                         onClick = { onToggle(type) },
-                        label = { Text(stringResource(seriesShortNameId(type))) },
+                        label = { Text(stringResource(seriesNameId(type))) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
                             selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer

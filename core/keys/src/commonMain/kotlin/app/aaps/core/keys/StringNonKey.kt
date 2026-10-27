@@ -56,6 +56,11 @@ enum class StringNonKey(
      * another phone's "currently active" is meaningless here.
      */
     ActiveScene(key = "active_scene", defaultValue = "", exportable = false),
+    /**
+     * The running "time to eat" timer (`EatReminder`), as JSON, or empty. Runtime state like [ActiveScene]: kept
+     * so the timer survives a restart, published on the hot channel so clients show it, never exported.
+     */
+    EatReminder(key = "eat_reminder", defaultValue = "", exportable = false),
 
     // Whole local profile list as one JSON document: {"lastChange": <ms>, "profiles": [ … ]}.
     // One key means one atomic apply and one last-writer-wins unit, which is what makes the profile

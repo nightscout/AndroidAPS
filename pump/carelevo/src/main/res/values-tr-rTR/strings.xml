@@ -10,7 +10,18 @@
     <!-- Warning Titles -->
     <!-- Alert Titles -->
     <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_lgs_started">LGS başladı</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS Sonu</string>
+    <string name="alarm_feat_title_notice_lgs_error">LGS Mevcut Değil</string>
     <!-- Action Buttons -->
     <!-- General Messages -->
     <!--    notification -->
+    <string name="alarm_notification_desc_notice_lgs_started">LGS başladı.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS, patch/CGM bağlantısının kesilmesi nedeniyle sona erdi.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS verilen ara nedeniyle sona erdi.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">Planlanan süre dolduğu için LGS sona erdi.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS sona erdi çünkü LGS kapatıldı.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">CGM seviyesi belirlenen eşik değerini aştığı için LGS sona erdi.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS bilinmeyen bir nedenle sona erdi.</string>
+    <string name="alarm_notification_desc_notice_lgs_error">Lütfen patch ve CGM bağlantısını kontrol edin.</string>
 </resources>

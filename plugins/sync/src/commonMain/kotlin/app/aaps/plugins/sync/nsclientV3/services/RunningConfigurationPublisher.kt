@@ -51,8 +51,8 @@ import kotlin.concurrent.Volatile
  *    clients. Triggered by [RunningConfigurationKeys.observableKeys] changes, plugin switches
  *    ([EventConfigBuilderChange]) and authorized-client changes; debounced [COLD_DEBOUNCE_MS]. One that could not be
  *    published is tried again later (`publishColdOrRetry`).
- *  - Hot ([SettingsIdentifiers.STATE]): the active scene only. Triggered by
- *    [RunningConfigurationKeys.hotKeys] (scene lifecycle); debounced [HOT_DEBOUNCE_MS].
+ *  - Hot ([SettingsIdentifiers.STATE]): the active scene and the "time to eat" timer. Triggered by
+ *    [RunningConfigurationKeys.hotKeys] (scene lifecycle, timer changes); debounced [HOT_DEBOUNCE_MS].
  *
  * Document shape (both): `{ schemaVersion: 2, signed: "<{ signedAt, runningConfig } as text>", signature: <…> }`,
  * signed by [MasterSigningKey] and opened on a client by [MasterDocVerifier], upserted via `updateSettings`.
@@ -133,7 +133,7 @@ class RunningConfigurationPublisher(
                     .debounce(COLD_DEBOUNCE_MS)
                     .collect { publishColdOrRetry() }
             }
-            // Hot doc: scene lifecycle. Short debounce so a scene shows on clients quickly.
+            // Hot doc: scene lifecycle and the eat timer. Short debounce so they show on clients quickly.
             launch {
                 hotKeyTriggers.merge()
                     .debounce(HOT_DEBOUNCE_MS)
@@ -217,9 +217,9 @@ class RunningConfigurationPublisher(
         return putSettings(SettingsIdentifiers.COLD, payload)
     }
 
-    // Hot doc: the active scene. Small, and sent on every scene change.
+    // Hot doc: the active scene and the eat timer. Small, and sent on every change of either.
     private suspend fun publishHot() {
-        putSettings(SettingsIdentifiers.STATE, runningConfiguration.activeSceneConfiguration())
+        putSettings(SettingsIdentifiers.STATE, runningConfiguration.hotConfiguration())
     }
 
     /** True when Nightscout took the doc. */

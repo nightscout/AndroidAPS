@@ -13,7 +13,7 @@ package app.aaps.core.interfaces.notifications
  *   extra, and a resource id is a build specific number - the same value means something else in
  *   the next build. The stable [name] travels instead.
  *
- * Deliberately a closed set: the sound files live in `:core:ui/res/raw` and there are four of them.
+ * Deliberately a closed set: the sound files live in `:core:ui/res/raw` and there are five of them.
  * Adding one means adding an entry here, which makes the `when` in the Android resolver stop
  * compiling until it is handled.
  */
@@ -29,5 +29,8 @@ enum class AlarmSound {
     ERROR,
 
     /** Bolus delivery failure. */
-    BOLUS_ERROR
+    BOLUS_ERROR,
+
+    /** The "time to eat" timer. A soft kitchen timer, so it is not taken for a warning. */
+    EAT_REMINDER
 }

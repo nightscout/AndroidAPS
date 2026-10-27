@@ -358,19 +358,17 @@ class SceneExecutor(
     /**
      * Dismiss the expired scene banner. No revert — everything already handled by onExpiry.
      *
-     * Also clears the notifications this scene-end produced so confirming the banner tidies them
-     * away in one action: always the "Scene … ended" card ([NotificationId.SCENE_ENDED]), and — only
-     * when the scene actually performed a ProfileSwitch — the single-instance "Basal profile in pump
-     * updated" card ([NotificationId.PROFILE_SET_OK]) that its revert can raise. The profile card is
-     * meant to be silenced (#4959); the scoped dismiss here is a no-op when suppression works and a
-     * cleanup when it leaks. Reading the active state before [ActiveSceneManager.clearActive] is
-     * required — it is gone afterwards.
+     * The end itself raises no notification - the banner says it, and that is the one thing to confirm.
+     * Only when the scene actually performed a ProfileSwitch is there a card to clear: the
+     * single-instance "Basal profile in pump updated" one ([NotificationId.PROFILE_SET_OK]) that its
+     * revert can raise. That card is meant to be silenced (#4959); the scoped dismiss here is a no-op
+     * when suppression works and a cleanup when it leaks. Reading the active state before
+     * [ActiveSceneManager.clearActive] is required — it is gone afterwards.
      */
     fun dismiss() {
         val hadProfileSwitch = activeSceneManager.getActiveState()
             ?.scene?.actions?.any { it is SceneAction.ProfileSwitch } == true
         activeSceneManager.clearActive()
-        notificationManager.dismiss(NotificationId.SCENE_ENDED)
         if (hadProfileSwitch) notificationManager.dismiss(NotificationId.PROFILE_SET_OK)
     }
 

@@ -47,6 +47,11 @@ object AapsSpacing {
     // 16 dp gap), so the button never covers that item when the list is scrolled to the end
     val fabClearance = 88.dp
 
+    // Ring drawn inside the small FAB that shows pump communication. Smaller than the 40 dp button,
+    // so it sits between the button edge and the 24 dp icon without touching either
+    val pumpFabRingSize = 36.dp
+    val pumpFabRingStrokeWidth = 2.dp
+
     // Chip dimensions
     val chipCornerRadius = 8.dp
     val chipHeight = 35.dp

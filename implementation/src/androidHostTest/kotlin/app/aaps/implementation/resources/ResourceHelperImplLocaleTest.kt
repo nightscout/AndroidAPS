@@ -8,6 +8,8 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
+import app.aaps.core.ui.locale.LocaleHelper
+import app.aaps.implementation.maintenance.migration.FileKeyValueStore
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.After
@@ -58,8 +60,8 @@ internal class ResourceHelperImplLocaleTest {
         simpleModeFlow = MutableStateFlow(false)
         whenever(preferences.observe(StringKey.GeneralLanguage)).thenReturn(languageFlow)
         whenever(preferences.observe(BooleanKey.GeneralSimpleMode)).thenReturn(simpleModeFlow)
-        // LocaleHelper reads the shared preferences directly, not through the mock above - it must not
-        // depend on :core:keys. So the picked language has to be stored for real as well.
+        // LocaleHelper reads the settings store it was handed, not the mock above: it runs in
+        // attachBaseContext, where nothing can be injected. So the picked language goes there as well.
         storePickedLanguage("de", simpleMode = false)
         sut = ResourceHelperImpl(context, fabricPrivacy, preferences)
         sut.start()
@@ -68,6 +70,7 @@ internal class ResourceHelperImplLocaleTest {
     @After
     fun tearDown() {
         Locale.setDefault(localeBefore)
+        LocaleHelper.settings = null
     }
 
     @Test
@@ -128,11 +131,7 @@ internal class ResourceHelperImplLocaleTest {
     }
 
     private fun storePickedLanguage(language: String, simpleMode: Boolean) {
-        context.getSharedPreferences("${context.packageName}_preferences", Context.MODE_PRIVATE)
-            .edit()
-            .putBoolean("simple_mode", simpleMode)
-            .putString("language", language)
-            .commit()
+        LocaleHelper.settings = FileKeyValueStore(mapOf(BooleanKey.GeneralSimpleMode.key to simpleMode, StringKey.GeneralLanguage.key to language))
     }
 
     private fun contextIn(locale: Locale): Context =

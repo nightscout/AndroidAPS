@@ -203,6 +203,11 @@ dependencies {
     // phone runs, so a payload parses identically on both.
     implementation(libs.org.json.android)
 
+    // The OS key stores the encryption keys live in: DPAPI (through jna-platform's Crypt32Util), the
+    // macOS Keychain and libsecret. One library for all three; see the `secure` package.
+    implementation(libs.jna)
+    implementation(libs.jna.platform)
+
     // The plugins the client runs, mirroring the list :ios:shell carries. Metro finds their
     // @ContributesBinding classes through these, which is what turns the graph from an anchor into
     // the real app. No pump driver except the virtual one: a desktop has no Bluetooth radio to
@@ -243,12 +248,18 @@ tasks.withType<Test> {
     // reference to the build script there breaks the configuration cache.
     val testHome = project.layout.buildDirectory.dir("test-home").get().asFile
     systemProperty("user.home", testHome.absolutePath)
+    // Keys in files under that home, never in the real Keychain or keyring of whoever runs the tests.
+    // The tests of the OS key stores themselves construct those directly.
+    systemProperty("aaps.desktop.keyVault", "file")
     doFirst { testHome.deleteRecursively() }
 }
 
 compose.desktop {
     application {
         mainClass = "app.aaps.desktop.shell.MainKt"
+        // JNA calls into the OS key stores. From JDK 24 that is a "restricted method": allowed today with a
+        // warning, blocked in a future release unless native access is enabled. JDK 21 accepts the flag too.
+        jvmArgs += "--enable-native-access=ALL-UNNAMED"
 
         nativeDistributions {
             // The client name, matching `DesktopClientConfig.appName` and the `aapsclient` flavour
@@ -259,6 +270,10 @@ compose.desktop {
             // jpackage demands a plain numeric version - an MSI rejects anything else - so the
             // `-dev-b-kmp` style suffix that Versions.appVersion carries is trimmed off here.
             packageVersion = Versions.appVersion.substringBefore('-')
+            // The packaged app carries a trimmed JRE with only the modules the plugin can detect. JNA
+            // needs sun.misc.Unsafe from jdk.unsupported, which it cannot detect; without it every OS
+            // key store fails to load and the keys fall back to plain files.
+            modules("jdk.unsupported")
             // jpackage embeds a JRE, so the user installs an app rather than a JVM.
             targetFormats(
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi,

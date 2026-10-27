@@ -76,6 +76,8 @@ fun OverviewScreenSplit(
     endSceneEnabled: Boolean = true,
     commandsAllowed: Boolean = true,
     formatDuration: (Long) -> String = { ms -> "${(ms / 60000L).toInt()}m" },
+    /** The "time to eat" bar, under the scene bar. */
+    eatReminderBanner: @Composable () -> Unit = {},
     /** Height of the bars drawn over the content in preview mode; both columns need it as extra space at their end. */
     overlaidBarsHeight: Dp = 0.dp,
     modifier: Modifier = Modifier
@@ -103,6 +105,7 @@ fun OverviewScreenSplit(
             endEnabled = endSceneEnabled,
             formatDuration = formatDuration
         )
+        eatReminderBanner()
 
         Row(
             modifier = Modifier

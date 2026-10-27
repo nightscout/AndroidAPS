@@ -69,7 +69,7 @@ import app.aaps.core.ui.R as CoreUiR
  *  - no text is cut off without an ellipsis ("23:36(" for "23:36(-1)"),
  *  - no text is taller than the place it has (the second line of a chip cut in half).
  *
- * The status rows have long ages on purpose, "8 days 23 hours", as on the screen in the issue.
+ * The status rows have the widest age on purpose, "8d23h", and a cannula usage beside it.
  *
  * The window is a fake: [LocalConfiguration] says the size and the orientation, which is what the
  * layout and the text scale read on Android, and the content is given exactly that size. The real
@@ -176,7 +176,7 @@ class OverviewSizeSweepTest {
         return null
     }
 
-    /** "8 days 23 hours" on every status row and a cannula usage, like the screen in issue #5355. */
+    /** "8d23h" on every status row and a cannula usage, like the screen in issue #5355. */
     private fun withLongStatusAges() {
         val changedAt = NOW - 8 * DAY - 23 * HOUR
         runBlocking {

@@ -112,10 +112,10 @@ class ResourceHelperImpl(
     private fun buildLocalizedContext(): Context =
         // The plain context is right for "default" only, and it is also the better answer there: it
         // follows a later change of the phone language, while a copied Configuration would not.
-        if (LocaleHelper.isSystemDefault(context)) context
+        if (LocaleHelper.isSystemDefault()) context
         else context.createConfigurationContext(
             Configuration(context.resources.configuration)
-                .apply { setLocale(LocaleHelper.currentLocale(context)) }
+                .apply { setLocale(LocaleHelper.currentLocale()) }
         )
 
     override fun gs(@StringRes id: Int): String =

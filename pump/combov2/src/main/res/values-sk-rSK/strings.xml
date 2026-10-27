@@ -81,7 +81,6 @@ Pokiaľ po viac ako ~5 minútach nie je nadviazané žiadne spojenie:\n\n
     <string name="combov2_bolus_delivery_failed">Podávanie inzulínu zlyhalo. Zdá sa, že nebol podaný žiadny bolus. Aby ste si boli istí, skontrolujte pumpu a prípadne pošlite bolus znovu. Aby sa zabránilo nechcenému dvojitému bolusu, podanie bolusu nie je automaticky opakované.</string>
     <string name="combov2_bolus_not_delivered">Bolus nebol podaný</string>
     <string name="combov2_cannot_access_pump_data">Nie je možné získať prístup k dátam pumpy; pumpa musí byť znova spárovaná</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Zistené nečakané bolusy. Z bezpečnostných dôvodov bolus zrušený.</string>
     <string name="combov2_incorrect_active_basal_profile">Nesprávny aktívny bazálny profil; profil 1 musí byť aktívny, nie profil %1$d</string>
     <string name="combov2_unrecognized_alert">Nerozpoznané Combo upozornenie</string>
     <string name="combov2_combo_alert">Combo upozornenie</string>

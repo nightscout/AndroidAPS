@@ -157,8 +157,9 @@ class RealNightscoutTreatmentTest {
     }
 
     /**
-     * Malformed text still throws, and still is not caught anywhere - `toNSTreatment()` has no
-     * guard even though its return type is nullable. This test records that, it does not endorse it.
+     * Malformed text still throws - `toNSTreatment()` has no guard even though its return type is
+     * nullable. The websocket handler (`NsFrameHandler.onDataCreateUpdate`) catches it and drops the
+     * frame. This test records that, it does not endorse it.
      *
      * **The exception type changed** from Gson's `JsonSyntaxException` to
      * `SerializationException`. That was called out before the migration precisely so it could not

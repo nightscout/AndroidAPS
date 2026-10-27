@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">Изберете количеството.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Диапазон: %1$d ~ %2$d Е</string>
+    <string name="carelevo_insulin_refill_step1">1. Отлепете хартията от лепенката.</string>
+    <string name="carelevo_insulin_refill_step2">2. Почистете гумената част на инсулина с алкохол.</string>
+    <string name="carelevo_insulin_refill_step3">3. Махнете защитната капачка на инсулина като я изтеглите.</string>
+    <string name="carelevo_insulin_refill_step4">4. Изтеглете буталото за да напълните около 2 мл въздух.</string>
+    <string name="carelevo_insulin_refill_step5">5. Поставете пълната с въздух спринцовка в инсулиновия флакон и натиснете за да вкарате въздуха във влакона.</string>
+    <string name="carelevo_insulin_refill_step6">6. С поставена спринцовка, обърнете нея и инсулина наобратно и използвайте налягането да напълните спринцовката в близо 2мл инсулин.</string>
+    <string name="carelevo_insulin_refill_step7">7. Поставете иглата на спринцовката вертикално в дупката за пълнене докато не достигне дъното. Изтеглете буталото до горе и го пуснете. Махнете спринцовката от дупката за пълнене.</string>
+    <string name="carelevo_insulin_refill_step8">8. Задръжте спринцовката наобратно и почукайте леко по нея за да съберете въздуха на върха. </string>
+    <string name="carelevo_insulin_refill_step9">9. Вкарайте иглата обратно в инсулина и вкарайте целия въздух и после изтеглете количество инсулин, което ще трябва за пача.</string>
+    <string name="carelevo_insulin_refill_step10">10. Извадете спринцовката от флакона. Ако има балончете я задръжте нагоре с иглата, почукайте за да отидат най-горе и ги изкарайте чрез натиск на буталото.</string>
+    <string name="carelevo_insulin_refill_step11">11. Натиснете буталото за да съвпада в маркировката и да регулирате дозата прецизно.</string>
+    <string name="carelevo_insulin_refill_step12">12. Вкарайте иглата в дупката за инсулин на пача (①) докато достигне до долу и бавно натиснете буталото за да вкарате целия инсулин.</string>
+    <string name="carelevo_title_fill_insulin">Пълнене на пач с инсулин</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Напълнете пача с инсулин (%1$d–%2$d Ед), в зависимост от периода (до 168 часа). Натиснете [Наоълни количество] за заредения инсулин.</string>
     <!-- Connection -->
     <!-- Profile -->
     <!-- Needle Insertion -->

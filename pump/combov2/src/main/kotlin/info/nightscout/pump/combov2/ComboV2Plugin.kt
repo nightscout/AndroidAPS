@@ -44,7 +44,7 @@ import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -156,7 +156,7 @@ class ComboV2Plugin(
     commandQueue: CommandQueue,
     private val context: Context,
     private val rxBus: RxBus,
-    sp: SP,
+    sp: KeyValueStore,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
     notificationManager: NotificationManager,

@@ -21,10 +21,10 @@ import java.util.Properties
  * and writing a master password in the clear to save typing is not a trade worth making quietly. Now
  * that `DesktopSecureEncrypt` exists, what lands here is the same AES-GCM envelope Android stores.
  *
- * **The protection is only as good as the key file**, which sits in `~/.aaps/keys` with owner-only
- * permissions. That stops another account on the machine reading it, and keeps the secret out of
- * backups and exports; it does not stop anyone who can already read this user's own files. The same
- * limit is written up on `DesktopSecureEncrypt`, and it applies to everything desktop encrypts.
+ * **The protection is only as good as where the key is.** That is the operating system's key store
+ * (DPAPI, Keychain, Secret Service), so a copy of this file is useless elsewhere; where no key store
+ * exists, a file in `~/.aaps/keys`. Neither stops a program running as this user. The same limit is
+ * written up on `DesktopSecureEncrypt`, and it applies to everything desktop encrypts.
  *
  * A properties file rather than DataStore, which is Android only. Two values, read and written whole.
  */
@@ -58,7 +58,7 @@ class DesktopExportPasswordPlatform(
                 setProperty(SECRET_KEY, secret)
                 setProperty(TIMESTAMP_KEY, timestamp.toString())
             }
-            file.outputStream().use { properties.store(it, "AAPS unattended export password. Encrypted; the key is in keys/.") }
+            file.outputStream().use { properties.store(it, "AAPS unattended export password. Encrypted; the key is in the system key store.") }
             restrictToOwner(file)
         }.onFailure { aapsLogger.error(LTag.CORE, "Cannot store the export password: ${it.message}") }
     }

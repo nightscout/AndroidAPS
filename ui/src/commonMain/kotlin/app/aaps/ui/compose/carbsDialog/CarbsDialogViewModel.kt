@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.TT
-import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.InterfacesStrings
@@ -225,10 +224,18 @@ class CarbsDialogViewModel(
         _uiState.update {
             it.copy(
                 timeOffsetMinutes = clamped,
-                eventTime = newEventTime
+                eventTime = newEventTime,
+                alarmChecked = alarmAfterOffsetChange(it, clamped)
             )
         }
     }
+
+    /**
+     * Carbs later turn the "time to eat" alarm on, as in the bolus wizard. Only when the offset first becomes
+     * positive, so an alarm the user turned off stays off while they change the time.
+     */
+    private fun alarmAfterOffsetChange(state: CarbsDialogUiState, newOffsetMinutes: Int): Boolean =
+        state.alarmChecked || (state.timeOffsetMinutes <= 0 && newOffsetMinutes > 0)
 
     fun updateDuration(hours: Int) {
         val clamped = hours.coerceIn(0, uiState.value.maxCarbsDurationHours.toInt())
@@ -282,10 +289,12 @@ class CarbsDialogViewModel(
         val rawOffset = ((timeMillis - state.eventTimeOriginal) / (1000 * 60)).toInt()
         // Negative carbs (COB removal) may only be now/past — snap a future pick back to "now".
         val pinToNow = state.carbs < 0 && rawOffset > 0
+        val newOffset = if (pinToNow) 0 else rawOffset
         _uiState.update {
             it.copy(
                 eventTime = if (pinToNow) it.eventTimeOriginal else timeMillis,
-                timeOffsetMinutes = if (pinToNow) 0 else rawOffset
+                timeOffsetMinutes = newOffset,
+                alarmChecked = alarmAfterOffsetChange(it, newOffset)
             )
         }
     }
@@ -323,7 +332,10 @@ class CarbsDialogViewModel(
         }
     }
 
-    /** Confirm the master's prepared batch: record the carbs (+ TT) once, then the device-local reminders. */
+    /**
+     * Confirm the master's prepared batch: record the carbs (+ TT) once, then the device-local reminders. The
+     * "time to eat" timer is not one of those: it travels in the batch and the master starts it.
+     */
     fun commit(bolusId: Long) {
         appScope.launch {
             val state = confirmedState
@@ -340,9 +352,6 @@ class CarbsDialogViewModel(
                 else if (!config.AAPSCLIENT) result.detail?.let { _sideEffect.tryEmit(SideEffect.ShowDeliveryError(it)) }
             }
             automation.removeAutomationEventEatReminder()
-            // Device-local "time to eat" alarm — on confirm, when configured.
-            if (state != null && state.alarmChecked && state.carbs > 0 && state.timeOffsetMinutes > 0)
-                automation.scheduleTimeToEatReminder(T.mins(state.timeOffsetMinutes.toLong()).secs().toInt())
         }
     }
 
@@ -379,7 +388,9 @@ class CarbsDialogViewModel(
                 add(
                     BatchAction.Bolus(
                         insulin = 0.0, carbs = state.carbs, carbsTimeOffsetMinutes = state.timeOffsetMinutes,
-                        carbsDurationHours = state.durationHours, recordOnly = false, notes = state.notes, timestamp = state.eventTime, iCfg = null
+                        carbsDurationHours = state.durationHours, recordOnly = false, notes = state.notes, timestamp = state.eventTime, iCfg = null,
+                        // The master starts the "time to eat" timer: it is the phone near the person who eats.
+                        alarm = state.alarmChecked && state.carbs > 0 && state.timeOffsetMinutes > 0
                     )
                 )
         }

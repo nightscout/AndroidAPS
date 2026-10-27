@@ -20,7 +20,7 @@ internal fun StatusSectionContentPreview() {
             StatusSectionContent(
                 sensorStatus = StatusItem(
                     label = "Sensor",
-                    age = "5d 12h",
+                    age = "5d12h",
                     ageStatus = StatusLevel.NORMAL,
                     agePercent = 0.55f,
                     level = "Signal OK",
@@ -30,7 +30,7 @@ internal fun StatusSectionContentPreview() {
                 ),
                 insulinStatus = StatusItem(
                     label = "Insulin",
-                    age = "2d 3h",
+                    age = "2d3h",
                     ageStatus = StatusLevel.WARNING,
                     agePercent = 0.75f,
                     level = "86 U",
@@ -40,14 +40,14 @@ internal fun StatusSectionContentPreview() {
                 ),
                 cannulaStatus = StatusItem(
                     label = "Cannula",
-                    age = "1d 18h",
+                    age = "1d18h",
                     ageStatus = StatusLevel.NORMAL,
                     agePercent = 0.6f,
                     icon = IcCannulaChange
                 ),
                 batteryStatus = StatusItem(
                     label = "Battery",
-                    age = "14d",
+                    age = "14d3h",
                     ageStatus = StatusLevel.CRITICAL,
                     agePercent = 0.95f,
                     level = "12%",

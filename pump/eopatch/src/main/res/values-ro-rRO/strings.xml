@@ -70,7 +70,6 @@ prin apăsarea manuală a portului de oprire a alarmei de pe plasture așa cum s
     <string name="patch_communication_succeed">Comunicare reușită</string>
     <string name="patch_communication_succeed_message">Conectat cu plasturele.</string>
     <string name="patch_cancel_pairing">Anulați asocierea</string>
-    <string name="all_dose_unit">&#160;U</string>
     <string name="insulin_suspend_msg1">După suspendare, administrarea bolusului &amp; bazalei temporare vor fi anulate. \n\nRată : %1$s U/oră\nTimp rămas : %2$s\n&amp; Insulină rămasă: %3$.2f U</string>
     <string name="insulin_suspend_msg2">După suspendare, Bolusul care se livrează în prezent va fi anulat. \n\nInsulina rămasă: %1$.2f U</string>
     <string name="insulin_suspend_msg3">După suspendare, administrarea bazalei temporare va fi anulată. \nRată : %1$s U/oră\nTimp rămas : %2$s\n Insulină rămasă:  U</string>

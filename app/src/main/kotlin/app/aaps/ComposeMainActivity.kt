@@ -93,12 +93,15 @@ import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.utils.isRunningRealPumpTest
+import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import app.aaps.implementation.plugin.PluginPermissionsImpl
 import app.aaps.implementation.protection.BiometricCheck
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
+import app.aaps.settingsstore.AndroidStorage
+import app.aaps.settingsstore.SettingsUnreadableActivity
 import app.aaps.plugins.sync.nfcCommands.NfcForegroundDispatch
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
@@ -166,6 +169,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var prefFileList: FileListProvider
     @Inject lateinit var notificationManager: NotificationManager
+    @Inject lateinit var alarmNotificationManager: AlarmNotificationManager
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var builtInSearchables: BuiltInSearchables
     @Inject lateinit var bolusProgressData: BolusProgressData
@@ -232,11 +236,23 @@ class ComposeMainActivity : MetroAppCompatActivity() {
     private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (AndroidStorage.failure != null) {
+            // The settings cannot be opened, and AAPS is not started. This activity is not injected then (see
+            // MainApp.injectMembers): it only hands over. finish() here skips onStart and onResume.
+            super.onCreate(savedInstanceState)
+            startActivity(Intent(this, SettingsUnreadableActivity::class.java))
+            finish()
+            return
+        }
         // Bar icon color is kept in sync with the AAPS-effective theme reactively
         // from inside AapsTheme via a SideEffect on WindowInsetsControllerCompat,
         // so a plain enableEdgeToEdge() here is enough.
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        // Other apps may not draw over AAPS: an overlay could hide what a tap really does, for example on a bolus
+        // confirmation. It also covers the dialogs, because this window stays visible under them. System and
+        // accessibility overlays still show. Needs HIDE_OVERLAY_WINDOWS.
+        window.setHideOverlayWindows(true)
 
         // Activity result launchers (from base class)
         accessTree = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
@@ -585,6 +601,15 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // A background alarm the user has not answered: nothing in this screen can stop it, so show
+        // its alarm screen again (#5338). In onStart and not in onResume: the alarm screen is
+        // translucent, so leaving it with Back resumes this activity without starting it, and the
+        // alarm screen does not come straight back.
+        alarmNotificationManager.unansweredAlarmIntent()?.let { startActivity(it) }
     }
 
     override fun onResume() {

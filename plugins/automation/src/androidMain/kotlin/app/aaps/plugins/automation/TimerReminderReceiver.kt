@@ -17,8 +17,8 @@ import dev.zacsweers.metro.Inject
  *
  * Why this exists: handing a reminder to the system Clock app with `startActivity(ACTION_SET_TIMER)`
  * does not work, because Android blocks that from the background. A reminder scheduled while AAPS is
- * backgrounded — e.g. a Bolus-Wizard "Set alarm" delivered ON THE MASTER after being relayed from a
- * client, which the master runs in a background service — would be silently dropped. AlarmManager
+ * backgrounded — e.g. an automation alarm action — would be silently dropped. (The wizard's "time to
+ * eat" alarm is `EatReminder` now, with its own receiver.) AlarmManager
  * delivers this broadcast in the background (idle-exempt via `setAlarmClock`) and
  * [UiInteraction.runAlarm] posts the full-screen-intent alarm without needing a foreground activity,
  * so the reminder rings regardless of state.

@@ -90,6 +90,8 @@ fun OverviewScreen(
     // Disables the command chips' click (running mode / profile / temp target) on an unpaired client — same gate as nav/Manage.
     commandsAllowed: Boolean = true,
     formatDuration: (Long) -> String = { ms -> "${(ms / 60000L).toInt()}m" },
+    /** The "time to eat" bar, shown under the scene bar in every layout. */
+    eatReminderBanner: @Composable () -> Unit = {},
     paddingValues: PaddingValues,
     fabBottomOffset: Dp = 0.dp,
     /**
@@ -185,6 +187,7 @@ fun OverviewScreen(
                     endSceneEnabled = endSceneEnabled,
                     commandsAllowed = commandsAllowed,
                     formatDuration = formatDuration,
+                    eatReminderBanner = eatReminderBanner,
                     overlaidBarsHeight = overlaidBarsHeight
                 )
             } else if (twoColumns) {
@@ -223,6 +226,7 @@ fun OverviewScreen(
                     endSceneEnabled = endSceneEnabled,
                     commandsAllowed = commandsAllowed,
                     formatDuration = formatDuration,
+                    eatReminderBanner = eatReminderBanner,
                     overlaidBarsHeight = overlaidBarsHeight
                 )
             } else {
@@ -261,6 +265,7 @@ fun OverviewScreen(
                     endSceneEnabled = endSceneEnabled,
                     commandsAllowed = commandsAllowed,
                     formatDuration = formatDuration,
+                    eatReminderBanner = eatReminderBanner,
                     overlaidBarsHeight = overlaidBarsHeight
                 )
             }

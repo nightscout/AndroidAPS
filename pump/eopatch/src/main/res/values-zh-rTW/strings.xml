@@ -69,7 +69,6 @@
     <string name="patch_communication_succeed">通訊成功</string>
     <string name="patch_communication_succeed_message">已與貼片連線。</string>
     <string name="patch_cancel_pairing">取消配對</string>
-    <string name="all_dose_unit">&#160;U</string>
     <string name="insulin_suspend_msg1">暫停後，目前正在輸送的注射和臨時基礎速率將被取消。 \n\n速率 : %1$s U/hr\n剩餘時間 : %2$s\n&amp; 剩餘胰島素 : %3$.2f U</string>
     <string name="insulin_suspend_msg2">暫停後，目前正在輸送的注射將被取消。 \n\n剩餘胰島素 : %1$.2f U</string>
     <string name="insulin_suspend_msg3">暫停後，目前正在輸送的臨時基礎速率將被取消。 \n\n速率 : %1$s U/hr\n剩餘時間 : %2$s</string>

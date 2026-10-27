@@ -51,6 +51,9 @@ import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
+import app.aaps.settingsstore.AndroidStorage
+import app.aaps.settingsstore.IdleWorkerFactory
+import app.aaps.settingsstore.SettingsUnreadableNotification
 import app.aaps.utils.configureLeakCanary
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
@@ -92,7 +95,12 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         private val PLUGIN_START_WAIT = 30.seconds
     }
 
-    override fun injectMembers(target: Any): Boolean = metroGraphs.injectMembers(target)
+    // When the settings cannot be opened, ComposeMainActivity only hands over to SettingsUnreadableActivity and
+    // finishes. Filling its fields would build some 40 objects - plugins, the command queue - for nothing,
+    // and on settings that are not the user's.
+    override fun injectMembers(target: Any): Boolean =
+        if (AndroidStorage.failure != null && target is ComposeMainActivity) true
+        else metroGraphs.injectMembers(target)
 
     override val metroViewModelFactory: MetroViewModelFactory get() = metroGraphs.viewModelFactory
 
@@ -114,15 +122,19 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     // it does not know returns null and falls back to WorkManager's default reflective factory, which
     // is what builds WorkManager's own internal workers. The default androidx.startup
     // WorkManagerInitializer is removed in AndroidManifest.xml so this config wins.
+    // While the settings cannot be opened, the app's jobs do nothing (see IdleWorkerFactory).
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
-            .setWorkerFactory(MetroWorkerFactory(metroGraphs))
+            .setWorkerFactory(
+                if (AndroidStorage.failure == null) MetroWorkerFactory(metroGraphs)
+                else IdleWorkerFactory { metroGraphs.workerCreators().keys }
+            )
             .build()
 
     private val pluginStore get() = metroGraphs.pluginStore
     private val aapsLogger get() = metroGraphs.aapsLogger
     private val versionCheckersUtils get() = metroGraphs.versionCheckerUtils
-    private val sp get() = metroGraphs.sp
+    private val sp get() = metroGraphs.keyValueStore
     private val preferences get() = metroGraphs.preferences
     private val config get() = metroGraphs.config
     private val configBuilder get() = metroGraphs.configBuilder
@@ -160,6 +172,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private val profileSwitchScheduler get() = metroGraphs.profileSwitchScheduler
     private val automationRuntime get() = metroGraphs.automationRuntime
     private val snackbarNotificationFallback get() = metroGraphs.snackbarNotificationFallback
+    private val eatReminder get() = metroGraphs.eatReminder
     private val appScope get() = metroGraphs.applicationScope
 
     /** The rules; the two fields below are what this app's start-up sequence carries between its steps. */
@@ -191,6 +204,16 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     override fun onCreate() {
         super.onCreate()
 
+        // The settings first: everything below reads them. Opened here on purpose, not on first use, so a
+        // store that cannot be read is found at once and handled in one place.
+        val storage = AndroidStorage.open(this)
+        // Before any activity exists: every activity asks for the language in attachBaseContext, before it
+        // can be injected, and Android creates the first one only after this method returns.
+        LocaleHelper.settings = storage.store
+        storage.failure?.let { failure ->
+            startWithoutSettings(failure, storage.notes)
+            return
+        }
         GeneratedStringOwners.registerAll()
         resourceHelperImpl.start()
         // Applies the analytics opt-out. Must come before configureLeakCanary below, which reports
@@ -205,6 +228,10 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
 
         // Here should be everything injected
         aapsLogger.debug("onCreate")
+        storage.notes.forEach { aapsLogger.info(LTag.CORE, it) }
+        AndroidStorage.onSaveFailure = { aapsLogger.error(LTag.CORE, "Settings could not be saved, the next change tries again: ${it.message}") }
+        // Left by an earlier start whose settings could not be opened.
+        SettingsUnreadableNotification.cancel(this)
         ProcessLifecycleOwner.get().lifecycle.addObserver(processLifecycleListener)
 
         // Background fallback for EventShowSnackbar: when no GlobalSnackbarHost is collecting,
@@ -212,17 +239,20 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         // the iOS and desktop shells start the same class. Started here, before the migrations
         // below, so messages sent during startup are covered too.
         snackbarNotificationFallback.start()
-        // Configure LeakCanary with Firebase reporting
-        // Memory leaks will be uploaded to Firebase Crashlytics via FabricPrivacy.logException
-        configureLeakCanary(
-            isEnabled = !config.isEnabled(ExternalOptions.DISABLE_LEAK_CANARY),
-            fabricPrivacy = fabricPrivacy
-        )
 
         // All initialization in background thread to avoid blocking main thread
         // (ComposeMainActivity shows splash screen until initProgress.done)
         scope.launch {
             try {
+                // Configure LeakCanary with Firebase reporting. Memory leaks are uploaded to Firebase
+                // Crashlytics via FabricPrivacy.logException. Not on the main thread: reading the
+                // DISABLE_LEAK_CANARY marker lists the AAPS directory through SAF, and on slow phones
+                // that held up app start long enough for an ANR (4.0.0-rc1).
+                configureLeakCanary(
+                    isEnabled = { !config.isEnabled(ExternalOptions.DISABLE_LEAK_CANARY) },
+                    fabricPrivacy = fabricPrivacy
+                )
+
                 config.updateInitProgress(getString(R.string.migrating_preferences))
                 doMigrations()
 
@@ -265,6 +295,9 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 // Standalone automation runtime (no longer a plugin). Loads definitions on all
                 // flavors; the processing loop + location service are master-only (gated internally).
                 automationRuntime.start()
+                // A reboot or a force stop removes the alarm of a running "time to eat" timer; set it again.
+                // Master only (gated internally).
+                eatReminder.restore()
 
                 // Data migrations (DB I/O)
                 dataMigrations()
@@ -276,6 +309,23 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 config.initFailed(e.message ?: "Unknown error")
             }
         }
+    }
+
+    /**
+     * The settings could not be opened ([AndroidStorage] says why), so AAPS does not start: no plugins, so no
+     * loop, and nothing written to the database. The app runs on an empty store that lives in memory only,
+     * which keeps its parts from crashing without writing over the unreadable file. A notification that
+     * cannot be swiped away says so, and SettingsUnreadableActivity shows the way out.
+     */
+    private fun startWithoutSettings(failure: Exception, notes: List<String>) {
+        GeneratedStringOwners.registerAll()
+        // The user's answer about analytics and crash reports is in the settings that cannot be read, so it
+        // is "no" now - in memory only, like everything else.
+        sp.putBoolean(BooleanKey.MaintenanceEnableFabric.key, false)
+        fabricPrivacyImpl.start()
+        notes.forEach { aapsLogger.info(LTag.CORE, it) }
+        aapsLogger.error(LTag.CORE, "The settings cannot be opened, so AAPS does not start", failure)
+        SettingsUnreadableNotification.show(this, metroGraphs.iconsProvider.getNotificationIcon())
     }
 
     // Perform a full VACUUM at most once a month. VACUUM defragments the DB file and reclaims
@@ -355,7 +405,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         aapsLogger.debug("doInit")
         RxDogTag.install()
         setRxErrorHandler()
-        LocaleHelper.update(this@MainApp)
+        LocaleHelper.update()
 
         var gitRemote: String? = config.REMOTE
         var commitHash: String? = BuildConfig.HEAD

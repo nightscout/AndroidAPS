@@ -297,7 +297,9 @@ class WizardDialogViewModel(
 
     fun updateCarbTime(value: Int) {
         val clamped = value.coerceIn(-60, 60)
-        _uiState.update { it.copy(carbTime = clamped) }
+        // Eating later turns the "time to eat" alarm on, as in 3.x. Only when the time first becomes positive,
+        // so an alarm the user turned off stays off while they change the minutes.
+        _uiState.update { it.copy(carbTime = clamped, alarmChecked = it.alarmChecked || (it.carbTime <= 0 && clamped > 0)) }
         recalculate()
     }
 

@@ -54,7 +54,6 @@
     <string name="patch_communication_succeed">תקשרות נתונים עם ה-Patch בוצעה בהצלחה</string>
     <string name="patch_communication_succeed_message">מחובר ל-Patch.</string>
     <string name="patch_cancel_pairing">ביטול צימוד</string>
-    <string name="all_dose_unit">&#160;יח\'</string>
     <string name="insulin_suspend_msg1">עם ההשעיה, הבולוס המסופק כעת &amp; הבאזלי הזמני יבוטל. \n\nקצב: %1$s יח\'/ש\'
 \nזמן שנותר: %2$s\n&amp; אינסולין שנותר: %3$.2f יח\'</string>
     <string name="string_activate_patch">הפעלת Patch</string>

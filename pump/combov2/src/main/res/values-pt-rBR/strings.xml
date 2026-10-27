@@ -82,7 +82,6 @@ botão ao mesmo tempo para cancelar o emparelhamento)\n
     <string name="combov2_bolus_delivery_failed">A administração do bolus falhou. Nenhum bolus parece ter sido administrado. Para evitar uma dupla administração do bolus, por favor verifique a informação de bolus na bomba e se preciso administre o bolus novamente. Como segurança contra bugs, os bolus não são reprogramados de forma automática.</string>
     <string name="combov2_bolus_not_delivered">Bólus não entregue</string>
     <string name="combov2_cannot_access_pump_data">Não é possível acessar os dados da bomba; a bomba deve ser pareada novamente</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Entregas de bolus não contabilizadas detectadas. Cancelando bolus por razões de segurança.</string>
     <string name="combov2_incorrect_active_basal_profile">Perfil basal ativo incorreto; perfil 1 deve ser o ativo, não o perfil %1$d</string>
     <string name="combov2_unrecognized_alert">Alerta da Accu-Chek Combo desconhecido</string>
     <string name="combov2_combo_alert">Alerta da Accu-Chek Combo</string>

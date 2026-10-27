@@ -21,6 +21,8 @@ sealed interface BatchAction {
      * [quickWizardGuid] tags an INSULIN/CARBS QuickWizard batch with the originating entry so the MASTER marks it
      * used on a successful commit (lastUsed cooldown) — the master is SOT and republishes it; the client never
      * writes the synced QuickWizard pref itself. Null for a dialog/wear batch (those don't carry a QuickWizard).
+     * [alarm] asks the master to start the "time to eat" timer for [carbsTimeOffsetMinutes] once the entry is
+     * done; it only counts with carbs in the future.
      */
     data class Bolus(
         val insulin: Double,
@@ -34,7 +36,8 @@ sealed interface BatchAction {
         val eCarbsGrams: Int = 0,
         val eCarbsDelayMinutes: Int = 0,
         val eCarbsDurationHours: Int = 0,
-        val quickWizardGuid: String? = null
+        val quickWizardGuid: String? = null,
+        val alarm: Boolean = false
     ) : BatchAction
 
     /**

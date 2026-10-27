@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -61,11 +62,13 @@ class ErrorActivity : MetroAppCompatActivity() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var iconsProvider: IconsProvider
     @Inject lateinit var alarmSoundPlayer: AlarmSoundPlayer
+    @Inject lateinit var eatReminder: EatReminder
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private var status by mutableStateOf("")
     private var title by mutableStateOf("")
+    private var eatReminderAlarm by mutableStateOf(false)
     private var sound: AlarmSound = AlarmSound.ERROR
 
     /**
@@ -89,6 +92,7 @@ class ErrorActivity : MetroAppCompatActivity() {
 
         status = intent.getStringExtra(AlarmIntent.EXTRA_STATUS) ?: ""
         title = intent.getStringExtra(AlarmIntent.EXTRA_TITLE) ?: ""
+        eatReminderAlarm = intent.getBooleanExtra(AlarmIntent.EXTRA_EAT_REMINDER, false)
         sound = intent.getStringExtra(AlarmIntent.EXTRA_SOUND)?.let { runCatching { AlarmSound.valueOf(it) }.getOrNull() } ?: AlarmSound.ERROR
         postedAtElapsedRealtime = intent.getLongExtra(AlarmIntent.EXTRA_POSTED_AT_ELAPSED_REALTIME, 0L)
         val appIcon = iconsProvider.getIcon()
@@ -124,10 +128,20 @@ class ErrorActivity : MetroAppCompatActivity() {
                                 },
                                 onMute5Min = {
                                     uel.log(Action.ERROR_DIALOG_MUTE_5MIN, Sources.Unknown)
-                                    stopAlarm("Mute 5 min")
-                                    handler.postDelayed({ startAlarm() }, T.mins(5).msecs())
+                                    if (eatReminderAlarm) {
+                                        // +5 min moves the timer itself, so the alarm comes back even when this
+                                        // screen is closed. extend() also silences it; the stop below then finds a
+                                        // timer that has not rung and leaves it running.
+                                        eatReminder.extend()
+                                        stopAlarm("+5 min")
+                                        finish()
+                                    } else {
+                                        stopAlarm("Mute 5 min")
+                                        handler.postDelayed({ startAlarm() }, T.mins(5).msecs())
+                                    }
                                 },
-                                onStart = { startAlarm() }
+                                onStart = { startAlarm() },
+                                eatReminder = eatReminderAlarm
                             )
                         }
                         GlobalSnackbarHost(
@@ -147,6 +161,7 @@ class ErrorActivity : MetroAppCompatActivity() {
         setIntent(intent)
         status = intent.getStringExtra(AlarmIntent.EXTRA_STATUS) ?: ""
         title = intent.getStringExtra(AlarmIntent.EXTRA_TITLE) ?: ""
+        eatReminderAlarm = intent.getBooleanExtra(AlarmIntent.EXTRA_EAT_REMINDER, false)
         sound = intent.getStringExtra(AlarmIntent.EXTRA_SOUND)?.let { runCatching { AlarmSound.valueOf(it) }.getOrNull() } ?: AlarmSound.ERROR
         postedAtElapsedRealtime = intent.getLongExtra(AlarmIntent.EXTRA_POSTED_AT_ELAPSED_REALTIME, 0L)
         aapsLogger.debug("Error activity updated: $title - $status")

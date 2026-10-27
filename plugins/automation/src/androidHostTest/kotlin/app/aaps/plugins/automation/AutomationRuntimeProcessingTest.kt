@@ -1,7 +1,6 @@
 package app.aaps.plugins.automation
 
 import app.aaps.core.data.model.RM
-import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -16,7 +15,9 @@ import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.keys.StringNonKey
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionFactory
+import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.elements.ComparatorConnect
+import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerBTDevice
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDeps
@@ -72,7 +73,6 @@ class AutomationRuntimeProcessingTest : TestBaseWithProfile() {
     @Mock lateinit var actionFactory: ActionFactory
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var locationServiceController: LocationServiceController
-    @Mock lateinit var reminderScheduler: ReminderScheduler
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var sceneApi: SceneAutomationApi
@@ -107,7 +107,7 @@ class AutomationRuntimeProcessingTest : TestBaseWithProfile() {
 
         runtime = AutomationRuntime(
             mock<LocationPermissions>(), eventFactory, aapsLogger, text, preferences, loop, rxBus, constraintChecker,
-            config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
+            config, locationServiceController, dateUtil, activePlugin, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
             uel, profileRepository, sceneApi, mock()
         )
     }
@@ -149,14 +149,24 @@ class AutomationRuntimeProcessingTest : TestBaseWithProfile() {
         return action
     }
 
-    private fun addRule(title: String, trigger: TriggerConnector, action: Action) {
+    private fun addRule(title: String, trigger: TriggerConnector, vararg actions: Action) {
         runtime.add(eventFactory.newEvent().apply {
             this.title = title
             isEnabled = true
             this.trigger = trigger
-            actions.add(action)
+            this.actions.addAll(actions)
         })
     }
+
+    /** A rule condition that is true while [isTrue] says so, so a test can change it between runs. */
+    private fun switchTrigger(isTrue: () -> Boolean): TriggerConnector {
+        val trigger = mock<Trigger>()
+        whenever(trigger.friendlyDescription()).thenReturn("switch")
+        trigger.stub { onBlocking { shouldRun() } doSuspendableAnswer { isTrue() } }
+        return TriggerConnector(triggerDeps).also { it.list.add(trigger) }
+    }
+
+    private fun stopProcessing() = ActionStopProcessing(aapsLogger, text, pumpEnactResultProvider)
 
     @Test
     fun `a finished BG calculation starts a rule run`() = runTest {
@@ -226,5 +236,64 @@ class AutomationRuntimeProcessingTest : TestBaseWithProfile() {
             // A must not throw away an event it never saw; B has to find it.
             assertThat(carRuleFired).isEqualTo(1)
         }
+    }
+
+    // "Stop processing" stops the rules below for as long as the conditions of its rule are true. Until
+    // this was fixed it stopped them after every check of the rule, true or not, and let them through
+    // in the 5 minutes after the rule ran. dateUtil.now() does not move here, so a second run is inside
+    // those 5 minutes.
+
+    @Test
+    fun `stop processing lets the rules below run while its conditions are false`() = runTest {
+        var belowRan = 0
+        addRule("stop", switchTrigger { false }, stopProcessing())
+        addRule("below", TriggerConnector(triggerDeps), countingAction("below action") { belowRan++ })
+
+        runtime.processActions()
+
+        assertThat(belowRan).isEqualTo(1)
+    }
+
+    @Test
+    fun `stop processing stops the rules below while its conditions are true and its rule is inside the 5 minutes`() = runTest {
+        var stopRuleRan = 0
+        var belowRan = 0
+        addRule("stop", switchTrigger { true }, countingAction("stop rule action") { stopRuleRan++ }, stopProcessing())
+        addRule("below", TriggerConnector(triggerDeps), countingAction("below action") { belowRan++ })
+
+        runtime.processActions()
+        runtime.processActions() // the stop rule is skipped now, because it ran less than 5 minutes ago
+
+        assertThat(stopRuleRan).isEqualTo(1) // the 5 minute limit still holds for the actions
+        assertThat(belowRan).isEqualTo(0)
+    }
+
+    @Test
+    fun `a stop rule that ran stops the rules below also when its own actions made its conditions false`() = runTest {
+        var conditionsTrue = true
+        var belowRan = 0
+        // Like "no temporary target: set one and stop processing". Running the rule ends its own condition.
+        addRule("stop", switchTrigger { conditionsTrue }, countingAction("ends the condition") { conditionsTrue = false }, stopProcessing())
+        addRule("below", TriggerConnector(triggerDeps), countingAction("below action") { belowRan++ })
+
+        runtime.processActions()
+        assertThat(belowRan).isEqualTo(0)
+
+        runtime.processActions() // the condition is false now, so the rules below run again
+        assertThat(belowRan).isEqualTo(1)
+    }
+
+    @Test
+    fun `a stop rule switched off for an action that cannot run stops nothing`() = runTest {
+        var belowRan = 0
+        val cannotRun = mock<Action>()
+        whenever(cannotRun.isValid()).thenReturn(false)
+        whenever(cannotRun.shortDescription()).thenReturn("cannot run")
+        addRule("stop", switchTrigger { true }, cannotRun, stopProcessing())
+        addRule("below", TriggerConnector(triggerDeps), countingAction("below action") { belowRan++ })
+
+        runtime.processActions()
+
+        assertThat(belowRan).isEqualTo(1)
     }
 }

@@ -1,6 +1,8 @@
 package app.aaps.implementation.wizard
 
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.Loop
@@ -11,7 +13,6 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -40,10 +41,10 @@ class BolusWizardTest : TestBaseWithProfile() {
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var loop: Loop
     @Mock lateinit var autosensDataStore: AutosensDataStore
-    @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var automation: Automation
+    @Mock lateinit var eatReminder: EatReminder
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
@@ -69,7 +70,9 @@ class BolusWizardTest : TestBaseWithProfile() {
         val profile: Profile = mock()
         whenever(profile.getTargetLowMgdl()).thenReturn(targetLow)
         whenever(profile.getTargetHighMgdl()).thenReturn(targetHigh)
-        whenever(profile.getIsfMgdlForCarbs(any(), any(), any(), any())).thenReturn(insulinSensitivityFactor)
+        // No loop results stored, so the wizard counts with the profile ISF
+        whenever(profile.getIsfMgdlTimeFromMidnight(any())).thenReturn(insulinSensitivityFactor)
+        runBlocking { whenever(persistenceLayer.getLoopSensitivities(any(), any())).thenReturn(emptyList()) }
         whenever(profile.getIc()).thenReturn(insulinToCarbRatio)
 
         val bolusIobTotal = IobTotal(System.currentTimeMillis()).also { it.iob = bolusIob }
@@ -92,10 +95,32 @@ class BolusWizardTest : TestBaseWithProfile() {
     }
 
     private fun createWizard() = BolusWizard(
-        aapsLogger, rh, rxBus, preferences, profileFunction, profileUtil, constraintChecker, loop, iobCobCalculator, dateUtil, config, uel, automation,
-        glucoseStatusProvider, persistenceLayer, processedDeviceStatusData, runningModeGuard,
+        aapsLogger, rh, rxBus, preferences, profileFunction, profileUtil, constraintChecker, loop, iobCobCalculator, dateUtil, config, uel, automation, eatReminder,
+        glucoseStatusProvider, persistenceLayer, runningModeGuard,
         ch, masterActionExecutor, CoroutineScope(Dispatchers.Unconfined)
     )
+
+    /**
+     * With loop results stored, the wizard counts with their average, the same ISF for carbs the COB
+     * calculation uses, and not with the profile ISF.
+     */
+    @Test
+    fun usesTheIsfForCarbsOfTheStoredLoopResults() = runBlocking {
+        val profile = setupProfile(4.0, 8.0, 20.0, 12.0)
+        whenever(persistenceLayer.getLoopSensitivities(any(), any())).thenReturn(
+            listOf(
+                PersistenceLayer.LoopSensitivity(now - T.mins(6).msecs(), 30.0),
+                PersistenceLayer.LoopSensitivity(now - T.mins(1).msecs(), 50.0)
+            )
+        )
+        val bw = createWizard().doCalc(
+            profile, "", null, carbs = 0, cob = 0.0, bg = 9.8, correction = 0.0, percentageCorrection = 100,
+            useBg = true, useCob = false, includeBolusIOB = false, includeBasalIOB = false,
+            useSuperBolus = false, useTT = false, useTrend = false, useAlarm = false
+        )
+        assertThat(bw.sens).isWithin(0.001).of(40.0)
+        assertThat(bw.insulinFromBG).isWithin(0.001).of(0.045) // 1.8/40
+    }
 
     // ==========================================
     // Group 1: Basic tests (existing, kept as-is)
