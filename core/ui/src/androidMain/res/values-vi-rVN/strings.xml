@@ -946,7 +946,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Bơm đã ghép nối</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Thiết bị không hỗ trợ Bluetooth.</string>
-    <string name="ble_not_supported_or_not_paired">Không hỗ trợ Bluetooth hoặc thiết bị chưa được ghép nối.</string>
     <string name="ble_not_enabled">Bluetooth chưa được bật.</string>
     <string name="ble_permissions_missing">Quyền truy cập Bluetooth chưa được cấp. Vui lòng cấp quyền trong cài đặt ứng dụng.</string>
     <!--    Preferences -->
