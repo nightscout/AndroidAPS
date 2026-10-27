@@ -96,7 +96,7 @@ class EatReminderManagerTest : TestBase() {
     }
 
     @Test
-    fun extendBeforeItRangMovesTheEndAndKeepsTheSetLength() {
+    fun extendBeforeItRangMovesTheEndAndGrowsTheWholeWait() {
         val sut = manager()
         sut.start(twentyMinutes)
         now += T.mins(3).msecs()
@@ -105,12 +105,12 @@ class EatReminderManagerTest : TestBase() {
 
         val state = sut.state.value!!
         assertThat(state.endsAt).isEqualTo(1_000_000L + twentyMinutes + fiveMinutes)
-        assertThat(state.durationMs).isEqualTo(twentyMinutes)
+        assertThat(state.durationMs).isEqualTo(twentyMinutes + fiveMinutes)
         assertThat(alarm.scheduledEnd).isEqualTo(state.endsAt)
         verify(uiInteraction, never()).stopAlarm(any())
     }
 
-    /** After it rang, +5 min counts from now, and the ringing alarm stops. */
+    /** After it rang, +5 min counts from now, and the ringing alarm stops. The time waited is part of the whole wait. */
     @Test
     fun extendAfterItRangCountsFromNowAndSilencesTheAlarm() {
         val sut = manager()
@@ -121,6 +121,7 @@ class EatReminderManagerTest : TestBase() {
         sut.extend()
 
         assertThat(sut.state.value!!.endsAt).isEqualTo(now + fiveMinutes)
+        assertThat(sut.state.value!!.durationMs).isEqualTo(twentyMinutes + T.mins(2).msecs() + fiveMinutes)
         assertThat(sut.state.value!!.alarmRang).isFalse()
         verify(uiInteraction).stopAlarm(any())
     }

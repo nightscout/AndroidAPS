@@ -24,7 +24,10 @@ interface EatReminder {
     /** Master: ends the timer. Before it rang this cancels the alarm, after it rang this also silences it. */
     fun stop()
 
-    /** Master: moves the end [EXTEND_MINUTES] later. After it rang the new end is counted from now, and the alarm is silenced. */
+    /**
+     * Master: moves the end [EXTEND_MINUTES] later. After it rang the new end is counted from now, and the alarm is
+     * silenced. The whole wait grows with the new end.
+     */
     fun extend()
 
     /** Master: the platform calls this when the timer's alarm rings, just before it shows the alarm. */
@@ -56,7 +59,7 @@ interface EatReminder {
  *
  * @param startedAt when the timer was started
  * @param endsAt when it rings; later after each +5 min
- * @param durationMs the length the user set, which +5 min does not change
+ * @param durationMs the whole wait, from [startedAt] until it rings; longer after each +5 min
  * @param alarmRang master only: its alarm really rang ([EatReminder.onRang]). Not sent to clients.
  */
 data class EatReminderState(

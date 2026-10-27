@@ -97,6 +97,8 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Mute for 5 minutes</string>
     <string name="mute">Mute</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Silence alarm</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Silence and close</string>
     <string name="success">Success</string>
     <string name="advanced_settings_title">Advanced Settings</string>
     <string name="extended_bolus">Extended bolus</string>
@@ -813,7 +815,7 @@
     <string name="wizard_set_alarm">Set alarm</string>
     <string name="eat_reminder_title">Time to eat</string>
     <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
-    <string name="eat_reminder_set_duration" comment="The length of the eat reminder the user set. %1$s=length with unit. Example: Set: 20 min">Set: %1$s</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Total wait: %1$s</string>
     <string name="eat_reminder_rung">The time is up</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
     <string name="eat_reminder_not_set">The eat reminder could not be set. Allow AAPS to set alarms and reminders in the Android settings.</string>

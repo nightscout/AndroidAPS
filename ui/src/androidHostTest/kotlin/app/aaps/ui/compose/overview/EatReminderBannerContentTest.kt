@@ -61,12 +61,12 @@ class EatReminderBannerContentTest {
     }
 
     @Test
-    fun runningTimer_showsTimeLeftAndTheSetLength() {
+    fun runningTimer_showsTimeLeftAndTheWholeWait() {
         show(running)
 
         compose.onNodeWithText(ctx.getString(CoreUiR.string.eat_reminder_title)).assertIsDisplayed()
         compose.onNodeWithText("12:05").assertIsDisplayed()
-        compose.onNodeWithText(ctx.getString(CoreUiR.string.eat_reminder_set_duration, ctx.getString(CoreUiR.string.format_mins, 20))).assertIsDisplayed()
+        compose.onNodeWithText(ctx.getString(CoreUiR.string.eat_reminder_total_wait, ctx.getString(CoreUiR.string.format_mins, 20))).assertIsDisplayed()
     }
 
     @Test

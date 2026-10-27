@@ -85,7 +85,9 @@ class EatReminderManager(
             val current = _state.value ?: return
             val now = dateUtil.now()
             // After the end time, +5 min means 5 minutes from now, not from the time that has passed.
-            val updated = current.copy(endsAt = max(current.endsAt, now) + T.mins(EatReminder.EXTEND_MINUTES.toLong()).msecs(), alarmRang = false)
+            val newEnd = max(current.endsAt, now) + T.mins(EatReminder.EXTEND_MINUTES.toLong()).msecs()
+            // The whole wait grows with the new end, so the bar and the countdown notification show the same number.
+            val updated = current.copy(endsAt = newEnd, durationMs = newEnd - current.startedAt, alarmRang = false)
             if (!alarm.schedule(updated.startedAt, updated.endsAt)) return
             save(updated)
             current.alarmRang

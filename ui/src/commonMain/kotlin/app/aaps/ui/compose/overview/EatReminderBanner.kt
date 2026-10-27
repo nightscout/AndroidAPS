@@ -29,8 +29,8 @@ import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.stringResource
 
 /**
- * Bar for the running "time to eat" timer (issues #5327, #5372): how long until it is time to eat, the length
- * that was set, and Stop / +5 min. After it rang, Stop becomes Dismiss.
+ * Bar for the running "time to eat" timer (issues #5327, #5372): how long until it is time to eat, the whole
+ * wait, and Stop / +5 min. After it rang, Stop becomes Dismiss.
  *
  * On a client it shows the master's timer, and the buttons ask the master; [controlsEnabled] is false while
  * the master cannot be reached.
@@ -74,7 +74,7 @@ internal fun EatReminderBannerContent(
     val totalMs = state.endsAt - state.startedAt
     // Rounded up, so it shows 0:01 until the end and never 0:00 before it rang.
     val leftSeconds = (state.remainingMs(now) + 999L) / 1000L
-    val setMinutes = T.msecs(state.durationMs).mins().toInt()
+    val totalMinutes = T.msecs(state.durationMs).mins().toInt()
 
     OverviewBannerCard(
         icon = IcCarbs,
@@ -82,7 +82,7 @@ internal fun EatReminderBannerContent(
         title = stringResource(CoreUiStrings.eat_reminder_title),
         lines = listOf(
             if (rang) stringResource(CoreUiStrings.eat_reminder_rung)
-            else stringResource(CoreUiStrings.eat_reminder_set_duration, stringResource(CoreUiStrings.format_mins, setMinutes))
+            else stringResource(CoreUiStrings.eat_reminder_total_wait, stringResource(CoreUiStrings.format_mins, totalMinutes))
         ),
         progress = if (!rang && totalMs > 0) 1f - state.remainingMs(now).toFloat() / totalMs.toFloat() else null,
         modifier = modifier,
