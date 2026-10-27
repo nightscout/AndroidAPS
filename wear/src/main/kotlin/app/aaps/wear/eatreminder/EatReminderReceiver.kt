@@ -6,7 +6,7 @@ import android.content.Intent
 import app.aaps.core.interfaces.di.injectMetroMembers
 import dev.zacsweers.metro.Inject
 
-/** The alarm of the "time to eat" timer, and the Silence and +5 min buttons of its notification. */
+/** The alarm of the "time to eat" timer, the buttons of its notifications, and the swipe that dismisses the running one. */
 class EatReminderReceiver : BroadcastReceiver() {
 
     @Inject lateinit var eatReminderWatch: EatReminderWatch
@@ -17,6 +17,7 @@ class EatReminderReceiver : BroadcastReceiver() {
             ACTION_RING   -> eatReminderWatch.ring()
             ACTION_STOP   -> eatReminderWatch.silence()
             ACTION_EXTEND -> eatReminderWatch.extend()
+            ACTION_REPOST -> eatReminderWatch.repost()
         }
     }
 
@@ -25,5 +26,6 @@ class EatReminderReceiver : BroadcastReceiver() {
         const val ACTION_RING = "app.aaps.wear.eatReminder.RING"
         const val ACTION_STOP = "app.aaps.wear.eatReminder.STOP"
         const val ACTION_EXTEND = "app.aaps.wear.eatReminder.EXTEND"
+        const val ACTION_REPOST = "app.aaps.wear.eatReminder.REPOST"
     }
 }

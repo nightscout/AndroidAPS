@@ -105,10 +105,11 @@ class ErrorActivity : MetroAppCompatActivity() {
         aapsLogger.debug("Error activity displayed: $title - $status")
 
         setContent {
-            // The timer ended somewhere else (the watch, a client, the notification's Mute): its alarm is
-            // silenced there, and this screen has nothing left to offer, so it closes
+            // The timer ended or was moved +5 min somewhere else (the watch, a client, the notification): its
+            // alarm is silenced there, and this screen has nothing left to offer, so it closes. The alarm has
+            // rung when this screen opens, so a timer that has not rung is one that was extended.
             if (eatReminderAlarm) LaunchedEffect(Unit) {
-                eatReminder.state.first { it == null }
+                eatReminder.state.first { it == null || !it.alarmRang }
                 if (!mutedHere) finish()
             }
             val snackbarHostState = remember { SnackbarHostState() }

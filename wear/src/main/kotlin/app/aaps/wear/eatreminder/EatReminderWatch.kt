@@ -30,8 +30,10 @@ import kotlin.math.max
  * The phone owns the timer and sends its end time with every status. The watch draws the end in its BG
  * graph and sets its own alarm at that time, so it rings also when the phone is out of reach at that
  * moment. While it runs a silent notification with Stop and +5 min sits in the stream, so the timer can
- * be handled from the watch before it rings. The ring is a vibrating notification with Silence and
- * +5 min; a screen of its own was tried, but Android does not open one from an alarm in the background.
+ * be handled from the watch before it rings; it is the only way to do that on the watch, so it comes
+ * back when it is swiped away. The ring is a vibrating notification with Silence and +5 min, and a
+ * swipe silences it, as on a clock's alarm; a screen of its own was tried, but Android does not open one
+ * from an alarm in the background.
  * The buttons go to the phone, which stops or moves the timer, and the next status brings the result
  * back. Until then the watch acts on its own copy, so it reads right also with the phone away.
  */
@@ -104,6 +106,14 @@ class EatReminderWatch(
         schedule(newEnd)
     }
 
+    /** The running timer's notification was swiped away. It comes back while the timer runs: it is the watch's only Stop. */
+    fun repost() {
+        val endsAt = this.endsAt
+        if (endsAt == 0L) return
+        aapsLogger.debug(LTag.WEAR, "Eat reminder notification dismissed, posted again")
+        postCountdownNotification(endsAt)
+    }
+
     private fun send(action: EatReminderAction) {
         rxBus.send(EventWearToMobile(EventData.ActionEatReminder(action)))
     }
@@ -119,7 +129,8 @@ class EatReminderWatch(
     /**
      * The running timer in the stream: silent, with Stop and +5 min, and the ring time as its time. It
      * goes away by itself at the end, when the ring takes over. A live countdown is not reliable on a
-     * watch, so the text names the time instead.
+     * watch, so the text names the time instead. Wear OS lets the user swipe an ongoing notification
+     * away, so the swipe posts it again; our own cancel does not fire the delete intent.
      */
     private fun postCountdownNotification(endsAt: Long) {
         val left = endsAt - System.currentTimeMillis()
@@ -141,6 +152,7 @@ class EatReminderWatch(
             .setOnlyAlertOnce(true)
             .setSilent(true)
             .setTimeoutAfter(left)
+            .setDeleteIntent(actionIntent(EatReminderReceiver.ACTION_REPOST, REPOST_REQUEST_CODE))
             .addAction(0, context.getString(R.string.eat_reminder_stop), actionIntent(EatReminderReceiver.ACTION_STOP, STOP_REQUEST_CODE))
             .addAction(0, context.getString(R.string.eat_reminder_extend, EatReminder.EXTEND_MINUTES), actionIntent(EatReminderReceiver.ACTION_EXTEND, EXTEND_REQUEST_CODE))
             .build()
@@ -151,6 +163,7 @@ class EatReminderWatch(
         notificationManager.cancel(NOTIFICATION_ID)
     }
 
+    /** The ring: Silence and +5 min as buttons, and a swipe silences too. Our own cancel does not fire the delete intent. */
     private fun postRingNotification() {
         notificationManager.createNotificationChannel(
             NotificationChannel(CHANNEL_ID, context.getString(R.string.eat_reminder_title), NotificationManager.IMPORTANCE_HIGH).apply {
@@ -163,6 +176,7 @@ class EatReminderWatch(
             .setContentTitle(context.getString(R.string.eat_reminder_title))
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setDeleteIntent(actionIntent(EatReminderReceiver.ACTION_STOP, STOP_REQUEST_CODE))
             .addAction(0, context.getString(R.string.eat_reminder_silence), actionIntent(EatReminderReceiver.ACTION_STOP, STOP_REQUEST_CODE))
             .addAction(0, context.getString(R.string.eat_reminder_extend, EatReminder.EXTEND_MINUTES), actionIntent(EatReminderReceiver.ACTION_EXTEND, EXTEND_REQUEST_CODE))
             .build()
@@ -187,6 +201,7 @@ class EatReminderWatch(
         const val RING_REQUEST_CODE = 4720
         const val STOP_REQUEST_CODE = 4721
         const val EXTEND_REQUEST_CODE = 4722
+        const val REPOST_REQUEST_CODE = 4723
         const val EXTEND_MS = EatReminder.EXTEND_MINUTES * 60_000L
 
         /** An alarm may come a little early or late; further from the end it belongs to an older timer. */
