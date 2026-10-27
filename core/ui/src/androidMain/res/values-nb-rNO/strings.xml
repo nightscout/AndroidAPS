@@ -946,7 +946,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pumpe sammenkoblet</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Lavenergi Bluetooth er ikke støttet.</string>
-    <string name="ble_not_supported_or_not_paired">Lavenergi Bluetooth er ikke støttet eller enheten er ikke sammenkoblet.</string>
     <string name="ble_not_enabled">Bluetooth er ikke aktivert.</string>
     <string name="ble_permissions_missing">Bluetooth-tillatelser er ikke gitt. Gi dem tilgang i appinnstillingene.</string>
     <!--    Preferences -->
