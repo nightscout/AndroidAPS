@@ -3,7 +3,9 @@ package app.aaps.workflow.iob
 import app.aaps.core.interfaces.db.PersistenceLayer
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 /** The master's ISF for carbs at a past time, from the results the client stored. */
 class CarbsIsfHistoryTest {
@@ -32,13 +34,21 @@ class CarbsIsfHistoryTest {
         assertEquals(64.0, history.at(9_000L))
     }
 
+    /** The oldest value the master is known to have had is much nearer than the profile ISF. */
     @Test
-    fun beforeTheFirstResultThereIsNoValue() {
-        assertNull(history.at(999L))
+    fun beforeTheFirstResultTheOldestOneIsUsed() {
+        assertEquals(56.0, history.at(999L))
     }
 
     @Test
     fun anEmptyHistoryHasNoValue() {
         assertNull(CarbsIsfHistory.EMPTY.at(1_450L))
+    }
+
+    /** Only an empty history makes the calculation use the profile ISF, and only that is worth a reset. */
+    @Test
+    fun onlyAnEmptyHistoryReportsItself() {
+        assertTrue(CarbsIsfHistory.EMPTY.isEmpty)
+        assertFalse(history.isEmpty)
     }
 }

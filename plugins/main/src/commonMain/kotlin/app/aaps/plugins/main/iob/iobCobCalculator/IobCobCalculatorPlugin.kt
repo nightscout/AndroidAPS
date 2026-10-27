@@ -117,6 +117,10 @@ class IobCobCalculatorPlugin(
     // should. kotlin.concurrent.Volatile, which works in common code.
     @Volatile override var ads: AutosensDataStore = AutosensDataStoreObject()
 
+    // Written by the calculation (PrepareGraphDataRunner.loadCarbsIsfHistory) and read by the collector of
+    // EventMasterCarbsIsfArrived on another thread, so @Volatile for the same reason as ads above.
+    @Volatile override var usedProfileIsfForCarbs: Boolean = false
+
     // Guards iobTable, every read and every write. Internal only so a test can hold it.
     internal val dataLock = AapsLock()
 
@@ -128,11 +132,17 @@ class IobCobCalculatorPlugin(
         // EventConfigBuilderChange
         rxBus.toFlow(EventConfigBuilderChange::class)
             .collectResilient(newScope, aapsLogger, LTag.AUTOSENS, start = CoroutineStart.UNDISPATCHED) { resetDataAndRunCalculation("onEventConfigBuilderChange") }
-        // AAPSClient: the COB calculation reads the master's ISF for carbs from the device status. The
-        // first calculation after a start can run before Nightscout has delivered one; its buckets then
-        // used the profile ISF and would stay cached. When the master's value first arrives, start over.
+        // AAPSCLIENT: the COB calculation takes the master's ISF for carbs of each bucket's own time from
+        // the results that came with the device statuses. A client that has none stored, a new install or
+        // one after a database reset, has to use the profile ISF instead, and those buckets would stay in
+        // the cache. So start over when the master's value first arrives - but only then. A client with
+        // stored results reads them at every run, is right from the start, and a reset here would only
+        // calculate the same numbers again (issue #5404).
         rxBus.toFlow(EventMasterCarbsIsfArrived::class)
-            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS) { resetDataAndRunCalculation("onMasterCarbsIsfArrived") }
+            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS) {
+                if (usedProfileIsfForCarbs) resetDataAndRunCalculation("onMasterCarbsIsfArrived")
+                else aapsLogger.debug(LTag.AUTOSENS, "Master ISF for carbs arrived, nothing cached used the profile ISF")
+            }
         // EventTimeZoneChanged: the basal profile is read in the current time zone, so every cached IOB,
         // basal and autosens value of the past would now be calculated differently. Until the past is
         // calculated with the offset of its own time (_docs/IOB_TIME_ZONE.md), start again from scratch.
@@ -246,6 +256,9 @@ class IobCobCalculatorPlugin(
         calculationWorkflow.stopCalculation(CalculationWorkflow.MAIN_CALCULATION, reason)
         clearCache()
         ads.reset()
+        // The buckets that used the profile ISF for carbs are gone with the cache. The run below finds out
+        // again whether the client has the master's values, and sets it back if it still has none.
+        usedProfileIsfForCarbs = false
         calculationWorkflow.runCalculation(
             job = CalculationWorkflow.MAIN_CALCULATION,
             iobCobCalculator = this,

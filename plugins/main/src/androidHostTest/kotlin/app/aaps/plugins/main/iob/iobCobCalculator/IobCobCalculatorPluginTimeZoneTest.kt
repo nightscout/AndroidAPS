@@ -133,20 +133,40 @@ class IobCobCalculatorPluginTimeZoneTest {
         verifyBlocking(calculationWorkflow, never()) { runCalculation(any(), any(), any(), any(), any(), eq(REASON), any(), any(), any()) }
     }
 
-    /** On a client the master's carbs ISF arriving after a start resets the same way: the cached COB used the profile ISF. */
+    /** A client that had to use the profile ISF for carbs has a wrong COB cached, so it starts over. */
     @Test
-    fun `the master carbs ISF arriving resets the calculation`() {
-        // Not debounced, so its collector starts a moment after onStart; an event sent before that is dropped
-        runBlocking { withTimeout(WAIT_MS) { masterCarbsIsfEvents.subscriptionCount.first { it > 0 } } }
+    fun `the master carbs ISF arriving resets a calculation that used the profile ISF`() {
+        sut.usedProfileIsfForCarbs = true
+        awaitMasterCarbsIsfCollector()
         masterCarbsIsfEvents.tryEmit(EventMasterCarbsIsfArrived())
 
         verifyResets(1, reason = "onMasterCarbsIsfArrived")
     }
+
+    /**
+     * Every device status brings the value, and a client with stored results already used them. Resetting
+     * on each of those would calculate the same numbers again, a full recalculation at every start.
+     */
+    @Test
+    fun `the master carbs ISF arriving does not reset a calculation that had stored values`() {
+        awaitMasterCarbsIsfCollector()
+        masterCarbsIsfEvents.tryEmit(EventMasterCarbsIsfArrived())
+
+        Thread.sleep(SETTLE_MS)
+        verifyBlocking(calculationWorkflow, never()) { runCalculation(any(), any(), any(), any(), any(), eq("onMasterCarbsIsfArrived"), any(), any(), any()) }
+    }
+
+    /** Not debounced, so its collector starts a moment after onStart; an event sent before that is dropped. */
+    private fun awaitMasterCarbsIsfCollector() =
+        runBlocking { withTimeout(WAIT_MS) { masterCarbsIsfEvents.subscriptionCount.first { it > 0 } } }
 
     private companion object {
 
         const val REASON = "onEventTimeZoneChanged"
         val DEBOUNCE = 200.milliseconds
         const val WAIT_MS = 3_000L
+
+        /** Long enough for a reset that should not come to have come. */
+        const val SETTLE_MS = 300L
     }
 }

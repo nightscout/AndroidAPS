@@ -130,9 +130,10 @@ class NSDeviceStatusHandler(
             }
             // Once per batch, not once per document: the predictions are read from the newest data only (#5247)
             appScope.launch { calculationWorkflow.runOnReceivedPredictions(overviewData) }
-            // The COB calculation reads the master's ISF for carbs from the APS result above. A calculation
-            // that ran before the first device status came, normally the one at start, used the profile
-            // ISF instead, and its cached result would stay. Said once, the calculation starts over on it.
+            // The master's ISF for carbs came with the APS result above, for the first time in this run.
+            // Said once, because every later device status carries it too. Whether that is worth a full
+            // recalculation is for the COB calculation to decide - it starts over only if it had to use
+            // the profile ISF, see IobCobCalculator.usedProfileIsfForCarbs.
             if (!hadCarbsIsf && processedDeviceStatusData.getAPSResult()?.isfMgdlForCarbs != null) rxBus.send(EventMasterCarbsIsfArrived())
             rxBus.send(EventNsClientStatusUpdated())
         }

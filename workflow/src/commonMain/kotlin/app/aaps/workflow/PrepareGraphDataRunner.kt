@@ -309,7 +309,7 @@ class PrepareGraphDataRunner(
             )
             // A client takes the master's ISF for carbs from the results it stored, at each bucket's own time,
             // the way the master had it then, see isfMgdlForCarbsAt
-            val carbsIsfHistory = loadCarbsIsfHistory(bucketedData[bucketedData.size - 1].timestamp)
+            val carbsIsfHistory = loadCarbsIsfHistory(data, bucketedData[bucketedData.size - 1].timestamp)
             // start from oldest to be able sub cob
             for (i in bucketedData.size - 4 downTo 0) {
                 data.signals.emitProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt())
@@ -538,7 +538,7 @@ class PrepareGraphDataRunner(
                 true
             )
             // The master's stored ISF for carbs, as in the first calculation block above
-            val carbsIsfHistory = loadCarbsIsfHistory(bucketedData[bucketedData.size - 1].timestamp)
+            val carbsIsfHistory = loadCarbsIsfHistory(data, bucketedData[bucketedData.size - 1].timestamp)
             // start from oldest to be able to sub cob
             for (i in bucketedData.size - 4 downTo 0) {
                 data.signals.emitProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt())
@@ -722,17 +722,33 @@ class PrepareGraphDataRunner(
     }
 
     /**
-     * AAPSClient: the master's ISF for carbs from the results the client stored, from an hour before
+     * AAPSCLIENT: the master's ISF for carbs from the results the client stored, from an hour before
      * [oldest] to now, so the oldest bucket has a result before it. Empty on a master.
+     *
+     * A client with nothing stored has to use the profile ISF, which is far from the master's value, so it
+     * says so. The flag is only set, never cleared here: a later run that does find stored values does not
+     * make the buckets already in the cache right. [app.aaps.core.interfaces.iob.IobCobCalculator] clears
+     * it when the cache goes.
      */
-    private suspend fun loadCarbsIsfHistory(oldest: Long): CarbsIsfHistory =
-        if (config.AAPSCLIENT) CarbsIsfHistory(persistenceLayer.getCarbsIsfs(oldest - T.hours(1).msecs(), dateUtil.now())) else CarbsIsfHistory.EMPTY
+    private suspend fun loadCarbsIsfHistory(data: PrepareGraphData, oldest: Long): CarbsIsfHistory {
+        if (!config.AAPSCLIENT) return CarbsIsfHistory.EMPTY
+        val history = CarbsIsfHistory(persistenceLayer.getCarbsIsfs(oldest - T.hours(1).msecs(), dateUtil.now()))
+        if (history.isEmpty) {
+            aapsLogger.debug(LTag.AUTOSENS, "No stored ISF for carbs from the master, using the profile ISF")
+            data.iobCobCalculator.usedProfileIsfForCarbs = true
+        }
+        return history
+    }
 
     /**
      * The ISF for carbs at [timestamp]: on a client the master's stored value in force then, else as
      * [app.aaps.core.interfaces.profile.Profile.getIsfMgdlForCarbs] gives it. One value for every bucket,
      * the newest, decayed the carbs slower than the master whenever the ISF had risen since, so COB
      * stayed higher after a restart.
+     *
+     * The profile call stays the fallback for a master, and for a client with nothing stored. Note it
+     * answers a client with the master's newest value, which is right for now but not for a past bucket -
+     * that is what [history] is for.
      */
     private fun isfMgdlForCarbsAt(profile: EffectiveProfile, timestamp: Long, caller: String, history: CarbsIsfHistory): Double =
         history.at(timestamp) ?: profile.getIsfMgdlForCarbs(timestamp, caller, config, processedDeviceStatusData)

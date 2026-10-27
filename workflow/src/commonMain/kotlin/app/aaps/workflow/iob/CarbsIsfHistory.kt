@@ -3,7 +3,7 @@ package app.aaps.workflow.iob
 import app.aaps.core.interfaces.db.PersistenceLayer
 
 /**
- * AAPSClient: the master's ISF for carbs at each past time, from the APS results the client stored as
+ * AAPSCLIENT: the master's ISF for carbs at each past time, from the APS results the client stored as
  * they came with the device statuses, oldest first.
  *
  * The master's calculation takes, for every bucket, the average dynamic ISF of the 24 hours before that
@@ -14,8 +14,18 @@ import app.aaps.core.interfaces.db.PersistenceLayer
  */
 internal class CarbsIsfHistory(private val rows: List<PersistenceLayer.CarbsIsf>) {
 
-    /** The master's ISF for carbs in force at [timestamp]: the newest stored result at or before it. Null before the first one. */
-    fun at(timestamp: Long): Double? = rows.lastOrNull { it.timestamp <= timestamp }?.valueMgdl
+    /** True when the client stored nothing for this time, so the calculation has to use the profile ISF. */
+    val isEmpty: Boolean get() = rows.isEmpty()
+
+    /**
+     * The master's ISF for carbs in force at [timestamp]: the newest stored result at or before it. Before
+     * the first stored result the oldest one is used - the master's value of a few hours ago is much nearer
+     * to what it had then than the profile ISF is. Null only when nothing at all is stored.
+     *
+     * A plain scan backwards. The list holds one row per loop run of the master, so about 300 for a day,
+     * and the work beside this in the loop (calculateFromTreatmentsAndTemps) is far bigger.
+     */
+    fun at(timestamp: Long): Double? = (rows.lastOrNull { it.timestamp <= timestamp } ?: rows.firstOrNull())?.valueMgdl
 
     companion object {
 
