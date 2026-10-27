@@ -347,32 +347,37 @@ private fun WizardConfirmScreen(carbs: Int, carbsType: CarbsType?, carbTime: Int
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
-        if (carbTime != 0) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = stringResource(R.string.wizard_result_carb_time, carbTime),
-                    color = WearSecondaryText,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                if (alarm && carbTime > 0) {
-                    Spacer(Modifier.size(4.dp))
-                    Icon(
-                        painter = painterResource(R.drawable.ic_alarm),
-                        contentDescription = stringResource(R.string.wizard_set_alarm),
-                        tint = CarbsOrange,
-                        modifier = Modifier.size(14.dp)
+        // The carb time and the percentage share one line when both are there, so the page stays as tall
+        // as with one of them: a third line under the check fell off the bottom of the screen
+        if (carbTime != 0 || percentage != null) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                if (carbTime != 0) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(
+                            text = stringResource(R.string.wizard_result_carb_time, carbTime),
+                            color = WearSecondaryText,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        if (alarm && carbTime > 0) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_alarm),
+                                contentDescription = stringResource(R.string.wizard_set_alarm),
+                                tint = CarbsOrange,
+                                modifier = Modifier.size(14.dp)
+                            )
+                        }
+                    }
+                }
+                if (percentage != null) {
+                    Text(
+                        text = stringResource(R.string.wizard_result_correction_percentage, percentage),
+                        color = WearSecondaryText,
+                        fontSize = if (carbTime != 0) 16.sp else 20.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
-        }
-        if (percentage != null) {
-            Text(
-                text = stringResource(R.string.wizard_result_correction_percentage, percentage),
-                color = WearSecondaryText,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
         }
     }
 }
