@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.text.format.DateFormat
 import androidx.core.app.NotificationCompat
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.alerts.EatReminderAction
@@ -19,6 +20,7 @@ import app.aaps.wear.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import java.util.Date
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -27,10 +29,11 @@ import kotlin.math.max
  *
  * The phone owns the timer and sends its end time with every status. The watch draws the end in its BG
  * graph and sets its own alarm at that time, so it rings also when the phone is out of reach at that
- * moment. The ring is a vibrating notification with Silence and +5 min; a screen of its own was tried,
- * but Android does not open one from an alarm in the background. Both buttons go to the phone, which
- * stops or moves the timer, and the next status brings the result back. Until then the watch acts on
- * its own copy, so it reads right also with the phone away.
+ * moment. While it runs a silent notification with Stop and +5 min sits in the stream, so the timer can
+ * be handled from the watch before it rings. The ring is a vibrating notification with Silence and
+ * +5 min; a screen of its own was tried, but Android does not open one from an alarm in the background.
+ * The buttons go to the phone, which stops or moves the timer, and the next status brings the result
+ * back. Until then the watch acts on its own copy, so it reads right also with the phone away.
  */
 @SingleIn(AppScope::class)
 @Inject
@@ -60,6 +63,7 @@ class EatReminderWatch(
         if (new == 0L) {
             aapsLogger.debug(LTag.WEAR, "Eat reminder ended on the phone")
             alarmManager.cancel(ringIntent())
+            notificationManager.cancel(COUNTDOWN_NOTIFICATION_ID)
         } else {
             aapsLogger.debug(LTag.WEAR, "Eat reminder ends at $new")
             schedule(new)
@@ -75,6 +79,7 @@ class EatReminderWatch(
             return
         }
         aapsLogger.debug(LTag.WEAR, "Eat reminder rings")
+        notificationManager.cancel(COUNTDOWN_NOTIFICATION_ID)
         postRingNotification()
     }
 
@@ -83,6 +88,7 @@ class EatReminderWatch(
         send(EatReminderAction.STOP)
         sp.remove(R.string.key_eat_reminder_ends_at)
         alarmManager.cancel(ringIntent())
+        notificationManager.cancel(COUNTDOWN_NOTIFICATION_ID)
         clearRing()
     }
 
@@ -107,6 +113,38 @@ class EatReminderWatch(
         if (endsAt < System.currentTimeMillis() - RING_TOLERANCE_MS) return
         // Exact, so a kitchen timer is not minutes late. The watch app targets API 30, so no permission is asked for
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, endsAt, ringIntent())
+        postCountdownNotification(endsAt)
+    }
+
+    /**
+     * The running timer in the stream: silent, with Stop and +5 min, and the ring time as its time. It
+     * goes away by itself at the end, when the ring takes over. A live countdown is not reliable on a
+     * watch, so the text names the time instead.
+     */
+    private fun postCountdownNotification(endsAt: Long) {
+        val left = endsAt - System.currentTimeMillis()
+        if (left <= 0) return
+        notificationManager.createNotificationChannel(
+            NotificationChannel(COUNTDOWN_CHANNEL_ID, context.getString(R.string.eat_reminder_countdown_channel), NotificationManager.IMPORTANCE_LOW).apply {
+                enableVibration(false)
+                setSound(null, null)
+            }
+        )
+        val notification = NotificationCompat.Builder(context, COUNTDOWN_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_alarm)
+            .setContentTitle(context.getString(R.string.eat_reminder_title))
+            .setContentText(context.getString(R.string.eat_reminder_rings_at, DateFormat.getTimeFormat(context).format(Date(endsAt))))
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .setWhen(endsAt)
+            .setShowWhen(true)
+            .setOngoing(true)
+            .setOnlyAlertOnce(true)
+            .setSilent(true)
+            .setTimeoutAfter(left)
+            .addAction(0, context.getString(R.string.eat_reminder_stop), actionIntent(EatReminderReceiver.ACTION_STOP, STOP_REQUEST_CODE))
+            .addAction(0, context.getString(R.string.eat_reminder_extend, EatReminder.EXTEND_MINUTES), actionIntent(EatReminderReceiver.ACTION_EXTEND, EXTEND_REQUEST_CODE))
+            .build()
+        notificationManager.notify(COUNTDOWN_NOTIFICATION_ID, notification)
     }
 
     private fun clearRing() {
@@ -143,7 +181,9 @@ class EatReminderWatch(
     private companion object {
 
         const val CHANNEL_ID = "AndroidAPS-EatReminder"
+        const val COUNTDOWN_CHANNEL_ID = "AndroidAPS-EatReminder-Countdown"
         const val NOTIFICATION_ID = 4720
+        const val COUNTDOWN_NOTIFICATION_ID = 4724
         const val RING_REQUEST_CODE = 4720
         const val STOP_REQUEST_CODE = 4721
         const val EXTEND_REQUEST_CODE = 4722
