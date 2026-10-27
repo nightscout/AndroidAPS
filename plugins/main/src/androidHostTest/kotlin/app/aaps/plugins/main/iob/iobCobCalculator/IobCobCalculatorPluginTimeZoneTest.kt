@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
+import app.aaps.core.interfaces.rx.events.EventMasterCarbsIsfArrived
 import app.aaps.core.interfaces.rx.events.EventTimeZoneChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -52,6 +53,7 @@ class IobCobCalculatorPluginTimeZoneTest {
     private val rxBus = mock<RxBus>()
     private val timeZoneEvents = MutableSharedFlow<EventTimeZoneChanged>(extraBufferCapacity = 16)
     private val configEvents = MutableSharedFlow<EventConfigBuilderChange>(extraBufferCapacity = 16)
+    private val masterCarbsIsfEvents = MutableSharedFlow<EventMasterCarbsIsfArrived>(extraBufferCapacity = 16)
     private val preferences = mock<Preferences>()
     private val persistenceLayer = mock<PersistenceLayer>()
     private val calculationWorkflow = mock<CalculationWorkflow>()
@@ -63,6 +65,7 @@ class IobCobCalculatorPluginTimeZoneTest {
         whenever(rxBus.toFlow<Event>(any())).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventTimeZoneChanged::class)).thenReturn(timeZoneEvents)
         whenever(rxBus.toFlow(EventConfigBuilderChange::class)).thenReturn(configEvents)
+        whenever(rxBus.toFlow(EventMasterCarbsIsfArrived::class)).thenReturn(masterCarbsIsfEvents)
         whenever(persistenceLayer.observeChanges<Any>(any())).thenReturn(emptyFlow())
         whenever(preferences.observe(any<IntNonPreferenceKey>())).thenReturn(MutableStateFlow(0))
         whenever(preferences.observe(any<StringNonPreferenceKey>())).thenReturn(MutableStateFlow(""))
@@ -128,6 +131,16 @@ class IobCobCalculatorPluginTimeZoneTest {
         verifyResets(1, reason = "onEventConfigBuilderChange")
 
         verifyBlocking(calculationWorkflow, never()) { runCalculation(any(), any(), any(), any(), any(), eq(REASON), any(), any(), any()) }
+    }
+
+    /** On a client the master's carbs ISF arriving after a start resets the same way: the cached COB used the profile ISF. */
+    @Test
+    fun `the master carbs ISF arriving resets the calculation`() {
+        // Not debounced, so its collector starts a moment after onStart; an event sent before that is dropped
+        runBlocking { withTimeout(WAIT_MS) { masterCarbsIsfEvents.subscriptionCount.first { it > 0 } } }
+        masterCarbsIsfEvents.tryEmit(EventMasterCarbsIsfArrived())
+
+        verifyResets(1, reason = "onMasterCarbsIsfArrived")
     }
 
     private companion object {

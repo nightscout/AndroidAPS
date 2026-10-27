@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventMasterCarbsIsfArrived
 import app.aaps.core.interfaces.rx.events.EventNsClientStatusUpdated
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
@@ -99,6 +100,7 @@ class NSDeviceStatusHandler(
      *   REST catch-up/initial batch load. Only a live push bumps the master-alive heartbeat — see below.
      */
     fun handleNewData(deviceStatuses: Array<NSDeviceStatus>, live: Boolean = false) {
+        val hadCarbsIsf = config.AAPSCLIENT && processedDeviceStatusData.getAPSResult()?.isfMgdlForCarbs != null
         for (i in deviceStatuses.size - 1 downTo 0) {
             val nsDeviceStatus = deviceStatuses[i]
             if (config.AAPSCLIENT) {
@@ -128,6 +130,10 @@ class NSDeviceStatusHandler(
             }
             // Once per batch, not once per document: the predictions are read from the newest data only (#5247)
             appScope.launch { calculationWorkflow.runOnReceivedPredictions(overviewData) }
+            // The COB calculation reads the master's ISF for carbs from the APS result above. A calculation
+            // that ran before the first device status came, normally the one at start, used the profile
+            // ISF instead, and its cached result would stay. Said once, the calculation starts over on it.
+            if (!hadCarbsIsf && processedDeviceStatusData.getAPSResult()?.isfMgdlForCarbs != null) rxBus.send(EventMasterCarbsIsfArrived())
             rxBus.send(EventNsClientStatusUpdated())
         }
     }

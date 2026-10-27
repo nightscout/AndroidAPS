@@ -44,6 +44,7 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventCalibrationChanged
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
+import app.aaps.core.interfaces.rx.events.EventMasterCarbsIsfArrived
 import app.aaps.core.interfaces.rx.events.EventTimeZoneChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -127,6 +128,11 @@ class IobCobCalculatorPlugin(
         // EventConfigBuilderChange
         rxBus.toFlow(EventConfigBuilderChange::class)
             .collectResilient(newScope, aapsLogger, LTag.AUTOSENS, start = CoroutineStart.UNDISPATCHED) { resetDataAndRunCalculation("onEventConfigBuilderChange") }
+        // AAPSClient: the COB calculation reads the master's ISF for carbs from the device status. The
+        // first calculation after a start can run before Nightscout has delivered one; its buckets then
+        // used the profile ISF and would stay cached. When the master's value first arrives, start over.
+        rxBus.toFlow(EventMasterCarbsIsfArrived::class)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS) { resetDataAndRunCalculation("onMasterCarbsIsfArrived") }
         // EventTimeZoneChanged: the basal profile is read in the current time zone, so every cached IOB,
         // basal and autosens value of the past would now be calculated differently. Until the past is
         // calculated with the offset of its own time (_docs/IOB_TIME_ZONE.md), start again from scratch.

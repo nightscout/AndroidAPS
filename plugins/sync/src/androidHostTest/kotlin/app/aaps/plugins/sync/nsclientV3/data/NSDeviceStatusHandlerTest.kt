@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventMasterCarbsIsfArrived
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
@@ -122,6 +123,32 @@ internal class NSDeviceStatusHandlerTest {
         sut.handleNewData(arrayOf(deviceStatusWithSuggested()))
 
         verifyBlocking(persistenceLayer) { insertOrUpdateApsResult(apsResult) }
+    }
+
+    /**
+     * The client's COB calculation reads the master's ISF for carbs from the device status. The first one to
+     * carry it, normally the first after a start, is announced, so the calculation can start over with it.
+     */
+    @Test
+    fun announcesTheMastersCarbsIsfWhenItFirstArrives() {
+        val apsResult = givenNewSuggested(APSResult.Algorithm.SMB)
+        whenever(apsResult.isfMgdlForCarbs).thenReturn(58.0)
+        whenever(processedDeviceStatusData.getAPSResult()).thenReturn(null, apsResult)
+
+        sut.handleNewData(arrayOf(deviceStatusWithSuggested()))
+
+        verify(rxBus).send(any<EventMasterCarbsIsfArrived>())
+    }
+
+    /** Every later device status carries the value too; the calculation must not start over each time. */
+    @Test
+    fun doesNotAnnounceTheCarbsIsfWhileItIsAlreadyKnown() {
+        val apsResult = givenNewSuggested(APSResult.Algorithm.SMB)
+        whenever(apsResult.isfMgdlForCarbs).thenReturn(58.0)
+
+        sut.handleNewData(arrayOf(deviceStatusWithSuggested()))
+
+        verify(rxBus, never()).send(any<EventMasterCarbsIsfArrived>())
     }
 
     private fun givenNewSuggested(algorithm: APSResult.Algorithm): APSResult {
