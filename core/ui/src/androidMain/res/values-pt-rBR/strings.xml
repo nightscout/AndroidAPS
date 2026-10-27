@@ -843,7 +843,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Bomba acoplada</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth de energia baixa (LE) não suportado.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetoothn Low Energy (BLE) não suportado ou o dispositivo não está acoplado.</string>
     <string name="ble_not_enabled">Bluetooth não está ativado.</string>
     <string name="ble_permissions_missing">As permissões do Bluetooth não foram concedidas. Conceda-as nas configurações do aplicativo.</string>
     <!--    Preferences -->
