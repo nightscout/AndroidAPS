@@ -97,6 +97,8 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Demp i 5 minutter</string>
     <string name="mute">Lyd av</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Demp alarm</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Demp og lukk</string>
     <string name="success">Suksess</string>
     <string name="advanced_settings_title">Avanserte innstillinger</string>
     <string name="extended_bolus">Forlenget bolus</string>
@@ -786,6 +788,7 @@
     <string name="wizard_set_alarm">Sett alarm</string>
     <string name="eat_reminder_title">Tid for å spise</string>
     <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Total ventetid: %1$s</string>
     <string name="eat_reminder_rung">Tiden er ute</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
     <string name="eat_reminder_not_set">Kunne ikke stille inn spisepåminnelsen. Gi AAPS tillatelse til å stille inn alarmer og påminnelser i Android-innstillingene.</string>
