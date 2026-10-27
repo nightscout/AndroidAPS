@@ -946,7 +946,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Micro associato</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy non supportato.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy non supportato o dispositivo non associato.</string>
     <string name="ble_not_enabled">Bluetooth non abilitato.</string>
     <string name="ble_permissions_missing">Le autorizzazioni Bluetooth non sono concesse. Si prega di concederle nelle impostazioni dell\'app.</string>
     <!--    Preferences -->
