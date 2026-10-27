@@ -55,11 +55,6 @@ class G7GattClient(
     @Volatile private var connected = false
     @Volatile private var closed = false
 
-    /** How the current client was opened. A plain re-arm keeps that mode, so [reconnect] checks it. */
-    @Volatile private var autoConnect = true
-
-    /** The last connect failed before the link was ready (status 133 and the like). */
-    @Volatile private var lastConnectFailed = false
 
     /**
      * Until then, normal connects and disconnects are not logged. The sensor opens a few short links
@@ -85,43 +80,24 @@ class G7GattClient(
      */
     fun connect(autoConnect: Boolean) {
         closed = false
-        lastConnectFailed = false
-        this.autoConnect = autoConnect
         gatt = device.connectGatt(context, autoConnect, callback, BluetoothDevice.TRANSPORT_LE)
         if (gatt == null) log("Bluetooth refused to open a connection to $address")
     }
 
     /**
-     * Re-arms a client after a disconnect, so the stack connects when the sensor next advertises. The
-     * client is not closed: closing drops that registration and leaves a scan as the only way back.
+     * Asks the stack to connect when the sensor next advertises, with a new background request. The old
+     * request is closed first, so requests never pile up.
      *
-     * A client opened with a direct connect (pairing, or after a scan) is replaced by a background one.
-     * Re-arming it would repeat the direct connect, which gives up after about 10 seconds (status 147)
-     * unless the sensor happens to advertise in that time.
-     *
-     * After a connect that failed before the link was ready, the client is replaced too. Re-arming then
-     * adds a request instead of replacing it (seen on a watch: one more status 133 each minute), and
-     * the extra requests later report the same link as connected again.
+     * Re-arming the old request with `gatt.connect()` failed in three ways: a Samsung S22 lost it after
+     * most readings, a watch added a request after each failed connect (one more status 133 each minute,
+     * and later a second "connected" for the same link), and a direct connect repeated itself and gave up
+     * after about 10 seconds (status 147). A new request worked every time.
      */
     fun reconnect() {
         if (closed) return
-        val g = gatt
-        if (g == null || !autoConnect || lastConnectFailed) {
-            if (g != null) {
-                if (autoConnect) log("Opening a new connection request after a failed connect")
-                else log("Switching to a background connection request")
-                runCatching { g.close() }
-                gatt = null
-            }
-            return connect(autoConnect = true)
-        }
-        val accepted = runCatching { g.connect() }.onFailure { log("Re-arming the connection failed: ${it.message}") }.getOrDefault(false)
-        if (!accepted) {
-            log("Bluetooth did not accept the re-armed connection; opening a new connection request")
-            runCatching { g.close() }
-            gatt = null
-            connect(autoConnect = true)
-        }
+        gatt?.let { runCatching { it.close() } }
+        gatt = null
+        connect(autoConnect = true)
     }
 
     fun disconnect() {
@@ -157,7 +133,6 @@ class G7GattClient(
                 BluetoothProfile.STATE_DISCONNECTED -> {
                     val wasConnected = connected
                     connected = false
-                    lastConnectFailed = !wasConnected && status != BluetoothGatt.GATT_SUCCESS
                     failPending(STATUS_DISCONNECTED)
                     val normal = status == BluetoothGatt.GATT_SUCCESS || status == STATUS_REMOTE_ENDED
                     if ((wasConnected || status != BluetoothGatt.GATT_SUCCESS) && !(normal && isQuiet())) log("Disconnected from $address (status $status)")
