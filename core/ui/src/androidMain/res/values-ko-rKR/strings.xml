@@ -459,7 +459,6 @@
     <string name="pump_paired" comment="26 characters max for translation">펌프 연결됨</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">BLE(블루투스 저전력) 지원되지 않음</string>
-    <string name="ble_not_supported_or_not_paired">저전력 블루투스(BLE)가 작동하지 않거나, 기기가 연동되지 않았습니다.</string>
     <string name="ble_not_enabled">블루투스가 활성화되지 않았습니다.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">플러그인 설정</string>
