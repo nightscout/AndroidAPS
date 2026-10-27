@@ -433,7 +433,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Bomba Emparelhada</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy não suportado.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy não suportado ou dispositivo não emparalhado.</string>
     <string name="ble_not_enabled">Bluetooth não está activado.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Preferências plugin</string>
