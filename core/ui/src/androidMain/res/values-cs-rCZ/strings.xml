@@ -946,7 +946,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pumpa spárována</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nepodporováno.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy není podporováno, nebo zařízení není spárováno.</string>
     <string name="ble_not_enabled">Bluetooth není povoleno.</string>
     <string name="ble_permissions_missing">Oprávnění Bluetooth nejsou udělena. Udělte je prosím v nastavení aplikace.</string>
     <!--    Preferences -->
