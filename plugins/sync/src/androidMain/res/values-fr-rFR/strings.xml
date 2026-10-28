@@ -51,7 +51,6 @@
     <string name="authorized_clients_token_problem_not_allowed">Le jeton Nightscout de ce téléphone n\'est pas un jeton administrateur, donc il ne peut donc pas créer de jeton pour le client. Utilisez un jeton admin ici, ou ajoutez le client avec le code PIN.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout a un jeton avec ce nom et d\'autres droits. Choisissez un autre nom.</string>
     <string name="authorized_clients_token_problem_name_in_use">Un client portant ce nom est déjà dans la liste. Choisissez un autre nom ou supprimez d\'abord ce client.</string>
-    <string name="authorized_clients_token_problem_failed">Nightscout n\'a pas créé le jeton. Vérifiez la connexion et réessayez.</string>
     <string name="authorized_clients_tokens_header">Lecture Nightscout uniquement</string>
     <string name="authorized_clients_token_unpaired">Propre jeton Nightscout, non appairé</string>
     <string name="authorized_clients_token_show_qr">Afficher le QR code</string>
