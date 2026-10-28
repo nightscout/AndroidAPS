@@ -52,7 +52,6 @@
     <string name="authorized_clients_token_problem_not_allowed">El token de Nightscout de este teléfono no es un token de administrador, por lo que no puede generar un token para el cliente. Utilice un token de administrador aquí, o añada el cliente con el PIN</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout tiene un token con este nombre y otros permisos. Elija otro nombre</string>
     <string name="authorized_clients_token_problem_name_in_use">Ya hay un cliente con este nombre en la lista. Elija otro nombre o elimine ese cliente primero</string>
-    <string name="authorized_clients_token_problem_failed">Nightscout no generó el token. Compruebe la conexión e intente de nuevo</string>
     <string name="authorized_clients_tokens_header">Leer solo Nightscout</string>
     <string name="authorized_clients_token_unpaired">Token de Nightscout propio, no emparejado</string>
     <string name="authorized_clients_token_show_qr">Mostrar código QR</string>
