@@ -403,6 +403,8 @@ class G7Session(
 
     private fun handleDisconnected(c: G7GattClient, status: Int) {
         if (c !== client) return
+        // False when the connect failed before the link was ready (status 133 and the like).
+        val wasReady = linkInUse
         linkInUse = false
         idleJob?.cancel()
         flushBackfill()
@@ -412,17 +414,17 @@ class G7Session(
         backfillPending = false
         val hadReading = gotReadingThisConnection
         gotReadingThisConnection = false
-        if (!hadReading && cameBack > 0) cameBackEndings.add(status)
+        if (!hadReading && wasReady && cameBack > 0) cameBackEndings.add(status)
         // The sensor comes back a few times in the next seconds. The client leaves those links out of the log.
         if (hadReading) c.quietUntil = lastReadingReceivedAt + QUIET_AFTER_READING_MS
         if (!running || paused) return
         _status.value = G7ConnectionStatus.WAITING
-        // After a normal reading cycle, re-arm at once: a delayed re-arm can be held back for minutes
+        // After a normal reading cycle, ask again at once: a delayed request can be held back for minutes
         // while the phone dozes, and the sensor's next advertisement would be missed. The same goes for
-        // a link we dropped because it came right after a reading. After a connection that failed
-        // before a reading (often status 133, or a handshake cut short), wait a little, or it would be
-        // retried as fast as the callback can fire.
-        val wait = maxOf(if (hadReading || isRightAfterReading()) 0L else REARM_DELAY_MS, retryNotBefore - System.currentTimeMillis())
+        // a link that came right after a reading and was left idle. After a connect that failed (often
+        // status 133, also right after a reading) or a handshake cut short, wait a little, or it is
+        // retried as fast as the callback can fire: seen on a watch, six refused requests in one second.
+        val wait = maxOf(if (hadReading || (wasReady && isRightAfterReading())) 0L else REARM_DELAY_MS, retryNotBefore - System.currentTimeMillis())
         rearmJob?.cancel()
         if (wait <= 0L) {
             c.reconnect()
