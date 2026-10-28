@@ -237,12 +237,15 @@ class NSDeviceStatusHandler(
                         // 5 minute slot and a 24 hour window, and only the same time puts it into the same one.
                         rt.deliverAt?.let { date = it }
                     }
-                    // A result that does not say which algorithm made it cannot be stored: `toDb` throws,
-                    // and in this scope that would end the app. It is still shown from the data above.
-                    if (apsResult.algorithm == APSResult.Algorithm.UNKNOWN)
-                        aapsLogger.debug(LTag.NSCLIENT, "APS result without algorithm from ${nsDeviceStatus.device}, not stored")
-                    else
-                        apsResults.add(ReceivedResult(apsResult, clock))
+                    when {
+                        // A result that does not say which algorithm made it cannot be stored: `toDb` throws,
+                        // and in this scope that would end the app. It is still shown from the data above.
+                        apsResult.algorithm == APSResult.Algorithm.UNKNOWN ->
+                            aapsLogger.debug(LTag.NSCLIENT, "APS result without algorithm from ${nsDeviceStatus.device}, not stored")
+                        // Calculated nothing, and the master did not store it either. Also shown from the data above.
+                        apsResult.stoppedEarly -> Unit
+                        else -> apsResults.add(ReceivedResult(apsResult, clock))
+                    }
                 }
             }
         }

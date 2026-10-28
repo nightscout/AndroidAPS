@@ -220,6 +220,22 @@ internal class NSDeviceStatusHandlerTest {
         verifyBlocking(persistenceLayer, never()) { insertOrUpdateApsResult(any()) }
     }
 
+    /**
+     * A run that stopped early on bad CGM data calculated nothing, and the master did not store it (#5413).
+     * The client does not store it either, but still shows it as the newest result.
+     */
+    @Test
+    fun doesNotStoreAResultThatStoppedEarly() {
+        givenResults(APSResult.Algorithm.SMB, stoppedEarly = true)
+
+        sut.handleNewData(arrayOf(deviceStatusAt(TIME_1)))
+
+        verifyBlocking(persistenceLayer, never()) { insertOrUpdateApsResult(any()) }
+        verifyBlocking(iobCobCalculator, never()) { apsResultsStored(any()) }
+        assertThat(openAPSData.clockSuggested).isEqualTo(5_000L)
+        assertThat(openAPSData.suggested).isNotNull()
+    }
+
     /** The same device status twice in one batch, which a WS push and a load can make, is stored once. */
     @Test
     fun storesTheSameResultOnceInABatch() {
@@ -230,12 +246,13 @@ internal class NSDeviceStatusHandlerTest {
         verifyBlocking(persistenceLayer, times(1)) { insertOrUpdateApsResult(any()) }
     }
 
-    /** One result for each suggested time, with that time and [algorithm]. */
-    private fun givenResults(algorithm: APSResult.Algorithm): Map<Long, APSResult> {
+    /** One result for each suggested time, with that time, [algorithm] and [stoppedEarly]. */
+    private fun givenResults(algorithm: APSResult.Algorithm, stoppedEarly: Boolean = false): Map<Long, APSResult> {
         val results = mapOf(TIME_1 to 5_000L, TIME_2 to 6_000L, TIME_3 to 7_000L).map { (iso, time) ->
             whenever(dateUtil.fromISODateString(iso)).thenReturn(time)
             time to mock<APSResult>().also {
                 whenever(it.algorithm).thenReturn(algorithm)
+                whenever(it.stoppedEarly).thenReturn(stoppedEarly)
                 // A real date: the handler sets it to the master's time and reads it back
                 var date = time
                 whenever(it.date).thenAnswer { date }
