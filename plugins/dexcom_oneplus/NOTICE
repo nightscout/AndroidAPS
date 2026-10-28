@@ -1,0 +1,153 @@
+THIRD-PARTY / UPSTREAM NOTICE
+=============================
+Module: :plugins:dexcom_oneplus (Dexcom ONE+ / G7 native CGM driver)
+
+Status: Current NOTICE for ported / derived sources (update when new files land).
+        Do not invent copyright holders; unknowns are marked explicitly.
+
+This AndroidAPS tree is licensed under the GNU Affero General
+Public License v3 (see repository root LICENSE.txt). Portions of this module are
+derived from xDrip+ (GNU GPL v3) AND from Juggluco (GNU GPL v3). Combined
+distribution of this app remains under AGPL-3 with GPL-3 obligations respected
+for the derived parts (GPLv3 §13 AGPL compatibility).
+
+Note: several files are co-derived from BOTH xDrip and Juggluco and are listed
+in both sections 1 and 2 below.
+
+
+-------------------------------------------------------------------------------
+1. xDrip+ (NightscoutFoundation) — messages / auth / Ob1 control flow
+-------------------------------------------------------------------------------
+
+Project:     xDrip+ / Nightscout xDrip
+Repository:  https://github.com/NightscoutFoundation/xDrip
+License:     GNU General Public License v3.0 (file LICENSE in that repository)
+Homepage:    https://jamorham.github.io/#xdrip-plus
+Pin:
+  Tag:     2026.07.15
+  Commit:  1e86d9a2a52577ed2c30fbf7b69d75fd56e6918f
+  URL:     https://github.com/NightscoutFoundation/xDrip/commit/1e86d9a2a52577ed2c30fbf7b69d75fd56e6918f
+Related historical repo (same lineage; prefer NightscoutFoundation for pins):
+  https://github.com/jamorham/xDrip-plus
+
+Copyright holders:
+  UNKNOWN as complete legal © lines — many upstream .java files carry no formal
+  "Copyright (C) YEAR NAME" header. Author / credit markers observed upstream:
+    - "JamOrHam" / "jamorham" (widespread on Ob1, g5model, libkeks, plugin)
+    - "joeginley" (comment on BluetoothServices UUID definitions)
+  README publisher mention: "Published by the Nightscout Foundation"
+  (community / publishing umbrella — not treated here as a verified sole © owner).
+
+Translated to Kotlin, not a verbatim copy (separate module, own NOTICE +
+per-file SPDX headers that keep the pin):
+  - :plugins:libkeks (jamorham.keks + IPluginDA). The Java sources at the pin
+    were translated to Kotlin Multiplatform; plugins/libkeks/NOTICE lists every
+    change and the golden tests that check the translation.
+
+Ported into original Kotlin (wire format / algorithm identical, text rewritten):
+  gatt/OnePlusBluetoothUuids.kt              ← BluetoothServices.java UUIDs
+  gatt/OnePlusKeksNotify.kt                  ← Ob1 Auth/ExtraData notify routing
+  parse/OnePlusFastCrc16.kt                  ← FastCRC16.java
+  parse/OnePlusGlucoseParser.kt              ← EGlucoseRxMessage / EGlucoseRxMessage2
+  parse/OnePlusCalibrationState.kt           ← CalibrationState
+  parse/OnePlusEGlucoseTx.kt                 ← EGlucoseTxMessage / BaseMessage.init
+  parse/OnePlusTransmitterTimeTx.kt, Rx.kt   ← TransmitterTimeTx/RxMessage
+  parse/OnePlusSessionStartTx.kt, Rx.kt      ← SessionStartTx/RxMessage
+  parse/OnePlusSessionStopTx.kt, Rx.kt       ← SessionStopTx/RxMessage
+  parse/OnePlusBackFillTx.kt, ControlRx.kt, Stream.kt
+                                             ← BackFillTxMessage2 / BackFillControlRx / BackFillStream
+  session/OnePlusBackfillSession.kt          ← Ob1G5StateMachine.backFillIfNeeded / monitorBackFill
+  session/OnePlusInvalidShortPairingCodes.kt ← TxIdHelper.INVALID_SHORT_PAIRING_CODES
+  session/OnePlusSessionStart.kt             ← TxIdHelper.isValidShortPairingCode
+  session/OnePlusKeksGuideCerts.kt           ← xDrip G7 keks Auto-Configure QR / Ob1 setPersistence
+
+Co-derived with Juggluco (also listed in section 2):
+  gatt/OnePlusGattClient.kt, gatt/OnePlusGattClientAndroid.kt,
+  oem/OemDeviceProfile.kt, session/OnePlusAuthStatusRx.kt,
+  session/OnePlusSessionAuth.kt, session/OnePlusSessionAuthKeks.kt,
+  session/OnePlusEgvSession.kt
+  (companion :plugins:source module: DexcomOnePlusIngest.kt ← Ob1 getForPreciseTimestamp dedup)
+
+Still incomplete vs full Ob1: full bond-state-machine UX, 24h backfill option,
+robust DexTimeKeeper persistence across process death.
+
+
+-------------------------------------------------------------------------------
+2. Juggluco — device identity / BLE + bond choreography / EGV request
+-------------------------------------------------------------------------------
+
+Project:     Juggluco
+Repository:  https://github.com/j-kaltes/Juggluco
+License:     GNU General Public License v3.0 or later (root LICENSE.txt is the
+             GPL v3 text; DexGattCallback.java header says "version 3 of the
+             License, or (at your option) any later version")
+Author:      j-kaltes (per repo). No formal per-file © lines assumed; do not invent.
+Pin:
+  Version: 10.9.6
+  Commit:  5297da7c23a312d1065c5e828a7b61a161cc1200
+  URL:     https://github.com/j-kaltes/Juggluco/commit/5297da7c23a312d1065c5e828a7b61a161cc1200
+  The files this module derives from (Common/src/dex/java/tk/glucodata/
+  DexGattCallback.java, SuperGattCallback.java, SensorBluetooth.java, BarCode.hpp)
+  are unchanged upstream from commit 63197a8f (10.9.3) up to the last commit
+  before 43fdbe1e (11.0.1), so any commit in that range gives the same code.
+
+Material derived from Juggluco (behaviour / approach ported into original Kotlin,
+not a verbatim copy):
+  identity/OnePlusAdvCandidate.kt            ← isG7 ADV name detection (DX + CM/02/01)
+  identity/OnePlusGs1ApplicatorParser.kt     ← BarCode GS1 AIs / dexcomEnd PIN
+  identity/OnePlusSensorIdentity.kt          ← GS1 Data Matrix fields / DexDeviceName
+  identity/OnePlusSensorStore.kt             ← short-auth reconnect persistence pattern
+  scan/OnePlusBleScannerAndroid.kt           ← isG7 scan soft-filter / sticky match
+
+Co-derived with xDrip (also listed in section 1):
+  gatt/OnePlusGattClient.kt, gatt/OnePlusGattClientAndroid.kt
+                                             ← bond wait, createBond(TRANSPORT_LE) via
+                                               reflection, removeBond, CCCD teardown/restore,
+                                               MTU "never request" on Dex path
+  oem/OemDeviceProfile.kt, oem/DeviceProfileRegistry.kt  ← Dex-path MTU / interval defaults
+  session/OnePlusAuthStatusRx.kt             ← DexGattCallback.authenticate ChallengeReply semantics
+  session/OnePlusSessionAuthKeks.kt          ← auth!=1 recovery, removeBond, CCCD teardown
+  session/OnePlusSessionAuth.kt              ← short-auth reconnect path
+  session/OnePlusEgvSession.kt               ← DexGattCallback.getdatacmd EGV/backfill approach
+
+Note: Juggluco is named in some user-facing strings (source module) only as a
+compatible app to close before connecting — that is not code derivation.
+
+
+-------------------------------------------------------------------------------
+3. Other third-party libraries
+-------------------------------------------------------------------------------
+
+None. Bouncy Castle (bcpkix / bcprov) used to arrive here through :plugins:libkeks.
+That module was translated to Kotlin Multiplatform in October 2026 and carries
+its own secp256r1 and ECDSA code now, so nothing third-party reaches this module
+through it any more. See plugins/libkeks/NOTICE.
+Add SPDX name / version / licence URL here if new direct dependencies land.
+
+
+-------------------------------------------------------------------------------
+4. Original AndroidAPS code (not from xDrip or Juggluco)
+-------------------------------------------------------------------------------
+
+Original to AndroidAPS (no upstream provenance marker):
+  OnePlusCgmDriver.kt, OnePlusCgmDriverReal.kt, OnePlusCgmDriverStub.kt,
+  OnePlusCgmDrivers.kt, OnePlusGlucoseSample.kt, OnePlusGlucoseWatcher.kt,
+  OnePlusLogMarkers.kt, OnePlusWarmupState.kt,
+  reconnect/OnePlusReconnectPolicy.kt, scan/OnePlusBleScanner.kt,
+  scan/OnePlusScanResult.kt, session/OnePlusBackfill.kt,
+  session/OnePlusBleSession.kt (reconnect/OEM orchestration; carries
+    Juggluco-informed wake-lock / short-auth patterns but is original code),
+  session/OnePlusSessionStartPolicy.kt, warmup/OnePlusWarmupClock.kt.
+The OEM device-profile abstraction (oem/) and the Android GATT plumbing bulk of
+gatt/OnePlusGattClientAndroid.kt are original AAPS implementation; only the
+protocol choreography within them is derived (see sections 1 and 2).
+
+
+-------------------------------------------------------------------------------
+Reviewer verification points (not legal advice — maintainer/counsel to confirm)
+-------------------------------------------------------------------------------
+  a. SPDX GPL-3.0-only vs GPL-3.0-or-later — Juggluco is GPL-3.0-or-later (section 2);
+     confirm the xDrip side against its LICENSE and file headers.
+  b. Repository root LICENSE.txt is AGPL-3.0(-or-later).
+
+End of NOTICE

@@ -16,6 +16,8 @@ plugins {
 val PLUGIN_LIBRARIES = setOf(
     // KEKS authentication for Dexcom ONE+ / G7 (Android and JVM only).
     ":plugins:libkeks",
+    // The Dexcom ONE+ / G7 BLE driver (Android only). The plugin itself is in :plugins:source.
+    ":plugins:dexcom_oneplus",
 )
 
 /**
