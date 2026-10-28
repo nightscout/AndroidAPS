@@ -52,7 +52,6 @@
     <string name="authorized_clients_token_problem_not_allowed">Токенът за Nightscout на този телефон не е админ токен, затова не може да създаде токен за клиента. Използвайте тук админ токен или добавете клиента с PIN.</string>
     <string name="authorized_clients_token_problem_name_taken">В Nightscout има токен с това име и други права. Изберете друго име.</string>
     <string name="authorized_clients_token_problem_name_in_use">Клиент с това име вече е в списъка. Изберете друго име или първо премахнете този клиент.</string>
-    <string name="authorized_clients_token_problem_failed">Nightscout не създаде токена. Проверете връзката и опитайте отново.</string>
     <string name="authorized_clients_tokens_header">Само четене от Nightscout</string>
     <string name="authorized_clients_token_unpaired">Собствен токен за Nightscout, не е свързан</string>
     <string name="authorized_clients_token_show_qr">Покажи QR код</string>
