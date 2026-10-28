@@ -535,11 +535,16 @@ private fun AddMethodOption(
 private const val DISABLED_ALPHA = 0.38f
 
 @Composable
-private fun tokenProblemText(problem: AuthorizedClientsViewModel.TokenProblem): String = when (problem) {
+private fun tokenProblemText(problem: AuthorizedClientsViewModel.TokenProblem, leftOverName: String? = null): String = when (problem) {
     AuthorizedClientsViewModel.TokenProblem.NotConnected -> stringResource(SyncStrings.authorized_clients_token_problem_not_connected)
     AuthorizedClientsViewModel.TokenProblem.NotAllowed   -> stringResource(SyncStrings.authorized_clients_token_problem_not_allowed)
     AuthorizedClientsViewModel.TokenProblem.NameTaken    -> stringResource(SyncStrings.authorized_clients_token_problem_name_taken)
     AuthorizedClientsViewModel.TokenProblem.NameInUse    -> stringResource(SyncStrings.authorized_clients_token_problem_name_in_use)
+    // Without the name there is nothing the user could act on, so it falls back to the plain text.
+    AuthorizedClientsViewModel.TokenProblem.LeftOver     ->
+        leftOverName?.let { stringResource(SyncStrings.authorized_clients_token_problem_left_over, it) }
+            ?: stringResource(SyncStrings.authorized_clients_token_problem_failed)
+
     AuthorizedClientsViewModel.TokenProblem.Failed       -> stringResource(SyncStrings.authorized_clients_token_problem_failed)
 }
 
@@ -617,7 +622,7 @@ private fun ClientQrDialog(
                     )
                 )
             },
-            text = { Text(tokenProblemText(dialog.problem)) },
+            text = { Text(tokenProblemText(dialog.problem, dialog.leftOverName)) },
             confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(CoreUiStrings.ok)) } }
         )
 

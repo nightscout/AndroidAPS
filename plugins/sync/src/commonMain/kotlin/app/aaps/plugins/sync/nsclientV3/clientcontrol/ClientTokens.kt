@@ -11,6 +11,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
 
 /**
  * The Nightscout tokens of the clients, made and removed by the master.
@@ -47,6 +48,16 @@ class ClientTokens(
         const val SUBJECT_PREFIX = "aaps-"
         const val SUBJECT_NOTES = "Made by AAPS for a client phone."
 
+        /**
+         * How many times a token is made when Nightscout does not list it. Two, not more: every try is a create and a
+         * delete on Nightscout, and a Nightscout that never lists a new token is not mended by asking it again and again.
+         */
+        const val ATTEMPTS = 2
+
+        /** How many times the new token is looked for, and how long between. */
+        const val READS = 3
+        const val READ_PAUSE_MS = 500L
+
         /** The name of the token for the client [clientName]. */
         fun subjectName(clientName: String): String = SUBJECT_PREFIX + clientName.trim()
     }
@@ -65,6 +76,12 @@ class ClientTokens(
         data object NameTaken : Result<Nothing>
 
         data class Failed(val message: String?) : Result<Nothing>
+
+        /**
+         * The token was made but Nightscout did not list it, and removing it again failed too, so it is still there.
+         * Only the user can clear it, so [subjectName] is shown to them.
+         */
+        data class LeftOver(val subjectName: String) : Result<Nothing>
     }
 
     /** True for a client token: a subject with the client role and nothing else. */
@@ -87,18 +104,68 @@ class ClientTokens(
     /**
      * The token for the client [clientName]: the client token that already has this name, or a new one. Sets the role
      * right first, so the token never works with more rights than [ROLE_PERMISSIONS].
+     *
+     * **Why this is not simply create-then-read.** Nightscout answers the create without the token: it builds the token
+     * from the subject's id while it reloads its own list, and `GET /authorization/subjects` then serves that list from
+     * memory, never from the database. The list is reloaded at start and by a create, a change or a delete that the same
+     * Nightscout process handled - there is no timer. So a create can come back fine while the list the next call reads
+     * knows nothing about it, and stays that way until the next write. Reading again does not mend it.
+     *
+     * What does mend it is writing again, so a new token that is not listed is deleted again and made once more. Without
+     * that delete the one that was made stays behind, invisible to the next try, which then makes a second token with
+     * the same name - the two tokens users were left with.
      */
     suspend fun tokenFor(clientName: String): Result<NSAuthSubject> = withClient { client ->
         ensureRoleWith(client, create = true)
         val name = subjectName(clientName)
         val sameName = client.getAuthSubjects().filter { it.name == name }
-        sameName.firstOrNull { isClientToken(it) && it.accessToken != null }?.let { return@withClient Result.Ok(it) }
-        if (sameName.isNotEmpty()) return@withClient Result.NameTaken
+        sameName.firstOrNull { isClientToken(it) && it.accessToken != null }?.let {
+            aapsLogger.info(LTag.NSCLIENT, "ClientControl: $name has a Nightscout token already, using it")
+            return@withClient Result.Ok(it)
+        }
+        if (sameName.isNotEmpty()) {
+            aapsLogger.warn(LTag.NSCLIENT, "ClientControl: Nightscout has a subject named $name with other roles, leaving it alone")
+            return@withClient Result.NameTaken
+        }
+        repeat(ATTEMPTS) { attempt ->
+            when (val made = makeToken(client, name, attempt)) {
+                is Result.Ok -> return@withClient made
+                is Result.LeftOver -> return@withClient made
+                else               -> Unit // not listed and taken back again: try once more
+            }
+        }
+        Result.Failed("Nightscout did not list the new token")
+    }
+
+    /**
+     * One create and the read it needs. Returns [Result.Failed] when the token was made but not listed **and** taken
+     * back again, so the caller may try again from a clean state; [Result.LeftOver] when taking it back failed too.
+     */
+    private suspend fun makeToken(client: NSAndroidClient, name: String, attempt: Int): Result<NSAuthSubject> {
         val id = client.createAuthSubject(NSAuthSubject(name = name, roles = listOf(ROLE_NAME), notes = SUBJECT_NOTES)).id
-            ?: return@withClient Result.Failed("Nightscout did not return the id of the new token")
-        // The answer to the create has no token: Nightscout makes it from the id when it lists the subjects.
-        client.getAuthSubjects().firstOrNull { it.id == id && it.accessToken != null }?.let { Result.Ok(it) }
-            ?: Result.Failed("The new token is not listed")
+            ?: return Result.Failed("Nightscout did not return the id of the new token")
+        aapsLogger.info(LTag.NSCLIENT, "ClientControl: made the Nightscout token $name (id $id), try ${attempt + 1} of $ATTEMPTS")
+        // A Nightscout that reloaded its list while it wrote has the token at once; one that read its own write too
+        // early needs a moment. A few short reads cost nothing and save the whole round when that is all it was.
+        repeat(READS) { read ->
+            client.getAuthSubjects().firstOrNull { it.id == id && it.accessToken != null }?.let {
+                if (read > 0) aapsLogger.info(LTag.NSCLIENT, "ClientControl: $name was listed on read ${read + 1}")
+                return Result.Ok(it)
+            }
+            if (read + 1 < READS) delay(READ_PAUSE_MS)
+        }
+        aapsLogger.warn(LTag.NSCLIENT, "ClientControl: Nightscout did not list the new token $name (id $id), taking it back")
+        return try {
+            client.deleteAuthSubject(id)
+            aapsLogger.info(LTag.NSCLIENT, "ClientControl: took the Nightscout token $name (id $id) back")
+            Result.Failed("The new token was not listed and was taken back")
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            // Now it really is left behind, and only the user can clear it.
+            aapsLogger.error(LTag.NSCLIENT, "ClientControl: could not take the Nightscout token $name (id $id) back: ${e.message}", e)
+            Result.LeftOver(name)
+        }
     }
 
     /** The client token with this id, with its token, for showing its QR code again. */
