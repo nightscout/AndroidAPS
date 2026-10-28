@@ -66,12 +66,14 @@
     <string name="scene_wizard_finish">Kết thúc</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Theo dõi ngữ cảnh</string>
+    <string name="scene_wizard_chain_info">Bạn có thể tùy chọn liên kết với một ngữ cảnh khác để tự động kích hoạt khi ngữ cảnh hiện tại hết hạn. Bạn cũng có thể chuyển sang ngữ cảnh đó khi kết thúc sớm. Ngữ cảnh tiếp theo chỉ được kích hoạt nếu đã được bật và bơm khả dụng; nếu không, biểu ngữ của ngữ cảnh vừa kết thúc sẽ cho biết lý do ngữ cảnh tiếp theo không được kích hoạt.</string>
     <string name="scene_chain_none">Không</string>
     <string name="scene_skip_to_format">Chuyển sang %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
     <string name="scene_chain_target_missing">Ngữ cảnh liên kết đã bị xóa</string>
     <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">Việc theo dõi chưa bắt đầu: %1$s</string>
     <string name="scene_chain_skipped_deleted">ngữ cảnh mục tiêu đã bị xóa</string>
     <string name="scene_chain_skipped_disabled">\"%1$s\" đã bị vô hiệu hóa</string>
     <string name="scene_chain_error_summary">%1$s → %2$s: %3$d trong %4$d hành động thất bại</string>
