@@ -388,8 +388,12 @@ class GarminPluginTest : TestBaseWithProfile() {
     @Test
     fun testOnPostBolus_SettingOff() {
         whenever(preferences.get(GarminBooleanKey.RemoteBolus)).thenReturn(false)
-        assertEquals("", gp.onPostBolus(createUri(mapOf("bolus" to "1.5"))))
+        assertEquals("", pluginWithText().onPostBolus(createUri(mapOf("bolus" to "1.5"))))
         verify(loopHub, never()).postBolus(any())
+        assertEquals(
+            "The Garmin watch asked for a bolus of 1.50 U. No bolus was given, because bolus from Garmin is not allowed. Turn it on in the Garmin settings.",
+            postedNotice(NotificationId.GARMIN_BOLUS_DISABLED)
+        )
     }
 
     @Test
@@ -431,13 +435,18 @@ class GarminPluginTest : TestBaseWithProfile() {
     // cannot show why, so the phone says it.
     private fun clientPlugin(): GarminPlugin {
         whenever(config.AAPSCLIENT).thenReturn(true)
+        return pluginWithText()
+    }
+
+    /** A plugin with the real English texts, for tests that check the notice on the phone. */
+    private fun pluginWithText(): GarminPlugin {
         val text = generatedTextResolver("sync" to SyncStringsValues::textOf)
         return GarminPlugin(aapsLogger, text, preferences, context, loopHub, persistenceLayer, config, notificationManager)
     }
 
-    private fun postedNotice(): String {
+    private fun postedNotice(id: NotificationId = NotificationId.GARMIN_NOT_ON_CLIENT): String {
         val captor = argumentCaptor<String>()
-        verify(notificationManager).post(eq(NotificationId.GARMIN_NOT_ON_CLIENT), captor.capture(), any(), any<Int>(), anyOrNull(), any(), anyOrNull())
+        verify(notificationManager).post(eq(id), captor.capture(), any(), any<Int>(), anyOrNull(), any(), anyOrNull())
         return captor.firstValue
     }
 

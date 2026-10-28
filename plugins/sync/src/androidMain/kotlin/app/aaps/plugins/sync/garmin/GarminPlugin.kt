@@ -751,7 +751,7 @@ class GarminPlugin(
      * Handles a bolus request from the device. The query parameter `bolus` is the insulin in units.
      *
      * The request is ignored when the value is missing, not a number or not above 0, and when the setting
-     * `GarminBooleanKey.RemoteBolus` is off. On a client the phone says that no bolus was given.
+     * `GarminBooleanKey.RemoteBolus` is off. In the last case and on a client the phone says that no bolus was given.
      */
     @VisibleForTesting
     fun onPostBolus(uri: URI): CharSequence {
@@ -761,7 +761,9 @@ class GarminPlugin(
         } else if (config.AAPSCLIENT) {
             refuseOnClient(rh.gs(SyncStrings.garmin_bolus_not_on_client, rh.gs(InterfacesStrings.format_insulin_units, bolus)))
         } else if (!preferences.get(GarminBooleanKey.RemoteBolus)) {
-            aapsLogger.warn(LTag.GARMIN, "ignore bolus request of $bolus U, bolus from Garmin is not allowed in the settings")
+            val text = rh.gs(SyncStrings.garmin_bolus_disabled, rh.gs(InterfacesStrings.format_insulin_units, bolus))
+            aapsLogger.warn(LTag.GARMIN, "ignore bolus request: $text")
+            notificationManager.post(id = NotificationId.GARMIN_BOLUS_DISABLED, text = text)
         } else {
             loopHub.postBolus(bolus)
         }

@@ -256,7 +256,11 @@ enum class NotificationId(
     // and the pairing secrets are plain files next to the data. IMPORTANT, not URGENT: nothing is wrong with
     // therapy, but a copy of the folder gives everything away, and the user can fix it. Appended at the END for
     // the same reason as above.
-    SECRETS_NOT_PROTECTED(IMPORTANT, SYSTEM);
+    SECRETS_NOT_PROTECTED(IMPORTANT, SYSTEM),
+
+    // A Garmin watch asked for a bolus, but "Allow bolus from Garmin device" is off. No bolus is given, and the
+    // watch cannot show why. NORMAL: nothing is delivered wrongly. Appended at the END for the same reason as above.
+    GARMIN_BOLUS_DISABLED(NORMAL, SYNC);
 
     companion object {
 

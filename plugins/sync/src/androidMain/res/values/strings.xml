@@ -166,6 +166,7 @@
     <string name="garmin_local_http_server">Local HTTP server</string>
     <string name="garmin_remote_bolus">Allow bolus from Garmin device</string>
     <string name="garmin_bolus_not_on_client" comment="%1$s=insulin with unit, example: 1.50 U. A client is a phone that follows and controls the main AAPS phone (the master).">The Garmin watch asked for a bolus of %1$s. This phone is a client, so no bolus was given. Use AAPS to give it.</string>
+    <string name="garmin_bolus_disabled" comment="%1$s=insulin with unit, example: 1.50 U">The Garmin watch asked for a bolus of %1$s. No bolus was given, because bolus from Garmin is not allowed. Turn it on in the Garmin settings.</string>
     <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">The Garmin watch sent %1$s of carbs. This phone is a client, so they were not entered. Enter them in AAPS.</string>
     <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">The Garmin watch asked to connect or disconnect the pump. This phone is a client, so nothing was changed. Do it in AAPS.</string>
 
