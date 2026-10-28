@@ -52,7 +52,8 @@
     <string name="authorized_clients_token_problem_not_allowed">Nightscout-tokenet på denne telefonen er ikke et administratortoken og kan derfor ikke opprette et token for klienten. Bruk et administratortoken her, eller legg til klienten med PIN-koden.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout har allerede et token med dette navnet og andre rettigheter. Velg et annet navn.</string>
     <string name="authorized_clients_token_problem_name_in_use">En klient med dette navnet finnes allerede i listen. Velg et annet navn, eller fjern klienten først.</string>
-    <string name="authorized_clients_token_problem_failed">Nightscout opprettet ikke tokenet. Kontroller tilkoblingen og prøv igjen.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout viste ikke den nye tokenen i listen, så den ble fjernet igjen. Ingenting ble liggende igjen. Prøv på nytt.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout viste ikke den nye tokenen i listen, og den kunne ikke fjernes igjen. Slett tokenen %1$s i Nightscout, og prøv deretter på nytt.</string>
     <string name="authorized_clients_tokens_header">Bare lesetilgang til Nightscout</string>
     <string name="authorized_clients_token_unpaired">Eget Nightscout-token, ikke sammenkoblet</string>
     <string name="authorized_clients_token_show_qr">Vis QR-kode</string>
