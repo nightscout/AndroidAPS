@@ -52,7 +52,6 @@
     <string name="authorized_clients_token_problem_not_allowed">此手机的 Nightscout 令牌不是管理员令牌，因此无法为客户端生成令牌。请在此处使用管理员令牌，或通过 PIN 码添加客户端。</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout 中已存在同名但权限不同的令牌。请选择其他名称。</string>
     <string name="authorized_clients_token_problem_name_in_use">列表中已存在同名客户端。请选择其他名称，或先移除该客户端。</string>
-    <string name="authorized_clients_token_problem_failed">Nightscout 未能生成令牌。请检查连接后重试。</string>
     <string name="authorized_clients_tokens_header">仅读取 Nightscout</string>
     <string name="authorized_clients_token_unpaired">使用自己的 Nightscout 令牌，未配对</string>
     <string name="authorized_clients_token_show_qr">显示二维码</string>
