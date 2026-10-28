@@ -59,4 +59,172 @@
     <string name="aidex_signal_lost">Sensor signal lost, please check the connection</string>
     <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">duplicate reading</string>
 
+    <!-- Dexcom ONE+ / G7 native source -->
+    <string name="dexcom_oneplus_native">Dexcom ONE+ / G7</string>
+    <string name="description_source_dexcom_oneplus_native">Native Dexcom ONE+ and G7 Bluetooth in AAPS. Apply the sensor, enter the pairing code immediately, then wait ~30 min warm-up before loop glucose.</string>
+    <string name="dexcom_oneplus_plugin_summary">Status, connect with pairing code, and warm-up</string>
+    <string name="dexcom_oneplus_status_title">ONE+ / G7 status</string>
+    <string name="dexcom_oneplus_status_summary">Session phase and connection status</string>
+    <string name="dexcom_oneplus_start_title">Start sensor</string>
+    <string name="dexcom_oneplus_start_summary">Apply sensor → enter code now → connect → ~30 min warm-up</string>
+    <string name="dexcom_oneplus_start_steps">How to start:\n1. Apply the sensor on your body.\n2. Paste the applicator Data Matrix (GS1) or enter the 4-digit pairing code — do not wait until after warm-up.\n3. Stop Dexcom, xDrip, and Juggluco Direct (only one Bluetooth master).\n4. Allow Bluetooth, Scan, select the highlighted sensor, then Connect / follow.\n5. Accept the Android Bluetooth pairing prompt if shown.\n6. Warm-up ~30 min for a new sensor; attaching to a running sensor can deliver EGVs sooner.</string>
+    <string name="dexcom_oneplus_step_prepare">Prepare</string>
+    <string name="dexcom_oneplus_step_code">Code</string>
+    <string name="dexcom_oneplus_step_connect">Connect</string>
+    <string name="dexcom_oneplus_step_warmup">Warm-up</string>
+    <string name="dexcom_oneplus_start_return_warmup">Connect adopts the selected sensor and opens the warm-up screen. The countdown also shows on the overview and in the ongoing notification — you do not have to stay on that screen.</string>
+    <string name="dexcom_oneplus_applicator_gs1_label">Applicator Data Matrix (GS1) or 4-digit PIN</string>
+    <string name="dexcom_oneplus_applicator_gs1_hint">Paste the full Data Matrix text from a QR scanner, or type the 4-digit PIN. Serial is stored for reconnect matching.</string>
+    <string name="dexcom_oneplus_applicator_parsed" comment="%1$s=PIN, %2$s=serial or dash. Example: PIN 1234 · serial ABCD">Parsed PIN %1$s · serial %2$s</string>
+    <string name="dexcom_oneplus_applicator_serial_none">—</string>
+    <string name="dexcom_oneplus_last_mac_hint" comment="%1$s=last MAC. Example: AA:BB:…:FF">Last successful MAC: %1$s</string>
+    <string name="dexcom_oneplus_warmup_title">Sensor warm-up</string>
+    <string name="dexcom_oneplus_warmup_summary">~30 minute warm-up countdown</string>
+    <string name="dexcom_oneplus_nav_back">Back</string>
+    <string name="dexcom_oneplus_permissions_hint">Before pairing: allow nearby Bluetooth devices (and notifications if prompted). Keep the phone near the sensor during start and warm-up.</string>
+    <string name="dexcom_oneplus_scan_hint">Scan for nearby ONE+ / G7-family sensors. Stop other Dexcom / xDrip / Juggluco Direct apps first.</string>
+    <string name="dexcom_oneplus_scan_pick_hint">Every ONE+ / G7 sensor in range is listed. The 4-digit code is not sent in the Bluetooth signal, so the app cannot use it to find your sensor. Pick the one you have just applied. The code is checked when you press Connect.</string>
+    <string name="dexcom_oneplus_scan_start">Scan</string>
+    <string name="dexcom_oneplus_scan_stop">Stop</string>
+    <string name="dexcom_oneplus_scan_scanning">Scanning…</string>
+    <string name="dexcom_oneplus_scan_idle" comment="%1$d=number of devices found. Example: 2">Devices found: %1$d</string>
+    <string name="dexcom_oneplus_scan_unnamed">Unnamed Dexcom device</string>
+    <string name="dexcom_oneplus_device_required">Select a sensor from the scan list</string>
+    <string name="dexcom_oneplus_new_sensor_code_warning">This is a different sensor from the paired one, but the pairing code has not changed. Paste the new applicator code — or press Connect again to keep the current one.</string>
+    <string name="dexcom_oneplus_dexcom_recovery_warning">Stop the Dexcom app and xDrip first, because only one app can use the sensor over Bluetooth. This source attaches to a running sensor session and does not end it. It is not certain that the Dexcom app can use the sensor again afterwards.</string>
+    <string name="dexcom_oneplus_connect_follow">Connect / follow sensor</string>
+    <string name="dexcom_oneplus_pairing_code_required">Enter the sensor pairing code</string>
+    <string name="dexcom_oneplus_pairing_code_invalid">Enter a valid 4-digit sensor pairing code</string>
+    <string name="dexcom_oneplus_request_permissions">Allow Bluetooth</string>
+    <string name="dexcom_oneplus_permissions_needed">Bluetooth permission is required before starting the sensor</string>
+    <string name="dexcom_oneplus_repair_missing_sensor_change">Repair a missing sensor change</string>
+    <string name="dexcom_oneplus_repair_missing_sensor_change_summary">On by default. When "Create sensor change" is also on, a missing sensor change for the running sensor is written once, so the sensor age is right. An event you delete after that write is not written again.</string>
+    <string name="dexcom_oneplus_anchor_session_to_manual_sensor_change">Use a sensor change you logged as the start</string>
+    <string name="dexcom_oneplus_anchor_session_to_manual_sensor_change_summary">On by default. When off, a new ONE+ session keeps the time of the start or of the first reading, and a sensor change logged earlier is not used to move that time back. When on, a sensor change from the last 24 hours that is earlier than that automatic time becomes the session start.</string>
+    <string name="dexcom_oneplus_correct_sensor_start">Allow correcting the insertion date</string>
+    <string name="dexcom_oneplus_correct_sensor_start_summary">On by default. When on, the Status screen can move the insertion time of the sensor in use. Sensor change events between the old and the new time are invalidated. Calibration entries are not deleted.</string>
+    <string name="dexcom_oneplus_correct_insertion_date">Correct insertion date</string>
+    <string name="dexcom_oneplus_insertion_date_future" comment="%1$s=current start time of the sensor. Example: 14:05">A sensor cannot be inserted in the future. The sensor still starts at %1$s.</string>
+    <string name="dexcom_oneplus_insertion_date_too_old" comment="%1$s=current start time of the sensor. Example: 14:05">That date is older than a full sensor life, so it belongs to another sensor. The sensor still starts at %1$s.</string>
+    <string name="dexcom_oneplus_insertion_date_no_session">No sensor session is running, so there is no date to correct.</string>
+    <string name="dexcom_oneplus_start_action">Start / new sensor</string>
+    <string name="dexcom_oneplus_status_message_none">(none)</string>
+    <string name="dexcom_oneplus_session_up">Up</string>
+    <string name="dexcom_oneplus_session_down">Down</string>
+    <string name="dexcom_oneplus_phase_idle">Idle</string>
+    <string name="dexcom_oneplus_phase_pairing">Pairing</string>
+    <string name="dexcom_oneplus_phase_connecting">Connecting</string>
+    <string name="dexcom_oneplus_phase_reconnecting">Reconnecting</string>
+    <string name="dexcom_oneplus_phase_warming">Warming up</string>
+    <string name="dexcom_oneplus_phase_ready">Active</string>
+    <string name="dexcom_oneplus_phase_failed">Failed</string>
+    <string name="dexcom_oneplus_warmup_countdown_unknown">—</string>
+    <string name="dexcom_oneplus_warmup_local_fallback_note">Showing a local ~30 min timer because the sensor did not provide remaining time yet.</string>
+    <string name="dexcom_oneplus_warmup_connecting_note">Establishing the Bluetooth link — keep the app open and stay close to the sensor. This can take up to a minute.</string>
+    <string name="dexcom_oneplus_warmup_no_loop_bg">No loop glucose yet — wait until warm-up finishes.</string>
+    <string name="dexcom_oneplus_msg_pairing">Pairing with sensor…</string>
+    <string name="dexcom_oneplus_msg_auth_ok">Authenticated — starting glucose session…</string>
+    <string name="dexcom_oneplus_msg_tx_session">Sensor session detected on transmitter.</string>
+    <string name="dexcom_oneplus_msg_session_down">Session ended or disconnected.</string>
+    <string name="dexcom_oneplus_error_auth_bond">Authentication or Bluetooth pairing failed. Accept the system pairing prompt and retry.</string>
+    <string name="dexcom_oneplus_error_connection">Connection or sensor session error. Check the Bluetooth connection and try again.</string>
+    <string name="dexcom_oneplus_status_message_generic">If the problem continues, open the driver log on this screen.</string>
+    <string name="dexcom_oneplus_warmup_done">Warm-up complete — source active</string>
+    <string name="dexcom_oneplus_notif_title">Dexcom ONE+ / G7</string>
+    <string name="dexcom_oneplus_notif_channel_name">Dexcom ONE+ / G7 status</string>
+    <string name="dexcom_oneplus_notif_channel_desc">Ongoing sensor connection and warm-up status.</string>
+    <string name="dexcom_oneplus_notif_session_alive">Keeping the sensor connected</string>
+    <string name="dexcom_oneplus_slot_conflict_title">This sensor is already soaking</string>
+    <string name="dexcom_oneplus_slot_conflict_message">It is running as your pre-soak sensor. One sensor cannot be paired twice at the same time: both sessions would talk over each other and the pairing fails for both.\n\nIf it is ready, promote it — that keeps everything it has collected. Otherwise cancel the pre-soak, which throws that away, and start it here instead.</string>
+    <string name="dexcom_oneplus_slot_conflict_promote">Promote it instead</string>
+    <string name="dexcom_oneplus_slot_conflict_restart">Cancel pre-soak and start here</string>
+    <string name="dexcom_oneplus_slot_conflict_dismiss">Leave it soaking</string>
+    <string name="dexcom_oneplus_staging_is_production">This sensor already feeds the loop. Start it from Production, not as a pre-soak.</string>
+    <string name="dexcom_oneplus_notif_pairing">Pairing…</string>
+    <string name="dexcom_oneplus_notif_connecting">Connecting to sensor…</string>
+    <string name="dexcom_oneplus_notif_reconnecting">Reconnecting…</string>
+    <string name="dexcom_oneplus_notif_waiting_adv" comment="%1$d = whole minutes the sensor has been silent. Example: No signal from the sensor for 7 min">No signal from the sensor for %1$d min — keep the phone close</string>
+    <string name="dexcom_oneplus_notif_stale_mac_title">Wrong sensor?</string>
+    <string name="dexcom_oneplus_notif_stale_mac_text">Another Dexcom ONE+ / G7 sensor is nearby but the paired one stays silent. Start the sensor again to pair the new one.</string>
+    <string name="dexcom_oneplus_notif_warming_title">Sensor warming up</string>
+    <string name="dexcom_oneplus_notif_warming_text">Keep the phone near the sensor</string>
+    <string name="dexcom_oneplus_notif_failed_title">Warm-up interrupted</string>
+    <string name="dexcom_oneplus_notif_failed_text">Open the app to retry</string>
+    <string name="dexcom_oneplus_slot_hint">Production feeds the loop after warm-up. Staging (pre-soak) warms a second sensor alongside the one you are currently using — it is collect-only and never feeds the loop until you promote it from the status screen.</string>
+    <string name="dexcom_oneplus_staging_connect">Start staging sensor</string>
+    <string name="dexcom_oneplus_staging_return_note">The staging sensor collects readings in the background and does not feed the loop. Return to the overview; promote it later from the ONE+ / G7 status screen once it is ready.</string>
+    <string name="dexcom_oneplus_staging_state_absent">None</string>
+    <string name="dexcom_oneplus_staging_state_warmup">Warming up</string>
+    <string name="dexcom_oneplus_staging_state_settling">Settling</string>
+    <string name="dexcom_oneplus_staging_state_ready">Ready to promote</string>
+    <string name="dexcom_oneplus_staging_last_reading" comment="%1$s=glucose value with unit, %2$s=time. Example: Last reading: 5.6 mmol/l at 14:32">Last reading: %1$s at %2$s</string>
+    <string name="dexcom_oneplus_staging_no_reading_yet">No reading yet. The staging sensor is still warming up or out of range.</string>
+    <string name="dexcom_oneplus_staging_cancel">Cancel staging</string>
+    <string name="dexcom_oneplus_staging_promote">Promote to production</string>
+    <string name="dexcom_oneplus_staging_promote_confirm_title">Promote staging sensor?</string>
+    <string name="dexcom_oneplus_staging_promote_confirm_message">This switches the loop\'s glucose source to the staging sensor and retires the sensor currently in use. This cannot be undone.</string>
+    <string name="dexcom_oneplus_staging_promote_early">Switch to it now (not settled)</string>
+    <string name="dexcom_oneplus_staging_promote_early_hint">Use this only if the sensor in use has stopped or has to be replaced now. The new sensor is reading, but it has not finished its 12 hour settling time.</string>
+    <string name="dexcom_oneplus_staging_promote_early_confirm_title">Switch to a sensor that is not settled?</string>
+    <string name="dexcom_oneplus_staging_promote_early_confirm_message">The new sensor is sending readings, but it has not finished its 12 hour settling time. Its readings can be less accurate for the first hours, so the loop may dose on values that are too high or too low. Only do this if the sensor in use has stopped or must be replaced now. This switches the loop\'s glucose source and cannot be undone.</string>
+    <string name="dexcom_oneplus_staging_promote_confirm">Promote</string>
+    <string name="dexcom_oneplus_staging_promote_dismiss">Cancel</string>
+    <string name="dexcom_oneplus_staging_promote_ok">Staging sensor promoted — it now feeds the loop.</string>
+    <string name="dexcom_oneplus_staging_promote_bound_failed">Sensor promoted, but older calibration entries could not be ignored. Remove fingerstick calibrations taken before this switch, then calibrate again if needed.</string>
+    <string name="dexcom_oneplus_staging_promote_follow_up_failed">Sensor promoted, but reconnecting it failed. The production sensor is the one just promoted. Open the ONE+ status screen and bring the sensor back in range. This is not a complete success.</string>
+    <string name="dexcom_oneplus_staging_promote_follow_up_failed_no_identity">A step after the exchange failed, and the production sensor identity is missing. This is not a complete success. Open the ONE+ status screen and check which sensor is in use.</string>
+    <string name="dexcom_oneplus_staging_promote_rejected_absent">No staging sensor to promote.</string>
+    <string name="dexcom_oneplus_staging_promote_rejected_not_settled">Staging sensor has not settled long enough to promote yet.</string>
+    <string name="dexcom_oneplus_staging_promote_rejected_no_glucose">Staging sensor has not produced enough valid glucose yet.</string>
+    <string name="dexcom_oneplus_staging_promote_rejected_no_recent_glucose">Staging sensor has not sent a reading in the last minutes. Wait until it reads again before switching to it.</string>
+    <string name="cgm_nav_close">Close</string>
+    <string name="cgm_help_expand">Show more</string>
+    <string name="cgm_help_collapse">Show less</string>
+    <string name="cgm_step_counter" comment="%1$d=current step number, %2$d=how many steps in total. Example: Step 2 of 4">Step %1$d of %2$d</string>
+    <string name="dexcom_oneplus_slot_production_short">Production</string>
+    <string name="dexcom_oneplus_slot_staging_short">Pre-soak</string>
+    <string name="dexcom_oneplus_help_how_to_start">How to start — 6 steps</string>
+    <string name="dexcom_oneplus_help_before_pairing">Before you pair — read this first</string>
+    <string name="dexcom_oneplus_help_permissions">Bluetooth permission and range</string>
+    <string name="dexcom_oneplus_help_slot">Production or pre-soak?</string>
+    <string name="dexcom_oneplus_section_pairing_code">Pairing code</string>
+    <string name="dexcom_oneplus_section_sensors_nearby">Sensors nearby</string>
+    <string name="dexcom_oneplus_scan_rescan">Rescan</string>
+    <string name="dexcom_oneplus_scan_last_used">last used</string>
+    <string name="dexcom_oneplus_scan_signal" comment="%1$d=signal strength in dBm, always negative. Example: Signal −67 dBm">Signal %1$d dBm</string>
+    <string name="dexcom_oneplus_scan_empty">No sensor found yet. Press Scan and keep the phone right next to the sensor.</string>
+    <string name="dexcom_oneplus_connect_target" comment="%1$s=sensor name or Bluetooth address. Example: Connect adopts DX02ABCD and opens warm-up.">Connect adopts %1$s and opens warm-up.</string>
+    <string name="cgm_warmup_remaining_label">remaining</string>
+    <string name="cgm_warmup_ends_at" comment="%1$s=localized time. Example: Ends at 3:45 PM">Ends at %1$s</string>
+    <string name="cgm_warmup_what_happened">What happened</string>
+    <string name="dexcom_oneplus_warmup_retry">Try connecting again</string>
+    <string name="dexcom_oneplus_warmup_start_other">Start another sensor</string>
+    <string name="cgm_sensor_heading">Sensor</string>
+    <string name="cgm_sensor_name">Name</string>
+    <string name="cgm_sensor_address">Address</string>
+    <string name="dexcom_oneplus_open_status">Status</string>
+    <string name="dexcom_oneplus_production_heading">Production sensor</string>
+    <string name="dexcom_oneplus_staging_heading_short">Pre-soak sensor</string>
+    <string name="cgm_actions_heading">Actions</string>
+    <string name="cgm_session_label">Bluetooth session</string>
+    <string name="dexcom_oneplus_sensor_age" comment="%1$s=already formatted duration. Example: Started 3 days ago">Started %1$s ago</string>
+    <string name="dexcom_oneplus_production_no_reading">No reading received yet.</string>
+    <string name="dexcom_oneplus_staging_readings_label">Readings collected</string>
+    <string name="dexcom_oneplus_staging_last_label">Last reading</string>
+    <string name="dexcom_oneplus_end_of_life_title">Sensor is near its end</string>
+    <string name="dexcom_oneplus_end_of_life_text">Starting a pre-soak sensor now means the next one is already warm when this one stops.</string>
+    <string name="dexcom_oneplus_start_presoak">Start a pre-soak sensor</string>
+    <string name="dexcom_oneplus_staging_none_short">A pre-soak sensor collects readings alongside the one in use. It never feeds the loop until you promote it here.</string>
+    <string name="cgm_driver_log_title">Sensor driver log</string>
+    <string name="cgm_driver_log_refresh">Refresh</string>
+    <string name="cgm_driver_log_share">Share the log</string>
+    <string name="cgm_driver_log_empty">Nothing yet. Lines appear here as soon as the driver starts working.</string>
+    <string name="cgm_driver_log_count" comment="%1$d=how many lines are shown. Example: 320 lines">%1$d lines</string>
+    <string name="cgm_driver_log_open">Driver log</string>
+    <string name="cgm_driver_log_follow">Follow</string>
+    <string name="staging_auto_promote_title">Switch to the pre-soak sensor automatically</string>
+    <string name="staging_auto_promote_summary">After the set number of hours, the pre-soak sensor feeds the loop if its recent readings are good. The sensor in use is stopped. The promote button still works.</string>
+    <string name="staging_auto_promote_hours_title">Hours before the automatic switch</string>
+    <string name="staging_auto_promote_done" comment="%1$s=hours since the pre-soak start, with unit. Example: The pre-soak sensor now feeds the loop. Automatic switch after 10 h.">The pre-soak sensor now feeds the loop. Automatic switch after %1$s.</string>
+
 </resources>
