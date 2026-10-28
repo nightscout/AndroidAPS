@@ -102,7 +102,8 @@ class PersistentNotificationPluginTest : TestBase() {
             line1 = "5.4 → +0.1 • 0.80 U/h ",
             line1WithDelta = "5.4 → +0.1",
             line2 = "IOB: 1.2U • COB: 20g",
-            line3 = "Default"
+            line3 = "Default",
+            bgStatusChipText = "5.4"
         )!!
 
         // The profile goes on the first row: One UI has no sub text field, where it was shown before.
@@ -110,23 +111,47 @@ class PersistentNotificationPluginTest : TestBase() {
         assertThat(texts.secondary).isEqualTo("IOB: 1.2U • COB: 20g")
         assertThat(texts.nowBarPrimary).isEqualTo("5.4 → +0.1")
         assertThat(texts.nowBarSecondary).isEqualTo("IOB: 1.2U • COB: 20g")
+        assertThat(texts.chipText).isEqualTo("5.4")
     }
 
     // "No profile set": one line only, and nothing invented for the second one.
     @Test
     fun `with one line only the samsung texts have no secondary`() {
         val texts = PersistentNotificationPlugin.samsungLiveTexts(
-            line1 = "No profile set", line1WithDelta = "No profile set", line2 = null, line3 = null
+            line1 = "No profile set", line1WithDelta = "No profile set", line2 = null, line3 = null, bgStatusChipText = null
         )!!
 
         assertThat(texts.primary).isEqualTo("No profile set")
         assertThat(texts.secondary).isNull()
         assertThat(texts.nowBarSecondary).isNull()
+        assertThat(texts.chipText).isNull()
     }
 
     @Test
     fun `nothing to show gives no samsung texts`() {
-        assertThat(PersistentNotificationPlugin.samsungLiveTexts(null, null, null, null)).isNull()
-        assertThat(PersistentNotificationPlugin.samsungLiveTexts("x", " ", "y", "z")).isNull()
+        assertThat(PersistentNotificationPlugin.samsungLiveTexts(null, null, null, null, null)).isNull()
+        assertThat(PersistentNotificationPlugin.samsungLiveTexts("x", " ", "y", "z", "5.4")).isNull()
+    }
+
+    @Test
+    fun `the samsung chip uses only the BG in mgdl`() {
+        val texts = PersistentNotificationPlugin.samsungLiveTexts(
+            line1 = "123 → +2 • 0.80 U/h",
+            line1WithDelta = "123 → +2",
+            line2 = "IOB: 1.2U • COB: 20g",
+            line3 = "Default",
+            bgStatusChipText = "123"
+        )!!
+
+        assertThat(texts.chipText).isEqualTo("123")
+        assertThat(texts.nowBarPrimary).isEqualTo("123 → +2")
+    }
+
+    @Test
+    fun `a blank BG does not become chip text`() {
+        val texts = PersistentNotificationPlugin.samsungLiveTexts("No BG", "No BG", null, null, " ")!!
+
+        assertThat(texts.chipText).isNull()
+        assertThat(texts.nowBarPrimary).isEqualTo("No BG")
     }
 }
