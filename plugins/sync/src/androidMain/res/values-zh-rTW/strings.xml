@@ -52,7 +52,6 @@
     <string name="authorized_clients_token_problem_not_allowed">此手機的 Nightscout 權杖不是管理員權杖，因此無法為客戶端建立權杖。請在此使用管理員權杖，或使用 PIN 新增該客戶端。</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout 已有同名但權限不同的權杖。請選擇其他名稱。</string>
     <string name="authorized_clients_token_problem_name_in_use">清單中已存在同名的客戶端。請選擇其他名稱，或先移除該客戶端。</string>
-    <string name="authorized_clients_token_problem_failed">Nightscout 未建立權杖。請檢查連線後再試一次。</string>
     <string name="authorized_clients_tokens_header">僅讀取 Nightscout</string>
     <string name="authorized_clients_token_unpaired">擁有自己的 Nightscout 權杖，未配對</string>
     <string name="authorized_clients_token_show_qr">顯示 QR Code</string>
