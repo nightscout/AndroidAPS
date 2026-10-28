@@ -108,6 +108,7 @@ bolussnooze_dia_divisor|DoubleKey|true
 boluswizard_percentage|IntKey|true
 bt_watchdog_last|LongNonKey|true
 bt_watchdog|BooleanKey|true
+calibration_entries_valid_from|CalibrationLongKey|false
 carbsReqThreshold|IntKey|true
 carbs_button_increment_1|IntKey|true
 carbs_button_increment_2|IntKey|true

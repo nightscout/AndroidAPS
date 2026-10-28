@@ -161,6 +161,7 @@ data class UserEntry(
         BG,                 //From BG plugin => Add One Source per BG Source for Calibration or Sensor Change
         Aidex,
         Dexcom,
+        DexcomOnePlus,
         Eversense,
         Glimp,
         MM640g,

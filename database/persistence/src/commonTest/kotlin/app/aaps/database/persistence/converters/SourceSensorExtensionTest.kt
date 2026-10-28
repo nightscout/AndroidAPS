@@ -28,4 +28,10 @@ internal class SourceSensorExtensionTest {
         assertEquals(GlucoseValue.SourceSensor.UNKNOWN, SourceSensor.UNKNOWN.toDb())
         assertEquals(SourceSensor.ZT_PREDICTION, GlucoseValue.SourceSensor.ZT_PREDICTION.fromDb())
     }
+
+    @Test
+    fun `dexcom one plus native maps both ways`() {
+        assertEquals(GlucoseValue.SourceSensor.DEXCOM_ONEPLUS_NATIVE, SourceSensor.DEXCOM_ONEPLUS_NATIVE.toDb())
+        assertEquals(SourceSensor.DEXCOM_ONEPLUS_NATIVE, GlucoseValue.SourceSensor.DEXCOM_ONEPLUS_NATIVE.fromDb())
+    }
 }

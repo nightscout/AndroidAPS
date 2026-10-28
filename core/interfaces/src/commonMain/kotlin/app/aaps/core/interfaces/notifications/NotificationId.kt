@@ -256,7 +256,11 @@ enum class NotificationId(
     // and the pairing secrets are plain files next to the data. IMPORTANT, not URGENT: nothing is wrong with
     // therapy, but a copy of the folder gives everything away, and the user can fix it. Appended at the END for
     // the same reason as above.
-    SECRETS_NOT_PROTECTED(IMPORTANT, SYSTEM);
+    SECRETS_NOT_PROTECTED(IMPORTANT, SYSTEM),
+
+    // A pre-soak sensor (Dexcom ONE+ / G7) was made the production sensor by the app itself, without the
+    // user pressing the promote button. Appended at the END for the same reason as above.
+    CGM_STAGING_AUTO_PROMOTED(NORMAL, CGM);
 
     companion object {
 
