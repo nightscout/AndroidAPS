@@ -1,0 +1,54 @@
+THIRD-PARTY NOTICE — :plugins:libkeks
+=====================================
+
+This module holds the KEKS J-PAKE / ExtraData authentication code from
+NightscoutFoundation/xDrip (GNU GPL v3.0), pin commit
+1e86d9a2a52577ed2c30fbf7b69d75fd56e6918f (tag 2026.07.15), TRANSLATED from
+Java to Kotlin. It is not a verbatim copy of the pin.
+
+Upstream paths:
+  - libkeks/src/main/java/jamorham/**
+  - ipluginda/src/main/java/com/eveningoutpost/dexdrip/plugin/IPluginDA.java
+
+Authorship per upstream comments: JamOrHam / jamorham. Upstream files carry no
+formal per-file "Copyright (C) <year> <name>" line; see the git history of the
+pin commit for authorship. No copyright holder is invented here.
+
+Each translated source file carries an "SPDX-License-Identifier: GPL-3.0-only"
+header naming this upstream and pin.
+
+MODIFICATION NOTICE
+-------------------
+These sources are a DERIVED WORK of the pin above, not a copy of it. The 24
+Java files were translated into Kotlin so that the handshake can run in shared
+(Kotlin Multiplatform) code. The translation keeps the protocol, the state
+machine, the message layouts and the upstream comments. A byte for byte diff
+against the pin is therefore not possible.
+
+How to check the translation:
+  `src/commonTest` holds golden values recorded from the original Java and
+  BouncyCastle code at the pin, including a whole four digit pairing replayed
+  message by message (`KeksGolden.kt` says how they were made). The Kotlin code
+  must reproduce them byte for byte. Run:
+    ./gradlew :plugins:libkeks:jvmTest :plugins:libkeks:testAndroidHostTest
+  The same tests run on the JVM and on Android, against each platform's
+  random, AES and log actuals.
+
+What the translation replaced, and why:
+  - BouncyCastle (secp256r1 point arithmetic, ECDSA, ASN.1 key readers) and
+    java.math.BigInteger have no multiplatform form. They are replaced by
+    jamorham.keks.crypto: KeksUInt, KeksP256 / KeksEcPoint, KeksEcdsa, KeksDer.
+  - Project Lombok (@Getter, @val, @RequiredArgsConstructor) is not needed in
+    Kotlin and is gone, with the annotation processor.
+  - javax.crypto, java.security.SecureRandom and android.util.Log are now three
+    `expect` declarations with an actual per platform.
+  - java.nio.ByteBuffer is replaced by jamorham.keks.util.KeksBuffer, which
+    copies the three behaviours the message classes depend on.
+
+SHA256.java carried its own MIT notice (Copyright (c) 2017 Fabian Meyer). That
+notice is kept in full at the top of the translated SHA256.kt.
+
+The combined AndroidAPS APK is distributed under AGPL-3.0-or-later; GPL-3.0
+obligations are honoured for these derived parts (GPLv3 §13 AGPL compatibility).
+
+Bouncy Castle (bcpkix / bcprov) is not a dependency of this module.
