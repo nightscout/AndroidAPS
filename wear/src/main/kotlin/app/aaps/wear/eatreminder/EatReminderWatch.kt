@@ -21,7 +21,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import java.util.Date
-import kotlin.math.abs
 import kotlin.math.max
 
 /**
@@ -33,7 +32,8 @@ import kotlin.math.max
  * be handled from the watch before it rings; it is the only way to do that on the watch, so it comes
  * back when it is swiped away. The ring is a vibrating notification with Silence and +5 min, and a
  * swipe silences it, as on a clock's alarm; a screen of its own was tried, but Android does not open one
- * from an alarm in the background.
+ * from an alarm in the background. A watch vibrates once per notification, so the ring is posted again
+ * every half minute for five minutes, as the phone rings until it is answered.
  * The buttons go to the phone, which stops or moves the timer, and the next status brings the result
  * back. Until then the watch acts on its own copy, so it reads right also with the phone away.
  */
@@ -73,16 +73,23 @@ class EatReminderWatch(
         return true
     }
 
-    /** The alarm fired. Rings only for the timer the watch knows now, not for one that was moved or ended. */
+    /**
+     * The alarm fired, or one of its repeats. Rings only for the timer the watch knows now, not for one that
+     * was moved or ended. Then it sets the next repeat, every [RING_REPEAT_MS] until [RING_REPEAT_FOR_MS] after
+     * the end. Every answer, on the watch or on the phone, cancels or replaces the alarm, and the repeats with it.
+     */
     fun ring() {
         val endsAt = this.endsAt
-        if (endsAt == 0L || abs(System.currentTimeMillis() - endsAt) > RING_TOLERANCE_MS) {
+        val now = System.currentTimeMillis()
+        if (endsAt == 0L || now < endsAt - RING_TOLERANCE_MS || now > endsAt + RING_REPEAT_FOR_MS + RING_TOLERANCE_MS) {
             aapsLogger.debug(LTag.WEAR, "Eat reminder alarm ignored: no timer due now")
             return
         }
         aapsLogger.debug(LTag.WEAR, "Eat reminder rings")
         notificationManager.cancel(COUNTDOWN_NOTIFICATION_ID)
         postRingNotification()
+        val next = now + RING_REPEAT_MS
+        if (next <= endsAt + RING_REPEAT_FOR_MS) alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, next, ringIntent())
     }
 
     /** Silence: the timer ends. The phone silences its own alarm too. */
@@ -163,7 +170,10 @@ class EatReminderWatch(
         notificationManager.cancel(NOTIFICATION_ID)
     }
 
-    /** The ring: Silence and +5 min as buttons, and a swipe silences too. Our own cancel does not fire the delete intent. */
+    /**
+     * The ring: Silence and +5 min as buttons, and a swipe silences too. Our own cancel does not fire the delete
+     * intent. Posted again on every repeat, so the watch vibrates again: not alert-once on purpose.
+     */
     private fun postRingNotification() {
         notificationManager.createNotificationChannel(
             NotificationChannel(CHANNEL_ID, context.getString(R.string.eat_reminder_title), NotificationManager.IMPORTANCE_HIGH).apply {
@@ -206,6 +216,10 @@ class EatReminderWatch(
 
         /** An alarm may come a little early or late; further from the end it belongs to an older timer. */
         const val RING_TOLERANCE_MS = 2 * 60_000L
+
+        /** The ring is repeated this often, for this long after the end, until it is answered. */
+        const val RING_REPEAT_MS = 30_000L
+        const val RING_REPEAT_FOR_MS = 5 * 60_000L
         val RING_VIBRATION = longArrayOf(0, 500, 300, 500, 300, 500)
     }
 }
