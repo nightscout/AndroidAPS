@@ -383,4 +383,25 @@
     <string name="cal_precheck_mark_sensor_change">Mark sensor change</string>
     <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
 
+    <!-- CGM warm-up and second sensor rows in the Overview status card -->
+    <string name="overview_cgm_warmup_label">Warm-up</string>
+    <string name="overview_cgm_warmup_waiting" comment="Shown in the warm-up row when the time left is not known yet">Waiting</string>
+    <string name="overview_second_sensor_label" comment="A second CGM sensor that warms up next to the one in use, before the loop switches to it">New sensor</string>
+    <string name="overview_second_sensor_warmup">Warming up</string>
+    <string name="overview_second_sensor_ready_in" comment="%1$s=whole hours before the new sensor may be used by the loop, with its unit. Example: Ready in 8 h">Ready in %1$s</string>
+    <string name="overview_second_sensor_waiting_readings">Waiting for readings</string>
+    <string name="overview_second_sensor_ready">Ready to switch</string>
+    <string name="overview_second_sensor_readings" comment="%1$d=number of valid glucose readings the new sensor has sent so far. Example: Readings: 12">Readings: %1$d</string>
+    <string name="overview_second_sensor_switch" comment="Button: the loop uses the new sensor from now on">Switch</string>
+    <string name="overview_second_sensor_switch_confirm">Use the new sensor for the loop from now on? The loop stops using the sensor it uses now.</string>
+    <string name="overview_second_sensor_switch_ok">The loop now uses the new sensor.</string>
+    <string name="overview_second_sensor_switch_ok_calibration_failed">Calibrations you entered for the old sensor could not be removed, so they may still be used for the new sensor. Check your calibrations.</string>
+    <string name="overview_second_sensor_switch_ok_connect_failed">The loop now uses the new sensor, but the connection to it could not be started. Keep the phone near the sensor and open the sensor status screen to check that readings come in.</string>
+    <string name="overview_second_sensor_switch_ok_sensor_unknown">The switch was made, but a step after it failed and the sensor in use could not be read back. Open the sensor status screen and check which sensor is in use.</string>
+    <string name="overview_second_sensor_switch_refused_absent">There is no new sensor to switch to. Nothing was changed.</string>
+    <string name="overview_second_sensor_switch_refused_not_settled">The new sensor has not settled long enough yet. Nothing was changed.</string>
+    <string name="overview_second_sensor_switch_refused_no_readings">The new sensor has not sent enough valid readings yet. Nothing was changed.</string>
+    <string name="overview_second_sensor_switch_refused_no_recent_reading">The new sensor has not sent a reading in the last minutes. Nothing was changed. Wait for its next reading and try again.</string>
+    <string name="overview_second_sensor_switch_error">Something went wrong during the switch. Open the sensor status screen and check which sensor is in use.</string>
+
 </resources>

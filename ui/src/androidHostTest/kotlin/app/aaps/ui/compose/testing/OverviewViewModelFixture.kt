@@ -197,7 +197,7 @@ internal class OverviewViewModelFixture(private val screen: AapsScreenFixture) {
     val statusViewModel: StatusViewModel by lazy {
         StatusViewModel(
             rh, activePlugin, profileFunction, screen.config, persistenceLayer, screen.dateUtil, rxBus,
-            screen.preferences, tddCalculator, decimalFormatter, processedDeviceStatusData
+            screen.preferences, tddCalculator, decimalFormatter, processedDeviceStatusData, aapsLogger
         )
     }
 
