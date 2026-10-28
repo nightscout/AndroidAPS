@@ -28,6 +28,7 @@
     <string name="alarm_channel_bolus_error">注射錯誤</string>
     <string name="alarm_channel_error">一般錯誤</string>
     <string name="alarm_channel_urgent">緊急警報</string>
+    <string name="alarm_channel_eat_reminder">用餐時間</string>
     <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s（忽略「請勿打擾」）</string>
     <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s（遵守「請勿打擾」）</string>
     <string name="alarm_channel_silent_urgent">緊急警報（音量漸增模式）</string>
