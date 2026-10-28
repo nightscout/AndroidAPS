@@ -84,7 +84,7 @@ class DexcomOnePlusPromotionOrderTest : TestBase() {
             .thenReturn(PersistenceLayer.TransactionResult())
         plugin = DexcomOnePlusPlugin(
             rh, logger, preferences, config, notificationManager, DexcomOnePlusAndroidHost(context), persistenceLayer,
-            activePlugin, rxBus,
+            mock<DexcomOnePlusWarmupBasalGuard>(), activePlugin, rxBus,
         )
         plugin.promotionAlerter = { alerts += it }
     }

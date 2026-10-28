@@ -63,6 +63,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.sync.Mutex
@@ -96,6 +98,7 @@ class DexcomOnePlusPlugin @Inject constructor(
     notificationManager: NotificationManager,
     private val host: DexcomOnePlusHost,
     private val persistenceLayer: PersistenceLayer,
+    private val warmupBasalGuard: DexcomOnePlusWarmupBasalGuard,
     private val activePlugin: ActivePlugin,
     private val rxBus: RxBus,
 ) : AbstractBgSourcePlugin(
@@ -196,6 +199,12 @@ class DexcomOnePlusPlugin @Inject constructor(
 
     /** Namespaced store for the STAGING sensor (identity / markers / session start kept separate). */
     private val stagingStore by lazy { host.slotStore(host.stagingNamespace) }
+
+    /** Runs [DexcomOnePlusWarmupBasalGuard] on every warm-up / connection change. Started in onStart, cancelled in onStop. */
+    private var warmupGuardJob: Job? = null
+
+    /** True while the [DexcomOnePlusWarmupBasalGuard] collector runs. For tests. */
+    internal fun isWarmupGuardRunning(): Boolean = warmupGuardJob?.isActive == true
 
     /** Session start already checked by [healMissingSensorChange], so a deletion is not undone twice. */
     @Volatile
@@ -372,10 +381,42 @@ class DexcomOnePlusPlugin @Inject constructor(
                 "autoResumeQueued=$autoResumeQueued " +
                 "stagingResumeQueued=$stagingResumeQueued",
         )
+        startWarmupBasalGuard()
+    }
+
+    /**
+     * While the sensor warms up or the link is (re)connecting, no glucose arrives and the APS does
+     * not run, so a high temp basal could keep running blind. On every change of that state the
+     * guard checks its conditions and may cancel a temp basal above profile, see
+     * [DexcomOnePlusWarmupBasalGuard]. It works in the background, with no screen open, and does
+     * nothing once a reading ends the warm-up (the state becomes null).
+     *
+     * A change is a change of the generic status or of the driver's status text, so a long
+     * reconnect that keeps reporting new attempts is checked again each time, also after the last
+     * glucose has become older than 7 minutes.
+     */
+    private fun startWarmupBasalGuard() {
+        warmupGuardJob?.cancel()
+        warmupGuardJob = ioScope().launch {
+            warmup
+                .map { state -> DexcomOnePlusWarmupMapper.toCgmWarmupStatus(state)?.let { status -> status to state.message } }
+                .distinctUntilChanged()
+                .collect { active ->
+                    if (active != null) {
+                        try {
+                            warmupBasalGuard.ensureProfileBasalDuringWarmup(this@DexcomOnePlusPlugin, ioScope())
+                        } catch (t: Throwable) {
+                            aapsLogger.error(LTag.BGSOURCE, "ONEPLUS_WARMUP_BASAL guard error: ${t.message}", t)
+                        }
+                    }
+                }
+        }
     }
 
     override suspend fun onStop() {
         cancelReconnectWatchdog()
+        warmupGuardJob?.cancel()
+        warmupGuardJob = null
         driver.removeWatcher(this)
         driver.shutdown()
         // Tear down any staging session too (independent of production).

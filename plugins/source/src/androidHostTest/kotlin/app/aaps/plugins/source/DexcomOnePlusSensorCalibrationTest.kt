@@ -58,7 +58,7 @@ class DexcomOnePlusSensorCalibrationTest : TestBase() {
         whenever(rh.gs(any<TextRef>())).thenReturn("not sent")
         plugin = DexcomOnePlusPlugin(
             rh, aapsLogger, preferences, config, notificationManager, DexcomOnePlusAndroidHost(context), persistenceLayer,
-            activePlugin, rxBus,
+            mock<DexcomOnePlusWarmupBasalGuard>(), activePlugin, rxBus,
         )
     }
 

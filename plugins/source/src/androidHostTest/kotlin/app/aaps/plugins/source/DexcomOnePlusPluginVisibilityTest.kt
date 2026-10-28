@@ -14,6 +14,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 /**
@@ -40,7 +41,7 @@ class DexcomOnePlusPluginVisibilityTest : TestBase() {
     fun setup() {
         plugin = DexcomOnePlusPlugin(
             rh, aapsLogger, preferences, config, notificationManager, DexcomOnePlusAndroidHost(context), persistenceLayer,
-            activePlugin, rxBus
+            mock<DexcomOnePlusWarmupBasalGuard>(), activePlugin, rxBus
         )
     }
 

@@ -28,6 +28,11 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doSuspendableAnswer
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.timeout
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 
 /**
@@ -46,6 +51,7 @@ class DexcomOnePlusPluginLifetimeTest : TestBase() {
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var activePlugin: ActivePlugin
 
+    private val warmupBasalGuard: DexcomOnePlusWarmupBasalGuard = mock()
     private lateinit var driver: OnePlusCgmDriverStub
     private lateinit var plugin: DexcomOnePlusPlugin
 
@@ -55,7 +61,7 @@ class DexcomOnePlusPluginLifetimeTest : TestBase() {
         driver = OnePlusCgmDriverStub()
         plugin = DexcomOnePlusPlugin(
             rh, AAPSLoggerTest(), preferences, config, notificationManager, FakeHost(driver), persistenceLayer,
-            activePlugin, rxBus,
+            warmupBasalGuard, activePlugin, rxBus,
         )
     }
 
@@ -119,6 +125,39 @@ class DexcomOnePlusPluginLifetimeTest : TestBase() {
         assertThat(plugin.hasRunningWork()).isTrue()
         plugin.onStop()
         assertThat(plugin.hasRunningWork()).isFalse()
+    }
+
+    @Test
+    fun `the basal guard is asked on each warm-up or connection change while the plugin runs`() = runTest {
+        plugin.onStart()
+
+        plugin.onWarmup(OnePlusWarmupState(phase = OnePlusWarmupState.Phase.WARMING, remainingMs = 60_000L))
+        verifyBlocking(warmupBasalGuard, timeout(5_000L).times(1)) { ensureProfileBasalDuringWarmup(eq(plugin), any(), any()) }
+        // A reconnect with only a new status text is a change too: the glucose may be older by now.
+        // Each change is awaited before the next one: the state is a StateFlow, and two changes sent
+        // at once may be merged into one before the collector sees them.
+        plugin.onWarmup(OnePlusWarmupState(phase = OnePlusWarmupState.Phase.RECONNECTING, message = "attempt 1"))
+        verifyBlocking(warmupBasalGuard, timeout(5_000L).times(2)) { ensureProfileBasalDuringWarmup(eq(plugin), any(), any()) }
+        plugin.onWarmup(OnePlusWarmupState(phase = OnePlusWarmupState.Phase.RECONNECTING, message = "attempt 2"))
+        verifyBlocking(warmupBasalGuard, timeout(5_000L).times(3)) { ensureProfileBasalDuringWarmup(eq(plugin), any(), any()) }
+
+        plugin.onStop()
+    }
+
+    @Test
+    fun `the basal guard runs only between onStart and onStop`() = runTest {
+        plugin.onWarmup(OnePlusWarmupState(phase = OnePlusWarmupState.Phase.WARMING, remainingMs = 60_000L))
+        plugin.onStart()
+        verifyBlocking(warmupBasalGuard, timeout(5_000L).times(1)) { ensureProfileBasalDuringWarmup(eq(plugin), any(), any()) }
+        assertThat(plugin.isWarmupGuardRunning()).isTrue()
+        plugin.onStop()
+
+        // No collector and no job are left after onStop, so nothing can call the guard again.
+        assertThat(plugin.isWarmupGuardRunning()).isFalse()
+        assertThat(plugin.hasRunningWork()).isFalse()
+        plugin.onWarmup(OnePlusWarmupState(phase = OnePlusWarmupState.Phase.RECONNECTING, message = "after stop"))
+
+        verifyBlocking(warmupBasalGuard, times(1)) { ensureProfileBasalDuringWarmup(any(), any(), any()) }
     }
 
     /** Everything the plugin asks of the phone, answered without Bluetooth or a file. */

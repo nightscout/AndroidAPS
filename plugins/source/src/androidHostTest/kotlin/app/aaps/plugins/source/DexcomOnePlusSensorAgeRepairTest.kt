@@ -76,7 +76,7 @@ class DexcomOnePlusSensorAgeRepairTest : TestBase() {
             .thenReturn(emptyList())
         plugin = DexcomOnePlusPlugin(
             rh, aapsLogger, preferences, config, notificationManager, DexcomOnePlusAndroidHost(context), persistenceLayer,
-            activePlugin, rxBus,
+            mock<DexcomOnePlusWarmupBasalGuard>(), activePlugin, rxBus,
         )
         DexcomOnePlusIngest.reset()
     }
