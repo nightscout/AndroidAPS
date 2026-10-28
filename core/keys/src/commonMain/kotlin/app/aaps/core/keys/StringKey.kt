@@ -78,7 +78,9 @@ enum class StringKey(
             "zh_TW" to KeysStrings.lang_zh_tw,
             "zh_CN" to KeysStrings.lang_zh_cn
         ),
-        defaultedBySM = true
+        defaultedBySM = true,
+        // Android 12 has no app languages: AAPS follows the phone there
+        visibility = ElementVisibility { it.supportsAppLanguage }
     ),
     // Not the patient: the person using THIS phone. It names this AAPS instance (export file names,
     // the OTP label, the watch), so it stays device-local and carries no SyncSpec - a client must not

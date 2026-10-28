@@ -60,9 +60,10 @@ class WikiSearchRepository(
     /**
      * The language the app shows its text in, as a BCP 47 tag.
      *
-     * iOS and desktop keep it in [TextRefValueRegistry.locale]. Android does not set that: its text
-     * comes from `Resources`, and `LocaleHelper` moves the default locale to the chosen language, so
-     * [Locale.current] is the app language there. It is also the phone language when none was chosen.
+     * iOS and desktop keep it in [TextRefValueRegistry.locale]. Android does not set that: there the
+     * chosen language is the app's language in the system (Android 13 and newer), which Android also
+     * keeps the default locale on, so [Locale.current] is the app language. It is the phone language
+     * when none was chosen, and always on Android 12.
      */
     private fun appLanguage(): String = TextRefValueRegistry.locale ?: Locale.current.toLanguageTag()
 

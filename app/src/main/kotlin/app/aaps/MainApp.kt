@@ -1,6 +1,7 @@
 package app.aaps
 
 import android.app.Application
+import android.app.LocaleManager
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.content.IntentFilter
@@ -9,6 +10,7 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.LocaleList
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.work.Configuration
 import app.aaps.core.data.configuration.Constants
@@ -35,7 +37,6 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
-import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.ExternalOptionsOverride
 import app.aaps.di.GeneratedStringOwners
@@ -213,15 +214,15 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         // The settings first: everything below reads them. Opened here on purpose, not on first use, so a
         // store that cannot be read is found at once and handled in one place.
         val storage = AndroidStorage.open(this)
-        // Before any activity exists: every activity asks for the language in attachBaseContext, before it
-        // can be injected, and Android creates the first one only after this method returns.
-        LocaleHelper.settings = storage.store
         storage.failure?.let { failure ->
             startWithoutSettings(failure, storage.notes)
             return
         }
         GeneratedStringOwners.registerAll()
         resourceHelperImpl.start()
+        // As early as possible, so the first screen is already in it
+        applyAppLanguage()
+        appLocales = resources.configuration.locales
         // Applies the analytics opt-out. Must come before configureLeakCanary below, which reports
         // through fabricPrivacy.
         fabricPrivacyImpl.start()
@@ -408,42 +409,65 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     }
 
     /**
-     * Android sets the default locale back to the phone language on every configuration change - font
-     * size, dark mode, rotation. The activity puts the app language back only when it is created again,
-     * and not at all while the app is in the background. Numbers and dates are formatted with the default
-     * locale, so it is set again here, for the whole app.
+     * Gives Android the language picked in AAPS as this app's language (Android 13 and newer). Android then shows
+     * the whole app in it - every screen, the notifications, the widget - and keeps the default locale on it, so
+     * numbers and dates are formatted in it too.
+     *
+     * AAPS used to move the default locale itself. Android sets the default locale back from the app's resources
+     * on many configuration updates, often without calling [onConfigurationChanged], so a Czech AAPS on an English
+     * phone showed "4.5" instead of "4,5" after its alarm screen had been shown.
+     *
+     * Android 12 has no app languages: there AAPS follows the phone's language, and the setting is hidden. Simple
+     * mode follows the phone too. Nothing is sent when Android has this language already.
+     */
+    private fun applyAppLanguage() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        val tag = appLanguageTag(preferences.get(StringKey.GeneralLanguage), preferences.get(BooleanKey.GeneralSimpleMode))
+        val wanted = tag?.let { LocaleList.forLanguageTags(it) } ?: LocaleList.getEmptyLocaleList()
+        val localeManager = getSystemService(LocaleManager::class.java)
+        if (localeManager.applicationLocales == wanted) return
+        aapsLogger.debug(LTag.CORE, "App language: ${tag ?: "the phone's"}")
+        localeManager.applicationLocales = wanted
+    }
+
+    /** A change of the AAPS language or of Simple mode goes to Android. What follows is in [onConfigurationChanged]. */
+    private fun followLanguage() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        appScope.launch {
+            merge(preferences.observe(StringKey.GeneralLanguage), preferences.observe(BooleanKey.GeneralSimpleMode))
+                .map { appLanguageTag(preferences.get(StringKey.GeneralLanguage), preferences.get(BooleanKey.GeneralSimpleMode)) }
+                .distinctUntilChanged()
+                .drop(1)
+                .collect { applyAppLanguage() }
+        }
+    }
+
+    /** The app's language as Android applies it, to notice a change. Null until the app has started. */
+    private var appLocales: LocaleList? = null
+
+    /**
+     * The app's language changed: the one picked in AAPS ([applyAppLanguage]), or the phone's while AAPS follows it.
+     * Android recreates the screens itself, but text built before - in the overview cache and in the view models -
+     * is in the old language. So the screens are rebuilt through `UiRestart`, as iOS and the desktop do, and the home
+     * screen widget draws again; it would otherwise wait up to a minute.
+     *
+     * Here and not where the language is picked: Android delivers the new language a moment later, and text read
+     * before that would still come out in the old one.
      */
     override fun onConfigurationChanged(newConfig: ResourcesConfiguration) {
         super.onConfigurationChanged(newConfig)
-        LocaleHelper.update()
-    }
-
-    /**
-     * A change of the app language, applied here once for the whole app and then shown by rebuilding the
-     * screens through `UiRestart`, as iOS and the desktop do. The default locale is set first, so the
-     * rebuilt screens and the work in the background format numbers and dates in the new language.
-     * Simple mode counts too: it puts the app in the phone language. The home screen widget is not a
-     * screen of the app, so it is asked to draw again too; it would otherwise wait up to a minute.
-     */
-    private fun followLanguage() {
-        appScope.launch {
-            merge(preferences.observe(StringKey.GeneralLanguage), preferences.observe(BooleanKey.GeneralSimpleMode))
-                .map { LocaleHelper.selectedLanguage() }
-                .distinctUntilChanged()
-                .drop(1)
-                .collect {
-                    LocaleHelper.update()
-                    uiRestart.request()
-                    widgetUpdater.update("LanguageChanged")
-                }
-        }
+        val previous = appLocales ?: return
+        if (newConfig.locales == previous) return
+        appLocales = newConfig.locales
+        aapsLogger.debug(LTag.CORE, "App language changed to ${newConfig.locales.toLanguageTags()}")
+        uiRestart.request()
+        widgetUpdater.update("LanguageChanged")
     }
 
     private suspend fun doInit() {
         aapsLogger.debug("doInit")
         RxDogTag.install()
         setRxErrorHandler()
-        LocaleHelper.update()
         followLanguage()
 
         var gitRemote: String? = config.REMOTE

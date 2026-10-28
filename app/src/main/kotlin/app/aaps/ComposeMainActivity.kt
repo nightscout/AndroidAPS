@@ -3,7 +3,6 @@ package app.aaps
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -91,7 +90,6 @@ import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
-import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.utils.isRunningRealPumpTest
 import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import app.aaps.implementation.plugin.PluginPermissionsImpl
@@ -244,6 +242,11 @@ class ComposeMainActivity : MetroAppCompatActivity() {
             finish()
             return
         }
+        // Recreated in another language: the one picked in AAPS (Android 13 and newer), or the phone's while AAPS
+        // follows it. Android recreates this screen itself then, and keeps the view models, with the text they built in
+        // the old language. So they go. Before super.onCreate, so that none is made from the old store first.
+        if (savedInstanceState != null && savedInstanceState.getString(STATE_LANGUAGE) != resources.configuration.locales.toLanguageTags())
+            viewModelStore.clear()
         // Bar icon color is kept in sync with the AAPS-effective theme reactively
         // from inside AapsTheme via a SideEffect on WindowInsetsControllerCompat,
         // so a plain enableEdgeToEdge() here is enough.
@@ -622,8 +625,15 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         permissionsViewModel.refresh()
     }
 
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleHelper.wrap(newBase))
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(STATE_LANGUAGE, resources.configuration.locales.toLanguageTags())
+    }
+
+    private companion object {
+
+        /** The language this screen was shown in, to notice a recreate in another one (see onCreate). */
+        const val STATE_LANGUAGE = "appLanguage"
     }
 
     override fun onDestroy() {
@@ -644,10 +654,9 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         lifecycleScope.launch {
             preferences.observe(BooleanKey.OverviewKeepScreenOn).collect { setupWakeLock() }
         }
-        // A rebuild asked for by code that cannot reach this activity: `MainApp` after a language
-        // change, an import applying its settings. Android answers it by recreating, because that is
-        // the only thing that re-runs `attachBaseContext` and so the only thing that can change the
-        // locale `Resources` resolve against. The view models go too, see onDestroy.
+        // A rebuild asked for by code that cannot reach this activity: `MainApp` once Android has applied a
+        // new language, an import applying its settings. Android answers it by recreating; the view models
+        // go too, see onDestroy.
         lifecycleScope.launch {
             uiRestart.signal.drop(1).collect {
                 rebuildingForRestart = true
