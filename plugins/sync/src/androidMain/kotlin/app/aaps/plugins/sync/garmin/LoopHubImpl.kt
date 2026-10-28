@@ -4,10 +4,10 @@ import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.HR
-import app.aaps.core.data.model.SC
 import app.aaps.core.data.model.RM
-import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.SC
 import app.aaps.core.data.model.TT
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -20,11 +20,9 @@ import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.StringKey
@@ -57,7 +55,6 @@ class LoopHubImpl(
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val persistenceLayer: PersistenceLayer,
-    private val userEntryLogger: UserEntryLogger,
     private val preferences: Preferences,
     private val processedTbrEbData: ProcessedTbrEbData,
     private val masterActionExecutor: MasterActionExecutor,
@@ -168,26 +165,29 @@ class LoopHubImpl(
         }
     }
 
-    // mod Bolus and temp target
-    /** Triggers a bolus. */
+    /**
+     * Delivers a correction bolus with the shared executor (one audited path). The executor checks the
+     * running mode, writes the user entry and sends the bolus to the command queue, which applies the
+     * bolus constraints. A failure is only logged. It is not reported back to the Garmin device.
+     */
     override fun postBolus(bolus: Double) {
         aapsLogger.info(LTag.GARMIN, "trigger a bolus of $bolus U")
-        userEntryLogger.log(
-            action = Action.BOLUS,
-            source = Sources.Garmin,
-            note = null,
-            ValueWithUnit.Insulin(bolus)
-        )
-        val detailedBolusInfo = DetailedBolusInfo().apply {
-            eventType = TE.Type.SNACK_BOLUS
-            insulin = bolus
-        }
         appScope.launch {
-            commandQueue.bolus(detailedBolusInfo)
+            masterActionExecutor.deliverInsulin(
+                insulin = bolus,
+                note = null,
+                source = Sources.Garmin,
+                onError = { aapsLogger.error(LTag.GARMIN, "bolus delivery failed: ${it.comment}") }
+            )
         }
     }
 
+    /**
+     * Sets a temporary target with the reason `WEAR`, or cancels the current one.
+     * [target] is converted from the user's glucose unit to mg/dl.
+     */
     override fun postTempTarget(target: Double, duration: Int) {
+        // A target or a duration of 0 means: cancel the current temporary target
         if (target == 0.0 || duration == 0) {
             appScope.launch {
                 persistenceLayer.cancelCurrentTemporaryTargetIfAny(
@@ -203,7 +203,7 @@ class LoopHubImpl(
                 persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                     temporaryTarget = TT(
                         timestamp = dateUtil.now(),
-                        duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
+                        duration = T.mins(duration.toLong()).msecs(),
                         reason = TT.Reason.WEAR,
                         lowTarget = profileUtil.convertToMgdl(target, profileUtil.units),
                         highTarget = profileUtil.convertToMgdl(target, profileUtil.units)
@@ -220,7 +220,6 @@ class LoopHubImpl(
             }
         }
     }
-    // end mod
 
     /** Stores hear rate readings that a taken and averaged of the given interval. */
     override fun storeHeartRate(
@@ -240,6 +239,10 @@ class LoopHubImpl(
         }
     }
 
+    /**
+     * Stores one steps count record. The record time is [samplingEnd]. The `stepsNmin` values are
+     * the number of steps in the last N minutes. The write runs in the background and errors are only logged.
+     */
     override fun storeStepsCount(
         samplingStart: Instant,
         samplingEnd: Instant,

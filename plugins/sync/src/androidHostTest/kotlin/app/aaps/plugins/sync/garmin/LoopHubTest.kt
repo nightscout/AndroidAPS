@@ -21,7 +21,6 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -66,7 +65,6 @@ class LoopHubTest : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var profileUtil: ProfileUtil
     @Mock lateinit var persistenceLayer: PersistenceLayer
-    @Mock lateinit var userEntryLogger: UserEntryLogger
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var processedTbrEbData: ProcessedTbrEbData
     @Mock lateinit var masterActionExecutor: MasterActionExecutor
@@ -85,7 +83,7 @@ class LoopHubTest : TestBase() {
         }
         loopHub = LoopHubImpl(
             aapsLogger, commandQueue, constraints, iobCobCalculator, loop,
-            profileFunction, profileUtil, persistenceLayer, userEntryLogger, preferences, processedTbrEbData,
+            profileFunction, profileUtil, persistenceLayer, preferences, processedTbrEbData,
             masterActionExecutor, dateUtil, testScope
         )
         loopHub.clock = clock
@@ -297,6 +295,17 @@ class LoopHubTest : TestBase() {
         runBlocking {
             // Carbs delivery now rides the shared executor (one audited path).
             verify(masterActionExecutor).deliverCarbs(eq(99), isNull(), eq(Sources.Garmin), any(), any())
+        }
+    }
+
+    @Test
+    fun testPostBolus() {
+        loopHub.postBolus(1.5)
+        runBlocking {
+            // insulin, note, source, onError, timestamp, treatmentNote, recordOnly, iCfg, onSuccess
+            verify(masterActionExecutor).deliverInsulin(
+                eq(1.5), isNull(), eq(Sources.Garmin), any(), isNull(), isNull(), eq(false), isNull(), any()
+            )
         }
     }
 

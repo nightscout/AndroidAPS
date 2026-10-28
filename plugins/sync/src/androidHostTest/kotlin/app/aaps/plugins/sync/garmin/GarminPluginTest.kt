@@ -6,7 +6,6 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.StringNonKey
@@ -33,6 +32,7 @@ import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.atMost
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
@@ -55,12 +55,11 @@ class GarminPluginTest : TestBaseWithProfile() {
 
     @Mock private lateinit var loopHub: LoopHub
     @Mock private lateinit var persistenceLayer: PersistenceLayer
-    @Mock private lateinit var keyValueStore: KeyValueStore
     private val clock = Clock.fixed(Instant.ofEpochMilli(10_000), ZoneId.of("UTC"))
 
     @BeforeEach
     fun setup() {
-        gp = GarminPlugin(aapsLogger, rh, preferences, keyValueStore, context, loopHub, persistenceLayer, config, notificationManager)
+        gp = GarminPlugin(aapsLogger, rh, preferences, context, loopHub, persistenceLayer, config, notificationManager)
         gp.clock = clock
         whenever(loopHub.currentProfileName).thenReturn("Default")
         whenever(preferences.get(GarminIntKey.LocalHttpPort)).thenReturn(28890)
@@ -380,6 +379,37 @@ class GarminPluginTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun testOnPostBolus() {
+        whenever(preferences.get(GarminBooleanKey.RemoteBolus)).thenReturn(true)
+        assertEquals("", gp.onPostBolus(createUri(mapOf("bolus" to "1.5"))))
+        verify(loopHub).postBolus(1.5)
+    }
+
+    @Test
+    fun testOnPostBolus_SettingOff() {
+        whenever(preferences.get(GarminBooleanKey.RemoteBolus)).thenReturn(false)
+        assertEquals("", gp.onPostBolus(createUri(mapOf("bolus" to "1.5"))))
+        verify(loopHub, never()).postBolus(any())
+    }
+
+    @Test
+    fun testOnPostBolus_InvalidValue() {
+        whenever(preferences.get(GarminBooleanKey.RemoteBolus)).thenReturn(true)
+        for (uri in listOf(createUri(emptyMap()), createUri(mapOf("bolus" to "abc")), createUri(mapOf("bolus" to "0")), createUri(mapOf("bolus" to "-2")))) {
+            assertEquals("", gp.onPostBolus(uri))
+        }
+        verify(loopHub, never()).postBolus(any())
+    }
+
+    @Test
+    fun testOnPostBolus_OnClient() {
+        whenever(preferences.get(GarminBooleanKey.RemoteBolus)).thenReturn(true)
+        assertEquals("", clientPlugin().onPostBolus(createUri(mapOf("bolus" to "1.5"))))
+        verify(loopHub, never()).postBolus(any())
+        assertEquals("The Garmin watch asked for a bolus of 1.50 U. This phone is a client, so no bolus was given. Use AAPS to give it.", postedNotice())
+    }
+
+    @Test
     fun testOnConnectPump_Disconnect() {
         val uri = createUri(mapOf("disconnectMinutes" to "20"))
         whenever(loopHub.isConnected).thenReturn(false)
@@ -402,7 +432,7 @@ class GarminPluginTest : TestBaseWithProfile() {
     private fun clientPlugin(): GarminPlugin {
         whenever(config.AAPSCLIENT).thenReturn(true)
         val text = generatedTextResolver("sync" to SyncStringsValues::textOf)
-        return GarminPlugin(aapsLogger, text, preferences, keyValueStore, context, loopHub, persistenceLayer, config, notificationManager)
+        return GarminPlugin(aapsLogger, text, preferences, context, loopHub, persistenceLayer, config, notificationManager)
     }
 
     private fun postedNotice(): String {

@@ -23,6 +23,7 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.garmin.keys.GarminBooleanKey
 import app.aaps.plugins.sync.garmin.keys.GarminIntKey
+import app.aaps.plugins.sync.garmin.keys.GarminIntNonKey
 import app.aaps.plugins.sync.garmin.keys.GarminStringKey
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -53,7 +54,6 @@ import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.math.roundToInt
-import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import kotlinx.coroutines.runBlocking
 
 /** Support communication with Garmin devices.
@@ -73,7 +73,6 @@ class GarminPlugin(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
     preferences: Preferences,
-    private val keyValueStore: KeyValueStore,
     private val context: Context,
     private val loopHub: LoopHub,
     private val persistenceLayer: PersistenceLayer,
@@ -85,17 +84,12 @@ class GarminPlugin(
         .icon(IcPluginGarmin)
         .pluginName(SyncStrings.garmin)
         .description(SyncStrings.garmin_description),
-    ownPreferences = GarminStringKey.entries + GarminBooleanKey.entries + GarminIntKey.entries,
+    ownPreferences = GarminStringKey.entries + GarminBooleanKey.entries + GarminIntKey.entries + GarminIntNonKey.entries,
     aapsLogger, rh, preferences, notificationManager
 ) {
 
     /** HTTP Server for local HTTP server communication (device app requests values) .*/
     private var server: HttpServer? = null
-
-    companion object {
-        private const val PREF_GARMIN_LAST_STEPS = "garmin_http_last_steps"
-        private const val PREF_GARMIN_LAST_TS = "garmin_http_last_steps_ts"
-    }
 
     @VisibleForTesting
     var garminMessengerField: GarminMessenger? = null
@@ -366,8 +360,7 @@ class GarminPlugin(
         }
     }
 
-
-    // mod Bolus and temp target
+    /** Returns the query parameter [name] as an Int, or [defaultValue] if it is missing or not a number. */
     private fun getQueryParameter(
         uri: URI,
         @Suppress("SameParameterValue") name: String,
@@ -382,6 +375,7 @@ class GarminPlugin(
         }
     }
 
+    /** Returns the query parameter [name] as a Double, or [defaultValue] if it is missing or not a number. */
     private fun getQueryParameter(
         uri: URI, name: String,
         @Suppress("SameParameterValue") defaultValue: Double
@@ -394,8 +388,8 @@ class GarminPlugin(
             defaultValue
         }
     }
-    // end mod
 
+    /** Converts a message value to Long. Numbers and numeric strings are accepted, anything else gives 0. */
     private fun toLong(v: Any?): Long {
         return when (v) {
             is Number -> v.toLong()
@@ -403,6 +397,8 @@ class GarminPlugin(
             else -> 0L
         }
     }
+
+    /** Converts a message value to Int. Numbers and numeric strings are accepted, anything else gives null. */
     private fun toInt(v: Any?) = when (v) {
         is Number -> v.toInt()
         is String -> v.toDoubleOrNull()?.toInt()
@@ -448,6 +444,13 @@ class GarminPlugin(
         }
     }
 
+    /**
+     * Reads the steps counts from a message that the device sent by the Garmin connection.
+     *
+     * The keys are `stepsStart` and `stepsEnd` (epoch seconds) and `steps5` to `steps180` (steps in the last
+     * 5 to 180 minutes). Missing buckets count as 0. If both times are missing, the last 5 minutes are used.
+     * Nothing is stored when all buckets are 0.
+     */
     @VisibleForTesting
     fun receiveSteps(msg: Map<String, Any>, test: Boolean) {
         // 🔍 DIAGNOSTIC: Log what Garmin sends
@@ -506,6 +509,13 @@ class GarminPlugin(
         )
     }
 
+    /**
+     * Reads the steps counts from the query of an HTTP request. It uses the same keys as the message
+     * variant of this function.
+     *
+     * Some watch faces send only one total value (`steps=...`, the steps since midnight). Then the steps
+     * since the last request are calculated by [ingestHttpTotalSteps].
+     */
     @VisibleForTesting
     fun receiveSteps(uri: URI) {
         // 🔍 DIAGNOSTIC
@@ -570,17 +580,26 @@ class GarminPlugin(
         )
     }
 
+    /**
+     * Stores the steps since the last request, calculated from a total step count of the day.
+     *
+     * The last total is kept in the preference `GarminIntNonKey.LastTotalSteps`.
+     * - First value ever: it is only saved as the baseline, nothing is stored.
+     * - Total is higher than the last one: the difference is stored as steps5min.
+     * - Total is not higher (for example after midnight, when the watch starts at 0 again): the total is
+     *   stored as the new baseline. It is also stored as steps, except when the same total was already
+     *   seen and there is a record from today for this device.
+     */
     private fun ingestHttpTotalSteps(uri: URI, totalSteps: Int, samplingStart: Long, samplingEnd: Long) {
         val device = getQueryParameter(uri, "device")
         val none = 0
 
         val now = System.currentTimeMillis()
-        val lastTotal = keyValueStore.getInt(PREF_GARMIN_LAST_STEPS, -1)
+        val lastTotal = preferences.get(GarminIntNonKey.LastTotalSteps)
 
         // First ever value → store baseline only
         if (lastTotal < 0) {
-            keyValueStore.putInt(PREF_GARMIN_LAST_STEPS, totalSteps)
-            keyValueStore.putLong(PREF_GARMIN_LAST_TS, now)
+            preferences.put(GarminIntNonKey.LastTotalSteps, totalSteps)
             aapsLogger.info(LTag.GARMIN, "[GarminHTTP] baseline steps=$totalSteps")
             return
         }
@@ -599,8 +618,7 @@ class GarminPlugin(
                 "[GarminHTTP] negative / 0 step delta=$delta (total=$totalSteps last=$lastTotal)"
             )
             if (totalSteps > 0 && delta == 0) {
-                keyValueStore.putInt(PREF_GARMIN_LAST_STEPS, totalSteps)
-                keyValueStore.putLong(PREF_GARMIN_LAST_TS, now)
+                preferences.put(GarminIntNonKey.LastTotalSteps, totalSteps)
                 val midnight = LocalDate.now()
                     .atStartOfDay(ZoneId.systemDefault())
                     .toInstant()
@@ -633,8 +651,7 @@ class GarminPlugin(
                     LTag.GARMIN,
                     "[GarminHTTP] takeover initial total=$totalSteps "
                 )
-                keyValueStore.putInt(PREF_GARMIN_LAST_STEPS, totalSteps)
-                keyValueStore.putLong(PREF_GARMIN_LAST_TS, now)
+                preferences.put(GarminIntNonKey.LastTotalSteps, totalSteps)
                 loopHub.storeStepsCount(
                     Instant.ofEpochSecond(samplingStart),
                     Instant.ofEpochSecond(samplingEnd),
@@ -655,8 +672,7 @@ class GarminPlugin(
             "[GarminHTTP] steps delta=$delta (${Instant.ofEpochSecond(samplingStart)} → ${Instant.ofEpochSecond(samplingEnd)}) Total: $totalSteps"
         )
 
-        keyValueStore.putInt(PREF_GARMIN_LAST_STEPS, totalSteps)
-        keyValueStore.putLong(PREF_GARMIN_LAST_TS, now)
+        preferences.put(GarminIntNonKey.LastTotalSteps, totalSteps)
         loopHub.storeStepsCount(
             Instant.ofEpochSecond(samplingStart),
             Instant.ofEpochSecond(samplingEnd),
@@ -670,6 +686,10 @@ class GarminPlugin(
         )
     }
 
+    /**
+     * Checks the values and stores them. Negative values and an empty or reversed period are skipped.
+     * With [test] set, the values are only logged.
+     */
     private fun receiveSteps(
         samplingStart: Instant,
         samplingEnd: Instant,
@@ -727,21 +747,37 @@ class GarminPlugin(
         }
     }
 
-    // mod Post bolus and temp targets
-    private fun onPostBolus(uri: URI): CharSequence {
+    /**
+     * Handles a bolus request from the device. The query parameter `bolus` is the insulin in units.
+     *
+     * The request is ignored when the value is missing, not a number or not above 0, and when the setting
+     * `GarminBooleanKey.RemoteBolus` is off. On a client the phone says that no bolus was given.
+     */
+    @VisibleForTesting
+    fun onPostBolus(uri: URI): CharSequence {
         val bolus: Double = getQueryParameter(uri, "bolus", 0.0)
-        loopHub.postBolus(bolus)
+        if (bolus <= 0.0) {
+            aapsLogger.warn(LTag.GARMIN, "ignore bolus request with value $bolus")
+        } else if (config.AAPSCLIENT) {
+            refuseOnClient(rh.gs(SyncStrings.garmin_bolus_not_on_client, rh.gs(InterfacesStrings.format_insulin_units, bolus)))
+        } else if (!preferences.get(GarminBooleanKey.RemoteBolus)) {
+            aapsLogger.warn(LTag.GARMIN, "ignore bolus request of $bolus U, bolus from Garmin is not allowed in the settings")
+        } else {
+            loopHub.postBolus(bolus)
+        }
         return ""
     }
 
-    /** Handles temp targets from the device. */
+    /**
+     * Handles a temporary target request from the device. The query parameters are `target` (glucose value)
+     * and `duration` (minutes). A value of 0 for one of them cancels the current temporary target.
+     */
     fun onPostTempTarget(uri: URI): CharSequence {
         val target: Double = getQueryParameter(uri, "target", 0.0)
         val duration: Int = getQueryParameter(uri, "duration", 0)
         loopHub.postTempTarget(target, duration)
         return ""
     }
-    // end mod
 
     /** Handles pump connected notification that the user entered on the Garmin device. */
     @VisibleForTesting
@@ -833,6 +869,7 @@ class GarminPlugin(
         items = listOf(
             GarminBooleanKey.LocalHttpServer,
             GarminIntKey.LocalHttpPort,
+            GarminBooleanKey.RemoteBolus,
             GarminStringKey.RequestKey
 
         ),

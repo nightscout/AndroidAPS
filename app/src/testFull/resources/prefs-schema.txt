@@ -202,6 +202,8 @@ fill_button2|DoubleKey|true
 fill_button3|DoubleKey|true
 g8_bolusspeed|DiaconnIntKey|true
 garmin_aaps_key|GarminStringKey|true
+garmin_http_last_steps|GarminIntNonKey|true
+garmin_remote_bolus|GarminBooleanKey|true
 google_drive_folder_id|StringNonKey|true
 google_drive_refresh_token|StringNonKey|true
 google_drive_storage_type|StringNonKey|true
