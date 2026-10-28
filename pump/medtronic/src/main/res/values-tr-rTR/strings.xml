@@ -18,7 +18,18 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Genişletilmiş görünüm)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Genişletilmiş görünüm)</string>
     <!-- Pump type entries -->
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A veya daha düşük)</string>
+    <string name="medtronic_pump_type_723_24a">723 (Fw 2.4A veya daha düşük)</string>
+    <string name="medtronic_pump_type_554_eu">554 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (CA Fw. &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (CA Fw. &lt;= 2.7A)</string>
     <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 sn</string>
+    <string name="medtronic_bolus_delay_10s">10 sn</string>
+    <string name="medtronic_bolus_delay_15s">15 sn</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink Pili</string>
     <!-- MDT Errors -->
