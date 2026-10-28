@@ -1867,7 +1867,7 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
     @Test
     fun prepareBatch_calibration_isRefusedWithTheMastersReason() = runTest {
         stubPassthroughConstraints()
-        whenever(masterRecordWriter.calibrationRefusal()).thenReturn("no session")
+        whenever(masterRecordWriter.calibrationRefusal(BatchAction.Calibration(120.0))).thenReturn("no session")
 
         val result = create().prepareBatch(listOf(BatchAction.Calibration(120.0)))
 
@@ -1877,8 +1877,8 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
     @Test
     fun prepareBatch_calibration_confirmStoresItOnTheMaster() = runTest {
         stubPassthroughConstraints()
-        whenever(masterRecordWriter.calibrationRefusal()).thenReturn(null)
-        whenever(masterRecordWriter.calibrationLine(BatchAction.Calibration(120.0))).thenReturn(ConfirmationLine(ConfirmationRole.PRIMARY, "Calibration: 120"))
+        whenever(masterRecordWriter.calibrationRefusal(BatchAction.Calibration(120.0))).thenReturn(null)
+        whenever(masterRecordWriter.calibrationLines(BatchAction.Calibration(120.0))).thenReturn(listOf(ConfirmationLine(ConfirmationRole.PRIMARY, "Calibration: 120")))
         val executor = create()
 
         val prepared = executor.prepareBatch(listOf(BatchAction.Calibration(120.0))) as MasterActionExecutor.PrepareResult.Preview

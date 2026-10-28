@@ -2,6 +2,7 @@ package app.aaps.plugins.dexcomoneplus.session
 
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.concurrent.withLock
+import app.aaps.plugins.dexcomoneplus.OnePlusCalibrationOutcome
 import app.aaps.plugins.dexcomoneplus.OnePlusGlucoseSample
 import app.aaps.plugins.dexcomoneplus.OnePlusLog
 import app.aaps.plugins.dexcomoneplus.OnePlusLogMarkers
@@ -10,6 +11,8 @@ import app.aaps.plugins.dexcomoneplus.gatt.OnePlusGattClient
 import app.aaps.plugins.dexcomoneplus.oem.DeviceProfileRegistry
 import app.aaps.plugins.dexcomoneplus.oem.OemDeviceProfile
 import app.aaps.plugins.dexcomoneplus.onePlusSleep
+import app.aaps.plugins.dexcomoneplus.parse.OnePlusCalibrateRx
+import app.aaps.plugins.dexcomoneplus.parse.OnePlusCalibrationBoundsRx
 import app.aaps.plugins.dexcomoneplus.reconnect.OemAwareReconnectPolicy
 import app.aaps.plugins.dexcomoneplus.reconnect.OnePlusReconnectPolicy
 import app.aaps.plugins.dexcomoneplus.warmup.OnePlusWarmupClock
@@ -316,6 +319,27 @@ class OnePlusBleSessionSkeleton(
     private val cpuLease: OnePlusCpuLease? = null,
     /** Sensor slot owning this session (`prod` / `staging`) — logged on every marker. */
     private val slot: String = OnePlusLogMarkers.SLOT_PRODUCTION,
+    /**
+     * Fingersticks waiting to be handed to the sensor's own algorithm, or null when this session may
+     * not calibrate.
+     *
+     * The driver passes its queue to every session, the pre-soak ones too, so a promoted session
+     * can calibrate. A pre-soak sensor must never be calibrated — it is not the one feeding the
+     * loop, and a sensor keeps a calibration for good — so the driver refuses every offer on a
+     * pre-soak slot and that queue stays empty. The plugin switch and its checks are a second gate:
+     * while the switch is off nothing is offered.
+     */
+    private val calibrationQueue: OnePlusCalibrationQueue? = null,
+    /** What the sensor answered to a calibration, so a refusal or an unreadable answer reaches the user. */
+    private val onCalibrationResult: (OnePlusCalibrateRx?) -> Unit = {},
+    /** The sensor's calibration state read after a calibration, and whether it holds the value sent. */
+    private val onCalibrationState: (OnePlusCalibrationBoundsRx, Boolean) -> Unit = { _, _ -> },
+    /** Checks run again right before a waiting value is written, see `OnePlusEgvSession`. Default: refuse. */
+    private val calibrationSendCheck: (Int, Long, Long) -> OnePlusCalibrationGate.Refusal? = { _, _, _ ->
+        OnePlusCalibrationGate.Refusal.NOT_READY
+    },
+    /** A waiting value was dropped before any write, and why. */
+    private val onCalibrationNotSent: (OnePlusCalibrationOutcome.NotSent.Reason) -> Unit = {},
 ) : OnePlusBleSession {
 
     @Volatile
@@ -713,6 +737,11 @@ class OnePlusBleSessionSkeleton(
                 },
                 onError = onError,
                 requestNewSensorStart = requestNewSensorStart,
+                calibrationQueue = calibrationQueue,
+                onCalibrationResult = onCalibrationResult,
+                onCalibrationState = onCalibrationState,
+                calibrationSendCheck = calibrationSendCheck,
+                onCalibrationNotSent = onCalibrationNotSent,
             )
             try {
                 egv.run(shouldContinue = { running && gatt.isConnected() })

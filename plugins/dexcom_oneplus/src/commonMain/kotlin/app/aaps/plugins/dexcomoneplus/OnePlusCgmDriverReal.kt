@@ -8,6 +8,8 @@ import app.aaps.plugins.dexcomoneplus.identity.OnePlusSensorStore
 import app.aaps.plugins.dexcomoneplus.identity.OnePlusStoredSession
 import app.aaps.plugins.dexcomoneplus.oem.DeviceProfileRegistry
 import app.aaps.plugins.dexcomoneplus.oem.OemDeviceProfile
+import app.aaps.plugins.dexcomoneplus.parse.OnePlusCalibrateRx
+import app.aaps.plugins.dexcomoneplus.parse.OnePlusCalibrationBoundsRx
 import app.aaps.plugins.dexcomoneplus.scan.OnePlusBleScanner
 import app.aaps.plugins.dexcomoneplus.scan.OnePlusBleScannerStub
 import app.aaps.plugins.dexcomoneplus.scan.OnePlusScanListener
@@ -15,6 +17,8 @@ import app.aaps.plugins.dexcomoneplus.scan.OnePlusScanResult
 import app.aaps.plugins.dexcomoneplus.session.OnePlusBleSession
 import app.aaps.plugins.dexcomoneplus.session.OnePlusMacArbiter
 import app.aaps.plugins.dexcomoneplus.session.OnePlusBleSessionSkeleton
+import app.aaps.plugins.dexcomoneplus.session.OnePlusCalibrationGate
+import app.aaps.plugins.dexcomoneplus.session.OnePlusCalibrationQueue
 import app.aaps.plugins.dexcomoneplus.session.OnePlusConnectPrep
 import app.aaps.plugins.dexcomoneplus.session.OnePlusSessionAuthKeks
 import app.aaps.plugins.dexcomoneplus.session.OnePlusSessionStart
@@ -22,6 +26,7 @@ import kotlin.concurrent.Volatile
 import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.concurrent.atomics.incrementAndFetch
+import kotlin.time.Clock
 
 internal object OnePlusCgmDriverResumePolicy {
     fun canResume(storedSession: OnePlusStoredSession?): Boolean =
@@ -127,6 +132,126 @@ class OnePlusCgmDriverReal(storeNamespace: String? = null) : OnePlusCgmDriver {
     @Volatile
     private var pendingAdvSightingElapsedMs: Long = 0L
 
+    /**
+     * Fingersticks waiting to be handed to the sensor, for this instance's sessions.
+     *
+     * One queue per driver instance, so a pre-soak sensor cannot receive the calibration meant for
+     * the sensor that feeds the loop. [offerCalibration] refuses outright on a staging slot, and a
+     * promoted instance keeps calling itself "staging" in the log but is production from the
+     * arbiter's point of view — which is why the check below is on [storeNamespace], read live,
+     * rather than on the fixed [slot] label.
+     *
+     * Every session gets this queue, the pre-soak ones too. That is safe because the refusal in
+     * [offerCalibration] keeps a pre-soak queue empty, and it is needed because a promotion keeps
+     * the session the instance had as a pre-soak: a session built without the queue would never
+     * send anything for the rest of the sensor's life.
+     */
+    private val calibrationQueue = OnePlusCalibrationQueue()
+
+    /** Last answer a sensor gave to a calibration, for the status screen. Null = nothing sent yet. */
+    @Volatile
+    private var lastCalibrationResult: OnePlusCalibrationOutcome? = null
+
+    /**
+     * Newest reading of this instance's sensor, for the checks run again right before a value is
+     * written ([calibrationSendCheck]). Kept across radio windows: a value is written at the start
+     * of a window, before that window's own reading. Forgotten when the sensor changes.
+     */
+    @Volatile
+    private var lastReading: OnePlusGlucoseSample? = null
+
+    /**
+     * The checks of [OnePlusCalibrationGate] at send time, on this driver's live warm-up phase and
+     * last reading: the sensor may have gone back to warm-up, or glucose may change fast now.
+     */
+    private fun calibrationSendCheck(glucoseMgdl: Int, bloodAtMs: Long, nowMs: Long): OnePlusCalibrationGate.Refusal? =
+        OnePlusCalibrationGate.check(glucoseMgdl, bloodAtMs, nowMs, warmupState().phase, lastReading)
+
+    /**
+     * Drop the waiting value, if any, because the sensor or its session changed: a new sensor, a
+     * new pairing, a restarted session, a promotion, a new identity, a disconnect or a shutdown.
+     * A value confirmed for one sensor must never be written to the next one. Nothing was written,
+     * so it is reported as [OnePlusCalibrationOutcome.NotSent] and the user may enter it again.
+     */
+    private fun dropPendingCalibration(why: String) {
+        if (calibrationQueue.take() == null) return
+        lastCalibrationResult = OnePlusCalibrationOutcome.NotSent(OnePlusCalibrationOutcome.NotSent.Reason.SENSOR_CHANGED)
+        OnePlusLog.w("${OnePlusLogMarkers.SESSION}: [$slot] calibration dropped before the write — $why")
+    }
+
+    /** A waiting value failed the checks at send time and was dropped before any write. */
+    private fun onCalibrationNotSent(reason: OnePlusCalibrationOutcome.NotSent.Reason) {
+        lastCalibrationResult = OnePlusCalibrationOutcome.NotSent(reason)
+        OnePlusLog.i("${OnePlusLogMarkers.SESSION}: [$slot] calibration outcome = $lastCalibrationResult")
+    }
+
+    override fun offerCalibration(glucoseMgdl: Int, bloodAtMs: Long): Boolean {
+        if (storeNamespace != null) {
+            OnePlusLog.w(
+                "${OnePlusLogMarkers.SESSION}: [$slot] calibration refused — a pre-soak sensor is never calibrated",
+            )
+            return false
+        }
+        // A session that exists but is not "up" is only between two radio windows: a G7 / ONE+
+        // connects for a few seconds every 5 minutes. The value waits in the queue and is sent at
+        // the next connection, or dropped there when it is older than one hour. Asking for `isUp()`
+        // here refused almost every fingerstick.
+        if (session == null) {
+            OnePlusLog.w("${OnePlusLogMarkers.SESSION}: [$slot] calibration refused — no session")
+            return false
+        }
+        val accepted = calibrationQueue.offer(glucoseMgdl, bloodAtMs, Clock.System.now().toEpochMilliseconds())
+        OnePlusLog.i(
+            "${OnePlusLogMarkers.SESSION}: [$slot] calibration queued=$accepted glucose=$glucoseMgdl",
+        )
+        if (accepted) lastCalibrationResult = OnePlusCalibrationOutcome.Pending
+        return accepted
+    }
+
+    override fun lastCalibrationOutcome(): OnePlusCalibrationOutcome? = lastCalibrationResult
+
+    /**
+     * Turn what came back on the wire into something the user can be told.
+     *
+     * A null reply means the write itself failed, or nothing came back before the loop gave up. It
+     * is [OnePlusCalibrationOutcome.Unknown] and not a refusal: the packet may well have reached a
+     * sensor whose answer was lost. The calibration state read just after can still settle it.
+     */
+    private fun onCalibrationAnswered(reply: OnePlusCalibrateRx?) {
+        lastCalibrationResult = when (reply?.outcome()) {
+            OnePlusCalibrateRx.Outcome.ACCEPTED -> OnePlusCalibrationOutcome.Accepted(reply.message())
+            OnePlusCalibrateRx.Outcome.REFUSED  -> OnePlusCalibrationOutcome.Refused(reply.message())
+            OnePlusCalibrateRx.Outcome.UNKNOWN  -> OnePlusCalibrationOutcome.Unknown(reply.message())
+            null                                -> OnePlusCalibrationOutcome.Unknown("The sensor did not answer")
+        }
+        OnePlusLog.i(
+            "${OnePlusLogMarkers.SESSION}: [$slot] calibration outcome = $lastCalibrationResult",
+        )
+    }
+
+    /**
+     * The sensor's calibration state, read right after a calibration was sent.
+     *
+     * When the answer to the calibration itself was lost, a state that holds exactly the value and
+     * time we sent is the sensor saying it took it. The value is never sent again either way.
+     */
+    private fun onCalibrationState(state: OnePlusCalibrationBoundsRx, matchesSent: Boolean) {
+        val current = lastCalibrationResult
+        lastCalibrationResult = when {
+            matchesSent && current is OnePlusCalibrationOutcome.Unknown  ->
+                OnePlusCalibrationOutcome.Accepted("Found in the sensor's calibration state (${state.processing})")
+            matchesSent && current is OnePlusCalibrationOutcome.Accepted ->
+                OnePlusCalibrationOutcome.Accepted("${current.detail}, ${state.processing}")
+            else                                                         -> current
+        }
+        OnePlusLog.i(
+            "${OnePlusLogMarkers.SESSION}: [$slot] calibration state matchesSent=$matchesSent " +
+                "processing=${state.processing} outcome=$lastCalibrationResult",
+        )
+    }
+
+    override fun calibrationPending(): Boolean = calibrationQueue.peek() != null
+
     override fun attach(platform: OnePlusPlatform) {
         this.platform = platform
         val store = storeFor(platform, storeNamespace)
@@ -149,11 +274,17 @@ class OnePlusCgmDriverReal(storeNamespace: String? = null) : OnePlusCgmDriver {
      * call instead of keeping it in a local (see `createSession`).
      */
     fun rebindStore(namespace: String?) {
+        // A promotion: from here on this instance feeds the loop. Start with an empty queue.
+        dropPendingCalibration("promotion")
+        lastReading = null
         storeNamespace = namespace
         platform?.let { sensorStore = storeFor(it, namespace) }
     }
 
     fun saveIdentity(identity: OnePlusSensorIdentity) {
+        // Only the start screen calls this, right before a new connect: a new sensor or a new code.
+        dropPendingCalibration("new sensor identity")
+        lastReading = null
         sensorStore?.saveIdentity(identity)
         scanner.updateSessionHint(sensorStore?.load())
     }
@@ -264,6 +395,9 @@ class OnePlusCgmDriverReal(storeNamespace: String? = null) : OnePlusCgmDriver {
             Triple(previous, newGeneration, bleExecutor)
         }
         previousSession?.stop("superseded")
+        // A new pairing is a new sensor, or a new session on it.
+        dropPendingCalibration("new pairing")
+        lastReading = null
         sensorStore?.saveIdentity(
             OnePlusSensorIdentity(
                 pin = pairingCode,
@@ -359,6 +493,8 @@ class OnePlusCgmDriverReal(storeNamespace: String? = null) : OnePlusCgmDriver {
             scanner.updateSessionHint(stored)
             queuedGeneration to queuedExecutor
         }
+        // A restarted session: a value confirmed for the session that ended does not carry over.
+        dropPendingCalibration("session restart")
         OnePlusLog.i(
             "${OnePlusLogMarkers.SESSION}: [$slot] auto-resume queued mac=***${deviceAddress.takeLast(5)} " +
                 "savedKey=true newStart=false",
@@ -430,6 +566,7 @@ class OnePlusCgmDriverReal(storeNamespace: String? = null) : OnePlusCgmDriver {
             session.also { session = null }
         }
         previousSession?.stop("disconnect")
+        dropPendingCalibration("disconnect")
         OnePlusMacArbiter.release(arbiterOwner)
     }
 
@@ -452,6 +589,7 @@ class OnePlusCgmDriverReal(storeNamespace: String? = null) : OnePlusCgmDriver {
             previousSession?.stop("shutdown")
         } catch (_: Throwable) {
         }
+        dropPendingCalibration("shutdown")
         watchersLock.withLock { watchers.clear() }
         previousExecutor.shutdownNow()
         OnePlusMacArbiter.release(arbiterOwner)
@@ -491,6 +629,7 @@ class OnePlusCgmDriverReal(storeNamespace: String? = null) : OnePlusCgmDriver {
             },
             onGlucose = { sample ->
                 ifCurrentOperation(generation) {
+                    if (sample.timestampMs > (lastReading?.timestampMs ?: Long.MIN_VALUE)) lastReading = sample
                     watchersSnapshot().forEach { it.onGlucose(sample) }
                 }
             },
@@ -517,6 +656,12 @@ class OnePlusCgmDriverReal(storeNamespace: String? = null) : OnePlusCgmDriver {
             },
             cpuLease = host.cpuLease(slot),
             slot = slot,
+            // Always passed, see [calibrationQueue]: the pre-soak refusal lives in offerCalibration.
+            calibrationQueue = calibrationQueue,
+            onCalibrationResult = { reply -> onCalibrationAnswered(reply) },
+            onCalibrationState = { state, matchesSent -> onCalibrationState(state, matchesSent) },
+            calibrationSendCheck = { glucoseMgdl, bloodAtMs, nowMs -> calibrationSendCheck(glucoseMgdl, bloodAtMs, nowMs) },
+            onCalibrationNotSent = { reason -> onCalibrationNotSent(reason) },
         )
         return created
     }

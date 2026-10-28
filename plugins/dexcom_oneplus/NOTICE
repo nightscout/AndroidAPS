@@ -50,6 +50,7 @@ Ported into original Kotlin (wire format / algorithm identical, text rewritten):
   parse/OnePlusFastCrc16.kt                  ← FastCRC16.java
   parse/OnePlusGlucoseParser.kt              ← EGlucoseRxMessage / EGlucoseRxMessage2
   parse/OnePlusCalibrationState.kt           ← CalibrationState
+  parse/OnePlusCalibrateTx.kt, Rx.kt         ← CalibrateTxMessage / CalibrateRxMessage (0x35 answer shape)
   parse/OnePlusEGlucoseTx.kt                 ← EGlucoseTxMessage / BaseMessage.init
   parse/OnePlusTransmitterTimeTx.kt, Rx.kt   ← TransmitterTimeTx/RxMessage
   parse/OnePlusSessionStartTx.kt, Rx.kt      ← SessionStartTx/RxMessage
@@ -60,6 +61,12 @@ Ported into original Kotlin (wire format / algorithm identical, text rewritten):
   session/OnePlusInvalidShortPairingCodes.kt ← TxIdHelper.INVALID_SHORT_PAIRING_CODES
   session/OnePlusSessionStart.kt             ← TxIdHelper.isValidShortPairingCode
   session/OnePlusKeksGuideCerts.kt           ← xDrip G7 keks Auto-Configure QR / Ob1 setPersistence
+
+Layout taken from the Dexcom G7 driver of AndroidAPS PR 5397 (same project,
+AGPL-3.0; tested there on G7 sensors):
+  parse/OnePlusCalibrateTx.kt                ← G7 7-byte calibrate request (no CRC)
+  parse/OnePlusCalibrateRx.kt                ← G7CalibrateRxMessage (0x34 echo)
+  parse/OnePlusCalibrationBoundsRx.kt        ← G7CalibrationBoundsMessage (0x32)
 
 Co-derived with Juggluco (also listed in section 2):
   gatt/OnePlusGattClient.kt, gatt/OnePlusGattClientAndroid.kt,
@@ -137,7 +144,9 @@ Original to AndroidAPS (no upstream provenance marker):
   scan/OnePlusScanResult.kt, session/OnePlusBackfill.kt,
   session/OnePlusBleSession.kt (reconnect/OEM orchestration; carries
     Juggluco-informed wake-lock / short-auth patterns but is original code),
-  session/OnePlusSessionStartPolicy.kt, warmup/OnePlusWarmupClock.kt.
+  session/OnePlusSessionStartPolicy.kt, warmup/OnePlusWarmupClock.kt,
+  OnePlusCalibrationOutcome.kt, session/OnePlusCalibrationQueue.kt,
+  session/OnePlusCalibrationGate.kt.
 The OEM device-profile abstraction (oem/) and the Android GATT plumbing bulk of
 gatt/OnePlusGattClientAndroid.kt are original AAPS implementation; only the
 protocol choreography within them is derived (see sections 1 and 2).

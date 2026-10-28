@@ -85,6 +85,15 @@ class OnePlusBytesTest {
     }
 
     @Test
+    fun `a calibration request carries the same bytes on every target`() {
+        val packet = assertNotNull(OnePlusCalibrateTx.build(glucoseMgdl = 150, dexTimeSeconds = 0x01020304))
+
+        assertEquals(OnePlusCalibrateTx.PACKET_LENGTH, packet.size)
+        assertEquals(OnePlusCalibrateTx.OPCODE, packet[0])
+        assertEquals("34960004030201", packet.onePlusToHex())
+    }
+
+    @Test
     fun `a session start answer is read on every target`() {
         val writer = OnePlusByteWriter(OnePlusSessionStartRx.PACKET_LENGTH)
         writer.put(OnePlusSessionStartRx.OPCODE)

@@ -15,6 +15,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.time.Clock
 
 /**
  * The real driver's own state, run on every platform the module builds for.
@@ -33,6 +34,8 @@ class OnePlusCgmDriverRealSharedTest {
         assertNull(driver.sensorStore())
         assertFalse(driver.isSessionUp())
         assertEquals(OnePlusWarmupState.Phase.IDLE, driver.warmupState().phase)
+        assertNull(driver.lastCalibrationOutcome())
+        assertFalse(driver.calibrationPending())
         driver.shutdown()
     }
 
@@ -67,6 +70,24 @@ class OnePlusCgmDriverRealSharedTest {
         // The production file is a different file, so the staging PIN is not in it.
         assertNull(staging.sensorStore()?.load()?.identity?.pin)
         staging.shutdown()
+    }
+
+    @Test
+    fun `a pre-soak sensor is never calibrated`() {
+        val driver = OnePlusCgmDriverReal(storeNamespace = "staging")
+        driver.attach(FakePlatform())
+        assertFalse(driver.offerCalibration(glucoseMgdl = 120, bloodAtMs = nowMs()))
+        assertNull(driver.lastCalibrationOutcome())
+        driver.shutdown()
+    }
+
+    @Test
+    fun `a fingerstick is refused while there is no session`() {
+        val driver = OnePlusCgmDriverReal()
+        driver.attach(FakePlatform())
+        assertFalse(driver.offerCalibration(glucoseMgdl = 120, bloodAtMs = nowMs()))
+        assertFalse(driver.calibrationPending())
+        driver.shutdown()
     }
 
     @Test
@@ -108,6 +129,8 @@ class OnePlusCgmDriverRealSharedTest {
         driver.shutdown()
         assertFalse(driver.isSessionUp())
     }
+
+    private fun nowMs(): Long = Clock.System.now().toEpochMilliseconds()
 
     /** A host with a store and a scanner, and nothing that needs a radio. */
     private class FakePlatform : OnePlusPlatform {

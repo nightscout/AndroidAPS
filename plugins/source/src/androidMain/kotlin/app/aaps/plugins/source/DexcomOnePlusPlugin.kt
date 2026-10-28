@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.source.CgmWarmupProvider
 import app.aaps.core.interfaces.source.CgmWarmupStatus
 import app.aaps.core.interfaces.source.PromotionRejectReason
 import app.aaps.core.interfaces.source.PromotionResult
+import app.aaps.core.interfaces.source.SensorCalibrationResult
 import app.aaps.core.interfaces.source.StagingState
 import app.aaps.core.interfaces.concurrent.AapsLock
 import app.aaps.core.interfaces.concurrent.withLock
@@ -41,6 +42,7 @@ import app.aaps.plugins.dexcomoneplus.OnePlusGlucoseSample
 import app.aaps.plugins.dexcomoneplus.OnePlusGlucoseWatcher
 import app.aaps.plugins.dexcomoneplus.OnePlusWarmupState
 import app.aaps.plugins.dexcomoneplus.identity.OnePlusSensorStore
+import app.aaps.plugins.dexcomoneplus.session.OnePlusCalibrationGate
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import app.aaps.plugins.source.keys.DexcomOnePlusBooleanKey
 import app.aaps.plugins.source.keys.DexcomOnePlusIntKey
@@ -169,6 +171,10 @@ class DexcomOnePlusPlugin @Inject constructor(
     @Volatile
     private var warmupPhase: OnePlusWarmupState.Phase = OnePlusWarmupState.Phase.IDLE
 
+    /** The newest reading of the production sensor, for the calibration checks. */
+    @Volatile
+    private var lastProductionReading: OnePlusGlucoseSample? = null
+
     private val _warmup = MutableStateFlow(OnePlusWarmupState(phase = OnePlusWarmupState.Phase.IDLE))
 
     /** Live warm-up / session status of the native driver — feeds the ongoing notification and the warm-up ring. */
@@ -280,12 +286,45 @@ class DexcomOnePlusPlugin @Inject constructor(
     }
 
 
+    /**
+     * A fingerstick goes to the sensor while [DexcomOnePlusBooleanKey.SendCalibrationToSensor] is on,
+     * which is the default.
+     *
+     * When it is true the app must not also fit a software line on the same readings. The graph
+     * worker already does this: its `PrepareGraphDataRunner.smoothData` skips the software
+     * calibration while this returns true, and the master's calibration path sends the value here
+     * instead of storing a calibration entry.
+     */
+    override fun calibratesInSensor(): Boolean =
+        preferences.get(DexcomOnePlusBooleanKey.SendCalibrationToSensor)
+
+    /** Why the sensor must not get [glucoseMgdl] now, already readable by the user, or null. */
+    override fun sensorCalibrationRefusal(glucoseMgdl: Int, bloodAtMs: Long): String? {
+        if (!calibratesInSensor()) return null
+        val refusal = OnePlusCalibrationGate.check(glucoseMgdl, bloodAtMs, nowMs(), warmupPhase, lastProductionReading)
+            ?: return null
+        aapsLogger.info(LTag.BGSOURCE, "DEXCOM_ONEPLUS_CALIBRATION: refused $refusal")
+        return resources.gs(DexcomOnePlusCalibrationText.refusal(refusal))
+    }
+
+    override fun calibrateSensor(glucoseMgdl: Int, bloodAtMs: Long): SensorCalibrationResult {
+        if (!calibratesInSensor()) return SensorCalibrationResult.NotSupported
+        // Checked again here: time has passed since the user saw the confirmation.
+        sensorCalibrationRefusal(glucoseMgdl, bloodAtMs)?.let { return SensorCalibrationResult.Refused(it) }
+        // Only the production driver: a pre-soak sensor is not the one feeding the loop, and a
+        // calibration it accepted would stay in it for the whole of its own life.
+        val queued = driver.offerCalibration(glucoseMgdl, bloodAtMs)
+        return if (queued) SensorCalibrationResult.Queued
+        else SensorCalibrationResult.Refused(resources.gs(SourceStrings.dexcom_oneplus_calibration_not_sent))
+    }
+
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "dexcom_oneplus_settings",
         title = SourceStrings.dexcom_oneplus_native,
         summary = SourceStrings.dexcom_oneplus_plugin_summary,
         // The three screen buttons come from the host, because opening a screen needs a Context.
         items = host.screenItems(this) + listOf(
+            DexcomOnePlusBooleanKey.SendCalibrationToSensor,
             DexcomOnePlusBooleanKey.AutoPromote,
             DexcomOnePlusIntKey.AutoPromoteHours,
             DexcomOnePlusBooleanKey.RepairMissingSensorChange,
@@ -392,6 +431,7 @@ class DexcomOnePlusPlugin @Inject constructor(
         if (warmupPhase != OnePlusWarmupState.Phase.READY && warmupPhase != OnePlusWarmupState.Phase.IDLE) {
             onWarmup(OnePlusWarmupState(phase = OnePlusWarmupState.Phase.READY))
         }
+        if (sample.timestampMs > (lastProductionReading?.timestampMs ?: Long.MIN_VALUE)) lastProductionReading = sample
         ingestToLoop(sample, sensorStore)
     }
 
@@ -921,6 +961,8 @@ class DexcomOnePlusPlugin @Inject constructor(
         runCatching { if (outgoing !== promoted && outgoing !== retired) outgoing.shutdown() }
         // 6) Only now retire the staging store — nothing points at it any more.
         stagingStore.clearAll()
+        // The last reading belongs to the sensor just retired: a calibration must wait for the new one.
+        lastProductionReading = null
         // The promoted sensor becomes the loop's sensor: its age must show on the overview from the
         // moment it was applied (its staging start, verified above), not from the promotion.
         logSensorChange(startMs)
