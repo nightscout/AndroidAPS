@@ -111,18 +111,31 @@ class NSDeviceStatusHandler(
      */
     fun handleNewData(deviceStatuses: Array<NSDeviceStatus>, live: Boolean = false) {
         val apsResults = mutableListOf<ReceivedResult>()
+        val unreadable = Unreadable()
+        var newestTime = 0L
         for (i in deviceStatuses.size - 1 downTo 0) {
             val nsDeviceStatus = deviceStatuses[i]
-            if (config.AAPSCLIENT) {
-                updatePumpData(nsDeviceStatus)
-                updateDeviceData(nsDeviceStatus)
-                updateOpenApsData(nsDeviceStatus, apsResults)
-                updateUploaderData(nsDeviceStatus)
-            }
-            if (config.APS) {
-                nsDeviceStatus.pump?.let { preferences.put(BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS, true) }  // Objective 0
+            // One document that cannot be read must not stop the others (#5414). A throw used to end the whole
+            // page of a load, so every later load asked for the same page and failed again, for up to 48 hours.
+            // On the websocket thread it ends the app.
+            try {
+                if (config.AAPSCLIENT) {
+                    val time = timeOf(nsDeviceStatus, unreadable)
+                    time?.let { newestTime = max(newestTime, it) }
+                    updatePumpData(nsDeviceStatus, unreadable)
+                    updateDeviceData(nsDeviceStatus, time)
+                    updateOpenApsData(nsDeviceStatus, apsResults, unreadable)
+                    updateUploaderData(nsDeviceStatus, time)
+                }
+                if (config.APS) {
+                    nsDeviceStatus.pump?.let { preferences.put(BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS, true) }  // Objective 0
+                }
+            } catch (e: Exception) {
+                unreadable.add("${nsDeviceStatus.device}: ${e.message ?: e::class.simpleName}")
             }
         }
+        if (unreadable.count > 0)
+            aapsLogger.warn(LTag.NSCLIENT, "Device statuses, parts skipped because they could not be read: ${unreadable.count}. The first: ${unreadable.first}")
         if (config.AAPSCLIENT && deviceStatuses.isNotEmpty()) {
             // Master-alive heartbeat — gates scene/edit controls when master goes silent, even while the
             // local WS to NS is still up. Bump ONLY for a live WS push: a brand-new devicestatus arriving in
@@ -130,14 +143,9 @@ class NSDeviceStatusHandler(
             // app start it pulls the master's LAST historical devicestatus off NS, which can be only a few
             // minutes old (inside the 9-min window) yet the master may already be offline. Per the agreed
             // design the client fails closed after start and waits for the first live ping.
-            // (created_at, not receipt time, is still used as a second guard: skip an unparseable/absent
-            // record rather than crashing, and never fall back to now().)
-            if (live) {
-                val newestCreatedAt = deviceStatuses
-                    .mapNotNull { ds -> ds.createdAt?.let { runCatching { dateUtil.fromISODateString(it) }.getOrNull() } ?: ds.date }
-                    .maxOrNull() ?: 0L
-                if (newestCreatedAt > 0L) nsClientV3Plugin().bumpDevicestatusHeartbeat(newestCreatedAt)
-            }
+            // (The time of the device status, not the receipt time, is still used as a second guard: a record
+            // without a time that can be read is skipped, and there is never a fallback to now().)
+            if (live && newestTime > 0L) nsClientV3Plugin().bumpDevicestatusHeartbeat(newestTime)
             // Once per batch, not once per document: the predictions are read from the newest data only (#5247)
             appScope.launch { calculationWorkflow.runOnReceivedPredictions(overviewData) }
             if (apsResults.isNotEmpty()) appScope.launch { storeApsResults(apsResults) }
@@ -171,17 +179,50 @@ class NSDeviceStatusHandler(
         newResults.minOfOrNull { it.date }?.let { iobCobCalculator().apsResultsStored(it) }
     }
 
-    private fun updateDeviceData(deviceStatus: NSDeviceStatus) {
-        val createdAt = deviceStatus.createdAt?.let { dateUtil.fromISODateString(it) } ?: return
+    /**
+     * What could not be read in one batch. Logged once at its end, not once for each document: a client loads
+     * the last 48 hours after every start, and one kind of bad data is then in hundreds of them (#5414).
+     */
+    private class Unreadable {
+
+        var count = 0
+            private set
+        var first: String? = null
+            private set
+
+        fun add(what: String) {
+            if (count++ == 0) first = what
+        }
+    }
+
+    /**
+     * When the device status was made: `date`, a number the master always sends, else the `created_at` text
+     * that Nightscout adds. Null when there is neither.
+     */
+    private fun timeOf(deviceStatus: NSDeviceStatus, unreadable: Unreadable): Long? =
+        deviceStatus.date ?: readTime(deviceStatus.createdAt, "created_at", deviceStatus, unreadable)
+
+    /** A time inside a device status, or null when there is none or it cannot be read. */
+    private fun readTime(text: String?, field: String, deviceStatus: NSDeviceStatus, unreadable: Unreadable): Long? =
+        text?.let {
+            runCatching { dateUtil.fromISODateString(it) }
+                .onFailure { unreadable.add("$field \"$text\" from ${deviceStatus.device}") }
+                .getOrNull()
+        }
+
+    private fun updateDeviceData(deviceStatus: NSDeviceStatus, time: Long?) {
+        val createdAt = time ?: return
         processedDeviceStatusData.device?.let { if (createdAt < it.createdAt) return } // take only newer record
         deviceStatus.device?.let {
             if (it.startsWith("openaps://")) processedDeviceStatusData.device = ProcessedDeviceStatusData.Device(createdAt, it.substring(10))
         }
     }
 
-    private fun updatePumpData(nsDeviceStatus: NSDeviceStatus) {
+    private fun updatePumpData(nsDeviceStatus: NSDeviceStatus, unreadable: Unreadable) {
         val pump = nsDeviceStatus.pump ?: return
-        val clock = pump.clock?.let { dateUtil.fromISODateString(it) } ?: return
+        // The time the master last read the pump. It can be older than the device status, and the client
+        // shows how old it is, so the time of the device status cannot stand in for it.
+        val clock = readTime(pump.clock, "pump.clock", nsDeviceStatus, unreadable) ?: return
         processedDeviceStatusData.pumpData?.let { if (clock < it.clock) return } // take only newer record
 
         // create new status and process data
@@ -214,14 +255,16 @@ class NSDeviceStatusHandler(
     }
 
     /** @param apsResults collects the loop result of this device status, to be stored with the batch */
-    private fun updateOpenApsData(nsDeviceStatus: NSDeviceStatus, apsResults: MutableList<ReceivedResult>) {
+    private fun updateOpenApsData(nsDeviceStatus: NSDeviceStatus, apsResults: MutableList<ReceivedResult>, unreadable: Unreadable) {
         nsDeviceStatus.openaps?.suggested?.let {
-            it.safeGetString("timestamp")?.let { timestamp ->
-                val clock = dateUtil.fromISODateString(timestamp)
+            // Read here, not taken from the decoded result: the time moves on also when this client cannot
+            // decode the result, for example from a master of another version. The master's loop still runs,
+            // and the client shows how long ago, and alarms when it gets old.
+            readTime(it.safeGetString("timestamp"), "suggested.timestamp", nsDeviceStatus, unreadable)?.let { clock ->
                 val suggested = try {
                     RT.deserialize(it.toString()).apply { this.timestamp = clock }
                 } catch (e: Exception) {
-                    aapsLogger.error(LTag.NSCLIENT, e.stackTraceToString())
+                    unreadable.add("loop result from ${nsDeviceStatus.device}: ${e.message}")
                     null
                 }
                 // check if this is new data
@@ -250,14 +293,13 @@ class NSDeviceStatusHandler(
             }
         }
         nsDeviceStatus.openaps?.enacted?.let {
-            it.safeGetString("timestamp")?.let { timestamp ->
-                val clock = dateUtil.fromISODateString(timestamp)
+            readTime(it.safeGetString("timestamp"), "enacted.timestamp", nsDeviceStatus, unreadable)?.let { clock ->
                 // check if this is new data
                 if (clock > processedDeviceStatusData.openAPSData.clockEnacted) {
                     try {
                         processedDeviceStatusData.openAPSData.enacted = RT.deserialize(it.toString()).apply { this.timestamp = clock }
                     } catch (e: Exception) {
-                        aapsLogger.error(LTag.NSCLIENT, e.stackTraceToString())
+                        unreadable.add("enacted from ${nsDeviceStatus.device}: ${e.message}")
                     }
                     processedDeviceStatusData.openAPSData.clockEnacted = clock
                 }
@@ -265,8 +307,8 @@ class NSDeviceStatusHandler(
         }
     }
 
-    private fun updateUploaderData(nsDeviceStatus: NSDeviceStatus) {
-        val clock = nsDeviceStatus.createdAt?.let { dateUtil.fromISODateString(it) } ?: return
+    private fun updateUploaderData(nsDeviceStatus: NSDeviceStatus, time: Long?) {
+        val clock = time ?: return
         val device = nsDeviceStatus.device ?: return
         val battery = nsDeviceStatus.uploaderBattery ?: nsDeviceStatus.uploader?.battery ?: return
         val isCharging = nsDeviceStatus.isCharging

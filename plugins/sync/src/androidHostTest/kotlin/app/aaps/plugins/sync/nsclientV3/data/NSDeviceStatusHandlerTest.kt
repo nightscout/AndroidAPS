@@ -6,9 +6,11 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventNsClientStatusUpdated
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
@@ -25,7 +27,9 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -246,6 +250,88 @@ internal class NSDeviceStatusHandlerTest {
         verifyBlocking(persistenceLayer, times(1)) { insertOrUpdateApsResult(any()) }
     }
 
+    /**
+     * #5414: one document with a time that cannot be read used to throw out of the whole batch. A load then
+     * failed on the same page every time, for up to 48 hours. The others are handled now, their results
+     * stored, and the batch is finished.
+     */
+    @Test
+    fun aTimeThatCannotBeReadSkipsOnlyItsPart() {
+        val results = givenResults(APSResult.Algorithm.SMB)
+        whenever(dateUtil.fromISODateString("bad")).thenThrow(IllegalStateException("not an ISO date: bad"))
+
+        sut.handleNewData(arrayOf(deviceStatusAt(TIME_1), deviceStatusAt("bad"), deviceStatusAt(TIME_3)))
+
+        verifyBlocking(persistenceLayer) { insertOrUpdateApsResult(results.getValue(5_000L)) }
+        verifyBlocking(persistenceLayer) { insertOrUpdateApsResult(results.getValue(7_000L)) }
+        verifyBlocking(iobCobCalculator) { apsResultsStored(5_000L) }
+        verify(rxBus).send(any<EventNsClientStatusUpdated>())
+        assertThat(oneWarning()).contains("could not be read: 1. The first: suggested.timestamp \"bad\"")
+    }
+
+    /** Anything else that throws while a document is handled skips that document, not the batch. */
+    @Test
+    fun aDocumentThatThrowsDoesNotStopTheBatch() {
+        val results = givenResults(APSResult.Algorithm.SMB)
+        whenever(dateUtil.fromISODateString(TIME_UNKNOWN)).thenReturn(8_000L) // no result for it: making one throws
+
+        sut.handleNewData(arrayOf(deviceStatusAt(TIME_1), deviceStatusAt(TIME_UNKNOWN), deviceStatusAt(TIME_3)))
+
+        verifyBlocking(persistenceLayer) { insertOrUpdateApsResult(results.getValue(5_000L)) }
+        verifyBlocking(persistenceLayer) { insertOrUpdateApsResult(results.getValue(7_000L)) }
+        assertThat(oneWarning()).contains("openaps://test")
+    }
+
+    /** On the websocket thread a throw ends the app. A live document that cannot be read is skipped. */
+    @Test
+    fun aLiveDocumentThatCannotBeReadDoesNotThrow() {
+        whenever(dateUtil.fromISODateString("bad")).thenThrow(IllegalStateException("not an ISO date: bad"))
+
+        sut.handleNewData(arrayOf(deviceStatusAt("bad", date = 9_000L)), live = true)
+
+        verify(nsClientV3Plugin).bumpDevicestatusHeartbeat(9_000L)
+    }
+
+    /**
+     * The time of a device status is its `date`, a number. `created_at` is read only without it, so one
+     * Nightscout sends as a number ("1698400000000" after the lenient decode) costs nothing.
+     */
+    @Test
+    fun theTimeOfADeviceStatusIsItsDate() {
+        val uploaders = HashMap<String, ProcessedDeviceStatusData.Uploader>()
+        whenever(processedDeviceStatusData.uploaderMap).thenReturn(uploaders)
+
+        sut.handleNewData(arrayOf(NSDeviceStatus(device = "openaps://test", createdAt = "1698400000000", date = 9_000L, uploaderBattery = 50)))
+
+        assertThat(uploaders.getValue("openaps://test").clock).isEqualTo(9_000L)
+        assertThat(uploaders.getValue("openaps://test").battery).isEqualTo(50)
+        verify(dateUtil, never()).fromISODateString("1698400000000")
+    }
+
+    /**
+     * A loop result this client cannot decode, from a master of another version or another uploader, used to
+     * write a full stack trace for every document of the 48 hours. Now one line for the batch. The time still
+     * moves: the master's loop runs, and the client must not show it as old.
+     */
+    @Test
+    fun loopResultsThatCannotBeReadGiveOneLine() {
+        givenResults(APSResult.Algorithm.SMB)
+
+        sut.handleNewData(arrayOf(deviceStatusAt(TIME_1, readable = false), deviceStatusAt(TIME_2, readable = false), deviceStatusAt(TIME_3, readable = false)))
+
+        assertThat(oneWarning()).contains("could not be read: 3. The first: loop result from openaps://test")
+        verify(aapsLogger, never()).error(any<LTag>(), any<String>())
+        verifyBlocking(persistenceLayer, never()) { insertOrUpdateApsResult(any()) }
+        assertThat(openAPSData.clockSuggested).isEqualTo(7_000L)
+    }
+
+    /** The one warning of the batch. */
+    private fun oneWarning(): String {
+        val message = argumentCaptor<String>()
+        verify(aapsLogger, times(1)).warn(eq(LTag.NSCLIENT), message.capture())
+        return message.firstValue
+    }
+
     /** One result for each suggested time, with that time, [algorithm] and [stoppedEarly]. */
     private fun givenResults(algorithm: APSResult.Algorithm, stoppedEarly: Boolean = false): Map<Long, APSResult> {
         val results = mapOf(TIME_1 to 5_000L, TIME_2 to 6_000L, TIME_3 to 7_000L).map { (iso, time) ->
@@ -263,12 +349,14 @@ internal class NSDeviceStatusHandlerTest {
         return results
     }
 
-    private fun deviceStatusAt(time: String, deliverAt: String? = null) = NSDeviceStatus(
+    /** @param readable false leaves out a field the loop result must have, so it cannot be decoded */
+    private fun deviceStatusAt(time: String, deliverAt: String? = null, readable: Boolean = true, date: Long? = null) = NSDeviceStatus(
         device = "openaps://test",
+        date = date,
         openaps = NSDeviceStatus.OpenAps(suggested = buildJsonObject {
             put("timestamp", time)
             deliverAt?.let { put("deliverAt", it) }
-            put("runningDynamicIsf", false)
+            if (readable) put("runningDynamicIsf", false)
         })
     )
 
@@ -277,5 +365,6 @@ internal class NSDeviceStatusHandlerTest {
         const val TIME_1 = "2026-10-12T16:35:00Z"
         const val TIME_2 = "2026-10-12T16:40:00Z"
         const val TIME_3 = "2026-10-12T16:45:00Z"
+        const val TIME_UNKNOWN = "2026-10-12T16:50:00Z"
     }
 }
