@@ -28,6 +28,7 @@
     <string name="alarm_channel_bolus_error">Lỗi Bolus</string>
     <string name="alarm_channel_error">Lỗi chung</string>
     <string name="alarm_channel_urgent">Cảnh báo khẩn cấp</string>
+    <string name="alarm_channel_eat_reminder">Đến giờ ăn</string>
     <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (bỏ qua chế độ Không làm phiền)</string>
     <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (tuân theo chế độ Không làm phiền)</string>
     <string name="alarm_channel_silent_urgent">Cảnh báo khẩn cấp (tăng dần âm lượng)</string>
