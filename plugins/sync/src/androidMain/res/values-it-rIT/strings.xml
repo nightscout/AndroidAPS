@@ -52,7 +52,8 @@
     <string name="authorized_clients_token_problem_not_allowed">Il token Nightscout di questo telefono non è un token di amministrazione, quindi non può fare un token per il client. Utilizzare un token di amministrazione qui, o aggiungere il client con il PIN.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout ha un token con questo nome e altri diritti. Scegli un altro nome.</string>
     <string name="authorized_clients_token_problem_name_in_use">Un client con questo nome è già nella lista. Scegli un altro nome o rimuovi prima quel client.</string>
-    <string name="authorized_clients_token_problem_failed">Nightscout non ha fatto il token. Controllare la connessione e riprovare.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout non ha elencato il nuovo token, quindi è stato rimosso di nuovo. Niente è rimasto indietro. Riprova.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout non ha elencato il nuovo token e non può essere rimosso nuovamente. Eliminare il token %1$s in Nightscout, quindi riprovare.</string>
     <string name="authorized_clients_tokens_header">Leggi solo Nightscout</string>
     <string name="authorized_clients_token_unpaired">Proprio token Nightscout, non accoppiato</string>
     <string name="authorized_clients_token_show_qr">Mostra codice QR</string>
