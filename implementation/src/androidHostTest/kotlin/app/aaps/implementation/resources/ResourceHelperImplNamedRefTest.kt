@@ -2,20 +2,15 @@ package app.aaps.implementation.resources
 
 import androidx.test.core.app.ApplicationProvider
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.StringKey
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.ImplementationStrings
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
@@ -35,18 +30,14 @@ import org.robolectric.annotation.Config
 internal class ResourceHelperImplNamedRefTest {
 
     @Mock private lateinit var fabricPrivacy: FabricPrivacy
-    @Mock private lateinit var preferences: Preferences
 
     private lateinit var sut: ResourceHelperImpl
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        // Both keys are observed, so both have to answer. The language itself is not what this class
-        // tests - see ResourceHelperImplLocaleTest for that.
-        whenever(preferences.observe(StringKey.GeneralLanguage)).thenReturn(MutableStateFlow("default"))
-        whenever(preferences.observe(BooleanKey.GeneralSimpleMode)).thenReturn(MutableStateFlow(true))
-        sut = ResourceHelperImpl(ApplicationProvider.getApplicationContext(), fabricPrivacy, preferences)
+        // The language is not what this class tests - see ResourceHelperImplLocaleTest for that.
+        sut = ResourceHelperImpl(ApplicationProvider.getApplicationContext(), fabricPrivacy)
         // The `coreUi` and `implementation` owners are registered by start(), not by the constructor -
         // they moved so the Application controls when it happens and Metro can own this class.
         sut.start()

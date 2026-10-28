@@ -96,6 +96,7 @@ import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -355,6 +356,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val profileSwitchScheduler: ProfileSwitchScheduler
     val snackbarNotificationFallback: SnackbarNotificationFallback
     val eatReminder: EatReminder
+    val uiRestart: UiRestart
     val runningConfiguration: RunningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys
     val activePlugin: ActivePlugin

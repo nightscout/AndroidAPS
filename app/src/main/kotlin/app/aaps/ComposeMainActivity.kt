@@ -183,6 +183,9 @@ class ComposeMainActivity : MetroAppCompatActivity() {
     private var requestMultiplePermissions: ActivityResultLauncher<Array<String>>? = null
     private var onPermissionResultDenied: ((List<String>) -> Unit)? = null
 
+    /** Set when this activity is recreated because of a `UiRestart` request, so its view models go too. */
+    private var rebuildingForRestart = false
+
     /**
      * The factory `by viewModels()` uses.
      */
@@ -624,6 +627,11 @@ class ComposeMainActivity : MetroAppCompatActivity() {
     }
 
     override fun onDestroy() {
+        // A recreate keeps the view models, so after a language change they still showed the texts
+        // they had built in the old language ("Buclă închisă" on a Czech screen), and after an import
+        // the values from before it. A restart rebuilds them too, as iOS and the desktop do. Cleared
+        // here, while Android hands this store to the next activity, so that one starts with none.
+        if (rebuildingForRestart) viewModelStore.clear()
         disposable.clear()
         accessTree = null
         requestMultiplePermissions = null
@@ -636,16 +644,15 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         lifecycleScope.launch {
             preferences.observe(BooleanKey.OverviewKeepScreenOn).collect { setupWakeLock() }
         }
-        // Language change requires full restart to reload resources
+        // A rebuild asked for by code that cannot reach this activity: `MainApp` after a language
+        // change, an import applying its settings. Android answers it by recreating, because that is
+        // the only thing that re-runs `attachBaseContext` and so the only thing that can change the
+        // locale `Resources` resolve against. The view models go too, see onDestroy.
         lifecycleScope.launch {
-            preferences.observe(StringKey.GeneralLanguage).drop(1).collect { recreate() }
-        }
-        // The same rebuild, asked for by code that cannot reach this activity - an import applying
-        // its settings, for one. Android answers it by recreating, because that is the only thing
-        // that re-runs `attachBaseContext` and so the only thing that can change the locale
-        // `Resources` resolve against.
-        lifecycleScope.launch {
-            uiRestart.signal.drop(1).collect { recreate() }
+            uiRestart.signal.drop(1).collect {
+                rebuildingForRestart = true
+                recreate()
+            }
         }
     }
 

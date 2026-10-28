@@ -80,6 +80,7 @@ import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.rx.events.EventNewOpenLoopNotification
 import app.aaps.core.interfaces.rx.events.EventNsClientStatusUpdated
+import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
@@ -187,6 +188,7 @@ class OverviewDataCacheImpl(
     private val decimalFormatter: DecimalFormatter,
     private val translator: Translator,
     private val rh: TextResolver,
+    private val uiRestart: UiRestart,
     @Assisted val signals: CalculationSignals,
     @Assisted val observeDatabase: Boolean
 ) : OverviewDataCache {
@@ -536,6 +538,24 @@ class OverviewDataCacheImpl(
                     updateTempTargetFromDatabase()
                     updateRunningModeFromDatabase()
                     updateTbrFromDatabase()
+                }
+            }
+
+            // A language change or an import rebuilds the screens, but the texts held here were built in
+            // the old language or from the old settings, and nothing in the database changed to say so.
+            // Without this the BG circle still said "stabilní" to a screen reader after a switch to
+            // Romanian. Read everything that holds text again, like after a wipe but without the reset.
+            scope.launch {
+                uiRestart.signal.drop(1).collect {
+                    aapsLogger.debug(LTag.UI, "OverviewDataCache: UI restart, reloading texts")
+                    updateBgInfoFromDatabase()
+                    updateProfileFromDatabase()
+                    updateTempTargetFromDatabase()
+                    updateRunningModeFromDatabase()
+                    updateTbrFromDatabase()
+                    rebuildTreatmentGraph()
+                    rebuildEpsGraph()
+                    if (config.AAPSCLIENT) rebuildNsClientStatus()
                 }
             }
 

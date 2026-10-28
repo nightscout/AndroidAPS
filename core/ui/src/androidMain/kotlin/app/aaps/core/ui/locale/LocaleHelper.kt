@@ -3,6 +3,7 @@ package app.aaps.core.ui.locale
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.LocaleList
 import app.aaps.core.interfaces.resources.LanguageTag
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
@@ -24,7 +25,11 @@ object LocaleHelper {
      */
     @Volatile var settings: KeyValueStore? = null
 
-    private fun selectedLanguage(): String {
+    /**
+     * The language the app shows, as stored: a language code, or "default" for the phone language.
+     * Simple mode counts, because it puts the app in the phone language.
+     */
+    fun selectedLanguage(): String {
         val store = settings ?: return "default"
         return if (store.getBoolean(BooleanKey.GeneralSimpleMode.key, BooleanKey.GeneralSimpleMode.defaultValue)) "default"
         else store.getString(StringKey.GeneralLanguage.key, StringKey.GeneralLanguage.defaultValue)
@@ -64,24 +69,31 @@ object LocaleHelper {
         }
     }
 
+    /**
+     * Makes the default locale the language of the app. Numbers and dates are formatted with it, also in
+     * the background where there is no activity.
+     *
+     * Android sets the default back to the phone language on every configuration change - font size,
+     * dark mode, rotation - so `MainApp.onConfigurationChanged` calls this again. Without that, a phone in
+     * English with the app in Czech showed "7.3" instead of "7,3" after the font size was changed, until
+     * an activity was created again.
+     *
+     * The phone language is set too, not skipped: after a switch from a picked language back to the
+     * phone language, the default would otherwise stay on the picked one.
+     */
     fun update() {
-        // no action for system default language
-        if (isSystemDefault()) return
-
-        val locale = currentLocale()
-        Locale.setDefault(locale)
+        LocaleList.setDefault(if (isSystemDefault()) Resources.getSystem().configuration.locales else LocaleList(currentLocale()))
     }
 
     fun wrap(ctx: Context): Context {
+        update()
         // no action for system default language
         if (isSystemDefault()) return ctx
 
         val configuration = Configuration(ctx.resources.configuration)
         val newLocale = currentLocale()
         configuration.setLocale(newLocale)
-        val localeList = LocaleList(newLocale)
-        LocaleList.setDefault(localeList)
-        configuration.setLocales(localeList)
+        configuration.setLocales(LocaleList(newLocale))
         val context = ctx.createConfigurationContext(configuration)
         return ContextWrapper(context)
     }

@@ -67,6 +67,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
@@ -80,6 +84,7 @@ import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
+import android.content.res.Configuration as ResourcesConfiguration
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 
@@ -174,6 +179,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private val snackbarNotificationFallback get() = metroGraphs.snackbarNotificationFallback
     private val eatReminder get() = metroGraphs.eatReminder
     private val appScope get() = metroGraphs.applicationScope
+    private val uiRestart get() = metroGraphs.uiRestart
 
     /** The rules; the two fields below are what this app's start-up sequence carries between its steps. */
     private val insulinMigration get() = InsulinMigration(aapsLogger, hardLimits, rh)
@@ -401,11 +407,44 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         }
     }
 
+    /**
+     * Android sets the default locale back to the phone language on every configuration change - font
+     * size, dark mode, rotation. The activity puts the app language back only when it is created again,
+     * and not at all while the app is in the background. Numbers and dates are formatted with the default
+     * locale, so it is set again here, for the whole app.
+     */
+    override fun onConfigurationChanged(newConfig: ResourcesConfiguration) {
+        super.onConfigurationChanged(newConfig)
+        LocaleHelper.update()
+    }
+
+    /**
+     * A change of the app language, applied here once for the whole app and then shown by rebuilding the
+     * screens through `UiRestart`, as iOS and the desktop do. The default locale is set first, so the
+     * rebuilt screens and the work in the background format numbers and dates in the new language.
+     * Simple mode counts too: it puts the app in the phone language. The home screen widget is not a
+     * screen of the app, so it is asked to draw again too; it would otherwise wait up to a minute.
+     */
+    private fun followLanguage() {
+        appScope.launch {
+            merge(preferences.observe(StringKey.GeneralLanguage), preferences.observe(BooleanKey.GeneralSimpleMode))
+                .map { LocaleHelper.selectedLanguage() }
+                .distinctUntilChanged()
+                .drop(1)
+                .collect {
+                    LocaleHelper.update()
+                    uiRestart.request()
+                    widgetUpdater.update("LanguageChanged")
+                }
+        }
+    }
+
     private suspend fun doInit() {
         aapsLogger.debug("doInit")
         RxDogTag.install()
         setRxErrorHandler()
         LocaleHelper.update()
+        followLanguage()
 
         var gitRemote: String? = config.REMOTE
         var commitHash: String? = BuildConfig.HEAD

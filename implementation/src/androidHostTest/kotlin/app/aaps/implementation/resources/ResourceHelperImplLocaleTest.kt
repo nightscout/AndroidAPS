@@ -6,28 +6,24 @@ import androidx.test.core.app.ApplicationProvider
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.implementation.maintenance.migration.FileKeyValueStore
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import org.robolectric.shadows.ShadowLooper
 import java.util.Locale
 
 /**
  * [ResourceHelperImpl] resolves text in the language the user picked, and follows a change of it.
  *
- * Two bugs lived here, both of them invisible to a mocked test because they need real resources:
+ * Three bugs lived here, all of them invisible to a mocked test because they need real resources:
  *
  * - The cached context was dropped only when Simple mode changed. A language change recreates the
  *   activity, which re-runs `attachBaseContext` for the activity alone, so this app-scoped class kept
@@ -36,17 +32,17 @@ import java.util.Locale
  *   `LocaleHelper.update()` and `LocaleHelper.wrap()` both move the default locale to the picked
  *   language, while the Application resources stay in the phone language, so after either of them had
  *   run the comparison matched and handed back phone-language text.
+ * - The context was dropped by a listener on the language setting. Code reacting to the same change -
+ *   the overview reading its texts again - could ask for text before that listener had run, and got the
+ *   old language. Now the stored language is checked on every use, so the change counts at once.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
 internal class ResourceHelperImplLocaleTest {
 
     @Mock private lateinit var fabricPrivacy: FabricPrivacy
-    @Mock private lateinit var preferences: Preferences
 
     private lateinit var context: Context
-    private lateinit var languageFlow: MutableStateFlow<String>
-    private lateinit var simpleModeFlow: MutableStateFlow<Boolean>
     private lateinit var sut: ResourceHelperImpl
 
     // Locale.setDefault is global to the JVM, so what these tests do to it has to be undone.
@@ -56,14 +52,10 @@ internal class ResourceHelperImplLocaleTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         context = ApplicationProvider.getApplicationContext()
-        languageFlow = MutableStateFlow("de")
-        simpleModeFlow = MutableStateFlow(false)
-        whenever(preferences.observe(StringKey.GeneralLanguage)).thenReturn(languageFlow)
-        whenever(preferences.observe(BooleanKey.GeneralSimpleMode)).thenReturn(simpleModeFlow)
-        // LocaleHelper reads the settings store it was handed, not the mock above: it runs in
-        // attachBaseContext, where nothing can be injected. So the picked language goes there as well.
+        // LocaleHelper reads the settings store it was handed: it runs in attachBaseContext, where
+        // nothing can be injected.
         storePickedLanguage("de", simpleMode = false)
-        sut = ResourceHelperImpl(context, fabricPrivacy, preferences)
+        sut = ResourceHelperImpl(context, fabricPrivacy)
         sut.start()
     }
 
@@ -92,15 +84,16 @@ internal class ResourceHelperImplLocaleTest {
     }
 
     @Test
-    fun `text follows a change of the picked language`() {
+    fun `text follows a change of the picked language at once`() {
         assertThat(sut.gs(R.string.cancel)).isEqualTo(textIn(Locale.GERMAN, R.string.cancel))
 
+        // Nothing else happens in between: no listener, no idle main thread. Code that reacts to the
+        // change asks for text straight away.
         storePickedLanguage("fr", simpleMode = false)
-        languageFlow.value = "fr"
-        ShadowLooper.idleMainLooper()
+        assertThat(sut.gs(R.string.cancel)).isEqualTo(textIn(Locale.FRENCH, R.string.cancel))
+
         // The activity does this, and it is what made the old comparison match.
         Locale.setDefault(Locale.FRENCH)
-
         assertThat(sut.gs(R.string.cancel)).isEqualTo(textIn(Locale.FRENCH, R.string.cancel))
     }
 
@@ -111,13 +104,9 @@ internal class ResourceHelperImplLocaleTest {
         Locale.setDefault(Locale.GERMAN)
 
         storePickedLanguage("de", simpleMode = true)
-        simpleModeFlow.value = true
-        ShadowLooper.idleMainLooper()
         assertThat(sut.gs(R.string.cancel)).isEqualTo(context.getString(R.string.cancel))
 
         storePickedLanguage("de", simpleMode = false)
-        simpleModeFlow.value = false
-        ShadowLooper.idleMainLooper()
         assertThat(sut.gs(R.string.cancel)).isEqualTo(textIn(Locale.GERMAN, R.string.cancel))
     }
 
