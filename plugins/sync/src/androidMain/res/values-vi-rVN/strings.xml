@@ -52,7 +52,6 @@
     <string name="authorized_clients_token_problem_not_allowed">Token Nightscout của điện thoại này không phải token quản trị nên không thể tạo token cho thiết bị phụ. Hãy sử dụng token quản trị tại đây hoặc thêm thiết bị phụ bằng mã PIN.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout đã có token mang tên này nhưng có quyền khác. Hãy chọn tên khác.</string>
     <string name="authorized_clients_token_problem_name_in_use">Danh sách đã có thiết bị phụ mang tên này. Hãy chọn tên khác hoặc xóa thiết bị phụ đó trước.</string>
-    <string name="authorized_clients_token_problem_failed">Nightscout không tạo được token. Hãy kiểm tra kết nối rồi thử lại.</string>
     <string name="authorized_clients_tokens_header">Chỉ đọc dữ liệu Nightscout</string>
     <string name="authorized_clients_token_unpaired">Giữ Token Nightscout, chưa ghép đôi</string>
     <string name="authorized_clients_token_show_qr">Hiển thị mã QR</string>
