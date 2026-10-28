@@ -97,6 +97,8 @@
     <string name="treatments_iob_label_string">IOB 活性胰島素:</string>
     <string name="mute5min">靜音 5 分鐘</string>
     <string name="mute">靜音</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">將鬧鈴靜音</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">靜音並關閉</string>
     <string name="success">成功</string>
     <string name="advanced_settings_title">進階設定</string>
     <string name="extended_bolus">延長注射</string>
@@ -788,6 +790,7 @@
     <string name="wizard_set_alarm">設定鬧鐘</string>
     <string name="eat_reminder_title">用餐時間</string>
     <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">總等待時間：%1$s</string>
     <string name="eat_reminder_rung">時間到了</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d 分鐘</string>
     <string name="eat_reminder_not_set">無法設定用餐提醒。請在 Android 設定中允許 AAPS 設定鬧鐘和提醒。</string>
@@ -1201,4 +1204,5 @@
     <string name="units_sec">秒</string>
     <string name="units_years">年</string>
     <string name="prefs_range_title">可視化範圍</string>
+    <string name="secrets_not_protected">這台電腦上找不到系統金鑰儲存區。用來保護設定和與主控裝置配對的金鑰，會儲存在資料旁的檔案中，因此任何取得您檔案副本的人，也會取得這些金鑰。在 Linux 上，請安裝並啟動金鑰環（例如 GNOME Keyring 或 KWallet），然後重新啟動 AAPS。</string>
 </resources>
