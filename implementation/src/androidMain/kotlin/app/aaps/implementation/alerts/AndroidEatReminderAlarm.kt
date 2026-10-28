@@ -89,11 +89,11 @@ class AndroidEatReminderAlarm(
         createChannel()
         val left = endsAt - dateUtil.now()
         if (left <= 0) return
-        val setMinutes = T.msecs(endsAt - startedAt).mins().toInt()
+        val totalMinutes = T.msecs(endsAt - startedAt).mins().toInt()
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(iconsProvider.getNotificationIcon())
             .setContentTitle(rh.gs(CoreUiStrings.eat_reminder_title))
-            .setContentText(rh.gs(CoreUiStrings.eat_reminder_set_duration, rh.gs(CoreUiStrings.format_mins, setMinutes)))
+            .setContentText(rh.gs(CoreUiStrings.eat_reminder_total_wait, rh.gs(CoreUiStrings.format_mins, totalMinutes)))
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .setWhen(endsAt)
             .setShowWhen(true)

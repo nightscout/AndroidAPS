@@ -49,7 +49,8 @@ import app.aaps.core.ui.compose.navigation.DarkElementColors
 
 class AapsGlanceWidget : GlanceAppWidget() {
 
-    // Exact, so the widget knows its real size and can choose font sizes at which the texts fit.
+    // Exact, so the widget knows its size and can choose font sizes at which the texts fit. This is the
+    // size the launcher reports, and it is not always the real one, so the layout fills by weight.
     override val sizeMode: SizeMode = SizeMode.Exact
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
@@ -260,16 +261,20 @@ private fun BgPanel(state: WidgetRenderState, sizes: WidgetSizes, modifier: Glan
             )
         }
         Spacer(modifier = GlanceModifier.height(ChipGap))
-        // Same height as the chip rows on the right, so the bottom row lines up.
+        // Same height as the chip rows on the right, so the bottom row lines up. If the launcher reports a
+        // smaller size than the real one, this chip is lower than the rows, but it stays at the bottom.
         SensitivityChip(state, sizes.sensitivitySp, modifier = GlanceModifier.fillMaxWidth().height(sizes.rowHeight))
     }
 }
 
 @Composable
 private fun ChipsPanel(state: WidgetRenderState, sizes: WidgetSizes, modifier: GlanceModifier) {
+    // The rows fill by weight, not with the measured row height. A launcher can report a size that is
+    // smaller than the real one (a Galaxy S23+ did), and rows with a fixed height then filled only the
+    // top of the widget.
     Column(modifier = modifier) {
         // The loop is an icon only, beside the profile, as on the overview. Its name is spoken.
-        Row(modifier = GlanceModifier.fillMaxWidth().height(sizes.rowHeight)) {
+        Row(modifier = GlanceModifier.fillMaxWidth().defaultWeight()) {
             IconChip(
                 modifier = GlanceModifier.fillMaxHeight(),
                 iconResId = state.runningModeIconResId,
@@ -292,7 +297,7 @@ private fun ChipsPanel(state: WidgetRenderState, sizes: WidgetSizes, modifier: G
             }
         }
         Spacer(modifier = GlanceModifier.height(ChipGap))
-        Row(modifier = GlanceModifier.fillMaxWidth().height(sizes.rowHeight)) {
+        Row(modifier = GlanceModifier.fillMaxWidth().defaultWeight()) {
             if (state.tempTargetText.isNotBlank()) {
                 Chip(
                     modifier = GlanceModifier.defaultWeight().fillMaxHeight(),
@@ -316,7 +321,7 @@ private fun ChipsPanel(state: WidgetRenderState, sizes: WidgetSizes, modifier: G
             )
         }
         Spacer(modifier = GlanceModifier.height(ChipGap))
-        Row(modifier = GlanceModifier.fillMaxWidth().height(sizes.rowHeight)) {
+        Row(modifier = GlanceModifier.fillMaxWidth().defaultWeight()) {
             Chip(
                 modifier = GlanceModifier.defaultWeight().fillMaxHeight(),
                 text = state.iobText,

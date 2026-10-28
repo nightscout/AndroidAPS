@@ -33,6 +33,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
@@ -72,7 +73,7 @@ internal class LoadDeviceStatusWorkerTest : TestBaseWithProfile() {
         TestListenableWorkerBuilder<LoadDeviceStatusWorker>(context)
             .setWorkerFactory(object : WorkerFactory() {
                 override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters) =
-                    LoadDeviceStatusWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, LoadDeviceStatusRunner(aapsLogger, nsClientV3Plugin, dateUtil, nsDeviceStatusHandler, nsClientRepository))
+                    LoadDeviceStatusWorker(appContext, workerParameters, aapsLogger, fabricPrivacy, LoadDeviceStatusRunner(aapsLogger, nsClientV3Plugin, dateUtil, nsDeviceStatusHandler, nsClientRepository, config))
             })
             .build()
 
@@ -126,7 +127,7 @@ internal class LoadDeviceStatusWorkerTest : TestBaseWithProfile() {
             pump = null,
             openaps = null,
         )
-        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong()))
+        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong(), anyInt()))
             .thenReturn(listOf(deviceStatus))
 
         val result = sut.doWorkAndLog()
@@ -141,7 +142,7 @@ internal class LoadDeviceStatusWorkerTest : TestBaseWithProfile() {
         whenever(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         sut = buildSut()
-        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong()))
+        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong(), anyInt()))
             .thenReturn(emptyList())
 
         val result = sut.doWorkAndLog()
@@ -157,7 +158,7 @@ internal class LoadDeviceStatusWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         sut = buildSut()
         val errorMessage = "Network error"
-        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong()))
+        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong(), anyInt()))
             .thenThrow(RuntimeException(errorMessage))
 
         val result = sut.doWorkAndLog()
@@ -174,7 +175,7 @@ internal class LoadDeviceStatusWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastOperationError = "Previous error"
         sut = buildSut()
-        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong()))
+        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong(), anyInt()))
             .thenReturn(emptyList())
 
         val result = sut.doWorkAndLog()
@@ -190,7 +191,7 @@ internal class LoadDeviceStatusWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.initialLoadFinished = false
         sut = buildSut()
-        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong()))
+        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong(), anyInt()))
             .thenReturn(emptyList())
 
         val result = sut.doWorkAndLog()
@@ -205,14 +206,70 @@ internal class LoadDeviceStatusWorkerTest : TestBaseWithProfile() {
         whenever(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         sut = buildSut()
-        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong()))
+        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong(), anyInt()))
             .thenReturn(emptyList())
 
         val result = sut.doWorkAndLog()
 
         assertIs<ListenableWorker.Result.Success>(result)
         val expectedFrom = now - T.mins(7).msecs()
-        verify(nsAndroidClient).getDeviceStatusModifiedSince(expectedFrom)
+        verify(nsAndroidClient).getDeviceStatusModifiedSince(expectedFrom, NSClientV3Plugin.RECORDS_TO_LOAD)
+    }
+
+    /** A client works out the ISF for carbs from the master's loop results of 48 hours, which come with them. */
+    @Test
+    fun `a client loads the last 48 hours after a start`() = runTest(timeout = 30.seconds) {
+        nsClientV3Plugin.nsAndroidClient = nsAndroidClient
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        sut = buildSut()
+        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong(), anyInt())).thenReturn(emptyList())
+
+        assertIs<ListenableWorker.Result.Success>(sut.doWorkAndLog())
+
+        verify(nsAndroidClient).getDeviceStatusModifiedSince(now - T.hours(48).msecs(), NSClientV3Plugin.RECORDS_TO_LOAD)
+    }
+
+    /** Then everything the server got since the last load, also what came while the phone was offline. */
+    @Test
+    fun `a client goes on from the last load`() = runTest(timeout = 30.seconds) {
+        nsClientV3Plugin.nsAndroidClient = nsAndroidClient
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        nsClientV3Plugin.lastLoadedDeviceStatusSrvModified = now - T.hours(2).msecs()
+        sut = buildSut()
+        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong(), anyInt())).thenReturn(emptyList())
+
+        assertIs<ListenableWorker.Result.Success>(sut.doWorkAndLog())
+
+        verify(nsAndroidClient).getDeviceStatusModifiedSince(now - T.hours(2).msecs(), NSClientV3Plugin.RECORDS_TO_LOAD)
+    }
+
+    /** A day holds about 300, so a full page is followed by the next one, from its newest change on. */
+    @Test
+    fun `a client loads page after page`() = runTest(timeout = 30.seconds) {
+        nsClientV3Plugin.nsAndroidClient = nsAndroidClient
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        sut = buildSut()
+        val start = now - T.hours(48).msecs()
+        val fullPage = (1..NSClientV3Plugin.RECORDS_TO_LOAD).map { NSDeviceStatus(srvModified = start + it, device = "test-device") }
+        val lastPage = listOf(NSDeviceStatus(srvModified = start + 1_000, device = "test-device"))
+        whenever(nsAndroidClient.getDeviceStatusModifiedSince(eq(start), anyInt())).thenReturn(fullPage)
+        whenever(nsAndroidClient.getDeviceStatusModifiedSince(eq(start + NSClientV3Plugin.RECORDS_TO_LOAD), anyInt())).thenReturn(lastPage)
+
+        assertIs<ListenableWorker.Result.Success>(sut.doWorkAndLog())
+
+        verify(nsDeviceStatusHandler).handleNewData(argThat { size == NSClientV3Plugin.RECORDS_TO_LOAD }, eq(false))
+        verify(nsDeviceStatusHandler).handleNewData(argThat { size == 1 }, eq(false))
+        assertThat(nsClientV3Plugin.lastLoadedDeviceStatusSrvModified).isEqualTo(start + 1_000)
+    }
+
+    /** A full sync, the way to rebuild a client's database, loads the 48 hours again. */
+    @Test
+    fun `a full sync loads the 48 hours again`() = runTest(timeout = 30.seconds) {
+        nsClientV3Plugin.lastLoadedDeviceStatusSrvModified = now - T.hours(2).msecs()
+
+        nsClientV3Plugin.resetToFullSync()
+
+        assertThat(nsClientV3Plugin.lastLoadedDeviceStatusSrvModified).isEqualTo(0L)
     }
 
     @Test
@@ -240,7 +297,7 @@ internal class LoadDeviceStatusWorkerTest : TestBaseWithProfile() {
             pump = null,
             openaps = null,
         )
-        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong()))
+        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong(), anyInt()))
             .thenReturn(listOf(deviceStatus1, deviceStatus2))
 
         val result = sut.doWorkAndLog()
@@ -257,7 +314,7 @@ internal class LoadDeviceStatusWorkerTest : TestBaseWithProfile() {
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.initialLoadFinished = true
         sut = buildSut()
-        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong()))
+        whenever(nsAndroidClient.getDeviceStatusModifiedSince(anyLong(), anyInt()))
             .thenReturn(emptyList())
 
         val result = sut.doWorkAndLog()

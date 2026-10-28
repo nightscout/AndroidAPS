@@ -35,7 +35,8 @@ import app.aaps.core.ui.compose.stringResource
 
 /**
  * Modal-style screen rendered over a scrim by [ErrorActivity] when an urgent alarm fires.
- * Displays the alarm title/status and three actions: OK (dismiss), Mute, Mute 5 min.
+ * Displays the alarm title/status and three actions, each saying what it does: mute for 5 minutes
+ * (+5 min for the "time to eat" timer), silence, and silence and close.
  *
  * Audio (MediaPlayer + volume ramp) is owned by [ErrorActivity] itself — the [onStart]
  * callback fires once on first composition so the activity can begin playback when the
@@ -148,22 +149,22 @@ fun ErrorScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Mute button
+                // Silence button: the sound stops, this screen stays open
                 Button(
                     onClick = onMute,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(CoreUiStrings.mute))
+                    Text(stringResource(CoreUiStrings.alarm_silence))
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // OK button
+                // Silence and close button
                 Button(
                     onClick = onOk,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(CoreUiStrings.ok))
+                    Text(stringResource(CoreUiStrings.alarm_silence_and_close))
                 }
             }
         }

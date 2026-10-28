@@ -575,9 +575,10 @@ class ClientControlReceiver(
                 eatReminder.stop(); AckOutcome(AckStatus.Ok, null)
             }
 
-            EatReminderAction.EXTEND -> {
-                eatReminder.extend(); AckOutcome(AckStatus.Ok, null)
-            }
+            // The master could not set the new alarm: nothing changed, and the client must not show success
+            EatReminderAction.EXTEND ->
+                if (eatReminder.extend()) AckOutcome(AckStatus.Ok, null)
+                else AckOutcome(AckStatus.Failed, FailureReason.ExecutionFailed.name)
 
             // A newer client sent an action this master does not know.
             null                     -> AckOutcome(AckStatus.Failed, FailureReason.ExecutionFailed.name)

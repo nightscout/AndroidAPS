@@ -4,6 +4,9 @@ import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 
@@ -59,6 +62,22 @@ class AutotuneProfileJsonTest : TestBaseWithProfile() {
         assertThat(data).isNotNull()
         assertThat(data!!.basalBlocks).isNotEmpty()
         assertThat(data.targetBlocks).isNotEmpty()
+    }
+
+    /**
+     * Autotune works with three decimals, but the profile it hands out has two: no pump takes a finer basal
+     * step than 0.01, and with the third decimal the editor stepped and summed digits it did not show
+     * (#5401, #5402). The tuned values themselves keep their precision for the next run.
+     */
+    @Test
+    fun `the tuned profile takes the basal rounded to two decimals`() {
+        val tuned = atProfile().also { it.basal[0] = 1.125; it.basal[1] = 1.114; it.basal[2] = 0.996 }
+
+        val blocks = tuned.data()!!.basalBlocks
+        assertThat(blocks.map { it.amount }.take(3)).containsExactly(1.13, 1.11, 1.0).inOrder()
+        val schedule = tuned.basal()
+        assertThat(schedule[0].jsonObject["value"]?.jsonPrimitive?.double).isEqualTo(1.13)
+        assertThat(tuned.basal[0]).isEqualTo(1.125)
     }
 
     /**

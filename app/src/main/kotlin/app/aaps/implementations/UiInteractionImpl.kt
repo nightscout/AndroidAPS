@@ -50,11 +50,19 @@ class UiInteractionImpl(
     override val mainActivity: KClass<*> = ComposeMainActivity::class
     override val errorHelperActivity: KClass<*> = ErrorActivity::class
 
+    /**
+     * The alarm shown now is the "time to eat" timer's. There is one full-screen alarm at a time and a newer one
+     * takes its place, so this follows the last [runAlarm]. Stopping, silencing and +5 min of the timer use it to
+     * reach only their own alarm (#5408).
+     */
+    @Volatile private var eatReminderAlarmShown = false
+
     override fun runAlarm(status: String, title: String, sound: AlarmSound?) = runAlarm(status, title, sound, eatReminder = false)
 
-    override fun runEatReminderAlarm(status: String, title: String) = runAlarm(status, title, AlarmSound.ALARM, eatReminder = true)
+    override fun runEatReminderAlarm(status: String, title: String) = runAlarm(status, title, AlarmSound.EAT_REMINDER, eatReminder = true)
 
     private fun runAlarm(status: String, title: String, sound: AlarmSound?, eatReminder: Boolean) {
+        eatReminderAlarmShown = eatReminder
         // Persist the error as an announcement at fire time — gated by the NS-announcement
         // preference + APS build. Done here (not in ErrorActivity) so the record is written for
         // every alarm with the true trigger time, regardless of whether/how it is later
@@ -114,13 +122,29 @@ class UiInteractionImpl(
 
     override fun stopAlarm(reason: String) {
         aapsLogger.debug(LTag.CORE, "stopAlarm: $reason")
+        // Every way of stopping the alarm shown comes here (alarm screen, notification Mute or swipe, watch). When it
+        // is the "time to eat" alarm, that is the timer's Stop, as on its bar: the timer ends and only its alarm is
+        // silenced, other alarms keep sounding. Stopping another alarm leaves the timer alone, also a pump alarm that
+        // came in after the eat alarm rang and took its place (#5408).
+        if (eatReminderAlarmShown) {
+            // Only the timer this alarm rang for. A new timer started since then has not rung, and runs on.
+            if (eatReminder().state.value?.alarmRang == true) eatReminder().stop()
+            // Also when the timer is gone or new: this alarm is still shown
+            stopEatReminderAlarm()
+            return
+        }
         // Route through the registry owner so all audible alarms are actually silenced: clears the
         // internal AlarmSoundPlayer (Wear snooze used to only cancel the system notification, leaving
         // the ramping audio playing), stops the full-screen audio, and cancels the notifications.
         notificationManager().muteAllAlarms()
-        // Every way of stopping an alarm comes here (alarm screen, notification Mute or swipe, watch). When
-        // the "time to eat" timer has rung, this was its alarm and the timer ends, as with Stop on its bar.
-        eatReminder().onAlarmStopped()
+    }
+
+    override fun stopEatReminderAlarm() {
+        if (!eatReminderAlarmShown) return
+        eatReminderAlarmShown = false
+        aapsLogger.debug(LTag.CORE, "stopEatReminderAlarm")
+        // The full-screen alarm and its looping sound, nothing in the notification list
+        alarmNotificationManager.cancelAlarm()
     }
 
     /**

@@ -8,7 +8,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.implementation.logging.AAPSLoggerIos
 import app.aaps.ios.shell.di.IosProbeGraph
-import app.aaps.ios.shell.prefs.IosSp
+import app.aaps.ios.shell.prefs.IosStorage
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import dev.zacsweers.metro.createGraphFactory
 import kotlinx.datetime.TimeZone
@@ -99,22 +99,20 @@ object ShellInfo {
     }
 
     /**
-     * Exercises the NSUserDefaults backed store.
+     * Exercises the encrypted settings store, in the real app with the real Keychain - which a test
+     * binary does not have.
      *
-     * The reason this is a runtime check and not a unit test yet is the failure it is looking for.
-     * `NSUserDefaults` answers a missing key with a zero value rather than saying it is missing, so
-     * a store written the obvious way returns `false` and `0.0` instead of the caller's defaults.
-     * That version compiles, links, runs, and quietly replaces every AAPS default with zero. So the
-     * first case below is the important one.
+     * An absent key must answer the caller's default. The store this replaced, `NSUserDefaults`,
+     * answered zero instead, which would quietly replace every AAPS default; the first case keeps that
+     * checked.
      *
      * @return one line per check, or the failure.
      */
     fun checkPrefs(): String = try {
-        val sp = IosSp()
+        val sp = IosStorage.open()
         val key = "aaps.ios.probe"
         sp.remove(key)
 
-        // The trap: absent key must give the caller's default, not NSUserDefaults' zero.
         val absentBool = sp.getBoolean(key, defaultValue = true)
         val absentDouble = sp.getDouble(key, defaultValue = 5.5)
         val absentInt = sp.getInt(key, defaultValue = 42)
@@ -181,14 +179,14 @@ object ShellInfo {
     /**
      * Looks for the alarm audio, and starts one briefly.
      *
-     * Two things here can fail without any compiler noticing. The four MP3s are copied into the
+     * Two things here can fail without any compiler noticing. The five MP3s are copied into the
      * bundle by a script in the Xcode project, so a rename on the Android side leaves them missing,
      * and `AVAudioPlayer` refuses to start for reasons - a bad file, a session it cannot activate -
      * that only show at run time. Both would end as an alarm that stays silent, which is the worst
      * way for this to break.
      */
     fun checkAlarm(): String = try {
-        val found = listOf("alarm", "urgentalarm", "error", "boluserror")
+        val found = listOf("alarm", "urgentalarm", "error", "boluserror", "eatreminder")
             .count { NSBundle.mainBundle.URLForResource(it, withExtension = "mp3") != null }
         val graph = createGraphFactory<IosProbeGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
         val player = graph.alarmSoundPlayer
@@ -198,7 +196,7 @@ object ShellInfo {
         // Not "the alarm works": play() is asynchronous, so this only says the call was accepted.
         // Whether AVAudioPlayer actually started is in the log, and on the simulator it does not.
         listOf(
-            "alarm sounds bundled: $found of 4",
+            "alarm sounds bundled: $found of 5",
             "play requested: yes (see the log for whether audio started)"
         ).joinToString("\n")
     } catch (e: Throwable) {

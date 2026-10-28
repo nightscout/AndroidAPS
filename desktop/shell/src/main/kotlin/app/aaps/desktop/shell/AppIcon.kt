@@ -26,16 +26,6 @@ internal fun appIconResource(config: Config): String = "icons/" + when {
     else               -> "ic_launcher"
 } + ".png"
 
-/**
- * What the window wears when the graph could not be built and there is no config to ask.
- *
- * The main icon and the main name, because a build that cannot say what it is is not a client.
- */
-internal const val DEFAULT_APP_ICON: String = "icons/ic_launcher.png"
-
-/** @see DEFAULT_APP_ICON */
-internal const val DEFAULT_APP_NAME: String = "AAPS"
-
 /** Only here to name the class loader that holds the copied icons. */
 private object IconResources
 

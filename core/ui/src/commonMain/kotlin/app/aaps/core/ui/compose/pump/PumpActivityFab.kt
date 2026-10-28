@@ -5,12 +5,16 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Vaccines
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -18,13 +22,15 @@ import androidx.compose.ui.text.font.FontWeight
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSmallFab
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.stringResource
 
 /**
  * FAB indicating active pump communication.
  *
  * Visible when pump is communicating or bolus is in progress.
- * Shows pump icon normally, or delivery percentage during SMB.
+ * Shows a Bluetooth icon normally, or delivery percentage during SMB. A turning ring around the
+ * content shows that the exchange is running right now, which a still icon cannot say.
  * Tap opens the PumpActivityDialog.
  *
  * @see PreviewPumpFabIcon
@@ -53,17 +59,26 @@ fun PumpActivityFab(
             onClick = onClick,
             modifier = Modifier.semantics { contentDescription = fabDescription }
         ) {
-            if (bolusState != null && bolusState.isSMB && bolusState.percent in 1..99) {
-                Text(
-                    text = stringResource(CoreUiStrings.units_format_percent, bolusState.percent),
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Bold
+            Box(contentAlignment = Alignment.Center) {
+                // The ring is given a fixed size on purpose. The content slot of the button is not
+                // bounded by the button itself, so fillMaxSize() here would grow to the whole screen.
+                CircularProgressIndicator(
+                    modifier = Modifier.size(AapsSpacing.pumpFabRingSize),
+                    strokeWidth = AapsSpacing.pumpFabRingStrokeWidth,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
-            } else {
-                Icon(
-                    imageVector = Icons.Default.Vaccines,
-                    contentDescription = null
-                )
+                if (bolusState != null && bolusState.isSMB && bolusState.percent in 1..99) {
+                    Text(
+                        text = stringResource(CoreUiStrings.units_format_percent, bolusState.percent),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Bluetooth,
+                        contentDescription = null
+                    )
+                }
             }
         }
     }

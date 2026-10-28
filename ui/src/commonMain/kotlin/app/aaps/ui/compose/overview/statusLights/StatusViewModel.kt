@@ -22,7 +22,6 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.ui.UiStrings
 import app.aaps.core.ui.compose.StatusLevel
@@ -187,7 +186,6 @@ class StatusViewModel(
         return StatusItem(
             label = rh.gs(CoreUiStrings.sensor_label),
             age = event?.let { formatAge(it.timestamp) } ?: "-",
-            ageShort = event?.let { formatAgeShort(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewSageWarning, IntKey.OverviewSageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewSageCritical) } ?: 0f,
             level = level,
@@ -223,7 +221,6 @@ class StatusViewModel(
         return StatusItem(
             label = rh.gs(CoreUiStrings.insulin_label),
             age = event?.let { formatAge(it.timestamp) } ?: "-",
-            ageShort = event?.let { formatAgeShort(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewIageWarning, IntKey.OverviewIageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewIageCritical) } ?: 0f,
             level = level,
@@ -248,7 +245,6 @@ class StatusViewModel(
         return StatusItem(
             label = label,
             age = event?.let { formatAge(it.timestamp) } ?: "-",
-            ageShort = event?.let { formatAgeShort(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewCageWarning, IntKey.OverviewCageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewCageCritical) } ?: 0f,
             level = if (usage > 0) rh.gs(CoreUiStrings.value_with_unit, decimalFormatter.to0Decimal(usage), rh.gs(CoreUiStrings.insulin_unit_shortname)) else null,
@@ -286,7 +282,6 @@ class StatusViewModel(
         return StatusItem(
             label = rh.gs(CoreUiStrings.pb_label),
             age = event?.let { formatAge(it.timestamp) } ?: "-",
-            ageShort = event?.let { formatAgeShort(it.timestamp) } ?: "-",
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewBageWarning, IntKey.OverviewBageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewBageCritical) } ?: 0f,
             level = if (showLevel) rh.gs(CoreUiStrings.units_format_percent, batteryLevelValue.toInt()) else null,
@@ -299,19 +294,13 @@ class StatusViewModel(
         )
     }
 
-    // Both forms are built, and the screen shows the long one where it fits (see `LongOrShort`).
+    // Always the short form, on every screen size: a status row is read at a glance, and the long
+    // words ("3 days 4 hours") pushed the row's own name out of its place on a narrow screen.
+    // The days part is left out while there is none, so a fresh sensor reads "4h" and not "0d4h".
     private fun formatAge(timestamp: Long): String {
         val diff = dateUtil.computeDiff(timestamp, dateUtil.now())
-        return rh.gs(
-            CoreUiStrings.value_with_unit,
-            rh.gs(CoreUiStrings.value_with_unit, diff.days.toString(), rh.gs(InterfacesStrings.days)),
-            rh.gs(CoreUiStrings.value_with_unit, diff.hours.toString(), rh.gs(InterfacesStrings.hours))
-        )
-    }
-
-    private fun formatAgeShort(timestamp: Long): String {
-        val diff = dateUtil.computeDiff(timestamp, dateUtil.now())
-        return rh.gs(UiStrings.status_age_short, diff.days, diff.hours)
+        return if (diff.days == 0L) rh.gs(UiStrings.status_age_short_hours, diff.hours)
+        else rh.gs(UiStrings.status_age_short, diff.days, diff.hours)
     }
 
     private fun getAgeStatus(timestamp: Long, warnKey: IntPreferenceKey, urgentKey: IntPreferenceKey): StatusLevel {

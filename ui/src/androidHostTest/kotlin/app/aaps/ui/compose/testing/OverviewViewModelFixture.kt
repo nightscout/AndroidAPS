@@ -121,9 +121,10 @@ internal class OverviewViewModelFixture(private val screen: AapsScreenFixture) {
 
     init {
         stubResourcesFromRobolectric(rh)
-        // The short status age is this module's own string, and the shared stub knows only five other
+        // The status ages are this module's own strings, and the shared stub knows only five other
         // modules, so it would throw. Answered from the real resources, like everything else here.
         doReturn(RuntimeEnvironment.getApplication().getString(R.string.status_age_short)).whenever(rh).gs(UiStrings.status_age_short)
+        doReturn(RuntimeEnvironment.getApplication().getString(R.string.status_age_short_hours)).whenever(rh).gs(UiStrings.status_age_short_hours)
 
         // ----- shared ambient -----
         whenever(screen.dateUtil.now()).thenReturn(NOW)

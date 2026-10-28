@@ -1,7 +1,6 @@
 package app.aaps.di.metro
 
 import android.content.Context
-import android.content.SharedPreferences
 import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.Loop
@@ -35,11 +34,13 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.scenes.Scenes
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.storage.Storage
+import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
@@ -271,7 +272,8 @@ class MetroGraphs(
     val rxBus: RxBus get() = root.rxBus
     val dateUtil: DateUtil get() = root.dateUtil
     val l: L get() = root.l
-    val sp: SP get() = root.sp
+    val keyValueStore: KeyValueStore get() = root.keyValueStore
+    val iconsProvider: IconsProvider get() = root.iconsProvider
     val widgetUpdater: WidgetUpdater get() = root.widgetUpdater
     val commandQueue: CommandQueue get() = root.commandQueue
     val localAlertUtils: LocalAlertUtils get() = root.localAlertUtils
@@ -282,11 +284,11 @@ class MetroGraphs(
     val profileSwitchScheduler: ProfileSwitchScheduler get() = root.profileSwitchScheduler
     val snackbarNotificationFallback: SnackbarNotificationFallback get() = root.snackbarNotificationFallback
     val eatReminder: EatReminder get() = root.eatReminder
+    val uiRestart: UiRestart get() = root.uiRestart
     val activePlugin: ActivePlugin get() = root.activePlugin
     val pluginStore: PluginStore get() = root.pluginStore
     val maintenance: Maintenance get() = root.maintenance
     val fileListProvider: FileListProvider get() = root.fileListProvider
-    val sharedPreferences: SharedPreferences get() = root.sharedPreferences
     val exportPasswordDataStore: ExportPasswordDataStore get() = root.exportPasswordDataStore
     val cryptoUtil: CryptoUtil get() = root.cryptoUtil
     val concentrationHelper: ConcentrationHelper get() = root.concentrationHelper

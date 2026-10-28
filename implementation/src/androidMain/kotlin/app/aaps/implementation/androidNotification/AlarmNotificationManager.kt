@@ -121,14 +121,16 @@ class AlarmNotificationManager(
             AlarmSound.ALARM to "alarm",
             AlarmSound.BOLUS_ERROR to "boluserror",
             AlarmSound.ERROR to "error",
-            AlarmSound.URGENT_ALARM to "urgentalarm"
+            AlarmSound.URGENT_ALARM to "urgentalarm",
+            AlarmSound.EAT_REMINDER to "eatreminder"
         )
 
         private val DISPLAY_NAMES: Map<AlarmSound, Int> = mapOf(
             AlarmSound.ALARM to R.string.alarm_channel_standard,
             AlarmSound.BOLUS_ERROR to R.string.alarm_channel_bolus_error,
             AlarmSound.ERROR to R.string.alarm_channel_error,
-            AlarmSound.URGENT_ALARM to R.string.alarm_channel_urgent
+            AlarmSound.URGENT_ALARM to R.string.alarm_channel_urgent,
+            AlarmSound.EAT_REMINDER to R.string.alarm_channel_eat_reminder
         )
     }
 
@@ -337,8 +339,8 @@ class AlarmNotificationManager(
             .setDeleteIntent(swipePendingIntent)
             .addAction(0, rh.gs(app.aaps.core.ui.R.string.mute), mutePendingIntent)
             .apply {
-                // +5 min next to Mute, so the timer can be moved from the lock screen. Mute ends the timer
-                // (EatReminder.onAlarmStopped), like every other way of stopping its alarm.
+                // +5 min next to Mute, so the timer can be moved from the lock screen. Mute ends the timer, like
+                // every other way of stopping its alarm: UiInteraction.stopAlarm knows the eat alarm is the one shown.
                 if (eatReminder) addAction(
                     0, rh.gs(CoreUiStrings.eat_reminder_extend, EatReminder.EXTEND_MINUTES),
                     PendingIntent.getBroadcast(

@@ -83,11 +83,12 @@ interface SceneAutomationApi {
 
     /**
      * Deactivate the active scene, and if it has a configured chain target, fire it — resolving the
-     * target from the active scene's own `endAction` internally (no caller-supplied id). Posts the
-     * SCENE_CHAINED / SCENE_CHAIN_ERROR notification on completion. This is the single master-side entry
-     * for "stop + chain", shared by the End-Scene dialog, the `scene.stop(triggerChain=true)` command,
-     * so the chain (and its notification) behaves identically however it was triggered. Falls back to a
-     * plain [stopActiveScene] when there's no chain target.
+     * target from the active scene's own `endAction` internally (no caller-supplied id). A chain that
+     * works says so with the new scene's own banner; only one that partly failed posts a notification
+     * (SCENE_CHAIN_ERROR). This is the single master-side entry for "stop + chain", shared by the
+     * End-Scene dialog and the `scene.stop(triggerChain=true)` command, so the chain behaves
+     * identically however it was triggered. Falls back to a plain [stopActiveScene] when there's no
+     * chain target.
      */
     suspend fun stopActiveSceneAndChain(): SceneAutomationResult
 }

@@ -106,7 +106,8 @@ class RunningConfigurationImpl(
                 ttNsId = snapshot.ttNsId,
                 psNsId = snapshot.psNsId,
                 rmNsId = snapshot.rmNsId,
-                teNsId = snapshot.teNsId
+                teNsId = snapshot.teNsId,
+                chainSkipReason = snapshot.chainSkipReason
             )
             // Straight to a JsonElement now - the old code went through text only because org.json
             // could not read a kotlinx tree.
@@ -240,7 +241,8 @@ class RunningConfigurationImpl(
             ttNsId = ttNsId,
             psNsId = psNsId,
             rmNsId = rmNsId,
-            teNsId = teNsId
+            teNsId = teNsId,
+            chainSkipReason = chainSkipReason
         )
 
 }

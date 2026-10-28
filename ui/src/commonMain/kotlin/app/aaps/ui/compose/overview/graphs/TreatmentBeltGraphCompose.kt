@@ -383,6 +383,7 @@ fun TreatmentBeltGraphCompose(
     }
 
     // Time formatter and axis config — same as other graphs for alignment
+    val bgReadings by viewModel.bgReadingsFlow.collectAsStateWithLifecycle()
     val timeFormatter = rememberTimeFormatter(minTimestamp)
     val bottomAxisItemPlacer = rememberBottomAxisItemPlacer(minTimestamp)
 
@@ -398,7 +399,7 @@ fun TreatmentBeltGraphCompose(
     val nowLineColor = MaterialTheme.colorScheme.onSurface
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val inspectLine = rememberInspectLine(inspect)
-    val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp)
+    val clockChanges = rememberClockChangeDecoration(minTimestamp, maxTimestamp, bgReadings)
     val beltDecorations = remember(nowLine, clockChanges, inspectLine) { listOfNotNull(nowLine, clockChanges, inspectLine) }
 
     val rangeProvider = remember(maxX) {

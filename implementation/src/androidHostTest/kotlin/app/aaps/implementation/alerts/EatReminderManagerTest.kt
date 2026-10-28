@@ -19,8 +19,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
- * The "time to eat" timer (#5327, #5372): start, stop, +5 min, the link to every way of stopping its alarm,
- * the restart, and the client's copy.
+ * The "time to eat" timer (#5327, #5372): start, stop, +5 min, the restart, and the client's copy. Which alarm a
+ * Stop of the alarm screen, the notification or the watch reaches is decided by `UiInteractionImpl`, see its test.
  */
 class EatReminderManagerTest : TestBase() {
 
@@ -96,37 +96,81 @@ class EatReminderManagerTest : TestBase() {
     }
 
     @Test
-    fun extendBeforeItRangMovesTheEndAndKeepsTheSetLength() {
+    fun extendBeforeItRangMovesTheEndAndGrowsTheWholeWait() {
         val sut = manager()
         sut.start(twentyMinutes)
         now += T.mins(3).msecs()
 
-        sut.extend()
+        assertThat(sut.extend()).isTrue()
 
         val state = sut.state.value!!
         assertThat(state.endsAt).isEqualTo(1_000_000L + twentyMinutes + fiveMinutes)
-        assertThat(state.durationMs).isEqualTo(twentyMinutes)
+        assertThat(state.durationMs).isEqualTo(twentyMinutes + fiveMinutes)
         assertThat(alarm.scheduledEnd).isEqualTo(state.endsAt)
+        verify(uiInteraction, never()).stopEatReminderAlarm()
         verify(uiInteraction, never()).stopAlarm(any())
     }
 
-    /** After it rang, +5 min counts from now, and the ringing alarm stops. */
+    /**
+     * After it rang, +5 min counts from now, and its alarm stops - only its own alarm, never the others (#5408). The
+     * time waited is part of the whole wait.
+     */
     @Test
-    fun extendAfterItRangCountsFromNowAndSilencesTheAlarm() {
+    fun extendAfterItRangCountsFromNowAndSilencesOnlyItsAlarm() {
         val sut = manager()
         sut.start(twentyMinutes)
         now += twentyMinutes + T.mins(2).msecs()
         sut.onRang()
 
-        sut.extend()
+        assertThat(sut.extend()).isTrue()
 
         assertThat(sut.state.value!!.endsAt).isEqualTo(now + fiveMinutes)
+        assertThat(sut.state.value!!.durationMs).isEqualTo(twentyMinutes + T.mins(2).msecs() + fiveMinutes)
         assertThat(sut.state.value!!.alarmRang).isFalse()
-        verify(uiInteraction).stopAlarm(any())
+        verify(uiInteraction).stopEatReminderAlarm()
+        verify(uiInteraction, never()).stopAlarm(any())
+    }
+
+    /**
+     * +5 min means "remind me in 5 minutes" everywhere. After Silence on the alarm screen ended the timer, its +5 min
+     * is still there, and the watch counts on the same: a new timer of 5 minutes starts.
+     */
+    @Test
+    fun extendWithNoTimerStartsANewOneOfFiveMinutes() {
+        val sut = manager()
+        sut.start(twentyMinutes)
+        now += twentyMinutes
+        sut.onRang()
+        sut.stop()
+
+        assertThat(sut.extend()).isTrue()
+
+        assertThat(sut.state.value).isEqualTo(EatReminderState(startedAt = now, endsAt = now + fiveMinutes, durationMs = fiveMinutes))
+        assertThat(alarm.scheduledEnd).isEqualTo(now + fiveMinutes)
+    }
+
+    /**
+     * When the new alarm cannot be set (exact alarms not allowed any more), +5 min changes nothing: the timer stays
+     * rung and its alarm is not silenced, so the reminder is not lost. The caller hears it failed (#5408).
+     */
+    @Test
+    fun extendThatCannotSetTheAlarmChangesNothing() {
+        val sut = manager()
+        sut.start(twentyMinutes)
+        now += twentyMinutes
+        sut.onRang()
+        val before = sut.state.value
+        alarm.canSchedule = false
+
+        assertThat(sut.extend()).isFalse()
+
+        assertThat(sut.state.value).isEqualTo(before)
+        verify(uiInteraction, never()).stopEatReminderAlarm()
+        verify(uiInteraction, never()).stopAlarm(any())
     }
 
     @Test
-    fun stopBeforeItRangCancelsWithoutTouchingOtherAlarms() {
+    fun stopBeforeItRangCancelsWithoutTouchingAnyAlarm() {
         val sut = manager()
         sut.start(twentyMinutes)
 
@@ -135,11 +179,13 @@ class EatReminderManagerTest : TestBase() {
         assertThat(sut.state.value).isNull()
         assertThat(alarm.scheduledEnd).isNull()
         assertThat(saved).isEmpty()
+        verify(uiInteraction, never()).stopEatReminderAlarm()
         verify(uiInteraction, never()).stopAlarm(any())
     }
 
+    /** Stop after it rang silences its own alarm and leaves every other alarm alone (#5408). */
     @Test
-    fun stopAfterItRangSilencesTheAlarm() {
+    fun stopAfterItRangSilencesOnlyItsAlarm() {
         val sut = manager()
         sut.start(twentyMinutes)
         now += twentyMinutes
@@ -148,38 +194,11 @@ class EatReminderManagerTest : TestBase() {
         sut.stop()
 
         assertThat(sut.state.value).isNull()
-        verify(uiInteraction).stopAlarm(any())
+        verify(uiInteraction).stopEatReminderAlarm()
+        verify(uiInteraction, never()).stopAlarm(any())
     }
 
-    /** OK on the alarm screen, Mute on the notification, the watch: all end the timer once it rang. */
-    @Test
-    fun stoppingTheAlarmAfterItRangEndsTheTimer() {
-        val sut = manager()
-        sut.start(twentyMinutes)
-        now += twentyMinutes + 1_000L
-        sut.onRang()
-
-        sut.onAlarmStopped()
-
-        assertThat(sut.state.value).isNull()
-    }
-
-    /**
-     * Android may deliver the alarm a little after the end time. A BG alarm muted in that gap is not the timer's
-     * alarm, and must not end the timer, or its alarm would come to nothing.
-     */
-    @Test
-    fun stoppingAnotherAlarmAfterTheEndButBeforeTheTimerRangChangesNothing() {
-        val sut = manager()
-        sut.start(twentyMinutes)
-        now += twentyMinutes + 1_000L
-
-        sut.onAlarmStopped()
-
-        assertThat(sut.state.value).isNotNull()
-        assertThat(alarm.scheduledEnd).isEqualTo(1_000_000L + twentyMinutes)
-    }
-
+    /** The rang mark survives a restart, so a Stop after it still silences the alarm. */
     @Test
     fun theRangMarkSurvivesARestart() {
         manager().apply {
@@ -189,22 +208,11 @@ class EatReminderManagerTest : TestBase() {
         }
 
         val afterRestart = manager()
-        afterRestart.onAlarmStopped()
+        assertThat(afterRestart.state.value!!.alarmRang).isTrue()
+        afterRestart.stop()
 
         assertThat(afterRestart.state.value).isNull()
-    }
-
-    /** Muting a BG alarm while the timer still runs must not end the timer. */
-    @Test
-    fun stoppingAnotherAlarmWhileTheTimerRunsChangesNothing() {
-        val sut = manager()
-        sut.start(twentyMinutes)
-        now += T.mins(10).msecs()
-
-        sut.onAlarmStopped()
-
-        assertThat(sut.state.value).isNotNull()
-        assertThat(alarm.scheduledEnd).isEqualTo(1_000_000L + twentyMinutes)
+        verify(uiInteraction).stopEatReminderAlarm()
     }
 
     @Test
@@ -261,16 +269,19 @@ class EatReminderManagerTest : TestBase() {
         assertThat(sut.state.value).isNull()
     }
 
-    /** A client's own alarms (a BG alarm) must not end its copy; only the master ends the timer. */
+    /** A client asks the master; changing its own copy here would only be undone by the next sync. */
     @Test
-    fun onAClientStoppingAnAlarmLeavesTheCopy() {
+    fun onAClientStopAndExtendLeaveTheCopy() {
         whenever(config.AAPSCLIENT).thenReturn(true)
         val sut = manager()
-        sut.applyRemote(EatReminderState(startedAt = 0L, endsAt = now - 1_000L, durationMs = twentyMinutes))
+        val remote = EatReminderState(startedAt = 0L, endsAt = now - 1_000L, durationMs = twentyMinutes)
+        sut.applyRemote(remote)
 
-        sut.onAlarmStopped()
+        sut.stop()
+        assertThat(sut.extend()).isFalse()
 
-        assertThat(sut.state.value).isNotNull()
+        assertThat(sut.state.value).isEqualTo(remote)
+        assertThat(alarm.scheduledEnd).isNull()
     }
 
     @Test

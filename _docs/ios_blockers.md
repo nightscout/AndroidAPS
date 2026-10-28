@@ -233,6 +233,29 @@ posting and routed back by instance key. `IosLoopNotifier` already does exactly 
 for N minutes" buttons and is the worked example. Android cannot be copied here - it suppresses such
 notifications from the tray instead, because its actions are `PendingIntent`s.
 
+## Ready for iOS: the encrypted settings store (2026-10, not yet run on Apple)
+
+Written by the Windows session. `IosSp` and `NSUserDefaults` are gone as the settings store. iOS now
+uses the same `EncryptedKeyValueStore` (`shared/impl`) as the desktop: one file, AES-256-GCM, written
+through DataStore's okio storage, which is the only file storage DataStore has on iOS.
+
+- `ios/shell/.../prefs/IosStorage.kt` opens it once, before any graph. The file is
+  `Application Support/aaps/preferences.store`, and that folder is excluded from iCloud and computer
+  backups: the key is `ThisDeviceOnly`, so the file could not be read on another phone anyway.
+- The key is in the Keychain, service `app.aaps.settingsstore`, account `preferences`
+  (`KeychainStoreCipher` in `implementation/src/iosMain`). `Keychain.loadStrict` tells "no key" apart
+  from "the Keychain did not answer", so a locked Keychain never leads to a new key.
+- The first start moves every text, true/false and number value of the app's own defaults domain into
+  the store (`UserDefaultsMigration`), then removes those keys from `NSUserDefaults`.
+- A file that does not open with the key shows `StartupFailedScreen` (`appshell`, shared with the
+  desktop) with "Start fresh"; a Keychain that does not answer shows "Try again".
+- Graph tests call `TestStorage.install()` first: a test binary has no Keychain.
+
+Only cross compiled so far. To check on the Mac: `iosSimulatorArm64Test` (new: `EncryptedStoreFileTest`
+in `shared/impl` commonTest on a real file, `KeychainStoreCipherTest`, `UserDefaultsMigrationTest`), the
+framework link, and in the app: an existing install keeps its settings after the update, and a second
+start is clean.
+
 ## Ready for iOS: the Nightscout client
 
 Written by the Windows session, for the macOS one - the other direction from the rest of this file.

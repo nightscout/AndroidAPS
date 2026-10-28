@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
@@ -23,6 +24,10 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlin.math.max
+import kotlin.math.min
 
 /*
 {
@@ -91,26 +96,46 @@ class NSDeviceStatusHandler(
     private val rxBus: RxBus,
     // Plain CoroutineScope: @ApplicationScope is a javax qualifier and cannot appear in commonMain.
     private val appScope: CoroutineScope,
-    private val nsClientV3Plugin: () -> NSClientV3Plugin
+    private val nsClientV3Plugin: () -> NSClientV3Plugin,
+    private val apsResultProvider: () -> APSResult,
+    // Deferred: the calculation reaches the plugins, and this handler belongs to one of them
+    private val iobCobCalculator: () -> IobCobCalculator
 ) {
+
+    /** One batch is stored at a time, so the check for results already stored sees the batch before. */
+    private val storeLock = Mutex()
 
     /**
      * @param live true only for a real-time WS push (a devicestatus the master just created), false for the
      *   REST catch-up/initial batch load. Only a live push bumps the master-alive heartbeat — see below.
      */
     fun handleNewData(deviceStatuses: Array<NSDeviceStatus>, live: Boolean = false) {
+        val apsResults = mutableListOf<ReceivedResult>()
+        val unreadable = Unreadable()
+        var newestTime = 0L
         for (i in deviceStatuses.size - 1 downTo 0) {
             val nsDeviceStatus = deviceStatuses[i]
-            if (config.AAPSCLIENT) {
-                updatePumpData(nsDeviceStatus)
-                updateDeviceData(nsDeviceStatus)
-                updateOpenApsData(nsDeviceStatus)
-                updateUploaderData(nsDeviceStatus)
-            }
-            if (config.APS) {
-                nsDeviceStatus.pump?.let { preferences.put(BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS, true) }  // Objective 0
+            // One document that cannot be read must not stop the others (#5414). A throw used to end the whole
+            // page of a load, so every later load asked for the same page and failed again, for up to 48 hours.
+            // On the websocket thread it ends the app.
+            try {
+                if (config.AAPSCLIENT) {
+                    val time = timeOf(nsDeviceStatus, unreadable)
+                    time?.let { newestTime = max(newestTime, it) }
+                    updatePumpData(nsDeviceStatus, unreadable)
+                    updateDeviceData(nsDeviceStatus, time)
+                    updateOpenApsData(nsDeviceStatus, apsResults, unreadable)
+                    updateUploaderData(nsDeviceStatus, time)
+                }
+                if (config.APS) {
+                    nsDeviceStatus.pump?.let { preferences.put(BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS, true) }  // Objective 0
+                }
+            } catch (e: Exception) {
+                unreadable.add("${nsDeviceStatus.device}: ${e.message ?: e::class.simpleName}")
             }
         }
+        if (unreadable.count > 0)
+            aapsLogger.warn(LTag.NSCLIENT, "Device statuses, parts skipped because they could not be read: ${unreadable.count}. The first: ${unreadable.first}")
         if (config.AAPSCLIENT && deviceStatuses.isNotEmpty()) {
             // Master-alive heartbeat — gates scene/edit controls when master goes silent, even while the
             // local WS to NS is still up. Bump ONLY for a live WS push: a brand-new devicestatus arriving in
@@ -118,31 +143,86 @@ class NSDeviceStatusHandler(
             // app start it pulls the master's LAST historical devicestatus off NS, which can be only a few
             // minutes old (inside the 9-min window) yet the master may already be offline. Per the agreed
             // design the client fails closed after start and waits for the first live ping.
-            // (created_at, not receipt time, is still used as a second guard: skip an unparseable/absent
-            // record rather than crashing, and never fall back to now().)
-            if (live) {
-                val newestCreatedAt = deviceStatuses
-                    .mapNotNull { ds -> ds.createdAt?.let { runCatching { dateUtil.fromISODateString(it) }.getOrNull() } ?: ds.date }
-                    .maxOrNull() ?: 0L
-                if (newestCreatedAt > 0L) nsClientV3Plugin().bumpDevicestatusHeartbeat(newestCreatedAt)
-            }
+            // (The time of the device status, not the receipt time, is still used as a second guard: a record
+            // without a time that can be read is skipped, and there is never a fallback to now().)
+            if (live && newestTime > 0L) nsClientV3Plugin().bumpDevicestatusHeartbeat(newestTime)
             // Once per batch, not once per document: the predictions are read from the newest data only (#5247)
             appScope.launch { calculationWorkflow.runOnReceivedPredictions(overviewData) }
+            if (apsResults.isNotEmpty()) appScope.launch { storeApsResults(apsResults) }
             rxBus.send(EventNsClientStatusUpdated())
         }
     }
 
-    private fun updateDeviceData(deviceStatus: NSDeviceStatus) {
-        val createdAt = deviceStatus.createdAt?.let { dateUtil.fromISODateString(it) } ?: return
+    /**
+     * A loop result as it came with a device status. Older clients stored it with [deviceStatusTime], not
+     * with the master's own time, so a result stored by them is found by that time.
+     */
+    private class ReceivedResult(val apsResult: APSResult, val deviceStatusTime: Long)
+
+    /**
+     * Stores the master's loop results that are not stored yet, then tells the calculation about them.
+     *
+     * The ISF for carbs is worked out from these, on the master from its own (`IsfForCarbs`), so the client
+     * needs every one of them, older ones too: those that come with the 48 hours loaded after a start, and
+     * those the master sent while this phone was offline. A result already stored comes again with every
+     * load after a start and is skipped by its time.
+     */
+    private suspend fun storeApsResults(received: List<ReceivedResult>) = storeLock.withLock {
+        val from = received.minOf { min(it.apsResult.date, it.deviceStatusTime) }
+        val to = received.maxOf { max(it.apsResult.date, it.deviceStatusTime) }
+        val stored = persistenceLayer.getLoopSensitivities(from, to).map { it.timestamp }.toSet()
+        val newResults = received
+            .filter { it.apsResult.date !in stored && it.deviceStatusTime !in stored }
+            .map { it.apsResult }
+            .distinctBy { it.date }
+        newResults.forEach { persistenceLayer.insertOrUpdateApsResult(it) }
+        newResults.minOfOrNull { it.date }?.let { iobCobCalculator().apsResultsStored(it) }
+    }
+
+    /**
+     * What could not be read in one batch. Logged once at its end, not once for each document: a client loads
+     * the last 48 hours after every start, and one kind of bad data is then in hundreds of them (#5414).
+     */
+    private class Unreadable {
+
+        var count = 0
+            private set
+        var first: String? = null
+            private set
+
+        fun add(what: String) {
+            if (count++ == 0) first = what
+        }
+    }
+
+    /**
+     * When the device status was made: `date`, a number the master always sends, else the `created_at` text
+     * that Nightscout adds. Null when there is neither.
+     */
+    private fun timeOf(deviceStatus: NSDeviceStatus, unreadable: Unreadable): Long? =
+        deviceStatus.date ?: readTime(deviceStatus.createdAt, "created_at", deviceStatus, unreadable)
+
+    /** A time inside a device status, or null when there is none or it cannot be read. */
+    private fun readTime(text: String?, field: String, deviceStatus: NSDeviceStatus, unreadable: Unreadable): Long? =
+        text?.let {
+            runCatching { dateUtil.fromISODateString(it) }
+                .onFailure { unreadable.add("$field \"$text\" from ${deviceStatus.device}") }
+                .getOrNull()
+        }
+
+    private fun updateDeviceData(deviceStatus: NSDeviceStatus, time: Long?) {
+        val createdAt = time ?: return
         processedDeviceStatusData.device?.let { if (createdAt < it.createdAt) return } // take only newer record
         deviceStatus.device?.let {
             if (it.startsWith("openaps://")) processedDeviceStatusData.device = ProcessedDeviceStatusData.Device(createdAt, it.substring(10))
         }
     }
 
-    private fun updatePumpData(nsDeviceStatus: NSDeviceStatus) {
+    private fun updatePumpData(nsDeviceStatus: NSDeviceStatus, unreadable: Unreadable) {
         val pump = nsDeviceStatus.pump ?: return
-        val clock = pump.clock?.let { dateUtil.fromISODateString(it) } ?: return
+        // The time the master last read the pump. It can be older than the device status, and the client
+        // shows how old it is, so the time of the device status cannot stand in for it.
+        val clock = readTime(pump.clock, "pump.clock", nsDeviceStatus, unreadable) ?: return
         processedDeviceStatusData.pumpData?.let { if (clock < it.clock) return } // take only newer record
 
         // create new status and process data
@@ -174,38 +254,52 @@ class NSDeviceStatusHandler(
         }
     }
 
-    private fun updateOpenApsData(nsDeviceStatus: NSDeviceStatus) {
+    /** @param apsResults collects the loop result of this device status, to be stored with the batch */
+    private fun updateOpenApsData(nsDeviceStatus: NSDeviceStatus, apsResults: MutableList<ReceivedResult>, unreadable: Unreadable) {
         nsDeviceStatus.openaps?.suggested?.let {
-            it.safeGetString("timestamp")?.let { timestamp ->
-                val clock = dateUtil.fromISODateString(timestamp)
+            // Read here, not taken from the decoded result: the time moves on also when this client cannot
+            // decode the result, for example from a master of another version. The master's loop still runs,
+            // and the client shows how long ago, and alarms when it gets old.
+            readTime(it.safeGetString("timestamp"), "suggested.timestamp", nsDeviceStatus, unreadable)?.let { clock ->
+                val suggested = try {
+                    RT.deserialize(it.toString()).apply { this.timestamp = clock }
+                } catch (e: Exception) {
+                    unreadable.add("loop result from ${nsDeviceStatus.device}: ${e.message}")
+                    null
+                }
                 // check if this is new data
                 if (clock > processedDeviceStatusData.openAPSData.clockSuggested) {
-                    try {
-                        processedDeviceStatusData.openAPSData.suggested = RT.deserialize(it.toString()).apply { this.timestamp = clock }
-                    } catch (e: Exception) {
-                        aapsLogger.error(LTag.NSCLIENT, e.stackTraceToString())
-                    }
+                    suggested?.let { rt -> processedDeviceStatusData.openAPSData.suggested = rt }
                     processedDeviceStatusData.openAPSData.clockSuggested = clock
-                    processedDeviceStatusData.getAPSResult()?.let { apsResult ->
+                }
+                // Stored also when older than the newest one, see storeApsResults
+                suggested?.let { rt ->
+                    val apsResult = apsResultProvider().with(rt).apply {
+                        // The time the master stored it with. The device status carries the time the loop
+                        // finished, up to a few seconds later. The ISF for carbs puts every result into a
+                        // 5 minute slot and a 24 hour window, and only the same time puts it into the same one.
+                        rt.deliverAt?.let { date = it }
+                    }
+                    when {
                         // A result that does not say which algorithm made it cannot be stored: `toDb` throws,
                         // and in this scope that would end the app. It is still shown from the data above.
-                        if (apsResult.algorithm == APSResult.Algorithm.UNKNOWN)
+                        apsResult.algorithm == APSResult.Algorithm.UNKNOWN ->
                             aapsLogger.debug(LTag.NSCLIENT, "APS result without algorithm from ${nsDeviceStatus.device}, not stored")
-                        else
-                            appScope.launch { persistenceLayer.insertOrUpdateApsResult(apsResult) }
+                        // Calculated nothing, and the master did not store it either. Also shown from the data above.
+                        apsResult.stoppedEarly -> Unit
+                        else -> apsResults.add(ReceivedResult(apsResult, clock))
                     }
                 }
             }
         }
         nsDeviceStatus.openaps?.enacted?.let {
-            it.safeGetString("timestamp")?.let { timestamp ->
-                val clock = dateUtil.fromISODateString(timestamp)
+            readTime(it.safeGetString("timestamp"), "enacted.timestamp", nsDeviceStatus, unreadable)?.let { clock ->
                 // check if this is new data
                 if (clock > processedDeviceStatusData.openAPSData.clockEnacted) {
                     try {
                         processedDeviceStatusData.openAPSData.enacted = RT.deserialize(it.toString()).apply { this.timestamp = clock }
                     } catch (e: Exception) {
-                        aapsLogger.error(LTag.NSCLIENT, e.stackTraceToString())
+                        unreadable.add("enacted from ${nsDeviceStatus.device}: ${e.message}")
                     }
                     processedDeviceStatusData.openAPSData.clockEnacted = clock
                 }
@@ -213,8 +307,8 @@ class NSDeviceStatusHandler(
         }
     }
 
-    private fun updateUploaderData(nsDeviceStatus: NSDeviceStatus) {
-        val clock = nsDeviceStatus.createdAt?.let { dateUtil.fromISODateString(it) } ?: return
+    private fun updateUploaderData(nsDeviceStatus: NSDeviceStatus, time: Long?) {
+        val clock = time ?: return
         val device = nsDeviceStatus.device ?: return
         val battery = nsDeviceStatus.uploaderBattery ?: nsDeviceStatus.uploader?.battery ?: return
         val isCharging = nsDeviceStatus.isCharging

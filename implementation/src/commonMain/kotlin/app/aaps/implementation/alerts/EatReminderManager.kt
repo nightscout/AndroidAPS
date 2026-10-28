@@ -37,8 +37,12 @@ import kotlin.math.max
  * [EatReminderState.alarmRang], set when the alarm really rang: the alarm can come a little after the end time,
  * and an alarm stopped in that gap was not this one.
  *
- * [UiInteraction] comes through a provider because `UiInteraction.stopAlarm` calls back into
- * [onAlarmStopped], so each needs the other.
+ * [UiInteraction] comes through a provider because stopping the alarm shown calls back into [stop], so each needs
+ * the other.
+ *
+ * Only its own alarm is ever silenced here ([UiInteraction.stopEatReminderAlarm]). Stop and +5 min used to go through
+ * `UiInteraction.stopAlarm`, which mutes every alarm, so a Stop on a client could silence a pump alarm on the master
+ * that nobody had seen (#5408).
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
@@ -76,24 +80,31 @@ class EatReminderManager(
             current.alarmRang
         }
         aapsLogger.debug(LTag.AUTOMATION, "Eat reminder stopped")
-        if (rang) uiInteraction().stopAlarm("Eat reminder stopped")
+        if (rang) uiInteraction().stopEatReminderAlarm()
     }
 
-    override fun extend() {
-        if (!isMaster("extend")) return
+    override fun extend(): Boolean {
+        if (!isMaster("extend")) return false
+        val extendMs = T.mins(EatReminder.EXTEND_MINUTES.toLong()).msecs()
         val rang = lock.withLock {
-            val current = _state.value ?: return
             val now = dateUtil.now()
-            // After the end time, +5 min means 5 minutes from now, not from the time that has passed.
-            val updated = current.copy(endsAt = max(current.endsAt, now) + T.mins(EatReminder.EXTEND_MINUTES.toLong()).msecs(), alarmRang = false)
-            if (!alarm.schedule(updated.startedAt, updated.endsAt)) return
+            // No timer: it was ended, for example with Silence on its alarm screen, whose +5 min is still there.
+            // +5 min means "remind me in 5 minutes" everywhere, so it starts a new one, as the watch expects.
+            val updated = _state.value?.let { current ->
+                // After the end time, +5 min means 5 minutes from now, not from the time that has passed.
+                val newEnd = max(current.endsAt, now) + extendMs
+                // The whole wait grows with the new end, so the bar and the countdown notification show the same number.
+                current.copy(endsAt = newEnd, durationMs = newEnd - current.startedAt, alarmRang = false)
+            } ?: EatReminderState(startedAt = now, endsAt = now + extendMs, durationMs = extendMs)
+            // Nothing changes when the alarm cannot be set: a ringing alarm keeps ringing, and the caller says so
+            if (!alarm.schedule(updated.startedAt, updated.endsAt)) return false
+            val wasRinging = _state.value?.alarmRang == true
             save(updated)
-            current.alarmRang
+            wasRinging
         }
         aapsLogger.debug(LTag.AUTOMATION, "Eat reminder extended by ${EatReminder.EXTEND_MINUTES} min")
-        // The state changed first: the stopAlarm below comes back to onAlarmStopped, which must find a timer
-        // that has not rung yet and leave it alone.
-        if (rang) uiInteraction().stopAlarm("Eat reminder extended")
+        if (rang) uiInteraction().stopEatReminderAlarm()
+        return true
     }
 
     override fun onRang() {
@@ -102,17 +113,6 @@ class EatReminderManager(
             val current = _state.value ?: return
             if (!current.alarmRang) save(current.copy(alarmRang = true))
         }
-    }
-
-    override fun onAlarmStopped() {
-        if (config.AAPSCLIENT) return
-        lock.withLock {
-            val current = _state.value ?: return
-            if (!current.alarmRang) return
-            alarm.cancel()
-            save(null)
-        }
-        aapsLogger.debug(LTag.AUTOMATION, "Eat reminder ended with its alarm")
     }
 
     override fun restore() {

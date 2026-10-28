@@ -494,6 +494,17 @@ class IobCobCalculatorPlugin(
     suspend fun scheduleHistoryDataChange(oldDataTimestamp: Long, reloadBgData: Boolean, triggeredByNewBG: Boolean = false) =
         historyScheduler.schedule(oldDataTimestamp, reloadBgData, triggeredByNewBG)
 
+    override suspend fun apsResultsStored(oldest: Long) {
+        // A bucket counts the results up to its own BG reading, so one after the newest reading is not late
+        val store = ads
+        val newestReading = store.dataLock.withLock { store.bucketedData?.firstOrNull()?.timestamp } ?: return
+        if (oldest > newestReading) return
+        aapsLogger.debug(LTag.AUTOSENS) {
+            "Loop results from ${dateUtil.dateAndTimeAndSecondsString(oldest)} came after the BG of ${dateUtil.dateAndTimeAndSecondsString(newestReading)}, calculating again from there"
+        }
+        scheduleHistoryDataChange(oldest, reloadBgData = false)
+    }
+
     // When historical data is changed (coming from NS etc.) finished calculations after this date must be invalidated
     private suspend fun newHistoryData(oldDataTimestamp: Long, bgDataReload: Boolean, triggeredByNewBG: Boolean) {
         calculationWorkflow.stopCalculation(CalculationWorkflow.MAIN_CALCULATION, "onEventNewHistoryData")

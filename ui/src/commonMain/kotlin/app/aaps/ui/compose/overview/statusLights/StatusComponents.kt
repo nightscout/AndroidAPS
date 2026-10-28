@@ -26,7 +26,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.compose.LongOrShort
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.statusLevelToColor
 import app.aaps.core.ui.compose.statusLevelToDescription
@@ -83,22 +82,6 @@ private fun StatusRow(
     actionLabel: String? = null,
     onActionClick: (() -> Unit)? = null
 ) {
-    // The long age where the whole row fits on one line, the short one where it does not. Squeezed by
-    // the long age, the label used to break in the middle of the word ("Cann / ula").
-    LongOrShort(
-        long = { StatusRowContent(item = item, age = item.age, actionLabel = actionLabel, onActionClick = onActionClick) },
-        short = { StatusRowContent(item = item, age = item.ageShort, actionLabel = actionLabel, onActionClick = onActionClick) },
-        modifier = Modifier.fillMaxWidth()
-    )
-}
-
-@Composable
-private fun StatusRowContent(
-    item: StatusItem,
-    age: String,
-    actionLabel: String?,
-    onActionClick: (() -> Unit)?
-) {
     val ageColor = statusLevelToColor(item.ageStatus)
     val levelColor = statusLevelToColor(item.levelStatus)
     val showLevel = item.level != null && item.expandedLevel
@@ -122,7 +105,7 @@ private fun StatusRowContent(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         // Everything that is only read is one accessibility node, so a screen reader reads
-        // "Critical, Cannula, 5d 12h, 150U" in one stop. It used to stop on the name, then the age,
+        // "Critical, Cannula, 5d12h, 150U" in one stop. It used to stop on the name, then the age,
         // then the level: three swipes for a row nobody can change. The merge has to happen HERE and
         // the value columns must carry no semantics of their own, because a merging parent does not
         // absorb a child that is itself merging - which is also what keeps the action button below
@@ -153,8 +136,8 @@ private fun StatusRowContent(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            // Label. One line even when the short age does not fit either: cut at the end, never
-            // broken inside the word.
+            // Label. One line even where the row is too narrow for it: cut at the end, never broken
+            // inside the word ("Cann / ula").
             Text(
                 text = item.label,
                 style = MaterialTheme.typography.bodyLarge,
@@ -166,7 +149,7 @@ private fun StatusRowContent(
 
             // Age with vertical progress
             StatusValueWithProgress(
-                value = age,
+                value = item.age,
                 valueColor = ageColor,
                 progress = item.agePercent,
                 progressColor = ageColor

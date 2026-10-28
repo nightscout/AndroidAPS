@@ -257,7 +257,13 @@ enum class NotificationId(
     // The Combo gave the bolus, but its history also had boluses that AAPS did not know about. Its own id,
     // so that it does not replace the low reservoir warning of the same bolus on COMBO_PUMP_ALARM (#5379).
     // Appended at the END for the same reason as above.
-    COMBO_UNKNOWN_BOLUS(URGENT, PUMP);
+    COMBO_UNKNOWN_BOLUS(URGENT, PUMP),
+
+    // Desktop only: no OS key store was found (Linux without a keyring), so the keys that protect the settings
+    // and the pairing secrets are plain files next to the data. IMPORTANT, not URGENT: nothing is wrong with
+    // therapy, but a copy of the folder gives everything away, and the user can fix it. Appended at the END for
+    // the same reason as above.
+    SECRETS_NOT_PROTECTED(IMPORTANT, SYSTEM);
 
     companion object {
 

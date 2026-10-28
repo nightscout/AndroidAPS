@@ -40,19 +40,6 @@ class IosSecureEncryptTest {
         override fun error(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {}
     }
 
-    /** Keys held in memory, behaving as the Keychain does: one key per alias, kept until deleted. */
-    private class FakeKeychain : Keychain {
-
-        private val keys = mutableMapOf<String, ByteArray>()
-
-        override fun load(alias: String): ByteArray? = keys[alias]
-        override fun store(alias: String, key: ByteArray) {
-            keys[alias] = key
-        }
-
-        override fun delete(alias: String): Boolean = keys.remove(alias) != null
-    }
-
     private val keychain = FakeKeychain()
     private val secure = IosSecureEncrypt(SilentLogger, keychain)
 
