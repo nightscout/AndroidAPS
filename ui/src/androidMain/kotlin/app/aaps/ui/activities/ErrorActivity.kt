@@ -12,6 +12,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,6 +45,7 @@ import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.flow.first
 
 /**
  * Full-screen alarm UI. Audio playback (looping MediaPlayer + volume ramp) lives in the shared
@@ -69,6 +71,9 @@ class ErrorActivity : MetroAppCompatActivity() {
     private var status by mutableStateOf("")
     private var title by mutableStateOf("")
     private var eatReminderAlarm by mutableStateOf(false)
+
+    /** The eat reminder's alarm was silenced on this screen. The screen then stays, as for every alarm. */
+    private var mutedHere = false
     private var sound: AlarmSound = AlarmSound.ERROR
 
     /**
@@ -100,6 +105,13 @@ class ErrorActivity : MetroAppCompatActivity() {
         aapsLogger.debug("Error activity displayed: $title - $status")
 
         setContent {
+            // The timer ended or was moved +5 min somewhere else (the watch, a client, the notification): its
+            // alarm is silenced there, and this screen has nothing left to offer, so it closes. The alarm has
+            // rung when this screen opens, so a timer that has not rung is one that was extended.
+            if (eatReminderAlarm) LaunchedEffect(Unit) {
+                eatReminder.state.first { it == null || !it.alarmRang }
+                if (!mutedHere) finish()
+            }
             val snackbarHostState = remember { SnackbarHostState() }
             CompositionLocalProvider(
                 LocalPreferences provides preferences,
@@ -124,6 +136,7 @@ class ErrorActivity : MetroAppCompatActivity() {
                                 },
                                 onMute = {
                                     uel.log(Action.ERROR_DIALOG_MUTE, Sources.Unknown)
+                                    mutedHere = true
                                     stopAlarm("Mute")
                                 },
                                 onMute5Min = {

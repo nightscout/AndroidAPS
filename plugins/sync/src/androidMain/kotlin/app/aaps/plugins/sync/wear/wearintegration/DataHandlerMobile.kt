@@ -34,7 +34,6 @@ import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
-import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -73,6 +72,10 @@ import app.aaps.core.interfaces.rx.weardata.ProfileInfo
 import app.aaps.core.interfaces.rx.weardata.TargetRange
 import app.aaps.core.interfaces.rx.weardata.TempTargetInfo
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
+import app.aaps.core.interfaces.alerts.EatReminder
+import app.aaps.core.interfaces.alerts.EatReminderAction
+import app.aaps.core.interfaces.clientcontrol.ActionProgress
+import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
@@ -180,6 +183,8 @@ class DataHandlerMobile(
     @Inject lateinit var activeSceneSync: ActiveSceneSync
     @Inject lateinit var sceneChainResolver: SceneChainResolver
     @Inject lateinit var sensitivityOverview: SensitivityOverview
+    @Inject lateinit var eatReminder: EatReminder
+    @Inject lateinit var clientControlDispatcher: ClientControlActionDispatcher
 
     // App lifetime: this is a @Singleton that subscribes in init and
     // never tears down. Dispatchers.IO because that is what the io scheduler gave these handlers, and
@@ -395,6 +400,8 @@ class DataHandlerMobile(
             onCommitResult(sceneActions.stop(triggerChain = it.triggerChain))
         }
         onEventSync<EventData.SnoozeAlert> { uiInteraction.stopAlarm("Muted from wear") }
+        // Not gated by the wear control switch, like the mute above: it only ends or moves a reminder
+        onEvent<EventData.ActionEatReminder> { handleEatReminder(it) }
         onEventSync<EventData.WearException> { fabricPrivacy.logWearException(it) }
         // Coalesce Wear reconnect-flush bursts (Data Layer replays queued events back-to-back).
         // chunkedOnQuietPeriod keeps the timer idle when no events arrive, unlike a fixed window.
@@ -706,16 +713,17 @@ class DataHandlerMobile(
             carbs = command.carbsType.carbsNow(command.carbs),
             percentage = command.percentage,
             directCorrection = 0.0,
-            carbTime = 0,
+            carbTime = command.carbTime,
             useBg = preferences.get(BooleanKey.WearWizardBg),
             useCob = preferences.get(BooleanKey.WearWizardCob),
             useIob = preferences.get(BooleanKey.WearWizardIob),
             useTt = preferences.get(BooleanKey.WearWizardTt),
             useTrend = preferences.get(BooleanKey.WearWizardTrend),
-            alarm = false,
+            alarm = command.alarm && command.carbTime > 0,
             notes = "",
             eCarbsGrams = command.carbsType.eCarbs(command.carbs),
-            eCarbsDelayMinutes = command.carbsType.eCarbsDelayMinutes,
+            // The eCarbs start relative to the meal, as on the phone
+            eCarbsDelayMinutes = command.carbsType.eCarbsDelayMinutes + command.carbTime,
             eCarbsDurationHours = command.carbsType.eCarbsDurationHours,
             source = Sources.Wear
         )
@@ -1625,6 +1633,8 @@ class DataHandlerMobile(
 
         // Current running mode (+ end time of a temporary one) for the running-mode complication and picker
         val runningModeRecord = loop.runningModeRecord()
+        // The "time to eat" timer, on a client the copy of the master's
+        val eatReminderState = eatReminder.state.value
 
         sendToWear(
             EventData.Status(
@@ -1649,7 +1659,9 @@ class DataHandlerMobile(
                 reservoirLevel = reservoirLevel,
                 loopMode = runningModeRecord.mode.toLoopMode(),
                 modeEndTime = runningModeRecord.endTimeForWatch(),
-                modeFromScene = runningModeRecord.id == activeSceneSync.getActiveState()?.scopedRecords?.rmId
+                modeFromScene = runningModeRecord.id == activeSceneSync.getActiveState()?.scopedRecords?.rmId,
+                eatReminderStartedAt = eatReminderState?.startedAt,
+                eatReminderEndsAt = eatReminderState?.endsAt
             )
         )
     }
@@ -1849,6 +1861,20 @@ class DataHandlerMobile(
         profile ?: return rh.gs(CoreUiStrings.noprofile)
         if (!loop.runningMode().isLoopRunning()) status += rh.gs(CoreUiStrings.disabled_loop) + "\n"
         return status
+    }
+
+    /** Stop or +5 min from the watch. On a master the timer changes here; a client asks its master, as its own bar does. */
+    private suspend fun handleEatReminder(command: EventData.ActionEatReminder) {
+        clientControlDispatcher.execute(
+            ClientControlActionDispatcher.Command.EatReminderControl(command.action),
+            rh.gs(CoreUiStrings.clientcontrol_action_eat_reminder)
+        ) {
+            when (command.action) {
+                EatReminderAction.STOP   -> eatReminder.stop()
+                EatReminderAction.EXTEND -> eatReminder.extend()
+            }
+            ActionProgress.Applied
+        }
     }
 
     private fun sendError(errorMessage: String) {

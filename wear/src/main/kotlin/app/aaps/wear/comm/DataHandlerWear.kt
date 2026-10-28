@@ -52,6 +52,7 @@ import app.aaps.wear.complications.SgvLargeComplication
 import app.aaps.wear.complications.TargetComplication
 import app.aaps.wear.complications.UploaderBatteryComplication
 import app.aaps.wear.data.ComplicationDataRepository
+import app.aaps.wear.eatreminder.EatReminderWatch
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
 import app.aaps.wear.interaction.actions.AcceptActivity
 import app.aaps.wear.interaction.actions.ContactingMasterActivity
@@ -86,7 +87,8 @@ class DataHandlerWear(
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
     private val complicationDataRepository: ComplicationDataRepository,
-    private val watchFacePushHelper: WatchFacePushHelper
+    private val watchFacePushHelper: WatchFacePushHelper,
+    private val eatReminderWatch: EatReminderWatch
 ) {
 
     // Coroutine scope for DataStore operations
@@ -198,6 +200,8 @@ class DataHandlerWear(
                     sp.putBoolean(R.string.key_temp_target_active, tempTargetActive)
                     TileService.getUpdater(context).requestUpdate(TempTargetTileService::class.java)
                 }
+                // The "time to eat" timer: the graph draws its end, the watch rings at it
+                if (eatReminderWatch.onStatus(it.eatReminderEndsAt)) TileService.getUpdater(context).requestUpdate(BgGraphTileService::class.java)
             }
             // Store in DataStore - supports all datasets (0, 1, 2)
             dataStoreScope.launch {
