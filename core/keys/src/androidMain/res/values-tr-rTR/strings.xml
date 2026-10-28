@@ -8,51 +8,151 @@
     <!-- BG Source preferences -->
     <!-- APS preferences -->
     <string name="pref_summary_aps_use_dynamic_sensitivity">Hassasiyet ayarı için otoduyarlılık yerine DinamikİDF kullanın.</string>
+    <string name="pref_summary_aps_use_uam">Bildirilmemiş öğünleri tespiti ve tedavisini etkinleştirir.</string>
+    <string name="pref_title_aps_sensitivity_raises_target">Duyarlılık hedefi yükseltir</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">Hassasiyet tespit edildiğinde, glikoz hedefini yükseltin.</string>
+    <string name="pref_title_aps_resistance_lowers_target">Direnç hedefi düşürür</string>
+    <string name="pref_summary_aps_resistance_lowers_target">Direnç tespit edildiğinde glikoz hedefini düşürün.</string>
+    <string name="pref_title_aps_always_use_short_deltas">Her zaman kısa ortalama delta kullanın</string>
+    <string name="pref_summary_aps_always_use_short_deltas">KŞ değişim hesaplamalarında, basit delta yerine her zaman kısa ortalama delta değerini kullanın.</string>
     <string name="pref_title_aps_dynisf_adjust_sensitivity">DinamikİDF hassasiyet ayarı</string>
     <string name="pref_summary_aps_dynisf_adjust_sensitivity">DinamikİDF kullanırken hassasiyet hesaplamalarını ayarlayın.</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Otoduyarlılık hedefleri ayarlar</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">Otoduyarlılığın bazal ve İDF\'nün yanı sıra hedef glikoz değerini de ayarlamasına izin verin.</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">Yüksek geçici hedefler duyarlılığı artırır</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">Yüksek geçici hedefler, insülin duyarlılığını artıracaktır.</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Düşük geçici hedefler duyarlılığı azaltır</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">Düşük geçici hedefler insülin duyarlılığını azaltacaktır.</string>
+    <string name="pref_title_aps_use_autoisf_weights">Oto İDF\'yi Etkinleştir</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Ağırlık tabanlı İDF ayarlamaları için OtoİDF\'yi etkinleştirin.</string>
+    <string name="pref_title_aps_smb_on_even_target">Hedef üzerinde SMB\'yi etkinleştirin</string>
+    <string name="pref_summary_aps_smb_on_even_target">SMB\'nin alternatif aktivasyonu her zaman hedef glikoz değerine dayalıdır.</string>
     <!-- Maintenance preferences -->
+    <string name="pref_title_maintenance_enable_fabric">Çökme raporlamasını etkinleştir</string>
+    <string name="pref_title_maintenance_enable_export_automation">Otomatik ayar dışa aktarımını etkinleştir</string>
     <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">Profil otomatik geçişi</string>
+    <string name="pref_summary_autotune_auto_switch_profile">Hesaplama tamamlandıktan sonra otomatik olarak Otoayar ile oluşturulan profile geçiş yapar.</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">UAM\'ı bazal olarak kategorize etme</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">UAM (Bildirilmemiş öğünlerin) bazal insülin gereksinimlerini Otoayar hesaplamalarında ele alarak tedavi eder.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">İnsülin eğrisini ayarla</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Sirkadiyen IC/ISF kullanın</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Otoayar hesaplamalarında IC ve IDF\'ye sirkadiyen varyasyon uygulayın.</string>
+    <string name="pref_title_autotune_additional_log">Ek günlük kaydı</string>
     <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">SMS ile uzaktan komutlara izin ver</string>
+    <string name="pref_title_sms_report_pump_unreachable">Pompaya ulaşılamadığında SMS ile bildir</string>
+    <string name="pref_summary_sms_report_pump_unreachable">Pompaya ulaşılamadığında SMS bildirimi gönderir.</string>
     <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">Nightscout\'a pompa durumunu aktar</string>
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">Verileri NS\'a yükleyin</string>
+    <string name="pref_summary_ns_upload_data">Tedavileri, geçici bazal dozları ve diğer verileri Nightscout\'a yükler.</string>
+    <string name="pref_title_ns_receive_cgm">NS\'den CGM verilerini alın</string>
+    <string name="pref_summary_ns_receive_cgm">Nightscout\'tan CGM ölçümlerini kabul eder.</string>
+    <string name="pref_title_ns_receive_profile_store">NS\'den profil deposunu al</string>
+    <string name="pref_summary_ns_receive_profile_store">Nightscout\'tan profil deposu güncellemelerini kabul eder.</string>
+    <string name="pref_title_ns_receive_temp_target">NS\'den geçici hedefleri al</string>
+    <string name="pref_summary_ns_receive_temp_target">Nightscout\'tan gelen geçici hedef değişikliklerini kabul eder.</string>
     <string name="pref_title_ns_receive_profile_switch">NS\'den profil geçişlerini al</string>
+    <string name="pref_summary_ns_receive_profile_switch">Nightscout\'tan profil değişimi etkinliklerini kabul eder.</string>
+    <string name="pref_title_ns_receive_insulin">NS\'den insülin verilerini alın</string>
+    <string name="pref_summary_ns_receive_insulin">Nightscout\'tan insülin tedavilerini kabul eder.</string>
+    <string name="pref_title_ns_receive_carbs">NS\'den karbonhidratları alın</string>
+    <string name="pref_summary_ns_receive_carbs">Nightscout\'tan karbonhidrat girişlerini kabul eder.</string>
+    <string name="pref_title_ns_receive_therapy_event">NS\'den terapi etkinliklerini alın</string>
+    <string name="pref_summary_ns_receive_therapy_event">Nightscout\'tan tedavi etkinliklerini kabul eder.</string>
+    <string name="pref_title_ns_receive_running_mode">NS\'den çalışma modunu al</string>
+    <string name="pref_summary_ns_receive_running_mode">Nightscout\'tan gelen çalışma modu değişikliklerini kabul eder.</string>
+    <string name="pref_title_ns_receive_tbr_eb">NS\'den GBO/EB alın</string>
+    <string name="pref_summary_ns_receive_tbr_eb">Nightscout\'tan geçici bazal oranlarını ve yayma bolusları kabul eder.</string>
     <!-- OpenHumans preferences -->
     <!-- xDrip preferences -->
     <!-- Wear preferences -->
     <!-- Site rotation preferences -->
     <!-- IntKey: Overview preferences -->
     <string name="carb_increment_button_message">Butona basıldığında eklenecek karbonhidrat sayısı</string>
+    <string name="pref_title_bage_warning">Pompa pil ömrü uyarısı</string>
+    <string name="pref_title_bage_critical">Kritik pompa pil ömrü seviyesi</string>
+    <string name="pref_title_res_warning">Rezervuar seviye uyarısı</string>
+    <string name="pref_title_res_critical">Kritik rezervuar seviyesi</string>
+    <string name="pref_title_batt_warning">Pompa pil seviye uyarısı</string>
+    <string name="pref_title_batt_critical">Kritik pompa pili seviyesi</string>
+    <string name="pref_title_bolus_percentage">Bolus yüzdesi</string>
+    <string name="deliverpartofboluswizard">Bu değeri bolus sihirbazının sonucundaki KŞ ve karb düzeltmesine uygulayın</string>
+    <string name="pref_title_reset_bolus_percentage_time">Bolus yüzdesi süresini sıfırla</string>
     <string name="deliver_part_of_boluswizard_reset_time">KŞ şu tarihten daha eskiyse tam bolus (%100) verin</string>
     <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">Koruma zaman aşımı</string>
+    <string name="pref_title_protection_type_application">Seviye 0: Uygulama koruması</string>
+    <string name="pref_summary_protection_type_application">Uygulama başlatıldığında ve uygulamaya geri dönüldüğünde. Diğer seviyelerden bağımsız olarak</string>
+    <string name="pref_title_protection_type_bolus">Seviye 1: Bolus koruması</string>
+    <string name="pref_summary_protection_type_bolus">Uygulamalar, profil etkinleştirme. 2. Seviye gerektirir</string>
+    <string name="pref_title_protection_type_settings">Seviye 2: Ayarların korunması</string>
+    <string name="pref_summary_protection_type_settings">Profilleri, tercihleri ​​düzenleme</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">Koruma yok</string>
     <string name="biometric">Biyometrik</string>
     <string name="master_password">Ana parola</string>
     <string name="custom_password">Özel parola</string>
     <string name="custom_pin">Özel PIN</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">İzin verilen maksimum karb miktarı</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Açık modda minimum değişiklik</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Açık Döngü, yalnızca değişiklik % cinsinden bu değerden büyükse yeni değişiklik isteğini açar. Varsayılan değer %20\'dir</string>
     <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">SMB Aralığı</string>
+    <string name="pref_title_smb_max_minutes">SMB\'yi sınırlamak için maksimum bazal dakika</string>
+    <string name="pref_title_uam_smb_max_minutes">SMB\'yi sınırlamak için UAM maksimum bazal dakika</string>
     <string name="uam_smb_max_minutes">UAM SMB maks. dakika ayarı</string>
+    <string name="pref_title_carbs_request_threshold">Karb gerekli</string>
     <string name="carbs_req_threshold_summary">Bir karbonhidrat öneri uyarısı görüntülemek için minimum karbonhidrat gramı. Bu sayının altındaki karbonhidrat önerileri bildirilmeyecektir.</string>
+    <string name="pref_title_half_basal_exercise_target">Yarım bazal egzersiz hedefi</string>
     <string name="half_basal_exercise_target_summary">Örneğin 160 gibi bir sayıya ayarlayın; bunun anlamı, geçici hedef 160 mg/dL olduğunda ve Yüksek geçici hedef duyarlılığı arttırır= doğru olduğunda, bu seviyede 50%% bazal çalışır (120 = 75%%; 140 = 60%%).</string>
+    <string name="pref_title_iob_threshold_percent">AİNS yüzde eşiği</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">SMB\'lerin devre dışı bırakılacağı maksAİNS yüzdesi.\nVarsayılan değer: %100\n Bu özellik %100 değeri ile devre dışıdır.</string>
     <string name="pref_title_dynisf_adjustment_factor">DinamikİDF ayarlama faktörü</string>
     <string name="dyn_isf_adjust_summary" formatted="false">DinamikİDF için ayarlama faktörü. Daha agresif düzeltme dozları için %100\'ün üzerine, daha az agresif düzeltmeler için %100\'ün altına ayarlayın.</string>
+    <string name="pref_title_autosens_period">Otoduyarlılık periyodu</string>
     <string name="openapsama_autosens_period_summary">Duyarlılık tespiti için geçmesi gereken süre (saat) miktarı (karbonhidrat emilim süresi hariç)</string>
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Gönderilecek günlük kaydı sayısı</string>
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Eski veri eşiği</string>
+    <string name="pref_title_pump_unreachable_threshold">Pompa ulaşılamaz eşiği</string>
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Varsayılan ayar günleri</string>
     <string name="autotune_default_tune_days_summary">OtoAyar tarafından işlenecek varsayılan veri gün sayısı (30\'a kadar)</string>
     <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">Uzak bolus min mesafesi</string>
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">Rastgele KŞ aralığı</string>
+    <string name="pref_title_random_bg_randomize">Rastgele KŞ verisi</string>
+    <string name="pref_summary_random_bg_randomize">Gürültü ekleyin, zaman damgalarını titreştirin, trend oklarını rastgeleleştirin ve ara sıra rastgele karbonhidratlar yayınlayın. Trend okunun sinüs eğiminden türetildiği temiz, deterministik bir sinüs dalgası için devre dışı bırakın.</string>
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Eski veri alarm eşiği</string>
+    <string name="pref_title_urgent_alarm_stale_data">Eski veri alarm eşiği (acil)</string>
     <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">Bölge rotasyonu için kullanıcı profili</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
+    <string name="site_rotation_profile_man">Erkek</string>
+    <string name="site_rotation_profile_woman">Kadın</string>
+    <string name="site_rotation_profile_child">Çocuk</string>
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Birimler</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">Dil</string>
+    <string name="lang_default">Sistem varsayılanı</string>
+    <string name="lang_en">İngilizce</string>
+    <string name="lang_af">Afrikaca</string>
+    <string name="lang_bg">Bulgarca</string>
+    <string name="lang_cs">Çekçe</string>
+    <string name="lang_de">Almanca</string>
+    <string name="lang_dk">Danca</string>
+    <string name="lang_fr">Fransızca</string>
     <!-- StringKey: Directory preferences -->
     <!-- StringKey: Protection preferences -->
     <!-- Theme switcher dark and light mode-->
@@ -71,9 +171,17 @@
     <!-- DoubleKey: Overview preferences -->
     <string name="insulin_increment_button_message">Butona basıldığında eklenecek insülin miktarı</string>
     <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">Doldur butonu 1</string>
+    <string name="pref_title_fill_button_2">Doldur butonu 2</string>
+    <string name="pref_title_fill_button_3">Doldur butonu 3</string>
     <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">Maksimum bolus</string>
     <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">Maksimum bazal oran</string>
     <string name="openapsma_max_basal_summary">Bu değer OpenAPS\'te \"maksimum bazal\" olarak adlandırılır</string>
+    <string name="pref_title_smb_max_iob">SMB için maks AİNS</string>
+    <string name="openapssmb_max_iob_summary">Bu değer OpenAPS bağlamında Maks AİNS (Aktif İnsülin) olarak adlandırılır\nOpenAPS, mevcut AİNS bu değerden daha büyükse daha fazla insülin vermez. Söz konusu değer, hastalığın tipine göre de değişiklik gösterebilir.</string>
+    <string name="pref_title_ama_max_iob">GYD için maks AİNS</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Varsayılan değer: 3. Bu, OpenAPS\'nin önemli bir güvenlik sınırıdır. Bu, bazal dozunuzu en yüksek bazal dozunuzun 3 katıyla sınırlandırır. Bunu değiştirmenize muhtemelen gerek kalmayacak, ancak güvenlik sınırları için \"günlük maksimumun 3 katı; mevcut dozun 4 katı\" ifadesinin ne anlama geldiğinin farkında olmalısınız.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Varsayılan ayar: 4 Bu, OpenAPS güvenlik ayarlarının diğer yarısı ve \"3x max günlük, 4x akım\" güvenlik korumasının diğer yarısıdır. Bu, başlangıç değerinizin, pompada ayarlanan taban maksimum değerinizden bağımsız olarak, mevcut bazal seviyenin bu sayısından daha yüksek olamayacağı anlamına gelir. Bu, insanların, algoritmanın nasıl çalıştığını anlamadan temel çizgiyi büyük ölçüde artırarak kendilerini tehlikeli durumlarda bulmalarını engellemektir. Varsayılan ayar 4x\'dir; Çoğu insan bu ayarları asla değiştirmek zorunda kalmayacak, ancak bu güvenlik sınırına yakınsa diğer terapi ayarlarını ayarlamalıdırlar.</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">Varsayılan değer: 2\nYemek bolusu yaptıktan sonra bolus erteleme devreye girer, bu nedenle döngü, yeni yemek yediğinizde düşük geçici bazallar-hedefler ile etkileşime girmez. Buradaki örnek ve varsayılan 2\'dir; bu nedenle 3 saatlik bir İES, bolus ertelemenin kademeli olarak 1,5 saat (3İES/2) üzerinden aşamalı olarak sonlandırılacağı anlamına gelir.</string>
