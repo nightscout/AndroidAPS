@@ -902,6 +902,8 @@ class MainViewModel(
     fun extendEatReminder() = controlEatReminder(EatReminderAction.EXTEND) { eatReminder.extend() }
 
     // On the master the timer changes here; a client asks the master, and its bar follows with the next sync.
+    // A +5 min whose alarm cannot be set is told once, by the alarm code (a snackbar), so the master does not
+    // report it a second time here. A client gets it from the master's answer.
     private fun controlEatReminder(action: EatReminderAction, onMaster: () -> Unit) {
         viewModelScope.launch {
             clientControlDispatcher.execute(

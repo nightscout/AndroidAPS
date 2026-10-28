@@ -1863,7 +1863,11 @@ class DataHandlerMobile(
         return status
     }
 
-    /** Stop or +5 min from the watch. On a master the timer changes here; a client asks its master, as its own bar does. */
+    /**
+     * Stop or +5 min from the watch. On a master the timer changes here; a client asks its master, as its own bar does.
+     * The same two functions as every other Stop and +5 min, so the watch does what the phone does. A +5 min whose alarm
+     * cannot be set is told once, by the alarm code on the phone, as for the bar; the next status puts the watch back.
+     */
     private suspend fun handleEatReminder(command: EventData.ActionEatReminder) {
         clientControlDispatcher.execute(
             ClientControlActionDispatcher.Command.EatReminderControl(command.action),

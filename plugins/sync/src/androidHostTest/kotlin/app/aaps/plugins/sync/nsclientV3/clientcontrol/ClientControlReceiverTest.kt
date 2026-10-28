@@ -1380,6 +1380,35 @@ internal class ClientControlReceiverTest {
     }
 
     @Test
+    fun anExtendTheMasterSetIsAnsweredOk() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.MealAssistant)
+        val acks = captureAcks(clientId)
+        whenever(eatReminder.extend()).thenReturn(true)
+
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}eat_reminder_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.EatReminderControl(EatReminderAction.EXTEND.name), counter = 5L, wantsAck = true))
+        )
+
+        assertThat(acks.last().status.name).isEqualTo("Ok")
+    }
+
+    /** The master could not set the new alarm (#5408): nothing changed there, so the client must not be told it worked. */
+    @Test
+    fun anExtendTheMasterCannotSetIsAnsweredFailed() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.MealAssistant)
+        val acks = captureAcks(clientId)
+        whenever(eatReminder.extend()).thenReturn(false)
+
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}eat_reminder_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.EatReminderControl(EatReminderAction.EXTEND.name), counter = 5L, wantsAck = true))
+        )
+
+        assertThat(acks.last().status.name).isEqualTo("Failed")
+    }
+
+    @Test
     fun readOnlyClientCannotTouchTheEatReminder() = runTest {
         val (clientId, secret) = activeClient(ClientRole.ReadOnly)
         captureAcks(clientId)

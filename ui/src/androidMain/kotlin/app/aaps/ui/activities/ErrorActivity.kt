@@ -143,11 +143,10 @@ class ErrorActivity : MetroAppCompatActivity() {
                                     uel.log(Action.ERROR_DIALOG_MUTE_5MIN, Sources.Unknown)
                                     if (eatReminderAlarm) {
                                         // +5 min moves the timer itself, so the alarm comes back even when this
-                                        // screen is closed. extend() also silences it; the stop below then finds a
-                                        // timer that has not rung and leaves it running.
-                                        eatReminder.extend()
-                                        stopAlarm("+5 min")
-                                        finish()
+                                        // screen is closed, and it starts a new one when Silence here ended it.
+                                        // extend() silences this alarm itself. When the new alarm cannot be set,
+                                        // nothing changed: the alarm goes on, and this screen stays with the message.
+                                        if (eatReminder.extend()) finish()
                                     } else {
                                         stopAlarm("Mute 5 min")
                                         handler.postDelayed({ startAlarm() }, T.mins(5).msecs())
