@@ -66,12 +66,14 @@
     <string name="scene_wizard_finish">Zakończ</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Następna scena</string>
+    <string name="scene_wizard_chain_info">Opcjonalnie połącz kolejną scenę, która uruchomi się automatycznie po zakończeniu tej. Możesz też przejść do niej wcześniej, kończąc tę scenę przed czasem. Następna scena uruchomi się tylko wtedy, gdy scena docelowa jest włączona i pompa jest dostępna; w przeciwnym razie baner zakończonej sceny wyjaśni, dlaczego kolejna nie została uruchomiona.</string>
     <string name="scene_chain_none">Brak</string>
     <string name="scene_skip_to_format">Przejdź do %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
     <string name="scene_chain_target_missing">Powiązana scena została usunięta</string>
     <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">Powiązana scena nie uruchomiła się: %1$s</string>
     <string name="scene_chain_skipped_deleted">scena docelowa została usunięta</string>
     <string name="scene_chain_skipped_disabled">„%1$s” jest wyłączona</string>
     <string name="scene_chain_error_summary">%1$s → %2$s: %3$d z %4$d akcji nie powiodło się</string>
