@@ -48,6 +48,32 @@
     <string name="permission_notification_listener_title">Notification Access</string>
     <string name="permission_notification_listener_description">Required to read glucose values from CGM app notifications</string>
 
+    <!-- Generic CGM source strings, shared by native CGM drivers -->
+    <string name="cgm_nav_back">Back</string>
+    <string name="cgm_nav_close">Close</string>
+    <string name="cgm_help_expand">Show more</string>
+    <string name="cgm_help_collapse">Show less</string>
+    <string name="cgm_step_counter" comment="%1$d=current step number, %2$d=how many steps in total. Example: Step 2 of 4">Step %1$d of %2$d</string>
+    <string name="cgm_warmup_remaining_label">remaining</string>
+    <string name="cgm_warmup_ends_at" comment="%1$s=localized time. Example: Ends at 3:45 PM">Ends at %1$s</string>
+    <string name="cgm_warmup_what_happened">What happened</string>
+    <string name="cgm_sensor_heading">Sensor</string>
+    <string name="cgm_sensor_name">Name</string>
+    <string name="cgm_sensor_address">Address</string>
+    <string name="cgm_actions_heading">Actions</string>
+    <string name="cgm_session_label">Bluetooth session</string>
+    <string name="cgm_driver_log_title">Sensor driver log</string>
+    <string name="cgm_driver_log_refresh">Refresh</string>
+    <string name="cgm_driver_log_share">Share the log</string>
+    <string name="cgm_driver_log_empty">Nothing yet. Lines appear here as soon as the driver starts working.</string>
+    <string name="cgm_driver_log_count" comment="%1$d=how many lines are shown. Example: 320 lines">%1$d lines</string>
+    <string name="cgm_driver_log_open">Driver log</string>
+    <string name="cgm_driver_log_follow">Follow</string>
+    <string name="staging_auto_promote_title">Switch to the pre-soak sensor automatically</string>
+    <string name="staging_auto_promote_summary">After the set number of hours, the pre-soak sensor feeds the loop if its recent readings are good. The sensor in use is stopped. The promote button still works.</string>
+    <string name="staging_auto_promote_hours_title">Hours before the automatic switch</string>
+    <string name="staging_auto_promote_done" comment="%1$s=hours since the pre-soak start, with unit. Example: The pre-soak sensor now feeds the loop. Automatic switch after 10 h.">The pre-soak sensor now feeds the loop. Automatic switch after %1$s.</string>
+
     <string name="aidex">MicroTech CGM App</string>
     <string name="description_source_aidex">Receive CGM values from LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 etc.</string>
 
