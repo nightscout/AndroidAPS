@@ -47,7 +47,6 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.LocalClientRole
-import app.aaps.core.ui.compose.LongOrShort
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
@@ -129,11 +128,10 @@ fun OverviewStatusSection(
                         modifier = Modifier.clickable { onExpandedChange(false) }
                     )
                 } else {
-                    // The long ages where all of them fit on one line, otherwise the short ones. The line
-                    // wraps only when even the short ones do not fit.
-                    LongOrShort(
-                        long = { CompactStatusItems(items = compactItems, shortAge = false) },
-                        short = { CompactStatusItems(items = compactItems, shortAge = true) },
+                    // The ages are short, so all of them fit on one line on most screens. The line
+                    // wraps where they do not.
+                    CompactStatusItems(
+                        items = compactItems,
                         modifier = Modifier
                             .weight(1f)
                             .clickable { onExpandedChange(true) }
@@ -224,20 +222,20 @@ internal fun StatusLightsSettingsContent(settingsDef: PreferenceSubScreenDef) {
 }
 
 @Composable
-private fun CompactStatusItems(items: List<StatusItem>, shortAge: Boolean) {
+private fun CompactStatusItems(items: List<StatusItem>, modifier: Modifier = Modifier) {
     FlowRow(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         items.forEach { item ->
-            CompactStatusItem(item = item, age = if (shortAge) item.ageShort else item.age)
+            CompactStatusItem(item = item)
         }
     }
 }
 
 @Composable
-private fun CompactStatusItem(item: StatusItem, age: String) {
+private fun CompactStatusItem(item: StatusItem) {
     val showAge = item.compactAge
     val showLevel = item.compactLevel && item.level != null
     if (!showAge && !showLevel) return
@@ -264,7 +262,7 @@ private fun CompactStatusItem(item: StatusItem, age: String) {
         verticalAlignment = Alignment.CenterVertically,
         // Merged so the icon's name, the values and the severity are one item. The description adds
         // only the severity, because on a merging node it sits before the children rather than
-        // replacing them: "Critical, Cannula, 3d 50%".
+        // replacing them: "Critical, Cannula, 3d5h 50%".
         modifier = if (severity != null) {
             Modifier.semantics(mergeDescendants = true) { contentDescription = severity }
         } else {
@@ -282,7 +280,7 @@ private fun CompactStatusItem(item: StatusItem, age: String) {
             text = buildAnnotatedString {
                 if (showAge) {
                     withStyle(SpanStyle(color = ageColor)) {
-                        append(age)
+                        append(item.age)
                     }
                 }
                 if (showLevel) {

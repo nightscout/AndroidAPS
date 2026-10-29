@@ -61,6 +61,7 @@
     <string name="pref_prime_in_menu">Prime trong menu</string>
     <string name="pref_single_target">Mục tiêu đơn lẻ</string>
     <string name="pref_wizard_percentage">Tính toán theo phần trăm</string>
+    <string name="pref_wizard_carbs_type">Loại bữa ăn trên máy tính toán</string>
     <string name="pref_complication_tap_action">Thao tác chạm vào Complication</string>
     <string name="pref_complication_bg_graph_hours">Khoảng thời gian hiển thị biểu đồ đường huyết</string>
     <string name="duration_1_hour">1 giờ</string>
@@ -282,6 +283,14 @@
     <string name="title_activity_disconnect_pump">Ngắt kết nối bơm</string>
     <string name="title_activity_suspend_loop">Tạm dừng vòng lặp</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="wizard_carbs_type">Loại bữa ăn</string>
+    <string name="wizard_carbs_type_bread">Bánh mỳ</string>
+    <string name="wizard_carbs_type_cake">Bánh</string>
+    <string name="wizard_carbs_type_pizza">Pizza</string>
+    <string name="wizard_set_alarm">Đặt báo thức</string>
+    <string name="eat_reminder_title">Đến giờ ăn</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d phút</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>

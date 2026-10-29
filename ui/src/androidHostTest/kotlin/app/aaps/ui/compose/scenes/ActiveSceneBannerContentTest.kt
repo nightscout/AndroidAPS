@@ -3,8 +3,10 @@ package app.aaps.ui.compose.scenes
 import android.content.Context
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import app.aaps.core.data.model.ActiveSceneState
@@ -96,5 +98,41 @@ class ActiveSceneBannerContentTest {
             }
         }
         compose.onNodeWithText(ctx.getString(CoreUiR.string.scene_chain_indicator, "Cooldown")).assertIsDisplayed()
+    }
+
+    /**
+     * A follow-up that did not start is said here and nowhere else: there is no notification for it, so
+     * losing this line would lose the news.
+     */
+    @Test
+    fun expiredScene_saysWhyTheFollowUpDidNotStart() {
+        val ctx: Context = RuntimeEnvironment.getApplication()
+        val reason = "\"Night\" is disabled"
+        compose.setContent {
+            CompositionLocalProvider(LocalDateUtil provides dateUtil) {
+                MaterialTheme {
+                    ActiveSceneBannerContent(
+                        state = state(SceneLifecycle.EXPIRED).copy(chainSkipReason = reason),
+                        expired = true, onEndClick = {}
+                    )
+                }
+            }
+        }
+        compose.onNodeWithText(ctx.getString(CoreUiR.string.scene_chain_skipped_line, reason)).assertIsDisplayed()
+    }
+
+    /** While the scene still runs there is nothing skipped to report, even if a stale reason were set. */
+    @Test
+    fun activeScene_doesNotShowASkipReason() {
+        val ctx: Context = RuntimeEnvironment.getApplication()
+        val reason = "\"Night\" is disabled"
+        compose.setContent {
+            CompositionLocalProvider(LocalDateUtil provides dateUtil) {
+                MaterialTheme {
+                    ActiveSceneBannerContent(state = state().copy(chainSkipReason = reason), expired = false, onEndClick = {})
+                }
+            }
+        }
+        compose.onAllNodesWithText(ctx.getString(CoreUiR.string.scene_chain_skipped_line, reason)).assertCountEquals(0)
     }
 }

@@ -1,14 +1,13 @@
 package app.aaps.ui.compose.overview
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -17,11 +16,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.Placeable
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.overview.graph.BgInfoData
 import app.aaps.core.interfaces.overview.graph.BgRange
@@ -31,7 +34,9 @@ import app.aaps.core.ui.compose.LocalAapsScale
 import app.aaps.ui.compose.components.bgSpokenDescription
 import kotlin.math.PI
 import kotlin.math.cos
+import kotlin.math.roundToInt
 import kotlin.math.sin
+import kotlin.math.sqrt
 
 /**
  * Displays current BG information in a circular design.
@@ -169,37 +174,125 @@ fun BgInfoSection(
         }
 
         // Center content: delta on top, BG value, time ago below
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(bottom = AapsSpacing.small),
-            verticalArrangement = Arrangement.spacedBy((-2).dp, Alignment.CenterVertically)
-        ) {
-            // Delta on top
-            bgInfo.deltaText?.let { delta ->
-                Text(
-                    text = delta,
-                    style = AapsTheme.typography.bgSecondary,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+        LinesInsideRing(
+            circleSize = size,
+            ringStrokeWidth = ringStrokeWidth,
+            delta = {
+                bgInfo.deltaText?.let { delta ->
+                    Text(
+                        text = delta,
+                        style = AapsTheme.typography.bgSecondary,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            },
+            value = {
+                // The ring does not grow with the system font and the value already fills it, so the
+                // value keeps its normal size. The two small lines follow the system font.
+                CompositionLocalProvider(LocalDensity provides Density(LocalDensity.current.density, fontScale = 1f)) {
+                    // BG value - large bold text with strikethrough if outdated
+                    Text(
+                        text = bgInfo.bgText,
+                        style = AapsTheme.typography.bgValue,
+                        color = bgColor,
+                        textDecoration = if (bgInfo.isOutdated) TextDecoration.LineThrough else TextDecoration.None
+                    )
+                }
+            },
+            timeAgo = {
+                if (showTimeAgo) {
+                    Text(
+                        text = timeAgoText,
+                        style = AapsTheme.typography.bgTimeAgo,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
+        )
+    }
+}
 
-            // BG value - large bold text with strikethrough if outdated
-            Text(
-                text = bgInfo.bgText,
-                style = AapsTheme.typography.bgValue,
-                color = bgColor,
-                textDecoration = if (bgInfo.isOutdated) TextDecoration.LineThrough else TextDecoration.None
-            )
+/**
+ * Places the delta, the BG value and the time-ago line inside the ring: the value in the middle, the
+ * other two just above and below it. A line that would reach into the ring is drawn smaller, each line
+ * on its own. So a large system font or a long "time ago" text (French, Romanian) makes only that line
+ * smaller, never the value.
+ */
+@Composable
+private fun LinesInsideRing(
+    circleSize: Dp,
+    ringStrokeWidth: Dp,
+    delta: @Composable () -> Unit,
+    value: @Composable () -> Unit,
+    timeAgo: @Composable () -> Unit
+) {
+    Layout(
+        contents = listOf(delta, value, timeAgo),
+        modifier = Modifier.size(circleSize)
+    ) { (deltaParts, valueParts, timeAgoParts), _ ->
+        val anySize = Constraints()
+        val deltaLine = deltaParts.firstOrNull()?.measure(anySize)
+        val valueLine = valueParts.first().measure(anySize)
+        val timeAgoLine = timeAgoParts.firstOrNull()?.measure(anySize)
 
-            // Time ago below
-            if (showTimeAgo) {
-                Text(
-                    text = timeAgoText,
-                    style = AapsTheme.typography.bgTimeAgo,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+        val side = circleSize.roundToPx()
+        val hole = (circleSize / 2 - ringStrokeWidth).toPx()
+        // The lines sit a little above the middle, and the small lines overlap the value a little
+        val lift = AapsSpacing.extraSmall.toPx()
+        val overlap = AapsSpacing.extraSmall.toPx()
+
+        layout(side, side) {
+            val ringCenter = side / 2f
+            val valueCenter = ringCenter - lift
+            // The value is centred, so its far edge is half of its height further out than the lift
+            val valueScale = scaleToFit(valueLine.width, lift, valueLine.height / 2f * NUMBERS_INK, hole)
+            val valueTop = valueCenter - valueLine.height * valueScale / 2
+            val valueBottom = valueCenter + valueLine.height * valueScale / 2
+            placeScaled(valueLine, ringCenter, valueCenter, valueScale)
+
+            deltaLine?.let { line ->
+                val bottom = valueTop + overlap
+                val scale = scaleToFit(line.width, ringCenter - bottom, line.height * NUMBERS_INK, hole)
+                placeScaled(line, ringCenter, bottom - line.height * scale / 2, scale)
+            }
+            timeAgoLine?.let { line ->
+                val top = valueBottom - overlap
+                // Words: letters like "p" and "g" go down to the bottom of the line, also at its ends
+                val scale = scaleToFit(line.width, top - ringCenter, line.height.toFloat(), hole)
+                placeScaled(line, ringCenter, top + line.height * scale / 2, scale)
             }
         }
+    }
+}
+
+/**
+ * Numbers do not fill their line: there is nothing above the top of a digit, and only the comma goes
+ * below it, in the middle. So the outer part of a line of numbers, about 15 %, stays empty and may
+ * reach the ring. With 20 % the delta touched the ring in a test at three times its size.
+ */
+private const val NUMBERS_INK = 0.85f
+
+/**
+ * The biggest scale, at most 1, at which a line stays inside a hole of [hole] radius. The line is
+ * [width] wide, its edge nearest to the centre is [near] from the centre, and at full size its ink
+ * reaches [ink] further out. Solves (width·s/2)² + (near + ink·s)² = hole² for s.
+ */
+private fun scaleToFit(width: Int, near: Float, ink: Float, hole: Float): Float {
+    if (near >= hole) return 0f
+    val a = width * width / 4f + ink * ink
+    val b = near * ink
+    val c = near * near - hole * hole
+    return ((-b + sqrt(b * b - a * c)) / a).coerceAtMost(1f)
+}
+
+/** Places [line] with its centre at [centerX], [centerY], drawn at [scale] of its size. */
+private fun Placeable.PlacementScope.placeScaled(line: Placeable, centerX: Float, centerY: Float, scale: Float) {
+    val x = (centerX - line.width / 2f).roundToInt()
+    val y = (centerY - line.height / 2f).roundToInt()
+    if (scale >= 1f) line.place(x, y)
+    else line.placeWithLayer(x, y) {
+        scaleX = scale
+        scaleY = scale
     }
 }
 

@@ -61,7 +61,6 @@
     <string name="patch_communication_succeed">Communicatie geslaagd</string>
     <string name="patch_communication_succeed_message">Verbonden met de Patch.</string>
     <string name="patch_cancel_pairing">Koppeling annuleren</string>
-    <string name="all_dose_unit">&#160;E</string>
     <string name="insulin_suspend_msg1">Tot aan het uitstellen zal het leveren van de huidige Bolus &amp; tijdelijk basaal worden geannuleerd. \n\nSnelheid : %1$s E/uur\nResterende tijd: %2$s\n&amp; Insuline te gaan : %3$.2f E</string>
     <string name="insulin_suspend_msg2">Tot aan het uitstellen wordt de huidige geleverde bolus geannuleerd. \n\nInsuline om te gaan: %1$.2f E</string>
     <string name="insulin_suspend_msg3">Tijdens het uitstellen zal het momenteel afgeleverde tijdelijke basaal worden geannuleerd. \n\nRatio : %1$s E/uur\nResterende tijd: %2$s</string>

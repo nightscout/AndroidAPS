@@ -18,6 +18,7 @@ import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -58,6 +59,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.Mockito.mockingDetails
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
@@ -88,6 +90,7 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
     @Mock lateinit var automation: Automation
     @Mock lateinit var bolusProgressData: BolusProgressData
     @Mock lateinit var masterRecordWriter: MasterRecordWriter
+    @Mock lateinit var eatReminder: EatReminder
 
     // Real: the tests below read whether a pause is on, and confirm() checks it.
     private val smbPause by lazy { SmbPauseImpl(aapsLogger, dateUtil) }
@@ -95,7 +98,7 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
     private fun create() = MasterActionExecutorImpl(
         aapsLogger, baseText, config, quickWizard, bolusWizardProvider, profileFunction, profileRepository, iobCobCalculator, constraintsChecker, activePlugin,
         runningModeGuard, commandQueue, persistenceLayer, uel, loop, dateUtil, decimalFormatter, profileUtil, automation, notificationManager, bolusProgressData,
-        CoroutineScope(Dispatchers.Unconfined), masterRecordWriter, smbPause
+        CoroutineScope(Dispatchers.Unconfined), masterRecordWriter, smbPause, eatReminder
     )
 
     // The base mocks ConstraintsChecker without a default answer; the FIXED/batch cap path needs a passthrough.
@@ -513,7 +516,9 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
         calculated: Double,
         afterConstraints: Double,
         carbs: Int = 20,
-        executor: MasterActionExecutorImpl = create()
+        executor: MasterActionExecutorImpl = create(),
+        carbTime: Int = 0,
+        alarm: Boolean = false
     ): MasterActionExecutor.PrepareResult {
         whenever(config.appInitialized).thenReturn(true)
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
@@ -546,10 +551,85 @@ class MasterActionExecutorImplTest : TestBaseWithProfile() {
             )
         )
         val inputs = MasterActionExecutor.WizardInputs(
-            bg = 0.0, carbs = carbs, percentage = 100, directCorrection = 0.0, carbTime = 0, useBg = false, useCob = false, useIob = false,
-            useTt = false, useTrend = false, alarm = false, notes = ""
+            bg = 0.0, carbs = carbs, percentage = 100, directCorrection = 0.0, carbTime = carbTime, useBg = false, useCob = false, useIob = false,
+            useTt = false, useTrend = false, alarm = alarm, notes = ""
         )
         return executor.prepareWizard(inputs)
+    }
+
+    // ---- the "time to eat" timer counts from the end of the bolus (#5327), as in 3.x ----
+
+    @Test
+    fun confirm_wizardWithAlarm_startsTheTimerOnlyAfterThePumpFinished() = runTest {
+        whenever(constraintsChecker.applyBolusConstraints(any())).thenAnswer { it.getArgument<Constraint<Double>>(0) }
+        var timerStartedBeforeTheBolusEnded = false
+        whenever(commandQueue.bolus(anyOrNull())).thenAnswer {
+            // The pump is still delivering here.
+            timerStartedBeforeTheBolusEnded = mockingDetails(eatReminder).invocations.isNotEmpty()
+            pumpEnactResultProvider().success(true)
+        }
+        val executor = create()
+        val prepared = preparedManualWizard(calculated = 2.0, afterConstraints = 2.0, executor = executor, carbTime = 15, alarm = true) as MasterActionExecutor.PrepareResult.Preview
+
+        executor.confirm(prepared.bolusId, Sources.WizardDialog, { })
+
+        assertThat(timerStartedBeforeTheBolusEnded).isFalse()
+        verify(eatReminder).start(T.mins(15).msecs())
+    }
+
+    @Test
+    fun confirm_wizardWithAlarm_bolusFailsOnPump_noTimer() = runTest {
+        whenever(constraintsChecker.applyBolusConstraints(any())).thenAnswer { it.getArgument<Constraint<Double>>(0) }
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(false).comment("pump error"))
+        val executor = create()
+        val prepared = preparedManualWizard(calculated = 2.0, afterConstraints = 2.0, executor = executor, carbTime = 15, alarm = true) as MasterActionExecutor.PrepareResult.Preview
+
+        executor.confirm(prepared.bolusId, Sources.WizardDialog, { })
+
+        verify(eatReminder, never()).start(any())
+    }
+
+    @Test
+    fun confirm_wizardWithoutAlarm_noTimer() = runTest {
+        whenever(constraintsChecker.applyBolusConstraints(any())).thenAnswer { it.getArgument<Constraint<Double>>(0) }
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        val executor = create()
+        val prepared = preparedManualWizard(calculated = 2.0, afterConstraints = 2.0, executor = executor, carbTime = 15, alarm = false) as MasterActionExecutor.PrepareResult.Preview
+
+        executor.confirm(prepared.bolusId, Sources.WizardDialog, { })
+
+        verify(eatReminder, never()).start(any())
+    }
+
+    /** The carbs dialog's timer starts on the master too, also when a client entered the carbs. */
+    @Test
+    fun confirm_batchCarbsLaterWithAlarm_startsTheTimer() = runTest {
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        stubPassthroughConstraints()
+        val executor = create()
+        val carbs = BatchAction.Bolus(
+            insulin = 0.0, carbs = 20, carbsTimeOffsetMinutes = 30, carbsDurationHours = 0, recordOnly = false, notes = "", timestamp = 0L, iCfg = null, alarm = true
+        )
+        val prepared = executor.prepareBatch(listOf(carbs)) as MasterActionExecutor.PrepareResult.Preview
+
+        executor.confirm(prepared.bolusId, Sources.CarbDialog, { })
+
+        verify(eatReminder).start(T.mins(30).msecs())
+    }
+
+    @Test
+    fun confirm_batchCarbsNowWithAlarm_noTimer() = runTest {
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        stubPassthroughConstraints()
+        val executor = create()
+        val carbs = BatchAction.Bolus(
+            insulin = 0.0, carbs = 20, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false, notes = "", timestamp = 0L, iCfg = null, alarm = true
+        )
+        val prepared = executor.prepareBatch(listOf(carbs)) as MasterActionExecutor.PrepareResult.Preview
+
+        executor.confirm(prepared.bolusId, Sources.CarbDialog, { })
+
+        verify(eatReminder, never()).start(any())
     }
 
     @Test

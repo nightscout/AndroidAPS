@@ -7,7 +7,6 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.automation.AutomationEvent
@@ -143,7 +142,6 @@ class AutomationRuntime(
     private val locationServiceController: LocationServiceController,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
-    private val reminderScheduler: ReminderScheduler,
     private val actionFactory: ActionFactory,
     private val triggerFactory: TriggerFactory,
     private val triggerDeps: TriggerDeps,
@@ -580,11 +578,16 @@ class AutomationRuntime(
         val iterator = eventsLock.withLock { automationEvents.toMutableList().iterator() }
         while (iterator.hasNext()) {
             val event = iterator.next()
-            if (event.isEnabled && !event.userAction && event.shouldRun())
-                if (event.systemAction || commonEventsEnabled) {
-                    processEvent(event)
-                    if (event.hasStopProcessing()) break
-                }
+            if (!event.isEnabled || event.userAction) continue
+            if (!event.systemAction && !commonEventsEnabled) continue
+            val ran = event.shouldRun() && runEvent(event)
+            // "Stop processing" stops the rules below for as long as this rule's conditions are true.
+            // It used to stop them after every check of the rule, so the rules below never ran while
+            // the conditions were false, and they did run in the 5 minutes after the rule ran, because
+            // shouldRun() skips the rule then. The 5 minute limit is for the actions, not for the stop.
+            // A rule that ran stops the rest without a second check: its own actions can have changed
+            // its conditions. A rule switched off by runEvent (an action that cannot run) stops nothing.
+            if (event.isEnabled && event.hasStopProcessing() && (ran || event.canRun() && event.preconditionCanRun())) break
         }
 
         /*
@@ -605,8 +608,12 @@ class AutomationRuntime(
     }
 
     override suspend fun processEvent(someEvent: AutomationEvent) {
-        if (!config.APS) return // execution is master-only — guards every UI entry point (wear, quick launch, scenes, run-now)
-        val event = someEvent as AutomationEventObject
+        runEvent(someEvent as AutomationEventObject)
+    }
+
+    /** Runs the actions of [event] when its conditions are true. Returns true when they ran. */
+    private suspend fun runEvent(event: AutomationEventObject): Boolean {
+        if (!config.APS) return false // execution is master-only — guards every UI entry point (wear, quick launch, scenes, run-now)
 
         // A rule with an action that cannot run is switched off here, before any of it runs, rather
         // than half-executed. This decision used to live in `areActionsValid()`, which the Compose
@@ -622,7 +629,7 @@ class AutomationRuntime(
             }
             markEdited() // the rule is now disabled - store that and refresh the list
             rxBus.send(EventAutomationUpdateGui())
-            return
+            return false
         }
 
         if (event.canRun() && event.preconditionCanRun()) {
@@ -644,7 +651,9 @@ class AutomationRuntime(
             }
             event.lastRun = dateUtil.now()
             if (event.autoRemove) remove(event)
+            return true
         }
+        return false
     }
 
     fun add(event: AutomationEventObject) {
@@ -775,14 +784,6 @@ class AutomationRuntime(
 
         return triggers.toList()
     }
-
-    /**
-     * Generate reminder via [ReminderScheduler]
-     *
-     * @param seconds seconds to the future
-     */
-    override fun scheduleTimeToEatReminder(seconds: Int) =
-        reminderScheduler.scheduleReminder(seconds, rh.gs(AutomationStrings.time_to_eat))
 
     /**
      * Create new Automation event to alarm when is time to eat

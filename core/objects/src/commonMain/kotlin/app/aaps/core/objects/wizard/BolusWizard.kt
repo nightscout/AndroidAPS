@@ -14,6 +14,7 @@ import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.data.ui.confirmationLines
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -27,7 +28,6 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -40,6 +40,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.aps.IsfForCarbs
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.runningMode.PumpCommandGate
@@ -65,9 +66,9 @@ class BolusWizard(
     private val config: Config,
     private val uel: UserEntryLogger,
     private val automation: Automation,
+    private val eatReminder: EatReminder,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val persistenceLayer: PersistenceLayer,
-    private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val runningModeGuard: RunningModeGuard,
     private val ch: ConcentrationHelper,
     private val masterActionExecutor: MasterActionExecutor,
@@ -205,7 +206,8 @@ class BolusWizard(
         this.source = source
 
         // Insulin from BG
-        sens = profileUtil.fromMgdlToUnits(profile.getIsfMgdlForCarbs(dateUtil.now(), "BolusWizard", config, processedDeviceStatusData))
+        val now = dateUtil.now()
+        sens = profileUtil.fromMgdlToUnits(IsfForCarbs.load(persistenceLayer, now, now).isfMgdl(profile, now))
         targetBGLow = profileUtil.fromMgdlToUnits(profile.getTargetLowMgdl())
         targetBGHigh = profileUtil.fromMgdlToUnits(profile.getTargetHighMgdl())
         if (useTT && tempTarget != null) {
@@ -548,10 +550,11 @@ class BolusWizard(
                 else                           -> Action.TREATMENT
             }
             val bolusCalculatorResult = createBolusCalculatorResult()
-            // Schedule carb timer before bolus delivery. Scheduling in the bolus completion callback
-            // fails when the screen is off because Android blocks startActivity() from the background.
-            if (useAlarm && carbs > 0 && carbTime > 0) {
-                automation.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())
+            // A record-only entry has no pump delivery to wait for, so its "time to eat" timer starts now.
+            // A delivered wizard bolus does not come here: it goes through WizardExecutor to the master's
+            // confirm(), which starts the timer once the pump finished the bolus.
+            if (forcedRecordOnly && useAlarm && carbs > 0 && carbTime > 0) {
+                eatReminder.start(T.mins(carbTime.toLong()).msecs())
             }
             if (forcedRecordOnly) {
                 uel.log(

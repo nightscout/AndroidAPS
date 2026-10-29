@@ -6,38 +6,29 @@ import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.utils.hexStringToByteArray
 import app.aaps.core.utils.toHex
-import app.aaps.implementation.maintenance.DesktopFolders
+import app.aaps.desktop.shell.secure.KeyVault
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.attribute.PosixFilePermission
 import java.security.SecureRandom
+import java.util.concurrent.ConcurrentHashMap
 import javax.crypto.Cipher
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 /**
- * Secrets encrypted with AES-GCM, using keys kept in files under the AAPS folder.
+ * Secrets encrypted with AES-GCM, using keys kept in the desktop [KeyVault].
  *
- * ## What this protects against, and what it does not
+ * ## Where the keys are
  *
- * **Be clear about this before relying on it.** Android puts its key in the hardware-backed KeyStore,
- * where it cannot be read out even by the app; iOS uses the Keychain. Desktop has no comparable store
- * that works the same on Windows, macOS and Linux, so the key sits in a file next to the data it
- * protects, with owner-only permissions where the filesystem supports them.
+ * In the operating system's key store: DPAPI on Windows, the login Keychain on macOS, the Secret Service
+ * on Linux (see `KeyVaults`). A copy of `~/.aaps`, a backup or another account on the computer gets the
+ * encrypted secrets but not the keys. Until 2026-10 the keys were plain files next to the data; the
+ * first start of a newer version moves them into the key store (`LegacyKeyFiles`).
  *
- * That means it protects against:
- * - another user account on the same machine reading the secrets,
- * - a secret being readable in a backup, an export or a log,
- * - casual inspection of the preferences file.
- *
- * It does **not** protect against anyone who can read the current user's own files - malware running
- * as the user, or someone with the unlocked machine. A key on disk cannot, whatever wraps it: a
- * passphrase baked into the binary is not a secret, and one typed by the user would have to be typed
- * on every launch.
+ * Where no key store exists - Linux without a keyring - the keys stay in files, and the user is told so.
+ * No key store protects against a program running as the same user: that is a limit of the desktop.
  *
  * ## The stored format is the same as Android's
  *
@@ -51,10 +42,12 @@ import javax.crypto.spec.SecretKeySpec
 @Inject
 class DesktopSecureEncrypt(
     private val log: AAPSLogger,
-    private val cryptoUtil: CryptoUtil
+    private val cryptoUtil: CryptoUtil,
+    private val vault: KeyVault
 ) : SecureEncrypt {
 
-    private val keyDir = File(DesktopFolders.data, "keys")
+    /** Keys already read, so the key store is not asked on every call. */
+    private val keys = ConcurrentHashMap<String, SecretKeySpec>()
 
     override fun encrypt(plaintextSecret: String, keystoreAlias: String): String {
         if (plaintextSecret.isEmpty()) {
@@ -108,40 +101,25 @@ class DesktopSecureEncrypt(
     }
 
     override fun deleteKey(keystoreAlias: String) {
-        val file = File(keyDir, keystoreAlias)
-        if (file.exists() && file.delete()) log.info(LTag.CORE, "$MODULE: deleted key alias=$keystoreAlias")
-    }
-
-    /** The key for [alias], created on first use. */
-    private fun keyFor(alias: String): SecretKeySpec {
-        val file = File(keyDir, alias)
-        if (!file.exists()) {
-            keyDir.mkdirs()
-            val key = ByteArray(AES_KEY_SIZE_BYTE).also { SecureRandom().nextBytes(it) }
-            file.writeText(key.toHex())
-            restrictToOwner(file)
-            log.info(LTag.CORE, "$MODULE: created key alias=$alias")
-        }
-        return SecretKeySpec(file.readText().trim().hexStringToByteArray(), "AES")
+        keys.remove(keystoreAlias)
+        if (vault.delete(keystoreAlias)) log.info(LTag.CORE, "$MODULE: deleted key alias=$keystoreAlias")
     }
 
     /**
-     * Owner-only permissions where the filesystem supports them.
+     * The key for [alias], created on first use.
      *
-     * POSIX first, because it is exact. On Windows the `File` flags are coarser - they clear access
-     * for everyone and then restore it for the owner - and they are what is available without a
-     * platform-specific ACL call.
+     * A key store that does not answer throws here, and the caller logs it as a failed encrypt or decrypt
+     * and returns an empty string - the same answer as any other failure, and never a new key in its place.
      */
-    private fun restrictToOwner(file: File) {
-        runCatching {
-            Files.setPosixFilePermissions(file.toPath(), setOf(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE))
-        }.onFailure {
-            file.setReadable(false, false)
-            file.setWritable(false, false)
-            file.setReadable(true, true)
-            file.setWritable(true, true)
+    private fun keyFor(alias: String): SecretKeySpec =
+        keys.computeIfAbsent(alias) {
+            val bytes = vault.load(alias) ?: ByteArray(AES_KEY_SIZE_BYTE).also {
+                SecureRandom().nextBytes(it)
+                vault.store(alias, it)
+                log.info(LTag.CORE, "$MODULE: created key alias=$alias in ${vault.name}")
+            }
+            SecretKeySpec(bytes, "AES")
         }
-    }
 
     companion object {
 

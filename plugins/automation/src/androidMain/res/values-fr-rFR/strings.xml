@@ -108,6 +108,8 @@
     <string name="triggerCannulaAgeDesc">Âge de canule %1$s %2$.1f heure</string>
     <string name="triggerPodChangeLabel">Activation du pod</string>
     <string name="triggerPodChangeDesc">Pod activé</string>
+    <string name="triggerUnknownLabel">Déclencheur inconnu</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Déclencheur %1$s inconnu - jamais vrai</string>
     <string name="triggerInsulinAgeLabel">Âge de l\'insuline</string>
     <string name="triggerInsulinAgeDesc">Âge de l\'insuline %1$s %2$.1f heure</string>
     <string name="triggerPumpBatteryAgeLabel">Age de la pile pompe</string>

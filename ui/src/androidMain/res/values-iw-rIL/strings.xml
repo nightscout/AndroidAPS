@@ -319,11 +319,6 @@
     <string name="widget_rm_disabled">מושבת</string>
     <string name="widget_rm_suspended">מושהה</string>
     <string name="widget_rm_resume">חידוש</string>
-    <!-- Calibration entry rejection reasons -->
-    <string name="cal_reject_delta_too_high">הכיול לא נשמר: רמת הסוכר משתנה מהר מדי (הפרש%1$s %3$s ב-5 דקות, גבול %2$s). נסו שוב כשהסוכר יתייצב.</string>
-    <string name="cal_reject_no_pair">הכיול לא נשמר: לא נמצאה קריאת חיישן ב-10 הדקות האחרונות.</string>
-    <string name="cal_reject_warmup">הכיול לא נשמר: החיישן עדיין נמצא בזמן החימום.</string>
-    <string name="cal_reject_no_session">הכיול לא נשמר: לא רשום חיישן פעיל. יש לרשום חיישן פעיל תחילה.</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
     <string name="cal_precheck_warmup">החיישן בחימום. הכיול יהיה זמין ב-%1$s.</string>
     <string name="cal_precheck_no_session">לא רשום חיישן פעיל.</string>

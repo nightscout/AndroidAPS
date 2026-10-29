@@ -251,6 +251,7 @@ fun GraphsSection(
     // the whole window in that mode. Both pick one of the zoom objects above rather than allocating
     // a new one - see the note above on why a fresh Zoom instance tears the state down.
     val startZoom = if (fitWholeWindow) bgMinZoom else defaultZoom
+    val startWindowMinutes = if (fitWholeWindow) Constants.GRAPH_TIME_RANGE_HOURS * 60.0 else DEFAULT_GRAPH_ZOOM_MINUTES
 
     // BG graph - primary interactive.
     // Wrapped in key(bgViewportResetTrigger) so bumping the trigger tears down and recreates both
@@ -449,7 +450,9 @@ fun GraphsSection(
         if (bgViewportResetTrigger == nudgedResetTrigger) return@LaunchedEffect
         val showPredictions = SeriesType.PREDICTIONS in graphConfig.bgOverlays
         val timeRange = derivedTimeRange
-        if (showPredictions && predictions.isNotEmpty() && timeRange != null) {
+        // A whole axis that fits in the start window (a short history) has nothing to scroll. maxValue then
+        // stays 0, and the wait below never ended: the scroll came later on its own, during a pinch (#5418).
+        if (showPredictions && predictions.isNotEmpty() && timeRange != null && axisLongerThan(timeRange, startWindowMinutes)) {
             // Vico drops a scroll on a state the chart has not measured yet, with no error. That is
             // the case on return from another screen with a new reading waiting: the model producer
             // is new, the chart shows its placeholder until the first model is built, and the reading
@@ -473,8 +476,9 @@ fun GraphsSection(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .stopsBgFling(bgScrollForwarder)
+            .closesInspectPillOnTouch(inspect)
     ) {
-        // Treatment Belt Graph - running mode background + therapy events
+        // Treatment Belt Graph - running mode background + therapy events. A hold or a tap shows the pill.
         TreatmentBeltGraphCompose(
             viewModel = graphViewModel,
             inspect = inspect,
@@ -482,7 +486,9 @@ fun GraphsSection(
             zoomState = beltZoomState,
             derivedTimeRange = derivedTimeRange,
             nowTimestamp = nowTimestamp,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .graphInspectTouch(inspect)
         )
         // BG Graph - primary interactive graph
         var editingBgOverlays by remember { mutableStateOf(false) }
@@ -863,6 +869,22 @@ private fun seriesShortNameId(type: SeriesType): TextRef = when (type) {
     SeriesType.PREDICTIONS     -> CoreUiStrings.predictions_shortname
 }
 
+/** String resource ID for the full name of a series type, for the graph settings where there is room (#5336) */
+private fun seriesNameId(type: SeriesType): TextRef = when (type) {
+    SeriesType.IOB             -> CoreUiStrings.graph_series_iob
+    SeriesType.ABS_IOB         -> CoreUiStrings.graph_series_abs_insulin
+    SeriesType.COB             -> CoreUiStrings.graph_series_cob
+    SeriesType.BGI             -> CoreUiStrings.graph_series_bgi
+    SeriesType.DEVIATIONS      -> CoreUiStrings.graph_series_deviations
+    SeriesType.SENSITIVITY     -> CoreUiStrings.graph_series_sensitivity
+    SeriesType.VAR_SENSITIVITY -> CoreUiStrings.graph_series_variable_sens
+    SeriesType.DEV_SLOPE       -> CoreUiStrings.graph_series_deviation_slope
+    SeriesType.HEART_RATE      -> CoreUiStrings.graph_series_heart_rate
+    SeriesType.STEPS           -> CoreUiStrings.graph_series_steps
+    SeriesType.ACTIVITY        -> CoreUiStrings.graph_series_activity
+    SeriesType.PREDICTIONS     -> CoreUiStrings.graph_series_predictions
+}
+
 // =========================================================================
 // Graph edit button + series picker bottom sheet
 // =========================================================================
@@ -974,7 +996,7 @@ private fun GraphSeriesBottomSheet(
                     FilterChip(
                         selected = type in selectedSeries,
                         onClick = { onToggle(type) },
-                        label = { Text(stringResource(seriesShortNameId(type))) },
+                        label = { Text(stringResource(seriesNameId(type))) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
                             selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer

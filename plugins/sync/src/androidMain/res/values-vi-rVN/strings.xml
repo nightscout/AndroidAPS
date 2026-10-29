@@ -15,7 +15,6 @@
     <string name="authorized_clients_add">Thêm máy phụ</string>
     <string name="authorized_clients_comm_switch_title">Cho phép thiết bị phụ điều khiển</string>
     <string name="authorized_clients_comm_switch_summary">Cho phép các thiết bị phụ đã ghép đôi gửi các lệnh đã ký xác thực qua Nightscout. Tắt tùy chọn này để ngừng liên lạc mà không cần xóa các thiết bị đó.</string>
-    <string name="authorized_clients_needs_websocket">WebSocket đang bị tắt nên không thể nhận lệnh từ các thiết bị khách. Các thiết bị khách sẽ xem máy chủ này là không chấp nhận lệnh cho đến khi bạn bật WebSocket.</string>
     <string name="authorized_clients_state_active">Kích hoạt</string>
     <string name="authorized_clients_state_pending">Đang chờ xử lý</string>
     <string name="authorized_clients_last_seen">Lần cuối hoạt động: %1$s</string>
@@ -35,6 +34,35 @@
     <string name="authorized_clients_pin_published">Yêu cầu ghép đôi đã sẵn sàng trên Nightscout.</string>
     <string name="authorized_clients_pin_publish_failed">Không thể gửi yêu cầu ghép đôi lên Nightscout.</string>
     <string name="authorized_clients_pin_retry">Thử lại</string>
+    <string name="authorized_clients_method_title">Điện thoại được thiết lập như thế nào?</string>
+    <string name="authorized_clients_method_qr_pair">Mã QR: Nightscout và ghép đôi</string>
+    <string name="authorized_clients_method_qr_pair_summary">Quét mã một lần trên điện thoại mới. Điện thoại sẽ có token Nightscout riêng và được ghép đôi.</string>
+    <string name="authorized_clients_method_qr_ns">Mã QR: Chỉ Nightscout</string>
+    <string name="authorized_clients_method_qr_ns_summary">Điện thoại có token Nightscout riêng và có thể đọc dữ liệu. Điện thoại chưa được ghép đôi nên không thể gửi lệnh.</string>
+    <string name="authorized_clients_method_pin">Mã PIN</string>
+    <string name="authorized_clients_method_pin_summary">Dành cho điện thoại không có camera. Điện thoại phải được kết nối với Nightscout từ trước.</string>
+    <string name="authorized_clients_qr_working">Đang tạo token Nightscout…</string>
+    <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Thiết lập %1$s</string>
+    <string name="authorized_clients_qr_pair_instructions">Quét mã này trên điện thoại mới, trong trình hướng dẫn thiết lập hoặc mục Ghép đôi với thiết bị chính. Mã sẽ thiết lập Nightscout và ghép đôi điện thoại.</string>
+    <string name="authorized_clients_qr_ns_instructions">Quét mã này trên điện thoại mới, trong trình hướng dẫn thiết lập hoặc mục Ghép đôi với thiết bị chính. Mã sẽ thiết lập Nightscout nhưng không ghép đôi điện thoại.</string>
+    <string name="authorized_clients_qr_keep_private">Bất kỳ ai nhìn thấy mã này đều có thể đọc dữ liệu Nightscout của bạn. Chỉ hiển thị mã này trên điện thoại mới.</string>
+    <string name="authorized_clients_token_problem_title">Không có mã QR</string>
+    <string name="authorized_clients_not_added_title">Chưa thêm thiết bị phụ</string>
+    <string name="authorized_clients_token_problem_not_connected">Điện thoại này chưa được kết nối với Nightscout nên không thể tạo token cho thiết bị phụ.</string>
+    <string name="authorized_clients_token_problem_not_allowed">Token Nightscout của điện thoại này không phải token quản trị nên không thể tạo token cho thiết bị phụ. Hãy sử dụng token quản trị tại đây hoặc thêm thiết bị phụ bằng mã PIN.</string>
+    <string name="authorized_clients_token_problem_name_taken">Nightscout đã có token mang tên này nhưng có quyền khác. Hãy chọn tên khác.</string>
+    <string name="authorized_clients_token_problem_name_in_use">Danh sách đã có thiết bị phụ mang tên này. Hãy chọn tên khác hoặc xóa thiết bị phụ đó trước.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout không hiển thị token mới nên token đã bị xóa. Không có dữ liệu nào còn sót lại. Vui lòng thử lại.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout không hiển thị token mới và token này không thể bị xóa lại. Hãy xóa token %1$s trong Nightscout, sau đó thử lại.</string>
+    <string name="authorized_clients_tokens_header">Chỉ đọc dữ liệu Nightscout</string>
+    <string name="authorized_clients_token_unpaired">Giữ Token Nightscout, chưa ghép đôi</string>
+    <string name="authorized_clients_token_show_qr">Hiển thị mã QR</string>
+    <string name="authorized_clients_token_delete_title">Xóa token?</string>
+    <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s không còn có thể đọc dữ liệu Nightscout.</string>
+    <string name="authorized_clients_delete_dialog_token">Token Nightscout của thiết bị này cũng đã bị xóa, nên thiết bị không còn có thể đọc dữ liệu Nightscout.</string>
+    <string name="authorized_clients_uses_client_token">Giữ token Nightscout</string>
+    <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Đang sử dụng token Nightscout %1$s có nhiều quyền hơn mức cần thiết cho thiết bị phụ</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Đang sử dụng token Nightscout %1$s thay vì token riêng, nên các lệnh từ thiết bị này bị từ chối. Hãy xóa thiết bị này rồi thêm lại.</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Ghép đôi với thiết bị chính</string>
     <string name="pair_with_master_pin_entry_title">Nhập mã PIN ghép đôi</string>
@@ -57,6 +85,27 @@
     <string name="pair_with_master_already_paired_master">Hiện đang được ghép đôi với thiết bị chính %1$s. Hãy hủy ghép đôi trước khi nhập mã PIN mới.</string>
     <string name="pair_with_master_unpair">Hủy ghép đôi</string>
     <string name="pair_with_master_sending">Đang gửi yêu cầu ghép đôi…</string>
+    <!-- Client set-up from the master's QR code -->
+    <string name="client_setup_scan_button">Quét mã QR</string>
+    <string name="client_setup_scan_title">Quét mã QR của thiết bị chính</string>
+    <string name="client_setup_scan_instructions">Trên thiết bị chính, mở mục Thiết bị phụ được ủy quyền và thêm điện thoại này bằng mã QR. Hướng camera vào mã QR.</string>
+    <string name="client_setup_scan_camera_refused">Cần có quyền truy cập camera để quét mã QR. Hãy cấp quyền truy cập camera hoặc ghép đôi bằng mã PIN.</string>
+    <string name="client_setup_scan_camera_denied">Quyền truy cập camera của AAPS đang bị tắt. Hãy bật quyền này trong cài đặt hệ thống hoặc ghép đôi bằng mã PIN.</string>
+    <string name="client_setup_scan_camera_blocked">Thiết bị này không cho phép truy cập camera. Hãy ghép đôi bằng mã PIN.</string>
+    <string name="client_setup_scan_camera_unavailable">Không thể sử dụng camera trên thiết bị này. Hãy ghép đôi bằng mã PIN.</string>
+    <string name="client_setup_scan_open_settings">Mở cài đặt</string>
+    <string name="client_setup_scan_not_a_code">Đây không phải mã QR của AAPS.</string>
+    <string name="client_setup_scan_other_version">Mã này thuộc phiên bản AAPS khác. Thiết bị chính và điện thoại này phải chạy cùng một phiên bản AAPS.</string>
+    <string name="client_setup_scan_expired">Mã này đã hết hạn. Hãy tạo mã mới trên thiết bị chính.</string>
+    <string name="client_setup_scan_already_paired">Điện thoại này đã được ghép đôi. Hãy hủy ghép đôi trước khi sử dụng mã ghép đôi.</string>
+    <string name="client_setup_confirm_title">Sử dụng mã này không?</string>
+    <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nightscout: %1$s</string>
+    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">Nó cũng ghép đôi điện thoại với thiết bị chính %1$s.</string>
+    <string name="client_setup_confirm_replaces">Nó sẽ thay thế địa chỉ Nightscout và token của điện thoại.</string>
+    <string name="client_setup_confirm_apply">Sử dụng</string>
+    <string name="client_setup_done_title">Hoàn thành</string>
+    <string name="client_setup_done_paired">Nightscout đã được thiết lập và điện thoại đã được ghép đôi. Thiết bị chính sẽ hiển thị điện thoại là đang hoạt động khi điện thoại kết nối.</string>
+    <string name="client_setup_done_ns_only">Nightscout đã được thiết lập. Để điều khiển thiết bị chính từ điện thoại này, hãy ghép đôi điện thoại.</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">Thiết bị chính AAPS không còn nhận diện thiết bị này. Mở Quản lý → Ghép đôi với thiết bị chính để ghép đôi lại.</string>
     <string name="ns_client">NSClient</string>
@@ -81,6 +130,12 @@
     <string name="upload_now">Tải bây giờ</string>
     <string name="tidepool_purge_data">Xóa toàn bộ dữ liệu</string>
     <string name="tidepool_purge_data_confirm">Xóa TOÀN BỘ dữ liệu mà AAPS đã tải lên Tidepool? Hành động này không thể hoàn tác. Hãy dùng tính năng này để xóa dữ liệu bị lỗi do phiên bản cũ tạo ra, sau đó chạy \"Đồng bộ hóa toàn bộ\" để tải dữ liệu lên lại.</string>
+    <string name="tidepool_full_sync_comment">Đồng bộ hóa toàn bộ? AAPS sẽ tải lại tất cả dữ liệu lên Tidepool. Quá trình này có thể mất một lúc.</string>
+    <string name="tidepool_logout_confirm">Đăng xuất khỏi Tidepool? Việc tải dữ liệu lên sẽ dừng cho đến khi bạn đăng nhập lại.</string>
+    <string name="tidepool_status_not_logged_in">Chưa đăng nhập</string>
+    <string name="tidepool_status_no_session">Đã đăng nhập, chưa kết nối</string>
+    <string name="tidepool_status_blocked">Bị chặn bởi cài đặt kết nối</string>
+    <string name="tidepool_status_failed">Thất bại. Xem nhật ký bên dưới.</string>
     <string name="not_connected">Chưa kết nối</string>
     <string name="read_only">Chỉ đọc</string>
     <string name="working">Đang làm việc</string>
@@ -100,6 +155,8 @@
     <string name="garmin_description">Kết nối với thiết bị Garmin (Fenix, Edge, …)</string>
     <string name="garmin_local_http_server_port">Local HTTP server port</string>
     <string name="garmin_local_http_server">Local HTTP server</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">Đồng hồ Garmin đã gửi %1$s carbs. Điện thoại này là thiết bị phụ nên carbs chưa được ghi nhận. Hãy nhập carbs trong AAPS.</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">Đồng hồ Garmin đã yêu cầu kết nối hoặc ngắt kết nối bơm. Điện thoại này là thiết bị phụ nên không có thay đổi nào được thực hiện. Hãy thao tác trong AAPS.</string>
     <!--    Wear-->
     <string name="description_wear">Theo dõi và điều khiển AAPS từ đồng hồ WearOS.</string>
     <string name="no_watch_connected">(Không có đồng hồ kết nối)</string>

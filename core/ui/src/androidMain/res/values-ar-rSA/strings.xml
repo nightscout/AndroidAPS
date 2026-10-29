@@ -3,6 +3,7 @@
     <!--    General-->
     <string name="count_selected">%1$d محدد</string>
     <!-- master_password moved to core/keys/strings.xml -->
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
@@ -67,4 +68,5 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
 </resources>

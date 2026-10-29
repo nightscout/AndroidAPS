@@ -14,6 +14,7 @@
     <string name="description_ama">Het algoritme uit 2017</string>
     <string name="description_smb">Meest recente algoritme voor gevorderde gebruikers</string>
     <string name="description_smb_dynamic_isf">Meest recente algoritme voor gevorderde gebruikers met dynamische/automatische ISF</string>
+    <string name="description_auto_isf">Experimenteel algoritme voor gevorderde gebruikers met AutoISF uitbreidingen</string>
     <string name="openapsma_last_run_label">Laatste berekening</string>
     <string name="openapsma_input_parameters_label">Invoerparameters</string>
     <string name="openapsma_glucose_status_label">Glucose status</string>
@@ -37,9 +38,11 @@
     <string name="maxvalueinpreferences">Maximum waarde in instellingen</string>
     <string name="hardlimit">max limiet (SC)</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">Piek</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Er is een bolus toegediend gedurende de afgelopen 3 minuten, SMB wordt overgeslagen</string>
     <string name="pump_not_initialized">Pomp niet geïnitialiseerd!</string>
+    <string name="zero_basal_not_set">De pomp heeft de tijdelijke nul-basaalstand niet geaccepteerd. Mogelijk wordt er nog steeds basale insuline afgegeven. Controleer de pomp.</string>
     <string name="description_loop">Activeer of deactiveer de implementatie die de Loop triggert.</string>
     <string name="no_aps_selected">GEEN APS GESELECTEERD OF TOEGEKEND RESULTAAT</string>
     <string name="ignore5m">Negeer 5m</string>
@@ -47,6 +50,8 @@
     <string name="ignore30m">Negeer 30m</string>
     <string name="carbs_suggestion">Koolhydraten suggestie</string>
     <string name="open_loop_new_suggestion">Nieuwe suggestie beschikbaar</string>
+    <string name="loop_notification_channel_name">Loop suggesties</string>
+    <string name="open_loop_suggestion_too_old">Deze suggestie is te oud. Er is niets naar de pomp gestuurd. Wacht op de volgende.</string>
     <string name="basal_set_correctly">Basaal correct ingesteld</string>
     <string name="last_run_label">Laatst uitgevoerd</string>
     <string name="loop_aps_label">APS</string>

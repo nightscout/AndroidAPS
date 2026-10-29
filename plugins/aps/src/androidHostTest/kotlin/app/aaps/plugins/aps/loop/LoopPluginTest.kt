@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.loop
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.DS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
@@ -9,16 +10,15 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.profile.EffectiveProfile
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpStatusProvider
@@ -27,9 +27,10 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.SmbPause
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -73,7 +74,6 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var uel: UserEntryLogger
-    @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
     @Mock lateinit var loopNotifier: LoopNotifier
     @Mock lateinit var runningModeReconciler: RunningModeReconciler
@@ -102,7 +102,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         // The shared test base still hands out a javax Provider, which other tests rely on;
         // LoopPlugin takes Metro's now, so it is adapted here rather than flipping the base.
         persistenceLayer, notificationManager, { pumpEnactResultProvider() },
-        processedDeviceStatusData, pumpStatusProvider, ch, loopNotifier, runningModeReconciler, smbPause, testScope
+        pumpStatusProvider, ch, loopNotifier, runningModeReconciler, smbPause, testScope
     )
 
     /**
@@ -176,6 +176,24 @@ class LoopPluginTest : TestBaseWithProfile() {
         assertThat(d.getMostLimitedReasons()).isEqualTo("Loop: Limiting IOB to 0.0 U because of Low Glucose Suspend")
     }
 
+    // #5413: a run that stopped early on bad CGM data calculated nothing. Stored, it made the ISF for carbs
+    // take the profile ISF.
+    @Test
+    fun `a result that stopped early is not stored`() = runTest {
+        loopPlugin.storeApsResult(mock<APSResult> { on { stoppedEarly } doReturn true })
+
+        verify(persistenceLayer, never()).insertOrUpdateApsResult(any())
+    }
+
+    @Test
+    fun `a calculated result is stored`() = runTest {
+        val result = mock<APSResult> { on { stoppedEarly } doReturn false }
+
+        loopPlugin.storeApsResult(result)
+
+        verify(persistenceLayer).insertOrUpdateApsResult(result)
+    }
+
     // #5381: the user is confirming a bolus calculated without this SMB. Refused before the user entry is
     // written, so the log does not show an SMB that was never given; success = false lets the loop fall back
     // to a temp basal.
@@ -186,6 +204,40 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(RM(timestamp = 0, mode = RM.Mode.CLOSED_LOOP, duration = 0))
 
         val result = loopPlugin.applySMBRequest(mock<APSResult>())
+
+        assertThat(result.success).isFalse()
+        assertThat(result.enacted).isFalse()
+        verifyNoInteractions(uel)
+        verify(commandQueue, never()).bolus(any())
+    }
+
+    // #5362: the APS allows an SMB 6 s before the full interval, and this check runs later. It must allow the same.
+    @Test
+    fun `SMB is queued when the last bolus is 5 s short of the interval`() = runTest {
+        whenever(preferences.get(IntKey.ApsMaxSmbFrequency)).thenReturn(3)
+        val lastBolusTime = dateUtil.now() - T.mins(3).msecs() + T.secs(5).msecs()
+        whenever(persistenceLayer.getNewestBolus()).thenReturn(BS(timestamp = lastBolusTime, type = BS.Type.SMB, amount = 0.3, iCfg = someICfg))
+        whenever(virtualPumpPlugin.isInitialized()).thenReturn(true)
+        whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(RM(timestamp = 0, mode = RM.Mode.CLOSED_LOOP, duration = 0))
+        val queued = pumpEnactResultProvider().success(true).enacted(true)
+        commandQueue.stub { onBlocking { bolus(any()) } doReturn queued }
+
+        val result = loopPlugin.applySMBRequest(mock<APSResult> { on { smb } doReturn 0.5 })
+
+        assertThat(result).isSameInstanceAs(queued)
+        val captor = argumentCaptor<DetailedBolusInfo>()
+        verify(commandQueue).bolus(captor.capture())
+        // The queue refuses the SMB if a bolus newer than this one comes in before it is queued.
+        assertThat(captor.firstValue.lastKnownBolusTime).isEqualTo(lastBolusTime)
+    }
+
+    @Test
+    fun `no SMB and no SMB log entry when the last bolus is 7 s short of the interval`() = runTest {
+        whenever(preferences.get(IntKey.ApsMaxSmbFrequency)).thenReturn(3)
+        val lastBolusTime = dateUtil.now() - T.mins(3).msecs() + T.secs(7).msecs()
+        whenever(persistenceLayer.getNewestBolus()).thenReturn(BS(timestamp = lastBolusTime, type = BS.Type.SMB, amount = 0.3, iCfg = someICfg))
+
+        val result = loopPlugin.applySMBRequest(mock<APSResult> { on { smb } doReturn 0.5 })
 
         assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
@@ -775,16 +827,9 @@ class LoopPluginTest : TestBaseWithProfile() {
 
     private suspend fun prepareDeviceStatus(request: APSResult, tbrSetByPump: PumpEnactResult? = null) {
         whenever(pumpStatusProvider.generatePumpJsonStatus()).thenReturn(JsonObject(emptyMap()))
-        // The profile reads isfMgdlForCarbs through the active APS and errors out when there is none.
-        // Stubbed in two steps: a whenever() nested inside another one confuses Mockito.
-        val aps = mock<APS>()
-        whenever(aps.usingDynamicIsf()).thenReturn(false)
-        whenever(activePlugin.activeAPS).thenReturn(aps)
-        // ProfileSealed reads activeAPS once, when it is built, so the base fixture's profile was built
-        // before the stub above existed. Build a fresh one - outside the thenReturn(), because that
-        // constructor call touches a mock and Mockito would read it as another unfinished stubbing.
-        val profile = ProfileSealed.EPS(effectiveProfileSwitch, activePlugin)
-        whenever(profileFunction.getProfile()).thenReturn(profile)
+        // No loop results stored unless a test says otherwise, so isfMgdlForCarbs is the profile ISF
+        whenever(persistenceLayer.getLoopSensitivities(any(), any())).thenReturn(emptyList())
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
         loopPlugin.lastRun = Loop.LastRun().apply {
             this.request = request
             this.lastAPSRun = dateUtil.now()
@@ -810,7 +855,24 @@ class LoopPluginTest : TestBaseWithProfile() {
         assertThat(suggested.getInt("carbsReq")).isEqualTo(0)
         // …and the two entries this method adds arrived.
         assertThat(suggested.has("timestamp")).isTrue()
-        assertThat(suggested.has("isfMgdlForCarbs")).isTrue()
+        assertThat(suggested.getDouble("isfMgdlForCarbs"))
+            .isWithin(0.001).of(effectiveProfile.getIsfMgdlTimeFromMidnight(MidnightUtils.secondsFromMidnight(now)))
+    }
+
+    /** Older clients still read the finished value; it is the same average a newer client works out itself. */
+    @Test
+    fun `isfMgdlForCarbs is the average of the stored loop results`() = runTest {
+        prepareDeviceStatus(apsResultReturning("eventualBG" to 120))
+        whenever(persistenceLayer.getLoopSensitivities(any(), any())).thenReturn(
+            listOf(
+                PersistenceLayer.LoopSensitivity(now - T.mins(6).msecs(), 60.0),
+                PersistenceLayer.LoopSensitivity(now - T.mins(1).msecs(), 70.0)
+            )
+        )
+
+        val suggested = JSONObject(storedDeviceStatus().suggested!!)
+
+        assertThat(suggested.getDouble("isfMgdlForCarbs")).isWithin(0.001).of(65.0)
     }
 
     /** No temp basal was set on the pump, so there is nothing enacted to report. */

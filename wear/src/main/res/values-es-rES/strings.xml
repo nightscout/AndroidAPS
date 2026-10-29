@@ -61,6 +61,8 @@
     <string name="pref_prime_in_menu">Cebar en menú</string>
     <string name="pref_single_target">Objetivo único</string>
     <string name="pref_wizard_percentage">Porcentaje en calculadora</string>
+    <string name="pref_wizard_carbs_type">Tipo de comida de la calculadora</string>
+    <string name="pref_wizard_carb_time">Tiempo de hidratos de carbono de la calculadora</string>
     <string name="pref_complication_tap_action">Acción al tocar la complicación</string>
     <string name="pref_complication_bg_graph_hours">Rango de tiempo del gráfico de glucemia</string>
     <string name="duration_1_hour">1 hora</string>
@@ -282,6 +284,22 @@
     <string name="title_activity_disconnect_pump">Desconectar bomba</string>
     <string name="title_activity_suspend_loop">Suspender lazo</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="wizard_carbs_type">Tipo de comida</string>
+    <string name="wizard_carbs_type_bread">Pan</string>
+    <string name="wizard_carbs_type_cake">Pastel</string>
+    <string name="wizard_carbs_type_pizza">Pizza</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Tiempo de hidratos de carbono\n[min]</string>
+    <string name="wizard_carb_time_now">Ahora</string>
+    <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
+    <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>
+    <string name="wizard_set_alarm">Establecer alarma</string>
+    <string name="eat_reminder_title">Hora de comer</string>
+    <string name="eat_reminder_silence">Silencio</string>
+    <string name="eat_reminder_stop">Detener</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Suena a las %1$s</string>
+    <string name="eat_reminder_countdown_channel">Hora de comer, en ejecución</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>

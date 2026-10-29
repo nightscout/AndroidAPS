@@ -5,6 +5,7 @@
     <string name="settings">Налаштування</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="profile">Профіль</string>
     <string name="next">Далі</string>
     <!--    Protection-->
@@ -72,4 +73,5 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
 </resources>

@@ -52,7 +52,6 @@
     <string name="no_profile_set">GEEN PROFIEL INGESTELD</string>
     <string name="active"><![CDATA[<Huidig>]]></string>
     <string name="date">Datum</string>
-    <string name="units_label">Eenheden</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">KH-ratio</string>
     <string name="isf_label">ISF</string>
@@ -91,6 +90,7 @@
     <string name="wrong_pump_data">Data komt van een andere pomp. Wijzig de pomp driver om de pomp status te resetten.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibratie</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Bolus fout geconstateerd. Controleer handmatig de werkelijk toegediende hoeveelheid insuline en koolhydraten</string>
     <string name="duration_label">Tijdsduur</string>
@@ -523,7 +523,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pomp gekoppeld</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy wordt niet ondersteund.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy wordt niet ondersteund of het apparaat is niet gekoppeld.</string>
     <string name="ble_not_enabled">Bluetooth niet ingeschakeld.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin instellingen</string>
@@ -613,5 +612,6 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="prefs_range_title">Bereik voor visualisatie</string>
 </resources>

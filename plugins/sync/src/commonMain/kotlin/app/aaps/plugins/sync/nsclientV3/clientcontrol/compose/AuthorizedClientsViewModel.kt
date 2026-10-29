@@ -126,7 +126,10 @@ class AuthorizedClientsViewModel(
         list.associate { client -> client.clientId to tokenKind(client, state) }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000L), emptyMap())
 
-    /** The QR code for a new client, or the step before it (making the token) or what stopped it. */
+    /**
+     * The QR code for a new client, or the step before it (making the token) or what stopped it. The PIN way uses it
+     * only to say that the name is in use.
+     */
     private val _qrDialog = MutableStateFlow<QrDialog?>(null)
     val qrDialog: StateFlow<QrDialog?> = _qrDialog.asStateFlow()
 
@@ -171,7 +174,11 @@ class AuthorizedClientsViewModel(
         _dialogState.value = DialogState.EnterName
     }
 
-    /** True when a client with this name is in the list already; a QR code needs a name of its own for its token. */
+    /**
+     * True when a client with this name is in the list already. Every way of adding a client checks this: the master
+     * gives a client its Nightscout token by name (`ClientControlReceiver.ownTokenFor`), so two clients of one name
+     * would share one token, and removing one would cut off the other.
+     */
     private suspend fun nameInUse(name: String): Boolean =
         repository.current(dateUtil.now()).any { it.name.trim().equals(name.trim(), ignoreCase = true) }
 
@@ -203,7 +210,7 @@ class AuthorizedClientsViewModel(
             val subject = when (val result = clientTokens.tokenFor(clientName)) {
                 is ClientTokens.Result.Ok -> result.value
                 else                      -> {
-                    _qrDialog.value = QrDialog.Problem(result.problem())
+                    _qrDialog.value = QrDialog.Problem(result.problem(), result.leftOverName())
                     return@launch
                 }
             }
@@ -293,6 +300,10 @@ class AuthorizedClientsViewModel(
         // click handler, and viewModelScope is Main.immediate, so the state writes below still land
         // on this frame unless the mutex is actually contended.
         publishJob = viewModelScope.launch {
+            if (nameInUse(name)) {
+                _qrDialog.value = QrDialog.Problem(TokenProblem.NameInUse)
+                return@launch
+            }
             val now = dateUtil.now()
             val result = repository.addPending(name.trim(), role, PAIR_TTL_MS, now)
             val payload = PairingPayload(
@@ -475,9 +486,13 @@ class AuthorizedClientsViewModel(
         ClientTokens.Result.NotConnected -> TokenProblem.NotConnected
         ClientTokens.Result.NotAllowed   -> TokenProblem.NotAllowed
         ClientTokens.Result.NameTaken    -> TokenProblem.NameTaken
+        is ClientTokens.Result.LeftOver  -> TokenProblem.LeftOver
         is ClientTokens.Result.Failed,
         is ClientTokens.Result.Ok        -> TokenProblem.Failed
     }
+
+    /** The name the user has to clear in Nightscout themselves, for [TokenProblem.LeftOver]. Null for anything else. */
+    private fun ClientTokens.Result<*>.leftOverName(): String? = (this as? ClientTokens.Result.LeftOver)?.subjectName
 
     sealed class DialogState {
         data object EnterName : DialogState()
@@ -515,6 +530,12 @@ class AuthorizedClientsViewModel(
         /** A Nightscout token with this name has other roles, so it is not used for a client. */
         NameTaken,
 
+        /**
+         * The token was made but Nightscout did not list it, and it could not be taken back again, so it is still in
+         * Nightscout. Only the user can clear it, and the dialog names it.
+         */
+        LeftOver,
+
         /** A client with this name is in the list already. */
         NameInUse,
         Failed
@@ -540,7 +561,8 @@ class AuthorizedClientsViewModel(
         /** Making the token in Nightscout. */
         data object Working : QrDialog
 
-        data class Problem(val problem: TokenProblem) : QrDialog
+        /** [leftOverName] is set only for [TokenProblem.LeftOver]: the token the user has to clear in Nightscout. */
+        data class Problem(val problem: TokenProblem, val leftOverName: String? = null) : QrDialog
 
         /**
          * [text] is SENSITIVE: the Nightscout token, and when [pairs], the pairing secret. [expiresAt] and [clientId] are

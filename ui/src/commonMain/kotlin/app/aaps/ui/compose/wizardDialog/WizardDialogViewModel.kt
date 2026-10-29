@@ -297,7 +297,9 @@ class WizardDialogViewModel(
 
     fun updateCarbTime(value: Int) {
         val clamped = value.coerceIn(-60, 60)
-        _uiState.update { it.copy(carbTime = clamped) }
+        // Eating later turns the "time to eat" alarm on, as in 3.x. Only when the time first becomes positive,
+        // so an alarm the user turned off stays off while they change the minutes.
+        _uiState.update { it.copy(carbTime = clamped, alarmChecked = it.alarmChecked || (it.carbTime <= 0 && clamped > 0)) }
         recalculate()
     }
 
@@ -306,8 +308,11 @@ class WizardDialogViewModel(
         recalculate()
     }
 
+    // The note and the alarm recalculate too: the confirmation and the record-only path read them from the
+    // wizard of the last calculation, so a change made last was lost (#5415).
     fun updateNotes(value: String) {
         _uiState.update { it.copy(notes = value) }
+        recalculate()
     }
 
     fun selectProfile(index: Int) {
@@ -365,6 +370,7 @@ class WizardDialogViewModel(
 
     fun toggleAlarm(checked: Boolean) {
         _uiState.update { it.copy(alarmChecked = checked) }
+        recalculate()
     }
 
     fun toggleCalculationExpanded() {
@@ -407,7 +413,15 @@ class WizardDialogViewModel(
         viewModelScope.launch { recalculateSuspend() }
     }
 
+    /**
+     * Counts the calculations. Each one reads the inputs when it starts, and they can end in another order:
+     * typing a note starts one for every letter. Only the newest may keep its result. Else an older one that
+     * ends last leaves a wizard with old inputs, and the confirmation and the record-only path use it (#5415).
+     */
+    private var calculations = 0
+
     private suspend fun recalculateSuspend() {
+        val calculation = ++calculations
         val state = uiState.value
         val profileStore = profileRepository.profile.value ?: return
 
@@ -472,6 +486,8 @@ class WizardDialogViewModel(
             state.carbTime
         )
 
+        // A newer calculation started meanwhile: its result counts, not this one
+        if (calculation != calculations) return
         wizard = w
 
         // Update temp target availability

@@ -126,7 +126,7 @@
     <string name="pref_title_ns_use_ws">使用 WebSocket</string>
     <string name="pref_summary_ns_use_ws">使用 WebSocket 與 Nightscout 進行即時通訊。</string>
     <string name="pref_title_ns_allow_client_control">允許用戶端控制</string>
-    <string name="pref_summary_ns_allow_client_control">允許已配對的用戶端裝置透過 Nightscout 傳送簽章的指令（例如開始/停止情境）。</string>
+    <string name="pref_summary_ns_allow_client_control">允許配對的用戶端裝置透過 Nightscout 傳送已簽章的指令（例如啟動／停止場景）。這也會開啟強化模式：不再接受直接在 Nightscout 中進行的變更。</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">僅限 WiFi</string>
     <string name="pref_title_openhumans_charging_only">僅在充電時</string>

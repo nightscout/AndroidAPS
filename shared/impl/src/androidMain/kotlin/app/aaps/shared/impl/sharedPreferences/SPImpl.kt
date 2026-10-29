@@ -8,17 +8,23 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.SafeParse
 
 /**
- * The one preferences file the phone and the watch both use.
+ * The preferences file of the watch, and the phone's old settings file.
  *
- * Written out in three places before this: the phone graph, the wear graph and the backup agent. They
- * have to agree exactly - a mismatch means the app reads one file and backs up another, and nothing
- * fails while that is true.
+ * The phone keeps its settings in the encrypted store (`AndroidStorage`) since 2026-10. It only reads this
+ * file once, to move the settings over, and keeps it for one release as a way back for a downgrade.
  */
 fun preferencesFileName(context: Context): String = "${context.packageName}_preferences"
 
 fun defaultPreferences(context: Context): SharedPreferences =
     context.getSharedPreferences(preferencesFileName(context), Context.MODE_PRIVATE)
 
+/**
+ * The SharedPreferences store. Only wear uses it now; the phone moved to the encrypted store in 2026-10.
+ *
+ * To remove from here in the release after that move: delete the phone's old settings file (the move in
+ * `SharedPreferencesMigration` keeps it for one release), then move this class, the two functions above and
+ * the `SP` interface into the wear module.
+ */
 class SPImpl(
     private val sharedPreferences: SharedPreferences,
     private val context: Context

@@ -15,7 +15,6 @@
     <string name="authorized_clients_add">Añadir cliente</string>
     <string name="authorized_clients_comm_switch_title">Permitir el control del cliente</string>
     <string name="authorized_clients_comm_switch_summary">Permite que los clientes vinculados envíen comandos firmados a través de Nightscout. Desactívalo para detener la comunicación sin eliminarlos</string>
-    <string name="authorized_clients_needs_websocket">Los websockets están desactivados, por lo que no se pueden recibir comandos de los clientes. Los clientes verán que este máster no acepta comandos hasta que actives los websockets</string>
     <string name="authorized_clients_state_active">Activo</string>
     <string name="authorized_clients_state_pending">Pendiente</string>
     <string name="authorized_clients_last_seen">Visto por última vez %1$s</string>
@@ -35,6 +34,35 @@
     <string name="authorized_clients_pin_published">Vinculación lista en Nightscout</string>
     <string name="authorized_clients_pin_publish_failed">No se ha podido subir la vinculación a Nightscout</string>
     <string name="authorized_clients_pin_retry">Reintentar</string>
+    <string name="authorized_clients_method_title">¿Cómo está configurado el teléfono?</string>
+    <string name="authorized_clients_method_qr_pair">Código QR: Nightscout y emparejamiento</string>
+    <string name="authorized_clients_method_qr_pair_summary">Escanee una vez en el nuevo teléfono. Obtendrá su propio token de Nightscout y quedará emparejado</string>
+    <string name="authorized_clients_method_qr_ns">Código QR: solo Nightscout</string>
+    <string name="authorized_clients_method_qr_ns_summary">El teléfono obtiene su propio token de Nightscout y puede leer los datos. No está emparejado y no puede enviar comandos</string>
+    <string name="authorized_clients_method_pin">PIN</string>
+    <string name="authorized_clients_method_pin_summary">Para un teléfono sin cámara. Ya debe estar conectado a Nightscout</string>
+    <string name="authorized_clients_qr_working">Generando el token de Nightscout…</string>
+    <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Configurar %1$s</string>
+    <string name="authorized_clients_qr_pair_instructions">Escanee este código en el nuevo teléfono, en el asistente de configuración o en Emparejar con el master. Configura Nightscout y empareja el teléfono</string>
+    <string name="authorized_clients_qr_ns_instructions">Escanee este código en el nuevo teléfono, en el asistente de configuración o en Emparejar con el master. Configura Nightscout. El teléfono no está emparejado</string>
+    <string name="authorized_clients_qr_keep_private">Cualquiera que vea este código podrá leer su Nightscout. Muéstrelo únicamente en el nuevo teléfono</string>
+    <string name="authorized_clients_token_problem_title">Sin código QR</string>
+    <string name="authorized_clients_not_added_title">Cliente no añadido</string>
+    <string name="authorized_clients_token_problem_not_connected">Este teléfono no está conectado a Nightscout, por lo que no puede generar un token para el cliente</string>
+    <string name="authorized_clients_token_problem_not_allowed">El token de Nightscout de este teléfono no es un token de administrador, por lo que no puede generar un token para el cliente. Utilice un token de administrador aquí, o añada el cliente con el PIN</string>
+    <string name="authorized_clients_token_problem_name_taken">Nightscout tiene un token con este nombre y otros permisos. Elija otro nombre</string>
+    <string name="authorized_clients_token_problem_name_in_use">Ya hay un cliente con este nombre en la lista. Elija otro nombre o elimine ese cliente primero</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout no enumeró el nuevo token, por lo que se eliminó de nuevo. No quedó nada atrás. Inténtelo de nuevo</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout no enumeró el nuevo token y no se pudo eliminar de nuevo. Elimine el token %1$s en Nightscout y vuelva a intentarlo</string>
+    <string name="authorized_clients_tokens_header">Leer solo Nightscout</string>
+    <string name="authorized_clients_token_unpaired">Token de Nightscout propio, no emparejado</string>
+    <string name="authorized_clients_token_show_qr">Mostrar código QR</string>
+    <string name="authorized_clients_token_delete_title">¿Eliminar el token?</string>
+    <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s ya no puede leer Nightscout</string>
+    <string name="authorized_clients_delete_dialog_token">Su token de Nightscout también se ha eliminado, por lo que ya no puede leer Nightscout</string>
+    <string name="authorized_clients_uses_client_token">Token de Nightscout propio</string>
+    <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Utiliza el token de Nightscout %1$s, el cual tiene más permisos de los que necesita un cliente</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Usa el token de Nightscout %1$s, no el suyo: sus comandos son rechazados. Elimínelo y vuelva a añadirlo</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Vincular con máster</string>
     <string name="pair_with_master_pin_entry_title">Introduce el PIN de vinculación</string>
@@ -57,6 +85,27 @@
     <string name="pair_with_master_already_paired_master">Actualmente emparejado con el máster %1$s. Desempareja primero para introducir un nuevo PIN</string>
     <string name="pair_with_master_unpair">Desvincular</string>
     <string name="pair_with_master_sending">Enviando mensaje de emparejamiento…</string>
+    <!-- Client set-up from the master's QR code -->
+    <string name="client_setup_scan_button">Escanear código QR</string>
+    <string name="client_setup_scan_title">Escanee el código QR del master</string>
+    <string name="client_setup_scan_instructions">En el master, abra Clientes autorizados y añada este teléfono con un código QR. Apunte la cámara al código</string>
+    <string name="client_setup_scan_camera_refused">La cámara es necesaria para leer el código QR. Permítala, o empareje con el PIN</string>
+    <string name="client_setup_scan_camera_denied">El acceso a la cámara está desactivado para AAPS. Actívelo en los ajustes del sistema o empareje con el PIN</string>
+    <string name="client_setup_scan_camera_blocked">El acceso a la cámara no está permitido en este dispositivo. Empareje con el PIN en su lugar</string>
+    <string name="client_setup_scan_camera_unavailable">La cámara no se puede utilizar en este dispositivo. Empareje con el PIN en su lugar</string>
+    <string name="client_setup_scan_open_settings">Abrir ajustes</string>
+    <string name="client_setup_scan_not_a_code">Este no es un código QR de AAPS</string>
+    <string name="client_setup_scan_other_version">Este código es de otra versión de AAPS. El master y este teléfono deben ejecutar la misma versión</string>
+    <string name="client_setup_scan_expired">Este código ha caducado. Genere uno nuevo en el master</string>
+    <string name="client_setup_scan_already_paired">Este teléfono ya está emparejado. Desemparejelo primero para usar un código de emparejamiento</string>
+    <string name="client_setup_confirm_title">¿Usar este código?</string>
+    <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nightscout: %1$s</string>
+    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">También empareja este teléfono con el master %1$s</string>
+    <string name="client_setup_confirm_replaces">Sustituye la dirección y el token de Nightscout de este teléfono</string>
+    <string name="client_setup_confirm_apply">Usar</string>
+    <string name="client_setup_done_title">Hecho</string>
+    <string name="client_setup_done_paired">Nightscout está configurado y el teléfono está emparejado. El master lo muestra como activo cuando se ha conectado</string>
+    <string name="client_setup_done_ns_only">Nightscout está configurado. Para controlar el master desde este teléfono, emparejelo también</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">El máster de AAPS ya no reconoce este dispositivo. Abre la pantalla Administrar → Emparejar con el máster para volver a emparejar</string>
     <string name="ns_client">NSClient</string>
@@ -81,6 +130,12 @@
     <string name="upload_now">Subir ahora</string>
     <string name="tidepool_purge_data">Eliminar todos los datos</string>
     <string name="tidepool_purge_data_confirm">¿Eliminar TODOS los datos que AAPS ha subido a Tidepool? Esta acción no se puede deshacer. Utilízala para borrar los datos dañados por una versión anterior y, a continuación, ejecuta una \"Sincronización completa\" para volver a subirlos</string>
+    <string name="tidepool_full_sync_comment">¿Sincronización completa? AAPS volverá a subir todos los datos a Tidepool. Puede tardar un tiempo</string>
+    <string name="tidepool_logout_confirm">¿Cerrar sesión en Tidepool? Las subidas se detendrán hasta que vuelva a iniciar sesión</string>
+    <string name="tidepool_status_not_logged_in">No ha iniciado sesión</string>
+    <string name="tidepool_status_no_session">Sesión iniciada, aún no conectado</string>
+    <string name="tidepool_status_blocked">Bloqueado por los ajustes de conexión</string>
+    <string name="tidepool_status_failed">Error. Consulte el registro a continuación</string>
     <string name="not_connected">No conectado</string>
     <string name="read_only">Sólo lectura</string>
     <string name="working">Funcionando</string>
@@ -100,6 +155,8 @@
     <string name="garmin_description">Conexión al dispositivo Garmin (Fénix, Edge, …)</string>
     <string name="garmin_local_http_server_port">Puerto del servidor local HTTP</string>
     <string name="garmin_local_http_server">Servidor local HTTP</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">El reloj Garmin ha enviado %1$s de hidratos. Este teléfono es un cliente, por lo que no se han introducido. Introdúzcalos en AAPS</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">El reloj Garmin ha solicitado conectar o desconectar la bomba. Este teléfono es un cliente, por lo que no se ha cambiado nada. Hágalo en AAPS</string>
     <!--    Wear-->
     <string name="description_wear">Supervisar y controlar AAPS usando un reloj WearOS</string>
     <string name="no_watch_connected">(Ningún reloj conectado)</string>

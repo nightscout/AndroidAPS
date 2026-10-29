@@ -63,7 +63,7 @@ most of it is already running on desktop's target without anyone asking for it:
   `OAuthCallback` are all in `commonMain`, over Ktor rather than any Google SDK.
 - `JvmAuthRedirectListener` is in **`jvmSharedMain`** - the loopback socket that catches the OAuth
   redirect, in plain `java.net`, already compiled into the desktop target.
-- `DesktopSp` already implements `KeyValueStore`, which is where the tokens go.
+- The desktop `KeyValueStore` (`DesktopSp` then, the encrypted `EncryptedKeyValueStore` since 2026-10) is where the tokens go.
 
 Two of the three missing pieces are now in, and both were small:
 

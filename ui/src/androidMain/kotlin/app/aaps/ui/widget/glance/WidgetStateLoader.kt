@@ -8,13 +8,13 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.overview.IsfStep
 import app.aaps.core.interfaces.overview.LastBgData
+import app.aaps.core.interfaces.overview.SensitivityOverview
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
@@ -48,15 +48,14 @@ class WidgetStateLoader(
     private val rh: TextResolver,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val dateUtil: DateUtil,
-    private val aapsLogger: AAPSLogger,
     private val iobCobCalculator: IobCobCalculator,
     private val loop: Loop,
     private val config: Config,
     private val preferences: Preferences,
-    private val constraintChecker: ConstraintsChecker,
     private val decimalFormatter: DecimalFormatter,
     private val persistenceLayer: PersistenceLayer,
-    private val processedDeviceStatusData: ProcessedDeviceStatusData
+    private val processedDeviceStatusData: ProcessedDeviceStatusData,
+    private val sensitivityOverview: SensitivityOverview
 ) {
 
     suspend fun loadState(appWidgetId: Int): WidgetRenderState {
@@ -91,6 +90,7 @@ class WidgetStateLoader(
         val cobInfo = iobCobCalculator.getCobInfo("Overview COB")
         var cobText = cobInfo.displayText(rh, decimalFormatter) ?: unavailable
         var cobActive = (cobInfo.displayCob ?: 0.0) > 0.0
+        var carbsRequired = false
         val constraintsProcessed = loop.lastRun?.constraintsProcessed
         val lastRun = loop.lastRun
         if (config.APS && constraintsProcessed != null && lastRun != null) {
@@ -99,17 +99,21 @@ class WidgetStateLoader(
                 if (lastCarbsTime < lastRun.lastAPSRun) {
                     cobText += "\n" + rh.gs(CoreUiStrings.value_with_unit, constraintsProcessed.carbsReq.toString(), rh.gs(CoreUiStrings.required))
                     cobActive = true
+                    carbsRequired = true
                 }
             }
         }
 
         val units = profileFunction.getUnits()
         val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
-        val tempTargetIconResId = when (tempTarget?.reason) {
-            TT.Reason.EATING_SOON  -> R.drawable.ic_widget_tt_eating_soon
-            TT.Reason.ACTIVITY     -> R.drawable.ic_widget_tt_activity
-            TT.Reason.HYPOGLYCEMIA -> R.drawable.ic_widget_tt_hypo
-            else                   -> R.drawable.ic_widget_tt_manual
+        // With no temp target the chip shows the profile target. That is not a manual target, so it
+        // gets the plain target, not the one with the pencil (#5340).
+        val tempTargetIconResId = when {
+            tempTarget == null                           -> R.drawable.ic_widget_target
+            tempTarget.reason == TT.Reason.EATING_SOON  -> R.drawable.ic_widget_tt_eating_soon
+            tempTarget.reason == TT.Reason.ACTIVITY     -> R.drawable.ic_widget_tt_activity
+            tempTarget.reason == TT.Reason.HYPOGLYCEMIA -> R.drawable.ic_widget_tt_hypo
+            else                                        -> R.drawable.ic_widget_tt_manual
         }
         var tempTargetText = ""
         var tempTargetColor = WidgetTextMuted
@@ -139,28 +143,27 @@ class WidgetStateLoader(
             it is ProfileSealed.EPS && (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
         } ?: false
 
-        val lastAutosensData = iobCobCalculator.ads.getLastAutosensData("Widget", aapsLogger, dateUtil)
-        val lastAutosensRatio = lastAutosensData?.let { it.autosensResult.ratio * 100 }
-        val autosensEnabled = constraintChecker.isAutosensModeEnabled().value()
-        val sensitivityIconResId = if (autosensEnabled)
-            lastAutosensRatio?.let {
-                when {
-                    it > 100.0 -> R.drawable.ic_widget_as_above
-                    it < 100.0 -> R.drawable.ic_widget_as_below
-                    else       -> R.drawable.ic_widget_as_equal
-                }
-            } ?: R.drawable.ic_widget_as_equal
+        // What the overview chip and the watch show. The widget had its own copy of the rule, which
+        // knew only the autosens ratio: with DynISF it showed "100%" and not the ISF in use (#5340).
+        val sensitivity = sensitivityOverview.build()
+        val sensitivityIconResId = if (sensitivity.isEnabled)
+            when {
+                sensitivity.ratio > 1.0 -> R.drawable.ic_widget_as_above
+                sensitivity.ratio < 1.0 -> R.drawable.ic_widget_as_below
+                else                    -> R.drawable.ic_widget_as_equal
+            }
         else
-            lastAutosensRatio?.let {
-                when {
-                    it > 100.0 -> R.drawable.ic_widget_as_x_above
-                    it < 100.0 -> R.drawable.ic_widget_as_x_below
-                    else       -> R.drawable.ic_widget_as_x_equal
-                }
-            } ?: R.drawable.ic_widget_as_x_equal
-        val sensitivityText = lastAutosensData?.let {
-            rh.gs(CoreUiStrings.autosens_short, it.autosensResult.ratio * 100)
-        } ?: "—"
+            when {
+                sensitivity.ratio > 1.0 -> R.drawable.ic_widget_as_x_above
+                sensitivity.ratio < 1.0 -> R.drawable.ic_widget_as_x_below
+                else                    -> R.drawable.ic_widget_as_x_equal
+            }
+        // Spoken as what the step means, like the overview chip. Equal values need no word.
+        val (isfStepIconResId, isfStepDescription) = when (sensitivity.isfStep) {
+            IsfStep.UP   -> R.drawable.ic_widget_arrow_fortyfiveup to rh.gs(CoreUiStrings.arrow_up)
+            IsfStep.DOWN -> R.drawable.ic_widget_arrow_fortyfivedown to rh.gs(CoreUiStrings.arrow_down)
+            IsfStep.SAME -> R.drawable.ic_widget_arrow_flat to null
+        }
 
         val profile = profileFunction.getProfile()
         // The icon and its spoken name are chosen together, so the two cannot drift apart. Same
@@ -226,6 +229,7 @@ class WidgetStateLoader(
             iobActive = iobActive,
             cobText = cobText,
             cobActive = cobActive,
+            carbsRequired = carbsRequired,
             tempTargetText = tempTargetText,
             tempTargetColor = tempTargetColor,
             tempTargetActive = tempTargetActive,
@@ -240,7 +244,11 @@ class WidgetStateLoader(
             runningModeIconResId = runningModeIconResId,
             runningModeActive = runningModeActive,
             sensitivityIconResId = sensitivityIconResId,
-            sensitivityText = sensitivityText,
+            sensitivityText = sensitivity.asText,
+            isfFromText = sensitivity.isfFrom,
+            isfToText = sensitivity.isfTo,
+            isfStepIconResId = isfStepIconResId,
+            isfStepDescription = isfStepDescription,
             tbrIconResId = tbrIconResId,
             backgroundColor = backgroundColor
         )

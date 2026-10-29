@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS(Кръгъл)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Персонализиран)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Персонализиран) винаги включен</string>
     <string name="label_actions_tile">Действия</string>
     <string name="label_temp_target_tile">Временна цел</string>
     <string name="label_quick_wizard_tile">Съветник</string>
@@ -60,6 +61,7 @@
     <string name="pref_prime_in_menu">Пълнене в менюто</string>
     <string name="pref_single_target">Единична цел</string>
     <string name="pref_wizard_percentage">Калкулатор Процент</string>
+    <string name="pref_wizard_carbs_type">Тип храна</string>
     <string name="pref_complication_tap_action">Допълнителни действия при почукване</string>
     <string name="pref_complication_bg_graph_hours">Диапазон на графиката за КЗ</string>
     <string name="duration_1_hour">1 час</string>
@@ -83,6 +85,11 @@
     <string name="menu_bg_graph">Графика на КЗ</string>
     <string name="menu_resync">Ре-синхр.</string>
     <string name="menu_prime_fill">Пълнене на сет</string>
+    <string name="menu_install_watchface">Инсталирай на часовник</string>
+    <string name="menu_installing_watchface">Информация в часовник...</string>
+    <string name="watchface_installed_active">Инсталирано в часовника и активирано</string>
+    <string name="watchface_installed_select">Инсталирано в часовника, изберете го от списъка с циферблати</string>
+    <string name="watchface_install_failed">Неуспешна инсталация в часовник</string>
     <string name="menu_none">Без</string>
     <string name="menu_default">Стандартен</string>
     <string name="menu_menu">Меню</string>
@@ -91,6 +98,7 @@
     <string name="action_user_action_confirmation">Изисква потвърждение</string>
     <string name="action_scene_confirmation">Желан сценарии</string>
     <string name="scene_end">Край</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Пропусни</string>
     <string name="action_treatment_confirmation">Заявена Терапия</string>
     <string name="action_bolus_confirmation">Заявен Болус</string>
     <string name="action_wizard_confirmation">Заявено Изчисление</string>
@@ -102,6 +110,7 @@
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Висока [%s]</string>
     <string name="action_carbs">въглехидрати</string>
     <string name="action_carbs_gram">Въглехидрати [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Макс за премахване: %1$d гр (COB)</string>
     <string name="action_ecarbs">Удължени въглехидрати</string>
     <string name="action_percentage">Проценти\n[%]</string>
     <string name="action_start_minutes">Старт\n[минути]</string>
@@ -153,6 +162,21 @@
     <string name="pref_simplify_ui">Опростен интерфейс</string>
     <string name="pref_vibrate_hourly">Вибрира почасово</string>
     <string name="pref_show_weeknumber">Показване на номер седмица</string>
+    <string name="pref_complication_1">Усложнение 1</string>
+    <string name="pref_complication_2">Усложнение 2</string>
+    <string name="pref_complication_3">Усложнение 3</string>
+    <string name="pref_complication_4">Усложнение 4</string>
+    <string name="pref_complication_5">Усложнение 5</string>
+    <string name="complication_summary_none">Изберете източник на данни</string>
+    <string name="pref_complication_type_priority">Приоритет на усложнение</string>
+    <string name="pref_complication_type_priority_all">По подразбиране за всички</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Промяната тук ще бъде приложена при следващия избор на източник на данни. Да изберете същия няма да е достатъчно: изберете различен първо, а след това този, който желаете.</string>
+    <string name="complication_type_priority_value">Стойност или уред</string>
+    <string name="complication_type_priority_text">Текс</string>
+    <string name="complication_type_priority_icon">Икона</string>
+    <string name="complication_type_priority_use_default">По подразбиране</string>
+    <string name="cwf_complication_layout">Изглед на усложнение</string>
+    <string name="cwf_complication_layout_description">Позиция и размер на усложненията, взето от последния циферблат.</string>
     <string name="pref_include_external">Включвай външни работи в темплейта</string>
     <string name="pref_switch_external">Включи външни данни в циферблата</string>
     <string name="custom_pref_show_seconds">Показвай секунди</string>
@@ -168,6 +192,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS Прогрес на болуса Безшумно</string>
     <string name="bolus_progress_channel_description">Прогрес на болуса и отказ</string>
     <string name="bolus_progress_silent_channel_description">Прогрес на болуса и отказ с по-малко вибрации</string>
+    <string name="open_loop_channel_name">AAPS Отворен кръг</string>
+    <string name="open_loop_channel_description">Нотификации от Отворен кръг</string>
     <string name="simple_ui_off">Изкл</string>
     <string name="simple_ui_charging">По време на зареждане</string>
     <string name="simple_ui_always_on">Режим Постоянно включен</string>
@@ -225,6 +251,12 @@
     <string name="complication_blood_glucose_ext1">КЗ Ext1</string>
     <string name="complication_blood_glucose_ext2">КЗ Ext2</string>
     <string name="complication_bg_graph">Графика на КЗ</string>
+    <string name="complication_cwf_image">Персонализиран Watchface</string>
+    <string name="complication_cwf_ambient_bg">Настройки на Watchface глюкоза</string>
+    <string name="complication_cwf_ambient_status">Настройки на Watchface статус</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Настройки на Watchface фон</string>
+    <string name="complication_cwf_upper">Вид Watchface часовник</string>
     <string name="complication_br_cob_iob">БАЗА, ВЪГЛ &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">БАЗА, ВЪГЛ &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">БАЗА, ВЪГЛ &amp; IoB Ext2</string>
@@ -238,6 +270,8 @@
     <string name="complication_iob_icon">IoB икона</string>
     <string name="complication_iob_detailed">IoB детайли</string>
     <string name="complication_uploader_phone_battery">Качване/батерия на телефон</string>
+    <string name="running_mode_resume">Възстанови кръга</string>
+    <string name="running_mode_reconnect">Свържи отново помпата</string>
     <string name="label_running_mode_title">Текущ режим</string>
     <string name="label_bg_graph_tile">Графика на КЗ</string>
     <string name="tile_tap_action">Чукнете действие</string>
@@ -249,6 +283,14 @@
     <string name="title_activity_disconnect_pump">Изключи помпа</string>
     <string name="title_activity_suspend_loop">Изключи цикъла</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d гр</string>
+    <string name="wizard_carbs_type">Тип хранене</string>
+    <string name="wizard_carbs_type_bread">Хляб</string>
+    <string name="wizard_carbs_type_cake">Торта</string>
+    <string name="wizard_carbs_type_pizza">Пица</string>
+    <string name="wizard_set_alarm">Напомни ми</string>
+    <string name="eat_reminder_title">Време е за ядене</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d мин</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d гр</string>
     <string name="insulin_unit_short">Е</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d гр</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f Е</string>
@@ -257,7 +299,9 @@
     <string name="contacting_master_unknown">Непознат статус - вижте телефона</string>
     <string name="tile_settings">Настройки на тайлове</string>
     <string name="loop_status_error">Невъзможно зареждане на състояние</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f Е/ч (%2$d%%)</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">остават %1$s</string>
     <string name="loop_status_tbr_continues">Вр базал продължава</string>
     <string name="loop_status_tbr_cancel">Прилагане на временен базал</string>
     <string name="loop_status_smb">%1$.2f Ед</string>
@@ -285,6 +329,18 @@
     <string name="loop_status_target_range">Диапазон</string>
     <string name="loop_status_target">Целeва КЗ</string>
     <string name="loop_status_adjusted_target">Променена цел</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">До края</string>
+    <string name="loop_status_scene_ended">Приключен</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Следващ сценарий</string>
+    <string name="loop_status_profile">Профил</string>
+    <string name="loop_status_no_profile">Няма заден профил</string>
+    <string name="loop_status_profile_percentage">Процент</string>
+    <string name="loop_status_profile_timeshift">Отместване</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Върни на</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+d ч</string>
+    <string name="loop_status_sensitivity">Чувствителност</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Стартиван от сценарий</string>
     <string name="loop_status">Статус на кръга</string>
     <string name="loop_status_refresh">Обнови</string>
     <string name="confirm">Потвърждаване</string>

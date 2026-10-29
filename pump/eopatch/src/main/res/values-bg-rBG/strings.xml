@@ -2,6 +2,7 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Интегриране на помпа EOPatch2 / GlucoMen Day</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Пача не потвърди край на болус. Записано е %1$s, но пача може да е доставил повече. Проверете пача преди да пуснете още инсулин.</string>
     <string name="low_reservoir">Предупреждение за празен резервоар</string>
     <string name="patch_expiration_reminders">Напомняне за изтичане на Patch</string>
     <string name="patch_buzzer_reminders">Звуково Напомняне за Patch</string>
@@ -68,7 +69,6 @@
     <string name="patch_communication_succeed">Успешно свързване</string>
     <string name="patch_communication_succeed_message">Свързанo с Patch.</string>
     <string name="patch_cancel_pairing">Отмени сдвояване</string>
-    <string name="all_dose_unit">&#160;Е</string>
     <string name="insulin_suspend_msg1">При спиране, текущо доставяният болус &amp; Временният базал ще бъде отменен. \n\nСкорост: %1$s Е/час\nОставащо време: %2$s\n&amp; Оставащ инсулин: %3$.2f Е</string>
     <string name="insulin_suspend_msg2">При спиране, доставяният в момента болус ще бъде отменен. \n\nОставащ инсулин: %1$.2f Е</string>
     <string name="insulin_suspend_msg3">При спиране, доставяният в момента Временен базал ще бъде отменен. \n\nСкорост : %1$s Е/час\nОставащо време: %2$s</string>

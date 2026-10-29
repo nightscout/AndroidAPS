@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -112,6 +113,52 @@ internal class ClientTokensTest {
 
         assertThat(sut.tokenFor("Tablet")).isEqualTo(ClientTokens.Result.Ok(tabletToken))
         verify(nsAndroidClient).createAuthSubject(argThat { name == "aaps-Tablet" && roles == listOf(ClientTokens.ROLE_NAME) && id == null && accessToken == null })
+    }
+
+    /**
+     * Nightscout serves the subject list from memory and reloads it only when it writes, so a token it has just made
+     * can be missing from the list and stay missing. Taking it back is what keeps it from being left behind, invisible,
+     * for the next try to trip over - that is how one client ended up with two tokens of the same name.
+     */
+    @Test
+    fun `a new token Nightscout does not list is taken back and made again`() = runTest {
+        whenever(nsAndroidClient.getAuthRoles()).thenReturn(listOf(clientRole))
+        // Empty for the first check, empty for every read of the first token, then the second one is there.
+        whenever(nsAndroidClient.getAuthSubjects()).thenReturn(
+            emptyList(), emptyList(), emptyList(), emptyList(),
+            emptyList(), listOf(tabletToken.copy(id = "s2"))
+        )
+        whenever(nsAndroidClient.createAuthSubject(any())).thenReturn(
+            tabletToken.copy(accessToken = null), tabletToken.copy(id = "s2", accessToken = null)
+        )
+
+        assertThat(sut.tokenFor("Tablet")).isEqualTo(ClientTokens.Result.Ok(tabletToken.copy(id = "s2")))
+        verify(nsAndroidClient).deleteAuthSubject("s1")
+        verify(nsAndroidClient, times(2)).createAuthSubject(any())
+    }
+
+    /** Both tries came to nothing, and both tokens were taken back: Nightscout is left as it was. */
+    @Test
+    fun `a token that is never listed fails and leaves nothing behind`() = runTest {
+        whenever(nsAndroidClient.getAuthRoles()).thenReturn(listOf(clientRole))
+        whenever(nsAndroidClient.getAuthSubjects()).thenReturn(emptyList())
+        whenever(nsAndroidClient.createAuthSubject(any())).thenReturn(tabletToken.copy(accessToken = null))
+
+        assertThat(sut.tokenFor("Tablet")).isInstanceOf(ClientTokens.Result.Failed::class.java)
+        verify(nsAndroidClient, times(ClientTokens.ATTEMPTS)).deleteAuthSubject("s1")
+    }
+
+    /** Taking it back failed, so it really is in Nightscout and only the user can clear it: it has to be named. */
+    @Test
+    fun `a token that cannot be taken back is reported with its name`() = runTest {
+        whenever(nsAndroidClient.getAuthRoles()).thenReturn(listOf(clientRole))
+        whenever(nsAndroidClient.getAuthSubjects()).thenReturn(emptyList())
+        whenever(nsAndroidClient.createAuthSubject(any())).thenReturn(tabletToken.copy(accessToken = null))
+        whenever(nsAndroidClient.deleteAuthSubject("s1")).thenAnswer { throw RuntimeException("boom") }
+
+        assertThat(sut.tokenFor("Tablet")).isEqualTo(ClientTokens.Result.LeftOver("aaps-Tablet"))
+        // Stops at once: a second try would only make a second one next to the token already left behind.
+        verify(nsAndroidClient).createAuthSubject(any())
     }
 
     @Test

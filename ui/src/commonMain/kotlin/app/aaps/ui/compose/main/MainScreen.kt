@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
@@ -63,6 +64,7 @@ import app.aaps.ui.compose.maintenance.MaintenanceDialogs
 import app.aaps.ui.compose.maintenance.MaintenanceViewModel
 import app.aaps.ui.compose.manageSheet.ManageSheetState
 import app.aaps.ui.compose.manageSheet.ManageViewModel
+import app.aaps.ui.compose.overview.EatReminderBanner
 import app.aaps.ui.compose.overview.OverviewScreen
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
@@ -249,6 +251,7 @@ fun MainScreen(
                 val activeSceneState by mainViewModel.activeSceneState.collectAsStateWithLifecycle()
                 val sceneExpired by mainViewModel.sceneExpired.collectAsStateWithLifecycle()
                 val activeSceneChainTargetName by mainViewModel.activeSceneChainTargetName.collectAsStateWithLifecycle()
+                val eatReminderState by mainViewModel.eatReminderState.collectAsStateWithLifecycle()
                 val masterReachable by mainViewModel.masterReachable.collectAsStateWithLifecycle()
                 // Stable pairing signal — hides the mutating nav buttons on an unpaired client.
                 val masterOrPairedClient by mainViewModel.masterOrPairedClient.collectAsStateWithLifecycle()
@@ -296,6 +299,15 @@ fun MainScreen(
                         endSceneEnabled = masterReachable,
                         commandsAllowed = masterOrPairedClient,
                         formatDuration = mainViewModel::formatDuration,
+                        eatReminderBanner = {
+                            EatReminderBanner(
+                                state = eatReminderState,
+                                onStop = mainViewModel::stopEatReminder,
+                                onExtend = mainViewModel::extendEatReminder,
+                                // Like End scene: a client's buttons ask the master, which needs the connection.
+                                controlsEnabled = masterReachable
+                            )
+                        },
                         paddingValues = contentPadding,
                         fabBottomOffset = if (hasToolbar && showChrome) 56.dp else 0.dp,
                         // In preview mode the bottom bar lies over the content instead of above it, so the end of each
@@ -348,11 +360,15 @@ fun MainScreen(
                         )
                     }
 
-                    // Version overlay
+                    // Version overlay. Fixed to the screen, not to the scrolling content. With the top
+                    // bar shown it is lifted into the bar's empty band under the search bar, so it sits
+                    // above the profile chip instead of level with the chip's text. In preview mode the
+                    // content starts right under the status bar, so there it stays at the content's edge.
                     VersionOverlay(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .padding(contentPadding)
+                            .offset(y = if (showChrome) -VERSION_LABEL_LIFT else 0.dp)
                     )
 
                     // Status bar protection scrim — keeps system icons legible
@@ -585,3 +601,10 @@ fun MainScreen(
 
 private val PREVIEW_MODE_MIN_HEIGHT: Dp = 500.dp
 private const val AUTO_HIDE_DELAY_MS = 3000L
+
+/**
+ * How far the version label is lifted above the content's top edge while the top bar is shown. The
+ * bar has 8 dp of nothing under its search bar and the first chip starts a few dp into the content;
+ * this centers the 12 dp label between the two.
+ */
+private val VERSION_LABEL_LIFT: Dp = 6.dp

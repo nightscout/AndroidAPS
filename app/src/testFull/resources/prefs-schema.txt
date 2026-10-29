@@ -171,6 +171,7 @@ diaconn_g8_logtubechange|DiaconnBooleanKey|true
 diagonn_g8_address|DiaconnStringNonKey|true
 dura_ISF_weight|DoubleKey|true
 dynisf_adjust_sensitivity|BooleanKey|true
+eat_reminder|StringNonKey|false
 email_for_crash_report|StringKey|true
 enableSMB_after_carbs|BooleanKey|true
 enableSMB_always|BooleanKey|true

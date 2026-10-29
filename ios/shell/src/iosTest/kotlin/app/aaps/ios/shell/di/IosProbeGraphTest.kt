@@ -4,6 +4,7 @@ import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.implementation.logging.AAPSLoggerIos
+import app.aaps.ios.shell.prefs.TestStorage
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import dev.zacsweers.metro.createGraphFactory
 import kotlinx.coroutines.test.runTest
@@ -21,6 +22,10 @@ import kotlin.test.assertTrue
  * uses it.
  */
 class IosProbeGraphTest {
+
+    init {
+        TestStorage.install()
+    }
 
     private fun graph() = createGraphFactory<IosProbeGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
 
@@ -114,7 +119,7 @@ class IosProbeGraphTest {
     fun `the graph builds FabricPrivacy over the real preference store`() {
         val fabric = graph().fabricPrivacy
 
-        // Reads NSUserDefaults for the enable flag, so calling it exercises the store too.
+        // Reads the settings store for the enable flag, so calling it exercises the store too.
         fabric.fabricEnabled()
         fabric.logMessage("probe")
     }

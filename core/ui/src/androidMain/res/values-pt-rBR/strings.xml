@@ -111,7 +111,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nA insulina também não foi trocada.</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
-    <string name="units_label">Unidades</string>
     <string name="insulin_nickname_label">Apelido da insulina</string>
     <string name="concentration_label">Concentração</string>
     <string name="peak_label">Pico</string>
@@ -155,6 +154,10 @@
     <string name="wrong_pump_data">Os dados estão vindo de uma bomba diferente. Alterar o driver da bomba para redefinir o estado da bomba.</string>
     <string name="bg_label">Glicemia</string>
     <string name="calibration">Calibração</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_no_pair">Calibração não salva: nenhuma leitura do CGM foi encontrada nos 10 minutos anteriores.</string>
+    <string name="cal_reject_warmup">Calibração não salva: o sensor ainda está na janela de aquecimento de 2 horas.</string>
+    <string name="cal_reject_no_session">Calibração não salva: não há uma sessão de sensor ativa. Registre primeiro uma troca de sensor.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">O bolus reportou um erro. Verifique manualmente a insulina realmente administrada e a quantidade de carboidratos</string>
     <string name="bolus_reminder">Lembrar do bolus quando a glicemia voltar ao normal</string>
@@ -840,7 +843,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Bomba acoplada</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth de energia baixa (LE) não suportado.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetoothn Low Energy (BLE) não suportado ou o dispositivo não está acoplado.</string>
     <string name="ble_not_enabled">Bluetooth não está ativado.</string>
     <string name="ble_permissions_missing">As permissões do Bluetooth não foram concedidas. Conceda-as nas configurações do aplicativo.</string>
     <!--    Preferences -->
@@ -1019,6 +1021,7 @@
     <string name="graph_height">Altura do gráfico [dp]</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <string name="steps_shortname" comment="Short label for Steps graph series">PASSOS</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="units_days">dias</string>
     <string name="units_format_days">%1$d dias</string>
     <string name="units_format_days_range">%1$d dias (%2$d - %3$d)</string>

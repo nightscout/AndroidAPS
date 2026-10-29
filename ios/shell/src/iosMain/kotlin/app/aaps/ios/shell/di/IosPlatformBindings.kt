@@ -12,7 +12,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.logging.AAPSLoggerIos
 import app.aaps.implementation.notifications.IosSystemNotificationPlatform
 import app.aaps.ios.shell.config.IosClientConfig
-import app.aaps.ios.shell.prefs.IosSp
+import app.aaps.ios.shell.prefs.IosStorage
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.impl.utils.IosDateFormatPlatform
 import dev.zacsweers.metro.AppScope
@@ -47,10 +47,13 @@ object IosPlatformBindings {
     // the compile-time tag defaults and the log-settings sheet did nothing.
     fun logger(logConfig: () -> L): AAPSLogger = AAPSLoggerIos(logConfig = logConfig)
 
-    /** NSUserDefaults, the store the preference layer sits on. */
+    /**
+     * The encrypted settings store the preference layer sits on. One for the whole process, shared by
+     * every graph: DataStore allows only one per file. The app opens it before it builds a graph.
+     */
     @Provides
     @SingleIn(AppScope::class)
-    fun keyValueStore(): KeyValueStore = IosSp()
+    fun keyValueStore(): KeyValueStore = IosStorage.open()
 
     /** Dates through the iOS formatter, so this is the production class rather than a stand-in. */
     @Provides

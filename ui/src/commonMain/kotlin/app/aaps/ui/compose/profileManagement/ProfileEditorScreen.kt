@@ -546,16 +546,18 @@ private fun BasalContent(
 
                 Spacer(Modifier.height(8.dp))
 
+                // The name is drawn above, next to the sum; the rows still need it for the screen reader
                 TimeValueList(
-                    title = "",
+                    title = stringResource(CoreUiStrings.basal_long_label),
+                    showTitle = false,
                     entries = profile.basal,
                     onEntryChange = { index, entry -> viewModel.updateBasalEntry(index, entry) },
                     onAddEntry = { index -> viewModel.addBasalEntry(index) },
                     onRemoveEntry = { index -> viewModel.removeBasalEntry(index) },
                     valueRange = state.basalRange,
-                    step = 0.01,
+                    step = ProfileEditorViewModel.BASAL_STEP,
                     valueFormat = NumberFormat.DECIMAL_2,
-                    unitLabel = ""
+                    unitLabel = stringResource(InterfacesStrings.profile_ins_units_per_hour)
                 )
             }
         }

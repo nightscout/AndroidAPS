@@ -97,6 +97,8 @@
     <string name="treatments_iob_label_string">IOB 活性胰島素:</string>
     <string name="mute5min">靜音 5 分鐘</string>
     <string name="mute">靜音</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">將鬧鈴靜音</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">靜音並關閉</string>
     <string name="success">成功</string>
     <string name="advanced_settings_title">進階設定</string>
     <string name="extended_bolus">延長注射</string>
@@ -110,10 +112,13 @@
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d 克</string>
     <string name="format_hours">%1$.2f 小時</string>
     <string name="format_mins">%1$d 分鐘</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
+    <string name="value_question" comment="Asks if this should be done. %1$s=what will be done. Example: Send logs?">%1$s?</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">目標</string>
     <string name="please_wait">請稍候…</string>
     <string name="stop">停止</string>
@@ -121,6 +126,9 @@
     <string name="invalid_profile">無效的設定檔！</string>
     <string name="no_profile_set">未設置設定檔</string>
     <string name="profile_switch_no_insulin">無法切換設定檔：目前沒有使用中的胰島素，且也未選取任何胰島素。</string>
+    <string name="scene_no_profile_before">場景開始前，未啟用任何設定檔。</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">場景 %1$s 已結束，但其設定檔仍在使用中。%2$s 請手動啟用設定檔。</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">此為暫時切換使用的胰島素為 %1$s，但其下方的永久設定檔使用的胰島素為 %2$s。請先前往「胰島素」設定，啟用目前幫浦中使用的胰島素。</string>
     <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">設定檔切換時間必須在距現在 %1$d 小時以內。</string>
     <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">臨時目標必須在距現在 %1$d 小時以內開始。</string>
     <string name="profile_switch_select_insulin_hint">目前尚未啟用任何胰島素。請選取你正在使用的胰島素，讓這次設定檔切換能記錄該胰島素。</string>
@@ -131,7 +139,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n胰島素也未切換。</string>
     <string name="active"><![CDATA[<已啟用的設定檔>]]></string>
     <string name="date">日期</string>
-    <string name="units_label">單位</string>
     <string name="insulin_nickname_label">胰島素暱稱</string>
     <string name="concentration_label">濃度</string>
     <string name="peak_label">峰值</string>
@@ -175,6 +182,11 @@
     <string name="wrong_pump_data">資料來自不同的幫浦。更換幫浦驅動程式以重置幫浦狀態。</string>
     <string name="bg_label">BG</string>
     <string name="calibration">校正</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">未儲存校正：血糖變化太快（每 5 分鐘 Δ %1$s %3$s，限制為 %2$s）。請在血糖穩定時再試一次。</string>
+    <string name="cal_reject_no_pair">校正未儲存：在過去 10 分鐘內未找到 CGM 讀取值。</string>
+    <string name="cal_reject_warmup">校正未儲存：傳感器仍在 2 小時預熱時間內。</string>
+    <string name="cal_reject_no_session">校正未儲存：目前沒有啟動任何傳感器工作階段。請先標記傳感器更換。</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">注射錯誤報告。請檢查實際注射的胰島素和碳水化合物量</string>
     <string name="bolus_reminder">當血糖恢復時提醒注射</string>
@@ -197,6 +209,8 @@
     <string name="a11y_arrow_unknown">未知</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">將 %1$s 減少 %2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">將 %1$s 增加 %2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">開啟 %1$s 輸入</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">關閉 %1$s</string>
     <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">上移</string>
     <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">下移</string>
     <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">第 %1$d 步，共 %2$d 步</string>
@@ -217,6 +231,7 @@
     <string name="percentage_label">百分比</string>
     <string name="timeshift_label">時間偏移</string>
     <string name="confirm_remove_multiple_items">您確定要移除 %1$d 項目嗎</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">主手機沒有這些記錄中的 %1$d 筆，因此不會將其移除。</string>
     <string name="overview_treatment_label">治療</string>
     <string name="copytolocalprofile">從此設定檔建立新設定檔？</string>
     <string name="wear_wizard_settings">Wear 嚮導設定</string>
@@ -410,6 +425,19 @@
     <string name="scene_lock_banner_control_disabled">主控端已停用遠端控制。重新在主控端啟用後，場景控制將會恢復。</string>
     <string name="master_offline_banner">無法連線到主裝置。連線恢復前，編輯功能已停用。</string>
     <string name="master_control_disabled_banner">Master 已停用遠端控制。在 Master 重新啟用之前，無法進行編輯。</string>
+    <string name="hardened_mode_on">強化模式已開啟</string>
+    <string name="hardened_mode_title">強化模式</string>
+    <string name="hardened_mode_info_open">關於強化模式</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">唯讀</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">餐點</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">照護者</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">管理員</string>
+    <string name="client_role_title">角色</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">角色：%1$s</string>
+    <string name="client_roles_info_open">關於角色</string>
+    <string name="client_roles_info">每部配對的手機都有一個角色。主控手機會檢查每個指令的角色，手機只會顯示該角色允許的內容。變更角色後會立即生效，不必重新配對。\n\n唯讀：手機仍保持配對，但只會顯示資料。\n\n餐點：注射、注射嚮導、QuickWizard 和碳水化合物。也可以停止正在進行的注射。在此輸入的碳水化合物可能會使循環增加胰島素注射量。\n\n照護者：可執行 AAPS 使用者能執行的所有操作，例如臨時目標、設定檔和胰島素切換、循環模式、臨時基礎率、延長注射、場景、CarePortal 事件、校正和移除記錄。但無法變更設定或預設值。\n\n管理員：可執行所有操作，包括設定和預設值（QuickWizard、臨時目標預設值、場景、設定檔、自動化、胰島素）。</string>
+    <string name="client_read_only_banner">這部手機在主手機上處於唯讀模式。</string>
+    <string name="hardened_mode_info">主手機只接受來自配對用戶端的變更。它不會接受直接在 Nightscout 中進行的治療、臨時目標、設定檔變更、運作模式變更或刪除，例如在網站或其他 App 中進行的變更。強化模式開啟時，會隱藏接受 Nightscout 資料的設定。SMS 指令不受影響。\n\n主控手機仍會將所有資料上傳至 Nightscout，包括血糖。如果主控手機從 Nightscout 取得血糖，仍會從那裡接收血糖資料。\n\n若要在新的主控手機載入歷史資料，請在 NSClient 中使用完整同步。完整同步會載入 Nightscout 中的所有內容，包括設定檔。\n\n用戶端的遠端控制需要主控手機和配對用戶端都能正常連線至 Nightscout 的 WebSocket。簡易模式一律會開啟強化模式。若要關閉強化模式，請退出簡易模式，並在主控手機上關閉用戶端控制。</string>
     <string name="scene_lock_reason_master_offline">主裝置已中斷連線</string>
     <string name="scene_lock_reason_control_disabled">遠端控制已停用</string>
     <string name="scene_lock_reason_scene_active">請先停止正在執行的情境</string>
@@ -420,6 +448,7 @@
     <string name="clientcontrol_action_deactivate_scene">結束情境</string>
     <string name="clientcontrol_action_update_settings">更新設定</string>
     <string name="clientcontrol_action_deliver_bolus">施打注射</string>
+    <string name="clientcontrol_action_eat_reminder">變更用餐提醒</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">此裝置未與主裝置配對。</string>
     <string name="clientcontrol_fail_not_reachable">主裝置已離線。</string>
@@ -437,7 +466,11 @@
     <string name="clientcontrol_fail_cancelled">指令在執行前已取消。未傳送任何內容至幫浦。</string>
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">大劑量已取消。未注射任何胰島素。\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">已取消</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">有一筆注射正等待確認時，不會執行微量注射。</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">正在執行微量注射。完成後即可進行確認。</string>
     <string name="clientcontrol_fail_control_disabled">主控端已關閉遠端控制</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">主手機上的角色不允許此操作。</string>
+    <string name="clientcontrol_fail_other_token">主機已拒絕：此手機使用與自身不同的權杖寫入 Nightscout。請在主機端移除此手機後再重新新增。</string>
     <string name="clientcontrol_fail_no_pending_bolus">已準備的注射已失效或被取代。請再輕觸按鈕一次。</string>
     <string name="clientcontrol_fail_bolus_compute">主裝置無法計算注射（缺少血糖／設定檔，或幫浦尚未就緒）。</string>
     <string name="clientcontrol_fail_internal">發生錯誤。</string>
@@ -755,6 +788,12 @@
     <string name="grant">授予</string>
     <string name="set">設定</string>
     <string name="wizard_set_alarm">設定鬧鐘</string>
+    <string name="eat_reminder_title">用餐時間</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">總等待時間：%1$s</string>
+    <string name="eat_reminder_rung">時間到了</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d 分鐘</string>
+    <string name="eat_reminder_not_set">無法設定用餐提醒。請在 Android 設定中允許 AAPS 設定鬧鐘和提醒。</string>
     <string name="wizard_use_percentage">使用百分比</string>
     <string name="wizard_include_bg">包含血糖</string>
     <string name="wizard_include_tt">包含臨時目標</string>
@@ -824,6 +863,7 @@
     <string name="limitingbasalratio">因 %2$s 限制最大基礎率為 %1$.2f U/h</string>
     <string name="pumplimit">幫浦限制</string>
     <string name="limitingpercentrate">因 %2$s 限制最大百分比速率為 %1$d%%</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">已依目前基礎率 %3$s U/h，將百分比速率 %1$d%% 重新計算為 %2$s U/h</string>
     <string name="itmustbepositivevalue">必須為正值</string>
     <string name="limitingbolus">因 %2$s 限制注射為 %1$.1f U</string>
     <!--    Dialogs-->
@@ -910,7 +950,6 @@
     <string name="pump_paired" comment="26 characters max for translation">幫浦已配對</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">不支援藍牙低功耗。</string>
-    <string name="ble_not_supported_or_not_paired">不支援藍牙低功耗或設備未配對。</string>
     <string name="ble_not_enabled">藍牙未啟用。</string>
     <string name="ble_permissions_missing">藍牙權限未授予。請在應用程式設定中授予。</string>
     <!--    Preferences -->
@@ -1110,6 +1149,19 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">體內胰島素</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">絕對胰島素</string>
+    <string name="graph_series_cob">體內碳水化合物</string>
+    <string name="graph_series_bgi">血糖影響</string>
+    <string name="graph_series_deviations">偏差</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">敏感度變化</string>
+    <string name="graph_series_variable_sens">可變敏感度</string>
+    <string name="graph_series_deviation_slope">偏差斜率</string>
+    <string name="graph_series_heart_rate">心率</string>
+    <string name="graph_series_steps">步數</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">作用程度</string>
+    <string name="graph_series_predictions">預測</string>
     <string name="units_days">天</string>
     <string name="units_format_days">%1$d 天</string>
     <string name="units_format_days_range">%1$d 天 (%2$d - %3$d)</string>
@@ -1136,6 +1188,7 @@
     <string name="units_format_min">%1$d 分鐘</string>
     <string name="units_format_min_range">%1$d 分鐘 (%2$d - %3$d)</string>
     <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
     <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
     <string name="units_format_sec">%1$d 秒</string>
     <string name="units_format_sec_range">%1$d 秒 (%2$d - %3$d)</string>
@@ -1151,4 +1204,5 @@
     <string name="units_sec">秒</string>
     <string name="units_years">年</string>
     <string name="prefs_range_title">可視化範圍</string>
+    <string name="secrets_not_protected">這台電腦上找不到系統金鑰儲存區。用來保護設定和與主控裝置配對的金鑰，會儲存在資料旁的檔案中，因此任何取得您檔案副本的人，也會取得這些金鑰。在 Linux 上，請安裝並啟動金鑰環（例如 GNOME Keyring 或 KWallet），然後重新啟動 AAPS。</string>
 </resources>

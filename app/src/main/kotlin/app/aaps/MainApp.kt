@@ -1,6 +1,7 @@
 package app.aaps
 
 import android.app.Application
+import android.app.LocaleManager
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.content.IntentFilter
@@ -9,6 +10,7 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.LocaleList
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.work.Configuration
 import app.aaps.core.data.configuration.Constants
@@ -35,7 +37,6 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
-import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.ExternalOptionsOverride
 import app.aaps.di.GeneratedStringOwners
@@ -51,6 +52,9 @@ import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
+import app.aaps.settingsstore.AndroidStorage
+import app.aaps.settingsstore.IdleWorkerFactory
+import app.aaps.settingsstore.SettingsUnreadableNotification
 import app.aaps.utils.configureLeakCanary
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
@@ -64,6 +68,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
@@ -77,6 +85,7 @@ import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
+import android.content.res.Configuration as ResourcesConfiguration
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 
@@ -92,7 +101,12 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         private val PLUGIN_START_WAIT = 30.seconds
     }
 
-    override fun injectMembers(target: Any): Boolean = metroGraphs.injectMembers(target)
+    // When the settings cannot be opened, ComposeMainActivity only hands over to SettingsUnreadableActivity and
+    // finishes. Filling its fields would build some 40 objects - plugins, the command queue - for nothing,
+    // and on settings that are not the user's.
+    override fun injectMembers(target: Any): Boolean =
+        if (AndroidStorage.failure != null && target is ComposeMainActivity) true
+        else metroGraphs.injectMembers(target)
 
     override val metroViewModelFactory: MetroViewModelFactory get() = metroGraphs.viewModelFactory
 
@@ -114,15 +128,19 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     // it does not know returns null and falls back to WorkManager's default reflective factory, which
     // is what builds WorkManager's own internal workers. The default androidx.startup
     // WorkManagerInitializer is removed in AndroidManifest.xml so this config wins.
+    // While the settings cannot be opened, the app's jobs do nothing (see IdleWorkerFactory).
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
-            .setWorkerFactory(MetroWorkerFactory(metroGraphs))
+            .setWorkerFactory(
+                if (AndroidStorage.failure == null) MetroWorkerFactory(metroGraphs)
+                else IdleWorkerFactory { metroGraphs.workerCreators().keys }
+            )
             .build()
 
     private val pluginStore get() = metroGraphs.pluginStore
     private val aapsLogger get() = metroGraphs.aapsLogger
     private val versionCheckersUtils get() = metroGraphs.versionCheckerUtils
-    private val sp get() = metroGraphs.sp
+    private val sp get() = metroGraphs.keyValueStore
     private val preferences get() = metroGraphs.preferences
     private val config get() = metroGraphs.config
     private val configBuilder get() = metroGraphs.configBuilder
@@ -160,7 +178,9 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private val profileSwitchScheduler get() = metroGraphs.profileSwitchScheduler
     private val automationRuntime get() = metroGraphs.automationRuntime
     private val snackbarNotificationFallback get() = metroGraphs.snackbarNotificationFallback
+    private val eatReminder get() = metroGraphs.eatReminder
     private val appScope get() = metroGraphs.applicationScope
+    private val uiRestart get() = metroGraphs.uiRestart
 
     /** The rules; the two fields below are what this app's start-up sequence carries between its steps. */
     private val insulinMigration get() = InsulinMigration(aapsLogger, hardLimits, rh)
@@ -191,8 +211,18 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     override fun onCreate() {
         super.onCreate()
 
+        // The settings first: everything below reads them. Opened here on purpose, not on first use, so a
+        // store that cannot be read is found at once and handled in one place.
+        val storage = AndroidStorage.open(this)
+        storage.failure?.let { failure ->
+            startWithoutSettings(failure, storage.notes)
+            return
+        }
         GeneratedStringOwners.registerAll()
         resourceHelperImpl.start()
+        // As early as possible, so the first screen is already in it
+        applyAppLanguage()
+        appLocales = resources.configuration.locales
         // Applies the analytics opt-out. Must come before configureLeakCanary below, which reports
         // through fabricPrivacy.
         fabricPrivacyImpl.start()
@@ -205,6 +235,10 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
 
         // Here should be everything injected
         aapsLogger.debug("onCreate")
+        storage.notes.forEach { aapsLogger.info(LTag.CORE, it) }
+        AndroidStorage.onSaveFailure = { aapsLogger.error(LTag.CORE, "Settings could not be saved, the next change tries again: ${it.message}") }
+        // Left by an earlier start whose settings could not be opened.
+        SettingsUnreadableNotification.cancel(this)
         ProcessLifecycleOwner.get().lifecycle.addObserver(processLifecycleListener)
 
         // Background fallback for EventShowSnackbar: when no GlobalSnackbarHost is collecting,
@@ -212,17 +246,20 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         // the iOS and desktop shells start the same class. Started here, before the migrations
         // below, so messages sent during startup are covered too.
         snackbarNotificationFallback.start()
-        // Configure LeakCanary with Firebase reporting
-        // Memory leaks will be uploaded to Firebase Crashlytics via FabricPrivacy.logException
-        configureLeakCanary(
-            isEnabled = !config.isEnabled(ExternalOptions.DISABLE_LEAK_CANARY),
-            fabricPrivacy = fabricPrivacy
-        )
 
         // All initialization in background thread to avoid blocking main thread
         // (ComposeMainActivity shows splash screen until initProgress.done)
         scope.launch {
             try {
+                // Configure LeakCanary with Firebase reporting. Memory leaks are uploaded to Firebase
+                // Crashlytics via FabricPrivacy.logException. Not on the main thread: reading the
+                // DISABLE_LEAK_CANARY marker lists the AAPS directory through SAF, and on slow phones
+                // that held up app start long enough for an ANR (4.0.0-rc1).
+                configureLeakCanary(
+                    isEnabled = { !config.isEnabled(ExternalOptions.DISABLE_LEAK_CANARY) },
+                    fabricPrivacy = fabricPrivacy
+                )
+
                 config.updateInitProgress(getString(R.string.migrating_preferences))
                 doMigrations()
 
@@ -265,6 +302,9 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 // Standalone automation runtime (no longer a plugin). Loads definitions on all
                 // flavors; the processing loop + location service are master-only (gated internally).
                 automationRuntime.start()
+                // A reboot or a force stop removes the alarm of a running "time to eat" timer; set it again.
+                // Master only (gated internally).
+                eatReminder.restore()
 
                 // Data migrations (DB I/O)
                 dataMigrations()
@@ -276,6 +316,23 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 config.initFailed(e.message ?: "Unknown error")
             }
         }
+    }
+
+    /**
+     * The settings could not be opened ([AndroidStorage] says why), so AAPS does not start: no plugins, so no
+     * loop, and nothing written to the database. The app runs on an empty store that lives in memory only,
+     * which keeps its parts from crashing without writing over the unreadable file. A notification that
+     * cannot be swiped away says so, and SettingsUnreadableActivity shows the way out.
+     */
+    private fun startWithoutSettings(failure: Exception, notes: List<String>) {
+        GeneratedStringOwners.registerAll()
+        // The user's answer about analytics and crash reports is in the settings that cannot be read, so it
+        // is "no" now - in memory only, like everything else.
+        sp.putBoolean(BooleanKey.MaintenanceEnableFabric.key, false)
+        fabricPrivacyImpl.start()
+        notes.forEach { aapsLogger.info(LTag.CORE, it) }
+        aapsLogger.error(LTag.CORE, "The settings cannot be opened, so AAPS does not start", failure)
+        SettingsUnreadableNotification.show(this, metroGraphs.iconsProvider.getNotificationIcon())
     }
 
     // Perform a full VACUUM at most once a month. VACUUM defragments the DB file and reclaims
@@ -351,11 +408,67 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         }
     }
 
+    /**
+     * Gives Android the language picked in AAPS as this app's language (Android 13 and newer). Android then shows
+     * the whole app in it - every screen, the notifications, the widget - and keeps the default locale on it, so
+     * numbers and dates are formatted in it too.
+     *
+     * AAPS used to move the default locale itself. Android sets the default locale back from the app's resources
+     * on many configuration updates, often without calling [onConfigurationChanged], so a Czech AAPS on an English
+     * phone showed "4.5" instead of "4,5" after its alarm screen had been shown.
+     *
+     * Android 12 has no app languages: there AAPS follows the phone's language, and the setting is hidden. Simple
+     * mode follows the phone too. Nothing is sent when Android has this language already.
+     */
+    private fun applyAppLanguage() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        val tag = appLanguageTag(preferences.get(StringKey.GeneralLanguage), preferences.get(BooleanKey.GeneralSimpleMode))
+        val wanted = tag?.let { LocaleList.forLanguageTags(it) } ?: LocaleList.getEmptyLocaleList()
+        val localeManager = getSystemService(LocaleManager::class.java)
+        if (localeManager.applicationLocales == wanted) return
+        aapsLogger.debug(LTag.CORE, "App language: ${tag ?: "the phone's"}")
+        localeManager.applicationLocales = wanted
+    }
+
+    /** A change of the AAPS language or of Simple mode goes to Android. What follows is in [onConfigurationChanged]. */
+    private fun followLanguage() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        appScope.launch {
+            merge(preferences.observe(StringKey.GeneralLanguage), preferences.observe(BooleanKey.GeneralSimpleMode))
+                .map { appLanguageTag(preferences.get(StringKey.GeneralLanguage), preferences.get(BooleanKey.GeneralSimpleMode)) }
+                .distinctUntilChanged()
+                .drop(1)
+                .collect { applyAppLanguage() }
+        }
+    }
+
+    /** The app's language as Android applies it, to notice a change. Null until the app has started. */
+    private var appLocales: LocaleList? = null
+
+    /**
+     * The app's language changed: the one picked in AAPS ([applyAppLanguage]), or the phone's while AAPS follows it.
+     * Android recreates the screens itself, but text built before - in the overview cache and in the view models -
+     * is in the old language. So the screens are rebuilt through `UiRestart`, as iOS and the desktop do, and the home
+     * screen widget draws again; it would otherwise wait up to a minute.
+     *
+     * Here and not where the language is picked: Android delivers the new language a moment later, and text read
+     * before that would still come out in the old one.
+     */
+    override fun onConfigurationChanged(newConfig: ResourcesConfiguration) {
+        super.onConfigurationChanged(newConfig)
+        val previous = appLocales ?: return
+        if (newConfig.locales == previous) return
+        appLocales = newConfig.locales
+        aapsLogger.debug(LTag.CORE, "App language changed to ${newConfig.locales.toLanguageTags()}")
+        uiRestart.request()
+        widgetUpdater.update("LanguageChanged")
+    }
+
     private suspend fun doInit() {
         aapsLogger.debug("doInit")
         RxDogTag.install()
         setRxErrorHandler()
-        LocaleHelper.update(this@MainApp)
+        followLanguage()
 
         var gitRemote: String? = config.REMOTE
         var commitHash: String? = BuildConfig.HEAD

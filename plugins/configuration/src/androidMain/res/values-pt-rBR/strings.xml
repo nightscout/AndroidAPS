@@ -38,7 +38,6 @@
     <string name="setupwizard_client_control_info">Pareie dispositivos clientes para que possam enviar comandos assinados a este dispositivo principal pelo Nightscout. Esta é a nova forma recomendada de controlar o AAPS remotamente.</string>
     <string name="setupwizard_ns_receive_info">A aceitação de tratamentos e dados diretamente do Nightscout (forma menos segura) agora está desativada por padrão. Abra as configurações abaixo somente se ainda precisar delas. É necessária se você precisar inserir dados pelo NS ou por apps de terceiros (3rd party).</string>
     <string name="setupwizard_open_ns_receive_settings">Aceitação de dados do Nightscout</string>
-    <string name="setupwizard_pair_with_master_info">Pareie este cliente com seu AAPS no dispositivo principal para que ele possa enviar comandos por um canal seguro.</string>
     <string name="setupwizard_pairing_ws_warning">A conexão WebSocket do Nightscout é necessária para o pareamento. Volte à etapa anterior e ative-a primeiro.</string>
     <string name="setupwizard_pairing_status_master">Clientes pareados: %1$d</string>
     <string name="setupwizard_pairing_status_master_none">Nenhum cliente pareado ainda</string>

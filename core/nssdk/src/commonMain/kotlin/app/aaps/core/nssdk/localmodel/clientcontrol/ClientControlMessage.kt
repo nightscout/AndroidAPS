@@ -184,6 +184,17 @@ sealed class ClientControlMessage {
     @Serializable
     @SerialName("stop_bolus")
     data object StopBolus : ClientControlMessage()
+
+    /**
+     * Client asks the master to stop or extend its "time to eat" timer. [action] is `EatReminderAction` by name
+     * ("STOP", "EXTEND"); the master refuses a name it does not know. The changed timer reaches the client with
+     * the running configuration.
+     */
+    @Serializable
+    @SerialName("eat_reminder")
+    data class EatReminderControl(
+        val action: String
+    ) : ClientControlMessage()
 }
 
 /** One synced preference on the wire: its value (serialized as a string) and edit timestamp. */
@@ -244,6 +255,8 @@ data class BatchActionDto(
     val eCarbsDurationHours: Int = 0,
     // bolus: originating QuickWizard guid (INSULIN/CARBS mode) so the master marks the entry used on commit (lastUsed)
     val quickWizardGuid: String? = null,
+    // bolus: start the master's "time to eat" timer for carbsTimeOffsetMinutes once the entry is done
+    val alarm: Boolean = false,
     // remove: the record type and the Nightscout ids of the records, the only ids every instance shares.
     // [localOnlyCount] counts the records without a Nightscout id: only the client has them, the master names them
     // in its confirmation. calibration reuses [glucoseMgdl] (the fingerstick value).

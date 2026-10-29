@@ -97,6 +97,7 @@
     <string name="action_user_action_confirmation">Reikalingas vartotojo veiksmas</string>
     <string name="action_scene_confirmation">Scenarijaus užklausa išsiųsta</string>
     <string name="scene_end">Baigti</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Praleisti</string>
     <string name="action_treatment_confirmation">Terapijos užklausa</string>
     <string name="action_bolus_confirmation">Boluso užklausa</string>
     <string name="action_wizard_confirmation">Skaičiavimo užklausa</string>
@@ -190,6 +191,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS boluso eiga be garso</string>
     <string name="bolus_progress_channel_description">Boluso leidimas ir atšaukimas</string>
     <string name="bolus_progress_silent_channel_description">Boluso leidimas ir atšaukimas su mažiau vibracijų</string>
+    <string name="open_loop_channel_name">AAPS atviras ciklas</string>
+    <string name="open_loop_channel_description">Pranešimas apie atviro ciklo užklausą</string>
     <string name="simple_ui_off">Išj.</string>
     <string name="simple_ui_charging">Įkrovimo metu</string>
     <string name="simple_ui_always_on">Visada įjungta</string>
@@ -279,6 +282,7 @@
     <string name="title_activity_disconnect_pump">Atjungti pompą</string>
     <string name="title_activity_suspend_loop">Pristabdyti ciklą</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="wizard_set_alarm">Nustatyti įspėjimą</string>
     <string name="insulin_unit_short">V</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f V</string>
@@ -317,6 +321,18 @@
     <string name="loop_status_target_range">Diapazonas</string>
     <string name="loop_status_target">Tikslas</string>
     <string name="loop_status_adjusted_target">Pakoreguotas tikslas</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Kol bus baigta</string>
+    <string name="loop_status_scene_ended">Baigta</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Kitas scenarijus</string>
+    <string name="loop_status_profile">Profilis</string>
+    <string name="loop_status_no_profile">Nepasirinktas profilis</string>
+    <string name="loop_status_profile_percentage">Profilio procentas</string>
+    <string name="loop_status_profile_timeshift">Laiko poslinkis</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Grįžtama į profilį</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+d val.</string>
+    <string name="loop_status_sensitivity">Jautrumas</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Nustatyta aktyvaus scenarijaus</string>
     <string name="loop_status">Ciklo būsena</string>
     <string name="loop_status_refresh">Atnaujinti</string>
     <string name="confirm">Patvirtinti</string>

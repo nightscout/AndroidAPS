@@ -68,7 +68,6 @@
     <string name="no_profile_set">ΔΕΝ ΟΡΙΣΤΗΚΕ ΠΡΟΦΙΛ</string>
     <string name="active"><![CDATA[<Ενεργή>]]></string>
     <string name="date">Ημερομηνία</string>
-    <string name="units_label">Μονάδες</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
@@ -104,6 +103,7 @@
     <string name="wrong_pump_data">Τα δεδομένα προέρχονται από διαφορετική αντλία. Αλλάξτε τον οδηγό της αντλίας για να επαναφέρετε την κατάσταση της αντλίας.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Καλιμπράρισμα</string>
+    <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="cgm">CGM</string>
     <string name="duration_label">Διάρκεια</string>
     <string name="shortgramm">g</string>
@@ -456,7 +456,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Αντλία σε ζεύξη</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Χαμηλή ενέργεια Bluetooth δεν υποστηρίζεται.</string>
-    <string name="ble_not_supported_or_not_paired">Το Bluetooth Low Energy δεν υποστηρίζεται ή η συσκευή δεν είναι συνδεδεμένη.</string>
     <string name="ble_not_enabled">Bluetooth μη ενεργοποιημένο.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Επιλογές προσθήκης</string>
@@ -536,5 +535,6 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="prefs_range_title">Εύρος εμφάνισης</string>
 </resources>

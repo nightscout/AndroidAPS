@@ -381,6 +381,7 @@ class ClientControlRoundTrip(
                 }
 
                 is ClientControlActionDispatcher.Command.BatchPrepare   -> ClientControlMessage.BatchPrepare(command.actions.map { it.toDto() })
+                is ClientControlActionDispatcher.Command.EatReminderControl -> ClientControlMessage.EatReminderControl(command.action.name)
             }
             // A pump-direct commit waits the longer window (the master blocks on the pump); everything else is fast-or-never.
             val ttl = if (command is ClientControlActionDispatcher.Command.BolusCommit && command.pumpDirect) PUMP_ROUND_TRIP_TTL_MS else ROUND_TRIP_TTL_MS

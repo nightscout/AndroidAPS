@@ -15,7 +15,6 @@
     <string name="authorized_clients_add">הוספת משתמש</string>
     <string name="authorized_clients_comm_switch_title">אפשר שליטה ממכשיר לקוח</string>
     <string name="authorized_clients_comm_switch_summary">אפשר ללקוחות משויכים לשלוח פקודות חתומות דרך Nightscout. כבה כדי להפסיק את התקשורת מבלי להסיר אותם.</string>
-    <string name="authorized_clients_needs_websocket">WebSockets כבויים, ולכן לא ניתן לקבל פקודות ממכשירי לקוח. מכשירי הלקוח יראו שמכשיר ראשי זה אינו מקבל פקודות עד שתפעילו את WebSockets.</string>
     <string name="authorized_clients_state_active">פעיל</string>
     <string name="authorized_clients_state_pending">בהמתנה</string>
     <string name="authorized_clients_last_seen">נראה לאחרונה %1$s</string>
@@ -56,6 +55,7 @@
     <string name="pair_with_master_already_paired_master">מצומד כעת למכשיר הראשי %1$s. יש לבטל תחילה את הצימוד כדי להזין קוד PIN חדש.</string>
     <string name="pair_with_master_unpair">בטל התאמה</string>
     <string name="pair_with_master_sending">שולח הודעת התאמה…</string>
+    <!-- Client set-up from the master's QR code -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">מכשיר AAPS הראשי כבר אינו מזהה מכשיר זה. פתחו את מסך הניהול ← צימוד למכשיר הראשי כדי לצמד מחדש.</string>
     <string name="ns_client">NSClient</string>

@@ -4,6 +4,7 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Paramètres de connexion</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
+    <string name="description_ns_client_v3">Synchronise vos données avec Nightscout à l\'aide de l\'API v3</string>
     <string name="blocked_by_charging">Bloqué par les options de recharge</string>
     <string name="blocked_by_connectivity">Bloqué par les options de connectivité</string>
     <string name="no_connectivity">Aucune connectivité</string>
@@ -14,7 +15,6 @@
     <string name="authorized_clients_add">Ajouter un client</string>
     <string name="authorized_clients_comm_switch_title">Autoriser le contrôle par un client</string>
     <string name="authorized_clients_comm_switch_summary">Autorise les clients associés à envoyer des commandes signées sur Nightscout. Désactivez pour arrêter le contrôle sans supprimer les clients.</string>
-    <string name="authorized_clients_needs_websocket">Les websockets sont désactivés, donc les commandes des clients ne peuvent pas être reçues. Les clients voient ce maître comme n\'acceptant pas les commandes tant que vous n\'activez pas les websockets.</string>
     <string name="authorized_clients_state_active">Actif</string>
     <string name="authorized_clients_state_pending">En cours</string>
     <string name="authorized_clients_last_seen">Dernière fois vu %1$s</string>
@@ -34,6 +34,32 @@
     <string name="authorized_clients_pin_published">Demande d\'appairage prête sur Nightscout.</string>
     <string name="authorized_clients_pin_publish_failed">Impossible de télécharger la demande d\'appairage vers Nightscout.</string>
     <string name="authorized_clients_pin_retry">Réessayer</string>
+    <string name="authorized_clients_method_title">Comment configurer le téléphone ?</string>
+    <string name="authorized_clients_method_qr_pair">QR code : Nightscout et appairage</string>
+    <string name="authorized_clients_method_qr_pair_summary">Scannez une fois sur le nouveau téléphone. Il reçoit son propre jeton Nightscout et est jumelé.</string>
+    <string name="authorized_clients_method_qr_ns">QR code : Nightscout uniquement</string>
+    <string name="authorized_clients_method_qr_ns_summary">Le téléphone reçoit son propre jeton Nightscout et peut lire les données. Il n\'est pas jumelé et ne peut pas envoyer de commandes.</string>
+    <string name="authorized_clients_method_pin">PIN</string>
+    <string name="authorized_clients_method_pin_summary">Pour un téléphone sans caméra. Il doit déjà être connecté à Nightscout.</string>
+    <string name="authorized_clients_qr_working">Création du jeton Nightscout…</string>
+    <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Configurer %1$s</string>
+    <string name="authorized_clients_qr_pair_instructions">Scannez ce code sur le nouveau téléphone, dans l\'assistant de configuration ou dans Appairer avec le maître. Il configure Nightscout et appaire le téléphone.</string>
+    <string name="authorized_clients_qr_ns_instructions">Scannez ce code sur le nouveau téléphone, dans l\'assistant de configuration ou dans Appairer avec le maître. Il configure Nightscout. Le téléphone n\'est pas appairé.</string>
+    <string name="authorized_clients_qr_keep_private">Quiconque voit ce code peut lire votre Nightscout. Ne le montrer qu\'au nouveau téléphone.</string>
+    <string name="authorized_clients_token_problem_title">Pas de QR code</string>
+    <string name="authorized_clients_token_problem_not_connected">Ce téléphone n\'est pas connecté à Nightscout, donc il ne peut pas créer de jeton pour le client.</string>
+    <string name="authorized_clients_token_problem_not_allowed">Le jeton Nightscout de ce téléphone n\'est pas un jeton administrateur, donc il ne peut donc pas créer de jeton pour le client. Utilisez un jeton admin ici, ou ajoutez le client avec le code PIN.</string>
+    <string name="authorized_clients_token_problem_name_taken">Nightscout a un jeton avec ce nom et d\'autres droits. Choisissez un autre nom.</string>
+    <string name="authorized_clients_token_problem_name_in_use">Un client portant ce nom est déjà dans la liste. Choisissez un autre nom ou supprimez d\'abord ce client.</string>
+    <string name="authorized_clients_tokens_header">Lecture Nightscout uniquement</string>
+    <string name="authorized_clients_token_unpaired">Propre jeton Nightscout, non appairé</string>
+    <string name="authorized_clients_token_show_qr">Afficher le QR code</string>
+    <string name="authorized_clients_token_delete_title">Supprimer le jeton ?</string>
+    <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s ne peut plus lire Nightscout.</string>
+    <string name="authorized_clients_delete_dialog_token">Son jeton Nightscout est également supprimé. Il ne peut donc plus lire Nightscout.</string>
+    <string name="authorized_clients_uses_client_token">Propre jeton Nightscout</string>
+    <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Utilise le jeton Nightscout %1$s, qui a plus de droits qu\'un client n\'en a besoin</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Utilise le jeton Nightscout %1$s, pas le sien : ses commandes sont refusées. Supprimez-le et ajoutez-le à nouveau.</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Associer au maître</string>
     <string name="pair_with_master_pin_entry_title">Entrez le code PIN d\'appairage</string>
@@ -50,11 +76,33 @@
     <string name="pair_with_master_error_ambiguous_pin">Plusieurs appairages correspondent à ce PIN. Demandez au maître d\'en générer un nouveau et réessayez.</string>
     <string name="pair_with_master_error_expired">Cet appairage a expiré. Générer un nouveau code PIN sur le maître.</string>
     <string name="pair_with_master_error_network">Impossible d\'accéder à Nightscout. Vérifiez la connexion et réessayez.</string>
+    <string name="pair_with_master_error_secret_store">L\'appairage secret n\'a pas pu être stocké, l\'appairage a donc été annulé. Rien n\'a été changé. Essayez à nouveau, et si ça continue à échouer, redémarrez l\'application.</string>
     <string name="pair_with_master_retry">Essayer à nouveau</string>
     <string name="pair_with_master_already_paired_title">Déjà appairé</string>
     <string name="pair_with_master_already_paired_master">Actuellement appairé avec le maître %1$s. Dissocier d\'abord pour entrer un nouveau PIN.</string>
     <string name="pair_with_master_unpair">Dissocier</string>
     <string name="pair_with_master_sending">Envoi du message d\'appairage…</string>
+    <!-- Client set-up from the master's QR code -->
+    <string name="client_setup_scan_button">Scanner le QR code</string>
+    <string name="client_setup_scan_title">Scannez le QR code du maître</string>
+    <string name="client_setup_scan_instructions">Sur le maître, ouvrez les clients autorisés et ajoutez ce téléphone avec un QR code. Pointez la caméra sur le code.</string>
+    <string name="client_setup_scan_camera_refused">La caméra est nécessaire pour lire le QR code. Autorisez-le, ou associez-la avec le code PIN.</string>
+    <string name="client_setup_scan_camera_denied">L\'accès à la caméra est bloqué pour AAPS. Activez-le dans les paramètres du système, ou associez-le avec le PIN.</string>
+    <string name="client_setup_scan_camera_blocked">L\'accès à la caméra n\'est pas autorisé sur cet appareil. Associer avec le code PIN à la place.</string>
+    <string name="client_setup_scan_camera_unavailable">La caméra ne peut pas être utilisée sur cet appareil. Appairer avec le code PIN à la place.</string>
+    <string name="client_setup_scan_open_settings">Ouvrir les paramètres</string>
+    <string name="client_setup_scan_not_a_code">Ceci n\'est pas un QR code d\'AAPS.</string>
+    <string name="client_setup_scan_other_version">Ce code provient d\'une autre version d\'AAPS. Le maître et ce téléphone doivent exécuter la même version.</string>
+    <string name="client_setup_scan_expired">Ce code a expiré. Faites-en un nouveau sur le maître.</string>
+    <string name="client_setup_scan_already_paired">Ce téléphone est déjà appairé. Déconnectez-le d\'abord pour utiliser un code qui l\'appairera.</string>
+    <string name="client_setup_confirm_title">Utiliser ce code ?</string>
+    <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nightscout : %1$s</string>
+    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">Il appaire également ce téléphone avec le maître %1$s.</string>
+    <string name="client_setup_confirm_replaces">Il remplace l\'adresse et le jeton Nightscout de ce téléphone.</string>
+    <string name="client_setup_confirm_apply">Utiliser</string>
+    <string name="client_setup_done_title">Terminé</string>
+    <string name="client_setup_done_paired">Nightscout est configuré et le téléphone est appairé. Le maître le montre comme actif lorsqu\'il c\'est connecté.</string>
+    <string name="client_setup_done_ns_only">Nightscout est configuré. Pour contrôler le maître de ce téléphone, appairez-le également.</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">Master AAPS ne reconnaît plus ce périphérique. Ouvrez le menu Gestion → Associer avec le maître pour ré-associer.</string>
     <string name="ns_client">NSClient</string>
@@ -72,11 +120,18 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Si activé, les téléchargements iront vers les serveurs de test au lieu des serveurs habituels</string>
     <string name="title_tidepool_dev_servers">Utiliser les serveurs d\'Intégration (test)</string>
+    <string name="title_tidepool_use_ns_connection">Utiliser les paramètres de connexion de Nightscout</string>
+    <string name="summary_tidepool_use_ns_connection">Désactiver pour définir des paramètres de connexion séparés pour Tidepool</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Transfère les données vers Tidepool</string>
     <string name="upload_now">Télécharger maintenant</string>
     <string name="tidepool_purge_data">Purger toutes les données</string>
     <string name="tidepool_purge_data_confirm">Supprimer TOUTES les données que AAPS a téléchargées sur Tidepool ? Cette action est irréversible. Utilisez-le pour supprimer les données corrompues par une ancienne version, puis exécutez \"Synchronisation totale\" pour re-télécharger.</string>
+    <string name="tidepool_full_sync_comment">Synchronisation complète ? AAPS téléversera toutes les données sur Tidepool. Cela peut prendre un certain temps.</string>
+    <string name="tidepool_logout_confirm">Se déconnecter de Tidepool ? Les téléversements s\'arrêtent jusqu\'à ce que vous vous connectiez à nouveau.</string>
+    <string name="tidepool_status_not_logged_in">Non connecté</string>
+    <string name="tidepool_status_blocked">Bloqué par les paramètres de connexion</string>
+    <string name="tidepool_status_failed">Échec. Voir le journal ci-dessous.</string>
     <string name="not_connected">Non connecté</string>
     <string name="read_only">Lecture seule</string>
     <string name="working">Opération en cours</string>
@@ -96,6 +151,8 @@
     <string name="garmin_description">Connexion au périphérique Garmin (Fenix, Edge, …)</string>
     <string name="garmin_local_http_server_port">Port du serveur HTTP local</string>
     <string name="garmin_local_http_server">Serveur HTTP local</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">La montre Garmin a envoyé %1$s de glucides. Ce téléphone est un client, ils n\'ont donc pas été entrés. Entrez-les dans AAPS.</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">La montre Garmin a demandé à se connecter ou déconnecter la pompe. Ce téléphone est un client, rien n\'a donc été changé. Faites-le dans AAPS.</string>
     <!--    Wear-->
     <string name="description_wear">Surveillez et contrôlez AAPS en utilisant votre montre WearOS.</string>
     <string name="no_watch_connected">(Pas de montre connectée)</string>
@@ -104,6 +161,8 @@
     <string name="user_action_not_available">L\'action utilisateur %1$s n\'est plus disponible, veuillez actualiser vos cartes</string>
     <string name="scene_not_available">Le scénario %1$s n\'est plus disponible, veuillez actualiser vos cartes</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Les commandes d\'insuline à distance sont désactivées en mode client</string>
+    <string name="wear_phone_not_ready">Le téléphone est toujours en cours de démarrage ou d\'application des paramètres. Réessayez dans un instant.</string>
+    <string name="wear_control_disabled">Le contrôle par la montre est désactivé dans les paramètres Montre du téléphone.</string>
     <string name="wear_action_tempt_unit_error">Différentes unités utilisées sur la montre et le téléphone!</string>
     <string name="wear_action_tempt_min_bg_error">Gly mini hors limite!</string>
     <string name="wear_action_tempt_max_bg_error">Gly maxi hors limite!</string>
@@ -112,6 +171,7 @@
     <string name="wear_general_settings">Paramètres généraux</string>
     <string name="wear_custom_watchface_settings">Paramètres du Cadran Personnalisé</string>
     <string name="wear_custom_watchface">Cadran personnalisé : %1$s</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s remplacera la %2$s sur la montre. Les complications que vous avez modifiées dans l\'éditeur de cadrans reviennent aux valeurs par défaut.</string>
     <string name="wear_load_watchface">Charger le cadran</string>
     <string name="wear_infos_watchface">Infos Cadran</string>
     <string name="wear_export_watchface">Exporter le modèle</string>
@@ -147,6 +207,7 @@
     <string name="aps">APS</string>
     <string name="last_run">Dernière exécution</string>
     <string name="last_enact">Dernière injection</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fU %2$.0f%%</string>
     <string name="today">Aujourd’hui</string>
     <string name="weighted">pondération</string>
     <string name="full_xdrip_sync_comment">Synchronisation complète ? Cela peut prendre plusieurs heures et vous ne verrez pas de nouvelles données dans xDrip+ avant la fin.</string>
@@ -247,6 +308,8 @@
     <string name="sms_read_status_failed">La lecture du statut a échoué</string>
     <string name="sms_profile_switch_created">Changement de profil effectué</string>
     <string name="sms_wrong_tbr_duration">La durée du DBT doit être un multiple de %1$d minutes et supérieure à 0.</string>
+    <string name="sms_tbr_percent_only">Cette pompe accepte une basale temporaire seulement en pourcentage, pas en U/h.</string>
+    <string name="sms_tbr_absolute_only">Cette pompe accepte une basale temporaire seulement en U/h, pas en pourcentage.</string>
     <string name="a11y_otp_qr_code">QR Code pour configurer un mot de passe à usage unique</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">L\'application a besoin d\'une autorisation SMS pour le contrôle à distance par SMS</string>

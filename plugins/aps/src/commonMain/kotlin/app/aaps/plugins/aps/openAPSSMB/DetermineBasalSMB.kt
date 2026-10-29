@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.aps.RT
+import app.aaps.core.interfaces.aps.SmbIntervalGate
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import dev.zacsweers.metro.AppScope
@@ -445,7 +446,9 @@ class DetermineBasalSMB(
             sensitivityRatio = sensitivityRatio, // autosens ratio (fraction of normal basal)
             consoleLog = consoleLog,
             consoleError = consoleError,
-            variable_sens = profile.variable_sens
+            // Null, not 0.0, when this run used no variable sensitivity, so the stored result says that
+            // plainly. The ISF for carbs falls back to the profile ISF on it (IsfForCarbs).
+            variable_sens = if (dynIsfMode) profile.variable_sens else null
         )
 
         // generate predicted future BGs based on IOB, COB, and current absorption rate
@@ -1209,10 +1212,11 @@ class DetermineBasalSMB(
                 val lastBolusAge = (systemTime - iob_data.lastBolusTime) / 1000.0
                 //console.error(lastBolusAge);
                 // allow SMBIntervals between 1 and 10 minutes
-                val SMBInterval = min(10, max(1, profile.SMBInterval)) * 60.0   // in seconds
+                val smbIntervalMinutes = min(10, max(1, profile.SMBInterval))
+                val SMBInterval = smbIntervalMinutes * 60.0   // in seconds
                 //console.error(naive_eventualBG, insulinReq, worstCaseInsulinReq, durationReq);
                 consoleError.add("naive_eventualBG $naive_eventualBG,${durationReq}m ${smbLowTempReq}U/h temp needed; last bolus ${round(lastBolusAge / 60.0, 1)}m ago; maxBolus: $maxBolus")
-                if (lastBolusAge > SMBInterval - 6.0) {   // 6s tolerance
+                if (!SmbIntervalGate.tooSoon(iob_data.lastBolusTime, smbIntervalMinutes, systemTime)) {
                     if (microBolus > 0) {
                         rT.units = microBolus
                         rT.reason.append("Microbolusing ${microBolus}U. ")

@@ -61,7 +61,6 @@
     <string name="patch_communication_succeed">Kommunikation lyckades</string>
     <string name="patch_communication_succeed_message">Ansluten till podden.</string>
     <string name="patch_cancel_pairing">Avbryt parkoppling</string>
-    <string name="all_dose_unit">&#160;U</string>
     <string name="insulin_suspend_msg1">Vid avstängningen kommer den nuvarande leveransen av Bolus &amp; tillfällig basaldos att avbrytas. \n\nDos : %1$s U/hr\nÅterstående tid : %2$s\n&amp; Kvarvarande insulin att leverera: %3$.2f U</string>
     <string name="insulin_suspend_msg2">Vid avstängning kommer den nuvarande leveransen av bolus att avbrytas. \n\nInsulin kvar att leverera : %1$.2f U</string>
     <string name="insulin_suspend_msg3">Vid avstängningen kommer den nuvarande leveransen av tillfällig basaldos att avbrytas. \n\nDos : %1$s U/hr\nÅterstående tid : %2$s</string>

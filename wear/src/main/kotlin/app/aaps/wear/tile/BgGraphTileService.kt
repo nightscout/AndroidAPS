@@ -210,7 +210,7 @@ class BgGraphTileService : TileService() {
                 canvas = composeCanvas,
                 size = Size(widthPx.toFloat(), graphHeightPx.toFloat())
             ) {
-                renderBgGraph(data, sp.getString("tile_bg_graph_hours", "3").toIntOrNull() ?: 3)
+                renderBgGraph(data, sp.getString("tile_bg_graph_hours", "3").toIntOrNull() ?: 3, minutesText = { getString(R.string.action_minutes_format, it) })
             }
         }
 

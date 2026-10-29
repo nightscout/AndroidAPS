@@ -4,6 +4,22 @@
     <string name="identification_not_set">Tanımlama geliştirme modunda ayarlanmadı</string>
     <string name="select">Seçin</string>
     <string name="set">Uygula</string>
+    <string name="migrating_preferences">Tercihler taşınıyor…</string>
+    <string name="optimizing_database">Veritabanı optimize ediliyor…</string>
+    <string name="initializing_plugins">Eklentiler başlatılıyor…</string>
+    <string name="initializing">Başlatılıyor…</string>
     <string name="migrating_profile_switches">Profil geçişleri taşınıyor…</string>
     <string name="migrating_effective_profile_switches">Geçerli profil geçişleri taşınıyor…</string>
+    <string name="migrating_boluses">Boluslar taşınıyor...</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Daha eski kayıtlarda herhangi bir insülin yapılandırması bulunmuyor ve hiçbir profil etkin durumda değildi. Bu nedenle bunlar için %1$s kullanıldı. İnsülin ayarlarınızı kontrol edin. Halihazırda taşınmış olan kayıtlar sonradan güncellenmez.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Eski kayıtlarda insülin süresi bilgisi bulunmadığından, %2$s için %1$.1f saat değeri kullanılmıştır. İnsülin ayarlarınızı kontrol edin; halihazırda taşınmış olan kayıtlar sonradan güncellenmez.</string>
+    <string name="settings_unreadable_title">AAPS ayarları okunamıyor</string>
+    <string name="settings_unreadable_key_explanation">Bu telefondaki ayarlarınız, Android\'in AAPS için sakladığı bir anahtarla şifrelenmiştir; ancak söz konusu anahtar artık bu ayarların kilidini açmamaktadır. Bu durum, telefonun anahtar deposu sıfırlandığında meydana gelebilir.</string>
+    <string name="settings_unreadable_keystore_explanation">Telefonun anahtar deposu yanıt vermedi; bu nedenle AAPS, ayarlarını açamadı.</string>
+    <string name="settings_unreadable_not_running">AAPS çalışmıyor ve pompayı kontrol etmiyor. Devam etmekte olan geçici bazal doz, süresi dolduğunda sona erer; sonrasında pompa kendi bazal dozunu uygulamaya devam eder.</string>
+    <string name="settings_unreadable_what_to_do">Tekrar dene seçeneği AAPS\'i kapatır ve yeniden başlatır. Bu işe yaramazsa, telefonu yeniden başlatın. Yalnızca başka hiçbir şey yardımcı olmadığında \"Sıfırdan başla\" seçeneğini seçin: okunamayan ayarları bir kenara bırakır ve AAPS boş ayarlarla başlar. Ardından kurulum sihirbazında son ayar dışa aktarımınızı içe aktarın.</string>
+    <string name="settings_unreadable_start_fresh">Sıfırdan başla</string>
+    <string name="settings_unreadable_confirm_title">Boş ayarlarla mı başlansın?</string>
+    <string name="settings_unreadable_confirm_text">Okunamayan ayar dosyası yeniden adlandırılarak saklanır. Tüm ayarlar varsayılan değerlerine döner. Ardından AAPS\'i yeniden yapılandırabilir veya daha önce dışa aktardığınız ayarları içe aktarabilirsiniz.</string>
+    <string name="settings_unreadable_notification">AAPS çalışmıyor. Ne yapmanız gerektiğini görmek için AAPS\'i açın.</string>
 </resources>

@@ -41,7 +41,7 @@ import platform.UIKit.UIViewController
  * This renders [AapsTheme], not a bare `MaterialTheme`, which is the part worth proving: the theme
  * carries AAPS's own colours, typography and spacing, and it resolves them through code written for
  * Android. It reads `LocalPreferences` to pick light or dark, so it needs a real [Preferences] -
- * built here by the same Metro graph the rest of the probe uses, on top of `NSUserDefaults`.
+ * built here by the same Metro graph the rest of the probe uses, on top of the settings store.
  *
  * Getting to that point took the whole chain below `Preferences` into `commonMain`: `PreferencesImpl`,
  * `PersistenceLayerImpl`, `ProfileFunctionImpl`, `ProfileUtilImpl`, `HardLimitsImpl`, `PluginStore`,
@@ -49,7 +49,7 @@ import platform.UIKit.UIViewController
  */
 fun aapsComposeViewController(): UIViewController {
     // Built once, outside the composition: a graph rebuilt on every recomposition would hand out a
-    // new NSUserDefaults wrapper each time.
+    // new Preferences each time.
     val preferences = createGraphFactory<IosProbeGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings).preferences
     return ComposeUIViewController {
         CompositionLocalProvider(LocalPreferences provides preferences) {

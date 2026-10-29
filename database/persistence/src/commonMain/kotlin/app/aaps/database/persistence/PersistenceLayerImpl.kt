@@ -2648,6 +2648,10 @@ class PersistenceLayerImpl(
         repository.getApsResultVariableSens(start, end).mapNotNull { row -> row.variableSens?.let { PersistenceLayer.VariableSensitivity(row.timestamp, it) } }
     }
 
+    override suspend fun getLoopSensitivities(start: Long, end: Long): List<PersistenceLayer.LoopSensitivity> = withContext(aapsIoDispatcher) {
+        repository.getApsResultVariableSens(start, end).map { row -> PersistenceLayer.LoopSensitivity(row.timestamp, row.variableSens) }
+    }
+
     private val nonFiniteFieldRegex = Regex("(\\w+)=(NaN|Infinity|-Infinity)\\b")
 
     // Diagnostic only — must never let a reporting failure block persistence of the APSResult, so the whole

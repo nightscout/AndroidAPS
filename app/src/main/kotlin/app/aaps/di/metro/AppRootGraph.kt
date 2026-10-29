@@ -1,8 +1,8 @@
 package app.aaps.di.metro
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.work.WorkManager
+import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensData
@@ -84,7 +84,7 @@ import app.aaps.core.interfaces.scenes.SceneChainResolver
 import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.scenes.Scenes
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.stats.DexcomTirCalculator
 import app.aaps.core.interfaces.stats.TddCalculator
@@ -96,6 +96,7 @@ import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.ui.CarbSuggestionActions
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -323,7 +324,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val dateUtil: DateUtil
     val l: L
     val aapsSchedulers: AapsSchedulers
-    val sp: SP
+    val keyValueStore: KeyValueStore
     val widgetUpdater: WidgetUpdater
     val sceneIconResolver: SceneIconResolver
     val processedDeviceStatusData: ProcessedDeviceStatusData
@@ -354,6 +355,8 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val profileSwitchSilentGate: ProfileSwitchSilentGate
     val profileSwitchScheduler: ProfileSwitchScheduler
     val snackbarNotificationFallback: SnackbarNotificationFallback
+    val eatReminder: EatReminder
+    val uiRestart: UiRestart
     val runningConfiguration: RunningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys
     val activePlugin: ActivePlugin
@@ -367,7 +370,6 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val pumpStatusProvider: PumpStatusProvider
     val passwordCheck: PasswordCheck
     val overviewData: OverviewData
-    val sharedPreferences: SharedPreferences
     val exportPasswordDataStore: ExportPasswordDataStore
     val secureEncrypt: SecureEncrypt
     val cryptoUtil: CryptoUtil

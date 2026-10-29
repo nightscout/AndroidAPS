@@ -126,7 +126,7 @@
     <string name="pref_title_ns_use_ws">使用 websockets</string>
     <string name="pref_summary_ns_use_ws">使用 websockets 与 Nightscout 进行实时通信。</string>
     <string name="pref_title_ns_allow_client_control">允许客户端控制</string>
-    <string name="pref_summary_ns_allow_client_control">允许已配对的客户端设备通过 Nightscout 发送已签名的命令（例如启动/停止情景模式）。</string>
+    <string name="pref_summary_ns_allow_client_control">允许已配对的客户端设备通过 Nightscout 发送已签名的命令（例如启动/停止情景模式）。这也会开启强化模式：直接在 Nightscout 中所做的更改将不再被接受。</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">仅使用 WiFi</string>
     <string name="pref_title_openhumans_charging_only">仅充电</string>
@@ -267,6 +267,8 @@
     <string name="lang_tr">土耳其语</string>
     <string name="lang_zh_tw">繁体中文</string>
     <string name="lang_zh_cn">简体中文</string>
+    <string name="pref_title_patient_name">实例名称</string>
+    <string name="pref_summary_patient_name">使用此手机的人员姓名。它用于在报告和同步中区分此 AAPS 实例。</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">AAPS目录</string>
     <!-- StringKey: Protection preferences -->

@@ -48,5 +48,7 @@ data class ActiveSceneSnapshot(
     val ttNsId: String? = null,
     val psNsId: String? = null,
     val rmNsId: String? = null,
-    val teNsId: String? = null
+    val teNsId: String? = null,
+    /** Why the follow-up scene did not start, in the master's words; null when none was skipped. */
+    val chainSkipReason: String? = null
 )

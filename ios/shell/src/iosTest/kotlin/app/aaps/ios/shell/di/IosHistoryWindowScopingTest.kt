@@ -1,6 +1,7 @@
 package app.aaps.ios.shell.di
 
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.ios.shell.prefs.TestStorage
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocket
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.shared.clientbindings.ClientGraphBindings
@@ -30,6 +31,10 @@ class IosHistoryWindowScopingTest {
     private object NoSockets : NsSocketFactory {
 
         override fun create(url: String): NsSocket? = null
+    }
+
+    init {
+        TestStorage.install()
     }
 
     private val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings, NoSockets)

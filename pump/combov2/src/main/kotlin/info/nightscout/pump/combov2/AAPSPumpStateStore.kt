@@ -1,6 +1,6 @@
 package info.nightscout.pump.combov2
 
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import info.nightscout.comboctl.base.BluetoothAddress
 import info.nightscout.comboctl.base.CurrentTbrState
 import info.nightscout.comboctl.base.InvariantPumpData
@@ -17,7 +17,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 /**
- * [PumpStateStore] subclass that uses AAPS' [SP] class for storing the pump state.
+ * [PumpStateStore] subclass that uses AAPS' [KeyValueStore] for storing the pump state.
  *
  * This pump state has a special logic to address the following problem:
  *
@@ -66,7 +66,7 @@ import kotlin.time.Instant
  *   overwriting the pump state from the imported configuration.
  */
 class AAPSPumpStateStore(
-    private val sp: SP
+    private val sp: KeyValueStore
 ) : PumpStateStore {
     sealed interface States {
         var btAddress: String
@@ -114,7 +114,7 @@ class AAPSPumpStateStore(
         override var utcOffsetSeconds: Int = 0
     }
 
-    class SPStates(val sp: SP): States {
+    class SPStates(val sp: KeyValueStore): States {
         override var btAddress: String
             by SPDelegateString(sp, PreferenceKeys.BT_ADDRESS_KEY.str, "")
 

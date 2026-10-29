@@ -76,7 +76,6 @@
     <string name="combov2_bolus_delivery_failed">מתן הבולוס נכשל. נראה כי לא ניתן בולוס. כדי להיות בטוחים, יש לבדוק את המשאבה כדי למנוע בולוס כפול ואז להזריק שוב בולוס. כדי להגן מפני באגים, בולוסים אינם ניתנים מחדש אוטומטית.</string>
     <string name="combov2_bolus_not_delivered">הבולוס לא הוזרק</string>
     <string name="combov2_cannot_access_pump_data">לא ניתן לתקשר עם המשאבה; יש לצמד את המשאבה מחדש</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">נמצאו הזרקות בולוס שאינן מוסברות. מבטל את הבולוס מטעמי בטיחות.</string>
     <string name="combov2_incorrect_active_basal_profile">פרופיל בזאלי פעיל שגוי; על פרופיל מספר 1 להיות הפרופיל הפעיל, לא פרופיל מספר %1$d</string>
     <string name="combov2_unrecognized_alert">התראת משאבה בלתי מזוהה</string>
     <string name="combov2_combo_alert">התראת Combo</string>

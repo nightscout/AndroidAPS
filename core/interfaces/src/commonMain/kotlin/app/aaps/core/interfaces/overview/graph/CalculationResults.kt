@@ -52,6 +52,7 @@ data class BgDataPoint(
     val range: BgRange,            // Range classification (high/in-range/low)
     val type: BgType,              // Type determines rendering style and color
     val filledGap: Boolean = false, // For bucketed data - if true, render semi-transparent
+    val utcOffset: Long? = null,   // Stored offset in milliseconds; null for synthetic points.
 )
 
 // ============================================================================

@@ -235,6 +235,13 @@ class NSClientV3Plugin(
     internal var firstLoadContinueTimestamp = LastModified(LastModified.Collections()) // timestamp of last fetched data for every collection during initial load
     internal var initialLoadFinished = false
 
+    /**
+     * AAPSCLIENT: the newest srvModified of the device statuses loaded so far, see LoadDeviceStatusRunner. Not
+     * stored: after a start the client loads the last 48 hours again, so a database that lost its loop
+     * results gets them back.
+     */
+    internal var lastLoadedDeviceStatusSrvModified = 0L
+
 
     /**
      * Set to true if full sync is requested from fragment.
@@ -735,6 +742,7 @@ class NSClientV3Plugin(
     override suspend fun resetToFullSync() {
         firstLoadContinueTimestamp = LastModified(LastModified.Collections())
         lastLoadedSrvModified = LastModified(LastModified.Collections())
+        lastLoadedDeviceStatusSrvModified = 0L
         initialLoadFinished = false
         storeLastLoadedSrvModified()
         dataSyncSelectorV3.resetToNextFullSync()

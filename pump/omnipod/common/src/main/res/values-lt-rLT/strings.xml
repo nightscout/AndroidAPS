@@ -112,6 +112,8 @@
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_pod_error">Pod klaida</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Insulino tiekimas sustabdytas. Pakeiskite Pod.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod naudojimo laikas greitai baigsis</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod naudojimo laikas greitai baigsis</string>
@@ -178,6 +180,9 @@
     </plurals>
     <string name="omnipod_common_overview_pod_hard_end_date">Pod veikimo pabaiga</string>
     <!-- Omnipod - History -->
+    <string name="omnipod_common_history_tbr_value">%1$.2f V/val., %2$d min</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f V</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
     <string name="omnipod_common_history_total_delivered">Viso suleista: %1$.2f V</string>
 </resources>

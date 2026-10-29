@@ -4,6 +4,8 @@ import app.aaps.core.data.json.OrgJsonCompat.optJsonObjectCompat
 import app.aaps.core.data.json.OrgJsonCompat.optStringCompat
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.alerts.EatReminder
+import app.aaps.core.interfaces.alerts.EatReminderAction
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.bolus.RemoteCaller
 import app.aaps.core.interfaces.bolus.requiredRole
@@ -126,7 +128,8 @@ class ClientControlReceiver(
     // commonMain. AppCoroutineBindings.unqualifiedAppScope provides the same scope unqualified.
     private val appScope: CoroutineScope,
     private val clientTokens: ClientTokens,
-    private val masterSigningKey: MasterSigningKey
+    private val masterSigningKey: MasterSigningKey,
+    private val eatReminder: EatReminder
 ) {
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -413,6 +416,7 @@ class ClientControlReceiver(
             is ClientControlMessage.BatchPrepare      -> onVerifiedBatchPrepare(entry, envelope, message, now)
             ClientControlMessage.DismissAlarm         -> onVerifiedDismissAlarm(entry, envelope, now)
             ClientControlMessage.StopBolus            -> onVerifiedStopBolus(entry, envelope, now)
+            is ClientControlMessage.EatReminderControl -> onVerifiedEatReminderControl(entry, message)
         }
         if (envelope.wantsAck) writeAck(client, secret, envelope.clientId, envelope.counter, AckPhase.Done, outcome.status, outcome.reason, outcome.payload, now)
         // Don't deleteSettings here (nor on any error path above). NS soft-deletes (tombstones)
@@ -434,7 +438,9 @@ class ClientControlReceiver(
         is ClientControlMessage.WizardPrepare,
         is ClientControlMessage.BolusCommit,
         ClientControlMessage.StopBolus,
-        ClientControlMessage.DismissAlarm         -> ClientRole.MealAssistant
+        ClientControlMessage.DismissAlarm,
+        // The timer belongs to a meal, so whoever may enter the meal may also stop or move it.
+        is ClientControlMessage.EatReminderControl -> ClientRole.MealAssistant
 
         is ClientControlMessage.BatchPrepare      -> message.actions.mapNotNull { it.toDomain() }.requiredRole
 
@@ -555,6 +561,28 @@ class ClientControlReceiver(
         commandQueue.cancelAllBoluses(null)
         nsClientRepository.addLog("◄ CLIENTCTL", "stop_bolus from ${entry.name}")
         return AckOutcome(AckStatus.Ok, null)
+    }
+
+    /**
+     * Client stops or extends the master's "time to eat" timer. The changed timer goes back to the clients with
+     * the running configuration. Stopping a timer that already ended is fine: there is nothing left to stop.
+     */
+    private fun onVerifiedEatReminderControl(entry: AuthorizedClient, message: ClientControlMessage.EatReminderControl): AckOutcome {
+        val action = EatReminderAction.entries.firstOrNull { it.name == message.action }
+        nsClientRepository.addLog("◄ CLIENTCTL", "eat_reminder ${message.action} from ${entry.name}")
+        return when (action) {
+            EatReminderAction.STOP   -> {
+                eatReminder.stop(); AckOutcome(AckStatus.Ok, null)
+            }
+
+            // The master could not set the new alarm: nothing changed, and the client must not show success
+            EatReminderAction.EXTEND ->
+                if (eatReminder.extend()) AckOutcome(AckStatus.Ok, null)
+                else AckOutcome(AckStatus.Failed, FailureReason.ExecutionFailed.name)
+
+            // A newer client sent an action this master does not know.
+            null                     -> AckOutcome(AckStatus.Failed, FailureReason.ExecutionFailed.name)
+        }
     }
 
     /**

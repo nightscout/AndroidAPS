@@ -69,7 +69,6 @@
     <string name="patch_communication_succeed">Komunikacja udana</string>
     <string name="patch_communication_succeed_message">Połączony z Patchem.</string>
     <string name="patch_cancel_pairing">Anuluj parowanie</string>
-    <string name="all_dose_unit">&#160;U</string>
     <string name="insulin_suspend_msg1">Po zawieszeniu, aktualnie dostarczany bolus &amp; tymczasowa baza zostaną anulowane. \n\nDawka: %1$s U/h\nPozostały czas: %2$s\n&amp; Insulina pozostała do podania: %3$.2f U</string>
     <string name="insulin_suspend_msg2">Po zawieszeniu, aktualnie dostarczany bolus zostanie anulowany.\n\Insulina pozostała do podania: %1$.2f U</string>
     <string name="insulin_suspend_msg3">Po zawieszeniu, aktualna tymczasowa baza zostanie anulowana. \n\nDawka: %1$s U/h\nPozostały czas: %2$s</string>

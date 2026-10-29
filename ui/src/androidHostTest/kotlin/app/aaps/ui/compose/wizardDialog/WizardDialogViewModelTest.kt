@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.wizardDialog
 
 import androidx.lifecycle.SavedStateHandle
+import app.aaps.core.data.model.BolusWizardData
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
@@ -14,8 +15,10 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -33,6 +36,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -45,8 +49,14 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.Mockito.RETURNS_DEFAULTS
+import org.mockito.Mockito.mockingDetails
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.stub
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -145,6 +155,82 @@ internal class WizardDialogViewModelTest {
     @AfterEach
     fun tearDown() = Dispatchers.resetMain()
 
+    /**
+     * #5415: the confirmation and the record-only path read the alarm and the note from the wizard of the last
+     * calculation. Changed as the last step, they did not reach it: the alarm rang although it was turned off,
+     * or did not ring although it was turned on, and the note was not saved.
+     */
+    @Test
+    fun `a changed alarm or note reaches the wizard`() {
+        val wizards = givenWizardsThatCalculate()
+
+        sut.updateCarbs(40)
+        mainDispatcher.scheduler.advanceUntilIdle()
+        assertThat(calculation(wizards.last())[USE_ALARM]).isEqualTo(false)
+
+        sut.toggleAlarm(true)
+        mainDispatcher.scheduler.advanceUntilIdle()
+        assertThat(calculation(wizards.last())[USE_ALARM]).isEqualTo(true)
+
+        sut.updateNotes("pen")
+        mainDispatcher.scheduler.advanceUntilIdle()
+        assertThat(calculation(wizards.last())[NOTES]).isEqualTo("pen")
+    }
+
+    /**
+     * #5415, seen on a phone: a note typed fast starts a calculation for every letter, and they can end in another
+     * order. "test5415" was saved as "test54", because an older calculation ended last and its wizard was kept.
+     */
+    @Test
+    fun `an older calculation that ends last does not replace a newer one`() {
+        val wizards = givenWizardsThatCalculate()
+        var first = true
+        persistenceLayer.stub {
+            onBlocking { getTemporaryTargetActiveAt(any()) } doSuspendableAnswer {
+                if (first) {
+                    first = false
+                    delay(1_000)
+                }
+                null
+            }
+        }
+
+        sut.updateNotes("test54")
+        mainDispatcher.scheduler.runCurrent() // its calculation starts and waits for the slow read
+        sut.updateNotes("test5415")
+        mainDispatcher.scheduler.advanceUntilIdle() // the newer one ends first, then the older one
+
+        sut.getConfirmationSummary()
+        val used = wizards.single { wizard -> mockingDetails(wizard).invocations.any { it.method.name == "buildConfirmationLines" } }
+        assertThat(calculation(used)[NOTES]).isEqualTo("test5415")
+    }
+
+    /** Every calculation gets its own wizard, whose `doCalc` returns itself. Returns them in the order made. */
+    private fun givenWizardsThatCalculate(): List<BolusWizard> {
+        // Only after initialize() has run with no profile store, so it does not need everything a real start does
+        mainDispatcher.scheduler.advanceUntilIdle()
+        whenever(profileRepository.profile).thenReturn(MutableStateFlow(mock<ProfileStore>()))
+        profileFunction.stub {
+            onBlocking { getProfile() } doReturn mock<EffectiveProfile>()
+            onBlocking { getProfileName() } doReturn "Test"
+        }
+        whenever(constraintChecker.applyCarbsConstraints(any())).thenAnswer { it.arguments[0] }
+        val wizards = mutableListOf<BolusWizard>()
+        whenever(bolusWizardProvider.invoke()).thenAnswer {
+            mock<BolusWizard>(defaultAnswer = { invocation ->
+                if (invocation.method.name == "doCalc") invocation.mock else RETURNS_DEFAULTS.answer(invocation)
+            }).also { wizard ->
+                whenever(wizard.data).thenReturn(mock<BolusWizardData>())
+                wizards += wizard
+            }
+        }
+        return wizards
+    }
+
+    /** The arguments of the `doCalc` of [wizard]. */
+    private fun calculation(wizard: BolusWizard): Array<Any?> =
+        mockingDetails(wizard).invocations.single { it.method.name == "doCalc" }.arguments
+
     @Test
     fun `updateNotes and toggleAlarm update the state`() {
         sut.updateNotes("wizard note")
@@ -152,6 +238,31 @@ internal class WizardDialogViewModelTest {
 
         assertThat(sut.uiState.value.notes).isEqualTo("wizard note")
         assertThat(sut.uiState.value.alarmChecked).isTrue()
+    }
+
+    // #5327: eating later turns the "time to eat" alarm on, as in 3.x. A manual untick is kept while the minutes change.
+    @Test
+    fun `eating later ticks the alarm, and an untick stays while the time changes`() {
+        assertThat(sut.uiState.value.alarmChecked).isFalse()
+
+        sut.updateCarbTime(15)
+        assertThat(sut.uiState.value.alarmChecked).isTrue()
+
+        sut.toggleAlarm(false)
+        sut.updateCarbTime(20)
+        assertThat(sut.uiState.value.alarmChecked).isFalse()
+
+        // Back to now and later again: a new decision, so it is ticked again.
+        sut.updateCarbTime(0)
+        sut.updateCarbTime(10)
+        assertThat(sut.uiState.value.alarmChecked).isTrue()
+    }
+
+    @Test
+    fun `eating earlier does not tick the alarm`() {
+        sut.updateCarbTime(-15)
+
+        assertThat(sut.uiState.value.alarmChecked).isFalse()
     }
 
     /**
@@ -249,5 +360,9 @@ internal class WizardDialogViewModelTest {
     private companion object {
 
         const val NOW = 1_700_000_000_000L
+
+        /** Positions of `useAlarm` and `notes` in the parameters of `BolusWizard.doCalc`. */
+        const val USE_ALARM = 15
+        const val NOTES = 16
     }
 }

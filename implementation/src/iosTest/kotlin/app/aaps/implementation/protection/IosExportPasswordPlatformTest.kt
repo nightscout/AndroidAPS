@@ -49,18 +49,6 @@ class IosExportPasswordPlatformTest {
         override fun error(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {}
     }
 
-    private class FakeKeychain : Keychain {
-
-        val entries = mutableMapOf<String, ByteArray>()
-
-        override fun load(alias: String): ByteArray? = entries[alias]
-        override fun store(alias: String, key: ByteArray) {
-            entries[alias] = key
-        }
-
-        override fun delete(alias: String): Boolean = entries.remove(alias) != null
-    }
-
     private val logger = RecordingLogger()
     private val keychain = FakeKeychain()
     private val platform = IosExportPasswordPlatform(logger, keychain)

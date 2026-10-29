@@ -15,7 +15,6 @@
     <string name="authorized_clients_add">新增用戶端</string>
     <string name="authorized_clients_comm_switch_title">允許用戶端控制</string>
     <string name="authorized_clients_comm_switch_summary">允許已配對的用戶端透過 Nightscout 傳送簽章的指令。關閉可在不移除的情況下停止通訊。</string>
-    <string name="authorized_clients_needs_websocket">WebSockets 已關閉，因此無法接收來自用戶端的指令。在您開啟 WebSockets 之前，用戶端會將此主機端顯示為不接受指令。</string>
     <string name="authorized_clients_state_active">啟用中</string>
     <string name="authorized_clients_state_pending">等待中</string>
     <string name="authorized_clients_last_seen">上次連線於 %1$s</string>
@@ -35,6 +34,35 @@
     <string name="authorized_clients_pin_published">配對邀請已於 Nightscout 準備就緒。</string>
     <string name="authorized_clients_pin_publish_failed">無法將配對邀請上傳至 Nightscout。</string>
     <string name="authorized_clients_pin_retry">重試</string>
+    <string name="authorized_clients_method_title">這支手機如何設定？</string>
+    <string name="authorized_clients_method_qr_pair">QR Code：Nightscout 與配對</string>
+    <string name="authorized_clients_method_qr_pair_summary">在新手機上掃描一次。它會取得自己的 Nightscout 權杖並完成配對。</string>
+    <string name="authorized_clients_method_qr_ns">QR Code：僅 Nightscout</string>
+    <string name="authorized_clients_method_qr_ns_summary">手機會取得自己的 Nightscout 權杖並可讀取資料。未配對，無法傳送指令。</string>
+    <string name="authorized_clients_method_pin">PIN</string>
+    <string name="authorized_clients_method_pin_summary">適用於沒有相機的手機。必須已連線到 Nightscout。</string>
+    <string name="authorized_clients_qr_working">正在建立 Nightscout 權杖…</string>
+    <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">設定 %1$s</string>
+    <string name="authorized_clients_qr_pair_instructions">請在新手機上的設定嚮導或「與主裝置配對」中掃描此 QR Code。它會設定 Nightscout 並為該手機完成配對。</string>
+    <string name="authorized_clients_qr_ns_instructions">請在新手機上的設定嚮導或「與主裝置配對」中掃描此 QR Code。它會設定 Nightscout。該手機不會配對。</string>
+    <string name="authorized_clients_qr_keep_private">任何看到此代碼的人都能讀取你的 Nightscout。只將它顯示給新手機。</string>
+    <string name="authorized_clients_token_problem_title">沒有 QR Code</string>
+    <string name="authorized_clients_not_added_title">尚未新增用戶端</string>
+    <string name="authorized_clients_token_problem_not_connected">此手機未連線到 Nightscout，因此無法為客戶端建立權杖。</string>
+    <string name="authorized_clients_token_problem_not_allowed">此手機的 Nightscout 權杖不是管理員權杖，因此無法為客戶端建立權杖。請在此使用管理員權杖，或使用 PIN 新增該客戶端。</string>
+    <string name="authorized_clients_token_problem_name_taken">Nightscout 已有同名但權限不同的權杖。請選擇其他名稱。</string>
+    <string name="authorized_clients_token_problem_name_in_use">清單中已存在同名的客戶端。請選擇其他名稱，或先移除該客戶端。</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout 未列出新的權杖，因此已再次將其移除。沒有留下任何殘留項目。請再試一次。</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout 未列出新的權杖，因此無法再次將其移除。請在 Nightscout 中刪除權杖 %1$s，然後再試一次。</string>
+    <string name="authorized_clients_tokens_header">僅讀取 Nightscout</string>
+    <string name="authorized_clients_token_unpaired">擁有自己的 Nightscout 權杖，未配對</string>
+    <string name="authorized_clients_token_show_qr">顯示 QR Code</string>
+    <string name="authorized_clients_token_delete_title">要刪除權杖嗎？</string>
+    <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s 將無法再讀取 Nightscout。</string>
+    <string name="authorized_clients_delete_dialog_token">其 Nightscout 權杖也已被刪除，因此將無法再讀取 Nightscout。</string>
+    <string name="authorized_clients_uses_client_token">擁有自己的 Nightscout 權杖</string>
+    <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">正在使用 Nightscout 權杖 %1$s，其權限多於客戶端所需。</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">使用 Nightscout 權杖 %1$s，而非其自身的權杖：其指令已被拒絕。請將其移除後再重新新增。</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">與主裝置配對</string>
     <string name="pair_with_master_pin_entry_title">輸入配對 PIN</string>
@@ -57,6 +85,27 @@
     <string name="pair_with_master_already_paired_master">目前已與主裝置 %1$s 配對。請先取消配對後再輸入新的 PIN。</string>
     <string name="pair_with_master_unpair">取消配對</string>
     <string name="pair_with_master_sending">正在傳送配對訊息…</string>
+    <!-- Client set-up from the master's QR code -->
+    <string name="client_setup_scan_button">掃描 QR Code</string>
+    <string name="client_setup_scan_title">掃描主裝置的 QR Code</string>
+    <string name="client_setup_scan_instructions">在主裝置上開啟「已授權的客戶端」，使用 QR Code 新增此手機。將相機對準該 QR Code。</string>
+    <string name="client_setup_scan_camera_refused">需要相機才能讀取 QR Code。請允許使用，或改用 PIN 配對。</string>
+    <string name="client_setup_scan_camera_denied">AAPS 的相機存取已關閉。請在系統設定中開啟，或改用 PIN 配對。</string>
+    <string name="client_setup_scan_camera_blocked">此裝置不允許使用相機。請改用 PIN 配對。</string>
+    <string name="client_setup_scan_camera_unavailable">此裝置無法使用相機。請改用 PIN 配對。</string>
+    <string name="client_setup_scan_open_settings">開啟設定</string>
+    <string name="client_setup_scan_not_a_code">這不是來自 AAPS 的 QR Code。</string>
+    <string name="client_setup_scan_other_version">此代碼來自另一個 AAPS 版本。主裝置與此手機必須執行相同版本。</string>
+    <string name="client_setup_scan_expired">此代碼已過期。請在主裝置上建立新的代碼。</string>
+    <string name="client_setup_scan_already_paired">此手機已配對。若要使用可配對的代碼，請先取消配對。</string>
+    <string name="client_setup_confirm_title">要使用此代碼嗎？</string>
+    <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nightscout：%1$s</string>
+    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">同時會將此手機與主裝置 %1$s 配對。</string>
+    <string name="client_setup_confirm_replaces">這會取代此手機的 Nightscout 位址與權杖。</string>
+    <string name="client_setup_confirm_apply">使用</string>
+    <string name="client_setup_done_title">完成</string>
+    <string name="client_setup_done_paired">Nightscout 已設定且手機已配對。當已連線時，主裝置會將其顯示為啟用中。</string>
+    <string name="client_setup_done_ns_only">Nightscout 已設定。若要從此手機控制主裝置，請同時進行配對。</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">AAPS 主裝置已無法辨識此裝置。請開啟 管理頁面 → 與主裝置配對 以重新配對。</string>
     <string name="ns_client">NSClient</string>
@@ -82,6 +131,12 @@
     <string name="tidepool_purge_data">清除所有資料</string>
     <string name="tidepool_purge_data_confirm">要刪除 AAPS 已上傳至 Tidepool 的所有資料嗎？此操作無法復原。
 此功能可用來移除舊版本所造成的損毀資料。刪除後，請執行「完整同步」以重新上傳資料。</string>
+    <string name="tidepool_full_sync_comment">要進行完整同步嗎？AAPS 會再次將所有資料上傳至 Tidepool。這可能需要一些時間。</string>
+    <string name="tidepool_logout_confirm">要登出 Tidepool 嗎？在你再次登入前，上傳將會停止。</string>
+    <string name="tidepool_status_not_logged_in">尚未登入</string>
+    <string name="tidepool_status_no_session">已登入，尚未連線</string>
+    <string name="tidepool_status_blocked">被連線設定阻擋</string>
+    <string name="tidepool_status_failed">失敗。請查看下方記錄。</string>
     <string name="not_connected">未連線</string>
     <string name="read_only">唯讀</string>
     <string name="working">工作中</string>
@@ -101,6 +156,8 @@
     <string name="garmin_description">連線到 Garmin 設備（Fenix，Edge 等）</string>
     <string name="garmin_local_http_server_port">本地 HTTP 伺服器端口</string>
     <string name="garmin_local_http_server">本地 HTTP 伺服器</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">Garmin 手錶傳送了 %1$s 碳水化合物。這部手機是用戶端，因此未輸入這些碳水化合物。請在 AAPS 中輸入。</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">Garmin 手錶要求連線或中斷幫浦連線。這部手機是用戶端，因此未進行任何變更。請在 AAPS 中操作。</string>
     <!--    Wear-->
     <string name="description_wear">使用您的 WearOS 手錶監控和控制 AAPS。</string>
     <string name="no_watch_connected">（無手錶連線）</string>
@@ -159,6 +216,7 @@
     <string name="aps">APS</string>
     <string name="last_run">上次運行</string>
     <string name="last_enact">上次執行</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fU %2$.0f%%</string>
     <string name="today">今天</string>
     <string name="weighted">加權</string>
     <string name="full_xdrip_sync_comment">完全同步？這可能需要一段時間，直到完成前您都不會看到新的資料在 xDrip+ 上。</string>

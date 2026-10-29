@@ -6,6 +6,9 @@
     <string name="start_eating_soon_tt">TT Chuản bị ăn</string>
     <string name="start_hypo_tt">Bắt đầu TT Hạ đường huyết</string>
     <string name="time_offset">Lệch thời gian</string>
+    <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
+    <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dd%2$dh</string>
+    <string name="status_age_short_hours" comment="Age of a sensor, cannula or battery, short, used on the first day when there are no full days yet. h=hours. %1$d=hours. Example: 5h">%1$dh</string>
     <!--    Widget-->
     <string name="configure">Cấu hình độ trong suốt</string>
     <string name="widget_description">AAPS widget</string>
@@ -15,6 +18,30 @@
     <string name="widget_small_description">AAPS thu gọn</string>
     <!--     Activities-->
     <string name="dexcom_tir">Phạm vi mục tiêu của Dexcom</string>
+    <string name="agp" comment="Section title: Ambulatory Glucose Profile">AGP</string>
+    <string name="agp_title">Biểu đồ hồ sơ đường huyết lưu động (AGP)</string>
+    <string name="agp_glycemic_overview">Tổng quan đường huyết</string>
+    <string name="agp_today">Hôm nay</string>
+    <string name="agp_hours" comment="%1$d=number of hours. Example: 24h">%1$dh</string>
+    <string name="agp_days" comment="%1$d=number of days. Example: 7d">%1$dd</string>
+    <string name="agp_no_data">Không có dữ liệu đường huyết trong khoảng thời gian này.</string>
+    <string name="agp_load_failed">Không thể tải thống kê AGP. Vui lòng thử lại.</string>
+    <string name="agp_chart_description">Biểu đồ phân vị đường huyết</string>
+    <string name="agp_tir_chart">Biểu đồ trong phạm vi</string>
+    <string name="agp_percentile_10_90" comment="Glucose percentile band from the 10th to the 90th percentile">10–90%</string>
+    <string name="agp_percentile_25_75" comment="Glucose percentile band from the 25th to the 75th percentile">25–75%</string>
+    <string name="agp_percent" comment="%1$.1f=percentage value. Example: 72.4%">%1$.1f%%</string>
+    <string name="agp_range" comment="%1$s=lower glucose value, %2$s=upper glucose value. Example: 3.9–10.0">%1$s–%2$s</string>
+    <string name="agp_above" comment="%1$s=upper glucose limit. Example: &gt; 10.0">&gt; %1$s</string>
+    <string name="agp_below" comment="%1$s=lower glucose limit. Example: &lt; 3.9">&lt; %1$s</string>
+    <string name="agp_average">Trung bình</string>
+    <string name="agp_median">Trung vị</string>
+    <string name="agp_ea1c" comment="Estimated HbA1c">eA1c</string>
+    <string name="agp_gmi" comment="Glucose management indicator">GMI</string>
+    <string name="agp_standard_deviation" comment="Standard deviation of glucose values">SD</string>
+    <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
+    <string name="agp_available_days">Ngày</string>
+    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as eA1c, GMI or days of glucose data. Example: 13.8">%1$.1f</string>
     <string name="cgp_title">Ngũ giác đường huyết (CGP) — 14 ngày</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
     <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
@@ -281,6 +308,7 @@
     <string name="permission_directory_picker_error">Không thể mở trình chọn thư mục. Thường là do sự cố với Android hoặc Family Link.</string>
     <string name="permission_nav_label">Quyền truy cập</string>
     <!--    TDD Cycle Pattern -->
+    <string name="stats_tab_cycle" comment="Short tab label on the Statistics screen. The tab shows daily insulin totals laid over 28-day cycles (TDD Cycle Pattern).">Chu kỳ</string>
     <string name="cycle_offset">Độ lệch chu kỳ</string>
     <string name="raw_tdd">Raw TDD</string>
     <string name="cleaned_tdd">TDD đã được làm sạch</string>
@@ -322,11 +350,6 @@
     <string name="widget_rm_disabled">Vô hiệu hoá</string>
     <string name="widget_rm_suspended">Bị tạm dừng</string>
     <string name="widget_rm_resume">Tiếp tục</string>
-    <!-- Calibration entry rejection reasons -->
-    <string name="cal_reject_delta_too_high">Hiệu chuẩn chưa được lưu: BG đang thay đổi quá nhanh (Δ %1$s %3$s trong 5 phút, giới hạn %2$s). Hãy thử lại khi đường huyết ổn định.</string>
-    <string name="cal_reject_no_pair">Hiệu chuẩn chưa được lưu: không tìm thấy giá trị CGM trong 10 phút gần đây.</string>
-    <string name="cal_reject_warmup">Hiệu chuẩn chưa được lưu: cảm biến vẫn đang trong giai đoạn khởi động 2 giờ.</string>
-    <string name="cal_reject_no_session">Hiệu chuẩn chưa được lưu: không có phiên cảm biến nào đang hoạt động. Hãy thay cảm biến trước.</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
     <string name="cal_precheck_warmup">Cảm biến vẫn đang khởi động. Có thể hiệu chuẩn lúc %1$s.</string>
     <string name="cal_precheck_no_session">Không có phiên cảm biến nào đang hoạt động.</string>

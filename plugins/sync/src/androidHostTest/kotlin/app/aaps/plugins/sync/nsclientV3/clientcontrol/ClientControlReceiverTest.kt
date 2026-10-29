@@ -3,6 +3,8 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
+import app.aaps.core.interfaces.alerts.EatReminder
+import app.aaps.core.interfaces.alerts.EatReminderAction
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.bolus.RemoteCaller
 import app.aaps.core.interfaces.clientcontrol.FailureReason
@@ -100,6 +102,7 @@ internal class ClientControlReceiverTest {
     @Mock private lateinit var bolusProgressData: BolusProgressData
     @Mock private lateinit var commandQueue: CommandQueue
     @Mock private lateinit var masterSigningKey: MasterSigningKey
+    @Mock private lateinit var eatReminder: EatReminder
 
     // Same deterministic fake as the repository tests — encrypt/decrypt round-trip via reverse,
     // so the persisted form does not contain the original plaintext.
@@ -188,7 +191,8 @@ internal class ClientControlReceiverTest {
             aapsLogger,
             appScope,
             clientTokens,
-            masterSigningKey
+            masterSigningKey,
+            eatReminder
         )
     }
 
@@ -1355,6 +1359,80 @@ internal class ClientControlReceiverTest {
         )
 
         verify(commandQueue).cancelAllBoluses(anyOrNull())
+    }
+
+    @Test
+    fun mealAssistantMayStopAndExtendTheEatReminder() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.MealAssistant)
+        captureAcks(clientId)
+
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}eat_reminder_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.EatReminderControl(EatReminderAction.EXTEND.name), counter = 5L))
+        )
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}eat_reminder_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.EatReminderControl(EatReminderAction.STOP.name), counter = 6L))
+        )
+
+        verify(eatReminder).extend()
+        verify(eatReminder).stop()
+    }
+
+    @Test
+    fun anExtendTheMasterSetIsAnsweredOk() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.MealAssistant)
+        val acks = captureAcks(clientId)
+        whenever(eatReminder.extend()).thenReturn(true)
+
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}eat_reminder_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.EatReminderControl(EatReminderAction.EXTEND.name), counter = 5L, wantsAck = true))
+        )
+
+        assertThat(acks.last().status.name).isEqualTo("Ok")
+    }
+
+    /** The master could not set the new alarm (#5408): nothing changed there, so the client must not be told it worked. */
+    @Test
+    fun anExtendTheMasterCannotSetIsAnsweredFailed() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.MealAssistant)
+        val acks = captureAcks(clientId)
+        whenever(eatReminder.extend()).thenReturn(false)
+
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}eat_reminder_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.EatReminderControl(EatReminderAction.EXTEND.name), counter = 5L, wantsAck = true))
+        )
+
+        assertThat(acks.last().status.name).isEqualTo("Failed")
+    }
+
+    @Test
+    fun readOnlyClientCannotTouchTheEatReminder() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.ReadOnly)
+        captureAcks(clientId)
+
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}eat_reminder_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.EatReminderControl(EatReminderAction.STOP.name), counter = 5L))
+        )
+
+        verify(eatReminder, never()).stop()
+    }
+
+    @Test
+    fun anUnknownEatReminderActionChangesNothing() = runTest {
+        val (clientId, secret) = activeClient(ClientRole.Admin)
+        captureAcks(clientId)
+
+        sut.onSettingsDocChanged(
+            "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}eat_reminder_$clientId",
+            wrap(envelope(clientId, secret, message = ClientControlMessage.EatReminderControl("SNOOZE_FOREVER"), counter = 5L))
+        )
+
+        verify(eatReminder, never()).stop()
+        verify(eatReminder, never()).extend()
     }
 
     @Test

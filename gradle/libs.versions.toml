@@ -1,17 +1,12 @@
 # libs.versions.toml
 [versions]
-gradlePlugin = "9.4.1"
+gradlePlugin = "9.5.0"
 kotlin = "2.4.21"
 room = "2.8.5"
-# A release again. The snapshot was taken because 1.4.2 had a member-injection codegen bug
-# (ZacSweers/metro#2731) that blocked converting the remaining Android entry points; the note here
-# said to move back "as soon as 1.5.0 ships", but the fix landed in 1.4.3 instead - its notes list
-# the crash on zero-parameter member-injection functions, and the issue was closed between the two
-# releases. There is no 1.5.0.
-metro = "1.4.5"
+metro = "1.5.0"
 mockito = "5.24.0"
 junit = "6.1.3"
-okhttp = "5.5.0"
+okhttp = "5.5.1"
 retrofit = "3.0.0"
 ktor = "3.6.0"
 # cryptography-kotlin: HMAC-SHA256, PBKDF2 and AES-256-GCM for the client-control signing and
@@ -19,12 +14,13 @@ ktor = "3.6.0"
 # than implementing the algorithms, which is what we want in a signing path.
 cryptographyKotlin = "0.6.0"
 work = "2.12.0"
-datastorePreferences = "1.2.1"
+datastorePreferences = "1.3.0"
+jna = "5.19.1"
 # CameraX: the client reads the master's set-up QR code with the camera (no Play services needed).
 cameraX = "1.6.2"
 
 # Compose
-wearCompose = "1.7.0"
+wearCompose = "1.7.1"
 lifecycleRuntimeKtx = "2.11.0"
 composeUi = "1.12.1"
 
@@ -58,7 +54,7 @@ com-google-gms = { group = "com.google.gms", name = "google-services", version =
 
 
 com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.8" }
-com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "35.0.2" }
+com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "35.1.0" }
 com-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 com-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 com-google-firebase-config = { group = "com.google.firebase", name = "firebase-config" }
@@ -71,7 +67,7 @@ com-google-watchface-validator-push-cli = { group = "com.google.android.wearable
 com-google-android-material = { group = "com.google.android.material", name = "material", version = "1.14.0" }
 
 com-google-guava = { group = "com.google.guava", name = "guava", version = "33.7.2-jre" }
-com-google-code-gson = { group = "com.google.code.gson", name = "gson", version = "2.14.0" }
+com-google-code-gson = { group = "com.google.code.gson", name = "gson", version = "2.15.0" }
 com-google-crypto-tink = { group = "com.google.crypto.tink", name = "tink-android", version = "1.24.0" }
 com-google-truth = { group = "com.google.truth", name = "truth", version = "1.4.5" }
 com-google-zxing-core = { group = "com.google.zxing", name = "core", version = "3.5.4" }
@@ -85,7 +81,7 @@ kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", vers
 cryptography-core = { group = "dev.whyoleg.cryptography", name = "cryptography-core", version.ref = "cryptographyKotlin" }
 cryptography-provider-optimal = { group = "dev.whyoleg.cryptography", name = "cryptography-provider-optimal", version.ref = "cryptographyKotlin" }
 
-kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-bom", version = "1.11.0" }
+kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-bom", version = "1.12.0" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json" }
 kotlinx-serialization-protobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf" }
 kotlinx-coroutines-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-bom", version = "1.11.0" }
@@ -118,6 +114,10 @@ androidx-collection = { group = "androidx.collection", name = "collection", vers
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.2.2" }
 androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.19.1" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastorePreferences" }
+androidx-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "datastorePreferences" }
+androidx-datastore-core-okio = { module = "androidx.datastore:datastore-core-okio", version.ref = "datastorePreferences" }
+jna ={ module = "net.java.dev.jna:jna", version.ref = "jna" }
+jna-platform = { module = "net.java.dev.jna:jna-platform", version.ref = "jna" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-legacy-support = { group = "androidx.legacy", name = "legacy-support-v13", version = "1.0.0" }
 androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycleRuntimeKtx" }
@@ -169,12 +169,12 @@ io-ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", versio
 io-ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktor" }
 
 org-apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version = "3.21.0" }
-org-mozilla-rhino = { group = "org.mozilla", name = "rhino", version = "1.9.1" }
+org-mozilla-rhino = { group = "org.mozilla", name = "rhino", version = "1.9.2" }
 
 org-mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
 org-mockito-junit-jupiter = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref = "mockito" }
 org-mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version = "6.4.0" }
-org-slf4j-api = { group = "org.slf4j", name = "slf4j-api", version = "2.0.19" }
+org-slf4j-api = { group = "org.slf4j", name = "slf4j-api", version = "2.0.20" }
 com-github-tony19-logback-android = { group = "com.github.tony19", name = "logback-android", version = "3.0.0" }
 
 org-junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
@@ -187,7 +187,7 @@ org-robolectric = { group = "org.robolectric", name = "robolectric", version = "
 com-madgag-spongycastle = { group = "com.madgag.spongycastle", name = "core", version = "1.58.0.0" }
 com-caverock-androidsvg = { group = "com.caverock", name = "androidsvg", version = "1.4" }
 net-danlew-android-joda = { group = "net.danlew", name = "android.joda", version = "2.15.0" }
-joda-time = { group = "joda-time", name = "joda-time", version = "2.15.0" }
+joda-time = { group = "joda-time", name = "joda-time", version = "2.15.1" }
 org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", version = "1.5.3" }
 # Test-only oracle. On Android `org.json` comes from the platform, so a plain JVM test has no real
 # implementation to compare against. This is AOSP's own org.json, repackaged for the JVM - NOT
@@ -240,7 +240,7 @@ jetbrains-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifec
 jetbrains-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "jetbrainsLifecycle" }
 # The JetBrains republish of navigation-compose - same `androidx.navigation` package names, with
 # Apple targets. Same reason as the lifecycle entries above and the navigationevent entry below.
-jetbrains-androidx-compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.2" }
+jetbrains-androidx-compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.10.0" }
 # Replacement for the deprecated `androidx.compose.ui.backhandler.BackHandler`.
 # The JetBrains republish, not `androidx.navigationevent:navigationevent-compose` - the plain androidx
 # one ships Android/JVM variants only and cannot be used from commonMain.

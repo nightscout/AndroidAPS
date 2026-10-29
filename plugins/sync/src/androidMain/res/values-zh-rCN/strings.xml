@@ -15,7 +15,6 @@
     <string name="authorized_clients_add">添加客户端</string>
     <string name="authorized_clients_comm_switch_title">允许客户端控制</string>
     <string name="authorized_clients_comm_switch_summary">允许已配对的客户端通过 Nightscout 发送已签名的命令。关闭此选项可在不移除客户端的情况下停止通信。</string>
-    <string name="authorized_clients_needs_websocket">WebSocket 已关闭，因此无法接收来自客户端的命令。在您开启 WebSocket 之前，客户端会认为此主机不接受命令。</string>
     <string name="authorized_clients_state_active">已激活</string>
     <string name="authorized_clients_state_pending">等待中</string>
     <string name="authorized_clients_last_seen">上次活跃时间 %1$s</string>
@@ -35,6 +34,33 @@
     <string name="authorized_clients_pin_published">配对请求已在 Nightscout 上就绪。</string>
     <string name="authorized_clients_pin_publish_failed">无法将配对请求上传至 Nightscout。</string>
     <string name="authorized_clients_pin_retry">重试</string>
+    <string name="authorized_clients_method_title">此手机是如何设置的？</string>
+    <string name="authorized_clients_method_qr_pair">二维码：Nightscout 和配对</string>
+    <string name="authorized_clients_method_qr_pair_summary">在新手机上扫描一次即可。它会获得自己的 Nightscout 令牌并完成配对。</string>
+    <string name="authorized_clients_method_qr_ns">二维码：仅Nightscout</string>
+    <string name="authorized_clients_method_qr_ns_summary">此手机会获得自己的 Nightscout 令牌并可读取数据。它未配对，因此无法发送命令。</string>
+    <string name="authorized_clients_method_pin">PIN</string>
+    <string name="authorized_clients_method_pin_summary">适用于没有摄像头的手机。该手机必须已连接到 Nightscout。</string>
+    <string name="authorized_clients_qr_working">制作Nightscout 令牌…</string>
+    <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">设置 %1$s</string>
+    <string name="authorized_clients_qr_pair_instructions">在新手机上扫描此代码，可在设置向导中或‘与主机配对’中进行。它会配置 Nightscout 并完成手机配对。</string>
+    <string name="authorized_clients_qr_ns_instructions">在新手机上扫描此代码，可在设置向导中或‘与主机配对’中进行。它会配置 Nightscout。此手机尚未配对。</string>
+    <string name="authorized_clients_qr_keep_private">任何看到此代码的人都能读取您的 Nightscout。请仅向新手机显示它。</string>
+    <string name="authorized_clients_token_problem_title">无二维码</string>
+    <string name="authorized_clients_not_added_title">客户端未添加</string>
+    <string name="authorized_clients_token_problem_not_connected">此手机未连接到 Nightscout，因此无法为客户端生成令牌。</string>
+    <string name="authorized_clients_token_problem_not_allowed">此手机的 Nightscout 令牌不是管理员令牌，因此无法为客户端生成令牌。请在此处使用管理员令牌，或通过 PIN 码添加客户端。</string>
+    <string name="authorized_clients_token_problem_name_taken">Nightscout 中已存在同名但权限不同的令牌。请选择其他名称。</string>
+    <string name="authorized_clients_token_problem_name_in_use">列表中已存在同名客户端。请选择其他名称，或先移除该客户端。</string>
+    <string name="authorized_clients_tokens_header">仅读取 Nightscout</string>
+    <string name="authorized_clients_token_unpaired">使用自己的 Nightscout 令牌，未配对</string>
+    <string name="authorized_clients_token_show_qr">显示二维码</string>
+    <string name="authorized_clients_token_delete_title">删除令牌吗？</string>
+    <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s 无法再读取 Nightscout。</string>
+    <string name="authorized_clients_delete_dialog_token">其 Nightscout 令牌也已被删除，因此它已无法再读取 Nightscout。</string>
+    <string name="authorized_clients_uses_client_token">使用自己的 Nightscout 令牌</string>
+    <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">使用 Nightscout 令牌 %1$s，其权限超出客户端所需</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">使用的 Nightscout 令牌 %1$s 并非其自身令牌：其命令会被拒绝。请移除该客户端并重新添加。</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">与主机配对</string>
     <string name="pair_with_master_pin_entry_title">输入配对 PIN</string>
@@ -57,6 +83,27 @@
     <string name="pair_with_master_already_paired_master">当前已与主机 %1$s 配对。请先取消配对再输入新 PIN 码。</string>
     <string name="pair_with_master_unpair">取消配对</string>
     <string name="pair_with_master_sending">正在发送配对消息…</string>
+    <!-- Client set-up from the master's QR code -->
+    <string name="client_setup_scan_button">扫描二维码</string>
+    <string name="client_setup_scan_title">扫描主机的 QR 码</string>
+    <string name="client_setup_scan_instructions">在主机上，打开‘已授权的客户端’，并使用二维码添加此手机。将摄像头对准二维码。</string>
+    <string name="client_setup_scan_camera_refused">需要摄像头来读取二维码。请允许使用摄像头，或通过 PIN 码配对。</string>
+    <string name="client_setup_scan_camera_denied">AAPS 的摄像头访问权限已关闭。请在系统设置中开启，或通过 PIN 码配对。</string>
+    <string name="client_setup_scan_camera_blocked">此设备不允许使用摄像头。请改用 PIN 码配对。</string>
+    <string name="client_setup_scan_camera_unavailable">此设备无法使用摄像头。请改用 PIN 码配对。</string>
+    <string name="client_setup_scan_open_settings">打开设置</string>
+    <string name="client_setup_scan_not_a_code">这不是来自 AAPS 的二维码。</string>
+    <string name="client_setup_scan_other_version">此代码来自另一个 AAPS 版本。主机与此手机必须运行相同的版本。</string>
+    <string name="client_setup_scan_expired">此代码已过期。请在主机上生成新的代码。</string>
+    <string name="client_setup_scan_already_paired">此手机已配对。请先取消配对，才能使用用于配对的代码。</string>
+    <string name="client_setup_confirm_title">使用此代码吗？</string>
+    <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nightscout: %1$s</string>
+    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">它还会将此手机与主机 %1$s 配对。</string>
+    <string name="client_setup_confirm_replaces">它会替换此手机的 Nightscout 地址和令牌。</string>
+    <string name="client_setup_confirm_apply">使用</string>
+    <string name="client_setup_done_title">完成</string>
+    <string name="client_setup_done_paired">Nightscout 已配置完成，手机也已配对。当连接成功后，主机会将其显示为活动状态。</string>
+    <string name="client_setup_done_ns_only">Nightscout 已配置完成。若要从这台手机控制主机，还需将其配对。</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">主机 AAPS 不再识别此设备。请打开“管理界面” → “与主机配对”以重新配对。</string>
     <string name="ns_client">NSClient</string>
@@ -74,11 +121,19 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">如果启用，上传将转到测试服务器而不是常规服务器</string>
     <string name="title_tidepool_dev_servers">使用集成（测试）服务器</string>
+    <string name="title_tidepool_use_ns_connection">使用 Nightscout 连接设置</string>
+    <string name="summary_tidepool_use_ns_connection">关闭此选项，可为 Tidepool 设置独立的连接设置</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">数据上传到Tidepool</string>
     <string name="upload_now">现在上传</string>
     <string name="tidepool_purge_data">清除所有数据</string>
     <string name="tidepool_purge_data_confirm">删除 AAPS 已上传至 Tidepool 的 ALL 数据？此操作不可撤销。用于移除因旧版本损坏的数据，完成后运行“完全同步”以重新上传。</string>
+    <string name="tidepool_full_sync_comment">完全同步？AAPS 将再次把所有数据上传至 Tidepool。这可能需要一段时间。</string>
+    <string name="tidepool_logout_confirm">退出 Tidepool 登录？在您重新登录之前，上传将停止。</string>
+    <string name="tidepool_status_not_logged_in">未登录</string>
+    <string name="tidepool_status_no_session">已登录，尚未连接</string>
+    <string name="tidepool_status_blocked">被连接设置阻止</string>
+    <string name="tidepool_status_failed">失败。请查看下面的日志。</string>
     <string name="not_connected">未连接</string>
     <string name="read_only">只读</string>
     <string name="working">工作中</string>
@@ -98,6 +153,8 @@
     <string name="garmin_description">连接到Garmin设备（Fenix、Edge...）</string>
     <string name="garmin_local_http_server_port">本地 HTTP 服务器端口</string>
     <string name="garmin_local_http_server">本地 HTTP 服务器</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">Garmin 手表发送了 %1$s 的碳水化合物。此手机是客户端，因此未录入。请在 AAPS 中录入。”</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">Garmin 手表请求连接或断开泵。此手机是客户端，因此未做任何更改。请在 AAPS 中操作。</string>
     <!--    Wear-->
     <string name="description_wear">使用您的WearOS 监视器监控AAPS。</string>
     <string name="no_watch_connected">(无手表连接)</string>
@@ -156,6 +213,7 @@
     <string name="aps">APS</string>
     <string name="last_run">上次运行</string>
     <string name="last_enact">上次应用</string>
+    <string name="tdd_line" comment="%1$.2f=total daily dose in units, %2$.0f=that dose as percent of the reference dose. Example: 32.50U 108%">%1$.2fU %2$.0f%%</string>
     <string name="today">今天</string>
     <string name="weighted">权重</string>
     <string name="full_xdrip_sync_comment">完全同步？可能需要一段时间，直到完成之前，您将不会在 xDrip+ 中看到新的数据。</string>

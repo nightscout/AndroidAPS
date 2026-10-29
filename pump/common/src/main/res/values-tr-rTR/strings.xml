@@ -11,6 +11,10 @@
     <string name="pump_status_suspended">Askıya Alındı</string>
     <string name="pump_status_executing_command">Komut Çalıştırılıyor</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Ayarlar</string>
+    <string name="pump_cmd_desc_get_firmware">Pompa Yazılımı</string>
+    <string name="pump_cmd_desc_get_basal_profile">Bazal profili</string>
+    <string name="pump_cmd_desc_set_basal_profile">Bazal Profili Ayarla</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Bazallar</string>
     <string name="history_group_configuration">Konfigürasyon</string>

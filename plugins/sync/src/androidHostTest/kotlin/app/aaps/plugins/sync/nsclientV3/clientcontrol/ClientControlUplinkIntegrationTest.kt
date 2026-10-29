@@ -223,7 +223,7 @@ class ClientControlUplinkIntegrationTest {
         masterReceiver = ClientControlReceiver(
             masterAuthorizedRepository, { nsClientV3Plugin }, nsClientRepository, sceneAutomationApi,
             offerPublisher, masterPrefs, dateUtil, uel, runningConfigurationPublisher, persistenceLayer, masterActionExecutor, notificationManager, masterConfig, bolusProgressData, commandQueue, rh, aapsLogger,
-            masterScope, clientTokens, mock<MasterSigningKey>()
+            masterScope, clientTokens, mock<MasterSigningKey>(), mock()
         )
         clientKeyExchange = ClientKeyExchange(clientPairingRepository, { clientControlRoundTrip }, clientPrefs, nsClientRepository, aapsLogger)
             .also { it.tokenWorks = { _, _ -> true } }

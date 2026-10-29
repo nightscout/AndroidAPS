@@ -1,22 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">Kies een beginpunt. Sjablonen vullen aanbevolen acties voor gemeenschappelijke situaties - je kunt alles aanpassen in de volgende stappen.</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">Beweging/sport</string>
+    <string name="scene_wizard_exercise_desc">Verhoog doelstelling, verminder het profiel tot 70%, schakel SMB uit lage BG waarden bij beweging/sport te voorkomen.</string>
+    <string name="scene_wizard_info_exercise">Tijdens lichaamsbeweging verbruiken spieren sneller glucose en neemt insuline gevoeligheid toe. Het van tevoren verhogen van uw tijdelijke streefwaarde geeft het algoritme een voorschot — het zal het verminderen van de insuline-levering vervroegd beginnen om zo een buffer bouwen tegen door beweging/sporten veroorzaakte lage BG waarden. Het uitschakelen van SMB is ook aanbevolen, omdat BG waarden door correctie bolussen tijdens de oefening snel kunnen dalen. Activeer voor de beste resultaten deze scène 1 at 2 uur voordat je begint te bewegen/sporten zodat het algoritme tijd heeft om je insuline aan boord te verlagen.</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">Ziekte dag</string>
+    <string name="scene_wizard_sick_day_desc">Sterker profiel (150%) om met verhoogde insuline weerstand tijdens ziekte om te gaan.</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">Ziekte, koorts en stress hormonen kunnen de insulineresistentie drastisch vergroten — soms met 50% of meer. Een sterker profiel (bijv. 150%) laat het algoritme weten om meer insuline te leveren in alle berekeningen - basaalstanden, bolus suggesties en correctie factoren. U kunt ook een tijdelijk doel toevoegen of de actieve modus aanpassen in de volgende stappen. Controleer nauwkeurig en pas aan na het herstel van uw lichaam.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">Ziekte dag - overgeven</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">Verminderd profiel met LGS - het tegenovergestelde van een standaard ziekte dag: wanneer je geen voedsel kunt absorberen.</string>
+    <string name="scene_wizard_info_sick_day_vomiting">Wanneer je geen voedsel kunt binnenhouden, kan de standaard ‘ziekte dag’-aanpak waarbij je de insuline verhoogt gevaarlijk zijn. Braken betekent dat koolhydraten niet worden opgenomen, waardoor de bloedglucose kan dalen in plaats van stijgen. Een verlaagd profiel (60%) vermindert de insulinetoevoer, en de LGS‑modus biedt extra veiligheid door insuline te pauzeren wanneer de glucose daalt. Het uitschakelen van SMB voorkomt extra bolussen. Monitor frequent: controleer de bloedglucose elke 1–2 uur en ketonen elke 2–4 uur. Zoek medische hulp als het braken langer dan enkele uren aanhoudt of de ketonen boven 1,5 mmol/L stijgen.</string>
     <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">Slaap</string>
+    <string name="scene_wizard_sleep_desc">Strakere streefwaarde voor een betere controle in de nacht.</string>
+    <string name="scene_wizard_info_sleep">Tijdens de nacht ervaren veel mensen ongemerkte hoge of lage waarden. Een iets strakker doelbereik tijdens de slaap stelt het algoritme in staat om fijnere correcties uit te voeren gedurende de nacht. Combineer dit met een profiel dat aansluit bij je nachtelijke basaalbehoefte voor de beste resultaten.</string>
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">Nacht na beweging/sport</string>
+    <string name="scene_wizard_post_exercise_night_desc">Verminderd profiel, hogere streefwaarde, SMB uit - beschermt na activiteit tegen vertraagde lage BG waarden gedurende de nacht.</string>
+    <string name="scene_wizard_info_post_exercise_night">Na lichamelijke activiteit blijven spieren gedurende vele uren glycogeenvoorraden aanvullen — de insulinegevoeligheid kan 24–48 uur verhoogd blijven, met het hoogste risico op nachtelijke hypoglykemie 6–12 uur na inspanning. Een verlaagd profiel vermindert de basaalafgifte gedurende de nacht, een hogere tijdelijke doelwaarde geeft het algoritme een extra veiligheidsmarge en het uitschakelen van SMB voorkomt dat het algoritme korte stijgingen te sterk corrigeert. Activeer deze scène bij het slapengaan op dagen waarop je bijvoorbeeld hebt gesport, vooral na langere sessies of wanneer je nieuwe activiteiten hebt toegevoegd. Houd snelle koolhydraten binnen handbereik en overweeg een wekker te zetten voor een controle midden in de nacht.</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">Voor de maaltijd</string>
+    <string name="scene_wizard_pre_meal_desc">Lagere streefwaarde om een post‑maaltijdpiek te voorkomen.</string>
+    <string name="scene_wizard_info_pre_meal">Door 30–60 minuten vóór het eten een lagere doelwaarde in te stellen, krijgt het algoritme het signaal om alvast meer insuline aan boord op te bouwen voordat de koolhydraten binnenkomen. Dit helpt de post‑maaltijdpiek te dempen die ontstaat wanneer voedsel sneller in de bloedbaan komt dan insuline kan werken. Het is het meest effectief wanneer je zeker weet dat er binnenkort een maaltijd komt.</string>
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">Alcohol</string>
+    <string name="scene_wizard_alcohol_desc">LGS-modus, verminderde profiel, SMB uit - beschermt tegen vertraagde alcoholhypo\'s.</string>
+    <string name="scene_wizard_info_alcohol">Alcohol is een van de gevaarlijkste situaties voor mensen met type 1 diabetes. De lever geeft voorrang aan het verwerken van alcohol boven het vrijgeven van glucose, wat 6–24 uur later — vaak ’s nachts terwijl je slaapt — tot vertraagde hypoglykemie kan leiden. De LGS‑modus voorkomt insuline‑stapeling door de afgifte alleen te verlagen wanneer de glucose daalt. Een verlaagd profiel en uitgeschakelde SMB beperken de hoeveelheid insuline aan boord verder. Controleer altijd je bloedglucose voordat je gaat slapen en overweeg een wekker te zetten voor een controle midden in de nacht.</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">Autorijden</string>
+    <string name="scene_wizard_driving_desc">Iets hogere streefwaarde voor meer veiligheid tijdens het autotijden.</string>
+    <string name="scene_wizard_info_driving">Veilig rijden vereist een stabiele bloedglucose boven 5,0 mmol/L (90 mg/dL). In sommige landen is het wettelijk verplicht om vóór en tijdens lange ritten te controleren. Een iets hogere doelwaarde geeft het algoritme een extra veiligheidsmarge — het werkt eraan om je boven het niveau te houden waarop concentratie en reactietijd beginnen af te nemen. Als je een hypo krijgt tijdens het rijden, stop dan onmiddellijk, behandel de hypo, en wacht minstens 45 minuten nadat je glucose weer normaal is voordat je verder rijdt.</string>
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_template_bathing">Baden</string>
+    <string name="scene_wizard_bathing_desc">Ontkoppel de pomp voor douche, zwemmen, baden, of welke wateractiviteit dan ook.</string>
+    <string name="scene_wizard_info_bathing">Wanneer je je pomp loskoppelt, stopt de insulineafgifte volledig — geen basaal, geen bolussen, geen correcties. Het algoritme schakelt over naar de losgekoppelde modus en stopt met aanpassen. Dit is normaal voor korte periodes zoals douchen, baden of zwemmen. Wanneer de scène eindigt, wordt de pomp opnieuw verbonden en hervat het algoritme automatisch. Houd loskoppelingen kort — zonder basale insuline begint de bloedglucose binnen 1–2 uur te stijgen.</string>
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">Luteale fase</string>
+    <string name="scene_wizard_luteal_phase_desc">Verhoogd profiel om pre-period insuline resistentie te verwerken.</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">Veel vrouwen ervaren een verhoogde insulineresistentie tijdens de luteale fase (ongeveer 1–2 weken vóór hun menstruatie). Dit wordt veroorzaakt door stijgende progesteronspiegels die de insulinegevoeligheid verminderen. Het effect verschilt enorm tussen individuen — sommigen merken een toename van 10–30% in insulinebehoefte, anderen zien nauwelijks verandering. Begin met een voorzichtige verhoging (115%) en pas aan op basis van je eigen patronen over meerdere cycli. Door dit in CarePortal bijhouden helpt om je persoonlijke ritme te herkennen.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">Warm Weer</string>
+    <string name="scene_wizard_hot_weather_desc">Verminderd profiel — warmte versnelt insuline absorptie.</string>
+    <string name="scene_wizard_info_hot_weather">Hoge temperaturen zorgen ervoor dat bloedvaten uitzetten, waardoor insuline sneller wordt opgenomen — dezelfde dosis werkt daardoor sneller en sterker. Dit kan tot onverwachte hypo’s leiden, vooral bij activiteiten buiten. Een bescheiden profielverlaging (85%) compenseert voor de snellere opname. Blijf goed gehydrateerd, monitor vaker, en wees je ervan bewust dat insuline in een warme pomp of pen kan degraderen. Als je ook sport in de hitte, overweeg dan dit te combineren met de ‘exercise’-scène voor extra bescherming.</string>
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">Medische Procedure</string>
+    <string name="scene_wizard_medical_procedure_desc">Open loop met SMB uit voor chirurgie of medische procedures.</string>
+    <string name="scene_wizard_info_medical_procedure">Tijdens operaties of medische ingrepen maken anesthesie en stresshormonen de bloedglucose onvoorspelbaar. Open‑loopmodus wordt aanbevolen omdat het algoritme onder deze omstandigheden niet betrouwbaar kan voorspellen wat je lichaam zal doen. Een hogere doelwaarde (150 mg/dL) biedt een veiligheidsmarge tegen intraoperatieve hypoglykemie. Het uitschakelen van SMB voorkomt onverwachte insulineafgifte tijdens de procedure. Informeer het medisch personeel altijd dat je een insulinepomp en CGM draagt. Bij ingrepen langer dan 3 uur kan het team overschakelen op intraveneuze insuline.</string>
     <!-- Blank: no actions — 1h -->
+    <string name="scene_template_blank">Blanco</string>
+    <string name="scene_wizard_blank_desc">Begin zonder vooraf geselecteerde acties.</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info" formatted="false">Een profielwissel verandert je basaalstanden, insulinegevoeligheidsfactor (ISF) en insuline‑koolhydraatratio’s (IC) allemaal tegelijk. Je kunt alles in één keer met een percentage schalen — bijvoorbeeld: 110% verhoogt de basaalafgifte, bolusberekeningen en koolhydraatabsorptiesnelheid met 10%. Je kunt ook volledig naar een ander profiel overschakelen als je er één hebt ingesteld voor specifieke situaties.</string>
+    <string name="scene_wizard_tt_info">Een tijdelijke streefwaarde vertelt het algoritme dat het gedurende een bepaalde periode naar een andere bloedglucosewaarde moet streven. Met een hogere streefwaarde reageert het algoritme trager op stijgende glucose en mikt het op een hoger niveau — dit vermindert de insulineafgifte en helpt hypo’s tijdens inspanning te voorkomen. Met een lagere doelwaarde reageert het algoritme sneller en geeft het meer insuline — handig om vóór een maaltijd alvast vooruit te werken. Kies hieronder één van je presets — de doelwaarde en reden zijn daar al geconfigureerd.</string>
+    <string name="scene_wizard_smb_info">Super Micro Boluses (SMB) stellen het algoritme in staat om insuline vooraf als kleine bolussen toe te dienen, terwijl de basaalafgifte tijdelijk wordt stopgezet ter compensatie — feitelijk ‘leen’ je insuline uit de toekomst voor een snellere respons. Het uitschakelen van SMB voorkomt dit en beperkt het algoritme tot alleen het aanpassen van de basaalstanden. De respons wordt trager en geleidelijker, wat vaak de voorkeur heeft tijdens inspanning of slaap.</string>
+    <string name="scene_wizard_loop_mode_info">“De werkings‑modus bepaalt hoeveel autonomie het algoritme heeft. In Closed Loop past het de insulineafgifte automatisch aan. LGS (Low Glucose Suspend) verlaagt of stopt alleen de insuline wanneer de glucose daalt richting een hypo — het zal de afgifte niet verhogen. Open Loop berekent suggesties maar wacht tot jij elke suggestie bevestigt.</string>
+    <string name="scene_wizard_careportal_info">Een CarePortal event is een logboekitem — het verandert de insulineafgifte of het algoritmegedrag niet. Gebruik het om activiteiten, situaties of notities in je behandeloverzicht te markeren. Je kunt deze registraties bekijken in Behandelingen → CarePortal en in Nightscout, zodat jij en je arts patronen in je gegevens kunnen herkennen.</string>
+    <string name="scene_wizard_duration_info">Duur bepaalt hoe lang deze scène actief blijft. Wanneer de tijd afloopt, verlopen duur‑gebaseerde acties (tijdelijke doelwaarde, profielwissel, werkings‑modus) vanzelf, terwijl blijvende wijzigingen (zoals de SMB‑schakelaar) automatisch worden teruggezet naar hun vorige waarden. Als je de duur op 0 instelt, wordt de scène onbeperkt — alle acties blijven actief totdat je de scène handmatig beëindigt.</string>
+    <string name="scene_wizard_name_info">Kies een naam en pictogram die deze scène in één oogopslag herkenbaar maken. Je ziet ze op de activatieknop en in de actieve‑scènebanner op je overzichtsscherm.</string>
     <!-- Scene wizard: UI labels -->
+    <string name="scene_wizard_include_action">%1$s opnemen in scène</string>
+    <string name="scene_wizard_finish">Voltooien</string>
     <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">Vervolg scène</string>
+    <string name="scene_chain_none">Geen</string>
+    <string name="scene_skip_to_format">Overslaan naar %1$s</string>
     <!-- Scene list: chain indicator -->
-    <!-- Scene expiry: chain result notifications -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">Gekoppelde scène is verwijderd</string>
+    <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_deleted">doelscène is verwijderd</string>
+    <string name="scene_chain_skipped_disabled">\"%1$s\" is uitgeschakeld</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s: %3$d of %4$d acties mislukt</string>
 </resources>
