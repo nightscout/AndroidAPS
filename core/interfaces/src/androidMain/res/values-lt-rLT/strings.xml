@@ -15,7 +15,7 @@
     <string name="sec_plus">(+%1$d s)</string>
     <string name="minago_long">Prieš %1$d min</string>
     <string name="hoursago">Prieš %1$.1f val.</string>
-    <string name="days_ago">Prieš %1$s d.</string>
+    <string name="days_ago">Prieš %1$.1f d.</string>
     <string name="days_ago_round">Prieš %1$.0f d.</string>
     <plurals name="plurals_day_hour_ago">
         <item quantity="one">Prieš %1$s d. ir %2$s val.</item>
