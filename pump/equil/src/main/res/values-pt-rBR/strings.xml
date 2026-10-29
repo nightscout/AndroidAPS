@@ -33,8 +33,6 @@
     <string name="equil_change">Trocar bomba</string>
     <string name="equil_change_content">Desconecte a bomba da placa de base.</string>
     <string name="equil_unpair_alert">Tem certeza de que deseja liberar o controle de %1$s?</string>
-    <string name="equil_record_basal">Taxa basal %1$s U/H</string>
-    <string name="equil_record_basal_temp">Taxa basal temporária %1$s U/H</string>
     <string name="equil_error_set_temp_basal_failed_validation">A duração da TBR deve ser maior que zero e um múltiplo de %1$s minutos.</string>
     <string name="equil_basal_exceeds_max">A taxa basal do perfil %1$s U/h excede a basal máxima da bomba %2$s U/h. Aumente a configuração de basal máxima e reconecte a bomba.</string>
     <string name="equil_not_enough_insulin">Não há insulina suficiente no reservatório</string>
@@ -48,7 +46,6 @@
     <string name="equil_firmware_version">Versão do firmware</string>
     <string name="equil_shutdown_be">A Equil será desligada automaticamente</string>
     <string name="equil_shutdown">Desligamento automático da Equil</string>
-    <string name="equil_common_history_tbr_value">Taxa: %1$.2f U/H, duração: %2$d minutos</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Definir bolus</string>
     <string name="equil_common_cmd_cancel_bolus">Cancelar bolus</string>
