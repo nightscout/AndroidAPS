@@ -34,6 +34,35 @@
     <string name="authorized_clients_pin_published">Susiejimo pasiūlymas paruoštas Nightscout.</string>
     <string name="authorized_clients_pin_publish_failed">Nepavyko įkelti susiejimo pasiūlymo į Nightscout.</string>
     <string name="authorized_clients_pin_retry">Bandyti dar kartą</string>
+    <string name="authorized_clients_method_title">Kaip nustatytas šis telefonas?</string>
+    <string name="authorized_clients_method_qr_pair">QR kodas: Nightscout ir susiejimas</string>
+    <string name="authorized_clients_method_qr_pair_summary">Vieną kartą nuskaitykite kodą naujame telefone. Jis gaus savo Nightscout prieigos raktą ir bus susietas.</string>
+    <string name="authorized_clients_method_qr_ns">QR kodas: tik Nightscout</string>
+    <string name="authorized_clients_method_qr_ns_summary">Telefonas gauna savo Nightscout prieigos raktą ir gali skaityti duomenis. Jis nesusietas ir negali siųsti komandų.</string>
+    <string name="authorized_clients_method_pin">PIN</string>
+    <string name="authorized_clients_method_pin_summary">Telefonui be kameros. Jis jau turi būti prijungtas prie Nightscout.</string>
+    <string name="authorized_clients_qr_working">Kuriamas Nightscout prieigos raktas…</string>
+    <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Nustatyti %1$s</string>
+    <string name="authorized_clients_qr_pair_instructions">Naujame telefone nuskaitykite šį kodą sąrankos vedlyje arba atvėrę „Susieti su pagrindiniu įrenginiu“. Taip nustatysite Nightscout ir susiesite telefoną.</string>
+    <string name="authorized_clients_qr_ns_instructions">Naujame telefone nuskaitykite šį kodą sąrankos vedlyje arba paspaudę „Susieti su pagrindiniu įrenginiu“. Taip nustatysite Nightscout. Telefonas nebus susietas.</string>
+    <string name="authorized_clients_qr_keep_private">Kiekvienas, pamatęs šį kodą, gali skaityti jūsų Nightscout duomenis. Rodykite jį tik naujam telefonui.</string>
+    <string name="authorized_clients_token_problem_title">Nėra QR kodo</string>
+    <string name="authorized_clients_not_added_title">Klientas nepridėtas</string>
+    <string name="authorized_clients_token_problem_not_connected">Šis telefonas neprijungtas prie Nightscout, todėl negali sukurti prieigos rakto klientui.</string>
+    <string name="authorized_clients_token_problem_not_allowed">Šio telefono Nightscout prieigos raktas nėra administratoriaus prieigos raktas, todėl šis telefonas negali sukurti prieigos rakto klientui. Čia naudokite administratoriaus prieigos raktą arba pridėkite klientą naudodami PIN.</string>
+    <string name="authorized_clients_token_problem_name_taken">Nightscout jau turi tokio pavadinimo prieigos raktą su kitomis teisėmis. Pasirinkite kitą pavadinimą.</string>
+    <string name="authorized_clients_token_problem_name_in_use">Tokio pavadinimo klientas jau yra sąraše. Pasirinkite kitą pavadinimą arba pirmiausia pašalinkite tą klientą.</string>
+    <string name="authorized_clients_token_problem_failed">Naujas prieigos raktas Nightscout sąraše nepasirodė, todėl jis vėl pašalintas. Po šio bandymo neliko jokių pakeitimų. Bandykite dar kartą.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Naujas prieigos raktas Nightscout sąraše nepasirodė ir jo nepavyko vėl pašalinti. Ištrinkite prieigos raktą %1$s Nightscout sistemoje ir bandykite dar kartą.</string>
+    <string name="authorized_clients_tokens_header">Tik Nightscout duomenų skaitymas</string>
+    <string name="authorized_clients_token_unpaired">Nuosavas Nightscout prieigos raktas, įrenginys nesusietas</string>
+    <string name="authorized_clients_token_show_qr">Rodyti QR kodą</string>
+    <string name="authorized_clients_token_delete_title">Ištrinti prieigos raktą?</string>
+    <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s nebegalės skaityti Nightscout duomenų.</string>
+    <string name="authorized_clients_delete_dialog_token">Jo Nightscout prieigos raktas taip pat ištrinamas, todėl jis nebegalės skaityti Nightscout duomenų.</string>
+    <string name="authorized_clients_uses_client_token">Nuosavas Nightscout prieigos raktas</string>
+    <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Naudoja Nightscout prieigos raktą %1$s, kuris suteikia daugiau teisių, nei reikia klientui</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Naudoja Nightscout prieigos raktą %1$s, o ne savo: jo komandos atmetamos. Pašalinkite klientą ir pridėkite jį iš naujo.</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Susieti su pagrindiniu įrenginiu</string>
     <string name="pair_with_master_pin_entry_title">Įveskite susiejimo PIN</string>
@@ -50,12 +79,33 @@
     <string name="pair_with_master_error_ambiguous_pin">Šį PIN atitiko keli susiejimai. Pagrindiniame įrenginyje sugeneruokite naują PIN ir bandykite dar kartą.</string>
     <string name="pair_with_master_error_expired">Šio susiejimo galiojimas baigėsi. Pagrindiniame įrenginyje sugeneruokite naują PIN.</string>
     <string name="pair_with_master_error_network">Nepavyksta pasiekti Nightscout. Patikrinkite ryšį ir bandykite dar kartą.</string>
+    <string name="pair_with_master_error_secret_store">Nepavyko išsaugoti susiejimo rakto, todėl susiejimas atšauktas. Niekas nepakeista. Bandykite dar kartą. Jei klaida kartosis, paleiskite programėlę iš naujo.</string>
     <string name="pair_with_master_retry">Bandyti dar kartą</string>
     <string name="pair_with_master_already_paired_title">Jau susieta</string>
     <string name="pair_with_master_already_paired_master">Šiuo metu susieta su pagrindiniu įrenginiu %1$s. Norėdami įvesti naują PIN, pirmiausia atsiekite.</string>
     <string name="pair_with_master_unpair">Atsieti</string>
     <string name="pair_with_master_sending">Siunčiamas susiejimo pranešimas…</string>
     <!-- Client set-up from the master's QR code -->
+    <string name="client_setup_scan_button">Nuskaityti QR kodą</string>
+    <string name="client_setup_scan_title">Nuskaitykite pagrindinio įrenginio QR kodą</string>
+    <string name="client_setup_scan_instructions">Pagrindiniame įrenginyje paspauskite „Autorizuoti klientai“ ir pridėkite šį telefoną naudodami QR kodą. Nukreipkite kamerą į kodą.</string>
+    <string name="client_setup_scan_camera_refused">Norint nuskaityti QR kodą, reikia kameros. Suteikite leidimą ją naudoti arba susiekite naudodami PIN.</string>
+    <string name="client_setup_scan_camera_denied">AAPS prieiga prie kameros išjungta. Įjunkite ją sistemos nustatymuose arba susiekite naudodami PIN.</string>
+    <string name="client_setup_scan_camera_blocked">Šiame įrenginyje neleidžiama naudoti kameros. Vietoj to susiekite naudodami PIN.</string>
+    <string name="client_setup_scan_camera_unavailable">Šiame įrenginyje kamera negali būti naudojama. Vietoj to susiekite naudodami PIN.</string>
+    <string name="client_setup_scan_open_settings">Atidaryti nustatymus</string>
+    <string name="client_setup_scan_not_a_code">Tai ne AAPS QR kodas.</string>
+    <string name="client_setup_scan_other_version">Šis kodas iš kitos AAPS versijos. Pagrindiniame ir šiame telefone turi veikti ta pati versija.</string>
+    <string name="client_setup_scan_expired">Šio kodo galiojimas baigėsi. Pagrindiniame įrenginyje sukurkite naują.</string>
+    <string name="client_setup_scan_already_paired">Šis telefonas jau susietas. Kad galėtumėte naudoti susiejimo kodą, pirmiausia jį atsiekite.</string>
+    <string name="client_setup_confirm_title">Naudoti šį kodą?</string>
+    <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nightscout: %1$s</string>
+    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">Jis taip pat susieja šį telefoną su pagrindiniu įrenginiu %1$s.</string>
+    <string name="client_setup_confirm_replaces">Jis pakeičia šio telefono Nightscout adresą ir prieigos raktą.</string>
+    <string name="client_setup_confirm_apply">Naudoti</string>
+    <string name="client_setup_done_title">Atlikta</string>
+    <string name="client_setup_done_paired">Nightscout nustatytas, telefonas susietas. Pagrindiniame įrenginyje jis bus rodomas kaip aktyvus, kai prisijungs.</string>
+    <string name="client_setup_done_ns_only">Nightscout nustatytas. Kad galėtumėte iš šio telefono valdyti pagrindinį telefoną, susiekite ir šį telefoną.</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="clientcontrol_orphan_notification">Pagrindinis AAPS įrenginys šio įrenginio nebeatpažįsta. Atverkite Valdymas → Susieti su pagrindiniu įrenginiu ir susiekite iš naujo.</string>
     <string name="ns_client">NSClient</string>
@@ -73,12 +123,19 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Įjungus duomenys bus įkeliami į bandomuosius, o ne įprastus serverius</string>
     <string name="title_tidepool_dev_servers">Naudoti integracijos (test) serverius</string>
+    <string name="title_tidepool_use_ns_connection">Naudoti Nightscout ryšio nustatymus</string>
+    <string name="summary_tidepool_use_ns_connection">Išjunkite, kad Tidepool galėtumėte nustatyti atskirus ryšio nustatymus</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Sinchronizuoti duomenis su Tidepool</string>
     <string name="upload_now">Įkelti dabar</string>
     <string name="tidepool_purge_data">Išvalyti visus duomenis</string>
     <string name="tidepool_purge_data_confirm">Ištrinti VISUS duomenis, kuriuos AAPS įkėlė į Tidepool? Šio veiksmo atšaukti negalima. Naudokite šią funkciją senesnės versijos sugadintiems duomenims pašalinti, tada paleiskite pilną sinchronizaciją, kad įkeltumėte duomenis iš naujo.</string>
     <string name="tidepool_full_sync_comment">Vykdyti pilną sinchronizaciją? AAPS įkels visus duomenis į Tidepool. Tai gali užtrukti.</string>
+    <string name="tidepool_logout_confirm">Atsijungti nuo Tidepool? Duomenų įkėlimas sustos, kol vėl prisijungsite.</string>
+    <string name="tidepool_status_not_logged_in">Neprisijungta</string>
+    <string name="tidepool_status_no_session">Prisijungta, bet ryšys dar neužmegztas</string>
+    <string name="tidepool_status_blocked">Užblokuota dėl ryšio nustatymų</string>
+    <string name="tidepool_status_failed">Nepavyko. Žr. įrašą žemiau.</string>
     <string name="not_connected">Neprisijungta</string>
     <string name="read_only">Tik skaityti</string>
     <string name="working">Dirbama</string>
@@ -98,6 +155,8 @@
     <string name="garmin_description">Susiejimas su Garmin (Fenix, Edge, …)</string>
     <string name="garmin_local_http_server_port">Vietinio HTTP serverio prievadas</string>
     <string name="garmin_local_http_server">Vietinis HTTP serveris</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">Garmin laikrodis atsiuntė %1$s angliavandenių. Šis telefonas yra klientas, todėl angliavandeniai neįvesti. Įveskite juos AAPS.</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">Garmin laikrodis paprašė prijungti arba atjungti pompą. Šis telefonas yra klientas, todėl niekas nepakeista. Atlikite tai AAPS.</string>
     <!--    Wear-->
     <string name="description_wear">Stebėti ir kontroliuoti AAPS naudojant WearOS laikrodį.</string>
     <string name="no_watch_connected">(nėra prijungto laikrodžio)</string>
@@ -107,6 +166,7 @@
     <string name="scene_not_available">Scenarijus %1$s nebepasiekiamas. Atnaujinkite plytelę</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Kliento režimu nuotolinės insulino komandos išjungtos</string>
     <string name="wear_phone_not_ready">Telefonas vis dar paleidžiamas arba taiko nustatymus. Netrukus bandykite dar kartą.</string>
+    <string name="wear_control_disabled">Telefono AAPS skiltyje „Išmanieji laikrodžiai“ išjungta parinktis „Valdymas per Wear“.</string>
     <string name="wear_action_tempt_unit_error">Laikrodyje ir telefone naudojami skirtingi vienetai!</string>
     <string name="wear_action_tempt_min_bg_error">Minimali gliukozės reikšmė nepatenka į leistiną intervalą!</string>
     <string name="wear_action_tempt_max_bg_error">Maksimali gliukozės reikšmė nepatenka į leistiną intervalą!</string>
