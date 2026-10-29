@@ -26,7 +26,7 @@
         <item quantity="other">%1$s uur geleden</item>
     </plurals>
     <plurals name="plurals_minute_ago">
-        <item quantity="one">een moment geleden</item>
+        <item quantity="one">zojuist</item>
         <item quantity="other">%1$s minuten geleden</item>
     </plurals>
     <string name="seconds_ago">seconden geleden</string>
