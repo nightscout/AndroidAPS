@@ -3,8 +3,6 @@ package app.aaps.ui.activities
 import android.content.Intent
 import android.media.AudioManager
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.alerts.EatReminder
@@ -31,6 +28,7 @@ import app.aaps.core.interfaces.notifications.AlarmIntent
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAlarmDismissed
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -65,8 +63,6 @@ class ErrorActivity : MetroAppCompatActivity() {
     @Inject lateinit var iconsProvider: IconsProvider
     @Inject lateinit var alarmSoundPlayer: AlarmSoundPlayer
     @Inject lateinit var eatReminder: EatReminder
-
-    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private var status by mutableStateOf("")
     private var title by mutableStateOf("")
@@ -112,6 +108,11 @@ class ErrorActivity : MetroAppCompatActivity() {
                 eatReminder.state.first { it == null || !it.alarmRang }
                 if (!mutedHere) finish()
             }
+            // OK on the watch: the alarm is stopped there, and this screen closes as its own OK would
+            LaunchedEffect(Unit) {
+                rxBus.toFlow(EventAlarmDismissed::class).first()
+                finish()
+            }
             val snackbarHostState = remember { SnackbarHostState() }
             CompositionLocalProvider(
                 LocalPreferences provides preferences,
@@ -148,8 +149,10 @@ class ErrorActivity : MetroAppCompatActivity() {
                                         // nothing changed: the alarm goes on, and this screen stays with the message.
                                         if (eatReminder.extend()) finish()
                                     } else {
-                                        stopAlarm("Mute 5 min")
-                                        handler.postDelayed({ startAlarm() }, T.mins(5).msecs())
+                                        // The re-ring comes from UiInteraction, so the watch is told too, and it
+                                        // survives this screen closing. This screen stays, as before.
+                                        alarmSoundPlayer.stop(AlarmSoundPlayer.OWNER_FULLSCREEN)
+                                        uiInteraction.muteAlarm(UiInteraction.MUTE_MINUTES, "Mute 5 min")
                                     }
                                 },
                                 onStart = { startAlarm() },
@@ -177,15 +180,12 @@ class ErrorActivity : MetroAppCompatActivity() {
         sound = intent.getStringExtra(AlarmIntent.EXTRA_SOUND)?.let { runCatching { AlarmSound.valueOf(it) }.getOrNull() } ?: AlarmSound.ERROR
         postedAtElapsedRealtime = intent.getLongExtra(AlarmIntent.EXTRA_POSTED_AT_ELAPSED_REALTIME, 0L)
         aapsLogger.debug("Error activity updated: $title - $status")
-        handler.removeCallbacksAndMessages(null)
         // play() stops any previous playback first.
         startAlarm()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        handler.removeCallbacksAndMessages(null)
-        handler.looper.quitSafely()
         // Owner-scoped: only stops audio this activity owns, never an internal-path alarm.
         alarmSoundPlayer.stop(AlarmSoundPlayer.OWNER_FULLSCREEN)
     }

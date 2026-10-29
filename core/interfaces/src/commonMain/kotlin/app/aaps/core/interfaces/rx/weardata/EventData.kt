@@ -606,8 +606,35 @@ sealed class EventData : Event() {
     @Serializable
     data object RemoteDelivered : EventData()
 
+    /** Wear -> Mobile: silence the alarm on the phone. Its screen stays, as Mute on that screen does. */
     @Serializable
     data class SnoozeAlert(val timeStamp: Long) : EventData()
+
+    /**
+     * Wear -> Mobile: Silence on the watch's notification of the phone's alarm ([AlarmRinging]), or its swipe. The
+     * alarm is silenced and its screen on the phone closes, as "Silence and close" on that screen does.
+     */
+    @Serializable
+    data class DismissAlert(val timeStamp: Long) : EventData()
+
+    /**
+     * Wear -> Mobile: "Mute 5 min" on the watch's notification of the phone's alarm. The alarm is silenced and rings
+     * again after [minutes], on the phone and on the watch, as "Mute for 5 minutes" on the phone's screen does.
+     */
+    @Serializable
+    data class MuteAlert(val timeStamp: Long, val minutes: Int) : EventData()
+
+    /**
+     * Mobile -> Wear: an alarm rings on the phone ([app.aaps.core.interfaces.ui.UiInteraction.runAlarm]), with the
+     * title and text of its screen. The watch shows them in a notification with Silence and Mute 5 min, so it tells
+     * why the phone makes a sound. Not sent for the "time to eat" alarm: the watch rings that one by itself.
+     */
+    @Serializable
+    data class AlarmRinging(val timeStamp: Long, val title: String, val status: String) : EventData()
+
+    /** Mobile -> Wear: the alarm shown on the phone was stopped, on the phone or from the watch, or replaced. */
+    @Serializable
+    data class AlarmStopped(val timeStamp: Long) : EventData()
 
     /**
      * Stop or +5 min of the "time to eat" timer, from the watch's ring screen. The phone runs it on the
