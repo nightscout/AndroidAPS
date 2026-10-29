@@ -16,4 +16,9 @@
     <string name="settings_unreadable_title">AAPS instellingen kunnen niet gelezen worden</string>
     <string name="settings_unreadable_key_explanation">Je instellingen op deze telefoon zijn versleuteld met een sleutel die Android bewaart voor AAPS, en die sleutel opent ze niet meer. Dit kan gebeuren nadat de key store van de telefoon is gereset.</string>
     <string name="settings_unreadable_keystore_explanation">De hoofdopslag van de telefoon heeft niet geantwoord, dus AAPS kon zijn instellingen niet openen.</string>
+    <string name="settings_unreadable_what_to_do">Opnieuw proberen sluit AAPS en start opnieuw. Als dat niet helpt, herstart dan de telefoon. Kies voor \'pas beginnen\' als er niets anders helpt: de onleesbare instellingen worden dan bewaard, en AAPS begint met lege instellingen. Importeer dan je laatste export instellingen in de setup-wizard.</string>
+    <string name="settings_unreadable_start_fresh">Opnieuw beginnen</string>
+    <string name="settings_unreadable_confirm_title">Starten met lege instellingen?</string>
+    <string name="settings_unreadable_confirm_text">Het onleesbare instellingenbestand is hernoemd en bewaard. Alle instellingen starten vanaf hun standaardwaarden. Vervolgens stel je AAPS opnieuw in of importeer je instellingen die geëxporteerd worden.</string>
+    <string name="settings_unreadable_notification">AAPS is niet actief. Open AAPS om te zien wat je moet doen.</string>
 </resources>
