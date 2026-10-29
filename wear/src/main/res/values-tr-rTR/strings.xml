@@ -292,6 +292,18 @@
     <string name="wizard_carb_time_now">Şimdi</string>
     <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
     <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d dk</string>
+    <string name="wizard_set_alarm">Alarmı ayarla</string>
+    <string name="eat_reminder_title">Yemek vakti</string>
+    <string name="eat_reminder_silence">Sessize al</string>
+    <string name="eat_reminder_stop">Durdur</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Zil %1$s çalacak</string>
+    <string name="eat_reminder_countdown_channel">Yemek vakti, çalışıyor</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d dk</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d gr</string>
+    <string name="insulin_unit_short">Ü</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d gr</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f Ü</string>
+    <string name="wizard_confirmation_sent">Gönderildi</string>
     <string name="contacting_master">Ana birimle iletişime geçiliyor…</string>
     <string name="contacting_master_unknown">Durum bilinmiyor — telefonu kontrol edin</string>
     <string name="tile_settings">Panel Ayarları</string>
@@ -343,4 +355,21 @@
     <string name="confirm">Onayla</string>
     <string name="request">İstek</string>
     <string name="constraint_applied">Kısıtlama uygulandı!</string>
+    <string name="wizard_total_insulin">Toplam İnsülin</string>
+    <string name="wizard_calculation">Hesaplama</string>
+    <string name="wizard_settings_format">IC: %1$s | İDF: %2$s</string>
+    <string name="wizard_result_bg">KŞ</string>
+    <string name="wizard_result_bg_tt">KŞ (GH: %1$s)</string>
+    <string name="wizard_result_trend">15 dk eğilim</string>
+    <string name="wizard_result_iob">AİNS</string>
+    <string name="wizard_result_new_iob">Yeni AİNS: %1$s Ü</string>
+    <string name="wizard_result_cob">AKRB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">Karb (%1$d g)</string>
+    <string name="wizard_result_subtotal">Ara toplam</string>
+    <string name="wizard_result_correction">Düzeltme</string>
+    <string name="wizard_result_total">Toplam</string>
+    <string name="wizard_insulin_format">%1$s Ü</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s dk)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d s (+%3$d dk)</string>
 </resources>
