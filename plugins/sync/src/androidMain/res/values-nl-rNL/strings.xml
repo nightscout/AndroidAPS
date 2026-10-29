@@ -10,25 +10,67 @@
     <string name="unsupported_ns_version">Niet ondersteunde versie van Nightscout</string>
     <!-- AAPSClient -->
     <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <string name="authorized_clients_title">Geautoriseerde klanten</string>
+    <string name="authorized_clients_add">Klant toevoegen</string>
+    <string name="authorized_clients_comm_switch_title">Klankcontrole toestaan</string>
+    <string name="authorized_clients_comm_switch_summary">Sta toe dat gekoppelde clients ondertekende commando\'s via Nightscout verzenden. Schakel dit uit om de communicatie te stoppen zonder de clients te verwijderen.</string>
+    <string name="authorized_clients_state_pending">In behandeling</string>
+    <string name="authorized_clients_never_seen">Nooit gebruikt</string>
+    <string name="authorized_clients_pending_expires_in">De koppeling verloopt over %1$ss</string>
+    <string name="authorized_clients_name_placeholder">Apparatennaam</string>
+    <string name="authorized_clients_delete_dialog_title">Toegang intrekken?</string>
+    <string name="authorized_clients_delete_dialog_message">%1$s kan niet langer opdrachten verzenden.</string>
+    <string name="authorized_clients_pin_expires_in">Verloopt over %1$ss</string>
+    <string name="authorized_clients_pin_done">Klaar</string>
+    <string name="authorized_clients_pin_retry">Opnieuw proberen</string>
+    <string name="authorized_clients_method_title">Hoe wordt de telefoon ingesteld?</string>
+    <string name="authorized_clients_method_qr_pair">QR-code: Nightscout en koppelen</string>
+    <string name="authorized_clients_method_qr_pair_summary">Scan eenmalig op de nieuwe telefoon. Het krijgt zijn eigen Nightscout token en is gekoppeld.</string>
+    <string name="authorized_clients_method_qr_ns">QR-code: alleen Nightscout</string>
+    <string name="authorized_clients_method_qr_ns_summary">De telefoon krijgt zijn eigen Nightscout token en kan de gegevens lezen. Hij is niet gekoppeld en kan geen opdrachten verzenden.</string>
     <!-- Pair with master (client side PIN entry) -->
+    <string name="pair_with_master_error_network">Nightscout is niet bereikbaar. Controleer de verbinding en probeer het opnieuw.</string>
+    <string name="pair_with_master_error_secret_store">De koppelingssleutel kon niet worden opgeslagen, dus het koppelen is geannuleerd. Er is niets gewijzigd. Probeer het opnieuw; als het blijft mislukken, start dan de app opnieuw op.</string>
+    <string name="pair_with_master_retry">Probeer het opnieuw</string>
+    <string name="pair_with_master_already_paired_title">Reeds gekoppeld</string>
+    <string name="pair_with_master_unpair">Ontkoppelen</string>
+    <string name="pair_with_master_sending">Zenden van koppelingsbericht…</string>
     <!-- Client set-up from the master's QR code -->
+    <string name="client_setup_scan_button">Scan de QR-code</string>
+    <string name="client_setup_scan_camera_refused">De camera is nodig om de QR-code te lezen. Sta deze toe of koppel met de pincode.</string>
+    <string name="client_setup_scan_camera_denied">Toegang tot de camera is uitgeschakeld voor AAPS. Schakel deze in in de systeeminstellingen of koppel met de pincode.</string>
+    <string name="client_setup_scan_camera_blocked">Toegang tot de camera is niet toegestaan op dit apparaat. Koppel in plaats daarvan met de pincode.</string>
+    <string name="client_setup_scan_camera_unavailable">De camera kan niet worden gebruikt op dit apparaat. Koppel in plaats daarvan met de pincode.</string>
+    <string name="client_setup_scan_open_settings">Instellingen openen</string>
+    <string name="client_setup_scan_not_a_code">Dit is geen QR-code van AAPS.</string>
+    <string name="client_setup_scan_already_paired">Deze telefoon is al gekoppeld. Ontkoppel het eerst om een code te gebruiken die de koppeling maakt.</string>
+    <string name="client_setup_confirm_title">Deze code gebruiken?</string>
+    <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nachtscout: %1$s</string>
+    <string name="client_setup_confirm_replaces">Het vervangt het adres van Nightscout en het token van deze telefoon.</string>
+    <string name="client_setup_confirm_apply">Gebruik</string>
+    <string name="client_setup_done_title">Klaar</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
     <string name="ns_client">NSClient</string>
     <string name="ns_client_url">URL:</string>
     <string name="ns_client_v3_title">NSClientV3</string>
     <string name="deliver_now">Toedienen</string>
     <string name="queue">Wachtend:</string>
+    <string name="status_label">Status:</string>
     <string name="clear_log">Logboek wissen</string>
     <string name="full_sync">Volledige synchronisatie</string>
     <string name="full_sync_comment">Volledige synchronisatie? Dit kan een aantal uren duren. Je ziet dan geen nieuwe gegevens in Nightscout.</string>
     <string name="ns_sync_options">Synchronisatie</string>
     <string name="ns_alarm_options">Alarm opties</string>
+    <string name="ns_remote_control_options">Afstandsbediening</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Indien ingeschakeld zullen uploads naar de test servers gaan in plaats van de standaard servers</string>
     <string name="title_tidepool_dev_servers">Gebruik integratie (test) servers</string>
+    <string name="title_tidepool_use_ns_connection">Gebruik Nightscout-verbindingsinstellingen</string>
+    <string name="summary_tidepool_use_ns_connection">Schakel dit uit om aparte verbindingsinstellingen voor Tidepool in te stellen</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Upload gegevens naar Tidepool</string>
     <string name="upload_now">Nu Uploaden</string>
+    <string name="tidepool_purge_data">Verwijder alle gegevens</string>
     <string name="not_connected">Niet verbonden</string>
     <string name="read_only">Alleen lezen</string>
     <string name="working">Bezig</string>
