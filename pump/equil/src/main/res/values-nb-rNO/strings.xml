@@ -44,8 +44,6 @@
     <string name="equil_new_infusion_set_no">Nei, bare reservoar eller batteri</string>
     <string name="equil_same_infusion_set_hint">Kanylen vil ikke bli fylt, og det vil ikke bli registrert noe kanylebytte.</string>
     <string name="equil_unpair_alert">Er du sikker på at du vil gi fra kontroll over %1$s?</string>
-    <string name="equil_record_basal">Basaldose %1$s E/t</string>
-    <string name="equil_record_basal_temp">Midlertidig basaldose %1$s E/t</string>
     <string name="equil_record_bolus">Bolus %1$s E</string>
     <string name="equil_error_set_temp_basal_failed_validation">Midlertidig basalvarighet må være større enn null og et multiplum av %1$s minutter.</string>
     <string name="equil_basal_exceeds_max">Profilens basalrate på %1$s U/t overskrider pumpens maksimale basalrate på %2$s U/t. Øk maksimal basalrate i innstillingene og koble til pumpen på nytt.</string>
@@ -64,7 +62,6 @@
     <string name="equil_firmware_version">Fastvareversjon</string>
     <string name="equil_shutdown_be">Equil vil bli skrudd av automatisk</string>
     <string name="equil_shutdown">Equil auto-av</string>
-    <string name="equil_common_history_tbr_value">Dose： %1$.2f E/t，varighet： %2$d minutter</string>
     <string name="equil_common_history_bolus_value">%1$.2f E</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Angi bolus</string>
