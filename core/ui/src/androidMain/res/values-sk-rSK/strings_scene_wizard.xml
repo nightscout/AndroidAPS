@@ -68,12 +68,14 @@ Aktivujte túto scénu pred spaním v dňoch, keď ste cvičili, najmä po dlhš
     <string name="scene_wizard_finish">Dokončiť</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Nadväzujúca scéna</string>
+    <string name="scene_wizard_chain_info">Voliteľne pripojte ďalšiu scénu, aby sa automaticky aktivovala po uplynutí tejto aktuálnej. Môžete na ňu tiež preskočiť pri predčasnom ukončení. Nasledujúca scéna sa spustí iba vtedy, ak je cieľ povolený a pumpa je dostupná; v opačnom prípade sa zobrazí upozornenie na ukončenú scénu i s vysvetlením, prečo bola ukončená.</string>
     <string name="scene_chain_none">Žiadna</string>
     <string name="scene_skip_to_format">Preskočiť na %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
     <string name="scene_chain_target_missing">Nadväzujúca scéna bola zmazaná</string>
     <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">Následujúca scéna sa nespustila: %1$s</string>
     <string name="scene_chain_skipped_deleted">cieľová scéna bola zmazaná</string>
     <string name="scene_chain_skipped_disabled">„%1$s“ je zakázaná</string>
     <string name="scene_chain_error_summary">%1$s → %2$s: %3$d z %4$d akcií zlyhalo</string>
