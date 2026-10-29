@@ -237,6 +237,9 @@ dependencies {
     implementation(project(":database:persistence"))
     implementation(project(":pump:virtual"))
     implementation(project(":workflow"))
+    // Dexcom G7 Direct BG source. Android only, so it is not under :plugins: (which :appshell pulls
+    // into its multiplatform commonMain).
+    implementation(project(":cgm:dexcomg7"))
 
     // Pump drivers — only for full + pumpcontrol flavors. Derived from the :pump:* modules included
     // in settings.gradle (single source of truth) minus one exception:

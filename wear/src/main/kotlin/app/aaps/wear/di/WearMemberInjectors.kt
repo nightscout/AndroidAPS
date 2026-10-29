@@ -34,6 +34,7 @@ import app.aaps.wear.complications.WallpaperGrayComplication
 import app.aaps.wear.complications.WallpaperLightComplication
 import app.aaps.wear.complications.cwf.CwfAmbientFaceComplication
 import app.aaps.wear.complications.cwf.CwfFaceComplication
+import app.aaps.wear.g7.G7WatchActivity
 import app.aaps.wear.interaction.ConfigurationActivity
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
 import app.aaps.wear.interaction.actions.BackgroundActionActivity
@@ -336,6 +337,12 @@ object WearMemberInjectors {
     @IntoMap
     @ClassKey(LoopStatusActivity::class)
     fun bindLoopStatusActivity(injector: MembersInjector<LoopStatusActivity>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(G7WatchActivity::class)
+    fun bindG7WatchActivity(injector: MembersInjector<G7WatchActivity>): MembersInjector<*> = injector
 
     @Provides
     @FeatureMemberInjectors

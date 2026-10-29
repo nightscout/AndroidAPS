@@ -22,6 +22,7 @@ work = "2.12.0"
 datastorePreferences = "1.3.0"
 jna = "5.19.1"
 # CameraX: the client reads the master's set-up QR code with the camera (no Play services needed).
+# :cgm:dexcomg7 also uses it to scan the G7 applicator barcode.
 cameraX = "1.6.2"
 
 # Compose

@@ -219,6 +219,42 @@ class EventDataTest {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
+        EventData.CgmAlarm("URGENT_LOW", "Urgent low", "52 mg/dl ↓", 7, true).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.CgmAlarmCancel("URGENT_LOW").let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.CgmAlarmAcknowledge("URGENT_LOW").let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.G7WatchDirect(true, "1155", "F6:E6:B1:55:0B:A9", "701278739531", "DXCMsk").let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.G7WatchDirect(false).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.G7WatchStatus(EventData.G7WatchState.WAITING, "F6:E6:B1:55:0B:A9", 1_000L, batteryRestricted = true).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.G7WatchLog(listOf(EventData.G7WatchLogLine(1_000L, "Bonded (0801)"), EventData.G7WatchLogLine(2_000L, "send control 4e"))).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.G7WatchStatus(EventData.G7WatchState.REFUSED, "F6:E6:B1:55:0B:A9", 1_000L, "key").let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        // A reading the watch took from the sensor keeps its flag through the watch's own store.
+        EventData.SingleBg(dataset = 0, 1, sgv = 2.0, high = 3.0, low = 4.0, fromSensor = true).let {
+            assertThat((EventData.deserializeByte(it.serializeByte()) as EventData.SingleBg).fromSensor).isTrue()
+        }
         // Running mode now rides the generic confirm path: Selected/Confirmed + the master-authored lines.
         EventData.RunningModeSelected(1, 2, 60).let {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)

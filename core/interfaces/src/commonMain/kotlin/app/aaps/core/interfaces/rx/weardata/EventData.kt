@@ -337,7 +337,10 @@ sealed class EventData : Event() {
         val color: Int = 0,
         val deltaMgdl: Double? = null,
         val avgDeltaMgdl: Double? = null,
-        val id: Int = 0
+        val id: Int = 0,
+        // True when the watch read this value from the sensor itself (direct-to-watch), not from the phone.
+        // Keep new fields at the END of this class: the ProtoBuf wire format numbers fields by declaration order.
+        val fromSensor: Boolean = false
     ) : EventDataSet, EventData(), Comparable<SingleBg> {
 
         override fun equals(other: Any?): Boolean =
@@ -608,6 +611,92 @@ sealed class EventData : Event() {
 
     @Serializable
     data class SnoozeAlert(val timeStamp: Long) : EventData()
+
+    /**
+     * Mobile→Wear: a CGM alarm is going off (sent again for each reminder). The watch shows it with an
+     * Acknowledge button and vibrates for [vibrationSeconds] (0 = no vibration).
+     * [id] names the alarm, so a later [CgmAlarmCancel] or [CgmAlarmAcknowledge] can refer to it.
+     */
+    @Serializable
+    data class CgmAlarm(
+        val id: String,
+        val title: String,
+        val message: String,
+        val vibrationSeconds: Int,
+        val urgent: Boolean
+    ) : EventData()
+
+    /** Mobile→Wear: the alarm [id] is over (acknowledged somewhere or gone). Stop and remove it. */
+    @Serializable
+    data class CgmAlarmCancel(val id: String) : EventData()
+
+    /** Wear→Mobile: the wearer acknowledged the alarm [id] on the watch. */
+    @Serializable
+    data class CgmAlarmAcknowledge(val id: String) : EventData()
+
+    /**
+     * Mobile→Wear: direct-to-watch for the Dexcom G7. With [active] the watch connects to the sensor
+     * itself, in the sensor's watch slot, next to the phone. It makes its own key from [pairingCode]; the
+     * phone's key never leaves the phone. Without [active] the watch lets the sensor go.
+     */
+    @Serializable
+    data class G7WatchDirect(
+        val active: Boolean,
+        val pairingCode: String? = null,
+        val address: String? = null,
+        val serial: String? = null,
+        val sensorName: String? = null
+    ) : EventData()
+
+    /** Wear→Mobile: how the watch's own connection to the Dexcom G7 is doing. */
+    @Serializable
+    data class G7WatchStatus(
+        val state: G7WatchState,
+        /** The sensor the watch is set up for, so the phone can see when it holds an old one. */
+        val address: String? = null,
+        val latestReadingAt: Long? = null,
+        /** The last refusal or problem, in plain words, for the phone's status line. */
+        val detail: String? = null,
+        /**
+         * True when the watch may put the app to sleep in the background. Samsung watches then freeze it as
+         * soon as the screen dims, and the sensor's readings are missed. Fixed by unrestricted battery use.
+         */
+        val batteryRestricted: Boolean = false
+    ) : EventData()
+
+    /**
+     * Wear→Mobile: lines of the watch's own Dexcom G7 log, with the times they were written, for the
+     * phone's G7 log. The watch app's log cannot be read on the watch itself.
+     */
+    @Serializable
+    data class G7WatchLog(val lines: List<G7WatchLogLine>) : EventData()
+
+    @Serializable
+    data class G7WatchLogLine(val time: Long, val text: String)
+
+    @Serializable
+    enum class G7WatchState {
+
+        /** Direct-to-watch is off. */
+        OFF,
+
+        /** The watch runs Android 11 or older; the sensor code needs Android 12. */
+        NOT_SUPPORTED,
+
+        /** The wearer has to allow Bluetooth on the watch. */
+        NEEDS_PERMISSION,
+        BLUETOOTH_OFF,
+
+        /** No key yet: the next connection runs the key exchange and the pairing prompts. */
+        PAIRING,
+
+        /** Paired, waiting for the sensor's next reading. The normal state between readings. */
+        WAITING,
+        CONNECTED,
+
+        /** The sensor refused the watch. [G7WatchStatus.detail] says why. */
+        REFUSED
+    }
 
     /**
      * Stop or +5 min of the "time to eat" timer, from the watch's ring screen. The phone runs it on the

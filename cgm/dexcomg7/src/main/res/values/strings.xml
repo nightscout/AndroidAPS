@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Plugin -->
+    <string name="dexcom_g7_direct">Dexcom G7 Direct</string>
+    <string name="description_dexcom_g7_direct">Get readings straight from a Dexcom G7 or ONE+ sensor over Bluetooth. No Dexcom app or xDrip is needed. Pair the sensor with the code on its applicator.</string>
+    <string name="dexcom_g7_permission_bluetooth_title">Bluetooth</string>
+    <string name="dexcom_g7_permission_bluetooth_description">Needed to find the sensor and to receive its readings.</string>
+
+    <!-- Status screen -->
+    <string name="dexcom_g7_sensor">Sensor</string>
+    <string name="dexcom_g7_pair_new_sensor">Pair new sensor</string>
+    <string name="dexcom_g7_pair_sensor">Pair sensor</string>
+    <string name="dexcom_g7_calibrate">Calibrate</string>
+    <string name="dexcom_g7_cancel_calibration">Cancel calibration</string>
+    <string name="dexcom_g7_communication_log">Communication log</string>
+    <string name="dexcom_g7_forget_sensor">Forget sensor</string>
+    <string name="dexcom_g7_forget_sensor_text">AAPS will stop reading this sensor and forget its key. The sensor keeps its phone slot for this phone for about 15 minutes. To use it with another app, wait that long first.</string>
+
+    <string name="dexcom_g7_state_unpaired">No sensor paired</string>
+    <string name="dexcom_g7_state_connecting">Paired. Waiting for the first reading (can take 5 minutes)</string>
+    <string name="dexcom_g7_state_warmup">Warmup ends in %1$s</string>
+    <string name="dexcom_g7_state_ok">Sensor ends in %1$s</string>
+    <string name="dexcom_g7_state_grace_period">Sensor expired. Readings go on for up to 12 hours. Replace the sensor.</string>
+    <string name="dexcom_g7_state_expired">Sensor session ended. Apply and pair a new sensor.</string>
+    <string name="dexcom_g7_state_failed">Sensor failed. Remove it and start a new sensor. Check your glucose with a meter.</string>
+    <string name="dexcom_g7_status_bluetooth_blocked">Bluetooth is off or not allowed</string>
+
+    <string name="dexcom_g7_connection_stopped">Not running</string>
+    <string name="dexcom_g7_connection_unpaired">No sensor</string>
+    <string name="dexcom_g7_connection_waiting">Waiting for next reading</string>
+    <string name="dexcom_g7_connection_connected">Connected</string>
+    <string name="dexcom_g7_connection_pairing">Pairing</string>
+
+    <string name="dexcom_g7_row_how_to_start">Start</string>
+    <string name="dexcom_g7_row_how_to_start_text">Press \"Pair new sensor\" and scan the applicator</string>
+    <string name="dexcom_g7_row_sensor">Sensor</string>
+    <string name="dexcom_g7_row_last_reading">Last reading</string>
+    <string name="dexcom_g7_row_sensor_state">Sensor state</string>
+    <string name="dexcom_g7_row_connection">Connection</string>
+    <string name="dexcom_g7_row_last_connect">Last connection</string>
+    <string name="dexcom_g7_row_started">Started</string>
+    <string name="dexcom_g7_row_warmup_ends">Warmup ends</string>
+    <string name="dexcom_g7_row_expires">Expires</string>
+    <string name="dexcom_g7_row_grace_ends">Grace period ends</string>
+    <string name="dexcom_g7_row_session_length">Session length</string>
+    <string name="dexcom_g7_row_serial">Serial number</string>
+    <string name="dexcom_g7_row_pairing_code">Pairing code</string>
+    <string name="dexcom_g7_row_firmware">Firmware</string>
+    <string name="dexcom_g7_row_display_slot">Display slot</string>
+    <string name="dexcom_g7_row_watch">Watch</string>
+    <string name="dexcom_g7_row_watch_battery">Watch battery use</string>
+    <string name="dexcom_g7_watch_battery_restricted">The watch can put AAPS to sleep and then misses readings. On the watch, open the AAPS notification and allow unrestricted battery use.</string>
+    <string name="dexcom_g7_watch_direct_turn_on">Direct to watch: turn on</string>
+    <string name="dexcom_g7_watch_direct_turn_off">Direct to watch: turn off</string>
+    <string name="dexcom_g7_watch_waiting_for_watch">Waiting for the watch. Is the AAPS watch app installed and the watch nearby?</string>
+    <string name="dexcom_g7_watch_not_supported">This watch is too old. Direct to watch needs Wear OS with Android 12 or newer.</string>
+    <string name="dexcom_g7_watch_needs_permission">Allow Bluetooth on the watch: tap the AAPS notification there.</string>
+    <string name="dexcom_g7_watch_bluetooth_off">Bluetooth is off on the watch</string>
+    <string name="dexcom_g7_watch_pairing">Pairing at the next reading. Accept the pairing requests on the watch.</string>
+    <string name="dexcom_g7_watch_connected" comment="%1$s=how long ago, for example 2 min ago">Reading the sensor itself, last reading %1$s</string>
+    <string name="dexcom_g7_watch_connected_no_reading">Paired, waiting for the first reading</string>
+    <string name="dexcom_g7_watch_refused" comment="%1$s=the reason, a whole sentence, for example: The sensor refused this phone\'s key. Pair the sensor again.">The sensor refused the watch. %1$s</string>
+    <string name="dexcom_g7_row_paired">Paired</string>
+    <string name="dexcom_g7_row_calibration">Last calibration</string>
+    <string name="dexcom_g7_row_previous_sensor">Previous sensor</string>
+    <string name="dexcom_g7_previous_sensor_text">%1$s, started %2$s, ended %3$s</string>
+    <string name="dexcom_g7_days">%1$d days</string>
+    <string name="dexcom_g7_duration_days_hours">%1$d d %2$d h</string>
+    <string name="dexcom_g7_duration_hours_minutes">%1$d h %2$d min</string>
+    <string name="dexcom_g7_duration_minutes">%1$d min</string>
+
+    <string name="dexcom_g7_refused_slot_taken">The sensor is used by another phone or app. A sensor works with one phone app at a time. Stop the other app from using this sensor, then wait 15 minutes.</string>
+    <string name="dexcom_g7_refused_key">The sensor refused this phone\'s key. Pair the sensor again.</string>
+    <string name="dexcom_g7_refused_wrong_code">The sensor does not match the stored pairing code. Pair the sensor again.</string>
+    <string name="dexcom_g7_refused_other">The sensor refused the connection. AAPS tries again in 15 minutes.</string>
+
+    <!-- Calibration -->
+    <string name="dexcom_g7_calibration_guidance">The sensor is calibrated in the factory. Only calibrate when readings are clearly wrong. Wash your hands, use a fresh meter reading, and do not calibrate while glucose changes fast. The value goes to the sensor at its next reading.</string>
+    <string name="dexcom_g7_calibration_value">Meter value (%1$s)</string>
+    <string name="dexcom_g7_calibration_not_now">A calibration can only be sent to a sensor that is running normally (not in warmup, expired or failed).</string>
+    <string name="dexcom_g7_calibration_pending">%1$s entered at %2$s, waiting for the sensor</string>
+    <string name="dexcom_g7_calibration_rejected">%1$s refused by the sensor (status %2$d)</string>
+    <string name="dexcom_g7_calibration_processing">%1$s accepted at %2$s, the sensor is still applying it</string>
+    <string name="dexcom_g7_calibration_accepted">%1$s accepted at %2$s</string>
+
+    <!-- Pairing -->
+    <string name="dexcom_g7_cancel_pairing_title">Cancel pairing</string>
+    <string name="dexcom_g7_cancel_pairing_text">Stop pairing the sensor?</string>
+    <string name="dexcom_g7_conflicting_apps">These apps are installed: %1$s. A sensor works with one phone app at a time. Make sure they do not use this sensor, or uninstall them.</string>
+    <string name="dexcom_g7_intro_title">Apply the sensor</string>
+    <string name="dexcom_g7_intro_replacing">The current sensor will be replaced by the new one.</string>
+    <string name="dexcom_g7_intro_step_1">1. Keep the applicator: its barcode or 4-digit code is needed for pairing.</string>
+    <string name="dexcom_g7_intro_step_2">2. Apply the sensor to the back of your upper arm, as the Dexcom instructions say.</string>
+    <string name="dexcom_g7_intro_step_3">3. Keep the phone close to the sensor during pairing. Android may ask to pair with the sensor: accept it.</string>
+    <string name="dexcom_g7_intro_step_4">4. After pairing, the sensor warms up for about 30 minutes (up to an hour for 15-day sensors). Readings come every 5 minutes.</string>
+    <string name="dexcom_g7_code_explanation">Scan the barcode on the applicator, or type the 4-digit pairing code printed on it.</string>
+    <string name="dexcom_g7_scan_barcode">Scan applicator barcode</string>
+    <string name="dexcom_g7_pairing_code">Pairing code</string>
+    <string name="dexcom_g7_pairing_code_hint">4 digits</string>
+    <string name="dexcom_g7_use_watch_slot">Use the watch slot (test)</string>
+    <string name="dexcom_g7_use_watch_slot_summary">Pairs into the sensor\'s watch slot instead of the phone slot, so a second phone can test direct-to-watch while the main phone keeps its connection. Leave off on the main phone.</string>
+    <string name="dexcom_g7_pair">Pair</string>
+    <string name="dexcom_g7_scan_explanation">Point the camera at the square barcode on the applicator.</string>
+    <string name="dexcom_g7_type_code_instead">Type the code instead</string>
+    <string name="dexcom_g7_scan_found">Code %1$s found (serial %2$s)</string>
+    <string name="dexcom_g7_scan_not_dexcom">This barcode does not look like a Dexcom product. Check the code.</string>
+    <string name="dexcom_g7_scan_no_code">This barcode has no pairing code. Scan the barcode on the applicator.</string>
+    <string name="dexcom_g7_pairing_starting">Starting</string>
+    <string name="dexcom_g7_pairing_scanning">Looking for the sensor</string>
+    <string name="dexcom_g7_pairing_scanning_found">Looking for the sensor. Found: %1$s</string>
+    <string name="dexcom_g7_pairing_authenticating">Pairing with %1$s (attempt %2$d)</string>
+    <string name="dexcom_g7_pairing_elapsed">%1$d:%2$02d</string>
+    <string name="dexcom_g7_pairing_hint">A sensor used by another phone in the last 15 minutes can take up to 20 minutes to be found.</string>
+    <string name="dexcom_g7_pairing_done">Paired with %1$s</string>
+    <string name="dexcom_g7_pairing_done_hint">The first reading comes within 5 minutes. A new sensor warms up first.</string>
+    <string name="dexcom_g7_try_again">Try again</string>
+    <string name="dexcom_g7_pairing_failed_invalid_code">The pairing code is the 4-digit number printed on the applicator.</string>
+    <string name="dexcom_g7_pairing_failed_bluetooth">Bluetooth is off or not allowed. Turn it on and allow AAPS to use it.</string>
+    <string name="dexcom_g7_pairing_failed_no_sensor">No sensor was found. Make sure the sensor is applied, the phone is close to it, and no other phone or app uses it.</string>
+    <string name="dexcom_g7_pairing_failed_all">Could not pair with any sensor in range. Check the code.</string>
+
+    <!-- Log -->
+    <string name="dexcom_g7_copy_log">Copy</string>
+    <string name="dexcom_g7_clear_log">Clear</string>
+    <string name="dexcom_g7_log_empty">Nothing yet</string>
+    <string name="dexcom_g7_save_log">Save to file</string>
+    <string name="dexcom_g7_log_saved" comment="%1$s=file name in the AAPS folder. Example: exports/DexcomG7_log_2026-09-27_154500.txt">Saved to %1$s in the AAPS folder</string>
+    <string name="dexcom_g7_log_save_failed">The log could not be saved</string>
+    <string name="dexcom_g7_log_no_directory">No AAPS folder is set. Choose it in Maintenance first.</string>
+
+    <!-- Alerts -->
+    <string name="dexcom_g7_notification" comment="%1$s=the message. Example: Dexcom G7: the sensor session ends in about 6 hours">Dexcom G7: %1$s</string>
+    <string name="dexcom_g7_end_in_hours" comment="%1$d=hours, %2$s=date and time of the end. Example: The sensor session ends in about 6 hours, at 9/28/26 14:05. ...">The sensor session ends in about %1$d hours, at %2$s. After that, a 12-hour grace period follows. Have a new sensor ready.</string>
+    <string name="dexcom_g7_grace_started" comment="%1$s=date and time when readings stop">The sensor session has ended. The 12-hour grace period starts now: readings go on until %1$s, then they stop. Replace the sensor before then.</string>
+    <string name="dexcom_g7_grace_ends_in_hours" comment="%1$d=hours, %2$s=date and time when readings stop">The grace period ends in about %1$d hours, at %2$s. Then readings stop. Replace the sensor.</string>
+    <string name="dexcom_g7_session_over">The sensor session and its grace period are over, and readings have stopped. Apply and pair a new sensor.</string>
+    <string name="dexcom_g7_alert_sensor_failed">Dexcom G7: the sensor has failed and sends no usable readings. Remove it and start a new sensor. Check your glucose with a meter.</string>
+    <string name="dexcom_g7_alert_connection_refused">Dexcom G7: the sensor refused the connection. It may be used by another phone or app. Open Dexcom G7 Direct for details.</string>
+    <string name="dexcom_g7_alert_warmup_finished">Dexcom G7: warmup finished, readings are in use.</string>
+    <!-- Alarms -->
+    <string name="dexcom_g7_alarms_general">Alarms: General</string>
+    <string name="dexcom_g7_alarm_section" comment="%1$s=alarm name. Example: Alarm: Urgent low">Alarm: %1$s</string>
+    <string name="dexcom_g7_alarms_enabled">Use Dexcom G7 alarms</string>
+    <string name="dexcom_g7_alarms_enabled_summary">Glucose and sensor alarms. They sound even when the phone is on silent or vibrate.</string>
+    <string name="dexcom_g7_alarm_minimum_volume">Minimum alarm volume</string>
+    <string name="dexcom_g7_alarm_minimum_volume_summary">Alarms use the phone\'s alarm volume. If it is lower than this, it is raised while an alarm sounds and put back afterwards.</string>
+    <string name="dexcom_g7_alarm_minimum_volume_off">Use the phone\'s alarm volume</string>
+    <string name="dexcom_g7_alarm_minimum_volume_percent" comment="%1$d=percent of the maximum volume. Example: At least 70 %">At least %1$d %%</string>
+    <string name="dexcom_g7_alarm_channel">Dexcom G7 alarms</string>
+    <string name="dexcom_g7_alarm_acknowledge">Acknowledge</string>
+    <string name="dexcom_g7_alarm_banner" comment="%1$s=alarm name, %2$s=details. Example: Urgent low: 52 mg/dl ↓">%1$s: %2$s</string>
+    <string name="dexcom_g7_alarm_body_glucose" comment="%1$s=glucose with unit, %2$s=trend arrow. Example: 52 mg/dl ↓">%1$s %2$s</string>
+    <string name="dexcom_g7_alarm_body_signal_loss" comment="%1$s=time of the last reading. Example: 14:05">No readings from the sensor since %1$s. Keep the phone close to the sensor and check that Bluetooth is on.</string>
+    <string name="dexcom_g7_alarm_body_sensor_issue">The sensor has a brief issue and sends no readings. They usually come back on their own. Check your glucose with a meter if you need to.</string>
+
+    <string name="dexcom_g7_alarm_urgent_low">Urgent low</string>
+    <string name="dexcom_g7_alarm_urgent_low_summary">Glucose at or below 55 mg/dl (3.1 mmol/l). Always on.</string>
+    <string name="dexcom_g7_alarm_urgent_low_soon">Urgent low soon</string>
+    <string name="dexcom_g7_alarm_urgent_low_soon_summary">Glucose is falling and will be at or below 55 mg/dl (3.1 mmol/l) within 20 minutes.</string>
+    <string name="dexcom_g7_alarm_low">Low</string>
+    <string name="dexcom_g7_alarm_low_summary">Glucose at or below the level you set.</string>
+    <string name="dexcom_g7_alarm_high">High</string>
+    <string name="dexcom_g7_alarm_high_summary">Glucose at or above the level you set.</string>
+    <string name="dexcom_g7_alarm_fall_rate">Fall rate</string>
+    <string name="dexcom_g7_alarm_fall_rate_summary">Glucose is falling fast.</string>
+    <string name="dexcom_g7_alarm_rise_rate">Rise rate</string>
+    <string name="dexcom_g7_alarm_rise_rate_summary">Glucose is rising fast.</string>
+    <string name="dexcom_g7_date_time" comment="%1$s=short date, %2$s=time. Example: 30/09 10:22">%1$s %2$s</string>
+    <string name="dexcom_g7_alarm_sensor_end">Sensor end</string>
+    <string name="dexcom_g7_alarm_sensor_end_summary">24, 6 and 2 hours before the sensor session ends, when the 12-hour grace period starts, 6 and 2 hours before the grace period ends, and when readings stop. During the night hours it goes off only once, with no reminders.</string>
+    <string name="dexcom_g7_alarm_signal_loss">Signal loss</string>
+    <string name="dexcom_g7_alarm_signal_loss_summary">No readings from the sensor for the time you set.</string>
+    <string name="dexcom_g7_alarm_sensor_issue">Brief sensor issue</string>
+    <string name="dexcom_g7_alarm_sensor_issue_summary">The sensor is connected but sends no usable readings.</string>
+    <string name="dexcom_g7_alarm_sensor_failed">Sensor failed</string>
+    <string name="dexcom_g7_alarm_sensor_failed_summary">The sensor has stopped working. Always on.</string>
+
+    <string name="dexcom_g7_alarm_enabled">On</string>
+    <string name="dexcom_g7_alarm_level">Level</string>
+    <string name="dexcom_g7_alarm_rate">Rate</string>
+    <string name="dexcom_g7_alarm_rate_2">2 mg/dl/min (0.11 mmol/l/min) or more</string>
+    <string name="dexcom_g7_alarm_rate_3">3 mg/dl/min (0.17 mmol/l/min) or more</string>
+    <string name="dexcom_g7_alarm_delay_first">Delay first alarm</string>
+    <string name="dexcom_g7_alarm_delay_for_more_than">For more than</string>
+    <string name="dexcom_g7_alarm_delay_none">No delay</string>
+    <string name="dexcom_g7_alarm_repeat">Repeat</string>
+    <string name="dexcom_g7_alarm_repeat_summary">After you acknowledge, the alarm comes back after this time if the condition is still there.</string>
+    <string name="dexcom_g7_alarm_repeat_never">Never</string>
+    <string name="dexcom_g7_alarm_sound">Sound</string>
+    <string name="dexcom_g7_alarm_vibrate_first">First alarm vibrate only</string>
+    <string name="dexcom_g7_alarm_vibrate_first_summary">The first alarm only vibrates. If you do not acknowledge it within 5 minutes, it sounds.</string>
+    <string name="dexcom_g7_alarm_test">Test sound</string>
+    <string name="dexcom_g7_alarm_test_summary">Play the chosen sound once, at alarm volume.</string>
+    <string name="dexcom_g7_alarm_watch_vibration">Watch vibration</string>
+    <string name="dexcom_g7_alarm_watch_vibration_summary">How long the AAPS watch app vibrates for this alarm. It needs the Wear plugin and the AAPS watch app.</string>
+    <string name="dexcom_g7_alarm_watch_vibration_night">Watch vibration at night</string>
+    <string name="dexcom_g7_alarm_watch_vibration_off">No vibration</string>
+    <string name="dexcom_g7_alarm_watch_night">Night hours</string>
+    <string name="dexcom_g7_alarm_watch_night_summary">Between these hours, alarms use the night watch vibration, for example a longer one to wake you up. A sensor end alert goes off only once, with no reminders.</string>
+    <string name="dexcom_g7_alarm_watch_night_start">Night starts</string>
+    <string name="dexcom_g7_alarm_watch_night_end">Night ends</string>
+    <string name="dexcom_g7_seconds" comment="%1$d=number of seconds. Example: 5 s">%1$d s</string>
+    <string name="dexcom_g7_hour_of_day" comment="%1$d=hour of the day, 0 to 23. Example: 22:00">%1$02d:00</string>
+    <string name="dexcom_g7_minutes" comment="%1$d=number of minutes. Example: 15 min">%1$d min</string>
+    <string name="dexcom_g7_hours" comment="%1$d=number of hours. Example: 2 h">%1$d h</string>
+
+    <string name="dexcom_g7_sound_acoustic" comment="Name of a style of alarm sounds, played on real instruments">Acoustic</string>
+    <string name="dexcom_g7_sound_electronic" comment="Name of a style of alarm sounds, made with a synthesizer">Electronic</string>
+    <string name="dexcom_g7_sound_mild" comment="Urgency level of an alarm sound, the lowest of three">Mild</string>
+    <string name="dexcom_g7_sound_medium" comment="Urgency level of an alarm sound, the middle of three">Medium</string>
+    <string name="dexcom_g7_sound_harsh" comment="Urgency level of an alarm sound, the highest of three">Harsh</string>
+    <string name="dexcom_g7_sound_acoustic_mild">Acoustic, mild</string>
+    <string name="dexcom_g7_sound_acoustic_medium">Acoustic, medium</string>
+    <string name="dexcom_g7_sound_acoustic_harsh">Acoustic, harsh</string>
+    <string name="dexcom_g7_sound_electronic_mild">Electronic, mild</string>
+    <string name="dexcom_g7_sound_electronic_medium">Electronic, medium</string>
+    <string name="dexcom_g7_sound_electronic_harsh">Electronic, harsh</string>
+    <string name="dexcom_g7_sound_glass_bell">Glass bell</string>
+    <string name="dexcom_g7_sound_harp">Harp</string>
+    <string name="dexcom_g7_sound_meow">Meow</string>
+    <string name="dexcom_g7_sound_saw_wave">Saw wave</string>
+    <string name="dexcom_g7_sound_hard_saw_wave">Hard saw wave</string>
+    <string name="dexcom_g7_sound_sine_wave">Sine wave</string>
+    <string name="dexcom_g7_sound_open_can">Open can</string>
+    <string name="dexcom_g7_sound_open_wrapper">Open wrapper</string>
+    <string name="dexcom_g7_sound_for_this_alarm">Made for this alarm</string>
+    <string name="dexcom_g7_sound_other">Other sounds</string>
+    <string name="dexcom_g7_sound_urgency">Urgency level</string>
+    <string name="dexcom_g7_sound_play">Play</string>
+    <string name="dexcom_g7_sound_stop">Stop</string>
+    <string name="dexcom_g7_sound_preview_summary">Play plays the sound once at your alarm volume.</string>
+</resources>
