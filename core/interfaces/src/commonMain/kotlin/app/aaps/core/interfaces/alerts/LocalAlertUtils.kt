@@ -32,4 +32,14 @@ interface LocalAlertUtils {
      * Overview notification with sound, Therapy event
      */
     suspend fun checkStaleBGAlert()
+
+    /**
+     * Check the last glucose value against the alarms the user has set up (low, high, rapid fall)
+     * and raise or dismiss their notifications.
+     *
+     * Works for every BG source, because it reads the last stored glucose value. It only notifies:
+     * it never changes dosing or the loop. It does nothing when the data is stale, because the
+     * missed readings alarm owns that case.
+     */
+    suspend fun checkGlucoseAlerts()
 }

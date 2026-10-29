@@ -4,10 +4,14 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.maintenance.Maintenance
+import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -15,6 +19,8 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
+import org.mockito.kotlin.timeout
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -39,7 +45,7 @@ class PeriodicMaintenanceTest : TestBase() {
 
     @BeforeEach
     fun init() {
-        sut = PeriodicMaintenance(aapsLogger, localAlertUtils, persistenceLayer, maintenance, preferences, dateUtil)
+        sut = PeriodicMaintenance(aapsLogger, localAlertUtils, persistenceLayer, maintenance, preferences, dateUtil, rxBus)
     }
 
     /** The one a user notices: a follower whose CGM stops has to be told. */
@@ -50,6 +56,71 @@ class PeriodicMaintenanceTest : TestBase() {
         sut.runOnce()
 
         verify(localAlertUtils).checkStaleBGAlert()
+    }
+
+    /** The low, high and rapid fall alarms are checked on every pass, like the missed reading alarm. */
+    @Test
+    fun `a pass checks the glucose alarms`() = runTest {
+        whenever(dateUtil.now()).thenReturn(1_000L)
+
+        sut.runOnce()
+
+        verify(localAlertUtils).checkGlucoseAlerts()
+    }
+
+    /** A failing glucose alarm check must not skip the log and database trim of the same pass. */
+    @Test
+    fun `a failing glucose alarm check does not skip the trim`() = runTest {
+        val now = T.days(10).msecs()
+        whenever(dateUtil.now()).thenReturn(now)
+        whenever(preferences.get(LongNonKey.LastCleanupRun)).thenReturn(now - T.days(2).msecs())
+        whenever(localAlertUtils.checkGlucoseAlerts()).thenThrow(IllegalStateException("broken"))
+
+        sut.runOnce()
+
+        verify(maintenance).deleteLogs(PeriodicMaintenance.KEEP_LOG_FILES)
+        verify(persistenceLayer).cleanupDatabase(eq(now - keep), eq(false))
+    }
+
+    /** iOS and desktop: a new reading must check the glucose alarms, not only the next tick. */
+    @Test
+    fun `a new reading checks the glucose alarms`() = runTest {
+        whenever(dateUtil.now()).thenReturn(1_000L)
+        val scope = CoroutineScope(Dispatchers.Unconfined)
+        try {
+            sut.start(scope)
+            // The first pass of the ticker runs at once and checks one time.
+            verify(localAlertUtils, timeout(1_000).times(1)).checkGlucoseAlerts()
+
+            rxBus.send(EventBucketedDataCreated())
+
+            verify(localAlertUtils, timeout(1_000).times(2)).checkGlucoseAlerts()
+        } finally {
+            scope.cancel()
+        }
+    }
+
+    /**
+     * Android: `KeepAliveWorker` already runs the pass, so the app start starts only the trigger. A
+     * new reading must check the glucose alarms there too, and no second ticker may start.
+     */
+    @Test
+    fun `the glucose alarm trigger alone checks on a new reading and starts no ticker`() = runTest {
+        whenever(dateUtil.now()).thenReturn(1_000L)
+        val scope = CoroutineScope(Dispatchers.Unconfined)
+        try {
+            sut.startGlucoseAlarmTrigger(scope)
+            verify(localAlertUtils, never()).checkGlucoseAlerts()
+
+            rxBus.send(EventBucketedDataCreated())
+
+            verify(localAlertUtils, timeout(1_000).times(1)).checkGlucoseAlerts()
+            // No pass ran: that is the worker's job on Android.
+            verify(localAlertUtils, never()).checkStaleBGAlert()
+            verify(maintenance, never()).deleteLogs(any())
+        } finally {
+            scope.cancel()
+        }
     }
 
     @Test

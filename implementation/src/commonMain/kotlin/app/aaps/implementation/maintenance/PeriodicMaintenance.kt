@@ -6,6 +6,9 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.Maintenance
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
+import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -14,7 +17,9 @@ import app.aaps.implementation.maintenance.PeriodicMaintenance.Companion.MAX_CUT
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -44,8 +49,9 @@ import kotlin.time.Duration.Companion.minutes
  *
  * The trigger stays per platform, because that part genuinely differs: Android has WorkManager and a
  * wake lock, and the other two do not. Android calls [runOnce] from `KeepAliveWorker` on its existing
- * schedule; iOS and desktop call [start] and get a coroutine ticker. What must NOT differ again is
- * the work itself, which is why it is one method rather than three call sites.
+ * schedule, and [startGlucoseAlarmTrigger] from the app start; iOS and desktop call [start] and get
+ * a coroutine ticker plus the same trigger. What must NOT differ again is the work itself, which is
+ * why it is one method rather than three call sites.
  */
 @SingleIn(AppScope::class)
 @Inject
@@ -55,7 +61,8 @@ class PeriodicMaintenance(
     private val persistenceLayer: PersistenceLayer,
     private val maintenance: Maintenance,
     private val preferences: Preferences,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val rxBus: RxBus
 ) {
 
     /**
@@ -65,8 +72,34 @@ class PeriodicMaintenance(
     suspend fun runOnce() {
         localAlertUtils.shortenSnoozeInterval()
         localAlertUtils.checkStaleBGAlert()
+        // On its own: a failure in the glucose alarms must not skip the log and database trim.
+        try {
+            localAlertUtils.checkGlucoseAlerts()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (t: Throwable) {
+            aapsLogger.error(LTag.CORE, "Glucose alarm check failed", t)
+        }
         maintenance.deleteLogs(KEEP_LOG_FILES)
         cleanupDatabase()
+    }
+
+    /**
+     * Checks the glucose alarms each time a new reading has been processed. Every platform runs this:
+     * iOS and desktop through [start], Android from the app start, next to its `KeepAliveWorker`
+     * schedule (which already runs [runOnce], so Android must not call [start] and get a second ticker).
+     *
+     * Without it a low could wait up to five minutes for the next periodic pass. Checking twice is
+     * harmless: each alarm keeps its own "next alarm" time, so a second check in the same minute does
+     * not post again.
+     *
+     * Call it once per process.
+     */
+    fun startGlucoseAlarmTrigger(scope: CoroutineScope) {
+        // UNDISPATCHED because RxBus has no replay: a reading processed before the collector starts
+        // would be missed.
+        rxBus.toFlow(EventBucketedDataCreated::class)
+            .collectResilient(scope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { localAlertUtils.checkGlucoseAlerts() }
     }
 
     /**
@@ -75,8 +108,11 @@ class PeriodicMaintenance(
      * Deliberately not idempotent-guarded here: the callers are shell startup paths that run once.
      * A failure is logged and the loop continues - one bad pass must not stop the missed-reading
      * alarm for the rest of the session.
+     *
+     * It also starts [startGlucoseAlarmTrigger], so the glucose alarms are checked on each new reading.
      */
     fun start(scope: CoroutineScope) {
+        startGlucoseAlarmTrigger(scope)
         scope.launch {
             while (isActive) {
                 try {

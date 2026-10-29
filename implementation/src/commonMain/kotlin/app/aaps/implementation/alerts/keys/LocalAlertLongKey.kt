@@ -12,6 +12,10 @@ import app.aaps.core.keys.interfaces.LongNonPreferenceKey
  *
  * They were missed by the 2026-09-22 sweep that made pump identity and the sync cursors
  * non-exportable; same category, found later by review.
+ *
+ * The glucose alarm keys (low, high, rapid fall) are the same kind of deadline: they hold back a
+ * repeat of the same alarm, and 0 means "may fire now". [HypoTreatedGlucose] belongs to the low
+ * alarm hold and is device state in the same way.
  */
 enum class LocalAlertLongKey(
     override val key: String,
@@ -20,5 +24,14 @@ enum class LocalAlertLongKey(
 ) : LongNonPreferenceKey {
 
     NextPumpDisconnectedAlarm("nextPumpDisconnectedAlarm", 0L),
-    NextMissedReadingsAlarm("nextMissedReadingsAlarm", 0L)
+    NextMissedReadingsAlarm("nextMissedReadingsAlarm", 0L),
+    NextHypoAlarm("nextHypoAlarm", 0L),
+    NextHyperAlarm("nextHyperAlarm", 0L),
+    NextRapidFallAlarm("nextRapidFallAlarm", 0L),
+
+    /**
+     * Glucose in mg/dL (rounded) when the user tapped "hypo treated", kept with that hold. A reading
+     * more than 10 mg/dL below it breaks the hold. 0 means no such hold.
+     */
+    HypoTreatedGlucose("hypoTreatedGlucose", 0L)
 }

@@ -413,6 +413,32 @@ enum class IntKey(
         dependency = BooleanKey.AlertPumpUnreachable,
         unitType = UnitType.MIN
     ),
+    /**
+     * Rapid fall drop size: a glucose *difference*, stored and shown in mg/dL for both unit settings.
+     *
+     * It must NOT be a `UnitDoubleKey`. That type guesses the unit from the number (below 36 means
+     * mmol/L), which is right for a glucose level but wrong for a small difference: 30 mg/dL would be
+     * shown as 540.
+     */
+    AlertRapidFallDrop(
+        key = "alert_rapid_fall_drop_mgdl",
+        defaultValue = 30,
+        min = 15,
+        max = 60,
+        title = KeysStrings.pref_title_alert_rapid_fall_drop,
+        summary = KeysStrings.pref_summary_alert_rapid_fall_drop,
+        dependency = BooleanKey.AlertRapidFall,
+        unitType = UnitType.MGDL
+    ),
+    AlertRapidFallWindow(
+        key = "alert_rapid_fall_window",
+        defaultValue = 15,
+        min = 5,
+        max = 30,
+        title = KeysStrings.pref_title_alert_rapid_fall_window,
+        dependency = BooleanKey.AlertRapidFall,
+        unitType = UnitType.MIN
+    ),
 
     AutotuneDefaultTuneDays(key = "autotune_default_tune_days", defaultValue = 5, min = 1, max = 30, title = KeysStrings.pref_title_autotune_days, summary = KeysStrings.autotune_default_tune_days_summary, unitType = UnitType.DAYS),
 

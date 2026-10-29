@@ -83,6 +83,9 @@ enum class BooleanKey(
     ),
     AlertIncreaseVolume("gradually_increase_notification_volume", true, KeysStrings.pref_title_alert_increase_volume),
     AlertOverrideDoNotDisturb("alert_override_dnd", true, KeysStrings.pref_title_alert_override_dnd, KeysStrings.pref_summary_alert_override_dnd, defaultedBySM = true),
+    AlertHypo("enable_hypo_alert", false, KeysStrings.pref_title_alert_hypo, KeysStrings.pref_summary_alert_hypo),
+    AlertHyper("enable_hyper_alert", false, KeysStrings.pref_title_alert_hyper, KeysStrings.pref_summary_alert_hyper),
+    AlertRapidFall("enable_rapid_fall_alert", false, KeysStrings.pref_title_alert_rapid_fall, KeysStrings.pref_summary_alert_rapid_fall),
 
     BgSourceUploadToNs("dexcomg5_nsupload", true, KeysStrings.pref_title_bg_source_upload_to_ns, defaultedBySM = true, hideParentScreenIfHidden = true, defaultedByHardenedMode = true),
     BgSourceCreateSensorChange("dexcom_lognssensorchange", true, KeysStrings.pref_title_bg_source_create_sensor_change, KeysStrings.pref_summary_bg_source_create_sensor_change, defaultedBySM = true),

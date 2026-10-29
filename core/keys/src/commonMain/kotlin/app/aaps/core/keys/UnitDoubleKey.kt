@@ -32,7 +32,25 @@ enum class UnitDoubleKey(
         defaultedBySM = true,
         dependency = BooleanKey.ApsUseDynamicSensitivity,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
+    ),
+    AlertHypoThreshold(
+        key = "alert_hypo_threshold",
+        defaultValue = 70.0,
+        minMgdl = 50,
+        maxMgdl = 100,
+        title = KeysStrings.pref_title_alert_hypo_threshold,
+        dependency = BooleanKey.AlertHypo
+    ),
+    AlertHyperThreshold(
+        key = "alert_hyper_threshold",
+        defaultValue = 250.0,
+        minMgdl = 140,
+        maxMgdl = 400,
+        title = KeysStrings.pref_title_alert_hyper_threshold,
+        dependency = BooleanKey.AlertHyper
     )
+    // The rapid fall drop is a glucose difference, so it is the IntKey `AlertRapidFallDrop` in mg/dL:
+    // this type guesses the unit from the number and gets small differences wrong.
     ;
 
 }

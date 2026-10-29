@@ -260,7 +260,13 @@ enum class NotificationId(
 
     // A pre-soak sensor of a native CGM driver was made the production sensor by the app itself, without the
     // user pressing the promote button. Appended at the END for the same reason as above.
-    CGM_STAGING_AUTO_PROMOTED(NORMAL, CGM);
+    CGM_STAGING_AUTO_PROMOTED(NORMAL, CGM),
+
+    // Glucose alarms the user sets up (low, high, rapid fall). They work for every BG source and only
+    // notify; they never change dosing. Appended at the END for the same reason as above.
+    BG_HYPO(URGENT, CGM),
+    BG_HYPER(IMPORTANT, CGM),
+    BG_RAPID_FALL(URGENT, CGM);
 
     companion object {
 

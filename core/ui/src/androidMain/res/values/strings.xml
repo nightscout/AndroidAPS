@@ -94,6 +94,10 @@
     <string name="uploader">Uploader</string>
     <string name="uploader_short">UPLD</string>
     <string name="missed_bg_readings">Missed BG readings</string>
+    <string name="alert_hypo_message" comment="%1$s = glucose value with unit, e.g. 68 mg/dL or 3.8 mmol/L. %2$s = age of that reading with unit, e.g. 4 min. Example: Low glucose: 68 mg/dL (4 min ago)">Low glucose: %1$s (%2$s ago)</string>
+    <string name="alert_hypo_treated" comment="Short button label on the low glucose alarm. The user tells AAPS that the hypo (low glucose) was treated, for example by eating sugar.">Hypo treated</string>
+    <string name="alert_hyper_message" comment="%1$s = glucose value with unit, e.g. 260 mg/dL or 14.4 mmol/L. %2$s = age of that reading with unit, e.g. 4 min. Example: High glucose: 260 mg/dL (4 min ago)">High glucose: %1$s (%2$s ago)</string>
+    <string name="alert_rapid_fall_message" comment="%1$s = glucose drop with unit (e.g. 35 mg/dL), %2$d = time window in minutes, %3$s = age of the newest reading with unit (e.g. 4 min). Example: Glucose dropping fast: 35 mg/dL in 15 min (4 min ago)">Glucose dropping fast: %1$s in %2$d min (%3$s ago)</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Mute for 5 minutes</string>
     <string name="mute">Mute</string>

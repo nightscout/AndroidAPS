@@ -77,7 +77,11 @@ active_scene|StringNonKey|false
 actual_basal_profile|MedtrumStringNonKey|true
 age|StringKey|true
 alarm_setting|MedtrumStringKey|true
+alert_hyper_threshold|UnitDoubleKey|true
+alert_hypo_threshold|UnitDoubleKey|true
 alert_override_dnd|BooleanKey|true
+alert_rapid_fall_drop_mgdl|IntKey|true
+alert_rapid_fall_window|IntKey|true
 allow_hardware_pump|BooleanNonKey|true
 always_use_shortavg|BooleanKey|true
 app_expiration_%s|LongComposedKey|true
@@ -179,8 +183,11 @@ enableSMB_with_high_temptarget|BooleanKey|true
 enableSMB_with_temptarget|BooleanKey|true
 enable_carbs_required_alert_local|BooleanKey|true
 enable_fabric2|BooleanKey|true
+enable_hyper_alert|BooleanKey|true
+enable_hypo_alert|BooleanKey|true
 enable_missed_bg_readings|BooleanKey|true
 enable_pump_unreachable_alert|BooleanKey|true
+enable_rapid_fall_alert|BooleanKey|true
 enable_unattended_export|BooleanKey|true
 eopatch_alarms|EopatchStringNonKey|true
 eopatch_bolus_current|EopatchStringNonKey|true
@@ -212,6 +219,7 @@ high_mark|UnitDoubleKey|true
 high_temptarget_raises_sensitivity|BooleanKey|true
 higher_ISFrange_weight|DoubleKey|true
 hourly_max_insulin|MedtrumIntKey|true
+hypoTreatedGlucose|LocalAlertLongKey|false
 insight_disable_vibration_auto|InsightBooleanKey|true
 insight_disable_vibration|InsightBooleanKey|true
 insight_disconnect_delay|InsightIntKey|true
@@ -298,8 +306,11 @@ medtronic_std_boluses_delivered|MedtronicLongNonKey|true
 medtronic_tbrs_set|MedtronicLongNonKey|true
 medtrum_session_token|MedtrumLongNonKey|true
 missed_bg_readings_threshold|IntKey|true
+nextHyperAlarm|LocalAlertLongKey|false
+nextHypoAlarm|LocalAlertLongKey|false
 nextMissedReadingsAlarm|LocalAlertLongKey|false
 nextPumpDisconnectedAlarm|LocalAlertLongKey|false
+nextRapidFallAlarm|LocalAlertLongKey|false
 notification_reader_dedup_state|StringNonKey|true
 notification_reader_packages|StringNonKey|true
 ns_alarm_stale_data_value|IntKey|true
