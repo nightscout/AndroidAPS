@@ -130,7 +130,7 @@ jobs:
           # Actions runs `bash -e` but NOT pipefail, so without this the exit code of the pipeline
           # would be tee's and a failed Gradle build would report success.
           set -o pipefail
-          ./gradlew --console=plain --no-daemon -Pcoverage -PfirebaseDisable \
+          ./gradlew --console=plain --no-daemon -Pcoverage \
             testFullDebugUnitTest testDebugUnitTest jvmTest testAndroidHostTest :desktop:shell:test \
             2>&1 | tee unit-tests.log
 

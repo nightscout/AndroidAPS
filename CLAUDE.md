@@ -120,7 +120,7 @@ reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused w
 - **A rename or a signature change is never local.** Run the suite **CI** runs, not the modules you
   edited. The command is in `.github/workflows/unit-tests.yml`:
   ```
-  ./gradlew.bat --console=plain --no-daemon --continue -PfirebaseDisable \
+  ./gradlew.bat --console=plain --no-daemon --continue \
     testFullDebugUnitTest testDebugUnitTest jvmTest testAndroidHostTest :desktop:shell:test
   ```
   Add `--continue` yourself. Without it gradle stops scheduling after the first failing module, so

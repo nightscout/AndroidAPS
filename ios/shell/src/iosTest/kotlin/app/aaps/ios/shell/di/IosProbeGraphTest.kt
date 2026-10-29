@@ -116,11 +116,13 @@ class IosProbeGraphTest {
     }
 
     @Test
-    fun `the graph builds FabricPrivacy over the real preference store`() {
+    fun `the graph builds FabricPrivacy and nothing is uploaded from iOS`() {
         val fabric = graph().fabricPrivacy
 
-        // Reads the settings store for the enable flag, so calling it exercises the store too.
-        fabric.fabricEnabled()
+        // False on purpose: it reports whether anything is uploaded, and on iOS nothing is. This is
+        // what puts "Crash logs upload disabled!" in the About dialog. If a Firebase bridge is ever
+        // added, this assertion is the one that should fail first and make someone think.
+        assertEquals(false, fabric.fabricEnabled())
         fabric.logMessage("probe")
     }
 
