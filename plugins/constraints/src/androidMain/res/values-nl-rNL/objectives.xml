@@ -56,8 +56,12 @@
     <string name="objectives_exam_learned_objectives">Uw voortgang in Doelen wordt samen met andere instellingen opgeslagen en deze moeten worden bewaard (backup).</string>
     <string name="objectives_exam_learned_objectives2">Bewaar de geëxporteerde instellingen en de gegenereerde APK ook buiten de telefoon. De telefoon kan verloren gaan, beschadigd raken, etc. Cloud storage welke toegankelijk is vanaf je telefoon is hiervoor een geschikte locatie. In zo\'n geval kan je AAPS binnen enkele minuten herstellen op een ander toestel. Het is ook een goede gewoonte om het gebruikte hoofdwachtwoord ook op een veilige plaats te bewaren. Zonder dit wachtwoord is de backup onbruikbaar. Hetzelfde geldt voor het sleutelbestand (.jks file) en de wachtwoorden welke gebruikt zijn om AAPS te bouwen. De rest is niet belangrijk - en kan op elk moment opnieuw van internet gedownload worden.</string>
     <string name="objectives_exam_learned_wrongcarbs">Als je een verkeerde invoer in AAPS hebt gedaan, of als deze niet overeenkomt met de realiteit, los deze dan zo snel mogelijk op. Dit kan leiden tot overdosering. AAPS moet altijd zo goed mogelijk geïnformeerd worden over koolhydraten, insuline etc.</string>
+    <string name="objectives_exam_learned_iob">Als je analyseert of AAPS goed voor je werkt, kan het bekijken van de IOB-grafiek veel nuttige informatie opleveren.</string>
+    <string name="objectives_exam_learned_cob">De COB-berekening is afhankelijk van de relatie tussen ISF en IC. Een verhoging van ISF of een verlaging van IC leidt tot langere absorptietijden. Bij een profielwijziging met een procentuele verandering van beide waarden tegelijkertijd wordt de absorptietijd echter niet beïnvloed.</string>
     <string name="objectives_exam_learned_breadgrams">Alleen gram is toegestaan voor de invoer van koolhydraten.</string>
     <string name="objectives_exam_learned_ecarbs">E-carbs kunnen worden gezien als een vervanging van een vertraagde bolus in het algemene pomp jargon.</string>
+    <string name="objectives_exam_learned_nsclient">Je kunt AAPS op afstand volgen met AAPSClient of Nightscout. Wanneer AAPSClient is gekoppeld aan de hoofdtelefoon, kun je AAPS ook op afstand bedienen.</string>
+    <string name="objectives_exam_learned_concentration1">Het gebruik van U200-insuline met een profielinstelling van 50% vereist een permanente omrekening: voor externe bolussen met pennen, en omdat alle standaardrapporten van AAPS of NS onjuist zullen zijn en voor het medisch team moeten worden omgerekend naar IE.</string>
     <string name="answerdisabledto">Beantwoorden uitgeschakeld tot: %1$s</string>
     <string name="wronganswer">Verkeerd antwoord!</string>
     <string name="unfinshed_button">Volgende onvoltooide</string>
@@ -68,7 +72,13 @@
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/nl/latest/SettingUpAaps/ConfigBuilder.html</string>
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Niet verbonden met het internet</string>
+    <string name="failedretrievetime">Tijd kon niet worden opgehaald</string>
     <string name="requirementnotmet">Vereisten van doel niet behaald</string>
     <string name="what_i_ve_learned">Wat ik heb geleerd:</string>
     <string name="verify_master_password">Verifieer dat u het masterwachtwoord kent</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Klaar</string>
+    <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">Bezig</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">Not started</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">Vergrendeld</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">juist antwoord</string>
 </resources>
