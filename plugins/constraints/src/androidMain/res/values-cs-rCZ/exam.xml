@@ -16,7 +16,7 @@
     <string name="hypott_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/TempTargets.html</string>
     <string name="pumpdisconnect_label">Důvody pro použití \"Odpojit pumpu\" v AAPS</string>
     <string name="pumpdisconnect_unnecessary">To je zbytečné, protože inzulín nebude dodáván v případě, že je pumpa fyzicky odpojena.</string>
-    <string name="pumpdisconnect_missinginsulin">Zabraňuje AAPS započítat inzulín, který nebyl dodán, když je pumpa fyzicky odpojena.</string>
+    <string name="pumpdisconnect_missinginsulin">Zabraňuje aplikaci AAPS započítat inzulín, který nebyl dodán, když je pumpa fyzicky odpojena.</string>
     <string name="pumpdisconnect_notstop">Nezastaví vydávání inzulínu, pokud pumpa zůstane připojena k tělu.</string>
     <string name="pumpdisconnect_openloop">Pošle AAPS do režimu otevřené smyčky.</string>
     <string name="pumpdisconnect_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-loop-status</string>
@@ -38,7 +38,7 @@
     <string name="noisycgm_nothing">Nic, smyčka se s tím vypořádá.</string>
     <string name="noisycgm_pause">Zakažte uzavřenou smyčku, aby nedošlo k předávkování nebo poddávkování.</string>
     <string name="noisycgm_replacesensor">Nahraďte trvale zašůměné nebo nepřesné senzory.</string>
-    <string name="noisycgm_checksmoothing">Ujistěte se, že vaše glykémie jsou vyhlazené, buď pomocí aplikace CGM nebo pomocí vyhlazujícího pluginu v AAPS.</string>
+    <string name="noisycgm_checksmoothing">Ujistěte se, že vaše glykémie jsou vyhlazené, buď pomocí aplikace CGM, nebo pomocí vyhlazovacího pluginu v AAPS.</string>
     <string name="noisycgm_hint1">https://wiki.aaps.app/cs/latest/CompatibleCgms/SmoothingBloodGlucoseData.html</string>
     <string name="exerciseprofile_label">Cvičení a profily</string>
     <string name="exerciseprofile_whattodo">Jak můžete použít profily, abyste mohli nejlépe pomoci systému řešit aerobní cvičení?</string>
@@ -77,7 +77,7 @@
     <string name="prerequisites2_hint1">https://wiki.aaps.app/cs/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Aktualizace AAPS</string>
     <string name="update_git">Chcete-li stavět s Android Studio, potřebujete nainstalovat a nakonfigurovat Git na vašem počítači. Vytváření v prohlížeči nepotřebuje Git.</string>
-    <string name="update_asap">Pokud jsou uvolněny aktualizované verze AAPS, starší verze mohou být po určité době vzdálené omezeny.</string>
+    <string name="update_asap">Pokud jsou vydány aktualizované verze AAPS, starší verze mohou být po určité době vzdáleně omezeny.</string>
     <string name="update_keys">Pokud používáte sestavení v Android Studiu, měli byste si uložit a zaznamenat umístění keystore a pro aktualizace používat stejný podpisový klíč jako pro předchozí instalaci.</string>
     <string name="update_askfriend">Máte-li potíže se sestavením apk, můžete nainstalovat apk, který byl vybudován přítelem.</string>
     <string name="update_hint1">https://wiki.aaps.app/cs/latest/Maintenance/UpdateToNewVersion.html</string>
@@ -146,7 +146,7 @@
     <string name="extendedcarbs_handling">Na co byste mohli použít e-sacharidy (prodloužené sacharidy)?</string>
     <string name="extendedcarbs_future">Pro plánování budoucích sacharidů, případně distribuovaných v intervalu (podobné prodlouženému bolusu).</string>
     <string name="extendedcarbs_free">Pro zaznamenání \'falešných\' sacharidů při cvičení, které chcete skrýt v AAPS.</string>
-    <string name="extendedcarbs_fat">e-sacharidy (distribuované v budoucnu) mohou AAPS pomoci při nakládání s jídly s vysokým obsahem tuku/bílkovin.</string>
+    <string name="extendedcarbs_fat">e-sacharidy (rozložené v budoucnu) mohou AAPS pomoci zvládat jídla s vysokým obsahem tuku/bílkovin.</string>
     <string name="extendedcarbs_rescue">Pro zaznamenání rychlých sacharidů použitých k léčbě nízké hladiny glykémie v krvi.</string>
     <string name="extendedcarbs_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/ExtendedCarbs.html</string>
     <string name="nsclient_label">Dálkové sledování a řízení</string>
@@ -198,7 +198,7 @@
     <string name="other_medication_text">AAPS snižuje bazály na zvýšení hladiny cukru v krvi. Léky ze skupiny inhibitorů SGLT2 (glifloziny) mohou zabránit očekávanému zvýšení hodnoty glykémie, a tak mohou produkovat nebezpečný nedostatek inzulínu (ketoacidózu).
 \nBěžné značky jsou: Invokana ®, Forxiga ®, Jardiance ®, Steglatro ®, Suglat ®, Apleway ®, Deberza ®, Synjardy ®, Vokanamet ®, Xigduo ®.\n\nTímto slibuji, že tyto léky neberu při používání AAPS nebo deaktivuji smyčku před užíváním těchto léků.</string>
     <string name="concentration_feature_label">Správa koncentrace inzulínu</string>
-    <string name="u200_with_profile">Než AAPS začal podporovat koncentrace inzulínu, uživatelé používali U200 nastavením 50% profilu, aby rozpůlili všechny hodnoty. Které odpovědi jsou v tomto nastavení pravdivé?</string>
+    <string name="u200_with_profile">Než aplikace AAPS začala podporovat koncentrace inzulínu, uživatelé používali U200 nastavením 50% profilu, aby podělili všechny hodnoty na polovinu. Které odpovědi jsou v tomto nastavení pravdivé?</string>
     <string name="u200_with_profile_reports">Moje interní databáze AAPS a reporty z NS jsou chybné, všechny hodnoty (bolusy, dávky, CDD) musí být vynásobeny 2, aby ukazovaly skutečný stav, zejména pro lékaře a zdravotnický tým.</string>
     <string name="u200_with_profile_pens">Nemusím řešit žádný přepočet mezi AAPS a perem, pokud použiji pero U200 k podání externího bolusu.</string>
     <string name="u200_with_profile_pens2">Ať už je pro externí bolus použito jakékoli pero (U100 nebo U200), musím pro každý externí bolus přepočítat mezi množstvím vypočítaným AAPS a množstvím, které si na peru zvolím.</string>
