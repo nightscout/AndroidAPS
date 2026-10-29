@@ -176,7 +176,7 @@
     <string name="pref_title_batt_critical">Kritinė pompos baterijos lygio riba</string>
     <string name="pref_title_bolus_percentage">Boluso procentas</string>
     <string name="deliverpartofboluswizard">Taikyti šią reikšmę gliukozės ir angliavandenių korekcijai boluso skaičiuotuvo rezultate.</string>
-    <string name="pref_title_reset_bolus_percentage_time">Laikas iki boliuso procento atkūrimo</string>
+    <string name="pref_title_reset_bolus_percentage_time">Laikas iki boluso procento atkūrimo</string>
     <string name="deliver_part_of_boluswizard_reset_time">Suleisti 100% bolusą, jei glikemijos duomenys senesni nei</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Laikas iki pakartotinio užrakinimo</string>
@@ -333,7 +333,7 @@
     <string name="openapsama_max_daily_safety_multiplier_summary">Numatytoji reikšmė: 3 tai pagrindinis OpenAPS saugiklis. Jis apriboja Jūsų valandinę bazę iki trigubos maksimalios valandinės bazės (standartiniu atveju). Jums greičiausiai neprireiks šios reikšmės keisti, tačiau turėtumėte žinoti, kad ji naudojama kaip saugiklis apskaičiuojant \"3x maksimali dienos bazė; 4x dabartinė valandinė bazė\".</string>
     <string name="pref_title_current_basal_multiplier">Dabartinės bazės saugos daugiklis</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Numatytoji reikšmė: 4 tai antras pagrindinis OpenAPS saugiklis, apskaičiuojant \"3x maksimali dienos bazė; 4x dabartinė valandinė bazė\". Jis reiškia, kad jūsų valandinė bazė, nepriklausomai nuo to, kokia maksimali valandinė bazė suprogramuota pompoje, negali būti didesnė, nei keturguba dabartinė valandinė bazė. Tai apsaugo Jus nuo pavojingų situacijų, kai nustatoma pernelyg didelė valandinė bazė, pilnai nesuprantant, kaip veikia algoritmas. Numatytoji reikšmė yra 4x; daugumai vartotojų niekada neprireikia šio skaičiaus keisti, o pajutus, kad \"atsitrenkiama\" į saugiklį, rekomenduojama peržiūrėti kitus nustatymus.</string>
-    <string name="pref_title_bolus_snooze_divisor">IVT daliklis laikotarpiui po boliuso</string>
+    <string name="pref_title_bolus_snooze_divisor">IVT daliklis laikotarpiui po boluso</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">Numatytoji reikšmė: 2\nAtidėjimas po boluso aktyvuojamas iškart po to, kai susileidžiate bolusą maistui. Ši funkcija neleidžia sistemai nustatyti mažų laikinų bazių iškart po valgio. Pvz.: jei IVT yra 3 val, tai atidėjimas po boluso pamažu deaktyvuojamas per 1,5 val (3 val. / 2).</string>
     <string name="pref_title_ama_min_5m_carbs_impact">AMA minimalus 5 min angliavandenių poveikis</string>
     <string name="pref_title_smb_min_5m_carbs_impact">SMB minimalus 5 min angliavandenių poveikis</string>
@@ -365,7 +365,7 @@
     <string name="pref_title_dura_weight">JIF kitimo laike koeficientas</string>
     <string name="openapsama_dura_ISF_weight_summary">Tai svoris, kuris taikomas per ilgesnės trukmės aukštą glikemiją, ir kuris stiprina JIF, taip potencialiai didindamas insulino suleidimą.\n\nNumatytoji reikšmė 0,0 iš esmės išjungia šį efektą.</string>
     <string name="pref_title_smb_delivery_ratio">SMB dozės dalis</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Numatytoji reikšmė: 0,5. Tai yra dar vienas svarbus OpenAPS saugos apribojimas, kuris nurodo, kokią dalį viso reikalingo insulino galima skirti kaip SMB. Šis apribojimas skirtas išvengti pavojingų situacijų, kai SMB užklausos siunčiamos tuo pačiu metu sekėjo globėjo telefono. Šią eksperimentinę reikšmę didinkite lėtai ir atsargiai.</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Numatytoji reikšmė: 0,5. Tai dar viena svarbi OpenAPS saugos riba, nustatanti, kokia viso apskaičiuoto reikiamo insulino dalis gali būti suleista kaip SMB. Ji padeda išvengti pavojingo perdozavimo, pavyzdžiui, kai tuo pačiu metu SMB komandos siunčiamos ir iš prižiūrinčio asmens telefono. Šią eksperimentinę reikšmę didinkite lėtai ir atsargiai.</string>
     <string name="pref_title_smb_delivery_ratio_min">Mažiausia SMB dozės dalis</string>
     <string name="openapsama_smb_delivery_ratio_min_summary">Numatytoji reikšmė: 0,5. Tai apatinė tiesiškai didėjančios SMB dozės dalies riba, o ne fiksuota reikšmė, kaip nurodyta aukščiau.</string>
     <string name="pref_title_smb_delivery_ratio_max">Didžiausia SMB dozės dalis</string>
