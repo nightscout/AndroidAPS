@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.omnipod.common.keys.DashBooleanPreferenceKey
@@ -48,7 +49,9 @@ import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandSuspendDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration
+import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
 import app.aaps.pump.omnipod.omnipod5.history.O5History
+import app.aaps.pump.omnipod.omnipod5.history.database.O5HistoryDatabase
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Completable
@@ -99,6 +102,7 @@ class O5PumpPluginTest : TestBaseWithProfile() {
     @Mock lateinit var protectionCheck: ProtectionCheck
     @Mock lateinit var blePreCheck: BlePreCheck
     @Mock lateinit var history: O5History
+    @Mock lateinit var historyDatabase: O5HistoryDatabase
 
     private lateinit var plugin: O5PumpPlugin
 
@@ -106,7 +110,7 @@ class O5PumpPluginTest : TestBaseWithProfile() {
     fun setup() {
         plugin = O5PumpPlugin(
             aapsLogger, rh, preferences, commandQueue, bleManager, podStateManager, history, pumpSync,
-            notificationManager, pumpEnactResultProvider, bolusProgressData, protectionCheck, blePreCheck, config
+            notificationManager, pumpEnactResultProvider, bolusProgressData, protectionCheck, blePreCheck, config, historyDatabase
         )
         whenever(rh.gs(R.string.omnipod_5_error_not_enough_insulin)).thenReturn("Not enough insulin")
         whenever(rh.gs(R.string.omnipod_5_error_bolus_already_in_progress)).thenReturn("Bolus already in progress")
@@ -450,6 +454,57 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         whenever(podStateManager.deliverySuspended).thenReturn(true)
 
         assertThat(plugin.isThisProfileSet(mock())).isFalse()
+    }
+
+    @Test
+    fun `delivered basal reports the confirmed rounded program hour by hour`() {
+        val profile = mock<PumpProfile>()
+        whenever(profile.getBasalValues()).thenReturn(arrayOf(Profile.ProfileValue(0, 0.42), Profile.ProfileValue(6 * 3600, 0.43)))
+        val program = mapProfileToBasalProgram(profile, PumpType.OMNIPOD_5)
+        whenever(podStateManager.isActivationCompleted).thenReturn(true)
+        whenever(podStateManager.basalProgram).thenReturn(program)
+
+        val delivered = plugin.deliveredBasal()!!
+
+        assertThat(delivered.map { it.timeAsSeconds }).containsExactlyElementsIn((0..23).map { it * 3600 }).inOrder()
+        assertThat(delivered.map { it.value }).containsExactlyElementsIn((0..23).map { if (it < 6) 0.40 else 0.45 }).inOrder()
+    }
+
+    @Test
+    fun `delivered basal averages half hour rates within each hour`() {
+        val profile = mock<PumpProfile>()
+        whenever(profile.getBasalValues()).thenReturn(arrayOf(Profile.ProfileValue(0, 0.40), Profile.ProfileValue(1800, 0.45)))
+        val program = mapProfileToBasalProgram(profile, PumpType.OMNIPOD_5)
+        whenever(podStateManager.isActivationCompleted).thenReturn(true)
+        whenever(podStateManager.basalProgram).thenReturn(program)
+
+        assertThat(plugin.deliveredBasal()!!.map { it.value })
+            .containsExactlyElementsIn(listOf(0.425) + List(23) { 0.45 }).inOrder()
+    }
+
+    @Test
+    fun `delivered basal is unknown before activation completes`() {
+        whenever(podStateManager.isActivationCompleted).thenReturn(false)
+        whenever(podStateManager.basalProgram).thenReturn(BasalProgram(listOf(BasalProgram.Segment(0, 48, 100))))
+
+        assertThat(plugin.deliveredBasal()).isNull()
+    }
+
+    @Test
+    fun `delivered basal is unknown before a program is confirmed`() {
+        whenever(podStateManager.isActivationCompleted).thenReturn(true)
+        whenever(podStateManager.basalProgram).thenReturn(null)
+
+        assertThat(plugin.deliveredBasal()).isNull()
+    }
+
+    @Test
+    fun `database reset clears the O5 history through OwnDatabasePlugin`() {
+        val databasePlugin: OwnDatabasePlugin = plugin
+
+        databasePlugin.clearAllTables()
+
+        verify(historyDatabase).clearAllTables()
     }
 
 
