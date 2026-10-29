@@ -1,22 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">Dit veld mag niet leeg zijn</string>
+    <string name="error_mustbe4hexadidits">Moet 4 tekens bevatten uit ABCDEF0123456789</string>
     <!--    General-->
+    <string name="treatments">Behandelingen</string>
+    <string name="treatments_history">Behandelingen geschiedenis</string>
+    <string name="treatments_desc">Bekijk en beheer de behandelingsgeschiedenis</string>
+    <string name="nav_configuration">Configuratie</string>
+    <string name="count_selected">%1$d geselecteerd</string>
+    <string name="delete">Verwijderen</string>
+    <string name="show_invalidated">Toon ongeldig</string>
+    <string name="hide_invalidated">Verberg ongeldig</string>
+    <string name="more_options">Meer opties</string>
     <string name="refresh">Vernieuwen</string>
+    <string name="no_history_records">Geen gegevens gevonden</string>
     <string name="error">Fout</string>
+    <string name="navigation_error_screen_not_found">Het scherm kon niet worden geopend (niet beschikbaar in deze configuratie).</string>
     <string name="profile_set_ok">Basaal profiel in pomp bijgewerkt</string>
     <string name="invalid_input">Verkeerde ingave</string>
+    <string name="invalid_number">Ongeldig nummer</string>
     <string name="constraint_applied">Beperking toegepast!</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Pomp niet beschikbaar</string>
     <string name="insulin_unit_shortname">E</string>
     <string name="pump_base_basal_rate">%1$.2f E/h</string>
+    <string name="pump_base_basal_rate_dynamic">%1$s E/h</string>
     <string name="pump_not_initialized_profile_not_set">Pomp niet geïnitialiseerd, profiel niet ingesteld!</string>
     <string name="failed_update_basal_profile">Update basaal profiel mislukt</string>
     <string name="no_valid_basal_rate">Geen correcte basale snelheid van pomp kunnen lezen</string>
     <string name="limiting_iob">IOB gelimiteerd tot %1$.1f E doordat %2$s</string>
+    <string name="loop_disabled_by_user">Loop uitgeschakeld door gebruiker</string>
     <string name="event_type">Gebeurtenis type</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/L</string>
+    <string name="bg_mgdl">%1$d mg/dL</string>
+    <string name="bg_mmol">%1$.1f mmol/L</string>
     <string name="save">Opslaan</string>
+    <string name="skip">Overslaan</string>
+    <string name="switch_to_edit">Bewerk</string>
     <string name="snooze">Sluimeren</string>
+    <string name="snooze_15m">15m sluimeren</string>
     <string name="virtual_pump">Virtuele Pomp</string>
     <string name="constraints">Beperkingen</string>
     <string name="superbolus">Superbolus</string>
@@ -25,6 +48,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Gebruiker</string>
     <string name="result">Resultaat</string>
     <string name="settings">Instellingen</string>
+    <string name="open_plugin">Plug-in openen</string>
     <string name="statuslights">Statusindicatoren</string>
     <string name="configbuilder_insulin">Insuline</string>
     <string name="protection">Beveiliging</string>
@@ -50,8 +74,21 @@
     <string name="stop">Stop</string>
     <string name="invalid_profile">Ongeldig profiel!</string>
     <string name="no_profile_set">GEEN PROFIEL INGESTELD</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">Scène %1$s is geëindigd, maar zijn profiel is nog in gebruik. %2$s Activeer een handmatig profiel.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Deze tijdelijke profiel wissel heeft %1$s, maar het permanente profiel eronder heeft %2$s. Activeer eerst de insuline die in de pomp zit in de insuline instellingen.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">De profiel wissel tijd moet binnen %1$d uur van nu liggen.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Het tijdelijke doel moet beginnen binnen %1$d uur vanaf nu.</string>
+    <string name="profile_switch_select_insulin_hint">Er wordt nog geen insuline gebruikt. Selecteer de insuline die u gebruikt, zodat deze profielwissel dit kan registreren.</string>
+    <string name="insulin_activation_failed">De insuline is niet gewijzigd. Uw vorige insuline wordt nog steeds gebruikt.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">De insuline is niet gewijzigd: %1$s Uw vorige insuline wordt nog steeds gebruikt.</string>
+    <string name="insulin_activation_unconfirmed">De insuline wissel kon niet worden bevestigd. Controleer welke insuline actief is in uw profiel voordat u een dosis toedient.</string>
+    <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">De insuline is niet gewijzigd. Uw vorige insuline wordt nog steeds gebruikt.\n\n%1$s</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nDe insuline werd ook niet gewisseld.</string>
     <string name="active"><![CDATA[<Huidig>]]></string>
     <string name="date">Datum</string>
+    <string name="insulin_nickname_label">Insuline bijnaam</string>
+    <string name="concentration_label">Concentratie</string>
+    <string name="peak_label">Piek</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">KH-ratio</string>
     <string name="isf_label">ISF</string>
@@ -86,11 +123,15 @@
     <string name="time">Tijd</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Laden…</string>
+    <string name="waiting_for_pump">Wachten op pomp…</string>
     <string name="notes_label">Notities</string>
     <string name="wrong_pump_data">Data komt van een andere pomp. Wijzig de pomp driver om de pomp status te resetten.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibratie</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Kalibratie niet opgeslagen: BG verandert te snel (## %1$s %3$s per 5 min, limiet %2$s). Probeer het opnieuw als glucose stabiel is.</string>
+    <string name="cal_reject_no_pair">Kalibratie niet opgeslagen: Geen sensor waarde gevonden in de  10 minuten hiervoor</string>
+    <string name="cal_reject_warmup">Kalibratie niet opgeslagen: de sensor is nog in de 2uur durende opwarmfase</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Bolus fout geconstateerd. Controleer handmatig de werkelijk toegediende hoeveelheid insuline en koolhydraten</string>
     <string name="duration_label">Tijdsduur</string>
@@ -99,6 +140,7 @@
     <string name="notconfigured">Niet ingesteld</string>
     <string name="loop_suspended_by_dst">Loop onderbroken voor zomer/wintertijd (DST)</string>
     <string name="required">nodig</string>
+    <string name="a11y_arrow_triple_down">heel snel dalend</string>
     <string name="a11y_arrow_double_down">snel dalend</string>
     <string name="a11y_arrow_single_down">dalend</string>
     <string name="a11y_arrow_forty_five_down">langzaam dalend</string>
@@ -106,15 +148,27 @@
     <string name="a11y_arrow_forty_five_up">langzaam stijgend</string>
     <string name="a11y_arrow_single_up">stijgend</string>
     <string name="a11y_arrow_double_up">snel stijgend</string>
+    <string name="a11y_arrow_triple_up">heel snel stijgend</string>
     <string name="a11y_arrow_none">geen</string>
     <string name="a11y_arrow_unknown">onbekend</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">verlaag %1$s met %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">verhoog %1$s met %2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">open %1$s om te typen</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">sluit %1$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Omhoog</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Omlaag</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Stap %1$d van %2$d</string>
     <string name="decrement">verlaag</string>
     <string name="increment">verhoog</string>
     <string name="a11y_high">hoog</string>
     <string name="a11y_inrange">binnen bereik</string>
     <string name="a11y_low">laag</string>
+    <string name="remove_label">Verwijder</string>
+    <string name="activate_profile">Activeer profiel</string>
     <string name="profileswitch_ismissing">Profiel wissel ontbreekt. Doe aub een profiel wissel of duw op Activeer Profiel in het Lokale profiel.</string>
     <string name="profile">Profiel</string>
+    <string name="percentage_label">Percentage</string>
+    <string name="timeshift_label">Tijd verschuiving</string>
     <string name="confirm_remove_multiple_items">Weet je zeker dat je %1$d items wilt verwijderen</string>
     <string name="overview_treatment_label">Behandeling</string>
     <string name="copytolocalprofile">Nieuw profiel van dit profiel maken?</string>
@@ -124,6 +178,9 @@
     <string name="login">Aanmelden</string>
     <string name="logout">Uitloggen</string>
     <string name="prime_fill">Prime/Vul</string>
+    <string name="prime_not_available">Deze pomp vult zichzelf tijdens het activeren. Prime/Fill vanuit AAPS is niet beschikbaar.</string>
+    <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Wissel</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Vullen</string>
     <string name="site_rotation">Site rotatie</string>
     <string name="edit_site">Bewerk</string>
     <string name="overview_insulin_label">Insuline</string>
@@ -154,6 +211,7 @@
     <string name="not_available_full">Niet beschikbaar</string>
     <string name="engineering_mode_enabled">Engineering modus is geactiveerd</string>
     <string name="next">Volgende</string>
+    <string name="pref_syncs_with_main_phone">Synchroniseert met de hoofdtelefoon.</string>
     <string name="show_hide_records">Verberg loop records</string>
     <!--    Protection-->
     <string name="wrongpassword">Verkeerd wachtwoord</string>
@@ -170,10 +228,12 @@
     <string name="reason">Reden</string>
     <string name="nochangerequested">Geen aanpassing noodzakelijk</string>
     <!--    Insulin / Concentration-->
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Wordt geactiveerd</string>
     <!--       Stats -->
     <string name="average">Gemiddelde</string>
     <string name="below" comment="below &quot;in range&quot;">Onder</string>
     <string name="in_range">Binnen bereik</string>
+    <string name="veryLow" comment="below 3.1">Zeer laag</string>
     <string name="low" comment="3.1-3.9">Laag</string>
     <string name="high" comment="10.0-13.9">Hoog</string>
     <string name="veryHigh" comment="above 13.9">Zeer hoog</string>
@@ -214,11 +274,30 @@
     <string name="pump_battery_change">Pomp bat. wissel</string>
     <string name="temporary_target">Tijdelijk streefdoel</string>
     <string name="running_mode">Actieve modus</string>
+    <string name="running_mode_desc">Sluit of open de loop, stop deze, of koppel de pomp af</string>
+    <string name="running_mode_change_not_allowed">Het wijzigen van de uitvoeringsmodus is niet mogelijk.</string>
+    <string name="pump_reconnect">Sluit de pomp weer aan</string>
+    <string name="scene_end_active">Einde actieve scene</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Ga naar</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Vervolg %1$s zal niet beginnen</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profiel: %1$d%%</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
+    <string name="scene_lock_banner_master_offline">Hoofdapparaat niet bereikbaar. De scènebesturing wordt hervat zodra de verbinding is hersteld.</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_no_pending_bolus">De voorbereide bolus is verlopen of vervangen. Tik nogmaals op de knop.</string>
+    <string name="clientcontrol_fail_internal">Er is iets misgegaan.</string>
+    <string name="clientcontrol_fail_unknown">De opdracht is mislukt.</string>
+    <string name="clientcontrol_unconfirmed_wear">Onbekende status — controleer je telefoon/Nightscout voordat je een nieuwe bolus toedient.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">Verbinding verbroken — leveringsstatus onbekend</string>
     <string name="careportal_temporarytargetvalue">Tijdelijk streefdoel</string>
     <string name="careportal_temporarytargetcancel">Tijdelijk streefdoel annuleren</string>
     <string name="boluswizard">Bolus wizard</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Insuline instellingen</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Boven Profiel</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Onder profiel</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Geen</string>
     <string name="user_entry">Gebruikersinvoer</string>
     <string name="glucosetype_finger">Vingerprik</string>
     <string name="glucosetype_sensor">Sensor</string>
@@ -228,6 +307,7 @@
     <string name="activity">Activiteit</string>
     <string name="wear">Wear</string>
     <string name="automation">Automatisering</string>
+    <string name="automation_management_desc">Maak regels aan die acties automatisch uitvoeren op basis van triggers.</string>
     <string name="settingsexport">Exporteer instellingen</string>
     <string name="custom">Aangepast</string>
     <string name="loop">Loop</string>
@@ -248,6 +328,8 @@
     <string name="location_front_left_lower_abdomen">Linker onderkant buik voorzijde</string>
     <string name="location_back_right_buttock">Rechterbil</string>
     <string name="location_back_left_buttock">Linkerbil</string>
+    <string name="location_back_right_lower_back">Rechter onderkant rug</string>
+    <string name="location_back_left_lower_back">Linker onderkant rug</string>
     <string name="location_side_right_upper_thigh">Buitenzijde bovenbeen hoog, rechts</string>
     <string name="location_side_left_upper_thigh">Buitenzijde bovenbeen hoog, links</string>
     <string name="location_side_right_lower_thigh">Buitenzijde bovenbeen laag, rechts</string>
@@ -324,6 +406,7 @@
     <string name="uel_tt_ns_refresh">TIJDELIJK DOEL NS VERVERSEN</string>
     <string name="uel_automation_removed">AUTOMATISERING VERWIJDERD</string>
     <string name="uel_bg_removed">BG VERWIJDERD</string>
+    <string name="uel_calibration_removed">CALIBRATIE VERWIJDERD</string>
     <string name="uel_careportal_removed">CAREPORTAL VERWIJDERD</string>
     <string name="uel_bolus_removed">BOLUS VERWIJDERD</string>
     <string name="uel_carbs_removed">KOOLHYDRATEN VERWIJDERD</string>
@@ -376,6 +459,7 @@
     <string name="uel_running_mode">BEDRIJFSMODE</string>
     <string name="uel_running_mode_removed">BEDRIJFSMODE VERWIJDERD</string>
     <string name="uel_running_mode_updarted">BEDRIJFSMODE GEWIJZIGD</string>
+    <string name="uel_remote_config_changed">CONFIGURATIE OP AFSTAND GEWIJZIGD</string>
     <!-- HardLimits -->
     <string name="temp_target_high_target">Tijdelijk streefdoel bovengrens</string>
     <string name="temp_target_value">Tijdelijk streefdoel waarde</string>
@@ -385,6 +469,10 @@
     <string name="valueoutofrange">»%1$s« is buiten de harde limiet</string>
     <!-- Profile validation -->
     <string name="missing_profile_name">Profielnaam ontbreekt</string>
+    <string name="profile_not_saved_activate">Profiel niet opgeslagen. Sla het profiel op voordat je het activeert.</string>
+    <string name="profile_basal_not_compatible_with_pump">Basaal stand is niet compatibel met de huidige pomp en kan niet worden geactiveerd. Verminder het percentage of pas de basaal stand aan</string>
+    <string name="profile_basal_below_pump_minimum">Basaal ratio is onder het minimum van de huidige pomp en kan niet geactiveerd worden. Verhoog het percentage of pas de totaalstand aan.</string>
+    <string name="profile_pump_incompatible_label">Pomp limiet</string>
     <string name="error_in_ic_values">Fout in IC waarden</string>
     <string name="error_in_isf_values">Fout in ISF waarden</string>
     <string name="error_in_basal_values">Fout in basaal waarden</string>
@@ -418,6 +506,10 @@
     <string name="basal">Basaal</string>
     <string name="basalpct">Basaal %</string>
     <string name="sensitivity">Gevoeligheid</string>
+    <string name="isf_for_carbs">Gemiddelde ISF voor Bolus Calculator en Koolhydraten Absorptie: %1$.1f</string>
+    <string name="isf_profile">Profiel ISF: %1$.1f</string>
+    <string name="isf_variable">Variabele ISF: %1$.1f</string>
+    <string name="isf_effective">Effectieve ISF: %1$.1f</string>
     <string name="autosens_long">Autosens Waarde: %.0f%%</string>
     <string name="algorithm_long">Autosens in algoritme: %.0f%%</string>
     <!-- Autotune -->
@@ -430,12 +522,23 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolusadviseur</string>
     <string name="bolus_advisor_message">Je hebt een hoge bloedglucose. In plaats van te eten, is het nu aan te raden om te wachten op een betere bloedglucose. Wil je nu een correctiebolus uitvoeren en je laten weten wanneer het tijd is om te eten? In dit geval worden er geen koolhydraten opgenomen en moet je de wizard opnieuw gebruiken wanneer we je er aan herinneren.</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
     <string name="set">Stel in</string>
+    <string name="eat_reminder_title">Tijd om te eten</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Totale wacht: %1$s</string>
+    <string name="eat_reminder_rung">De tijd is om</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="eat_reminder_not_set">De eetherinnering kon niet worden ingesteld. Sta AAPS toe om alarmen en herinneringen in te stellen in de Android instellingen.</string>
+    <string name="wizard_calculation">Berekening</string>
+    <string name="no_action_selected">Geen actie geselecteerd, geen verandering.</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Max te verwijderen: %1$d g (koolhydraten aanwezig)</string>
     <string name="wizard_no_actual_bg">Geen recente BG om de berekening op te baseren!</string>
     <string name="wizard_no_active_profile">Geen actief profiel ingesteld!</string>
     <string name="wizard_carbs_constraint">Koolhydraten beperking overschreden!</string>
     <string name="wizard_constraint_bolus_size">Insuline beperking!\nKan %1$.2fE niet leveren</string>
     <string name="wizard_pump_not_available">Geen pomp beschikbaar!</string>
+    <string name="quick_wizard_not_available">De geselecteerde snelwizard is niet langer beschikbaar. Vernieuw uw tegel.</string>
     <!--    Preferences-->
     <string name="child">Kind</string>
     <string name="teenage">Tiener</string>
@@ -471,14 +574,18 @@
     <string name="reading_pump_history">Lezen van pomp historie</string>
     <string name="password_cleared">Wachtwoord gewist!</string>
     <string name="pairing">Koppelen</string>
+    <string name="initializing">Initialiseren…</string>
     <string name="secs" comment="second short">%1$d s</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Kritiek</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
     <string name="pumplimit">Pomp limiet</string>
     <string name="limitingpercentrate">Begrezen van max procentuele wijzigen tot %1$d%% wegens de %2$s</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Percentage %1$d%% herberekend tot %2$s E/uur met huidige basaal %3$s E/uur</string>
     <string name="itmustbepositivevalue">dit moet een positieve waarde zijn</string>
     <string name="limitingbolus">Bolus beperkt tot %1$.1f E doordat %2$s</string>
     <!--    Dialogs-->
+    <string name="confirmation">Bevestiging</string>
     <string name="message">Bericht</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuleren</string>
@@ -509,10 +616,14 @@
     <string name="unattended_settings_export">Niet interactief instellingen exporteren</string>
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
+    <string name="clear_cloud_settings">Wis cloud instellingen</string>
+    <string name="clear_cloud_settings_message">Dit zal overschakelen naar lokale opslag en de autorisatie wissen. Doorgaan?</string>
     <string name="cloud_connection_failed">Verbinding maken met cloud opslag mislukt</string>
     <string name="cloud_reauthorize_message">Verbinding maken met cloud opslag mislukt. Wil je je opnieuw authenticeren?</string>
     <string name="reauthorize">Opnieuw authenticeren</string>
     <string name="cloud_auth_success">Authenticatie cloudopslag gelukt</string>
+    <string name="format_hour_minute" comment="%1$d=hours, %2$d=minutes. Example: 1 h 23 min">%1$d u %2$d min</string>
+    <string name="format_hours_only" comment="%1$d=hours, when minutes are zero. Example: 4 h">%1$d u</string>
     <!-- datetime layout -->
     <string name="event_time_label">Gebeurtenis tijdstip</string>
     <!-- BluetoothDevicePreference -->
@@ -530,11 +641,15 @@
     <string name="nav_exit">Afsluiten</string>
     <string name="open_navigation">Open navigatie</string>
     <string name="nav_history_browser">Historiek venster</string>
+    <string name="localprofile">Profiel</string>
     <string name="nav_setupwizard">Setup Wizard</string>
     <string name="statistics">Statistieken</string>
     <string name="nav_profile_helper">Profiel hulp</string>
     <!-- Alerts -->
     <!-- Actions Screen -->
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Verplaats eerder</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Verplaats later</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Details weergeven</string>
     <string name="extended_bolus_button">Vertraagde bolus</string>
     <string name="sensor_label">Sensor</string>
     <string name="insulin_label">Insuline</string>
