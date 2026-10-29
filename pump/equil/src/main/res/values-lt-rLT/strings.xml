@@ -44,6 +44,8 @@
     <string name="equil_new_infusion_set_no">Ne, tik rezervuarą arba bateriją</string>
     <string name="equil_same_infusion_set_hint">Kaniulė nebus užpildyta, o jos pakeitimas nebus užregistruotas.</string>
     <string name="equil_unpair_alert">Ar tikrai norite atsisakyti kontrolės per %1$s?</string>
+    <string name="equil_record_basal">Valandinė bazė  %1$s V/val.</string>
+    <string name="equil_record_basal_temp">Laikina bazė %1$s V/val.</string>
     <string name="equil_record_bolus">Bolusas %1$s V</string>
     <string name="equil_error_set_temp_basal_failed_validation">TBR trukmė turi būti didesnė už nulį ir būti %1$s minučių kartotinis.</string>
     <string name="equil_basal_exceeds_max">Profilio valandinė bazė %1$s V/val. viršija didžiausią pompos valandinę bazę %2$s U/h. Padidinkite didžiausios valandinė bazės nustatymą ir iš naujo prijunkite pompą.</string>
@@ -62,6 +64,7 @@
     <string name="equil_firmware_version">Programinės įrangos versija</string>
     <string name="equil_shutdown_be">Equil atsijungs automatiškai</string>
     <string name="equil_shutdown">Equil automatinis atsijungimas</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Bazė: %1$.2f V/val., trukmė: %2$d min</string>
     <string name="equil_common_history_bolus_value">%1$.2f V</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Nustatyti bolusą</string>
