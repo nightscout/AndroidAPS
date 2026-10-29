@@ -77,7 +77,8 @@
     <string name="description_tidepool">Sinchronizuoti duomenis su Tidepool</string>
     <string name="upload_now">Įkelti dabar</string>
     <string name="tidepool_purge_data">Išvalyti visus duomenis</string>
-    <string name="tidepool_purge_data_confirm">Ištrinti VISUS duomenis, kuriuos AAPS įkėlė į Tidepool? Šio veiksmo atšaukti negalima. Naudokite šią funkciją senesnės versijos sugadintiems duomenims pašalinti, tada paleiskite pilną sinchronizavimą, kad įkeltumėte duomenis iš naujo.</string>
+    <string name="tidepool_purge_data_confirm">Ištrinti VISUS duomenis, kuriuos AAPS įkėlė į Tidepool? Šio veiksmo atšaukti negalima. Naudokite šią funkciją senesnės versijos sugadintiems duomenims pašalinti, tada paleiskite pilną sinchronizaciją, kad įkeltumėte duomenis iš naujo.</string>
+    <string name="tidepool_full_sync_comment">Vykdyti pilną sinchronizaciją? AAPS įkels visus duomenis į Tidepool. Tai gali užtrukti.</string>
     <string name="not_connected">Neprisijungta</string>
     <string name="read_only">Tik skaityti</string>
     <string name="working">Dirbama</string>
