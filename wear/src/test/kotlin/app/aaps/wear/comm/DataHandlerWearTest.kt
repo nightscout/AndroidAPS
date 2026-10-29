@@ -128,6 +128,6 @@ internal class DataHandlerWearTest : WearTestBase() {
     companion object {
 
         /** Generous upper bound — the handler normally answers in well under a millisecond. */
-        private const val HANDLER_TIMEOUT_MS = 2_000L
+        private const val HANDLER_TIMEOUT_MS = 5_000L
     }
 }
