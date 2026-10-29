@@ -9,8 +9,8 @@
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pomp stuurprogramma gewijzigd.</string>
     <!--    DateUtil-->
-    <string name="minago">%1$dm geleden</string>
-    <string name="secago">%1$ds geleden</string>
+    <string name="minago">%1$dm oud</string>
+    <string name="secago">%1$ds oud</string>
     <string name="min_plus">(+%1$dm)</string>
     <string name="sec_plus">(+%1$ds)</string>
     <string name="minago_long">%1$d minuten geleden</string>
