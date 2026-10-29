@@ -37,6 +37,7 @@
     <string name="accomplished">Įvykdyta: %1$s</string>
     <string name="objectives_usage_objective">Išmokite valdyti AAPS</string>
     <string name="objectives_usage_gate">Atlikite įvairius veiksmus su AAPS</string>
+    <string name="objectives_usage_learned">Susipažinote su AAPS pagrindais. Dauguma valdiklių yra pagrindiniame ekrane. Daugiau veiksmų rasite ekrano apačioje esančiuose meniu Terapija ir Valdymas bei šoniniame meniu.</string>
     <string name="objectives_useprofileswitch">Nustatykite 90 % profilį 10-čiai minučių.</string>
     <string name="objectives_usedisconnectpump">Imituokite dušą. Atjunkite pompą 1 val.</string>
     <string name="objectives_usereconnectpump">... ir iš naujo prijunkite tuo pačiu būdu</string>
@@ -44,6 +45,8 @@
     <string name="objectives_useloop">Peržiūrėkite Ciklo įskiepio turinį</string>
     <string name="objectives_usescale">Slinkti arba keisti gliukozės grafiko mastelį</string>
     <string name="objectives_exam_objective">Pasitikrinkite žinias</string>
+    <string name="objectives_exam_gate">Atidžiai perskaitykite klausimus. Kiekvienas klausimas turi kelis atsakymų variantus, ir teisingų gali būti daugiau nei vienas. Pažymėkite visus teisingus atsakymus ir spauskite PATIKRINTI.</string>
+    <string name="objectives_exam_learned_prerequisites">Nebūtina būti programuotoju. Kad galėtumėte įvykdyti mokymo etapus, reikės Nightscout arba Tidepool, suderinamos pompos ir galimybės sukurti AAPS – interneto naršyklėje arba naudojant Android Studio. To reikės pirmą kartą diegiant AAPS ir kiekvieną kartą ją atnaujinant.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS gali veikti be interneto.</string>
     <string name="objectives_exam_learned_basaltest">Profilis turi būti patikrintas ir atnaujintas. Tikslesnis profilis = geresni rezultatai.</string>
     <string name="objectives_exam_learned_dia">IVT uždaro ciklo sistemoje traktuojama kitaip (laikas, per kurį nustoja veikti visas insulinas), nei įprastoje pompos terapijoje (laikas, per kurį nustoja veikti didžioji dalis insulino).</string>
@@ -57,13 +60,17 @@
     <string name="objectives_exam_learned_exercise2">Bent 1 val. iki fizinio aktyvumo nustatytas aukštesnis laikinas tikslas taipogi padeda sumažinti aktyvaus insulino kiekį organizme.</string>
     <string name="objectives_exam_learned_noisycgm">Jei CGM duomenys nepatikimi, leisti ciklui veikti be priežiūros pavojinga.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS turi gauti informaciją apie pompos fizinį atjungimą, tam, kad AIO skaičiavimai būtų tikslūs.</string>
+    <string name="objectives_exam_learned_insulin">AAPS turi žinoti, koks insulinas yra pompoje, nes nuo to priklauso AIO skaičiavimas.</string>
     <string name="objectives_exam_learned_sensitivity">Jautrumo nustatymo algoritmas padeda adaptuoti automatinį insulino dozavimą įvairioms situacijoms.</string>
     <string name="objectives_exam_learned_objectives">Jūsų pažanga mokymo programoje yra išsaugoma kartu su kitais nustatymais, kai sukuriate jų atsarginę kopiją.</string>
     <string name="objectives_exam_learned_objectives2">Eksportuotus nustatymus ir sukurtą APK failą visada laikykite ne tik telefone. Telefoną galima pamesti, jis gali sugesti ar būti sugadintas. Tinkama vieta atsarginei kopijai gali būti bet kuri iš telefono pasiekiama debesies saugykla. Tokiu atveju AAPS kitame įrenginyje galėsite atkurti vos per kelias minutes. Taip pat saugioje vietoje išsaugokite naudojamą pagrindinį slaptažodį. Be jo atsarginė nustatymų kopija bus bevertė. Tas pats galioja AAPS kūrimui naudojamiems pasirašymo raktams (.jks failui) ir slaptažodžiams. Kitus failus prireikus galima bet kada iš naujo atsisiųsti iš interneto.</string>
     <string name="objectives_exam_learned_wrongcarbs">Jei į AAPS įvedėte neteisingus duomenis arba jie neatitinka tikrosios situacijos, kuo greičiau juos ištaisykite. Priešingu atveju gali būti suleista per daug insulino. AAPS visada turėtų turėti kuo tikslesnę informaciją apie angliavandenius, insuliną ir kitus svarbius duomenis.</string>
+    <string name="objectives_exam_learned_iob">Analizuojant, ar gerai veikia AAPS, AIO grafiko stebėjimas gali suteikti daug naudingos informacijos.</string>
     <string name="objectives_exam_learned_cob">AAO apskaičiavimas priklauso nuo JIF ir IA tarpusavio ryšio. Kuo didesnis JIF ar mažesnis IA, tuo angliavandeniai įsisavinami lėčiau. Tačiau profilio keitimas procentais abi reikšmes pakeičia proporcingai, todėl AV įsisavinimo laikas nepakinta.</string>
     <string name="objectives_exam_learned_breadgrams">Angliavandeniai įvedami tik gramais.</string>
     <string name="objectives_exam_learned_ecarbs">Ištęsti AV pakeičia pompose įprastai naudojamus ištęstus bolusus.</string>
+    <string name="objectives_exam_learned_nsclient">AAPS veikimą nuotoliniu būdu galite stebėti naudodami AAPSClient arba Nightscout. Susiejus AAPSClient su pagrindiniu telefonu, AAPS taip pat galima valdyti nuotoliniu būdu.</string>
+    <string name="objectives_exam_learned_concentration1">Naudojant U200 insuliną su 50 % profiliu, reikės nuolat perskaičiuoti dozes: tiek leidžiant insuliną švirkštikliu, tiek vertinant standartines AAPS ar Nightscout ataskaitas. Jose dozės bus rodomos neteisingai, todėl sveikatos priežiūros specialistams jas reikės perskaičiuoti į tarptautinius vienetus (V).</string>
     <string name="objectives_exam_learned_concentration2" formatted="false">Pereinant nuo U200 insulino su 50 % profiliu prie U200 insulino naudojant insulino koncentracijos funkciją, reikės sukurti naują, stipresnį profilį, savaitei išjungti DynamicISF ir priprasti visas insulino dozes vertinti tarptautiniais vienetais (V).</string>
     <string name="objectives_exam_learned_concentration3">Insulino koncentraciją galima keisti tik keičiant rezervuarą. Svarbiausia – ypač naudojant pompas su vamzdeliais, – bolusų niekada neleiskite tiesiogiai per pačios pompos valdymo ekraną.</string>
     <string name="answerdisabledto">Atsakyti negalima iki: %1$s</string>
@@ -76,6 +83,7 @@
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/lt/latest/SettingUpAaps/ConfigBuilder.html</string>
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/lt/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">Nėra interneto ryšio</string>
+    <string name="failedretrievetime">Nepavyko nustatyti laiko</string>
     <string name="requirementnotmet">Etapo reikalavimai neįvykdyti</string>
     <string name="what_i_ve_learned">Ką išmokote:</string>
     <string name="verify_master_password">Pasitikrinkite, ar žinote pagrindinį slaptažodį</string>
