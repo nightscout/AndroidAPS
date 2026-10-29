@@ -28,6 +28,7 @@
     <string name="alarm_channel_bolus_error">Chyba bolusu</string>
     <string name="alarm_channel_error">Obecná chyba</string>
     <string name="alarm_channel_urgent">Urgentní alarm</string>
+    <string name="alarm_channel_eat_reminder">Čas jíst</string>
     <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (přepsat režim Nerušit)</string>
     <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (respektuje režim Nerušit)</string>
     <string name="alarm_channel_silent_urgent">Urgentní alarm (režim zvyšování hlasitosti)</string>
