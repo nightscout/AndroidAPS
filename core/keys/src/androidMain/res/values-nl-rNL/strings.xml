@@ -78,6 +78,9 @@
     <!-- Wear preferences -->
     <!-- Site rotation preferences -->
     <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">Stapgrootte koolhydraten knoop 1</string>
+    <string name="pref_title_carbs_button_increment_2">Stapgrootte koolhydraten knop 2</string>
+    <string name="pref_title_carbs_button_increment_3">Stapgrootte koolhydraten knop 3</string>
     <string name="carb_increment_button_message">Aantal koolhydraten toevoegen wanneer de knop wordt ingedrukt</string>
     <string name="deliver_part_of_boluswizard_reset_time">Volledige bolus (100%) leveren als glycemie ouder is dan</string>
     <!-- IntKey: Protection preferences -->
