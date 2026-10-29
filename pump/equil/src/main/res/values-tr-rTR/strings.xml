@@ -44,8 +44,6 @@
     <string name="equil_new_infusion_set_no">Hayır, yalnızca rezervuar veya pil</string>
     <string name="equil_same_infusion_set_hint">Kanül hazırlanmayacak ve kanül değişikliği kaydedilmeyecektir.</string>
     <string name="equil_unpair_alert">%1$s üzerindeki kontrolü bırakmak istediğinizden emin misiniz?</string>
-    <string name="equil_record_basal">Bazal oranı %1$s Ü/S</string>
-    <string name="equil_record_basal_temp">Geçici bazal oranı %1$s Ü/S</string>
     <string name="equil_record_bolus">Bolus %1$s Ü</string>
     <string name="equil_error_set_temp_basal_failed_validation">GBO süresi sıfırdan büyük ve %1$s dakikanın katı olmalıdır.</string>
     <string name="equil_basal_exceeds_max">%1$s Ü/sa değerindeki profil bazal oranı, pompanın %2$s Ü/sa olan maksimum bazal sınırını aşıyor. Maksimum bazal ayarını artırın ve pompayı yeniden bağlayın.</string>
@@ -62,7 +60,6 @@
     <string name="equil_firmware_version">Cihaz Yazılımı Sürümü</string>
     <string name="equil_shutdown_be">Equil otomatik olarak kapanacak</string>
     <string name="equil_shutdown">Equil otomatik kapanma</string>
-    <string name="equil_common_history_tbr_value">Oran: %1$.2f Ü/S, süre: %2$d dakika</string>
     <string name="equil_common_history_bolus_value">%1$.2f Ü</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Bolusu ayarla</string>
