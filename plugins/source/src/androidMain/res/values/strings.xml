@@ -48,6 +48,32 @@
     <string name="permission_notification_listener_title">Notification Access</string>
     <string name="permission_notification_listener_description">Required to read glucose values from CGM app notifications</string>
 
+    <!-- Generic CGM source strings, shared by native CGM drivers -->
+    <string name="cgm_nav_back">Back</string>
+    <string name="cgm_nav_close">Close</string>
+    <string name="cgm_help_expand">Show more</string>
+    <string name="cgm_help_collapse">Show less</string>
+    <string name="cgm_step_counter" comment="%1$d=current step number, %2$d=how many steps in total. Example: Step 2 of 4">Step %1$d of %2$d</string>
+    <string name="cgm_warmup_remaining_label">remaining</string>
+    <string name="cgm_warmup_ends_at" comment="%1$s=localized time. Example: Ends at 3:45 PM">Ends at %1$s</string>
+    <string name="cgm_warmup_what_happened">What happened</string>
+    <string name="cgm_sensor_heading">Sensor</string>
+    <string name="cgm_sensor_name">Name</string>
+    <string name="cgm_sensor_address">Address</string>
+    <string name="cgm_actions_heading">Actions</string>
+    <string name="cgm_session_label">Bluetooth session</string>
+    <string name="cgm_driver_log_title">Sensor driver log</string>
+    <string name="cgm_driver_log_refresh">Refresh</string>
+    <string name="cgm_driver_log_share">Share the log</string>
+    <string name="cgm_driver_log_empty">Nothing yet. Lines appear here as soon as the driver starts working.</string>
+    <string name="cgm_driver_log_count" comment="%1$d=how many lines are shown. Example: 320 lines">%1$d lines</string>
+    <string name="cgm_driver_log_open">Driver log</string>
+    <string name="cgm_driver_log_follow">Follow</string>
+    <string name="staging_auto_promote_title">Switch to the pre-soak sensor automatically</string>
+    <string name="staging_auto_promote_summary">After the set number of hours, the pre-soak sensor feeds the loop if its recent readings are good. The sensor in use is stopped. The promote button still works.</string>
+    <string name="staging_auto_promote_hours_title">Hours before the automatic switch</string>
+    <string name="staging_auto_promote_done" comment="%1$s=hours since the pre-soak start, with unit. Example: The pre-soak sensor now feeds the loop. Automatic switch after 10 h.">The pre-soak sensor now feeds the loop. Automatic switch after %1$s.</string>
+
     <string name="aidex">MicroTech CGM App</string>
     <string name="description_source_aidex">Receive CGM values from LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 etc.</string>
 
@@ -80,7 +106,6 @@
     <string name="dexcom_oneplus_last_mac_hint" comment="%1$s=last MAC. Example: AA:BB:…:FF">Last successful MAC: %1$s</string>
     <string name="dexcom_oneplus_warmup_title">Sensor warm-up</string>
     <string name="dexcom_oneplus_warmup_summary">~30 minute warm-up countdown</string>
-    <string name="dexcom_oneplus_nav_back">Back</string>
     <string name="dexcom_oneplus_permissions_hint">Before pairing: allow nearby Bluetooth devices (and notifications if prompted). Keep the phone near the sensor during start and warm-up.</string>
     <string name="dexcom_oneplus_scan_hint">Scan for nearby ONE+ / G7-family sensors. Stop other Dexcom / xDrip / Juggluco Direct apps first.</string>
     <string name="dexcom_oneplus_scan_pick_hint">Every ONE+ / G7 sensor in range is listed. The 4-digit code is not sent in the Bluetooth signal, so the app cannot use it to find your sensor. Pick the one you have just applied. The code is checked when you press Connect.</string>
@@ -199,10 +224,6 @@
     <string name="dexcom_oneplus_staging_promote_rejected_not_settled">Staging sensor has not settled long enough to promote yet.</string>
     <string name="dexcom_oneplus_staging_promote_rejected_no_glucose">Staging sensor has not produced enough valid glucose yet.</string>
     <string name="dexcom_oneplus_staging_promote_rejected_no_recent_glucose">Staging sensor has not sent a reading in the last minutes. Wait until it reads again before switching to it.</string>
-    <string name="cgm_nav_close">Close</string>
-    <string name="cgm_help_expand">Show more</string>
-    <string name="cgm_help_collapse">Show less</string>
-    <string name="cgm_step_counter" comment="%1$d=current step number, %2$d=how many steps in total. Example: Step 2 of 4">Step %1$d of %2$d</string>
     <string name="dexcom_oneplus_slot_production_short">Production</string>
     <string name="dexcom_oneplus_slot_staging_short">Pre-soak</string>
     <string name="dexcom_oneplus_help_how_to_start">How to start — 6 steps</string>
@@ -216,19 +237,11 @@
     <string name="dexcom_oneplus_scan_signal" comment="%1$d=signal strength in dBm, always negative. Example: Signal −67 dBm">Signal %1$d dBm</string>
     <string name="dexcom_oneplus_scan_empty">No sensor found yet. Press Scan and keep the phone right next to the sensor.</string>
     <string name="dexcom_oneplus_connect_target" comment="%1$s=sensor name or Bluetooth address. Example: Connect adopts DX02ABCD and opens warm-up.">Connect adopts %1$s and opens warm-up.</string>
-    <string name="cgm_warmup_remaining_label">remaining</string>
-    <string name="cgm_warmup_ends_at" comment="%1$s=localized time. Example: Ends at 3:45 PM">Ends at %1$s</string>
-    <string name="cgm_warmup_what_happened">What happened</string>
     <string name="dexcom_oneplus_warmup_retry">Try connecting again</string>
     <string name="dexcom_oneplus_warmup_start_other">Start another sensor</string>
-    <string name="cgm_sensor_heading">Sensor</string>
-    <string name="cgm_sensor_name">Name</string>
-    <string name="cgm_sensor_address">Address</string>
     <string name="dexcom_oneplus_open_status">Status</string>
     <string name="dexcom_oneplus_production_heading">Production sensor</string>
     <string name="dexcom_oneplus_staging_heading_short">Pre-soak sensor</string>
-    <string name="cgm_actions_heading">Actions</string>
-    <string name="cgm_session_label">Bluetooth session</string>
     <string name="dexcom_oneplus_sensor_age" comment="%1$s=already formatted duration. Example: Started 3 days ago">Started %1$s ago</string>
     <string name="dexcom_oneplus_production_no_reading">No reading received yet.</string>
     <string name="dexcom_oneplus_staging_readings_label">Readings collected</string>
@@ -237,16 +250,5 @@
     <string name="dexcom_oneplus_end_of_life_text">Starting a pre-soak sensor now means the next one is already warm when this one stops.</string>
     <string name="dexcom_oneplus_start_presoak">Start a pre-soak sensor</string>
     <string name="dexcom_oneplus_staging_none_short">A pre-soak sensor collects readings alongside the one in use. It never feeds the loop until you promote it here.</string>
-    <string name="cgm_driver_log_title">Sensor driver log</string>
-    <string name="cgm_driver_log_refresh">Refresh</string>
-    <string name="cgm_driver_log_share">Share the log</string>
-    <string name="cgm_driver_log_empty">Nothing yet. Lines appear here as soon as the driver starts working.</string>
-    <string name="cgm_driver_log_count" comment="%1$d=how many lines are shown. Example: 320 lines">%1$d lines</string>
-    <string name="cgm_driver_log_open">Driver log</string>
-    <string name="cgm_driver_log_follow">Follow</string>
-    <string name="staging_auto_promote_title">Switch to the pre-soak sensor automatically</string>
-    <string name="staging_auto_promote_summary">After the set number of hours, the pre-soak sensor feeds the loop if its recent readings are good. The sensor in use is stopped. The promote button still works.</string>
-    <string name="staging_auto_promote_hours_title">Hours before the automatic switch</string>
-    <string name="staging_auto_promote_done" comment="%1$s=hours since the pre-soak start, with unit. Example: The pre-soak sensor now feeds the loop. Automatic switch after 10 h.">The pre-soak sensor now feeds the loop. Automatic switch after %1$s.</string>
 
 </resources>

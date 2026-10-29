@@ -8,7 +8,7 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
- * The age of a CGM sensor, as shown in "Started %1$s ago" on the ONE+ screens.
+ * The age of a CGM sensor, as shown in "Started %1$s ago" on the native CGM screens.
  *
  * It keeps the two largest units, like the old `DateUtil.age(millis, false, rh)` did:
  * "2 days, 5 hours", "3 hours, 10 minutes", "7 minutes". Every piece comes from a translated

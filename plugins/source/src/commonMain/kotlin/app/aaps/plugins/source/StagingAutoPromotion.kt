@@ -4,7 +4,7 @@ package app.aaps.plugins.source
  * Decides when a pre-soak sensor may take over the loop by itself, without the user pressing the
  * promote button.
  *
- * Used by the Dexcom ONE+ / G7 plugin. It is checked on every reading of the
+ * Used by the native CGM plugins that have a pre-soak sensor. It is checked on every reading of the
  * pre-soak sensor, so it needs no timer, it survives an app restart, and a sensor that sends nothing
  * is never switched to.
  *
@@ -64,7 +64,7 @@ object StagingAutoPromotion {
      * @param startMs pre-soak start (epoch ms), 0 or less when not known
      * @param readings pre-soak readings as (timestamp ms, mg/dL), any order
      * @param minRecentReadings how many readings the last [RECENT_WINDOW_MS] must hold; it depends on
-     *   the sensor cadence (5 min for ONE+ / G7)
+     *   the sensor cadence (5 min for Dexcom ONE+ / G7)
      * @param nowMs current time (epoch ms)
      */
     fun decide(

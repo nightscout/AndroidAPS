@@ -1,5 +1,6 @@
 package app.aaps.plugins.source.activities
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -53,12 +54,15 @@ import kotlinx.coroutines.withContext
 import dev.zacsweers.metro.Inject
 
 /**
- * Shows what the Dexcom ONE+ / G7 driver has written, without leaving the app.
+ * Shows what a native CGM driver has written, without leaving the app.
  *
  * The point is a user who has a sensor that does not work. Their lines are in `AndroidAPS.log`
  * already, but reaching them means exporting the whole log folder and opening a five megabyte file
  * on a phone. This screen reads the same file, keeps only the driver lines, and lets them be read
  * or shared as they are.
+ *
+ * The screen knows no driver. The caller says which logger names to show, and may give a title,
+ * through [intent]. Without logger names the screen shows nothing.
  *
  * It is read only. Nothing here talks to a sensor.
  */
@@ -78,11 +82,37 @@ class CgmDriverLogActivity : MetroAppCompatActivity() {
                 AapsTheme {
                     CgmDriverLogScreen(
                         logDirectory = loggerUtils.logDirectory,
+                        loggerNames = loggerNamesOf(intent),
+                        title = intent.getStringExtra(EXTRA_TITLE),
                         onBack = { finish() },
                     )
                 }
             }
         }
+    }
+
+    companion object {
+
+        /** The logger names whose lines are shown, as a `String[]`. */
+        const val EXTRA_LOGGER_NAMES = "app.aaps.plugins.source.CGM_DRIVER_LOG_LOGGER_NAMES"
+
+        /** The title of the screen, as a `String`. Optional: the generic title is used without it. */
+        const val EXTRA_TITLE = "app.aaps.plugins.source.CGM_DRIVER_LOG_TITLE"
+
+        /**
+         * The intent that opens this screen for one driver.
+         *
+         * @param loggerNames the logger names of the driver, for example its log tag.
+         * @param title the screen title, or null for the generic one.
+         */
+        fun intent(context: Context, loggerNames: Set<String>, title: String? = null): Intent =
+            Intent(context, CgmDriverLogActivity::class.java)
+                .putExtra(EXTRA_LOGGER_NAMES, loggerNames.toTypedArray())
+                .apply { if (title != null) putExtra(EXTRA_TITLE, title) }
+
+        /** The logger names an [intent] carries. Empty when it carries none. */
+        fun loggerNamesOf(intent: Intent): Set<String> =
+            intent.getStringArrayExtra(EXTRA_LOGGER_NAMES)?.toSet() ?: emptySet()
     }
 }
 
@@ -96,6 +126,8 @@ private const val REFRESH_MILLIS = 5_000L
 @Composable
 internal fun CgmDriverLogScreen(
     logDirectory: String,
+    loggerNames: Set<String>,
+    title: String?,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -106,7 +138,7 @@ internal fun CgmDriverLogScreen(
 
     LaunchedEffect(reloads) {
         while (true) {
-            lines = withContext(Dispatchers.IO) { DriverLogReader.read(logDirectory) }
+            lines = withContext(Dispatchers.IO) { DriverLogReader.read(logDirectory, loggerNames) }
             delay(REFRESH_MILLIS)
         }
     }
@@ -127,12 +159,12 @@ internal fun CgmDriverLogScreen(
         modifier = modifier,
         topBar = {
             AapsTopAppBar(
-                title = { Text(stringResource(R.string.cgm_driver_log_title)) },
+                title = { Text(title ?: stringResource(R.string.cgm_driver_log_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.dexcom_oneplus_nav_back),
+                            contentDescription = stringResource(R.string.cgm_nav_back),
                         )
                     }
                 },
@@ -221,6 +253,6 @@ internal fun CgmDriverLogScreen(
 @Composable
 private fun CgmDriverLogScreenPreview() {
     MaterialTheme {
-        CgmDriverLogScreen(logDirectory = "", onBack = {})
+        CgmDriverLogScreen(logDirectory = "", loggerNames = emptySet(), title = null, onBack = {})
     }
 }

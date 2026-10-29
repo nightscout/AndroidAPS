@@ -95,7 +95,7 @@ class DexcomOnePlusStartStringsTest {
             SourceStrings.dexcom_oneplus_help_how_to_start,
             SourceStrings.dexcom_oneplus_help_permissions,
             SourceStrings.dexcom_oneplus_help_slot,
-            SourceStrings.dexcom_oneplus_nav_back,
+            SourceStrings.cgm_nav_back,
             SourceStrings.dexcom_oneplus_new_sensor_code_warning,
             SourceStrings.dexcom_oneplus_pairing_code_invalid,
             SourceStrings.dexcom_oneplus_pairing_code_required,

@@ -1,6 +1,5 @@
 package app.aaps.plugins.source.logs
 
-import app.aaps.plugins.dexcomoneplus.OnePlusLogMarkers
 import java.io.File
 import java.io.RandomAccessFile
 
@@ -8,8 +7,11 @@ import java.io.RandomAccessFile
  * Reads the driver lines back out of the AAPS log file.
  *
  * AAPS writes one rolling file, `AndroidAPS.log`, in the folder that `logback.xml` names. Each
- * line looks like `10:23:45.123 [main] I/DEXCOM_ONEPLUS: DEXCOM_ONEPLUS_SESSION: …`, so the driver a
- * line belongs to is the name between the level and the colon.
+ * line looks like `10:23:45.123 [main] I/SOME_DRIVER: SOME_DRIVER_SESSION: …`, so the driver a line
+ * belongs to is the logger name between the level and the colon.
+ *
+ * This class knows no driver. The caller says which logger names to keep, so every native CGM
+ * driver can use the same reader and the same screen with its own names.
  *
  * Two rules shape this class:
  *
@@ -31,20 +33,19 @@ object DriverLogReader {
     /** How many lines to keep, newest last. */
     const val MAX_LINES = 1000
 
-    /** The logger names of the Dexcom ONE+ / G7 driver lines. */
-    val DRIVER_LOGGERS: Set<String> = setOf(OnePlusLogMarkers.TAG)
-
     private val LINE_START = Regex("""^\d{2}:\d{2}:\d{2}\.\d{3} \[[^]]*] [A-Z]/([^:]+): """)
 
     /**
      * @param directory the folder `logback.xml` writes to, from `LoggerUtils.logDirectory`.
+     * @param loggerNames the logger names of the driver whose lines are wanted.
      * @return the kept lines, oldest first. An empty list when the file is not there yet, which is
      *   the normal answer on a build that has just started.
      */
-    fun read(directory: String): List<String> {
+    fun read(directory: String, loggerNames: Set<String>): List<String> {
+        if (loggerNames.isEmpty()) return emptyList()
         val file = File(directory, CURRENT_FILE)
         if (!file.isFile) return emptyList()
-        return keep(tail(file, TAIL_BYTES), DRIVER_LOGGERS, MAX_LINES)
+        return keep(tail(file, TAIL_BYTES), loggerNames, MAX_LINES)
     }
 
     /**
@@ -70,7 +71,7 @@ object DriverLogReader {
     /**
      * Keeps the lines of the wanted drivers, and the lines that carry on from them.
      *
-     * @param loggerNames the logger names to keep, for example `DEXCOM_ONEPLUS`.
+     * @param loggerNames the logger names to keep, for example `SOME_DRIVER`.
      * @param maxLines how many lines to hand back at most, counted from the end.
      */
     fun keep(lines: List<String>, loggerNames: Set<String>, maxLines: Int): List<String> {

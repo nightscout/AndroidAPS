@@ -11,6 +11,7 @@ import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.plugins.dexcomoneplus.OnePlusCgmDriverReal
 import app.aaps.plugins.dexcomoneplus.OnePlusCgmDrivers
+import app.aaps.plugins.dexcomoneplus.OnePlusLogMarkers
 import app.aaps.plugins.dexcomoneplus.identity.OnePlusSensorStore
 import app.aaps.plugins.dexcomoneplus.setContext
 import app.aaps.plugins.source.compose.DexcomOnePlusWarmupScreen
@@ -51,7 +52,7 @@ class DexcomOnePlusWarmupActivity : MetroAppCompatActivity() {
                         },
                         onOpenLog = {
                             startActivity(
-                                Intent(this, CgmDriverLogActivity::class.java)
+                                CgmDriverLogActivity.intent(this, setOf(OnePlusLogMarkers.TAG))
                             )
                         },
                         onOpenStart = {

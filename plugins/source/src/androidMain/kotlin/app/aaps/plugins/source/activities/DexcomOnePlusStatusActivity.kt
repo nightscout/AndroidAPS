@@ -49,6 +49,7 @@ import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.stringResource as coreStringResource
 import app.aaps.plugins.dexcomoneplus.OnePlusCalibrationOutcome
 import app.aaps.plugins.dexcomoneplus.OnePlusCgmDrivers
+import app.aaps.plugins.dexcomoneplus.OnePlusLogMarkers
 import app.aaps.plugins.dexcomoneplus.parse.OnePlusCalibrationState
 import app.aaps.plugins.source.DexcomOnePlusCalibrationText
 import app.aaps.plugins.source.DexcomOnePlusPlugin
@@ -113,7 +114,7 @@ class DexcomOnePlusStatusActivity : MetroAppCompatActivity() {
                         },
                         onOpenLog = {
                             startActivity(
-                                Intent(this, CgmDriverLogActivity::class.java)
+                                CgmDriverLogActivity.intent(this, setOf(OnePlusLogMarkers.TAG))
                             )
                         },
                         stagingStateFlow = dexcomOnePlusPlugin.stagingState,

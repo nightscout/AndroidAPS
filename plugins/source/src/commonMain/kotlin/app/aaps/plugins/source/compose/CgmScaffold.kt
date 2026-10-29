@@ -28,7 +28,7 @@ import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.source.SourceStrings
 
 /**
- * Which job the navigation icon of a ONE+ screen does — see the convention documented on
+ * Which job the navigation icon of a native CGM screen does — see the convention documented on
  * [app.aaps.core.ui.compose.AapsTopAppBar].
  */
 enum class CgmNavIcon {
@@ -41,7 +41,7 @@ enum class CgmNavIcon {
 }
 
 /**
- * Shared frame for every ONE+ / G7 screen.
+ * Shared frame for every native CGM driver screen.
  *
  * Three things are settled here once, instead of being re-decided per screen:
  *
@@ -75,7 +75,7 @@ fun CgmScaffold(
                         when (navIcon) {
                             CgmNavIcon.Back  -> Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(SourceStrings.dexcom_oneplus_nav_back),
+                                contentDescription = stringResource(SourceStrings.cgm_nav_back),
                             )
 
                             CgmNavIcon.Close -> Icon(

@@ -21,7 +21,7 @@ enum class CgmWidth {
 }
 
 /**
- * Size of the window a ONE+ screen is drawn in.
+ * Size of the window a native CGM screen is drawn in.
  *
  * The width classes follow the same 600 dp step as [TABLET_MIN_SW_DP], which the theme already uses
  * to scale typography, so a screen never disagrees with the theme about what a tablet is.

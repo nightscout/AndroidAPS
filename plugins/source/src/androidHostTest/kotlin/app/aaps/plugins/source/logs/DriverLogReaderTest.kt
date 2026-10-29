@@ -8,6 +8,9 @@ import java.io.File
 /** What the log screen is allowed to show, and what it must not lose on the way. */
 class DriverLogReaderTest {
 
+    /** The reader knows no driver, so the test names one, the way a caller does. */
+    private val oneDriver = setOf("DEXCOM_ONEPLUS")
+
     @Test
     fun `keeps only the lines of the driver`() {
         val lines = listOf(
@@ -16,7 +19,7 @@ class DriverLogReaderTest {
             "10:00:00.003 [main] D/LoopPlugin: something else entirely",
         )
 
-        assertThat(DriverLogReader.keep(lines, DriverLogReader.DRIVER_LOGGERS, 100))
+        assertThat(DriverLogReader.keep(lines, oneDriver, 100))
             .containsExactly("10:00:00.002 [main] I/DEXCOM_ONEPLUS: DEXCOM_ONEPLUS_SESSION: link is up")
     }
 
@@ -30,7 +33,7 @@ class DriverLogReaderTest {
             "java.lang.IllegalStateException: not ours either",
         )
 
-        val kept = DriverLogReader.keep(lines, DriverLogReader.DRIVER_LOGGERS, 100)
+        val kept = DriverLogReader.keep(lines, oneDriver, 100)
 
         assertThat(kept).hasSize(3)
         assertThat(kept[1]).isEqualTo("java.io.IOException: link closed")
@@ -41,7 +44,7 @@ class DriverLogReaderTest {
     fun `when there are too many lines the newest are the ones kept`() {
         val lines = (1..10).map { "10:00:00.00$it [main] I/DEXCOM_ONEPLUS: line $it" }
 
-        val kept = DriverLogReader.keep(lines, DriverLogReader.DRIVER_LOGGERS, 3)
+        val kept = DriverLogReader.keep(lines, oneDriver, 3)
 
         assertThat(kept).hasSize(3)
         assertThat(kept.last()).endsWith("line 10")
@@ -63,7 +66,7 @@ class DriverLogReaderTest {
 
     @Test
     fun `a build that has not written anything yet answers with nothing`(@TempDir folder: File) {
-        assertThat(DriverLogReader.read(folder.absolutePath)).isEmpty()
+        assertThat(DriverLogReader.read(folder.absolutePath, oneDriver)).isEmpty()
     }
 
     @Test
@@ -74,10 +77,32 @@ class DriverLogReaderTest {
                 "10:00:00.003 [main] I/DEXCOM_ONEPLUS: DEXCOM_ONEPLUS_BG: value taken\n"
         )
 
-        val all = DriverLogReader.read(folder.absolutePath)
+        val all = DriverLogReader.read(folder.absolutePath, oneDriver)
 
         assertThat(all).hasSize(2)
         assertThat(all.first()).contains("DEXCOM_ONEPLUS_SCAN")
         assertThat(all.last()).contains("DEXCOM_ONEPLUS_BG")
+    }
+
+    @Test
+    fun `only the lines of the logger names the caller gives are kept`() {
+        val lines = listOf(
+            "10:00:00.001 [main] I/DEXCOM_ONEPLUS: from the first driver",
+            "10:00:00.002 [main] I/OTHER_DRIVER: from the second driver",
+            "10:00:00.003 [main] I/OTHER_DRIVER_SCAN: a name that only starts the same",
+        )
+
+        assertThat(DriverLogReader.keep(lines, setOf("OTHER_DRIVER"), 100))
+            .containsExactly("10:00:00.002 [main] I/OTHER_DRIVER: from the second driver")
+        assertThat(DriverLogReader.keep(lines, setOf("DEXCOM_ONEPLUS", "OTHER_DRIVER"), 100)).hasSize(2)
+    }
+
+    @Test
+    fun `no logger names means no lines even when the file has some`(@TempDir folder: File) {
+        File(folder, DriverLogReader.CURRENT_FILE).writeText(
+            "10:00:00.001 [main] I/DEXCOM_ONEPLUS: DEXCOM_ONEPLUS_SCAN: sensor heard\n"
+        )
+
+        assertThat(DriverLogReader.read(folder.absolutePath, emptySet())).isEmpty()
     }
 }

@@ -10,6 +10,10 @@
             android:name=".activities.RequestDexcomPermissionActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".activities.CgmDriverLogActivity"
+            android:exported="false" />
+
         <service
             android:name=".notificationreader.NotificationCollectorService"
             android:exported="true"
@@ -27,9 +31,6 @@
             android:exported="false" />
         <activity
             android:name=".activities.DexcomOnePlusWarmupActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.CgmDriverLogActivity"
             android:exported="false" />
 
         <!-- Keeps the Dexcom ONE+ / G7 Bluetooth session alive with the screen off. The type is what
