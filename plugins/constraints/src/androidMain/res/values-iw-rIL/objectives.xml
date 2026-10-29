@@ -16,11 +16,15 @@
     <string name="objectives_maxbasal">בצע את הפעולה כמומלץ</string>
     <string name="objectives_maxbasal_learned">קחו בחשבון את אמצעי הבטיחות והתאימו את ערכי משתני הבטיחות במקרה הצורך.</string>
     <string name="objectives_maxiobzero_objective">מתחילים לסגור את הלולאה עם השהיה עקב רמת גלוקוז נמוכה</string>
+    <string name="objectives_maxiobzero_gate">הפעילו לולאה סגורה במצב השהיה ברמת סוכר נמוכה (LGS) (כלומר, max IOB = 0 מוגדר באופן אוטומטי) למשך כמה ימים ללא אירועי LGS רבים מדי.</string>
     <string name="objectives_maxiobzero_learned">איפוס ה-MaxIOB פועל למניעת היפוגליקמיה ולא יוסיף אינסולין מעל המינון בזאלי הקבוע בפרופיל (למעט במצב עם אינסולין פעיל שלילי)</string>
     <string name="objectives_maxiob_objective">כוונון הלולאה הסגורה, תוך העלאה של ערך ה- IOB מעל 0 ובסופו של דבר הורדת ערכי המטרה של רמת הסוכר</string>
     <string name="objectives_maxiob_gate">לפני הורדת ערך רמת הסוכר, הפעילו במשך מס\' ימים, עם לפחות לילה אחד ללא התרעת רמת סוכר נמוכה</string>
+    <string name="objectives_maxiob_learned">עדכנו את MaxIOB עם גדילת הילד. אל תאפשרו למערכת לתת יותר אינסולין מכפי שניתן לכסות באמצעות מזון — ערך גבוה מאוד הוא רעיון גרוע. Max IOB מחושב אוטומטית במצב פשוט.</string>
+    <string name="maxiobset">IOB מרבי הוגדר כראוי (לא נדרש במצב פשוט)</string>
     <string name="objectives_autosens_objective">במידת הצורך, בצעו התאמת בזאלי ויחסים, ולאחר מכן הפעילו את Autosens</string>
     <string name="objectives_autosens_gate">שבוע של הפעלה מוצלחת של הלולאה במשך שעות היום, עם רישום ערכי פחמימות בקביעות</string>
+    <string name="objectives_autosens_learned">אם תוצאת autosens אינה נעה סביב 100%, כנראה שהפרופיל שלכם זקוק לשיפור.</string>
     <string name="objectives_smb_objective">הפעלת פונקציות נוספות לשימוש במשך היום, כגון סופר מיקרו בולוסים (SMB)</string>
     <string name="objectives_smb_gate">חובה לקרוא את הויקי ולהעלות את ערך האינסולין הפעיל המרבי (maxIOB) כדי להפעיל את ה- SMB כראוי. התחלה טובה תהיה maxIOB=בולוס ארוחה טיפוסי + 3 פעמים ערך הבזאלי המקסימלי ביממה</string>
     <string name="objectives_smb_learned">שימוש ב-SMB הוא המטרה שלכם. אלגוריתם Oref1 תוכנן לעזור גם עם הבולוסים שלכם. אתם לא צריכים להזריק בולוס מלא למזון שלכם אלא רק על חלק ממנו ולתת ל-AAPS לטפל בשאר במידת הצורך. כך קל יותר להכיל טעויות בספירת פחמימות. הידעתם שאפשר להגדיר אחוז מתוצאת מחשבון הבולוס כדי להקטין את גודל הבולוס?</string>
@@ -33,27 +37,41 @@
     <string name="accomplished">הושלמו: %1$s</string>
     <string name="objectives_usage_objective">למדו כיצד לשלוט ב-AndoridAPS</string>
     <string name="objectives_usage_gate">בצעו פעולות שונות ב-AndroidAPS</string>
+    <string name="objectives_usage_learned">למדתם את יסודות AAPS. רוב הפקדים נמצאים במסך הסקירה. פעולות נוספות נמצאות בתפריטי הטיפולים והניהול בתחתית המסך ובתפריט הצד.</string>
+    <string name="objectives_useprofileswitch">הגדירו פרופיל 90% למשך 10 דקות</string>
+    <string name="objectives_usedisconnectpump">דמו מקלחת. נתקו את המשאבה למשך שעה אחת</string>
     <string name="objectives_usereconnectpump">... והתחברו מחדש באותה הדרך</string>
+    <string name="objectives_usetemptarget">צרו ערך מטרה זמני מותאם אישית למשך 10 דקות</string>
     <string name="objectives_useloop">הצג תוכן של תוסף לולאה</string>
+    <string name="objectives_usescale">השתמשו בגלילה או בזום בגרף הסוכר</string>
     <string name="objectives_exam_objective">הוכיחו את הידע שלכם\\ן</string>
+    <string name="objectives_exam_gate">למדו את השאלות. לכל שאלה כמה תשובות אפשריות, וייתכן שיותר מתשובה אחת נכונה. סמנו את כל התשובות הנכונות ובחרו ב\'סיום\'.</string>
+    <string name="objectives_exam_learned_prerequisites">אין צורך להיות מפתחים. כדי להשלים את המשימות, נדרשים Nightscout או Tidepool, משאבה תואמת ודרך לבנות את AAPS (בדפדפן או באמצעות Android Studio), הן להתקנה הראשונה והן לכל עדכון.</string>
     <string name="objectives_exam_learned_prerequisites2">ניתן להפעיל ולהשתמש ב-AASP ללא אינטרנט.</string>
     <string name="objectives_exam_learned_basaltest">יש לבדוק ולעדכן את הפרופיל. פרופיל טוב יותר = תוצאות טובות יותר.</string>
     <string name="objectives_exam_learned_dia">למשך פעילות האינסולין בשומוש בלופ יש משמעות שונה (זמן בו שכל האינסולין נספג) מאשר בטיפול במשאבות קלאסי (זמן עד שרוב האינסולין נספג).</string>
     <string name="objectives_exam_learned_isf">למדתם את משמעות הערך ISF וכיצד הוא משפיע על כמות האינסולין המשמשת לתיקון הסוכר בדם.</string>
     <string name="objectives_exam_learned_ic">למדתם את משמעות הערך IC וכיצד הוא משפיע על כמות האינסולין הדרושה לכיסוי פחמימות.</string>
     <string name="objectives_exam_learned_hypott">ערך מטרה זמני היפו משמש רק כדי למנוע תיקון ביתר לאחר היפו, כאשר בדרך כלל יש אינסולין פעיל שלילי שהצטבר. יש לשקול לבצע פעולות נוספות כדי למנוע מצב כזה בעתיד.</string>
+    <string name="objectives_exam_learned_profileswitch" formatted="false">שימוש באחוזים אינו משפיע על ערכי המטרה של הסוכר, אך הבזאלי, ISF ו־IC מותאמים כדי לתת יותר אינסולין (מעל 100%) או פחות אינסולין (מתחת ל־100%).</string>
     <string name="objectives_exam_learned_profileswitchtime">על ידי שימוש בהיסט זמן בהחלפת הפרופיל, אתם יכולים להתאים את הפרופיל הצירקדי לאי סדרים כמו השכמה מאוחרת.</string>
     <string name="objectives_exam_learned_profileswitch4">עריכת הפרופיל עצמו אינה מספיקה כדי לבצע שינוי. אתם עדיין צריכים לבצע החלפת פרופיל כדי להפעיל שינויים.</string>
     <string name="objectives_exam_learned_exercise">עליכם להפחית את כמות האינסולין בגוף לפחות שעה אחת לפני תחילת האימון על ידי בחירת פרופיל מתחת ל-100%.</string>
     <string name="objectives_exam_learned_exercise2">הגדרת ערך מטרה זמני גבוה יותר לפחות שעה אחת לפני האימון גם היא מסייעת בהפחתת כמות האינסולין בגוף.</string>
     <string name="objectives_exam_learned_noisycgm">כאשר אינכם יכולים לסמוך על ערכי הסנסור, אל תשתמשו בלולאה ללא השגחה.</string>
     <string name="objectives_exam_learned_pumpdisconnect">חובה על AAPS לדעת שהמשאבה אינה מחוברת כדי לספור כראוי את האינסולין הפעיל.</string>
+    <string name="objectives_exam_learned_insulin">AAPS חייב לדעת איזה אינסולין נמצא במשאבה, מכיוון שהדבר משפיע על חישוב האינסולין הפעיל (IOB).</string>
     <string name="objectives_exam_learned_sensitivity">זיהוי רגישות הוא חלק מהאלגוריתם המאפשר להתאים את מינון האינסולין למצבים שונים.</string>
     <string name="objectives_exam_learned_objectives">ההתקדמות שלכם במשימות מאוחסנת יחד עם הגדרות אחרות ויש לבצע לה גיבויים.</string>
     <string name="objectives_exam_learned_objectives2">שמרו תמיד את ההגדרות המיוצאות ואת קובץ ה-APK מחוץ לטלפון. טלפון יכול ללכת לאיבוד, להינזק וכו\'. מקום טוב יכול להיות כל ענן שנגיש מהטלפון. במקרה זה תוכלו לשחזר את AAPS במכשיר אחר תוך מספר דקות. מומלץ לאחסן גם את הסיסמה הראשית במקום בטוח. בלעדיה הגיבוי חסר תועלת. אותו הדבר תקף עבור מפתחות חתימה (קובץ jks) וסיסמאות המשמשות לבניית AAPS. השאר לא קריטי - אפשר להוריד אותו שוב מהאינטרנט בכל עת.</string>
     <string name="objectives_exam_learned_wrongcarbs">אם הזנתם נתונים שגויים ל-AAPS או שהוא לא תואם את המציאות, יש לפתור זאת בהקדם האפשרי. זה עלול להוביל למינון יתר. יש ליידע את AAPS תמיד בצורה הטובה ביותר לגבי פחמימות, אינסולין וכו\'.</string>
+    <string name="objectives_exam_learned_iob">כאשר אתם בודקים אם AAPS פועל היטב עבורכם, צפייה בגרף האינסולין הפעיל (IOB) יכולה לספק מידע שימושי רב.</string>
+    <string name="objectives_exam_learned_cob">חישוב הפחמימות הפעילות (COB) תלוי ביחס בין ISF ל־IC. הגדלת ISF או הקטנת IC תוביל לזמני ספיגה ארוכים יותר. עם זאת, החלפת פרופיל באמצעות אחוזים משנה את שני הערכים בו־זמנית, ולכן זמן הספיגה אינו מושפע.</string>
     <string name="objectives_exam_learned_breadgrams">הזנת פחמימות היא בגרמים בלבד.</string>
     <string name="objectives_exam_learned_ecarbs">פחמימות ממושכות הן תחליף לבולוס מושהה בעולם המשאבות.</string>
+    <string name="objectives_exam_learned_nsclient">ניתן לעקוב אחר AAPS מרחוק באמצעות AAPSClient או Nightscout. כאשר AAPSClient מצומד לטלפון הראשי, ניתן גם לשלוט ב־AAPS מרחוק.</string>
+    <string name="objectives_exam_learned_concentration1">שימוש באינסולין U200 עם פרופיל 50% דורש המרה קבועה: הבולוסים החיצוניים באמצעות עטים וכל הדוחות הרגילים שמספקים AAPS או NS יהיו שגויים ויהיה צורך להמירם ליחידות בינלאומיות (IU) עבור הצוות הרפואי.</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">מעבר מ־U200 עם פרופיל 50% ל־U200 באמצעות תכונת ריכוז האינסולין דורש יצירת פרופיל חדש וחזק יותר, השבתת DynISF למשך שבוע והתרגלות לחשיבה ביחידות בינלאומיות.</string>
     <string name="objectives_exam_learned_concentration3">ניתן לשנות את ריכוז האינסולין רק כאשר מחליפים את האינסולין או את הפוד. אבל חשוב מכל, במיוחד עבור משאבות צינור, לעולם אל תשתמשו בממשק המשתמש של המשאבה כדי לספק בולוסים ישירות מהמשאבה.</string>
     <string name="answerdisabledto">לא ניתן לענות עד: %1$s</string>
     <string name="wronganswer">תשובה שגויה!</string>
@@ -65,14 +83,23 @@
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/he/latest/SettingUpAaps/ConfigBuilder.html</string>
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/he/latest/DailyLifeWithAaps/AapsScreens.html#aapsscreens-the-homescreen</string>
     <string name="notconnected">אין חיבור לאינטרנט</string>
+    <string name="failedretrievetime">קבלת השעה נכשלה</string>
     <string name="requirementnotmet">דרישות המשימה לא נענו</string>
     <string name="what_i_ve_learned">מה שלמדתי:</string>
     <string name="verify_master_password">וודאו שאתם יודעים וזוכרים את הסיסמה הראשית</string>
     <string name="objectives_collapse">פחות</string>
     <string name="objectives_expand">יותר</string>
+    <string name="objectives_no_learned">לא תועדו לקחים למשימה זו.</string>
+    <string name="objectives_open_exam">פתיחת מבחן</string>
     <string name="objectives_exam_question_progress">שאלה %1$d מתוך %2$d</string>
     <string name="objectives_exam_reset">איפוס</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">הושלם</string>
+    <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">בתהליך</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">טרם התחיל</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">נעול</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">תשובה נכונה</string>
     <string name="objectives_exam_previous">הקודם</string>
     <string name="objectives_exam_next">הבא</string>
+    <string name="objectives_exam_next_unanswered">הבא שטרם נענה</string>
     <string name="objectives_show_hint">רמז</string>
 </resources>
