@@ -60,6 +60,8 @@
     <string name="pref_prime_in_menu">Ontlucht/vul in menu</string>
     <string name="pref_single_target">Enkel streefdoel</string>
     <string name="pref_wizard_percentage">Calculator percentage</string>
+    <string name="pref_wizard_carbs_type">Rekenmachine Maaltijd Type</string>
+    <string name="pref_wizard_carb_time">Koolhydraten tijd calculator</string>
     <string name="pref_complication_tap_action">Complicatie tik voor actie</string>
     <string name="pref_complication_bg_graph_hours">BG grafiek tijdbereik</string>
     <string name="duration_1_hour">1 uur</string>
@@ -96,6 +98,7 @@
     <string name="action_user_action_confirmation">Gebruiker actie aangevraagd</string>
     <string name="action_scene_confirmation">Gevraagde scène</string>
     <string name="scene_end">Einde</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Overslaan</string>
     <string name="action_treatment_confirmation">Behandeling aangevraagd</string>
     <string name="action_bolus_confirmation">Bolus aangevraagd</string>
     <string name="action_wizard_confirmation">Berekening aangevraagd</string>
@@ -174,6 +177,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS Bolus Voortgang Stil</string>
     <string name="bolus_progress_channel_description">Bolus voortgang en annuleer</string>
     <string name="bolus_progress_silent_channel_description">Bolus voortgang en annuleer met minder trillingen</string>
+    <string name="open_loop_channel_name">AAPS Open Loop</string>
+    <string name="open_loop_channel_description">Melding van Open Loop verzoek</string>
     <string name="simple_ui_off">Uit</string>
     <string name="simple_ui_charging">Tijdens Opladen</string>
     <string name="simple_ui_always_on">Altijd Aan modus</string>
@@ -255,6 +260,22 @@
     <string name="title_activity_disconnect_pump">Verbreek verbinding met de pomp</string>
     <string name="title_activity_suspend_loop">Onderbreek loop</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="wizard_carbs_type">Type maaltijd</string>
+    <string name="wizard_carbs_type_bread">Brood</string>
+    <string name="wizard_carbs_type_cake">Cake</string>
+    <string name="wizard_carbs_type_pizza">Pizza</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Koolhydraten tijd\n[min]</string>
+    <string name="wizard_carb_time_now">Nu</string>
+    <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
+    <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>
+    <string name="wizard_set_alarm">Alarm instellen</string>
+    <string name="eat_reminder_title">Tijd om te eten</string>
+    <string name="eat_reminder_silence">Stil</string>
+    <string name="eat_reminder_stop">Stop</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Gaat af om %1$s</string>
+    <string name="eat_reminder_countdown_channel">Tijd om te eten, actief</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">E</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f E</string>
@@ -293,6 +314,17 @@
     <string name="loop_status_target_range">Interval</string>
     <string name="loop_status_target">Streefwaarde</string>
     <string name="loop_status_adjusted_target">Aangepast streefdoel</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Tot einde</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Vervolg</string>
+    <string name="loop_status_profile">Profiel</string>
+    <string name="loop_status_no_profile">Geen profiel actief</string>
+    <string name="loop_status_profile_percentage">Percentage</string>
+    <string name="loop_status_profile_timeshift">Tijdverschuiving</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Keert terug naar</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+du</string>
+    <string name="loop_status_sensitivity">Gevoeligheid</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Veranderd door de actieve scene</string>
     <string name="loop_status">Loop status</string>
     <string name="loop_status_refresh">Vernieuwen</string>
     <string name="confirm">Bevestigen</string>
