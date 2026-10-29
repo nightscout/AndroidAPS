@@ -1380,11 +1380,12 @@ class O5PumpPluginTest : TestBaseWithProfile() {
         whenever(bleManager.connect()).thenReturn(Observable.empty())
         // The user presses cancel while the bolus program command is in flight.
         whenever(bleManager.sendCommand(any(), any())).thenAnswer {
-            if (it.getArgument<Command>(0) is ProgramBolusCommand) {
+            val command = it.getArgument<Command>(0)
+            if (command is ProgramBolusCommand) {
                 pending = pending?.copy(confirmedByStatus = true)
             }
             plugin.stopBolusDelivering()
-            Observable.empty<PodEvent>()
+            Observable.just<PodEvent>(PodEvent.CommandSent(command))
         }
 
         val result = runBlocking {
@@ -1436,7 +1437,8 @@ class O5PumpPluginTest : TestBaseWithProfile() {
                     alarmResponse -> alarm = AlarmType.ALARM_OCCLUDED
                     command is GetStatusCommand || command is StopDeliveryCommand -> faulted = true
                 }
-                Observable.empty<PodEvent>()
+                if (command is ProgramBolusCommand) Observable.just<PodEvent>(PodEvent.CommandSent(command))
+                else Observable.empty<PodEvent>()
             }
         }
 

@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.omnipod.common.R
 import app.aaps.pump.omnipod.common.bledriver.event.PodEvent
 import app.aaps.pump.omnipod.common.bledriver.pod.command.GetStatusCommand
@@ -58,9 +59,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
@@ -72,7 +75,13 @@ import org.mockito.kotlin.whenever
 import java.nio.ByteBuffer
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
+import kotlin.time.TestTimeSource
+import app.aaps.pump.omnipod.omnipod5.R as O5R
 
+@OptIn(ExperimentalTime::class)
 class O5DoseRecoveryTest : TestBaseWithProfile() {
 
     private companion object {
@@ -150,6 +159,165 @@ class O5DoseRecoveryTest : TestBaseWithProfile() {
         bolusCancelSequenceNumber = if (cancelled) 6 else null,
         bolusCancelHistoryId = if (cancelled) 8L else null
     )
+
+    private fun useBolusClock(): TestTimeSource = TestTimeSource().also { clock ->
+        plugin.bolusTimeSource = clock
+        plugin.bolusSleep = { clock += it.milliseconds }
+    }
+
+    private fun stubBolusDelivery(beforeSend: () -> Unit = {}, onStatus: () -> Unit = {}) {
+        whenever(ble.sendCommand(any(), any())).thenAnswer {
+            val command = it.getArgument<Command>(0)
+            Observable.defer {
+                val pending = requireNotNull(state.pendingDoseCommand)
+                val response = when (command) {
+                    is ProgramBolusCommand -> {
+                        beforeSend()
+                        status(
+                            requireNotNull(pending.sequenceNumber).toInt(),
+                            DeliveryStatus.BOLUS_AND_BASAL_ACTIVE,
+                            (requireNotNull(pending.requestedUnits) * 20).toInt()
+                        )
+                    }
+                    is GetStatusCommand -> {
+                        onStatus()
+                        status(requireNotNull(pending.sequenceNumber).toInt(), DeliveryStatus.BASAL_ACTIVE)
+                    }
+                    else -> error("Unexpected command: $command")
+                }
+                state.updateFromDefaultStatusResponse(response)
+                Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(doubles = [0.05, 1.0, 1.05, 5.0, 10.0])
+    fun `bolus progress catches up after delayed sleeps and updates`(amount: Double) = runBlocking<Unit> {
+        val clock = useBolusClock()
+        val start = clock.markNow()
+        val frames = mutableListOf<Pair<Long, Double>>()
+        var confirmationAt = 0L
+        plugin.bolusSleep = { clock += (it + 125L).milliseconds }
+        whenever(progress.updateProgress(any<PumpInsulin>())).thenAnswer {
+            frames += start.elapsedNow().inWholeMilliseconds to it.getArgument<PumpInsulin>(0).cU
+            clock += 75.milliseconds
+            Unit
+        }
+        stubBolusDelivery(onStatus = { confirmationAt = start.elapsedNow().inWholeMilliseconds })
+
+        val result = plugin.deliverTreatment(DetailedBolusInfo().also { it.insulin = amount })
+
+        assertThat(result.success).isTrue()
+        assertThat(result.bolusDelivered).isWithin(0.00001).of(amount)
+        assertThat(frames).isNotEmpty()
+        frames.forEach { (elapsedMs, delivered) ->
+            assertThat(delivered).isWithin(0.00001).of((elapsedMs / 2000L) * 0.05)
+            assertThat(delivered).isLessThan(amount)
+        }
+        val deliveryDurationMs = Math.round(amount * 20) * 2000L
+        assertThat(confirmationAt).isAtLeast(deliveryDurationMs + 3000L)
+        assertThat(confirmationAt).isAtMost(deliveryDurationMs + 3125L)
+        verify(progress, atLeastOnce()).updateProgress(
+            eq(99), eq(TextRef.AndroidRes(O5R.string.omnipod_5_checking_delivery_status)), eq(PumpInsulin(amount))
+        )
+        assertThat(state.pendingDoseCommand).isNull()
+    }
+
+    @Test
+    fun `bolus progress excludes send preparation and includes history sync time`() = runBlocking<Unit> {
+        val clock = useBolusClock()
+        val start = clock.markNow()
+        val frames = mutableListOf<Double>()
+        var confirmationAt = 0L
+        stubBolusDelivery(
+            beforeSend = { clock += 7.seconds },
+            onStatus = { confirmationAt = start.elapsedNow().inWholeMilliseconds }
+        )
+        var syncCalls = 0
+        whenever(sync.syncBolusWithPumpId(any(), any(), any(), any(), any(), any())).doSuspendableAnswer {
+            if (syncCalls++ == 0) clock += 10.seconds
+            true
+        }
+        whenever(progress.updateProgress(any<PumpInsulin>())).thenAnswer {
+            frames += it.getArgument<PumpInsulin>(0).cU
+            Unit
+        }
+
+        plugin.deliverTreatment(DetailedBolusInfo().also { it.insulin = 1.0 })
+
+        assertThat(frames.first()).isWithin(0.00001).of(0.25)
+        assertThat(confirmationAt).isEqualTo(50_000L)
+        assertThat(state.pendingDoseCommand).isNull()
+    }
+
+    @Test
+    fun `estimated delivery stays unconfirmed when final status cannot be read`() = runBlocking<Unit> {
+        useBolusClock()
+        stubBolusDelivery(onStatus = { throw IllegalStateException("Status response lost") })
+
+        val result = plugin.deliverTreatment(DetailedBolusInfo().also { it.insulin = 1.0 })
+
+        assertThat(result.comment).isEqualTo("Bolus outcome unknown")
+        assertThat(state.pendingDoseCommand).isNotNull()
+        assertThat(state.lastBolusDeliveredUnits).isNull()
+        verify(history, never()).markSuccess(any())
+        verify(progress, atLeastOnce()).updateProgress(
+            eq(99), eq(TextRef.AndroidRes(O5R.string.omnipod_5_checking_delivery_status)), eq(PumpInsulin(1.0))
+        )
+        verify(progress, never()).updateProgress(eq(100))
+        verify(ble, times(5)).sendCommand(argThat { this is GetStatusCommand }, any())
+    }
+
+    @Test
+    fun `cancellation stops the estimate and confirms the partial delivery`() = runBlocking<Unit> {
+        val clock = useBolusClock()
+        val start = clock.markNow()
+        plugin.bolusSleep = {
+            clock += it.milliseconds
+            if (start.elapsedNow() >= 10.seconds) plugin.stopBolusDelivering()
+        }
+        whenever(ble.sendCommand(any(), any())).thenAnswer {
+            val command = it.getArgument<Command>(0)
+            val pending = requireNotNull(state.pendingDoseCommand)
+            val response = when (command) {
+                is ProgramBolusCommand -> status(requireNotNull(pending.sequenceNumber).toInt(), DeliveryStatus.BOLUS_AND_BASAL_ACTIVE, 20)
+                is StopDeliveryCommand -> status(
+                    requireNotNull(pending.bolusCancelSequenceNumber).toInt(), DeliveryStatus.BASAL_ACTIVE, 15
+                )
+                else -> error("Unexpected command: $command")
+            }
+            state.updateFromDefaultStatusResponse(response)
+            Observable.just(PodEvent.CommandSent(command), PodEvent.ResponseReceived(command, response))
+        }
+
+        val result = plugin.deliverTreatment(DetailedBolusInfo().also { it.insulin = 1.0 })
+
+        assertThat(start.elapsedNow()).isEqualTo(10.seconds)
+        assertThat(result.bolusDelivered).isWithin(0.00001).of(0.25)
+        assertThat(state.pendingDoseCommand).isNull()
+        verify(ble).sendCommand(argThat { this is StopDeliveryCommand }, any())
+        verify(ble, never()).sendCommand(argThat { this is GetStatusCommand }, any())
+    }
+
+    @Test
+    fun `basal correction uses the same pulse timing and confirmation margin`() {
+        val clock = useBolusClock()
+        val start = clock.markNow()
+        state.activationProgress = ActivationProgress.COMPLETED
+        state.basalExpected = 0.05
+        stubBolusDelivery()
+
+        val result = plugin.executeCustomCommand(CommandDeliverBasalCorrection())
+
+        assertThat(result.success).isTrue()
+        assertThat(result.bolusDelivered).isWithin(0.00001).of(0.05)
+        assertThat(start.elapsedNow()).isEqualTo(5.seconds)
+        assertThat(state.pendingDoseCommand).isNull()
+        runBlocking {
+            verify(sync, never()).syncBolusWithPumpId(any(), any(), any(), any(), any(), any())
+        }
+    }
 
     @Test
     fun `lost temp response restores original type and delivery once`() = runBlocking<Unit> {
