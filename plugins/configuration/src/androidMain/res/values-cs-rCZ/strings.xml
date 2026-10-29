@@ -40,7 +40,7 @@
     <string name="setupwizard_client_control_info">Spárujte klientská zařízení, aby mohla tomuto hlavnímu zařízení posílat podepsané příkazy přes Nightscout. Toto je nový doporučený způsob, jak dálkově ovládat AAPS.</string>
     <string name="setupwizard_ns_receive_info">Příjem ošetření a dat přímo z Nightscoutu (méně bezpečný způsob ) je nyní ve výchozím nastavení vypnutý. Otevřete nastavení níže pouze v případě, že to stále potřebujete. Nezbytné, pokud potřebujete zadávat data prostřednictvím aplikací NS nebo třetích stran.</string>
     <string name="setupwizard_open_ns_receive_settings">Přijímání dat z Nightscoutu</string>
-    <string name="setupwizard_pair_with_master_info">Spárujte tohoto klienta s hlavním AAPS, aby mohl posílat příkazy přes zabezpečený kanál. Po párování je nastavení dokončeno.</string>
+    <string name="setupwizard_pair_with_master_info">Spárujte tohoto klienta s hlavní aplikací AAPS, aby mohl posílat příkazy přes zabezpečený kanál. Po párování je nastavení dokončeno.</string>
     <string name="setupwizard_setup_from_master_title">Nastavit z hlavního zařízení</string>
     <string name="setupwizard_setup_from_master_info">Na hlavním zařízení otevřete autorizované klienty a přidejte tento telefon pomocí QR kódu. Skenováním se nastaví Nightscout se svým vlastním tokenem a může také spárovat telefon. Po skenování je nastavení dokončeno. Bez QR kódu přeskočte tento krok a nastavte Nightscout sami.</string>
     <string name="setupwizard_scan_master_qr">Naskenujte QR kód</string>
@@ -54,7 +54,7 @@
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zařízení zřejmě neumožňuje vypnout optimalizaci baterie - může docházet k problémům s výkonem.</string>
     <!--    ConfigBuilder-->
-    <string name="configbuilder_pump_description">Jakou pumpu chcete s AAPS používat?</string>
+    <string name="configbuilder_pump_description">Kterou pumpu chcete s AAPS používat?</string>
     <string name="configbuilder_aps_description">Jaký algoritmus má AndroidAPS používat?</string>
     <string name="configbuilder_sync_description">Pluginy pro nahrávání dat, synchronizaci a komunikaci.</string>
     <string name="configbuilder_bgsource_description">Odkud má AAPS získávat glykémie?</string>
