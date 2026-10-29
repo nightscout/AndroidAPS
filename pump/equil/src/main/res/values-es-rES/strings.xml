@@ -44,6 +44,8 @@
     <string name="equil_new_infusion_set_no">No, solo reservorio o batería</string>
     <string name="equil_same_infusion_set_hint">No se cebará la cánula y no se registrará ningún cambio de cánula</string>
     <string name="equil_unpair_alert">¿Estás seguro de que quieres renunciar al control sobre %1$s?</string>
+    <string name="equil_record_basal">Tasa basal %1$s U/h</string>
+    <string name="equil_record_basal_temp">Tasa basal temporal %1$s U/h</string>
     <string name="equil_record_bolus">Bolo %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">La duración de la TBR debe ser mayor que cero y múltiplo de %1$s minutos.</string>
     <string name="equil_basal_exceeds_max">La tasa basal del perfil %1$s U/h supera el máximo basal de la bomba %2$s U/h. Aumenta el ajuste del máximo basal y vuelve a conectar la bomba.</string>
@@ -62,6 +64,7 @@
     <string name="equil_firmware_version">Versión del firmware</string>
     <string name="equil_shutdown_be">Equil se apagará automáticamente</string>
     <string name="equil_shutdown">Apagado automático de Equil</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Tasa: %1$.2f U/h, duración: %2$d minutos</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Establecer bolo</string>
