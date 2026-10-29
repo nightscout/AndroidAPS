@@ -21,6 +21,7 @@
     <string name="random_bg">Willekeurige BG</string>
     <string name="description_source_random_bg">Willekeurige BG data genereren (alleen Demo modus)</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai/Ottai</string>
     <string name="description_source_patched_syai_tag_app">Ontvang glucose-gegevens van de Syai/Ottai App.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">SI App</string>
@@ -31,4 +32,10 @@
     <!-- Instara preferences -->
     <!-- Notification Reader -->
     <!-- Permission rationales -->
+    <string name="aidex">Micro Tech CGM App</string>
+    <string name="description_source_aidex">Ontvang Glucose waarden van LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 enzovoort</string>
+    <string name="aidex_sensor_error">Sensor fout, controleer de sensor status</string>
+    <string name="aidex_sensor_replace">De Sensor moet vervangen worden, plaats zo spoedig mogelijk een nieuwe sensor</string>
+    <string name="aidex_signal_lost">Sensor signaal verloren, controleer de verbinding</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">dubbele waarde</string>
 </resources>
