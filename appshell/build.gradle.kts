@@ -18,6 +18,8 @@ val PLUGIN_LIBRARIES = setOf(
     ":plugins:libkeks",
     // The Dexcom ONE+ / G7 BLE driver (Android only). The plugin itself is in :plugins:source.
     ":plugins:dexcom_oneplus",
+    // The Libre 3 / Libre 3 Plus BLE and NFC driver (Android only). The plugin itself is in :plugins:source.
+    ":plugins:libre3",
 )
 
 /**
