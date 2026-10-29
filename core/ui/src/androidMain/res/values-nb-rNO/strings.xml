@@ -97,6 +97,8 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Demp i 5 minutter</string>
     <string name="mute">Lyd av</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Demp alarm</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Demp og lukk</string>
     <string name="success">Suksess</string>
     <string name="advanced_settings_title">Avanserte innstillinger</string>
     <string name="extended_bolus">Forlenget bolus</string>
@@ -116,6 +118,7 @@
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Opplæringsmål</string>
     <string name="please_wait">Vennligst vent…</string>
     <string name="stop">Stopp</string>
@@ -136,7 +139,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinet ble heller ikke byttet.</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Dato</string>
-    <string name="units_label">Enheter</string>
     <string name="insulin_nickname_label">Kallenavn for insulin</string>
     <string name="concentration_label">Konsentrasjon</string>
     <string name="peak_label">Topp</string>
@@ -192,7 +194,7 @@
     <string name="shortgramm">g</string>
     <string name="pump_running">Pumpe i drift</string>
     <string name="notconfigured">Ikke konfigurert</string>
-    <string name="loop_suspended_by_dst">Loop suspendert av DST (Sommertid)</string>
+    <string name="loop_suspended_by_dst">Loop pauset pga. klokkeomstilling</string>
     <string name="required">nødv</string>
     <string name="a11y_arrow_triple_down">faller svært raskt</string>
     <string name="a11y_arrow_double_down">synker raskt</string>
@@ -446,6 +448,7 @@
     <string name="clientcontrol_action_deactivate_scene">Avslutt scene</string>
     <string name="clientcontrol_action_update_settings">Oppdater innstillinger</string>
     <string name="clientcontrol_action_deliver_bolus">Lever bolus</string>
+    <string name="clientcontrol_action_eat_reminder">Endre spisepåminnelse</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Denne enheten er ikke koblet til en hovedenhet.</string>
     <string name="clientcontrol_fail_not_reachable">Hovedenheten er frakoblet.</string>
@@ -783,6 +786,12 @@
     <string name="grant">Tillat</string>
     <string name="set">Angi</string>
     <string name="wizard_set_alarm">Sett alarm</string>
+    <string name="eat_reminder_title">Tid for å spise</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Total ventetid: %1$s</string>
+    <string name="eat_reminder_rung">Tiden er ute</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="eat_reminder_not_set">Kunne ikke stille inn spisepåminnelsen. Gi AAPS tillatelse til å stille inn alarmer og påminnelser i Android-innstillingene.</string>
     <string name="wizard_use_percentage">Bruk prosent</string>
     <string name="wizard_include_bg">Inkluder BS</string>
     <string name="wizard_include_tt">Inkluder midlertidig mål</string>
@@ -939,7 +948,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pumpe sammenkoblet</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Lavenergi Bluetooth er ikke støttet.</string>
-    <string name="ble_not_supported_or_not_paired">Lavenergi Bluetooth er ikke støttet eller enheten er ikke sammenkoblet.</string>
     <string name="ble_not_enabled">Bluetooth er ikke aktivert.</string>
     <string name="ble_permissions_missing">Bluetooth-tillatelser er ikke gitt. Gi dem tilgang i appinnstillingene.</string>
     <!--    Preferences -->
@@ -1142,6 +1150,19 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">DISF</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">SKRITT</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Aktivt insulin (IOB)</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Absolutt insulin</string>
+    <string name="graph_series_cob">Karbo ombord</string>
+    <string name="graph_series_bgi">BS-påvirkning</string>
+    <string name="graph_series_deviations">Avvik</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Sensitivitetsendring</string>
+    <string name="graph_series_variable_sens">Dynamisk ISF</string>
+    <string name="graph_series_deviation_slope">Avviksutvikling</string>
+    <string name="graph_series_heart_rate">Puls</string>
+    <string name="graph_series_steps">Skritt</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Insulinaktivitet</string>
+    <string name="graph_series_predictions">Prediksjoner</string>
     <string name="units_days">dager</string>
     <string name="units_format_days">%1$d dager</string>
     <string name="units_format_days_range">%1$d dager (%2$d - %3$d)</string>
@@ -1184,4 +1205,5 @@
     <string name="units_sec">sek</string>
     <string name="units_years">år</string>
     <string name="prefs_range_title">Område for visualisering</string>
+    <string name="secrets_not_protected">Det ble ikke funnet noe systemlager for nøkler på denne datamaskinen. Nøklene som beskytter innstillingene dine og paringen med hovedenheten, lagres i filer sammen med dataene; det betyr at alle som får en kopi av filene dine, også får tilgang til disse nøklene. På Linux må du installere og starte en nøkkelring (for eksempel GNOME Keyring eller KWallet), og deretter starte AAPS på nytt.</string>
 </resources>

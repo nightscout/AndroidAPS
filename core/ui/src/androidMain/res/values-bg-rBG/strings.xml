@@ -116,6 +116,7 @@
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Цели</string>
     <string name="please_wait">Моля изчакайте...</string>
     <string name="stop">Стоп</string>
@@ -136,7 +137,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n Инсулинът не е сменен.</string>
     <string name="active"><![CDATA[<Активно>]]></string>
     <string name="date">Дата</string>
-    <string name="units_label">Единици</string>
     <string name="insulin_nickname_label">Никнейм на инсулин</string>
     <string name="concentration_label">Концентрация</string>
     <string name="peak_label">Пик</string>
@@ -446,6 +446,7 @@
     <string name="clientcontrol_action_deactivate_scene">Приключи сценария</string>
     <string name="clientcontrol_action_update_settings">Обнови настройките</string>
     <string name="clientcontrol_action_deliver_bolus">Стартирай болус</string>
+    <string name="clientcontrol_action_eat_reminder">Промяна на време на хранене</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Телефонът не е свързан с главния.</string>
     <string name="clientcontrol_fail_not_reachable">Главният телефон няма интернет връзка.</string>
@@ -783,6 +784,11 @@
     <string name="grant">Разрешаване</string>
     <string name="set">Приложи</string>
     <string name="wizard_set_alarm">Напомни ми</string>
+    <string name="eat_reminder_title">Време е за ядене</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_rung">Времето изтече</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d мин</string>
+    <string name="eat_reminder_not_set">Напомняне за хранене не може да се зададе. Позволете на AAPS да задава аларми в настройките на Android.</string>
     <string name="wizard_use_percentage">% от профила</string>
     <string name="wizard_include_bg">Включи КЗ</string>
     <string name="wizard_include_tt">Включи временна цел</string>
@@ -939,7 +945,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Помпата е свързана</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy не се поддържа.</string>
-    <string name="ble_not_supported_or_not_paired">Нискоенергиен Bluetooth не се потдържа или устройството не е сдвоено.</string>
     <string name="ble_not_enabled">Bluetooth не е включен.</string>
     <string name="ble_permissions_missing">Нямам разрешение за Bluetooth. Позволете такъв в Android настройките.</string>
     <!--    Preferences -->
@@ -1142,6 +1147,19 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">ЧУВСТВ%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">ПРОМ ЧУВСТВ</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">КРАЧКИ</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Insulin On Board</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Абсолютен инсулин</string>
+    <string name="graph_series_cob">Активни въглехидрати</string>
+    <string name="graph_series_bgi">Въздействие на Кръвна Захар</string>
+    <string name="graph_series_deviations">Отклонения</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Промяна в чувствителността</string>
+    <string name="graph_series_variable_sens">Променлива чувствителност</string>
+    <string name="graph_series_deviation_slope">Наклон на отклонението</string>
+    <string name="graph_series_heart_rate">Сърдечен ритъм</string>
+    <string name="graph_series_steps">Стъпки</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Активност</string>
+    <string name="graph_series_predictions">Предсказвания</string>
     <string name="units_days">дни</string>
     <string name="units_format_days">%1$d дни</string>
     <string name="units_format_days_range">%1$d дни (%2$d - %3$d)</string>

@@ -40,6 +40,10 @@
     <string name="setupwizard_client_control_info">配对客户端设备，使其能够通过 Nightscout 向此主机发送已签名的命令。这是遥控 AAPS 的新推荐方式。</string>
     <string name="setupwizard_ns_receive_info">直接从 Nightscout 接收治疗和数据（安全性较低的方式）现在默认处于关闭状态。仅当您仍然需要时才打开以下设置。如果您需要通过 NS 或第三方应用输入数据，则为必需。</string>
     <string name="setupwizard_open_ns_receive_settings">Nightscout 数据接收</string>
+    <string name="setupwizard_pair_with_master_info">将此客户端与您的主机 AAPS 配对，使其能够通过安全通道发送命令。配对完成后，设置即告完成。</string>
+    <string name="setupwizard_setup_from_master_title">从主机进行设置</string>
+    <string name="setupwizard_setup_from_master_info">在主机上，打开‘已授权的客户端’，并使用二维码添加此手机。扫描二维码会为其配置带有独立令牌的 Nightscout，还可以同时完成手机配对。扫描完成后，设置即告完成。若没有二维码，请跳过此步骤并自行设置 Nightscout。</string>
+    <string name="setupwizard_scan_master_qr">扫描该二维码</string>
     <string name="setupwizard_pairing_ws_warning">配对需要 Nightscout WebSocket 连接。请返回上一步并先启用该连接。</string>
     <string name="setupwizard_pairing_status_master">配对的客户端: %1$d</string>
     <string name="setupwizard_pairing_status_master_none">暂无已配对的客户端</string>

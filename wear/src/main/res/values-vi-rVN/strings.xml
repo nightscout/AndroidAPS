@@ -287,6 +287,9 @@
     <string name="wizard_carbs_type_bread">Bánh mỳ</string>
     <string name="wizard_carbs_type_cake">Bánh</string>
     <string name="wizard_carbs_type_pizza">Pizza</string>
+    <string name="wizard_set_alarm">Đặt báo thức</string>
+    <string name="eat_reminder_title">Đến giờ ăn</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d phút</string>
     <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>

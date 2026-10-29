@@ -110,10 +110,13 @@
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
+    <string name="value_question" comment="Asks if this should be done. %1$s=what will be done. Example: Send logs?">%1$s?</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Zadania</string>
     <string name="please_wait">Proszę czekać…</string>
     <string name="stop">Stop</string>
@@ -134,7 +137,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulina także nie została przełączona.</string>
     <string name="active"><![CDATA[<Aktywny>]]></string>
     <string name="date">Data</string>
-    <string name="units_label">Jednostki</string>
     <string name="insulin_nickname_label">Pseudonim insuliny</string>
     <string name="concentration_label">Stężenie</string>
     <string name="peak_label">Szczyt</string>
@@ -444,6 +446,7 @@
     <string name="clientcontrol_action_deactivate_scene">Zakończ scenę</string>
     <string name="clientcontrol_action_update_settings">Zaktualizuj ustawienia</string>
     <string name="clientcontrol_action_deliver_bolus">Podaj bolus</string>
+    <string name="clientcontrol_action_eat_reminder">Zmień przypomnienie o posiłku</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">To urządzenie nie jest sparowane z telefonem pacjenta.</string>
     <string name="clientcontrol_fail_not_reachable">Urządzenie pacjenta jest offline.</string>
@@ -461,6 +464,8 @@
     <string name="clientcontrol_fail_cancelled">Polecenie zostało anulowane przed wykonaniem. Nic nie zostało wysłane do pompy.</string>
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus anulowany. Nie podano insuliny.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Anulowano</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">Brak SMB podczas gdy bolus czeka na potwierdzenie.</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">Trwa dostarczanie SMB. Możesz potwierdzić, gdy zakończy się podawanie.</string>
     <string name="clientcontrol_fail_control_disabled">Zdalne sterowanie jest wyłączone na telefonie pacjenta.</string>
     <string name="clientcontrol_fail_not_allowed_for_role">Rola tego telefonu na telefonie głównym nie pozwala na to.</string>
     <string name="clientcontrol_fail_other_token">Telefon pacjenta odrzucił żądanie: ten telefon zapisuje dane do Nightscout innym tokenem niż własny. Na telefonie pacjenta usuń ten telefon i dodaj go ponownie.</string>
@@ -779,6 +784,11 @@
     <string name="grant">Przyznaj</string>
     <string name="set">Ustaw</string>
     <string name="wizard_set_alarm">Ustaw alarm</string>
+    <string name="eat_reminder_title">Czas coś zjeść</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_rung">Czas minął</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="eat_reminder_not_set">Nie udało się ustawić przypomnienia o posiłku. Zezwól AAPS na ustawianie alarmów i przypomnień w ustawieniach Androida.</string>
     <string name="wizard_use_percentage">Użyj procentów</string>
     <string name="wizard_include_bg">Uwzględnij glikemię</string>
     <string name="wizard_include_tt">Uwzględnij cel tymczasowy</string>
@@ -848,6 +858,7 @@
     <string name="limitingbasalratio">Ograniczam maks. dawkę bazową do %1$.2f U/h z uwagi na %2$s</string>
     <string name="pumplimit">ograniczenie pompy</string>
     <string name="limitingpercentrate">Ograniczam maksymalną wartość w procentach do %1$d%% z uwagi na %2$s</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Wartość procentowa %1$d%% przeliczona na %2$s U/h przy aktualnej bazie %3$s U/h.</string>
     <string name="itmustbepositivevalue">wartość musi być dodatnia</string>
     <string name="limitingbolus">Ograniczam bolus do %1$.1f U z uwagi na %2$s</string>
     <!--    Dialogs-->
@@ -934,7 +945,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pompa sparowana</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nie jest obsługiwany.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nie jest obsługiwany lub urządzenie nie jest sparowane.</string>
     <string name="ble_not_enabled">Bluetooth nie jest włączony.</string>
     <string name="ble_permissions_missing">Brak uprawnień Bluetooth. Nadaj je w ustawieniach aplikacji.</string>
     <!--    Preferences -->
@@ -1143,6 +1153,19 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">KROKI</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Insulina na pokładzie (IOB)</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Całkowita insulina (IOB)</string>
+    <string name="graph_series_cob">Węglowodany aktywne (COB)</string>
+    <string name="graph_series_bgi">Wpływ na glikemię</string>
+    <string name="graph_series_deviations">Odchylenia</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Zmiana wrażliwości</string>
+    <string name="graph_series_variable_sens">Zmienna wrażliwość</string>
+    <string name="graph_series_deviation_slope">Nachylenie odchyleń</string>
+    <string name="graph_series_heart_rate">Tętno</string>
+    <string name="graph_series_steps">Kroki</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Aktywność insuliny</string>
+    <string name="graph_series_predictions">Prognozy</string>
     <string name="units_days">dni</string>
     <string name="units_format_days">%1$d dni</string>
     <string name="units_format_days_range">%1$d dni (%2$d - %3$d)</string>
@@ -1169,6 +1192,7 @@
     <string name="units_format_min">%1$d min</string>
     <string name="units_format_min_range">%1$d min (%2$d - %3$d)</string>
     <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
     <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
     <string name="units_format_sec">%1$d sek</string>
     <string name="units_format_sec_range">%1$d sek (%2$d - %3$d)</string>
@@ -1184,4 +1208,5 @@
     <string name="units_sec">sek</string>
     <string name="units_years">r</string>
     <string name="prefs_range_title">Zakres do wizualizacji (na wykresie)</string>
+    <string name="secrets_not_protected">Na tym komputerze nie znaleziono systemowego magazynu kluczy. Klucze chroniące ustawienia i parowanie z urządzeniem pacjenta są przechowywane w plikach obok danych, więc każdy, kto dostanie kopię Twoich plików, dostanie też te klucze. W systemie Linux zainstaluj i uruchom menedżer kluczy (na przykład GNOME Keyring lub KWallet), a następnie uruchom AAPS ponownie.</string>
 </resources>
