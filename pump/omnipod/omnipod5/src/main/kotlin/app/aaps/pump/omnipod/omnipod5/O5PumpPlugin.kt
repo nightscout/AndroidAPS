@@ -37,7 +37,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.collectResilient
-import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withCompose
@@ -127,6 +126,10 @@ import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlin.concurrent.thread
 import kotlin.math.ceil
+import kotlin.math.roundToLong
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
+import app.aaps.pump.omnipod.omnipod5.R as O5R
 
 private fun (() -> PumpEnactResult).get(): PumpEnactResult = invoke()
 
@@ -200,6 +203,12 @@ class O5PumpPlugin @Inject constructor(
     @Volatile private var stopConnecting: CountDownLatch? = null
     private val doseMutex = Mutex()
 
+    @VisibleForTesting
+    internal var bolusTimeSource: TimeSource = TimeSource.Monotonic
+
+    @VisibleForTesting
+    internal var bolusSleep: (Long) -> Unit = { Thread.sleep(it) }
+
     private var statusChecker: Runnable
     private var housekeepingChecker: Runnable
     private var nextPodWarningCheck: Long = 0
@@ -212,6 +221,7 @@ class O5PumpPlugin @Inject constructor(
 
         private const val BOLUS_RETRY_INTERVAL_MS = 2000L
         private const val BOLUS_RETRIES = 5
+        private const val BOLUS_CONFIRMATION_MARGIN_MS = 3000L
         private const val STATUS_CHECK_INTERVAL_MS = 60L * 1000
         private const val POD_WARNING_INTERVAL_MS = 15L * 60 * 1000
         private const val RESERVOIR_OVER_50_UNITS_DEFAULT = 75.0
@@ -222,8 +232,7 @@ class O5PumpPlugin @Inject constructor(
 
         private const val FIXED_NONCE = O5_FIXED_NONCE
 
-        /** Matches Dash's fixed pulse-delay constant for bolus delivery pacing - a
-         *  pod-firmware-level property of the shared command layer. */
+        /** Bolus pulse interval in eighths of a second (2 seconds). */
         private const val BOLUS_DELAY_BETWEEN_PULSES_EIGHTH_SECONDS: Byte = 16
 
         private val pumpDescription = PumpDescription().fillFor(PumpType.OMNIPOD_5)
@@ -1037,11 +1046,13 @@ class O5PumpPlugin @Inject constructor(
                 .build()
 
             var commandMayHaveBeenSent = false
+            var commandSentAt: TimeMark? = null
             val ret = try {
                 bleManager.sendCommand(cmd, DefaultStatusResponse::class)
                     .doOnNext { rememberBolusAcceptance(startedAt, it) }
                     .filter { it.isCommandSent() }
                     .doOnNext {
+                        commandSentAt = bolusTimeSource.markNow()
                         commandMayHaveBeenSent = true
                         markBolusRecordExpected(startedAt)
                     }
@@ -1059,7 +1070,10 @@ class O5PumpPlugin @Inject constructor(
                     }
                     .blockingAwait()
                 armStatusChecker()
-                val completion = waitForBolusDeliveryToComplete(requestedUnits).blockingGet()
+                val completion = waitForBolusDeliveryToComplete(
+                    requestedUnits,
+                    requireNotNull(commandSentAt) { "Missing bolus command send time" }
+                ).blockingGet()
                 val deliveredUnits = completion.deliveredUnits
                 val accepted = podStateManager.pendingDoseCommand?.confirmedByStatus == true
                 if (deliveredUnits != null && accepted) {
@@ -1106,20 +1120,34 @@ class O5PumpPlugin @Inject constructor(
 
     private data class BolusCompletion(val deliveredUnits: Double?)
 
-    private fun waitForBolusDeliveryToComplete(requestedUnits: Double): Single<BolusCompletion> = Single.defer {
-        val estimatedSeconds = ceil(requestedUnits / PodConstants.POD_PULSE_BOLUS_UNITS).toLong() * 2 + 3
-        var waited = 0L
-        while (waited < estimatedSeconds && !bolusCanceled) {
-            waited += 1
-            Thread.sleep(1000)
-            bolusProgressData.updateProgress(
-                delivered = PumpInsulin(
-                    Round.roundTo(
-                        (waited.toFloat() / estimatedSeconds) * requestedUnits,
-                        PodConstants.POD_PULSE_BOLUS_UNITS
-                    )
+    private fun waitForBolusDeliveryToComplete(
+        requestedUnits: Double,
+        commandSentAt: TimeMark
+    ): Single<BolusCompletion> = Single.defer {
+        val totalPulses = (requestedUnits / PodConstants.POD_PULSE_BOLUS_UNITS).roundToLong()
+        val pulseIntervalMs = BOLUS_DELAY_BETWEEN_PULSES_EIGHTH_SECONDS.toLong() * 1000 / 8
+        val deliveryDurationMs = totalPulses * pulseIntervalMs
+        val confirmationTimeMs = deliveryDurationMs + BOLUS_CONFIRMATION_MARGIN_MS
+
+        // This is an estimate from the send time, not live feedback from the pod.
+        while (!bolusCanceled) {
+            val elapsedMs = commandSentAt.elapsedNow().inWholeMilliseconds
+            val estimatedPulses = (elapsedMs / pulseIntervalMs).coerceIn(0L, totalPulses)
+            val delivered = PumpInsulin(estimatedPulses * PodConstants.POD_PULSE_BOLUS_UNITS)
+
+            if (elapsedMs < deliveryDurationMs) {
+                bolusProgressData.updateProgress(delivered = delivered)
+            } else {
+                bolusProgressData.updateProgress(
+                    percent = 99,
+                    status = TextRef.AndroidRes(O5R.string.omnipod_5_checking_delivery_status),
+                    delivered = delivered
                 )
-            )
+            }
+
+            val remainingMs = confirmationTimeMs - elapsedMs
+            if (remainingMs <= 0L) break
+            bolusSleep(minOf(1000L, remainingMs))
         }
 
         repeat(BOLUS_RETRIES) {
@@ -1129,23 +1157,23 @@ class O5PumpPlugin @Inject constructor(
             } catch (e: Exception) {
                 aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$e")
                 reportPodFault()
-                Thread.sleep(BOLUS_RETRY_INTERVAL_MS)
+                bolusSleep(BOLUS_RETRY_INTERVAL_MS)
                 return@repeat
             }
             val bolusActive = podStateManager.deliveryStatus?.bolusDeliveringActive() == true
             if (bolusActive) {
                 val remainingPulses = podStateManager.bolusPulsesRemaining
                 if (remainingPulses == null) {
-                    Thread.sleep(BOLUS_RETRY_INTERVAL_MS)
+                    bolusSleep(BOLUS_RETRY_INTERVAL_MS)
                     return@repeat
                 }
                 val remainingUnits = remainingPulses.toInt() * PodConstants.POD_PULSE_BOLUS_UNITS
                 val delivered = requestedUnits - remainingUnits
                 val percent = (delivered / requestedUnits) * 100
-                bolusProgressData.updateProgress(percent.toInt())
+                bolusProgressData.updateProgress(percent.toInt().coerceIn(0, 99))
                 val sleepSeconds = if (bolusCanceled) BOLUS_RETRY_INTERVAL_MS / 1000
                 else ceil(remainingUnits / PodConstants.POD_PULSE_BOLUS_UNITS).toLong() * 2 + 3
-                Thread.sleep(sleepSeconds * 1000)
+                bolusSleep(sleepSeconds * 1000)
             } else {
                 val deliveredPulses = podStateManager.pendingDoseCommand?.deliveredBolusPulses(
                     podStateManager.sequenceNumberOfLastProgrammingCommand,
@@ -1717,17 +1745,22 @@ class O5PumpPlugin @Inject constructor(
                 .setProgramReminder(ProgramReminder(atStart = false, atEnd = false, atInterval = 0))
                 .setO5BolusInfo(mealUnits = 0.0, correctionUnits = requestedInsulinAmount)
                 .build()
+            var commandSentAt: TimeMark? = null
             bleManager.sendCommand(cmd, DefaultStatusResponse::class)
                 .doOnNext { rememberBolusAcceptance(startedAt, it) }
                 .filter { it.isCommandSent() }
                 .doOnNext {
+                    commandSentAt = bolusTimeSource.markNow()
                     commandMayHaveBeenSent = true
                     markBolusRecordExpected(startedAt)
                 }
                 .ignoreElements()
                 .blockingAwait()
             armStatusChecker()
-            val completion = waitForBolusDeliveryToComplete(requestedInsulinAmount).blockingGet()
+            val completion = waitForBolusDeliveryToComplete(
+                requestedInsulinAmount,
+                requireNotNull(commandSentAt) { "Missing bolus command send time" }
+            ).blockingGet()
             val deliveredUnits = completion.deliveredUnits
             if (deliveredUnits != null && podStateManager.pendingDoseCommand?.confirmedByStatus == true) {
                 runBlocking { finalizeBolus(podStateManager.pendingDoseCommand ?: pendingDose, deliveredUnits) }

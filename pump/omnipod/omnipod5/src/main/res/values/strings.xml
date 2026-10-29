@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="omnipod_5_checking_delivery_status">Checking delivery status</string>
     <string name="omnipod_o5_history_command_failed">Command failed</string>
     <string name="omnipod_o5_failed_to_connect">Failed to connect</string>
     <string name="omnipod_o5_found_too_many_pods">Found too many Pods</string>
