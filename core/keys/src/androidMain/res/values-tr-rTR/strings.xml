@@ -1,13 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">Basit mod</string>
+    <string name="pref_title_insulin_concentration">İnsülin konsantrasyonu desteği</string>
+    <string name="pref_summary_insulin_concentration">Farklı insülin konsantrasyonları (U50, U200 vb.) için desteği etkinleştirin</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Ekranı açık tut</string>
+    <string name="pref_summary_keep_screen_on">Android\'in ekranı kapatmasını önleyin. Prize takılı değilken çok fazla enerji tüketir.</string>
+    <string name="pref_title_show_treatment_button">Tedavi butonunu göster</string>
+    <string name="pref_title_show_wizard_button">Sihirbaz butonunu göster</string>
+    <string name="pref_title_show_insulin_button">İnsülin butonunu göster</string>
+    <string name="pref_title_show_carbs_button">Karb butonunu göster</string>
+    <string name="pref_title_show_cgm_button">CGM butonunu göster</string>
+    <string name="pref_summary_show_cgm_button">xDrip+ veya Dexcom uygulamasını açar (AAPS\'e dönmek için geri butonunu kullanabilirsiniz).</string>
+    <string name="pref_title_show_calibration_button">Kalibrasyon butonunu göster</string>
+    <string name="pref_summary_show_calibration_button">xDrip+\'a kalibrasyon gönderir (xDrip+\'ta Inter-App ayarları altında \"Kalibrasyonları Kabul Et\" seçeneğinin etkinleştirildiğinden emin olun).</string>
+    <string name="pref_title_show_notes_in_dialogs">Diyaloglarda notları göster</string>
+    <string name="pref_title_use_bolus_advisor">Bolus danışmanını kullan</string>
+    <string name="pref_summary_use_bolus_advisor">Daha yüksek kan şekeri seviyelerinde bolus hesaplamalarına yardımcı olan bolus danışmanını etkinleştirin.</string>
+    <string name="pref_title_use_bolus_reminder">Bolus hatırlatıcıyı kullan</string>
+    <string name="pref_summary_use_bolus_reminder">İnsülin yönetimini takip etmeye yardımcı olması için bolus hatırlatma bildirimlerini etkinleştirin.</string>
+    <string name="pref_title_use_super_bolus">Süper blos kullan</string>
+    <string name="pref_summary_use_super_bolus">Bazal insülin miktarından ödünç alarak anında insülin verilmesini sağlayan süper bolus özelliğini etkinleştirin.</string>
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">BT Watchdog</string>
     <string name="pref_summary_bt_watchdog">Pompayla bağlantı kurulamaması durumunda, telefonun bluetooth özelliğini bir saniyeliğine kapatır. Bu işlem, bluetooth altyapısının donduğu bazı telefonlarda sorunun çözülmesine yardımcı olabilir.</string>
     <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">KŞ bilgisi alınmadığında uyar</string>
+    <string name="pref_title_alert_pump_unreachable">Pompa ulaşılamıyorsa uyar</string>
+    <string name="pref_title_alert_carbs_required">Karbonhidrat gerekliyse uyar</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Acil durum uyarılarını Android bildirimleri olarak iletin</string>
+    <string name="pref_title_alert_increase_volume">Bildirim ses düzeyini kademeli olarak artırın</string>
+    <string name="pref_title_alert_override_dnd">Rahatsız Etmeyin modunu geçersiz kıl</string>
+    <string name="pref_summary_alert_override_dnd">Etkinleştirildiğinde, telefon sessizde olsa veya Rahatsız Etmeyin modunda bulunsa bile AAPS alarmları çalar. Devre dışı bırakıldığında ise bu modlarda alarmlar çalmaz.</string>
     <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">KŞ verilerini NighScout\'a yükle</string>
+    <string name="pref_title_bg_source_create_sensor_change">Sensör değişimini kaydet</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Sensör takıldığında sensör değişimi tedavi etkinliği oluşturun.</string>
     <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">Dinamik hassasiyet kullanın</string>
     <string name="pref_summary_aps_use_dynamic_sensitivity">Hassasiyet ayarı için otoduyarlılık yerine DinamikİDF kullanın.</string>
+    <string name="pref_title_aps_use_autosens">Otoduyarlılık kullanın</string>
+    <string name="pref_title_aps_use_smb">SMB etkinleştir</string>
     <string name="pref_summary_aps_use_uam">Bildirilmemiş öğünleri tespiti ve tedavisini etkinleştirir.</string>
     <string name="pref_title_aps_sensitivity_raises_target">Duyarlılık hedefi yükseltir</string>
     <string name="pref_summary_aps_sensitivity_raises_target">Hassasiyet tespit edildiğinde, glikoz hedefini yükseltin.</string>
