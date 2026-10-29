@@ -44,13 +44,10 @@
     <string name="equil_new_infusion_set_no">Не, само резервоар или батерия</string>
     <string name="equil_same_infusion_set_hint">Канюлата няма да бъде напълнена и смяна няма да бъде записана.</string>
     <string name="equil_unpair_alert">Сигурни ли сте, че искате да се откажете от контрола над %1$s?</string>
-    <string name="equil_record_basal">Базал %1$s Е/Ч</string>
-    <string name="equil_record_basal_temp">Временен базал %1$s Е/Ч</string>
     <string name="equil_record_bolus">Болус %1$s Е</string>
     <string name="equil_error_set_temp_basal_failed_validation">Продължителността трябва да бъде по-голяма от нула и кратна на %1$s минути.</string>
     <string name="equil_basal_exceeds_max">Профилният базал %1$s Е/ч надвишава разрешения в помпата от %2$s Е/ч. Разрешете по-голям базал в помпата.</string>
     <string name="equil_not_enough_insulin">Недостатъчно инсулин в резервоара</string>
-    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Слаба батерия: %1$d% %</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Недостатъчно инсулин в резервоара: %1$s</string>
     <string name="equil_reservoir_empty">Резервоара е празен. Помпата не пуска инсулин вече.</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Помпата спря по време на болуса. Доставени: %1$s от %2$s</string>
@@ -64,7 +61,6 @@
     <string name="equil_firmware_version">Версия на фърмуера</string>
     <string name="equil_shutdown_be">Equil ще бъде автоматично изключен</string>
     <string name="equil_shutdown">Equil автоматично изключване</string>
-    <string name="equil_common_history_tbr_value">Количество: %1$.2f Е/Ч, Продължителност: %2$d мин</string>
     <string name="equil_common_history_bolus_value">%1$.2f Е</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Стартирай болус</string>
