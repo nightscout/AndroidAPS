@@ -140,6 +140,16 @@ class Ap550OverviewViewModel(
     /** Bumped by every event that can change what the screen shows. */
     private val refreshTrigger = MutableStateFlow(0L)
 
+    /**
+     * Last connection status announced over the bus. The driver cannot answer `isConnecting()`
+     * while it dials: Android only reports connected and disconnected in the GATT callback, so
+     * `STATE_CONNECTING` is never recorded. The command queue fills that gap - it sends a
+     * CONNECTING event every second while it waits for the pump. Following that event, like the
+     * old fragment did, is the only way the card can show "connecting".
+     */
+    @Volatile
+    private var lastConnectionStatus = EventPumpStatusChanged.Status.DISCONNECTED
+
     init {
         // viewModelScope dies with the view model, like the CompositeDisposable it replaces. The
         // bodies only write a timestamp, so the dispatcher does not matter. UNDISPATCHED because
@@ -164,6 +174,11 @@ class Ap550OverviewViewModel(
         rxBus.toFlow(EventPumpStatusChanged::class)
             .collectResilient(viewModelScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { event ->
                 refreshTrigger.value = System.currentTimeMillis()
+                // Plain progress messages ("getting pump status" and so on) ride on PERFORMING and
+                // must not end a connecting phase that is still running.
+                if (event.status != EventPumpStatusChanged.Status.PERFORMING) {
+                    lastConnectionStatus = event.status
+                }
                 // While a paired pump is being connected, remind the user every two minutes that the
                 // pump did not answer, instead of letting the spinner run without explanation.
                 if (event.status == EventPumpStatusChanged.Status.CONNECTING &&
@@ -243,47 +258,58 @@ class Ap550OverviewViewModel(
      * Connection card. Same order as the old screen: connecting wins, then connected, then
      * disconnecting, and everything else counts as disconnected.
      */
-    private fun buildConnection(): Ap550ConnectionUiState = when {
-        !isPumpBound()                                          ->
-            Ap550ConnectionUiState(
-                phase = Ap550ConnectionPhase.UNBOUND,
-                statusText = rh.gs(R.string.ap550_status_unbound),
-                description = rh.gs(R.string.ap550_bind_uis_pump)
-            )
+    private fun buildConnection(): Ap550ConnectionUiState {
+        // `isConnecting()` cannot see the dial (see lastConnectionStatus), so the CONNECTING and
+        // HANDSHAKING events from the command queue decide when the card shows "connecting". They
+        // stop when the queue gives up and sends DISCONNECTED. A pump that is connected always
+        // wins: the last status can still say CONNECTING when the queue kept counting seconds
+        // while the last part of the connect attempt ran.
+        val connecting = !ap550PumpPlugin.isConnected() &&
+            (ap550PumpPlugin.isConnecting() ||
+                lastConnectionStatus == EventPumpStatusChanged.Status.CONNECTING ||
+                lastConnectionStatus == EventPumpStatusChanged.Status.HANDSHAKING)
+        return when {
+            !isPumpBound()          ->
+                Ap550ConnectionUiState(
+                    phase = Ap550ConnectionPhase.UNBOUND,
+                    statusText = rh.gs(R.string.ap550_status_unbound),
+                    description = rh.gs(R.string.ap550_bind_uis_pump)
+                )
 
-        ap550PumpPlugin.isConnecting()                          ->
-            Ap550ConnectionUiState(
-                phase = Ap550ConnectionPhase.CONNECTING,
-                statusText = rh.gs(R.string.ap550_status_connecting)
-            )
+            connecting              ->
+                Ap550ConnectionUiState(
+                    phase = Ap550ConnectionPhase.CONNECTING,
+                    statusText = rh.gs(R.string.ap550_status_connecting)
+                )
 
-        ap550PumpPlugin.isConnected() && !ap550Pump.paired      ->
-            Ap550ConnectionUiState(
-                phase = Ap550ConnectionPhase.CONNECTED_NOT_PAIRED,
-                statusText = rh.gs(R.string.ap550_status_disconnected),
-                description = rh.gs(R.string.ap550_tap_to_reconnect)
-            )
+            ap550PumpPlugin.isConnected() && !ap550Pump.paired ->
+                Ap550ConnectionUiState(
+                    phase = Ap550ConnectionPhase.CONNECTED_NOT_PAIRED,
+                    statusText = rh.gs(R.string.ap550_status_disconnected),
+                    description = rh.gs(R.string.ap550_tap_to_reconnect)
+                )
 
-        ap550PumpPlugin.isConnected()                           ->
-            Ap550ConnectionUiState(
-                phase = Ap550ConnectionPhase.CONNECTED,
-                statusText = rh.gs(R.string.ap550s_connected),
-                pumpSuspended = ap550Pump.pumpSuspended,
-                pumpMuted = ap550Pump.pumpMuteStatus
-            )
+            ap550PumpPlugin.isConnected() ->
+                Ap550ConnectionUiState(
+                    phase = Ap550ConnectionPhase.CONNECTED,
+                    statusText = rh.gs(R.string.ap550s_connected),
+                    pumpSuspended = ap550Pump.pumpSuspended,
+                    pumpMuted = ap550Pump.pumpMuteStatus
+                )
 
-        ap550PumpPlugin.disconnecting()                         ->
-            Ap550ConnectionUiState(
-                phase = Ap550ConnectionPhase.DISCONNECTING,
-                statusText = rh.gs(R.string.ap550_status_disconnecting)
-            )
+            ap550PumpPlugin.disconnecting() ->
+                Ap550ConnectionUiState(
+                    phase = Ap550ConnectionPhase.DISCONNECTING,
+                    statusText = rh.gs(R.string.ap550_status_disconnecting)
+                )
 
-        else                                                    ->
-            Ap550ConnectionUiState(
-                phase = Ap550ConnectionPhase.DISCONNECTED,
-                statusText = rh.gs(R.string.ap550_status_disconnected),
-                description = rh.gs(R.string.ap550_tap_to_reconnect)
-            )
+            else            ->
+                Ap550ConnectionUiState(
+                    phase = Ap550ConnectionPhase.DISCONNECTED,
+                    statusText = rh.gs(R.string.ap550_status_disconnected),
+                    description = rh.gs(R.string.ap550_tap_to_reconnect)
+                )
+        }
     }
 
     private fun buildOverview(snapshot: PumpSnapshot): PumpOverviewUiState {

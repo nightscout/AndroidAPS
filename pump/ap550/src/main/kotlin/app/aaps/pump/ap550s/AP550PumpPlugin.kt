@@ -595,6 +595,18 @@ class AP550PumpPlugin @Inject constructor(
         if (sExecutionService != null) sExecutionService!!.stopConnecting()
     }
 
+    /**
+     * Waits until the running connect attempt has finished (link up or attempt given up).
+     *
+     * [connect] returns before the link is up - the waits inside the attempt run on a background
+     * thread in the service, so the command queue is not blocked. A caller that needs the result
+     * right away, like the pairing wizard, waits for the attempt this way. Blocks the calling
+     * thread, so only call it from a background dispatcher.
+     */
+    fun joinConnectAttempt() {
+        sExecutionService?.joinConnectAttempt()
+    }
+
     override suspend fun getPumpStatus(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Test_ble_connect getPumpStatus reason: $reason")
         if (sExecutionService != null && sExecutionService!!.isConnected) {

@@ -130,6 +130,7 @@ import java.util.Timer
 import java.util.TimerTask
 import java.util.UUID
 import java.util.concurrent.Executors
+import java.util.concurrent.Future
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import dev.zacsweers.metro.Inject
@@ -1193,6 +1194,27 @@ class AP550ExecutionService : MetroService() {
         }
 
     private var reconnectLastTime: Long = 0
+
+    // Connect attempts run here, one at a time. The attempt waits for the MTU exchange (up to 10 s)
+    // and the version read (up to 5 s), and those waits must not block the caller: the command
+    // queue calls connect() from its loop and has to keep sending its once-per-second status
+    // events while the attempt runs, like it does for the DanaRS and Medtrum drivers.
+    private val connectExecutor = Executors.newSingleThreadExecutor()
+
+    /** The running connect attempt, so a caller that needs the link can wait for it to finish. */
+    private var connectAttempt: Future<*>? = null
+
+    /**
+     * True from the connect() call until the attempt finished, on the attempt's own thread or on
+     * the caller's. This is what [isConnecting] reports. Android never reports STATE_CONNECTING
+     * in the GATT callback, and the attempt itself runs on a background thread, so a separate
+     * flag is the only honest source for it.
+     */
+    @Volatile
+    private var connectAttemptRunning = false
+
+    /** Upper bound for waiting on a connect attempt. An attempt takes at most ~15 s (MTU + version read). */
+    private val joinConnectAttemptTimeoutSec = 30L
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     fun connect(reason: String) {
         // Keep skipping the watchdog: the bluetooth radio was just toggled, so an immediate connect
@@ -1215,15 +1237,56 @@ class AP550ExecutionService : MetroService() {
             aapsLogger!!.debug(LTag.PUMPBTCOMM, "connect: too soon")
             return
         }
+        // One attempt at a time. While an attempt runs, isConnecting stays true, so the command
+        // queue waits instead of calling connect() again.
+        if (connectAttemptRunning) {
+            aapsLogger!!.debug(LTag.PUMPBTCOMM, "connect: attempt already running")
+            return
+        }
         reconnectLastTime = System.currentTimeMillis()
-        if (disconnected()) {
-            aapsLogger!!.debug(LTag.PUMPBTCOMM, "connect: Trying to connect disconnected")
-            bTGATTForSelectedPump
-        } else {
-            aapsLogger!!.debug(LTag.PUMPBTCOMM, "connect: Trying to disconnect")
-            disconnect("connect status is disconnected")
-            SystemClock.sleep(500)
-            bTGATTForSelectedPump
+        // Tell the rest of the driver the link is being dialled. isConnecting() below reports the
+        // attempt flag; this keeps the internal state honest for disconnected()/disconnecting().
+        mConnectionState = STATE_CONNECTING
+        connectAttemptRunning = true
+        val closeOldLink = !disconnected()
+        connectAttempt = try {
+            connectExecutor.submit {
+                try {
+                    if (closeOldLink) {
+                        aapsLogger!!.debug(LTag.PUMPBTCOMM, "connect: Trying to disconnect")
+                        disconnect("connect status is disconnected")
+                        SystemClock.sleep(500)
+                    }
+                    aapsLogger!!.debug(LTag.PUMPBTCOMM, "connect: Trying to connect disconnected")
+                    bTGATTForSelectedPump
+                } finally {
+                    // The attempt body can leave early (bad MAC, missing permission, failed MTU or
+                    // version read). Clear the connecting state so the queue can try again.
+                    if (mConnectionState != STATE_CONNECTED) mConnectionState = STATE_DISCONNECTED
+                    // Set last: isConnected() and isConnecting() report on this flag.
+                    connectAttemptRunning = false
+                }
+            }
+        } catch (e: Exception) {
+            // Only when the service is shutting down. Undo, so the queue can retry later.
+            aapsLogger!!.debug(LTag.PUMPBTCOMM, "connect: submit failed: ${e.message}")
+            connectAttemptRunning = false
+            mConnectionState = STATE_DISCONNECTED
+            null
+        }
+    }
+
+    /**
+     * Waits until the running connect attempt has finished (link up or attempt given up).
+     *
+     * [connect] returns before the link is up, so a caller that needs the result right away -
+     * the pairing wizard - waits for the attempt this way instead.
+     */
+    fun joinConnectAttempt() {
+        try {
+            connectAttempt?.get(joinConnectAttemptTimeoutSec, TimeUnit.SECONDS)
+        } catch (e: Exception) {
+            aapsLogger!!.debug(LTag.PUMPBTCOMM, "joinConnectAttempt: ${e.message}")
         }
     }
 
@@ -1705,8 +1768,13 @@ class AP550ExecutionService : MetroService() {
         }
     }
 
+    // True when the GATT link is up AND the connect attempt (MTU exchange, version read,
+    // authentication) has finished, so messages can actually be sent. The GATT callback sets
+    // STATE_CONNECTED on link up only; the attempt flag covers the rest. Before the connect
+    // went async, connect() blocked the caller until the attempt was done, which had the same
+    // effect.
     val isConnected: Boolean
-        get() = mConnectionState == STATE_CONNECTED
+        get() = mConnectionState == STATE_CONNECTED && !connectAttemptRunning
 
     private enum class DISCOVERED {
         NULL, PENDING, COMPLETE
@@ -1715,6 +1783,9 @@ class AP550ExecutionService : MetroService() {
 
     @Synchronized
     fun readVersion() : Boolean {
+        // A disconnect from another thread (stopConnecting on queue timeout, user disconnect) can
+        // close the link while this attempt is still waiting. Give up quietly instead of crashing.
+        if (mBluetoothGatt == null) return false
         // Read the pump DCN
         val deviceDcnService = mBluetoothGatt!!.getService(AP550_DEVICE_ID)
         if (deviceDcnService == null) {
@@ -1902,8 +1973,11 @@ class AP550ExecutionService : MetroService() {
         }
     }
 
+    // True while a connect attempt runs, from the connect() call until the attempt finished. The
+    // command queue relies on this to keep its once-per-second status events going and to not send
+    // commands while the attempt is still setting the link up.
     val isConnecting: Boolean
-        get() = mConnectionState == STATE_CONNECTING
+        get() = connectAttemptRunning
 
     fun disconnecting(): Boolean {
         return mConnectionState == STATE_DISCONNECTING
@@ -2348,6 +2422,7 @@ class AP550ExecutionService : MetroService() {
         timer = null
         task = null
         scheduledExecutor.shutdown()
+        connectExecutor.shutdownNow()
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, 0))
         BLEStateReceiver.unregister(applicationContext)
         localBleSwitchReceiver?.let {

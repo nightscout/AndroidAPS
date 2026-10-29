@@ -276,8 +276,10 @@ class Ap550PairWizardViewModel(
     /**
      * Connects and asks the pump for the pairing handshake.
      *
-     * `connect` does not return before the link is up or the attempt timed out, so it has to run off
-     * the main thread. Everything below runs on [Dispatchers.IO].
+     * `connect` returns before the link is up - the waits inside the connect attempt run on a
+     * background thread, so the command queue is not blocked. [AP550PumpPlugin.joinConnectAttempt]
+     * waits for the attempt to finish, like the old blocking connect did. Everything below runs on
+     * [Dispatchers.IO], so that wait is allowed here.
      */
     private suspend fun connectAndStartPairing(device: Ap550ScannedDevice) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Pairing with ${device.address} (${device.name})")
@@ -285,6 +287,7 @@ class Ap550PairWizardViewModel(
 
         if (ap550PumpPlugin.isConnected()) ap550PumpPlugin.disconnect("scan disconnect")
         ap550PumpPlugin.connect("scan connect")
+        ap550PumpPlugin.joinConnectAttempt()
         if (!ap550PumpPlugin.isConnected()) {
             forgetPairing()
             failWith(R.string.ap550_ble_connect_fail)
