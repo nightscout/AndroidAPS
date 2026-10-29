@@ -52,6 +52,8 @@
     <string name="authorized_clients_token_problem_not_allowed">Nightscout token tohoto telefonu není token administrátora, takže nemůže vytvořit token pro klienta. Použijte admin token, nebo přidejte klienta s PINem.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout již má token s tímto jménem a dalšími právy. Zvolte jiné jméno.</string>
     <string name="authorized_clients_token_problem_name_in_use">Klient s tímto jménem je již v seznamu. Vyberte si jiné jméno nebo jej nejprve odstraňte.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout neuvedl nový token, takže byl znovu odstraněn. Nic nebylo ponecháno zapomenuté. Zkuste to znovu.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout nenalezl nový token a nemohl být znovu odstraněn. Odstraňte token %1$s v Nightscoutu a zkuste znovu.</string>
     <string name="authorized_clients_tokens_header">Pouze číst Nightscout</string>
     <string name="authorized_clients_token_unpaired">Vlastní Nightscout token, nespárováno</string>
     <string name="authorized_clients_token_show_qr">Zobrazit QR kód</string>
