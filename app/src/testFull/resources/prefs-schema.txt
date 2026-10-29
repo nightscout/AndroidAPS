@@ -271,6 +271,11 @@ last_vacuum_run|LongNonKey|true
 last_versionchecker_plugin_warning_timestamp|VersionCheckerLongKey|true
 last_versionchecker_warning|VersionCheckerLongKey|true
 lgsThreshold|UnitDoubleKey|true
+libre3_staging_auto_promote_hours|Libre3IntKey|true
+libre3_staging_auto_promote|Libre3BooleanKey|false
+libre3_start|Libre3IntentKey|false
+libre3_status|Libre3IntentKey|false
+libre3_warmup|Libre3IntentKey|false
 local_profile_data|StringNonKey|true
 local_profile_last_change|LongNonKey|true
 location|StringKey|true

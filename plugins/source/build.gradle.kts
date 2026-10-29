@@ -87,6 +87,8 @@ kotlin {
                 implementation(project.dependencies.platform(libs.androidx.compose.bom))
                 implementation(libs.androidx.compose.material3)
                 implementation(libs.androidx.compose.runtime)
+                // The native Libre 3 / Libre 3 Plus driver. Android only, like the plugin that uses it.
+                implementation(project(":plugins:libre3"))
                 implementation(libs.androidx.lifecycle.runtime.compose)
                 implementation(libs.androidx.work.runtime)
             }

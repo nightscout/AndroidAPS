@@ -7,6 +7,23 @@
     <application>
 
         <activity
+            android:name=".activities.Libre3StatusActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.Libre3StartActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.Libre3WarmupActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".Libre3SessionService"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
+
+        <activity
             android:name=".activities.RequestDexcomPermissionActivity"
             android:exported="false" />
 
