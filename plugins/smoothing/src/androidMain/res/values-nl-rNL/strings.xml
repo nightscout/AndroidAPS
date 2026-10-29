@@ -5,4 +5,5 @@
     <string name="avg_smoothing_name">Gemiddeld vloeiend maken</string>
     <string name="description_avg_smoothing">"Gemiddeld vloeiend maken algoritme, nieuwste waarde wordt niet beïnvloed"</string>
     <string name="no_smoothing_name">Niet vloeiend maken</string>
+    <string name="description_no_smoothing">"Gebruik dit als je al gefilterde gegevens hebt, bijvoorbeeld van BYODA G6."</string>
 </resources>
