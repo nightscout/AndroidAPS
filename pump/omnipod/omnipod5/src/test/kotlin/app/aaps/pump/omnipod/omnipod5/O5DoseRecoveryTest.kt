@@ -33,6 +33,7 @@ import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.InMemoryO5PodStateMana
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.PersistedO5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.history.O5History
+import app.aaps.pump.omnipod.omnipod5.history.database.O5HistoryDatabase
 import app.aaps.pump.omnipod.omnipod5.keys.O5StringNonPreferenceKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -82,6 +83,7 @@ class O5DoseRecoveryTest : TestBaseWithProfile() {
 
     @Mock lateinit var ble: O5BleManager
     @Mock lateinit var history: O5History
+    @Mock lateinit var historyDatabase: O5HistoryDatabase
     @Mock lateinit var sync: PumpSync
     @Mock lateinit var queue: CommandQueue
     @Mock lateinit var progress: BolusProgressData
@@ -122,7 +124,7 @@ class O5DoseRecoveryTest : TestBaseWithProfile() {
 
     private fun newPlugin() = O5PumpPlugin(
             aapsLogger, rh, preferences, queue, ble, state, history, sync,
-            notificationManager, pumpEnactResultProvider, progress, protection, preCheck, config
+            notificationManager, pumpEnactResultProvider, progress, protection, preCheck, config, historyDatabase
         )
 
     private fun status(sequence: Int, delivery: DeliveryStatus, remaining: Int = 0): DefaultStatusResponse {
