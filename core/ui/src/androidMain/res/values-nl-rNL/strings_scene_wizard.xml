@@ -72,6 +72,7 @@
     <string name="scene_chain_indicator">→ %1$s</string>
     <string name="scene_chain_target_missing">Gekoppelde scène is verwijderd</string>
     <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">Opvolging is niet gestart: %1$s</string>
     <string name="scene_chain_skipped_deleted">doelscène is verwijderd</string>
     <string name="scene_chain_skipped_disabled">\"%1$s\" is uitgeschakeld</string>
     <string name="scene_chain_error_summary">%1$s → %2$s: %3$d of %4$d acties mislukt</string>
