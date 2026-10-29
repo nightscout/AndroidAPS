@@ -26,8 +26,6 @@
     <string name="equil_change">Vervang pomp</string>
     <string name="equil_change_content">Haal de pomp los van de bodemplaat.</string>
     <string name="equil_unpair_alert">Weet u zeker dat u de controle over %1$s wilt opgeven?</string>
-    <string name="equil_record_basal">Basaal snelheid %1$s E/u</string>
-    <string name="equil_record_basal_temp">Tijdelijke basaal snelheid %1$s E/u</string>
     <string name="equil_record_bolus">Bolus %1$s E</string>
     <string name="equil_error_set_temp_basal_failed_validation">Tijdelijke basaal duur moet groter zijn dan nul en een veelvoud van %1$s minuten.</string>
     <string name="equil_not_enough_insulin">Onvoldoende insuline beschikbaar in het reservoir</string>
@@ -41,7 +39,6 @@
     <string name="equil_firmware_version">Firmwareversie</string>
     <string name="equil_shutdown_be">Equil zal automatisch uit gaan</string>
     <string name="equil_shutdown">Equil auto uit</string>
-    <string name="equil_common_history_tbr_value">Snelheid: %1$.2f E/u, duur: %2$d minuten</string>
     <string name="equil_common_history_bolus_value">%1$.2f E</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Bolus instellen</string>
