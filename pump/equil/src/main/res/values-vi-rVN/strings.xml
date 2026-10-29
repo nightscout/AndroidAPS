@@ -44,6 +44,8 @@
     <string name="equil_new_infusion_set_no">Không, chỉ thay bình chứa insulin hoặc pin</string>
     <string name="equil_same_infusion_set_hint">Kim luồn sẽ không được mồi và hệ thống sẽ không ghi nhận việc thay kim luồn.</string>
     <string name="equil_unpair_alert">Bạn có chắc chắn muốn từ bỏ quyền kiểm soát đối với %1$s không?</string>
+    <string name="equil_record_basal">Tỷ lệ liều nền %1$s U/giờ</string>
+    <string name="equil_record_basal_temp">Tỷ lệ liều nền tạm thời %1$s U/giờ</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">Thời lượng TBR phải lớn hơn 0 và là bội số của %1$s phút.</string>
     <string name="equil_basal_exceeds_max">Tỷ lệ liều nền của Cấu hình %1$s U/h vượt quá giới hạn liều nền tối đa của bơm %2$s U/h. Hãy tăng cài đặt liều nền tối đa và kết nối lại bơm.</string>
@@ -62,6 +64,7 @@
     <string name="equil_firmware_version">Phiên bản phần mềm</string>
     <string name="equil_shutdown_be">Equil sẽ tự động tắt</string>
     <string name="equil_shutdown">Equil tự động tắt</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Tỷ lệ: %1$.2f U/giờ, thời lượng: %2$d phút</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Đặt liều Bolus</string>
