@@ -14,7 +14,7 @@
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">Liga — vėmimas</string>
     <string name="scene_wizard_sick_day_vomiting_desc">Sumažintas profilis su LGS – tai priešinga įprastai ligos dienos situacijai, kai organizmas prasčiau pasisavina maistą.</string>
-    <string name="scene_wizard_info_sick_day_vomiting">Jei dėl vėmimo nepavyksta išlaikyti maisto, įprastas ligos dienos principas didinti insulino kiekį gali būti pavojingas. Angliavandeniai tokiu atveju gali būti nepakankamai pasisavinami, todėl gliukozė gali ne kilti, o kristi. Sumažintas profilis (60 %) mažina insulino tiekimą, o LGS režimas suteikia papildomą apsaugą – gliukozei krentant insulino tiekimas sustabdomas. Išjungus SMB, neleidžiami papildomi mikroboliusai. Gliukozę tikrinkite kas 1–2 val., ketonus – kas 2–4 val. Kreipkitės medicininės pagalbos, jei vėmimas tęsiasi ilgiau nei kelias valandas arba ketonai padidėja virš 1,5 mmol/l.</string>
+    <string name="scene_wizard_info_sick_day_vomiting">Jei dėl vėmimo nepavyksta išlaikyti maisto, įprastas ligos dienos principas didinti insulino kiekį gali būti pavojingas. Angliavandeniai tokiu atveju gali būti nepakankamai pasisavinami, todėl gliukozė gali ne kilti, o kristi. Sumažintas profilis (60 %) mažina insulino tiekimą, o LGS režimas suteikia papildomą apsaugą – gliukozei krentant insulino tiekimas sustabdomas. Išjungus SMB, neleidžiami papildomi mikrobolusai. Gliukozę tikrinkite kas 1–2 val., ketonus – kas 2–4 val. Kreipkitės medicininės pagalbos, jei vėmimas tęsiasi ilgiau nei kelias valandas arba ketonai padidėja virš 1,5 mmol/l.</string>
     <!-- Sleep: no default actions — 8h -->
     <string name="scene_template_sleep">Miegas</string>
     <string name="scene_wizard_sleep_desc">Žemesnis gliukozės tikslas geresnei kontrolei naktį.</string>
@@ -38,7 +38,7 @@
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
     <string name="scene_template_bathing">Maudymasis</string>
     <string name="scene_wizard_bathing_desc">Atjungti pompą prausiantis duše, plaukiojant, maudantis vonioje ar užsiimant kita veikla vandenyje.</string>
-    <string name="scene_wizard_info_bathing">Atjungus pompą, insulino tiekimas visiškai sustoja – neleidžiama nei bazė, nei boliusai ar korekcijos. Algoritmas persijungia į atjungtos pompos režimą ir nebeatlieka korekcijų. Trumpam laikui, pavyzdžiui, prausiantis duše, maudantis ar plaukiojant, tai normalu. Scenarijui pasibaigus, pompa vėl prijungiama, o algoritmas automatiškai atnaujina darbą. Pompą laikykite atjungtą kuo trumpiau – negaunant bazinio insulino, gliukozė gali pradėti kilti jau po 1–2 val.</string>
+    <string name="scene_wizard_info_bathing">Atjungus pompą, insulino tiekimas visiškai sustoja – neleidžiama nei bazė, nei bolusai ar korekcijos. Algoritmas persijungia į atjungtos pompos režimą ir nebeatlieka korekcijų. Trumpam laikui, pavyzdžiui, prausiantis duše, maudantis ar plaukiojant, tai normalu. Scenarijui pasibaigus, pompa vėl prijungiama, o algoritmas automatiškai atnaujina darbą. Pompą laikykite atjungtą kuo trumpiau – negaunant bazinio insulino, gliukozė gali pradėti kilti jau po 1–2 val.</string>
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <string name="scene_template_luteal_phase">Liuteininė fazė</string>
     <string name="scene_wizard_luteal_phase_desc">Padidintas profilis prieš mėnesines padidėjusiam atsparumui insulinui kompensuoti.</string>
