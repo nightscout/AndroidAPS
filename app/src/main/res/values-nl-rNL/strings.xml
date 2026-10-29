@@ -12,4 +12,8 @@
     <string name="migrating_effective_profile_switches">Actieve profiel migreren…</string>
     <string name="migrating_boluses">Bolussen migreren…</string>
     <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Oudere records hadden geen insuline configuratie en er was geen actief profiel, daarom werd %1$s voor hen gebruikt. Controleer uw insuline-instellingen; al gemigreerde records worden daarna niet bijgewerkt.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Oudere records hadden geen insuline duur, dus %1$.1f uur werd gebruikt voor %2$s. Controleer je insuline-instellingen - al gemigreerde records worden niet achteraf bijgewerkt.</string>
+    <string name="settings_unreadable_title">AAPS instellingen kunnen niet gelezen worden</string>
+    <string name="settings_unreadable_key_explanation">Je instellingen op deze telefoon zijn versleuteld met een sleutel die Android bewaart voor AAPS, en die sleutel opent ze niet meer. Dit kan gebeuren nadat de key store van de telefoon is gereset.</string>
+    <string name="settings_unreadable_keystore_explanation">De hoofdopslag van de telefoon heeft niet geantwoord, dus AAPS kon zijn instellingen niet openen.</string>
 </resources>
