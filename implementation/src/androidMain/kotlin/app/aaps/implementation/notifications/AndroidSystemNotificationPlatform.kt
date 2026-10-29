@@ -177,7 +177,10 @@ class AndroidSystemNotificationPlatform(
     }
 
     private fun deleteIntent(instanceKey: Int): PendingIntent {
-        val intent = Intent(NotificationManager.DISMISS_ACTION).putExtra(EXTRA_INSTANCE_KEY, instanceKey)
+        // With a package the broadcast is explicit. An implicit one from a PendingIntent never reaches the
+        // dismiss receiver, which is registered as not exported, on Android 14 and newer: the swipe in the
+        // tray or on the watch took the system notification away, but the registry kept it.
+        val intent = Intent(NotificationManager.DISMISS_ACTION).setPackage(context.packageName).putExtra(EXTRA_INSTANCE_KEY, instanceKey)
         return PendingIntent.getBroadcast(
             context, instanceKey, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
