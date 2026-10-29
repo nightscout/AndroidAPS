@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.CrashReporter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.di.CoreObjectsGraph
@@ -107,7 +108,13 @@ interface IosProbeGraph {
          */
         fun create(
             @Includes coreObjects: CoreObjectsGraph,
-            @Includes clientBindings: ClientGraphBindings
+            @Includes clientBindings: ClientGraphBindings,
+            /**
+             * Needed only because this graph exposes [fabricPrivacy], which now reports through it.
+             * The probes pass [NoCrashReporter]: nothing a startup check does belongs in a crash
+             * dashboard.
+             */
+            @Provides crashReporter: CrashReporter
         ): IosProbeGraph
     }
 }

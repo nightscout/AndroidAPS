@@ -37,7 +37,7 @@ class IosHistoryWindowScopingTest {
         TestStorage.install()
     }
 
-    private val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings, NoSockets)
+    private val graph = createGraphFactory<IosAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings, NoSockets, NoCrashReporter)
 
     @Test
     fun `a window does not share the app's calculation objects`() {

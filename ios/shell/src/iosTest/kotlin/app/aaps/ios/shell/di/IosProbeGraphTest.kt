@@ -27,7 +27,7 @@ class IosProbeGraphTest {
         TestStorage.install()
     }
 
-    private fun graph() = createGraphFactory<IosProbeGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
+    private fun graph() = createGraphFactory<IosProbeGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings, NoCrashReporter)
 
     @Test
     fun `the graph can be created`() {

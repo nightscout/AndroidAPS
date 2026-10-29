@@ -10,6 +10,20 @@ import AapsShared
 @main
 struct ClientApp: App {
 
+    /// Firebase is started here, before SwiftUI builds anything.
+    ///
+    /// Crashlytics does not need an `AppDelegate` - an `init()` on the `App` is early enough, and
+    /// early is the point: its signal handlers have to be installed before there is anything to
+    /// crash. It also puts Kotlin's own terminate handler on top of Crashlytics', because the Kotlin
+    /// runtime does not start until the first call into the framework, which happens later in
+    /// `AapsAppView.makeUIViewController`. That ordering is what keeps a Kotlin crash readable.
+    ///
+    /// `start()` never raises. A missing or broken `GoogleService-Info.plist` means no crash
+    /// reporting, not no app.
+    init() {
+        CrashlyticsCrashReporter.start()
+    }
+
     var body: some SwiftUI.Scene {
         WindowGroup {
             ShellView()
@@ -30,7 +44,10 @@ struct AapsAppView: UIViewControllerRepresentable {
         // Swift and cannot carry a Kotlin annotation. Android and desktop contribute their own
         // socket.io client automatically; this is the same project's Swift client, so both platforms
         // speak to Nightscout identically.
-        AapsAppHostKt.aapsAppViewController(nsSocketFactory: SwiftNsSocketFactory())
+        AapsAppHostKt.aapsAppViewController(
+            nsSocketFactory: SwiftNsSocketFactory(),
+            crashReporter: CrashlyticsCrashReporter.shared
+        )
     }
 
     func updateUIViewController(_ controller: UIViewController, context: Context) {}

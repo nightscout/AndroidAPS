@@ -3,44 +3,50 @@ package app.aaps.implementation.utils.fabric
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
+import app.aaps.core.interfaces.utils.fabric.CrashReporter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
 /**
- * The iOS side of analytics and crash reporting: nothing leaves the phone, it is all written down.
+ * The iOS side of analytics and crash reporting.
  *
- * The Android implementation sends the same events to Firebase Analytics and Crashlytics. Firebase
- * does ship an Apple SDK, and reaching it is no longer the obstacle this comment once claimed it was
- * - the Xcode project already resolves Swift packages, and `FabricPrivacy` is already exported as an
- * Obj-C protocol, so a Swift class could implement it the way `NsSocketBridge.swift` implements
- * `NsSocketFactory`. What is missing is a decision, not a mechanism: two Apple apps registered in the
- * Firebase project, a privacy manifest and a privacy policy, and an answer on whether a medical app
- * should upload crash data by default at all.
+ * Crashes go to Firebase Crashlytics through [CrashReporter], which is implemented in Swift. There
+ * is no Analytics here and that is deliberate: `FirebaseCrashlytics` for Apple builds from source
+ * through SwiftPM, while `FirebaseAnalytics` arrives as a closed prebuilt binary that pulls in
+ * GoogleAppMeasurement and an advertising identifier surface. A medical app does not need it, so the
+ * analytics calls below are written down locally and go no further.
  *
- * [fabricEnabled] answers **false**, like the desktop one, and that is the truthful answer rather
- * than a shrug: it reports whether anything is uploaded, and nothing is. It is what puts "Crash logs
- * upload disabled!" in the About dialog, which on iOS is simply true. This used to read the stored
- * preference, which meant the dialog told an iOS user reporting was on while nothing was sent.
+ * ## The opt-out
  *
- * The methods below therefore log unconditionally and say "(not sent)", so the local record of what
- * happened is complete and nobody reads it as proof that something was reported. When Crashlytics is
- * wired up, [fabricEnabled] goes back to reading `BooleanKey.MaintenanceEnableFabric` and the gating
- * returns with it.
+ * [fabricEnabled] reads the same stored key as Android, but **defaults to false** where Android
+ * defaults to true. Reporting from iPhones is new, so it starts off and the user turns it on, rather
+ * than starting on under a switch that Simple Mode hides. A value the user has actually set is
+ * honoured either way, including one that arrives through a settings import from an Android phone.
+ *
+ * The flag is re-applied to Crashlytics on every start rather than trusted to stick, because
+ * Crashlytics keeps its own copy in its own `UserDefaults`, outside the AAPS store - so a "start
+ * fresh" or an import could otherwise leave the two disagreeing.
  */
 @Inject
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 class FabricPrivacyImpl(
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val store: KeyValueStore,
+    private val crashReporter: CrashReporter
 ) : FabricPrivacy {
 
-    override fun fabricEnabled(): Boolean = false
+    override fun fabricEnabled(): Boolean =
+        store.getBoolean(BooleanKey.MaintenanceEnableFabric.key, OFF_UNTIL_ASKED)
 
     override fun setUserProperty(key: String, value: String) {
         aapsLogger.debug(LTag.CORE, "Analytics user property (not sent): $key = $value")
+        if (fabricEnabled()) crashReporter.setCustomKey(key, value)
     }
 
     override fun logCustom(event: String) {
@@ -52,11 +58,17 @@ class FabricPrivacyImpl(
     }
 
     override fun logMessage(message: String) {
-        aapsLogger.info(LTag.CORE, "Analytics message (not sent): $message")
+        aapsLogger.info(LTag.CORE, "Crashlytics log message: $message")
+        if (fabricEnabled()) crashReporter.log(message)
     }
 
     override fun logException(throwable: Throwable) {
-        aapsLogger.error(LTag.CORE, "Exception (not reported to analytics): ", throwable)
+        aapsLogger.error(LTag.CORE, "Crashlytics log exception: ", throwable)
+        if (fabricEnabled()) crashReporter.recordException(
+            type = throwable::class.simpleName ?: "Throwable",
+            message = throwable.message ?: "",
+            stackTrace = throwable.stackTraceToString().lines()
+        )
     }
 
     /**
@@ -73,5 +85,17 @@ class FabricPrivacyImpl(
                 "manufacturer=${wearException.manufacturer} product=${wearException.product} " +
                 "sdk=${wearException.sdk} fingerprint=${wearException.fingerprint}"
         )
+    }
+
+    private companion object {
+
+        /**
+         * The iOS default for `MaintenanceEnableFabric`, deliberately not the shared one.
+         *
+         * `BooleanKey.MaintenanceEnableFabric.defaultValue` is true, which is the state of the
+         * Android fleet and not a decision this platform has to repeat. Changing the shared default
+         * would turn reporting off for every existing Android user, so the difference lives here.
+         */
+        private const val OFF_UNTIL_ASKED = false
     }
 }
