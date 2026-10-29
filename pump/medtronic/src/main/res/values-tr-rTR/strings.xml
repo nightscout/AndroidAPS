@@ -11,6 +11,7 @@
     <string name="medtronic_pump_max_basal">Pompadaki Maks Bazal (Ü/s)</string>
     <string name="medtronic_custom_action_wake_and_tune">Uyan ve Ayarla</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bolus Bloğunu Temizle</string>
+    <string name="medtronic_custom_action_reset_rileylink">Reset RileyLink</string>
     <string name="medtronic_pump_battery_select">Pil Türü (Güç Görünümü)</string>
     <string name="medtronic_pump_battery_no">Seçilmedi (Basit görünüm)</string>
     <string name="medtronic_pump_battery_alkaline">Alkali (Genişletilmiş görünüm)</string>
@@ -18,6 +19,11 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Genişletilmiş görünüm)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Genişletilmiş görünüm)</string>
     <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">Diğer (desteklenmeyen)</string>
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
     <string name="medtronic_pump_type_522">522</string>
     <string name="medtronic_pump_type_722">722</string>
     <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A veya daha düşük)</string>
