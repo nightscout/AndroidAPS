@@ -960,7 +960,7 @@
     <string name="nav_history_browser">Istorija</string>
     <string name="nav_history_browser_desc">Naršyti ankstesnius grafikus</string>
     <string name="appearance">Išvaizda</string>
-    <string name="manage">Tvarkyti</string>
+    <string name="manage">Valdymas</string>
     <string name="localprofile">Profilis</string>
     <string name="nav_setupwizard">Sąrankos vedlys</string>
     <string name="nav_setupwizard_desc">Žingsnis po žingsnio konfigūruokite AAPS</string>
