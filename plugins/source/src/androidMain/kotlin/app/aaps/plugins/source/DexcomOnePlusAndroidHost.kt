@@ -57,6 +57,10 @@ class DexcomOnePlusAndroidHost(
 
     override fun stagingDriver(): OnePlusCgmDriver = OnePlusCgmDrivers.staging()
 
+    override fun existingProductionDriver(): OnePlusCgmDriver? = OnePlusCgmDrivers.existingProduction()
+
+    override fun existingStagingDriver(): OnePlusCgmDriver? = OnePlusCgmDrivers.existingStaging()
+
     override fun attachProductionDriver(watcher: OnePlusGlucoseWatcher): OnePlusCgmDriver =
         OnePlusCgmDrivers.production(watcher)
 

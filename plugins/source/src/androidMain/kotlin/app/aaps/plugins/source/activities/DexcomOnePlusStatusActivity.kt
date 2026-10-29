@@ -126,6 +126,7 @@ class DexcomOnePlusStatusActivity : MetroAppCompatActivity() {
                         lastGlucose = { persistenceLayer.getLastGlucoseValue() },
                         onCancelStaging = { dexcomOnePlusPlugin.cancelStaging() },
                         onPromote = { allowEarly -> dexcomOnePlusPlugin.promoteStagingToProduction(allowEarly) },
+                        isPluginStopped = { dexcomOnePlusPlugin.isStopped() },
                         onCorrectSensorStart = { startMs -> dexcomOnePlusPlugin.correctProductionSensorStart(startMs) },
                     )
                 }
@@ -181,6 +182,8 @@ private fun DexcomOnePlusStatusScreen(
     lastGlucose: suspend () -> GV?,
     onCancelStaging: () -> Unit,
     onPromote: suspend (Boolean) -> PromotionResult,
+    /** True while the plugin is switched off: Promote is then refused with a message. */
+    isPluginStopped: () -> Boolean,
     onCorrectSensorStart: suspend (Long) -> DexcomOnePlusSensorStartCorrection.Verdict,
 ) {
     // Not `remember`-ed: a promotion swaps which driver instance `default()` hands out (see
@@ -220,6 +223,7 @@ private fun DexcomOnePlusStatusScreen(
     val promoteFollowUpFailed = stringResource(R.string.dexcom_oneplus_staging_promote_follow_up_failed)
     val promoteFollowUpNoIdentity = stringResource(R.string.dexcom_oneplus_staging_promote_follow_up_failed_no_identity)
     val promoteRejectedAbsent = stringResource(R.string.dexcom_oneplus_staging_promote_rejected_absent)
+    val promotePluginStopped = stringResource(R.string.dexcom_oneplus_plugin_stopped)
     val promoteRejectedNotSettled = stringResource(R.string.dexcom_oneplus_staging_promote_rejected_not_settled)
     val promoteRejectedNoGlucose = stringResource(R.string.dexcom_oneplus_staging_promote_rejected_no_glucose)
     val promoteRejectedNoRecentGlucose = stringResource(R.string.dexcom_oneplus_staging_promote_rejected_no_recent_glucose)
@@ -366,6 +370,10 @@ private fun DexcomOnePlusStatusScreen(
                     onClick = {
                         showPromoteConfirm = false
                         val allowEarly = promoteEarly
+                        if (isPluginStopped()) {
+                            promoteResultText = promotePluginStopped
+                            return@TextButton
+                        }
                         scope.launch {
                             promoteResultText = dexcomOnePlusPromotionMessage(
                                 result = onPromote(allowEarly),

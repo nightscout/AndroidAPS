@@ -54,6 +54,7 @@ import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancel
@@ -130,15 +131,35 @@ class DexcomOnePlusPlugin @Inject constructor(
      *
      * Made when work is first needed (normally by [onStart]) and cancelled in [onStop], so nothing
      * runs for a user who never enables the plugin, and nothing keeps running after it is stopped.
-     * A user action on a setup screen after a stop makes a new one.
+     * After [onStop] no new one is made until the next [onStart], see [stopped].
      */
     private var workScope: CoroutineScope? = null
 
-    /** Guards [workScope]. */
+    /** Guards [workScope] and [stopped]. */
     private val workScopeLock = AapsLock()
 
-    private fun ioScope(): CoroutineScope = workScopeLock.withLock {
-        workScope ?: CoroutineScope(SupervisorJob() + aapsIoDispatcher).also { workScope = it }
+    /**
+     * True from [onStop] until the next [onStart].
+     *
+     * While it is true [ioScope] gives no scope, so a late driver callback, the reconnect watchdog or
+     * the automatic promotion cannot start work that nothing would ever cancel, for example a
+     * Bluetooth reconnect while the plugin is switched off. The setup screens ask [isStopped] and
+     * refuse their actions with a message.
+     */
+    @Volatile
+    private var stopped = false
+
+    /** True after [onStop] until the next [onStart]. The setup screens refuse their actions then. */
+    fun isStopped(): Boolean = stopped
+
+    /** The work scope, or null while the plugin is [stopped]. */
+    private fun ioScope(): CoroutineScope? = workScopeLock.withLock {
+        if (stopped) {
+            aapsLogger.debug(LTag.BGSOURCE, "DEXCOM_ONEPLUS_SESSION: plugin is stopped, no new work started")
+            null
+        } else {
+            workScope ?: CoroutineScope(SupervisorJob() + aapsIoDispatcher).also { workScope = it }
+        }
     }
 
     /** Cancels everything started on [ioScope]. */
@@ -153,6 +174,12 @@ class DexcomOnePlusPlugin @Inject constructor(
     internal fun hasRunningWork(): Boolean = workScopeLock.withLock {
         workScope?.coroutineContext?.get(Job)?.children?.any { it.isActive } == true
     }
+
+    /** True while a work scope exists, even an idle one. For tests. */
+    internal fun hasWorkScope(): Boolean = workScopeLock.withLock { workScope != null }
+
+    /** True while the reconnect watchdog waits. For tests. */
+    internal fun isReconnectWatchdogArmed(): Boolean = reconnectWatchdog?.isActive == true
 
     /**
      * The last resort that brings a sensor back.
@@ -347,6 +374,7 @@ class DexcomOnePlusPlugin @Inject constructor(
 
     override suspend fun onStart() {
         super.onStart()
+        workScopeLock.withLock { stopped = false }
         ioScope()
         syncDriverFromPrefs()
         // Rehydrate the ingest dedup BEFORE any reconnect can deliver glucose, so an app update /
@@ -397,14 +425,15 @@ class DexcomOnePlusPlugin @Inject constructor(
      */
     private fun startWarmupBasalGuard() {
         warmupGuardJob?.cancel()
-        warmupGuardJob = ioScope().launch {
+        warmupGuardJob = ioScope()?.launch {
             warmup
                 .map { state -> DexcomOnePlusWarmupMapper.toCgmWarmupStatus(state)?.let { status -> status to state.message } }
                 .distinctUntilChanged()
                 .collect { active ->
-                    if (active != null) {
+                    val scope = ioScope()
+                    if (active != null && scope != null) {
                         try {
-                            warmupBasalGuard.ensureProfileBasalDuringWarmup(this@DexcomOnePlusPlugin, ioScope())
+                            warmupBasalGuard.ensureProfileBasalDuringWarmup(this@DexcomOnePlusPlugin, scope)
                         } catch (t: Throwable) {
                             aapsLogger.error(LTag.BGSOURCE, "ONEPLUS_WARMUP_BASAL guard error: ${t.message}", t)
                         }
@@ -414,20 +443,43 @@ class DexcomOnePlusPlugin @Inject constructor(
     }
 
     override suspend fun onStop() {
-        cancelReconnectWatchdog()
-        warmupGuardJob?.cancel()
+        // First: from here on no new work may start, also not from a callback that arrives while
+        // the drivers below are shutting down.
+        workScopeLock.withLock { stopped = true }
+        // Each step on its own: a driver that throws must not skip the steps after it. The work
+        // cancel and the session service stop must always run.
+        stopStep("watchdog cancel") { cancelReconnectWatchdog() }
+        stopStep("warm-up guard cancel") { warmupGuardJob?.cancel() }
         warmupGuardJob = null
-        driver.removeWatcher(this)
-        driver.shutdown()
+        // Only the instances that exist. Asking the registry for "the driver" would build a new
+        // one just to shut it down.
+        host.existingProductionDriver()?.let { production ->
+            stopStep("production removeWatcher") { production.removeWatcher(this) }
+            stopStep("production shutdown") { production.shutdown() }
+        }
         // Tear down any staging session too (independent of production).
-        runCatching { stagingDriver.removeWatcher(stagingWatcher) }
-        runCatching { stagingDriver.shutdown() }
-        host.cancelWarmupNotification()
-        host.setSessionServiceWanted(false)
-        // Last, after the drivers are stopped, so no late callback can start new work after it.
+        host.existingStagingDriver()?.let { staging ->
+            stopStep("staging removeWatcher") { staging.removeWatcher(stagingWatcher) }
+            stopStep("staging shutdown") { staging.shutdown() }
+        }
+        stopStep("warm-up notification cancel") { host.cancelWarmupNotification() }
+        stopStep("session service stop") { host.setSessionServiceWanted(false) }
+        // Last, after the drivers are stopped. [stopped] already keeps late callbacks from making
+        // a new scope.
         cancelWork()
         aapsLogger.info(LTag.BGSOURCE, "DEXCOM_ONEPLUS_SESSION: plugin stop")
         super.onStop()
+    }
+
+    /** One step of [onStop]. A throw is logged and does not stop the next steps. */
+    private inline fun stopStep(name: String, step: () -> Unit) {
+        try {
+            step()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (t: Throwable) {
+            aapsLogger.error(LTag.BGSOURCE, "DEXCOM_ONEPLUS_SESSION: plugin stop, $name failed: ${t.message}", t)
+        }
     }
 
     /**
@@ -489,7 +541,7 @@ class DexcomOnePlusPlugin @Inject constructor(
             return
         }
         val glucoseValues = listOf(DexcomOnePlusIngest.mapToGv(sample))
-        ioScope().launch {
+        ioScope()?.launch {
             val result = persistenceLayer.insertCgmSourceData(
                 Sources.DexcomOnePlus,
                 glucoseValues,
@@ -549,7 +601,7 @@ class DexcomOnePlusPlugin @Inject constructor(
             logSensorChange(startMs)
             return
         }
-        ioScope().launch {
+        ioScope()?.launch {
             val anchoredStartMs = DexcomOnePlusSensorChangeAnchor.resolve(
                 autoStartMs = startMs,
                 lastSensorChangeMs = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)?.timestamp,
@@ -567,7 +619,7 @@ class DexcomOnePlusPlugin @Inject constructor(
      */
     private fun logSensorChange(startMs: Long) {
         if (!preferences.get(BooleanKey.BgSourceCreateSensorChange)) return
-        ioScope().launch { writeSensorChange(startMs) }
+        ioScope()?.launch { writeSensorChange(startMs) }
     }
 
     /** @return true when a sensor change was really written (the DB refuses a duplicate timestamp). */
@@ -671,7 +723,7 @@ class DexcomOnePlusPlugin @Inject constructor(
      */
     private fun armReconnectWatchdog() {
         reconnectWatchdog?.cancel()
-        reconnectWatchdog = ioScope().launch {
+        reconnectWatchdog = ioScope()?.launch {
             delay(RECONNECT_WATCHDOG_MS)
             if (driver.isSessionUp()) return@launch
             val real = driver
@@ -784,6 +836,10 @@ class DexcomOnePlusPlugin @Inject constructor(
      *   the UI keeps the invariant for every future call site.
      */
     fun beginStaging(deviceAddress: String): Boolean {
+        if (stopped) {
+            aapsLogger.info(LTag.BGSOURCE, "DEXCOM_ONEPLUS_STAGING: refused, the plugin is stopped")
+            return false
+        }
         // Like onSensorSessionStarted, and before the early return: a pre-soak started while
         // production is stopped is still a Bluetooth session, and without this it would run its GATT
         // link with no foreground service at all.
@@ -927,8 +983,15 @@ class DexcomOnePlusPlugin @Inject constructor(
      * with no gap, and every other reader of [DexcomOnePlusHost.productionDriver] (the
      * Status/Warmup screens, the reconnect watchdog) now sees it too.
      */
-    override suspend fun promoteStagingToProduction(allowEarly: Boolean): PromotionResult =
-        promoteMutex.withLock { promoteLocked(allowEarly, byAuto = false) }
+    override suspend fun promoteStagingToProduction(allowEarly: Boolean): PromotionResult {
+        // The screen asks isStopped first and says why. This is the check for every other caller:
+        // the pre-soak driver was shut down by onStop, so there is no running pre-soak to switch to.
+        if (stopped) {
+            aapsLogger.info(LTag.BGSOURCE, "DEXCOM_ONEPLUS_PROMOTE: refused, the plugin is stopped")
+            return PromotionResult.Rejected(PromotionRejectReason.STAGING_ABSENT)
+        }
+        return promoteMutex.withLock { promoteLocked(allowEarly, byAuto = false) }
+    }
 
     /** The promotion itself. Call it only while holding [promoteMutex]. */
     private suspend fun promoteLocked(allowEarly: Boolean, byAuto: Boolean): PromotionResult {
@@ -1169,11 +1232,13 @@ class DexcomOnePlusPlugin @Inject constructor(
             nowMs = askedAtMs,
         )
         if (decision != StagingAutoPromotion.Decision.PROMOTE) return
+        // Before the claim: a stopped plugin switches nothing, and must not keep the claim.
+        val scope = ioScope() ?: return
         val claimed = autoPromoteLock.withLock {
             if (autoPromoteInFlight) false else { autoPromoteInFlight = true; true }
         }
         if (!claimed) return
-        ioScope().launch {
+        scope.launch {
             try {
                 val allowEarly = askedAtMs - startMs < DexcomOnePlusStaging.STAGING_MIN_SETTLE_MS
                 aapsLogger.info(
@@ -1205,7 +1270,7 @@ class DexcomOnePlusPlugin @Inject constructor(
         val startMs = sensorStore.loadSessionStart()
         _lifecycle.value =
             DexcomOnePlusStaging.computeLifecycle(startMs, nowMs())
-        if (startMs > 0L) ioScope().launch { healMissingSensorChange(startMs) }
+        if (startMs > 0L) ioScope()?.launch { healMissingSensorChange(startMs) }
     }
 
     /**

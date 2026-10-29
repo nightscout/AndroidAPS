@@ -5,6 +5,8 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.source.PromotionRejectReason
+import app.aaps.core.interfaces.source.PromotionResult
 import app.aaps.core.interfaces.source.StagingState
 import app.aaps.core.keys.interfaces.PreferenceItem
 import app.aaps.core.keys.interfaces.Preferences
@@ -53,17 +55,21 @@ class DexcomOnePlusPluginLifetimeTest : TestBase() {
 
     private val warmupBasalGuard: DexcomOnePlusWarmupBasalGuard = mock()
     private lateinit var driver: OnePlusCgmDriverStub
+    private lateinit var host: FakeHost
     private lateinit var plugin: DexcomOnePlusPlugin
 
     @BeforeEach
     fun setup() = runTest {
         whenever(persistenceLayer.getBgReadingsDataFromTime(any(), any())).thenReturn(emptyList())
         driver = OnePlusCgmDriverStub()
-        plugin = DexcomOnePlusPlugin(
-            rh, AAPSLoggerTest(), preferences, config, notificationManager, FakeHost(driver), persistenceLayer,
-            warmupBasalGuard, activePlugin, rxBus,
-        )
+        host = FakeHost(driver)
+        plugin = pluginWith(host)
     }
+
+    private fun pluginWith(fakeHost: FakeHost) = DexcomOnePlusPlugin(
+        rh, AAPSLoggerTest(), preferences, config, notificationManager, fakeHost, persistenceLayer,
+        warmupBasalGuard, activePlugin, rxBus,
+    )
 
     @Test
     fun `a plugin that was never started runs nothing and its flows still answer`() {
@@ -160,23 +166,113 @@ class DexcomOnePlusPluginLifetimeTest : TestBase() {
         verifyBlocking(warmupBasalGuard, times(1)) { ensureProfileBasalDuringWarmup(any(), any(), any()) }
     }
 
-    /** Everything the plugin asks of the phone, answered without Bluetooth or a file. */
-    private class FakeHost(private val driver: OnePlusCgmDriver) : DexcomOnePlusHost {
+    @Test
+    fun `late driver callbacks after onStop start no work`() = runTest {
+        plugin.onStart()
+        plugin.onStop()
+
+        plugin.onSession(up = false, reason = "link lost")
+        plugin.onGlucose(OnePlusGlucoseSample(mgdl = 120.0, timestampMs = System.currentTimeMillis(), sequence = 900_002L))
+        plugin.onWarmup(OnePlusWarmupState(phase = OnePlusWarmupState.Phase.RECONNECTING, message = "late"))
+
+        assertThat(plugin.isStopped()).isTrue()
+        assertThat(plugin.hasWorkScope()).isFalse()
+        assertThat(plugin.isReconnectWatchdogArmed()).isFalse()
+        assertThat(plugin.hasRunningWork()).isFalse()
+    }
+
+    @Test
+    fun `user actions after onStop are refused and connect nothing`() = runTest {
+        plugin.onStart()
+        plugin.onStop()
+        val attachesBefore = host.attachCount
+
+        assertThat(plugin.beginStaging("AA:BB:CC:DD:EE:FF")).isFalse()
+        assertThat(plugin.promoteStagingToProduction(allowEarly = true))
+            .isEqualTo(PromotionResult.Rejected(PromotionRejectReason.STAGING_ABSENT))
+
+        // beginStaging attaches the pre-soak driver before it connects. It never got that far.
+        assertThat(host.attachCount).isEqualTo(attachesBefore)
+        assertThat(plugin.hasWorkScope()).isFalse()
+        assertThat(plugin.stagingState.value).isEqualTo(StagingState.ABSENT)
+    }
+
+    @Test
+    fun `onStop finishes its work even when the driver throws`() = runTest {
+        val throwing = ThrowingDriver()
+        val throwingHost = FakeHost(throwing)
+        val stopping = pluginWith(throwingHost)
+        stopping.onStart()
+        stopping.onSession(up = false, reason = "link lost")
+        assertThat(stopping.hasRunningWork()).isTrue()
+
+        stopping.onStop()
+
+        assertThat(throwing.shutdownCalls).isEqualTo(2) // production and staging slot, both tried
+        assertThat(throwingHost.sessionServiceWanted).contains(false)
+        assertThat(stopping.hasWorkScope()).isFalse()
+        assertThat(stopping.hasRunningWork()).isFalse()
+    }
+
+    @Test
+    fun `onStop does not build a driver only to shut it down`() = runTest {
+        val noDriverYet = FakeHost(driver, built = false)
+        val stopping = pluginWith(noDriverYet)
+        stopping.onStart()
+        val requestsBefore = noDriverYet.driverRequests
+
+        stopping.onStop()
+
+        assertThat(noDriverYet.driverRequests).isEqualTo(requestsBefore)
+        assertThat(noDriverYet.sessionServiceWanted).contains(false)
+    }
+
+    /** A driver whose stop calls all throw, as a broken Bluetooth stack can. */
+    private class ThrowingDriver(inner: OnePlusCgmDriver = OnePlusCgmDriverStub()) : OnePlusCgmDriver by inner {
+
+        var shutdownCalls = 0
+
+        override fun removeWatcher(watcher: OnePlusGlucoseWatcher) = throw IllegalStateException("removeWatcher failed")
+
+        override fun shutdown() {
+            shutdownCalls++
+            throw IllegalStateException("shutdown failed")
+        }
+    }
+
+    /**
+     * Everything the plugin asks of the phone, answered without Bluetooth or a file.
+     *
+     * @param built whether the registry already holds the driver instances.
+     */
+    private class FakeHost(private val driver: OnePlusCgmDriver, private val built: Boolean = true) : DexcomOnePlusHost {
 
         private val stores = mutableMapOf<String?, OnePlusSensorStore>()
 
-        override fun attachPlatform(driver: OnePlusCgmDriver) = Unit
+        /** Calls that would build a driver in the real registry. */
+        var driverRequests = 0
+        var attachCount = 0
+        val sessionServiceWanted = mutableListOf<Boolean>()
+
+        override fun attachPlatform(driver: OnePlusCgmDriver) {
+            attachCount++
+        }
+
         override fun slotStore(namespace: String?): OnePlusSensorStore =
             stores.getOrPut(namespace) { OnePlusSensorStore(MemoryPrefs()) }
 
         override val stagingNamespace: String = "staging"
-        override fun productionDriver(): OnePlusCgmDriver = driver
-        override fun stagingDriver(): OnePlusCgmDriver = driver
+        override fun productionDriver(): OnePlusCgmDriver = driver.also { driverRequests++ }
+        override fun stagingDriver(): OnePlusCgmDriver = driver.also { driverRequests++ }
+        override fun existingProductionDriver(): OnePlusCgmDriver? = driver.takeIf { built }
+        override fun existingStagingDriver(): OnePlusCgmDriver? = driver.takeIf { built }
         override fun attachProductionDriver(watcher: OnePlusGlucoseWatcher): OnePlusCgmDriver =
             driver.also { it.addWatcher(watcher) }
 
         override fun promoteStagingInstance(): OnePlusCgmDriver? = null
-        override fun setSessionServiceWanted(wanted: Boolean) = Unit
+        override fun setSessionServiceWanted(wanted: Boolean) {
+            sessionServiceWanted += wanted
+        }
         override fun showWarmup(state: OnePlusWarmupState) = Unit
         override fun cancelWarmupNotification() = Unit
         override fun alert(message: String) = Unit

@@ -47,6 +47,15 @@ interface DexcomOnePlusHost {
     /** The second, independent driver for a pre-soak sensor. */
     fun stagingDriver(): OnePlusCgmDriver
 
+    /**
+     * The driver feeding the loop if it was already built, else null. Unlike [productionDriver] this
+     * never builds one, so a stop does not make a driver only to shut it down.
+     */
+    fun existingProductionDriver(): OnePlusCgmDriver?
+
+    /** The pre-soak driver if it was already built, else null. See [existingProductionDriver]. */
+    fun existingStagingDriver(): OnePlusCgmDriver?
+
     /** The driver feeding the loop, with [watcher] attached. */
     fun attachProductionDriver(watcher: OnePlusGlucoseWatcher): OnePlusCgmDriver
 

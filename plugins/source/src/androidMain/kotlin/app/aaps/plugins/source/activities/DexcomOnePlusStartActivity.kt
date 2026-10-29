@@ -59,6 +59,7 @@ class DexcomOnePlusStartActivity : MetroAppCompatActivity() {
                                 type = PluginType.BGSOURCE,
                             )
                         },
+                        isPluginStopped = { dexcomOnePlusPlugin.isStopped() },
                         onStarted = { startedSlot ->
                             // PRODUCTION: hand the user to the warm-up screen so the new sensor is
                             // visibly taken over (pairing → warm-up countdown). Returning straight to

@@ -86,6 +86,11 @@ fun DexcomOnePlusStartScreen(
     onBack: () -> Unit,
     onEnsureDriver: () -> OnePlusCgmDriver,
     onActivatePlugin: () -> Unit,
+    /**
+     * True after the plugin was stopped (switched off) and before it starts again. Connect is then
+     * refused with a message: a session started now would run with no plugin to stop it.
+     */
+    isPluginStopped: () -> Boolean,
     onStarted: (SensorSlot) -> Unit,
     /** STAGING only: the user started this sensor now — anchors the pre-soak clock on its MAC. */
     onBeginStaging: (String) -> Boolean,
@@ -170,6 +175,7 @@ fun DexcomOnePlusStartScreen(
     val serialNone = stringResource(SourceStrings.dexcom_oneplus_applicator_serial_none)
     val newSensorCodeWarning = stringResource(SourceStrings.dexcom_oneplus_new_sensor_code_warning)
     val stagingIsProduction = stringResource(SourceStrings.dexcom_oneplus_staging_is_production)
+    val pluginStopped = stringResource(SourceStrings.dexcom_oneplus_plugin_stopped)
     var connectRequested by remember { mutableStateOf(false) }
 
     // Guided-flow progress for the stepper: Prepare → Code → Connect → Warm-up.
@@ -197,6 +203,10 @@ fun DexcomOnePlusStartScreen(
     // user with a selected device and no way to validate it — and the slot store still holding the
     // PREVIOUS sensor's MAC.
     val onConnectClick: () -> Unit = onConnectClick@{
+        if (isPluginStopped()) {
+            errorText = pluginStopped
+            return@onConnectClick
+        }
         val identity = parsedIdentity
             ?: OnePlusGs1ApplicatorParser.parse(applicatorInput)
         if (identity == null) {

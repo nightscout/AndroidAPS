@@ -186,6 +186,7 @@
     <string name="dexcom_oneplus_slot_conflict_promote">Promote it instead</string>
     <string name="dexcom_oneplus_slot_conflict_restart">Cancel pre-soak and start here</string>
     <string name="dexcom_oneplus_slot_conflict_dismiss">Leave it soaking</string>
+    <string name="dexcom_oneplus_plugin_stopped">Dexcom ONE+ / G7 is switched off. Select it as BG source in Config Builder first, then try again.</string>
     <string name="dexcom_oneplus_staging_is_production">This sensor already feeds the loop. Start it from Production, not as a pre-soak.</string>
     <string name="dexcom_oneplus_notif_pairing">Pairing…</string>
     <string name="dexcom_oneplus_notif_connecting">Connecting to sensor…</string>
