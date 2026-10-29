@@ -161,4 +161,5 @@
     <!-- Omnipod - History -->
     <string name="omnipod_common_history_bolus_value">%1$.2f E</string>
     <string name="omnipod_common_history_total_delivered">Totaal toegediend: %1$.2f E</string>
+    <string name="omnipod_common_unknown">Onbekende status voor de opdracht</string>
 </resources>
