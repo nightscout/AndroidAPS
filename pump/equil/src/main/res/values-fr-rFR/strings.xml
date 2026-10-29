@@ -44,8 +44,6 @@
     <string name="equil_new_infusion_set_no">Non, uniquement le réservoir ou la batterie</string>
     <string name="equil_same_infusion_set_hint">La canule ne sera pas amorcée et aucun changement de canule ne sera enregistré.</string>
     <string name="equil_unpair_alert">Êtes-vous sûr de vouloir abandonner le contrôle de %1$s?</string>
-    <string name="equil_record_basal">Débit de base %1$s U/h</string>
-    <string name="equil_record_basal_temp">Débit de basale temporaire %1$s U/h</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">La durée du DBT doit être supérieure à zéro et un multiple de %1$s minutes.</string>
     <string name="equil_basal_exceeds_max">Le débit de base du profil %1$s U/h dépasse le débit maximum de la pompe %2$s U/h. Augmentez le réglage Basal max et reconnectez la pompe.</string>
@@ -64,7 +62,6 @@
     <string name="equil_firmware_version">Version du firmware</string>
     <string name="equil_shutdown_be">Equil sera désactivé automatiquement</string>
     <string name="equil_shutdown">Equil arrêt auto</string>
-    <string name="equil_common_history_tbr_value">Débit : %1$.2f U/h, durée : %2$d minutes</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Définir bolus</string>
