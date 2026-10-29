@@ -24,14 +24,7 @@ internal fun AAPSLogger.notOnIosYet(what: String) {
     error(LTag.CORE, "Not implemented on iOS yet: $what")
 }
 
-/**
- * For a call whose result the caller acts on, where inventing one would be a lie.
- *
- * Throwing is deliberate. A wrong answer to "is the master password set" or "decrypt this export"
- * would send a screen down a path it must not take, and a crash on a screen nobody has wired up yet
- * is cheaper to find than a silent wrong answer in something that looks finished.
- */
-internal fun AAPSLogger.failNotOnIosYet(what: String): Nothing {
-    error(LTag.CORE, "Not implemented on iOS yet: $what")
-    throw NotImplementedError("$what is not implemented on iOS yet")
-}
+// There used to be a throwing `failNotOnIosYet` beside this, for a call whose result the caller acts
+// on and where inventing one would be a lie. Its last user was `Maintenance.executeSendLogs`, which
+// is implemented now, so it went with it rather than sitting here unused. `failNotOnDesktopYet` in
+// the desktop shell is the same idea if one is needed again.
