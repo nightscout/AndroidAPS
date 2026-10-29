@@ -44,8 +44,6 @@
     <string name="equil_new_infusion_set_no">Nie, iba zásobník alebo batériu</string>
     <string name="equil_same_infusion_set_hint">Kanyla nebude naplnená a nezaznamená sa žiadna výmena kanyly.</string>
     <string name="equil_unpair_alert">Naozaj sa chcete vzdať kontroly nad %1$s?</string>
-    <string name="equil_record_basal">Bazálna dávka %1$s U/h</string>
-    <string name="equil_record_basal_temp">Dočasný bazál %1$s U/h</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">Doba trvania TBR musí byť väčšia ako nula, a musí byť násobkom %1$s minút.</string>
     <string name="equil_basal_exceeds_max">Profilová bazálna dávka %1$s U/h prekračuje maximálnu bazálnu dávku pumpy %2$s U/h. Zvýšte nastavenie maximálnej bazálnej dávky a znova pripojte pumpu.</string>
@@ -64,7 +62,6 @@
     <string name="equil_firmware_version">Verzia firmvéru</string>
     <string name="equil_shutdown_be">Equil bude automaticky vypnutá</string>
     <string name="equil_shutdown">Equil automatické vypnutie</string>
-    <string name="equil_common_history_tbr_value">Rýchlosť: %1$.2f U/h, Doba trvania: %2$d minút</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Nastaviť bolus</string>
