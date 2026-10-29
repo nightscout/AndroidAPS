@@ -57,7 +57,7 @@ internal class DataHandlerWearTest : WearTestBase() {
 
     @Test
     fun `an alarm ringing on the phone is shown on the watch, and its stop takes it away`() {
-        val alarm = EventData.AlarmRinging(0L, title = "AAPS", status = "Pump unreachable")
+        val alarm = EventData.AlarmRinging(0L, title = "AAPS", status = "Pump unreachable", canMute = true)
         rxBus.send(alarm)
         verify(phoneAlarmWatch, timeout(HANDLER_TIMEOUT_MS)).show(alarm)
 

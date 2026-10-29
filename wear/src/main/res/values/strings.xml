@@ -229,6 +229,7 @@
     <string name="key_phone_alarm_title" translatable="false">phone_alarm_title</string>
     <string name="key_phone_alarm_text" translatable="false">phone_alarm_text</string>
     <string name="key_phone_alarm_since" translatable="false">phone_alarm_since</string>
+    <string name="key_phone_alarm_can_mute" translatable="false">phone_alarm_can_mute</string>
     <string name="key_show_graph_basal" translatable="false">show_graph_basal</string>
     <string name="key_show_graph_temp_basal" translatable="false">show_graph_temp_basal</string>
     <string name="key_show_graph_carbs" translatable="false">show_graph_carbs</string>

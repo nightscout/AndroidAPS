@@ -223,7 +223,7 @@ class EventDataTest {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
-        EventData.AlarmRinging(1, "AAPS", "Pump unreachable").let {
+        EventData.AlarmRinging(1, "AAPS", "Pump unreachable", canMute = true).let {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }

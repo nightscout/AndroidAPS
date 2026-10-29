@@ -24,10 +24,12 @@ import dev.zacsweers.metro.SingleIn
  * text of its alarm screen when the alarm rings, and a vibrating notification shows them here, so the watch tells
  * why the phone makes a sound and the alarm can be answered from the wrist, with the same answers as the "time to
  * eat" alarm: Silence stops the alarm on the phone and closes its screen, and a swipe does the same. Mute 5 min
- * silences it, and the phone rings again after five minutes, with a new notification here. The phone rings until
- * it is answered, and a watch vibrates once per notification, so the notification is posted again every half
- * minute for five minutes. An answer on any side takes it away: the phone reports every stop. The "time to eat"
- * alarm is not sent here, the watch rings that one by itself ([app.aaps.wear.eatreminder.EatReminderWatch]).
+ * silences it, and the phone rings again after five minutes, with a new notification here. Mute 5 min is shown
+ * only when the phone can honour it: an urgent notification with a sound, as "Pump unreachable", has only Dismiss
+ * on the phone, so here it has only Silence. The phone rings until it is answered, and a watch vibrates once per
+ * notification, so the notification is posted again every half minute for five minutes. An answer on any side
+ * takes it away: the phone reports every stop. The "time to eat" alarm is not sent here, the watch rings that one
+ * by itself ([app.aaps.wear.eatreminder.EatReminderWatch]).
  *
  * The title and text are kept in preferences, so a repeat can post them again also when the process was gone in
  * between.
@@ -50,14 +52,19 @@ class PhoneAlarmWatch(
         sp.putString(R.string.key_phone_alarm_title, alarm.title)
         sp.putString(R.string.key_phone_alarm_text, alarm.status)
         sp.putLong(R.string.key_phone_alarm_since, System.currentTimeMillis())
-        post(alarm.title, alarm.status)
+        sp.putBoolean(R.string.key_phone_alarm_can_mute, alarm.canMute)
+        post(alarm.title, alarm.status, alarm.canMute)
         scheduleRepeat()
     }
 
     /** A repeat: posted again so the watch vibrates again, as long as the phone has not reported a stop. */
     fun repeat() {
         if (sp.getLong(R.string.key_phone_alarm_since, 0L) == 0L) return
-        post(sp.getString(R.string.key_phone_alarm_title, ""), sp.getString(R.string.key_phone_alarm_text, ""))
+        post(
+            sp.getString(R.string.key_phone_alarm_title, ""),
+            sp.getString(R.string.key_phone_alarm_text, ""),
+            sp.getBoolean(R.string.key_phone_alarm_can_mute, false)
+        )
         scheduleRepeat()
     }
 
@@ -80,6 +87,7 @@ class PhoneAlarmWatch(
         sp.remove(R.string.key_phone_alarm_title)
         sp.remove(R.string.key_phone_alarm_text)
         sp.remove(R.string.key_phone_alarm_since)
+        sp.remove(R.string.key_phone_alarm_can_mute)
     }
 
     private fun scheduleRepeat() {
@@ -89,17 +97,17 @@ class PhoneAlarmWatch(
     }
 
     /**
-     * Silence and Mute 5 min as buttons, and a swipe silences. Posted again on every repeat, so the watch vibrates
-     * again: not alert-once on purpose. Our own cancel does not fire the delete intent.
+     * Silence, and Mute 5 min when the phone can honour it, as buttons, and a swipe silences. Posted again on every
+     * repeat, so the watch vibrates again: not alert-once on purpose. Our own cancel does not fire the delete intent.
      */
-    private fun post(title: String, text: String) {
+    private fun post(title: String, text: String, canMute: Boolean) {
         notificationManager.createNotificationChannel(
             NotificationChannel(CHANNEL_ID, context.getString(R.string.phone_alarm_channel), NotificationManager.IMPORTANCE_HIGH).apply {
                 enableVibration(true)
                 vibrationPattern = VIBRATION
             }
         )
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_icon)
             .setContentTitle(title)
             .setContentText(text)
@@ -108,9 +116,9 @@ class PhoneAlarmWatch(
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setDeleteIntent(actionIntent(PhoneAlarmReceiver.ACTION_SILENCE, SILENCE_REQUEST_CODE))
             .addAction(0, context.getString(R.string.phone_alarm_silence), actionIntent(PhoneAlarmReceiver.ACTION_SILENCE, SILENCE_REQUEST_CODE))
-            .addAction(0, context.getString(R.string.phone_alarm_mute, UiInteraction.MUTE_MINUTES), actionIntent(PhoneAlarmReceiver.ACTION_MUTE, MUTE_REQUEST_CODE))
-            .build()
-        notificationManager.notify(NOTIFICATION_ID, notification)
+        if (canMute)
+            builder.addAction(0, context.getString(R.string.phone_alarm_mute, UiInteraction.MUTE_MINUTES), actionIntent(PhoneAlarmReceiver.ACTION_MUTE, MUTE_REQUEST_CODE))
+        notificationManager.notify(NOTIFICATION_ID, builder.build())
     }
 
     private fun repeatIntent(): PendingIntent = actionIntent(PhoneAlarmReceiver.ACTION_REPEAT, REPEAT_REQUEST_CODE)

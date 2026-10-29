@@ -91,7 +91,7 @@ class UiInteractionImpl(
         rxBus.send(
             EventMobileToWear(
                 if (eatReminder) EventData.AlarmStopped(System.currentTimeMillis())
-                else EventData.AlarmRinging(System.currentTimeMillis(), title = title, status = status)
+                else EventData.AlarmRinging(System.currentTimeMillis(), title = title, status = status, canMute = true)
             )
         )
         // Persist the error as an announcement at fire time — gated by the NS-announcement

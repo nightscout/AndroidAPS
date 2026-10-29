@@ -175,6 +175,7 @@ class UiInteractionImplTest : TestBase() {
         val ringing = ringingOnWear().single()
         assertThat(ringing.title).isEqualTo("AAPS")
         assertThat(ringing.status).isEqualTo("Pump unreachable")
+        assertThat(ringing.canMute).isTrue()
 
         sut.stopAlarm("Mute")
 

@@ -625,12 +625,14 @@ sealed class EventData : Event() {
     data class MuteAlert(val timeStamp: Long, val minutes: Int) : EventData()
 
     /**
-     * Mobile -> Wear: an alarm rings on the phone ([app.aaps.core.interfaces.ui.UiInteraction.runAlarm]), with the
-     * title and text of its screen. The watch shows them in a notification with Silence and Mute 5 min, so it tells
-     * why the phone makes a sound. Not sent for the "time to eat" alarm: the watch rings that one by itself.
+     * Mobile -> Wear: an alarm rings on the phone, with its title and text. The watch shows them in a notification
+     * with Silence, and Mute 5 min when [canMute], so it tells why the phone makes a sound. Sent for the alarm
+     * screen ([app.aaps.core.interfaces.ui.UiInteraction.runAlarm], can be muted) and for an urgent notification
+     * with a sound, as "Pump unreachable" (cannot: the phone has only Dismiss for those, and such an alarm comes
+     * back by itself while its cause lasts). Not sent for the "time to eat" alarm: the watch rings that one by itself.
      */
     @Serializable
-    data class AlarmRinging(val timeStamp: Long, val title: String, val status: String) : EventData()
+    data class AlarmRinging(val timeStamp: Long, val title: String, val status: String, val canMute: Boolean) : EventData()
 
     /** Mobile -> Wear: the alarm shown on the phone was stopped, on the phone or from the watch, or replaced. */
     @Serializable
