@@ -44,8 +44,6 @@
     <string name="equil_new_infusion_set_no">Nie, tylko zbiornik lub baterię</string>
     <string name="equil_same_infusion_set_hint">Kaniula nie zostanie napełniona i zmiana kaniuli nie zostanie zapisana.</string>
     <string name="equil_unpair_alert">Czy na pewno chcesz rozłączyć i zrezygnować z kontroli nad %1$s?</string>
-    <string name="equil_record_basal">Dawka bazowa %1$s U/H</string>
-    <string name="equil_record_basal_temp">Tymczasowa dawka bazowa %1$s U/H</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">Czas trwania TBR musi być większy od zera i być wielokrotnością %1$s minut.</string>
     <string name="equil_basal_exceeds_max">Podstawowa dawka bazowa profilu %1$s U/h przekracza maksymalną dawkę bazową pompy %2$s U/h. Zwiększ maks. bazę w ustawieniach i połącz ponownie pompę.</string>
@@ -64,7 +62,6 @@
     <string name="equil_firmware_version">Wersja firmware\'u </string>
     <string name="equil_shutdown_be">Equil wyłączy się automatycznie</string>
     <string name="equil_shutdown">Auto wyłączenie Equila</string>
-    <string name="equil_common_history_tbr_value">Dawka:  %1$.2f U/h,  czas trwania:  %2$d min</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Ustaw bolus</string>
