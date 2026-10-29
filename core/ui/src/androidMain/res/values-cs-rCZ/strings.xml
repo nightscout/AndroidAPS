@@ -108,7 +108,7 @@
     <string name="tdd_old_data">Stará data</string>
     <string name="goingtodeliver">Podávání %1$.2f U inzulínu</string>
     <string name="carbs_not_saved_after_bolus">Bolus byl vydán, ale sacharidy nebylo možné uložit. Zadejte sacharidy znovu.</string>
-    <string name="androidaps_start">AAPS spuštěno</string>
+    <string name="androidaps_start">Aplikace AAPS spuštěna</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$dg</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
