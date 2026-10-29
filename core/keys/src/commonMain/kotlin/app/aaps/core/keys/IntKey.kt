@@ -439,6 +439,24 @@ enum class IntKey(
         dependency = BooleanKey.AlertRapidFall,
         unitType = UnitType.MIN
     ),
+    AlertCgmExpiringLeadHours(
+        key = "alert_cgm_expiring_lead_hours",
+        defaultValue = 12,
+        min = 1,
+        max = 48,
+        title = KeysStrings.pref_title_alert_cgm_expiring_lead,
+        dependency = BooleanKey.AlertCgmSensorExpiring,
+        unitType = UnitType.HOURS
+    ),
+    AlertCgmSignalLostMinutes(
+        key = "alert_cgm_signal_lost_minutes",
+        defaultValue = 10,
+        min = 5,
+        max = 60,
+        title = KeysStrings.pref_title_alert_cgm_signal_lost_delay,
+        dependency = BooleanKey.AlertCgmSignalLost,
+        unitType = UnitType.MIN
+    ),
 
     AutotuneDefaultTuneDays(key = "autotune_default_tune_days", defaultValue = 5, min = 1, max = 30, title = KeysStrings.pref_title_autotune_days, summary = KeysStrings.autotune_default_tune_days_summary, unitType = UnitType.DAYS),
 

@@ -72,7 +72,16 @@ class PeriodicMaintenance(
     suspend fun runOnce() {
         localAlertUtils.shortenSnoozeInterval()
         localAlertUtils.checkStaleBGAlert()
-        // On its own: a failure in the glucose alarms must not skip the log and database trim.
+        checkAlarmsSafely()
+        maintenance.deleteLogs(KEEP_LOG_FILES)
+        cleanupDatabase()
+    }
+
+    /**
+     * The glucose alarms and the CGM sensor alarms, each on its own: a failure in one must not skip
+     * the other, nor the log and database trim of the same pass.
+     */
+    private suspend fun checkAlarmsSafely() {
         try {
             localAlertUtils.checkGlucoseAlerts()
         } catch (e: CancellationException) {
@@ -80,12 +89,17 @@ class PeriodicMaintenance(
         } catch (t: Throwable) {
             aapsLogger.error(LTag.CORE, "Glucose alarm check failed", t)
         }
-        maintenance.deleteLogs(KEEP_LOG_FILES)
-        cleanupDatabase()
+        try {
+            localAlertUtils.checkSensorAlerts()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (t: Throwable) {
+            aapsLogger.error(LTag.CORE, "Sensor alarm check failed", t)
+        }
     }
 
     /**
-     * Checks the glucose alarms each time a new reading has been processed. Every platform runs this:
+     * Checks the glucose alarms, and the CGM sensor alarms, each time a new reading has been processed. Every platform runs this:
      * iOS and desktop through [start], Android from the app start, next to its `KeepAliveWorker`
      * schedule (which already runs [runOnce], so Android must not call [start] and get a second ticker).
      *
@@ -99,7 +113,7 @@ class PeriodicMaintenance(
         // UNDISPATCHED because RxBus has no replay: a reading processed before the collector starts
         // would be missed.
         rxBus.toFlow(EventBucketedDataCreated::class)
-            .collectResilient(scope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { localAlertUtils.checkGlucoseAlerts() }
+            .collectResilient(scope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { checkAlarmsSafely() }
     }
 
     /**

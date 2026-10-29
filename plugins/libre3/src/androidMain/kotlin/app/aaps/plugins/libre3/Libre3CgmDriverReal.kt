@@ -430,6 +430,7 @@ class Libre3CgmDriverReal(
         if (!fromGlucoseChannel) {
             if (plaintext.size != Libre3PatchStatusParser.PLAINTEXT_SIZE) return
             val status = Libre3PatchStatusParser.parse(plaintext)
+            watchers.forEach { it.onPatchStatus(status) }
             if (status.hasSensorError()) {
                 watchers.forEach { it.onError("the sensor reports a problem: ${status.sensorError}", false) }
             }

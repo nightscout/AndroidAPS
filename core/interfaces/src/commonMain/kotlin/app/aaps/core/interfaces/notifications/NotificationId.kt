@@ -266,7 +266,17 @@ enum class NotificationId(
     // notify; they never change dosing. Appended at the END for the same reason as above.
     BG_HYPO(URGENT, CGM),
     BG_HYPER(IMPORTANT, CGM),
-    BG_RAPID_FALL(URGENT, CGM);
+    BG_RAPID_FALL(URGENT, CGM),
+
+    // Sensor state alarms, raised for a BG source that implements
+    // [app.aaps.core.interfaces.source.CgmSensorAlertProvider]. They only notify; they never change
+    // dosing. Appended at the END for the same reason as above.
+    CGM_SENSOR_FAILED(URGENT, CGM),
+    CGM_SENSOR_EXPIRED(URGENT, CGM),
+    CGM_SENSOR_EXPIRING(IMPORTANT, CGM),
+    CGM_SIGNAL_LOST(IMPORTANT, CGM),
+    CGM_WARMUP_DONE(NORMAL, CGM),
+    CGM_SECOND_SENSOR_READY(NORMAL, CGM);
 
     companion object {
 

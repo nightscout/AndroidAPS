@@ -20,11 +20,16 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CgmSensorAlertProvider
+import app.aaps.core.interfaces.source.CgmSensorAlertState
+import app.aaps.core.interfaces.source.CgmSensorFailure
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.CoreUiStrings
@@ -332,7 +337,158 @@ class LocalAlertUtilsImpl(
         }
     }
 
+    /**
+     * One sensor state alarm: its notification, its switch, the key that remembers the episode it
+     * was last raised for, and its sound (only the urgent ones have one).
+     */
+    private enum class SensorAlarm(
+        val id: NotificationId,
+        val switch: BooleanKey,
+        val episodeKey: LocalAlertLongKey,
+        val sound: AlarmSound?
+    ) {
+
+        FAILED(NotificationId.CGM_SENSOR_FAILED, BooleanKey.AlertCgmSensorFailed, LocalAlertLongKey.CgmSensorFailedEpisode, AlarmSound.ALARM),
+        EXPIRED(NotificationId.CGM_SENSOR_EXPIRED, BooleanKey.AlertCgmSensorExpired, LocalAlertLongKey.CgmSensorExpiredEpisode, AlarmSound.ALARM),
+        EXPIRING(NotificationId.CGM_SENSOR_EXPIRING, BooleanKey.AlertCgmSensorExpiring, LocalAlertLongKey.CgmSensorExpiringEpisode, null),
+        SIGNAL_LOST(NotificationId.CGM_SIGNAL_LOST, BooleanKey.AlertCgmSignalLost, LocalAlertLongKey.CgmSignalLostEpisode, null),
+        WARMUP_DONE(NotificationId.CGM_WARMUP_DONE, BooleanKey.AlertCgmWarmupDone, LocalAlertLongKey.CgmWarmupDoneEpisode, null),
+        SECOND_SENSOR_READY(NotificationId.CGM_SECOND_SENSOR_READY, BooleanKey.AlertCgmSecondSensorReady, LocalAlertLongKey.CgmSecondSensorReadyEpisode, null)
+    }
+
+    /** The periodic pass and the "new reading" event can both run [checkSensorAlerts]. */
+    private val sensorAlertsLock = Mutex()
+
+    /** The BG source of the last [checkSensorAlerts]. Guarded by [sensorAlertsLock]. */
+    private var lastSensorAlertSource: BgSource? = null
+
+    /**
+     * The episode each alarm was raised for in THIS process. Not stored on purpose: the stored
+     * episode keys survive an app restart, the notifications do not. So after a restart an alarm
+     * whose episode is still going on is raised once more (an urgent one with its sound, the others
+     * without sound), and after that only for a new episode, as before. Guarded by
+     * [sensorAlertsLock].
+     */
+    private val raisedInThisProcess = mutableMapOf<SensorAlarm, Long>()
+
+    override suspend fun checkSensorAlerts() = sensorAlertsLock.withLock {
+        val source = activePlugin.activeBgSource
+        // A sensor alarm belongs to the source that raised it. After a switch to another source
+        // it says nothing true any more.
+        val sourceChanged = lastSensorAlertSource != null && lastSensorAlertSource !== source
+        lastSensorAlertSource = source
+        if (sourceChanged) {
+            aapsLogger.debug(LTag.CORE, "BG source changed, sensor alarms cleared")
+            SensorAlarm.entries.forEach { clearSensorAlarm(it, dismiss = true) }
+        }
+        val provider = source as? CgmSensorAlertProvider
+        if (provider == null) {
+            // Also after a restart with another source: nothing of the old one may stay.
+            SensorAlarm.entries.forEach { clearSensorAlarm(it, dismiss = true) }
+            return@withLock
+        }
+        // Reading the value lets the source compute the states that only depend on the clock.
+        val state = provider.sensorAlertState.value
+        val now = dateUtil.now()
+        // A link that is lost for less than the delay is not an episode yet. Treating it as a state
+        // change would clear the other alarms and post them again on every short drop out.
+        if (state is CgmSensorAlertState.SignalLost && now - state.sinceEpochMs < signalLostDelayMs()) return@withLock
+
+        val raised = raisedAlarmOf(state)
+        val active = raised?.alarm
+        // A state that changed clears the alarms of the old one. The warm-up message is not taken
+        // away: it is only information, and it ends by itself after WARMUP_DONE_SHOW_MS. A lost
+        // signal does not touch the information alarms at all: what they say is still true, and
+        // after the link is back they must not be raised again for the same episode.
+        SensorAlarm.entries
+            .filter { it != active && !(active == SensorAlarm.SIGNAL_LOST && it in KEPT_WHILE_SIGNAL_LOST) }
+            .forEach { clearSensorAlarm(it, dismiss = it != SensorAlarm.WARMUP_DONE) }
+        if (raised == null) return@withLock
+        val alarm = raised.alarm
+
+        if (!preferences.get(alarm.switch)) {
+            clearSensorAlarm(alarm, dismiss = true)
+            return@withLock
+        }
+        if (!isSensorAlarmDue(state, now)) return@withLock
+        if (raisedInThisProcess[alarm] == raised.episode) return@withLock
+        val againAfterRestart = preferences.get(alarm.episodeKey) == raised.episode
+        preferences.put(alarm.episodeKey, raised.episode)
+        raisedInThisProcess[alarm] = raised.episode
+        aapsLogger.debug(LTag.CORE, "Sensor alarm ${alarm.id} for $state${if (againAfterRestart) ", again after an app restart" else ""}")
+        notificationManager.post(
+            id = alarm.id,
+            textRef = raised.text,
+            validTo = if (state is CgmSensorAlertState.WarmupDone) state.atEpochMs + WARMUP_DONE_SHOW_MS else 0L,
+            sound = alarm.sound
+        )
+    }
+
+    private fun signalLostDelayMs(): Long = T.mins(preferences.get(IntKey.AlertCgmSignalLostMinutes).toLong()).msecs()
+
+    private fun expiringLeadMs(): Long = T.hours(preferences.get(IntKey.AlertCgmExpiringLeadHours).toLong()).msecs()
+
+    /** Forgets the episode of [alarm], so the next one is raised again, and optionally takes it away. */
+    private fun clearSensorAlarm(alarm: SensorAlarm, dismiss: Boolean) {
+        raisedInThisProcess.remove(alarm)
+        if (preferences.get(alarm.episodeKey) == 0L) return
+        preferences.put(alarm.episodeKey, 0L)
+        if (dismiss) notificationManager.dismiss(alarm.id)
+    }
+
+    /**
+     * What a sensor state raises: its alarm, the episode (see [LocalAlertLongKey]) and the message.
+     *
+     * @property episode the timestamp of the state, or for a failure its reason + 1, never 0.
+     */
+    private class RaisedAlarm(val alarm: SensorAlarm, val episode: Long, val text: TextRef)
+
+    /** The alarm of [state], null for [CgmSensorAlertState.Ok], which raises nothing. */
+    private fun raisedAlarmOf(state: CgmSensorAlertState): RaisedAlarm? = when (state) {
+        CgmSensorAlertState.Ok                   -> null
+
+        is CgmSensorAlertState.Failed            -> RaisedAlarm(
+            SensorAlarm.FAILED, state.reason.ordinal + 1L, when (state.reason) {
+                CgmSensorFailure.SENSOR_ERROR -> CoreUiStrings.cgm_alert_failed_sensor_error
+                CgmSensorFailure.ENDED_EARLY  -> CoreUiStrings.cgm_alert_failed_ended_early
+                CgmSensorFailure.OTHER        -> CoreUiStrings.cgm_alert_failed_other
+            }
+        )
+
+        is CgmSensorAlertState.Expired           ->
+            RaisedAlarm(SensorAlarm.EXPIRED, state.atEpochMs, CoreUiStrings.cgm_alert_expired.withArgs(dateUtil.dateAndTimeString(state.atEpochMs)))
+
+        is CgmSensorAlertState.Expiring          ->
+            RaisedAlarm(SensorAlarm.EXPIRING, state.endsAtEpochMs, CoreUiStrings.cgm_alert_expiring.withArgs(dateUtil.dateAndTimeString(state.endsAtEpochMs)))
+
+        is CgmSensorAlertState.SignalLost        ->
+            RaisedAlarm(SensorAlarm.SIGNAL_LOST, state.sinceEpochMs, CoreUiStrings.cgm_alert_signal_lost.withArgs(dateUtil.timeString(state.sinceEpochMs)))
+
+        is CgmSensorAlertState.WarmupDone        ->
+            RaisedAlarm(SensorAlarm.WARMUP_DONE, state.atEpochMs, CoreUiStrings.cgm_alert_warmup_done.withArgs(dateUtil.timeString(state.atEpochMs)))
+
+        is CgmSensorAlertState.SecondSensorReady ->
+            RaisedAlarm(SensorAlarm.SECOND_SENSOR_READY, state.atEpochMs, CoreUiStrings.cgm_alert_second_sensor_ready.withArgs(dateUtil.timeString(state.atEpochMs)))
+    }
+
+    /**
+     * Whether the alarm of [state] should be raised now. "Ending soon" waits for the warning time,
+     * "no signal" for the delay, and an old warm-up end is not news any more.
+     */
+    private fun isSensorAlarmDue(state: CgmSensorAlertState, now: Long): Boolean = when (state) {
+        is CgmSensorAlertState.Expiring   -> state.endsAtEpochMs - now <= expiringLeadMs()
+        is CgmSensorAlertState.SignalLost -> now - state.sinceEpochMs >= signalLostDelayMs()
+        is CgmSensorAlertState.WarmupDone -> now - state.atEpochMs < WARMUP_DONE_SHOW_MS
+        else                              -> true
+    }
+
     companion object {
+
+        /** Information alarms a lost signal leaves alone, see [checkSensorAlerts]. */
+        private val KEPT_WHILE_SIGNAL_LOST = setOf(SensorAlarm.EXPIRING, SensorAlarm.SECOND_SENSOR_READY, SensorAlarm.WARMUP_DONE)
+
+        /** The warm-up done message is shown this long, then it ends by itself. */
+        private val WARMUP_DONE_SHOW_MS = T.mins(30).msecs()
 
         // While a condition lasts, post the same alarm again at most this often.
         private val HYPO_REALARM_MS = T.mins(15).msecs()

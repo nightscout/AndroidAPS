@@ -197,7 +197,15 @@ class BuiltInSearchables(
             UnitDoubleKey.AlertHyperThreshold,
             BooleanKey.AlertRapidFall,
             IntKey.AlertRapidFallDrop,
-            IntKey.AlertRapidFallWindow
+            IntKey.AlertRapidFallWindow,
+            BooleanKey.AlertCgmSensorFailed,
+            BooleanKey.AlertCgmSensorExpired,
+            BooleanKey.AlertCgmSensorExpiring,
+            IntKey.AlertCgmExpiringLeadHours,
+            BooleanKey.AlertCgmSignalLost,
+            IntKey.AlertCgmSignalLostMinutes,
+            BooleanKey.AlertCgmWarmupDone,
+            BooleanKey.AlertCgmSecondSensorReady
         ),
         icon = Icons.Default.Notifications
     )

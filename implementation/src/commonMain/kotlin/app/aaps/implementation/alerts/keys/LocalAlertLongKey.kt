@@ -16,6 +16,12 @@ import app.aaps.core.keys.interfaces.LongNonPreferenceKey
  * The glucose alarm keys (low, high, rapid fall) are the same kind of deadline: they hold back a
  * repeat of the same alarm, and 0 means "may fire now". [HypoTreatedGlucose] belongs to the low
  * alarm hold and is device state in the same way.
+ *
+ * The CGM sensor alarm keys hold the episode an alarm was last raised for: the timestamp of that
+ * sensor state (for a failed sensor, the failure reason + 1). 0 means "not raised". Within one run
+ * of the app the same episode is raised only once. After an app restart an episode that is still
+ * going on is raised once more, because the notification itself did not survive the restart: an
+ * urgent one with its sound, the others without sound.
  */
 enum class LocalAlertLongKey(
     override val key: String,
@@ -33,5 +39,12 @@ enum class LocalAlertLongKey(
      * Glucose in mg/dL (rounded) when the user tapped "hypo treated", kept with that hold. A reading
      * more than 10 mg/dL below it breaks the hold. 0 means no such hold.
      */
-    HypoTreatedGlucose("hypoTreatedGlucose", 0L)
+    HypoTreatedGlucose("hypoTreatedGlucose", 0L),
+
+    CgmSensorFailedEpisode("cgmSensorFailedEpisode", 0L),
+    CgmSensorExpiredEpisode("cgmSensorExpiredEpisode", 0L),
+    CgmSensorExpiringEpisode("cgmSensorExpiringEpisode", 0L),
+    CgmSignalLostEpisode("cgmSignalLostEpisode", 0L),
+    CgmWarmupDoneEpisode("cgmWarmupDoneEpisode", 0L),
+    CgmSecondSensorReadyEpisode("cgmSecondSensorReadyEpisode", 0L)
 }

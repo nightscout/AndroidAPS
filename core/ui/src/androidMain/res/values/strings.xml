@@ -98,6 +98,14 @@
     <string name="alert_hypo_treated" comment="Short button label on the low glucose alarm. The user tells AAPS that the hypo (low glucose) was treated, for example by eating sugar.">Hypo treated</string>
     <string name="alert_hyper_message" comment="%1$s = glucose value with unit, e.g. 260 mg/dL or 14.4 mmol/L. %2$s = age of that reading with unit, e.g. 4 min. Example: High glucose: 260 mg/dL (4 min ago)">High glucose: %1$s (%2$s ago)</string>
     <string name="alert_rapid_fall_message" comment="%1$s = glucose drop with unit (e.g. 35 mg/dL), %2$d = time window in minutes, %3$s = age of the newest reading with unit (e.g. 4 min). Example: Glucose dropping fast: 35 mg/dL in 15 min (4 min ago)">Glucose dropping fast: %1$s in %2$d min (%3$s ago)</string>
+    <string name="cgm_alert_failed_sensor_error">The CGM sensor reports an error. Glucose readings may stop. Check the sensor and replace it if needed.</string>
+    <string name="cgm_alert_failed_ended_early">The CGM sensor stopped before the end of its life. Replace the sensor.</string>
+    <string name="cgm_alert_failed_other">The CGM sensor cannot be used. Open the BG source screen to see why.</string>
+    <string name="cgm_alert_expired" comment="%1$s = date and time when the usable time of the sensor ended, including its grace period, e.g. 29.10.2026 14:05">The CGM sensor has ended. Replace the sensor. End of its usable time, including the grace period: %1$s.</string>
+    <string name="cgm_alert_expiring" comment="%1$s = date and time when the usable time of the sensor ends, including its grace period, e.g. 29.10.2026 14:05">The usable time of the CGM sensor, including the grace period, ends at %1$s. Prepare a new sensor.</string>
+    <string name="cgm_alert_signal_lost" comment="%1$s = time of the last link or the last reading of the sensor, e.g. 14:05">No signal from the CGM sensor since %1$s.</string>
+    <string name="cgm_alert_warmup_done" comment="%1$s = time of the first usable reading, e.g. 14:05">Warm-up finished. The CGM sensor is active, first usable reading at %1$s.</string>
+    <string name="cgm_alert_second_sensor_ready" comment="%1$s = time when the pre-soak sensor became ready, e.g. 14:05">The pre-soak CGM sensor has been ready to promote since %1$s. You can switch to it now.</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Mute for 5 minutes</string>
     <string name="mute">Mute</string>

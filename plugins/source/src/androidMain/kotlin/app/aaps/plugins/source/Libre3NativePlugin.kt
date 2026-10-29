@@ -19,6 +19,8 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.CgmSensorAlertProvider
+import app.aaps.core.interfaces.source.CgmSensorAlertState
 import app.aaps.core.interfaces.source.CgmSensorLifecycle
 import app.aaps.core.interfaces.source.CgmSensorStatusProvider
 import app.aaps.core.interfaces.source.CgmStagingEvidence
@@ -28,6 +30,7 @@ import app.aaps.core.interfaces.source.PromotionResult
 import app.aaps.core.interfaces.source.SensorSlot
 import app.aaps.core.interfaces.source.StagingState
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey as CoreIntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withClick
@@ -44,6 +47,7 @@ import app.aaps.plugins.libre3.Libre3WarmupState
 import app.aaps.plugins.libre3.identity.Libre3SensorIdentity
 import app.aaps.plugins.libre3.identity.Libre3SensorStore
 import app.aaps.plugins.libre3.nfc.Libre3NfcSession
+import app.aaps.plugins.libre3.parse.Libre3PatchStatus
 import app.aaps.plugins.libre3.session.Libre3DisconnectPolicy
 import app.aaps.plugins.libre3.setContext
 import app.aaps.plugins.libre3.warmup.Libre3WarmupClock
@@ -122,7 +126,7 @@ class Libre3NativePlugin @Inject constructor(
     preferences,
     config,
     notificationManager,
-), BgSource, Libre3GlucoseWatcher, CgmSensorStatusProvider {
+), BgSource, Libre3GlucoseWatcher, CgmSensorStatusProvider, CgmSensorAlertProvider {
 
     /** The constructor argument, kept as [ResourceHelper] so string ids do not need a cast. */
     private val resourceHelper: ResourceHelper = rh
@@ -226,6 +230,7 @@ class Libre3NativePlugin @Inject constructor(
         override fun onGlucose(sample: Libre3GlucoseSample) = handleProductionGlucose(sample, this)
         override fun onSession(up: Boolean, reason: String?) = handleProductionSession(up, reason)
         override fun onError(message: String, fatal: Boolean) = handleProductionError(message, fatal)
+        override fun onPatchStatus(status: Libre3PatchStatus) = handleProductionPatchStatus(status, this)
     }
 
     /**
@@ -298,6 +303,54 @@ class Libre3NativePlugin @Inject constructor(
 
     private val _lifecycle = MutableStateFlow<CgmSensorLifecycle?>(null)
     override val lifecycle: StateFlow<CgmSensorLifecycle?> = _lifecycle.asStateFlow()
+
+    // What the sensor alarms need to know about the production sensor, see [refreshSensorAlertState].
+    // Set from the driver's BLE thread, read by the alarm check, so each is volatile.
+
+    /**
+     * Guards the computing and setting of [sensorAlertState] together, so a refresh that read older
+     * inputs can never overwrite the result of a newer one. Also guards [sensorFaultFilter] and
+     * the cached identity.
+     */
+    private val sensorAlertLock = Any()
+
+    /** What the health messages of the sensor say. Guarded by [sensorAlertLock]. */
+    private val sensorFaultFilter = Libre3SensorFaultFilter()
+
+    /** The stored production identity, cached for the alarm reads. Guarded by [sensorAlertLock]. */
+    private var alertIdentity: Libre3SensorIdentity? = null
+
+    /** When [alertIdentity] was read from the store, 0 when never. Guarded by [sensorAlertLock]. */
+    private var alertIdentityReadAtMs = 0L
+
+    /** The link has been down since then; null while it is up. */
+    @Volatile private var linkLostSinceMs: Long? = null
+
+    /** When the last reading of the production sensor was accepted. */
+    @Volatile private var lastReadingAtMs: Long? = null
+
+    /** A warm-up was seen, and its first usable reading has not arrived yet. */
+    @Volatile private var warmupEndPending = false
+
+    /** The first usable reading after the last warm-up. */
+    @Volatile private var warmupDoneAtMs: Long? = null
+
+    /** The pre-soak sensor has been ready since then; null while it is not. */
+    @Volatile private var secondSensorReadyAtMs: Long? = null
+
+    private val _sensorAlertState = MutableStateFlow<CgmSensorAlertState>(CgmSensorAlertState.Ok)
+
+    /**
+     * The state for the sensor alarms. Set again on every driver event and also each time it is
+     * read, so the states that only depend on the clock (ending soon, ended, no reading for a while)
+     * are current when the alarm check reads it, without a timer of their own. A read uses the
+     * cached sensor identity (see [refreshSensorAlertState]), so it does no storage work each time.
+     */
+    override val sensorAlertState: StateFlow<CgmSensorAlertState>
+        get() {
+            refreshSensorAlertState(reloadIdentity = false)
+            return _sensorAlertState.asStateFlow()
+        }
 
     // ---- The pre-soak slot ----
     //
@@ -467,6 +520,10 @@ class Libre3NativePlugin @Inject constructor(
         // its way harmless: the repeat guard forgets the old counter, the stored mark goes back to
         // "nothing accepted yet", and anything late carries the retired watcher and is refused.
         newProductionEpoch()
+        // The epoch put the phase back to "nothing running". The promoted sensor has a phase of its
+        // own, and a sensor that is still warming must keep blocking the glucose path.
+        warmupPhase = runCatching { promoted.warmupState().phase }.getOrDefault(Libre3WarmupState.Phase.IDLE)
+        refreshSensorAlertState()
         // Held in a local, because after the swap below `driver` is the promoted instance.
         val outgoing = driver
         runCatching { outgoing.disconnect() }
@@ -609,6 +666,8 @@ class Libre3NativePlugin @Inject constructor(
             emptyList()
         }
         Libre3Ingest.seed(sensorStore.loadLastLifeCount(), recentTimestamps)
+        // So that a sensor that stays silent after a restart is still seen as silent.
+        lastReadingAtMs = recentTimestamps.maxOrNull()
         warmupPhase = driver.warmupState().phase
         // A message that survived a restart is brought back in line with what the driver really
         // says, otherwise a stale countdown could sit in the status bar for ever.
@@ -619,6 +678,7 @@ class Libre3NativePlugin @Inject constructor(
                 "lastLifeCount=${sensorStore.loadLastLifeCount()} storedReadings=${recentTimestamps.size}",
         )
         refreshProductionLifecycle()
+        refreshSensorAlertState()
         sensorStore.loadIdentity()?.let { identity ->
             connectStoredSensor(identity.bleAddress)
         }
@@ -781,6 +841,8 @@ class Libre3NativePlugin @Inject constructor(
         // Last, after the drivers are stopped. [stopped] already keeps late callbacks from making
         // a new scope.
         cancelWork()
+        // A stopped plugin raises no sensor alarm.
+        refreshSensorAlertState()
         aapsLogger.info(LTag.BGSOURCE, "${Libre3LogMarkers.SESSION}: plugin stop")
         super.onStop()
     }
@@ -826,6 +888,20 @@ class Libre3NativePlugin @Inject constructor(
         _warmup.value = state
         _warmupStatus.value = Libre3WarmupMapper.toCgmWarmupStatus(state)
         warmupNotification.update(state)
+        when (state.phase) {
+            // CONNECTING is not "link back": the driver passes through it on every retry.
+            Libre3WarmupState.Phase.RECONNECTING -> if (linkLostSinceMs == null) linkLostSinceMs = System.currentTimeMillis()
+            Libre3WarmupState.Phase.WARMING      -> {
+                linkLostSinceMs = null
+                warmupEndPending = true
+            }
+
+            Libre3WarmupState.Phase.READY,
+            Libre3WarmupState.Phase.IDLE         -> linkLostSinceMs = null
+
+            else                                 -> Unit
+        }
+        refreshSensorAlertState()
         aapsLogger.info(
             LTag.BGSOURCE,
             "${Libre3LogMarkers.WARMUP}: phase=${state.phase} remainingMs=${state.remainingMs} msg=${state.message}",
@@ -874,6 +950,14 @@ class Libre3NativePlugin @Inject constructor(
             owner,
         )
         refreshProductionLifecycle()
+        val acceptedAt = System.currentTimeMillis()
+        lastReadingAtMs = acceptedAt
+        linkLostSinceMs = null
+        if (warmupEndPending) {
+            warmupEndPending = false
+            warmupDoneAtMs = acceptedAt
+        }
+        refreshSensorAlertState()
         val glucoseValues = listOf(Libre3Ingest.mapToGv(sample))
         ioScope()?.launch {
             if (owner !== productionWatcher) {
@@ -915,6 +999,9 @@ class Libre3NativePlugin @Inject constructor(
             reason == Libre3DisconnectPolicy.Reason.LINK_LOST.name -> armReconnectWatchdog()
             else                                                  -> cancelReconnectWatchdog()
         }
+        if (up) linkLostSinceMs = null
+        else if (reason == Libre3DisconnectPolicy.Reason.LINK_LOST.name && linkLostSinceMs == null) linkLostSinceMs = System.currentTimeMillis()
+        refreshSensorAlertState()
     }
 
     /**
@@ -947,6 +1034,54 @@ class Libre3NativePlugin @Inject constructor(
         aapsLogger.error(LTag.BGSOURCE, "${Libre3LogMarkers.ERROR}: fatal=$fatal $message")
     }
 
+    /** Takes the health message into account for the sensor alarms. A retired sensor is ignored. */
+    private fun handleProductionPatchStatus(status: Libre3PatchStatus, owner: Libre3GlucoseWatcher) {
+        if (owner !== productionWatcher) return
+        synchronized(sensorAlertLock) { sensorFaultFilter.onStatus(status) }
+        refreshSensorAlertState()
+    }
+
+    /**
+     * Sets [sensorAlertState] from what the plugin knows now. Cheap, never throws.
+     *
+     * Computes and sets under [sensorAlertLock], so two threads (the BLE thread and the alarm check)
+     * cannot leave an older result behind.
+     *
+     * @param reloadIdentity read the sensor identity from the store again. Every driver event does,
+     *   so a new or forgotten sensor is seen at once. A plain read of [sensorAlertState] uses the
+     *   cached identity, and reads the store again only when the cache is older than
+     *   [ALERT_IDENTITY_MAX_AGE_MS].
+     */
+    private fun refreshSensorAlertState(reloadIdentity: Boolean = true) {
+        synchronized(sensorAlertLock) {
+            val now = System.currentTimeMillis()
+            if (reloadIdentity || alertIdentityReadAtMs == 0L || now - alertIdentityReadAtMs !in 0L..ALERT_IDENTITY_MAX_AGE_MS) {
+                alertIdentity = runCatching { sensorStore.loadIdentity() }.getOrNull()
+                alertIdentityReadAtMs = now
+            }
+            val identity = alertIdentity
+            val leadHours = runCatching { preferences.get(CoreIntKey.AlertCgmExpiringLeadHours) }.getOrNull()
+                ?.coerceIn(CoreIntKey.AlertCgmExpiringLeadHours.min, CoreIntKey.AlertCgmExpiringLeadHours.max)
+                ?: CoreIntKey.AlertCgmExpiringLeadHours.defaultValue
+            _sensorAlertState.value = Libre3SensorAlertMapper.map(
+                Libre3SensorAlertMapper.Input(
+                    stopped = stopped,
+                    sensorStored = identity != null,
+                    phase = warmupPhase,
+                    activatedAtMs = identity?.activatedAtMs ?: 0L,
+                    wearMinutes = identity?.wearDurationMinutes,
+                    fault = sensorFaultFilter.fault,
+                    linkLostSinceMs = linkLostSinceMs,
+                    lastReadingAtMs = lastReadingAtMs,
+                    warmupDoneAtMs = warmupDoneAtMs,
+                    secondSensorReadyAtMs = secondSensorReadyAtMs,
+                    expiringLeadMs = leadHours * HOUR_MS,
+                    nowMs = now,
+                )
+            )
+        }
+    }
+
     /**
      * Says "from now on a different sensor feeds the loop".
      *
@@ -977,6 +1112,15 @@ class Libre3NativePlugin @Inject constructor(
         // Only one that exists: a new instance has no watcher to drop.
         runCatching { Libre3CgmDrivers.productionOrNull()?.removeWatcher(retiredWatcher) }
         runCatching { Libre3CgmDrivers.stagingOrNull()?.removeWatcher(retiredWatcher) }
+        // What the sensor alarms knew belongs to the retired sensor. Its phase too: a retired
+        // sensor that had failed must not make the new one look failed until its first event.
+        synchronized(sensorAlertLock) { sensorFaultFilter.reset() }
+        warmupPhase = Libre3WarmupState.Phase.IDLE
+        linkLostSinceMs = null
+        lastReadingAtMs = null
+        warmupEndPending = false
+        warmupDoneAtMs = null
+        refreshSensorAlertState()
     }
 
     // ---------------- The pre-soak slot ----------------
@@ -1270,6 +1414,8 @@ class Libre3NativePlugin @Inject constructor(
         _stagingLifecycle.value = null
         _stagingEvidence.value = null
         _stagingState.value = StagingState.ABSENT
+        secondSensorReadyAtMs = null
+        refreshSensorAlertState()
     }
 
     private fun refreshStagingLifecycle() {
@@ -1298,14 +1444,22 @@ class Libre3NativePlugin @Inject constructor(
     }
 
     private fun refreshStagingState() {
-        _stagingState.value = Libre3Staging.computeStagingState(
+        val state = Libre3Staging.computeStagingState(
             present = stagingPresent,
             warming = stagingWarming,
             validReadingCount = stagingValidReadingCount,
         )
+        _stagingState.value = state
+        secondSensorReadyAtMs = if (state == StagingState.READY) secondSensorReadyAtMs ?: System.currentTimeMillis() else null
+        refreshSensorAlertState()
     }
 
     companion object {
+
+        private const val HOUR_MS = 60L * 60L * 1000L
+
+        /** A plain read of [sensorAlertState] reads the sensor identity from the store again after this long. */
+        private const val ALERT_IDENTITY_MAX_AGE_MS = 60L * 1000L
 
         /** How far back stored readings are read to rebuild the repeat guard after a restart. */
         private const val INGEST_SEED_WINDOW_MS = 6L * 60L * 60L * 1000L

@@ -42,4 +42,14 @@ interface LocalAlertUtils {
      * missed readings alarm owns that case.
      */
     suspend fun checkGlucoseAlerts()
+
+    /**
+     * Check the sensor state of the active BG source (failed, ended, ending soon, no signal, warm-up
+     * done, second sensor ready) and raise or dismiss its alarms.
+     *
+     * Only a source that implements [app.aaps.core.interfaces.source.CgmSensorAlertProvider] gets
+     * these alarms; for every other source it does nothing. It only notifies: it never changes
+     * dosing or the loop.
+     */
+    suspend fun checkSensorAlerts()
 }

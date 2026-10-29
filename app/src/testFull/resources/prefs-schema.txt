@@ -77,6 +77,8 @@ active_scene|StringNonKey|false
 actual_basal_profile|MedtrumStringNonKey|true
 age|StringKey|true
 alarm_setting|MedtrumStringKey|true
+alert_cgm_expiring_lead_hours|IntKey|true
+alert_cgm_signal_lost_minutes|IntKey|true
 alert_hyper_threshold|UnitDoubleKey|true
 alert_hypo_threshold|UnitDoubleKey|true
 alert_override_dnd|BooleanKey|true
@@ -127,6 +129,12 @@ carelevo_patch_info|CarelevoStringNonKey|false
 carelevo_temp_basal_infusion_info|CarelevoStringNonKey|false
 carelevo_user_setting_info|CarelevoStringNonKey|false
 categorize_uam_as_basal|BooleanKey|true
+cgmSecondSensorReadyEpisode|LocalAlertLongKey|false
+cgmSensorExpiredEpisode|LocalAlertLongKey|false
+cgmSensorExpiringEpisode|LocalAlertLongKey|false
+cgmSensorFailedEpisode|LocalAlertLongKey|false
+cgmSignalLostEpisode|LocalAlertLongKey|false
+cgmWarmupDoneEpisode|LocalAlertLongKey|false
 combov2-bt-address-key|ComboStringNonKey|true
 combov2-cp-cipher-key|ComboStringNonKey|true
 combov2-key-response-address-key|ComboIntNonKey|true
@@ -182,6 +190,12 @@ enableSMB_with_COB|BooleanKey|true
 enableSMB_with_high_temptarget|BooleanKey|true
 enableSMB_with_temptarget|BooleanKey|true
 enable_carbs_required_alert_local|BooleanKey|true
+enable_cgm_second_sensor_ready_alert|BooleanKey|true
+enable_cgm_sensor_expired_alert|BooleanKey|true
+enable_cgm_sensor_expiring_alert|BooleanKey|true
+enable_cgm_sensor_failed_alert|BooleanKey|true
+enable_cgm_signal_lost_alert|BooleanKey|true
+enable_cgm_warmup_done_alert|BooleanKey|true
 enable_fabric2|BooleanKey|true
 enable_hyper_alert|BooleanKey|true
 enable_hypo_alert|BooleanKey|true
