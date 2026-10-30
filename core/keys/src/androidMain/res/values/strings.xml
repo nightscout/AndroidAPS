@@ -35,7 +35,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Raise urgent alarms as Android notifications</string>
     <string name="pref_title_alert_increase_volume">Gradually increase notification volume</string>
     <string name="pref_title_alert_override_dnd">Override Do Not Disturb mode</string>
-    <string name="pref_summary_alert_override_dnd">When enabled, alarms use the alarm volume: they sound when the phone is silenced, and under Do Not Disturb when its settings allow alarms. When disabled, alarms make no sound while the phone is silenced or Do Not Disturb is on. Under Do Not Disturb they only vibrate.</string>
+    <string name="pref_summary_alert_override_dnd">On: alarms ring even when the phone is silent or in Do Not Disturb. Off: alarms do not ring then. In Do Not Disturb they only vibrate.</string>
 
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Upload BG data to NS</string>
