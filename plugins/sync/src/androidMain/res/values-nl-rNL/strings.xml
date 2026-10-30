@@ -4,6 +4,7 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Verbindings instellingen</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
+    <string name="description_ns_client_v3">Synchroniseert je data met Nightscout via de API v3</string>
     <string name="blocked_by_charging">Geblokkeerd door oplaad instellingen</string>
     <string name="blocked_by_connectivity">Geblokkeerd door verbindings instellingen</string>
     <string name="no_connectivity">Geen verbinding</string>
@@ -53,9 +54,19 @@
     <string name="authorized_clients_token_problem_name_in_use">Een client met deze naam bestaat al. Kies een andere naam, of verwijder de bestaande client.</string>
     <string name="authorized_clients_token_problem_failed">Nightscout heeft het nieuwe token niet vermeld, dus het is opnieuw verwijderd. Er is nog niets achtergelaten. Probeer het opnieuw.</string>
     <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout heeft het nieuwe token niet weergegeven en het kon ook niet meer worden verwijderd. Verwijder het token %1$s in Nightscout en probeer het daarna opnieuw.</string>
+    <string name="authorized_clients_tokens_header">Nightscout allen lezen</string>
+    <string name="authorized_clients_token_unpaired">Eigen Nightscout token, niet gekoppeld</string>
     <string name="authorized_clients_token_show_qr">Toon QR-code</string>
     <string name="authorized_clients_token_delete_title">Verwijder het token?</string>
+    <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s kan Nightscout niet meer lezen.</string>
+    <string name="authorized_clients_delete_dialog_token">Het Nightscout token is ook verwijderd, dus het kan Nightscout niet meer lezen.</string>
+    <string name="authorized_clients_uses_client_token">Eigen Nightscout token</string>
+    <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Gebruikt het Nightscout token %1$s, dat meer rechten heeft dan een client nodig heeft</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Gebruikt het Nightscout token %1$s, niet zijn eigen: commando\'s worden geweigerd. Verwijder het en voeg het opnieuw toe.</string>
     <!-- Pair with master (client side PIN entry) -->
+    <string name="pair_with_master_title">Koppel met master</string>
+    <string name="pair_with_master_pin_entry_title">Voer de koppelings PIN in</string>
+    <string name="pair_with_master_pin_entry_message">Open \'Geautoriseerde clients\' op de master en voeg deze client toe. Voer de 8-cijferige pincode in die daar wordt weergegeven.</string>
     <string name="pair_with_master_pin_entry_label">8-cijferige pincode</string>
     <string name="pair_with_master_pin_entry_submit">Koppel</string>
     <string name="pair_with_master_fetching">Koppeling opzoeken…</string>
@@ -65,6 +76,7 @@
     <string name="pair_with_master_confirm_pair">Koppel</string>
     <string name="pair_with_master_error_title">Kan niet koppelen</string>
     <string name="pair_with_master_error_wrong_pin">Er is geen koppeling gevonden voor die pincode. Controleer de pincode op de meester en probeer het opnieuw.</string>
+    <string name="pair_with_master_error_ambiguous_pin">Meerdere koppelingen kwamen overeen met die pincode. Vraag de master om een ​​nieuwe te genereren en probeer het opnieuw.</string>
     <string name="pair_with_master_error_expired">Deze koppeling is verlopen. Genereer een nieuwe pincode op de master.</string>
     <string name="pair_with_master_error_network">Nightscout is niet bereikbaar. Controleer de verbinding en probeer het opnieuw.</string>
     <string name="pair_with_master_error_secret_store">De koppelingssleutel kon niet worden opgeslagen, dus het koppelen is geannuleerd. Er is niets gewijzigd. Probeer het opnieuw; als het blijft mislukken, start dan de app opnieuw op.</string>
@@ -88,10 +100,14 @@
     <string name="client_setup_scan_already_paired">Deze telefoon is al gekoppeld. Ontkoppel het eerst om een code te gebruiken die de koppeling maakt.</string>
     <string name="client_setup_confirm_title">Deze code gebruiken?</string>
     <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nachtscout: %1$s</string>
+    <string name="client_setup_confirm_pairs" comment="%1$s = the id of the master phone">Het koppelt ook deze telefoon met de master %1$s.</string>
     <string name="client_setup_confirm_replaces">Het vervangt het adres van Nightscout en het token van deze telefoon.</string>
     <string name="client_setup_confirm_apply">Gebruik</string>
     <string name="client_setup_done_title">Klaar</string>
+    <string name="client_setup_done_paired">Nightscout is ingesteld en de telefoon is gekoppeld. De master laat het zien als actief wanneer het verbonden is.</string>
+    <string name="client_setup_done_ns_only">Nightscout is ingesteld. Om de master te bedienen vanaf deze telefoon, koppel deze ook.</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="clientcontrol_orphan_notification">Master AAPS herkent dit apparaat niet meer. Open het beheerscherm → Koppelen met master om opnieuw te koppelen.</string>
     <string name="ns_client">NSClient</string>
     <string name="ns_client_url">URL:</string>
     <string name="ns_client_v3_title">NSClientV3</string>
@@ -132,18 +148,24 @@
     <string name="xdrip_local_broadcasts_summary">Verzend glucose en behandelingsgegevens naar xDrip+. Gegevensbron \"xDrip+ Sync Follower\" moet worden geselecteerd en het accepteren van gegevens moet worden ingeschakeld in Instellingen - Inter-app instellingen - Accepteer Glucose/Behandelingen</string>
     <string name="xdrip_local_broadcasts_title">Activeer uitzendingen naar xDrip+.</string>
     <!--    DataBroadcast-->
+    <string name="tizen">Externe Companion Apps</string>
+    <string name="tizen_description">Gegevens zenden inschakelen voor verschillende externe companion apps</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Verbinding met Garmin apparaat (Fenix, Edge, …)</string>
     <string name="garmin_local_http_server_port">Lokale HTTP server poort</string>
     <string name="garmin_local_http_server">Lokale HTTP server</string>
     <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">Het Garminhorloge heeft %1$s van koolhydraten verzonden. Deze telefoon is een client, dus zijn ze niet ingevoerd. Voer ze in AAPS.</string>
+    <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">De Garmin smartwatch heeft gevraagd om verbinding te maken met de pomp of de verbinding te verbreken. Deze telefoon is een client, dus er is niets veranderd. Doet dit in AAPS.</string>
     <!--    Wear-->
     <string name="description_wear">Monitor en bedien AAPS met uw WearOS horloge.</string>
     <string name="no_watch_connected">(Geen horloge verbonden)</string>
     <string name="pump_status">Pomp status</string>
     <string name="loop_status">Loop status</string>
     <string name="user_action_not_available">De geselecteerde gebruikersactie %1$s is niet meer beschikbaar, ververs uw tegel</string>
+    <string name="scene_not_available">De geselecteerde scene %1$s is niet meer beschikbaar, ververs uw tegel</string>
+    <string name="wear_remote_insulin_not_allowed_in_client">Externe insuline commando\'s zijn uitgeschakeld in client modus</string>
+    <string name="wear_phone_not_ready">De telefoon wordt opgestart of instellingen toegepast. Probeer het zo nog eens.</string>
     <string name="wear_control_disabled">Wear Control is uitgeschakeld in de Wear-instellingen op de telefoon.</string>
     <string name="wear_action_tempt_unit_error">Verschillende eenheden gebruikt op horloge en telefoon!</string>
     <string name="wear_action_tempt_min_bg_error">Min BG buiten bereik!</string>
@@ -153,6 +175,11 @@
     <string name="wear_general_settings">Algemene instellingen</string>
     <string name="wear_custom_watchface_settings">Aanpasbare Wijzerplaat Instellingen</string>
     <string name="wear_custom_watchface">Aanpasbare Watchface: %1$s</string>
+    <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Installeren...</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">De smartwatch toont de \"Complications\" watchface. Selecteer \"Custom watchface\" om %1$s te zien op de watch.</string>
+    <string name="wear_pushed_watchface_confirm_title">Watchface wijzigen?</string>
+    <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s zal de %2$s op de smartwatch vervangen.</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s zal de %2$s op de smartwatch vervangen. Complicaties die u heeft gewijzigd in de watch face editor gaan terug naar de standaardinstellingen.</string>
     <string name="wear_load_watchface">Laad Watchface</string>
     <string name="wear_infos_watchface">Watchface informatie</string>
     <string name="wear_export_watchface">Exporteer template</string>
@@ -160,9 +187,12 @@
     <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/nl/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Update Wear gegevens</string>
     <string name="open_settings_on_wear">Open instellingen op Wear</string>
+    <string name="wear_import_custom_watchface_title">Selecteer \"Custom\" watchface</string>
     <string name="cwf_infos_pref_locked">Lijst met instellingen die zijn vergrendeld door watchface</string>
     <string name="cwf_infos_pref_required">Lijst met instellingen vereist voor watchface</string>
     <string name="cwf_infos_view_title">Lijst van velden opgenomen in de watchface</string>
+    <string name="enabled">Ingeschakeld</string>
+    <string name="disabled">Uitgeschakeld</string>
     <string name="pump_fetching_data">proberen gegevens van de pomp op te halen.</string>
     <string name="pump_old_data">TDD: Nog steeds oude gegevens! Kan niet laden van de pomp.</string>
     <string name="units_short">E</string>
@@ -289,4 +319,6 @@
     <string name="sms_tbr_percent_only">Deze pomp accepteert een tijdelijke basale snelheid alleen in procenten, niet in E/u.</string>
     <string name="sms_tbr_absolute_only">Deze pomp accepteert een tijdelijke basaalstand alleen in E/u, niet in procenten.</string>
     <string name="a11y_otp_qr_code">QR Code voor het instellen van een eenmalig wachtwoord</string>
+    <string name="permission_sms_title">SMS</string>
+    <string name="permission_sms_description">Toepassing heeft SMS-toestemming nodig om op afstand te besturen via SMS-berichten</string>
 </resources>
