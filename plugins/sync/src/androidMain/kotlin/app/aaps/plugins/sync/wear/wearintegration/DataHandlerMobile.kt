@@ -400,6 +400,9 @@ class DataHandlerMobile(
             onCommitResult(sceneActions.stop(triggerChain = it.triggerChain))
         }
         onEventSync<EventData.SnoozeAlert> { uiInteraction.stopAlarm("Muted from wear") }
+        // Not gated by the wear control switch, like the mute above: they only answer an alarm
+        onEventSync<EventData.DismissAlert> { uiInteraction.dismissAlarm("Dismissed from wear") }
+        onEventSync<EventData.MuteAlert> { uiInteraction.muteAlarm(it.minutes, "Muted from wear for ${it.minutes} min") }
         // Not gated by the wear control switch, like the mute above: it only ends or moves a reminder
         onEvent<EventData.ActionEatReminder> { handleEatReminder(it) }
         onEventSync<EventData.WearException> { fabricPrivacy.logWearException(it) }

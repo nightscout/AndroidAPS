@@ -38,6 +38,19 @@ interface UiInteraction {
     fun stopAlarm(reason: String)
 
     /**
+     * "Silence and close" from somewhere else than the alarm screen (the watch): [stopAlarm], and the alarm screen
+     * closes as its own "Silence and close" would. Where there is no such screen, it is a plain [stopAlarm].
+     */
+    fun dismissAlarm(reason: String) = stopAlarm(reason)
+
+    /**
+     * "Mute for [minutes]": [stopAlarm] now, and the same alarm rings again after [minutes], on the phone and on
+     * the watch, unless it was stopped or replaced in between. The alarm screen stays, as with its own
+     * "Mute for 5 minutes". Where there is no re-ring, it is a plain [stopAlarm].
+     */
+    fun muteAlarm(minutes: Int, reason: String) = stopAlarm(reason)
+
+    /**
      * Silences the alarm of the "time to eat" timer ([runEatReminderAlarm]) when it is the alarm shown now, and
      * nothing else: other alarms keep sounding. A newer alarm takes the place of the shown one, so once a pump
      * alarm came in, this leaves that alarm alone (#5408).
@@ -45,4 +58,10 @@ interface UiInteraction {
      * Only the master's timer calls this. Where the eat alarm is a plain alarm, stopping it is all there is.
      */
     fun stopEatReminderAlarm() = stopAlarm("Eat reminder")
+
+    companion object {
+
+        /** "Mute for 5 minutes" on the alarm screen and on the watch's notification of the alarm. */
+        const val MUTE_MINUTES = 5
+    }
 }

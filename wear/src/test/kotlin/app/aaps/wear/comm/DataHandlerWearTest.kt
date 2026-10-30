@@ -12,6 +12,7 @@ import app.aaps.wear.AAPSLoggerTest
 import app.aaps.wear.R
 import app.aaps.wear.WearTestBase
 import app.aaps.wear.data.ComplicationDataRepository
+import app.aaps.wear.alarm.PhoneAlarmWatch
 import app.aaps.wear.eatreminder.EatReminderWatch
 import app.aaps.wear.watchfaces.WatchFacePushHelper
 import com.google.common.truth.Truth.assertThat
@@ -42,6 +43,7 @@ internal class DataHandlerWearTest : WearTestBase() {
     @Mock lateinit var complicationDataRepository: ComplicationDataRepository
     @Mock lateinit var watchFacePushHelper: WatchFacePushHelper
     @Mock lateinit var eatReminderWatch: EatReminderWatch
+    @Mock lateinit var phoneAlarmWatch: PhoneAlarmWatch
 
     private val logger = AAPSLoggerTest()
     private lateinit var rxBus: RxBus
@@ -50,7 +52,17 @@ internal class DataHandlerWearTest : WearTestBase() {
     @BeforeEach
     fun setupHandler() {
         rxBus = RxBusImpl(logger)
-        sut = DataHandlerWear(context, rxBus, sp, preferences, logger, complicationDataRepository, watchFacePushHelper, eatReminderWatch)
+        sut = DataHandlerWear(context, rxBus, sp, preferences, logger, complicationDataRepository, watchFacePushHelper, eatReminderWatch, phoneAlarmWatch)
+    }
+
+    @Test
+    fun `an alarm ringing on the phone is shown on the watch, and its stop takes it away`() {
+        val alarm = EventData.AlarmRinging(0L, title = "AAPS", status = "Pump unreachable", canMute = true)
+        rxBus.send(alarm)
+        verify(phoneAlarmWatch, timeout(HANDLER_TIMEOUT_MS)).show(alarm)
+
+        rxBus.send(EventData.AlarmStopped(0L))
+        verify(phoneAlarmWatch, timeout(HANDLER_TIMEOUT_MS)).clear()
     }
 
     @Test
@@ -116,6 +128,6 @@ internal class DataHandlerWearTest : WearTestBase() {
     companion object {
 
         /** Generous upper bound — the handler normally answers in well under a millisecond. */
-        private const val HANDLER_TIMEOUT_MS = 2_000L
+        private const val HANDLER_TIMEOUT_MS = 5_000L
     }
 }

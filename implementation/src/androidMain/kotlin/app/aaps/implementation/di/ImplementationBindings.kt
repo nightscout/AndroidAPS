@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.implementation.notifications.CommonNotificationManager
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
@@ -50,6 +51,7 @@ object ImplementationBindings {
         aapsLogger: AAPSLogger,
         rh: TextResolver,
         platform: SystemNotificationPlatform,
+        rxBus: RxBus,
         @ApplicationScope appScope: CoroutineScope
-    ): NotificationManager = CommonNotificationManager(aapsLogger, rh, platform, appScope)
+    ): NotificationManager = CommonNotificationManager(aapsLogger, rh, platform, rxBus, appScope)
 }
