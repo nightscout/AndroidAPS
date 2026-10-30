@@ -14,7 +14,7 @@
     <string name="pump_cmd_desc_get_settings">Načítanie nastavení</string>
     <string name="pump_cmd_desc_get_firmware">Načítanie firmvéru pumpy</string>
     <string name="pump_cmd_desc_get_basal_profile">Načítanie bazálneho profilu</string>
-    <string name="pump_cmd_desc_set_basal_profile">Nastavte bazálny profil</string>
+    <string name="pump_cmd_desc_set_basal_profile">Nastaviť bazálny profil</string>
     <string name="pump_cmd_desc_get_tbr">Načítanie dočasného bazálu</string>
     <string name="pump_cmd_desc_cancel_tbr">Zrušiť dočasný bazál</string>
     <string name="pump_cmd_desc_set_tbr">Nastaviť dočasný bazál</string>
