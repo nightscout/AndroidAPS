@@ -22,6 +22,7 @@
     <string name="constraint_applied">Beperking toegepast!</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Pomp niet beschikbaar</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">De pompdriver reageert niet. \"%1$s\" is al %2$d minuten actief en geen ander commando kan de pomp bereiken. Controleer de pomp en start AAPS vervolgens opnieuw.</string>
     <string name="insulin_unit_shortname">E</string>
     <string name="pump_base_basal_rate">%1$.2f E/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s E/h</string>
@@ -49,31 +50,72 @@
     <string name="result">Resultaat</string>
     <string name="settings">Instellingen</string>
     <string name="open_plugin">Plug-in openen</string>
+    <string name="configbuilder_pick_one_hint">Kies één. Er kan maar één tegelijk actief zijn.</string>
+    <string name="configbuilder_pick_many_hint">Kies alle opties die van toepassing zijn.</string>
+    <string name="configbuilder_no_selection_warning">Er is geen plug-in geselecteerd in deze categorie.</string>
+    <string name="configbuilder_switch_confirmation_title">Plugin wisselen?</string>
+    <string name="configbuilder_switch_confirmation">Dit zal %1$s uitschakelen en %2$s inschakelen.</string>
+    <string name="expand">Uitvouwen</string>
+    <string name="collapse">Samenvouwen</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Compleet</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Uitgevouwen</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Samengeklapt</string>
+    <string name="no_compose_preferences">Geen voorkeuren beschikbaar voor deze plugin</string>
+    <string name="confirm_password_hint">Bevestig wachtwoord</string>
+    <string name="confirm_pin_hint">Bevestig PIN</string>
     <string name="statuslights">Statusindicatoren</string>
     <string name="configbuilder_insulin">Insuline</string>
+    <string name="configbuilder_bgsource">BG bron</string>
+    <string name="configbuilder_smoothing">Vloeiend maken</string>
+    <string name="configbuilder_calibration">Kalibratie</string>
+    <string name="configbuilder_pump">Pomp</string>
+    <string name="configbuilder_sensitivity">Gevoeligheid detectie</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_sync">Communicatie</string>
+    <string name="configbuilder_general">Algemeen</string>
     <string name="protection">Beveiliging</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Exporteer gebruikersinvoer naar Excel (csv)</string>
+    <string name="confirm">Bevestigen</string>
     <string name="pump">Pomp</string>
+    <string name="pump_management">Pomp</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader">Uploader</string>
+    <string name="uploader_short">UPLD</string>
     <string name="missed_bg_readings">Geen BG metingen</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">5 minuten dempen</string>
     <string name="mute">Geluid dempen</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Alarmen dempen</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Dempen en sluiten</string>
     <string name="success">Succes</string>
     <string name="advanced_settings_title">Geavanceerde instellingen</string>
     <string name="extended_bolus">Vertraagde bolus</string>
     <string name="paused">Gepauzeerd</string>
+    <string name="running">Actief</string>
     <string name="tdd_total">TDD Totaal</string>
     <string name="tdd_old_data">Oude gegevens</string>
     <string name="goingtodeliver">%1$.2f E toedienen</string>
+    <string name="carbs_not_saved_after_bolus">Bolus toegediend, maar de koolhydraten konden niet worden opgeslagen. Voer de koolhydraten opnieuw in.</string>
     <string name="androidaps_start">AAPS gestart</string>
+    <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f u</string>
+    <string name="format_mins">%1$d min</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
+    <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s - %2$s</string>
     <string name="objectives">Doelen</string>
     <string name="please_wait">Even geduld a.u.b.…</string>
     <string name="stop">Stop</string>
+    <string name="stop_pressed">STOP INGEDRUKT</string>
     <string name="invalid_profile">Ongeldig profiel!</string>
     <string name="no_profile_set">GEEN PROFIEL INGESTELD</string>
+    <string name="profile_switch_no_insulin">Kan profiel niet wijzigen: er wordt geen insuline gebruikt en er was geen insuline geselecteerd.</string>
     <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">Scène %1$s is geëindigd, maar zijn profiel is nog in gebruik. %2$s Activeer een handmatig profiel.</string>
     <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Deze tijdelijke profiel wissel heeft %1$s, maar het permanente profiel eronder heeft %2$s. Activeer eerst de insuline die in de pomp zit in de insuline instellingen.</string>
     <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">De profiel wissel tijd moet binnen %1$d uur van nu liggen.</string>
@@ -284,8 +326,21 @@
     <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_lock_banner_master_offline">Hoofdapparaat niet bereikbaar. De scènebesturing wordt hervat zodra de verbinding is hersteld.</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Alleen lezen</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Maaltijden</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Beheerder</string>
+    <string name="client_role_title">Rol</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Rol: %1$s</string>
+    <string name="client_roles_info_open">Over rollen</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">Stel tijdelijk streefdoel in</string>
+    <string name="clientcontrol_action_cancel_temp_target">Annuleer tijdelijk streefdoel</string>
+    <string name="clientcontrol_action_deliver_bolus">Bolus toedienen</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_busy">Een andere actie is al gaande.</string>
+    <string name="clientcontrol_fail_send_failed">Nightscout kon niet bereikt worden.</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Geannuleerd</string>
+    <string name="clientcontrol_fail_other_token">De meester weigerde dit: deze telefoon schrijft naar Nightscout met een ander token dan zijn eigen. Op de meester, verwijder deze telefoon en voeg hem opnieuw toe.</string>
     <string name="clientcontrol_fail_no_pending_bolus">De voorbereide bolus is verlopen of vervangen. Tik nogmaals op de knop.</string>
     <string name="clientcontrol_fail_internal">Er is iets misgegaan.</string>
     <string name="clientcontrol_fail_unknown">De opdracht is mislukt.</string>
@@ -650,6 +705,9 @@
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Verplaats eerder</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Verplaats later</string>
     <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Details weergeven</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Positie %1$d van %2$d</string>
+    <string name="tempbasal_button">Tijdelijk Basaal</string>
     <string name="extended_bolus_button">Vertraagde bolus</string>
     <string name="sensor_label">Sensor</string>
     <string name="insulin_label">Insuline</string>
@@ -716,6 +774,7 @@
     <string name="aaps_directory">AAPS map</string>
     <string name="import_setting">Importeer instellingen</string>
     <!-- Import settings screen -->
+    <string name="import_apply_title">Geïmporteerde instellingen toepassen?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
@@ -728,5 +787,16 @@
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_bgi">Bloedglucose impact</string>
+    <string name="graph_series_deviations">Afwijkingen</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Gevoeligheid wijziging</string>
+    <string name="graph_series_variable_sens">Variabele gevoeligheid</string>
+    <string name="graph_series_deviation_slope">Richtingscoëfficiënt afwijking</string>
+    <string name="graph_series_heart_rate">Hartslag</string>
+    <string name="graph_series_steps">Stappen</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Activiteit</string>
+    <string name="graph_series_predictions">Voorspellingen</string>
+    <string name="units_format_insulin_int">%1$d E</string>
+    <string name="units_format_insulin_rate">%1$.1f E/u</string>
     <string name="prefs_range_title">Bereik voor visualisatie</string>
 </resources>
