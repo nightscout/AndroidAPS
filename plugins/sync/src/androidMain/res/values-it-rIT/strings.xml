@@ -72,7 +72,6 @@
     <string name="pair_with_master_fetching">Ricerca accoppiamento…</string>
     <string name="pair_with_master_confirm_title">Accoppia con master?</string>
     <string name="pair_with_master_confirm_master">Master: %1$s</string>
-    <string name="pair_with_master_confirm_warning">Dopo l\'accoppiamento, questo master sarà in grado di inviare comandi firmati a questo dispositivo.</string>
     <string name="pair_with_master_confirm_pair">Accoppia</string>
     <string name="pair_with_master_error_title">Impossibile accoppiare</string>
     <string name="pair_with_master_error_wrong_pin">Nessun accoppiamento trovato per quel PIN. Controllare il PIN sul master e riprovare.</string>
