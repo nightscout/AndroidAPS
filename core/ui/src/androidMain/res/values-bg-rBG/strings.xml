@@ -11,7 +11,6 @@
     <string name="treatments_history">История на леченията</string>
     <string name="treatments_desc">Прегледай и редактирай леченията</string>
     <string name="nav_configuration">Конфигурация</string>
-    <string name="nav_configuration_desc">НАстройка на конфигурацията (CGM, помпа, ...) и пускане на други функции</string>
     <string name="count_selected">%1$d избрани</string>
     <string name="delete">Изтрий</string>
     <string name="show_invalidated">Покажи невалидните</string>
@@ -97,6 +96,8 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Изключи за 5 минути</string>
     <string name="mute">Заглушаване</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Заглуши алармата</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Заглуши и затвори</string>
     <string name="success">Успешен</string>
     <string name="advanced_settings_title">Разширени настройки</string>
     <string name="extended_bolus">Удължен болус</string>
@@ -786,6 +787,7 @@
     <string name="wizard_set_alarm">Напомни ми</string>
     <string name="eat_reminder_title">Време е за ядене</string>
     <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Общо изчакване: %1$s</string>
     <string name="eat_reminder_rung">Времето изтече</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d мин</string>
     <string name="eat_reminder_not_set">Напомняне за хранене не може да се зададе. Позволете на AAPS да задава аларми в настройките на Android.</string>
@@ -1202,4 +1204,5 @@
     <string name="units_sec">сек</string>
     <string name="units_years">г</string>
     <string name="prefs_range_title">Диапазон за визуализация</string>
+    <string name="secrets_not_protected">На този компютър не е намерено системно хранилище за ключове. Ключовете, които защитават настройките ви и сдвояването с главния телефон, се пазят във файлове до данните, така че всеки, който получи копие на файловете ви, получава и тях. В Linux инсталирайте и стартирайте хранилище за ключове (keyring, например GNOME Keyring или KWallet), след което стартирайте AAPS отново.</string>
 </resources>
