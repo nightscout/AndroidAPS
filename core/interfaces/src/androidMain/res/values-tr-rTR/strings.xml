@@ -154,6 +154,7 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f sınırların dışında</string>
     <string name="basal_value">Bazal değer</string>
     <string name="cobvsiob">AKRB vs AİNS</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Yavaş karbonhidrat emilimi tespit edildi: zamanın %1$d% kadar. Hesaplamanızı tekrar kontrol edin. AKRB fazla tahmin edilebilir, bu nedenle daha fazla insülin verilebilir !!!!!</string>
     <string name="bolus_constraint_applied_warn">Bolus kısıtlaması uygulandı: %1$.2f Ü ile %2$.2f Ü</string>
     <string name="bolus_recorded_only">Bolus yalnızca kaydedilecektir (pompa ile iletilmez)</string>
     <string name="advisoralarm">Yemek zamanı alarmı çalıştır</string>
