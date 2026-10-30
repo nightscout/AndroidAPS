@@ -110,6 +110,8 @@
     <string name="action_start_minutes">Start\n[minutes]</string>
     <string name="action_duration_hours">Dauer\n[hours]</string>
     <string name="action_duration_hours_format">%1$d h</string>
+    <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
     <string name="action_insulin">Insulin</string>
     <string name="action_preset_1">Voreinstellung 1</string>
     <string name="action_preset_2">Voreinstellung 2</string>
@@ -157,6 +159,11 @@
     <string name="pref_complication_5">Komplikation 5</string>
     <string name="complication_summary_none">Tippen, um eine Datenquelle auszuwählen</string>
     <string name="pref_complication_type_priority_all">Standard für alle Slots</string>
+    <string name="complication_type_priority_text">Text</string>
+    <string name="complication_type_priority_use_default">Standard verwenden</string>
+    <string name="cwf_complication_layout">Komplikations-Layout</string>
+    <string name="pref_include_external">Externe Ansichten in Vorlage einbeziehen</string>
+    <string name="pref_switch_external">Externe Daten in Watchface umschalten</string>
     <string name="custom_pref_show_seconds">Sekunden anzeigen</string>
     <string name="digitalstyle_pref_your_style">Dein Stil</string>
     <string name="digitalstyle_style_none">ohne Stil</string>
@@ -196,9 +203,12 @@
     <string name="week_short">w</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="minute_short">Min</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
+    <string name="error">Fehler</string>
     <string name="pref_heartRateSampling">Herzfrequenz</string>
+    <string name="pref_heartRateSmoothing">Puls Glättung</string>
     <string name="pref_stepsSampling">Schrittzähler aktivieren</string>
     <string name="tile_tempt_1">Temporäres Ziel 1</string>
     <string name="tile_tempt_2">Temporäres Ziel 2</string>
@@ -221,8 +231,43 @@
     <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
     <string name="complication_br">Basalrate</string>
     <string name="complication_target">Ziel</string>
+    <string name="running_mode_reconnect">Pumpe erneut verbinden</string>
+    <string name="label_bg_graph_tile">Blutzucker-Verlauf</string>
     <string name="tile_graph_time_range">Zeitraum</string>
     <string name="tile_tap_bg_graph">Blutzucker-Verlauf</string>
     <string name="tile_tap_main_menu">Hauptmenü</string>
     <string name="tile_tap_loop_status">Loop-Status</string>
+    <string name="title_activity_disconnect_pump">Pumpe trennen</string>
+    <string name="title_activity_suspend_loop">Loop pausieren</string>
+    <string name="wizard_carbs_type_pizza">Pizza</string>
+    <string name="wizard_carb_time_now">Jetzt</string>
+    <string name="eat_reminder_title">Zeit zum Essen</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
+    <string name="wizard_confirmation_sent">Gesendet</string>
+    <string name="contacting_master_unknown">Status unbekannt — Telefon überprüfen</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">%1$s verbleibend</string>
+    <string name="loop_status_closed">Closed Loop</string>
+    <string name="loop_status_duration">Dauer</string>
+    <string name="loop_status_targets">Ziele</string>
+    <string name="loop_status_target">Ziel</string>
+    <string name="loop_status_scene_ended">Beendet</string>
+    <string name="loop_status_profile">Profil</string>
+    <string name="loop_status_no_profile">Kein Profil gesetzt</string>
+    <string name="loop_status_profile_percentage">Prozentsatz</string>
+    <string name="loop_status_profile_timeshift">Zeitverschiebung</string>
+    <string name="loop_status_sensitivity">Sensitivität</string>
+    <string name="loop_status">Loop Status</string>
+    <string name="loop_status_refresh">Aktualisieren</string>
+    <string name="confirm">Bestätigen</string>
+    <string name="request">Anfordern</string>
+    <string name="wizard_total_insulin">Gesamtinsulin</string>
+    <string name="wizard_calculation">Berechnung</string>
+    <string name="wizard_result_bg">BZ</string>
+    <string name="wizard_result_bg_tt">BZ (TT: %1$s)</string>
+    <string name="wizard_result_trend">15\'-Trend</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_correction">Korrektur</string>
+    <string name="wizard_result_total">Total</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
 </resources>
