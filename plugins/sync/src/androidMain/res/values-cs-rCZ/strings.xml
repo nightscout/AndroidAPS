@@ -72,7 +72,6 @@
     <string name="pair_with_master_fetching">Vyhledávání párování…</string>
     <string name="pair_with_master_confirm_title">Párovat s tímto hlavním zařízením?</string>
     <string name="pair_with_master_confirm_master">Hlavní zařízení: %1$s</string>
-    <string name="pair_with_master_confirm_warning">Po párování bude moci toho hlavní zařízení odeslat podepsané příkazy na toto zařízení.</string>
     <string name="pair_with_master_confirm_pair">Párovat</string>
     <string name="pair_with_master_error_title">Nelze spárovat</string>
     <string name="pair_with_master_error_wrong_pin">Nenalezeno žádné párování pro tento PIN. Zkontrolujte PIN na hlavní stránce a zkuste to znovu.</string>
