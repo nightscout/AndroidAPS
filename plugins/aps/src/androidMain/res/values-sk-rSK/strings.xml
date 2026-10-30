@@ -5,9 +5,9 @@
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
     <string name="openaps_auto_isf">Auto ISF</string>
-    <string name="openapsma_disabled">Modul je deaktivovaný</string>
+    <string name="openapsma_disabled">Plugin je deaktivovaný</string>
     <string name="openapsma_no_glucose_data">Nedostupné dáta o glykémiách</string>
-    <string name="openaps_no_as_data">Nedostupná dáta o citlivosti</string>
+    <string name="openaps_no_as_data">Nedostupné dáta o citlivosti</string>
     <string name="dynisf_shortname">DYNISF</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Pole %1$d prvkov.\nAktuálna hodnota:</string>
@@ -26,7 +26,7 @@
     <string name="constraints">Obmedzenia</string>
     <string name="openapsma_autosensdata_label">Dáta detekcie citlivosti</string>
     <string name="openapsma_script_debug_data_label">Ladenie skriptu</string>
-    <string name="openapsama_link_to_preference_json_doc_txt">Pozor!\nZa normálnych okolností tieto hodnoty nemusíte meniť. Kliknete TU, PREČÍTAJTE si informácie a UISTITE sa, že im rozumiete skôr, ako ich začnete meniť.</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Pozor!\nZa normálnych okolností tieto hodnoty nemusíte meniť. Kliknite TU, PREČÍTAJTE si informácie a UISTITE sa, že im rozumiete skôr, ako ich začnete meniť.</string>
     <string name="increasing_max_basal">Zvýšenie maximálnej hodnoty bazálu, pretože nastavenie je nižšie, než je vaša maximálna hodnota bazálu v profile</string>
     <string name="max_basal_multiplier">maximálny násobok bazálu</string>
     <string name="max_daily_basal_multiplier">maximálny násobok najvyššieho bazálu</string>
@@ -49,8 +49,8 @@
     <string name="ignore15m">Ignorovať 15m</string>
     <string name="ignore30m">Ignorovať 30m</string>
     <string name="carbs_suggestion">Návrh sacharidov</string>
-    <string name="open_loop_new_suggestion">Dostupné nové doporučenie</string>
-    <string name="loop_notification_channel_name">Návrhy slučky</string>
+    <string name="open_loop_new_suggestion">Je dostupný nový návrh</string>
+    <string name="loop_notification_channel_name">Návrhy okruhu</string>
     <string name="open_loop_suggestion_too_old">Tento návrh je príliš starý. Do pumpy nebolo nič odoslané. Počkajte na ďalší.</string>
     <string name="basal_set_correctly">Bazál nastavený správne</string>
     <string name="last_run_label">Posledné spustenie</string>
@@ -66,7 +66,7 @@
     <string name="fallback_smb_no_tdd">Použiť algoritmus SMB. Nedostatok dát o CDD.</string>
     <string name="fallback_to_isf_no_tdd">Použitá hodnota citlivosti z profilu. Nedostatok dát. Dôvod: %1$s</string>
     <!-- Autotune -->
-    <string name="autotune_description">Pomoc s možnými úpravami profilu (citlivosť, inzulíno-sacharidový pomer a bazálny dávky)</string>
+    <string name="autotune_description">Pomoc s možnými úpravami profilu (citlivosť, inzulínovo-sacharidový pomer a bazálne dávky)</string>
     <string name="autotune_default_tune_days_title">Počet dní s dátami</string>
     <string name="autotune_tunedprofile_name">Vyladené</string>
     <string name="autotune_profile">Profil :</string>
@@ -87,9 +87,9 @@
     <string name="autotune_check_input_profile_button">Skontrolovať vstupný profil</string>
     <string name="autotune_compare_profile">Porovnať profily</string>
     <string name="autotune_copy_localprofile_button">Kopírovať do miestneho profilu</string>
-    <string name="autotune_update_input_profile_button">Aktualizujte vstupný profil</string>
+    <string name="autotune_update_input_profile_button">Aktualizovať vstupný profil</string>
     <string name="autotune_revert_input_profile_button">Vrátiť vstupný profil</string>
-    <string name="autotune_copy_local_profile_message">Vytvoriť z tohoto Autotune profilu nový miestny profil?</string>
+    <string name="autotune_copy_local_profile_message">Vytvoriť z tohto Autotune profilu nový miestny profil?</string>
     <string name="autotune_update_local_profile_message">Aktualizovať profil %1$s pomocou profilu Autotune?</string>
     <string name="autotune_revert_local_profile_message">Vrátiť profil %1$s na vstupný profil?</string>
     <string name="autotune_profile_invalid">Neplatný profil</string>
