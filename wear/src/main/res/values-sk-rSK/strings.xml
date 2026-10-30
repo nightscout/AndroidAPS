@@ -27,7 +27,7 @@
     <string name="pref_show_detailed_delta">Zobraziť detailnú odchýlku</string>
     <string name="pref_show_avgdelta">Zobraziť priemernú odchýlku</string>
     <string name="pref_show_phone_battery">Zobraziť stav batérie telefónu</string>
-    <string name="pref_show_rig_battery">Zobraziť batériu zariadenia (rig)</string>
+    <string name="pref_show_rig_battery">Zobrazovať stav batérie ďalších zariadení</string>
     <string name="pref_show_basal_rate">Zobraziť bazál</string>
     <string name="pref_show_temp_target">Zobraziť dočasný cieľ</string>
     <string name="pref_show_reservoir_level">Zobraziť stav zásobníka</string>
@@ -39,7 +39,7 @@
     <string name="pref_show_temp_basal">Zobraziť dočasný bazál</string>
     <string name="pref_show_bolus">Zobraziť Bolus &amp; SMB</string>
     <string name="pref_show_grid">Zobraziť mriežku</string>
-    <string name="pref_dark" comment="Enables dark visual theme">Tmavý </string>
+    <string name="pref_dark" comment="Enables dark visual theme">Tmavý</string>
     <string name="pref_highlight_basals">Zvýrazniť bazály</string>
     <string name="pref_prediction_lines">Zobraziť predikcie</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Zodpovedajúci oddeľovač</string>
@@ -68,7 +68,7 @@
     <string name="duration_1_hour">1 hodina</string>
     <string name="duration_3_hours">3 hodiny</string>
     <string name="duration_6_hours">6 hodín</string>
-    <string name="pref_unicode_in_complications">Unicode v komplikáciach</string>
+    <string name="pref_unicode_in_complications">Unicode v komplikáciách</string>
     <string name="pref_version">Verzia:</string>
     <string name="pref_moreWatchfaceSettings">Ďalšie nastavenia ciferníka</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Pozrite sa prosím do konfigurácie Watchface.</string>
@@ -133,7 +133,7 @@
     <string name="press_to_cancel">stlačením tlačidla zrušíte akciu</string>
     <string name="cancel_bolus">ZRUŠIŤ BOLUS</string>
     <string name="status_pump">Pumpa</string>
-    <string name="status_loop">Uzavretý okruh</string>
+    <string name="status_loop">Okruh</string>
     <string name="status_profile_switch">Prepnutie profilu</string>
     <string name="status_tdd">CDD</string>
     <string name="activity_carb">Sach</string>
@@ -160,7 +160,7 @@
     <string name="color_name_bluegray">modrosivá</string>
     <string name="color_name_white">biela</string>
     <string name="color_name_multicolor">viacfarebná</string>
-    <string name="pref_simplify_ui">Zjednodušené užívateľské rozhranie</string>
+    <string name="pref_simplify_ui">Zjednodušené používateľské rozhranie</string>
     <string name="pref_vibrate_hourly">Vibrovať každú hodinu</string>
     <string name="pref_show_weeknumber">Zobraziť číslo týždňa</string>
     <string name="pref_complication_1">Komplikácia 1</string>
@@ -179,7 +179,7 @@
     <string name="cwf_complication_layout">Rozloženie komplikácií</string>
     <string name="cwf_complication_layout_description">Poloha a veľkosť komplikácií prevzaté z načítaného vlastného ciferníka.</string>
     <string name="pref_include_external">Zahrnúť externé zobrazenia do šablóny</string>
-    <string name="pref_switch_external">Prepnúť externé dáta v ciferníku</string>
+    <string name="pref_switch_external">Prehodiť externé dáta v ciferníku</string>
     <string name="custom_pref_show_seconds">Zobrazovať sekundy</string>
     <string name="digitalstyle_pref_your_style">Váš štýl</string>
     <string name="digitalstyle_style_none">žiadny štýl</string>
@@ -304,7 +304,7 @@
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
     <string name="wizard_confirmation_sent">Odoslané</string>
-    <string name="contacting_master">Kontaktuje sa riadiace zariadenie/telefón…</string>
+    <string name="contacting_master">Spája sa s hlavným zariadením…</string>
     <string name="contacting_master_unknown">Neznámy stav – skontrolujte telefón</string>
     <string name="tile_settings">Nastavenie dlaždice</string>
     <string name="loop_status_error">Nepodarilo sa načítať stav</string>
