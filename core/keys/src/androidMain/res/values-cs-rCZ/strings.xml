@@ -2,7 +2,7 @@
 <resources>
     <!-- General preferences -->
     <string name="pref_title_simple_mode">Zjednodušený režim</string>
-    <string name="pref_title_insulin_concentration">Podpora koncentrace inzulinu</string>
+    <string name="pref_title_insulin_concentration">Podpora koncentrace inzulínu</string>
     <string name="pref_summary_insulin_concentration">Povolit podporu různých koncentrací inzulínu (U50, U200 atd.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Nechat obrazovku zapnutou</string>
@@ -54,7 +54,7 @@
     <string name="pref_title_aps_use_smb_after_carbs">Povolit SMB po sacharidech</string>
     <string name="pref_summary_aps_use_smb_after_carbs">Povolit SMB po určitou dobu po zadání sacharidů.</string>
     <string name="pref_title_aps_use_uam">Povolit UAM</string>
-    <string name="pref_summary_aps_use_uam">Povolit detekci a bolusování neohlášených jídel.</string>
+    <string name="pref_summary_aps_use_uam">Povolit detekci a ošetření neoznámených jídel.</string>
     <string name="pref_title_aps_sensitivity_raises_target">Citlivost zvyšuje cíl</string>
     <string name="pref_summary_aps_sensitivity_raises_target">Když je detekována citlivost, zvýšit cílovou glykémii.</string>
     <string name="pref_title_aps_resistance_lowers_target">Rezistence snižuje cíl</string>
@@ -80,7 +80,7 @@
     <string name="pref_title_autotune_auto_switch_profile">Automatické přepnutí profilu</string>
     <string name="pref_summary_autotune_auto_switch_profile">Po výpočtu automaticky přepnout na profil vygenerovaný Autotune.</string>
     <string name="pref_title_autotune_categorize_uam_as_basal">Kategorizovat UAM jako bazál</string>
-    <string name="pref_summary_autotune_categorize_uam_as_basal">Pro výpočty Autotune považovat neohlášená jídla za bazální potřeby inzulínu.</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">Pro výpočty Autotune považovat neoznámená jídla za bazální potřebu inzulínu.</string>
     <string name="pref_title_autotune_tune_insulin_curve">Ladit křivku inzulínu</string>
     <string name="pref_title_autotune_circadian_ic_isf">Použít cirkadiánní IC/ISF</string>
     <string name="pref_summary_autotune_circadian_ic_isf">Aplikovat cirkadiánní variaci na IC a ISF ve výpočtech Autotune.</string>
