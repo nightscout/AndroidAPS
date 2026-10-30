@@ -98,7 +98,6 @@
     <string name="aaps_bolus_icon_label">Bolo</string>
     <string name="aaps_carbs_icon_label">Carboidrati</string>
     <string name="aaps_tbr_icon_label">Basale temporanea</string>
-    <string name="aaps_activity_icon_label">Esercizio</string>
     <string name="aaps_note_icon_label">Nota</string>
     <string name="aaps_automation_icon_label">Automazione</string>
     <string name="aaps_calibration_icon_label">Calibrazione</string>
