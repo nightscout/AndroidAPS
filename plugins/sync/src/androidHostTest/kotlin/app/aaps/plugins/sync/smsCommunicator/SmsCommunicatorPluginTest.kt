@@ -44,7 +44,9 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.joda.time.DateTime
 import org.junit.jupiter.api.BeforeEach
@@ -1101,7 +1103,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     /**
      * The bolus reply waits for the pump. A delivery that fails after confirm returned still has to reach the
-     * sender as a failure - not as the "delivered" reply - and must not count as a remote bolus.
+     * sender as a failure - not as the "delivered" reply. It still counts as a remote bolus (#5441): the pump had
+     * accepted it, part of the dose may be in, and nothing here can tell part of a dose from none.
      */
     @Test fun processBolusFailureTest() = runTest {
         whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
@@ -1121,7 +1124,44 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         assertThat(smsCommunicatorPlugin.messages[3].text)
             .isEqualTo("Bolus failed. Verify real state before sending another command!\nPump not reachable\nVirtual Pump")
-        assertThat(smsCommunicatorPlugin.lastRemoteBolusTime).isEqualTo(0L)
+        assertThat(smsCommunicatorPlugin.lastRemoteBolusTime).isEqualTo(dateUtilMocked.now())
+    }
+
+    /**
+     * WorkManager can stop the SMS worker while it waits for the pump, and the bolus goes on in the app scope (#5441).
+     * Before, no reply came and the interval did not start, so the sender sent BOLUS again and it was given. Now the
+     * interval starts when the pump accepts the bolus, and the reply still goes out after the stop.
+     */
+    @Test fun processBolusWorkerStoppedTest() = runTest {
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
+        whenever(preferences.get(IntKey.SmsRemoteBolusDistance)).thenReturn(15)
+        whenever(dateUtilMocked.now()).thenReturn(Constants.REMOTE_BOLUS_MIN_DISTANCE + 1002L)
+        smsCommunicatorPlugin.lastRemoteBolusTime = 0
+        // The pump accepts the bolus, and finishes it only when the test says so.
+        var finishDose: (() -> Unit)? = null
+        whenever(masterActionExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), isNull(), anyOrNull())).thenAnswer { invocation ->
+            finishDose = invocation.getArgument<(() -> Unit)?>(6)
+            MasterActionExecutor.ConfirmResult.Delivered
+        }
+
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(Sms("1234", "BOLUS 1"))
+        val passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
+        val worker = launch { smsCommunicatorPlugin.processSms(Sms("1234", passCode)) }
+        runCurrent()
+        // Accepted and still running: the interval has started already.
+        assertThat(smsCommunicatorPlugin.lastRemoteBolusTime).isEqualTo(dateUtilMocked.now())
+
+        worker.cancel()
+        finishDose!!.invoke()
+        runCurrent()
+
+        assertThat(smsCommunicatorPlugin.messages.map { it.text }).contains("Bolus 1.00 U delivered successfully\nVirtual Pump")
+
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(Sms("1234", "BOLUS 1"))
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote bolus not available. Try again later.")
     }
 
     @Test fun processCalTest() = runTest {
