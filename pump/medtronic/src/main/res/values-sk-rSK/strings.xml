@@ -16,7 +16,7 @@
     <string name="medtronic_pump_battery_no">Nevybrané (jednoduché zobrazenie)</string>
     <string name="medtronic_pump_battery_alkaline">Alkalické (rozšírené zobrazenie)</string>
     <string name="medtronic_pump_battery_lithium">Líthiové (rozšírené zobrazenie)</string>
-    <string name="medtronic_pump_battery_nizn">NiZn (Rozšírené)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (rozšírené zobrazenie)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Rozšírené zobrazenie)</string>
     <!-- Pump type entries -->
     <string name="medtronic_pump_type_unsupported">Iné (nepodporované)</string>
@@ -59,10 +59,10 @@
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
-    <string name="medtronic_cmd_cancel_bolus_not_supported">Zrušili ste bolus po tom, čo bol nastavený na pumpe. Pretože Medtronic nepodporuje zrušenie bolusu, musíte ho zrušiť ručne. Pozastavte pumpu a znovu spustite (pokiaľ naďalej trváte na zrušení). Aplikácia prevezme zmeny pri ďalšom pripojení (do 5 min).</string>
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Zrušili ste bolus po tom, čo už bol nastavený na pumpe. Pumpa Medtronic nepodporuje zrušenie, preto ho musíte zrušiť ručne. Prepnite pumpu do režimu Pozastaviť a potom zvoľte Obnoviť (ak stále chcete bolus zrušiť). Aplikácia prevezme zmeny pri ďalšej aktualizácii (do 5 minút).</string>
     <string name="medtronic_cmd_cant_read_tbr">Nie je možné načítať aktuálny dočasný bazál.</string>
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Nie je možné zastaviť aktuálny dočasný bazál. Ukončujem operáciu.</string>
-    <string name="medtronic_cmd_set_profile_pattern_overflow">Nastavenie profilu zlyhalo, pretože následujúce hodnoty bazálu, sú príliš vysoké: %1$s</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">Nastavenie profilu zlyhalo, pretože nasledujúce vzory majú príliš vysokú bazálnu dávku: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolus nemohol byť podaný.</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolus nebolo možné podať, pretože dostupné množstvo inzulínu (%1$.2f) je menšie než požadovaný bolus (%2$.2f).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">Dočasný bazál nemohol byť nastavený.</string>
@@ -88,8 +88,8 @@
     <string name="medtronic_notification_check_time_date">Je vyžadovaná aktualizácia času v pumpe</string>
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Nastaviť neutrálny dočasný bazál</string>
-    <string name="set_neutral_temps_summary">Ak je povolená táto možnosť, zastaví sa dočasný bazál pred koncom každej hodiny. To môže u niektorých púmp pomôcť zastaviť pípanie/vibrácie na celú hodinu.</string>
-    <string name="invalid_history_data">Zistené chybné dáta v histórii pumpy. Otvor nový incident a poskytni logy.</string>
+    <string name="set_neutral_temps_summary">Ak je táto možnosť povolená, dočasný bazál sa zruší pred koncom každej hodiny. Tento spôsob môže pri niektorých pumpách zabrániť pípaniu/vibráciám na začiatku každej hodiny.</string>
+    <string name="invalid_history_data">Zistené chybné dáta v histórii pumpy. Otvorte nové hlásenie (issue) a priložte logy.</string>
     <string name="riley_statistics">Štatistiky RL</string>
-    <string name="clicked_refresh" comment="26 characters max for translation">Kliknuté na tlačítko obnoviť</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Kliknuté na tlačidlo obnoviť</string>
 </resources>
