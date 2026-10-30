@@ -52,6 +52,8 @@
     <string name="authorized_clients_token_problem_not_allowed">Токенът за Nightscout на този телефон не е админ токен, затова не може да създаде токен за клиента. Използвайте тук админ токен или добавете клиента с PIN.</string>
     <string name="authorized_clients_token_problem_name_taken">В Nightscout има токен с това име и други права. Изберете друго име.</string>
     <string name="authorized_clients_token_problem_name_in_use">Клиент с това име вече е в списъка. Изберете друго име или първо премахнете този клиент.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout не показа новия токен, затова той беше премахнат отново. Нищо не е останало. Опитайте отново.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout не показа новия токен и той не можа да бъде премахнат отново. Изтрийте токена %1$s в Nightscout и опитайте отново.</string>
     <string name="authorized_clients_tokens_header">Само четене от Nightscout</string>
     <string name="authorized_clients_token_unpaired">Собствен токен за Nightscout, не е свързан</string>
     <string name="authorized_clients_token_show_qr">Покажи QR код</string>
@@ -70,7 +72,6 @@
     <string name="pair_with_master_fetching">Свързване…</string>
     <string name="pair_with_master_confirm_title">Свържи се с главния телефон?</string>
     <string name="pair_with_master_confirm_master">Главен телефон: %1$s</string>
-    <string name="pair_with_master_confirm_warning">След свързването главният телефон ще може да получава подписани команди от този телефон.</string>
     <string name="pair_with_master_confirm_pair">Свържи</string>
     <string name="pair_with_master_error_title">Не мога да се свържа</string>
     <string name="pair_with_master_error_wrong_pin">Грешен PIN. Проверете го на главния телефон и опитайте отново.</string>
