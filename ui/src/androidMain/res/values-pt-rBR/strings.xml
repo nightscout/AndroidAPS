@@ -61,7 +61,6 @@
     <string name="aaps_profile_icon_label">Perfil</string>
     <string name="aaps_carbs_icon_label">Carboidratos</string>
     <string name="aaps_tbr_icon_label">Basal temporária</string>
-    <string name="aaps_activity_icon_label">Exercício</string>
     <string name="aaps_note_icon_label">Nota</string>
     <string name="aaps_automation_icon_label">Automação</string>
     <string name="aaps_calibration_icon_label">Calibração</string>
