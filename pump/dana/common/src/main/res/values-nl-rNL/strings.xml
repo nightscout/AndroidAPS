@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Koppeling verlopen</string>
+    <string name="danars_bonding_failed">Het koppelen van de pomp via Bluetooth is mislukt of geannuleerd. Probeer het opnieuw en voer de pincode in die op de pomp wordt weergegeven.</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="description_pump_dana_rs">Pomp integratie voor DANA RS en Dana-i pompen</string>
     <string name="maxbolusviolation">Max bolus overschrijding</string>
@@ -8,14 +9,22 @@
     <string name="speederror">Snelheid fout</string>
     <string name="insulinlimitviolation">Insuline limiet overschrijding</string>
     <string name="boluserrorcode">Gevraagd: %1$.2fE Toegediend: %2$.2fE Error code: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">De pomp is niet voorgevuld</string>
+    <string name="danai2_bolus_error_not_enough_insulin">Onvoldoende insuline in het reservoir</string>
+    <string name="danai2_bolus_error_easy_sleep">De \'Easy Sleep\'-modus van de pomp is ingeschakeld.</string>
+    <string name="danai2_pump_check_error">Fout bij pompcontrole</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Eenvoudige modus</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Automatische vergrendeling</string>
     <string name="danar_valuenotsetproperly">Waarde niet correct ingesteld</string>
     <string name="danar_setbasalstep001">Zet de basale stapgrootte op 0,01 E/uur</string>
     <string name="resetpairing">Reset pomp koppeling?</string>
     <string name="dana_model">%1$s\nModel: %2$02X\nProtocol: %3$02X\nCode: %4$02X</string>
     <string name="processinghistory">Gebeurtenis wordt uitgevoerd</string>
     <string name="danar_enableextendedbolus">Activeer vertraagde bolussen op de pomp</string>
+    <string name="danar_disablebolusblock">Bolusblokkering is ingeschakeld op de pomp. AAPS kan geen insuline toedienen zolang deze functie actief is. Schakel bolusblokkering uit in de pompinstellingen.</string>
     <string name="overview_bolusprogress_stoped">Gestopt</string>
     <string name="unsupportedfirmware">Niet ondersteunde pomp firmware</string>
+    <string name="danars_unsupported_model">Niet-ondersteund pompmodel (code %1$s)</string>
     <string name="pumperror">Pomp storing</string>
     <string name="lowbattery">Batterij bijna leeg</string>
     <string name="basalcompare">Toedienen van minder dan vooringestelde basaal</string>
@@ -36,6 +45,7 @@
     <string name="gettingtempbasalstatus">Ophalen van tijdelijke basaal status</string>
     <string name="gettingpumpsettings">Pomp instellingen ophalen</string>
     <string name="gettingpumptime">Pomp tijd ophalen</string>
+    <string name="largetimedifftitle">Groot tijdsverschil</string>
     <string name="largetimediff">Groot tijdsverschil:\nDe tijd in de pomp wijkt meer dan 1,5 uur af.\nStel de tijd handmatig in op de pomp en zorg ervoor dat het uitlezen van de geschiedenis van de pomp geen onverwacht gedrag veroorzaakt.\nIndien mogelijk verwijder de geschiedenis uit de pomp pomp voor het wijzigen van de tijd of schakel de Closed Loop uit voor één DIA na de laatste verkeerde invoer van de geschiedenis, maar vanaf nu minstens één DIA.</string>
     <string name="pairfirst">Aub de pomp koppelen met je telefoon!</string>
     <string name="approachingdailylimit">Insuline daglimiet bereikt</string>
@@ -89,6 +99,9 @@
     <string name="danars_password_title">Pomp wachtwoord (alleen v1)</string>
     <string name="danar_password_title">Pomp wachtwoord</string>
     <string name="danar_useextended_title">Gebruik vertraagde bolussen voor &gt;200%</string>
+    <string name="bolus_speed_12">12 s/E</string>
+    <string name="bolus_speed_30">30 s/E</string>
+    <string name="bolus_speed_60">60 s/E</string>
     <string name="selectedpump">Geselecteerde pomp</string>
     <string name="rs_loginsulinchange_title">Reservoir wissel noteren</string>
     <string name="rs_loginsulinchange_summary">Zet \"Reservoir wissel\" melding in Nightscout als deze in pompgeschiedenis wordt uitgelezen</string>
@@ -98,4 +111,18 @@
     <string name="num1pin">1: (12 cijfers)</string>
     <string name="num2pin">2: (8 cijfers)</string>
     <string name="basal_bolus_step">Basaal/bolus stap</string>
+    <string name="connecting_to_pump">Verbinden met pomp…</string>
+    <string name="pairing_successful">Succesvol gekoppeld!</string>
+    <string name="pairing_successful_message">De pomp is nu verbonden en klaar voor gebruik.</string>
+    <string name="cancel_pairing_title">Koppeling annuleren?</string>
+    <string name="cancel_pairing_message">Het koppelingsproces zal worden afgebroken.</string>
+    <string name="done">Gereed</string>
+    <string name="open_bluetooth_settings">Bluetooth instellingen openen</string>
+    <string name="enter_pump_password">Wachtwoord pomp invoeren</string>
+    <string name="select_paired_device">Selecteer het gekoppelde apparaat</string>
+    <string name="no_paired_devices">Geen gekoppelde Dana toestellen gevonden. Koppel eerst uw pomp in de Android Bluetooth-instellingen.</string>
+    <string name="password_hint">4-cijferig wachtwoord (0–9999)</string>
+    <string name="connecting_verifying">Verbinden en verifiëren van wachtwoord…</string>
+    <string name="password_ok">Wachtwoord succesvol geverifieerd!</string>
+    <string name="password_wrong">Verkeerd wachtwoord. Ga terug en corrigeer het.</string>
 </resources>
