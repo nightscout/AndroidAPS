@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="common_label_unit_value_duration_hour_and_minute">%1$d h %2$d min</string>
+    <string name="common_label_unit_value_duration_hour">%d Std.</string>
+    <string name="carelevo_pump_stop_duration_title">Bitte gib die Dauer der Unterbrechung der Insulinabgabe an.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 Minuten</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 Stunde</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 Stunde 30 Minuten</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 Stunden</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 Stunden 30 Minuten</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 Stunden</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 Stunden 30 Minuten</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 Stunden</string>
     <!-- Connection -->
     <!-- Profile -->
     <!-- Needle Insertion -->
