@@ -70,7 +70,6 @@
     <string name="pair_with_master_fetching">正在查找配对…</string>
     <string name="pair_with_master_confirm_title">与此主机配对？</string>
     <string name="pair_with_master_confirm_master">主机：%1$s</string>
-    <string name="pair_with_master_confirm_warning">配对后，此主机将能够向此设备发送已签名的命令。</string>
     <string name="pair_with_master_confirm_pair">配对</string>
     <string name="pair_with_master_error_title">无法配对</string>
     <string name="pair_with_master_error_wrong_pin">未找到该 PIN 码对应的配对。请检查主机上的 PIN 码后重试。</string>
