@@ -32,7 +32,6 @@
     <string name="pref_title_alert_urgent_as_android_notification">以 Android 通知顯示緊急警報</string>
     <string name="pref_title_alert_increase_volume">逐步提高通知音量</string>
     <string name="pref_title_alert_override_dnd">允許覆寫「請勿打擾」模式</string>
-    <string name="pref_summary_alert_override_dnd">啟用後，即使手機為靜音或「請勿打擾」模式，AAPS 警示也會發出聲音。停用後，這些模式下的警示將保持安靜。</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">將血糖資料上傳至 NS</string>
     <string name="pref_title_bg_source_create_sensor_change">記錄傳感器更換</string>
