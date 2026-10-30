@@ -57,9 +57,9 @@
     <string name="sendsmsactiontext">Odoslať SMS s textom</string>
     <string name="starttemptarget">Spustiť dočasný cieľ</string>
     <string name="islesser">je menšia ako</string>
-    <string name="isequalorlesser">je rovnaká, alebo menšia ako</string>
+    <string name="isequalorlesser">je rovnaká alebo menšia ako</string>
     <string name="isequal">je rovnaká</string>
-    <string name="isequalorgreater">je rovnaká, alebo väčšia ako</string>
+    <string name="isequalorgreater">je rovnaká alebo väčšia ako</string>
     <string name="isgreater">je väčšia ako</string>
     <string name="isnotavailable">nedostupný</string>
     <string name="glucoseisnotavailable">Glykémia nedostupná</string>
@@ -126,7 +126,7 @@
     <string name="taskname">Názov úlohy</string>
     <string name="edit_short">UPRAVIŤ</string>
     <string name="preconditions">Predpoklady:</string>
-    <string name="user_action">Akcia užívateľa</string>
+    <string name="user_action">Akcia používateľa</string>
     <string name="system_automation">Automatizácia systému</string>
     <string name="run_automations">Spustiť automatizácie</string>
     <string name="add_automation">Pridať pravidlo</string>
