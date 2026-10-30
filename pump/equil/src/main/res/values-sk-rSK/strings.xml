@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="equil_name">Equil</string>
-    <string name="equil_pump_description">Equil 5.3 alebo novšia pumpa</string>
+    <string name="equil_pump_description">Pumpa Equil 5.3 alebo novšia</string>
     <!--  start  -->
     <string name="equil_basal_speed">Základný bazál</string>
     <string name="equil_dressing">Vymeniť zásobník</string>
-    <string name="equil_dressing_onkey_msg">Automatické pretáčanie piestu do východzej polohy. Po dosiahnutí dna sa automaticky zastaví. V prípade potreby akciu prerušte kliknutím na tlačítko \"Stop\".</string>
-    <string name="equil_hint_dressing">Táto operácia zastaví vydávanie inzulínu, a spôsobí pretočenie piestu do východzej polohy!</string>
+    <string name="equil_dressing_onkey_msg">Piest sa automaticky posúva na dno zásobníka. Po dosiahnutí dna sa automaticky zastaví. V prípade potreby ho prerušte kliknutím na \'Stop\'.</string>
+    <string name="equil_hint_dressing">Táto operácia zastaví podávanie inzulínu a piest pumpy sa vráti na dno!</string>
     <string name="equil_insulin_reservoir">Zásobník inzulínu</string>
-    <string name="equil_mode">Režim spustenia</string>
+    <string name="equil_mode">Režim prevádzky</string>
     <string name="equil_mode_running">Spustené</string>
     <string name="equil_mode_stopped">Zastavené</string>
     <string name="equil_mode_suspended">Pozastavené</string>
@@ -26,16 +26,16 @@
     <string name="equil_tone">Tón výstrahy</string>
     <string name="equil_bolus_speed">Rýchlosť bolusu</string>
     <string name="equil_bolus_speed_summary">Rýchlejšie dávkovanie bolusu môže viesť k častejším alarmom oklúzie.</string>
-    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1,5 J/min (štandard)</string>
-    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 J/min</string>
-    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 J/min</string>
-    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 J/min</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1,5 U/min (štandard)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 U/min</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 U/min</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 U/min</string>
     <string name="equil_tone_mode_mute">Stíšiť</string>
     <string name="equil_tone_mode_shake">Iba vibrovať</string>
     <string name="equil_tone_mode_tone">Iba zvuky</string>
     <string name="equil_tone_mode_tone_and_shake">Vibrácie a zvuky</string>
     <string name="equil_unbind_content">Táto operácia zastaví vydávanie inzulínu, a zasunie piest pumpy do východzej polohy! Taktiež zruší spárovanie!</string>
-    <string name="equil_ble_config_confirmation_title">Spárovať Equil Patch pumpu</string>
+    <string name="equil_ble_config_confirmation_title">Spárovať pumpu Equil</string>
     <string name="equil_error">Chyba pripojenia</string>
     <string name="equil_change">Vymeniť pumpu</string>
     <string name="equil_change_content">Vyberte pumpu zo základne.</string>
@@ -44,15 +44,16 @@
     <string name="equil_new_infusion_set_no">Nie, iba zásobník alebo batériu</string>
     <string name="equil_same_infusion_set_hint">Kanyla nebude naplnená a nezaznamená sa žiadna výmena kanyly.</string>
     <string name="equil_unpair_alert">Naozaj sa chcete vzdať kontroly nad %1$s?</string>
+    <string name="equil_record_basal_temp">Dočasná bazálna dávka %1$s U/h</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">Doba trvania TBR musí byť väčšia ako nula, a musí byť násobkom %1$s minút.</string>
     <string name="equil_basal_exceeds_max">Profilová bazálna dávka %1$s U/h prekračuje maximálnu bazálnu dávku pumpy %2$s U/h. Zvýšte nastavenie maximálnej bazálnej dávky a znova pripojte pumpu.</string>
     <string name="equil_not_enough_insulin">Nedostatok inzulínu v zásobníku</string>
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Slabá batéria: %1$d%%</string>
-    <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">V zásobníku inzulínu nieje dostatočné množstvo inzulínu: %1$s</string>
+    <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">V zásobníku nie je dostatok inzulínu: %1$s</string>
     <string name="equil_reservoir_empty">Zásobník je prázdny. Pumpa už nepodáva inzulín.</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Pumpa sa zastavila počas podávania bolusu. Podané: %1$s z %2$s</string>
-    <string name="equil_pump_not_run">Pumpa nefunguje</string>
+    <string name="equil_pump_not_run">Pumpa nebeží</string>
     <string name="equil_pair">Párovať</string>
     <string name="equil_pair_error">Chyba párovania</string>
     <string name="equil_fill">Plnenie/doplňovanie</string>
@@ -62,6 +63,7 @@
     <string name="equil_firmware_version">Verzia firmvéru</string>
     <string name="equil_shutdown_be">Equil bude automaticky vypnutá</string>
     <string name="equil_shutdown">Equil automatické vypnutie</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Bazálna dávka: %1$.2f U/h, trvanie: %2$d minút</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Nastaviť bolus</string>
@@ -70,7 +72,7 @@
     <string name="equil_common_cmd_cancel_tbr">Zrušiť dočasný bazál</string>
     <string name="equil_common_cmd_set_basal_schedule">Nastaviť plán bazálu</string>
     <string name="equil_common_cmd_set_time">Nastavenie času</string>
-    <string name="equil_common_cmd_suspend_delivery">Pozastaviť dodávanie inzulínu</string>
+    <string name="equil_common_cmd_suspend_delivery">Pozastaviť podávanie inzulínu</string>
     <string name="equil_common_cmd_resume_delivery">Obnoviť podávanie inzulínu</string>
     <string name="equil_common_cmd_pair">Párovať Equil</string>
     <string name="equil_common_cmd_insert_cannula">Vložiť kanylu</string>
@@ -78,13 +80,13 @@
     <string name="equil_common_cmd_set_extended_bolus">Nastaviť predĺžený bolus</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Zrušiť predĺžený bolus</string>
     <!--    推杆回退-->
-    <string name="equil_common_change_insulin">Přetáčanie piesta</string>
-    <string name="equil_common_set_alarm_tone">Nastaviť upozornenie iba zvuk</string>
+    <string name="equil_common_change_insulin">Zasunutie piestu</string>
+    <string name="equil_common_set_alarm_tone">Nastaviť iba zvuk upozornenia</string>
     <string name="equil_common_set_alarm_shake">Nastaviť iba vibrácie</string>
-    <string name="equil_common_set_alarm_mute">Nastavenie tichého režimu</string>
-    <string name="equil_common_set_alarm_tone_and_shake">Nastaviť oznámenia zvuk i vibrácie</string>
+    <string name="equil_common_set_alarm_mute">Nastaviť tichý režim</string>
+    <string name="equil_common_set_alarm_tone_and_shake">Nastaviť zvuk a vibrácie upozornenia</string>
     <string name="equil_common_read_devices">Načítať informácie o zariadení</string>
-    <string name="equil_common_cmd_fill">Naplň</string>
+    <string name="equil_common_cmd_fill">Naplniť</string>
     <string name="history_manual_confirm">Ručné potvrdenie</string>
     <string name="equil_command_not_found">Zariadenia neboli nájdené</string>
     <string name="equil_command_connect_error">Chyba pripájania pumpy</string>
@@ -95,7 +97,7 @@
     <string name="equil_settings_alarm_insulin">Výstraha nízkej hladiny inzulínu</string>
     <string name="equil_init_insulin_error">Inicializácia zásobníka nie je dokončená</string>
     <string name="equil_history_group_all">Všetko</string>
-    <string name="equil_history_group_pair">Spárovať</string>
+    <string name="equil_history_group_pair">Párovanie</string>
     <string name="equil_history_group_bolus">Bolusy</string>
     <string name="equil_history_group_basal">Bazály</string>
     <string name="equil_history_group_configuration">Konfigurácie</string>
@@ -119,17 +121,16 @@
     <string name="equil_history_item14">Dočasný bazál ukončený</string>
     <string name="equil_history_item15">Nízka úroveň batérie</string>
     <string name="equil_history_item16">Batéria vybitá!</string>
-    <string name="equil_history_item17">Obnovenie napájania</string>
-    <string name="equil_history_item18">Zastavené abnormálne podávanie izulínu</string>
+    <string name="equil_history_item17">Reset po zapnutí</string>
+    <string name="equil_history_item18">Abnormálne podávanie inzulínu zastavené</string>
     <string name="equil_common_overview_button_suspend_delivery">Pozastaviť</string>
     <string name="equil_common_overview_button_resume_delivery">Obnoviť podávanie inzulínu</string>
-    <string name="equil_common_wizard_exit_confirmation_text">Doposiaľ ste nedokončili všetky kroky. Ste si istý, že chcete ukončiť prácu?</string>
+    <string name="equil_common_wizard_exit_confirmation_text">Ešte ste nedokončili všetky kroky. Naozaj chcete odísť?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Ukončiť</string>
     <string name="equil_support_error">Verzia firmvéru je príliš stará. Nie je podporovaná.</string>
-    <string name="equil_password_tips">Ak chcete spárovať pumpu Equil v5.3, nastavte heslo. Toto heslo bude v budúcnosti použité aj pre zrušenie párovania, preto si ho zapamätajte.
-Pravidlo pre tvorbu hesla: musí mať 4 znaky a musí obsahovať znaky z tejto skupiny ABCDEF0123456789.</string>
+    <string name="equil_password_tips">Voliteľne nastavte heslo pre párovanie s pumpou Equil v5.3. Toto heslo sa bude v budúcnosti používať aj na zrušenie párovania, preto si ho zapamätajte. Pravidlo pre heslo: musí mať 4 znaky zo skupiny ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Nastaviť heslo pre spárovanie</string>
-    <string name="equil_hint1">Po pripojení pumpy k základni zvoľte, či chcete vyprázdniť vzduch z vnútornej ihly.</string>
+    <string name="equil_hint1">Po nasadení pumpy na základňu zvoľte, či chcete odstrániť vzduch zo zavedenej ihly.</string>
     <string name="equil_unbind">Zrušiť párovanie zariadenia</string>
     <string name="equil_device_unpaired">Zariadenie odpárované</string>
     <string name="equil_assemble">Prosím, zostavte pumpu, naplnený zásobník a nabitú batériu</string>
