@@ -28,12 +28,15 @@
     <string name="alarm_channel_bolus_error">Bolus fout</string>
     <string name="alarm_channel_error">Algemene fout</string>
     <string name="alarm_channel_urgent">Dringend alarm</string>
+    <string name="alarm_channel_eat_reminder">Tijd om te eten</string>
     <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (negeer \'Niet storen\')</string>
     <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (houdt rekening met \'Niet storen\')</string>
     <string name="alarm_channel_silent_urgent">Dringend alarm (met oplopend volume)</string>
     <string name="alarm_channel_silent">Alarm (oplopend volume modus)</string>
     <string name="alarm_channel_silent_description">Wordt gebruikt wanneer \'Meldingsvolume geleidelijk verhogen\' is ingeschakeld. Het alarmscherm speelt het geluid af.</string>
     <string name="ongoing_channel_name">Lopende status</string>
+    <string name="eat_reminder_channel">Aftellen tot eetmoment</string>
+    <string name="eat_reminder_channel_description">Geeft aan hoeveel tijd er nog rest tot het tijd is om te eten. Dit maakt geen geluid; het alarm aan het einde wel.</string>
     <string name="notifications_channel_name">AAPS meldingen</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0E (%2$.1f\u00a0µl)</string>
