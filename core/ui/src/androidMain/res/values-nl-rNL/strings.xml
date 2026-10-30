@@ -2,6 +2,7 @@
 <resources>
     <string name="error_field_must_not_be_empty">Dit veld mag niet leeg zijn</string>
     <string name="error_mustbe4hexadidits">Moet 4 tekens bevatten uit ABCDEF0123456789</string>
+    <string name="authorized_clients_manage_label">Geautoriseerde clients</string>
     <string name="authorized_clients_manage_desc">Beheer de gekoppelde clientapparaten die deze master aansturen.</string>
     <string name="pair_with_master_manage_label">Koppel met master</string>
     <string name="pair_with_master_manage_desc">Voer de koppelings-pincode van een master in om deze client ondertekende opdrachten te laten verzenden.</string>
@@ -10,6 +11,7 @@
     <string name="treatments_history">Behandelingen geschiedenis</string>
     <string name="treatments_desc">Bekijk en beheer de behandelingsgeschiedenis</string>
     <string name="nav_configuration">Configuratie</string>
+    <string name="nav_configuration_desc">Instellen configuratie (sensor, pomp, ...) en functies</string>
     <string name="count_selected">%1$d geselecteerd</string>
     <string name="delete">Verwijderen</string>
     <string name="show_invalidated">Toon ongeldig</string>
@@ -44,6 +46,8 @@
     <string name="switch_to_edit">Bewerk</string>
     <string name="snooze">Sluimeren</string>
     <string name="snooze_15m">15m sluimeren</string>
+    <string name="snooze_30m">30m sluimeren</string>
+    <string name="snooze_60m">60m sluimeren</string>
     <string name="virtual_pump">Virtuele Pomp</string>
     <string name="constraints">Beperkingen</string>
     <string name="superbolus">Superbolus</string>
@@ -66,6 +70,7 @@
     <string name="no_compose_preferences">Geen voorkeuren beschikbaar voor deze plugin</string>
     <string name="confirm_password_hint">Bevestig wachtwoord</string>
     <string name="confirm_pin_hint">Bevestig PIN</string>
+    <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Statusindicatoren</string>
     <string name="configbuilder_insulin">Insuline</string>
     <string name="configbuilder_bgsource">BG bron</string>
@@ -107,6 +112,8 @@
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f u</string>
     <string name="format_mins">%1$d min</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
+    <string name="value_question" comment="Asks if this should be done. %1$s=what will be done. Example: Send logs?">%1$s?</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
@@ -119,6 +126,7 @@
     <string name="invalid_profile">Ongeldig profiel!</string>
     <string name="no_profile_set">GEEN PROFIEL INGESTELD</string>
     <string name="profile_switch_no_insulin">Kan profiel niet wijzigen: er wordt geen insuline gebruikt en er was geen insuline geselecteerd.</string>
+    <string name="scene_no_profile_before">Er was geen profiel in gebruik voordat de scène begon.</string>
     <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">Scène %1$s is geëindigd, maar zijn profiel is nog in gebruik. %2$s Activeer een handmatig profiel.</string>
     <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Deze tijdelijke profiel wissel heeft %1$s, maar het permanente profiel eronder heeft %2$s. Activeer eerst de insuline die in de pomp zit in de insuline instellingen.</string>
     <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">De profiel wissel tijd moet binnen %1$d uur van nu liggen.</string>
@@ -169,6 +177,7 @@
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Laden…</string>
     <string name="waiting_for_pump">Wachten op pomp…</string>
+    <string name="initialization_failed">Initialisatie mislukt</string>
     <string name="notes_label">Notities</string>
     <string name="wrong_pump_data">Data komt van een andere pomp. Wijzig de pomp driver om de pomp status te resetten.</string>
     <string name="bg_label">BG</string>
@@ -177,8 +186,10 @@
     <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Kalibratie niet opgeslagen: BG verandert te snel (Δ %1$s %3$s per 5 min, limiet %2$s). Probeer het opnieuw als de glucose stabiel is.</string>
     <string name="cal_reject_no_pair">Kalibratie niet opgeslagen: Geen sensor waarde gevonden in de  10 minuten hiervoor</string>
     <string name="cal_reject_warmup">Kalibratie niet opgeslagen: de sensor is nog in de 2uur durende opwarmfase</string>
+    <string name="cal_reject_no_session">Kalibratie niet opgeslagen: geen sensor sessie actief. Voer eerst een sensor wijziging uit.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Bolus fout geconstateerd. Controleer handmatig de werkelijk toegediende hoeveelheid insuline en koolhydraten</string>
+    <string name="bolus_reminder">Herinneren aan bolus bij herstel BG</string>
     <string name="duration_label">Tijdsduur</string>
     <string name="shortgramm">g</string>
     <string name="pump_running">Pomp is actief</string>
@@ -210,13 +221,20 @@
     <string name="a11y_low">laag</string>
     <string name="remove_label">Verwijder</string>
     <string name="activate_profile">Activeer profiel</string>
+    <string name="activate_insulin">Activeer insuline</string>
+    <string name="pump_wizard_profile_gate_title">Profiel vereist</string>
+    <string name="pump_wizard_profile_gate_pick">Selecteer het profiel om toe te passen bij activering.</string>
+    <string name="pump_wizard_profile_gate_no_store">Geen profiel gedefinieerd. Ga naar profiel beheer om een profiel aan te maken en start het activeren daarna opnieuw.</string>
+    <string name="reset">Reset</string>
     <string name="profileswitch_ismissing">Profiel wissel ontbreekt. Doe aub een profiel wissel of duw op Activeer Profiel in het Lokale profiel.</string>
     <string name="profile">Profiel</string>
     <string name="percentage_label">Percentage</string>
     <string name="timeshift_label">Tijd verschuiving</string>
     <string name="confirm_remove_multiple_items">Weet je zeker dat je %1$d items wilt verwijderen</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">De master heeft geen %1$d van deze vermeldingen. Ze worden niet verwijderd.</string>
     <string name="overview_treatment_label">Behandeling</string>
     <string name="copytolocalprofile">Nieuw profiel van dit profiel maken?</string>
+    <string name="wear_wizard_settings">Instellingen Wear Wizard</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Basaal IOB</string>
     <string name="invalid">Ongeldig</string>
@@ -228,13 +246,23 @@
     <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Vullen</string>
     <string name="site_rotation">Site rotatie</string>
     <string name="edit_site">Bewerk</string>
+    <string name="select_arrow">Kies pijl</string>
+    <string name="site_filter_info">Selecteer het soort behandelgebeurtenis om te tonen: canule plaatsen of sensor plaatsen</string>
+    <string name="selected_location">Geselecteerd: %1$s</string>
+    <string name="last_site_location">Laatste plek: %1$s</string>
+    <string name="pick_site">Kies plaats</string>
+    <string name="select_site_location">Kies de plek van aanbrengen</string>
+    <string name="site_location">Plaatsingsplek</string>
     <string name="overview_insulin_label">Insuline</string>
     <string name="stoptemptarget">Stop tijdelijk doel</string>
     <string name="closedloop">Closed loop</string>
     <string name="openloop">Open loop</string>
     <string name="lowglucosesuspend">Stop bij laag</string>
     <string name="pump_suspended">Pomp is onderbroken</string>
+    <string name="pump_suspend">Onderbreek pomp</string>
+    <string name="pump_resume">Hervat pomp</string>
     <string name="mode_reverted">Modus teruggezet</string>
+    <string name="select_insulin">Selecteer insuline</string>
     <string name="dia">DIA</string>
     <string name="ic_short">KH-ratio</string>
     <string name="isf_short">ISF</string>
@@ -254,7 +282,10 @@
     <string name="location_permission_not_granted">Locatiemachtiging niet verleend. Toestaan in android instellingen.</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versie:</string>
     <string name="not_available_full">Niet beschikbaar</string>
+    <string name="not_implemented_yet">Deze functie is nog niet beschikbaar op dit platform</string>
+    <string name="not_available_on_platform">Deze functie is niet beschikbaar op dit platform</string>
     <string name="engineering_mode_enabled">Engineering modus is geactiveerd</string>
+    <string name="back">Terug</string>
     <string name="next">Volgende</string>
     <string name="pref_syncs_with_main_phone">Synchroniseert met de hoofdtelefoon.</string>
     <string name="show_hide_records">Verberg loop records</string>
@@ -265,6 +296,7 @@
     <string name="pin_dont_match">PIN-codes komen niet overeen</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Start profiel %1$d%% voor %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Annuleer tijdelijk basaal</string>
     <string name="let_temp_basal_run">Laat tijdelijk basaal lopen</string>
@@ -273,9 +305,16 @@
     <string name="reason">Reden</string>
     <string name="nochangerequested">Geen aanpassing noodzakelijk</string>
     <!--    Insulin / Concentration-->
+    <string name="ins_concentration_confirmed">Insuline %1$s is bevestigd</string>
+    <string name="current_insulin">Momenteel actief</string>
     <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Wordt geactiveerd</string>
+    <string name="change_insulin">Wissel</string>
+    <string name="select_insulin_description">Selecteer de insuline waarmee je de pomp vult. Er zal een profielwissel worden toegepast na activatie/prime.</string>
+    <string name="selected_insulin">Geselecteerde insuline: %1$s</string>
+    <string name="record_insulin_hint">Als je insuline met een pen toedient, geef hieronder dan de soort insuline aan. De dosis dient altijd in internationale eenheden te worden opgegeven.</string>
     <!--       Stats -->
     <string name="average">Gemiddelde</string>
+    <string name="tir">Tijd binnen bereik (TIR)</string>
     <string name="below" comment="below &quot;in range&quot;">Onder</string>
     <string name="in_range">Binnen bereik</string>
     <string name="veryLow" comment="below 3.1">Zeer laag</string>
@@ -288,9 +327,12 @@
     <string name="night_tir">TIR \'s nachts</string>
     <string name="hba1c">HbA1c: </string>
     <string name="std_deviation">SD: %1$s</string>
+    <string name="seven_days_short">7d</string>
+    <string name="thirty_days_short">30d</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">Zorgportaal</string>
     <string name="careportal_bgcheck">BG Controle</string>
     <string name="careportal_mbg">Handmatige BG of calibratie</string>
     <string name="careportal_announcement">Mededeling</string>
@@ -302,12 +344,17 @@
     <string name="careportal_note_message">Notitie : %1$s</string>
     <string name="careportal_question_message">Vraag : %1$s</string>
     <string name="careportal_exercise_message">Bewegen : %1$s</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Pomp plaats Veranderen: %1$s</string>
     <string name="careportal_pump_site_change">Infuus wissel</string>
+    <string name="cgm_sensor_insert">Sensor ingebracht</string>
     <string name="careportal_pump_site_management">Pomp sites</string>
     <string name="careportal_cgm_site_management">CGM sites</string>
+    <string name="careportal_cgmsensorstart">Sensor start</string>
+    <string name="careportal_cgm_sensor_stop">Sensor stop</string>
     <string name="careportal_dad_alert">Hulphond waarschuwing</string>
     <string name="careportal_insulin_cartridge_change">Insulinereservoir wissel</string>
     <string name="careportal_profileswitch">Profiel wissel</string>
+    <string name="profile_management">Profiel</string>
     <string name="careportal_snackbolus">Snack bolus</string>
     <string name="careportal_mealbolus">Maaltijd bolus</string>
     <string name="careportal_correctionbolus">Correctie bolus</string>
@@ -318,10 +365,15 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="pump_battery_change">Pomp bat. wissel</string>
     <string name="temporary_target">Tijdelijk streefdoel</string>
+    <string name="temporary_targets">Tijdelijke streefdoelen</string>
     <string name="running_mode">Bedrijfsmodus</string>
     <string name="running_mode_desc">Sluit of open de loop, stop deze, of koppel de pomp af</string>
     <string name="running_mode_change_not_allowed">Het wijzigen van de bedrijfsmodus is niet mogelijk</string>
     <string name="pump_reconnect">Sluit de pomp weer aan</string>
+    <string name="scene">Scène</string>
+    <string name="scenes">Scènes</string>
+    <string name="scene_activate">Activeer</string>
+    <string name="scene_deactivate">Beëindig scène</string>
     <string name="scene_end_active">Einde actieve scene</string>
     <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Ga naar</string>
     <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Vervolg %1$s zal niet beginnen</string>
@@ -331,12 +383,17 @@
     <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_lock_banner_master_offline">Master apparaat is niet bereikbaar. De scènebesturing wordt hervat zodra de verbinding is hersteld.</string>
+    <string name="scene_lock_banner_control_disabled">De master heeft bediening op afstand uitgeschakeld. De scènebesturing wordt hervat zodra dit op de master weer wordt ingeschakeld.</string>
+    <string name="master_offline_banner">Master apparaat is niet bereikbaar. Bewerken is uitgeschakeld totdat de verbinding is hersteld.</string>
+    <string name="master_control_disabled_banner">De master heeft bediening op afstand uitgeschakeld. Bewerken is niet mogelijk totdat deze functie op de meester weer is ingeschakeld.</string>
     <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Alleen lezen</string>
     <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Maaltijden</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Zorgverlener</string>
     <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Beheerder</string>
     <string name="client_role_title">Rol</string>
     <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Rol: %1$s</string>
     <string name="client_roles_info_open">Over rollen</string>
+    <string name="client_roles_info">Elke gekoppelde telefoon heeft een rol. De hoofdtelefoon controleert deze voor elke opdracht en de telefoon laat alleen zien wat zijn rol toelaat. Een nieuwe rol wordt onmiddellijk actief, zonder opnieuw te koppelen.\n\nAlleen lezen: de telefoon blijft gekoppeld, maar toont alleen gegevens.\n\nMaaltijd: bolus, bolus wizard, QuickWizard en koolhydraten. Het kan ook een lopende bolus stoppen. Koolhydraten die hier worden ingevoerd kunnen de loop meer insuline laten geven.\n\nZorgverlener: alles wat een gebruiker doet in AAPS, zoals tijdelijke streefdoelen, profiel en insuline wijzigingen, Loop modus, tijdelijke basaalstand, vertraagde bolus, scènes, careportal gebeurtenissen, kalibraties en het verwijderen van records. Het kan instellingen of presets niet wijzigen.\n\nAdmin: alles, instellingen en voorinstellingen inclusief (QuickWizard, tijdelijk doel voorinstellingen, scènes, profielen en automatisering, insuline).</string>
     <string name="hardened_mode_info">De hoofdtelefoon accepteert neemt alleen wijzigingen van gekoppelde klanten. Het accepteert geen behandelingen, tijdelijke doelstellingen, profielwijzigingen, wijzigingingen van bedrijfsmodus of verwijderingen die direct in Nightscout worden gemaakt, bijvoorbeeld op de website of in andere apps. De instellingen voor het accepteren van gegevens van Nightscout worden verborgen wanneer de geharde modus ingeschakeld is. SMS-commando\'s worden niet beïnvloed.\n\nDe hoofd-telefoon upload nog steeds alle gegevens naar Nightscout, inclusief BG gegevens. Als de hoofd-telefoom zijn BG\'s krijgt van Nightscout, blijven die daar vandaan komen.\n\nOm de geschiedenis op een nieuwe hoofdtelefoon te laden, gebruik Volledige synchronisatie in NSClient. Volledige synchronisatie neemt alles in Nightscout, inclusief profielen.\n\nVoor externe besturing van clients is een werkende WebSocket verbinding nodig met Nightscout, op de hoofdtelefoon en op degekoppelde apparaten. Eenvoudige modus schakelt altijd de geharde modus aan. Om deze uit te schakelen, schakel eenvoudige modus in en schakel de controle van de klant uit op de hoofdtelefoon.</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <string name="clientcontrol_action_set_temp_target">Stel tijdelijk streefdoel in</string>
@@ -352,6 +409,7 @@
     <string name="clientcontrol_fail_unknown">De opdracht is mislukt.</string>
     <string name="clientcontrol_unconfirmed_wear">Onbekende status — controleer je telefoon/Nightscout voordat je een nieuwe bolus toedient.</string>
     <string name="clientcontrol_bolus_progress_stalled_title">Verbinding verbroken — leveringsstatus onbekend</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Deze telefoon ontvangt geen updates meer van de master. De bolus wordt mogelijk nog toegediend of is inmiddels volledig toegediend. Als je dit bericht sluit, wordt het alleen op deze telefoon verborgen; de pomp wordt hierdoor niet gestopt. Controleer op de mastertelefoon hoeveel insuline daadwerkelijk is toegediend.</string>
     <string name="scene_revert_loop_mode">Tijdelijke bedrijfsmodus annuleren</string>
     <string name="careportal_temporarytargetvalue">Tijdelijk streefdoel</string>
     <string name="careportal_temporarytargetcancel">Tijdelijk streefdoel annuleren</string>
@@ -787,6 +845,8 @@
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_replace_pump_settings">Vervang ook de pompinstellingen</string>
+    <string name="import_replace_pump_settings_summary">Schakel dit uit om de koppeling met de huidige pomp te behouden. Schakel het in bij het terugzetten van gegevens op een nieuwe telefoon met dezelfde pomp.</string>
     <string name="reset_aps_results">Reset APS resultaten</string>
     <string name="database_cleanup">Database opschonen</string>
     <string name="nav_resetdb">Reset database</string>
@@ -794,6 +854,9 @@
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Actieve insuline (IOB)</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Absolute insuline</string>
+    <string name="graph_series_cob">Actieve koolhydraten (COB)</string>
     <string name="graph_series_bgi">Bloedglucose impact</string>
     <string name="graph_series_deviations">Afwijkingen</string>
     <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Gevoeligheid wijziging</string>
