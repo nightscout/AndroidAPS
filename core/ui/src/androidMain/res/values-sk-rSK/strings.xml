@@ -3,15 +3,15 @@
     <string name="error_field_must_not_be_empty">Toto pole nesmie byť prázdne</string>
     <string name="error_mustbe4hexadidits">Musí byť zo 4 znakov z ABCDEF0123456789</string>
     <string name="authorized_clients_manage_label">Autorizovaní klienti</string>
-    <string name="authorized_clients_manage_desc">Spravovanie spárovaných klientských zariadení ovládajúce tento hlavný systém.</string>
+    <string name="authorized_clients_manage_desc">Spravovanie spárovaných klientskych zariadení ovládajúcich tento hlavný systém.</string>
     <string name="pair_with_master_manage_label">Spárovanie s hlavným zariadením</string>
     <string name="pair_with_master_manage_desc">Zadajte párovací PIN hlavného zariadenia, aby tento klient mohol odosielať podpísané príkazy.</string>
     <!--    General-->
     <string name="treatments">Ošetrenia</string>
     <string name="treatments_history">História ošetrení</string>
-    <string name="treatments_desc">Zobraz a spravuj históriu ošetrení</string>
+    <string name="treatments_desc">Zobraziť a spravovať históriu ošetrení</string>
     <string name="nav_configuration">Konfigurácia</string>
-    <string name="nav_configuration_desc">Nastav svoju konfiguráciu (CGM, pumpa, ...) a zapni funkcionality</string>
+    <string name="nav_configuration_desc">Nastavte konfiguráciu (CGM, pumpa, ...) a zapnite funkcie</string>
     <string name="count_selected">%1$d vybraných</string>
     <string name="delete">Vymazať</string>
     <string name="show_invalidated">Zobraziť zneplatnené</string>
@@ -67,7 +67,7 @@
     <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Dokončené</string>
     <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Rozbalené</string>
     <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Zbalené</string>
-    <string name="no_compose_preferences">Pre tento plugin nie sú k dispozícii žiadne nastavenia písania</string>
+    <string name="no_compose_preferences">Pre tento plugin nie sú k dispozícii žiadne nastavenia</string>
     <string name="confirm_password_hint">Potvrďte heslo</string>
     <string name="confirm_pin_hint">Potvrďte PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
@@ -85,7 +85,7 @@
     <string name="protection">Ochrana</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
-    <string name="ue_export_to_csv">Exportovať užívateľské záznamy do Excelu (csv)</string>
+    <string name="ue_export_to_csv">Exportovať používateľské záznamy do Excelu (csv)</string>
     <string name="confirm">Potvrdiť</string>
     <string name="pump">Pumpa</string>
     <string name="pump_management">Pumpa</string>
@@ -125,14 +125,14 @@
     <string name="stop_pressed">STLAČENÝ STOP</string>
     <string name="invalid_profile">Neplatný profil!</string>
     <string name="no_profile_set">NENASTAVENÝ ŽIADNY PROFIL</string>
-    <string name="profile_switch_no_insulin">Nie je možné prepnúť profil: nepoužíva se žiadny inzulín a žiadny nebol vybraný.</string>
+    <string name="profile_switch_no_insulin">Nie je možné prepnúť profil: nepoužíva sa žiadny inzulín a žiadny nebol vybraný.</string>
     <string name="scene_no_profile_before">Pred spustením scény nebol aktívny žiadny profil.</string>
     <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">Scéna %1$s sa skončila, ale jej profil je stále aktívny. %2$s Aktivujte profil manuálne.</string>
     <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Toto dočasné prepnutie profilu používa %1$s, ale trvalý profil, z ktorého vychádza, používa %2$s. Najprv v nastaveniach inzulínu aktivujte inzulín, ktorý je v pumpe.</string>
     <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Čas prepnutia profilu musí nastať do %1$d hodín odteraz.</string>
     <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Dočasný cieľ musí začať do %1$d hodín odteraz.</string>
     <string name="profile_switch_select_insulin_hint">Zatiaľ sa nepoužíva žiadny inzulín. Vyberte inzulín, ktorý používate, aby ho prepnutie profilu mohlo zaznamenať.</string>
-    <string name="insulin_activation_failed">Inzulín nebol prepnutý. Váš predchádzajúci inzulín sa stále používá.</string>
+    <string name="insulin_activation_failed">Inzulín nebol prepnutý. Váš predchádzajúci inzulín sa stále používa.</string>
     <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Inzulín nebol prepnutý: %1$s. Váš predchádzajúci inzulín sa stále používa.</string>
     <string name="insulin_activation_unconfirmed">Prepnutie inzulínu nemohlo byť potvrdené. Skontrolujte, ktorý inzulín je aktívny vo vašom profile pred dávkovaním.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Inzulín nebol zmenený. Váš predchádzajúci inzulín sa stále používa.\n\n%1$s</string>
@@ -220,7 +220,7 @@
     <string name="a11y_low">nízka</string>
     <string name="remove_label">Odstrániť</string>
     <string name="activate_profile">Aktivovať profil</string>
-    <string name="activate_insulin">Aktivuj inzulín</string>
+    <string name="activate_insulin">Aktivovať inzulín</string>
     <string name="pump_wizard_profile_gate_title">Vyžaduje sa profil</string>
     <string name="pump_wizard_profile_gate_pick">Vyberte profil, ktorý sa použije pri aktivácii.</string>
     <string name="pump_wizard_profile_gate_no_store">Nie je zadefinovaný žiaden profil. Otvorte Správu profilov a vytvorte profil. Potom znova spustite aktiváciu.</string>
@@ -232,7 +232,7 @@
     <string name="confirm_remove_multiple_items">Naozaj chcete odstrániť %1$d položiek</string>
     <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Hlavné zariadenie nemá %1$d z týchto záznamov. Tieto záznamy nebudú odstránené.</string>
     <string name="overview_treatment_label">Ošetrenie</string>
-    <string name="copytolocalprofile">Vytvoriť z tohoto profilu nový profil?</string>
+    <string name="copytolocalprofile">Vytvoriť z tohto profilu nový profil?</string>
     <string name="wear_wizard_settings">Nastavenie sprievodcu na hodinkách</string>
     <string name="bolus_iob_label">Bolusový IOB</string>
     <string name="treatments_wizard_basaliob_label">Bazálny IOB</string>
@@ -245,23 +245,23 @@
     <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Plnenie</string>
     <string name="site_rotation">Striedanie miest</string>
     <string name="edit_site">Upraviť</string>
-    <string name="select_arrow">Zvoľ šípku</string>
-    <string name="site_filter_info">Zvoľ typ udalosti ošetrenia, ktorú chceš vidieť: Výmena setu a/alebo Výmena senzora</string>
-    <string name="selected_location">Vybrané %1$s</string>
+    <string name="select_arrow">Zvoliť šípku</string>
+    <string name="site_filter_info">Zvoľte typ udalosti ošetrenia, ktorý chcete vidieť: Výmena setu a/alebo Výmena senzora</string>
+    <string name="selected_location">Vybrané: %1$s</string>
     <string name="last_site_location">Posledné miesto aplikácie: %1$s</string>
     <string name="pick_site">Vybrať miesto</string>
-    <string name="select_site_location">Zvoľ miesto aplikácie</string>
+    <string name="select_site_location">Zvoliť miesto aplikácie</string>
     <string name="site_location">Miesto aplikácie</string>
     <string name="overview_insulin_label">Inzulín</string>
     <string name="stoptemptarget">Koniec dočasného cieľa</string>
     <string name="closedloop">Uzavretý okruh</string>
     <string name="openloop">Otvorený okruh</string>
-    <string name="lowglucosesuspend">Pozastavenie pri nízkej glykémii (LGS)</string>
+    <string name="lowglucosesuspend">Ochrana pred nízkou glykémiou</string>
     <string name="pump_suspended">Pumpa pozastavená</string>
     <string name="pump_suspend">Pozastaviť pumpu</string>
     <string name="pump_resume">Obnoviť pumpu</string>
-    <string name="mode_reverted">Režim bol obnovený</string>
-    <string name="select_insulin">Zvoľ inzulín</string>
+    <string name="mode_reverted">Režim bol vrátený</string>
+    <string name="select_insulin">Zvoliť inzulín</string>
     <string name="dia">DIA</string>
     <string name="ic_short">I:C</string>
     <string name="isf_short">ISF</string>
@@ -286,7 +286,7 @@
     <string name="engineering_mode_enabled">Vývojársky mód povolený</string>
     <string name="back">Späť</string>
     <string name="next">Ďalej</string>
-    <string name="pref_syncs_with_main_phone">Synchronizácia sa s hlavným telefónom</string>
+    <string name="pref_syncs_with_main_phone">Synchronizuje sa s hlavným telefónom</string>
     <string name="show_hide_records">Skryť záznamy uzavretého okruhu</string>
     <!--    Protection-->
     <string name="wrongpassword">Nesprávne heslo</string>
@@ -304,15 +304,15 @@
     <string name="reason">Zdôvodnenie</string>
     <string name="nochangerequested">Nepožadovaná žiadna zmena</string>
     <!--    Insulin / Concentration-->
-    <string name="ins_concentration_confirmed">Koncentrácia inzulínu %1$s potvrdená</string>
+    <string name="ins_concentration_confirmed">Inzulín %1$s potvrdený</string>
     <string name="current_insulin">Práve aktívny</string>
     <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Bude aktivovaný</string>
-    <string name="change_insulin">Vymeň inzulín</string>
-    <string name="select_insulin_description">Zvoľ inzulín, ktorým plníš pumpu. Po aktivácii/plnení bude vykonané prepnutie profilu.</string>
+    <string name="change_insulin">Zmeniť</string>
+    <string name="select_insulin_description">Zvoľte inzulín, ktorým plníte pumpu. Po aktivácii/plnení bude vykonané prepnutie profilu.</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Zvolený inzulín: %1$s</string>
-    <string name="record_insulin_hint">Ak zadávaš inzulín aplikovaný perom, zvoľ nižšie ten správny typ inzulínu.</string>
+    <string name="record_insulin_hint">Ak zadávate inzulín podaný perom, nižšie zvoľte správny typ inzulínu. Dávka je vždy v medzinárodných jednotkách.</string>
     <!--       Stats -->
     <string name="average">Priemer</string>
     <string name="tir">Čas v rozsahu</string>
@@ -367,9 +367,9 @@
     <string name="pump_battery_change">Výmena batérie v pumpe</string>
     <string name="temporary_target">Dočasný cieľ</string>
     <string name="temporary_targets">Dočasné ciele</string>
-    <string name="running_mode">Režim spustenia</string>
+    <string name="running_mode">Režim prevádzky</string>
     <string name="running_mode_desc">Uzavrite alebo otvorte slučku, pozastavte ju alebo odpojte pumpu</string>
-    <string name="running_mode_change_not_allowed">Zmena bežiaceho módu nie je k dispozícii</string>
+    <string name="running_mode_change_not_allowed">Zmena režimu prevádzky nie je k dispozícii</string>
     <string name="pump_reconnect">Znovu pripojiť pumpu</string>
     <string name="scene">Scéna</string>
     <string name="scenes">Scény</string>
@@ -378,32 +378,32 @@
     <string name="scene_deactivate">Ukončiť scénu</string>
     <string name="scene_active">Aktívna</string>
     <string name="scene_ended">Scéna ukončená</string>
-    <string name="scene_end_active">Aktívna scéna ukončená</string>
+    <string name="scene_end_active">Ukončiť aktívnu scénu</string>
     <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Prejsť na</string>
     <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Nadväzujúci scenár %1$s sa nespustí</string>
     <string name="scene_confirm_activate">Aktivovať scénu \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">Ukončiť scénu \"%1$s\" a vrátiť zmeny?</string>
     <string name="scene_conflict_active_tt">Aktívny dočasný cieľ bude nahradený</string>
     <string name="scene_conflict_active_profile">Aktívne prepnutie profilu bude nahradené</string>
-    <string name="scene_conflict_active_running_mode">Aktívny režim uzavretého okruhu bude nahradený</string>
-    <string name="scene_conflict_active_scene">Aktivna scéna \"%1$s\" bude najskôr ukončená</string>
+    <string name="scene_conflict_active_running_mode">Aktívny režim prevádzky bude nahradený</string>
+    <string name="scene_conflict_active_scene">Aktívna scéna \"%1$s\" bude najskôr ukončená</string>
     <string name="scene_action_tt">Dočasný cieľ: %1$s</string>
     <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profil: %1$d%%</string>
     <string name="scene_action_smb_on">Povoliť SMB</string>
     <string name="scene_action_smb_off">Zakázať SMB</string>
-    <string name="scene_action_running_mode">Režim uzavretého okruhu: %1$s</string>
+    <string name="scene_action_running_mode">Režim prevádzky: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
     <string name="scene_management">Scény</string>
     <string name="scene_management_desc">Vytvorenie, úprava a správa scén</string>
     <string name="scene_start_from_template">Začnite od šablóny</string>
     <string name="scene_editor_target">Cieľ</string>
     <string name="scene_editor_tt_preset">Predvoľba DC</string>
-    <string name="scene_editor_no_tt_presets">Žiadné predvoľby DC nie sú nastavené</string>
+    <string name="scene_editor_no_tt_presets">Žiadne predvoľby DC nie sú nastavené</string>
     <string name="scene_editor_select_tt_preset">Vyberte predvoľbu</string>
     <string name="scene_editor_percentage">Percento</string>
     <string name="scene_editor_profile">Profil</string>
-    <string name="scene_editor_keep_current_profile">-- Zachovať súčasnú --</string>
+    <string name="scene_editor_keep_current_profile">-- Zachovať súčasný --</string>
     <string name="scene_editor_mode">Režim</string>
     <string name="scene_editor_event_type">Typ udalosti</string>
     <string name="scene_editor_note">Poznámka</string>
@@ -443,7 +443,7 @@
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <string name="clientcontrol_action_set_temp_target">Nastaviť dočasný cieľ</string>
     <string name="clientcontrol_action_cancel_temp_target">Zrušiť dočasný cieľ</string>
-    <string name="clientcontrol_action_activate_scene">Aktivovať scénu \"%1$s</string>
+    <string name="clientcontrol_action_activate_scene">Aktivovať scénu %1$s</string>
     <string name="clientcontrol_action_deactivate_scene">Ukončiť scénu</string>
     <string name="clientcontrol_action_update_settings">Aktualizovať nastavenia</string>
     <string name="clientcontrol_action_deliver_bolus">Podať bolus</string>
@@ -470,19 +470,19 @@
     <string name="clientcontrol_fail_control_disabled">Diaľkové ovládanie je vypnuté na hlavnom zariadení.</string>
     <string name="clientcontrol_fail_not_allowed_for_role">Rola priradená tomuto telefónu na hlavnom zariadení to neumožňuje.</string>
     <string name="clientcontrol_fail_other_token">Hlavné zariadenie požiadavku odmietlo: tento telefón zapisuje do Nightscoutu pomocou iného tokenu, než vlastného. Na hlavnom zariadení odstráňte tento telefón a znova ho pridajte.</string>
-    <string name="clientcontrol_fail_no_pending_bolus">Pripravený bolus exspiroval alebo bol nahradený. ​​Znova kliknite na tlačidlo.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">Pripravený bolus vypršal alebo bol nahradený. Znova kliknite na tlačidlo.</string>
     <string name="clientcontrol_fail_bolus_compute">Hlavné zariadenie nedokázalo vypočítať bolus (chýba glukóza/profil alebo pumpa nie je pripravená).</string>
     <string name="clientcontrol_fail_internal">Niečo sa pokazilo.</string>
     <string name="clientcontrol_fail_unknown">Príkaz zlyhal.</string>
     <string name="clientcontrol_unconfirmed_wear">Stav neznámy – pred opätovným podaním bolusu skontrolujte telefón/Nightscout.</string>
     <string name="clientcontrol_bolus_progress_stalled_title">Spojenie prerušené – stav doručenia je neznámy</string>
-    <string name="clientcontrol_bolus_progress_stalled_body">Tento telefón prestal prijímať aktualizácie z hlavného zariadenia. Bolus sa možno stále podáva alebo sa už dokončil. Zatvorením tohto spojenia ho tu iba skryjete – pumpa sa tým nezastaví. Skontrolujte hlavné zariadenie /telefón, aké množstvo bolusu sa skutočne podáva.</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Tento telefón prestal prijímať aktualizácie z hlavného zariadenia. Bolus sa možno stále podáva alebo sa už dokončil. Zatvorením tohto okna ho tu iba skryjete – pumpa sa tým nezastaví. Na hlavnom telefóne skontrolujte skutočne podané množstvo.</string>
     <string name="scene_revert_tt">Zrušiť dočasný cieľ</string>
     <string name="scene_revert_profile">Vrátiť zmenu profilu</string>
     <string name="scene_revert_smb_on">Znovu povoliť SMB</string>
     <string name="scene_revert_smb_off">Zakázať SMB</string>
-    <string name="scene_revert_loop_mode">Zrušiť prepísanie režimu uzavretého okruhu</string>
-    <string name="scene_careportal_no_revert">Záznamy portálu starostlivosti se nevrátia</string>
+    <string name="scene_revert_loop_mode">Zrušiť prepísanie režimu prevádzky</string>
+    <string name="scene_careportal_no_revert">Záznamy portálu starostlivosti sa nevrátia</string>
     <string name="careportal_sickness">Choroba</string>
     <string name="careportal_stress">Stres</string>
     <string name="careportal_pre_period">Pred menštruáciou</string>
@@ -495,28 +495,28 @@
     <string name="careportal_temporarytargetvalue">Hodnota dočasného cieľa</string>
     <string name="careportal_temporarytargetcancel">Zrušiť dočasný cieľ</string>
     <string name="boluswizard">Bolusová kalkulačka</string>
-    <string name="treatment_desc">Zaznamenaj inzulín a sacharidy spolu</string>
-    <string name="treatment_insulin_desc">Podaj bolus ručne</string>
-    <string name="treatment_carbs_desc">Zaznamenaj sacharidy bez inzulínu</string>
-    <string name="treatment_calculator_desc">Spočítaj bolus</string>
+    <string name="treatment_desc">Zaznamenať inzulín a sacharidy spolu</string>
+    <string name="treatment_insulin_desc">Podať bolus ručne</string>
+    <string name="treatment_carbs_desc">Zaznamenať sacharidy bez inzulínu</string>
+    <string name="treatment_calculator_desc">Vypočítať bolus</string>
     <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Nastavenia inzulínu</string>
     <string name="manage_insulin_desc">Správa a aktivácia konfigurácie inzulínu</string>
-    <string name="concentration_disable_blocked">Nemôžem vypnúť podporu koncentrácie, pretože existuje i iný inzulín ako U100. Odstráň všetky inzulíny iné ako U100 a prepni najskôr na U100.</string>
-    <string name="simple_mode_blocked_by_concentration">Nemôžem zapnúť jednoduchý mód, pretože je použitý iný inzulín ako U100. Prepni najskôr na U100.</string>
-    <string name="manage_profile_desc">Spravuj a aktivuj profily</string>
-    <string name="manage_temp_target_desc">Spravuj a zadávaj dočasné ciele</string>
-    <string name="manage_temp_basal_desc">Spusti dočasný cieľ</string>
-    <string name="manage_extended_bolus_desc">Spusti kombinovaný bolus</string>
-    <string name="manage_site_rotation_desc">Sleduj a otáčaj infúzne sety</string>
-    <string name="manage_quickwizard_desc">Spravuj nastavenia rýchleho sprievodcu</string>
-    <string name="treatment_note_desc">Pridaj poznámku k Tvojim záznamom</string>
-    <string name="treatment_question_desc">Zaznamenaj otázku pre svoj ošetrovací tím</string>
-    <string name="treatment_cgm_desc">Otvor CGM aplikáciu</string>
-    <string name="treatment_calibration_desc">Skalibruj CGM senzor</string>
-    <string name="treatment_bg_check_desc">Zaznamenaj kontrolu glykémie</string>
-    <string name="treatment_exercise_desc">Zaznamenaj tréningovú aktivitu</string>
-    <string name="treatment_announcement_desc">Oznámenie o príspevku</string>
-    <string name="treatment_sensor_insert_desc">Zaznamenaj aplikovanie CGM senzora</string>
+    <string name="concentration_disable_blocked">Podporu koncentrácie nie je možné vypnúť, kým existujú inzulíny iné ako U100. Najskôr odstráňte všetky konfigurácie inzulínu iné ako U100 a prepnite na profil U100.</string>
+    <string name="simple_mode_blocked_by_concentration">Jednoduchý mód nie je možné zapnúť, kým sa používa inzulín iný ako U100. Najskôr prepnite na inzulín U100.</string>
+    <string name="manage_profile_desc">Spravovať a aktivovať profily</string>
+    <string name="manage_temp_target_desc">Spravovať a nastavovať dočasné ciele</string>
+    <string name="manage_temp_basal_desc">Spustiť dočasný bazál</string>
+    <string name="manage_extended_bolus_desc">Spustiť predĺžený bolus</string>
+    <string name="manage_site_rotation_desc">Sledovať a striedať miesta aplikácie</string>
+    <string name="manage_quickwizard_desc">Spravovať predvoľby rýchleho sprievodcu</string>
+    <string name="treatment_note_desc">Pridať poznámku k vašim záznamom</string>
+    <string name="treatment_question_desc">Zaznamenať otázku pre váš lekársky tím</string>
+    <string name="treatment_cgm_desc">Otvoriť aplikáciu CGM</string>
+    <string name="treatment_calibration_desc">Kalibrovať senzor CGM</string>
+    <string name="treatment_bg_check_desc">Zaznamenať kontrolu glykémie</string>
+    <string name="treatment_exercise_desc">Zaznamenať cvičenie</string>
+    <string name="treatment_announcement_desc">Zverejniť oznámenie</string>
+    <string name="treatment_sensor_insert_desc">Zaznamenať zavedenie senzora CGM</string>
     <string name="treatment_battery_change_desc">Zaznamenaj výmenu batérie v pumpe</string>
     <string name="treatment_cannula_change_desc">Zaznamenaj výmenu setu</string>
     <string name="treatment_fill_desc">Doplniť inzulín a naplniť kanylu</string>
