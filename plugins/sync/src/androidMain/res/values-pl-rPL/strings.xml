@@ -72,7 +72,6 @@
     <string name="pair_with_master_fetching">Sprawdzanie zaproszeń parowania…</string>
     <string name="pair_with_master_confirm_title">Sparować z tym urządzeniem pacjenta?</string>
     <string name="pair_with_master_confirm_master">Urządzenie pacjenta: %1$s</string>
-    <string name="pair_with_master_confirm_warning">Po sparowaniu to urządzenie pacjenta będzie mogło wysyłać do tego urządzenia podpisane polecenia.</string>
     <string name="pair_with_master_confirm_pair">Sparuj</string>
     <string name="pair_with_master_error_title">Nie można sparować</string>
     <string name="pair_with_master_error_wrong_pin">Nie znaleziono zaproszenia dla tego PIN-u. Sprawdź PIN na urządzeniu pacjenta i spróbuj ponownie.</string>
