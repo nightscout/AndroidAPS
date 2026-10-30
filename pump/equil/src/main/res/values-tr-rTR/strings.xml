@@ -44,12 +44,16 @@
     <string name="equil_new_infusion_set_no">Hayır, yalnızca rezervuar veya pil</string>
     <string name="equil_same_infusion_set_hint">Kanül hazırlanmayacak ve kanül değişikliği kaydedilmeyecektir.</string>
     <string name="equil_unpair_alert">%1$s üzerindeki kontrolü bırakmak istediğinizden emin misiniz?</string>
+    <string name="equil_record_basal">Bazal oranı %1$s Ü/s</string>
+    <string name="equil_record_basal_temp">Geçici bazal oranı %1$s Ü/s</string>
     <string name="equil_record_bolus">Bolus %1$s Ü</string>
     <string name="equil_error_set_temp_basal_failed_validation">GBO süresi sıfırdan büyük ve %1$s dakikanın katı olmalıdır.</string>
     <string name="equil_basal_exceeds_max">%1$s Ü/sa değerindeki profil bazal oranı, pompanın %2$s Ü/sa olan maksimum bazal sınırını aşıyor. Maksimum bazal ayarını artırın ve pompayı yeniden bağlayın.</string>
     <string name="equil_not_enough_insulin">Rezervuarda yeterli insülin kalmadı</string>
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Düşük pil: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Rezervuarda yeterli insülin kalmadı: %1$s</string>
+    <string name="equil_reservoir_empty">Rezervuar boş. Pompa artık insülin iletmiyor.</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Bolus sırasında pompa durdu. Verilen: %2$s nin %1$s\'i</string>
     <string name="equil_pump_not_run">Pompa çalışmıyor</string>
     <string name="equil_pair">Eşleştir</string>
     <string name="equil_pair_error">Eşleşme hatası</string>
@@ -60,6 +64,7 @@
     <string name="equil_firmware_version">Cihaz Yazılımı Sürümü</string>
     <string name="equil_shutdown_be">Equil otomatik olarak kapanacak</string>
     <string name="equil_shutdown">Equil otomatik kapanma</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Oran: %1$.2f Ü/s, süre: %2$d dakika</string>
     <string name="equil_common_history_bolus_value">%1$.2f Ü</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Bolusu ayarla</string>
@@ -88,6 +93,7 @@
     <string name="equil_command_connect_error">Pompa bağlantı hatası</string>
     <string name="equil_command_connect_no_response">Pompa Yanıt vermiyor</string>
     <string name="equil_command__unknown">Bilinmeyen komut durumu</string>
+    <string name="equil_install">Pompayı vücuda yerleştirin</string>
     <string name="equil_settings_alarm_battery">Düşük pil uyarısı</string>
     <string name="equil_settings_alarm_insulin">Düşük rezervuar uyarısı</string>
     <string name="equil_init_insulin_error">Rezervuarın başlatılması tamamlanmadı</string>
@@ -123,14 +129,18 @@
     <string name="equil_common_wizard_exit_confirmation_text">Henüz tüm adımları tamamlamadınız. Çıkmak istediğinize emin misin?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Çıkış</string>
     <string name="equil_support_error">Cihaz yazılımı sürümü çok düşük. Desteklenmiyor</string>
+    <string name="equil_password_tips">Equil v5.3 pompasıyla eşleştirme yapmak için isteğe bağlı olarak bir parola belirleyebilirsiniz. Bu parola, ileride eşleştirmeyi kaldırmak için de kullanılacaktır. Bu nedenle lütfen parolayı unutmayın. Parola kuralı: 4 karakter uzunluğunda olmalı ve ABCDEF0123456789 karakterlerinden seçilmelidir.</string>
     <string name="equil_set_pair_password">Paylaşım şifresini belirleyin</string>
     <string name="equil_hint1">Pompayı tabana yerleştirdikten sonra, havanın kalıcı iğneden boşaltılıp boşaltılmayacağını seçin.</string>
     <string name="equil_unbind">Eşleştirmeyi sonlandır</string>
+    <string name="equil_device_unpaired">Cihaz eşleşmesi kaldırıldı</string>
     <string name="equil_assemble">Lütfen pompayı, dolu rezervuarı ve şarj edilmiş pili birleştirin</string>
+    <string name="equil_pair_password_title">%1$s için parola girin</string>
     <string name="equil_insert">Lütfen iğne ucunda bir damla insülin kalana kadar rezervuarı doldurun</string>
     <string name="equil_insert2">Pompa, pompa tabanı üzerinde olmamalıdır.</string>
     <string name="equil_attach">Lütfen pompayı tabana takın</string>
     <string name="equil_hint2">Kanul dolumu</string>
     <string name="equil_pump_updated">Pompa güncellendi</string>
     <string name="equil_replace_reservoir">Rezervuar boş. Lütfen rezervuarı değiştirin</string>
+    <string name="equil_removed_anyway">Eşleşmeyi kaldırma başarısız oldu. Pompa yine de kaldırılacak. Eşleştirme sırasında belirlenen parola, pompadan silinmeyecektir.</string>
 </resources>
