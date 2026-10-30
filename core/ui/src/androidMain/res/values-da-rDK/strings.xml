@@ -68,7 +68,6 @@
     <string name="no_profile_set">INGEN PROFIL SAT</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Dato</string>
-    <string name="units_label">Enheder</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
@@ -458,7 +457,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pumpe parret</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy understøttes ikke.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy understøttes ikke eller enheden er ikke parret.</string>
     <string name="ble_not_enabled">Bluetooth er deaktiveret.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin indstillinger</string>
@@ -539,5 +537,6 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="prefs_range_title">Område for Visualisering</string>
 </resources>

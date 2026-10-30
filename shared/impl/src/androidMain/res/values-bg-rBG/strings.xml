@@ -3,6 +3,7 @@
     <string name="cwf_comment_background">Фоново изображение</string>
     <string name="cwf_comment_chart">Графики (КЗ, базал, прогнозни криви...)</string>
     <string name="cwf_comment_cover_chart">Изображение над графика и под текстови полета</string>
+    <string name="cwf_comment_complication">Място за проблеми</string>
     <string name="cwf_comment_freetext1">Свободен текст 1</string>
     <string name="cwf_comment_freetext2">Свободен текст 2</string>
     <string name="cwf_comment_freetext3">Свободен текст 3</string>

@@ -572,7 +572,9 @@ class CommandQueueImplementation(
     // failure (success = false) so a waiting bolus caller is not told a dose was delivered, and
     // cancelled = false because this IS a delivery failure and must still raise its alarm.
     // (Supersession via removeAll keeps the default success = true, except for a bolus.)
-    override fun clear() = drain(CoreUiStrings.connectiontimedout, success = false, cancelled = false)
+    override fun clear() = clear(CoreUiStrings.connectiontimedout)
+
+    override fun clear(comment: TextRef) = drain(comment, success = false, cancelled = false)
 
     // Dropped on purpose, so cancelled = true: the caller is told it did not happen, and nothing
     // alarms about it.

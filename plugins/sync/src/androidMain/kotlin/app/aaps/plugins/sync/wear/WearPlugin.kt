@@ -31,6 +31,7 @@ import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
@@ -89,6 +90,7 @@ class WearPlugin(
     private val bolusProgressData: BolusProgressData,
     private val persistenceLayer: PersistenceLayer,
     private val scenes: SceneAutomationApi,
+    private val eatReminder: EatReminder,
     notificationManager: NotificationManager,
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
@@ -240,6 +242,8 @@ class WearPlugin(
         forward(rxBus.toFlow(EventNsClientStatusUpdated::class), "EventNsClientStatusUpdated")
         // Push status to watch quickly when a TT changes, without waiting for the loop's 10s debounce
         forward(persistenceLayer.observeChanges<TT>().drop(1), "TempTargetChange") // drop: the initial emission on collection start
+        // The "time to eat" timer: the watch draws its end and rings at it, so a start, stop or +5 min goes out at once
+        forward(eatReminder.state.drop(1), "EatReminderChange") // drop: the current state on collection start
         // Push status to watch quickly when the running mode changes on the phone, so the
         // running-mode complication and tile do not wait for the next loop run. A wear-side
         // change already refreshes through handleRunningModeConfirmed.

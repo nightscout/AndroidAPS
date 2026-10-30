@@ -902,6 +902,8 @@ class MainViewModel(
     fun extendEatReminder() = controlEatReminder(EatReminderAction.EXTEND) { eatReminder.extend() }
 
     // On the master the timer changes here; a client asks the master, and its bar follows with the next sync.
+    // A +5 min whose alarm cannot be set is told once, by the alarm code (a snackbar), so the master does not
+    // report it a second time here. A client gets it from the master's answer.
     private fun controlEatReminder(action: EatReminderAction, onMaster: () -> Unit) {
         viewModelScope.launch {
             clientControlDispatcher.execute(
@@ -914,12 +916,25 @@ class MainViewModel(
         }
     }
 
-    /** QuickLaunch scene → ask the MASTER to PREPARE it, render the master's authored confirmation lines, commit on OK (role-transparent). */
     /** The icon the user picked for the scene, or the generic scene icon when the scene is not known. */
     private fun sceneIcon(iconKey: String?): ImageVector =
         iconKey?.let { SceneIcons.fromKey(it).icon } ?: ElementType.SCENE.icon()
 
+    /**
+     * Starts a scene from the overview (QuickLaunch tile or the scenes sheet).
+     *
+     * A scene changes the profile, the temp target, the loop mode and SMB, so it asks for the same bolus
+     * protection as doing those things by hand (#5429). The check is here and not at the callers, so every
+     * way to start a scene gets it.
+     */
     fun requestSceneConfirmation(sceneId: String) {
+        protectionCheck.requestProtection(ElementType.SCENE.protection) { result ->
+            if (result == ProtectionResult.GRANTED) prepareSceneStart(sceneId)
+        }
+    }
+
+    /** Asks the MASTER to PREPARE the scene, renders the master's authored confirmation lines, commits on OK (role-transparent). */
+    private fun prepareSceneStart(sceneId: String) {
         val title = rh.gs(CoreUiStrings.scene)
         viewModelScope.launch {
             when (val prepared = sceneActions.prepareStart(sceneId)) {
@@ -942,7 +957,17 @@ class MainViewModel(
         }
     }
 
-    fun requestSceneDeactivation() = viewModelScope.launch {
+    /**
+     * Ends the active scene from the overview banner. Ending reverts what the scene changed, and "Skip to"
+     * starts the next scene, so it asks for bolus protection like starting one does.
+     */
+    fun requestSceneDeactivation() {
+        protectionCheck.requestProtection(ElementType.SCENE.protection) { result ->
+            if (result == ProtectionResult.GRANTED) showSceneDeactivationConfirmation()
+        }
+    }
+
+    private fun showSceneDeactivationConfirmation() = viewModelScope.launch {
         val activeState = activeSceneManager.getActiveState() ?: return@launch
         val message = rh.gs(CoreUiStrings.scene_confirm_deactivate, activeState.scene.name)
         // When the scene chains to a runnable follow-up, "Skip to <Next>" becomes the primary

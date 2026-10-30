@@ -97,6 +97,8 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Muto per 5 minuti</string>
     <string name="mute">Muto</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Silenzia avvisi</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Silenzia e chiudi</string>
     <string name="success">OK</string>
     <string name="advanced_settings_title">Impostazioni avanzate</string>
     <string name="extended_bolus">Bolo esteso</string>
@@ -116,6 +118,7 @@
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Obiettivi</string>
     <string name="please_wait">Attendi…</string>
     <string name="stop">Stop</string>
@@ -136,7 +139,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nAnche l\'insulina non è stata cambiata.</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
-    <string name="units_label">Unità</string>
     <string name="insulin_nickname_label">Soprannome dell\'insulina</string>
     <string name="concentration_label">Concentrazione</string>
     <string name="peak_label">Picco</string>
@@ -446,6 +448,7 @@
     <string name="clientcontrol_action_deactivate_scene">Fine Scena</string>
     <string name="clientcontrol_action_update_settings">Aggiorna le impostazioni</string>
     <string name="clientcontrol_action_deliver_bolus">Eroga bolo</string>
+    <string name="clientcontrol_action_eat_reminder">Cambia promemoria del pasto</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Questo dispositivo non è abbinato a un master.</string>
     <string name="clientcontrol_fail_not_reachable">Il master è offline.</string>
@@ -783,6 +786,12 @@
     <string name="grant">Concedi</string>
     <string name="set">Imposta</string>
     <string name="wizard_set_alarm">Imposta allarme</string>
+    <string name="eat_reminder_title">Tempo per mangiare</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Attesa totale: %1$s</string>
+    <string name="eat_reminder_rung">Il tempo è scaduto</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="eat_reminder_not_set">Non è stato possibile impostare il promemoria del pasto. Consenti ad AAPS di impostare avvisi e promemoria nelle impostazioni di Android.</string>
     <string name="wizard_use_percentage">Uso percentuale</string>
     <string name="wizard_include_bg">Includi Glicemia</string>
     <string name="wizard_include_tt">Includi TempTarget</string>
@@ -939,7 +948,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Micro associato</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy non supportato.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy non supportato o dispositivo non associato.</string>
     <string name="ble_not_enabled">Bluetooth non abilitato.</string>
     <string name="ble_permissions_missing">Le autorizzazioni Bluetooth non sono concesse. Si prega di concederle nelle impostazioni dell\'app.</string>
     <!--    Preferences -->
@@ -1142,6 +1150,19 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Insulina attiva</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Insulina assoluta</string>
+    <string name="graph_series_cob">CHO attivi</string>
+    <string name="graph_series_bgi">Impatto sulla glicemia</string>
+    <string name="graph_series_deviations">Deviazioni</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Variazione di sensibilità</string>
+    <string name="graph_series_variable_sens">Sensibilità variabile</string>
+    <string name="graph_series_deviation_slope">Pendenza deviazione</string>
+    <string name="graph_series_heart_rate">Frequenza cardiaca</string>
+    <string name="graph_series_steps">Passi</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Attività fisica</string>
+    <string name="graph_series_predictions">Previsioni</string>
     <string name="units_days">giorni</string>
     <string name="units_format_days">%1$d giorni</string>
     <string name="units_format_days_range">%1$d giorni (%2$d - %3$d)</string>
@@ -1184,4 +1205,5 @@
     <string name="units_sec">sec</string>
     <string name="units_years">y</string>
     <string name="prefs_range_title">Intervallo di visualizzazione</string>
+    <string name="secrets_not_protected">Nessun archivio di chiavi di sistema è stato trovato su questo computer. Le chiavi che proteggono le impostazioni e l\'accoppiamento con il master sono conservate nei file accanto ai dati, così chiunque ottiene una copia dei tuoi file li ottiene troppo. Su Linux, installa e avvia un portachiavi (ad esempio GNOME Keyring o KWallet), quindi riavvia AAPS.</string>
 </resources>

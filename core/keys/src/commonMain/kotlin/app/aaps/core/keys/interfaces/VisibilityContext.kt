@@ -93,6 +93,13 @@ interface VisibilityContext {
      */
     val apsOffersDynamicSensitivity: Boolean
         get() = false
+
+    /**
+     * Whether AAPS can be shown in a language of its own. False on Android 12, which has no app languages:
+     * AAPS follows the phone there, so its language setting is hidden.
+     */
+    val supportsAppLanguage: Boolean
+        get() = true
 }
 
 /**

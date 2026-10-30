@@ -210,7 +210,7 @@ class AuthorizedClientsViewModel(
             val subject = when (val result = clientTokens.tokenFor(clientName)) {
                 is ClientTokens.Result.Ok -> result.value
                 else                      -> {
-                    _qrDialog.value = QrDialog.Problem(result.problem())
+                    _qrDialog.value = QrDialog.Problem(result.problem(), result.leftOverName())
                     return@launch
                 }
             }
@@ -486,9 +486,13 @@ class AuthorizedClientsViewModel(
         ClientTokens.Result.NotConnected -> TokenProblem.NotConnected
         ClientTokens.Result.NotAllowed   -> TokenProblem.NotAllowed
         ClientTokens.Result.NameTaken    -> TokenProblem.NameTaken
+        is ClientTokens.Result.LeftOver  -> TokenProblem.LeftOver
         is ClientTokens.Result.Failed,
         is ClientTokens.Result.Ok        -> TokenProblem.Failed
     }
+
+    /** The name the user has to clear in Nightscout themselves, for [TokenProblem.LeftOver]. Null for anything else. */
+    private fun ClientTokens.Result<*>.leftOverName(): String? = (this as? ClientTokens.Result.LeftOver)?.subjectName
 
     sealed class DialogState {
         data object EnterName : DialogState()
@@ -526,6 +530,12 @@ class AuthorizedClientsViewModel(
         /** A Nightscout token with this name has other roles, so it is not used for a client. */
         NameTaken,
 
+        /**
+         * The token was made but Nightscout did not list it, and it could not be taken back again, so it is still in
+         * Nightscout. Only the user can clear it, and the dialog names it.
+         */
+        LeftOver,
+
         /** A client with this name is in the list already. */
         NameInUse,
         Failed
@@ -551,7 +561,8 @@ class AuthorizedClientsViewModel(
         /** Making the token in Nightscout. */
         data object Working : QrDialog
 
-        data class Problem(val problem: TokenProblem) : QrDialog
+        /** [leftOverName] is set only for [TokenProblem.LeftOver]: the token the user has to clear in Nightscout. */
+        data class Problem(val problem: TokenProblem, val leftOverName: String? = null) : QrDialog
 
         /**
          * [text] is SENSITIVE: the Nightscout token, and when [pairs], the pairing secret. [expiresAt] and [clientId] are

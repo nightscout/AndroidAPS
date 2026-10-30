@@ -5,13 +5,7 @@ plugins {
 }
 
 kotlin {
-    jvm {
-        // Every consumer of :core:nssdk is still an Android module, and they resolve this variant.
-        // Nothing about them changes.
-        compilerOptions {
-            jvmTarget.set(Versions.jvmTarget)
-        }
-    }
+    jvm()
 
     // Real Apple targets, same as :core:data. They cross compile on Windows; only linking, cinterop
     // and running their tests need a Mac.

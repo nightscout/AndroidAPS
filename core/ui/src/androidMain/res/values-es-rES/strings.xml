@@ -97,6 +97,8 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Silenciar por 5 minutos</string>
     <string name="mute">Silenciar</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Silenciar alarma</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Silenciar y cerrar</string>
     <string name="success">Exito</string>
     <string name="advanced_settings_title">Ajustes avanzados</string>
     <string name="extended_bolus">Bolo extendido</string>
@@ -116,6 +118,7 @@
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Objetivos</string>
     <string name="please_wait">Por favor, espere…</string>
     <string name="stop">Detener</string>
@@ -136,7 +139,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nTampoco se ha cambiado la insulina</string>
     <string name="active"><![CDATA[<Activo>]]></string>
     <string name="date">Fecha</string>
-    <string name="units_label">Unidades</string>
     <string name="insulin_nickname_label">Apodo de la insulina</string>
     <string name="concentration_label">Concentración</string>
     <string name="peak_label">Pico de acción</string>
@@ -446,6 +448,7 @@
     <string name="clientcontrol_action_deactivate_scene">Finalizar escena</string>
     <string name="clientcontrol_action_update_settings">Actualizar ajustes</string>
     <string name="clientcontrol_action_deliver_bolus">Administrar bolo</string>
+    <string name="clientcontrol_action_eat_reminder">Cambiar recordatorio de comida</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Este dispositivo no está emparejado con un máster</string>
     <string name="clientcontrol_fail_not_reachable">El máster está fuera de línea</string>
@@ -783,6 +786,12 @@
     <string name="grant">Conceder</string>
     <string name="set">Establecer</string>
     <string name="wizard_set_alarm">Establecer alarma</string>
+    <string name="eat_reminder_title">Hora de comer</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Espera total: %1$s</string>
+    <string name="eat_reminder_rung">Se acabó el tiempo</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="eat_reminder_not_set">No se pudo establecer el recordatorio de comida. Permita que AAPS establezca alarmas y recordatorios en los ajustes de Android</string>
     <string name="wizard_use_percentage">Porcentaje de uso</string>
     <string name="wizard_include_bg">Incluir glucosa</string>
     <string name="wizard_include_tt">Incluir objetivo temporal</string>
@@ -939,7 +948,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Bomba emparejada</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth de baja energía no soportado.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy no compatible o dispositivo no emparejado.</string>
     <string name="ble_not_enabled">Bluetooth no activado</string>
     <string name="ble_permissions_missing">No se han concedido los permisos de Bluetooth. Por favor, concédalos en los ajustes de la aplicación.</string>
     <!--    Preferences -->
@@ -1142,6 +1150,19 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">PASOS</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Insulina en cuerpo (IOB)</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Insulina absoluta</string>
+    <string name="graph_series_cob">Hidratos de carbono en cuerpo (COB)</string>
+    <string name="graph_series_bgi">Impacto de la glucosa en sangre</string>
+    <string name="graph_series_deviations">Desviaciones</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Cambio de sensibilidad</string>
+    <string name="graph_series_variable_sens">Sensibilidad variable</string>
+    <string name="graph_series_deviation_slope">Pendiente de desviación</string>
+    <string name="graph_series_heart_rate">Frecuencia cardíaca</string>
+    <string name="graph_series_steps">Pasos</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Actividad</string>
+    <string name="graph_series_predictions">Predicciones</string>
     <string name="units_days">días</string>
     <string name="units_format_days">%1$d días</string>
     <string name="units_format_days_range">%1$d días (%2$d - %3$d)</string>
@@ -1184,4 +1205,5 @@
     <string name="units_sec">seg</string>
     <string name="units_years">a</string>
     <string name="prefs_range_title">Rango de visualización</string>
+    <string name="secrets_not_protected">No se ha encontrado ningún almacén de claves del sistema en este equipo. Las claves que protegen su configuración y el emparejamiento con el master se guardan en archivos junto a los datos, por lo que cualquiera que obtenga una copia de sus archivos también las obtendrá. En Linux, instale e inicie un depósito de claves (por ejemplo, GNOME Keyring o KWallet) y vuelva a iniciar AAPS</string>
 </resources>

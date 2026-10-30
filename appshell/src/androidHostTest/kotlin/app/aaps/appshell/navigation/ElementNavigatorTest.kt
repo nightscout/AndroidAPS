@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.ui.compose.main.MainViewModel
+import app.aaps.ui.compose.quickLaunch.QuickLaunchAction
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -163,6 +164,19 @@ class ElementNavigatorTest {
         assertThat(navigatedRoutes()).containsExactly(AppRoute.Profile.createRoute(ScreenMode.PLAY))
     }
 
+    /** Bolus protection lets the user start a scene; changing scenes needs settings protection (#5429). */
+    @Test
+    fun `the scene list opens read only with bolus and for editing with preferences`() {
+        grantAuthorization(ProtectionCheck.Protection.BOLUS)
+        sut.handleNavigationRequest(NavigationRequest.Element(ElementType.SCENE_MANAGEMENT))
+        assertThat(navigatedRoutes()).containsExactly(AppRoute.SceneList.createRoute(ScreenMode.PLAY))
+
+        setUp()
+        grantAuthorization(ProtectionCheck.Protection.PREFERENCES)
+        sut.handleNavigationRequest(NavigationRequest.Element(ElementType.SCENE_MANAGEMENT))
+        assertThat(navigatedRoutes()).containsExactly(AppRoute.SceneList.createRoute(ScreenMode.EDIT))
+    }
+
     @Test
     fun `a denied authorization navigates nowhere`() {
         grantAuthorization(null)
@@ -192,6 +206,18 @@ class ElementNavigatorTest {
         sut.handleNavigationRequest(NavigationRequest.QuickWizard("guid-1"))
 
         assertThat(viewModelCalls()).doesNotContain("executeQuickWizard")
+    }
+
+    /**
+     * The view model asks for protection before it starts a scene, so the overview scenes sheet is covered
+     * too. A second check here would ask twice when the protection timeout is 0.
+     */
+    @Test
+    fun `a scene tile leaves the protection check to the view model`() {
+        sut.handleQuickLaunchAction(QuickLaunchAction.SceneAction("scene-1"))
+
+        assertThat(viewModelCalls()).containsExactly("requestSceneConfirmation")
+        assertThat(mockingDetails(protectionCheck).invocations).isEmpty()
     }
 
     @Test

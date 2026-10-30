@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -53,23 +54,29 @@ import app.aaps.wear.R
 import app.aaps.wear.di.WearMetroActivity
 import dev.zacsweers.metro.Inject
 
+/** The carb time page: the phone wizard's range and step. */
+private val CARB_TIME_RANGE = -60.0..60.0
+private const val CARB_TIME_STEP = 5.0
+
 class WizardActivity : WearMetroActivity() {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var sp: SP
 
-    /** The pages of the wizard, in order. Two of them are settings, so the list is built once per start. */
-    private enum class Page { CARBS, CARBS_TYPE, PERCENTAGE, CONFIRM }
+    /** The pages of the wizard, in order. Three of them are settings, so the list is built once per start. */
+    private enum class Page { CARBS, CARBS_TYPE, CARB_TIME, PERCENTAGE, CONFIRM }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val hasCarbsType = sp.getBoolean(getString(R.string.key_wizard_carbs_type), false)
+        val hasCarbTime = sp.getBoolean(getString(R.string.key_wizard_carb_time), false)
         val hasPercentage = sp.getBoolean(getString(R.string.key_wizard_percentage), false)
         val pages = buildList {
             add(Page.CARBS)
             if (hasCarbsType) add(Page.CARBS_TYPE)
+            if (hasCarbTime) add(Page.CARB_TIME)
             if (hasPercentage) add(Page.PERCENTAGE)
             add(Page.CONFIRM)
         }
@@ -85,6 +92,10 @@ class WizardActivity : WearMetroActivity() {
             MaterialTheme {
                 var carbs by remember { mutableStateOf(0.0) }
                 var carbsType by remember { mutableStateOf(CarbsType.BREAD) }
+                // Minutes from now until the carbs are eaten, as on the phone. The alarm is the "time to eat"
+                // timer, on by default; it only counts when the carbs come later
+                var carbTime by remember { mutableStateOf(0.0) }
+                var alarm by remember { mutableStateOf(true) }
                 var percentage by remember { mutableStateOf(defaultPercentage) }
                 val pagerState = rememberPagerState(pageCount = { pages.size })
 
@@ -110,6 +121,22 @@ class WizardActivity : WearMetroActivity() {
                                 onSelect = { carbsType = it },
                                 enabled = !pagerState.isScrollInProgress,
                             )
+                            Page.CARB_TIME  -> PlusMinusInputScreen(
+                                value = carbTime,
+                                onValueChange = { carbTime = it },
+                                valueRange = CARB_TIME_RANGE,
+                                stepValues = listOf(CARB_TIME_STEP, CARB_TIME_STEP, CARB_TIME_STEP),
+                                format = NumberFormat.INTEGER,
+                                label = stringResource(R.string.wizard_carb_time),
+                                displayText = if (carbTime == 0.0) stringResource(R.string.wizard_carb_time_now) else stringResource(R.string.wizard_carb_time_offset, carbTime.toInt()),
+                                allowZero = true,
+                                isActive = pagerState.currentPage == page,
+                                simpleMode = true,
+                                enabled = !pagerState.isScrollInProgress,
+                                title = stringResource(R.string.menu_wizard),
+                                // Always in the layout, so the value does not jump when the bell comes and goes
+                                footer = { AlarmToggle(checked = alarm, onToggle = { alarm = it }, visible = carbTime > 0, enabled = !pagerState.isScrollInProgress) },
+                            )
                             Page.PERCENTAGE -> PlusMinusInputScreen(
                                 value = percentage,
                                 onValueChange = { percentage = it },
@@ -126,8 +153,12 @@ class WizardActivity : WearMetroActivity() {
                             Page.CONFIRM    -> WizardConfirmScreen(
                                 carbs = carbs.toInt(),
                                 carbsType = if (hasCarbsType) carbsType else null,
+                                carbTime = if (hasCarbTime) carbTime.toInt() else 0,
+                                alarm = alarm,
                                 percentage = if (hasPercentage) percentage.toInt() else null,
-                                onConfirm = { confirmWizard(carbs.toInt(), percentage.toInt(), carbsType) },
+                                onConfirm = {
+                                    confirmWizard(carbs.toInt(), percentage.toInt(), carbsType, if (hasCarbTime) carbTime.toInt() else 0, alarm)
+                                },
                             )
                         }
                     }
@@ -140,8 +171,8 @@ class WizardActivity : WearMetroActivity() {
         }
     }
 
-    private fun confirmWizard(carbs: Int, percentage: Int, carbsType: CarbsType) {
-        rxBus.send(EventWearToMobile(ActionWizardPreCheck(carbs, percentage, carbsType)))
+    private fun confirmWizard(carbs: Int, percentage: Int, carbsType: CarbsType, carbTime: Int, alarm: Boolean) {
+        rxBus.send(EventWearToMobile(ActionWizardPreCheck(carbs, percentage, carbsType, carbTime, alarm && carbTime > 0)))
         startActivity(
             Intent(this, ConfirmationActivity::class.java).apply {
                 putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION)
@@ -217,6 +248,42 @@ private fun CarbsTypeScreen(carbs: Int, selected: CarbsType, onSelect: (CarbsTyp
     }
 }
 
+/**
+ * The "time to eat" alarm of the carb time page: a bell that is lit when the alarm is on. One tap flips it.
+ * Not [visible] while the carbs are not later, but still in the layout, so the page does not move.
+ */
+@Composable
+private fun AlarmToggle(checked: Boolean, onToggle: (Boolean) -> Unit, visible: Boolean, enabled: Boolean) {
+    val haptic = LocalHapticFeedback.current
+    Row(
+        modifier = Modifier
+            .padding(top = 4.dp)
+            .alpha(if (visible) 1f else 0f)
+            .clip(CircleShape)
+            .clickable(enabled = enabled && visible) {
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                onToggle(!checked)
+            }
+            .semantics { this.selected = checked }
+            .padding(horizontal = 8.dp, vertical = 2.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_alarm),
+            contentDescription = null,
+            tint = if (checked) CarbsOrange else WearSecondaryText,
+            modifier = Modifier.size(16.dp)
+        )
+        Spacer(Modifier.size(4.dp))
+        Text(
+            text = stringResource(R.string.wizard_set_alarm),
+            color = if (checked) Color.White else WearSecondaryText,
+            fontSize = 12.sp,
+            maxLines = 1
+        )
+    }
+}
+
 private fun CarbsType.iconRes(): Int = when (this) {
     CarbsType.BREAD -> R.drawable.ic_bread
     CarbsType.CAKE  -> R.drawable.ic_cake
@@ -229,9 +296,12 @@ private fun CarbsType.nameRes(): Int = when (this) {
     CarbsType.PIZZA -> R.string.wizard_carbs_type_pizza
 }
 
-/** [carbsType] is null when the meal type page is off. Then the carbs line is the whole entry, as before. */
+/**
+ * [carbsType] is null when the meal type page is off. Then the carbs line is the whole entry, as before.
+ * [carbTime] is shown when it is not zero, with the bell when the alarm will be set.
+ */
 @Composable
-private fun WizardConfirmScreen(carbs: Int, carbsType: CarbsType?, percentage: Int?, onConfirm: () -> Unit) {
+private fun WizardConfirmScreen(carbs: Int, carbsType: CarbsType?, carbTime: Int, alarm: Boolean, percentage: Int?, onConfirm: () -> Unit) {
     val haptic = LocalHapticFeedback.current
     var confirmationSent by remember { mutableStateOf(false) }
     val carbsNow = carbsType?.carbsNow(carbs) ?: carbs
@@ -277,13 +347,37 @@ private fun WizardConfirmScreen(carbs: Int, carbsType: CarbsType?, percentage: I
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
-        if (percentage != null) {
-            Text(
-                text = stringResource(R.string.wizard_result_correction_percentage, percentage),
-                color = WearSecondaryText,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
+        // The carb time and the percentage share one line when both are there, so the page stays as tall
+        // as with one of them: a third line under the check fell off the bottom of the screen
+        if (carbTime != 0 || percentage != null) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                if (carbTime != 0) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(
+                            text = stringResource(R.string.wizard_result_carb_time, carbTime),
+                            color = WearSecondaryText,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        if (alarm && carbTime > 0) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_alarm),
+                                contentDescription = stringResource(R.string.wizard_set_alarm),
+                                tint = CarbsOrange,
+                                modifier = Modifier.size(14.dp)
+                            )
+                        }
+                    }
+                }
+                if (percentage != null) {
+                    Text(
+                        text = stringResource(R.string.wizard_result_correction_percentage, percentage),
+                        color = WearSecondaryText,
+                        fontSize = if (carbTime != 0) 16.sp else 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
         }
     }
 }

@@ -47,11 +47,13 @@
     <string name="authorized_clients_qr_ns_instructions">Naskenujte tento kód na novom telefóne v sprievodcovi nastavením alebo v časti Spárovať s hlavným telefónom. Tým sa nastaví Nightscout. Telefón sa nespáruje.</string>
     <string name="authorized_clients_qr_keep_private">Každý, kto získa tento kód, bude môcť čítať údaje z Nightscoutu. Zobrazte ho iba novému telefónu.</string>
     <string name="authorized_clients_token_problem_title">Žiadny QR kód</string>
+    <string name="authorized_clients_not_added_title">Klient nebol pridaný</string>
     <string name="authorized_clients_token_problem_not_connected">Tento telefón nie je pripojený k Nightscoutu, takže nie je možné vytvoriť token pre klienta.</string>
     <string name="authorized_clients_token_problem_not_allowed">Nightscout token nastavený v tomto telefóne nemá oprávnenia správcu, preto nemôže vytvoriť token pre klienta. Použite administrátorský token alebo pridajte klienta pomocou PIN kódu.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout už má token s týmto názvom ale inými oprávneniami. Vyberte iný názov.</string>
     <string name="authorized_clients_token_problem_name_in_use">Klient s týmto názvom sa už v zozname nachádza. Zvoľte iný názov alebo najprv odstráňte existujúceho klienta.</string>
-    <string name="authorized_clients_token_problem_failed">Nightscout nevytvoril token. Skontrolujte pripojenie a skúste to znova.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout nenašiel nový token, preto bol opäť odstranený. Nič nezostalo zabudnuté. Zkuste to znovu.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout nenašiel nový token a preto nemohol byť opäť odstránený. Odstráňte token %1$s v Nightscoute a skúste to znova.</string>
     <string name="authorized_clients_tokens_header">Len na čítanie z Nightscoutu</string>
     <string name="authorized_clients_token_unpaired">Vlastný token Nightscoutu, nie je spárovaný</string>
     <string name="authorized_clients_token_show_qr">Zobraziť QR kód</string>
@@ -60,6 +62,7 @@
     <string name="authorized_clients_delete_dialog_token">Odstráni sa aj Nightscout token, takže už nebude mocť čítať údaje z Nightscoutu.</string>
     <string name="authorized_clients_uses_client_token">Vlastný Nightscout token</string>
     <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Používa sa Nightscout token %1$s, ktorý má viac oprávnení, než klient potrebuje</string>
+    <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Používa token Nightscoutu %1$s namiesto vlastného, preto sú jeho príkazy odmietané. Odstráňte ho a znova pridajte.</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Spárovanie s hlavným zariadením</string>
     <string name="pair_with_master_pin_entry_title">Zadajte kód PIN pre párovanie</string>
@@ -87,6 +90,10 @@
     <string name="client_setup_scan_title">Naskenujte QR kód z hlavného telefónu</string>
     <string name="client_setup_scan_instructions">Na hlavnom telefóne, otvorte Autorizovaní klienti a pridajte tento telefón pomocou QR kódu. Nasmerujte kameru na QR kód.</string>
     <string name="client_setup_scan_camera_refused">Na načítanie QR kódu je potrebná kamera. Povoľte prístup ku kamere alebo použite PIN kód na spárovanie.</string>
+    <string name="client_setup_scan_camera_denied">Prístup ku kamere je pre AAPS vypnutý. Povoľte ho v systémových nastaveniach alebo vykonajte párovanie pomocou PIN kódu.</string>
+    <string name="client_setup_scan_camera_blocked">Prístup ku kamere nie je na tomto zariadení povolený. Namiesto toho vykonajte párovanie pomocou PIN kódu.</string>
+    <string name="client_setup_scan_camera_unavailable">Na tomto zariadení nie je možné použiť kameru. Namiesto toho vykonajte párovanie pomocou PIN kódu.</string>
+    <string name="client_setup_scan_open_settings">Otvoriť nastavenia</string>
     <string name="client_setup_scan_not_a_code">Toto nie je QR kód z AAPS.</string>
     <string name="client_setup_scan_other_version">Tento kód pochádza z inej verzie AAPS. Hlavné zariadenie aj tento telefón, musia používať rovnakú verziu.</string>
     <string name="client_setup_scan_expired">Platnosť tohto kódu vypršala. Na hlavnom zariadení vytvorte nový kód.</string>
@@ -123,6 +130,12 @@
     <string name="upload_now">Nahrať teraz</string>
     <string name="tidepool_purge_data">Zmazať všetky dáta</string>
     <string name="tidepool_purge_data_confirm">VYMAZAŤ VŠETKY dáta, ktoré boli z AAPS nahraté do Tidepoolu? Túto akciu nie je možné vrátiť späť. Použite ju k odstráneniu dát poškodených použitím staršej verzie, potom spustite „Úplnú synchronizáciu\" a znovu ich nahrajte.</string>
+    <string name="tidepool_full_sync_comment">Úplná synchronizácia? AAPS znova odošle všetky údaje do Tidepoolu. Môže to chvíľu trvať.</string>
+    <string name="tidepool_logout_confirm">Odhlásiť sa z Tidepoolu? Odosielanie údajov sa zastaví, kým sa znova neprihlásite.</string>
+    <string name="tidepool_status_not_logged_in">Neprihlásený</string>
+    <string name="tidepool_status_no_session">Prihlásený, zatiaľ nepripojený</string>
+    <string name="tidepool_status_blocked">Blokované nastaveniami pripojenia</string>
+    <string name="tidepool_status_failed">Zlyhalo. Pozrite si záznam nižšie.</string>
     <string name="not_connected">Nepripojené</string>
     <string name="read_only">Iba na čítanie</string>
     <string name="working">Pracujem</string>

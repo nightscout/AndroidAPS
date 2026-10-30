@@ -1,18 +1,41 @@
 package app.aaps.ui.compose.overview
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toPixelMap
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.captureToImage
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.unit.Density
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.overview.graph.BgInfoData
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.AapsTypography
+import app.aaps.core.ui.compose.LocalAapsTypography
+import app.aaps.core.ui.compose.aapsTypography
+import app.aaps.core.ui.compose.withoutFontPadding
 import app.aaps.ui.UiStringIds
+import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -20,6 +43,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import kotlin.math.hypot
 
 /**
  * Robolectric composable test for [BgInfoSection].
@@ -205,5 +229,128 @@ class BgInfoSectionTest {
         }
 
         compose.onAllNodesWithText("120").assertCountEquals(arrows.size)
+    }
+
+    /**
+     * With a large system font the lines grew into the ring: on an iPhone the value was wider than the
+     * hole, and on Android phones the "time ago" line ran into the ring from font 1.3. French and
+     * Romanian have the longest "time ago" texts. This looks at the drawn pixels, not at the text boxes:
+     * a box is taller than its letters, so a box may reach into the ring while the letters do not.
+     */
+    @Test
+    @Config(qualifiers = "xxhdpi")
+    fun noTextIsDrawnOnTheRing() {
+        showWideValue()
+        val problems = mutableListOf<String>()
+        for (linear in listOf(false, true)) {
+            for (scale in FONT_SCALES) {
+                for (text in TIME_AGO_TEXTS) {
+                    showAt(scale, text, linear)
+                    problems += listOfNotNull(textOnTheRing("font $scale${if (linear) " linear" else ""}, \"$text\""))
+                }
+            }
+        }
+        assertWithMessage(problems.joinToString("\n")).that(problems).isEmpty()
+    }
+
+    /** The ring does not grow with the font and the value already fills it, so the value keeps its size. */
+    @Test
+    fun valueKeepsItsSizeWithALargeFont() {
+        showWideValue()
+        showAt(1f, ENGLISH_TIME_AGO)
+        val normal = heightOf(WIDE_VALUE)
+        showAt(2f, ENGLISH_TIME_AGO)
+        assertThat(heightOf(WIDE_VALUE)).isWithin(1f).of(normal)
+    }
+
+    /** The two small lines still follow the system font, as far as the ring has room for them. */
+    @Test
+    fun smallLinesGrowWithTheFontWhileThereIsRoom() {
+        showWideValue()
+        showAt(1f, ENGLISH_TIME_AGO)
+        val normal = heightOf(DELTA)
+        showAt(1.3f, ENGLISH_TIME_AGO)
+        assertThat(heightOf(DELTA)).isGreaterThan(normal * 1.15f)
+    }
+
+    private var fontScale by mutableFloatStateOf(1f)
+    private var linearFont by mutableStateOf(false)
+    private var timeAgo by mutableStateOf("")
+
+    /**
+     * The widest value there is in mmol/L, with the font and the "time ago" text set by [showAt]. The
+     * typography is the one of the app: AapsTheme takes the font padding away. Dark, on black, with no
+     * trend arc: then the dim ring is the only thing drawn outside the hole, and text there is bright.
+     */
+    private fun showWideValue() {
+        compose.setContent {
+            MaterialTheme(colorScheme = darkColorScheme(), typography = Typography().withoutFontPadding()) {
+                val typography = aapsTypography()
+                CompositionLocalProvider(
+                    LocalAapsTypography provides if (linearFont) typography.withSmallLinesTimes(fontScale) else typography,
+                    LocalDensity provides Density(LocalDensity.current.density, if (linearFont) 1f else fontScale)
+                ) {
+                    Box(Modifier.background(Color.Black)) {
+                        BgInfoSection(bgInfo = bgInfo(bgText = WIDE_VALUE, deltaText = DELTA, trendArrow = null), timeAgoText = timeAgo)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showAt(scale: Float, text: String, linear: Boolean = false) {
+        fontScale = scale
+        linearFont = linear
+        timeAgo = text
+        compose.waitForIdle()
+    }
+
+    /**
+     * The two small lines [scale] times bigger, as iOS makes them with a large font (the value ignores
+     * the system font). A test cannot do it with the font scale: Compose on Android makes big text grow
+     * less than small text, and the text is measured with its own conversion, not one given here.
+     */
+    private fun AapsTypography.withSmallLinesTimes(scale: Float) = copy(
+        bgSecondary = bgSecondary.copy(fontSize = bgSecondary.fontSize * scale, lineHeight = bgSecondary.lineHeight * scale),
+        bgTimeAgo = bgTimeAgo.copy(fontSize = bgTimeAgo.fontSize * scale, lineHeight = bgTimeAgo.lineHeight * scale)
+    )
+
+    /** Height of the [text] line as drawn, so a line drawn smaller than it is laid out counts as smaller. */
+    private fun heightOf(text: String): Float =
+        compose.onNodeWithText(text, useUnmergedTree = true).fetchSemanticsNode().boundsInRoot.height
+
+    /**
+     * Counts the pixels of text outside the hole. On black the ring is dim (30 % of the BG colour) and
+     * the text is bright, so a bright pixel there is text.
+     */
+    private fun textOnTheRing(where: String): String? {
+        val image = compose.onNode(hasContentDescription("Glucose", substring = true)).captureToImage().toPixelMap()
+        val hole = with(compose.density) { (AapsSpacing.bgCircleSize / 2 - AapsSpacing.bgRingStrokeWidth).toPx() }
+        val centerX = image.width / 2f
+        val centerY = image.height / 2f
+        var pixels = 0
+        for (x in 0 until image.width) {
+            for (y in 0 until image.height) {
+                val pixel = image[x, y]
+                if (hypot(x + 0.5f - centerX, y + 0.5f - centerY) > hole && maxOf(pixel.red, pixel.green, pixel.blue) > BRIGHT) pixels++
+            }
+        }
+        return if (pixels == 0) null else "$where: $pixels pixels of text outside the hole"
+    }
+
+    companion object {
+
+        private const val WIDE_VALUE = "14,0"
+        private const val DELTA = "-0,7"
+        private const val ENGLISH_TIME_AGO = "12m ago"
+
+        /** English, Czech, French and Romanian (the longest) from `minago` */
+        private val TIME_AGO_TEXTS = listOf(ENGLISH_TIME_AGO, "před 12m", "il y a 12m", "12 minute în urmă")
+
+        /** Android goes up to 2.0, iOS further */
+        private val FONT_SCALES = listOf(1f, 1.3f, 2f, 3f)
+
+        /** The text is 0.8 (grey) or 1.0 (green) bright, the ring 0.3. An edge pixel half over the ring is about 0.55. */
+        private const val BRIGHT = 0.6f
     }
 }

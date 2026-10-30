@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -40,6 +41,7 @@ import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalMetroViewModelFactory
 import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.core.ui.compose.rememberOwnViewModelStoreOwner
 import app.aaps.desktop.shell.config.DesktopClientConfig
 import app.aaps.desktop.shell.config.GeneratedBuildInfo
 import app.aaps.desktop.shell.di.DesktopAppGraph
@@ -374,7 +376,11 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
     // scroll position lost on a language change is acceptable where losing it constantly is not.
     val restart by graph.uiRestart.signal.collectAsState()
     key(restart) {
-    CompositionLocalProvider(LocalMetroViewModelFactory provides viewModelFactory) {
+    CompositionLocalProvider(
+        LocalMetroViewModelFactory provides viewModelFactory,
+        // New with every rebuild, so the view models are rebuilt too, not only the screens
+        LocalViewModelStoreOwner provides rememberOwnViewModelStoreOwner()
+    ) {
         AapsAppRoot(
             config = graph.config,
             preferences = graph.preferences,

@@ -226,6 +226,7 @@ class GraphScopeStabilityTest {
             "translator",
             "trendCalculator",
             "uiInteraction",
+            "uiRestart",
             "userEntryLogger",
             "userEntryPresentationHelper",
             "versionCheckerUtils",

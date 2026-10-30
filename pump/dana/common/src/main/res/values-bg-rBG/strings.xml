@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Времето за сдвояване изтече</string>
+    <string name="danars_bonding_failed">Bluetooth връзката с помпата пропадна или е прекъсната. Опитайте отново и въведете ПИН-a от помпата.</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="description_pump_dana_rs">Интеграция за помпа DANA Diabecare RS и Dana-i</string>
     <string name="maxbolusviolation">Превишавате макс болус</string>
@@ -8,6 +9,12 @@
     <string name="speederror">Скорост грешка</string>
     <string name="insulinlimitviolation">Нарушение на макс дневен инсулин</string>
     <string name="boluserrorcode">Стартирано: %1$.2fЕ Доставено: %2$.2fЕ Код на грешка: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">Помпата не е инициализирана</string>
+    <string name="danai2_bolus_error_not_enough_insulin">Няма достатъчно инсулин в резервоара</string>
+    <string name="danai2_bolus_error_easy_sleep">Режим за заспиване е активиран в помпата</string>
+    <string name="danai2_pump_check_error">Грешка при проверка на помпата</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Опростен режим</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Авт. заключване</string>
     <string name="danar_valuenotsetproperly">Неправилна стойност</string>
     <string name="danar_setbasalstep001">Задайте стъпка на базала 0.01 Е/ч</string>
     <string name="resetpairing">Нулиране на сдвояването?</string>
@@ -17,6 +24,7 @@
     <string name="danar_disablebolusblock">Блокиране на болус е включено на помпата. AAPS не може да пуска инсулин когато е активно това. Изключете блокирането на инсулин в настройките на помпата.</string>
     <string name="overview_bolusprogress_stoped">Спрян</string>
     <string name="unsupportedfirmware">Неподдържан фърмуер на помпата</string>
+    <string name="danars_unsupported_model">Моделът на помпата не се поддържа (код %1$s)</string>
     <string name="pumperror">Грешка в промпата</string>
     <string name="lowbattery">Изтощена батерия</string>
     <string name="basalcompare">Доставяне на по-малко от предварително зададена базал</string>

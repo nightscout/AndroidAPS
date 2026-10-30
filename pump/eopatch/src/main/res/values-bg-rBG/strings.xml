@@ -2,6 +2,7 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Интегриране на помпа EOPatch2 / GlucoMen Day</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Пача не потвърди край на болус. Записано е %1$s, но пача може да е доставил повече. Проверете пача преди да пуснете още инсулин.</string>
     <string name="low_reservoir">Предупреждение за празен резервоар</string>
     <string name="patch_expiration_reminders">Напомняне за изтичане на Patch</string>
     <string name="patch_buzzer_reminders">Звуково Напомняне за Patch</string>

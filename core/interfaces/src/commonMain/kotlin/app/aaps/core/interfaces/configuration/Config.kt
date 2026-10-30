@@ -127,6 +127,13 @@ interface Config {
      * without a default: a new shell has to say what it is rather than inherit someone else's answer.
      */
     val platform: AppPlatform
+
+    /**
+     * Whether AAPS can be shown in a language of its own, other than the phone's. Android gives apps their own
+     * language from Android 13 on; on Android 12 AAPS follows the phone, and the language setting is hidden.
+     * True where the app sets its text language itself (iOS, desktop).
+     */
+    val supportsAppLanguage: Boolean get() = true
     val APPLICATION_ID: String
     val DEBUG: Boolean
     val currentDeviceModelString: String

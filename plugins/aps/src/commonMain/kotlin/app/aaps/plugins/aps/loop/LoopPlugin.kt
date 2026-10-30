@@ -589,8 +589,7 @@ class LoopPlugin(
                 return@withContext
             }
 
-            // Store calculations to DB
-            persistenceLayer.insertOrUpdateApsResult(apsResult)
+            storeApsResult(apsResult)
 
             // Prepare for pumps using % basals
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT && allowPercentage()) {
@@ -933,6 +932,15 @@ class LoopPlugin(
                 return commandQueue.tempBasalAbsolute(request.rate, request.duration, false, profile, PumpSync.TemporaryBasalType.NORMAL)
             }
         }
+    }
+
+    /**
+     * Stores what the algorithm calculated. A run that stopped early on bad CGM data calculated nothing and
+     * is not stored, see [APSResult.stoppedEarly]. Internal for its test, without driving a whole loop run.
+     */
+    internal suspend fun storeApsResult(apsResult: APSResult) {
+        if (apsResult.stoppedEarly) aapsLogger.debug(LTag.APS, "Stopped early, the result is not stored")
+        else persistenceLayer.insertOrUpdateApsResult(apsResult)
     }
 
     // Internal for the tests of its checks, without driving a whole loop run to the SMB branch.
