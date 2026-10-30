@@ -108,7 +108,6 @@
     <string name="aaps_bolus_icon_label">Bolus</string>
     <string name="aaps_carbs_icon_label">Carbs</string>
     <string name="aaps_tbr_icon_label">Temp Basal</string>
-    <string name="aaps_activity_icon_label">Exercise</string>
     <string name="aaps_note_icon_label">Note</string>
     <string name="aaps_automation_icon_label">Automation</string>
     <string name="aaps_calibration_icon_label">Calibration</string>
