@@ -32,7 +32,6 @@
     <string name="pref_title_alert_urgent_as_android_notification">Do pilnych alarmów użyj powiadomień Androida</string>
     <string name="pref_title_alert_increase_volume">Stopniowo zwiększaj głośność powiadomień</string>
     <string name="pref_title_alert_override_dnd">Powiadamiaj pomimo tryby Nie przeszkadzać</string>
-    <string name="pref_summary_alert_override_dnd">Ustawienie tej opcji sprawi, że alarmy będą działać nawet przy włączonym trybie \"Nie przeszkadzać\". Jesli nie włączono - alarmy są w tym trybie wyciszone.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Przekaż glikemię do NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Odnotuj zmianę sensora</string>
