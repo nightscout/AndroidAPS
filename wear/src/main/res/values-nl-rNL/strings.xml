@@ -315,6 +315,7 @@
     <string name="loop_status_target">Streefwaarde</string>
     <string name="loop_status_adjusted_target">Aangepast streefdoel</string>
     <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Tot einde</string>
+    <string name="loop_status_scene_ended">Geëindigd</string>
     <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Vervolg</string>
     <string name="loop_status_profile">Profiel</string>
     <string name="loop_status_no_profile">Geen profiel actief</string>
