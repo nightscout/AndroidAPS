@@ -97,7 +97,6 @@
     <string name="carelevo_patch_attach_step2_desc">從泡殼中取出貼片並移除針帽。</string>
     <string name="carelevo_patch_attach_step3_title">貼上貼片</string>
     <string name="carelevo_patch_attach_step3_desc">將貼片貼在皮膚上，並讓標示點朝上。</string>
-    <string name="carelevo_patch_attach_step4_desc">貼上貼片後，請按下 [就緒] 按鈕。</string>
     <string name="carelevo_patch_needle_insertion_step1_title">移除安全蓋</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">依箭頭方向旋轉並移除安全蓋。</string>
     <string name="carelevo_patch_needle_insertion_step2_title">插入針頭</string>
