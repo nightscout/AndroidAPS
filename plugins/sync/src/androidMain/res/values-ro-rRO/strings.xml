@@ -42,7 +42,6 @@
     <string name="pair_with_master_fetching">Se caută asocierea...</string>
     <string name="pair_with_master_confirm_title">Asociați cu acest dispozitiv principal?</string>
     <string name="pair_with_master_confirm_master">Dispozitiv principal: %1$s</string>
-    <string name="pair_with_master_confirm_warning">După asociere, acest dispozitiv principal va putea trimite comenzi semnate către aceste dispozitiv.</string>
     <string name="pair_with_master_confirm_pair">Asociați</string>
     <string name="pair_with_master_error_title">Nu poate fi asociat</string>
     <string name="pair_with_master_error_wrong_pin">Nu a fost găsită nicio asociere pentru acel PIN. Verificați codul PIN de pe dispozitivul principal și încercați din nou.</string>
