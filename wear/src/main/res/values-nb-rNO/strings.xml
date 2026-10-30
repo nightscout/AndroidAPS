@@ -298,8 +298,10 @@
     <string name="eat_reminder_stop">Stopp</string>
     <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Ringer kl. %1$s</string>
     <string name="eat_reminder_countdown_channel">Tid for å spise, pågående</string>
+    <string name="eat_reminder_channel_silent">Tid for å spise under Ikke forstyrr</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
     <string name="phone_alarm_channel">Alarmer fra telefonen</string>
+    <string name="phone_alarm_channel_silent">Alarmer fra telefonen under Ikke forstyrr</string>
     <string name="phone_alarm_silence">Demp</string>
     <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Demp i %1$d min</string>
     <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
