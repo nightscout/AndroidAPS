@@ -15,7 +15,7 @@
     <string name="protection_timeout_summary">Tijd voordat het wachtwoord of de pincode opnieuw moet worden ingevoerd</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Niet beveiligde fallback</string>
-    <string name="unsecure_fallback_descriotion_biometric">Om biometrische beveiliging te kunnen gebruiken, heb je een masterwachtwoord nodig als backup optie.\n\nStel dus een masterwachtwoord in!</string>
+    <string name="unsecure_fallback_descriotion_biometric">Biometrische beveiliging vereist een ingesteld hoofdwachtwoord als terugvaloptie.\n\nStel een hoofdwachtwoord in!</string>
     <string name="password_set">Wachtwoord ingesteld!</string>
     <string name="datastore_password_cleared">Opgeslagen export wachtwoord verwijderd!</string>
     <string name="pin_set">Pincode ingesteld!</string>
@@ -26,12 +26,12 @@
     <string name="pin_cleared">Pincode gewist!</string>
     <string name="protection_password_hint">Vul hier het wachtwoord in</string>
     <string name="protection_pin_hint">Voer de pincode hier in</string>
-    <string name="auth_hint_master_password">Voer het masterwachtwoord in</string>
-    <string name="auth_hint_master_or_pin">Voer masterwachtwoord of PIN in</string>
-    <string name="auth_hint_master_or_password">Voer masterwachtwoord of eigen wachtwoord in</string>
+    <string name="auth_hint_master_password">Voer het hoofdwachtwoord in</string>
+    <string name="auth_hint_master_or_pin">Voer hoofdwachtwoord of PIN in</string>
+    <string name="auth_hint_master_or_password">Voer hoofdwachtwoord of eigen wachtwoord in</string>
     <string name="use_pin_password">Gebruik PIN/Wachtwoord</string>
-    <string name="current_master_password">Huidig masterwachtwoord</string>
-    <string name="master_password_not_set">Masterwachtwoord niet ingesteld</string>
+    <string name="current_master_password">Huidig hoofdwachtwoord</string>
+    <string name="master_password_not_set">Hoofdwachtwoord niet ingesteld</string>
     <string name="aaps_directory_not_selected">AAPS map niet geselecteerd</string>
     <string name="aaps_directory_access_lost">De toegang tot de AAPS map is verloren, de instellingen worden niet meer op de telefoon opgeslagen. Selecteer de map opnieuw.</string>
 </resources>
