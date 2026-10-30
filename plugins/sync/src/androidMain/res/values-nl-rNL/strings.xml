@@ -14,35 +14,71 @@
     <string name="authorized_clients_add">Klant toevoegen</string>
     <string name="authorized_clients_comm_switch_title">Klankcontrole toestaan</string>
     <string name="authorized_clients_comm_switch_summary">Sta toe dat gekoppelde clients ondertekende commando\'s via Nightscout verzenden. Schakel dit uit om de communicatie te stoppen zonder de clients te verwijderen.</string>
+    <string name="authorized_clients_state_active">Actief</string>
     <string name="authorized_clients_state_pending">In behandeling</string>
+    <string name="authorized_clients_last_seen">Laatst gezien %1$s</string>
     <string name="authorized_clients_never_seen">Nooit gebruikt</string>
     <string name="authorized_clients_pending_expires_in">De koppeling verloopt over %1$ss</string>
+    <string name="authorized_clients_empty_title">Geen geautoriseerde clients</string>
+    <string name="authorized_clients_empty_subtitle">Koppel een client apparaat zodat het ondertekende opdrachten naar deze master kan verzenden.</string>
+    <string name="authorized_clients_name_dialog_title">Nieuwe client</string>
     <string name="authorized_clients_name_placeholder">Apparatennaam</string>
     <string name="authorized_clients_delete_dialog_title">Toegang intrekken?</string>
     <string name="authorized_clients_delete_dialog_message">%1$s kan niet langer opdrachten verzenden.</string>
+    <string name="authorized_clients_pin_dialog_title">Koppel client</string>
+    <string name="authorized_clients_pin_instructions">Voer deze pincode in op het client apparaat. De code is slechts eenmalig geldig.</string>
     <string name="authorized_clients_pin_expires_in">Verloopt over %1$ss</string>
     <string name="authorized_clients_pin_done">Klaar</string>
+    <string name="authorized_clients_pin_publishing">Koppelingsverzoek wordt verstuurd naar Nightscout…</string>
+    <string name="authorized_clients_pin_published">Koppelingsverzoek beschikbaar op Nightscout.</string>
+    <string name="authorized_clients_pin_publish_failed">Het koppelingsverzoek kon niet naar Nightscout worden verstuurd.</string>
     <string name="authorized_clients_pin_retry">Opnieuw proberen</string>
     <string name="authorized_clients_method_title">Hoe wordt de telefoon ingesteld?</string>
     <string name="authorized_clients_method_qr_pair">QR-code: Nightscout en koppelen</string>
     <string name="authorized_clients_method_qr_pair_summary">Scan eenmalig op de nieuwe telefoon. Het krijgt zijn eigen Nightscout token en is gekoppeld.</string>
     <string name="authorized_clients_method_qr_ns">QR-code: alleen Nightscout</string>
     <string name="authorized_clients_method_qr_ns_summary">De telefoon krijgt zijn eigen Nightscout token en kan de gegevens lezen. Hij is niet gekoppeld en kan geen opdrachten verzenden.</string>
+    <string name="authorized_clients_method_pin">PIN</string>
+    <string name="authorized_clients_method_pin_summary">Voor een telefoon zonder camera. Deze moet al verbonden zijn met Nightscout.</string>
+    <string name="authorized_clients_qr_working">Nightscout token aanmaken…</string>
+    <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Instellen %1$s</string>
+    <string name="authorized_clients_qr_pair_instructions">Scan deze code op de nieuwe telefoon, in de installatiewizard of in koppelen met master. Dit stelt Nightscout in en koppelt de telefoon.</string>
+    <string name="authorized_clients_qr_ns_instructions">Scan deze code op de nieuwe telefoon, in de installatiewizard of in een paar met de meester. Nightscout wordt ingesteld. De telefoon is niet gekoppeld.</string>
+    <string name="authorized_clients_qr_keep_private">Iedereen die deze code ziet kan je Nightscout lezen. Toon deze alleen aan de nieuwe telefoon.</string>
+    <string name="authorized_clients_token_problem_title">Geen QR-code</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout heeft het nieuwe token niet vermeld, dus het is opnieuw verwijderd. Er is nog niets achtergelaten. Probeer het opnieuw.</string>
+    <string name="authorized_clients_token_show_qr">Toon QR-code</string>
+    <string name="authorized_clients_token_delete_title">Verwijder het token?</string>
     <!-- Pair with master (client side PIN entry) -->
+    <string name="pair_with_master_pin_entry_label">8-cijferige pincode</string>
+    <string name="pair_with_master_pin_entry_submit">Koppel</string>
+    <string name="pair_with_master_fetching">Koppeling opzoeken…</string>
+    <string name="pair_with_master_confirm_title">Koppel met deze master?</string>
+    <string name="pair_with_master_confirm_master">Master:%1$s</string>
+    <string name="pair_with_master_confirm_warning">Na de koppeling kan deze meester ondertekende commando\'s naar dit apparaat sturen.</string>
+    <string name="pair_with_master_confirm_pair">Koppel</string>
+    <string name="pair_with_master_error_title">Kan niet koppelen</string>
+    <string name="pair_with_master_error_wrong_pin">Er is geen koppeling gevonden voor die pincode. Controleer de pincode op de meester en probeer het opnieuw.</string>
+    <string name="pair_with_master_error_expired">Deze koppeling is verlopen. Genereer een nieuwe pincode op de master.</string>
     <string name="pair_with_master_error_network">Nightscout is niet bereikbaar. Controleer de verbinding en probeer het opnieuw.</string>
     <string name="pair_with_master_error_secret_store">De koppelingssleutel kon niet worden opgeslagen, dus het koppelen is geannuleerd. Er is niets gewijzigd. Probeer het opnieuw; als het blijft mislukken, start dan de app opnieuw op.</string>
     <string name="pair_with_master_retry">Probeer het opnieuw</string>
     <string name="pair_with_master_already_paired_title">Reeds gekoppeld</string>
+    <string name="pair_with_master_already_paired_master">Momenteel gekoppeld aan master %1$s. Ontkoppel eerst om een ​​nieuwe pincode in te voeren.</string>
     <string name="pair_with_master_unpair">Ontkoppelen</string>
     <string name="pair_with_master_sending">Zenden van koppelingsbericht…</string>
     <!-- Client set-up from the master's QR code -->
     <string name="client_setup_scan_button">Scan de QR-code</string>
+    <string name="client_setup_scan_title">Scan de QR-code van de master</string>
+    <string name="client_setup_scan_instructions">Open Geautoriseerde clients op de master, voeg deze telefoon toe met een QR-code. Richt de camera op de code.</string>
     <string name="client_setup_scan_camera_refused">De camera is nodig om de QR-code te lezen. Sta deze toe of koppel met de pincode.</string>
     <string name="client_setup_scan_camera_denied">Toegang tot de camera is uitgeschakeld voor AAPS. Schakel deze in in de systeeminstellingen of koppel met de pincode.</string>
     <string name="client_setup_scan_camera_blocked">Toegang tot de camera is niet toegestaan op dit apparaat. Koppel in plaats daarvan met de pincode.</string>
     <string name="client_setup_scan_camera_unavailable">De camera kan niet worden gebruikt op dit apparaat. Koppel in plaats daarvan met de pincode.</string>
     <string name="client_setup_scan_open_settings">Instellingen openen</string>
     <string name="client_setup_scan_not_a_code">Dit is geen QR-code van AAPS.</string>
+    <string name="client_setup_scan_other_version">Deze code komt uit een andere AAPS versie. De master en deze telefoon moeten dezelfde versie gebruiken.</string>
+    <string name="client_setup_scan_expired">Deze code is verlopen. Maak een nieuwe op de master.</string>
     <string name="client_setup_scan_already_paired">Deze telefoon is al gekoppeld. Ontkoppel het eerst om een code te gebruiken die de koppeling maakt.</string>
     <string name="client_setup_confirm_title">Deze code gebruiken?</string>
     <string name="client_setup_confirm_nightscout" comment="%1$s = the Nightscout address, for example https://my.nightscout.host">Nachtscout: %1$s</string>
@@ -71,6 +107,7 @@
     <string name="description_tidepool">Upload gegevens naar Tidepool</string>
     <string name="upload_now">Nu Uploaden</string>
     <string name="tidepool_purge_data">Verwijder alle gegevens</string>
+    <string name="tidepool_status_not_logged_in">Niet ingelogd</string>
     <string name="not_connected">Niet verbonden</string>
     <string name="read_only">Alleen lezen</string>
     <string name="working">Bezig</string>
@@ -140,6 +177,7 @@
     <string name="full_xdrip_sync_comment">Volledige synchronisatie? Het kan enige tijd duren en tot het is voltooid zie je geen nieuwe gegevens in xDrip+.</string>
     <string name="wear_action_loop_state_unauthorized">Probeer het opnieuw.</string>
     <string name="wear_action_loop_state_invalid">Ongeldige loop status aangevraagd</string>
+    <string name="wear_action_running_mode_title">Bedrijfsmodus</string>
     <string name="garmin_request_key">Sleutel aanvragen</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS Commando\'s</string>
@@ -233,5 +271,7 @@
     <string name="sms_read_status_failed">Lezen van status mislukt</string>
     <string name="sms_profile_switch_created">Profiel wissel aangemaakt</string>
     <string name="sms_wrong_tbr_duration">Tijdelijk basaal duur moet een veelvoud van %1$d minuten en groter dan 0 zijn.</string>
+    <string name="sms_tbr_percent_only">Deze pomp accepteert een tijdelijke basale snelheid alleen in procenten, niet in E/u.</string>
+    <string name="sms_tbr_absolute_only">Deze pomp accepteert een tijdelijke basaalstand alleen in E/u, niet in procenten.</string>
     <string name="a11y_otp_qr_code">QR Code voor het instellen van een eenmalig wachtwoord</string>
 </resources>
