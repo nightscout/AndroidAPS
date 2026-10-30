@@ -11,7 +11,6 @@
     <string name="treatments_history">Historique Traitements</string>
     <string name="treatments_desc">Voir et gérer l\'historique des traitements</string>
     <string name="nav_configuration">Configuration</string>
-    <string name="nav_configuration_desc">Paramétrez votre configuration (CGM, Pompe, ...) et activer les fonctionnalités</string>
     <string name="count_selected">%1$d séléctionné(s)</string>
     <string name="delete">Supprimer</string>
     <string name="show_invalidated">Montrer les entrées invalides</string>
