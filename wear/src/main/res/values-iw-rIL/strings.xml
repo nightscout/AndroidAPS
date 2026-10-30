@@ -279,6 +279,9 @@
     <string name="title_activity_suspend_loop">השהיית הלולאה</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d גר׳</string>
     <string name="wizard_set_alarm">הגדרת התראה</string>
+    <string name="phone_alarm_channel">התראות מהטלפון</string>
+    <string name="phone_alarm_silence">שקט</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">השתק למשך %1$d דקות</string>
     <string name="insulin_unit_short">יח\'</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d גר׳</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f יח\'</string>
