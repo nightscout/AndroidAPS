@@ -32,7 +32,6 @@
     <string name="pref_title_alert_urgent_as_android_notification">Пускай аларми като нотификации в Андроид</string>
     <string name="pref_title_alert_increase_volume">Постепенно увеличаване на звука за нотификации</string>
     <string name="pref_title_alert_override_dnd">Прескочи DND режима</string>
-    <string name="pref_summary_alert_override_dnd">Когато е пуснато, AAPS ще алармира дори когато телефона е в тих режим или DND режим. Когато е изключно алармите няма да звучат в тези режими.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Kaчвай данните за КЗ в NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Проследяване на смяна на сензор</string>
