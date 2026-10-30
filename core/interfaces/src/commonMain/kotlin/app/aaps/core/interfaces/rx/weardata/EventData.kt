@@ -385,7 +385,20 @@ sealed class EventData : Event() {
         val bolusLargeFrom: Double = -1.0,
         val carbsSmallBelow: Double = -1.0,
         val carbsLargeFrom: Double = -1.0,
+        /**
+         * The target line of the phone's BG graph, as the points where it changes plus a last one at the end of
+         * the range: the temporary target's middle while one runs, else the profile's. Empty from a phone that
+         * does not send it.
+         */
+        val targets: ArrayList<Target> = ArrayList(),
     ) : EventData() {
+
+        /** One point of the target line, [mgdl] from [timeStamp] until the next point. */
+        @Serializable
+        data class Target(
+            val timeStamp: Long,
+            val mgdl: Double
+        )
 
         @Serializable
         data class TempBasal(

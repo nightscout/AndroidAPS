@@ -16,7 +16,6 @@ import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.endOf
-import app.aaps.core.data.model.latestRunningAt
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
@@ -62,6 +61,8 @@ import app.aaps.core.interfaces.overview.graph.RunningModeSegment
 import app.aaps.core.interfaces.overview.graph.SeriesType
 import app.aaps.core.interfaces.overview.graph.StepsGraphData
 import app.aaps.core.interfaces.overview.graph.TargetLineData
+import app.aaps.core.interfaces.overview.graph.buildTargetLine
+import app.aaps.core.interfaces.overview.graph.targetMiddleMgdl
 import app.aaps.core.interfaces.overview.graph.TbrDisplayData
 import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.interfaces.overview.graph.TempTargetDisplayData
@@ -94,7 +95,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.apsAdjustedTargetMgdl
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.fromGv
-import app.aaps.core.objects.extensions.target
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.ui.UiStrings
@@ -1044,24 +1044,8 @@ class OverviewDataCacheImpl(
         val temporaryTargets = (persistenceLayer.getTemporaryTargetsActiveAt(fromTime) +
             persistenceLayer.getTemporaryTargetDataFromTime(fromTime, true)).distinctBy { it.id }
 
-        val targets = mutableListOf<GraphDataPoint>()
-        var lastTarget = -1.0
-        var time = fromTime
-        while (time < endTime) {
-            val tt = temporaryTargets.latestRunningAt(time) { it.duration }
-            val value = if (tt != null) {
-                profileUtil.fromMgdlToUnits(tt.target())
-            } else {
-                profileUtil.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2)
-            }
-            if (value != lastTarget) {
-                targets.add(GraphDataPoint(time, value))
-                lastTarget = value
-            }
-            time += 5 * 60 * 1000L
-        }
-        // Final point
-        if (lastTarget >= 0.0) targets.add(GraphDataPoint(endTime, lastTarget))
+        // The same step line the watch gets (DataHandlerMobile.sendTreatments)
+        val targets = buildTargetLine(fromTime, endTime, temporaryTargets, profile::targetMiddleMgdl) { profileUtil.fromMgdlToUnits(it) }
 
         _targetLineFlow.value = TargetLineData(targets)
     }

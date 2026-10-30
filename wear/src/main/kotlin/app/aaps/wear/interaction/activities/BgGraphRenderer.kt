@@ -21,6 +21,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
+import kotlin.math.max
 import kotlin.math.min
 
 internal val BgInRangeColor = Color(0xFF00FF00)
@@ -30,6 +31,9 @@ internal val BgLowColor     = Color(0xFFFF0000)
 internal val CarbsRemovalMagenta = Color(0xFFE040FB)
 internal val SecondaryText  = Color(0xFFAAAAAA)
 internal val TempTargetColor     = Color(0xFFFDD835)
+
+/** The target line, the phone's temp target green at less than half strength, so it stays at the back. */
+internal val TargetLineColor     = Color(0x7377DD77)
 internal val AutosensTargetColor = Color(0xFF77DD77)
 
 internal val historyHoursCycle = listOf(3, 6, 1)
@@ -254,6 +258,22 @@ internal fun DrawScope.renderBgGraph(
             val nowLabel = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(now))
             canvas.nativeCanvas.drawText(nowLabel, nowX, pad + nowPaint.textSize + 2f, nowPaint)
         }
+    }
+
+    // The target as on the phone: the temporary target's middle while one runs, else the profile's, a faint
+    // step line at the back, out to the end of the window. The step is what tells a temporary target is set.
+    val targets = data.treatmentData.targets
+    for (i in 0 until targets.size - 1) {
+        val from = targets[i]
+        val to = targets[i + 1]
+        val x1 = timeToX(max(from.timeStamp, startTime))
+        val x2 = timeToX(min(to.timeStamp, endTime))
+        if (x2 <= x1) continue
+        val y = sgvToY(from.mgdl.toFloat())
+        drawLine(color = TargetLineColor, start = Offset(x1, y), end = Offset(x2, y), strokeWidth = 1.dp.toPx())
+        // The riser to the next value, when that change is inside the window. The last point has no next value.
+        if (i < targets.size - 2 && to.timeStamp in startTime..endTime)
+            drawLine(color = TargetLineColor, start = Offset(x2, y), end = Offset(x2, sgvToY(to.mgdl.toFloat())), strokeWidth = 1.dp.toPx())
     }
 
     // The "time to eat" timer: a dashed line where it rings, with the minutes left at it, one line under
