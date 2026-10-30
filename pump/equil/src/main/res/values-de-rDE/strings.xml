@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  start  -->
+    <string name="equil_tone_mode_mute">Stummschalten</string>
+    <string name="equil_tone_mode_shake">Nur vibrieren</string>
+    <string name="equil_tone_mode_tone">Nur Töne</string>
+    <string name="equil_tone_mode_tone_and_shake">Vibration und Ton</string>
+    <string name="equil_unbind_content">Dieser Vorgang stoppt die Insulininfusion und zieht den Pumpenkolben nach unten zurück! Außerdem wird der Bindungsstatus gelöscht!</string>
+    <string name="equil_error">Verbindungsfehler</string>
+    <string name="equil_change">Pumpe wechseln</string>
     <string name="equil_error_set_temp_basal_failed_validation">TBR Dauer muss größer null und ein Vielfaches von %1$s Minuten sein.</string>
     <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Rate: %1$.2f IE/h, Dauer: %2$d min</string>
     <!-- equil - Commands -->
     <!--    推杆回退-->
+    <string name="equil_command_connect_error">Pumpenverbindungsfehler</string>
+    <string name="equil_command_connect_no_response">Keine Antwort von der Pumpe</string>
+    <string name="equil_command__unknown">Unbekannter Status des Befehls</string>
+    <string name="equil_settings_alarm_battery">Alarm bei niedrigem Batteriestand</string>
+    <string name="equil_settings_alarm_insulin">Alarm bei niedrigem Medikamentenvorrat</string>
+    <string name="equil_init_insulin_error">Initialisierung des Reservoirs ist nicht abgeschlossen</string>
+    <string name="equil_history_group_all">Alle</string>
+    <string name="equil_history_group_pair">Koppeln</string>
+    <string name="equil_history_group_bolus">Boli</string>
+    <string name="equil_history_group_basal">Basalraten</string>
+    <string name="equil_history_group_configuration">Konfigurationen</string>
 </resources>
