@@ -16,7 +16,7 @@
     <string name="not_inserted">Nie je vložené</string>
     <string name="tdd_bolus">CDD bolusov</string>
     <string name="tdd_basal">CDD bazálov</string>
-    <string name="multiwave_bolus">Duálny bolus</string>
+    <string name="multiwave_bolus">Viacvlnový bolus</string>
     <string name="searching_for_devices">Vyhľadávam zariadenia...</string>
     <string name="pairing_completed">Párovanie dokončené</string>
     <string name="code_compare">Zhodujú sa kódy zobrazené na tomto zariadení a na pumpe?</string>
@@ -32,7 +32,7 @@
     <string name="timeout_during_handshake">Vypršal čas pri nadväzovaní spojenia - reštartujte Bluetooth</string>
     <string name="pump_stopped">Pumpa zastavená</string>
     <string name="pump_started">Pumpa spustená</string>
-    <string name="release_software_version">Verzia softwaru</string>
+    <string name="release_software_version">Verzia softvéru</string>
     <string name="bluetooth_address">Adresa Bluetooth</string>
     <string name="manufacturing_date">Dátum výroby</string>
     <string name="log_site_changes">Zaznamenať výmenu kanyly</string>
@@ -48,7 +48,7 @@
     <string name="min_recovery_duration">Min. doba trvania obnovenia [s]</string>
     <string name="pump_alert">Výstraha pumpy</string>
     <string name="last_connection">%1$s (%2$s)</string>
-    <string name="unpair">Odpárovať</string>
+    <string name="unpair">Zrušiť párovanie</string>
     <string name="reset_pairing">Reset informácií o párovaní?</string>
     <string name="reservoir_level">Stav zásobníka</string>
 </resources>
