@@ -97,7 +97,6 @@
     <string name="carelevo_patch_attach_step2_desc">Saca el parche del blíster y retira la tapa de la aguja</string>
     <string name="carelevo_patch_attach_step3_title">Aplicar el parche</string>
     <string name="carelevo_patch_attach_step3_desc">Pega el parche a la piel con el punto marcado hacia arriba</string>
-    <string name="carelevo_patch_attach_step4_desc">Después de colocar el parche, pulsa el botón Listo</string>
     <string name="carelevo_patch_needle_insertion_step1_title">Retirar la tapa de seguridad</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">Gira la tapa de seguridad en la dirección de la flecha y retírala</string>
     <string name="carelevo_patch_needle_insertion_step2_title">Inserta la aguja</string>
