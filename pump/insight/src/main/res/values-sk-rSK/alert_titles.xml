@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="alert_r1_title">Podaj bolus</string>
+    <string name="alert_r1_title">Podať bolus</string>
     <string name="alert_r2_title">Vynechaný bolus</string>
     <string name="alert_r3_title">Budík</string>
-    <string name="alert_r4_title">Vymeň infúzny set</string>
+    <string name="alert_r4_title">Vymeniť infúzny set</string>
     <string name="alert_r7_title">Dočasný bazál dokončený</string>
     <string name="alert_w31_title">Zásobník takmer prázdny</string>
     <string name="alert_w32_title">Batéria takmer vybitá</string>
