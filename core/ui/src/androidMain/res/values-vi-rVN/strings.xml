@@ -11,7 +11,6 @@
     <string name="treatments_history">Lịch sử điều trị</string>
     <string name="treatments_desc">Xem và quản lý lịch sử điều trị</string>
     <string name="nav_configuration">Thiết lập hệ thống</string>
-    <string name="nav_configuration_desc">Thiết lập cài đặt (CGM, bơm, ...) và bật các tính năng</string>
     <string name="count_selected">Đã chọn %1$d</string>
     <string name="delete">Xóa</string>
     <string name="show_invalidated">Hiển thị các mục không hợp lệ</string>
