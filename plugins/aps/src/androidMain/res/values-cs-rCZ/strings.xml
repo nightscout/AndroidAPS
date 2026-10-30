@@ -5,7 +5,7 @@
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
     <string name="openaps_auto_isf">Auto ISF</string>
-    <string name="openapsma_disabled">Modul zakázán</string>
+    <string name="openapsma_disabled">Plugin zakázán</string>
     <string name="openapsma_no_glucose_data">Nedostupná data o glykémiích</string>
     <string name="openaps_no_as_data">Nedostupná data o citlivosti</string>
     <string name="dynisf_shortname">DYNSENZ</string>
