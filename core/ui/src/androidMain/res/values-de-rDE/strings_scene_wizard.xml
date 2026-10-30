@@ -15,6 +15,7 @@
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
     <!-- Blank: no actions — 1h -->
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_duration_info">Die Dauer bestimmt, wie lange die Szene aktiv bleibt. Wenn die Zeit abgelaufen ist, werden alle laufzeit-basierten Aktionen (temporäres Ziel, Profilwechsel, Betriebsmodus) von selbst beeendet. Dauerhafte Änderungen (wie z. B. die SMB-Umschaltung) fallen automatisch auf ihre vorherigen Wert zurück. Wird die Dauer auf 0 gesetzt, bleibt die Szene bis auf Weiteres aktiv – alle Aktionen bleiben solange aktiv, bis Du die Szene manuell beendest.</string>
     <!-- Scene wizard: UI labels -->
     <!-- Scene wizard: chain step -->
     <!-- Scene list: chain indicator -->
