@@ -107,7 +107,7 @@
     <string name="pref_summary_ns_receive_carbs">Prijať vložené sacharidy z Nightscoutu.</string>
     <string name="pref_title_ns_receive_therapy_event">Prijímať ošetrenia z NS</string>
     <string name="pref_summary_ns_receive_therapy_event">Prijať vložené ošetrenia z Nightscoutu.</string>
-    <string name="pref_title_ns_receive_running_mode">Prijímať prevádzkový režim z NS</string>
+    <string name="pref_title_ns_receive_running_mode">Prijímať režim prevádzky z NS</string>
     <string name="pref_summary_ns_receive_running_mode">Prijímať zmeny prevádzkového režimu z Nightscoutu.</string>
     <string name="pref_title_ns_receive_tbr_eb">Prijímať TBR/EB z NS</string>
     <string name="pref_summary_ns_receive_tbr_eb">Prijímať dočasné bazálne dávky a predĺžené bolusy z Nightscoutu.</string>
@@ -287,7 +287,7 @@
     <!-- StringKey: Safety preferences -->
     <string name="pref_title_patient_age">Vek pacienta</string>
     <!-- StringKey: Maintenance preferences -->
-    <string name="maintenance_email">Príjemca E-mailu</string>
+    <string name="maintenance_email">Príjemca e-mailu</string>
     <string name="pref_title_identification">Identifikácia pre hlásenie pádov</string>
     <!-- StringKey: Automation preferences -->
     <string name="pref_title_automation_location">Služba zisťovania polohy</string>
@@ -320,7 +320,7 @@
     <string name="pref_title_fill_button_2">Tlačidlo plnenia 2</string>
     <string name="pref_title_fill_button_3">Tlačidlo plnenia 3</string>
     <!-- DoubleKey: Safety preferences -->
-    <string name="pref_title_max_bolus">Maximálny Bolus</string>
+    <string name="pref_title_max_bolus">Maximálny bolus</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Maximálna bazálna dávka</string>
     <string name="openapsma_max_basal_summary">Táto hodnota je v kontexte OpenAPS nazývaná ako \"max basal\"</string>
