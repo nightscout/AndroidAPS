@@ -1,8 +1,5 @@
 plugins {
-    id("kmp-test-defaults")
-    kotlin("multiplatform")
-    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
-    alias(libs.plugins.android.kmp.library)
+    id("kmp-android-library")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.metro)
 }
@@ -47,29 +44,12 @@ val PLUGIN_LIBRARIES = setOf(
 kotlin {
     android {
         namespace = "app.aaps.appshell"
-        compileSdk = Versions.compileSdk
-        minSdk = Versions.minSdk
         androidResources { enable = true }
         withHostTest {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-
-        lint {
-            checkReleaseBuilds = false
-            disable += "MissingTranslation"
-            disable += "ExtraTranslation"
-        }
     }
-
-
-    iosArm64()
-    iosSimulatorArm64()
-
-    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
-    // plain jvm() target, so no special target name is needed.
-    jvm()
 
     sourceSets {
         commonMain {

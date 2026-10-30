@@ -29,9 +29,7 @@ plugins {
  * `CoreObjectsGraph`.
  */
 kotlin {
-    jvm {
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-    }
+    jvm()
     iosArm64()
     iosSimulatorArm64()
 
