@@ -29,6 +29,9 @@
     <string name="tomorrow">Morgen</string>
     <string name="today">Heute</string>
     <string name="yesterday">Gestern</string>
+    <string name="time_frame_hours_minutes" comment="A duration, short. h=hours, the mark after the minutes means minutes. %1$d=hours, %2$d=minutes. Example: 1h 30'">%1$dh %2$d\'</string>
+    <string name="time_frame_minutes" comment="A duration in minutes, short. The mark after the number means minutes. %1$d=minutes. Example: 30'">%1$d\'</string>
+    <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
     <!-- Rx -->
     <string name="connecting_for">Verbindungsaufbau seit %1$d s</string>
     <string name="handshaking">Handshaking</string>
