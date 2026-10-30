@@ -46,7 +46,13 @@
     <string name="authorized_clients_qr_ns_instructions">Scan deze code op de nieuwe telefoon, in de installatiewizard of in een paar met de meester. Nightscout wordt ingesteld. De telefoon is niet gekoppeld.</string>
     <string name="authorized_clients_qr_keep_private">Iedereen die deze code ziet kan je Nightscout lezen. Toon deze alleen aan de nieuwe telefoon.</string>
     <string name="authorized_clients_token_problem_title">Geen QR-code</string>
+    <string name="authorized_clients_not_added_title">Client is niet toegevoegd</string>
+    <string name="authorized_clients_token_problem_not_connected">Deze telefoon is niet verbonden met Nightscout en kan daarom geen token voor de client aanmaken.</string>
+    <string name="authorized_clients_token_problem_not_allowed">Het Nightscout-token van deze telefoon heeft geen beheerdersrechten en kan daarom geen token voor de client aanmaken. Gebruik hier een beheerders-token of voeg de client toe met de pincode.</string>
+    <string name="authorized_clients_token_problem_name_taken">Nightscout heeft al een token met deze naam en andere rechten. Kies een andere naam.</string>
+    <string name="authorized_clients_token_problem_name_in_use">Een client met deze naam bestaat al. Kies een andere naam, of verwijder de bestaande client.</string>
     <string name="authorized_clients_token_problem_failed">Nightscout heeft het nieuwe token niet vermeld, dus het is opnieuw verwijderd. Er is nog niets achtergelaten. Probeer het opnieuw.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout heeft het nieuwe token niet weergegeven en het kon ook niet meer worden verwijderd. Verwijder het token %1$s in Nightscout en probeer het daarna opnieuw.</string>
     <string name="authorized_clients_token_show_qr">Toon QR-code</string>
     <string name="authorized_clients_token_delete_title">Verwijder het token?</string>
     <!-- Pair with master (client side PIN entry) -->
