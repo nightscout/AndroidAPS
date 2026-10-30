@@ -32,7 +32,6 @@
     <string name="pref_title_alert_urgent_as_android_notification">Spúšťať naliehavé výstrahy, ako upozorenia pre systém Androide</string>
     <string name="pref_title_alert_increase_volume">Postupné zvyšovanie hlasitosti upozornení</string>
     <string name="pref_title_alert_override_dnd">Potlačiť režim Nerušiť</string>
-    <string name="pref_summary_alert_override_dnd">Pokiaľ je to povolené, zvuk alarmu i v prípade, že je telefón stlmený, alebo v režime Nerušiť. Pokiaľ je to vypnuté, alarmy zostanú v týchto režimoch tiché.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Nahrávať glykémie do NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Zaznamenať výmenu senzora</string>
