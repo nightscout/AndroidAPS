@@ -32,10 +32,9 @@
     <string name="pref_title_alert_urgent_as_android_notification">Geef dringende alarmen als Android meldingen</string>
     <string name="pref_title_alert_increase_volume">Geleidelijk volume voor meldingen verhogen</string>
     <string name="pref_title_alert_override_dnd">Niet storen-stand negeren</string>
-    <string name="pref_summary_alert_override_dnd">Als deze optie is ingeschakeld, klinken AAPS-alarmen ook als de telefoon op stil staat of in de Niet storen-stand staat. Als deze optie is uitgeschakeld, blijven alarmen in deze modi stil.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Upload data naar NS</string>
-    <string name="pref_title_bg_source_create_sensor_change">Log sensor vervanging</string>
+    <string name="pref_title_bg_source_create_sensor_change">Log plaatsen nieuwe sensor</string>
     <string name="pref_summary_bg_source_create_sensor_change">Maak een behandelgebeurtenis aan bij het plaatsen van een nieuwe sensor.</string>
     <!-- APS preferences -->
     <string name="pref_title_aps_use_dynamic_sensitivity">Gebruik dynamische gevoeligheid</string>
@@ -147,6 +146,7 @@
     <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Aangepaste wijzerplaat</string>
     <string name="pref_title_wear_notify_on_smb">Melding bij SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Stuur melding naar het horloge bij een SMB.</string>
+    <string name="pref_title_wear_broadcast_data">Gegevens delen met smartwatch</string>
     <string name="pref_summary_wear_broadcast_data">Gegevens via een Intent delen met smartwatch-apps van derden.</string>
     <!-- Site rotation preferences -->
     <string name="pref_title_site_rotation_manage_pump">Plaatsingslocatie pomp beheren</string>
@@ -191,12 +191,14 @@
     <!-- IntKey: Safety preferences -->
     <string name="pref_title_max_carbs">Maximum toegestane koolhydraten</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Minimum wijziging open loop</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop zal alleen een wijzigingsverzoek tonen als de verandering groter is dan deze waarde in %. De standaard waarde is 20%</string>
     <!-- IntKey: APS preferences -->
     <string name="pref_title_smb_frequency">SMB interval</string>
     <string name="pref_title_smb_max_minutes">Aantal minuten basale insuline waarop SMB’s worden begrensd</string>
     <string name="pref_title_uam_smb_max_minutes">Aantal minuten basale insuline waarop SMB’s worden begrensd bij UAM</string>
     <string name="uam_smb_max_minutes">UAM SMB max minuten</string>
+    <string name="pref_title_carbs_request_threshold">Minimum benodigde koolhydraten</string>
     <string name="carbs_req_threshold_summary">Minimum gram benodigde koolhydraten waarbij een waarschuwing wordt gegeven. Wanneer er minder koolhydraten nodig zijn dan dit getal, wordt er geen waarschuwing gegeven.</string>
     <string name="half_basal_exercise_target_summary">Stel in op nummer, b.v. 160, wat betekent dat wanneer een tijdelijk streefdoel op 160 mg/dL is ingesteld en \"Hoog tijdelijk streefdoel verhoogt gevoeligheid\"=aan, zal basaal op 50%% worden ingesteld (120 = 75%%; 140 = 60%%).</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">Percentage van maxIOB waarbij SMB\'s worden uitgeschakeld.\nStandaardwaarde: 100%\nMet 100% wordt deze functie effectief uitgeschakeld.</string>
@@ -207,14 +209,21 @@
     <!-- IntKey: Maintenance preferences -->
     <string name="pref_title_logs_amount">Aantal logbestanden te verzenden</string>
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Maximale ouderdom glucosegegevens</string>
+    <string name="pref_title_pump_unreachable_threshold">Maximale tijd pomp onbereikbaar</string>
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Standaardperiode</string>
     <string name="autotune_default_tune_days_summary">Standaard aantal dagen aan gegevens dat Autotune verwerkt (tot 30)</string>
     <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">Minimale tijd tussen opdrachten</string>
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">Interval willekeurige BG waarden</string>
     <string name="pref_title_random_bg_randomize">Genereer willekeurige BG waarden</string>
     <string name="pref_summary_random_bg_randomize">Voeg ruis toe, laat tijdstempels variëren, maak trendpijlen willekeurig en voeg zo nu en dan willekeurige koolhydraten toe. Schakel deze optie uit voor een zuivere, deterministische sinusgolf waarbij de trendpijl wordt bepaald door de helling van de golf.</string>
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Waarschuwing ouderdom glucosegegevens</string>
+    <string name="pref_title_urgent_alarm_stale_data">Kritieke ouderdom glucosegegevens</string>
     <!-- IntKey: Site rotation preferences -->
     <string name="pref_title_site_rotation_profile">Gebruikersprofiel voor plaatsingslocaties</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
@@ -314,7 +323,10 @@
     <string name="openapssmb_max_iob_summary">Deze waarde wordt in de context van OpenAPS Max IOB genoemd.\nOpenAPS zal geen extra insuline toedienen als de huidige IOB hoger is dan deze waarde. De waarde wordt ook beïnvloed door het patiënttype.</string>
     <string name="pref_title_ama_max_iob">Max. IOB voor AMA</string>
     <string name="openapsma_max_iob_summary">Deze waarde wordt in de context van OpenAPS Max IOB genoemd.\nDit is de maximale hoeveelheid insuline (in eenheden) die APS in één keer kan leveren. De waarde wordt ook beïnvloed door het patiënttype.</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Standaard waarde: 3.0 Dit is een belangrijke veiligheid parameter van OpenAPS. Dit limiteert je basaal met een max van 3 maal je hoogste basale dosis. Normaal hoef je deze niet te veranderen. Het is echter belangrijk dat je de ingebouwde limieten kent.</string>
+    <string name="pref_title_max_daily_multiplier">Maximum op basis van profiel</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Standaardwaarde: 3\nDit is een belangrijke veiligheidslimiet van OpenAPS. Hiermee wordt de basaalstand beperkt tot maximaal 3 keer de hoogste basaalstand van de gebruiker. Waarschijnlijk hoef je deze waarde niet aan te passen, maar het is goed om te weten dat dit de achtergrond is van de veiligheidslimieten die worden aangeduid met ‘3× maximaal dagtotaal; 4× huidige basaalstand’.</string>
+    <string name="pref_title_current_basal_multiplier">Maximum op basis van actuele basaal</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Standaardwaarde: 4\nDit is de andere helft van de belangrijke veiligheidslimieten van OpenAPS en vormt samen met de vorige limiet de combinatie ‘3× maximaal dagtotaal; 4× huidige basaalstand’. Dit betekent dat de basaalstand, ongeacht de maximale basaalstand die op je pomp is ingesteld, nooit hoger kan zijn dan 4 keer de huidige basaalstand. Dit voorkomt dat je in een gevaarlijke situatie terechtkomt doordat je de maximale basaalstand te hoog instelt voordat je begrijpt hoe het algoritme werkt. De meeste gebruikers hoeven deze waarde nooit aan te passen. Als je merkt dat je regelmatig tegen deze veiligheidslimiet aanloopt, is het waarschijnlijk verstandiger om andere instellingen na te lopen.</string>
     <string name="pref_title_bolus_snooze_divisor">DIA-deler voor bolus-snooze</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">Standaard waarde: 2\nDe bolus-snooze is actief nadat je een maaltijdbolus hebt toegediend. Hierdoor zal de loop na het eten niet reageren met een verlaagd tijdelijk basaal. Bij de standaardwaarde van 2 en een DIA van 3 uur is de bolus-snooze gemiddeld 1,5 uur actief (3 uur DIA / 2).</string>
     <string name="pref_title_ama_min_5m_carbs_impact">AMA min 5 m koolhydraten impact</string>
@@ -322,26 +334,43 @@
     <string name="openapsama_min_5m_carb_impact_summary">Standaardwaarde: 3,0 (AMA) of 8,0 (SMB). Dit is een instelling voor de standaardimpact van koolhydraatabsorptie per 5 minuten. De standaardwaarde komt overeen met een verwachte glucose-impact van 3 mg/dl per 5 minuten. Deze instelling bepaalt hoe snel COB wordt afgebouwd en hoeveel koolhydraatabsorptie wordt verondersteld bij het berekenen van toekomstige bloedglucosewaarden, wanneer de bloedglucose sneller daalt dan verwacht of minder sterk stijgt dan verwacht.</string>
     <string name="pref_title_absorption_cutoff">Afkapmoment koolhydraatabsorptie</string>
     <string name="absorption_cutoff_summary">Tijdspanne waarbinnen een maaltijd als volledig opgenomen wordt beschouwd. Eventueel resterende koolhydraten vervallen vanaf dat moment.</string>
+    <string name="pref_title_absorption_maxtime">Maximale absorptietijd koolhydraten</string>
     <string name="absorption_max_time_summary">Het verwachte aantal uren totdat alle koolhydraten uit een maaltijd zijn opgenomen</string>
-    <string name="openapsama_autosens_min_summary">Standaard waarde: 0.7\nDit is de andere kan van de autosens veiligheid limiet. Dit zet een limiet op hoe laag het basaal kan aangepast worden, en hoe hoog het ISF en het streef BG.</string>
+    <string name="pref_title_autosens_min">Autosens min</string>
+    <string name="openapsama_autosens_min_summary">Standaardwaarde: 0,7\nDit is de andere kant van de veiligheidslimieten van Autosens. Deze instelling begrenst hoe sterk Autosens de basaalstanden naar beneden kan aanpassen en de ISF en BG-streefwaarden naar boven kan aanpassen.</string>
+    <string name="pref_title_autosens_max">Autosens max</string>
     <string name="openapsama_autosens_max_summary">Standaard waarde: 1.2\nDit is een vermenigvuldigingsfactor die de bovengrens voor Autosens (en binnenkort ook Autotune) bepaalt. Hiermee wordt de Autosens-ratio begrensd tot maximaal 20%% boven de standaardwaarde. Deze ratio bepaalt op zijn beurt hoe sterk Autosens de basaalstanden naar boven kan aanpassen, de ISF naar beneden kan aanpassen en de BG-streefwaarden kan verlagen.</string>
+    <string name="pref_title_autoisf_min">AutoISF min</string>
     <string name="openapsama_autoISF_min_summary">Vergelijkbaar met autosens_min definieert dit hoe zwak ISF kan worden.\n\nDe standaard waarde 1.0 schakelt dit effect effectief uit.</string>
+    <string name="pref_title_autoisf_max">AutoISF max</string>
     <string name="openapsama_autoISF_max_summary">Vergelijkbaar met autosens_max definieert dit hoe sterk ISF kan worden.\n\nDe standaard waarde 1.0 schakelt dit effect effectief uit.\n\nWAARSCHUWING: Wees extreem voorzichtig bij het gebruik van waarden boven de 2,5</string>
     <string name="pref_title_bg_accel_weight">ISF-aanpassingsfactor bij versnellende BG</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Dit is de wegingsfactor die wordt toegepast wanneer de bloedglucose sneller begint te stijgen of dalen. Hierdoor wordt de ISF versterkt, wat mogelijk kan leiden tot een hogere insulinedosering.\n\nDe standaardwaarde 0,0 schakelt dit effect uit.</string>
     <string name="pref_title_bg_brake_weight">ISF-aanpassingsfactor bij vertragende BG</string>
-    <string name="openapsama_bgBrake_ISF_weight_summary">Dit is het gewicht dat wordt toegepast wanneer de glucose waarde aan het vertragen is waardoor ISF verzwakt en de insulinetoediening mogelijk vermindert.\n\nDe standaardwaarde 0.0 schakelt dit effect effectief uit.</string>
-    <string name="openapsama_lower_ISFrange_weight_summary">Dit is het gewicht dat wordt toegepast wanneer de glucose lager dan de doelwaarde is, wat ISF verzwakt en hiermee mogelijk de insulinetoediening verlaagd.\n\nDe standaardwaarde 0.0 schakelt dit effect effectief uit.</string>
-    <string name="openapsama_higher_ISFrange_weight_summary">Dit is het gewicht dat wordt toegepast wanneer de glucose hoger dan de doelwaarde is, wat ISF versterkt en hiermee mogelijk de insulinetoediening verhoogd.\n\nDe standaardwaarde 0.0 schakelt dit effect effectief uit.</string>
-    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Standaard waarde: 0. De lineaire verhoging van de SMB uitgangsratio wordt gekoppeld aan de glucose waarde [target_bg, target_bg+bg_range].\nOp target_bg is de SMB verhouding smb_delivery_ratio_min, op target_bg+bg_bereik is smb_delivery_ratio_max\nMet 0 is de lineaire verhoging SMB ratio uitgeschakeld en wordt de vaste smb_delivery_ratio gebruikt.</string>
-    <string name="openapsama_pp_ISF_weight_summary">Dit is het gewicht dat wordt toegepast bij een stijgende glucose waardoor ISF versterkt wordt en de insulinetoediening mogelijk verhoogt.\n\nDe standaardwaarde 0.0 schakelt dit effect effectief uit.</string>
-    <string name="openapsama_dura_ISF_weight_summary">Dit is het gewicht dat wordt toegepast wanneer de glucose gedurende langere tijd verhoogd blijft waardoor ISF wordt versterkt en de insulinetoediening mogelijk toeneemt.\n\nDe standaardwaarde 0.0 schakelt dit effect effectief uit.</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Standaardwaarde: 0,5 Dit is een andere instelling voor de veiligheid van OpenAPS, en geeft aan welk deel van de benodigde totale insuline kan worden geleverd als SMB. Dit om te voorkomen dat mensen in een gevaarlijk situatie terechtkomen wanneer tegelijkertijd SMB verzoeken via een telefoon van een verzorger binnenkomen. Verhoog deze experimentele waarde langzaam en met voorzichtigheid.</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Standaard waarde: 0.5 Dit is het ondergrens van een lineaire verhoging ratio in plaats van de bovenstaande vaste waarde.</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Standaard waarde: 0.5 Dit is het bovengrens van een lineaire verhoging ratio in plaats van de bovenstaande vaste waarde.</string>
-    <string name="openapsama_smb_max_range_extension_summary">Standaardwaarde: 1 Dit is een andere instelling voor de veiligheid van OpenAPS, en geeft aan met welke factor je de gebruikelijke 120 maxSMB/maxUAM minuten kunt overschrijden. Verhoog deze experimentele waarde langzaam en met voorzichtigheid.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Dit is de wegingsfactor die wordt toegepast wanneer de bloedglucose minder snel begint te veranderen. Hierdoor wordt de ISF verzwakt, wat mogelijk kan leiden tot een lagere insulinedosering.\n\nDe standaardwaarde 0,0 schakelt dit effect uit.</string>
+    <string name="pref_title_low_bg_weight">ISF-aanpassingsfactor bij lage BG</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Dit is de wegingsfactor die wordt toegepast wanneer de bloedglucose onder de streefwaarde ligt. Hierdoor wordt de ISF verzwakt, wat mogelijk kan leiden tot een lagere insulinedosering.\n\nDe standaardwaarde 0,0 schakelt dit effect uit.</string>
+    <string name="pref_title_high_bg_weight">ISF-aanpassingsfactor bij hoge BG</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Dit is de wegingsfactor die wordt toegepast wanneer de bloedglucose boven de streefwaarde ligt. Hierdoor wordt de ISF versterkt, wat mogelijk kan leiden tot een hogere insulinedosering.\n\nDe standaardwaarde 0,0 schakelt dit effect uit.</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Standaardwaarde: 0.\nDe SMB-toedieningsratio neemt lineair toe binnen het glucosebereik [target_bg, target_bg + bg_range].\nBij target_bg is de SMB-ratio gelijk aan smb_delivery_ratio_min. Bij target_bg + bg_range is deze gelijk aan smb_delivery_ratio_max. Bij de waarde 0 is deze lineaire toename van de SMB-ratio uitgeschakeld en wordt de vaste smb_delivery_ratio gebruikt. smb_delivery_ratio gebruikt.</string>
+    <string name="pref_title_pp_weight">ISF-aanpassingsfactor na de maaltijd</string>
+    <string name="openapsama_pp_ISF_weight_summary">Dit is de wegingsfactor die wordt toegepast wanneer de bloedglucose stijgt na een maaltijd. Hierdoor wordt de ISF versterkt, wat mogelijk kan leiden tot een hogere insulinedosering.\n\nDe standaardwaarde 0,0 schakelt dit effect uit.</string>
+    <string name="pref_title_dura_weight">ISF-aanpassingsfactor langdurig verhoogde BG</string>
+    <string name="openapsama_dura_ISF_weight_summary">Dit is de wegingsfactor die wordt toegepast wanneer de bloedglucose gedurende langere tijd verhoogd blijft en een stabiel niveau bereikt. Hierdoor wordt de ISF versterkt, wat mogelijk kan leiden tot een hogere insulinedosering.\n\nDe standaardwaarde 0,0 schakelt dit effect uit.</string>
+    <string name="pref_title_smb_delivery_ratio">SMB-toedieningsratio</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Standaardwaarde: 0,5\nDit is een andere belangrijke veiligheidslimiet van OpenAPS. Deze instelling bepaalt welk deel van de totale benodigde hoeveelheid insuline als SMB mag worden toegediend. Dit voorkomt dat een onveilige situatie ontstaat doordat tegelijkertijd SMB-opdrachten worden gegeven vanaf de telefoon van de zorgverlener. Verhoog deze experimentele waarde langzaam en met de nodige voorzichtigheid.</string>
+    <string name="pref_title_smb_delivery_ratio_min">Minimale SMB-toedieningsratio</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Standaardwaarde: 0,5\nDit is de ondergrens van een lineair oplopende SMB-toedieningsratio, in plaats van bovenstaande vaste waarde.</string>
+    <string name="pref_title_smb_delivery_ratio_max">Maximale SMB-toedieningsratio</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Standaard waarde: 0.5\nDit is het bovengrens van een lineair oplopende SMB-toedieningsratio, in plaats van bovenstaande vaste waarde.</string>
+    <string name="pref_title_smb_max_range_extension">Overschrijdingsfactor maximaal SMB-bereik</string>
+    <string name="openapsama_smb_max_range_extension_summary">Standaardwaarde: 1\nDit is een andere belangrijke veiligheidslimiet van OpenAPS. Deze instelling bepaalt met welke factor je de gebruikelijke limiet van 120 minuten voor maxSMB/maxUAM mag overschrijden. Verhoog deze experimentele waarde langzaam en met de nodige voorzichtigheid.</string>
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">Markering lage BG</string>
+    <string name="pref_title_high_mark">Markering hoge BG</string>
     <!-- UnitDoubleKey: APS preferences -->
-    <string name="lgs_threshold_summary">BG waarde waarbij insuline afgifte wordt onderbroken. De standaard waarde gebruikt het standaard doelmodel. Gebruiker kan waarde instellen tussen 60 mg/dl (3.3 mmol/l) en 100mg/dl(5.6mmol/l). Waarden lager dan 65/3.6 resulteren in gebruik van het standaard model</string>
+    <string name="pref_title_lgs_threshold">LGS drempelwaarde</string>
+    <string name="lgs_threshold_summary">BG waarde waarbij insuline afgifte wordt onderbroken. De standaard waarde gebruikt het standaard doelmodel. Gebruiker kan waarde instellen tussen 3.3 mmol/l (60mg/dl) en 5.6mmol/l (100mg/dl). Waarden lager dan 3.6 mmol/l (65 mg/dl) resulteren in gebruik van het standaard model</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
 </resources>
