@@ -1592,8 +1592,8 @@ build. They had drifted: the desktop copy carried five of sixteen modules, so th
 
 One list now, one task, three consumers. Android generates the `R.string` id variant so AAPT and every
 translation keep working; iOS and desktop generate the English text variant. Adding a module with
-strings is one line in `StringOwnerModules.ALL`.
+strings is one line in `StringOwnerModules.ALL` plus `registerKeyStrings("xxx")` in its build file.
 
-A module listed there but not generating strings fails the build; a module generating strings but
-missing from the list shows its names on screen. The first is the better direction, which is why the
-list is the source of truth rather than a lookup.
+Both directions fail the build now. A module listed there but not generating strings breaks the
+generated registry's imports. A module generating strings but missing from the list fails in
+`registerKeyStrings`, which takes every value from its entry in the list.

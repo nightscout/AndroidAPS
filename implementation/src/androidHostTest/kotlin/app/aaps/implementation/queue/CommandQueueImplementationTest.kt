@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -46,6 +47,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceTimeBy
@@ -207,7 +209,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         )
         // Real executor sharing this queue: notifyAboutNewCommand() signals it and it drains on its own thread.
         executor = CommandExecutor(
-            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform()
+            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform(), notificationManager
         )
 
         // start with empty queue
@@ -253,7 +255,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             { executor }, testScope, bolusProgressData, smbPause
         )
         executor = CommandExecutor(
-            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform()
+            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform(), notificationManager
         )
 
         var result: PumpEnactResult? = null
@@ -266,6 +268,65 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         // TestPumpPlugin.connect() sets connected. Without the call the queue waits for the connection until it times out.
         assertThat(testPumpPlugin.connected).isTrue()
         assertThat(result?.success).isTrue()
+    }
+
+    /** A bolus through a real executor on a phone that has no Bluetooth permission, for a real pump. */
+    private fun bolusWithoutBluetoothPermission(): PumpEnactResult? {
+        whenever(config.PUMPDRIVERS).thenReturn(true)
+        lateinit var executor: CommandExecutor
+        commandQueue = CommandQueueImplementation(
+            aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
+            fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
+            pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
+            { executor }, testScope, bolusProgressData, smbPause
+        )
+        executor = CommandExecutor(
+            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData,
+            TestCommandExecutionPlatform(bluetoothPermission = false), notificationManager
+        )
+        var result: PumpEnactResult? = null
+        CoroutineScope(Dispatchers.IO).launch { result = commandQueue.bolus(DetailedBolusInfo()) }
+        var waitedMs = 0
+        while (result == null && waitedMs < 8000) {
+            Thread.sleep(100); waitedMs += 100
+        }
+        return result
+    }
+
+    /**
+     * Without the Bluetooth permission no command can reach the pump. The bolus fails at once with that reason, and a
+     * notification says what to fix (#5440). It used to wait in a loop with a snackbar every 5 s, and the bolus was
+     * given whenever the permission came back, maybe hours late.
+     */
+    @Test
+    fun `without the Bluetooth permission a bolus fails at once and says why`() = runTest {
+        whenever(notificationManager.notifications).thenReturn(MutableStateFlow(emptyList()))
+
+        val result = bolusWithoutBluetoothPermission()
+
+        assertThat(result?.success).isFalse()
+        // A failure with its alarm, not a quiet cancel: the user wanted this insulin.
+        assertThat(result?.cancelled).isFalse()
+        assertThat(result?.comment).isEqualTo("Application needs bluetooth permission")
+        verify(notificationManager).post(
+            eq(NotificationId.BLUETOOTH_PERMISSION_MISSING), eq(CoreUiStrings.need_connect_permission),
+            any<NotificationLevel>(), any<Int>(), any<Long>(), any<Long>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
+        )
+    }
+
+    /** Posting again would replace it with a new date and raise the Android notification again. */
+    @Test
+    fun `the Bluetooth permission notification is not posted again while it is shown`() = runTest {
+        val shown = AapsNotification(NotificationId.BLUETOOTH_PERMISSION_MISSING, instanceKey = 0, text = "", level = NotificationLevel.IMPORTANT)
+        whenever(notificationManager.notifications).thenReturn(MutableStateFlow(listOf(shown)))
+
+        val result = bolusWithoutBluetoothPermission()
+
+        assertThat(result?.success).isFalse()
+        verify(notificationManager, never()).post(
+            eq(NotificationId.BLUETOOTH_PERMISSION_MISSING), any<TextRef>(),
+            any<NotificationLevel>(), any<Int>(), any<Long>(), any<Long>(), anyOrNull(), any<List<NotificationAction>>(), anyOrNull()
+        )
     }
 
     @Test
@@ -281,7 +342,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             { executor }, testScope, bolusProgressData, smbPause
         )
         executor = CommandExecutor(
-            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform()
+            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform(), notificationManager
         )
         whenever(rh.gs(app.aaps.core.ui.R.string.carbs_not_saved_after_bolus)).thenReturn("Carbs could not be saved")
         // The pump delivers successfully (TestPumpPlugin), but storing carbs blows up.

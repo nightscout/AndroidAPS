@@ -1,11 +1,28 @@
 package app.aaps.ios.shell.di
 
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.resources.TextRefValueRegistry
+import app.aaps.core.keys.KeysStrings
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.implementation.ImplementationStrings
+import app.aaps.plugins.aps.ApsStrings
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.plugins.calibration.CalibrationStrings
+import app.aaps.plugins.configuration.ConfigurationStrings
+import app.aaps.plugins.constraints.ConstraintsStrings
+import app.aaps.plugins.main.MainStrings
+import app.aaps.plugins.sensitivity.SensitivityStrings
+import app.aaps.plugins.smoothing.SmoothingStrings
+import app.aaps.plugins.source.SourceStrings
+import app.aaps.plugins.sync.SyncStrings
+import app.aaps.pump.virtual.VirtualStrings
+import app.aaps.ui.UiStrings
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 /**
@@ -48,25 +65,38 @@ class IosStringOwnersTest {
     }
 
     /**
-     * Every owner the framework links, checked by asking each for a name it does own.
+     * Every module the framework links, checked by asking each for a name it really owns.
      *
-     * A module whose `owner.set(...)` is in its build file but missing from `GeneratedStringOwners` shows
-     * string names on its own screens and nowhere else, so it is worth failing here instead.
+     * The build already makes sure each module is in the generated registry. This checks the other
+     * half: that the registration really reaches that module's text. Each name comes from the module's
+     * own generated object, so its owner is spelled the way the module spells it, and a missing
+     * registration gives null here instead of string names on that module's screens.
      */
     @Test
-    fun `every linked module has an owner registered`() {
+    fun `every linked module resolves one of its own strings`() {
         GeneratedStringOwners.registerAll()
 
-        val expected = listOf(
-            "keys", "interfaces", "coreUi", "implementation", "ui", "aps", "automation",
-            "calibration", "configuration", "constraints", "main", "sensitivity", "smoothing",
-            "source", "sync", "virtual"
-        )
-        // A registered owner answers null for a name it does not have; an unregistered one is
-        // indistinguishable from that, so the check is that the lookup itself is wired - asking for
-        // a name no module owns must not throw, and asking a known one must resolve.
-        expected.forEach { owner -> assertNull(textOf(owner, "definitely_not_a_string_name")) }
-        assertEquals("Settings", textOf("coreUi", "settings"))
+        listOf(
+            InterfacesStrings.advisoralarm,
+            KeysStrings.absorption_cutoff_summary,
+            CoreUiStrings.configbuilder_general,
+            ImplementationStrings.backup_to_google_drive,
+            UiStrings.a11y_add_new_insulin,
+            ApsStrings.array_of_elements,
+            AutomationStrings.automation,
+            CalibrationStrings.no_calibration_name,
+            ConfigurationStrings.units,
+            ConstraintsStrings.dst_plugin_name,
+            MainStrings.basal_shortname,
+            SensitivityStrings.sensitivity_oref1,
+            SmoothingStrings.no_smoothing_name,
+            SourceStrings.ns_client_bg,
+            SyncStrings.a11y_otp_qr_code,
+            VirtualStrings.virtual_pump_type
+        ).forEach { ref ->
+            val named = ref as TextRef.Named
+            assertNotNull(TextRefValueRegistry.textOf(named), "owner '${named.owner}' has no text, so it is not registered")
+        }
     }
 
     @Test

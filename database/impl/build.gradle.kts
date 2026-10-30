@@ -1,8 +1,5 @@
 plugins {
-    id("kmp-test-defaults")
-    kotlin("multiplatform")
-    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
-    alias(libs.plugins.android.kmp.library)
+    id("kmp-android-library")
     alias(libs.plugins.ksp)
     // Metro is the only DI framework here now: AppRepository comes from DatabaseBindings.
     alias(libs.plugins.metro)
@@ -21,8 +18,6 @@ ksp {
 kotlin {
     android {
         namespace = "app.aaps.database.impl"
-        compileSdk = Versions.compileSdk
-        minSdk = Versions.minSdk
         // Needed for the schema JSONs under src/androidDeviceTest/assets to be packaged: with resources
         // off, the multiplatform android plugin skips the asset merge entirely.
         androidResources { enable = true }
@@ -37,26 +32,11 @@ kotlin {
         withDeviceTest {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-
-        // Restated from android-module-dependencies, which this module can no longer apply.
-        lint {
-            checkReleaseBuilds = false
-            disable += "MissingTranslation"
-            disable += "ExtraTranslation"
-        }
     }
 
-    // Apple klibs cross compile on Windows; linking and running still need a Mac. Room only runs its
-    // processor for Android here (see kspAndroid below) - the entities and DAOs in commonMain need the
-    // annotations to resolve, not the generated implementation, and the @Database class that does need
-    // it stays in androidMain with Converters.
-    iosArm64()
-    iosSimulatorArm64()
-
-    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
-    // plain jvm() target, so no special target name is needed.
-    jvm()
+    // Room only runs its processor for Android here (see kspAndroid below) - the entities and DAOs in
+    // commonMain need the annotations to resolve, not the generated implementation, and the @Database
+    // class that does need it stays in androidMain with Converters.
 
     // Android and desktop share what is plain JVM. Applied explicitly, because the manual dependsOn
     // below would otherwise switch the automatic hierarchy off and silently unwire iosMain.

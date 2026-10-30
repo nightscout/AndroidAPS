@@ -258,6 +258,11 @@ enum class NotificationId(
     // the same reason as above.
     SECRETS_NOT_PROTECTED(IMPORTANT, SYSTEM),
 
+    // A real pump is selected, but AAPS has no Bluetooth (Nearby devices) permission, so no command can reach the
+    // pump and the queue fails them (#5440). It removes itself once the permission is back. IMPORTANT, not URGENT:
+    // a bolus that fails because of it raises its own alarm. Appended at the END for the same reason as above.
+    BLUETOOTH_PERMISSION_MISSING(IMPORTANT, PUMP),
+
     // A pre-soak sensor of a native CGM driver was made the production sensor by the app itself, without the
     // user pressing the promote button. Appended at the END for the same reason as above.
     CGM_STAGING_AUTO_PROMOTED(NORMAL, CGM),

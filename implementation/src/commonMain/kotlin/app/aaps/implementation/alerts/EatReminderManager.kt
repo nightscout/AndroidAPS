@@ -64,11 +64,16 @@ class EatReminderManager(
         if (!isMaster("start") || durationMs <= 0L) return
         val now = dateUtil.now()
         val new = EatReminderState(startedAt = now, endsAt = now + durationMs, durationMs = durationMs)
-        lock.withLock {
+        val rang = lock.withLock {
             if (!alarm.schedule(new.startedAt, new.endsAt)) return
+            val wasRinging = _state.value?.alarmRang == true
             save(new)
+            wasRinging
         }
         aapsLogger.debug(LTag.AUTOMATION, "Eat reminder started for ${T.msecs(durationMs).mins()} min")
+        // The alarm of the timer this one replaces, as in extend(). The new timer has not rung, so nothing else would
+        // end that alarm: its screen closes at once, and it came back each time AAPS came to the front (#5439).
+        if (rang) uiInteraction().stopEatReminderAlarm()
     }
 
     override fun stop() {
