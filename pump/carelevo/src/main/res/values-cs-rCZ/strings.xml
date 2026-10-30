@@ -1,16 +1,215 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_description">Integrace pumpy Carelevo</string>
+    <string name="carelevo_alarm_channel_name">Alarmy Carelevo</string>
+    <string name="carelevo_alarm_channel_description">Oznámení o alarmech patche Carelevo</string>
+    <string name="common_btn_ok">OK</string>
+    <string name="carelevo_bluetooth_state_key">Stav Bluetooth</string>
+    <string name="carelevo_serial_number_key">Sériové číslo</string>
+    <string name="carelevo_boot_date_time_key">Čas aktivace</string>
+    <string name="carelevo_expiration_key">Konec platnosti</string>
+    <string name="carelevo_basal_rate_key">Bazální dávka</string>
+    <string name="carelevo_temp_basal_rate_key">Dočasný bazál</string>
+    <string name="carelevo_insulin_remain_key">Zbývající inzulín</string>
+    <string name="carelevo_running_remain_time">Zbývající čas patche</string>
+    <string name="carelevo_total_insulin_key">Celkem vydaný inzulín</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%1$d h %2$d min</string>
+    <string name="common_label_unit_value_minute">%d min</string>
+    <string name="common_label_unit_value_duration_hour">%d h</string>
+    <string name="common_label_unit_value_dose_with_space">%s U</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f U/h</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">Chcete obnovit výdej inzulínu?</string>
+    <string name="carelevo_pump_resume_description">Výdej inzulínu se obnoví, když stisknete Potvrdit.</string>
+    <string name="carelevo_pump_stop_duration_title">Nastavte, na jak dlouho se má výdej inzulínu pozastavit.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 minut</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 hodina</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 hodina 30 minut</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 hodiny</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 hodiny 30 minut</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 hodiny</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 hodiny 30 minut</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 hodiny</string>
+    <string name="common_unit_value_day_hour_min">%1$d d %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">Zbývá %1$d min %2$02d s</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">Návod k plnění</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Deaktivovat patch</string>
+    <string name="carelevo_btn_input_search_patch">Hledat patch</string>
+    <string name="carelevo_btn_retry">Opakovat</string>
+    <string name="carelevo_btn_next">Další</string>
+    <string name="carelevo_btn_safety_check">Bezpečnostní kontrola</string>
+    <string name="carelevo_btn_cancel">Zrušit</string>
+    <string name="carelevo_btn_confirm">Potvrdit</string>
+    <string name="carelevo_btn_research">Hledat znovu</string>
+    <string name="carelevo_btn_needle_insert_check">Potvrdit zavedení</string>
+    <string name="carelevo_state_none_value">Žádný aktivní patch</string>
+    <string name="carelevo_state_disconnected_value">Odpojeno</string>
+    <string name="carelevo_state_connected_value">Připojeno</string>
+    <string name="carelevo_overview_connect_btn_label">Aktivovat patch</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Zahodit patch</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">Pozastavit výdej</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Obnovit výdej</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">Vyberte naplněné množství.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Rozsah: %1$d–%2$d U</string>
+    <string name="carelevo_insulin_refill_step1">1. Odlepte krycí papír z blistru s patchem.</string>
+    <string name="carelevo_insulin_refill_step2">2. Vydezinfikujte gumovou zátku lahvičky s inzulínem alkoholovým tamponem.</string>
+    <string name="carelevo_insulin_refill_step3">3. Sundejte z inzulínové stříkačky ochranný kryt jehly tak, že ho stáhnete rovně.</string>
+    <string name="carelevo_insulin_refill_step4">4. Vytáhněte píst stříkačky a naberte do ní asi 2 ml vzduchu.</string>
+    <string name="carelevo_insulin_refill_step5">5. Zapíchněte stříkačku se vzduchem do lahvičky s inzulínem a vstříkněte vzduch do lahvičky.</string>
+    <string name="carelevo_insulin_refill_step6">6. Stříkačku nechte zapíchnutou, otočte lahvičku i stříkačku dnem vzhůru a pomocí tlaku naberte do stříkačky asi 2 ml inzulínu.</string>
+    <string name="carelevo_insulin_refill_step7">7. Zapíchněte jehlu stříkačky svisle do plnicího otvoru patche (①) až na dno. Vytáhněte píst úplně nahoru a pak ho pusťte. Vytáhněte stříkačku z plnicího otvoru.</string>
+    <string name="carelevo_insulin_refill_step8">8. Držte stříkačku svisle a jemně poklepejte na její bok, aby se všechny vzduchové bubliny shromáždily nahoře.</string>
+    <string name="carelevo_insulin_refill_step9">9. Zapíchněte jehlu zpět do lahvičky s inzulínem, vytlačte do ní všechen vzduch a pak naberte přesné množství inzulínu, které spotřebujete za dobu nošení patche.</string>
+    <string name="carelevo_insulin_refill_step10">10. Vytáhněte stříkačku z lahvičky. Pokud jsou v ní vzduchové bubliny, držte stříkačku svisle, poklepejte na její bok, aby bubliny stoupaly nahoru, a vytlačte ze stříkačky všechen vzduch.</string>
+    <string name="carelevo_insulin_refill_step11">11. Zarovnejte horní okraj pístu s ryskou stupnice, abyste přesně nastavili dávku inzulínu.</string>
+    <string name="carelevo_insulin_refill_step12">12. Zapíchněte jehlu svisle do plnicího otvoru patche (①) až na dno a pomalu tlačte píst, abyste do patche vstříkli všechen inzulín.</string>
+    <string name="carelevo_connect_prepare_title">Patch spuštěn</string>
+    <string name="carelevo_connect_patch_title">Připojit patch</string>
+    <string name="carelevo_connect_safety_check_title">Bezpečnostní kontrola</string>
+    <string name="carelevo_connect_patch_attach_title">Přilepit patch</string>
+    <string name="carelevo_connect_needle_check_title">Zavést jehlu</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Informační alarm patche</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">Nastavení upozornění na málo inzulínu</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">Nastavení upozornění na dobu používání patche</string>
+    <string name="carelevo_title_fill_insulin">Naplnit patch inzulínem</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Naplňte patch inzulínem (%1$d–%2$d U) podle doby používání (až 168 hodin). Klepněte na [Naplněné množství] a vyberte, kolik inzulínu jste naplnili.</string>
+    <string name="carelevo_patch_step_1">KROK 1.</string>
+    <string name="carelevo_patch_step_2">KROK 2.</string>
+    <string name="carelevo_patch_step_3">KROK 3.</string>
+    <string name="carelevo_patch_connect_step_1_title">Sundat kryt jehly</string>
+    <string name="carelevo_patch_connect_step_1_desc">Vyndejte patch z blistru a sundejte kryt jehly.</string>
+    <string name="carelevo_patch_connect_step_2_title">Zapnout a připojit</string>
+    <string name="carelevo_patch_connect_step_2_desc">Stiskněte tlačítko napájení na déle než 1 sekundu. Po pípnutí klepněte níže na tlačítko [Hledat patch].</string>
+    <string name="carelevo_patch_safety_check_start_title">Bezpečnostní kontrola</string>
+    <string name="carelevo_patch_safety_check_end_title">Bezpečnostní kontrola dokončena</string>
+    <string name="carelevo_patch_safety_check_start_desc">Patch byl úspěšně připojen.\nStiskněte tlačítko [Bezpečnostní kontrola].</string>
+    <string name="carelevo_patch_safety_check_progress_desc">Probíhá bezpečnostní kontrola.</string>
+    <string name="carelevo_patch_safety_check_end_desc">Bezpečnostní kontrola dokončena.\nStiskněte tlačítko Další.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">Zkontrolujte, zda se na špičce jehly vytvořila kapka inzulínu.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">Pokud kapka inzulínu není vidět, stiskněte tlačítko [Opakovat].</string>
+    <string name="carelevo_patch_attach_step1_title">Vydezinfikovat místo pro patch</string>
+    <string name="carelevo_patch_attach_step1_desc">Místo důkladně očistěte alkoholovým tamponem.</string>
+    <string name="carelevo_patch_attach_step2_title">Odstranit krycí pásku</string>
+    <string name="carelevo_patch_attach_step2_desc">Vyndejte patch z blistru a sundejte kryt jehly.</string>
+    <string name="carelevo_patch_attach_step3_title">Přilepit patch</string>
+    <string name="carelevo_patch_attach_step3_desc">Přilepte patch na kůži tak, aby označená tečka mířila nahoru.</string>
+    <string name="carelevo_patch_attach_step4_desc">Až patch přilepíte, stiskněte tlačítko Další.</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">Sundat bezpečnostní kryt</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Otočte bezpečnostní kryt ve směru šipky a sundejte ho.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Zavést jehlu</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Stiskněte tlačítko aplikátoru až na doraz. Když je jehla úspěšně zavedena, ozve se pípnutí.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">Stiskněte a držte 10 sekund.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">Zbývající pokusy o zavedení jehly: %d</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Deaktivovat patch a spustit nový?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Stisknutím tlačítka [OK] se zastaví výdej inzulínu.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">Ukončit bez spuštění výdeje?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Stisknutím tlačítka [OK] bude tento patch nepoužitelný.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">Zrušit aktivaci patche?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">Stisknutím tlačítka [OK] se zahodí, co jste zadali.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">Pokud je níže nalezený patch ten správný, klepněte na tlačítko Potvrdit.</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">Jehla zavedena a aplikátor odstraněn</string>
+    <string name="carelevo_dialog_connect_detached">Aplikátor odstraněn</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">Stiskněte úchyty na obou stranách aplikátoru a oddělte ho od patche,\na pak stiskněte tlačítko `Aplikátor odstraněn`. Začne výdej inzulínu.</string>
     <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth není zapnutý. Zkontrolujte ho.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">Žádný patch není připojen.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">Patch ještě není připojen. Zkuste to za chvíli znovu.</string>
+    <string name="carelevo_toast_msg_scan_failed">Hledání selhalo. Zkuste to znovu.</string>
+    <string name="carelevo_toast_msg_patch_not_found">Nebyl nalezen žádný patch. Zkuste to znovu.</string>
+    <string name="carelevo_toast_msg_connect_failed">Připojení patche selhalo. Zkuste to znovu.</string>
     <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">Profil není nastaven.</string>
     <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">Kontrola jehly selhala.</string>
     <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">Zahození patche selhalo. Zkuste to znovu.</string>
     <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_failed">Požadavek na výdej bazálu selhal. Zkuste to znovu.</string>
     <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">Obnovení výdeje selhalo. Zkuste to znovu.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">Pozastavení výdeje selhalo. Zkuste to znovu.</string>
     <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">Bezpečnostní kontrola selhala.</string>
     <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Málo inzulínu</string>
+    <string name="alarm_feat_title_warning_expired_patch">Platnost patche vypršela</string>
+    <string name="alarm_feat_title_warning_low_battery">Slabá baterie</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">Vysoká/nízká teplota</string>
+    <string name="alarm_feat_title_warning_not_used_app">Automatické vypnutí</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">BLE nepřipojeno</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">Vypršel čas na aplikaci patche</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">Autodiagnostika selhala</string>
+    <string name="alarm_feat_title_warning_patch_error">Chyba patche</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">Okluze</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">Chyba zavedení jehly</string>
     <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Málo inzulínu</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase2">Doba provozu patche skončila</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase1">Patch brzy vyprší</string>
+    <string name="alarm_feat_title_alert_low_battery">Slabá baterie</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">Vysoká/nízká teplota</string>
+    <string name="alarm_feat_title_alert_not_used_app">Automatické vypnutí</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">BLE nepřipojeno</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">Aktivace patche nedokončena</string>
+    <string name="alarm_feat_title_alert_resume_infusion">Spustit inzulín</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">Zapněte Bluetooth</string>
     <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_low_insulin">Málo inzulínu</string>
+    <string name="alarm_feat_title_notice_expired_patch">Upozornění na dobu používání patche</string>
+    <string name="alarm_feat_title_notice_check_patch">Upozornění na kontrolu patche</string>
+    <string name="alarm_feat_title_notice_change_time_zone">Změna časového pásma</string>
+    <string name="alarm_feat_title_notice_check_bg">Zkontrolujte glykémii</string>
+    <string name="alarm_feat_title_notice_lgs_started">LGS spuštěno</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS ukončeno</string>
+    <string name="alarm_feat_title_notice_lgs_error">LGS není k dispozici</string>
+    <string name="alarm_feat_title_notice_unknown">Chyba patche</string>
+    <string name="alarm_feat_desc_unknown">Neočekávaná chyba patche.</string>
     <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">Deaktivovat patch</string>
+    <string name="alarm_feat_btn_patch_force_discard">Zahodit patch</string>
+    <string name="alarm_feat_btn_resume_infusion">Spustit inzulín</string>
     <!-- General Messages -->
+    <string name="alarm_feat_msg_check_patch_connect">Zkontrolujte připojení patche.</string>
+    <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">Bolus nelze vydat. Dostupný bolus: %1$s</string>
+    <string name="carelevo_bolus_rejected_exceed_limit_none">Bolus nelze vydat. Nezbývá dostatek inzulínu.</string>
     <!--    notification -->
+    <string name="alarm_notification_desc_warning_low_insulin">Zbývá méně než 10 U inzulínu, výdej inzulínu byl zastaven. Klepněte na tlačítko [Deaktivovat patch] a patch hned vyměňte.</string>
+    <string name="alarm_notification_desc_warning_expired_patch">Platnost patche vypršela, výdej inzulínu byl zastaven. Klepněte na tlačítko [Deaktivovat patch] a patch hned vyměňte.</string>
+    <string name="alarm_notification_desc_warning_low_battery">Slabá baterie, výdej inzulínu byl zastaven. Klepněte na tlačítko [Zahodit patch] a patch hned vyměňte.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">Výdej inzulínu byl zastaven. Hned se přesuňte na místo s vhodnou teplotou (40℉ ~ 99℉).</string>
+    <string name="alarm_notification_desc_warning_not_used_app">Výdej inzulínu byl zastaven. Klepněte na tlačítko [Spustit inzulín] a znovu spusťte výdej bazálu.</string>
+    <string name="alarm_notification_desc_warning_incomplete_patch_setting">Vypršel čas na aplikaci patche. Klepněte na tlačítko [Deaktivovat patch] a patch hned vyměňte.</string>
+    <string name="alarm_notification_desc_warning_failed_safety_check">Autodiagnostika selhala. Klepněte na tlačítko [Deaktivovat patch] a patch hned vyměňte.</string>
+    <string name="alarm_notification_desc_warning_patch_error">Výdej inzulínu byl zastaven kvůli neočekávané chybě. Klepněte na tlačítko [Deaktivovat patch] a patch hned vyměňte.</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">Výdej inzulínu byl zastaven kvůli okluzi. Klepněte na tlačítko [Deaktivovat patch] a patch hned vyměňte.</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">Zavedení jehly selhalo. Klepněte na tlačítko [Deaktivovat patch] a patch hned vyměňte.</string>
+    <string name="alarm_notification_desc_alert_low_insulin">Zbývá méně než %s U inzulínu. Připravte se na výměnu patche.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase2">Platnost patche vypršela. Patch hned vyměňte.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase1">Platnost patche brzy vyprší. Patch hned vyměňte.</string>
+    <string name="alarm_notification_desc_alert_low_battery">Baterie je slabá. Připravte se na výměnu patche.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">Výdej inzulínu je pozastaven kvůli extrémní teplotě. Pro obnovení se přesuňte na místo s teplotou 40℉–99℉.</string>
+    <string name="alarm_notification_desc_alert_not_used_app">Klepněte na [OK]. Pokud tuto výstrahu ignorujete, změní se na kritický alarm a výdej inzulínu se zastaví.</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">Klepnutím na tlačítko [OK] dokončete aktivaci patche.</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">Pozastavení inzulínu skončilo. Klepnutím na [Spustit inzulín] spustíte výdej.</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">K používání patche je potřeba Bluetooth. Klepněte na [OK] a zapněte Bluetooth.</string>
+    <string name="alarm_notification_desc_notice_low_insulin">Zbývá méně než %s U inzulínu. Připravte se na výměnu patche.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">Patch se používá %1$s d %2$s h. Mějte to na paměti.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">Časové pásmo se změnilo z %1$s (UTC %2$s) na %3$s (UTC %4$s).</string>
+    <string name="alarm_notification_desc_notice_check_bg">Od bolusu uplynulo %s. Zkontrolujte si glykémii.</string>
+    <string name="alarm_notification_desc_notice_lgs_started">LGS bylo spuštěno.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS bylo ukončeno kvůli odpojení patche/CGM.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS bylo ukončeno kvůli pozastavení LGS.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">LGS bylo ukončeno, protože uplynul nastavený čas.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS bylo ukončeno, protože LGS bylo vypnuto.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">LGS bylo ukončeno, protože hodnota z CGM překročila nastavenou mez.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS bylo ukončeno z neznámého důvodu.</string>
+    <string name="alarm_notification_desc_notice_lgs_error">Zkontrolujte připojení patche a CGM.</string>
+    <string name="carelevo_profile_update_skip_comment">Přeskočeno: aktualizace příliš brzy.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">Patch nepotvrdil zastavení. Čeká se na konec bolusu…</string>
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">Právě byl přidán bolus, který nebyl zaznamenán. Zkontrolujte IOB a zkuste to znovu.</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Patch nepotvrdil zastavení. Je zaznamenán celý bolus %1$s.</string>
 </resources>
