@@ -2,9 +2,9 @@
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="no_temp_basal_running">Nie je spustený žiadny dočasný bazál</string>
-    <string name="start_activity_tt">Spustiť Dočasný cieľ Aktivita</string>
-    <string name="start_eating_soon_tt">Spustiť Dočasný cieľ Blížiace sa jedlo</string>
-    <string name="start_hypo_tt">Spustiť doč. cieľ Hypo</string>
+    <string name="start_activity_tt">Spustiť dočasný cieľ Aktivita</string>
+    <string name="start_eating_soon_tt">Spustiť dočasný cieľ Pred jedlom</string>
+    <string name="start_hypo_tt">Spustiť dočasný cieľ Hypo</string>
     <string name="time_offset">Časový posun</string>
     <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
     <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dd%2$dh</string>
@@ -31,7 +31,7 @@
     <string name="agp_percentile_10_90" comment="Glucose percentile band from the 10th to the 90th percentile">10–90%</string>
     <string name="agp_percentile_25_75" comment="Glucose percentile band from the 25th to the 75th percentile">25–75%</string>
     <string name="agp_percent" comment="%1$.1f=percentage value. Example: 72.4%">%1$.1f%%</string>
-    <string name="agp_range" comment="%1$s=lower glucose value, %2$s=upper glucose value. Example: 3.9–10.0">%1$s/%2$s</string>
+    <string name="agp_range" comment="%1$s=lower glucose value, %2$s=upper glucose value. Example: 3.9–10.0">%1$s–%2$s</string>
     <string name="agp_above" comment="%1$s=upper glucose limit. Example: &gt; 10.0">&gt; %1$s</string>
     <string name="agp_below" comment="%1$s=lower glucose limit. Example: &lt; 3.9">&lt; %1$s</string>
     <string name="agp_average">Priemer</string>
@@ -59,7 +59,7 @@
     <string name="do_you_want_recalculate_tdd_stats">Chcete prepočítať štatistiky CDD?</string>
     <string name="calculation_in_progress">Prebieha výpočet</string>
     <string name="age">Vek</string>
-    <string name="weight_label">Váha</string>
+    <string name="weight_label">Hmotnosť</string>
     <string name="glucose_type">Zadanie glykémie</string>
     <string name="bg_other">Iné</string>
     <string name="bg_meter">Glukomer</string>
@@ -72,12 +72,12 @@
     <string name="record_site_note">Poznámka: %1$s</string>
     <string name="delete_site_note">Poznámka odstránená</string>
     <!-- FillDialog -->
-    <string name="fill_warning">Prosím uistite sa, že hodnota zodpovedá špecifikácií Vášho setu!</string>
+    <string name="fill_warning">Uistite sa, prosím, že množstvo zodpovedá špecifikácii vášho infúzneho setu!</string>
     <string name="record_pump_site_change">Zaznamenať výmenu setu</string>
     <string name="record_insulin_cartridge_change">Zaznamenať výmenu inzulínu</string>
     <string name="fill_prime_amount">Množstvo naplnenia</string>
-    <string name="fill_pump_units_note">Množstvo náplne v pumpe v jednotkách</string>
-    <string name="fill_insulin_change">Prepni inzulín na: %1$s (bude vykonané prepnutie profilu)</string>
+    <string name="fill_pump_units_note">Množstvo naplnenia je v jednotkách pumpy</string>
+    <string name="fill_insulin_change">Prepnúť inzulín na: %1$s (bude vykonané prepnutie profilu)</string>
     <!-- Scene -->
     <string name="scene_cat_aaps">AAPS</string>
     <string name="scene_cat_activity">Aktivita</string>
@@ -93,7 +93,7 @@
     <string name="aaps_tt_hypo_icon_label">DC Hypo</string>
     <string name="aaps_tt_manual_icon_label">DC ručne</string>
     <string name="aaps_profile_icon_label">Profil</string>
-    <string name="aaps_loop_icon_label">Uzavretý okruh</string>
+    <string name="aaps_loop_icon_label">Okruh</string>
     <string name="aaps_smb_icon_label">SMB</string>
     <string name="aaps_bolus_icon_label">Bolus</string>
     <string name="aaps_carbs_icon_label">Sacharidy</string>
@@ -151,7 +151,7 @@
     <string name="label_icon_label">Štítok</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Chýba názov inzulínu</string>
-    <string name="insulin_name_exists">Inzulín s názvom %1$s už existuje, zvoľ iný názov</string>
+    <string name="insulin_name_exists">Inzulín s názvom %1$s už existuje, zvoľte iný názov</string>
     <string name="insulin_external_update_title">Konfigurácia inzulínu sa zmenila</string>
     <string name="insulin_external_update_message">Spárovaný klient zmenil konfiguráciu inzulínu. Klepnutím na OK načítate jeho zmeny a zahodíte neuložené úpravy, alebo na Zrušiť, ak chcete pokračovať v úpravách (ďalšie uloženie prepíše jeho zmeny).</string>
     <string name="insulin_edit_target_gone">Tento inzulín bol odstránený inde, takže vaše úpravy nebolo možné uložiť. Zoznam bol znova načítaný.</string>
@@ -169,23 +169,23 @@
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="clientcontrol_pending_unconfirmed_format">%1$s bolo odoslané, ale potvrdenie neprišlo.\n%2$s\nZobrazí sa tu, ak/keď ho hlavné zariadenie aplikuje.</string>
     <string name="clientcontrol_pending_stop_waiting">Zastaviť čakanie</string>
-    <string name="a11y_add_new_insulin">Pridaj nový inzulín</string>
-    <string name="a11y_delete_current_insulin">Vymaž aktuálny inzulín</string>
-    <string name="load_peak_from">Nahraj vrchol z</string>
-    <string name="cannot_delete_last_insulin">Nemôžem vymazať posledný inzulín</string>
-    <string name="cannot_delete_active_insulin">Nemôžem vymazať aktívny inzulín</string>
+    <string name="a11y_add_new_insulin">Pridať nový inzulín</string>
+    <string name="a11y_delete_current_insulin">Vymazať aktuálny inzulín</string>
+    <string name="load_peak_from">Načítať vrchol z</string>
+    <string name="cannot_delete_last_insulin">Nie je možné vymazať posledný inzulín</string>
+    <string name="cannot_delete_active_insulin">Nie je možné vymazať aktívny inzulín</string>
     <string name="reuse_profile_pct_hours">Znovu použiť %1$d%% %2$dh</string>
     <string name="percentage_label">Percento</string>
     <!-- LoopDialog -->
     <string name="disconnectpump">Odpojiť pumpu</string>
-    <string name="resume">Pokračovať</string>
+    <string name="resume">Obnoviť</string>
     <string name="reconnect">Znovu pripojiť pumpu</string>
     <string name="duration15m">15 minút</string>
     <string name="duration30m">30 minút</string>
     <string name="duration1h">1 hodina</string>
     <string name="duration2h">2 hodiny</string>
     <string name="duration3h">3 hodiny</string>
-    <string name="duration10h">10 hodiny</string>
+    <string name="duration10h">10 hodín</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">Chýba %1$d g</string>
     <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
@@ -193,27 +193,27 @@
     <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
     <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
     <string name="wizard_carbs_type_bread_desc">100% okamžité sacharidy, žiadne predĺžené sacharidy (eCarbs)</string>
-    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">eSacharidy znížené o %1$d%%, pridané eSacharidy %2$d%% oneskorené o %3$d min na %4$d h</string>
-    <string name="wizard_include_info">Stlač pre zahrnutie/vyňatie z kalkulácie:\n• BG - glykémia (ZAP na začiatku)\n• TT - dočasný cieľ (ZAP na začiatku)\n• Trend - Trend glykémie (posledný zapamätaný stav)\n• IOB - aktívny inzulín (ZAP na začiatku)\n• COB - aktívne sacharidy (posledný zapamätaný stav)</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Sacharidy znížené o %1$d%%, pridané eSacharidy %2$d%% oneskorené o %3$d min na %4$d h</string>
+    <string name="wizard_include_info">Klepnutím zahrniete/vynecháte z výpočtu:\n• BG - glykémia (ZAP na začiatku)\n• TT - dočasný cieľ (ZAP na začiatku)\n• Trend - Trend glykémie (posledný zapamätaný stav)\n• IOB - aktívny inzulín (ZAP na začiatku)\n• COB - aktívne sacharidy (posledný zapamätaný stav)</string>
     <!-- Treatments -->
     <string name="no_records_available">Nie sú k dispozícii žiadne záznamy</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="carbs_and_bolus">Sacharidy a bolusy</string>
     <string name="show_invalidated">Zobraziť zneplatnené</string>
     <string name="hide_invalidated">Skryť zneplatnené</string>
-    <string name="careportal_remove_started_events">Odstrániť všetky záznamy AAPS spustený</string>
-    <string name="user_entry">Záznam užívateľa</string>
+    <string name="careportal_remove_started_events">Odstrániť záznamy „AAPS spustený“</string>
+    <string name="user_entry">Záznam používateľa</string>
     <string name="clone_label">Klonovať</string>
-    <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Graf glukózy. Nedávne hodnoty %1$s. %2$s. %3$s</string>
+    <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Graf glykémie. Nedávne hodnoty %1$s. %2$s. %3$s</string>
     <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Zobraziť ovládacie prvky</string>
-    <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Notifikácia: %1$d</string>
+    <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Notifikácie: %1$d</string>
     <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">Žiadny dočasný cieľ, cieľ profilu</string>
-    <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">upravené slučkou</string>
+    <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">upravené okruhom</string>
     <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s v %2$s</string>
     <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">rozdiel %1$s</string>
     <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">starý záznam</string>
     <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s, %2$s</string>
-    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Graf hladiny cukru v krvi. Najnovšie hodnoty %1$s</string>
+    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Graf glykémie. Nedávne hodnoty %1$s</string>
     <string name="a11y_predictions" comment="Screen-reader description of the predicted glucose curves, which are drawn on the graph and cannot be read otherwise. %1$s=one sentence per prediction, already joined. Example: Predictions. COB prediction rises to 11.2 mmol/l. IOB prediction falls to 4.8 mmol/l.">Predpovede. %1$s</string>
     <string name="a11y_prediction_rises" comment="One predicted curve that ends higher than the current glucose. %1$s=the name of the prediction, %2$s=the highest value it reaches, with its unit. Example: COB prediction rises to 11.2 mmol/l">%1$s stúpa na %2$s.</string>
     <string name="a11y_prediction_falls" comment="One predicted curve that ends lower than the current glucose. %1$s=the name of the prediction, %2$s=the lowest value it reaches, with its unit. Example: IOB prediction falls to 4.8 mmol/l">%1$s klesá na %2$s.</string>
@@ -234,7 +234,7 @@
     <string name="remove_label">Odstrániť</string>
     <string name="active_profile_indicator">AKTÍVNY</string>
     <string name="confirm_remove_profile">Odstrániť profil %1$s?</string>
-    <string name="confirm_clone_profile">Klonovať profil %1$s?</string>
+    <string name="confirm_clone_profile">Klonovať profil „%1$s“?</string>
     <string name="profile_no_longer_exists">Zoznam profilov sa medzičasom zmenil – prosím, skúste to znovu</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
@@ -272,15 +272,15 @@
     <string name="a11y_history_next_window">Nasledujúce okno</string>
     <string name="additional_ecarbs">Pridať eSacharidy</string>
     <string name="calculator_options">Nastavenia Kalkulačky</string>
-    <string name="use_bg">Použi Glykémiu</string>
-    <string name="use_cob">Použi COB</string>
-    <string name="use_iob">Použi IOB</string>
-    <string name="use_trend">Použi trend</string>
+    <string name="use_bg">Použiť glykémiu</string>
+    <string name="use_cob">Použiť COB</string>
+    <string name="use_iob">Použiť IOB</string>
+    <string name="use_trend">Použiť trend</string>
     <string name="trend_all">Všetko</string>
     <string name="trend_positive_only">Iba kladné</string>
     <string name="trend_negative_only">Iba záporné</string>
-    <string name="use_temp_target">Použi dočasný cieľ</string>
-    <string name="use_alarm">Použi alarm</string>
+    <string name="use_temp_target">Použiť dočasný cieľ</string>
+    <string name="use_alarm">Použiť alarm</string>
     <string name="device_selection">Voľba zariadenia</string>
     <string name="show_on_phone">Zobraziť na telefóne</string>
     <string name="show_on_watch">Zobraziť na hodinkách</string>
@@ -295,16 +295,16 @@
     <string name="recalculate">Prepočítať</string>
     <!--    Widget-->
     <string name="use_black_color">Použiť čiernu farbu</string>
-    <string name="widget_configuration">Konfiguráciu widgetu</string>
+    <string name="widget_configuration">Konfigurácia widgetu</string>
     <string name="until_changed">Dokiaľ sa nezmení</string>
     <!--    Permissions-->
-    <string name="permission_sheet_title">Požadované povolenie</string>
+    <string name="permission_sheet_title">Požadované povolenia</string>
     <string name="permission_sheet_subtitle">Sú potrebné určité povolenia na korektný chod aplikácie</string>
     <string name="permission_grant">Povoliť</string>
     <string name="permission_change">Zmeniť</string>
-    <string name="permission_denied_go_to_settings">Permanentné povolenie odmietnuté. Prosím povoľte to v nastaveniach aplikácie.</string>
+    <string name="permission_denied_go_to_settings">Povolenie bolo trvalo zamietnuté. Povoľte ho, prosím, v nastaveniach aplikácie.</string>
     <string name="permission_open_settings">Nastavenia</string>
-    <string name="permission_directory_picker_error">Nepodarilo sa spustiť výber adresára. Zvyčajne ide o problém OS Android, alebo službou Family Link.</string>
+    <string name="permission_directory_picker_error">Nepodarilo sa spustiť výber priečinka. Zvyčajne ide o problém systému Android alebo služby Family Link.</string>
     <string name="permission_nav_label">Povolenia</string>
     <!--    TDD Cycle Pattern -->
     <string name="stats_tab_cycle" comment="Short tab label on the Statistics screen. The tab shows daily insulin totals laid over 28-day cycles (TDD Cycle Pattern).">Cyklus</string>
@@ -316,7 +316,7 @@
     <string name="cycles_found">%1$d cyklov (%2$d dní)</string>
     <string name="cycle_day1_date">Deň 1 = %1$s</string>
     <string name="calculation_in_progress_percent">Prepočítavam... %1$d%%</string>
-    <string name="not_enough_data_for_cycles">Nedostatok dát (potrebujem aspoň 56 dní pre 2 cykly)</string>
+    <string name="not_enough_data_for_cycles">Nedostatok dát (pre 2 cykly je potrebných aspoň 56 dní)</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Oba</item>
         <item>Iba kladné</item>
@@ -328,21 +328,21 @@
     <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">Odstrániť %1$s</string>
     <string name="quick_launch_no_dynamic_items">Žiadne položky nie sú dostupné</string>
     <string name="quick_launch_category_treatment">Ošetrenie</string>
-    <string name="quick_launch_category_care">Portál starostlivosti</string>
+    <string name="quick_launch_category_care">Starostlivosť</string>
     <string name="quick_launch_category_profile">Profil</string>
-    <string name="quick_launch_category_temp_target">Predvoľby dočasného bazálu</string>
+    <string name="quick_launch_category_temp_target">Predvoľby dočasného cieľa</string>
     <string name="quick_launch_category_quick_wizard">Rýchly sprievodca</string>
     <string name="quick_launch_category_automation">Automatizácia</string>
     <string name="quick_launch_all_selected">Všetky položky označené</string>
-    <string name="quick_launch_no_quick_wizard">Pridajte položky Rýchleho sprievodca, aby ste ich tu mohli použiť</string>
-    <string name="quick_launch_no_automation">Vytvorte užívateľské akcie Automatizácie, aby ste ich tu mohli použiť</string>
+    <string name="quick_launch_no_quick_wizard">Pridajte položky Rýchleho sprievodcu, aby ste ich tu mohli použiť</string>
+    <string name="quick_launch_no_automation">Vytvorte používateľské akcie Automatizácie, aby ste ich tu mohli použiť</string>
     <string name="quick_launch_no_tt_presets">Vytvorte predvoľby dočasného cieľa, aby ste ich tu mohli použiť</string>
     <string name="quick_launch_no_profiles">Vytvorte profily v Lokálnom profile, aby ste ich tu mohli použiť</string>
-    <string name="quick_launch_edit_profile_preset">Upraviť predvoľby profilu</string>
+    <string name="quick_launch_edit_profile_preset">Upraviť predvoľbu profilu</string>
     <string name="quick_launch_profile_permanent">Permanentné</string>
-    <string name="select_arrow">Zvoľ šípku</string>
-    <string name="loop_accept_nav_label">Uzavretý okruh</string>
-    <string name="loop_accept_set_basal_question">Povoliť nový dočasný bazál:</string>
+    <string name="select_arrow">Zvoliť šípku</string>
+    <string name="loop_accept_nav_label">Okruh</string>
+    <string name="loop_accept_set_basal_question">Prijať nový dočasný bazál:</string>
     <string name="loop_accept_perform">Vykonať</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
     <string name="widget_rm_lgs">LGS</string>
