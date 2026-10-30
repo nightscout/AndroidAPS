@@ -69,7 +69,6 @@
     <string name="pair_with_master_fetching">Recherche d\'appairage…</string>
     <string name="pair_with_master_confirm_title">Associer avec ce maître ?</string>
     <string name="pair_with_master_confirm_master">Maître: %1$s</string>
-    <string name="pair_with_master_confirm_warning">Après l\'appairage, ce maître pourra envoyer des commandes signées à cet appareil.</string>
     <string name="pair_with_master_confirm_pair">Appairer</string>
     <string name="pair_with_master_error_title">Impossible d\'appairer</string>
     <string name="pair_with_master_error_wrong_pin">Aucun appairage trouvé pour ce code PIN. Vérifiez le code PIN sur le maître et réessayez.</string>
