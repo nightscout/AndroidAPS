@@ -51,7 +51,6 @@ import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcCalibration
@@ -97,7 +96,6 @@ object SceneIcons {
     private val BOLUS = SceneIconEntry("aaps_bolus", IcBolus, UiStrings.aaps_bolus_icon_label)
     private val CARBS = SceneIconEntry("aaps_carbs", IcCarbs, UiStrings.aaps_carbs_icon_label)
     private val TBR = SceneIconEntry("aaps_tbr", IcTbrHigh, UiStrings.aaps_tbr_icon_label)
-    private val ACTIVITY_AAPS = SceneIconEntry("aaps_activity", IcActivity, UiStrings.aaps_activity_icon_label)
     private val NOTE = SceneIconEntry("aaps_note", IcNote, UiStrings.aaps_note_icon_label)
     private val AUTOMATION = SceneIconEntry("aaps_automation", IcAutomation, UiStrings.aaps_automation_icon_label)
     private val CALIBRATION = SceneIconEntry("aaps_calibration", IcCalibration, UiStrings.aaps_calibration_icon_label)
@@ -168,7 +166,7 @@ object SceneIcons {
     private val allIcons: List<SceneIconEntry> = listOf(
         // AAPS
         TT_HIGH, TT_ACTIVITY, TT_EATING, TT_HYPO, TT_MANUAL, PROFILE, LOOP, SMB, BOLUS, CARBS,
-        TBR, ACTIVITY_AAPS, NOTE, AUTOMATION, CALIBRATION,
+        TBR, NOTE, AUTOMATION, CALIBRATION,
         // Material
         EXERCISE, FITNESS, POOL, HIKING, BIKE, SKATEBOARD, TENNIS, SOCCER, RUGBY, HANDBALL, GYMNASTICS, GOLF, SCUBADIVING, ROWING, SURFING,
         HOSPITAL, MEDICATION, MONITOR_HEART, THERMOSTAT, BLOOD_TYPE, HEALTH_SAFETY, HEALING,
@@ -179,7 +177,9 @@ object SceneIcons {
         STAR, SPEED, ALARM, EVENT, FLAG, BOOKMARK, LABEL
     )
 
-    private val byKey: Map<String, SceneIconEntry> = allIcons.associateBy { it.key }
+    // "aaps_activity" was the Exercise treatment icon, a swimmer. Exercise is the runner now (#5443), the same as
+    // EXERCISE, so the picker offers it once; scenes saved with the old key show the runner.
+    private val byKey: Map<String, SceneIconEntry> = allIcons.associateBy { it.key } + ("aaps_activity" to EXERCISE)
 
     /** Resolve icon by persisted key, fallback to Star */
     fun fromKey(key: String): SceneIconEntry = byKey[key] ?: STAR
@@ -189,7 +189,7 @@ object SceneIcons {
         SceneIconCategory(
             UiStrings.scene_cat_aaps, listOf(
                 TT_HIGH, TT_ACTIVITY, TT_EATING, TT_HYPO, TT_MANUAL, PROFILE, LOOP, SMB, BOLUS, CARBS,
-                TBR, ACTIVITY_AAPS, NOTE, AUTOMATION, CALIBRATION
+                TBR, NOTE, AUTOMATION, CALIBRATION
             )
         ),
         SceneIconCategory(UiStrings.scene_cat_activity, listOf(EXERCISE, FITNESS, POOL, HIKING, BIKE, SKATEBOARD, TENNIS, SOCCER, RUGBY, HANDBALL, GYMNASTICS, GOLF, SCUBADIVING, ROWING, SURFING)),
