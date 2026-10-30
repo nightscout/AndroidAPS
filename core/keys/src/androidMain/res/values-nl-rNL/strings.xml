@@ -6,59 +6,59 @@
     <string name="pref_summary_insulin_concentration">Schakel ondersteuning in voor verschillende insuline concentraties (U50, U200, enz.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Scherm aan houden</string>
-    <string name="pref_summary_keep_screen_on">Voorkomen dat Android het scherm uitschakelt. Dit kost veel accuvoeding als je de telefoon niet aan de oplader hebt.</string>
+    <string name="pref_summary_keep_screen_on">Voorkom dat Android het scherm uitschakelt. Dit kost veel accuvoeding als je de telefoon niet aan de oplader hebt.</string>
     <string name="pref_title_show_treatment_button">Toon behandelingsknop</string>
     <string name="pref_title_show_wizard_button">Toon wizard knop</string>
     <string name="pref_title_show_insulin_button">Toon insuline knop</string>
-    <string name="pref_title_show_carbs_button">Toon Koolhydraten knop</string>
+    <string name="pref_title_show_carbs_button">Toon koolhydraten knop</string>
     <string name="pref_title_show_cgm_button">Toon CGM knop</string>
     <string name="pref_summary_show_cgm_button">Opent xDrip+ of de Dexcom App (je kunt de terug knop gebruiken om terug te keren naar AAPS).</string>
     <string name="pref_title_show_calibration_button">Toon kalibratieknop</string>
-    <string name="pref_summary_show_calibration_button">Verzend een kalibratie naar xDrip+ (zorg ervoor dat \'Accept Calibrations\' is ingeschakeld in xDrip+ onder Inter-App instellingen).</string>
+    <string name="pref_summary_show_calibration_button">Verzend een kalibratie naar xDrip+ (zorg ervoor dat ‘Accepteer kalibraties’ is ingeschakeld onder ‘Instellingen Interapp’ in xDrip+).</string>
     <string name="pref_title_show_notes_in_dialogs">Notities weergeven in dialogen</string>
     <string name="pref_title_use_bolus_advisor">Gebruik de bolusadviseur</string>
-    <string name="pref_summary_use_bolus_advisor">Schakel de bolusadviseur in om te helpen bij bolusberekeningen wanneer je glucosewaarden verhoogd zijn.</string>
+    <string name="pref_summary_use_bolus_advisor">Schakelt de bolusadviseur in, die helpt bij het berekenen van bolussen bij hogere bloedglucosewaarden.</string>
     <string name="pref_title_use_bolus_reminder">Gebruik bolus herinnering</string>
-    <string name="pref_summary_use_bolus_reminder">Activeer bolus notificatie om insuline administratie te volgen.</string>
+    <string name="pref_summary_use_bolus_reminder">Activeert meldingen die je eraan herinneren een bolus toe te dienen.</string>
     <string name="pref_title_use_super_bolus">Gebruik super bolus</string>
     <string name="pref_summary_use_super_bolus">Inschakelen van super bolus functie die insuline leent van basaal voor onmiddellijke levering.</string>
     <!-- Pump preferences -->
     <string name="pref_title_bt_watchdog">BT Watchdog</string>
-    <string name="pref_summary_bt_watchdog">Zet de bluetooth van de telefoon even kort uit en weer aan als er geen verbinding met de pomp is. Dit kan op sommige telefoons een vastgelopen bluetooth service verhelpen.</string>
+    <string name="pref_summary_bt_watchdog">Schakelt de bluetooth van de telefoon kort uit als er geen verbinding met de pomp tot stand kan worden gebracht. Dit kan helpen bij bepaalde telefoons waarbij de bluetoothverbinding vastloopt.</string>
     <!-- Alert preferences -->
-    <string name="pref_title_alert_missed_bg_reading">Alarm als er geen BG data wordt ontvangen</string>
-    <string name="pref_title_alert_pump_unreachable">Alarm als de pomp niet bereikbaar is</string>
-    <string name="pref_title_alert_carbs_required">Alarm op koolhydraten vereist</string>
+    <string name="pref_title_alert_missed_bg_reading">Waarschuw als er geen BG-gegevens worden ontvangen</string>
+    <string name="pref_title_alert_pump_unreachable">Waarschuw als de pomp niet bereikbaar is</string>
+    <string name="pref_title_alert_carbs_required">Waarschuw als koolhydraten nodig zijn</string>
     <string name="pref_title_alert_urgent_as_android_notification">Geef dringende alarmen als Android meldingen</string>
     <string name="pref_title_alert_increase_volume">Geleidelijk volume voor meldingen verhogen</string>
-    <string name="pref_title_alert_override_dnd">Niet storen stand overschrijven</string>
-    <string name="pref_summary_alert_override_dnd">Wanneer ingeschakeld, AAPS alarm geluid, zelfs als de telefoon op stil staat of in \'Niet storen\'. Wanneer uitgeschakeld, blijven alarmen stil in deze modi.</string>
+    <string name="pref_title_alert_override_dnd">Niet storen-stand negeren</string>
+    <string name="pref_summary_alert_override_dnd">Als deze optie is ingeschakeld, klinken AAPS-alarmen ook als de telefoon op stil staat of in de Niet storen-stand staat. Als deze optie is uitgeschakeld, blijven alarmen in deze modi stil.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Upload data naar NS</string>
-    <string name="pref_title_bg_source_create_sensor_change">Log sensor wijziging</string>
-    <string name="pref_summary_bg_source_create_sensor_change">Creëer sensor wissel therapie event wanneer de sensor is geplaatst.</string>
+    <string name="pref_title_bg_source_create_sensor_change">Log sensor vervanging</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Maak een behandelgebeurtenis aan bij het plaatsen van een nieuwe sensor.</string>
     <!-- APS preferences -->
     <string name="pref_title_aps_use_dynamic_sensitivity">Gebruik dynamische gevoeligheid</string>
-    <string name="pref_summary_aps_use_dynamic_sensitivity">Gebruik DynamicISF voor gevoeligheid aanpassingen in plaats van Autosens.</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Gebruik DynamicISF voor het aanpassen van de insulinegevoeligheid in plaats van Autosens.</string>
     <string name="pref_title_aps_use_autosens">Gebruik Autosens</string>
-    <string name="pref_title_aps_use_smb">Activeer SMB</string>
+    <string name="pref_title_aps_use_smb">SMB toestaan</string>
     <string name="pref_summary_aps_use_smb">Schakel Super Micro Bolus in. SMB levert onmiddellijk insuline om te reageren op stijgende bloedglucose.</string>
-    <string name="pref_title_aps_use_smb_with_high_tt">Gebruik SMB met een hoog tijdelijk streefdoel</string>
-    <string name="pref_summary_aps_use_smb_with_high_tt">SMB toestaan wanneer hoog tijdelijk streefdoel actief is.</string>
-    <string name="pref_title_aps_use_smb_always">Activeer SMB altijd</string>
-    <string name="pref_summary_aps_use_smb_always">Activeer SMB in alle omstandigheden, ongeacht bolus of COB.</string>
-    <string name="pref_title_aps_use_smb_with_cob">Activeer SMB met COB</string>
-    <string name="pref_summary_aps_use_smb_with_cob">Sta SMB toe wanneer er koolhydraten aan boord zijn.</string>
-    <string name="pref_title_aps_use_smb_with_low_tt">Gebruik SMB met een laag tijdelijk streefdoel</string>
-    <string name="pref_summary_aps_use_smb_with_low_tt">SMB toestaan wanneer een laag tijdelijk streefdoel actief is.</string>
-    <string name="pref_title_aps_use_smb_after_carbs">Activeer SMB na koolhydraten</string>
-    <string name="pref_summary_aps_use_smb_after_carbs">Gebruik SMB voor een periode nadat koolhydraten zijn ingevoerd.</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">SMB toestaan bij hoog tijdelijk streefdoel</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">SMB\'s zijn toestaan wanneer een hoog tijdelijk streefdoel actief is.</string>
+    <string name="pref_title_aps_use_smb_always">SMB altijd toestaan</string>
+    <string name="pref_summary_aps_use_smb_always">SMB\'s zijn altijd toegestaan, ongeacht bolus of COB.</string>
+    <string name="pref_title_aps_use_smb_with_cob">SMB toestaan bij COB</string>
+    <string name="pref_summary_aps_use_smb_with_cob">Staat SMB’s toe wanneer er nog koolhydraten actief zijn.</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">SMB toestaan bij laag tijdelijk streefdoel</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">SMB\'s zijn toestaan wanneer een laag tijdelijk streefdoel actief is.</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Activeren SMB na invoer van koolhydraten</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">Sta SMB\'s gedurende een bepaalde periode toe nadat koolhydraten zijn ingevoerd.</string>
     <string name="pref_title_aps_use_uam">Activeer UAM</string>
-    <string name="pref_summary_aps_use_uam">Schakel detectie en behandeling van onaangekondigde maaltijden In.</string>
-    <string name="pref_title_aps_sensitivity_raises_target">Gevoeligheid verhoogt het doel</string>
-    <string name="pref_summary_aps_sensitivity_raises_target">Wanneer insulinegevoeligheid wordt gedetecteerd, verhoog het BG streefdoel.</string>
-    <string name="pref_title_aps_resistance_lowers_target">Resistentie verlaagt het doel</string>
-    <string name="pref_summary_aps_resistance_lowers_target">Wanneer insulineresistentie wordt gedetecteerd, verlaag het BG streefdoel.</string>
+    <string name="pref_summary_aps_use_uam">Schakel detectie en behandeling van onaangekondigde maaltijden (UnAnnounced Meals) in.</string>
+    <string name="pref_title_aps_sensitivity_raises_target">Gevoeligheid verhoogt streefdoel</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">Verhoog het streefdoel voor de bloedglucose wanneer een verhoogde insulinegevoeligheid wordt vastgesteld.</string>
+    <string name="pref_title_aps_resistance_lowers_target">Resistentie verlaagt streefdoel</string>
+    <string name="pref_summary_aps_resistance_lowers_target">Verlaag het streefdoel voor de bloedglucose wanneer insulineresistentie wordt vastgesteld.</string>
     <string name="pref_title_aps_always_use_short_deltas">Gebruik altijd korte gemiddelde delta</string>
     <string name="pref_summary_aps_always_use_short_deltas">Gebruik altijd korte gemiddelde delta in plaats van eenvoudige delta voor BG berekeningen.</string>
     <string name="pref_title_aps_dynisf_adjust_sensitivity">DynamicISF pas gevoeligheid aan</string>
@@ -78,6 +78,7 @@
     <string name="pref_summary_autotune_auto_switch_profile">Schakel na het berekenen automatisch over naar het door Autotune gegenereerde profiel.</string>
     <string name="pref_title_autotune_categorize_uam_as_basal">UAM als basaal aanmerken</string>
     <string name="pref_summary_autotune_categorize_uam_as_basal">Behandel niet aangekondigde maaltijden als basale insuline behoefte binnen Autotune berekeningen.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">Insuline curve aanpassen</string>
     <string name="pref_title_autotune_circadian_ic_isf">Circadiane IC/ISF gebruiken</string>
     <string name="pref_summary_autotune_circadian_ic_isf">Pas dagritmeafhankelijke variaties in IC en ISF toe bij Autotune berekeningen.</string>
     <string name="pref_title_autotune_additional_log">Additionele logging</string>
@@ -86,6 +87,7 @@
     <string name="pref_title_sms_report_pump_unreachable">Meld onbereikbare pomp onbereikbaar via SMS</string>
     <string name="pref_summary_sms_report_pump_unreachable">Stuur een SMS-notificatie wanneer de pomp onbereikbaar wordt.</string>
     <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">Upload pompstatus naar NS</string>
     <!-- NS Client preferences -->
     <string name="pref_title_ns_upload_data">Upload data naar NS</string>
     <string name="pref_summary_ns_upload_data">Upload behandelingen, tijdelijke basaalstanden en andere gegevens naar Nightscout.</string>
@@ -101,6 +103,8 @@
     <string name="pref_summary_ns_receive_insulin">Insulineregistraties van Nightscout accepteren.</string>
     <string name="pref_title_ns_receive_carbs">Ontvang koolhydraten van NS</string>
     <string name="pref_summary_ns_receive_carbs">Koolhydraatregistraties van Nightscout accepteren.</string>
+    <string name="pref_title_ns_receive_therapy_event">Behandelgebeurtenissen ontvangen van NS</string>
+    <string name="pref_summary_ns_receive_therapy_event">Registraties van het plaatsen van een nieuwe sensor, canule of pomp vanuit Nightscout accepteren.</string>
     <string name="pref_title_ns_receive_running_mode">Ontvang bedrijfsmodus van NS</string>
     <string name="pref_summary_ns_receive_running_mode">Wijzigingen in de bedrijfsmodus - zoals closed loop, stop bij laag, loop onderbreken - vanuit Nightscout accepteren.</string>
     <string name="pref_title_ns_receive_tbr_eb">Ontvang TBR/VB van NS</string>
@@ -179,7 +183,7 @@
     <!-- Protection type entries (canonical location - also used by core/ui) -->
     <string name="noprotection">Geen beveiliging</string>
     <string name="biometric">Biometrisch</string>
-    <string name="master_password">Masterwachtwoord</string>
+    <string name="master_password">Hoofdwachtwoord</string>
     <string name="custom_password">Aangepast wachtwoord</string>
     <string name="custom_pin">Aangepaste pincode</string>
     <!-- IntKey: Safety preferences -->
