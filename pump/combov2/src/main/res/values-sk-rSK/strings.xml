@@ -11,11 +11,11 @@
     <string name="combov2_error_1">Zásobník je prázdny</string>
     <string name="combov2_error_2">Batéria vybitá</string>
     <string name="combov2_error_4">Oklúzia</string>
-    <string name="combov2_error_5">Koniec zálohy činnosti pumpy</string>
+    <string name="combov2_error_5">Koniec prevádzky záložnej pumpy</string>
     <string name="combov2_error_6">Mechanická chyba</string>
     <string name="combov2_error_7">Chyba elektroniky</string>
     <string name="combov2_error_8">Prerušenie napájania</string>
-    <string name="combov2_error_9">Koniec doby zapožičania</string>
+    <string name="combov2_error_9">Koniec prevádzky zapožičanej pumpy</string>
     <string name="combov2_error_10">Chyba zásobníka</string>
     <string name="combov2_error_11">Infúzny set nie je naplnený</string>
     <string name="combov2_extended_bolus_not_supported">Predĺžený bolus nie je podporovaný</string>
@@ -26,17 +26,18 @@
     <string name="bluetooth_address">Adresa Bluetooth</string>
     <string name="combov2_start_pairing">Spustiť párovanie</string>
     <string name="combov2_pairing_in_progress">Prebieha Combo párovanie</string>
-    <string name="combov2_pairing_start_steps">Kroky k vykonaniu párovania s Combo:\n\n
-1. Na vašej pumpe prejdite do nastavení Bluetooth\n
-2. Zkontrolujte, či je zariadenie už zobrazené ako spárované. pokiaľ áno, prejdite na obrazovku pumpy \"Odstrániť zariadenie\" a odstrániť/zrušiť párovanie tohoto zariadenia\n
-3. Prejdite na obrazovku pumpy \"Pridať zariadenie\" a spárujte na pumpe\n
-4. Kliknite na tlačítko \"Spustiť párovanie\" nižšie pre zahájenie párovania v AndroidAPS\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Po nejakej dobe sa na obrazovke pumpy zobrazí meno telefónu; stlačte KONTROLA pre potvrdenie.\n\n
-Po úspešnom dokončení párovania, potvrďte dokončenie párovania na vašej pumpe a vráťte sa na hlavnú obrazovku pumpy dvojitým stlačením tlačítka KONIEC.\n\n
-Pokiaľ po viac ako ~5 minútach nie je nadviazané žiadne spojenie:\n\n
-1. Stlačte tlačítko Späť alebo tlačítko \"Zrušiť párovanie\"\n
-2. Zrušte párovanie na Combo (súčasne stlačte tlačítka „UP i MENU“ pre zrušenie párovania)\n
-3. Skúste znova spárovať</string>
+    <string name="combov2_pairing_start_steps">Kroky na spárovanie s pumpou Combo:\n\n
+1. Na pumpe prejdite do nastavení Bluetooth\n
+2. Skontrolujte, či je už nejaké zariadenie zobrazené ako spárované; ak áno, prejdite na obrazovku pumpy \"Odstrániť zariadenie\" a toto zariadenie odstráňte/zrušte jeho párovanie\n
+3. Prejdite na obrazovku pumpy \"Pridať zariadenie\" a spustite párovanie na pumpe\n
+4. Kliknite na tlačidlo \"Spustiť párovanie\" nižšie a spustite párovanie v AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Po chvíli sa na obrazovke pumpy zobrazí názov telefónu; potvrďte ho stlačením CHECK.\n\n
+Keď je párovanie úspešne dokončené, potvrďte dokončené párovanie na pumpe a vráťte sa na hlavnú obrazovku pumpy dvojitým stlačením tlačidla CHECK.\n\n
+Ak sa ani po viac ako ~5 minútach nenadviaže spojenie:\n\n
+1. Stlačte Späť alebo tlačidlo \"Zrušiť párovanie\"\n
+2. Zrušte párovanie na pumpe Combo (na zrušenie párovania stlačte naraz
+tlačidlá UP a MENU)\n
+3. Skúste párovanie znova</string>
     <string name="combov2_enter_pin">Zadajte PIN</string>
     <string name="combov2_cancel_pairing">Zrušiť párovanie</string>
     <string name="combov2_confirm_cancel_pairing_message">Naozaj chcete zrušiť párovanie?</string>
@@ -45,7 +46,7 @@ Pokiaľ po viac ako ~5 minútach nie je nadviazané žiadne spojenie:\n\n
     <string name="combov2_pairing_finished_successfully">Úspešne spárované s Combo</string>
     <string name="combov2_pairing_cancelled">Párovanie s Combo zrušené užívateľom</string>
     <string name="combov2_pairing_combo_scan_timeout_reached">Časový limit pre vyhľadávanie Combo dosiahnutý</string>
-    <string name="combov2_pairing_failed_due_to_error">Párovanie se nepodarilo z dôvodu chyby: %1$s</string>
+    <string name="combov2_pairing_failed_due_to_error">Párovanie sa nepodarilo z dôvodu chyby: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Párovanie prerušené z neznámych dôvodov</string>
     <string name="combov2_scanning_for_pump">Vyhľadávanie pumpy</string>
     <string name="combov2_establishing_bt_connection">Nadväzovanie Bluetooth pripojenia (pokus č. %1$d)</string>
@@ -72,13 +73,13 @@ Pokiaľ po viac ako ~5 minútach nie je nadviazané žiadne spojenie:\n\n
     <string name="combov2_pairing_pin_failure">PIN nefungoval. Skontrolujte, či ste neurobili preklep. Pokiaľ sa to stále deje, zrušte a opakujte párovanie.</string>
     <string name="combov2_discovery_duration">Dĺžka hľadania (v sekundách)</string>
     <string name="combov2_verbose_logging">Povoliť podrobné logovanie Combo</string>
-    <string name="combov2_getting_basal_profile">Získávanie bazálneho profilu; čítanie %1$d. faktora</string>
+    <string name="combov2_getting_basal_profile">Načítavanie bazálneho profilu; čítanie %1$d. faktora</string>
     <string name="combov2_setting_basal_profile">Nastavenie bazálneho profilu; zapisovanie %1$d. faktora</string>
     <string name="combov2_delivering_bolus">Podávanie bolusu (podané %1$.1f z %2$.1f U)</string>
-    <string name="combov2_cannot_deliver_pump_suspended">Nie je možné podať bolus - pumpa je pozastavená</string>
+    <string name="combov2_cannot_deliver_pump_suspended">Nie je možné podať ošetrenie - pumpa je pozastavená</string>
     <string name="combov2_insufficient_insulin_in_reservoir">Nedostatok inzulínu v zásobníku</string>
     <string name="combov2_bolus_cancelled">Bolus zrušený</string>
-    <string name="combov2_bolus_delivery_failed">Podávanie inzulínu zlyhalo. Zdá sa, že nebol podaný žiadny bolus. Aby ste si boli istí, skontrolujte pumpu a prípadne pošlite bolus znovu. Aby sa zabránilo nechcenému dvojitému bolusu, podanie bolusu nie je automaticky opakované.</string>
+    <string name="combov2_bolus_delivery_failed">Podanie bolusu zlyhalo. Zdá sa, že nebol podaný žiadny bolus. Pre istotu skontrolujte pumpu, aby ste sa vyhli dvojitému bolusu, a potom podajte bolus znova. Ako ochrana pred chybami sa bolusy automaticky neopakujú.</string>
     <string name="combov2_bolus_not_delivered">Bolus nebol podaný</string>
     <string name="combov2_cannot_access_pump_data">Nie je možné získať prístup k dátam pumpy; pumpa musí byť znova spárovaná</string>
     <string name="combov2_bolus_outcome_unknown" comment="%1$s=insulin amount with unit. Example: 0.6 U, or for U200 insulin 0.6 U (0.3 CU)">Počas podávania bolusu sa prerušilo spojenie s pumpou. Pumpa dovtedy podala %1$s a môže ešte podať zvyšok. Nepodávajte ďalší bolus. AAPS pri ďalšom pripojení načíta skutočne podané množstvo z pumpy.</string>
@@ -104,9 +105,9 @@ Pokiaľ po viac ako ~5 minútach nie je nadviazané žiadne spojenie:\n\n
     <string name="combov2_set_emulated_100_tbr">Nastaviť emulovaný 100% dočasný bazál</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Nechávam emulovaný 100% dočasný bazál dokončiť</string>
     <string name="combov2_ignoring_redundant_100_tbr">Ignorovanie požiadavky 100% dočasného bazálu</string>
-    <string name="combov2_hit_unexpected_tbr_limit">Pri úprave dočasného bazálu došlo k neočekávanému limitu: vyžadované %1$d%%, dosiahnutý limit %2$d%%</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Pri úprave dočasného bazálu došlo k neočakávanému limitu: požadované %1$d%%, dosiahnutý limit %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Nie je možné nastaviť absolútny dočasný bazál, pokiaľ je bazálna dávka nulová</string>
-    <string name="combov2_unpair_pump_summary">Zrušiť párovanie AndroidAPS a Androidu v súčasnej dobe spárovanej Accu-Chek Combo</string>
+    <string name="combov2_unpair_pump_summary">Zrušiť párovanie AndroidAPS a Androidu s aktuálne spárovanou pumpou Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Neznámy dočasný bazál bol zistený a zastavený. Percentuálna hodnota: %1$d%%; zostávajúca doba trvania: %2$s</string>
     <string name="combov2_connection_error">Chyba pripojenia: %1$s</string>
     <string name="combov2_short_status_alert">Upozornenie: %s</string>
@@ -116,7 +117,7 @@ Pokiaľ po viac ako ~5 minútach nie je nadviazané žiadne spojenie:\n\n
     <string name="combov2_datetime_changed">Dátum a/alebo čas zmenený</string>
     <string name="combov2_dst_started">Začal letný čas (DST)</string>
     <string name="combov2_dst_ended">Letný čas (DST) skončil</string>
-    <string name="combov2_cannot_connect_pump_error_observed">Nemôžem sa pripojiť k pumpe, pretože pumpa zaznamenala chybu. Užívateľ musí spracovať chybu a potom čakať 5 minút, alebo stlačiť tlačítko Obnoviť na karte ovládača pumpy.</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Nie je možné sa pripojiť k pumpe, pretože pumpa hlási chybu. Používateľ musí chybu vyriešiť a potom buď počkať 5 minút, alebo stlačiť tlačidlo Obnoviť na karte ovládača.</string>
     <string name="combov2_refresh_pump_status_after_error">Obnovovanie stavu pumpy po zaznamenaní chyby</string>
     <string name="combov2_go_back">Späť</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Nie je možné spárovať, pretože ovládač nie je inicializovaný. To sa obvykle stáva, ak neboli udelené potrebné oprávnenia Bluetooth. Choďte späť, udeľte oprávnenia Bluetooth, potom skúste znova spárovať.</string>
