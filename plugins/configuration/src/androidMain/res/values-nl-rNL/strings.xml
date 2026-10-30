@@ -40,6 +40,10 @@
     <string name="setupwizard_client_control_info">Koppel \'client\' apparaten zodat ze ondertekende commando\'s via Nightscout naar deze \'master\' kunnen sturen. Dit is de nieuwe aanbevolen manier om AAPS op afstand te beheren.</string>
     <string name="setupwizard_ns_receive_info">Het rechtstreeks accepteren van behandelingen en gegevens van Nightscout (een minder veilige methode) is nu standaard uitgeschakeld. Open de onderstaande instellingen alleen als u dit nog steeds nodig hebt. Dit is noodzakelijk als u gegevens via NS of apps van derden moet invoeren.</string>
     <string name="setupwizard_open_ns_receive_settings">Nightscout-gegevensacceptatie</string>
+    <string name="setupwizard_pair_with_master_info">Koppel deze client aan jouw \'master\' AAPS, zodat deze via een beveiligde verbinding opdrachten kan versturen. Na het koppelen is de installatie voltooid.</string>
+    <string name="setupwizard_setup_from_master_title">Instellen vanaf de \'master\'</string>
+    <string name="setupwizard_setup_from_master_info">Open \'geautoriseerde clients\' op de master en voeg deze telefoon toe met een QR-code. Door de QR-code te scannen, wordt Nightscout ingesteld met een eigen token. Ook kan de telefoon hiermee worden gekoppeld. Na het scannen is de installatie voltooid. Heb je geen QR-code? Sla deze stap dan over en stel Nightscout zelf in.</string>
+    <string name="setupwizard_scan_master_qr">Scan de QR-code</string>
     <string name="setupwizard_pairing_ws_warning">Voor het koppelen is de Nightscout WebSocket-verbinding vereist. Ga terug naar de vorige stap en schakel deze eerst in.</string>
     <string name="setupwizard_pairing_status_master">Gekoppelde clients: %1$d</string>
     <string name="setupwizard_pairing_status_master_none">Er zijn nog geen clients gekoppeld</string>
