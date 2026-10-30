@@ -8,8 +8,9 @@
     <string name="omnipod_dash_overview_bluetooth_connection_quality">Kvalita pripojenia</string>
     <string name="omnipod_dash_overview_delivery_status">Stav doručenia</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
-    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Naplňte nový Pod dostatkom inzulínu na 3 dni.\n\nČakajte na dve pípnutia z Podu v priebehu procesu plnenia. Tieto indikujú, že minimálne množstvo 85U bolo naplnené. Uistite sa, že striekačka je úplne vyprázdnená a to aj po vypočutí dvoch pípnutí.\n\nPo naplnení Podu, prosím, stlačte <b>Ďalšia</b>.\n\n<b>Poznámka:</b> zatiaľ nesnímajte kryt z ihly Podu.</string>
-    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Systém sa snaží spárovať s novým Podom a naplniť ho.\n\nAkonáhle bude inicializační proces úspešne dokončený, môžete stlačiť tlačítko <b>Ďalšia</b>.</string>
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Naplňte nový Pod
+        dostatkom inzulínu na 3 dni.\n\nPočas plnenia počúvajte dve pípnutia z Podu. Znamenajú, že bolo naplnené minimálne množstvo 80U. Striekačku úplne vyprázdnite, aj keď už zazneli dve pípnutia.\n\nPo naplnení Podu stlačte <b>Ďalej</b>.\n\n<b>Poznámka:</b> zatiaľ neodstraňujte kryt ihly Podu.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Systém sa snaží spárovať s novým Podom a naplniť ho.\n\nKeď bude inicializácia úspešne dokončená, môžete stlačiť <b>Ďalej</b>.</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Nepodarilo sa pripojiť</string>
     <string name="omnipod_dash_found_too_many_pods">Nájdených príliš veľa Podov</string>
@@ -23,14 +24,14 @@
     <string name="requested_by_user" comment="26 characters max for translation">Požadované používateľom</string>
     <string name="suspend_delivery_is_unconfirmed">Pozastavenie podávania inzulínu je nepotvrdené! Prosím aktualizujte stav Podu zo záložky Omnipod a ak je to potrebné, obnovte podávanie inzulínu.</string>
     <string name="insulin_delivery_suspended">Podávanie inzulínu je pozastavené</string>
-    <string name="timezone_on_pod_is_different_from_the_timezone">Časové pásmo Podu je rozdielne s s časovým pásmom telefónu. Bazálna dávka je nesprávna. Pre nápravu prepnite profil</string>
-    <string name="failed_to_set_the_new_basal_profile">Chyba pri potvrdení nového profilu. Podávanie inzulínu pozastavené</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Časové pásmo Podu sa líši od časového pásma telefónu. Bazálna dávka je nesprávna. Pre nápravu prepnite profil</string>
+    <string name="failed_to_set_the_new_basal_profile">Nepodarilo sa nastaviť nový bazálny profil. Podávanie inzulínu je pozastavené</string>
     <string name="setting_basal_profile_might_have_failed">Nastavenie bazálneho profilu pravdepodobne zlyhalo. Podávanie inzulínu môže byť pozastavené! Manuálne obnovte stav Podu zo záložky Omnipod a pokračujte v podávaní inzulínu, ak je to potrebné.</string>
-    <string name="bolus_delivery_status_uncertain">Stav podávania inzulínu je neurčitý. Na potvrdenie, alebo zamietnutie aktualizujte stav Podu.</string>
+    <string name="bolus_delivery_status_uncertain">Stav podania bolusu je neistý. Na potvrdenie alebo vyvrátenie aktualizujte stav Podu.</string>
     <string name="temp_basal_out_of_sync">Stav dočasného bazálu nie je ako očakávaný! Pokiaľ bol predtým dočasný bazál spustený, bol zrušený. Skontrolujte prosím podaný inzulín a históriu Podu.</string>
     <string name="checking_delivery_status">Kontrola stavu podávania inzulínu</string>
-    <string name="setting_temp_basal_might_have_basal_failed">Nastavenie dočasného bazálu mohlo byť neúspešné. Ak bol predtým spustený dočasný bazál, mohol byť zrušený. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Nastavenie dočasného bazálu mohlo zlyhať. Ak bol predtým spustený dočasný bazál, bol zrušený. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Výsledok zrušenia dočasného bazálu je neurčitý</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Nepotvrdený príkaz obnovenia podávania inzulínu. Prosím obnovte stav Podu</string>
-    <string name="cancelling_temp_basal_might_have_failed">Zrušenie dočasného bazálu pravdepodobne zlyhalo. Ak bol predtým spustený dočasný bazál, mohol byť zrušený. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
+    <string name="cancelling_temp_basal_might_have_failed">Zrušenie dočasného bazálu mohlo zlyhať. Ak bol predtým spustený dočasný bazál, mohol byť zrušený. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
 </resources>
