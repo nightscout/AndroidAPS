@@ -11,7 +11,6 @@
     <string name="treatments_history">היסטוריית טיפולים</string>
     <string name="treatments_desc">הצגה וניהול של היסטוריית הטיפולים</string>
     <string name="nav_configuration">הגדרות תצורה</string>
-    <string name="nav_configuration_desc">הגדירו את התצורה שלכם (CGM, משאבה ועוד) והפעילו תכונות</string>
     <string name="count_selected">%1$d נבחרו</string>
     <string name="delete">מחיקה</string>
     <string name="show_invalidated">הצג פסולים</string>
