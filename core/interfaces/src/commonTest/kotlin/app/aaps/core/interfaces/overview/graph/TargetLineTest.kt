@@ -11,7 +11,8 @@ import kotlin.test.assertEquals
  */
 class TargetLineTest {
 
-    private val hour = 60 * 60 * 1000L
+    private val minute = 60 * 1000L
+    private val hour = 60 * minute
     private val from = 10 * hour
     private val profileTarget: (Long) -> Double = { 100.0 }
 
@@ -54,6 +55,34 @@ class TargetLineTest {
         val line = buildTargetLine(from, from + hour, listOf(tt(from + hour / 2, 5 * hour, 90.0, 90.0)), profileTarget) { it }
 
         assertEquals(listOf(GraphDataPoint(from, 100.0), GraphDataPoint(from + hour / 2, 90.0), GraphDataPoint(from + hour, 90.0)), line)
+    }
+
+    /** The steps stand where the temporary target starts and ends, not on the next five minutes of the clock. */
+    @Test
+    fun theStepsStandExactlyAtTheTemporaryTargetsStartAndEnd() {
+        val start = from + 51 * minute
+        val line = buildTargetLine(from, from + 2 * hour, listOf(tt(start, 6 * minute, 120.0, 140.0)), profileTarget) { it }
+
+        assertEquals(
+            listOf(
+                GraphDataPoint(from, 100.0),
+                GraphDataPoint(start, 130.0),
+                GraphDataPoint(start + 6 * minute, 100.0),
+                GraphDataPoint(from + 2 * hour, 100.0)
+            ),
+            line
+        )
+    }
+
+    /** The phone and the watch build the line over different ranges and must get the same steps. */
+    @Test
+    fun twoRangesStartingAtDifferentTimesGiveTheSameSteps() {
+        val targets = listOf(tt(from + 51 * minute, hour, 120.0, 140.0))
+
+        val fromTheHour = buildTargetLine(from, from + 3 * hour, targets, profileTarget) { it }
+        val fromSevenPast = buildTargetLine(from + 7 * minute, from + 3 * hour, targets, profileTarget) { it }
+
+        assertEquals(fromTheHour.drop(1), fromSevenPast.drop(1))
     }
 
     @Test
