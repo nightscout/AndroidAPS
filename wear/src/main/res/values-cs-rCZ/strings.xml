@@ -6,7 +6,7 @@
     <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (Vlastní) vždy zapnuto</string>
     <string name="label_actions_tile">Akce</string>
     <string name="label_temp_target_tile">Dočasný cíl</string>
-    <string name="label_quick_wizard_tile">Rychlý průvodce</string>
+    <string name="label_quick_wizard_tile">Rychlý bolus</string>
     <string name="label_user_action_tile">Uživatelská akce</string>
     <string name="label_scene_tile">Scéna</string>
     <string name="msg_warning_sync">Od %1$s nebyla obdržena žádná data! Zkontrolujte, zda AAPS na telefonu odesílá data ke sledování</string>
@@ -88,7 +88,7 @@
     <string name="menu_prime_fill">Plnění/doplňování</string>
     <string name="menu_install_watchface">Nainstalovat ciferník</string>
     <string name="menu_installing_watchface">Instalace ciferníku…</string>
-    <string name="watchface_installed_active">Cifrerník byl nainstalován a nastaven jako aktivní</string>
+    <string name="watchface_installed_active">Ciferník byl nainstalován a nastaven jako aktivní</string>
     <string name="watchface_installed_select">Ciferník byl nainstalován, vyberte ho v seznamu ciferníků</string>
     <string name="watchface_install_failed">Instalace ciferníku se nezdařila</string>
     <string name="menu_none">Nic</string>
