@@ -32,7 +32,6 @@
     <string name="pref_title_alert_urgent_as_android_notification">Acil durum uyarılarını Android bildirimleri olarak iletin</string>
     <string name="pref_title_alert_increase_volume">Bildirim ses düzeyini kademeli olarak artırın</string>
     <string name="pref_title_alert_override_dnd">Rahatsız Etmeyin modunu geçersiz kıl</string>
-    <string name="pref_summary_alert_override_dnd">Etkinleştirildiğinde, telefon sessizde olsa veya Rahatsız Etmeyin modunda bulunsa bile AAPS alarmları çalar. Devre dışı bırakıldığında ise bu modlarda alarmlar çalmaz.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">KŞ verilerini NighScout\'a yükle</string>
     <string name="pref_title_bg_source_create_sensor_change">Sensör değişimini kaydet</string>
