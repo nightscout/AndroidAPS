@@ -126,4 +126,13 @@
     <string name="diaconn_g8_cloudsend_summary">Stuur pomp logs naar de Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Sync</string>
     <string name="bolus_speed_1">1 E/min</string>
+    <string name="bolus_speed_2">2 E/min</string>
+    <string name="bolus_speed_3">3 E/min</string>
+    <string name="bolus_speed_4">4 E/min</string>
+    <string name="bolus_speed_5">5 E/min</string>
+    <string name="bolus_speed_6">6 E/min</string>
+    <string name="bolus_speed_7">7 E/min</string>
+    <string name="bolus_speed_8">8 E/min</string>
+    <string name="diaconn_pairing_successful">Succesvol gekoppeld!</string>
+    <string name="diaconn_pairing_successful_message">De pomp is nu verbonden en klaar voor gebruik.</string>
 </resources>
