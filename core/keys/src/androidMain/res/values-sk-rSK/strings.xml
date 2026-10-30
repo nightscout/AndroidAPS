@@ -7,14 +7,14 @@
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Nechať obrazovku zapnutú</string>
     <string name="pref_summary_keep_screen_on">Zabrániť Androidu, aby zhasínal obrazovku. Bez pripojenia nabíjačky bude batéria veľmi rýchlo vybitá.</string>
-    <string name="pref_title_show_treatment_button">Zobraziť tlačítko Ošetrenie</string>
-    <string name="pref_title_show_wizard_button">Zobraziť tlačítko Kalkulačka</string>
-    <string name="pref_title_show_insulin_button">Zobraziť tlačítko Inzulín</string>
-    <string name="pref_title_show_carbs_button">Zobraziť tlačítko Sacharidy</string>
-    <string name="pref_title_show_cgm_button">Zobraziť tlačítko CGM</string>
-    <string name="pref_summary_show_cgm_button">Otvorí xDrip+, alebo aplikáciu Dexcom (môžete použiť tlačítko späť na návrat do AAPS).</string>
-    <string name="pref_title_show_calibration_button">Zobraziť tlačítko Kalibrácia</string>
-    <string name="pref_summary_show_calibration_button">Odošle kalibráciu do xDrip+ (presvedčte sa, či je v xDrip+ povolené „Prijímať kalibrácie z iných aplikácií“ v nastavení \"Komunikácia s inými aplikáciami).</string>
+    <string name="pref_title_show_treatment_button">Zobraziť tlačidlo Ošetrenie</string>
+    <string name="pref_title_show_wizard_button">Zobraziť tlačidlo Kalkulačka</string>
+    <string name="pref_title_show_insulin_button">Zobraziť tlačidlo Inzulín</string>
+    <string name="pref_title_show_carbs_button">Zobraziť tlačidlo Sacharidy</string>
+    <string name="pref_title_show_cgm_button">Zobraziť tlačidlo CGM</string>
+    <string name="pref_summary_show_cgm_button">Otvorí xDrip+ alebo aplikáciu Dexcom (na návrat do AAPS môžete použiť tlačidlo späť).</string>
+    <string name="pref_title_show_calibration_button">Zobraziť tlačidlo Kalibrácia</string>
+    <string name="pref_summary_show_calibration_button">Odošle kalibráciu do xDrip+ (uistite sa, že v xDrip+ je v nastaveniach „Komunikácia s inými aplikáciami“ povolené „Prijímať kalibrácie z iných aplikácií“).</string>
     <string name="pref_title_show_notes_in_dialogs">Zobraziť poznámky v dialogových oknách</string>
     <string name="pref_title_use_bolus_advisor">Povoliť bolusového poradcu</string>
     <string name="pref_summary_use_bolus_advisor">Povoliť bolusového poradcu, ktorý pomáha s výpočtami bolusov pri vyšších glykémiách.</string>
@@ -24,28 +24,28 @@
     <string name="pref_summary_use_super_bolus">Povoliť funkciu Superbolusu, ktorá si požičiava inzulín z bazálu pre okamžité podanie.</string>
     <!-- Pump preferences -->
     <string name="pref_title_bt_watchdog">Strážny pes BT</string>
-    <string name="pref_summary_bt_watchdog">Vypne na 1 sekundu Bluetooth v telefóne, pokiaľ se nedarí pripojiť k pumpe. Môže to pomôcť pri telefónoch, ktoré majú problémy s BT.</string>
+    <string name="pref_summary_bt_watchdog">Vypne Bluetooth v telefóne na 1 sekundu, ak sa nedarí pripojiť k pumpe. Môže to pomôcť pri telefónoch, v ktorých Bluetooth zamŕza.</string>
     <!-- Alert preferences -->
     <string name="pref_title_alert_missed_bg_reading">Výstraha pri nedostupných hodnotách glykémie</string>
     <string name="pref_title_alert_pump_unreachable">Výstraha pri nedostupnej pumpe</string>
     <string name="pref_title_alert_carbs_required">Výstraha, ak sú požadované sacharidy</string>
-    <string name="pref_title_alert_urgent_as_android_notification">Spúšťať naliehavé výstrahy, ako upozorenia pre systém Androide</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Spúšťať naliehavé výstrahy ako upozornenia systému Android</string>
     <string name="pref_title_alert_increase_volume">Postupné zvyšovanie hlasitosti upozornení</string>
     <string name="pref_title_alert_override_dnd">Potlačiť režim Nerušiť</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Nahrávať glykémie do NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Zaznamenať výmenu senzora</string>
-    <string name="pref_summary_bg_source_create_sensor_change">Vytvor udalosť výmeny senzora, keď bol aplikovaný nový senzor.</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Vytvoriť udalosť výmeny senzora pri zavedení nového senzora.</string>
     <!-- APS preferences -->
     <string name="pref_title_aps_use_dynamic_sensitivity">Použiť dynamickú citlivosť</string>
     <string name="pref_summary_aps_use_dynamic_sensitivity">Použiť pre nastavenie citlivosti DynamicISF namiesto Autosens.</string>
-    <string name="pref_title_aps_use_autosens">Pouziť Autosens</string>
+    <string name="pref_title_aps_use_autosens">Použiť Autosens</string>
     <string name="pref_title_aps_use_smb">Povoliť SMB</string>
     <string name="pref_summary_aps_use_smb">Povoliť Super Mikro Bolusy. SMB podajú inzulín okamžite, ako odpoveď na narastajúcu hodnotu glykémie.</string>
     <string name="pref_title_aps_use_smb_with_high_tt">Povoliť SMB s vysokými dočasnými cieľmi</string>
-    <string name="pref_summary_aps_use_smb_with_high_tt">Povoliť SMB keď je aktívny dočasný cieľ.</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">Povoliť SMB, keď je aktívny vysoký dočasný cieľ.</string>
     <string name="pref_title_aps_use_smb_always">Vždy povoliť SMB</string>
-    <string name="pref_summary_aps_use_smb_always">Povoliť SMB za každých okolností, bezohľadu na bolusy, alebo COB.</string>
+    <string name="pref_summary_aps_use_smb_always">Povoliť SMB za každých okolností, bez ohľadu na bolusy alebo COB.</string>
     <string name="pref_title_aps_use_smb_with_cob">Povoliť SMB s COB</string>
     <string name="pref_summary_aps_use_smb_with_cob">Povoliť SMB ak sú prítomné aktívne sacharidy.</string>
     <string name="pref_title_aps_use_smb_with_low_tt">Povoliť SMB s nízkymi dočasnými cieľmi</string>
@@ -53,20 +53,20 @@
     <string name="pref_title_aps_use_smb_after_carbs">Povoliť SMB po jedle</string>
     <string name="pref_summary_aps_use_smb_after_carbs">Povoliť SMB na určitý čas po zadaní sacharidov.</string>
     <string name="pref_title_aps_use_uam">Povoliť UAM</string>
-    <string name="pref_summary_aps_use_uam">Povoliť detekciu Neoznámených jedál a ošetrení.</string>
+    <string name="pref_summary_aps_use_uam">Povoliť detekciu a liečbu neohlásených jedál (UAM).</string>
     <string name="pref_title_aps_sensitivity_raises_target">Citlivosť zvyšuje cieľ</string>
-    <string name="pref_summary_aps_sensitivity_raises_target">Ak je zistená citlivosť, zvýš cieľovú hladinu glykémie.</string>
-    <string name="pref_title_aps_resistance_lowers_target">Rezistancia znižuje cieľ</string>
-    <string name="pref_summary_aps_resistance_lowers_target">Ak je zistená rezistancia, znížiť cieľovú hladinu glykémie.</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">Ak je zistená citlivosť, zvýšiť cieľovú glykémiu.</string>
+    <string name="pref_title_aps_resistance_lowers_target">Rezistencia znižuje cieľ</string>
+    <string name="pref_summary_aps_resistance_lowers_target">Ak je zistená rezistencia, znížiť cieľovú glykémiu.</string>
     <string name="pref_title_aps_always_use_short_deltas">Vždy používať krátku priemernú deltu</string>
     <string name="pref_summary_aps_always_use_short_deltas">Pre výpočty zmien glykémie vždy používať krátku priemernú deltu namiesto jednoduchej delty.</string>
     <string name="pref_title_aps_dynisf_adjust_sensitivity">DynamicISF upravuje citlivosť</string>
     <string name="pref_summary_aps_dynisf_adjust_sensitivity">Upraviť výpočty citlivosti pri použití DynamicISF.</string>
     <string name="pref_title_aps_autosens_adjust_targets">Úprava cieľovej glykémie pomocou automatickej detekcie citlivosti</string>
     <string name="pref_summary_aps_autosens_adjust_targets">Povoliť Autosens upravovať cieľovú glykémiu okrem bazálu a ISF.</string>
-    <string name="pref_title_aps_high_tt_raises_sensitivity">Vysoký dočasný ciel zvyšuje citlivosť</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">Vysoký dočasný cieľ zvyšuje citlivosť</string>
     <string name="pref_summary_aps_high_tt_raises_sensitivity">Vysoké dočasné ciele zvýšia citlivosť na inzulín.</string>
-    <string name="pref_title_aps_low_tt_lowers_sensitivity">Nízky dočasný ciel znižuje citlivosť</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Nízky dočasný cieľ znižuje citlivosť</string>
     <string name="pref_summary_aps_low_tt_lowers_sensitivity">Nízke dočasné ciele znížia citlivosť na inzulín.</string>
     <string name="pref_title_aps_use_autoisf_weights">Povoliť AutoISF</string>
     <string name="pref_summary_aps_use_autoisf_weights">Povoliť úpravy ISF založené na váhach AutoISF.</string>
@@ -113,10 +113,10 @@
     <string name="pref_summary_ns_receive_tbr_eb">Prijímať dočasné bazálne dávky a predĺžené bolusy z Nightscoutu.</string>
     <string name="pref_title_ns_notifications_from_alarms">NS alarmy</string>
     <string name="pref_title_ns_notifications_from_announcements">NS oznámenia</string>
-    <string name="pref_title_ns_use_cellular">Použi mobilné dáta</string>
-    <string name="pref_title_ns_use_roaming">Použi roaming</string>
-    <string name="pref_title_ns_use_wifi">Použi WiFi</string>
-    <string name="pref_title_ns_use_on_battery">Synchronizovať na batériu</string>
+    <string name="pref_title_ns_use_cellular">Použiť mobilné dáta</string>
+    <string name="pref_title_ns_use_roaming">Použiť roaming</string>
+    <string name="pref_title_ns_use_wifi">Použiť WiFi</string>
+    <string name="pref_title_ns_use_on_battery">Synchronizovať pri napájaní z batérie</string>
     <string name="pref_title_ns_use_on_charging">Synchronizovať pri nabíjaní</string>
     <string name="pref_title_ns_log_app_start">Zaznamenávať spustenie aplikácie</string>
     <string name="pref_title_ns_create_announcements_from_errors">Vytvárať z chýb oznámenia</string>
@@ -137,15 +137,15 @@
     <string name="pref_summary_xdrip_send_bgi">Zobraziť Blood Glucose Impact v stavovom riadku xDrip+.</string>
     <!-- Wear preferences -->
     <string name="pref_title_wear_control">Ovládanie cez Wear</string>
-    <string name="pref_summary_wear_control">Ovládať AAPS z hodinek Android Wear.</string>
+    <string name="pref_summary_wear_control">Ovládať AAPS z hodiniek Android Wear.</string>
     <string name="pref_title_wear_wizard_bg">Zahrnúť glykémiu v kalkulačke</string>
     <string name="pref_title_wear_wizard_tt">Zahrnúť dočasný cieľ v kalkulačke</string>
     <string name="pref_title_wear_wizard_trend">Zahrnúť trend v kalkulačke</string>
     <string name="pref_title_wear_wizard_cob">Zahrnúť COB v kalkulačke</string>
-    <string name="pref_title_wear_wizard_iob">Zahrnúť glykémiu v kalkulačke</string>
+    <string name="pref_title_wear_wizard_iob">Zahrnúť IOB v kalkulačke</string>
     <string name="pref_title_wear_custom_watchface_authorization">Autorizovať vlastné ciferníky</string>
     <string name="pref_title_wear_pushed_watchface">Ciferník nainštalovaný v hodinkách</string>
-    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Ciferník s komlikáciami</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Ciferník s komplikáciami</string>
     <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Vlastný ciferník</string>
     <string name="pref_title_wear_notify_on_smb">Upozorniť na SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Odosielať oznámenia na hodinky, keď je podané SMB.</string>
@@ -155,10 +155,10 @@
     <string name="pref_title_site_rotation_manage_pump">Spravovať rotáciu umiestnenia pumpy</string>
     <string name="pref_title_site_rotation_manage_cgm">Spravovať rotáciu umiestnení CGM</string>
     <!-- IntKey: Overview preferences -->
-    <string name="pref_title_carbs_button_increment_1">Prírastok tlačítka sacharidov 1</string>
-    <string name="pref_title_carbs_button_increment_2">Prírastok tlačítka sacharidov 2</string>
-    <string name="pref_title_carbs_button_increment_3">Prírastok tlačítka sacharidov 3</string>
-    <string name="carb_increment_button_message">Počet g sacharidov, ktoré se pridajú po stlačení tlačítka</string>
+    <string name="pref_title_carbs_button_increment_1">Prírastok tlačidla sacharidov 1</string>
+    <string name="pref_title_carbs_button_increment_2">Prírastok tlačidla sacharidov 2</string>
+    <string name="pref_title_carbs_button_increment_3">Prírastok tlačidla sacharidov 3</string>
+    <string name="carb_increment_button_message">Počet gramov sacharidov, ktoré sa pridajú po stlačení tlačidla</string>
     <string name="pref_title_cage_warning">Prah upozornenia na vek kanyly</string>
     <string name="pref_title_cage_critical">Prah kritického veku kanyly</string>
     <string name="pref_title_iage_warning">Prah upozornenia na vek inzulínu</string>
@@ -176,7 +176,7 @@
     <string name="pref_title_bolus_percentage">Percento bolusu</string>
     <string name="deliverpartofboluswizard">Aplikovať túto hodnotu na korekciu glykémie a sacharidov vo výsledku bolusového kalkulátora</string>
     <string name="pref_title_reset_bolus_percentage_time">Čas resetu percenta bolusu</string>
-    <string name="deliver_part_of_boluswizard_reset_time">Podať plný bolus (100 %), pokiaľ je glykémie staršia než</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Podať plný bolus (100 %), ak je glykémia staršia ako</string>
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Časový limit ochrany</string>
     <string name="pref_title_protection_type_application">Úroveň 0: Ochrana aplikácie</string>
@@ -199,16 +199,16 @@
     <!-- IntKey: APS preferences -->
     <string name="pref_title_smb_frequency">Interval SMB</string>
     <string name="pref_title_smb_max_minutes">Maximálny počet minút bazálu, ktorými sa limituje SMB</string>
-    <string name="pref_title_uam_smb_max_minutes">Maximálny počet minút bazálu, ktorými sa limituje SMB pre UMB</string>
+    <string name="pref_title_uam_smb_max_minutes">Maximálny počet minút bazálu, ktorými sa limituje SMB pre UAM</string>
     <string name="uam_smb_max_minutes">UAM SMB max. minút</string>
-    <string name="pref_title_carbs_request_threshold">Požadovaná prahová hodnota pre sacharidy</string>
+    <string name="pref_title_carbs_request_threshold">Prah požadovaných sacharidov</string>
     <string name="carbs_req_threshold_summary">Minimálne množstvo sacharidov v gramoch, ktoré spustí upozornenie návrhu sacharidov. Množstvo sacharidov pod touto hodnotou nespustí oznámenie.</string>
     <string name="pref_title_half_basal_exercise_target">Polovičný bazál pri cieli Aktivita</string>
     <string name="half_basal_exercise_target_summary">Nastavený na hodnotu, napr. 160, čo znamená, že, ak je dočasný cieľ 160 mg/dL (8.9 mmol/L) a možnosť „Vysoký dočasný cieľ zvyšuje citlivosť“ je povolená, spustí sa pri tejto hodnote 50%% bazál (120 = 75%%; 140 = 60%%).</string>
     <string name="pref_title_iob_threshold_percent">Percento prahu IOB</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">Percento z maxIOB, pri prekročení ktorého sú SMB zakázané.\nPredvolená hodnota: 100 %\nPri hodnote 100 % je táto funkcia vypnutá.</string>
     <string name="pref_title_dynisf_adjustment_factor">Korekčný faktor pre DynISF</string>
-    <string name="dyn_isf_adjust_summary" formatted="false">Korekčný faktor pre Dynamickú ISF. Pre agresivnejšie korekčné dávky nastavte hodnoty väčšie ako 100%, pre menej agresívne korekcie, menšie než 100%.</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Korekčný faktor pre DynamicISF. Pre agresívnejšie korekčné dávky nastavte hodnotu väčšiu ako 100%, pre menej agresívne korekcie menšiu ako 100%.</string>
     <string name="pref_title_autosens_period">Perióda Autosens</string>
     <string name="openapsama_autosens_period_summary">Počet uplynutých hodín použitých na automatickú detekciu citlivosti (čas vstrebávania sacharidov sa nezohľadňuje)</string>
     <!-- IntKey: Maintenance preferences -->
@@ -225,12 +225,12 @@
     <!-- IntKey: BG Source preferences -->
     <string name="pref_title_random_bg_interval">Interval náhodnej glykémie</string>
     <string name="pref_title_random_bg_randomize">Náhodné dáta glykémie</string>
-    <string name="pref_summary_random_bg_randomize">Pridať šum, čas jitteru, náhodné trendové šípky a náhodné sacharidy. Zakážte pre čistú deterministickú sinusovú vlnu so šipkou trendu odvodenú od sínusovej krivky.</string>
+    <string name="pref_summary_random_bg_randomize">Pridať šum, náhodne posunúť časové značky, náhodne meniť trendové šípky a občas pridať náhodné sacharidy. Vypnite pre čistú deterministickú sínusovú vlnu so šípkou trendu odvodenou od sklonu sínusoidy.</string>
     <!-- IntKey: NS Client preferences -->
     <string name="pref_title_alarm_stale_data">Prahová hodnota alarmu pre zastaralé dáta</string>
     <string name="pref_title_urgent_alarm_stale_data">Prahová hodnota naliehavého alarmu pre zastaralé dáta</string>
     <!-- IntKey: Site rotation preferences -->
-    <string name="pref_title_site_rotation_profile">Uživateľský profil pre rotáciu miest</string>
+    <string name="pref_title_site_rotation_profile">Používateľský profil pre rotáciu miest</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
     <string name="site_rotation_profile_man">Muž</string>
     <string name="site_rotation_profile_woman">Žena</string>
@@ -240,7 +240,7 @@
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
     <string name="pref_title_language">Jazyk</string>
-    <string name="lang_default">Východzí systémový</string>
+    <string name="lang_default">Predvolený systémom</string>
     <string name="lang_en">Angličtina</string>
     <string name="lang_af">Afrikánčina</string>
     <string name="lang_bg">Bulharčina</string>
@@ -279,9 +279,9 @@
     <string name="pref_title_bolus_password">Heslo pre bolus</string>
     <string name="pref_title_bolus_pin">PIN pre bolus</string>
     <!-- Theme switcher dark and light mode-->
-    <string name="pref_summary_theme_switcher">Vyber tmavú, svetlú, alebo systémovú tému</string>
+    <string name="pref_summary_theme_switcher">Vyberte tmavú, svetlú alebo systémovú tému</string>
     <string name="pref_title_app_color_scheme">Farebná schéma</string>
-    <string name="pref_dark_theme">Tmavý motív</string>
+    <string name="pref_dark_theme">Tmavá téma</string>
     <string name="pref_light_theme">Svetlá téma</string>
     <string name="pref_follow_system_theme">Použiť tému zariadenia</string>
     <!-- StringKey: Safety preferences -->
@@ -292,8 +292,8 @@
     <!-- StringKey: Automation preferences -->
     <string name="pref_title_automation_location">Služba zisťovania polohy</string>
     <string name="automation_location_passive">Použiť pasívnu polohu</string>
-    <string name="automation_location_network">Použi polohu zo siete</string>
-    <string name="automation_location_gps">Použi polohu z GPS</string>
+    <string name="automation_location_network">Použiť polohu zo siete</string>
+    <string name="automation_location_gps">Použiť polohu z GPS</string>
     <!-- StringKey: SMS preferences -->
     <string name="smscommunicator_allowednumbers">Povolené telefónne čísla</string>
     <string name="smscommunicator_allowednumbers_summary">+421XXXXXXXXX;+421YYYYYYYYY</string>
@@ -311,46 +311,46 @@
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="ns_wifi_ssids_summary">Povolené SSID (oddelené bodkočiarkou)</string>
     <!-- DoubleKey: Overview preferences -->
-    <string name="pref_title_insulin_button_increment_1">Tlačítko prídavku inzulínu 1</string>
-    <string name="pref_title_insulin_button_increment_2">Tlačítko prídavku inzulínu 2</string>
-    <string name="pref_title_insulin_button_increment_3">Tlačítko prídavku inzulínu 3</string>
+    <string name="pref_title_insulin_button_increment_1">Prírastok tlačidla inzulínu 1</string>
+    <string name="pref_title_insulin_button_increment_2">Prírastok tlačidla inzulínu 2</string>
+    <string name="pref_title_insulin_button_increment_3">Prírastok tlačidla inzulínu 3</string>
     <string name="insulin_increment_button_message">Množstvo inzulínu, ktoré má byť pridané po stlačení tlačidla</string>
     <!-- DoubleKey: Actions preferences -->
-    <string name="pref_title_fill_button_1">Tlačítko plnenia 1</string>
-    <string name="pref_title_fill_button_2">Tlačítko plnenia 2</string>
-    <string name="pref_title_fill_button_3">Tlačítko plnenia 3</string>
+    <string name="pref_title_fill_button_1">Tlačidlo plnenia 1</string>
+    <string name="pref_title_fill_button_2">Tlačidlo plnenia 2</string>
+    <string name="pref_title_fill_button_3">Tlačidlo plnenia 3</string>
     <!-- DoubleKey: Safety preferences -->
     <string name="pref_title_max_bolus">Maximálny Bolus</string>
     <!-- DoubleKey: APS preferences -->
     <string name="pref_title_max_basal">Maximálna bazálna dávka</string>
     <string name="openapsma_max_basal_summary">Táto hodnota je v kontexte OpenAPS nazývaná ako \"max basal\"</string>
     <string name="pref_title_smb_max_iob">Max IOB pre SMB</string>
-    <string name="openapssmb_max_iob_summary">Táto hodnota sa v kontexte\nOpenAPS nazýva Max IOB. OpenAPS nepridá viac inzulínu, ak je aktuálny IOB vyšší ako táto hodnota. Hodnotu ovplyvňuje aj typ pacienta.</string>
+    <string name="openapssmb_max_iob_summary">Táto hodnota sa v kontexte OpenAPS nazýva Max IOB.\nOpenAPS nepridá viac inzulínu, ak je aktuálny IOB vyšší ako táto hodnota. Hodnotu ovplyvňuje aj typ pacienta.</string>
     <string name="pref_title_ama_max_iob">Max IOB pre AMA</string>
-    <string name="openapsma_max_iob_summary">Táto hodnota sa v kontexte OpenAPS nazýva Max IOB\n. Toto je maximálne množstvo inzulínu v [U], ktoré dokáže APS podať naraz. Hodnotu ovplyvňuje aj typ pacienta.</string>
+    <string name="openapsma_max_iob_summary">Táto hodnota sa v kontexte OpenAPS nazýva Max IOB.\nToto je maximálne množstvo inzulínu v [U], ktoré dokáže APS podať naraz. Hodnotu ovplyvňuje aj typ pacienta.</string>
     <string name="pref_title_max_daily_multiplier">Maximálny bezpečnostný násobiteľ najvyššieho denného bazálu</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Štandardná hodnota: 3 Toto je kľúčová hodnota zabezpečenia. Hovorí, že maximálny nastaviteľný bazál je trojnásobkom maximálneho denného bazálu. Spravidla to zrejme nebudete musieť meniť, prípadne si prečítate o téme bezpečnostných limitov \"3x max denný; 4x aktuálny\".</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Štandardná hodnota: 3 Toto je kľúčový bezpečnostný limit OpenAPS. Obmedzuje vaše bazály na 3-násobok (v tomto prípade) vašej najvyššej bazálnej dávky. Pravdepodobne to nebudete musieť meniť, ale mali by ste vedieť, že práve o tom hovorí pravidlo bezpečnostných limitov „3x max denný; 4x aktuálny“.</string>
     <string name="pref_title_current_basal_multiplier">Bezpečnostný násobiteľ aktuálneho bazálu</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Východzia hodnota: 4. Ide o druhú polovicu kľúčových bezpečnostných limitov OpenAPS a druhú polovicu limitov „3× max denný 4× aktuálny“. Znamená to, že váš bazál bez ohľadu na max. bazál nastavený v pumpe nemôže byť vyšší ako tento násobok aktuálnej úrovne vášho bazálu. Cieľom je zabrániť tomu, aby sa ľudia dostali do nebezpečnej oblasti nastavením príliš vysokých max. bazálov bez pochopenia, ako algoritmus funguje. Východzia hodnota je znova 4×; väčšina požívateľov ju nikdy nebude potrebovať meniť. Najskôr bude potrebné upraviť iné nastavenia, pokiaľ majú pocit, že do tohto bezpečnostného limitu „narážajú“.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Štandardná hodnota: 4. Ide o druhú polovicu kľúčových bezpečnostných limitov OpenAPS a druhú polovicu limitov „3× max denný; 4× aktuálny“. Znamená to, že váš bazál bez ohľadu na max. bazál nastavený v pumpe nemôže byť vyšší ako tento násobok aktuálnej úrovne vášho bazálu. Cieľom je zabrániť tomu, aby sa ľudia dostali do nebezpečnej oblasti nastavením príliš vysokých max. bazálov bez pochopenia, ako algoritmus funguje. Štandardná hodnota je znova 4×; väčšina používateľov ju nikdy nebude potrebovať meniť. Ak majú pocit, že do tohto bezpečnostného limitu „narážajú“, pravdepodobnejšie budú musieť upraviť iné nastavenia.</string>
     <string name="pref_title_bolus_snooze_divisor">Deliteľ bolus snooze DIA</string>
-    <string name="openapsama_bolus_snooze_dia_divisor_summary">Štandardná hodnota: 2\nBolus snooze sa aktivuje vtedy, keď je podaný bolus na jedlo, aby uzavretý okruh nereagoval, ak ste práve jedli. Napríklad tu je štandardná hodnota 2;  3 hodinová DIA znamená, že bolus snooze bude postupne utlmovaný v priebehu 1,5 hodiny (3DIA/2).</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Štandardná hodnota: 2\nBolus snooze sa aktivuje po podaní bolusu na jedlo, aby okruh nereagoval nízkymi dočasnými bazálmi, keď ste práve jedli. Príklad a štandardná hodnota je 2; DIA 3 hodiny teda znamená, že bolus snooze bude postupne utlmovaný v priebehu 1,5 hodiny (3DIA/2).</string>
     <string name="pref_title_ama_min_5m_carbs_impact">AMA min 5m vplyv sacharidov </string>
     <string name="pref_title_smb_min_5m_carbs_impact">SMB min 5m dopad sacharidov</string>
-    <string name="openapsama_min_5m_carb_impact_summary">Štandardná hodnota: 3.0 (AMA), alebo 8.0 (SMB). Prednastavená je 3 mg/dl/5min. Táto hodnota definuje minimálnu časť absorbovaných (vstrebaných) sacharidov za každých 5min. Táto hodnota ovplyvňuje výpočet COB. Ovplyvňuje to, ako rýchlo sa COB znižuje a aká absorbcia sacharidov je očakávaná pri výpočte budúcej predpokladanej glykémie, keď klesá alebo narastá viac ako sa očakávalo.</string>
-    <string name="pref_title_absorption_cutoff">Doba absorbcie (vstrebávania)</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Štandardná hodnota: 3.0 (AMA) alebo 8.0 (SMB). Toto je nastavenie predvoleného vplyvu absorpcie sacharidov za 5 minút. Predvolene sa očakávajú 3 mg/dl/5min. Ovplyvňuje to, ako rýchlo sa COB znižuje a aká absorpcia sacharidov sa predpokladá pri výpočte budúcej predpokladanej glykémie, keď glykémia klesá viac, ako sa očakávalo, alebo nestúpa tak, ako sa očakávalo.</string>
+    <string name="pref_title_absorption_cutoff">Hraničný čas absorpcie (vstrebávania)</string>
     <string name="absorption_cutoff_summary">Čas, po ktorom je akékoľvek jedlo považované za absorbované (vstrebané). Zvyšné sacharidy budú vynulované.</string>
     <string name="pref_title_absorption_maxtime">Maximálna doba absorpcie (vstrebávania)</string>
     <string name="absorption_max_time_summary">Čas v hodinách, počas ktorého sa predpokladá, že všetky sacharidy budú absorbované (vstrebané).</string>
     <string name="pref_title_autosens_min">Autosens min</string>
-    <string name="openapsama_autosens_min_summary">Štandardná hodnota: 0.7\nToto je bezpečnostné nastavenie pre automatickú detekciu citlivosti. Hovorí, že automatická detekcia citlivosti môže znížiť bazály, zvýšiť ISF (citlivosť) a zvýšiť cieľovú hodnotu glykémie.</string>
+    <string name="openapsama_autosens_min_summary">Štandardná hodnota: 0.7\nDruhá strana bezpečnostných limitov Autosens. Obmedzuje, ako nízko môže Autosens upraviť bazály a ako vysoko môže upraviť ISF a cieľové glykémie.</string>
     <string name="pref_title_autosens_max">Autosens max</string>
     <string name="openapsama_autosens_max_summary">Štandardná hodnota: 1,2\n Ide o maximálny násobok pre Autosens (a čoskoro aj Autotune), ktorý nastavuje maximálny limit 20%% na to, aký vysoký môže byť pomer Autosens. Toto určuje aj to, ako vysoko môže Autosens upraviť bazály, ako nízko môže upraviť ISF a ako nízko môže nastaviť cieľ glykémie.</string>
     <string name="pref_title_autoisf_min">AutoISF min</string>
-    <string name="openapsama_autoISF_min_summary">Podobne ako autosens_min definuje, aké slabé môže byť ISF.\n\nVýchozia hodnota 1.0 túto funkciu vypne.</string>
+    <string name="openapsama_autoISF_min_summary">Podobne ako autosens_min definuje, aké slabé môže byť ISF.\n\nPredvolená hodnota 1.0 túto funkciu vypne.</string>
     <string name="pref_title_autoisf_max">AutoISF max</string>
     <string name="openapsama_autoISF_max_summary">Podobne ako autosens_max, toto definuje, aké silné môže byť ISF.\n\nPredvolená hodnota 1,0 túto funkciu vypne.\n\nUPOZORNENIE: Pri používaní hodnôt nad 2,5 je potrebné byť veľmi opatrný</string>
     <string name="pref_title_bg_accel_weight">Váha ISF pri zrýchlení zmeny glykémie</string>
-    <string name="openapsama_bgAccel_ISF_weight_summary">Toto je váha ktorá je aplikovaná v situácii, keď je glykémia nad cieľovou hodnotou a parameter, ktorý znižuje ISF, čím potenciálne zvyšuje podávanie inzulínu.\n\nPredvolená hodnota 0.0 túto funkciu vypne.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Toto je váha, ktorá sa použije, keď sa rast glykémie zrýchľuje, a ktorá znižuje ISF, čím potenciálne zvyšuje podávanie inzulínu.\n\nPredvolená hodnota 0.0 túto funkciu vypne.</string>
     <string name="pref_title_bg_brake_weight">Váha ISF pri spomalení zmeny glykémie</string>
     <string name="openapsama_bgBrake_ISF_weight_summary">Toto je váha, ktorá je aplikovaná pri spomaľovaní vzostupu glykémie a parameter, ktorý zvyšuje ISF, čím potenciálne znižuje množstvo dodaného inzulínu.\n\nPredvolená hodnota 0.0 túto funkciu vypne.</string>
     <string name="pref_title_low_bg_weight">Váha v nízkom rozsahu glykémie</string>
@@ -364,11 +364,11 @@
     <string name="pref_title_dura_weight">Váha ISF podľa trvania</string>
     <string name="openapsama_dura_ISF_weight_summary">Toto je váha, ktorá je aplikovaná pri dlhotrvajúcej hyperglykémii a parameter, ktorý znižuje ISF, čím potenciálne zvyšuje množstvo dodaného inzulínu.\n\nPredvolená hodnota 0.0 túto funkciu vypne.</string>
     <string name="pref_title_smb_delivery_ratio">Pomer podávania SMB</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Štandardná hodnota: 0.5 Toto je ďalšie dôležité bezpečnostné nastavenie OpenAPS, ktoré určuje, aké percento celkového inzulínu je možné vydať prostredníctvom SMB. Jeho zmyslom je zabrániť tomu, aby sa užívatelia vystavili riziku kvôli tomu, že by požiadavka na SMB odišla v tej istej chvíli prostredníctvom telefónu. Zvyšujte túto experimentálnu hodnotu pomaly a opatrne.</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Štandardná hodnota: 0.5 Toto je ďalšie dôležité bezpečnostné nastavenie OpenAPS, ktoré určuje, aký podiel z celkového potrebného inzulínu je možné podať prostredníctvom SMB. Jeho zmyslom je zabrániť tomu, aby sa používatelia vystavili riziku, keby v tej istej chvíli zadali požiadavku na SMB aj z telefónu opatrovateľa. Zvyšujte túto experimentálnu hodnotu pomaly a opatrne.</string>
     <string name="pref_title_smb_delivery_ratio_min">Min pomer podávania SMB</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Štandardná hodnota: 0.5 Toto je spodný limit lineárne narastajúcej veľkosti, skôr než fixné zvýšenie.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Štandardná hodnota: 0.5 Toto je spodný koniec lineárne rastúceho pomeru namiesto pevnej hodnoty uvedenej vyššie.</string>
     <string name="pref_title_smb_delivery_ratio_max">Max pomer podávania SMB</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Štandardná hodnota: 0.5 Toto je horný limit lineárne narastajúcej veľkosti, skôr než fixné zvýšenie.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Štandardná hodnota: 0.5 Toto je horný koniec lineárne rastúceho pomeru namiesto pevnej hodnoty uvedenej vyššie.</string>
     <string name="pref_title_smb_max_range_extension">SMB max rozšírenie rozsahu</string>
     <string name="openapsama_smb_max_range_extension_summary">Štandardná hodnota: 1. Toto je ďalší dôležitý bezpečnostný limit OpenAPS a špecifikuje, nakoľko môžete prekročiť štandardný limit 120 minút pre maxSMB/maxUAM. Zvyšujte túto experimentálnu hodnotu pomaly a opatrne.</string>
     <!-- UnitDoubleKey: Overview preferences -->
@@ -376,7 +376,7 @@
     <string name="pref_title_high_mark">Limit vysokej glykémie</string>
     <!-- UnitDoubleKey: APS preferences -->
     <string name="pref_title_lgs_threshold">Prah LGS</string>
-    <string name="lgs_threshold_summary">Hodnota glykémie, pod ktorú  bude podávanie inzulínu zastavené. Východzia hodnota využíva štandardný cieľový model. Užívateľ môže nastaviť hodnoty od 3,3 mmol/l do 5,5 mmol/l. Pri hodnotách pod 3,6 mmol/l se použije východzí model.</string>
+    <string name="lgs_threshold_summary">Hodnota glykémie, pod ktorou bude podávanie inzulínu zastavené. Predvolená hodnota využíva štandardný cieľový model. Používateľ môže nastaviť hodnotu od 60 mg/dl (3,3 mmol/l) do 100 mg/dl (5,5 mmol/l). Pri hodnotách pod 65/3,6 sa použije predvolený model.</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
 </resources>
