@@ -5,7 +5,9 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import app.aaps.core.data.model.BCR
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.ui.UiStringIds
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -30,6 +32,9 @@ class WizardInfoDialogContentTest {
 
     @Before
     fun setUp() {
+        // The app registers this at start. Without it every UiStrings text shows its key name, and "MYBG" is
+        // inside one. The test passed only when an earlier test in the same JVM had registered it.
+        TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
         whenever(decimalFormatter.to1Decimal(any())).thenReturn("1.0")
         whenever(decimalFormatter.to0Decimal(any())).thenReturn("20")
     }
