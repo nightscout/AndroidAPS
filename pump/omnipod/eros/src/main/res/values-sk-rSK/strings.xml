@@ -6,8 +6,8 @@
     <!-- Omnipod Eros - Errors -->
     <string name="omnipod_eros_error_riley_link_address_invalid">Neplatná adresa RileyLinku.</string>
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Zobraziť tlačítko Pulzný Log v menu Správa Podu</string>
-    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Zobraziť tlačítko Štatistika RileyLink v menu Správa Podu</string>
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Zobraziť tlačidlo Protokol pulzov v menu Správa Podu</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Zobraziť tlačidlo Štatistika RileyLink v menu Správa Podu</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">V Akciách povoliť zaznamenávanie výmeny batérie</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
@@ -30,17 +30,17 @@
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RileyLink prerušený</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Žiadna odpoveď z Podu</string>
     <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Nastavenie bazálneho profilu zlyhalo. Podávanie môže byť pozastavené! Manuálne obnovte stav Podu zo záložky Omnipod a pokračujte v podávaní, ak je to potrebné.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Nastavenie bazálneho profilu zlyhalo. Podávanie môže byť pozastavené! Manuálne obnovte stav Podu zo záložky Omnipod a pokračujte v podávaní, ak je to potrebné.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Nastavenie bazálneho profilu mohlo zlyhať. Podávanie môže byť pozastavené! Manuálne obnovte stav Podu zo záložky Omnipod a ak je to potrebné, obnovte podávanie.</string>
     <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Nastavenie bazálneho profilu zlyhalo. Podávanie je pozastavené! Manuálne obnovte podávanie zo záložky Omnipod.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Zrušenie dočasného bazalu mohlo zlyhať. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Zrušenie dočasného bazálu mohlo zlyhať. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Nastavenie dočasného bazálu zlyhalo. Ak bol predtým spustený dočasný bazál, mohol byť zrušený. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Nastavenie dočasného bazálu mohlo byť neúspešné. Ak bol predtým spustený dočasný bazál, mohol byť zrušený. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Nastavenie dočasného bazálu mohlo zlyhať. Ak bol predtým spustený dočasný bazál, bol zrušený. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">Doba trvania TBR musí byť väčšia ako nula, a musí byť násobkom %1$s minút.</string>
-    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Nastavenie času, pravdepodobne zlyhalo. Podávanie môže byť pozastavené! Manuálne obnovte stav Podu zo záložky Omnipod a pokračujte v podávaní, ak je to potrebné.</string>
+    <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Nastavenie času mohlo zlyhať. Podávanie môže byť pozastavené! Manuálne obnovte stav Podu zo záložky Omnipod a ak je to potrebné, obnovte podávanie.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Nastavenie času zlyhalo. Podávanie je pozastavené! Manuálne obnovte podávanie zo záložky Omnipod.</string>
     <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Nepodarilo sa automaticky zmeniť čas na Pode. Mali by ste ručne synchronizovať čas na záložke Omnipod.</string>
-    <string name="omnipod_eros_error_bolus_failed_uncertain">Nedá sa overiť, či bol bolus úspešný. Prosím manuálne overte, či Váš Pod podáva bolus počúvaním klikania. <b>Ak ste si istý, že bolus nebol úspešný, mali by ste ručne odstrániť záznam o boluse z ošetrení, aj keď kliknete na \'Zrušiť bolus\' teraz!</b></string>
-    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Nedá sa overiť, či bol bolus SMB (%1$.2f U) úspešne podaný. <b>Pokiaľ ste si istý, že bolus nebol podaný, mali by ste ručne odstrániť položku SMB z Ošetrení.</b></string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain">Nedá sa overiť, či bol bolus úspešný. Overte ručne počúvaním klikania, či váš Pod podáva bolus. <b>Ak ste si istí, že bolus nebol úspešný, mali by ste ručne odstrániť záznam o boluse z Ošetrení, aj keď teraz kliknete na \'Zrušiť bolus\'!</b></string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Nedá sa overiť, či bol bolus SMB (%1$.2f U) úspešne podaný. <b>Ak ste si istí, že bolus nebol podaný, mali by ste ručne odstrániť položku SMB z Ošetrení.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Dočasný bazál na Pode prebieha, ale AAPS o tomto dočasnom bazále nevie. Prosím zrušte svoj dočasný bazál ručne.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Štatistika RileyLink</string>
@@ -48,6 +48,6 @@
     <string name="omnipod_eros_pod_management_pulse_log">Protokol pulzov</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Protokol pulzov (skopírované do schránky)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
-    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Naplňte nový Pod dostatkom inzulínu na 3 dni.\n\nČakajte na dve pípnutia z Podu v priebehu procesu plnenia. Tieto indikujú, že minimálne množstvo 85U bolo naplnené. Uistite sa, že striekačka je úplne vyprázdnená a to aj po vypočutí dvoch pípnutí.\n\nPo naplnení Podu, prosím, stlačte <b>Ďalšia</b>.\n\n<b>Poznámka:</b> zatiaľ nesnímajte kryt z ihly.\n<b>Poznámka:</b>prosím umiestnite RileyLink vo zvislej polohe blízko Podu.</string>
-    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Snažíte sa spárovať nový Pod a naplniť ho.\n\nKeď bol úspešne dokončený inicializačný proces, môžete stlačiť tlačítko <b>Ďalšia</b>.\n\n<b>Poznámka:</b> položte RileyLink vo vzpriamenej polohe a umiestnite ho pár centimetrov od Podu.</string>
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Naplňte nový Pod dostatkom inzulínu na 3 dni.\n\nPočas plnenia počúvajte dve pípnutia z Podu. Znamenajú, že bolo naplnené minimálne množstvo 80U. Striekačku úplne vyprázdnite, aj keď už zazneli dve pípnutia.\n\nPo naplnení Podu stlačte <b>Ďalej</b>.\n\n<b>Poznámka:</b> zatiaľ neodstraňujte kryt ihly Podu.\n<b>Poznámka:</b> umiestnite RileyLink do zvislej polohy a Pod položte niekoľko centimetrov od neho.</string>
+    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Systém sa snaží spárovať s novým Podom a naplniť ho.\n\nKeď bude inicializácia úspešne dokončená, môžete stlačiť <b>Ďalej</b>.\n\n<b>Poznámka:</b> umiestnite RileyLink do zvislej polohy a Pod položte niekoľko centimetrov od neho.</string>
 </resources>
