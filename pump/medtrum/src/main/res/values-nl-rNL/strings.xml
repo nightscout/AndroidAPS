@@ -61,9 +61,11 @@
     <string name="step_deactivate">Deactiveer Patch</string>
     <string name="step_deactivating">Deactiveren...</string>
     <string name="step_deactivate_complete">Patch gedeactiveerd</string>
+    <string name="unpair_confirm_message">Het opgeslagen pomp serienummer wordt gewist en de verbinding verbroken. Activeer een nieuwe patch om een scan naar een pomp te starten.</string>
     <string name="step_retry_activation">Bezig met activatie</string>
     <string name="unexpected_state">Onverwachte staat: %1$s</string>
     <string name="patch_begin_activation">Geen actieve patch. Druk op <b>Volgende</b> om het activeringsproces te starten.</string>
+    <string name="connect_pump_base">Controleer of de pomp basis is verbonden met de patch, verwijder luchtbellen en vul met insuline, druk daarna op <b>Volgende</b>.</string>
     <string name="note_min_70_units">Opmerking: Voor de activering zijn minimaal 70 eenheden vereist.</string>
     <string name="reservoir_text_and_level">Reservoir: %.2f E</string>
     <string name="do_not_attach_to_body">Plaats de patch nog niet op het lichaam.</string>
