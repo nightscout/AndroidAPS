@@ -185,8 +185,8 @@
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
     <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Kalibratie niet opgeslagen: BG verandert te snel (Δ %1$s %3$s per 5 min, limiet %2$s). Probeer het opnieuw als de glucose stabiel is.</string>
     <string name="cal_reject_no_pair">Kalibratie niet opgeslagen: Geen sensor waarde gevonden in de  10 minuten hiervoor</string>
-    <string name="cal_reject_warmup">Kalibratie niet opgeslagen: de sensor is nog in de 2uur durende opwarmfase</string>
-    <string name="cal_reject_no_session">Kalibratie niet opgeslagen: geen sensor sessie actief. Voer eerst een sensor wijziging uit.</string>
+    <string name="cal_reject_warmup">Kalibratie niet opgeslagen: de sensor bevindt zich nog in de opwarmperiode van 2 uur.</string>
+    <string name="cal_reject_no_session">Kalibratie niet opgeslagen: er is geen actieve sensorsessie. Registreer eerst een sensorwissel.</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">Bolus fout geconstateerd. Controleer handmatig de werkelijk toegediende hoeveelheid insuline en koolhydraten</string>
     <string name="bolus_reminder">Herinneren aan bolus bij herstel BG</string>
@@ -279,7 +279,7 @@
     <string name="extended_bolus_full">%1$.2f E/u @%2$s %3$s/%4$s min</string>
     <string name="extended_bolus_medium">%1$.2f E/u %2$s/%3$s\'</string>
     <string name="nav_export">Exporteer instellingen</string>
-    <string name="location_permission_not_granted">Locatiemachtiging niet verleend. Toestaan in android instellingen.</string>
+    <string name="location_permission_not_granted">Geen toestemming voor locatietoegang. Geef deze toestemming via de Android-instellingen.</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versie:</string>
     <string name="not_available_full">Niet beschikbaar</string>
     <string name="not_implemented_yet">Deze functie is nog niet beschikbaar op dit platform</string>
@@ -310,6 +310,8 @@
     <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Wordt geactiveerd</string>
     <string name="change_insulin">Wissel</string>
     <string name="select_insulin_description">Selecteer de insuline waarmee je de pomp vult. Er zal een profielwissel worden toegepast na activatie/prime.</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CE</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CE</string>
     <string name="selected_insulin">Geselecteerde insuline: %1$s</string>
     <string name="record_insulin_hint">Als je insuline met een pen toedient, geef hieronder dan de soort insuline aan. De dosis dient altijd in internationale eenheden te worden opgegeven.</string>
     <!--       Stats -->
@@ -359,8 +361,8 @@
     <string name="careportal_mealbolus">Maaltijd bolus</string>
     <string name="careportal_correctionbolus">Correctie bolus</string>
     <string name="careportal_combobolus">Combinatie-Bolus</string>
-    <string name="careportal_tempbasalstart">Start tijd. basaal</string>
-    <string name="careportal_tempbasalend">Einde tijd. basaal</string>
+    <string name="careportal_tempbasalstart">Start tijdelijke basaal</string>
+    <string name="careportal_tempbasalend">Einde tijdelijke basaal</string>
     <string name="careportal_carbscorrection">Koolhydraten correctie</string>
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="pump_battery_change">Pomp bat. wissel</string>
@@ -375,18 +377,56 @@
     <string name="scene_desc">Voorinstellingen voor scenes — meerdere acties tegelijk activeren</string>
     <string name="scene_activate">Activeer</string>
     <string name="scene_deactivate">Beëindig scène</string>
+    <string name="scene_active">Actief</string>
+    <string name="scene_ended">Scène beëindigd</string>
     <string name="scene_end_active">Einde actieve scene</string>
     <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Ga naar</string>
     <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Vervolg %1$s zal niet beginnen</string>
+    <string name="scene_confirm_activate">Scène \"%1$s\" activeren?</string>
+    <string name="scene_confirm_deactivate">Scène \"%1$s\" beëindigen en de wijzigingen ongedaan maken?</string>
+    <string name="scene_conflict_active_tt">Actief tijdelijk streefdoel zal worden vervangen</string>
+    <string name="scene_conflict_active_profile">Actieve profielinstelling zal worden vervangen</string>
     <string name="scene_conflict_active_running_mode">De actieve bedrijfsmodus wordt vervangen</string>
+    <string name="scene_conflict_active_scene">Actieve scène \"%1$s\" zal eerst worden beëindigd</string>
+    <string name="scene_action_tt">Tijdelijk streefdoel %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profiel: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profiel: %1$d%%</string>
+    <string name="scene_action_smb_on">SMB inschakelen</string>
+    <string name="scene_action_smb_off">SMB uitschakelen</string>
     <string name="scene_action_running_mode">Bedrijfsmodus: %1$s</string>
+    <string name="scene_action_careportal">Log: %1$s</string>
+    <string name="scene_management">Scènes</string>
+    <string name="scene_management_desc">Maak, bewerk en beheer scènes</string>
+    <string name="scene_editor_target">Streefdoel</string>
+    <string name="scene_editor_tt_preset">Tijdelijk streefdoel (TT)</string>
+    <string name="scene_editor_no_tt_presets">Geen tijdelijk streefdoel geconfigureerd</string>
+    <string name="scene_editor_select_tt_preset">Kies een voorinstelling voor het tijdelijk streefdoel</string>
+    <string name="scene_editor_percentage">Percentage</string>
+    <string name="scene_editor_profile">Profiel</string>
+    <string name="scene_editor_keep_current_profile">-- Huidige behouden --</string>
+    <string name="scene_editor_mode">Modus</string>
+    <string name="scene_editor_event_type">Type gebeurtenis</string>
+    <string name="scene_editor_note">Notitie</string>
+    <string name="scene_icon">Icoon</string>
+    <string name="scene_editor_enabled">Ingeschakeld</string>
+    <string name="scene_editor_disabled">Uitgeschakeld</string>
+    <string name="scene_summary">%1$d acties, %2$s</string>
     <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
+    <string name="scene_duration_indefinite">Ongedefinieerd (handmatig einde)</string>
+    <string name="scene_some_actions_failed">Sommige acties zijn mislukt</string>
+    <string name="scene_no_active">Geen scène actief</string>
+    <string name="scene_some_reverts_failed">Sommige wijzigingen konden niet worden teruggedraaid</string>
+    <string name="scene_no_profile_store">Geen profielopslag beschikbaar</string>
+    <string name="scene_no_actions">Scène heeft geen acties</string>
+    <string name="scene_profile_not_found">Profiel \"%1$s\" niet gevonden</string>
     <string name="scene_lock_banner_master_offline">Master apparaat is niet bereikbaar. De scènebesturing wordt hervat zodra de verbinding is hersteld.</string>
     <string name="scene_lock_banner_control_disabled">De master heeft bediening op afstand uitgeschakeld. De scènebesturing wordt hervat zodra dit op de master weer wordt ingeschakeld.</string>
     <string name="master_offline_banner">Master apparaat is niet bereikbaar. Bewerken is uitgeschakeld totdat de verbinding is hersteld.</string>
     <string name="master_control_disabled_banner">De master heeft bediening op afstand uitgeschakeld. Bewerken is niet mogelijk totdat deze functie op de meester weer is ingeschakeld.</string>
+    <string name="hardened_mode_on">Beveiligde modus ingeschakeld</string>
+    <string name="hardened_mode_title">Beveiligde modus</string>
+    <string name="hardened_mode_info_open">Over de beveiligde modus</string>
     <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Alleen lezen</string>
     <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Maaltijden</string>
     <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Zorgverlener</string>
@@ -395,14 +435,35 @@
     <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Rol: %1$s</string>
     <string name="client_roles_info_open">Over rollen</string>
     <string name="client_roles_info">Elke gekoppelde telefoon heeft een rol. De hoofdtelefoon controleert deze voor elke opdracht en de telefoon laat alleen zien wat zijn rol toelaat. Een nieuwe rol wordt onmiddellijk actief, zonder opnieuw te koppelen.\n\nAlleen lezen: de telefoon blijft gekoppeld, maar toont alleen gegevens.\n\nMaaltijd: bolus, bolus wizard, QuickWizard en koolhydraten. Het kan ook een lopende bolus stoppen. Koolhydraten die hier worden ingevoerd kunnen de loop meer insuline laten geven.\n\nZorgverlener: alles wat een gebruiker doet in AAPS, zoals tijdelijke streefdoelen, profiel en insuline wijzigingen, Loop modus, tijdelijke basaalstand, vertraagde bolus, scènes, careportal gebeurtenissen, kalibraties en het verwijderen van records. Het kan instellingen of presets niet wijzigen.\n\nAdmin: alles, instellingen en voorinstellingen inclusief (QuickWizard, tijdelijk doel voorinstellingen, scènes, profielen en automatisering, insuline).</string>
-    <string name="hardened_mode_info">De hoofdtelefoon accepteert neemt alleen wijzigingen van gekoppelde klanten. Het accepteert geen behandelingen, tijdelijke doelstellingen, profielwijzigingen, wijzigingingen van bedrijfsmodus of verwijderingen die direct in Nightscout worden gemaakt, bijvoorbeeld op de website of in andere apps. De instellingen voor het accepteren van gegevens van Nightscout worden verborgen wanneer de geharde modus ingeschakeld is. SMS-commando\'s worden niet beïnvloed.\n\nDe hoofd-telefoon upload nog steeds alle gegevens naar Nightscout, inclusief BG gegevens. Als de hoofd-telefoom zijn BG\'s krijgt van Nightscout, blijven die daar vandaan komen.\n\nOm de geschiedenis op een nieuwe hoofdtelefoon te laden, gebruik Volledige synchronisatie in NSClient. Volledige synchronisatie neemt alles in Nightscout, inclusief profielen.\n\nVoor externe besturing van clients is een werkende WebSocket verbinding nodig met Nightscout, op de hoofdtelefoon en op degekoppelde apparaten. Eenvoudige modus schakelt altijd de geharde modus aan. Om deze uit te schakelen, schakel eenvoudige modus in en schakel de controle van de klant uit op de hoofdtelefoon.</string>
+    <string name="client_read_only_banner">Dit toestel heeft op de master alleen-lezen toegang.</string>
+    <string name="hardened_mode_info">De master accepteert wijzigingen alleen van gekoppelde clients. Wijzigingen die rechtstreeks in Nightscout worden aangebracht, bijvoorbeeld via de website of andere apps, worden niet overgenomen. Dit geldt voor behandelgegevens, tijdelijke streefwaarden, profielwijzigingen, wijzigingen van de actieve modus en verwijderingen. De instellingen voor het accepteren van gegevens uit Nightscout zijn verborgen zolang de aangescherpte modus is ingeschakeld. SMS-opdrachten worden hierdoor niet beïnvloed.\n\nDe master blijft wel alle gegevens naar Nightscout uploaden, inclusief BG-gegevens. Als Nightscout de bron van de BG-gegevens is, blijft de master deze daar ook ophalen.\n\nGebruik Full sync in NSClient om de geschiedenis op een nieuwe mastertelefoon te laden. Full sync haalt alle gegevens op die in Nightscout staan, inclusief profielen.\n\nVoor bediening op afstand via clients is een werkende WebSocket-verbinding met Nightscout nodig, zowel op de master als op gekoppelde clients. In de eenvoudige modus wordt de aangescherpte modus altijd ingeschakeld. Om deze uit te schakelen, moet je de eenvoudige modus verlaten en de bediening door clients op de master uitschakelen.</string>
+    <string name="scene_lock_reason_master_offline">Master niet verbonden</string>
+    <string name="scene_lock_reason_control_disabled">Bediening op afstand uitgeschakeld</string>
+    <string name="scene_lock_reason_scene_active">Stop eerst de lopende scène</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <string name="clientcontrol_action_set_temp_target">Stel tijdelijk streefdoel in</string>
     <string name="clientcontrol_action_cancel_temp_target">Annuleer tijdelijk streefdoel</string>
+    <string name="clientcontrol_action_activate_scene">Scène %1$s activeren</string>
+    <string name="clientcontrol_action_deactivate_scene">Scène beëindigen</string>
+    <string name="clientcontrol_action_update_settings">Instellingen bijwerken</string>
     <string name="clientcontrol_action_deliver_bolus">Bolus toedienen</string>
+    <string name="clientcontrol_action_eat_reminder">Eetmomentherinnering wijzigen</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">Dit apparaat is niet gekoppeld aan een master.</string>
+    <string name="clientcontrol_fail_not_reachable">De master is offline.</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">De pompconfiguratie is niet gesynchroniseerd met de master. Probeer het opnieuw.</string>
+    <string name="clientcontrol_fail_no_reply">De master reageert niet.</string>
+    <string name="clientcontrol_fail_expired">De opdracht is verlopen voordat de master deze kon uitvoeren.</string>
     <string name="clientcontrol_fail_busy">Een andere actie is al gaande.</string>
     <string name="clientcontrol_fail_send_failed">Nightscout kon niet bereikt worden.</string>
+    <string name="clientcontrol_fail_no_active_profile">De master heeft geen actief profiel waarop dit toegepast kan worden.</string>
+    <string name="clientcontrol_fail_scene_not_found">Die scène bestaat niet meer.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">Het record bestaat niet meer.</string>
+    <string name="clientcontrol_fail_scene_disabled">De scène is uitgeschakeld.</string>
+    <string name="clientcontrol_fail_partial">Sommige acties konden niet worden uitgevoerd.</string>
+    <string name="clientcontrol_fail_execution">De master kon het verzoek niet uitvoeren.</string>
+    <string name="clientcontrol_fail_cancelled">De opdracht is geannuleerd voordat deze werd uitgevoerd. Er is niets naar de pomp gestuurd.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus geannuleerd. Er is geen insuline toegediend.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Geannuleerd</string>
     <string name="clientcontrol_fail_other_token">Het master apparaat heeft dit geweigerd: deze client schrijft met een ander token naar Nightscout dan zijn eigen token. Verwijder deze client op het hoofdapparaat en voeg hem opnieuw toe.</string>
     <string name="clientcontrol_fail_no_pending_bolus">De voorbereide bolus is verlopen of vervangen. Tik nogmaals op de knop.</string>
