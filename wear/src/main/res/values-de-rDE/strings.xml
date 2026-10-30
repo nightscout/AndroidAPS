@@ -3,6 +3,11 @@
     <string name="label_watchface_circle">AAPS(Kreis)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
+    <string name="label_actions_tile">Aktionen</string>
+    <string name="label_temp_target_tile">Temporäres Ziel</string>
+    <string name="label_quick_wizard_tile">Schnellassistent</string>
+    <string name="label_user_action_tile">Benutzer Aktion</string>
+    <string name="label_scene_tile">Szene</string>
     <string name="msg_warning_sync">Keine Daten seit %1$s! Prüfe, ob AAPS auf dem Smartphone Daten an die Uhr sendet.</string>
     <string name="msg_warning_old">AAPS Daten sind %1$s alt! Prüfe Deinen Sensor, xDrip+, NS, AAPS Einstellungen etc!</string>
     <string name="pref_vibrate_on_bolus">Bei Bolus vibrieren</string>
@@ -22,6 +27,8 @@
     <string name="pref_show_phone_battery">Akkustand Smartphone</string>
     <string name="pref_show_rig_battery">Akkustand Rig</string>
     <string name="pref_show_basal_rate">Basalrate anzeigen</string>
+    <string name="pref_show_temp_target">Temporäres Ziel anzeigen</string>
+    <string name="pref_show_reservoir_level">Reservoirstand anzeigen</string>
     <string name="pref_show_loop_status">Loop Status anzeigen</string>
     <string name="pref_show_bg">BZ anzeigen</string>
     <string name="pref_show_bgi">Zeige BGI</string>
@@ -40,6 +47,10 @@
     <string name="pref_3_hours">3 Std.</string>
     <string name="pref_4_hours">4 Std.</string>
     <string name="pref_5_hours">5 Std.</string>
+    <string name="pref_1_min">deaktiviert</string>
+    <string name="pref_5_min">5 min</string>
+    <string name="pref_10_min">10 min</string>
+    <string name="pref_15_min">15 min</string>
     <string name="pref_big_numbers">Große Zahlen</string>
     <string name="pref_ring_history">Ring BZ-Historie</string>
     <string name="pref_light_ring_history">Ring BZ-Historie light</string>
@@ -49,11 +60,15 @@
     <string name="pref_single_target">Einzelzielwert</string>
     <string name="pref_wizard_percentage">Rechner Prozentsatz</string>
     <string name="pref_complication_tap_action">Tipp Komplikation</string>
+    <string name="duration_1_hour">1 Stunde</string>
+    <string name="duration_3_hours">3 Stunden</string>
+    <string name="duration_6_hours">6 Stunden</string>
     <string name="pref_unicode_in_complications">Unicode in Komplikationen</string>
     <string name="pref_version">Version:</string>
     <string name="pref_moreWatchfaceSettings">Weitere Watchface Einstellungen</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Schaue Dir bitte die Watchface-Konfiguration an.</string>
     <string name="menu_tempt">Temp. Ziel</string>
+    <string name="menu_tempt_long">Temporäres Ziel</string>
     <string name="menu_wizard">Rechner</string>
     <string name="menu_wizard_short">Rechner</string>
     <string name="menu_treatment">Bolus</string>
@@ -65,19 +80,36 @@
     <string name="menu_status">Status</string>
     <string name="menu_resync">Erneut synchronisieren</string>
     <string name="menu_prime_fill">(Vor-)Füllen</string>
+    <string name="menu_install_watchface">Watchface installieren</string>
+    <string name="menu_installing_watchface">Installiere Watchface…</string>
+    <string name="watchface_installed_active">Watchface installiert und als aktiv gesetzt</string>
+    <string name="watchface_installed_select">Watchface installiert, wählen Sie es in der Uhrenansicht aus</string>
+    <string name="watchface_install_failed">Watchface Installation fehlgeschlagen</string>
     <string name="menu_none">Kein(e)</string>
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Menü</string>
     <string name="action_tempt_confirmation">Temp Target angefordert</string>
     <string name="action_quick_wizard_confirmation">Quick Wizard angefordert</string>
+    <string name="action_user_action_confirmation">Benutzeraktion angefordert</string>
+    <string name="scene_end">Ende</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Überspringen</string>
     <string name="action_treatment_confirmation">Behandlung angefordert</string>
     <string name="action_bolus_confirmation">Bolus angefordert</string>
     <string name="action_wizard_confirmation">Berechnung angefordert</string>
     <string name="action_fill_confirmation">Füllen angefordert</string>
     <string name="action_ecarb_confirmation">KH angefordert</string>
     <string name="action_profile_switch_confirmation">Profilwechsel angefordert</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Zielwert [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Niedrig [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Hoch [%s]</string>
     <string name="action_carbs">Kohlenhydrate</string>
+    <string name="action_carbs_gram">Kohlenhydrate [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Maximale Entfernung: %1$d g (COB)</string>
     <string name="action_ecarbs">eCarbs</string>
+    <string name="action_percentage">Prozent\n[%]</string>
+    <string name="action_start_minutes">Start\n[minutes]</string>
+    <string name="action_duration_hours">Dauer\n[hours]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
     <string name="action_insulin">Insulin</string>
     <string name="action_preset_1">Voreinstellung 1</string>
     <string name="action_preset_2">Voreinstellung 2</string>
@@ -118,15 +150,27 @@
     <string name="pref_simplify_ui">Benutzeroberfläche vereinfachen</string>
     <string name="pref_vibrate_hourly">stündlich vibrieren</string>
     <string name="pref_show_weeknumber">Kalenderwoche anzeigen</string>
+    <string name="pref_complication_1">Komplikation 1</string>
+    <string name="pref_complication_2">Komplikation 2</string>
+    <string name="pref_complication_3">Komplikation 3</string>
+    <string name="pref_complication_4">Komplikation 4</string>
+    <string name="pref_complication_5">Komplikation 5</string>
+    <string name="complication_summary_none">Tippen, um eine Datenquelle auszuwählen</string>
+    <string name="pref_complication_type_priority_all">Standard für alle Slots</string>
     <string name="custom_pref_show_seconds">Sekunden anzeigen</string>
+    <string name="digitalstyle_pref_your_style">Dein Stil</string>
     <string name="digitalstyle_style_none">ohne Stil</string>
     <string name="digitalstyle_style_minimal">minimalistisches Stil</string>
     <string name="digitalstyle_style_shape">schattierter Stil</string>
     <string name="digitalstyle_style_full">vollständiger Stil</string>
+    <string name="digitalstyle_pref_your_color">Ihre Farbe</string>
+    <string name="digitalstyle_pref_your_color_saturation">Ihre Farbsättigung</string>
+    <string name="digitalstyle_pref_your_color_opacity">Deine Farbtransparenz</string>
     <string name="bolus_progress_channel_name">AAPS Bolus Fortschritt</string>
     <string name="bolus_progress_silent_channel_name">AAPS Bolus-Fortschritt stumm</string>
     <string name="bolus_progress_channel_description">Bolus-Fortschritt und Abbruch</string>
     <string name="bolus_progress_silent_channel_description">Bolus Fortschritt und Abbruch mit weniger Vibrationen</string>
+    <string name="open_loop_channel_name">AAPS Open Loop</string>
     <string name="simple_ui_off">Aus</string>
     <string name="simple_ui_charging">Während des Ladevorgangs</string>
     <string name="simple_ui_always_on">Immer im Modus</string>
@@ -155,4 +199,30 @@
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="pref_heartRateSampling">Herzfrequenz</string>
+    <string name="pref_stepsSampling">Schrittzähler aktivieren</string>
+    <string name="tile_tempt_1">Temporäres Ziel 1</string>
+    <string name="tile_tempt_2">Temporäres Ziel 2</string>
+    <string name="tile_tempt_3">Temporäres Ziel 3</string>
+    <string name="tile_tempt_4">Temporäres Ziel 4</string>
+    <string name="tile_action_1">Aktion 1</string>
+    <string name="tile_action_2">Aktion 2</string>
+    <string name="tile_action_3">Aktion 3</string>
+    <string name="tile_action_4">Aktion 4</string>
+    <string name="tile_scene_1">Szene 1</string>
+    <string name="tile_scene_2">Szene 2</string>
+    <string name="tile_scene_3">Szene 3</string>
+    <string name="tile_scene_4">Szene 4</string>
+    <string name="tile_scene_auto">Automatisch</string>
+    <string name="tile_scene_unavailable">Nicht verfügbar</string>
+    <string name="on">EIN</string>
+    <string name="off">AUS</string>
+    <string name="complication_blood_glucose">Blutzucker</string>
+    <string name="complication_cwf_image">Benutzerdefiniertes Watchface</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_br">Basalrate</string>
+    <string name="complication_target">Ziel</string>
+    <string name="tile_graph_time_range">Zeitraum</string>
+    <string name="tile_tap_bg_graph">Blutzucker-Verlauf</string>
+    <string name="tile_tap_main_menu">Hauptmenü</string>
+    <string name="tile_tap_loop_status">Loop-Status</string>
 </resources>
