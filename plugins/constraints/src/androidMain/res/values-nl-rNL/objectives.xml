@@ -72,6 +72,7 @@
     <string name="objectives_exam_learned_ecarbs">E-carbs kunnen worden gezien als een vervanging van een vertraagde bolus in het algemene pomp jargon.</string>
     <string name="objectives_exam_learned_nsclient">Je kunt AAPS op afstand volgen met AAPSClient of Nightscout. Wanneer AAPSClient is gekoppeld aan de hoofdtelefoon, kun je AAPS ook op afstand bedienen.</string>
     <string name="objectives_exam_learned_concentration1">Het gebruik van U200-insuline met een profielinstelling van 50% vereist een permanente omrekening: voor externe bolussen met pennen, en omdat alle standaardrapporten van AAPS of NS onjuist zullen zijn en voor het medisch team moeten worden omgerekend naar IE.</string>
+    <string name="objectives_exam_learned_concentration2" formatted="false">Overschakelen van U200 met een 50% profiel naar U200 met de insuline concentratie functie vereist het maken van een nieuw, sterker profiel. Schakel \'DynISF\' uit voor een week en train het systeem om in Internationale Eenheden te denken.</string>
     <string name="objectives_exam_learned_concentration3">Insuline concentratie kan alleen worden gewijzigd wanneer de insuline of de patch wordt gewijzigd. Belangrijk, vooral voor de tube pompen: gebruik nooit de interface van de pomp om bolussen direct vanuit de pomp toe te dienen.</string>
     <string name="answerdisabledto">Beantwoorden uitgeschakeld tot: %1$s</string>
     <string name="wronganswer">Verkeerd antwoord!</string>
@@ -89,9 +90,17 @@
     <string name="verify_master_password">Verifieer dat u het masterwachtwoord kent</string>
     <string name="objectives_collapse">Minder</string>
     <string name="objectives_expand">Meer</string>
+    <string name="objectives_no_learned">Geen lessen vastgelegd voor dit doel.</string>
+    <string name="objectives_open_exam">Start examen</string>
+    <string name="objectives_exam_question_progress">Vraag %1$d van %2$d</string>
+    <string name="objectives_exam_reset">Herstart</string>
     <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Klaar</string>
     <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">Bezig</string>
     <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">Not started</string>
     <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">Vergrendeld</string>
     <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">juist antwoord</string>
+    <string name="objectives_exam_previous">Vorige</string>
+    <string name="objectives_exam_next">Volgende</string>
+    <string name="objectives_exam_next_unanswered">Volgende onbeantwoord</string>
+    <string name="objectives_show_hint">Tip</string>
 </resources>
