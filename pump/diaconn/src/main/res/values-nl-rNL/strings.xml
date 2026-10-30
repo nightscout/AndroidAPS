@@ -11,9 +11,11 @@
     <string name="gettingpumpsettings">Pomp instellingen aan het ophalen</string>
     <string name="gettingpumptime">Pomp tijd aan het ophalen</string>
     <string name="largetimediff">Groot tijdsverschil:\nTijd in de pomp staat meer dan 1,5 uur uit.\nPas de tijd handmatig aan op de pomp en zorg ervoor dat het lezen van geschiedenis uit de pomp geen onverwacht gedrag veroorzaakt.\nindien mogelijk verwijder de geschiedenis van de pomp voordat je de tijd wijzigt of schakel de closed loop uit voor een DIA na het laatste verkeerde geschiedenis-invoer, maar vanaf nu minimaal één DIA.</string>
+    <string name="largetimedifftitle">Groot tijdsverschil</string>
     <string name="approachingdailylimit">Insuline daglimiet aan het benaderen</string>
     <string name="startingbolus">Bolus toediening gestart</string>
     <string name="waitingforbolusend">Wachten tot het einde van de bolus is bereikt</string>
+    <string name="gettingbolusstatus">Bolus status aan het ophalen</string>
     <string name="stoppingtempbasal">Stoppen van tijdelijk basaal</string>
     <string name="settingtempbasal">Instellen tijdelijk basaal</string>
     <string name="settingextendedbolus">Instellen van vertraagde bolus</string>
@@ -123,4 +125,5 @@
     <string name="diaconn_g8_errorcode_36">Tijdelijk basaal stop geweigerd als tijdelijk basaal niet wordt uitgevoerd</string>
     <string name="diaconn_g8_cloudsend_summary">Stuur pomp logs naar de Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Sync</string>
+    <string name="bolus_speed_1">1 E/min</string>
 </resources>
