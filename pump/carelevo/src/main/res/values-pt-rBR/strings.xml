@@ -87,7 +87,6 @@
     <string name="carelevo_patch_attach_step2_desc">Retire o patch do blister e remova a tampa da agulha.</string>
     <string name="carelevo_patch_attach_step3_title">Aplicar patch</string>
     <string name="carelevo_patch_attach_step3_desc">Fixe o patch na pele com o ponto marcado voltado para cima.</string>
-    <string name="carelevo_patch_attach_step4_desc">Depois de fixar o patch, pressione o botão Pronto.</string>
     <string name="carelevo_patch_needle_insertion_step1_title">Remover tampa de segurança</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">Gire a tampa de segurança na direção da seta e remova-a.</string>
     <string name="carelevo_patch_needle_insertion_step2_title">Inserir agulha</string>
