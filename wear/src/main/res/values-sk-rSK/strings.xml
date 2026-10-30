@@ -9,8 +9,8 @@
     <string name="label_quick_wizard_tile">Rýchly sprievodca</string>
     <string name="label_user_action_tile">Akcia používateľa</string>
     <string name="label_scene_tile">Scéna</string>
-    <string name="msg_warning_sync">Žiadne dáta od %1$s! Skontroluj, či AAPS na telefóne posiela dáta na hodinky</string>
-    <string name="msg_warning_old">AAPS dáta sú %1$s staré! Skontroluj tvoj senzor, xDrip+, NS, AAPS nastavenia atď.!</string>
+    <string name="msg_warning_sync">Od %1$s neprišli žiadne dáta! Skontrolujte, či AAPS v telefóne posiela dáta do hodiniek</string>
+    <string name="msg_warning_old">Dáta AAPS sú staré %1$s! Skontrolujte senzor, xDrip+, NS, nastavenia AAPS a iné!</string>
     <string name="pref_vibrate_on_bolus">Zavibrovať pri boluse</string>
     <string name="units_short">U</string>
     <string name="pref_display_settings">Displej</string>
@@ -24,10 +24,10 @@
     <string name="pref_show_detailed_iob">Zobraziť detailný IOB</string>
     <string name="pref_show_cob">Zobraziť COB</string>
     <string name="pref_show_delta">Zobraziť odchýlku</string>
-    <string name="pref_show_detailed_delta">Zobraziť detailnú odchylku</string>
+    <string name="pref_show_detailed_delta">Zobraziť detailnú odchýlku</string>
     <string name="pref_show_avgdelta">Zobraziť priemernú odchýlku</string>
     <string name="pref_show_phone_battery">Zobraziť stav batérie telefónu</string>
-    <string name="pref_show_rig_battery">Zobrazovať kruhový graf batérie</string>
+    <string name="pref_show_rig_battery">Zobraziť batériu zariadenia (rig)</string>
     <string name="pref_show_basal_rate">Zobraziť bazál</string>
     <string name="pref_show_temp_target">Zobraziť dočasný cieľ</string>
     <string name="pref_show_reservoir_level">Zobraziť stav zásobníka</string>
@@ -57,13 +57,13 @@
     <string name="pref_ring_history">História glykémií - kruh</string>
     <string name="pref_light_ring_history">História glykémií - svetlý kruh</string>
     <string name="pref_animations">Animácie</string>
-    <string name="pref_wizard_in_menu">Kalkulačka v nastaveniach</string>
-    <string name="pref_prime_in_menu">Plnenie v nastaveniach</string>
+    <string name="pref_wizard_in_menu">Kalkulačka v ponuke</string>
+    <string name="pref_prime_in_menu">Plnenie v ponuke</string>
     <string name="pref_single_target">Jeden cieľ</string>
     <string name="pref_wizard_percentage">Percento kalkulačky</string>
     <string name="pref_wizard_carbs_type">Typ jedla v kalkulačke</string>
-    <string name="pref_wizard_carb_time">Kalkulačka času na sacharidy</string>
-    <string name="pref_complication_tap_action">Zadaj komplikáciu</string>
+    <string name="pref_wizard_carb_time">Čas sacharidov v kalkulačke</string>
+    <string name="pref_complication_tap_action">Akcia po ťuknutí na komplikáciu</string>
     <string name="pref_complication_bg_graph_hours">Časový rozsah grafu glykémie</string>
     <string name="duration_1_hour">1 hodina</string>
     <string name="duration_3_hours">3 hodiny</string>
@@ -102,7 +102,7 @@
     <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Preskočiť</string>
     <string name="action_treatment_confirmation">Požadované ošetrenie</string>
     <string name="action_bolus_confirmation">Požadovaný bolus</string>
-    <string name="action_wizard_confirmation">Požadovaná kalkulačka</string>
+    <string name="action_wizard_confirmation">Požadovaný výpočet</string>
     <string name="action_fill_confirmation">Požadované plnenie</string>
     <string name="action_ecarb_confirmation">Požadované sacharidy</string>
     <string name="action_profile_switch_confirmation">Požadované prepnutie profilu</string>
@@ -135,7 +135,7 @@
     <string name="status_pump">Pumpa</string>
     <string name="status_loop">Uzavretý okruh</string>
     <string name="status_profile_switch">Prepnutie profilu</string>
-    <string name="status_tdd">TDD</string>
+    <string name="status_tdd">CDD</string>
     <string name="activity_carb">Sach</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">žiadny stav</string>
@@ -179,16 +179,16 @@
     <string name="cwf_complication_layout">Rozloženie komplikácií</string>
     <string name="cwf_complication_layout_description">Poloha a veľkosť komplikácií prevzaté z načítaného vlastného ciferníka.</string>
     <string name="pref_include_external">Zahrnúť externé zobrazenia do šablóny</string>
-    <string name="pref_switch_external">Zobraziť externé dáta v ciferníku</string>
+    <string name="pref_switch_external">Prepnúť externé dáta v ciferníku</string>
     <string name="custom_pref_show_seconds">Zobrazovať sekundy</string>
-    <string name="digitalstyle_pref_your_style">Tvoj štýl</string>
+    <string name="digitalstyle_pref_your_style">Váš štýl</string>
     <string name="digitalstyle_style_none">žiadny štýl</string>
     <string name="digitalstyle_style_minimal">minimálny štýl</string>
-    <string name="digitalstyle_style_shape">tvar štýlu</string>
+    <string name="digitalstyle_style_shape">štýl tvaru</string>
     <string name="digitalstyle_style_full">úplný štýl</string>
-    <string name="digitalstyle_pref_your_color">Tvoja farba</string>
-    <string name="digitalstyle_pref_your_color_saturation">Tvoja sýtosť farieb</string>
-    <string name="digitalstyle_pref_your_color_opacity">Tvoja priehľadnosť farieb</string>
+    <string name="digitalstyle_pref_your_color">Vaša farba</string>
+    <string name="digitalstyle_pref_your_color_saturation">Vaša sýtosť farby</string>
+    <string name="digitalstyle_pref_your_color_opacity">Vaša priehľadnosť farby</string>
     <string name="bolus_progress_channel_name">AAPS Priebeh podávania bolusu</string>
     <string name="bolus_progress_silent_channel_name">AAPS Priebeh podávania bolusu tichý</string>
     <string name="bolus_progress_channel_description">Priebeh bolusu a zrušenie</string>
@@ -215,13 +215,13 @@
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
-    <string name="snooze_alert">AAPS Potvrdenie výstrahy</string>
-    <string name="sending_snooze">Odosielanie potvrdení do AAPS</string>
+    <string name="snooze_alert">AAPS Odloženie výstrahy</string>
+    <string name="sending_snooze">Odosielanie odloženia do AAPS</string>
     <string name="week_short">t</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
     <string name="minute_short">m</string>
-    <string name="hour_minute">%1$s: %2$s</string>
+    <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="error">Chyba</string>
     <string name="pref_heartRateSampling">Tepová frekvencia</string>
@@ -246,18 +246,18 @@
     <string name="on">ZAP</string>
     <string name="off">VYP</string>
     <string name="complication_full_status">Kompletný stav</string>
-    <string name="complication_full_status_flipped">Kompletní stav (opačne)</string>
+    <string name="complication_full_status_flipped">Kompletný stav (opačne)</string>
     <string name="complication_blood_glucose">Glykémia</string>
     <string name="complication_blood_glucose_large">Glykémia (veľká)</string>
     <string name="complication_blood_glucose_ext1">Glykémia Ext1</string>
     <string name="complication_blood_glucose_ext2">Glykémia Ext2</string>
     <string name="complication_bg_graph">Graf glykémie</string>
     <string name="complication_cwf_image">Vlastný ciferník</string>
-    <string name="complication_cwf_ambient_bg">Vlastný ciferník s údajmi o hladine glukózy</string>
+    <string name="complication_cwf_ambient_bg">Vlastný ciferník – glykémia v pohotovostnom režime</string>
     <string name="complication_cwf_ambient_status">Stav vlastného ciferníka v pohotovostnom režime</string>
-    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s %2$s</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
     <string name="complication_cwf_lower">Pozadie vlastného ciferníka</string>
-    <string name="complication_cwf_upper">Vlastný ciferník</string>
+    <string name="complication_cwf_upper">Hodiny vlastného ciferníka</string>
     <string name="complication_br_cob_iob">Bazál, COB &amp; IOB</string>
     <string name="complication_br_cob_iob_ext1">Bazál, COB &amp; IOB Ext1</string>
     <string name="complication_br_cob_iob_ext2">Bazál, COB &amp; IOB Ext2</string>
@@ -271,7 +271,7 @@
     <string name="complication_iob_icon">Ikona IOB</string>
     <string name="complication_iob_detailed">Detailný IOB</string>
     <string name="complication_uploader_phone_battery">Batéria telefónu/uploadera</string>
-    <string name="running_mode_resume">Pokračovať v uzavretom okruhu</string>
+    <string name="running_mode_resume">Obnoviť okruh</string>
     <string name="running_mode_reconnect">Znovu pripojiť pumpu</string>
     <string name="label_running_mode_title">Režim prevádzky</string>
     <string name="label_bg_graph_tile">Graf glykémie</string>
@@ -292,11 +292,11 @@
     <string name="wizard_carb_time_now">Teraz</string>
     <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
     <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>
-    <string name="wizard_set_alarm">Nastav upozornenie</string>
+    <string name="wizard_set_alarm">Nastaviť alarm</string>
     <string name="eat_reminder_title">Čas na jedlo</string>
     <string name="eat_reminder_silence">Stíšiť</string>
     <string name="eat_reminder_stop">Zastaviť</string>
-    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Vyzváňanie o %1$s</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Zazvoní o %1$s</string>
     <string name="eat_reminder_countdown_channel">Čas na jedlo, prebieha</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
     <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
@@ -349,7 +349,7 @@
     <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
     <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dh</string>
     <string name="loop_status_sensitivity">Citlivosť</string>
-    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Nastavené podľa aktívneho režimu</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Nastavené aktívnou scénou</string>
     <string name="loop_status">Stav okruhu</string>
     <string name="loop_status_refresh">Obnoviť</string>
     <string name="confirm">Potvrdiť</string>
@@ -362,7 +362,7 @@
     <string name="wizard_result_bg_tt">GL (DC: %1$s)</string>
     <string name="wizard_result_trend">15min trend</string>
     <string name="wizard_result_iob">IOB</string>
-    <string name="wizard_result_new_iob">Nový IOB: %1$sU</string>
+    <string name="wizard_result_new_iob">Nový IOB: %1$s U</string>
     <string name="wizard_result_cob">COB (%1$.1f g)</string>
     <string name="wizard_result_carbs">Sacharidy (%1$d g)</string>
     <string name="wizard_result_subtotal">Medzisúčet</string>
