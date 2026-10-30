@@ -66,6 +66,7 @@
     <string name="scene_wizard_finish">Voltooien</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Vervolg scène</string>
+    <string name="scene_wizard_chain_info">Koppel optioneel een andere scène die automatisch wordt geactiveerd wanneer deze scène verloopt. Je kunt er ook direct naartoe overschakelen wanneer je eerder beëindigt. De opvolgscène wordt alleen uitgevoerd als de doelwaarde is ingeschakeld en de pomp beschikbaar is; anders ontvang je een melding waarom niet gestart.</string>
     <string name="scene_chain_none">Geen</string>
     <string name="scene_skip_to_format">Overslaan naar %1$s</string>
     <!-- Scene list: chain indicator -->
