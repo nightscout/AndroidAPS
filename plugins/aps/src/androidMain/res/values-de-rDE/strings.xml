@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
+    <string name="dyn_isf_adjust_title" formatted="false">DynamicISF Anpassungsfaktor %</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamischer ISF</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
     <string name="openapsma_disabled">Plugin ist deaktiviert</string>
     <string name="openapsma_no_glucose_data">Keine BZ-Werte verfügbar</string>
     <string name="openaps_no_as_data">Keine Autosens-Daten verfügbar</string>
@@ -12,6 +14,7 @@
     <string name="description_ama">Stand des Algorithmus in 2017</string>
     <string name="description_smb">Der aktuellste Algorithmus für erfahrene Nutzer</string>
     <string name="description_smb_dynamic_isf">Neuester Algorithmus für fortgeschrittene Benutzer mit dynamischer/automatischer ISF</string>
+    <string name="description_auto_isf">Experimenteller Algorithmus für fortgeschrittene Benutzer mit AutoISF-Erweiterungen</string>
     <string name="openapsma_last_run_label">Letzte Ausführung</string>
     <string name="openapsma_input_parameters_label">Eingabeparameter</string>
     <string name="openapsma_glucose_status_label">Glukose-Status</string>
@@ -35,9 +38,11 @@
     <string name="maxvalueinpreferences">Max. Wert in den Einstellungen</string>
     <string name="hardlimit">festem Grenzwert</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">Spitzenwert</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Aufgrund eines Bolus in den letzten 3 Minuten wird kein SMB abgegeben</string>
     <string name="pump_not_initialized">Pumpe nicht initialisiert!</string>
+    <string name="zero_basal_not_set">Die Pumpe hat die temporäre Null-Basalrate nicht akzeptiert. Möglicherweise wird weiterhin Basalinsulin abgegeben. Überprüfe die Pumpe.</string>
     <string name="description_loop">Aktiviere oder deaktiviere die Anwendung, die den Loop ausführt.</string>
     <string name="no_aps_selected">KEIN APS AUSGEWÄHLT ODER KEIN ERGEBNIS VORHANDEN</string>
     <string name="ignore5m">5 Min. ignorieren</string>
@@ -45,6 +50,9 @@
     <string name="ignore30m">30 Min. ignorieren</string>
     <string name="carbs_suggestion">KH-Vorschlag</string>
     <string name="open_loop_new_suggestion">Neue Empfehlung verfügbar</string>
+    <string name="loop_notification_channel_name">Loop Vorschläge</string>
+    <string name="loop_notification_channel_silent_name">Loop-Vorschläge während des \"Nicht-stören\"-Modus</string>
+    <string name="open_loop_suggestion_too_old">Dieser Vorschlag ist zu alt. Es wurde nichts an die Pumpe geschickt. Warte auf den nächsten Vorschlag.</string>
     <string name="basal_set_correctly">Basalrate richtig eingestellt</string>
     <string name="last_run_label">Letzte Ausführung</string>
     <string name="loop_aps_label">APS</string>
@@ -57,7 +65,9 @@
     <string name="loop_smb_execution_time_label">SMB Ausführungszeit</string>
     <string name="loop_smb_set_by_pump_label">SMB von Pumpe eingestellt</string>
     <string name="fallback_smb_no_tdd">Fallback auf SMB. Nicht genügend TDD Werte.</string>
+    <string name="fallback_to_isf_no_tdd">Rückgriff auf die Insulinempfindlichkeit im Profil. Nicht genug Daten. Grund: %1$s</string>
     <!-- Autotune -->
+    <string name="autotune_description">Hilfe zu möglichen Anpassungen des Profils (ISF, IC und Basalraten)</string>
     <string name="autotune_default_tune_days_title">Anzahl der Tage an Daten</string>
     <string name="autotune_tunedprofile_name">Angepasst</string>
     <string name="autotune_profile">Profil :</string>
@@ -84,5 +94,8 @@
     <string name="autotune_update_local_profile_message">Anpassen %1$s Profile mit dem Autotune Profile?</string>
     <string name="autotune_revert_local_profile_message">%1$s Profil mit Eingabeprofil zurücksetzen?</string>
     <string name="autotune_profile_invalid">Profil ungültig</string>
+    <string name="pump_disconnected">Verbindung zur Pumpe getrennt</string>
     <!--    autoISF -->
+    <string name="autoISF_settings_title">AutoISF Einstellungen</string>
+    <string name="smb_delivery_settings_title">SMB-Abgabe Einstellungen</string>
 </resources>
