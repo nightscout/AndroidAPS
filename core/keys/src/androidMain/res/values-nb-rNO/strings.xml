@@ -32,6 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Vis akutte alarmer som Android-varsler</string>
     <string name="pref_title_alert_increase_volume">Øk varselvolumet gradvis</string>
     <string name="pref_title_alert_override_dnd">Overstyr ikke forstyrr-modus</string>
+    <string name="pref_summary_alert_override_dnd">På: Alarmer utløses selv om telefonen er satt på lydløs eller Ikke forstyrr er aktivert. Av: Alarmene lager ikke lyd da. Når Ikke forstyrr er aktivert, vibrerer de bare.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Last opp BS-data til NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Logg sensorskifte</string>
