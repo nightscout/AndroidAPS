@@ -72,7 +72,6 @@
     <string name="pair_with_master_fetching">Ieškoma susiejimo…</string>
     <string name="pair_with_master_confirm_title">Susieti su šiuo pagrindiniu įrenginiu?</string>
     <string name="pair_with_master_confirm_master">Pagrindinis įrenginys: %1$s</string>
-    <string name="pair_with_master_confirm_warning">Susiejus pagrindinis įrenginys galės siųsti pasirašytas komandas į šį įrenginį.</string>
     <string name="pair_with_master_confirm_pair">Susieti</string>
     <string name="pair_with_master_error_title">Susieti nepavyko</string>
     <string name="pair_with_master_error_wrong_pin">Pagal šį PIN susiejimas nerastas. Patikrinkite PIN pagrindiniame įrenginyje ir bandykite dar kartą.</string>
