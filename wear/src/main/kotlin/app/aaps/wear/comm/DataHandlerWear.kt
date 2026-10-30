@@ -52,6 +52,7 @@ import app.aaps.wear.complications.SgvLargeComplication
 import app.aaps.wear.complications.TargetComplication
 import app.aaps.wear.complications.UploaderBatteryComplication
 import app.aaps.wear.data.ComplicationDataRepository
+import app.aaps.wear.alarm.PhoneAlarmWatch
 import app.aaps.wear.eatreminder.EatReminderWatch
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
 import app.aaps.wear.interaction.actions.AcceptActivity
@@ -88,7 +89,8 @@ class DataHandlerWear(
     private val aapsLogger: AAPSLogger,
     private val complicationDataRepository: ComplicationDataRepository,
     private val watchFacePushHelper: WatchFacePushHelper,
-    private val eatReminderWatch: EatReminderWatch
+    private val eatReminderWatch: EatReminderWatch,
+    private val phoneAlarmWatch: PhoneAlarmWatch
 ) {
 
     // Coroutine scope for DataStore operations
@@ -171,6 +173,8 @@ class DataHandlerWear(
         onEvent<EventData.CancelNotification> {
             (context.getSystemService(WearableListenerService.NOTIFICATION_SERVICE) as NotificationManager).cancel(DataLayerListenerServiceWear.CHANGE_NOTIF_ID)
         }
+        onEvent<EventData.AlarmRinging>(detail = { " ${it.title}: ${it.status}" }) { phoneAlarmWatch.show(it) }
+        onEvent<EventData.AlarmStopped> { phoneAlarmWatch.clear() }
         onEvent<EventData.OpenLoopRequest> { handleOpenLoopRequest(it) }
         onEvent<EventData.OpenSettings> {
             // The Display screen holds the settings of the code-based faces. With the complications
@@ -259,6 +263,8 @@ class DataHandlerWear(
             preferences.put(DoubleKey.OverviewInsulinButtonIncrement2, it.insulinButtonIncrement2)
             preferences.put(IntKey.OverviewCarbsButtonIncrement1, it.carbsButtonIncrement1)
             preferences.put(IntKey.OverviewCarbsButtonIncrement2, it.carbsButtonIncrement2)
+            // Read by the watch's own alarms, see DoNotDisturbRule
+            preferences.put(BooleanKey.AlertOverrideDoNotDisturb, it.alertOverrideDnd)
             // The Watch Face Push face the wearer chose on the phone. Stored whatever the watch
             // can do with it, so a watch updated to Wear OS 6 later installs the chosen face on
             // its next start; swapped now when the watch can. Either way the phone is told what

@@ -64,6 +64,8 @@ import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.weardata.ActiveSceneInfo
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
+import app.aaps.core.interfaces.overview.graph.buildTargetLine
+import app.aaps.core.interfaces.overview.graph.targetMiddleMgdl
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.EventData.RunningModeList.AvailableRunningMode
 import app.aaps.core.interfaces.rx.weardata.LoopStatusData
@@ -400,6 +402,9 @@ class DataHandlerMobile(
             onCommitResult(sceneActions.stop(triggerChain = it.triggerChain))
         }
         onEventSync<EventData.SnoozeAlert> { uiInteraction.stopAlarm("Muted from wear") }
+        // Not gated by the wear control switch, like the mute above: they only answer an alarm
+        onEventSync<EventData.DismissAlert> { uiInteraction.dismissAlarm("Dismissed from wear") }
+        onEventSync<EventData.MuteAlert> { uiInteraction.muteAlarm(it.minutes, "Muted from wear for ${it.minutes} min") }
         // Not gated by the wear control switch, like the mute above: it only ends or moves a reminder
         onEvent<EventData.ActionEatReminder> { handleEatReminder(it) }
         onEventSync<EventData.WearException> { fabricPrivacy.logWearException(it) }
@@ -1265,7 +1270,8 @@ class DataHandlerMobile(
                 insulinButtonIncrement2 = preferences.get(DoubleKey.OverviewInsulinButtonIncrement2),
                 carbsButtonIncrement1 = preferences.get(IntKey.OverviewCarbsButtonIncrement1),
                 carbsButtonIncrement2 = preferences.get(IntKey.OverviewCarbsButtonIncrement2),
-                pushedWatchface = preferences.get(StringKey.WearPushedWatchface)
+                pushedWatchface = preferences.get(StringKey.WearPushedWatchface),
+                alertOverrideDnd = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
             )
         )
         // QuickWizard
@@ -1527,9 +1533,18 @@ class DataHandlerMobile(
                     )
                 )
             }
+        // The target line as on the phone's BG graph, out past the watch's prediction area. One read of the
+        // temporary targets for the whole window; the running one at the start is not "from" the start.
+        val temporaryTargets = (persistenceLayer.getTemporaryTargetsActiveAt(startTimeWindow) +
+            persistenceLayer.getTemporaryTargetDataFromTime(startTimeWindow, true)).distinctBy { it.id }
+        val targets = ArrayList(
+            buildTargetLine(startTimeWindow, now + T.hours(2).msecs(), temporaryTargets, profile::targetMiddleMgdl) { it }
+                .map { EventData.TreatmentData.Target(it.timestamp, it.value) }
+        )
         sendToWear(
             EventData.TreatmentData(
                 temps, basals, boluses, predictions,
+                targets = targets,
                 smbSmallBelow = smbSizeClasses?.smallBelow ?: -1.0,
                 smbLargeFrom = smbSizeClasses?.largeFrom ?: -1.0,
                 bolusSmallBelow = bolusSizeClasses?.smallBelow ?: -1.0,

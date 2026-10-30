@@ -588,8 +588,14 @@ fun NavGraphBuilder.appNavGraph(
         )
     }
 
-    composable(AppRoute.SceneList.route) {
+    composable(
+        AppRoute.SceneList.route,
+        arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "EDIT" })
+    ) { backStackEntry ->
+        val mode = ScreenMode.fromRoute(backStackEntry.stringArg("mode"))
         SceneListScreen(
+            initialMode = mode,
+            onRequestEditMode = requestEditModeAuthorization,
             onNavigateToWizard = {
                 navController.navigate(AppRoute.SceneWizard.createRoute())
             },

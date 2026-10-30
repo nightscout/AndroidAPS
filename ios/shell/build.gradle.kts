@@ -58,7 +58,7 @@ val migratedModules = listOf(
 //
 // Swift callers see every exported name at once, so a Kotlin class can shadow a system type. AAPS
 // has a `Scene`, which hides SwiftUI's, and the app writes `SwiftUI.Scene` to say which it means. A
-// real app would export a smaller, chosen surface instead of all fourteen modules.
+// real app would export a smaller, chosen surface instead of every module.
 val exportMigratedApi = true
 
 // Fails the build when a module gains iOS targets and is not listed above.
@@ -82,10 +82,13 @@ val checkMigratedModules = tasks.register("checkMigratedModules") {
         val withIosTargets = buildFiles
             // Skip comment lines: a doc line that merely mentions the target used to count as
             // declaring it, which is how a KDoc in :appshell once made this fail.
+            // A module builds for iOS when it declares the target itself, or applies
+            // kmp-android-library, which declares it for the module.
             .filter { f ->
                 f.readLines().any { line ->
                     val t = line.trimStart()
-                    !t.startsWith("//") && !t.startsWith("*") && !t.startsWith("/*") && t.contains("iosArm64()")
+                    !t.startsWith("//") && !t.startsWith("*") && !t.startsWith("/*") &&
+                        (t.contains("iosArm64()") || t.contains("id(\"kmp-android-library\")"))
                 }
             }
             .map { ":" + it.parentFile.relativeTo(rootDir).invariantSeparatorsPath.replace('/', ':') }
@@ -109,13 +112,6 @@ val checkMigratedModules = tasks.register("checkMigratedModules") {
 }
 
 tasks.matching { it.name.startsWith("linkDebugFramework") }.configureEach { dependsOn(checkMigratedModules) }
-
-/**
- * Which module owns which strings, generated rather than hand written.
- *
- * The list is `StringOwnerModules.ALL`, shared with `:app` and the desktop shell, so the three
- * platforms cannot drift - which they had: the desktop copy carried five of sixteen modules.
- */
 
 /** The same build stamp `:app` puts in BuildConfig.BUILDVERSION: short commit and date. */
 fun buildStamp(): String {
@@ -156,6 +152,12 @@ val generateIosVersionXcconfig = tasks.register<GenerateVersionXcconfigTask>("ge
     outputs.upToDateWhen { false } // the build number is the clock; never reuse a previous run
 }
 
+/**
+ * Which module owns which strings, generated rather than hand written.
+ *
+ * The list is `StringOwnerModules.ALL`, shared with `:app` and the desktop shell, so the three
+ * platforms cannot drift - which they had: the desktop copy carried five of sixteen modules.
+ */
 val generateIosStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("generateIosStringOwners") {
     owners.set(StringOwnerModules.ALL)
     packageName.set("app.aaps.ios.shell.di")

@@ -1,34 +1,15 @@
 plugins {
-    id("kmp-test-defaults")
-    kotlin("multiplatform")
-    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
-    alias(libs.plugins.android.kmp.library)
+    id("kmp-android-library")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.metro)
 }
 
-// Generates SyncStrings (commonMain) and SyncStringIds (androidMain) from this module's res/values,
-// the same generator the other plugins use. The strings themselves do not move, and AAPT keeps
-// resolving them on Android exactly as before.
-val generateSyncStrings = tasks.register<GenerateKeyStringsTask>("generateSyncStrings") {
-    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
-    packageName.set("app.aaps.plugins.sync")
-    owner.set("sync")
-    objectName.set("SyncStrings")
-    idsObjectName.set("SyncStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/syncStrings/translations.txt"))
-    // Set explicitly: addGeneratedSourceDirectory only derives a convention from the task name, so
-    // both properties would land on one directory and the second file written would delete the first.
-    commonOutputDir.set(layout.buildDirectory.dir("generated/syncStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/syncStrings/android"))
-}
+registerKeyStrings("sync")
 
 kotlin {
     android {
         namespace = "app.aaps.plugins.sync"
-        compileSdk = Versions.compileSdk
-        minSdk = Versions.minSdk
         androidResources { enable = true }
         withHostTest {
             isIncludeAndroidResources = true
@@ -39,24 +20,11 @@ kotlin {
         withDeviceTest {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-
-        lint {
-            checkReleaseBuilds = false
-            disable += "MissingTranslation"
-            disable += "ExtraTranslation"
-        }
     }
 
-    // Declared so an Android import cannot quietly reach shared code. Most of this module stays on
-    // Android for now - okhttp, retrofit, appauth, Play Services and Garmin have no Apple artifacts.
-    // The client-control screens are what needs to move: :appshell routes to them.
-    iosArm64()
-    iosSimulatorArm64()
-
-    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
-    // plain jvm() target, so no special target name is needed.
-    jvm()
+    // Most of this module stays on Android for now - okhttp, retrofit, appauth, Play Services and
+    // Garmin have no Apple artifacts. The client-control screens are what needs to move: :appshell
+    // routes to them.
 
     // Android and desktop share the socket.io client. Applied explicitly, because the manual
     // dependsOn below would otherwise switch the automatic hierarchy off and silently unwire iosMain.
@@ -86,7 +54,6 @@ kotlin {
         }
 
         commonMain {
-            kotlin.srcDir(generateSyncStrings.flatMap { it.commonOutputDir })
             dependencies {
                 implementation(project(":core:data"))
                 implementation(project(":core:interfaces"))
@@ -120,8 +87,6 @@ kotlin {
         }
 
         androidMain {
-            // Android only: the string name to R.string id map.
-            kotlin.srcDir(generateSyncStrings.flatMap { it.androidOutputDir })
             dependencies {
                 implementation(project(":shared:impl"))
 
@@ -206,15 +171,6 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.test)
             }
         }
-    }
-}
-
-tasks.withType<Test> {
-    // useJUnitPlatform() and the heap cap come from kmp-test-defaults; only the JaCoCo part is
-    // specific here. Restated from jacoco-module-dependencies, which applies com.android.library.
-    extensions.configure<JacocoTaskExtension> {
-        isIncludeNoLocationClasses = true
-        excludes = listOf("jdk.internal.*")
     }
 }
 
