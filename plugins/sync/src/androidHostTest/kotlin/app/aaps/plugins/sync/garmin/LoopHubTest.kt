@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -67,6 +68,7 @@ class LoopHubTest : TestBase() {
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var processedTbrEbData: ProcessedTbrEbData
     @Mock lateinit var masterActionExecutor: MasterActionExecutor
+    @Mock lateinit var dateUtil: DateUtil
 
     private lateinit var loopHub: LoopHubImpl
     private val clock = Clock.fixed(Instant.ofEpochMilli(10_000), ZoneId.of("UTC"))
@@ -82,7 +84,7 @@ class LoopHubTest : TestBase() {
         loopHub = LoopHubImpl(
             aapsLogger, commandQueue, constraints, iobCobCalculator, loop,
             profileFunction, profileUtil, persistenceLayer, preferences, processedTbrEbData,
-            masterActionExecutor, testScope
+            masterActionExecutor, dateUtil, testScope
         )
         loopHub.clock = clock
     }
@@ -293,6 +295,17 @@ class LoopHubTest : TestBase() {
         runBlocking {
             // Carbs delivery now rides the shared executor (one audited path).
             verify(masterActionExecutor).deliverCarbs(eq(99), isNull(), eq(Sources.Garmin), any(), any())
+        }
+    }
+
+    @Test
+    fun testPostBolus() {
+        loopHub.postBolus(1.5)
+        runBlocking {
+            // insulin, note, source, onError, timestamp, treatmentNote, recordOnly, iCfg, onSuccess
+            verify(masterActionExecutor).deliverInsulin(
+                eq(1.5), isNull(), eq(Sources.Garmin), any(), isNull(), isNull(), eq(false), isNull(), any()
+            )
         }
     }
 

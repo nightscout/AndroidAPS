@@ -32,6 +32,7 @@ import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.atMost
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
@@ -378,6 +379,41 @@ class GarminPluginTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun testOnPostBolus() {
+        whenever(preferences.get(GarminBooleanKey.RemoteBolus)).thenReturn(true)
+        assertEquals("", gp.onPostBolus(createUri(mapOf("bolus" to "1.5"))))
+        verify(loopHub).postBolus(1.5)
+    }
+
+    @Test
+    fun testOnPostBolus_SettingOff() {
+        whenever(preferences.get(GarminBooleanKey.RemoteBolus)).thenReturn(false)
+        assertEquals("", pluginWithText().onPostBolus(createUri(mapOf("bolus" to "1.5"))))
+        verify(loopHub, never()).postBolus(any())
+        assertEquals(
+            "The Garmin watch asked for a bolus of 1.50 U. No bolus was given, because bolus from Garmin is not allowed. Turn it on in the Garmin settings.",
+            postedNotice(NotificationId.GARMIN_BOLUS_DISABLED)
+        )
+    }
+
+    @Test
+    fun testOnPostBolus_InvalidValue() {
+        whenever(preferences.get(GarminBooleanKey.RemoteBolus)).thenReturn(true)
+        for (uri in listOf(createUri(emptyMap()), createUri(mapOf("bolus" to "abc")), createUri(mapOf("bolus" to "0")), createUri(mapOf("bolus" to "-2")))) {
+            assertEquals("", gp.onPostBolus(uri))
+        }
+        verify(loopHub, never()).postBolus(any())
+    }
+
+    @Test
+    fun testOnPostBolus_OnClient() {
+        whenever(preferences.get(GarminBooleanKey.RemoteBolus)).thenReturn(true)
+        assertEquals("", clientPlugin().onPostBolus(createUri(mapOf("bolus" to "1.5"))))
+        verify(loopHub, never()).postBolus(any())
+        assertEquals("The Garmin watch asked for a bolus of 1.50 U. This phone is a client, so no bolus was given. Use AAPS to give it.", postedNotice())
+    }
+
+    @Test
     fun testOnConnectPump_Disconnect() {
         val uri = createUri(mapOf("disconnectMinutes" to "20"))
         whenever(loopHub.isConnected).thenReturn(false)
@@ -399,13 +435,18 @@ class GarminPluginTest : TestBaseWithProfile() {
     // cannot show why, so the phone says it.
     private fun clientPlugin(): GarminPlugin {
         whenever(config.AAPSCLIENT).thenReturn(true)
+        return pluginWithText()
+    }
+
+    /** A plugin with the real English texts, for tests that check the notice on the phone. */
+    private fun pluginWithText(): GarminPlugin {
         val text = generatedTextResolver("sync" to SyncStringsValues::textOf)
         return GarminPlugin(aapsLogger, text, preferences, context, loopHub, persistenceLayer, config, notificationManager)
     }
 
-    private fun postedNotice(): String {
+    private fun postedNotice(id: NotificationId = NotificationId.GARMIN_NOT_ON_CLIENT): String {
         val captor = argumentCaptor<String>()
-        verify(notificationManager).post(eq(NotificationId.GARMIN_NOT_ON_CLIENT), captor.capture(), any(), any<Int>(), anyOrNull(), any(), anyOrNull())
+        verify(notificationManager).post(eq(id), captor.capture(), any(), any<Int>(), anyOrNull(), any(), anyOrNull())
         return captor.firstValue
     }
 

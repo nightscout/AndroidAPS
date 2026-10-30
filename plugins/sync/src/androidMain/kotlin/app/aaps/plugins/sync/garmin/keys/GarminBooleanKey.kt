@@ -13,6 +13,9 @@ enum class GarminBooleanKey(
 ) : BooleanPreferenceKey {
 
     LocalHttpServer("communication_http", false, title = SyncStrings.garmin_local_http_server, defaultedBySM = true, hideParentScreenIfHidden = true),
+
+    /** Lets the Garmin device deliver insulin boluses. Off by default, and always off in simple mode. */
+    RemoteBolus("garmin_remote_bolus", false, title = SyncStrings.garmin_remote_bolus, defaultedBySM = true),
     ;
 
 }

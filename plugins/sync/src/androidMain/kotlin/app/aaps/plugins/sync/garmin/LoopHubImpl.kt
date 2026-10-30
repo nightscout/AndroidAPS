@@ -5,6 +5,9 @@ import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.SC
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -21,6 +24,7 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -54,6 +58,7 @@ class LoopHubImpl(
     private val preferences: Preferences,
     private val processedTbrEbData: ProcessedTbrEbData,
     private val masterActionExecutor: MasterActionExecutor,
+    private val dateUtil: DateUtil,
     @ApplicationScope private val appScope: CoroutineScope
 ) : LoopHub {
 
@@ -160,6 +165,62 @@ class LoopHubImpl(
         }
     }
 
+    /**
+     * Delivers a correction bolus with the shared executor (one audited path). The executor checks the
+     * running mode, writes the user entry and sends the bolus to the command queue, which applies the
+     * bolus constraints. A failure is only logged. It is not reported back to the Garmin device.
+     */
+    override fun postBolus(bolus: Double) {
+        aapsLogger.info(LTag.GARMIN, "trigger a bolus of $bolus U")
+        appScope.launch {
+            masterActionExecutor.deliverInsulin(
+                insulin = bolus,
+                note = null,
+                source = Sources.Garmin,
+                onError = { aapsLogger.error(LTag.GARMIN, "bolus delivery failed: ${it.comment}") }
+            )
+        }
+    }
+
+    /**
+     * Sets a temporary target with the reason `WEAR`, or cancels the current one.
+     * [target] is converted from the user's glucose unit to mg/dl.
+     */
+    override fun postTempTarget(target: Double, duration: Int) {
+        // A target or a duration of 0 means: cancel the current temporary target
+        if (target == 0.0 || duration == 0) {
+            appScope.launch {
+                persistenceLayer.cancelCurrentTemporaryTargetIfAny(
+                    timestamp = dateUtil.now(),
+                    action = Action.TT,
+                    source = Sources.TTDialog,
+                    note = null,
+                    listValues = listOf()
+                )
+            }
+        } else {
+            appScope.launch {
+                persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                    temporaryTarget = TT(
+                        timestamp = dateUtil.now(),
+                        duration = T.mins(duration.toLong()).msecs(),
+                        reason = TT.Reason.WEAR,
+                        lowTarget = profileUtil.convertToMgdl(target, profileUtil.units),
+                        highTarget = profileUtil.convertToMgdl(target, profileUtil.units)
+                    ),
+                    action = Action.TT,
+                    source = Sources.Garmin,
+                    note = null,
+                    listValues = listOf(
+                        ValueWithUnit.TETTReason(TT.Reason.AUTOMATION),
+                        ValueWithUnit.Mgdl(target),
+                        ValueWithUnit.Minute(duration)
+                    ).filterNotNull()
+                )
+            }
+        }
+    }
+
     /** Stores hear rate readings that a taken and averaged of the given interval. */
     override fun storeHeartRate(
         samplingStart: Instant, samplingEnd: Instant,
@@ -175,6 +236,50 @@ class LoopHubImpl(
         )
         appScope.launch {
             persistenceLayer.insertOrUpdateHeartRates(listOf(hr))
+        }
+    }
+
+    /**
+     * Stores one steps count record. The record time is [samplingEnd]. The `stepsNmin` values are
+     * the number of steps in the last N minutes. The write runs in the background and errors are only logged.
+     */
+    override fun storeStepsCount(
+        samplingStart: Instant,
+        samplingEnd: Instant,
+        steps5min: Int,
+        steps10min: Int,
+        steps15min: Int,
+        steps30min: Int,
+        steps60min: Int,
+        steps180min: Int,
+        device: String?,
+    ) {
+        val sc = SC(
+            duration = samplingEnd.toEpochMilli() - samplingStart.toEpochMilli(),
+            timestamp = samplingEnd.toEpochMilli(),
+            steps5min = steps5min,
+            steps10min = steps10min,
+            steps15min = steps15min,
+            steps30min = steps30min,
+            steps60min = steps60min,
+            steps180min = steps180min,
+            device = device ?: "Garmin",
+            dateCreated = clock.millis(),
+        )
+        appScope.launch {
+            try {
+                val result: PersistenceLayer.TransactionResult<SC> = persistenceLayer.insertOrUpdateStepsCount(sc)
+                val id = result.inserted.firstOrNull()?.id ?: result.updated.firstOrNull()?.id
+                aapsLogger.info(
+                    LTag.GARMIN,
+                    "✅ Steps stored in DB: ID=$id, 5min=$steps5min, timestamp=${java.util.Date(samplingEnd.toEpochMilli())}"
+                )
+            } catch (error: Exception) {
+                aapsLogger.error(
+                    LTag.GARMIN,
+                    "❌ Failed to store steps: ${error.message}"
+                )
+            }
         }
     }
 }

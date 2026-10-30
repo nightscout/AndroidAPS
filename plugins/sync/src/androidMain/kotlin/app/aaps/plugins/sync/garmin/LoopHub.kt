@@ -54,10 +54,42 @@ interface LoopHub {
     /** Notifies the system that carbs were eaten and stores the value. */
     fun postCarbs(carbohydrates: Int)
 
+    /**
+     * Delivers an insulin bolus that was requested on the Garmin device.
+     *
+     * @param bolus insulin in units
+     */
+    fun postBolus(bolus: Double)
+
+    /**
+     * Sets or cancels a temporary target that was requested on the Garmin device.
+     * The current temporary target is cancelled when [target] or [duration] is 0.
+     *
+     * @param target target glucose, in the glucose unit chosen by the user
+     * @param duration duration in minutes
+     */
+    fun postTempTarget(target: Double, duration: Int)
+
     /** Stores hear rate readings that a taken and averaged of the given interval. */
     fun storeHeartRate(
         samplingStart: Instant, samplingEnd: Instant,
         avgHeartRate: Int,
         device: String?
+    )
+
+    /**
+     * Stores steps count readings aggregated over multiple intervals.
+     * Each `stepsNmin` value is the number of steps taken in the last N minutes before [samplingEnd].
+     */
+    fun storeStepsCount(
+        samplingStart: Instant,
+        samplingEnd: Instant,
+        steps5min: Int,
+        steps10min: Int,
+        steps15min: Int,
+        steps30min: Int,
+        steps60min: Int,
+        steps180min: Int,
+        device: String?,
     )
 }
