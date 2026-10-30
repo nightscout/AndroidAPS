@@ -72,7 +72,6 @@
     <string name="pair_with_master_fetching">正在查詢配對…</string>
     <string name="pair_with_master_confirm_title">與此主裝置配對？</string>
     <string name="pair_with_master_confirm_master">主裝置：%1$s</string>
-    <string name="pair_with_master_confirm_warning">配對後，此主裝置將能向此裝置傳送簽章的指令。</string>
     <string name="pair_with_master_confirm_pair">配對</string>
     <string name="pair_with_master_error_title">無法配對</string>
     <string name="pair_with_master_error_wrong_pin">找不到對應該 PIN 的配對。請在主裝置上確認 PIN，然後再試一次。</string>
