@@ -267,6 +267,7 @@
     <string name="smscommunicator_message_body">Ongeldige inhoud van het bericht</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Om van Loop mode te wisselen naar LGS (Low Glucose Suspend) antwoord met code %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Om van Loop mode te wisselen naar Closed Loop antwoord met code %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Huidige bedrijfsmodus: %1$s</string>
     <string name="wrong_format">Verkeerde invoer</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">Laatste BG:</string>
