@@ -1,5 +1,6 @@
 package app.aaps.implementation.androidNotification
 
+import android.app.NotificationManager
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaMetadataRetriever
@@ -13,6 +14,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
+import app.aaps.core.interfaces.notifications.DoNotDisturbRule
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -33,6 +35,9 @@ import kotlin.math.pow
  * ALL access to [player] / [currentSound] / [currentOwner] / [currentVolumeLevel] and every
  * MediaPlayer call + callback runs on that single thread. This makes the player race-free even
  * though [play] may be invoked from any thread (e.g. NotificationManagerImpl's IO dispatcher).
+ *
+ * Do Not Disturb: with the override off the sound is not started while Do Not Disturb is on, see
+ * [DoNotDisturbRule]. With it on the alarm stream is used, and the Do Not Disturb profile decides.
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
@@ -45,6 +50,7 @@ class AlarmSoundPlayerImpl(
 ) : AlarmSoundPlayer {
 
     private val handler = Handler(Looper.getMainLooper())
+    private val notificationManager get() = context.getSystemService(NotificationManager::class.java)
 
     // --- main-looper-confined state ---
     private var player: MediaPlayer? = null
@@ -110,6 +116,10 @@ class AlarmSoundPlayerImpl(
         val soundRes = currentSound?.rawRes ?: return
 
         val overrideDnd = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
+        if (DoNotDisturbRule.staysQuiet(overrideDnd, notificationManager.currentInterruptionFilter)) {
+            aapsLogger.debug(LTag.CORE, "AlarmSoundPlayer: Do Not Disturb is on and the override is off, the alarm stays quiet")
+            return
+        }
         val audioAttrs = AudioAttributes.Builder()
             .setUsage(if (overrideDnd) AudioAttributes.USAGE_ALARM else AudioAttributes.USAGE_NOTIFICATION)
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)

@@ -478,7 +478,13 @@ sealed class EventData : Event() {
          * a value of `StringKey.WearPushedWatchface`. Defaulted, so a payload from a phone that
          * predates the field still decodes and keeps the face that was pushed before.
          */
-        val pushedWatchface: String = "cwf"
+        val pushedWatchface: String = "cwf",
+        /**
+         * The phone's `AlertOverrideDoNotDisturb`. With it off, the watch's alarms only vibrate while the watch
+         * is in Do Not Disturb, as on the phone. Defaulted to on, so a payload from a phone that predates the
+         * field keeps the alarms as they were.
+         */
+        val alertOverrideDnd: Boolean = true
     ) : EventData()
 
     @Serializable

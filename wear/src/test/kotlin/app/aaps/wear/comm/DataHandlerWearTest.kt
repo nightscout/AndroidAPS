@@ -3,6 +3,7 @@ package app.aaps.wear.comm
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.PushedWatchfaceId
@@ -68,7 +69,7 @@ internal class DataHandlerWearTest : WearTestBase() {
     @Test
     fun `preferences event stores the wear settings`() {
         // wearControl (false) equals the mock preferences default, so the tile-refresh branch is skipped.
-        rxBus.send(EventData.Preferences(0L, false, true, 50, 80, 25.0, 0.5, 1.0, 5, 10))
+        rxBus.send(EventData.Preferences(0L, false, true, 50, 80, 25.0, 0.5, 1.0, 5, 10, alertOverrideDnd = false))
 
         // The handler now runs on the collector's IO dispatcher, so the writes land shortly after
         // send() returns instead of on the caller thread. verify(timeout) waits for them.
@@ -80,6 +81,7 @@ internal class DataHandlerWearTest : WearTestBase() {
         verify(preferences, timeout(HANDLER_TIMEOUT_MS)).put(DoubleKey.OverviewInsulinButtonIncrement2, 1.0)
         verify(preferences, timeout(HANDLER_TIMEOUT_MS)).put(IntKey.OverviewCarbsButtonIncrement1, 5)
         verify(preferences, timeout(HANDLER_TIMEOUT_MS)).put(IntKey.OverviewCarbsButtonIncrement2, 10)
+        verify(preferences, timeout(HANDLER_TIMEOUT_MS)).put(BooleanKey.AlertOverrideDoNotDisturb, false)
     }
 
     @Test

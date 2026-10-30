@@ -9,11 +9,14 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.DoNotDisturbRule
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -33,12 +36,16 @@ import dev.zacsweers.metro.SingleIn
  *
  * The title and text are kept in preferences, so a repeat can post them again also when the process was gone in
  * between.
+ *
+ * While the watch is in Do Not Disturb and the phone's "Override Do Not Disturb mode" is off, the notification
+ * only vibrates, as the phone's alarm does then, see [DoNotDisturbRule].
  */
 @SingleIn(AppScope::class)
 @Inject
 class PhoneAlarmWatch(
     private val context: Context,
     private val sp: SP,
+    private val preferences: Preferences,
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger
 ) {
@@ -107,7 +114,15 @@ class PhoneAlarmWatch(
                 vibrationPattern = VIBRATION
             }
         )
-        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+        notificationManager.createNotificationChannel(
+            NotificationChannel(SILENT_CHANNEL_ID, context.getString(R.string.phone_alarm_channel_silent), NotificationManager.IMPORTANCE_HIGH).apply {
+                setSound(null, null)
+                enableVibration(true)
+                vibrationPattern = VIBRATION
+            }
+        )
+        val quiet = DoNotDisturbRule.staysQuiet(preferences.get(BooleanKey.AlertOverrideDoNotDisturb), notificationManager.currentInterruptionFilter)
+        val builder = NotificationCompat.Builder(context, if (quiet) SILENT_CHANNEL_ID else CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_icon)
             .setContentTitle(title)
             .setContentText(text)
@@ -133,6 +148,7 @@ class PhoneAlarmWatch(
     private companion object {
 
         const val CHANNEL_ID = "AndroidAPS-PhoneAlarm"
+        const val SILENT_CHANNEL_ID = "AndroidAPS-PhoneAlarm-silent"
         const val NOTIFICATION_ID = 4730
         const val REPEAT_REQUEST_CODE = 4730
         const val SILENCE_REQUEST_CODE = 4731
