@@ -43,7 +43,6 @@
     <string name="pair_with_master_fetching">מחפש צימוד...</string>
     <string name="pair_with_master_confirm_title">לצמד למכשיר ראשי זה?</string>
     <string name="pair_with_master_confirm_master">מכשיר ראשי: %1$s</string>
-    <string name="pair_with_master_confirm_warning">לאחר הצימוד, מכשיר ראשי זה יוכל לשלוח פקודות חתומות למכשיר זה.</string>
     <string name="pair_with_master_confirm_pair">צימוד</string>
     <string name="pair_with_master_error_title">לא ניתן לצמד</string>
     <string name="pair_with_master_error_wrong_pin">לא נמצא צימוד עבור קוד PIN זה. בדקו את הקוד במכשיר הראשי ונסו שוב.</string>
