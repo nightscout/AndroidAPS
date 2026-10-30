@@ -24,6 +24,7 @@
     <string name="maxiobset">Maximale IOB correct ingesteld (niet nodig in eenvoudige modus)</string>
     <string name="objectives_autosens_objective">Pas het basaal en de ratios aan indien nodig, activeer hierna de auto-sens optie</string>
     <string name="objectives_autosens_gate">Gedurende 1 week succesvol overdag loopen met regelmatige invoer van koolhydraten</string>
+    <string name="objectives_autosens_learned">Als het resultaat van je autosens niet rond de 100% schommelt, is je profiel waarschijnlijk onjuist.</string>
     <string name="objectives_smb_objective">Activeren van extra functies overdag zoals SMB (super micro bolus)</string>
     <string name="objectives_smb_gate">Lees de wiki en verhoog maxIOB om SMB goed werkend te krijgen. Een goed begin is maxIOB=gemiddelde maaltijdbolus + 3 x max dagelijkse basaal</string>
     <string name="objectives_smb_learned">Het gebruik van SMB is het uiteindelijke doel. Het Oref1 algoritme is ontworpen om je ook te helpen met je bolussen. Je hoeft geen volledige bolus te geven voor jouw voeding, maar slechts een deel ervan en AAPS zal de rest geven als dat nodig is. Op deze manier heb je meer ruimte voor verkeerd berekende koolhydraten. Wist je dat je een percentage in de bolus calculator kan instellen om de hoeveelheid bolus te verminderen?</string>
@@ -37,9 +38,12 @@
     <string name="accomplished">Voltooid: %1$s</string>
     <string name="objectives_usage_objective">Leer hoe AndroidAPS te gebruiken</string>
     <string name="objectives_usage_gate">Voer verschillende acties uit in AndroidAPS</string>
+    <string name="objectives_usage_learned">Je hebt de basis van AAPS geleerd. De meeste bedieningselementen bevinden zich op het overzichtsscherm. Meer acties vind je in de menu\'s \'Behandelingen\' en \'Beheer\' onderaan het scherm, en in het zijmenu.</string>
     <string name="objectives_usereconnectpump">... en op dezelfde manier weer aankoppelen</string>
     <string name="objectives_useloop">Inhoud van loop plugin weergeven</string>
     <string name="objectives_exam_objective">Bewijs je kennis</string>
+    <string name="objectives_exam_gate">Bekijk de vragen. Elke vraag heeft meerdere mogelijke antwoorden, en er kunnen meerdere antwoorden juist zijn. Vink alle juiste antwoorden aan en selecteer \'Controleren\'.</string>
+    <string name="objectives_exam_learned_prerequisites">Je hoeft geen ontwikkelaar te zijn. Je hebt Nightscout of Tidepool nodig om de doelstellingen te voltooien, een compatibele pomp en een manier om AAPS te bouwen (via een webbrowser of met Android Studio) voor de eerste installatie en voor elke update.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS kan offline worden uitgevoerd.</string>
     <string name="objectives_exam_learned_basaltest">Het profiel moet worden beoordeeld en bijgewerkt. Een beter profiel = betere resultaten.</string>
     <string name="objectives_exam_learned_dia">DIA in een loop heeft een andere betekenis (tijd totdat alle insuline is geabsorbeerd) dan in klassieke pomptherapie (tijd tot de meeste insuline is geabsorbeerd).</string>
@@ -52,6 +56,7 @@
     <string name="objectives_exam_learned_exercise2">Het instellen van een hoger tijdelijk streefdoel minstens 1 uur voor de oefening helpt ook om de hoeveelheid insuline in het lichaam te verminderen.</string>
     <string name="objectives_exam_learned_noisycgm">Wanneer je de CGM-waarden niet kunt vertrouwen is het af te raden om de loop zonder toezicht te gebruiken.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS moet weten wanneer de pomp niet verbonden is om zo een correcte IOB te berekenen.</string>
+    <string name="objectives_exam_learned_insulin">AAPS moet weten welke insuline zich in de pomp bevindt, omdat dit van invloed is op de berekening van de IOB.</string>
     <string name="objectives_exam_learned_sensitivity">Gevoeligheid detectie maakt deel uit van het algoritme waarmee de insuline dosering kan worden aangepast aan verschillende situaties.</string>
     <string name="objectives_exam_learned_objectives">Uw voortgang in Doelen wordt samen met andere instellingen opgeslagen en deze moeten worden bewaard (backup).</string>
     <string name="objectives_exam_learned_objectives2">Bewaar de geëxporteerde instellingen en de gegenereerde APK ook buiten de telefoon. De telefoon kan verloren gaan, beschadigd raken, etc. Cloud storage welke toegankelijk is vanaf je telefoon is hiervoor een geschikte locatie. In zo\'n geval kan je AAPS binnen enkele minuten herstellen op een ander toestel. Het is ook een goede gewoonte om het gebruikte hoofdwachtwoord ook op een veilige plaats te bewaren. Zonder dit wachtwoord is de backup onbruikbaar. Hetzelfde geldt voor het sleutelbestand (.jks file) en de wachtwoorden welke gebruikt zijn om AAPS te bouwen. De rest is niet belangrijk - en kan op elk moment opnieuw van internet gedownload worden.</string>
