@@ -107,7 +107,13 @@
     <string name="description_tidepool">Upload gegevens naar Tidepool</string>
     <string name="upload_now">Nu Uploaden</string>
     <string name="tidepool_purge_data">Verwijder alle gegevens</string>
+    <string name="tidepool_purge_data_confirm">Alle gegevens die AAPS naar Tidepool heeft geüpload, verwijderen? Dit kan niet ongedaan worden gemaakt. Gebruik deze functie om gegevens te verwijderen die door een oudere versie zijn beschadigd, en voer vervolgens \"Volledige synchronisatie\" uit om de gegevens opnieuw te uploaden.</string>
+    <string name="tidepool_full_sync_comment">Volledige synchronisatie? AAPS zal alle gegevens opnieuw naar Tidepool uploaden. Het kan even duren.</string>
+    <string name="tidepool_logout_confirm">Uitloggen uit Tidepool? Uploads stoppen totdat je opnieuw inlogt.</string>
     <string name="tidepool_status_not_logged_in">Niet ingelogd</string>
+    <string name="tidepool_status_no_session">Ingelogd en nog niet verbonden</string>
+    <string name="tidepool_status_blocked">Geblokkeerd door verbindings instellingen</string>
+    <string name="tidepool_status_failed">Mislukt. Zie de log hieronder.</string>
     <string name="not_connected">Niet verbonden</string>
     <string name="read_only">Alleen lezen</string>
     <string name="working">Bezig</string>
@@ -125,12 +131,14 @@
     <string name="garmin_description">Verbinding met Garmin apparaat (Fenix, Edge, …)</string>
     <string name="garmin_local_http_server_port">Lokale HTTP server poort</string>
     <string name="garmin_local_http_server">Lokale HTTP server</string>
+    <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">Het Garminhorloge heeft %1$s van koolhydraten verzonden. Deze telefoon is een client, dus zijn ze niet ingevoerd. Voer ze in AAPS.</string>
     <!--    Wear-->
     <string name="description_wear">Monitor en bedien AAPS met uw WearOS horloge.</string>
     <string name="no_watch_connected">(Geen horloge verbonden)</string>
     <string name="pump_status">Pomp status</string>
     <string name="loop_status">Loop status</string>
     <string name="user_action_not_available">De geselecteerde gebruikersactie %1$s is niet meer beschikbaar, ververs uw tegel</string>
+    <string name="wear_control_disabled">Wear Control is uitgeschakeld in de Wear-instellingen op de telefoon.</string>
     <string name="wear_action_tempt_unit_error">Verschillende eenheden gebruikt op horloge en telefoon!</string>
     <string name="wear_action_tempt_min_bg_error">Min BG buiten bereik!</string>
     <string name="wear_action_tempt_max_bg_error">Max BG buiten bereik!</string>
