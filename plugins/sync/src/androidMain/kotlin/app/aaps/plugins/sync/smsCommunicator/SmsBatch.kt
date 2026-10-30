@@ -46,8 +46,15 @@ sealed interface SmsBatchResult {
  *
  * A bolus or carbs entry is delivered in the background, so with [waitForDose] this waits for the pump to finish
  * before it returns. Every other step is awaited inside `confirm` already.
+ *
+ * [onAccepted] runs as soon as the executor accepted the batch, before that wait. What it records stays, also when
+ * the dose fails later: the pump may have given part of it, and nothing here can tell part of a dose from none.
  */
-suspend fun MasterActionExecutor.runSmsBatch(actions: List<BatchAction>, waitForDose: Boolean = false): SmsBatchResult {
+suspend fun MasterActionExecutor.runSmsBatch(
+    actions: List<BatchAction>,
+    waitForDose: Boolean = false,
+    onAccepted: () -> Unit = {}
+): SmsBatchResult {
     val prepared = prepareBatch(actions)
     if (prepared !is MasterActionExecutor.PrepareResult.Preview)
         return SmsBatchResult.Refused((prepared as? MasterActionExecutor.PrepareResult.Error)?.message)
@@ -63,6 +70,7 @@ suspend fun MasterActionExecutor.runSmsBatch(actions: List<BatchAction>, waitFor
         onSuccess = { doseOutcome.complete(null) }
     )
     if (result != MasterActionExecutor.ConfirmResult.Delivered) return SmsBatchResult.Failed(failure?.comment)
+    onAccepted()
     val doseFailure = if (waitForDose) doseOutcome.await() else failure
     return if (doseFailure == null) SmsBatchResult.Done(prepared) else SmsBatchResult.Failed(doseFailure.comment)
 }
