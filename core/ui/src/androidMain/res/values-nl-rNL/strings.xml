@@ -315,14 +315,16 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="pump_battery_change">Pomp bat. wissel</string>
     <string name="temporary_target">Tijdelijk streefdoel</string>
-    <string name="running_mode">Actieve modus</string>
+    <string name="running_mode">Bedrijfsmodus</string>
     <string name="running_mode_desc">Sluit of open de loop, stop deze, of koppel de pomp af</string>
-    <string name="running_mode_change_not_allowed">Het wijzigen van de uitvoeringsmodus is niet mogelijk.</string>
+    <string name="running_mode_change_not_allowed">Het wijzigen van de bedrijfsmodus is niet mogelijk</string>
     <string name="pump_reconnect">Sluit de pomp weer aan</string>
     <string name="scene_end_active">Einde actieve scene</string>
     <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Ga naar</string>
     <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Vervolg %1$s zal niet beginnen</string>
+    <string name="scene_conflict_active_running_mode">De actieve bedrijfsmodus wordt vervangen</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profiel: %1$d%%</string>
+    <string name="scene_action_running_mode">Bedrijfsmodus: %1$s</string>
     <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_lock_banner_master_offline">Hoofdapparaat niet bereikbaar. De scènebesturing wordt hervat zodra de verbinding is hersteld.</string>
@@ -332,6 +334,7 @@
     <string name="client_role_title">Rol</string>
     <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Rol: %1$s</string>
     <string name="client_roles_info_open">Over rollen</string>
+    <string name="hardened_mode_info">De hoofdtelefoon accepteert neemt alleen wijzigingen van gekoppelde klanten. Het accepteert geen behandelingen, tijdelijke doelstellingen, profielwijzigingen, wijzigingingen van bedrijfsmodus of verwijderingen die direct in Nightscout worden gemaakt, bijvoorbeeld op de website of in andere apps. De instellingen voor het accepteren van gegevens van Nightscout worden verborgen wanneer de geharde modus ingeschakeld is. SMS-commando\'s worden niet beïnvloed.\n\nDe hoofd-telefoon upload nog steeds alle gegevens naar Nightscout, inclusief BG gegevens. Als de hoofd-telefoom zijn BG\'s krijgt van Nightscout, blijven die daar vandaan komen.\n\nOm de geschiedenis op een nieuwe hoofdtelefoon te laden, gebruik Volledige synchronisatie in NSClient. Volledige synchronisatie neemt alles in Nightscout, inclusief profielen.\n\nVoor externe besturing van clients is een werkende WebSocket verbinding nodig met Nightscout, op de hoofdtelefoon en op degekoppelde apparaten. Eenvoudige modus schakelt altijd de geharde modus aan. Om deze uit te schakelen, schakel eenvoudige modus in en schakel de controle van de klant uit op de hoofdtelefoon.</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <string name="clientcontrol_action_set_temp_target">Stel tijdelijk streefdoel in</string>
     <string name="clientcontrol_action_cancel_temp_target">Annuleer tijdelijk streefdoel</string>
@@ -346,6 +349,7 @@
     <string name="clientcontrol_fail_unknown">De opdracht is mislukt.</string>
     <string name="clientcontrol_unconfirmed_wear">Onbekende status — controleer je telefoon/Nightscout voordat je een nieuwe bolus toedient.</string>
     <string name="clientcontrol_bolus_progress_stalled_title">Verbinding verbroken — leveringsstatus onbekend</string>
+    <string name="scene_revert_loop_mode">Tijdelijke bedrijfsmodus annuleren</string>
     <string name="careportal_temporarytargetvalue">Tijdelijk streefdoel</string>
     <string name="careportal_temporarytargetcancel">Tijdelijk streefdoel annuleren</string>
     <string name="boluswizard">Bolus wizard</string>
@@ -511,9 +515,9 @@
     <string name="ue_none">Geen Eenheid</string>
     <string name="uel_loop_change">LOOP VERANDERD</string>
     <string name="uel_loop_removed">LOOP VERWIJDERD</string>
-    <string name="uel_running_mode">BEDRIJFSMODE</string>
-    <string name="uel_running_mode_removed">BEDRIJFSMODE VERWIJDERD</string>
-    <string name="uel_running_mode_updarted">BEDRIJFSMODE GEWIJZIGD</string>
+    <string name="uel_running_mode">BEDRIJFSMODUS</string>
+    <string name="uel_running_mode_removed">BEDRIJFSMODUS VERWIJDERD</string>
+    <string name="uel_running_mode_updarted">BEDRIJFSMODUS GEWIJZIGD</string>
     <string name="uel_remote_config_changed">CONFIGURATIE OP AFSTAND GEWIJZIGD</string>
     <!-- HardLimits -->
     <string name="temp_target_high_target">Tijdelijk streefdoel bovengrens</string>
