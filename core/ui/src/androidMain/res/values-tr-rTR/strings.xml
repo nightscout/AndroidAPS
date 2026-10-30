@@ -312,7 +312,7 @@
     <string name="uel_temp_basal_removed">GEÇİCİ BAZAL KALDIRILDI</string>
     <string name="uel_extended_bolus_removed">YAYMA BOLUS KALDIRILDI</string>
     <string name="uel_food">YEMEK</string>
-    <string name="uel_food_removed">YEMEK KALDIRILDI</string>
+    <string name="uel_food_removed">YİYECEK KALDIRILDI</string>
     <string name="uel_profile_removed">PROFİL KALDIRILDI</string>
     <string name="uel_profile_switch_removed">PROFİL DEĞİŞTİRİCİ KALDIRILDI</string>
     <string name="uel_restart_events_removed">TEKRAR BAŞLAT ETKİNLİKLERİ KALDIRILDI</string>
