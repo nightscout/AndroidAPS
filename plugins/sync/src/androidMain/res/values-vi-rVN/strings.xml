@@ -72,7 +72,6 @@
     <string name="pair_with_master_fetching">Đang tìm kiếm ghép đôi…</string>
     <string name="pair_with_master_confirm_title">Ghép đôi với thiết bị chính?</string>
     <string name="pair_with_master_confirm_master">Thiết bị chính: %1$s</string>
-    <string name="pair_with_master_confirm_warning">Sau khi ghép đôi, thiết bị chính này sẽ có thể gửi các lệnh đã ký xác thực đến thiết bị này.</string>
     <string name="pair_with_master_confirm_pair">Ghép đôi</string>
     <string name="pair_with_master_error_title">Không thể ghép đôi</string>
     <string name="pair_with_master_error_wrong_pin">Không tìm thấy ghép đôi với mã PIN này. Hãy kiểm tra mã PIN trên thiết bị chính và thử lại.</string>
