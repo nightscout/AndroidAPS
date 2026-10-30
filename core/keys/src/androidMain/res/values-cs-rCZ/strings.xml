@@ -32,6 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Zobrazit naléhavé alarmy jako oznámení Androidu</string>
     <string name="pref_title_alert_increase_volume">Postupně zvyšovat hlasitost oznámení</string>
     <string name="pref_title_alert_override_dnd">Přebít režim Nerušit</string>
+    <string name="pref_summary_alert_override_dnd">Zapnuto: alarm i když je telefon ztišený nebo v režimu Nerušit Vypnuto: alarmy nevyzvání. V režimu Nerušit pouze vibrují.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Nahrávat glykémie do NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Zaznamenávat výměnu senzoru</string>
