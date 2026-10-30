@@ -1,5 +1,6 @@
 package app.aaps.implementation.notifications
 
+import android.app.NotificationManager as AndroidNotificationManager
 import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
@@ -27,6 +28,7 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowLooper
 
@@ -174,6 +176,28 @@ class AndroidSystemNotificationPlatformTest {
         )
         ShadowLooper.idleMainLooper()
 
+        assertThat(dismissed).isEqualTo(42)
+    }
+
+    /**
+     * The test above sends the broadcast itself. The real delete intent had no package, and from Android 14 an
+     * implicit broadcast from a PendingIntent never reaches a receiver registered as not exported: a swipe in the
+     * tray, or on the watch, took the notification away, but the registry kept it, so the overview still showed it.
+     * This takes the delete intent the notification really carries.
+     */
+    @Test
+    fun `the delete intent names this package, so the dismiss receiver gets it`() {
+        var dismissed: Int? = null
+        sut.onDismissed { dismissed = it }
+        whenever(preferences.get(BooleanKey.AlertUrgentAsAndroidNotification)).thenReturn(true)
+        sut.show(notification(NotificationLevel.NORMAL), "Info")
+
+        val posted = shadowOf(context.getSystemService(AndroidNotificationManager::class.java)).allNotifications.single()
+        val deleteIntent = shadowOf(posted.deleteIntent).savedIntent
+
+        assertThat(deleteIntent.`package`).isEqualTo(context.packageName)
+        context.sendBroadcast(deleteIntent)
+        ShadowLooper.idleMainLooper()
         assertThat(dismissed).isEqualTo(42)
     }
 }
