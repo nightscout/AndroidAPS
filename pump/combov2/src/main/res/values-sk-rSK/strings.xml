@@ -44,7 +44,7 @@ tlačidlá UP a MENU)\n
     <string name="combov2_confirm_unpair_message">Naozaj chcete odpárovať pumpu?</string>
     <string name="combov2_pin_hint">10-miestny PIN</string>
     <string name="combov2_pairing_finished_successfully">Úspešne spárované s Combo</string>
-    <string name="combov2_pairing_cancelled">Párovanie s Combo zrušené užívateľom</string>
+    <string name="combov2_pairing_cancelled">Párovanie s Combo zrušené používateľom</string>
     <string name="combov2_pairing_combo_scan_timeout_reached">Časový limit pre vyhľadávanie Combo dosiahnutý</string>
     <string name="combov2_pairing_failed_due_to_error">Párovanie sa nepodarilo z dôvodu chyby: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Párovanie prerušené z neznámych dôvodov</string>
