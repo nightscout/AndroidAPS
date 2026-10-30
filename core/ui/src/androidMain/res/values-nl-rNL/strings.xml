@@ -11,7 +11,6 @@
     <string name="treatments_history">Behandelingen geschiedenis</string>
     <string name="treatments_desc">Bekijk en beheer de behandelingsgeschiedenis</string>
     <string name="nav_configuration">Configuratie</string>
-    <string name="nav_configuration_desc">Instellen configuratie (sensor, pomp, ...) en functies</string>
     <string name="count_selected">%1$d geselecteerd</string>
     <string name="delete">Verwijderen</string>
     <string name="show_invalidated">Toon ongeldig</string>
