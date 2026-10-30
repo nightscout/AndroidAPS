@@ -11,7 +11,6 @@
     <string name="treatments_history">治療紀錄</string>
     <string name="treatments_desc">查看並管理治療紀錄</string>
     <string name="nav_configuration">組態</string>
-    <string name="nav_configuration_desc">設定您的組態（CGM、幫浦…）並啟用功能</string>
     <string name="count_selected">%1$d 個已選取</string>
     <string name="delete">刪除</string>
     <string name="show_invalidated">顯示已作廢</string>
