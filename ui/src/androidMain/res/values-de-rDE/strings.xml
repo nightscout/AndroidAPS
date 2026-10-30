@@ -8,28 +8,89 @@
     <string name="configure">Deckkraft konfigurieren</string>
     <string name="widget_description">AAPS Widget</string>
     <!--     Activities-->
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="agp_today">Heute</string>
+    <string name="agp_no_data">Es sind keine Glukosedaten für diesen Zeitraum verfügbar.</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hypo</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hyper</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Mittelwert</string>
+    <string name="cgp_reference">Gesunder Mensch</string>
+    <string name="cgp_patient">Patient</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">Sehr geringes Risiko</string>
+    <string name="cgp_pgr_low">Niedriges Risiko</string>
+    <string name="cgp_pgr_moderate">Mäßiges Risiko</string>
+    <string name="cgp_pgr_high">Hohes Risiko</string>
+    <string name="cgp_pgr_extremely_high">Extrem hohes Risiko</string>
+    <string name="do_you_want_recalculate_tdd_stats">Willst Du die TDD Statistik neu berechnen?</string>
     <string name="calculation_in_progress">Kalkulation wird gerade durchgeführt</string>
     <string name="age">Alter</string>
     <string name="weight_label">Gewicht</string>
-    <string name="glucose_type">Glukoseart</string>
+    <string name="glucose_type">Glukosetyp</string>
     <string name="bg_other">Anderes</string>
     <string name="bg_meter">Messgerät</string>
     <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
+    <string name="edit_site">Bearbeiten</string>
+    <string name="record_site_location">Setzstelle: %1$s</string>
+    <string name="record_site_note">Notiz: %1$s</string>
+    <string name="delete_site_note">Notiz gelöscht</string>
     <!-- FillDialog -->
     <string name="fill_warning">Bitte vergewissere Dich, dass die Füllmenge den Eigenschaften des Katheters entspricht!</string>
     <string name="record_pump_site_change">Katheter-Wechsel erfassen</string>
     <string name="record_insulin_cartridge_change">Reservoir-Wechsel erfassen</string>
+    <string name="fill_insulin_change">Insulinwechsel auf: %1$s (Profilwechsel wird ausgeführt)</string>
     <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">Aktivität</string>
+    <string name="scene_cat_health">Gesundheit</string>
+    <string name="scene_cat_food">Essen</string>
+    <string name="scene_cat_sleep">Schlaf</string>
+    <string name="scene_cat_dailylife">Alltag</string>
+    <string name="scene_cat_wellness">Wellness</string>
+    <string name="scene_cat_general">Allgemein</string>
+    <string name="aaps_tt_high_icon_label">Temporäres Ziel</string>
+    <string name="aaps_tt_activity_icon_label">TT Aktivität</string>
+    <string name="aaps_tt_eating_icon_label">TT Bald Essen</string>
+    <string name="aaps_tt_hypo_icon_label">TT Hypo</string>
+    <string name="aaps_profile_icon_label">Profil</string>
+    <string name="aaps_loop_icon_label">Loop</string>
+    <string name="aaps_smb_icon_label">SMB</string>
+    <string name="aaps_bolus_icon_label">Bolus</string>
+    <string name="aaps_carbs_icon_label">Kohlenhydrate</string>
+    <string name="aaps_tbr_icon_label">Temporäre Basalrate</string>
+    <string name="aaps_note_icon_label">Notiz</string>
+    <string name="aaps_automation_icon_label">Automation</string>
+    <string name="aaps_calibration_icon_label">Kalibrierung</string>
+    <string name="exercise_icon_label">Laufen</string>
+    <string name="fitness_icon_label">Fitness</string>
+    <string name="swim_icon_label">Schwimmen</string>
+    <string name="hiking_icon_label">Wandern</string>
+    <string name="bike_icon_label">Radfahren</string>
     <!-- Insulin Management -->
+    <string name="insulin_external_update_title">Insulin-Konfiguration geändert</string>
+    <string name="insulin_external_update_message">Ein gekoppelter Client hat die Insulinkonfiguration geändert. Tippen Sie auf OK, um dessen Änderungen zu laden und Ihre ungespeicherten Änderungen zu verwerfen oder Abbrechen, um die Bearbeitung fortzusetzen (Ihr nächster Speichervorgang wird die Client-Änderungen überschreiben).</string>
+    <string name="insulin_edit_target_gone">Dieses Insulin wurde an anderer Stelle entfernt, sodass deine Bearbeitung nicht gespeichert werden konnte. Die Liste wurde neu geladen.</string>
+    <string name="insulin_activation_applied">Insulin-Aktivierung angewendet</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_text">Warte auf Bestätigung durch den Master…</string>
+    <string name="clientcontrol_pending_rejected_title">Nicht übernommen</string>
+    <string name="clientcontrol_pending_failed_format">%1$s konnte nicht erledigt werden.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Teilweise angewendet</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s wurde angewendet, aber einige Aktionen konnten nicht ausgeführt werden.\nÜberprüfen Sie den aktiven Zustand.</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="a11y_add_new_insulin">Neues Insulin hinzufügen</string>
+    <string name="a11y_delete_current_insulin">Aktuelles Insulin löschen</string>
+    <string name="cannot_delete_active_insulin">Das aktive Insulin kann nicht gelöscht werden</string>
     <string name="reuse_profile_pct_hours">Erneut verwenden %1$d%% %2$dh</string>
     <string name="percentage_label">Prozentsatz</string>
     <!-- LoopDialog -->
+    <string name="disconnectpump">Pumpe trennen</string>
     <string name="resume">Fortsetzen</string>
     <string name="reconnect">Pumpe erneut verbinden</string>
     <string name="duration15m">15 Min.</string>
@@ -44,14 +105,29 @@
     <string name="no_records_available">Keine Datensätze verfügbar</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="carbs_and_bolus">Kohlenhydrate &amp; Bolus</string>
+    <string name="show_invalidated">Zeige ungültige</string>
+    <string name="hide_invalidated">Verstecke ungültige</string>
     <string name="careportal_remove_started_events">AAPS gestartete Einträge entfernen</string>
+    <string name="user_entry">Benutzereingabe</string>
     <string name="clone_label">Klonen</string>
+    <string name="add_new_profile">Neues Profil hinzufügen</string>
+    <string name="edit_label">Bearbeiten</string>
+    <string name="activate_label">Aktivieren</string>
     <string name="activate_profile">Aktiviere Profil</string>
+    <string name="remove_label">Entfernen</string>
+    <string name="active_profile_indicator">AKTIV</string>
+    <string name="confirm_clone_profile">Profil \"%1$s \"klonen?</string>
+    <string name="profile_no_longer_exists">Profilliste wurde zwischenzeitig geändert — Bitte versuche es erneut</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Profil-Typ</string>
+    <string name="profile_parameters">Profil-Parameter</string>
+    <string name="active_profile">Aktives Profil</string>
+    <string name="available_profiles">Verfügbare Profile</string>
     <string name="profile_switches">Profilwechsel</string>
     <string name="basal_pct_from_tdd_label">% der Basalrate</string>
     <string name="selected_profile">Ausgewählt:</string>
+    <string name="profile_tab_1">Profil 1</string>
+    <string name="profile_tab_2">Profil 2</string>
     <string name="motol_default_profile">Standard-Profil</string>
     <string name="current_profile">Aktuelles Profil</string>
     <string name="available_profile">Verfügbares Profil</string>
@@ -61,10 +137,60 @@
     <string name="dpv_default_profile">DPV-Standard-Profil</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
+    <string name="overview_edit_quickwizard_button_text">Schaltflächentext</string>
+    <string name="quick_wizard_mode_insulin">Insulin</string>
+    <string name="quick_wizard_mode_carbs">Kohlenhydrate</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Nur positives IOB</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <!--    History browser-->
+    <string name="history_now">Jetzt</string>
+    <string name="a11y_history_previous_window">Vorheriges Fenster</string>
+    <string name="a11y_history_next_window">Nächstes Fenster</string>
+    <string name="additional_ecarbs">eCarbs hinzufügen</string>
+    <string name="calculator_options">Rechner-Optionen</string>
+    <string name="use_bg">BZ verwenden</string>
+    <string name="use_cob">COB verwenden</string>
+    <string name="use_iob">IOB verwenden</string>
+    <string name="use_trend">Trend verwenden</string>
+    <string name="trend_all">Alle</string>
+    <string name="trend_positive_only">Nur Positiv</string>
+    <string name="trend_negative_only">Nur Negative</string>
+    <string name="use_temp_target">Temporäres Ziel verwenden</string>
+    <string name="use_alarm">Alarm verwenden</string>
+    <string name="device_selection">Geräteauswahl</string>
+    <string name="show_on_phone">Auf Telefon anzeigen</string>
+    <string name="show_on_watch">Auf Uhr anzeigen</string>
+    <string name="ecarbs_additional">Zusätzliche Kohlenhydrate</string>
+    <string name="save_changes_question">Änderungen zu diesem Eintrag speichern?</string>
+    <string name="wizard_no_insulin_required">Kein Insulin benötigt</string>
+    <string name="carbs_constraint_violation">Kohlenhydrate begrenzt durch Beschränkungen</string>
+    <string name="insulin_constraint_violation">Insulin begrenzt durch Beschränkungen</string>
+    <string name="confirm_treatment">Bitte bestätige die Behandlung</string>
+    <string name="recalculate">Neu berechnen</string>
     <!--    Widget-->
+    <string name="use_black_color">Verwende schwarze Farbe</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">Berechtigungen erforderlich</string>
+    <string name="permission_sheet_subtitle">Einige Berechtigungen werden benötigt, damit die App richtig funktioniert</string>
+    <string name="permission_change">Ändern</string>
+    <string name="permission_denied_go_to_settings">Zugriff dauerhaft verweigert. Bitte aktiviere ihn in den App-Einstellungen.</string>
+    <string name="permission_open_settings">Einstellungen</string>
+    <string name="permission_directory_picker_error">Verzeichnisauswahl kann nicht gestartet werden. In der Regel ist dies ein Android oder Family Link Problem.</string>
+    <string name="permission_nav_label">Berechtigungen</string>
     <!--    TDD Cycle Pattern -->
+    <string name="raw_tdd">Roh-TDD</string>
+    <string name="cleaned_tdd">TDD bereinigt</string>
+    <string name="cleaned_tdd_explanation">TDD abzüglich Insulin für Kohlenhydrate.</string>
+    <string name="cycle_lines_legend">Individuelle Zyklen</string>
+    <string name="cycles_found">%1$d Zyklen (%2$d Tage)</string>
+    <string name="cycle_day1_date">Tag 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">Berechne… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Nicht genügend Daten (benötigt mindestens 56 Tage für 2 Zyklen)</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Both</item>
+        <item>Nur Positive</item>
+        <item>Negative only</item>
+    </string-array>
     <!-- Toolbar configuration -->
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
     <!-- Calibration preflight messages shown in the dialog before submit -->
