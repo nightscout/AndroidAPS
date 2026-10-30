@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 /**
  * Tests for the pure top-level helper functions in BgGraphRenderer.kt:
  * [bgColor], [formatTtDuration], [ageColor], [smbSizeFactor], [bolusSizeFactor], [carbsSizeFactor],
- * [interpolatedSgvAt] and [markerAnchorTime].
+ * [interpolatedSgvAt], [markerAnchorTime] and [bgAxisTop].
  *
  * These are `internal`, so the test lives in the same package to reach them and the module's
  * own color constants ([BgLowColor], [BgHighColor], [BgInRangeColor]). They take only Long/String
@@ -292,5 +292,31 @@ internal class BgGraphRendererFunctionsTest {
         val factor = carbsSizeFactor(meals(carbs(30.0), carbsSmallBelow = 20.0, carbsLargeFrom = 40.0))
 
         assertThat(factor(30.0)).isEqualTo(mealMedium)
+    }
+
+    // --- bgAxisTop -----------------------------------------------------------
+
+    // The top edge sits 30 mg/dl above the highest value the axis is fitted to.
+    private val margin = 30f
+
+    @Test fun bgAxisTopWithoutPredictionsFollowsTheHigherOfReadingsAndHighMark() {
+        assertThat(bgAxisTop(actualMax = 120f, predMax = 0f, high = 180f)).isEqualTo(180f + margin)
+        assertThat(bgAxisTop(actualMax = 250f, predMax = 0f, high = 180f)).isEqualTo(250f + margin)
+    }
+
+    @Test fun bgAxisTopFollowsAPredictionInsideTheHeadroom() {
+        assertThat(bgAxisTop(actualMax = 160f, predMax = 200f, high = 180f)).isEqualTo(200f + margin)
+        assertThat(bgAxisTop(actualMax = 250f, predMax = 290f, high = 180f)).isEqualTo(290f + margin)
+    }
+
+    @Test fun bgAxisTopStopsAPredictionAtTheHeadroomAboveTheRealData() {
+        // A COB curve towards 360 (20 mmol/L) with readings below the high mark: the axis stops 50 above the high mark
+        assertThat(bgAxisTop(actualMax = 160f, predMax = 360f, high = 180f)).isEqualTo(180f + PREDICTION_AXIS_HEADROOM_MGDL + margin)
+        // Readings above the high mark: the headroom counts from the readings
+        assertThat(bgAxisTop(actualMax = 250f, predMax = 360f, high = 180f)).isEqualTo(250f + PREDICTION_AXIS_HEADROOM_MGDL + margin)
+    }
+
+    @Test fun bgAxisTopNeverGoesBelowTheRealDataForALowPrediction() {
+        assertThat(bgAxisTop(actualMax = 250f, predMax = 60f, high = 180f)).isEqualTo(250f + margin)
     }
 }
