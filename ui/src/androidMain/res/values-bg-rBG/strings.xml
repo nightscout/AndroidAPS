@@ -97,7 +97,6 @@
     <string name="aaps_bolus_icon_label">Болус</string>
     <string name="aaps_carbs_icon_label">Въглехидрати</string>
     <string name="aaps_tbr_icon_label">Временен базал</string>
-    <string name="aaps_activity_icon_label">Спорт</string>
     <string name="aaps_note_icon_label">Бележка</string>
     <string name="aaps_automation_icon_label">Автоматизация</string>
     <string name="aaps_calibration_icon_label">Калибрация</string>
