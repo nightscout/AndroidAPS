@@ -114,7 +114,7 @@
     <string name="wrongcarbs_bolus">Podajte bolus inzulínu pomocou tlačidla Inzulín v menu Ošetrenia.</string>
     <string name="wronginsulin_label">Chyby pri podávaní/zadávaní inzulínu</string>
     <string name="wronginsulin_whattodo">Čo by ste mali urobiť, pokiaľ ste dostali menej inzulínu, než ukazuje história pumpy, napr. v dôsledku oklúzie, vadnej kanyly, alebo zabudnutia na opätovné pripojenie pumpy po sprche?</string>
-    <string name="wronginsulin_careportal">Odstráňte dáta o inzulíne v Nightscout Careportal, aby sa odstránili z histórie pumpy.</string>
+    <string name="wronginsulin_careportal">Odstráňte údaje o inzulíne zo Starostlivosti v Nightscoute, aby sa odstránili z histórie pumpy.</string>
     <string name="wronginsulin_compare">Porovnajte hodnoty v AAPS s históriou pumpy (ak to pumpa podporuje).</string>
     <string name="wronginsulin_prime">Podajte bolusom časť vypočítaného „chýbajúceho“ inzulínu buď striekačkou/perom, alebo pomocou plnenia.</string>
     <string name="cob_label">Aktívne sacharidy (COB)</string>
