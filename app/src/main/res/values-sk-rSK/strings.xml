@@ -17,7 +17,7 @@
     <string name="settings_unreadable_key_explanation">Vaše nastavenia v tomto telefóne sú zašifrované kľúčom, ktorý Android uchováva pre AAPS a ktorý ho už neotvára. Môže sa to stať po resetovaní úložiska kľúčov v telefóne.</string>
     <string name="settings_unreadable_keystore_explanation">Úložisko kľúčov v telefóne neodpovedalo, preto AAPS nemohlo načítať svoje nastavenia.</string>
     <string name="settings_unreadable_not_running">AAPS nie je spustené a neovláda pumpu. Prebiehajúci dočasný bazál sa ukončí po uplynutí nastavenej doby a pumpa potom začne podávať bazál podľa svojho nastavenia.</string>
-    <string name="settings_unreadable_what_to_do">Skúste znova ukončiť AAPS a opätovne ho spustiť. Ak to nepomôže, reštartujte telefón. Možnosť Začať znova vyberte iba vtedy, keď nič iné nepomáha: nečitateľné nastavenia sa odložia a AAPS sa spustí s prázdnymi nastaveniami. Potom v sprievodcovi nastavením importujte poslednú zálohu nastavení.</string>
+    <string name="settings_unreadable_what_to_do">Tlačidlo Opakovať zatvorí AAPS a znova ho spustí. Ak to nepomôže, reštartujte telefón. Možnosť Začať znova vyberte iba vtedy, keď nič iné nepomáha: nečitateľné nastavenia sa odložia a AAPS sa spustí s prázdnymi nastaveniami. Potom v sprievodcovi nastavením importujte posledný export nastavení.</string>
     <string name="settings_unreadable_start_fresh">Začať znova</string>
     <string name="settings_unreadable_confirm_title">Začať s prázdnymi nastaveniami?</string>
     <string name="settings_unreadable_confirm_text">Nečitateľný súbor s nastaveniami je premenovaný a ponechaný. Všetky nastavenia začínajú na predvolených hodnotách. Potom znova nastavte AAPS alebo importujte zálohu nastavení.</string>
