@@ -11,6 +11,7 @@ fun GlucoseValue.SourceSensor.fromDb(): SourceSensor =
         GlucoseValue.SourceSensor.LIBRE_1           -> SourceSensor.LIBRE_1
         GlucoseValue.SourceSensor.LIBRE_2           -> SourceSensor.LIBRE_2
         GlucoseValue.SourceSensor.LIBRE_3           -> SourceSensor.LIBRE_3
+        GlucoseValue.SourceSensor.LIBRE_3_NATIVE    -> SourceSensor.LIBRE_3_NATIVE
         GlucoseValue.SourceSensor.MEDTRUM_A6        -> SourceSensor.MEDTRUM_A6
         GlucoseValue.SourceSensor.MEDTRUM_UNKNOWN   -> SourceSensor.MEDTRUM_UNKNOWN
         GlucoseValue.SourceSensor.MM_600_SERIES     -> SourceSensor.MM_600_SERIES
@@ -51,6 +52,7 @@ fun SourceSensor.toDb(): GlucoseValue.SourceSensor =
         SourceSensor.LIBRE_1           -> GlucoseValue.SourceSensor.LIBRE_1
         SourceSensor.LIBRE_2           -> GlucoseValue.SourceSensor.LIBRE_2
         SourceSensor.LIBRE_3           -> GlucoseValue.SourceSensor.LIBRE_3
+        SourceSensor.LIBRE_3_NATIVE    -> GlucoseValue.SourceSensor.LIBRE_3_NATIVE
         SourceSensor.MEDTRUM_A6        -> GlucoseValue.SourceSensor.MEDTRUM_A6
         SourceSensor.MEDTRUM_UNKNOWN   -> GlucoseValue.SourceSensor.MEDTRUM_UNKNOWN
         SourceSensor.MM_600_SERIES     -> GlucoseValue.SourceSensor.MM_600_SERIES

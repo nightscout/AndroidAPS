@@ -36,6 +36,31 @@
     <string name="pref_title_alert_increase_volume">Gradually increase notification volume</string>
     <string name="pref_title_alert_override_dnd">Override Do Not Disturb mode</string>
     <string name="pref_summary_alert_override_dnd">On: alarms ring even when the phone is silent or in Do Not Disturb. Off: alarms do not ring then. In Do Not Disturb they only vibrate.</string>
+    <string name="pref_title_alert_hypo">Alert on low glucose</string>
+    <string name="pref_summary_alert_hypo">Sound an alarm when glucose is at or below the low threshold.</string>
+    <string name="pref_title_alert_hypo_threshold">Low glucose alarm threshold</string>
+    <string name="pref_title_alert_hyper">Alert on high glucose</string>
+    <string name="pref_summary_alert_hyper">Notify when glucose is at or above the high threshold.</string>
+    <string name="pref_title_alert_hyper_threshold">High glucose alarm threshold</string>
+    <string name="pref_title_alert_rapid_fall">Alert on rapid fall</string>
+    <string name="pref_summary_alert_rapid_fall">Sound an alarm when glucose drops by at least the configured amount within the configured time window.</string>
+    <string name="pref_title_alert_rapid_fall_drop">Rapid fall drop threshold</string>
+    <string name="pref_summary_alert_rapid_fall_drop" comment="mg/dL and mmol/L are glucose units: keep them as they are. The value is always set in mg/dL, also for mmol/L users.">How much glucose must drop to sound the alarm. Always in mg/dL, also when AAPS shows mmol/L (18 mg/dL is about 1 mmol/L).</string>
+    <string name="pref_title_alert_rapid_fall_window">Rapid fall time window</string>
+    <string name="pref_title_alert_cgm_sensor_failed">Alert when the CGM sensor fails</string>
+    <string name="pref_summary_alert_cgm_sensor_failed">Sound an alarm when the sensor reports an error or cannot be used. Only for BG sources that report their sensor state.</string>
+    <string name="pref_title_alert_cgm_sensor_expired">Alert when the CGM sensor has ended</string>
+    <string name="pref_summary_alert_cgm_sensor_expired">Sound an alarm when the usable time of the sensor has ended, including the grace period the sensor allows (for Libre 3: its life plus 12 hours). Only for BG sources that report their sensor state.</string>
+    <string name="pref_title_alert_cgm_sensor_expiring">Warn before the CGM sensor ends</string>
+    <string name="pref_summary_alert_cgm_sensor_expiring">Notify some hours before the usable time of the sensor ends, including the grace period the sensor allows (for Libre 3: its life plus 12 hours), so you can prepare a new sensor. Only for BG sources that report their sensor state.</string>
+    <string name="pref_title_alert_cgm_expiring_lead">Warn this long before the sensor ends</string>
+    <string name="pref_title_alert_cgm_signal_lost">Alert on lost CGM signal</string>
+    <string name="pref_summary_alert_cgm_signal_lost">Notify when the phone has had no link to the sensor, or no reading from it, for some time. Only for BG sources that report their sensor state.</string>
+    <string name="pref_title_alert_cgm_signal_lost_delay">Signal lost for at least</string>
+    <string name="pref_title_alert_cgm_warmup_done">Notify when sensor warm-up is done</string>
+    <string name="pref_summary_alert_cgm_warmup_done">Notify when a new sensor sends its first usable reading. Only for BG sources that report their sensor state.</string>
+    <string name="pref_title_alert_cgm_second_sensor_ready">Notify when a second sensor is ready</string>
+    <string name="pref_summary_alert_cgm_second_sensor_ready">Notify when a pre-soaked second sensor is ready and you can switch to it. Only for BG sources that support a second sensor.</string>
 
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Upload BG data to NS</string>

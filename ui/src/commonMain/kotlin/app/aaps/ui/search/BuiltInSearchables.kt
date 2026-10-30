@@ -190,7 +190,22 @@ class BuiltInSearchables(
             BooleanKey.AlertCarbsRequired,
             BooleanKey.AlertUrgentAsAndroidNotification,
             BooleanKey.AlertIncreaseVolume,
-            BooleanKey.AlertOverrideDoNotDisturb
+            BooleanKey.AlertOverrideDoNotDisturb,
+            BooleanKey.AlertHypo,
+            UnitDoubleKey.AlertHypoThreshold,
+            BooleanKey.AlertHyper,
+            UnitDoubleKey.AlertHyperThreshold,
+            BooleanKey.AlertRapidFall,
+            IntKey.AlertRapidFallDrop,
+            IntKey.AlertRapidFallWindow,
+            BooleanKey.AlertCgmSensorFailed,
+            BooleanKey.AlertCgmSensorExpired,
+            BooleanKey.AlertCgmSensorExpiring,
+            IntKey.AlertCgmExpiringLeadHours,
+            BooleanKey.AlertCgmSignalLost,
+            IntKey.AlertCgmSignalLostMinutes,
+            BooleanKey.AlertCgmWarmupDone,
+            BooleanKey.AlertCgmSecondSensorReady
         ),
         icon = Icons.Default.Notifications
     )
