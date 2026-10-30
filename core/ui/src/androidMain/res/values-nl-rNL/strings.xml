@@ -372,6 +372,7 @@
     <string name="pump_reconnect">Sluit de pomp weer aan</string>
     <string name="scene">Scène</string>
     <string name="scenes">Scènes</string>
+    <string name="scene_desc">Voorinstellingen voor scenes — meerdere acties tegelijk activeren</string>
     <string name="scene_activate">Activeer</string>
     <string name="scene_deactivate">Beëindig scène</string>
     <string name="scene_end_active">Einde actieve scene</string>
