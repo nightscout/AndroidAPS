@@ -67,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Pod\'u Devre Dışı Bırak</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Pod\'u devre dışı bırakmak için <b>İleri</b>\'ye basın.\n\n<b>Not:</b> Bu, tüm insülin iletimini askıya alacak ve Pod\'u devre dışı bırakacaktır.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">Devre dışı bırakılmış bir Pod tekrar kullanılamaz. Bu Pod\'u şimdi devre dışı bırakmak istiyor musunuz?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Pod Devre dışı bırakılıyor</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Pod devre dışı bırakılıyor.\n\nDevre dışı bırakma başarıyla tamamlandığında, <b>İleri</b>\'ye basabilirsiniz.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod Devre dışı bırakıldı</string>
@@ -98,6 +99,9 @@
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Belirsiz GBO bildirimleri için sesi etkinleştir</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Belirsiz SMB bildirimleri için ses etkinleştirildi</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Belirsiz bolus bildirimleri için sesi etkinleştir</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">İletimin askıya alındığı bildirimi etkinleştirildiğinde sesle uyar</string>
+    <string name="omnipod_dash_use_bonding">Bluetooth eşleşmesi</string>
+    <string name="omnipod_dash_use_bonding_summary">Bunu yalnızca pod sabit bir bağlantı sağlayamıyorsa deneyin. Telefonda, kabul etmeniz gereken eşleştirme istekleri görünecektir. Pod düzgün bir şekilde bağlanıyorsa bu ayarı kapalı bırakın. Android 15 öncesi sürümlerde hiçbir etkisi yoktur.</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Aktif Pod Yok</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Kurulum devam ediyor (Pod aktivasyonu bekleniyor)</string>
@@ -108,9 +112,21 @@
     <string name="omnipod_common_pod_status_inactive">İnaktif</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod Hatası: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">PDM Bildirimi</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Rezervuar Boş</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">İnsülin iletimi durdu. Pod\'u şimdi değiştirin.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Otomatik kapanma</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">İnsülin iletimi durdu. PDM cihazınız ile Pod\'unuz son 4 saat içinde iletişim kurmadı. İnsülin iletimini yeniden başlatmak için Pod\'unuzu hemen değiştirin.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Pod Süresi Doldu</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">İnsülin iletimi durdu. Pod\'u şimdi değiştirin.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Tıkanma tespit edildi</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">İnsülin iletimi durdu. Pod\'u şimdi değiştirin. KŞ\'ni kontrol edin</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Pod hatası</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">İnsülin iletimi durdu. Pod\'u şimdi değiştirin.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod yakında sona erecek</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod yakında sona erecek</string>
@@ -124,6 +140,8 @@
     <string name="omnipod_common_cmd_set_basal_schedule">Bazal Planı Ayarla</string>
     <string name="omnipod_common_cmd_set_bolus">Bolusu Ayarla</string>
     <string name="omnipod_common_cmd_cancel_bolus">Bolusu İptal Et</string>
+    <string name="omnipod_common_cmd_set_tbr">GBO ayarla</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">GBO İptal et</string>
     <string name="omnipod_common_cmd_discard_pod">Pod\'u Çıkart</string>
     <string name="omnipod_common_cmd_get_pod_status">Pod Durumu</string>
     <string name="omnipod_common_cmd_set_time">Saati Ayarla</string>
@@ -132,10 +150,17 @@
     <string name="omnipod_common_cmd_read_pulse_log">Nabız Kaydını Oku</string>
     <string name="omnipod_common_cmd_suspend_delivery">İletimi Askıya Al</string>
     <string name="omnipod_common_cmd_resume_delivery">İletime devam et</string>
+    <string name="omnipod_common_cmd_cancel_tbr">GBO iptal et (kullanıcı)</string>
     <string name="omnipod_common_cmd_get_pod_info">Pod Bilgisi</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Sahte Askıya Alınmış GBO ayarla</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Sahte Askıya Alınmış GBO iptal et</string>
+    <string name="omnipod_common_cmd_split_tbr">GBO Böl</string>
     <string name="omnipod_common_cmd_play_test_beep">Test Bip Sesi Çal</string>
     <string name="omnipod_common_cmd_unknown_entry">Bilinmeyen Giriş</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Askıya Alma Uyarılarını Devre Dışı Bırak</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Eşleştirme hatırlatıcısını bitir</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Kurulum hatırlatıcısını bitir</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Dakika önce</string>
@@ -158,6 +183,8 @@
         <item quantity="one">Pod Alarmı: %1$s</item>
         <item quantity="other">Pod Alarmları: %1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Pod Zorunlu Sonu</string>
+    <string name="omnipod_common_overview_pod_hard_end_value" comment="%1$s=date and time when the pod stops delivering insulin, %2$s=time left until then. Example: 21.10.2026 18:34 (17m remaining)">%1$s (%2$s)</string>
     <!-- Omnipod - History -->
     <string name="omnipod_common_history_tbr_value">%1$.2f Ü/s, %2$d dakika</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f Ü</string>
