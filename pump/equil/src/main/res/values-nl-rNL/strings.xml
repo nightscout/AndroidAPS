@@ -19,6 +19,7 @@
     <string name="equil_title_history_events">Historie gebeurtenissen</string>
     <string name="equil_tone">Alarmtoon</string>
     <string name="equil_bolus_speed">Bolussnelheid</string>
+    <string name="equil_bolus_speed_summary">Een snellere bolus kan meer occlusie alarmen geven.</string>
     <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1.5 E/min (standaard)</string>
     <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 E/min</string>
     <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 E/min</string>
