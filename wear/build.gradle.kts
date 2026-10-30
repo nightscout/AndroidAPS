@@ -22,7 +22,7 @@ repositories {
 // submission, and `git describe` would otherwise report it however far away it is.
 fun generateGitBuild(): String {
     try {
-        val processBuilder = ProcessBuilder("git", "describe", "--always", "--exclude=ios-testflight-*")
+        val processBuilder = ProcessBuilder("git", "describe", "--always", "--abbrev=7", "--exclude=ios-testflight-*")
         val output = File.createTempFile("git-build", "")
         processBuilder.redirectOutput(output)
         val process = processBuilder.start()
