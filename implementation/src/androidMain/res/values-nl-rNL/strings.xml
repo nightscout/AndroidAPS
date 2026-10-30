@@ -72,7 +72,7 @@
     <string name="prefdecrypt_issue_missing_file_hash">Bestand checksum (hash) ontbreekt, kan de authenticiteit van instellingen niet controleren!</string>
     <string name="prefdecrypt_issue_modified">Bestand is gewijzigd na export!</string>
     <string name="prefdecrypt_issue_parsing">Decoderingsfout, uitlezen van instellingen is mislukt!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Decoderingsfout, het opgegeven wachtwoord is ongeldig of het instellingenbestand is gewijzigd / mee geknoeid. Wellicht was het geïmporteerde bestand geëxporteerd met een ander masterwachtwoord.</string>
+    <string name="prefdecrypt_issue_wrong_pass">Fout bij het ontsleutelen. Het opgegeven wachtwoord is onjuist of het instellingenbestand is gewijzigd. Dit kan gebeuren als het geïmporteerde bestand is geëxporteerd met een ander hoofdwachtwoord.</string>
     <string name="prefdecrypt_issue_wrong_format">Ontbrekende versleutelingsconfiguratie, instellingen indeling is ongeldig!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Niet-ondersteund of niet opgegeven versleutelingsalgoritme!</string>
     <string name="metadata_label_format">Bestandsformaat</string>
