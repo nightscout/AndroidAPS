@@ -178,7 +178,7 @@
     <string name="percentage_label">Procenta</string>
     <!-- LoopDialog -->
     <string name="disconnectpump">Odpojit pumpu</string>
-    <string name="resume">Uvolnit</string>
+    <string name="resume">Obnovit</string>
     <string name="reconnect">Znovu připojit pumpu</string>
     <string name="duration15m">15 minut</string>
     <string name="duration30m">30 minut</string>
@@ -193,7 +193,7 @@
     <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
     <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
     <string name="wizard_carbs_type_bread_desc">100 % okamžité sacharidy, žádné prodloužené sacharidy</string>
-    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Sacharidy poníženy o %1$d%%, přidány eSacharidy %2$d%% zpožděné o %3$d rozložené na %4$d h</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Sacharidy sníženy o %1$d %%, přidány eSacharidy %2$d %% se zpožděním %3$d min, rozložené na %4$d h</string>
     <string name="wizard_include_info">Klepnutím zahrnete/vyloučíte z výpočtu:\n Gly – glykémie (na začátku ZAPNUTO)\n TT – dočasný cíl (na začátku ZAPNUTO)\n Trend – trend glykémie (poslední stav zapamatován)\n IOB – insulin on board (na začátku ZAPNUTO)\n COB – sacharidy on board (poslední stav zapamatován)</string>
     <!-- Treatments -->
     <string name="no_records_available">Nejsou k dispozici žádné záznamy</string>
