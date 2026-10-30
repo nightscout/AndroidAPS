@@ -84,7 +84,6 @@
     <string name="carelevo_patch_attach_step2_desc">패치의 보호 테이프를 제거해 주세요.</string>
     <string name="carelevo_patch_attach_step3_title">패치 부착</string>
     <string name="carelevo_patch_attach_step3_desc">패치에 표시된 점이 위로 향하게 피부에 부착해 주세요.</string>
-    <string name="carelevo_patch_attach_step4_desc">피부에 부착한 후, 준비 완료 버튼을 눌러주세요.</string>
     <string name="carelevo_patch_needle_insertion_step1_title">안전캡 제거</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">안전캡을 화살표 방향으로 90도 돌린 후 안전캡을 들어 제거해 주세요.</string>
     <string name="carelevo_patch_needle_insertion_step2_title">바늘 삽입</string>
