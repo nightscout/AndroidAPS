@@ -30,7 +30,7 @@
     <string name="authorized_clients_pin_instructions">Zadejte tento PIN do klientského zařízení. Kód je platný pouze pro jedno párování.</string>
     <string name="authorized_clients_pin_expires_in">Vyprší za %1$ss</string>
     <string name="authorized_clients_pin_done">Hotovo</string>
-    <string name="authorized_clients_pin_publishing">Odesílání párovácí nabídky do Nightscoutu…</string>
+    <string name="authorized_clients_pin_publishing">Odesílání párovací nabídky do Nightscoutu…</string>
     <string name="authorized_clients_pin_published">V Nightscoutu je připravena párovací nabídka.</string>
     <string name="authorized_clients_pin_publish_failed">Nepodařilo se nahrát nabídku párování do Nightscoutu.</string>
     <string name="authorized_clients_pin_retry">Opakovat</string>
@@ -45,8 +45,8 @@
     <string name="authorized_clients_qr_title" comment="%1$s = the name of the new client, for example Tablet">Nastavit %1$s</string>
     <string name="authorized_clients_qr_pair_instructions">Naskenujte tento kód na novém telefonu, v průvodci nastavením nebo v párování klienta. Nastaví Nightscout a spáruje telefon.</string>
     <string name="authorized_clients_qr_ns_instructions">Naskenujte tento kód na novém telefonu, v průvodci nastavením nebo v párování klienta. Nastaví Nightscout. Telefon není spárován.</string>
-    <string name="authorized_clients_qr_keep_private">Každý, kdo vidí tento kód, může číst váš Nightscout. Ukaž ho pouze novému telefonu.</string>
-    <string name="authorized_clients_token_problem_title">Nemáte QR kód</string>
+    <string name="authorized_clients_qr_keep_private">Každý, kdo vidí tento kód, může číst váš Nightscout. Ukažte ho pouze novému telefonu.</string>
+    <string name="authorized_clients_token_problem_title">Žádný QR kód</string>
     <string name="authorized_clients_not_added_title">Klient nebyl přidán</string>
     <string name="authorized_clients_token_problem_not_connected">Tento telefon není připojen k Nightscoutu, takže nemůže vytvořit token pro klienta.</string>
     <string name="authorized_clients_token_problem_not_allowed">Nightscout token tohoto telefonu není token administrátora, takže nemůže vytvořit token pro klienta. Použijte admin token, nebo přidejte klienta s PINem.</string>
@@ -65,7 +65,7 @@
     <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Používá Nightscout token %1$s, není jeho vlastní: jeho příkazy jsou odmítnuty. Odstraňte jej a znovu jej přidejte.</string>
     <!-- Pair with master (client side PIN entry) -->
     <string name="pair_with_master_title">Párovat s hlavním zařízením</string>
-    <string name="pair_with_master_pin_entry_title">Zadej PIN párování</string>
+    <string name="pair_with_master_pin_entry_title">Zadejte PIN pro párování</string>
     <string name="pair_with_master_pin_entry_message">Otevřete autorizované klienty na hlavním zařízení a přidejte tohoto klienta. Zadejte osmimístný kód PIN.</string>
     <string name="pair_with_master_pin_entry_label">8místný PIN</string>
     <string name="pair_with_master_pin_entry_submit">Párovat</string>
@@ -79,7 +79,7 @@
     <string name="pair_with_master_error_ambiguous_pin">Více párování odpovídá kódu PIN. Požádejte na hlavním zařízení o vygenerování nového a opakujte akci.</string>
     <string name="pair_with_master_error_expired">Toto párování vypršelo. Vygenerujte nový PIN na hlavním zařízení.</string>
     <string name="pair_with_master_error_network">K Nightscoutu se nelze připojit. Zkontrolujte připojení a zkuste to znovu.</string>
-    <string name="pair_with_master_error_secret_store">Tento telefon nemohl uložit klíč párování, takže spárování bylo zrušeno. Nic se nezměnilo. Zkuste to znovu, a pokud se nedaří, restartujte telefon.</string>
+    <string name="pair_with_master_error_secret_store">Klíč párování se nepodařilo uložit, proto bylo párování zrušeno. Nic se nezměnilo. Zkuste to znovu, a pokud se to stále nedaří, restartujte aplikaci.</string>
     <string name="pair_with_master_retry">Zkuste to znovu</string>
     <string name="pair_with_master_already_paired_title">Již spárováno</string>
     <string name="pair_with_master_already_paired_master">Momentálně spárováno s hlavním zařízením %1$s. Před zadáním nového PINu nejprve odpárujte.</string>
@@ -90,7 +90,7 @@
     <string name="client_setup_scan_title">Naskenovat QR kód hlavního zařízení</string>
     <string name="client_setup_scan_instructions">Na hlavním zařízení otevřete autorizované klienty a přidejte tento telefon s QR kódem. Fotoaparát namiřte na kód.</string>
     <string name="client_setup_scan_camera_refused">Fotoaparát je potřebný pro přečtení QR kódu. Povolte jej nebo spárujte PINem.</string>
-    <string name="client_setup_scan_camera_denied">Přístup k fotoaparátu je vypnutý pro AAPS. Zapněte jej v nastavení systému nebo spárujte PINen.</string>
+    <string name="client_setup_scan_camera_denied">Přístup k fotoaparátu je pro AAPS vypnutý. Zapněte ho v nastavení systému, nebo spárujte pomocí PINu.</string>
     <string name="client_setup_scan_camera_blocked">Přístup k fotoaparátu není na tomto zařízení povolen. Místo toho spárujte PINem.</string>
     <string name="client_setup_scan_camera_unavailable">Fotoaparát nelze na tomto zařízení použít. Místo toho spárujte PINem.</string>
     <string name="client_setup_scan_open_settings">Otevřít nastavení</string>
