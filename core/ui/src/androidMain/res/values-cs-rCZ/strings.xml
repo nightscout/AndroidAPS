@@ -56,7 +56,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Uživatel</string>
     <string name="result">Výsledek</string>
     <string name="settings">Nastavení</string>
-    <string name="open_plugin">Otevřít modul</string>
+    <string name="open_plugin">Otevřít plugin</string>
     <string name="configbuilder_pick_one_hint">Vyberte jeden. Pouze jeden může být aktivní.</string>
     <string name="configbuilder_pick_many_hint">Zvolte, co se použije.</string>
     <string name="configbuilder_no_selection_warning">V této kategorii není vybrán žádný plugin.</string>
@@ -381,7 +381,7 @@
     <string name="scene_ended">Scéna ukončena</string>
     <string name="scene_end_active">Konec aktivní scény</string>
     <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Přeskočit na</string>
-    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Následná akce %1$s nebude spuštěna</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Navazující scéna %1$s nebude spuštěna</string>
     <string name="scene_confirm_activate">Aktivovat scénu \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">Ukončit scénu \"%1$s\" a vrátit změny?</string>
     <string name="scene_conflict_active_tt">Aktivní dočasný cíl bude nahrazen</string>
@@ -629,7 +629,7 @@
     <string name="uel_cancel_bolus">ZRUŠIT BOLUS</string>
     <string name="uel_cancel_extended_bolus">ZRUŠIT PRODLOUŽENÝ BOLUS</string>
     <string name="uel_cancel_tt">ZRUŠIT DOČASNÝ CÍL</string>
-    <string name="uel_careportal">OŠETŘENÍ</string>
+    <string name="uel_careportal">PÉČE</string>
     <string name="uel_sensor_location">MÍSTO APLIKACE SENZORU</string>
     <string name="uel_site_change">VÝMĚNA SETU</string>
     <string name="uel_site_location">MÍSTO APLIKACE SETU</string>
@@ -664,7 +664,7 @@
     <string name="uel_error_dialog_mute">DIALOGOVÉ OKNO CHYBY ZTLUMENO</string>
     <string name="uel_error_dialog_mute_5min">DIALOGOVÉ OKNO CHYBY ZTLUMENO NA 5 MIN</string>
     <string name="uel_objective_started">CÍL ZAHÁJEN</string>
-    <string name="uel_objective_unstarted">CÍL OD-ZAHÁJEN</string>
+    <string name="uel_objective_unstarted">ZAHÁJENÍ CÍLE ZRUŠENO</string>
     <string name="uel_objectives_skipped">CÍL PŘESKOČEN</string>
     <string name="uel_stat_reset">RESET STATISTIK</string>
     <string name="uel_delete_logs">VYMAZAT LOGY</string>
@@ -731,7 +731,7 @@
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">SACHARIDY %1$d g</string>
-    <string name="extended_bolus_u_min">ROZLOŽENÝ BOLUS %1$.2f U %2$d min</string>
+    <string name="extended_bolus_u_min">PRODLOUŽENÝ BOLUS %1$.2f U %2$d min</string>
     <string name="load_events">NAČÍST UDÁLOSTI</string>
     <string name="clear_alarms">SMAZAT ALARMY</string>
     <string name="deactivate">DEAKTIVOVAT</string>
@@ -759,9 +759,9 @@
     <string name="isf_profile">ISF v profilu: %1$.1f</string>
     <string name="isf_variable">ISF počítané: %1$.1f</string>
     <string name="isf_effective">Efektivní ISF: %1$.1f</string>
-    <string name="autosens_long">Hodnota Autosense: %.0f%%</string>
+    <string name="autosens_long">Hodnota Autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
-    <string name="algorithm_long">Detekce citlivosti algoritmu: %.0f%%</string>
+    <string name="algorithm_long">Autosens v algoritmu: %.0f%%</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_tune_days">Ladit dní:</string>
@@ -975,7 +975,7 @@
     <!-- Alerts -->
     <string name="localalertsettings_title">Místní výstrahy</string>
     <!-- Actions Screen -->
-    <string name="add">Výměna</string>
+    <string name="add">Přidat</string>
     <string name="remove">Odstranit</string>
     <string name="reorder">Přeřadit</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Přesunout dopředu</string>
@@ -1070,7 +1070,7 @@
     <string name="no_search_results">Nebyly nalezeny žádné výsledky</string>
     <string name="search_plugin_disabled">Plugin %1$s zakázán</string>
     <!--    Food Management -->
-    <string name="food_management">Potravina</string>
+    <string name="food_management">Potraviny</string>
     <string name="food_deleted">Potravina odstraněna</string>
     <string name="edit_food">Upravit potravinu</string>
     <string name="add_food">Přidat potravinu</string>
