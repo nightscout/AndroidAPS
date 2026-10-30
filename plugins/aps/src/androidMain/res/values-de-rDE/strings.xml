@@ -38,7 +38,7 @@
     <string name="maxvalueinpreferences">Max. Wert in den Einstellungen</string>
     <string name="hardlimit">festem Grenzwert</string>
     <!--    Autotune   -->
-    <string name="autotune_peak">Spitzenwert</string>
+    <string name="autotune_peak">Wirkmaximum</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Aufgrund eines Bolus in den letzten 3 Minuten wird kein SMB abgegeben</string>
     <string name="pump_not_initialized">Pumpe nicht initialisiert!</string>
