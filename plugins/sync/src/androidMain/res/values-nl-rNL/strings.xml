@@ -72,7 +72,6 @@
     <string name="pair_with_master_fetching">Koppeling opzoeken…</string>
     <string name="pair_with_master_confirm_title">Koppel met deze master?</string>
     <string name="pair_with_master_confirm_master">Master:%1$s</string>
-    <string name="pair_with_master_confirm_warning">Na de koppeling kan deze meester ondertekende commando\'s naar dit apparaat sturen.</string>
     <string name="pair_with_master_confirm_pair">Koppel</string>
     <string name="pair_with_master_error_title">Kan niet koppelen</string>
     <string name="pair_with_master_error_wrong_pin">Er is geen koppeling gevonden voor die pincode. Controleer de pincode op de meester en probeer het opnieuw.</string>
