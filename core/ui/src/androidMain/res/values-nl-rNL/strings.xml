@@ -848,30 +848,41 @@
     <string name="pairing">Koppelen</string>
     <string name="initializing">Initialiseren…</string>
     <string name="secs" comment="second short">%1$d s</string>
+    <string name="warning" comment="Generic warning dialog title">Waarschuwing</string>
     <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Kritiek</string>
+    <string name="alert" comment="Generic alert dialog title">Melding</string>
+    <string name="retry" comment="Button label to retry a failed operation">Opnieuw proberen</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">Voltooien</string>
+    <string name="firmware" comment="Pump firmware version label">Firmware</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">Bolussnelheid</string>
+    <string name="history" comment="Tab/screen title for viewing past events">Geschiedenis</string>
+    <string name="overview_reservoir_concentration_value_over">Meer dan %1$s over</string>
     <!--    Constraints-->
-    <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
-    <string name="pumplimit">Pomp limiet</string>
-    <string name="limitingpercentrate">Begrezen van max procentuele wijzigen tot %1$d%% wegens de %2$s</string>
-    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Percentage %1$d%% herberekend tot %2$s E/uur met huidige basaal %3$s E/uur</string>
+    <string name="limitingbasalratio">Maximale basaalstand beperkt tot %1$.2f E/u vanwege %2$s</string>
+    <string name="pumplimit">pomplimiet</string>
+    <string name="limitingpercentrate">Maximaal basaalpercentage beperkt tot %1$d%% vanwege %2$s</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Percentage van %1$d%% herberekend tot %2$s E/uur met huidige basaal %3$s E/uur</string>
     <string name="itmustbepositivevalue">dit moet een positieve waarde zijn</string>
-    <string name="limitingbolus">Bolus beperkt tot %1$.1f E doordat %2$s</string>
+    <string name="limitingbolus">Bolus beperkt tot %1$.1f E vanwege %2$s</string>
     <!--    Dialogs-->
     <string name="confirmation">Bevestiging</string>
     <string name="message">Bericht</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuleren</string>
+    <string name="dismiss">Negeren</string>
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
     <string name="close">Sluiten</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
     <string name="export_warning">Waarschuwing</string>
     <string name="export_expired">Verlopen</string>
     <string name="export_disabled">Uitgeschakeld</string>
     <string name="export_failed">Mislukt</string>
     <string name="export_alert">WAARSCHUWING</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">Hoofdwachtwoord is niet ingesteld!\n\nStel een hoofdwachtwoord in en probeer opnieuw.</string>
     <string name="export_to">Exporteer instellingen naar</string>
     <string name="password_preferences_encrypt_prompt">Je wordt gevraagd om het hoofdwachtwoord. Daarmee worden geëxporteerde instellingen versleuteld.</string>
     <string name="preferences_export_canceled">Exporteren geannuleerd! Instellingen zijn NIET geëxporteerd!</string>
@@ -882,19 +893,46 @@
     <string name="export_result_message_expired">Export instellingen geannuleerd: wachtwoord is verlopen. Exporteer handmatig en geef (opnieuw) in!</string>
     <string name="export_result_message_disabled">Waarschuwing (automatisering): Instellingen export niet ingeschakeld!</string>
     <!-- Cloud export -->
+    <string name="export_cloud_success">Export naar de cloud geslaagd</string>
+    <string name="export_cloud_failed">Export naar de cloud MISLUKT!</string>
+    <string name="csv_exported">Gebruikersgegevens geëxporteerd</string>
+    <string name="csv_export_failed">Exporteren van gebruikersgegevens MISLUKT!</string>
+    <string name="logs_sent">Logbestanden per e-mail verzonden</string>
+    <string name="logs_send_failed">Verzenden van logbestanden is mislukt</string>
     <string name="cloud_directory">Cloud map</string>
     <string name="cloud_token_expired_or_invalid">De autorisatie voor cloudopslag is verlopen of ongeldig. Autoriseer opnieuw.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_local">Lokaal</string>
+    <string name="chip_cloud">Cloud</string>
+    <string name="chip_email">E-mail</string>
+    <string name="send_logs">Logbestanden verzenden</string>
+    <string name="file_management">Bestandsbeheer</string>
+    <string name="database_management">Databasebeheer</string>
     <string name="data_choices">Data Keuzes</string>
-    <string name="unattended_settings_export">Niet interactief instellingen exporteren</string>
+    <string name="unattended_settings_export">Automatisch instellingen exporteren</string>
     <!-- Maintenance bottom sheet descriptions -->
+    <string name="maintenance_log_settings_desc">Detailniveaus van logboekregistratie instellen</string>
+    <string name="maintenance_send_logs_desc">Deel logbestanden voor probleemoplossing</string>
+    <string name="maintenance_delete_logs_desc">Oude logbestanden verwijderen</string>
+    <string name="maintenance_aaps_directory_desc">Lokale opslagmap selecteren</string>
+    <string name="maintenance_cloud_directory_desc">Cloudopslag instellen (Google Drive)</string>
+    <string name="maintenance_export_desc">Versleutelde back-up van instellingen opslaan</string>
+    <string name="maintenance_import_desc">Instellingen herstellen vanuit back-up</string>
+    <string name="maintenance_export_csv_desc">Behandelgeschiedenis exporteren als spreadsheet</string>
+    <string name="maintenance_cleanup_db_desc">Oude gegevens uit de database verwijderen</string>
+    <string name="maintenance_reset_aps_results_desc">Opgeslagen algoritmeresultaten wissen</string>
+    <string name="maintenance_reset_db_desc">Alle databases wissen en opnieuw laden</string>
     <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">Selecteer een opslagtype</string>
+    <string name="clear_cloud_action">Wis instellingen</string>
     <string name="clear_cloud_settings">Wis cloud instellingen</string>
-    <string name="clear_cloud_settings_message">Dit zal overschakelen naar lokale opslag en de autorisatie wissen. Doorgaan?</string>
+    <string name="clear_cloud_settings_message">Hierdoor wordt overgeschakeld naar lokale opslag en wordt de cloud autorisatie gewist. Doorgaan?</string>
+    <string name="cloud_revoke_incomplete">De cloudinstellingenop dit apparaat zijn gewist, maar er kon geen verbinding met het account worden gemaakt om de toegang volledig in te trekken. Mogelijk moet de toegang handmatig worden ingetrokken via de accountinstellingen.</string>
     <string name="cloud_connection_failed">Verbinding maken met cloud opslag mislukt</string>
-    <string name="cloud_reauthorize_message">Verbinding maken met cloud opslag mislukt. Wil je je opnieuw authenticeren?</string>
-    <string name="reauthorize">Opnieuw authenticeren</string>
-    <string name="cloud_auth_success">Authenticatie cloudopslag gelukt</string>
+    <string name="cloud_reauthorize_message">Verbinding met cloudopslag mislukt. Opnieuw autoriseren?</string>
+    <string name="reauthorize">Opnieuw autoriseren</string>
+    <string name="cloud_auth_success">Autorisatie voor cloudopslag geslaagd</string>
+    <string name="authorization_status">Autorisatiestatus</string>
     <string name="format_hour_minute" comment="%1$d=hours, %2$d=minutes. Example: 1 h 23 min">%1$d u %2$d min</string>
     <string name="format_hours_only" comment="%1$d=hours, when minutes are zero. Example: 4 h">%1$d u</string>
     <!-- datetime layout -->
@@ -904,38 +942,64 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Gebruikers verzoek</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Koppelen</string>
+    <string name="pump_unpair">Ontkoppelen</string>
+    <string name="pump_unpair_confirm_title">Pomp ontkoppelen?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pomp gekoppeld</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy wordt niet ondersteund.</string>
     <string name="ble_not_enabled">Bluetooth niet ingeschakeld.</string>
+    <string name="ble_permissions_missing">Er is geen toestemming verleend voor bluetooth. Verleen deze toestemming via de app-instellingen.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin instellingen</string>
     <!-- Navigation -->
+    <string name="nav_about">Over</string>
+    <string name="nav_about_desc">Appversie en informatie bekijken</string>
     <string name="nav_exit">Afsluiten</string>
     <string name="open_navigation">Open navigatie</string>
-    <string name="nav_history_browser">Historiek venster</string>
+    <string name="nav_history_browser">Historie bekijken</string>
+    <string name="nav_history_browser_desc">Historische grafieken bekijken</string>
+    <string name="appearance">Weergave</string>
+    <string name="manage">Beheren</string>
     <string name="localprofile">Profiel</string>
     <string name="nav_setupwizard">Setup Wizard</string>
+    <string name="nav_setupwizard_desc">AAPS stap voor stap configureren</string>
     <string name="statistics">Statistieken</string>
-    <string name="nav_profile_helper">Profiel hulp</string>
+    <string name="statistics_desc">Toon statistieken en rapporten</string>
+    <string name="tdd_cycle_pattern">TDD-cycluspatroon</string>
+    <string name="tdd_cycle_pattern_desc">Dagelijkse insulinetotalen over perioden van 28 dagen heen leggen om terugkerende patronen te herkennen</string>
+    <string name="nav_profile_helper">Profielhulp</string>
+    <string name="nav_profile_helper_desc">Profiel samenstellen op basis van gewicht of TDD</string>
+    <string name="quick_launch_configure">Configureer QuickLaunch</string>
+    <string name="quick_launch_configure_desc">Snelactieknoppen op het overzicht aanpassen</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">Lokale alarmen</string>
     <!-- Actions Screen -->
+    <string name="add">Toevoegen</string>
+    <string name="remove">Verwijderen</string>
+    <string name="reorder">Herschikken</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Verplaats eerder</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Verplaats later</string>
     <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Details weergeven</string>
     <string name="presets_changed_reorder_aborted">De voorinstellingen zijn ergens anders gewijzigd. De nieuwe volgorde is niet opgeslagen.</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Positie %1$d van %2$d</string>
+    <string name="status">Status</string>
+    <string name="pump_actions">Pompacties</string>
     <string name="tempbasal_button">Tijdelijk Basaal</string>
     <string name="extended_bolus_button">Vertraagde bolus</string>
+    <string name="device_maintenance">Apparaatbeheer</string>
+    <string name="from_label">Van</string>
+    <string name="to_label">Tot</string>
     <string name="sensor_label">Sensor</string>
     <string name="insulin_label">Insuline</string>
     <string name="pb_label">Pomp batterij</string>
     <string name="cannula">Canule</string>
     <string name="patch_pump">Patchpomp</string>
     <!-- Site Rotation -->
+    <string name="select_location">Tik hieronder om een plaats te selecteren</string>
     <!-- About -->
-    <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
+    <string name="cta_dont_kill_my_app_info">Sluit mijn app niet af?</string>
     <string name="fabric_upload_disabled">Upload van crashrapporten is uitgeschakeld!</string>
     <string name="about_link_urls">\n\nDocumentatie:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
@@ -966,6 +1030,7 @@
     <string name="weekday_monday_short">Ma</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f E</string>
+    <string name="format_insulin_units_signed">%1$+.2f E</string>
     <string name="percent_rate_duration">Basaal: %1$.2f%% (%2$.2f E/h) Duur: %3$d min</string>
     <string name="rate_percent_duration">Basaal: %1$.2f E/h (%2$.2f%%) Duur: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Basaal</b>: %1$.2f%% (%2$.2f E/h)<br><b>Duur</b>: %3$d min<br>]]></string>
@@ -973,13 +1038,23 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS speelt geluid"</string>
     <!-- ProfileEditor -->
+    <string name="basal_short">BAS</string>
     <string name="target_short">DOEL</string>
     <string name="profile_name">Profielnaam:</string>
+    <string name="edit_profile_name">Profielnaam bewerken</string>
     <string name="units_colon">Eenheden:</string>
+    <string name="unsaved_changes">Niet opgeslagen wijzigingen</string>
+    <string name="unsaved_changes_message">Er zijn niet-opgeslagen wijzigingen. Wat moet ermee gebeuren?</string>
     <string name="discard">Weggooien</string>
     <string name="ic_dynamic_label_warning">Uw algoritme kan een dynamische berekening van IC leveren. De onderstaande waarden worden alleen gebruikt om op terug te vallen in geval van ontbrekende gegevens of als referentiewaarde</string>
     <string name="isf_dynamic_label_warning">Uw algoritme kan een dynamische berekening van ISF leveren. De onderstaande waarden worden alleen gebruikt om op terug te vallen in geval van ontbrekende gegevens of als referentiewaarde</string>
+    <string name="add_time_block">Tijdblok toevoegen</string>
+    <string name="remove_entry">Record verwijderen</string>
+    <string name="target_low_label">Laag</string>
+    <string name="target_high_label">Hoog</string>
     <!--    Search-->
+    <string name="search">Zoeken</string>
+    <string name="clear">Wissen</string>
     <!--    Food Management -->
     <string name="category">Categorie</string>
     <string name="subcategory">Subcategorie</string>
