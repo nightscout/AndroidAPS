@@ -6,6 +6,8 @@
     <!-- Alert preferences -->
     <!-- BG Source preferences -->
     <!-- APS preferences -->
+    <string name="pref_title_aps_sensitivity_raises_target">Empfindlichkeit erhöht den Zielwert</string>
+    <string name="pref_title_aps_resistance_lowers_target">Resistenz senkt den Zielwert</string>
     <!-- Maintenance preferences -->
     <!-- Autotune preferences -->
     <!-- SMS preferences -->
