@@ -1,5 +1,6 @@
 package app.aaps.implementation.alerts
 
+import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
@@ -32,12 +33,14 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.core.objects.extensions.asAnnouncement
+import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.alerts.keys.LocalAlertLongKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -220,10 +223,34 @@ class LocalAlertUtilsImpl(
         if (ageMs > missedReadingsThreshold()) return@withLock
         val age = rh.gs(CoreUiStrings.format_mins, T.msecs(ageMs).mins().toInt())
         val lowAndFallFresh = ageMs <= lowAndFallFreshLimit()
+        val bgMgdl = alarmMgdl(last)
 
-        if (lowAndFallFresh) checkHypoAlert(last.value, age, now)
-        checkHyperAlert(last.value, age, now)
+        if (lowAndFallFresh) checkHypoAlert(bgMgdl, age, now)
+        checkHyperAlert(bgMgdl, age, now)
         if (lowAndFallFresh) checkRapidFallAlert(age, now)
+    }
+
+    /**
+     * The value the glucose alarms compare and show: the stored reading with the active calibration
+     * applied, the same correction as the glucose on the Overview. Smoothing is left out on purpose,
+     * it would only make a low alarm come later.
+     *
+     * Each reading goes to the calibration on its own. Given a list with a gap in it, the calibration
+     * could ask the user to log a sensor change.
+     *
+     * The stored value is used when there is no calibration, when it fails, or when it gives a value
+     * outside [CALIBRATED_MIN_MGDL]..[CALIBRATED_MAX_MGDL].
+     */
+    private suspend fun alarmMgdl(gv: GV): Double {
+        val calibrated = try {
+            activePlugin.activeCalibration.calibrate(mutableListOf(InMemoryGlucoseValue.fromGv(gv))).firstOrNull()?.calibrated
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.CORE, "Calibration for the glucose alarms failed, the stored value is used", e)
+            null
+        }
+        return calibrated?.takeIf { it.isFinite() && it in CALIBRATED_MIN_MGDL..CALIBRATED_MAX_MGDL } ?: gv.value
     }
 
     /**
@@ -279,7 +306,8 @@ class LocalAlertUtilsImpl(
     fun snoozeHypoAfterTreatment() {
         appScope.launch {
             glucoseAlertsLock.withLock {
-                val atTapMgdl = persistenceLayer.getLastGlucoseValue()?.value?.roundToLong() ?: 0L
+                // The same calibrated value the check compares, so the hold breaks at the right point.
+                val atTapMgdl = persistenceLayer.getLastGlucoseValue()?.let { alarmMgdl(it) }?.roundToLong() ?: 0L
                 preferences.put(LocalAlertLongKey.HypoTreatedGlucose, atTapMgdl)
                 preferences.put(LocalAlertLongKey.NextHypoAlarm, dateUtil.now() + HYPO_TREATED_SNOOZE_MS)
                 notificationManager.dismiss(NotificationId.BG_HYPO)
@@ -318,7 +346,7 @@ class LocalAlertUtilsImpl(
         val readings: List<GV> = persistenceLayer.getBgReadingsDataFromTime(now - T.mins(windowMinutes.toLong()).msecs(), ascending = true)
         // Need at least two readings in the window, otherwise a data gap makes the drop meaningless.
         if (readings.size < 2) return
-        val drop = readings.first().value - readings.last().value
+        val drop = alarmMgdl(readings.first()) - alarmMgdl(readings.last())
         // Always mg/dL, for both unit settings: the drop is a difference, not a glucose level.
         val dropThreshold = preferences.get(IntKey.AlertRapidFallDrop).toDouble()
         if (drop >= dropThreshold) {
@@ -505,6 +533,10 @@ class LocalAlertUtilsImpl(
 
         /** A reading this far (mg/dL) below the value at the "hypo treated" tap breaks the hold. */
         private const val HYPO_TREATED_BREAK_MGDL = 10.0
+
+        // A calibrated value outside this range (mg/dL) is not trusted, the stored value is used instead.
+        private const val CALIBRATED_MIN_MGDL = 39.0
+        private const val CALIBRATED_MAX_MGDL = 400.0
 
         /** The low and rapid fall alarms use no reading older than this. */
         private val LOW_AND_FALL_MAX_AGE_MS = T.mins(15).msecs()

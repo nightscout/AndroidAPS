@@ -1,12 +1,16 @@
 package app.aaps.implementation.alerts
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.calibration.AddEntryResult
+import app.aaps.core.interfaces.calibration.Calibration
+import app.aaps.core.interfaces.calibration.CalibrationContext
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.AlarmSound
@@ -68,6 +72,7 @@ class LocalAlertUtilsImplTest : TestBase() {
     @Mock lateinit var pumpDescription: PumpDescription
 
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
+    private val calibration = FakeCalibration()
     private lateinit var localAlertUtils: LocalAlertUtilsImpl
 
     private val now = 100000000L
@@ -115,6 +120,7 @@ class LocalAlertUtilsImplTest : TestBase() {
         }
         whenever(profileUtil.fromMgdlToStringWithUnits(any())).thenReturn("x")
         whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(activePlugin.activeCalibration).thenReturn(calibration)
         whenever(pump.pumpDescription).thenReturn(pumpDescription)
         whenever(pumpDescription.hasCustomUnreachableAlertCheck).thenReturn(false)
         runTest {
@@ -888,6 +894,120 @@ class LocalAlertUtilsImplTest : TestBase() {
         is TextRef.AndroidRes -> ref.args
         is TextRef.Named      -> ref.args
         else                  -> emptyList()
+    }
+
+    // endregion
+
+    // region the glucose alarms use the calibrated value, like the Overview
+
+    /**
+     * Stands in for the calibration plugin: without a fit it leaves the value alone, like the
+     * default plugin; with one it writes `slope * value + offset`, like the linear plugin.
+     */
+    private class FakeCalibration : Calibration {
+
+        var fit: Pair<Double, Double>? = null
+        var fails = false
+        val listSizes = mutableListOf<Int>()
+
+        override suspend fun calibrate(data: MutableList<InMemoryGlucoseValue>, context: CalibrationContext): MutableList<InMemoryGlucoseValue> {
+            listSizes.add(data.size)
+            if (fails) error("calibration failed")
+            val (slope, offset) = fit ?: return data
+            data.forEach { it.calibrated = slope * it.value + offset }
+            return data
+        }
+
+        override suspend fun addEntry(bgMgdl: Double, timestamp: Long): AddEntryResult = AddEntryResult.Accepted
+        override suspend fun checkPreconditions(): AddEntryResult = AddEntryResult.Accepted
+    }
+
+    @Test // Stored 78 is above the 70 threshold, but the calibrated value on the Overview is 68
+    fun `hypo alarm fires on the calibrated value`() = runTest {
+        freshLast(78.0)
+        hypoOn()
+        calibration.fit = 1.0 to -10.0
+        whenever(preferences.get(LocalAlertLongKey.NextHypoAlarm)).thenReturn(now - 1)
+
+        localAlertUtils.checkGlucoseAlerts()
+
+        verifyPosted(NotificationId.BG_HYPO, AlarmSound.ALARM)
+        verify(profileUtil).fromMgdlToStringWithUnits(68.0)
+    }
+
+    @Test
+    fun `hyper alarm stays silent when the calibrated value is below the threshold`() = runTest {
+        freshLast(255.0)
+        hyperOn()
+        calibration.fit = 1.0 to -15.0 // 240
+        whenever(preferences.get(LocalAlertLongKey.NextHyperAlarm)).thenReturn(now - 1)
+
+        localAlertUtils.checkGlucoseAlerts()
+
+        verifyNotPosted(NotificationId.BG_HYPER)
+    }
+
+    @Test // A calibrated value below 39 is not trusted
+    fun `the stored value is used when the calibrated value is out of range`() = runTest {
+        freshLast(78.0)
+        hypoOn()
+        calibration.fit = 1.0 to -60.0 // 18
+        whenever(preferences.get(LocalAlertLongKey.NextHypoAlarm)).thenReturn(now - 1)
+
+        localAlertUtils.checkGlucoseAlerts()
+
+        verifyNotPosted(NotificationId.BG_HYPO)
+    }
+
+    @Test
+    fun `the stored value is used when the calibration fails`() = runTest {
+        freshLast(65.0)
+        hypoOn()
+        calibration.fails = true
+        whenever(preferences.get(LocalAlertLongKey.NextHypoAlarm)).thenReturn(now - 1)
+
+        localAlertUtils.checkGlucoseAlerts()
+
+        verifyPosted(NotificationId.BG_HYPO, AlarmSound.ALARM)
+        verify(profileUtil).fromMgdlToStringWithUnits(65.0)
+    }
+
+    @Test // Stored drop 150 -> 125 is 25, calibrated drop 180 -> 150 is 30
+    fun `rapid fall alarm uses the calibrated drop`() = runTest {
+        freshLast(125.0)
+        rapidFallOn(drop = 30)
+        calibration.fit = 1.2 to 0.0
+        whenever(preferences.get(LocalAlertLongKey.NextRapidFallAlarm)).thenReturn(now - 1)
+        whenever(persistenceLayer.getBgReadingsDataFromTime(any(), eq(true)))
+            .thenReturn(listOf(gv(150.0, now - T.mins(15).msecs()), gv(125.0, now)))
+
+        localAlertUtils.checkGlucoseAlerts()
+
+        verifyPosted(NotificationId.BG_RAPID_FALL, AlarmSound.ALARM)
+    }
+
+    @Test // A list with a gap could make the calibration ask about a sensor change
+    fun `each reading goes to the calibration on its own`() = runTest {
+        freshLast(125.0)
+        hypoOn()
+        rapidFallOn(drop = 30)
+        whenever(persistenceLayer.getBgReadingsDataFromTime(any(), eq(true)))
+            .thenReturn(listOf(gv(150.0, now - T.mins(15).msecs()), gv(125.0, now)))
+
+        localAlertUtils.checkGlucoseAlerts()
+
+        assertThat(calibration.listSizes).isNotEmpty()
+        assertThat(calibration.listSizes.toSet()).containsExactly(1)
+    }
+
+    @Test
+    fun `hypo treated tap keeps the calibrated glucose of that moment`() = runTest {
+        whenever(persistenceLayer.getLastGlucoseValue()).thenReturn(gv(75.0))
+        calibration.fit = 1.0 to -10.0
+
+        localAlertUtils.snoozeHypoAfterTreatment()
+
+        verify(preferences, timeout(1_000)).put(LocalAlertLongKey.HypoTreatedGlucose, 65L)
     }
 
     // endregion
