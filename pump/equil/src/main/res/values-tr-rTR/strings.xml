@@ -18,23 +18,40 @@
     <string name="equil_title_dressing">Kartuşu değiştir</string>
     <string name="equil_title_assemble">Pompayı birleştirin</string>
     <string name="equil_title_serial">Cihazı eşleştir</string>
+    <string name="equil_title_fill">Hazırla / Doldur</string>
+    <string name="equil_title_attach">Pompayı takın</string>
+    <string name="equil_title_air">Kanül dolumu</string>
+    <string name="equil_title_unpair_detach">Pompayı ayırın</string>
     <string name="equil_title_history_events">Olay Geçmişi</string>
     <string name="equil_tone">Uyarı tonu</string>
     <string name="equil_bolus_speed">Bolus hızı</string>
+    <string name="equil_bolus_speed_summary">Hızlı bolus iletimi, daha fazla tıkanıklık alarmına yol açabilir.</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1.5 Ü/dk (standart)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 Ü/dk</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 Ü/dk</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 Ü/dk</string>
     <string name="equil_tone_mode_mute">Sessiz</string>
     <string name="equil_tone_mode_shake">Sadece titreşim</string>
     <string name="equil_tone_mode_tone">Sadece ses</string>
     <string name="equil_tone_mode_tone_and_shake">Titreşim ve ses</string>
+    <string name="equil_unbind_content">Bu işlem insülin infüzyonunu durduracak ve pompa pistonunu aşağıya doğru çekecektir! Ayrıca bağlanma durumunu da silecektir!</string>
     <string name="equil_ble_config_confirmation_title">Equil Patch pompasını eşleştirin</string>
     <string name="equil_error">Bağlantı Hatası</string>
     <string name="equil_change">Pompayı değiştir</string>
     <string name="equil_change_content">Lütfen pompayı tabandan ayırın.</string>
+    <string name="equil_new_infusion_set_question">Ayrıca yeni bir infüzyon seti (pompa tabanı ve kanül) de takacak mısınız?</string>
+    <string name="equil_new_infusion_set_yes">Evet, yeni infüzyon seti</string>
+    <string name="equil_new_infusion_set_no">Hayır, yalnızca rezervuar veya pil</string>
+    <string name="equil_same_infusion_set_hint">Kanül hazırlanmayacak ve kanül değişikliği kaydedilmeyecektir.</string>
     <string name="equil_unpair_alert">%1$s üzerindeki kontrolü bırakmak istediğinizden emin misiniz?</string>
     <string name="equil_record_basal">Bazal oranı %1$s Ü/S</string>
     <string name="equil_record_basal_temp">Geçici bazal oranı %1$s Ü/S</string>
     <string name="equil_record_bolus">Bolus %1$s Ü</string>
     <string name="equil_error_set_temp_basal_failed_validation">GBO süresi sıfırdan büyük ve %1$s dakikanın katı olmalıdır.</string>
+    <string name="equil_basal_exceeds_max">%1$s Ü/sa değerindeki profil bazal oranı, pompanın %2$s Ü/sa olan maksimum bazal sınırını aşıyor. Maksimum bazal ayarını artırın ve pompayı yeniden bağlayın.</string>
     <string name="equil_not_enough_insulin">Rezervuarda yeterli insülin kalmadı</string>
+    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Düşük pil: %1$d%%</string>
+    <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Rezervuarda yeterli insülin kalmadı: %1$s</string>
     <string name="equil_pump_not_run">Pompa çalışmıyor</string>
     <string name="equil_pair">Eşleştir</string>
     <string name="equil_pair_error">Eşleşme hatası</string>

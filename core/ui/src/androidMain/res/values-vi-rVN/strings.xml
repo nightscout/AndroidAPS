@@ -97,6 +97,8 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Tắt trong 5 phút</string>
     <string name="mute">Im lặng</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Tắt âm báo</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Tắt âm báo và đóng</string>
     <string name="success">Thành công</string>
     <string name="advanced_settings_title">Cài đặt nâng cao</string>
     <string name="extended_bolus">Liều Bolus kéo dài</string>
@@ -116,6 +118,7 @@
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Mục tiêu học tập</string>
     <string name="please_wait">Vui lòng chờ…</string>
     <string name="stop">Dừng lại</string>
@@ -136,7 +139,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nLoại insulin cũng chưa được chuyển đổi.</string>
     <string name="active"><![CDATA[<Đang hoạt động>]]></string>
     <string name="date">Ngày</string>
-    <string name="units_label">Đơn vị</string>
     <string name="insulin_nickname_label">Tên gọi insulin</string>
     <string name="concentration_label">Tập trung</string>
     <string name="peak_label">Đỉnh (Peak)</string>
@@ -446,6 +448,7 @@
     <string name="clientcontrol_action_deactivate_scene">Kết thúc ngữ cảnh</string>
     <string name="clientcontrol_action_update_settings">Cập nhật cài đặt</string>
     <string name="clientcontrol_action_deliver_bolus">Tiêm liều bolus</string>
+    <string name="clientcontrol_action_eat_reminder">Thay đổi nhắc nhở ăn uống</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Thiết bị này chưa được ghép đôi với thiết bị chính.</string>
     <string name="clientcontrol_fail_not_reachable">Thiết bị chính đang ngoại tuyến.</string>
@@ -783,6 +786,12 @@
     <string name="grant">Cấp quyền</string>
     <string name="set">Cài đặt</string>
     <string name="wizard_set_alarm">Đặt báo thức</string>
+    <string name="eat_reminder_title">Đến giờ ăn</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Tổng thời gian chờ: %1$s</string>
+    <string name="eat_reminder_rung">Đã hết thời gian</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d phút</string>
+    <string name="eat_reminder_not_set">Không thể thiết lập nhắc nhở ăn uống. Hãy cho phép AAPS đặt báo thức và lời nhắc trong phần Cài đặt Android.</string>
     <string name="wizard_use_percentage">Sử dụng phần trăm</string>
     <string name="wizard_include_bg">Bao gồm BG</string>
     <string name="wizard_include_tt">Bao gồm Mục tiêu tạm thời</string>
@@ -939,7 +948,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Bơm đã ghép nối</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Thiết bị không hỗ trợ Bluetooth.</string>
-    <string name="ble_not_supported_or_not_paired">Không hỗ trợ Bluetooth hoặc thiết bị chưa được ghép nối.</string>
     <string name="ble_not_enabled">Bluetooth chưa được bật.</string>
     <string name="ble_permissions_missing">Quyền truy cập Bluetooth chưa được cấp. Vui lòng cấp quyền trong cài đặt ứng dụng.</string>
     <!--    Preferences -->
@@ -1139,6 +1147,19 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Insulin còn tác dụng</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Insulin tuyệt đối</string>
+    <string name="graph_series_cob">Carb còn tác dụng</string>
+    <string name="graph_series_bgi">Mức ảnh hưởng đến đường huyết</string>
+    <string name="graph_series_deviations">Độ lệch</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Thay đổi độ nhạy</string>
+    <string name="graph_series_variable_sens">Độ nhạy thay đổi</string>
+    <string name="graph_series_deviation_slope">Độ dốc độ lệch</string>
+    <string name="graph_series_heart_rate">Heart Rate</string>
+    <string name="graph_series_steps">Steps</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Hoạt động</string>
+    <string name="graph_series_predictions">Dự đoán</string>
     <string name="units_days">ngày</string>
     <string name="units_format_days">%1$d ngày</string>
     <string name="units_format_days_range">%1$d ngày (%2$d - %3$d)</string>
@@ -1181,4 +1202,5 @@
     <string name="units_sec">giây</string>
     <string name="units_years">y</string>
     <string name="prefs_range_title">Phạm vi để hiển thị</string>
+    <string name="secrets_not_protected">Không tìm thấy kho khóa hệ thống trên máy tính này. Các khóa bảo vệ cài đặt và thông tin ghép đôi với thiết bị chính được lưu trong các tệp cùng thư mục với dữ liệu. Vì vậy, bất kỳ ai có bản sao các tệp của bạn cũng có thể lấy được những khóa này. Trên Linux, hãy cài đặt và khởi chạy một trình quản lý khóa (ví dụ: GNOME Keyring hoặc KWallet), sau đó khởi động lại AAPS.</string>
 </resources>

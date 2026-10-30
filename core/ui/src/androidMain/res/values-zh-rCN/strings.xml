@@ -97,6 +97,8 @@
     <string name="treatments_iob_label_string">IOB活性胰岛素:</string>
     <string name="mute5min">静音 5 分钟</string>
     <string name="mute">静音</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">静音警报</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">静音并关闭</string>
     <string name="success">成功</string>
     <string name="advanced_settings_title">高级设置</string>
     <string name="extended_bolus">扩展大剂量(方波)</string>
@@ -110,10 +112,13 @@
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f 小时</string>
     <string name="format_mins">%1$d min</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
+    <string name="value_question" comment="Asks if this should be done. %1$s=what will be done. Example: Send logs?">%1$s?</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">目标</string>
     <string name="please_wait">请稍等...</string>
     <string name="stop">停止</string>
@@ -134,7 +139,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n胰岛素也未切换。</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">日期</string>
-    <string name="units_label">单位</string>
     <string name="insulin_nickname_label">胰岛素昵称</string>
     <string name="concentration_label">浓度</string>
     <string name="peak_label">峰值</string>
@@ -179,6 +183,7 @@
     <string name="bg_label">血糖</string>
     <string name="calibration">校准</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">校准未保存：血糖变化过快（每 5 分钟 Δ %1$s %3$s，限制 %2$s）。请在血糖稳定后重试。</string>
     <string name="cal_reject_no_pair">校准未保存：过去10分钟内未找到CGM读数。</string>
     <string name="cal_reject_warmup">校准未保存：传感器仍处于2小时预热窗口内。</string>
     <string name="cal_reject_no_session">校准未保存：当前无活动传感器会话。请先标记传感器更换。</string>
@@ -226,6 +231,7 @@
     <string name="percentage_label">百分比</string>
     <string name="timeshift_label">时间偏移</string>
     <string name="confirm_remove_multiple_items">你确定要删除 %1$d 吗？</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">主机上没有这些条目中的 %1$d 条。它们未被移除。</string>
     <string name="overview_treatment_label">治疗</string>
     <string name="copytolocalprofile">是否复制这个配置文件的参数来创新一个新的配置文件？</string>
     <string name="wear_wizard_settings">Wear 向导设置</string>
@@ -419,6 +425,19 @@
     <string name="scene_lock_banner_control_disabled">主机已禁用远程控制。在主机重启时，场景控制将会恢复。</string>
     <string name="master_offline_banner">主机设备无法访问。连接恢复前编辑功能已禁用。</string>
     <string name="master_control_disabled_banner">主机已禁用远程控制。在主机上重新启用之前，编辑功能将被禁用。</string>
+    <string name="hardened_mode_on">强化模式开启</string>
+    <string name="hardened_mode_title">强化模式</string>
+    <string name="hardened_mode_info_open">关于强化模式</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">只读</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">餐食</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">照护者</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">管理员</string>
+    <string name="client_role_title">角色</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">角色：%1$s</string>
+    <string name="client_roles_info_open">关于角色</string>
+    <string name="client_roles_info">每台已配对手机都有一个角色。主机手机会针对每条命令检查其角色，而手机端仅显示其角色所允许的内容。新角色会立即生效，无需重新配对。\n\n只读：手机保持配对，但仅显示数据。\n\n餐食：大剂量、大剂量向导、快速向导和碳水化合物。它还可以停止正在运行的大剂量。在此处输入的碳水化合物可使闭环输送更多胰岛素。\n\n照护者：用户在 AAPS 中执行的所有操作，例如临时目标、配置文件和胰岛素切换、闭环模式、临时基础率、扩展大剂量、情景模式、CarePortal 事件、校准和删除记录。它无法更改设置或预设。\n\n管理员：全部权限，包括设置和预设（快速向导、临时目标预设、情景模式、配置文件、自动化、胰岛素）。</string>
+    <string name="client_read_only_banner">此手机在主机手机上处于只读模式。</string>
+    <string name="hardened_mode_info">主机手机仅接受来自已配对客户端的更改。它不接受直接在 Nightscout 中（例如在网站或其他应用中）做出的治疗、临时目标、配置文件更改、运行模式更改或删除操作。强化模式开启期间，接受来自 Nightscout 数据的设置会被隐藏。短信命令不受影响。\n\n主机手机仍会将所有数据上传至 Nightscout，包括血糖。如果它从 Nightscout 获取血糖，则仍会从那里接收血糖。\n\n要在新的主机手机上加载历史记录，请使用 NSClient 中的‘完全同步’。完全同步会获取 Nightscout 中的所有内容，包括配置文件。\n\n来自客户端的远程控制需要在主机手机和已配对客户端上均具备可用的 Nightscout WebSocket 连接。简单模式始终会开启强化模式。要将其关闭，请退出简单模式，并在主机手机上关闭客户端控制。</string>
     <string name="scene_lock_reason_master_offline">主机已断开连接</string>
     <string name="scene_lock_reason_control_disabled">远程控制已禁用</string>
     <string name="scene_lock_reason_scene_active">请先停止正在运行的情景</string>
@@ -429,6 +448,7 @@
     <string name="clientcontrol_action_deactivate_scene">结束情景</string>
     <string name="clientcontrol_action_update_settings">更新设置</string>
     <string name="clientcontrol_action_deliver_bolus">输注大剂量</string>
+    <string name="clientcontrol_action_eat_reminder">更改进餐提醒</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">此设备未与主机配对。</string>
     <string name="clientcontrol_fail_not_reachable">主机已离线。</string>
@@ -446,7 +466,11 @@
     <string name="clientcontrol_fail_cancelled">命令在执行前已被取消。未向泵发送任何指令。</string>
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">大剂量已取消。未输注任何胰岛素。\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">已取消</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">大剂量等待确认期间不输注 SMB</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">正在输注 SMB。您可以在其完成后进行确认。</string>
     <string name="clientcontrol_fail_control_disabled">主机上的远程控制已关闭。</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">此手机在主机上的角色不允许此操作。</string>
+    <string name="clientcontrol_fail_other_token">主机拒绝了该请求：此手机写入 Nightscout 时使用的令牌与其自身令牌不一致。请在主机上移除此手机，然后重新添加。</string>
     <string name="clientcontrol_fail_no_pending_bolus">准备的大剂量已过期或已被取代。请再次点击按钮。</string>
     <string name="clientcontrol_fail_bolus_compute">主机无法计算大剂量（缺少血糖值/配置文件，或泵未就绪）。</string>
     <string name="clientcontrol_fail_internal">发生错误。</string>
@@ -762,6 +786,12 @@
     <string name="grant">允许</string>
     <string name="set">设置</string>
     <string name="wizard_set_alarm">设置闹钟</string>
+    <string name="eat_reminder_title">吃饭时间</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">总等待时间: %1$s</string>
+    <string name="eat_reminder_rung">时间结束</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="eat_reminder_not_set">无法设置进餐提醒。请在 Android 设置中允许 AAPS 设置闹钟和提醒。</string>
     <string name="wizard_use_percentage">使用百分比</string>
     <string name="wizard_include_bg">包含血糖</string>
     <string name="wizard_include_tt">包含临时目标</string>
@@ -831,6 +861,7 @@
     <string name="limitingbasalratio">最大基础率被限定为 %1$.2f U/h 由于 %2$s</string>
     <string name="pumplimit">泵限制</string>
     <string name="limitingpercentrate">由于 %2$s, 将最大百分比限制为 %1$d%%</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">百分比速率 %1$d%% 重新计算为 %2$s U/h 按当前基础率 %3$s U/h</string>
     <string name="itmustbepositivevalue">它必须是正数</string>
     <string name="limitingbolus">由于 %2$s, 将大剂量限制为 %1$.1f U</string>
     <!--    Dialogs-->
@@ -917,7 +948,6 @@
     <string name="pump_paired" comment="26 characters max for translation">泵已配对</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">不支持蓝牙低能量。</string>
-    <string name="ble_not_supported_or_not_paired">蓝牙低电量或设备未配对。</string>
     <string name="ble_not_enabled">蓝牙未启用</string>
     <string name="ble_permissions_missing">蓝牙权限未授予。请在应用程序设置中授予这些权限。</string>
     <!--    Preferences -->
@@ -1117,6 +1147,19 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">活性胰岛素</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">绝对胰岛素</string>
+    <string name="graph_series_cob">活性碳水化合物</string>
+    <string name="graph_series_bgi">血糖影响</string>
+    <string name="graph_series_deviations">偏差</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">敏感度变化</string>
+    <string name="graph_series_variable_sens">可变敏感度</string>
+    <string name="graph_series_deviation_slope">偏差斜率</string>
+    <string name="graph_series_heart_rate">心率</string>
+    <string name="graph_series_steps">步数</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">活动度</string>
+    <string name="graph_series_predictions">预测</string>
     <string name="units_days">天</string>
     <string name="units_format_days">%1$d 天</string>
     <string name="units_format_days_range">%1$d 天 (%2$d - %3$d)</string>
@@ -1143,6 +1186,7 @@
     <string name="units_format_min">%1$d 分</string>
     <string name="units_format_min_range">%1$d 分(%2$d - %3$d)</string>
     <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
     <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
     <string name="units_format_sec">%1$d 秒</string>
     <string name="units_format_sec_range">%1$d 秒(%2$d - %3$d)</string>
@@ -1158,4 +1202,5 @@
     <string name="units_sec">秒</string>
     <string name="units_years">年</string>
     <string name="prefs_range_title">可视化范围</string>
+    <string name="secrets_not_protected">此计算机上未找到系统密钥库。用于保护您的设置以及与主机配对关系的密钥会保存在数据旁边的文件中，因此任何获取您文件副本的人也会同时获得这些密钥。在 Linux 上，请安装并启动密钥环服务（例如 GNOME Keyring 或 KWallet），然后重新启动 AAPS。</string>
 </resources>

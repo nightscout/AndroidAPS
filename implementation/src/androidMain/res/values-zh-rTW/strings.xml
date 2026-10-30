@@ -28,12 +28,15 @@
     <string name="alarm_channel_bolus_error">注射錯誤</string>
     <string name="alarm_channel_error">一般錯誤</string>
     <string name="alarm_channel_urgent">緊急警報</string>
+    <string name="alarm_channel_eat_reminder">用餐時間</string>
     <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s（忽略「請勿打擾」）</string>
     <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s（遵守「請勿打擾」）</string>
     <string name="alarm_channel_silent_urgent">緊急警報（音量漸增模式）</string>
     <string name="alarm_channel_silent">警報（音量漸增模式）</string>
     <string name="alarm_channel_silent_description">當「逐步增加通知音量」開啟時使用。警報畫面會播放聲音。</string>
     <string name="ongoing_channel_name">持續狀態</string>
+    <string name="eat_reminder_channel">用餐提醒倒數</string>
+    <string name="eat_reminder_channel_description">顯示距離用餐時間還有多久。倒數結束時會響起鬧鐘，此提醒本身不會發出聲音。</string>
     <string name="notifications_channel_name">AAPS 通知</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>

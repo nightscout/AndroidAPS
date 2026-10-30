@@ -13,4 +13,13 @@
     <string name="migrating_boluses">Migrace bolusů…</string>
     <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Starší záznamy neměly konfiguraci inzulínu a nebyl aktivní profil, takže pro ně byl použit %1$s. Zkontrolujte nastavení inzulínu - již migrované záznamy nejsou následně aktualizovány.</string>
     <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Satrší záznamy nemají žádné trvání inzulinu, proto bylo pro 2$s použito %1$.1f hodin. Zkontrolujte nastavení inzulinu — již převedené záznamy nelze dodatečně aktualizovat.</string>
+    <string name="settings_unreadable_title">Nastavení AAPS nelze načíst</string>
+    <string name="settings_unreadable_key_explanation">Vaše nastavení na tomto telefonu jsou šifrována klíčem, který Android udržuje pro AAPS a který je již neotevírá. To se může stát po resetování úložiště klíčů telefonu.</string>
+    <string name="settings_unreadable_keystore_explanation">Úložiště klíčů telefonu neodpovědělo, takže AAPS nemohl otevřít jeho nastavení.</string>
+    <string name="settings_unreadable_not_running">AAPS není spuštěno a neovládá pumpu. Až zkončí dočasný bazál, pumpa přejde na bazální profil.</string>
+    <string name="settings_unreadable_what_to_do">Zkuste znovu AAPS zavřít a znovu jej spustit. Pokud to nepomůže, restartujte telefon. Vyberte Začít nově pouze v případě, že nic jiného nepomůže: odstaví se nečitelná nastavení a AAPS začne s prázdným nastavením. Poté importujte vaše poslední nastavení v průvodci nastavením.</string>
+    <string name="settings_unreadable_start_fresh">Začít nově</string>
+    <string name="settings_unreadable_confirm_title">Začít s prázdnými nastavením?</string>
+    <string name="settings_unreadable_confirm_text">Nečitelný soubor nastavení je přejmenován a uchováván. Všechna nastavení začínají od jejich výchozího nastavení. Poté znovu nastavte AAPS nebo importujte nastavení.</string>
+    <string name="settings_unreadable_notification">AAPS není spuštěno. Otevřete AAPS a zjistěte, co dělat.</string>
 </resources>

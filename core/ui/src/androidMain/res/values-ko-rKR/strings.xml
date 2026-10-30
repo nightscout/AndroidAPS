@@ -69,7 +69,6 @@
     <string name="no_profile_set">프로파일 설정되지 않음</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">날짜</string>
-    <string name="units_label">단위</string>
     <string name="dia_label">인슐린활동시간(DIA):</string>
     <string name="ic_label">인슐린 대 탄수화물 비율(IC):</string>
     <string name="isf_label">인슐린 민감도(ISF):</string>
@@ -460,7 +459,6 @@
     <string name="pump_paired" comment="26 characters max for translation">펌프 연결됨</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">BLE(블루투스 저전력) 지원되지 않음</string>
-    <string name="ble_not_supported_or_not_paired">저전력 블루투스(BLE)가 작동하지 않거나, 기기가 연동되지 않았습니다.</string>
     <string name="ble_not_enabled">블루투스가 활성화되지 않았습니다.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">플러그인 설정</string>
@@ -537,5 +535,6 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="prefs_range_title">차트 표시 범위</string>
 </resources>

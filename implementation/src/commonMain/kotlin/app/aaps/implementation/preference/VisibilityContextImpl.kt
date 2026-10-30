@@ -101,4 +101,7 @@ class VisibilityContextImpl(
 
     override val apsOffersDynamicSensitivity: Boolean
         get() = activePlugin.activeAPS?.offersDynamicSensitivity() == true
+
+    override val supportsAppLanguage: Boolean
+        get() = config.supportsAppLanguage
 }

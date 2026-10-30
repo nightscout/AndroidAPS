@@ -97,6 +97,8 @@
     <string name="treatments_iob_label_string">IOB 活性胰島素:</string>
     <string name="mute5min">靜音 5 分鐘</string>
     <string name="mute">靜音</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">將鬧鈴靜音</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">靜音並關閉</string>
     <string name="success">成功</string>
     <string name="advanced_settings_title">進階設定</string>
     <string name="extended_bolus">延長注射</string>
@@ -116,6 +118,7 @@
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">目標</string>
     <string name="please_wait">請稍候…</string>
     <string name="stop">停止</string>
@@ -136,7 +139,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n胰島素也未切換。</string>
     <string name="active"><![CDATA[<已啟用的設定檔>]]></string>
     <string name="date">日期</string>
-    <string name="units_label">單位</string>
     <string name="insulin_nickname_label">胰島素暱稱</string>
     <string name="concentration_label">濃度</string>
     <string name="peak_label">峰值</string>
@@ -446,6 +448,7 @@
     <string name="clientcontrol_action_deactivate_scene">結束情境</string>
     <string name="clientcontrol_action_update_settings">更新設定</string>
     <string name="clientcontrol_action_deliver_bolus">施打注射</string>
+    <string name="clientcontrol_action_eat_reminder">變更用餐提醒</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">此裝置未與主裝置配對。</string>
     <string name="clientcontrol_fail_not_reachable">主裝置已離線。</string>
@@ -785,6 +788,12 @@
     <string name="grant">授予</string>
     <string name="set">設定</string>
     <string name="wizard_set_alarm">設定鬧鐘</string>
+    <string name="eat_reminder_title">用餐時間</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">總等待時間：%1$s</string>
+    <string name="eat_reminder_rung">時間到了</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d 分鐘</string>
+    <string name="eat_reminder_not_set">無法設定用餐提醒。請在 Android 設定中允許 AAPS 設定鬧鐘和提醒。</string>
     <string name="wizard_use_percentage">使用百分比</string>
     <string name="wizard_include_bg">包含血糖</string>
     <string name="wizard_include_tt">包含臨時目標</string>
@@ -941,7 +950,6 @@
     <string name="pump_paired" comment="26 characters max for translation">幫浦已配對</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">不支援藍牙低功耗。</string>
-    <string name="ble_not_supported_or_not_paired">不支援藍牙低功耗或設備未配對。</string>
     <string name="ble_not_enabled">藍牙未啟用。</string>
     <string name="ble_permissions_missing">藍牙權限未授予。請在應用程式設定中授予。</string>
     <!--    Preferences -->
@@ -1141,6 +1149,19 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">體內胰島素</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">絕對胰島素</string>
+    <string name="graph_series_cob">體內碳水化合物</string>
+    <string name="graph_series_bgi">血糖影響</string>
+    <string name="graph_series_deviations">偏差</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">敏感度變化</string>
+    <string name="graph_series_variable_sens">可變敏感度</string>
+    <string name="graph_series_deviation_slope">偏差斜率</string>
+    <string name="graph_series_heart_rate">心率</string>
+    <string name="graph_series_steps">步數</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">作用程度</string>
+    <string name="graph_series_predictions">預測</string>
     <string name="units_days">天</string>
     <string name="units_format_days">%1$d 天</string>
     <string name="units_format_days_range">%1$d 天 (%2$d - %3$d)</string>
@@ -1183,4 +1204,5 @@
     <string name="units_sec">秒</string>
     <string name="units_years">年</string>
     <string name="prefs_range_title">可視化範圍</string>
+    <string name="secrets_not_protected">這台電腦上找不到系統金鑰儲存區。用來保護設定和與主控裝置配對的金鑰，會儲存在資料旁的檔案中，因此任何取得您檔案副本的人，也會取得這些金鑰。在 Linux 上，請安裝並啟動金鑰環（例如 GNOME Keyring 或 KWallet），然後重新啟動 AAPS。</string>
 </resources>

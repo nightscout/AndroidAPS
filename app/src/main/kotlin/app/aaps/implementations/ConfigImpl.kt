@@ -52,6 +52,9 @@ class ConfigImpl(
     override val BUILD_TYPE: String = BuildConfig.BUILD_TYPE
     override val PLATFORM: String = "Android"
     override val platform: AppPlatform = AppPlatform.Android
+
+    // App languages (LocaleManager) came with Android 13; see MainApp.applyAppLanguage
+    override val supportsAppLanguage: Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
     override val VERSION: String = BuildConfig.VERSION
     override val APPLICATION_ID: String = BuildConfig.APPLICATION_ID
     override val DEBUG = BuildConfig.DEBUG

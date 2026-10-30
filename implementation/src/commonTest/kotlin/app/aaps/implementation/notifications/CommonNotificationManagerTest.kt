@@ -9,8 +9,14 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.Event
+import app.aaps.core.interfaces.rx.events.EventMobileToWear
+import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.keys.interfaces.TextRef
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -20,6 +26,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.reflect.KClass
 
 /**
  * Covers the notification registry, which is the part that is the same on every platform.
@@ -99,10 +106,25 @@ class CommonNotificationManagerTest {
         override fun error(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {}
     }
 
+    /** Keeps what was sent. Nothing here listens, so the flow side is empty. */
+    private class RecordingRxBus : RxBus {
+
+        val sent = mutableListOf<Event>()
+
+        override fun send(event: Event) {
+            sent.add(event)
+        }
+
+        override fun <T : Event> toFlow(eventType: KClass<T>): Flow<T> = emptyFlow()
+    }
+
     private val platform = RecordingPlatform()
+    private val rxBus = RecordingRxBus()
 
     private fun createSut() =
-        CommonNotificationManager(SilentLogger, FakeTextResolver, platform, TestScope(UnconfinedTestDispatcher()))
+        CommonNotificationManager(SilentLogger, FakeTextResolver, platform, rxBus, TestScope(UnconfinedTestDispatcher()))
+
+    private fun toWear() = rxBus.sent.filterIsInstance<EventMobileToWear>().map { it.payload }
 
     private fun texts(sut: CommonNotificationManager) = sut.notifications.value.map { it.text }
 
@@ -311,6 +333,57 @@ class CommonNotificationManagerTest {
         assertEquals(listOf("quiet"), texts(sut))
         assertNull(platform.audibleKey)
         assertContains(platform.calls, "cancelAll")
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // The watch
+    // ---------------------------------------------------------------------------------------------
+
+    /** The watch shows what rings, so it tells why the phone makes a sound. These alarms have no mute on the phone. */
+    @Test
+    fun `the watch is told of the alarm that sounds`() = runTest {
+        val sut = createSut()
+
+        sut.post(NotificationId.PUMP_UNREACHABLE, "Pump unreachable", sound = AlarmSound.ALARM)
+
+        val ringing = toWear().single() as EventData.AlarmRinging
+        assertEquals("Pump unreachable", ringing.status)
+        assertEquals("title", ringing.title)
+        assertEquals(false, ringing.canMute)
+    }
+
+    /** The watch follows the owner slot: the next alarm after a dismiss and silence at the end. */
+    @Test
+    fun `the watch is told of a hand-off and of silence`() = runTest {
+        val sut = createSut()
+        val older = sut.post(NotificationId.TOAST_ALARM, "older", date = 1_000L, sound = AlarmSound.ERROR)
+        val newer = sut.post(NotificationId.EOFLOW_PATCH_ALERT, "newer", date = 2_000L, sound = AlarmSound.ALARM)
+
+        sut.dismiss(newer)
+        sut.dismiss(older)
+
+        assertEquals(listOf("older", "newer", "older"), toWear().filterIsInstance<EventData.AlarmRinging>().map { it.status })
+        assertTrue(toWear().last() is EventData.AlarmStopped)
+    }
+
+    @Test
+    fun `mute all tells the watch that the sound stopped`() = runTest {
+        val sut = createSut()
+        sut.post(NotificationId.TOAST_ALARM, "loud", sound = AlarmSound.ERROR)
+
+        sut.muteAllAlarms()
+
+        assertTrue(toWear().last() is EventData.AlarmStopped)
+    }
+
+    @Test
+    fun `a quiet notification is not sent to the watch`() = runTest {
+        val sut = createSut()
+
+        sut.post(NotificationId.SCENE_ENDED, "quiet", level = NotificationLevel.INFO)
+        sut.dismiss(NotificationId.SCENE_ENDED)
+
+        assertTrue(toWear().isEmpty())
     }
 
     // ---------------------------------------------------------------------------------------------

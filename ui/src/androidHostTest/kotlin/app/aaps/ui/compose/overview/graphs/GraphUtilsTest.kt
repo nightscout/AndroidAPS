@@ -15,6 +15,28 @@ import org.junit.jupiter.params.provider.CsvSource
  */
 internal class GraphUtilsTest {
 
+    /**
+     * #5418: the "now + 2 h" scroll after a reset waited for a scroll limit above 0. With an axis that fits in the
+     * start window that limit stays 0, so the wait never ended and the scroll came later, during a pinch.
+     */
+    @Nested
+    inner class AxisLongerThanTest {
+
+        private val start = 1_700_000_000_000L
+        private val minute = 60_000L
+
+        @Test
+        fun `an axis longer than the window can scroll`() {
+            assertThat(axisLongerThan(start to start + 361 * minute, DEFAULT_GRAPH_ZOOM_MINUTES)).isTrue()
+        }
+
+        @Test
+        fun `an axis that fits in the window, as with a short history, cannot`() {
+            assertThat(axisLongerThan(start to start + 360 * minute, DEFAULT_GRAPH_ZOOM_MINUTES)).isFalse()
+            assertThat(axisLongerThan(start to start + 75 * minute, DEFAULT_GRAPH_ZOOM_MINUTES)).isFalse()
+        }
+    }
+
     @Nested
     inner class NiceScaleTest {
 

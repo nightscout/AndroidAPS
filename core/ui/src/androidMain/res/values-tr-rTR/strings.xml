@@ -71,7 +71,6 @@
     <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">%1$s senaryosu sona erdi ancak profili hâlâ kullanımda. %2$s Bir profili manuel olarak etkinleştirin.</string>
     <string name="active"><![CDATA[<Aktif>]]></string>
     <string name="date">Tarih</string>
-    <string name="units_label">Birim</string>
     <string name="dia_label">İES</string>
     <string name="ic_label">IC Karbonhidrat İnsülin Oranı</string>
     <string name="isf_label">İDF</string>
@@ -501,7 +500,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pompa eşleştirildi</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Düşük Enerji Bluetooth desteklenmez.</string>
-    <string name="ble_not_supported_or_not_paired">Düşük Enerji Bluetooth desteklenmiyor veya cihaz eşleştirilmedi.</string>
     <string name="ble_not_enabled">Bluetooth etkin değil.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Eklenti tercihleri</string>
@@ -593,5 +591,6 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="prefs_range_title">Görselleştirme Aralığı</string>
 </resources>

@@ -34,6 +34,8 @@
     <string name="alarm_channel_silent">Аларма (режим с нарастваща сила на звука)</string>
     <string name="alarm_channel_silent_description">Използва се, когато е включено „Постепенно увеличаване на силата на звука на известията“. Екранът на алармата възпроизвежда звука.</string>
     <string name="ongoing_channel_name">Текущ статус</string>
+    <string name="eat_reminder_channel">Напомняне за хранене</string>
+    <string name="eat_reminder_channel_description">Показва оставащото времето оставащо до хранене. Няма да прозвучава аларма.</string>
     <string name="notifications_channel_name">AAPS нотификации</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0Е (%2$.1f\u00a0µl)</string>

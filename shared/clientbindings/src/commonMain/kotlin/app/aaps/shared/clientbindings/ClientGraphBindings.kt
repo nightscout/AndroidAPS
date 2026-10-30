@@ -178,8 +178,9 @@ object ClientGraphBindings {
         logger: AAPSLogger,
         textResolver: TextResolver,
         platform: SystemNotificationPlatform,
+        rxBus: RxBus,
         scope: CoroutineScope
-    ): NotificationManager = CommonNotificationManager(logger, textResolver, platform, scope)
+    ): NotificationManager = CommonNotificationManager(logger, textResolver, platform, rxBus, scope)
 
     // ---- Plugins that cannot annotate themselves ----
 

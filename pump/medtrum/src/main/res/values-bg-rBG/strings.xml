@@ -12,6 +12,7 @@
     <string name="patch_not_active">Пач помпата не е активирана</string>
     <string name="pump_setting_failed">Неуспешно зареждане на потребителските настройки в помпата!</string>
     <string name="pump_sync_error">Грешка при синхронизацията с историята на помпата. Някой записи са игнорирани. Проверете в Лечения дали болусите са правилни. Отложете и при нова такава грешла сменете базата на пач помпата.</string>
+    <string name="patch_reset_after_primed_error">Пача се е рестартирал сам. Не може да доставя инсулин повече. Махнете пача и стартирайте нов.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Активен болус</string>
     <string name="pump_state_label">Състояние на помпата</string>

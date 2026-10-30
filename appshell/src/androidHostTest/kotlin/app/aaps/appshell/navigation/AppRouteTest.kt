@@ -27,7 +27,6 @@ class AppRouteTest {
         assertThat(AppRoute.TreatmentDialog.route).isEqualTo("treatment_dialog")
         assertThat(AppRoute.TempBasalDialog.route).isEqualTo("temp_basal_dialog")
         assertThat(AppRoute.ExtendedBolusDialog.route).isEqualTo("extended_bolus_dialog")
-        assertThat(AppRoute.SceneList.route).isEqualTo("scene_list")
         assertThat(AppRoute.QuickLaunchConfig.route).isEqualTo("quick_launch_config")
         assertThat(AppRoute.Configuration.route).isEqualTo("configuration")
         assertThat(AppRoute.FoodManagement.route).isEqualTo("food_management")
@@ -73,6 +72,16 @@ class AppRouteTest {
     @Test
     fun quickWizardManagement_defaultMode_isEdit() {
         assertThat(AppRoute.QuickWizardManagement.createRoute()).isEqualTo("quick_wizard_management?mode=EDIT")
+    }
+
+    @Test
+    fun sceneList_defaultMode_isEdit() {
+        assertThat(AppRoute.SceneList.createRoute()).isEqualTo("scene_list?mode=EDIT")
+    }
+
+    @Test
+    fun sceneList_explicitPlayMode() {
+        assertThat(AppRoute.SceneList.createRoute(ScreenMode.PLAY)).isEqualTo("scene_list?mode=PLAY")
     }
 
     @Test
@@ -177,6 +186,7 @@ class AppRouteTest {
         assertThat(prefixOf(AppRoute.PluginContent.createRoute(0))).isEqualTo(prefixOf(AppRoute.PluginContent.route))
         assertThat(prefixOf(AppRoute.WizardDialog.createRoute())).isEqualTo(prefixOf(AppRoute.WizardDialog.route))
         assertThat(prefixOf(AppRoute.SceneWizard.createRoute())).isEqualTo(prefixOf(AppRoute.SceneWizard.route))
+        assertThat(prefixOf(AppRoute.SceneList.createRoute())).isEqualTo(prefixOf(AppRoute.SceneList.route))
         assertThat(prefixOf(AppRoute.PreferenceScreen.createRoute("k"))).isEqualTo(prefixOf(AppRoute.PreferenceScreen.route))
         assertThat(prefixOf(AppRoute.SiteLocationPicker.createRoute(TE.Type.CANNULA_CHANGE)))
             .isEqualTo(prefixOf(AppRoute.SiteLocationPicker.route))

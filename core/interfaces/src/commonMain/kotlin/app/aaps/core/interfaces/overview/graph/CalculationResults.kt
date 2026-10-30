@@ -190,15 +190,17 @@ data class VarSensGraphData(
 )
 
 /**
- * Heart rate graph data: BPM readings from smartwatch or similar device.
- * Each point spans (timestamp - duration) to timestamp.
+ * Heart rate graph data: BPM readings from smartwatch or similar device, as stretches of a line.
+ * A new stretch starts where the device sent nothing for a while, so the line is not drawn across
+ * that time. A point is the start of a reading; the last point of a stretch is the end of its last reading.
  */
 data class HeartRateGraphData(
-    val heartRates: List<GraphDataPoint>
+    val segments: List<List<GraphDataPoint>>
 )
 
 /**
  * Steps count graph data: 5-minute step counts from smartwatch or similar device.
+ * Each point counts the steps from timestamp to timestamp + 5 min.
  */
 data class StepsGraphData(
     val steps: List<GraphDataPoint>

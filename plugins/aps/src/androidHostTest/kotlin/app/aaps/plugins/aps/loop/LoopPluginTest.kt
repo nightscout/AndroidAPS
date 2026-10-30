@@ -176,6 +176,24 @@ class LoopPluginTest : TestBaseWithProfile() {
         assertThat(d.getMostLimitedReasons()).isEqualTo("Loop: Limiting IOB to 0.0 U because of Low Glucose Suspend")
     }
 
+    // #5413: a run that stopped early on bad CGM data calculated nothing. Stored, it made the ISF for carbs
+    // take the profile ISF.
+    @Test
+    fun `a result that stopped early is not stored`() = runTest {
+        loopPlugin.storeApsResult(mock<APSResult> { on { stoppedEarly } doReturn true })
+
+        verify(persistenceLayer, never()).insertOrUpdateApsResult(any())
+    }
+
+    @Test
+    fun `a calculated result is stored`() = runTest {
+        val result = mock<APSResult> { on { stoppedEarly } doReturn false }
+
+        loopPlugin.storeApsResult(result)
+
+        verify(persistenceLayer).insertOrUpdateApsResult(result)
+    }
+
     // #5381: the user is confirming a bolus calculated without this SMB. Refused before the user entry is
     // written, so the log does not show an SMB that was never given; success = false lets the loop fall back
     // to a temp basal.

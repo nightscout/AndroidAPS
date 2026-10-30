@@ -90,7 +90,7 @@ class BgGraphComplication : ModernBaseComplicationProviderService() {
             canvas = ComposeCanvas(Canvas(bitmap)),
             size = Size(widthPx.toFloat(), heightPx.toFloat())
         ) {
-            renderBgGraph(data, historyHours, showNowLabel = false)
+            renderBgGraph(data, historyHours, showNowLabel = false, minutesText = { getString(R.string.action_minutes_format, it) })
         }
         return bitmap
     }

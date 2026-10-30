@@ -278,6 +278,7 @@
     <string name="title_activity_disconnect_pump">ניתוק משאבה</string>
     <string name="title_activity_suspend_loop">השהיית הלולאה</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d גר׳</string>
+    <string name="wizard_set_alarm">הגדרת התראה</string>
     <string name="insulin_unit_short">יח\'</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d גר׳</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f יח\'</string>

@@ -52,7 +52,6 @@
     <string name="no_profile_set">INGEN PROFIL VALD</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Datum</string>
-    <string name="units_label">Enheter</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">CR</string>
     <string name="isf_label">ISF</string>
@@ -409,7 +408,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pump parkopplad</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Enheten stöder inte BLE.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy stöds inte, eller så är enheten inte parkopplad.</string>
     <string name="ble_not_enabled">Bluetooth är avstängt.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Inställningar för insticksprogram</string>
@@ -458,5 +456,6 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="prefs_range_title">Gränsvärden för visualisering</string>
 </resources>

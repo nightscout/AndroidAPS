@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.overview.graph.TempTargetDisplayData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
@@ -73,6 +74,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
@@ -319,6 +321,60 @@ internal class MainViewModelTest {
 
         assertThat(sut.quickLaunchItems.value.map { it.action }).containsExactly(QuickLaunchAction.Wizard, qw, configButton).inOrder()
         verify(preferences, never()).put(eq(StringNonKey.QuickLaunchActions), any<String>())
+    }
+
+    /** Answers every protection request with [outcome]. */
+    private fun resolveProtection(outcome: ProtectionResult) {
+        whenever(protectionCheck.requestProtection(any(), any())).thenAnswer { invocation ->
+            @Suppress("UNCHECKED_CAST")
+            val onResult = invocation.arguments[1] as (ProtectionResult) -> Unit
+            onResult(outcome)
+        }
+    }
+
+    /**
+     * A scene changes the profile, the temp target, the loop mode and SMB, so it needs the same bolus
+     * protection as doing those things by hand. The overview scenes sheet started one with no check (#5429).
+     */
+    @Test
+    fun `a scene is not prepared when bolus protection is refused`() = runTest {
+        resolveProtection(ProtectionResult.DENIED)
+
+        sut.requestSceneConfirmation("s1")
+        advanceUntilIdle()
+
+        verify(protectionCheck).requestProtection(eq(ProtectionCheck.Protection.BOLUS), any())
+        verify(sceneActions, never()).prepareStart(any(), anyOrNull())
+    }
+
+    @Test
+    fun `a scene is prepared and confirmed once bolus protection is granted`() = runTest {
+        resolveProtection(ProtectionResult.GRANTED)
+        whenever(rh.gs(any<TextRef>())).thenReturn("Scene")
+        whenever(sceneActions.prepareStart("s1")).thenReturn(ActionProgress.Prepared(id = 3L))
+
+        sut.requestSceneConfirmation("s1")
+        advanceUntilIdle()
+
+        val sent = argumentCaptor<Event>()
+        verify(rxBus).send(sent.capture())
+        assertThat(sent.firstValue).isInstanceOf(EventShowDialog.OkCancel::class.java)
+    }
+
+    /** Ending a scene reverts what it changed, and "Skip to" starts the next scene. */
+    @Test
+    fun `ending a scene from the banner needs bolus protection`() = runTest {
+        resolveProtection(ProtectionResult.DENIED)
+        sut.requestSceneDeactivation()
+        advanceUntilIdle()
+        verify(activeSceneManager, never()).getActiveState()
+        assertThat(sut.actionConfirmation.value).isNull()
+
+        resolveProtection(ProtectionResult.GRANTED)
+        sut.requestSceneDeactivation()
+        advanceUntilIdle()
+        verify(activeSceneManager).getActiveState()
+        verify(protectionCheck, times(2)).requestProtection(eq(ProtectionCheck.Protection.BOLUS), any())
     }
 
     /**

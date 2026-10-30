@@ -287,6 +287,9 @@
     <string name="wizard_carbs_type_bread">Хляб</string>
     <string name="wizard_carbs_type_cake">Торта</string>
     <string name="wizard_carbs_type_pizza">Пица</string>
+    <string name="wizard_set_alarm">Напомни ми</string>
+    <string name="eat_reminder_title">Време е за ядене</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d мин</string>
     <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d гр</string>
     <string name="insulin_unit_short">Е</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d гр</string>
@@ -337,6 +340,7 @@
     <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
     <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+d ч</string>
     <string name="loop_status_sensitivity">Чувствителност</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Стартиван от сценарий</string>
     <string name="loop_status">Статус на кръга</string>
     <string name="loop_status_refresh">Обнови</string>
     <string name="confirm">Потвърждаване</string>

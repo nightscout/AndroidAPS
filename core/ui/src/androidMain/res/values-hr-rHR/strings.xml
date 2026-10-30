@@ -46,7 +46,6 @@
     <string name="stop">Zaustavi</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Datum</string>
-    <string name="units_label">Jedinice</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
@@ -244,7 +243,6 @@
     <!--    Pump pair/unpair (shared) -->
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nije podržan.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nije podržan ili uređaj nije uparen.</string>
     <string name="ble_not_enabled">Bluetooth nije omogućen.</string>
     <!--    Preferences -->
     <!-- Navigation -->
@@ -287,4 +285,5 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
 </resources>

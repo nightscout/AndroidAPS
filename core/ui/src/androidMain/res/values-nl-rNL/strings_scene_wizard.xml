@@ -66,16 +66,12 @@
     <string name="scene_wizard_finish">Voltooien</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Vervolg scène</string>
-    <string name="scene_wizard_chain_info">Koppel optioneel een andere scène die automatisch wordt geactiveerd wanneer deze scène verloopt. Je kunt er ook direct naartoe overschakelen wanneer je eerder beëindigt. De opvolgscène wordt alleen uitgevoerd als de doelwaarde is ingeschakeld en de pomp beschikbaar is; anders ontvang je een melding.</string>
     <string name="scene_chain_none">Geen</string>
     <string name="scene_skip_to_format">Overslaan naar %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
     <string name="scene_chain_target_missing">Gekoppelde scène is verwijderd</string>
-    <!-- Scene expiry: chain result notifications -->
-    <string name="scene_ended_format">Scène \"%1$s\" beëindigd</string>
-    <string name="scene_chained_format">Opvolgscène gekoppeld: %1$s → %2$s</string>
-    <string name="scene_chain_ended_with_skip">%1$s beëindigd - vervolg overgeslagen: %2$s</string>
+    <!-- Scene expiry: what the banner says, and the chain error notification -->
     <string name="scene_chain_skipped_deleted">doelscène is verwijderd</string>
     <string name="scene_chain_skipped_disabled">\"%1$s\" is uitgeschakeld</string>
     <string name="scene_chain_error_summary">%1$s → %2$s: %3$d of %4$d acties mislukt</string>

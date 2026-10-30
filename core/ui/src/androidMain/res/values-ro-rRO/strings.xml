@@ -131,7 +131,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulina nu a fost de asemenea schimbată.</string>
     <string name="active"><![CDATA[<Activ>]]></string>
     <string name="date">Data</string>
-    <string name="units_label">Unități</string>
     <string name="insulin_nickname_label">Pseudonim insulină</string>
     <string name="concentration_label">Concentrație</string>
     <string name="peak_label">Vârf</string>
@@ -891,7 +890,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pompă asociată</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">BLE nu este suportat.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nu este acceptat sau dispozitivul nu este asociat.</string>
     <string name="ble_not_enabled">Bluetooth dezactivat.</string>
     <string name="ble_permissions_missing">Permisiunile Bluetooth nu sunt acordate. Vă rugăm să le acordați în setările aplicației.</string>
     <!--    Preferences -->
@@ -1083,6 +1081,7 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">PAȘI</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="units_days">zile</string>
     <string name="units_format_days">%1$d zile</string>
     <string name="units_format_days_range">%1$d zile (%2$d - %3$d)</string>

@@ -112,7 +112,7 @@ class DetermineBasalAutoISFTest : TestBaseWithProfile() {
         profile_percentage = 100
     )
 
-    private fun run(mealData: MealData, currentTemp: CurrentTemp = CurrentTemp(0, 0.0, null)): RT =
+    private fun run(mealData: MealData, currentTemp: CurrentTemp = CurrentTemp(0, 0.0, null), flatBGsDetected: Boolean = false): RT =
         sut.determine_basal(
             glucose_status = glucoseStatus(),
             currenttemp = currentTemp,
@@ -122,7 +122,7 @@ class DetermineBasalAutoISFTest : TestBaseWithProfile() {
             meal_data = mealData,
             microBolusAllowed = false,
             currentTime = currentTime,
-            flatBGsDetected = false,
+            flatBGsDetected = flatBGsDetected,
             autoIsfMode = false,
             loop_wanted_smb = "AAPS",
             profile_percentage = 100,
@@ -134,6 +134,27 @@ class DetermineBasalAutoISFTest : TestBaseWithProfile() {
         )
 
     private fun RT.console(): String = (consoleLog.orEmpty() + consoleError.orEmpty()).joinToString(" ")
+
+    /**
+     * `DetermineBasalResult.stoppedEarly` takes a result without eventual BG for the return of the CGM data
+     * checks, and such a result is not stored (#5413). That return has none, a full run has one.
+     */
+    @Test
+    fun `only the return of the CGM data checks has no eventual BG`() {
+        val noMeal = MealData(
+            carbs = 0.0,
+            mealCOB = 0.0,
+            slopeFromMaxDeviation = 0.0,
+            slopeFromMinDeviation = 0.0,
+            lastBolusTime = currentTime - 3600000L,
+            lastCarbTime = currentTime - 4 * 3600000L
+        )
+
+        val flat = run(noMeal, flatBGsDetected = true)
+        assertThat(flat.reason.toString()).contains("CGM data is unchanged")
+        assertThat(flat.eventualBG).isNull()
+        assertThat(run(noMeal).eventualBG).isNotNull()
+    }
 
     @Test
     fun `COB left after carbs aged out does not poison the prediction blend`() {

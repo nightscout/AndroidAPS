@@ -101,7 +101,7 @@ enum class ElementType(
 
     // Scenes (situation presets) — activation + management ride Client-Control → CLIENT_PAIRED.
     SCENE(category = ElementCategory.MANAGEMENT, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
-    SCENE_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.PREFERENCES, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
+    SCENE_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS, visibility = ElementVisibility.MASTER_OR_PAIRED_CLIENT, role = ClientRole.Caregiver),
 
     // NSCv3 client control — paired devices that can issue signed commands
     // Master only AND NSCv3-WS enabled — keeps search in lock-step with the Manage-sheet button (ManageViewModel).

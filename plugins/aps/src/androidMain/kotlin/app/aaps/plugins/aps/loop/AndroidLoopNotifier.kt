@@ -5,9 +5,12 @@ import android.app.NotificationChannel
 import android.content.Context
 import androidx.core.app.NotificationCompat
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.interfaces.notifications.DoNotDisturbRule
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.CarbSuggestionActions
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.aps.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -21,6 +24,10 @@ import android.app.NotificationManager as AndroidNotificationManager
  *
  * One notification id for both shapes, as before: the carbs and open-loop notifications replace each
  * other rather than stacking, and [dismiss] takes down whichever is showing.
+ *
+ * The notification is `CATEGORY_ALARM`, so Do Not Disturb lets it ring when the profile allows alarms.
+ * While Do Not Disturb is on and "Override Do Not Disturb mode" is off it goes to a channel that only
+ * vibrates, as every alarm does, see [DoNotDisturbRule].
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
@@ -28,6 +35,7 @@ import android.app.NotificationManager as AndroidNotificationManager
 class AndroidLoopNotifier(
     private val context: Context,
     private val rh: ResourceHelper,
+    private val preferences: Preferences,
     private val notificationHolder: NotificationHolder,
     private val carbSuggestionActions: CarbSuggestionActions
 ) : LoopNotifier {
@@ -50,6 +58,17 @@ class AndroidLoopNotifier(
             vibrationPattern = VIBRATE_PATTERN
         }
         notificationManager.createNotificationChannel(channel)
+        // The same without a sound, for Do Not Disturb with the override off
+        @SuppressLint("WrongConstant") val silentChannel = NotificationChannel(
+            SILENT_CHANNEL_ID,
+            rh.gs(R.string.loop_notification_channel_silent_name),
+            AndroidNotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            setSound(null, null)
+            enableVibration(true)
+            vibrationPattern = VIBRATE_PATTERN
+        }
+        notificationManager.createNotificationChannel(silentChannel)
     }
 
     override fun carbsRequired(text: String) {
@@ -77,7 +96,11 @@ class AndroidLoopNotifier(
     }
 
     private fun baseBuilder(title: String, text: String): NotificationCompat.Builder =
-        NotificationCompat.Builder(context, CHANNEL_ID)
+        NotificationCompat.Builder(
+            context,
+            if (DoNotDisturbRule.staysQuiet(preferences.get(BooleanKey.AlertOverrideDoNotDisturb), notificationManager.currentInterruptionFilter)) SILENT_CHANNEL_ID
+            else CHANNEL_ID
+        )
             .setSmallIcon(app.aaps.core.ui.R.drawable.notif_icon)
             .setContentTitle(title)
             .setContentText(text)
@@ -97,6 +120,7 @@ class AndroidLoopNotifier(
 
         const val OLD_CHANNEL_ID = "AAPS-OpenLoop"
         const val CHANNEL_ID = "AAPS-OpenLoop-v2"
+        const val SILENT_CHANNEL_ID = "AAPS-OpenLoop-v2-silent"
         val VIBRATE_PATTERN = longArrayOf(1000, 1000, 1000, 1000, 1000)
     }
 }

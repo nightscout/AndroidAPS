@@ -128,7 +128,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nגם האינסולין לא הוחלף.</string>
     <string name="active"><![CDATA[<פועל>]]></string>
     <string name="date">תאריך</string>
-    <string name="units_label">יחידות</string>
     <string name="insulin_nickname_label">כינוי לאינסולין</string>
     <string name="concentration_label">ריכוז</string>
     <string name="peak_label">שיא</string>
@@ -893,7 +892,6 @@
     <string name="pump_paired" comment="26 characters max for translation">המשאבה צומדה</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">בלוטות\' באנרגיה נמוכה לא נתמך.</string>
-    <string name="ble_not_supported_or_not_paired">בלוטות\' באנרגיה נמוכה (BLE) לא נתמך או שהמכשיר אינו מצומד.</string>
     <string name="ble_not_enabled">בלוטות אינו מופעל.</string>
     <string name="ble_permissions_missing">לא ניתנו הרשאות בלוטות . יש לאפשר אותן בהגדרות האפליקציה.</string>
     <!--    Preferences -->
@@ -1089,6 +1087,7 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">רגישות%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">רג\' משתנה</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">צעדים</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="units_days">ימים</string>
     <string name="units_format_days">%1$d ימים</string>
     <string name="units_format_days_range">%1$d ימים (%2$d - %3$d)</string>

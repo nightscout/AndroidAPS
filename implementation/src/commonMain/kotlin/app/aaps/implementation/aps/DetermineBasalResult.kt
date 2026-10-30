@@ -122,6 +122,11 @@ class DetermineBasalResult(
         scriptDebug = result.consoleError
     }
 
+    // In SMB, AutoISF and AMA only the return of the CGM data checks comes before the result that sets
+    // eventualBG. Every later return, an abort on a non-finite value too, has it.
+    override val stoppedEarly: Boolean
+        get() = result.eventualBG == null
+
     override val carbsRequiredText: String
         get() = rh.gs(CoreUiStrings.carbsreq, carbsReq, carbsReqWithin)
 

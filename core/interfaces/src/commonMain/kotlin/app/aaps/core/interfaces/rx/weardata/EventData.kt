@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.rx.weardata
 
+import app.aaps.core.interfaces.alerts.EatReminderAction
 import app.aaps.core.data.model.CarbsType
 import app.aaps.core.interfaces.rx.events.Event
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -124,9 +125,12 @@ sealed class EventData : Event() {
     @Serializable
     data class ActionProfileSwitchPreCheck(val timeShift: Int, val percentage: Int, val duration: Int) : EventData()
 
+    /**
+     * [carbsType] came later. A watch without it sends none, and bread is what it did before: all carbs now, no eCarbs.
+     * [carbTime] is minutes from now until the carbs are eaten, as on the phone, and [alarm] starts the "time to eat" timer then.
+     */
     @Serializable
-    /** [carbsType] came later. A watch without it sends none, and bread is what it did before: all carbs now, no eCarbs. */
-    data class ActionWizardPreCheck(val carbs: Int, val percentage: Int, val carbsType: CarbsType = CarbsType.BREAD) : EventData()
+    data class ActionWizardPreCheck(val carbs: Int, val percentage: Int, val carbsType: CarbsType = CarbsType.BREAD, val carbTime: Int = 0, val alarm: Boolean = false) : EventData()
 
     @Serializable
     data class ActionQuickWizardPreCheck(val guid: String) : EventData()
@@ -381,7 +385,20 @@ sealed class EventData : Event() {
         val bolusLargeFrom: Double = -1.0,
         val carbsSmallBelow: Double = -1.0,
         val carbsLargeFrom: Double = -1.0,
+        /**
+         * The target line of the phone's BG graph, as the points where it changes plus a last one at the end of
+         * the range: the temporary target's middle while one runs, else the profile's. Empty from a phone that
+         * does not send it.
+         */
+        val targets: ArrayList<Target> = ArrayList(),
     ) : EventData() {
+
+        /** One point of the target line, [mgdl] from [timeStamp] until the next point. */
+        @Serializable
+        data class Target(
+            val timeStamp: Long,
+            val mgdl: Double
+        )
 
         @Serializable
         data class TempBasal(
@@ -437,7 +454,11 @@ sealed class EventData : Event() {
         // End time (epoch ms) of a temporary running mode (suspend/disconnect/superbolus); null when permanent or older sender
         val modeEndTime: Long? = null,
         // Whether the active scene set the running mode, so the picker can mark it; false from an older sender
-        val modeFromScene: Boolean = false
+        val modeFromScene: Boolean = false,
+        // The "time to eat" timer: when it was started and when it rings. Null when none runs, or from an older sender.
+        // The watch draws the end in its BG graph and rings itself at that time.
+        val eatReminderStartedAt: Long? = null,
+        val eatReminderEndsAt: Long? = null
     ) : EventData(), EventDataSet
 
     @Serializable
@@ -457,7 +478,13 @@ sealed class EventData : Event() {
          * a value of `StringKey.WearPushedWatchface`. Defaulted, so a payload from a phone that
          * predates the field still decodes and keeps the face that was pushed before.
          */
-        val pushedWatchface: String = "cwf"
+        val pushedWatchface: String = "cwf",
+        /**
+         * The phone's `AlertOverrideDoNotDisturb`. With it off, the watch's alarms only vibrate while the watch
+         * is in Do Not Disturb, as on the phone. Defaulted to on, so a payload from a phone that predates the
+         * field keeps the alarms as they were.
+         */
+        val alertOverrideDnd: Boolean = true
     ) : EventData()
 
     @Serializable
@@ -598,8 +625,44 @@ sealed class EventData : Event() {
     @Serializable
     data object RemoteDelivered : EventData()
 
+    /** Wear -> Mobile: silence the alarm on the phone. Its screen stays, as Mute on that screen does. */
     @Serializable
     data class SnoozeAlert(val timeStamp: Long) : EventData()
+
+    /**
+     * Wear -> Mobile: Silence on the watch's notification of the phone's alarm ([AlarmRinging]), or its swipe. The
+     * alarm is silenced and its screen on the phone closes, as "Silence and close" on that screen does.
+     */
+    @Serializable
+    data class DismissAlert(val timeStamp: Long) : EventData()
+
+    /**
+     * Wear -> Mobile: "Mute 5 min" on the watch's notification of the phone's alarm. The alarm is silenced and rings
+     * again after [minutes], on the phone and on the watch, as "Mute for 5 minutes" on the phone's screen does.
+     */
+    @Serializable
+    data class MuteAlert(val timeStamp: Long, val minutes: Int) : EventData()
+
+    /**
+     * Mobile -> Wear: an alarm rings on the phone, with its title and text. The watch shows them in a notification
+     * with Silence, and Mute 5 min when [canMute], so it tells why the phone makes a sound. Sent for the alarm
+     * screen ([app.aaps.core.interfaces.ui.UiInteraction.runAlarm], can be muted) and for an urgent notification
+     * with a sound, as "Pump unreachable" (cannot: the phone has only Dismiss for those, and such an alarm comes
+     * back by itself while its cause lasts). Not sent for the "time to eat" alarm: the watch rings that one by itself.
+     */
+    @Serializable
+    data class AlarmRinging(val timeStamp: Long, val title: String, val status: String, val canMute: Boolean) : EventData()
+
+    /** Mobile -> Wear: the alarm shown on the phone was stopped, on the phone or from the watch, or replaced. */
+    @Serializable
+    data class AlarmStopped(val timeStamp: Long) : EventData()
+
+    /**
+     * Stop or +5 min of the "time to eat" timer, from the watch's ring screen. The phone runs it on the
+     * master, a client relays it to its master.
+     */
+    @Serializable
+    data class ActionEatReminder(val action: EatReminderAction) : EventData()
 
     // Wear -> Wear (workaround)
     @Serializable

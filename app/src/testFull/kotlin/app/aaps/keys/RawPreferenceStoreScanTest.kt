@@ -92,7 +92,6 @@ class RawPreferenceStoreScanTest {
         // --- Runs before DI exists ---
         "implementation/src/androidMain/kotlin/app/aaps/implementation/utils/fabric/FabricPrivacyImpl.kt" to "reads before the graph is built (DI cycle)",
         "implementation/src/iosMain/kotlin/app/aaps/implementation/utils/fabric/FabricPrivacyImpl.kt" to "same, on iOS",
-        "core/ui/src/androidMain/kotlin/app/aaps/core/ui/locale/LocaleHelper.kt" to "reads the language in attachBaseContext, before an activity can be injected",
 
         // --- Wiring, which hands the store to the things above ---
         "app/src/main/kotlin/app/aaps/di/metro/AppRootGraph.kt" to "DI wiring",

@@ -23,6 +23,9 @@ import app.aaps.core.utils.MidnightUtils
  * - When the newest result in the window has no value, the profile ISF is used. Dynamic ISF is off then,
  *   or the algorithm has none, or the master had no TDD and dosed with the profile ISF too. Results
  *   without a value are left out of the average.
+ * - A loop run that stopped early on bad CGM data is never stored
+ *   ([app.aaps.core.interfaces.aps.APSResult.stoppedEarly]). It has no value either, but it says nothing
+ *   about dynamic ISF (#5413).
  *
  * @param rows the stored results, oldest first, as [PersistenceLayer.getLoopSensitivities] gives them
  */

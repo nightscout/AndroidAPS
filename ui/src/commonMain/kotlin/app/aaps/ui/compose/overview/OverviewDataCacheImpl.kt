@@ -16,7 +16,6 @@ import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.endOf
-import app.aaps.core.data.model.latestRunningAt
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
@@ -62,6 +61,8 @@ import app.aaps.core.interfaces.overview.graph.RunningModeSegment
 import app.aaps.core.interfaces.overview.graph.SeriesType
 import app.aaps.core.interfaces.overview.graph.StepsGraphData
 import app.aaps.core.interfaces.overview.graph.TargetLineData
+import app.aaps.core.interfaces.overview.graph.buildTargetLine
+import app.aaps.core.interfaces.overview.graph.targetMiddleMgdl
 import app.aaps.core.interfaces.overview.graph.TbrDisplayData
 import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.interfaces.overview.graph.TempTargetDisplayData
@@ -94,7 +95,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.apsAdjustedTargetMgdl
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.fromGv
-import app.aaps.core.objects.extensions.target
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.ui.UiStrings
@@ -1044,24 +1044,8 @@ class OverviewDataCacheImpl(
         val temporaryTargets = (persistenceLayer.getTemporaryTargetsActiveAt(fromTime) +
             persistenceLayer.getTemporaryTargetDataFromTime(fromTime, true)).distinctBy { it.id }
 
-        val targets = mutableListOf<GraphDataPoint>()
-        var lastTarget = -1.0
-        var time = fromTime
-        while (time < endTime) {
-            val tt = temporaryTargets.latestRunningAt(time) { it.duration }
-            val value = if (tt != null) {
-                profileUtil.fromMgdlToUnits(tt.target())
-            } else {
-                profileUtil.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2)
-            }
-            if (value != lastTarget) {
-                targets.add(GraphDataPoint(time, value))
-                lastTarget = value
-            }
-            time += 5 * 60 * 1000L
-        }
-        // Final point
-        if (lastTarget >= 0.0) targets.add(GraphDataPoint(endTime, lastTarget))
+        // The same step line the watch gets (DataHandlerMobile.sendTreatments)
+        val targets = buildTargetLine(fromTime, endTime, temporaryTargets, profile::targetMiddleMgdl) { profileUtil.fromMgdlToUnits(it) }
 
         _targetLineFlow.value = TargetLineData(targets)
     }
@@ -1256,18 +1240,18 @@ class OverviewDataCacheImpl(
 
     private suspend fun rebuildHeartRateGraph() {
         val (fromTime, toTime) = graphTimeRange() ?: return
-        val heartRates = persistenceLayer.getHeartRatesFromTimeToTime(fromTime, toTime)
-            .filter { it.isValid }
-            // Plot at sampling start: HR.timestamp is the end of the sampling period (matches legacy HeartRateDataPoint.getX())
-            .map { hr -> GraphDataPoint(timestamp = hr.timestamp - hr.duration, value = hr.beatsPerMinute) }
-        _heartRateGraphFlow.value = HeartRateGraphData(heartRates)
+        val heartRates = persistenceLayer.getHeartRatesFromTimeToTime(fromTime, toTime).filter { it.isValid }
+        _heartRateGraphFlow.value = HeartRateGraphData(heartRateSegments(heartRates))
     }
 
     private suspend fun rebuildStepsGraph() {
         val (fromTime, toTime) = graphTimeRange() ?: return
         val steps = persistenceLayer.getStepsCountFromTimeToTime(fromTime, toTime)
             .filter { it.isValid }
-            .map { sc -> GraphDataPoint(timestamp = sc.timestamp, value = sc.steps5min.toDouble()) }
+            // The watch stores each sample once per duration (5 to 180 min), all with the same steps5min
+            .distinctBy { it.timestamp }
+            // Plot at the start of the 5 minutes steps5min counts: SC.timestamp is their end
+            .map { sc -> GraphDataPoint(timestamp = sc.timestamp - T.mins(5).msecs(), value = sc.steps5min.toDouble()) }
         _stepsGraphFlow.value = StepsGraphData(steps)
     }
 
@@ -1307,6 +1291,41 @@ class OverviewDataCacheImpl(
 
 /** Rounds [time] up to the next full minute, as `AutosensDataStore.roundUpTime` does for the IOB caches. */
 internal fun roundUpToMinute(time: Long): Long = if (time % 60_000L == 0L) time else (time / 60_000L + 1) * 60_000L
+
+/** The longest time without heart rate readings that the line is still drawn across. */
+internal val HEART_RATE_MAX_GAP = T.mins(5).msecs()
+
+/**
+ * The heart rate [readings] as stretches of a line. Each reading is plotted at its start, because
+ * `HR.timestamp` is the end of the time it was measured over (as the legacy `HeartRateDataPoint`).
+ * A new stretch starts when a reading starts more than [HEART_RATE_MAX_GAP] after the end of the one
+ * before it: the device was off or not worn, and a line across that time would show values nobody
+ * measured. A shorter hole, such as a minute the AAPS watch app could not measure, does not break it.
+ *
+ * The gap is measured with the duration of each reading, because the sources send at different rates:
+ * the AAPS watch app once a minute, Garmin as often as its watch face asks.
+ *
+ * Each stretch ends with the end of its last reading, at the same value. So the line reaches as far as
+ * the readings go, and a lone reading is drawn too, as a short flat line.
+ */
+internal fun heartRateSegments(readings: List<HR>): List<List<GraphDataPoint>> {
+    val segments = mutableListOf<List<GraphDataPoint>>()
+    var segment = mutableListOf<GraphDataPoint>()
+    var previous: HR? = null
+    for (hr in readings.sortedBy { it.timestamp }) {
+        val start = hr.timestamp - hr.duration
+        previous?.let { last ->
+            if (start > last.timestamp + HEART_RATE_MAX_GAP) {
+                segments += segment + GraphDataPoint(last.timestamp, last.beatsPerMinute)
+                segment = mutableListOf()
+            }
+        }
+        segment += GraphDataPoint(start, hr.beatsPerMinute)
+        previous = hr
+    }
+    previous?.let { last -> segments += segment + GraphDataPoint(last.timestamp, last.beatsPerMinute) }
+    return segments
+}
 
 /**
  * The times inside a graph window where the effective profile can change.

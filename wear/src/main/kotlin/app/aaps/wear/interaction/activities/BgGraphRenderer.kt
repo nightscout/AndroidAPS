@@ -4,9 +4,11 @@ import android.graphics.Paint
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.ui.MarkerSizeClasses
 import app.aaps.core.data.ui.MarkerTier
@@ -19,6 +21,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
+import kotlin.math.max
 import kotlin.math.min
 
 internal val BgInRangeColor = Color(0xFF00FF00)
@@ -28,6 +31,9 @@ internal val BgLowColor     = Color(0xFFFF0000)
 internal val CarbsRemovalMagenta = Color(0xFFE040FB)
 internal val SecondaryText  = Color(0xFFAAAAAA)
 internal val TempTargetColor     = Color(0xFFFDD835)
+
+/** The target line, the phone's temp target green at less than half strength, so it stays at the back. */
+internal val TargetLineColor     = Color(0x7377DD77)
 internal val AutosensTargetColor = Color(0xFF77DD77)
 
 internal val historyHoursCycle = listOf(3, 6, 1)
@@ -151,8 +157,18 @@ internal fun markerAnchorTime(time: Long, partners: List<Long>): Long {
     return if (partner != null && partner < time) partner else time
 }
 
-internal fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int, showNowLabel: Boolean = true) {
-    val now = System.currentTimeMillis()
+/**
+ * [now] is the moment the graph is drawn for; a screen that ticks passes its own clock, so the drawing
+ * follows it. [minutesText] writes the minutes left of the "time to eat" timer at its end line; null
+ * leaves the minutes out, the line stays.
+ */
+internal fun DrawScope.renderBgGraph(
+    data: ComplicationData,
+    historyHours: Int,
+    showNowLabel: Boolean = true,
+    now: Long = System.currentTimeMillis(),
+    minutesText: ((Int) -> String)? = null
+) {
     val historyMs = historyHours * 60 * 60 * 1000L
     // Cap predictions at the history span so short ranges (1h) aren't dominated by the prediction area
     val predictionMs = min(90 * 60 * 1000L, historyMs)
@@ -244,6 +260,35 @@ internal fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int, 
         }
     }
 
+    // The "time to eat" timer: a dashed line where it rings, with the minutes left at it, one line under
+    // the now label so the two never meet. Past the window's end the line stands at the edge
+    val eatAt = data.statusData.eatReminderEndsAt
+    if (eatAt != null && eatAt > now) {
+        val x = timeToX(min(eatAt, endTime))
+        drawLine(
+            color = CarbsOrange,
+            start = Offset(x, pad),
+            end = Offset(x, pad + graphH),
+            strokeWidth = 1.dp.toPx(),
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(4.dp.toPx(), 3.dp.toPx()))
+        )
+        val minutesLeft = ((eatAt - now + 59_999L) / 60_000L).toInt()
+        if (minutesText != null) drawIntoCanvas { canvas ->
+            val paint = Paint().apply {
+                color = CarbsOrange.toArgb()
+                textSize = 8.dp.toPx()
+                isAntiAlias = true
+                isFakeBoldText = true
+            }
+            val text = minutesText(minutesLeft)
+            val margin = 2.dp.toPx()
+            // Right of the line when there is room, else left of it
+            val fits = x + margin + paint.measureText(text) <= pad + drawW
+            paint.textAlign = if (fits) Paint.Align.LEFT else Paint.Align.RIGHT
+            canvas.nativeCanvas.drawText(text, if (fits) x + margin else x - margin, pad + paint.textSize * 2 + 4f, paint)
+        }
+    }
+
     val high = bgData.high.toFloat()
     if (high in yMin..yMax) {
         drawLine(
@@ -262,6 +307,23 @@ internal fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int, 
             end = Offset(pad + drawW, sgvToY(low)),
             strokeWidth = 1.dp.toPx()
         )
+    }
+
+    // The target as on the phone: the temporary target's middle while one runs, else the profile's, a faint
+    // step line out to the end of the window, over the high and low lines (it often runs along one of them)
+    // and under the readings. The step is what tells a temporary target is set.
+    val targets = data.treatmentData.targets
+    for (i in 0 until targets.size - 1) {
+        val from = targets[i]
+        val to = targets[i + 1]
+        val x1 = timeToX(max(from.timeStamp, startTime))
+        val x2 = timeToX(min(to.timeStamp, endTime))
+        if (x2 <= x1) continue
+        val y = sgvToY(from.mgdl.toFloat())
+        drawLine(color = TargetLineColor, start = Offset(x1, y), end = Offset(x2, y), strokeWidth = 1.dp.toPx())
+        // The riser to the next value, when that change is inside the window. The last point has no next value.
+        if (i < targets.size - 2 && to.timeStamp in startTime..endTime)
+            drawLine(color = TargetLineColor, start = Offset(x2, y), end = Offset(x2, sgvToY(to.mgdl.toFloat())), strokeWidth = 1.dp.toPx())
     }
 
     val dotRadius = w * 0.013f

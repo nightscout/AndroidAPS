@@ -51,8 +51,8 @@
     <string name="equil_same_infusion_set_hint">The cannula will not be primed and no cannula change will be recorded.</string>
 
     <string name="equil_unpair_alert">Are you sure you want to relinquish control over %1$s?</string>
-    <string name="equil_record_basal">Basal rate %1$s U/H</string>
-    <string name="equil_record_basal_temp">Temporary basal rate %1$s U/H</string>
+    <string name="equil_record_basal">Basal rate %1$s U/h</string>
+    <string name="equil_record_basal_temp">Temporary basal rate %1$s U/h</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">TBR duration must be greater than zero and a multiple of %1$s minutes.</string>
     <string name="equil_basal_exceeds_max">Profile basal rate %1$s U/h exceeds the pump max basal %2$s U/h. Increase the max basal setting and reconnect the pump.</string>
@@ -73,7 +73,7 @@
     <string name="equil_shutdown">Equil auto off</string>
 
 
-    <string name="equil_common_history_tbr_value">Rate： %1$.2f U/H，duration： %2$d minutes</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Rate: %1$.2f U/h, duration: %2$d minutes</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
 
     <!-- equil - Commands -->

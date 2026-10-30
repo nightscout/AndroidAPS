@@ -211,6 +211,7 @@
     <string name="action_running_mode_selected">Modo de operação solicitado</string>
     <string name="title_activity_disconnect_pump">Desconectar bomba</string>
     <string name="title_activity_suspend_loop">Suspender loop</string>
+    <string name="wizard_set_alarm">Definir alarme</string>
     <string name="wizard_confirmation_sent">Enviado</string>
     <string name="contacting_master">Contactando o dispositivo principal…</string>
     <string name="contacting_master_unknown">Estado desconhecido — verifique o telefone</string>

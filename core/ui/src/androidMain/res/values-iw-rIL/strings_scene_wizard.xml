@@ -66,16 +66,12 @@
     <string name="scene_wizard_finish">סיום</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">סצנה עוקבת</string>
-    <string name="scene_wizard_chain_info">ניתן לשרשר סצנה נוספת שתופעל אוטומטית כאשר הסצנה הנוכחית מסתיימת. ניתן גם לדלג אליה בעת סיום מוקדם. הסצנה העוקבת תפעל רק אם היעד מופעל והמשאבה זמינה; אחרת תתקבל התראה.</string>
     <string name="scene_chain_none">ללא</string>
     <string name="scene_skip_to_format">דלג אל %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">← %1$s</string>
     <string name="scene_chain_target_missing">הסצנה המשורשרת נמחקה</string>
-    <!-- Scene expiry: chain result notifications -->
-    <string name="scene_ended_format">הסצנה \"%1$s\" הסתיימה</string>
-    <string name="scene_chained_format">הסצנות שורשרו: %1$s ← %2$s</string>
-    <string name="scene_chain_ended_with_skip">%1$s הסתיימה — הסצנה העוקבת דולגה: %2$s</string>
+    <!-- Scene expiry: what the banner says, and the chain error notification -->
     <string name="scene_chain_skipped_deleted">סצנת היעד נמחקה</string>
     <string name="scene_chain_skipped_disabled">\"%1$s\" מושבתת</string>
     <string name="scene_chain_error_summary">%1$s ← %2$s: %3$d מתוך %4$d פעולות נכשלו</string>

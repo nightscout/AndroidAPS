@@ -98,6 +98,13 @@ fun timestampToX(timestamp: Long, minTimestamp: Long): Double =
     ((timestamp - minTimestamp) / 60000).toDouble()
 
 /**
+ * True when the axis of [timeRange] is longer than a window of [windowMinutes], so the graph can scroll. When it
+ * fits in the window, Vico's scroll limit (`maxValue`) stays 0.
+ */
+fun axisLongerThan(timeRange: Pair<Long, Long>, windowMinutes: Double): Boolean =
+    timestampToX(timeRange.second, timeRange.first) > windowMinutes
+
+/**
  * Creates a time formatter for X-axis labels showing hours (HH format).
  *
  * @param minTimestamp The reference timestamp for x-value calculation

@@ -282,6 +282,7 @@
     <string name="title_activity_disconnect_pump">Atjungti pompą</string>
     <string name="title_activity_suspend_loop">Pristabdyti ciklą</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="wizard_set_alarm">Nustatyti įspėjimą</string>
     <string name="insulin_unit_short">V</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f V</string>

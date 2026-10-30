@@ -57,6 +57,13 @@ interface CommandQueue {
     fun clear()
 
     /**
+     * Like [clear], a delivery failure with its alarm, but with [comment] as the reason instead of
+     * "connection timed out" - for a case where the real reason is known, so the alarm does not send the
+     * user the wrong way.
+     */
+    fun clear(comment: TextRef)
+
+    /**
      * Drops every queued command without running it and tells each waiting caller, through
      * [Command.cancel] - so a command that owns progress UI (a bolus) clears it as well.
      *

@@ -127,7 +127,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinas taip pat nepakeistas.</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
-    <string name="units_label">Vienetai</string>
     <string name="insulin_nickname_label">Insulino pavadinimas</string>
     <string name="concentration_label">Koncentracija</string>
     <string name="peak_label">Pikas</string>
@@ -895,7 +894,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pompa susieta</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nepalaikoma.</string>
-    <string name="ble_not_supported_or_not_paired">Nepalaikomas BLE arba įrenginys nesusietas.</string>
     <string name="ble_not_enabled">Bluetooth neįjungta.</string>
     <string name="ble_permissions_missing">Bluetooth leidimas nesuteiktas. Suteikite jį programos nustatymuose.</string>
     <!--    Preferences -->
@@ -1104,6 +1102,7 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">ŽINGSNIAI</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="units_days">d.</string>
     <string name="units_format_days">%1$d d.</string>
     <string name="units_format_days_range">%1$d d. (%2$d - %3$d)</string>

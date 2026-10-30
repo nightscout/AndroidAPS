@@ -2,8 +2,10 @@ package app.aaps.ui.compose.fillDialog
 
 import androidx.lifecycle.SavedStateHandle
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.ui.ConfirmationRole
+import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.MasterActionExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
@@ -52,6 +54,7 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -176,6 +179,60 @@ internal class FillDialogViewModelTest {
         val seen = runCartridgeChangeWithInsulinSwitch(ActionProgress.Applied)
 
         assertThat(seen).isEmpty()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // One batch, so a client makes one round trip (#5416)
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * A client runs one round trip at a time and refuses a second one at once as Busy. With one batch per ticked
+     * item only one of them reached the master, and a lost site change was not even reported.
+     */
+    @Test
+    fun `everything ticked goes to the master in one batch`() = runTest {
+        whenever(batchExecutor.prepare(any(), any(), any())).thenReturn(ActionProgress.Applied)
+        val fiasp = ICfg(insulinLabel = "Fiasp", insulinEndTime = 480, insulinPeakTime = 55, concentration = 1.0)
+
+        sut.selectInsulin(fiasp)
+        sut.updateSiteChange(true)
+        sut.updateCartridgeChange(true)
+        sut.buildConfirmationSummary()
+        sut.confirmAndSave()
+
+        val batch = argumentCaptor<List<BatchAction>>()
+        verify(batchExecutor, times(1)).prepare(batch.capture(), any(), any())
+        assertThat(batch.firstValue.filterIsInstance<BatchAction.TherapyEvent>().map { it.teType })
+            .containsExactly(TE.Type.CANNULA_CHANGE, TE.Type.INSULIN_CHANGE)
+        assertThat(batch.firstValue.filterIsInstance<BatchAction.InsulinActivate>().map { it.iCfg }).containsExactly(fiasp)
+    }
+
+    /**
+     * On a client the app's round-trip modal shows the master's answer, with the master's own reason. The dialog
+     * used to add a second dialog with a less exact text.
+     */
+    @Test
+    fun `on a client the master's answer is shown once, by the modal`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+
+        assertThat(runCartridgeChangeWithInsulinSwitch(ActionProgress.Rejected(FailureReason.NotAllowedForRole, "role"))).isEmpty()
+    }
+
+    @Test
+    fun `on a client an unconfirmed switch is shown once, by the modal`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+
+        assertThat(runCartridgeChangeWithInsulinSwitch(ActionProgress.Unconfirmed(FailureReason.NoReply, "timeout"))).isEmpty()
+    }
+
+    /** Nothing was sent, so there was no modal: the dialog says it itself. */
+    @Test
+    fun `on a client a master that cannot be reached is still reported`() = runTest {
+        whenever(config.AAPSCLIENT).thenReturn(true)
+
+        val seen = runCartridgeChangeWithInsulinSwitch(ActionProgress.Rejected(FailureReason.NotReachable, "offline"))
+
+        assertThat(seen).contains("The insulin was not switched: The master is offline. Your previous insulin is still in use.")
     }
 
     /**

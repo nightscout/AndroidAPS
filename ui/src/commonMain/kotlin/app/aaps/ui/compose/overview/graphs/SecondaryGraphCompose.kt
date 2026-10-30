@@ -98,8 +98,10 @@ private data class ModelInput(
  * Shows one or two series. Every series draws the same way, on either axis:
  * - IOB: Blue line with area fill + bolus markers (SMBs, normal boluses, extended boluses)
  * - COB: Orange adaptive-step line with area fill + carbs markers + failover dots
- * - Simple line series (AbsIOB, BGI, Sensitivity, VarSens, DevSlope, HR, Steps): Colored line with gradient fill
+ * - Simple line series (AbsIOB, BGI, Sensitivity, VarSens, DevSlope): Colored line with gradient fill
  * - Deviations: Per-type colored step lines with gradient fill (POSITIVE/NEGATIVE/EQUAL/UAM/CSF)
+ * - Steps: Columns like the deviations, see [processStepsColumns]
+ * - Heart rate: Thin curved line, one per stretch of readings, so it has a break where the watch sent nothing
  *
  * The first series is drawn against the left axis and the second against the right one, unless the
  * two share a unit and so one axis. The axes follow the rules in SecondaryGraphAxes.kt.
@@ -135,8 +137,10 @@ fun SecondaryGraphCompose(
     val maxX = remember(minTimestamp, maxTimestamp) {
         timestampToX(maxTimestamp, minTimestamp)
     }
-    val stableTimeRange = remember(minTimestamp / 60000, maxTimestamp / 60000) {
-        minTimestamp to maxTimestamp
+    // Only a key of the cached series below. Null until the real range is known: those series are empty then, and
+    // a real range in the same minutes as the stand-in one kept them empty until the data changed (#5418).
+    val stableTimeRange = remember(hasRealTimeRange, minTimestamp / 60000, maxTimestamp / 60000) {
+        if (hasRealTimeRange) minTimestamp to maxTimestamp else null
     }
 
     // =========================================================================
@@ -176,7 +180,7 @@ fun SecondaryGraphCompose(
 
     // Simple line series processing (excludes BASAL — it's a fixed flipped overlay on IOB)
     val processedSimpleSeries = remember(
-        seriesTypes, stableTimeRange, absIobData, bgiData, ratioData, varSensData, devSlopeData, hrData, stepsData, activityData
+        seriesTypes, stableTimeRange, absIobData, bgiData, ratioData, varSensData, devSlopeData, hrData, activityData
     ) {
         if (!hasRealTimeRange) return@remember emptyList()
         buildList {
@@ -200,11 +204,10 @@ fun SecondaryGraphCompose(
                 if (it.dsMax.isNotEmpty()) add(SeriesType.DEV_SLOPE to processPoints(it.dsMax, minTimestamp, minX, maxX))
                 // dsMin tagged separately via DEV_SLOPE_MIN marker (see below)
             }
-            hrData?.heartRates?.takeIf { it.isNotEmpty() }?.let {
-                add(SeriesType.HEART_RATE to processPoints(it, minTimestamp, minX, maxX))
-            }
-            stepsData?.steps?.takeIf { it.isNotEmpty() }?.let {
-                add(SeriesType.STEPS to processPoints(it, minTimestamp, minX, maxX))
+            // One line per stretch, so the line has a break where the watch sent nothing. x is whole minutes, and
+            // two readings in the same minute would draw a vertical stroke.
+            hrData?.segments?.forEach { segment ->
+                add(SeriesType.HEART_RATE to processPoints(segment, minTimestamp, minX, maxX).distinctBy { it.first })
             }
             // Not when activity is only the overlay of the IOB graph: that one is scaled into IOB units below
             if (SeriesType.ACTIVITY in seriesTypes) {
@@ -245,6 +248,12 @@ fun SecondaryGraphCompose(
         // Only include types that have at least one non-zero value
         val activeTypes = perType.filter { (_, ys) -> ys.any { it != 0.0 } }
         ProcessedDeviationLines(allX, activeTypes)
+    }
+
+    // Steps as columns, like the deviations
+    val processedSteps = remember(stepsData, stableTimeRange) {
+        if (!hasRealTimeRange || stepsData == null) return@remember emptyList()
+        processStepsColumns(stepsData.steps, minTimestamp, minX, maxX)
     }
 
     // IOB line processing
@@ -290,7 +299,7 @@ fun SecondaryGraphCompose(
 
     // What each series draws: its line and its markers, the same on either axis
     val seriesSpecs = remember(
-        seriesTypes, processedDeviationLines, processedIob, processedIobTreatments, processedCob, processedCarbs, processedSimpleSeries, processedDevSlopeMin
+        seriesTypes, processedDeviationLines, processedSteps, processedIob, processedIobTreatments, processedCob, processedCarbs, processedSimpleSeries, processedDevSlopeMin
     ) {
         seriesTypes.associateWith { type ->
             buildList {
@@ -298,6 +307,8 @@ fun SecondaryGraphCompose(
                     SeriesType.DEVIATIONS -> processedDeviationLines?.series?.forEach { (deviationType, yValues) ->
                         add(SeriesSpec(processedDeviationLines.allX, yValues, SeriesSlot.DeviationLine(deviationType)))
                     }
+
+                    SeriesType.STEPS      -> addPoints(processedSteps, SeriesSlot.StepsColumns)
 
                     SeriesType.IOB        -> {
                         addPoints(processedIob, SeriesSlot.IobLine)
@@ -324,9 +335,9 @@ fun SecondaryGraphCompose(
             }
         }
     }
-    // Deviation bars first on an axis they share, so the line of the other series stays on top
-    val leftBaseSpecs = remember(sides, seriesSpecs) { sides.left.sortedBy { it != SeriesType.DEVIATIONS }.flatMap { seriesSpecs[it].orEmpty() } }
-    val rightSpecs = remember(sides, seriesSpecs) { sides.right.sortedBy { it != SeriesType.DEVIATIONS }.flatMap { seriesSpecs[it].orEmpty() } }
+    // Columns first on an axis they share, so the line of the other series stays on top
+    val leftBaseSpecs = remember(sides, seriesSpecs) { sides.left.sortedBy { it !in COLUMN_SERIES }.flatMap { seriesSpecs[it].orEmpty() } }
+    val rightSpecs = remember(sides, seriesSpecs) { sides.right.sortedBy { it !in COLUMN_SERIES }.flatMap { seriesSpecs[it].orEmpty() } }
 
     // Visible-window bounds (same x-unit as processed* points — minutes from minTimestamp) for
     // windowing the Y-axis scale to only the currently scrolled/zoomed portion of this graph's
@@ -409,8 +420,8 @@ fun SecondaryGraphCompose(
 
     val axes = remember(leftRange, rightRange, hasBasalLayer) { graphAxes(leftRange, rightRange, hasBasalLayer) }
     val hasRightAxis = sides.right.isNotEmpty()
-    // Deviation bars are drawn first, so the line of the other axis stays on top of them
-    val rightFirst = SeriesType.DEVIATIONS in sides.right
+    // Columns are drawn first, so the line of the other axis stays on top of them
+    val rightFirst = sides.right.any { it in COLUMN_SERIES }
 
     // =========================================================================
     // Line styles
@@ -647,9 +658,13 @@ fun SecondaryGraphCompose(
 /** The two series a basal layer always needs, for a basal with fewer than two points. */
 private val EMPTY_BASAL = listOf(0.0, 1.0) to listOf(0.0, 0.0)
 
+/** The series drawn as columns. They are drawn before the other series, so a line is never hidden behind them. */
+private val COLUMN_SERIES = setOf(SeriesType.DEVIATIONS, SeriesType.STEPS)
+
 /** The line style of one series. */
 private fun lineFor(slot: SeriesSlot, colors: SeriesColors, iobStyles: IobLineStyles, cobStyles: CobLineStyles): LineCartesianLayer.Line = when (slot) {
-    is SeriesSlot.DeviationLine -> createDeviationLine(slot.type)
+    is SeriesSlot.DeviationLine -> createColumnLine(deviationColor(slot.type))
+    SeriesSlot.StepsColumns     -> createColumnLine(colors.steps)
     SeriesSlot.IobLine          -> iobStyles.iobLine
     SeriesSlot.SmallSmb         -> iobStyles.smallSmbLine
     SeriesSlot.MediumSmb        -> iobStyles.mediumSmbLine
@@ -681,6 +696,7 @@ private fun MutableList<SeriesSpec>.addPoints(points: List<Pair<Double, Double>>
 
 internal sealed class SeriesSlot {
     data class DeviationLine(val type: DeviationType) : SeriesSlot()
+    data object StepsColumns : SeriesSlot()
     data object IobLine : SeriesSlot()
     data object SmallSmb : SeriesSlot()
     data object MediumSmb : SeriesSlot()
@@ -763,6 +779,32 @@ internal fun processStepPoints(points: List<GraphDataPoint>, minTimestamp: Long,
     if (inRange.isEmpty() || inRange.last().first >= maxX) return inRange
     val edgeValue = stepValueAt(pts, maxX) ?: return inRange
     return inRange + (maxX to edgeValue)
+}
+
+/** The minutes a steps point counts, see `StepsGraphData`. */
+private const val STEPS_COLUMN_MINUTES = 5.0
+
+/**
+ * The steps as columns, drawn with [Square]. A point counts the steps of the [STEPS_COLUMN_MINUTES]
+ * that start at its time. The watch sends one about every 40 seconds, so a column simply reaches to
+ * the next point. Where the next point is further away, the watch sent nothing: the column ends after
+ * its own minutes and the line goes down to zero. Without that, a gap of hours would be drawn as hours
+ * of the last count. The last column ends the same way.
+ *
+ * x is whole minutes, so two points can fall on the same minute. Only the newer one is kept.
+ */
+internal fun processStepsColumns(points: List<GraphDataPoint>, minTimestamp: Long, minX: Double, maxX: Double): List<Pair<Double, Double>> {
+    val perMinute = points.sortedBy { it.timestamp }.map { timestampToX(it.timestamp, minTimestamp) to it.value }.toMap().toList()
+    val columns = filterToRange(perMinute, minX, maxX)
+    return buildList {
+        columns.forEachIndexed { index, (x, y) ->
+            add(x to y)
+            val end = x + STEPS_COLUMN_MINUTES
+            val next = columns.getOrNull(index + 1)?.first
+            val close = minOf(end, maxX)
+            if ((next == null || next > end) && close > x) add(close to 0.0)
+        }
+    }
 }
 
 /**
@@ -904,16 +946,12 @@ fun createSeriesLine(type: SeriesType, colors: SeriesColors): LineCartesianLayer
             fill = LineCartesianLayer.LineFill.single(Fill(color)),
             areaFill = null
         )
-        // Points/dots only — no connecting line
-        SeriesType.HEART_RATE, SeriesType.STEPS                                  -> LineCartesianLayer.Line(
-            fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
+        // Thin curved line, no fill, so it reads well over the steps columns
+        SeriesType.HEART_RATE                                                    -> LineCartesianLayer.Line(
+            fill = LineCartesianLayer.LineFill.single(Fill(color)),
+            stroke = LineCartesianLayer.LineStroke.Continuous(thickness = 1.5.dp),
             areaFill = null,
-            pointProvider = LineCartesianLayer.PointProvider.single(
-                LineCartesianLayer.Point(
-                    component = ShapeComponent(fill = Fill(color), shape = CircleShape),
-                    size = 4.dp
-                )
-            )
+            interpolator = LineCartesianLayer.Interpolator.cubic()
         )
         // Default: smooth line with gradient area fill
         else                                                                     -> LineCartesianLayer.Line(
@@ -1104,9 +1142,8 @@ private fun deviationColor(type: DeviationType): Color = when (type) {
     DeviationType.CSF      -> DEVIATION_COLOR_CSF
 }
 
-/** Step line with solid area fill and thin stroke, per-deviation-type color */
-private fun createDeviationLine(type: DeviationType): LineCartesianLayer.Line {
-    val color = deviationColor(type)
+/** Columns: a step line with solid area fill and no stroke. Used for the deviations (one color per type) and the steps. */
+private fun createColumnLine(color: Color): LineCartesianLayer.Line {
     return LineCartesianLayer.Line(
         fill = LineCartesianLayer.LineFill.single(Fill(color)),
         stroke = LineCartesianLayer.LineStroke.Continuous(thickness = 0.dp),

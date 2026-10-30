@@ -28,12 +28,15 @@
     <string name="alarm_channel_bolus_error">Chyba bolusu</string>
     <string name="alarm_channel_error">Všeobecná chyba</string>
     <string name="alarm_channel_urgent">Urgentný alarm</string>
+    <string name="alarm_channel_eat_reminder">Čas na jedlo</string>
     <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (obísť režim Nerušiť)</string>
     <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (zachovať režim Nerušiť)</string>
     <string name="alarm_channel_silent_urgent">Urgentný alarm (režim postupného zvyšovania hlasitosti)</string>
     <string name="alarm_channel_silent">Alarm (režim postupného zvyšovania hlasitosti)</string>
     <string name="alarm_channel_silent_description">Používa sa pri zapnutej možnosti „Postupne zvyšovať hlasitosť upozornení“. Zobrazený alarm potom prehráva zvuk.</string>
     <string name="ongoing_channel_name">Aktuálny stav</string>
+    <string name="eat_reminder_channel">Odpočítavanie do pripomienky jedla</string>
+    <string name="eat_reminder_channel_description">Zobrazuje zostávajúci čas do jedla. Odpočítavanie je bez zvuku, zvukový signál zaznie až po uplynutí času.</string>
     <string name="notifications_channel_name">AAPS notifikácie</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>

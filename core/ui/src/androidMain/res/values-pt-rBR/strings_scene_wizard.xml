@@ -66,15 +66,11 @@
     <string name="scene_wizard_finish">Concluir</string>
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Cenário de acompanhamento</string>
-    <string name="scene_wizard_chain_info">Opcionalmente, encadeie outro cenário para ativá-lo automaticamente quando este expirar. Você também pode ignorá-lo ao encerrar este cenário antes do tempo. O cenário de acompanhamento só será executado se o cenário de destino estiver ativado e a bomba estiver disponível; caso contrário, você receberá uma notificação.</string>
     <string name="scene_chain_none">Nenhum</string>
     <string name="scene_skip_to_format">Pular para %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_target_missing">O cenário encadeado foi excluído</string>
-    <!-- Scene expiry: chain result notifications -->
-    <string name="scene_ended_format">O cenário \"%1$s\" terminou</string>
-    <string name="scene_chained_format">Cenários encadeados: %1$s → %2$s</string>
-    <string name="scene_chain_ended_with_skip">%1$s terminou — acompanhamento ignorado: %2$s</string>
+    <!-- Scene expiry: what the banner says, and the chain error notification -->
     <string name="scene_chain_skipped_deleted">o cenário de destino foi excluído</string>
     <string name="scene_chain_skipped_disabled">\"%1$s\" está desativado</string>
     <string name="scene_chain_error_summary">%1$s → %2$s: %3$d de %4$d ações falharam</string>

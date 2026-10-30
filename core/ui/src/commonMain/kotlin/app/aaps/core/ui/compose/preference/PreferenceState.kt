@@ -72,6 +72,7 @@ private class ReactiveVisibilityContext(
     override val masterOrPairedClient: Boolean get() = delegate.masterOrPairedClient
     override val clientRole: ClientRole get() = delegate.clientRole
     override val apsOffersDynamicSensitivity: Boolean get() = delegate.apsOffersDynamicSensitivity
+    override val supportsAppLanguage: Boolean get() = delegate.supportsAppLanguage
 
     // Return a reactive preferences wrapper
     override val preferences: Preferences get() = ReactivePreferencesWrapper(delegatePreferences, sharedStates)

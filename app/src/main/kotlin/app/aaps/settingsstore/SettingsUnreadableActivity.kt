@@ -1,6 +1,5 @@
 package app.aaps.settingsstore
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -16,7 +15,6 @@ import app.aaps.ComposeMainActivity
 import app.aaps.R
 import app.aaps.appshell.StartupFailedLabels
 import app.aaps.appshell.StartupFailedScreen
-import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.plugins.configuration.configBuilder.AndroidAppExit
 import app.aaps.shared.impl.sharedPreferences.StoreUnreadableException
 import app.aaps.core.ui.R as CoreUiR
@@ -29,10 +27,6 @@ import app.aaps.core.ui.R as CoreUiR
  * screen needs nothing of it. `ComposeMainActivity` hands over to it at once, and the notification opens it.
  */
 class SettingsUnreadableActivity : ComponentActivity() {
-
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleHelper.wrap(newBase))
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()

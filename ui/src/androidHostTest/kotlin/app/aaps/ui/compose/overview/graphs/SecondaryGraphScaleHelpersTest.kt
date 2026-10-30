@@ -124,6 +124,62 @@ internal class SecondaryGraphScaleHelpersTest {
     }
 
     @Nested
+    inner class ProcessStepsColumnsTest {
+
+        private fun min(m: Long) = m * 60_000L
+
+        @Test
+        fun `points close together make one column each, and the last one ends after its five minutes`() {
+            val points = listOf(GraphDataPoint(min(0), 10.0), GraphDataPoint(min(1), 10.0), GraphDataPoint(min(2), 30.0))
+            val result = processStepsColumns(points, minTimestamp = 0L, minX = 0.0, maxX = 60.0)
+            assertThat(result).containsExactly(0.0 to 10.0, 1.0 to 10.0, 2.0 to 30.0, 7.0 to 0.0).inOrder()
+        }
+
+        @Test
+        fun `a gap goes down to zero after five minutes instead of holding the last count`() {
+            // The watch was not connected from minute 5 to 40. Square holds a value up to the next
+            // point, so without the zero the gap would be drawn as 35 minutes of walking.
+            val points = listOf(GraphDataPoint(min(0), 50.0), GraphDataPoint(min(40), 20.0))
+            val result = processStepsColumns(points, minTimestamp = 0L, minX = 0.0, maxX = 60.0)
+            assertThat(result).containsExactly(0.0 to 50.0, 5.0 to 0.0, 40.0 to 20.0, 45.0 to 0.0).inOrder()
+        }
+
+        @Test
+        fun `a point exactly five minutes later continues the column`() {
+            val points = listOf(GraphDataPoint(min(0), 50.0), GraphDataPoint(min(5), 20.0))
+            val result = processStepsColumns(points, minTimestamp = 0L, minX = 0.0, maxX = 60.0)
+            assertThat(result).containsExactly(0.0 to 50.0, 5.0 to 20.0, 10.0 to 0.0).inOrder()
+        }
+
+        @Test
+        fun `points on the same minute keep only the newer one`() {
+            // The watch sends every 40 seconds, and x is whole minutes
+            val points = listOf(GraphDataPoint(min(0), 10.0), GraphDataPoint(min(0) + 40_000L, 25.0))
+            val result = processStepsColumns(points, minTimestamp = 0L, minX = 0.0, maxX = 60.0)
+            assertThat(result).containsExactly(0.0 to 25.0, 5.0 to 0.0).inOrder()
+        }
+
+        @Test
+        fun `the last column stops at the right edge`() {
+            val points = listOf(GraphDataPoint(min(58), 10.0))
+            val result = processStepsColumns(points, minTimestamp = 0L, minX = 0.0, maxX = 60.0)
+            assertThat(result).containsExactly(58.0 to 10.0, 60.0 to 0.0).inOrder()
+        }
+
+        @Test
+        fun `a point on the right edge gets no closing point`() {
+            val points = listOf(GraphDataPoint(min(60), 10.0))
+            val result = processStepsColumns(points, minTimestamp = 0L, minX = 0.0, maxX = 60.0)
+            assertThat(result).containsExactly(60.0 to 10.0)
+        }
+
+        @Test
+        fun `no points, no columns`() {
+            assertThat(processStepsColumns(emptyList(), minTimestamp = 0L, minX = 0.0, maxX = 60.0)).isEmpty()
+        }
+    }
+
+    @Nested
     inner class WindowedValuesTest {
 
         private fun spec(vararg points: Pair<Double, Double>, slot: SeriesSlot = SeriesSlot.IobLine, countsForRange: Boolean = true) =

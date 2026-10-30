@@ -26,5 +26,5 @@
     <!-- Scene wizard: UI labels -->
     <!-- Scene wizard: chain step -->
     <!-- Scene list: chain indicator -->
-    <!-- Scene expiry: chain result notifications -->
+    <!-- Scene expiry: what the banner says, and the chain error notification -->
 </resources>

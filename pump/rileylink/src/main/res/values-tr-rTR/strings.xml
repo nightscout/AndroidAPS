@@ -8,6 +8,7 @@
     <string name="pump_status_error_comm">İletişim hatası</string>
     <string name="pump_status_timeout_comm">İletişimde zaman aşımı</string>
     <string name="pump_status_invalid_config">Geçersiz yapılandırma</string>
+    <string name="medtronic_pump_encoding_title">Medtronic Kodlama</string>
     <string name="medtronic_pump_encoding_4b6b_local">Yazılım 4b6b Kodlama</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Donanım 4b6b Kodlama</string>
     <string name="medtronic_pump_frequency_us_ca">ABD &amp; Kanada (916 MHz)</string>
@@ -71,4 +72,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Taramayı Kullan</string>
     <string name="orange_use_scanning_level_summary">OrangeLink\'e bağlanmadan önce tarayın, bağlantıları iyileştirebilir (gerekirse diğer RileyLink klonlarıyla da kullanılabilir)</string>
+    <string name="rileylink_pair">RileyLink\'i Eşleştir</string>
+    <string name="rileylink_pair_success">RileyLink başarıyla eşleştirildi</string>
+    <string name="rileylink_config_reset">RileyLink yapılandırmasını sıfırla</string>
 </resources>

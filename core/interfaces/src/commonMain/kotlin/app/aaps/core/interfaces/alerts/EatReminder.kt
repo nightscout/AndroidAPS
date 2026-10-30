@@ -21,25 +21,26 @@ interface EatReminder {
      */
     fun start(durationMs: Long)
 
-    /** Master: ends the timer. Before it rang this cancels the alarm, after it rang this also silences it. */
+    /**
+     * Master: ends the timer. Before it rang this cancels the alarm, after it rang this also silences it - only its
+     * own alarm, never another alarm (#5408). Every Stop and Silence comes here: the bar, the alarm screen, the
+     * notifications, a client and the watch, so they all do the same.
+     */
     fun stop()
 
     /**
-     * Master: moves the end [EXTEND_MINUTES] later. After it rang the new end is counted from now, and the alarm is
-     * silenced. The whole wait grows with the new end.
+     * Master: +5 min, "remind me in [EXTEND_MINUTES] minutes", the same from every place that offers it. A running
+     * timer ends [EXTEND_MINUTES] later; after it rang the new end is counted from now, and its alarm is silenced.
+     * The whole wait grows with the new end. With no timer - it was ended, for example with Silence on its alarm -
+     * a new one of [EXTEND_MINUTES] starts.
+     *
+     * @return false when the alarm could not be set. Then nothing changed: a ringing alarm keeps ringing, and the
+     *   caller must not report success (the user is told the alarm could not be set).
      */
-    fun extend()
+    fun extend(): Boolean
 
     /** Master: the platform calls this when the timer's alarm rings, just before it shows the alarm. */
     fun onRang()
-
-    /**
-     * Master: the user stopped an alarm somewhere (alarm screen, notification, watch). When the timer's alarm has
-     * rung ([onRang]), this was its alarm, and the timer ends. Otherwise it was another alarm, and nothing changes -
-     * also in the second between the end time and the moment Android delivers the timer's alarm, so muting a BG
-     * alarm then cannot swallow it.
-     */
-    fun onAlarmStopped()
 
     /** Master, once at app start: sets the alarm again from the saved timer. A reboot or a force stop removes it. */
     fun restore()
