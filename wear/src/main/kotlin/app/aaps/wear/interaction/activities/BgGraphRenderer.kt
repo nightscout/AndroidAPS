@@ -260,22 +260,6 @@ internal fun DrawScope.renderBgGraph(
         }
     }
 
-    // The target as on the phone: the temporary target's middle while one runs, else the profile's, a faint
-    // step line at the back, out to the end of the window. The step is what tells a temporary target is set.
-    val targets = data.treatmentData.targets
-    for (i in 0 until targets.size - 1) {
-        val from = targets[i]
-        val to = targets[i + 1]
-        val x1 = timeToX(max(from.timeStamp, startTime))
-        val x2 = timeToX(min(to.timeStamp, endTime))
-        if (x2 <= x1) continue
-        val y = sgvToY(from.mgdl.toFloat())
-        drawLine(color = TargetLineColor, start = Offset(x1, y), end = Offset(x2, y), strokeWidth = 1.dp.toPx())
-        // The riser to the next value, when that change is inside the window. The last point has no next value.
-        if (i < targets.size - 2 && to.timeStamp in startTime..endTime)
-            drawLine(color = TargetLineColor, start = Offset(x2, y), end = Offset(x2, sgvToY(to.mgdl.toFloat())), strokeWidth = 1.dp.toPx())
-    }
-
     // The "time to eat" timer: a dashed line where it rings, with the minutes left at it, one line under
     // the now label so the two never meet. Past the window's end the line stands at the edge
     val eatAt = data.statusData.eatReminderEndsAt
@@ -323,6 +307,23 @@ internal fun DrawScope.renderBgGraph(
             end = Offset(pad + drawW, sgvToY(low)),
             strokeWidth = 1.dp.toPx()
         )
+    }
+
+    // The target as on the phone: the temporary target's middle while one runs, else the profile's, a faint
+    // step line out to the end of the window, over the high and low lines (it often runs along one of them)
+    // and under the readings. The step is what tells a temporary target is set.
+    val targets = data.treatmentData.targets
+    for (i in 0 until targets.size - 1) {
+        val from = targets[i]
+        val to = targets[i + 1]
+        val x1 = timeToX(max(from.timeStamp, startTime))
+        val x2 = timeToX(min(to.timeStamp, endTime))
+        if (x2 <= x1) continue
+        val y = sgvToY(from.mgdl.toFloat())
+        drawLine(color = TargetLineColor, start = Offset(x1, y), end = Offset(x2, y), strokeWidth = 1.dp.toPx())
+        // The riser to the next value, when that change is inside the window. The last point has no next value.
+        if (i < targets.size - 2 && to.timeStamp in startTime..endTime)
+            drawLine(color = TargetLineColor, start = Offset(x2, y), end = Offset(x2, sgvToY(to.mgdl.toFloat())), strokeWidth = 1.dp.toPx())
     }
 
     val dotRadius = w * 0.013f
