@@ -1270,7 +1270,8 @@ class DataHandlerMobile(
                 insulinButtonIncrement2 = preferences.get(DoubleKey.OverviewInsulinButtonIncrement2),
                 carbsButtonIncrement1 = preferences.get(IntKey.OverviewCarbsButtonIncrement1),
                 carbsButtonIncrement2 = preferences.get(IntKey.OverviewCarbsButtonIncrement2),
-                pushedWatchface = preferences.get(StringKey.WearPushedWatchface)
+                pushedWatchface = preferences.get(StringKey.WearPushedWatchface),
+                alertOverrideDnd = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
             )
         )
         // QuickWizard

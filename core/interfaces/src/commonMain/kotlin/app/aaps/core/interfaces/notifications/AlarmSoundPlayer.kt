@@ -20,8 +20,8 @@ import app.aaps.core.interfaces.notifications.AlarmSoundPlayer.Companion.OWNER_I
  * `AlertOverrideDoNotDisturb` preferences. On Android a stream choice alone cannot keep the override
  * setting, the Do Not Disturb profile decides what a stream may do: with the override off the player
  * checks Do Not Disturb itself and stays quiet, and with it on the alarm stream is heard only when the
- * profile allows alarms. From Android 15 an app cannot lift Do Not Disturb the user turned on, also
- * not with Do Not Disturb access, so that is as far as the setting reaches there.
+ * profile allows alarms. Every other alarm sound on Android follows the same rule, `DoNotDisturbRule`
+ * in androidMain.
  *
  * `AlertOverrideDoNotDisturb` takes two levers to honour off Android, because iOS splits what
  * Android's alarm stream does in one. The Ring/Silent switch is answered by the audio session
