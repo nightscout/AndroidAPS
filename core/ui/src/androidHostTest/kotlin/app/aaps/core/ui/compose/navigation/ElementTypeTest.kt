@@ -88,11 +88,30 @@ class ElementTypeTest {
             ElementType.SETTINGS,
             ElementType.SETUP_WIZARD,
             ElementType.MAINTENANCE,
-            ElementType.CONFIGURATION,
-            ElementType.SCENE_MANAGEMENT
+            ElementType.CONFIGURATION
         )
         expectedPreferences.forEach { type ->
             assertThat(type.protection).isEqualTo(ProtectionCheck.Protection.PREFERENCES)
+        }
+    }
+
+    /**
+     * These screens open read only with bolus protection, so a preset or a scene can be used. Changing
+     * one asks for settings protection on the screen. Starting a scene changes therapy, so it needs bolus
+     * protection too (#5429).
+     */
+    @Test
+    fun managementScreensAndScenes_requireBolusAuth() {
+        val expectedBolusProtected = setOf(
+            ElementType.PROFILE_MANAGEMENT,
+            ElementType.TEMP_TARGET_MANAGEMENT,
+            ElementType.INSULIN_MANAGEMENT,
+            ElementType.QUICK_WIZARD_MANAGEMENT,
+            ElementType.SCENE_MANAGEMENT,
+            ElementType.SCENE
+        )
+        expectedBolusProtected.forEach { type ->
+            assertThat(type.protection).isEqualTo(ProtectionCheck.Protection.BOLUS)
         }
     }
 
