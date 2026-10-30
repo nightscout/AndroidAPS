@@ -12,7 +12,7 @@
     <string name="eopatch_not_activated">Neaktivováno</string>
     <string name="eopatch_base_basal_rate">Základní hodnota bazálu</string>
     <string name="eopatch_temp_basal_rate">Dočasná bazální dávka</string>
-    <string name="invalid_basal_rate">Bazál profilu je menší než 0,05 U/h. EOPatch má minimální jednotku 0,5U. Zkuste to znovu po nastavení profilu na více než minimální jednotku.</string>
+    <string name="invalid_basal_rate">Bazál profilu je menší než 0,05 U/h. EOPatch má minimální jednotku dávky 0,05 U. Zkuste to znovu po nastavení profilu na více než minimální jednotku.</string>
     <string name="no_profile_selected_try_again">Nebyl vybrán žádný profil. Vyberte prosím profil a zkuste to znovu.</string>
     <string name="symbol_day">dní</string>
     <string name="symbol_plus">+</string>
@@ -23,7 +23,7 @@
     <string name="time_2hr">2 h</string>
     <string name="patch_safe_deactivation_desc">Chcete-li změnit na novou pumpu, musí být aktuální pumpa zahozena. Veškerá dodávka inzulínu z pumpy bude zrušena.</string>
     <string name="patch_discard_complete_title">Zahození pumpy je dokončeno.</string>
-    <string name="patch_discard_complete_desc">Pumpa byl deaktivována.\nZahození pumpy.\nOdstraňte pumpu připojenou k tělu.</string>
+    <string name="patch_discard_complete_desc">Pumpa byla deaktivována.\nZahoďte pumpu.\nOdstraňte pumpu připojenou k tělu.</string>
     <string name="patch_change_confirm_bolus_is_active_desc">Právě je podáván bolus. Opravdu chcete zrušit vydávání inzulinu a zahodit pumpu?</string>
     <string name="patch_change_confirm_temp_basal_is_active_desc">Právě je podáván dočasný bazál. Opravdu chcete zrušit vydávání inzulinu a zahodit pumpu?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Právě je podáván bolus a dočasný bazál. Opravdu chcete zrušit vydávání inzulinu a zahodit pumpu?</string>
@@ -41,7 +41,7 @@
     <string name="patch_wake_up_pairing_info">Během párování se zobrazí dvě systémová vyskakovací okna Androidu. Obě musíte potvrdit pro dokončení Bluetooth párování.</string>
     <string name="patch_start_pairing">Začít párovat</string>
     <string name="patch_connect_new">Párování pumpy</string>
-    <string name="patch_connect_new_desc">Nový pumpa je spárována.\nUdržujte vzdálenost mezi pumpou a telefonem co nejblíže</string>
+    <string name="patch_connect_new_desc">Nová pumpa se páruje.\nUdržujte pumpu a telefon co nejblíže u sebe.</string>
     <string name="patch_remove_needle_cap">Připravte se na připojení pumpy</string>
     <string name="patch_remove_needle_cap_desc_1">Odstraňte lepicí pásku a klepněte na \"Další\".</string>
     <string name="patch_remove_needle_cap_desc_2">Pokud jehla trčí, klepněte na \'Zahodit\'.</string>
@@ -84,7 +84,7 @@
     <string name="string_resume_insulin_delivery_title">Obnovit výdej inzulínu</string>
     <string name="string_resume_insulin_delivery_message">Konec pozastavení inzulínu.\nKlepněte na \'Potvrdit\' pro obnovení dodávky inzulínu.\n\nDodávka inzulínu nebude obnovena, dokud neklepnete na \'Potvrdit\'.\nPokud na \'Potvrdit\' neklepnete, můžete dostat hyperglykémii.</string>
     <string name="string_suspended_insulin_delivery_message">Výdej inzulínu je pozastaven.</string>
-    <string name="string_resumed_insulin_delivery_message">Výdej inzulínu je pozastaven.</string>
+    <string name="string_resumed_insulin_delivery_message">Výdej inzulínu je obnoven.</string>
     <string name="string_temp_basal_remained_hhmm">zbývající čas: %1$s:%2$s</string>
     <string name="string_pause_failed">Pozastavení selhalo.</string>
     <string name="string_resume_failed">Obnovení se nezdařilo.</string>
