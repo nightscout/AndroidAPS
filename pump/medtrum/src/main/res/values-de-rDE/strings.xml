@@ -2,6 +2,7 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
+    <string name="medtrum_pump_description">Pumpenintegration für Medtrum Nano und Medtrum 300U</string>
     <string name="medtrum_pump_setting">Medtrum Pumpeneinstellungen</string>
     <string name="pump_error">Pumpenfehler: %1$s!! </string>
     <string name="pump_is_suspended">Pumpe ist ausgesetzt</string>
@@ -83,6 +84,9 @@
     <!-- settings-->
     <string name="alarm_setting_title">Alarm Einstellungen</string>
     <string name="alarm_setting_summary">Wählen Sie Ihre bevorzugten Pumpen-Alarmeinstellungen.</string>
+    <string name="alarm_setting_vibrate">Vibration</string>
+    <string name="alarm_setting_beep">Piepton</string>
+    <string name="alarm_setting_silent">Lautlos</string>
     <string name="patch_expiration_title">Patch Ablaufdatum</string>
     <string name="patch_expiration_summary">Wenn aktiviert, läuft der Patch nach 3 Tagen ab, mit einer Nachfrist von 8 Stunden danach.</string>
     <string name="hourly_max_insulin_summary">Lege die maximale Anzahl an Insulineinheiten pro Stunde fest. Bei Überschreitung wird die Pumpe ausgesetzt.</string>
