@@ -22,7 +22,7 @@
     <string name="stoppingextendedbolus">Zastavuji prodloužený bolus</string>
     <string name="updatingbasalrates">Aktualizuji bazály</string>
     <string name="description_pump_diaconn_g8">Integrace pumpy pro pumpy Diaconn G8</string>
-    <string name="diaconn_g8_pump">Diakonn G8</string>
+    <string name="diaconn_g8_pump">Diaconn G8</string>
     <string name="maxbolusviolation">Překročen maximální bolus</string>
     <string name="commanderror">Chyba příkazu</string>
     <string name="speederror">Chyba rychlosti</string>
@@ -33,7 +33,7 @@
     <string name="basal_step">Krok bazálu</string>
     <string name="pairfirst">Prosím, spárujte pumpu s telefonem!</string>
     <string name="processinghistory">Zpracovávání události</string>
-    <string name="diaconn_g8_history_tempbasal">Dočasný Bazál</string>
+    <string name="diaconn_g8_history_tempbasal">Dočasný bazál</string>
     <string name="diaconng8_pump_settings">Nastavení pumpy Diaconn</string>
     <string name="diaconn_g8_pumpalarm">Zvuk</string>
     <string name="diaconn_g8_pumpalarm_sound">zvuk</string>
