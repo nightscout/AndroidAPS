@@ -12,10 +12,13 @@ import app.aaps.core.interfaces.alerts.EatReminder
 import app.aaps.core.interfaces.alerts.EatReminderAction
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.DoNotDisturbRule
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -36,12 +39,15 @@ import kotlin.math.max
  * every half minute for five minutes, as the phone rings until it is answered.
  * The buttons go to the phone, which stops or moves the timer, and the next status brings the result
  * back. Until then the watch acts on its own copy, so it reads right also with the phone away.
+ * While the watch is in Do Not Disturb and the phone's "Override Do Not Disturb mode" is off, the ring
+ * only vibrates, as the phone's alarm does then, see [DoNotDisturbRule].
  */
 @SingleIn(AppScope::class)
 @Inject
 class EatReminderWatch(
     private val context: Context,
     private val sp: SP,
+    private val preferences: Preferences,
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger
 ) {
@@ -181,7 +187,15 @@ class EatReminderWatch(
                 vibrationPattern = RING_VIBRATION
             }
         )
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+        notificationManager.createNotificationChannel(
+            NotificationChannel(SILENT_CHANNEL_ID, context.getString(R.string.eat_reminder_channel_silent), NotificationManager.IMPORTANCE_HIGH).apply {
+                setSound(null, null)
+                enableVibration(true)
+                vibrationPattern = RING_VIBRATION
+            }
+        )
+        val quiet = DoNotDisturbRule.staysQuiet(preferences.get(BooleanKey.AlertOverrideDoNotDisturb), notificationManager.currentInterruptionFilter)
+        val notification = NotificationCompat.Builder(context, if (quiet) SILENT_CHANNEL_ID else CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_alarm)
             .setContentTitle(context.getString(R.string.eat_reminder_title))
             .setCategory(NotificationCompat.CATEGORY_ALARM)
@@ -205,6 +219,7 @@ class EatReminderWatch(
     private companion object {
 
         const val CHANNEL_ID = "AndroidAPS-EatReminder"
+        const val SILENT_CHANNEL_ID = "AndroidAPS-EatReminder-silent"
         const val COUNTDOWN_CHANNEL_ID = "AndroidAPS-EatReminder-Countdown"
         const val NOTIFICATION_ID = 4720
         const val COUNTDOWN_NOTIFICATION_ID = 4724

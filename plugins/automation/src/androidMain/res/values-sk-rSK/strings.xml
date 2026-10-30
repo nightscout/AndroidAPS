@@ -146,6 +146,7 @@
     <string name="triggerStepsCountLabel">Počet krokov</string>
     <string name="triggerStepsCountDesc">Počet krokov za %1$s minút %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Trvanie merania</string>
+    <string name="automation_log_entry" comment="One line of the automation run log. %1$s=time, %2$s=a symbol for success or failure, %3$s=rule name (bold), %4$s=what the action did, %5$s=its result. Example: 21:15 ☺ Night low: Start temp target: 8.0mmol/L@60 min(Automation): OK">%1$s %2$s %3$s: %4$s: %5$s</string>
     <!--    SMB mode-->
     <string name="changeSmbState">Povoliť/zakázať SMB</string>
     <string name="changeSmbTo">Zmeniť SMB na %1$s</string>

@@ -489,6 +489,15 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
         rxBus.send(EventData.SnoozeAlert(0L))
         verify(uiInteraction, timeout(2000)).stopAlarm("Muted from wear")
     }
+    @Test fun `onEventSync dispatches a posted DismissAlert to its handler`() {
+        // Silence on the watch's notification of the alarm: stop and close the screen, where the quick snooze leaves it
+        rxBus.send(EventData.DismissAlert(0L))
+        verify(uiInteraction, timeout(2000)).dismissAlarm("Dismissed from wear")
+    }
+    @Test fun `onEventSync dispatches a posted MuteAlert to its handler`() {
+        rxBus.send(EventData.MuteAlert(0L, minutes = 5))
+        verify(uiInteraction, timeout(2000)).muteAlarm(5, "Muted from wear for 5 min")
+    }
     @Test fun `onEvent dispatches a posted ActionBolusPreCheck to the suspend handler`() {
         // onEvent wraps the handler in rxCompletable, which runs the coroutine off the posting thread —
         // hence a timeout verify rather than a synchronous capture. The unstubbed prepare() returns the

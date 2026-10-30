@@ -72,10 +72,8 @@
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
     <string name="scene_chain_target_missing">Scena concatenata eliminata</string>
-    <!-- Scene expiry: chain result notifications -->
-    <string name="scene_ended_format">Scena \"%1$s\" terminata</string>
-    <string name="scene_chained_format">Scena concatenata: %1$s → %2$s</string>
-    <string name="scene_chain_ended_with_skip">%1$s terminato — seguito saltato: %2$s</string>
+    <!-- Scene expiry: what the banner says, and the chain error notification -->
+    <string name="scene_chain_skipped_line" comment="Shown on the banner of a scene that has ended. %1$s=why the next scene did not start. Example: Follow-up did not start: target scene was deleted">Il follow-up non è stato avviato: %1$s</string>
     <string name="scene_chain_skipped_deleted">la scena target è stata eliminata</string>
     <string name="scene_chain_skipped_disabled">\"%1$s\" è disabilitato</string>
     <string name="scene_chain_error_summary">%1$s → %2$s: %3$d di azioni %4$d fallite</string>

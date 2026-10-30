@@ -131,7 +131,6 @@
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nL\'insuline n\'a pas non plus été changée.</string>
     <string name="active"><![CDATA[<Actif>]]></string>
     <string name="date"> Date</string>
-    <string name="units_label">Unités</string>
     <string name="insulin_nickname_label">Nom de l\'insuline</string>
     <string name="concentration_label">Concentration</string>
     <string name="peak_label">Pic</string>
@@ -929,7 +928,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Pompe appairée</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy non pris en charge.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy non pris en charge ou appareil non appairé.</string>
     <string name="ble_not_enabled">Bluetooth désactivé.</string>
     <string name="ble_permissions_missing">Les autorisations Bluetooth ne sont pas accordées. Veuillez les accorder dans les paramètres de l\'application.</string>
     <!--    Preferences -->
@@ -1126,6 +1124,7 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">V_SI</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">PAS</string>
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="units_days">jours</string>
     <string name="units_format_days">%1$d jours</string>
     <string name="units_format_days_range">%1$d jours (%2$d - %3$d)</string>

@@ -64,7 +64,6 @@
     <string name="no_profile_set">ПРОФИЛЬ НЕ ЗАДАН</string>
     <string name="active"><![CDATA[Активен]]></string>
     <string name="date">Дата</string>
-    <string name="units_label">единицы</string>
     <string name="dia_label">DIA (время действия инсулина)</string>
     <string name="ic_label">Углеводный коэффициент IC (ГУ/ед. инс)</string>
     <string name="isf_label">ISF (чувствительность к инсулину)</string>
@@ -537,7 +536,6 @@
     <string name="pump_paired" comment="26 characters max for translation">Помпа сопряжена</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth с низким энергопотреблением не поддерживается.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy не поддерживается или устройство не сопряжено.</string>
     <string name="ble_not_enabled">Bluetooth не включен.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Настройки расширений</string>
@@ -632,5 +630,6 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <!-- Graph series full names (used in the graph settings, where there is room) -->
     <string name="prefs_range_title">Диапазон для визуализации</string>
 </resources>

@@ -47,11 +47,13 @@
     <string name="authorized_clients_qr_ns_instructions">Skann denne koden på den nye telefonen, enten i oppsettsveiviseren eller under Koble til hovedenhet. Den konfigurerer Nightscout. Telefonen blir ikke sammenkoblet.</string>
     <string name="authorized_clients_qr_keep_private">Alle som ser denne koden, kan lese dataene dine i Nightscout. Vis den bare til den nye telefonen.</string>
     <string name="authorized_clients_token_problem_title">Ingen QR-kode</string>
+    <string name="authorized_clients_not_added_title">Klient ikke lagt til</string>
     <string name="authorized_clients_token_problem_not_connected">Denne telefonen er ikke koblet til Nightscout og kan derfor ikke opprette et token for klienten.</string>
     <string name="authorized_clients_token_problem_not_allowed">Nightscout-tokenet på denne telefonen er ikke et administratortoken og kan derfor ikke opprette et token for klienten. Bruk et administratortoken her, eller legg til klienten med PIN-koden.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout har allerede et token med dette navnet og andre rettigheter. Velg et annet navn.</string>
     <string name="authorized_clients_token_problem_name_in_use">En klient med dette navnet finnes allerede i listen. Velg et annet navn, eller fjern klienten først.</string>
-    <string name="authorized_clients_token_problem_failed">Nightscout opprettet ikke tokenet. Kontroller tilkoblingen og prøv igjen.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout viste ikke den nye tokenen i listen, så den ble fjernet igjen. Ingenting ble liggende igjen. Prøv på nytt.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout viste ikke den nye tokenen i listen, og den kunne ikke fjernes igjen. Slett tokenen %1$s i Nightscout, og prøv deretter på nytt.</string>
     <string name="authorized_clients_tokens_header">Bare lesetilgang til Nightscout</string>
     <string name="authorized_clients_token_unpaired">Eget Nightscout-token, ikke sammenkoblet</string>
     <string name="authorized_clients_token_show_qr">Vis QR-kode</string>
@@ -171,8 +173,8 @@
     <string name="wear_action_tempt_range_error">Ugyldig område: Lavt mål (%1$s) kan ikke være større enn Høyt mål (%2$s)</string>
     <string name="wear_wizard_settings_summary">Beregninger inkludert i resultatet fra kalkulator:</string>
     <string name="wear_general_settings">Generelle innstillinger</string>
-    <string name="wear_custom_watchface_settings">Innstillinger for tilpasset urskive</string>
-    <string name="wear_custom_watchface">Tilpasset urskive: %1$s</string>
+    <string name="wear_custom_watchface_settings">Innstillinger for egendefinert urskive</string>
+    <string name="wear_custom_watchface">Egendefinert urskive: %1$s</string>
     <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Installerer…</string>
     <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Klokken viser komplikasjons-urskive. Velg Egendefinert urskive for å vise %1$s på klokken.</string>
     <string name="wear_pushed_watchface_confirm_title">Endre urskive på klokken?</string>
@@ -181,11 +183,11 @@
     <string name="wear_load_watchface">Last inn urskive</string>
     <string name="wear_infos_watchface">Info urskive</string>
     <string name="wear_export_watchface">Eksporter mal</string>
-    <string name="wear_new_custom_watchface_exported">Tilpasset urskive-mal eksportert</string>
+    <string name="wear_new_custom_watchface_exported">Egendefinert urskive-mal eksportert</string>
     <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Send alle data på nytt</string>
     <string name="open_settings_on_wear">Åpne Innstillinger på klokken</string>
-    <string name="wear_import_custom_watchface_title">Velg tilpasset urskive</string>
+    <string name="wear_import_custom_watchface_title">Velg egendefinert urskive</string>
     <string name="cwf_infos_pref_locked">Liste over forhåndsvalg låst av urskive</string>
     <string name="cwf_infos_pref_required">Liste over innstillinger som kreves av urskiven</string>
     <string name="cwf_infos_view_title">Liste over felt som er inkludert i urskive</string>
