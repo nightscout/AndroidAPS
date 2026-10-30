@@ -72,7 +72,6 @@
     <string name="pair_with_master_fetching">Søker etter sammenkobling…</string>
     <string name="pair_with_master_confirm_title">Koble til denne hovedenheten?</string>
     <string name="pair_with_master_confirm_master">Hovedenhet: %1$s</string>
-    <string name="pair_with_master_confirm_warning">Etter sammenkobling vil denne hovedenheten kunne sende signerte kommandoer til denne enheten.</string>
     <string name="pair_with_master_confirm_pair">Koble til</string>
     <string name="pair_with_master_error_title">Kan ikke koble til</string>
     <string name="pair_with_master_error_wrong_pin">Fant ingen sammenkobling for denne PIN-koden. Kontroller PIN-koden på hovedenheten og prøv igjen.</string>
