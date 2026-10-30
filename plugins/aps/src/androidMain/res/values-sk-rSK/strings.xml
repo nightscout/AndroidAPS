@@ -86,7 +86,7 @@
     <string name="autotune_run">Spustiť Autotune</string>
     <string name="autotune_check_input_profile_button">Skontrolovať vstupný profil</string>
     <string name="autotune_compare_profile">Porovnať profily</string>
-    <string name="autotune_copy_localprofile_button">Kopírovať do miestneho profilu</string>
+    <string name="autotune_copy_localprofile_button">Kopírovať do lokálneho profilu</string>
     <string name="autotune_update_input_profile_button">Aktualizovať vstupný profil</string>
     <string name="autotune_revert_input_profile_button">Vrátiť vstupný profil</string>
     <string name="autotune_copy_local_profile_message">Vytvoriť z tohto Autotune profilu nový miestny profil?</string>
