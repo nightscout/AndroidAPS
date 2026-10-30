@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="dia_whatmeansdia">Wat is waar over DIA?</string>
+    <string name="dia_label_exam">Duur van insuline activiteit (DIA)</string>
     <string name="dia_profile">Je moet de waarde voor DIA instellen bij de insuline-instellingen (Beheren → Insuline-instellingen), niet in het profiel.</string>
+    <string name="dia_minimumis5h">De minimumwaarde is 5 uur.</string>
     <string name="dia_hint1">https://wiki.aaps.app/nl/latest/SettingUpAaps/ConfigBuilder.html#config-builder-insulin</string>
     <string name="dia_meaningisequaltodiapump">Als je tevreden bent met de waarde voor DIA die je in je pomp gebruikte voordat je AndroidAPS ging gebruiken goed werkte, dan is het niet nodig om deze te wijzigen als je begint met loopen.</string>
     <string name="dia_valuemustbedetermined">Je moet voor jezelf de juiste waarde voor DIA bepalen.</string>
