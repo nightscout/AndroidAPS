@@ -7,7 +7,7 @@
     <string name="automation_empty_desc">Vytvorte pravidlo na automatizáciu akcií na základe spúšťačov.</string>
     <string name="automation_edit_rule">Upraviť pravidlo</string>
     <string name="automation_discard_title">Zahodiť zmeny?</string>
-    <string name="automation_discard_message">Pravidlo je neúplné a nemôže byť uložené. Zahodiť Vaše zmeny?</string>
+    <string name="automation_discard_message">Pravidlo je neúplné a nemôže byť uložené. Zahodiť vaše zmeny?</string>
     <string name="automation_discard_confirm">Zahodiť</string>
     <string name="automation_category_time">Čas &amp; plánovač</string>
     <string name="automation_category_glucose">Glykémia &amp; ošetrenie</string>
@@ -35,9 +35,9 @@
     <string name="action_scene_not_found">Scéna sa nenašla</string>
     <string name="action_scene_disabled">Scéna je zakázaná</string>
     <string name="automation_unit_meters">m</string>
-    <string name="automation_unit_bpm">bmp</string>
+    <string name="automation_unit_bpm">bpm</string>
     <string name="automation_missing_task_name">Zadajte prosím názov úlohy.</string>
-    <string name="automation_missing_trigger">Prosím, zadajte aspoň jednu podmienku.</string>
+    <string name="automation_missing_trigger">Prosím, zadajte aspoň jeden spúšťač.</string>
     <string name="automation_missing_action">Prosím, zadajte aspoň jednu akciu.</string>
     <string name="exportsettings_message">Export nastavení: %1$s</string>
     <string name="export_settings_short">Text v ošetreniach:</string>
@@ -48,14 +48,14 @@
     <string name="profilename">Zmeniť profil na</string>
     <string name="changengetoprofilename">Zmena profilu na %1$s</string>
     <string name="automation_trigger_pump_last_connection_label">Posledné spojenie s pumpou</string>
-    <string name="automation_trigger_pump_last_connection_compared">Posledné spojenie s pumpou pred %1$s %2$s minútami</string>
+    <string name="automation_trigger_pump_last_connection_compared">Posledné spojenie s pumpou %1$s %2$s min dozadu</string>
     <string name="alreadyset">Už nastavené</string>
     <string name="profilepercentage">Percentuálny profil</string>
-    <string name="startprofileforever">Začiatok profilu %1$d%%</string>
+    <string name="startprofileforever">Spustiť profil %1$d%%</string>
     <string name="sendsmsactionlabel">Poslať SMS: %1$s</string>
     <string name="sendsmsactiondescription">Poslať SMS na všetky čísla</string>
     <string name="sendsmsactiontext">Odoslať SMS s textom</string>
-    <string name="starttemptarget">Začiatok dočasného cieľa</string>
+    <string name="starttemptarget">Spustiť dočasný cieľ</string>
     <string name="islesser">je menšia ako</string>
     <string name="isequalorlesser">je rovnaká, alebo menšia ako</string>
     <string name="isequal">je rovnaká</string>
@@ -72,15 +72,15 @@
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="or">Alebo</string>
     <string name="xor">Exkluzívny alebo</string>
-    <string name="atspecifiedtime">Za %1$s</string>
+    <string name="atspecifiedtime">O %1$s</string>
     <string name="onconnect">Pri pripojení</string>
     <string name="ondisconnect">Pri odpojení</string>
-    <string name="short_avgdelta">Krátkodobý priemer</string>
-    <string name="long_avgdelta">Dlhodobý priemer</string>
+    <string name="short_avgdelta">Krátkodobý priem. rozdiel</string>
+    <string name="long_avgdelta">Dlhodobý priem. rozdiel</string>
     <string name="delta">Rozdiel</string>
     <string name="locationis">%1$s %2$s</string>
     <string name="location_inside">Keď sa nachádzate vo vnútri oblasti</string>
-    <string name="location_outside">Keď sa nachádzate mimo oblasť</string>
+    <string name="location_outside">Keď sa nachádzate mimo oblasti</string>
     <string name="location_going_in">Keď vstúpite do oblasti s názvom</string>
     <string name="location_going_out">Keď opustíte oblasť s názvom</string>
     <string name="time_range">Časový rozsah</string>
@@ -97,7 +97,7 @@
     <string name="currentlocation">Súčasná poloha</string>
     <string name="location">Poloha</string>
     <string name="lastboluslabel">Od posledného bolusu</string>
-    <string name="lastboluscompared">Čas posledného bolusu: pred %1$s %2$s min </string>
+    <string name="lastboluscompared">Čas posledného bolusu %1$s %2$s min dozadu</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Tepová frekvencia</string>
@@ -116,15 +116,15 @@
     <string name="triggerPumpBatteryAgeDesc">Vek batérie v pumpe %1$s %2$.1f h</string>
     <string name="triggerReservoirLevelLabel">Stav zásobníka</string>
     <string name="triggerReservoirLevelDesc">Stav zásobníka %1$s %2$.0f</string>
-    <string name="triggerPumpBatteryLevelLabel">Vek batérie v pumpe</string>
+    <string name="triggerPumpBatteryLevelLabel">Úroveň nabitia batérie v pumpe</string>
     <string name="triggerPumpBatteryLevelDesc">Úroveň nabitia batérie v pumpe %1$s %2$.0f</string>
-    <string name="recurringTime">Čas zotavovania</string>
+    <string name="recurringTime">Opakovaný čas</string>
     <string name="every">Každých</string>
     <string name="never">Nikdy</string>
     <string name="condition">Podmienka:</string>
     <string name="action">Akcia:</string>
     <string name="taskname">Názov úlohy</string>
-    <string name="edit_short">EDIT</string>
+    <string name="edit_short">UPRAVIŤ</string>
     <string name="preconditions">Predpoklady:</string>
     <string name="user_action">Akcia užívateľa</string>
     <string name="system_automation">Automatizácia systému</string>
@@ -160,11 +160,11 @@
     <string name="precondition_smoothing_not_active_name">Vyhladzovanie nie je aktívne</string>
     <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">Vyhladzovanie %1$s nie je aktívne</string>
     <!--    Map Picker (OpenStreetMap)-->
-    <string name="pick_from_map">Vyber z mapy</string>
-    <string name="tap_to_select_location">Ťukni na mapu a vyber miesto</string>
+    <string name="pick_from_map">Vybrať z mapy</string>
+    <string name="tap_to_select_location">Ťuknite na mapu a vyberte miesto</string>
     <string name="selected_coords">Vybraté: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
-    <string name="permission_location_title">Miesto</string>
-    <string name="permission_location_description">Potrebné pre spúšťanie na polohe založenej Automatiky a identifikáciu WiFi siete</string>
-    <string name="permission_background_location_description">Potrebné pre spúšťanie Automatiky, v čase, keď aplikácia pracuje na pozadí</string>
+    <string name="permission_location_title">Poloha</string>
+    <string name="permission_location_description">Potrebné pre spúšťače automatizácie založené na polohe a na identifikáciu siete WiFi</string>
+    <string name="permission_background_location_description">Potrebné na to, aby spúšťače automatizácie fungovali, keď je aplikácia na pozadí</string>
 </resources>
