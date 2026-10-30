@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Automatisering</string>
+    <string name="automation_empty_desc">Maak een regel aan om acties te automatiseren op basis van triggers.</string>
     <string name="automation_missing_task_name">Voer een taaknaam in.</string>
     <string name="automation_missing_trigger">Voer minstens één trigger in.</string>
     <string name="automation_missing_action">Voer minstens één actie in.</string>
@@ -73,6 +74,8 @@
     <string name="triggerCannulaAgeDesc">Canule leeftijd %1$s %2$.1f uur</string>
     <string name="triggerPodChangeLabel">Pod activering</string>
     <string name="triggerPodChangeDesc">Pod geactiveerd</string>
+    <string name="triggerUnknownLabel">Onbekende trigger</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Onbekende trigger %1$s – nooit waar</string>
     <string name="triggerInsulinAgeLabel">Insuline leeftijd</string>
     <string name="triggerInsulinAgeDesc">Insuline leeftijd %1$s %2$.1f uur</string>
     <string name="triggerPumpBatteryAgeLabel">Pomp batterij leeftijd</string>
@@ -114,6 +117,7 @@
     <string name="changeSmbTo">Wijzig SMB naar %1$s</string>
     <string name="newSmbMode">Nieuwe SMB modus:</string>
     <string name="on">AAN</string>
+    <string name="off">UIT</string>
     <!--    Smoothing-->
     <!--    Map Picker (OpenStreetMap)-->
     <!-- Permission rationales -->
