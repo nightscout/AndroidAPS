@@ -8,11 +8,11 @@
     <string name="sensor_change_detected_action">Zaznamenať výmenu senzora</string>
     <!-- Calibration management screen -->
     <string name="cal_status_no_session">Zaznamenajte zmenu senzora pre povolenie kalibrácie.</string>
-    <string name="cal_status_warmup">Zahríevanie senzora — kalibrácia bude aktívna po %1$s.</string>
+    <string name="cal_status_warmup">Zahrievanie senzora — kalibrácia bude aktívna po %1$s.</string>
     <string name="cal_status_need_more_entries">Vyžadujú sa aspoň 2 záznamy odberu krvi z prsta (aktuálne %1$d).</string>
-    <string name="cal_status_unsafe_fit">Hodnota mimo bezpečného rozsahu – kalibrácia nebola aplikovaná.</string>
+    <string name="cal_status_unsafe_fit">Vypočítaná kalibrácia je mimo bezpečného rozsahu – kalibrácia nebola aplikovaná.</string>
     <string name="cal_status_applied">Kalibrácia aplikovaná.</string>
-    <string name="cal_status_applied_offset_only">Kalibrácia použitá iba pri offsete – vzdialenosti hodnôt senzora sú príliš blízko seba pre daný sklon.</string>
+    <string name="cal_status_applied_offset_only">Aplikovaná kalibrácia iba posunom (offset) – rozsah hodnôt senzora je príliš úzky na výpočet sklonu.</string>
     <string name="cal_status_applied_slope_clamped">Kalibrácia aplikovaná – sklon obmedzený na bezpečný rozsah. Pridajte ďalšie záznamy na uvoľnenie obmedzenia.</string>
     <string name="cal_slope_offset">Sklon %1$.2f, korekcia stredného rozsahu %2$s</string>
     <string name="cal_session_started">Relácia sa začala: %1$s</string>
