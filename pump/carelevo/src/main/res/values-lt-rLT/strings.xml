@@ -97,7 +97,6 @@
     <string name="carelevo_patch_attach_step2_desc">Išimkite pompą iš lizdinės pakuotės ir nuimkite adatos dangtelį.</string>
     <string name="carelevo_patch_attach_step3_title">Priklijuokite pompą</string>
     <string name="carelevo_patch_attach_step3_desc">Priklijuokite pompos modulį prie odos taip, kad pažymėtas taškas būtų nukreiptas į viršų.</string>
-    <string name="carelevo_patch_attach_step4_desc">Priklijavę pompą, paspauskite mygtuką Paruošta.</string>
     <string name="carelevo_patch_needle_insertion_step1_title">Nuimkite apsauginį dangtelį</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">Pasukite apsauginį dangtelį rodyklės kryptimi ir nuimkite.</string>
     <string name="carelevo_patch_needle_insertion_step2_title">Įveskite adatą</string>
