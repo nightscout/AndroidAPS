@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS(Cirkel)</string>
     <string name="label_watchface_digital_style">AAPS(DigitaleStijl)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Aangepast) altijd aan</string>
     <string name="label_actions_tile">Acties</string>
     <string name="label_temp_target_tile">Tijdelijk Streefdoel</string>
     <string name="label_quick_wizard_tile">Quick Wizard</string>
@@ -162,6 +163,21 @@
     <string name="pref_simplify_ui">Versimpel interface</string>
     <string name="pref_vibrate_hourly">Tril ieder uur</string>
     <string name="pref_show_weeknumber">Weeknummer weergeven</string>
+    <string name="pref_complication_1">Complicatie 1</string>
+    <string name="pref_complication_2">Complicatie 2</string>
+    <string name="pref_complication_3">Complicatie 3</string>
+    <string name="pref_complication_4">Complicatie 4</string>
+    <string name="pref_complication_5">Complicatie 5</string>
+    <string name="complication_summary_none">Tik om een gegevensbron te selecteren</string>
+    <string name="pref_complication_type_priority">Complicatietype prioriteit</string>
+    <string name="pref_complication_type_priority_all">Standaard voor alle slots</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Een verandering hier wordt de volgende keer dat u een databron kiest toegepast. Dezelfde kiezen is niet genoeg; kies een andere bron eerst, kies daarna degene die u wilt.</string>
+    <string name="complication_type_priority_value">Waarde of wijzer</string>
+    <string name="complication_type_priority_text">Tekst</string>
+    <string name="complication_type_priority_icon">Icoon</string>
+    <string name="complication_type_priority_use_default">Standaard gebruiken</string>
+    <string name="cwf_complication_layout">Complicatie indeling</string>
+    <string name="cwf_complication_layout_description">Positie en grootte van de complicaties, gebruikt van de geladen horloge wijzerplaat.</string>
     <string name="pref_include_external">Externe weergaven opnemen in sjabloon</string>
     <string name="pref_switch_external">Externe data wijzigen in watchface</string>
     <string name="custom_pref_show_seconds">Toon seconden</string>
@@ -236,6 +252,9 @@
     <string name="complication_blood_glucose_ext1">Bloed glucose Ex1</string>
     <string name="complication_blood_glucose_ext2">Bloed glucose Ex2</string>
     <string name="complication_bg_graph">BG Grafiek</string>
+    <string name="complication_cwf_image">Aangepaste wijzerplaat</string>
+    <string name="complication_cwf_lower">Aangepaste wijzerplaat achtergrond</string>
+    <string name="complication_cwf_upper">Aangepaste wijzerplaat klok</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
@@ -249,6 +268,8 @@
     <string name="complication_iob_icon">IoB icoon</string>
     <string name="complication_iob_detailed">Gedetailleerde IoB</string>
     <string name="complication_uploader_phone_battery">Uploader/Telefoon Batterij</string>
+    <string name="running_mode_resume">Hervat loop</string>
+    <string name="running_mode_reconnect">Pomp opnieuw verbinden</string>
     <string name="label_running_mode_title">Bedrijfsmodus</string>
     <string name="label_bg_graph_tile">BG Grafiek</string>
     <string name="tile_tap_action">Tik actie</string>
@@ -275,6 +296,9 @@
     <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Gaat af om %1$s</string>
     <string name="eat_reminder_countdown_channel">Tijd om te eten, actief</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="phone_alarm_channel">Alarm van de telefoon</string>
+    <string name="phone_alarm_silence">Stil</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Demp %1$d min</string>
     <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">E</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
