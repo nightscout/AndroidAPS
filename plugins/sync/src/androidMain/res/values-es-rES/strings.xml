@@ -72,7 +72,6 @@
     <string name="pair_with_master_fetching">Buscando vinculación…</string>
     <string name="pair_with_master_confirm_title">¿Vincular con este máster?</string>
     <string name="pair_with_master_confirm_master">Máster: %1$s</string>
-    <string name="pair_with_master_confirm_warning">Tras la vinculación, este máster podrá enviar comandos firmados a este dispositivo</string>
     <string name="pair_with_master_confirm_pair">Vincular</string>
     <string name="pair_with_master_error_title">No se puede vincular</string>
     <string name="pair_with_master_error_wrong_pin">No se encontró ningún emparejamiento para ese PIN. Comprueba el PIN en el máster e inténtalo de nuevo</string>
