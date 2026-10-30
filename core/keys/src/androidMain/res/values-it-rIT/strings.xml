@@ -32,7 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Alza gli avvisi urgenti come notifiche Android</string>
     <string name="pref_title_alert_increase_volume">Aumenta gradualmente il volume delle notifiche</string>
     <string name="pref_title_alert_override_dnd">Ignora la modalità Non Disturbare</string>
-    <string name="pref_summary_alert_override_dnd">Quando abilitato, gli allarmi AAPS suonano anche se il telefono è silenziato o in Non Disturbare. Quando disabilitato, gli allarmi rimangono tranquilli in quelle modalità.</string>
+    <string name="pref_summary_alert_override_dnd">Se abilitata, gli avvisi usano il volume degli avvisi: suonano quando il telefono è silenziato e sotto Non disturbare quando le impostazioni consentono gli avvisi. Quando disabilitato, gli avvisi non emettono alcun suono mentre il telefono è silenziato o non disturbare è acceso. Sotto Non disturbare vibrano solo.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Carica dati BG su NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Registra cambio sensore</string>
