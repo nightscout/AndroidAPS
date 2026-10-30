@@ -17,7 +17,7 @@
     <string name="medtronic_pump_battery_alkaline">Alkalické (rozšírené zobrazenie)</string>
     <string name="medtronic_pump_battery_lithium">Líthiové (rozšírené zobrazenie)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (rozšírené zobrazenie)</string>
-    <string name="medtronic_pump_battery_nimh">NiMH (Rozšírené zobrazenie)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (rozšírené zobrazenie)</string>
     <!-- Pump type entries -->
     <string name="medtronic_pump_type_unsupported">Iné (nepodporované)</string>
     <string name="medtronic_pump_type_512">512</string>
