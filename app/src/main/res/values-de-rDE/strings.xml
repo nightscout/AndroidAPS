@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="authorizationfailed">Autorisierung fehlgeschlagen</string>
     <string name="identification_not_set">Identifikation im Dev-Modus nicht gesetzt</string>
+    <string name="select">Auswählen</string>
+    <string name="set">Einstellen</string>
+    <string name="migrating_preferences">Einstellungen migrieren…</string>
+    <string name="optimizing_database">Optimiere Datenbank...</string>
     <string name="initializing_plugins">Initialisiere Plugins…</string>
     <string name="initializing">Initialisiere…</string>
     <string name="settings_unreadable_title">AAPS-Einstellungen können nicht gelesen werden</string>
+    <string name="settings_unreadable_key_explanation">Ihre Einstellungen auf diesem Telefon werden mit einem Schlüssel verschlüsselt, den Android für AAPS behält, und dieser Schlüssel öffnet sie nicht mehr. Dies kann passieren, nachdem der Schlüsselspeicher des Telefons zurückgesetzt wurde.</string>
+    <string name="settings_unreadable_keystore_explanation">Der Schlüsselspeicher des Telefons hat nicht geantwortet, so dass AAPS die Einstellungen nicht öffnen konnte.</string>
+    <string name="settings_unreadable_not_running">AAPS läuft nicht und steuert die Pumpe nicht. Eine temporäre Basalrate, die gerade läuft, endet zu ihrer Zeit, und dann gibt die Pumpe ihre eigene Basalrate ab.</string>
 </resources>
