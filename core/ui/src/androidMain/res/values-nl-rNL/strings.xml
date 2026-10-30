@@ -2,6 +2,9 @@
 <resources>
     <string name="error_field_must_not_be_empty">Dit veld mag niet leeg zijn</string>
     <string name="error_mustbe4hexadidits">Moet 4 tekens bevatten uit ABCDEF0123456789</string>
+    <string name="authorized_clients_manage_desc">Beheer de gekoppelde clientapparaten die deze master aansturen.</string>
+    <string name="pair_with_master_manage_label">Koppel met master</string>
+    <string name="pair_with_master_manage_desc">Voer de koppelings-pincode van een master in om deze client ondertekende opdrachten te laten verzenden.</string>
     <!--    General-->
     <string name="treatments">Behandelingen</string>
     <string name="treatments_history">Behandelingen geschiedenis</string>
@@ -171,7 +174,7 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibratie</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
-    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Kalibratie niet opgeslagen: BG verandert te snel (## %1$s %3$s per 5 min, limiet %2$s). Probeer het opnieuw als glucose stabiel is.</string>
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Kalibratie niet opgeslagen: BG verandert te snel (Δ %1$s %3$s per 5 min, limiet %2$s). Probeer het opnieuw als de glucose stabiel is.</string>
     <string name="cal_reject_no_pair">Kalibratie niet opgeslagen: Geen sensor waarde gevonden in de  10 minuten hiervoor</string>
     <string name="cal_reject_warmup">Kalibratie niet opgeslagen: de sensor is nog in de 2uur durende opwarmfase</string>
     <string name="cgm">CGM</string>
@@ -327,7 +330,7 @@
     <string name="scene_action_running_mode">Bedrijfsmodus: %1$s</string>
     <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
-    <string name="scene_lock_banner_master_offline">Hoofdapparaat niet bereikbaar. De scènebesturing wordt hervat zodra de verbinding is hersteld.</string>
+    <string name="scene_lock_banner_master_offline">Master apparaat is niet bereikbaar. De scènebesturing wordt hervat zodra de verbinding is hersteld.</string>
     <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Alleen lezen</string>
     <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Maaltijden</string>
     <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Beheerder</string>
@@ -343,7 +346,7 @@
     <string name="clientcontrol_fail_busy">Een andere actie is al gaande.</string>
     <string name="clientcontrol_fail_send_failed">Nightscout kon niet bereikt worden.</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Geannuleerd</string>
-    <string name="clientcontrol_fail_other_token">De meester weigerde dit: deze telefoon schrijft naar Nightscout met een ander token dan zijn eigen. Op de meester, verwijder deze telefoon en voeg hem opnieuw toe.</string>
+    <string name="clientcontrol_fail_other_token">Het master apparaat heeft dit geweigerd: deze client schrijft met een ander token naar Nightscout dan zijn eigen token. Verwijder deze client op het hoofdapparaat en voeg hem opnieuw toe.</string>
     <string name="clientcontrol_fail_no_pending_bolus">De voorbereide bolus is verlopen of vervangen. Tik nogmaals op de knop.</string>
     <string name="clientcontrol_fail_internal">Er is iets misgegaan.</string>
     <string name="clientcontrol_fail_unknown">De opdracht is mislukt.</string>
@@ -660,7 +663,7 @@
     <string name="export_alert">WAARSCHUWING</string>
     <!-- Export dialog strings -->
     <string name="export_to">Exporteer instellingen naar</string>
-    <string name="password_preferences_encrypt_prompt">Je wordt gevraagd om een masterwachtwoord. Daarmee worden geëxporteerde instellingen versleuteld.</string>
+    <string name="password_preferences_encrypt_prompt">Je wordt gevraagd om het hoofdwachtwoord. Daarmee worden geëxporteerde instellingen versleuteld.</string>
     <string name="preferences_export_canceled">Exporteren geannuleerd! Instellingen zijn NIET geëxporteerd!</string>
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Instellingen geëxporteerd</string>
@@ -803,4 +806,5 @@
     <string name="units_format_insulin_int">%1$d E</string>
     <string name="units_format_insulin_rate">%1$.1f E/u</string>
     <string name="prefs_range_title">Bereik voor visualisatie</string>
+    <string name="secrets_not_protected">Er is geen systeemsleutelopslag gevonden op deze computer. De sleutels die je instellingen en de koppeling met de master beveiligen, worden opgeslagen in bestanden naast de gegevensbestanden. Iedereen die een kopie van deze bestanden in handen krijgt, krijgt daardoor ook toegang tot deze sleutels. Gebruik je Linux? Installeer en start dan een keyring (bijvoorbeeld GNOME Keyring of KWallet) en start AAPS daarna opnieuw.</string>
 </resources>
