@@ -95,6 +95,54 @@ class EatReminderManagerTest : TestBase() {
         assertThat(afterRestart.state.value).isEqualTo(EatReminderState(startedAt = now, endsAt = now + twentyMinutes, durationMs = twentyMinutes))
     }
 
+    /**
+     * A new timer over one whose alarm rang and was not answered takes that alarm down - only its own alarm (#5439).
+     * Nothing else would end it: the new timer has not rung, so its screen closes at once and came back each time.
+     */
+    @Test
+    fun startOverATimerThatRangSilencesOnlyItsAlarm() {
+        val sut = manager()
+        sut.start(twentyMinutes)
+        now += twentyMinutes
+        sut.onRang()
+
+        sut.start(twentyMinutes)
+
+        assertThat(sut.state.value).isEqualTo(EatReminderState(startedAt = now, endsAt = now + twentyMinutes, durationMs = twentyMinutes))
+        assertThat(alarm.scheduledEnd).isEqualTo(now + twentyMinutes)
+        verify(uiInteraction).stopEatReminderAlarm()
+        verify(uiInteraction, never()).stopAlarm(any())
+    }
+
+    @Test
+    fun startOverATimerThatHasNotRungTouchesNoAlarm() {
+        val sut = manager()
+        sut.start(twentyMinutes)
+        now += T.mins(3).msecs()
+
+        sut.start(twentyMinutes)
+
+        assertThat(sut.state.value!!.startedAt).isEqualTo(now)
+        verify(uiInteraction, never()).stopEatReminderAlarm()
+        verify(uiInteraction, never()).stopAlarm(any())
+    }
+
+    /** As with +5 min: when the new alarm cannot be set, nothing changes, and the alarm that rang is not silenced. */
+    @Test
+    fun startThatCannotSetTheAlarmLeavesTheAlarmThatRang() {
+        val sut = manager()
+        sut.start(twentyMinutes)
+        now += twentyMinutes
+        sut.onRang()
+        val before = sut.state.value
+        alarm.canSchedule = false
+
+        sut.start(twentyMinutes)
+
+        assertThat(sut.state.value).isEqualTo(before)
+        verify(uiInteraction, never()).stopEatReminderAlarm()
+    }
+
     @Test
     fun extendBeforeItRangMovesTheEndAndGrowsTheWholeWait() {
         val sut = manager()
