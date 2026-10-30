@@ -57,6 +57,7 @@
     <string name="carbs_suggestion">Carbs Suggestion</string>
     <string name="open_loop_new_suggestion">New suggestion available</string>
     <string name="loop_notification_channel_name">Loop suggestions</string>
+    <string name="loop_notification_channel_silent_name">Loop suggestions during Do Not Disturb</string>
     <string name="open_loop_suggestion_too_old">This suggestion is too old. Nothing was sent to the pump. Wait for the next one.</string>
     <string name="basal_set_correctly">Basal set correctly</string>
     <string name="last_run_label">Last run</string>
