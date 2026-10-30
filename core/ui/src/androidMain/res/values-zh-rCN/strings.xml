@@ -11,7 +11,6 @@
     <string name="treatments_history">治疗历史</string>
     <string name="treatments_desc">查看和管理治疗记录</string>
     <string name="nav_configuration">配置</string>
-    <string name="nav_configuration_desc">设置您的配置（CGM、泵等）并启用功能</string>
     <string name="count_selected">已选中 %1$d 项</string>
     <string name="delete">删除</string>
     <string name="show_invalidated">显示无效项</string>
