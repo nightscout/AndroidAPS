@@ -13,18 +13,7 @@ plugins {
 // Generates SourceStrings (commonMain) and SourceStringIds (androidMain) from this module's
 // res/values, the same generator the other plugins use. The strings themselves do not move, and AAPT
 // keeps resolving them on Android exactly as before.
-val generateSourceStrings = tasks.register<GenerateKeyStringsTask>("generateSourceStrings") {
-    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
-    packageName.set("app.aaps.plugins.source")
-    owner.set("source")
-    objectName.set("SourceStrings")
-    idsObjectName.set("SourceStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/sourceStrings/translations.txt"))
-    // Set explicitly: addGeneratedSourceDirectory only derives a convention from the task name, so
-    // both properties would land on one directory and the second file written would delete the first.
-    commonOutputDir.set(layout.buildDirectory.dir("generated/sourceStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/sourceStrings/android"))
-}
+val generateSourceStrings = registerKeyStrings("source")
 
 kotlin {
     android {

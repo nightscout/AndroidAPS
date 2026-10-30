@@ -13,18 +13,7 @@ plugins {
 // Same generator as :core:ui and :core:interfaces, pointed at this module's strings. The strings
 // themselves do not move, and AAPT keeps resolving them on Android exactly as before - this only adds
 // a TextRef-named view of them that common code can reach.
-val generateVirtualStrings = tasks.register<GenerateKeyStringsTask>("generateVirtualStrings") {
-    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
-    packageName.set("app.aaps.pump.virtual")
-    owner.set("virtual")
-    objectName.set("VirtualStrings")
-    idsObjectName.set("VirtualStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/virtualStrings/translations.txt"))
-    // Set explicitly: addGeneratedSourceDirectory derives its convention from the task name, so both
-    // properties would land on one directory and the second file written would delete the first.
-    commonOutputDir.set(layout.buildDirectory.dir("generated/virtualStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/virtualStrings/android"))
-}
+val generateVirtualStrings = registerKeyStrings("virtual")
 
 kotlin {
     android {

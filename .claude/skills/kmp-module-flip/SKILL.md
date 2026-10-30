@@ -202,13 +202,15 @@ Anchor it as `^import android\.`.
 
 `R.string.x` cannot exist in commonMain. The fix is `GenerateKeyStringsTask`, which turns the
 module's `strings.xml` into a `XxxStrings` object of `TextRef.Named` (commonMain) plus a
-`XxxStringIds` map (androidMain). Copy the task registration from `ui/build.gradle.kts`, then:
+`XxxStringIds` map (androidMain). Add one line for the module to `StringOwnerModules.ALL` in
+buildSrc, then `val generateXxxStrings = registerKeyStrings("xxx")` in the module's build file. The
+build fails if the owner is not in the list. Then:
 
 1. Add `kotlin.srcDir(...)` for the common output to `commonMain` and the android output to
    `androidMain`, and `implementation(project(":core:keys"))` to commonMain for `TextRef`.
-2. Register the owner in **both** `MainApp.registerStringOwners()` and `BaseTestApp` - they must
-   match, or instrumented tests render blank text and fail as "not displayed", a long way from the
-   cause.
+2. Nothing to register by hand. Every shell (`:app`, its instrumented tests, desktop, iOS) generates
+   `GeneratedStringOwners` from `StringOwnerModules.ALL`. Add one of the module's strings to
+   `DesktopStringOwnersTest` and `IosStringOwnersTest`.
 3. Swap `R.string.foo` for `XxxStrings.foo`. The substitution is name-preserving, so a wrong mapping
    cannot happen silently - it fails to compile.
 4. In Composables import `app.aaps.core.ui.compose.stringResource` alongside the androidx one. Both

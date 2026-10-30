@@ -13,18 +13,7 @@ plugins {
 // Same generator as :plugins:smoothing, pointed at this module's strings. The strings themselves do
 // not move, and AAPT keeps resolving them on Android exactly as before - this only adds a TextRef
 // named view of them that common code can reach.
-val generateSensitivityStrings = tasks.register<GenerateKeyStringsTask>("generateSensitivityStrings") {
-    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
-    packageName.set("app.aaps.plugins.sensitivity")
-    owner.set("sensitivity")
-    objectName.set("SensitivityStrings")
-    idsObjectName.set("SensitivityStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/sensitivityStrings/translations.txt"))
-    // Set explicitly: addGeneratedSourceDirectory derives its convention from the task name, so both
-    // properties would land on one directory and the second file written would delete the first.
-    commonOutputDir.set(layout.buildDirectory.dir("generated/sensitivityStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/sensitivityStrings/android"))
-}
+val generateSensitivityStrings = registerKeyStrings("sensitivity")
 
 kotlin {
     android {

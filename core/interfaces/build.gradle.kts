@@ -15,19 +15,7 @@ plugins {
 // needed. Same generator as :core:keys and :core:ui, pointed at this module's strings: it lets the
 // data enums here (ConcentrationType, InsulinType, CwfMetadataKey) carry a TextRef instead of an
 // R.string Int. The strings themselves do not move, and AAPT keeps resolving them as before.
-val generateInterfacesStrings = tasks.register<GenerateKeyStringsTask>("generateInterfacesStrings") {
-    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
-    packageName.set("app.aaps.core.interfaces")
-    owner.set("interfaces")
-    objectName.set("InterfacesStrings")
-    idsObjectName.set("InterfacesStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/interfacesStrings/translations.txt"))
-    // Set explicitly: addGeneratedSourceDirectory only applies a convention derived from the task
-    // name, so both properties would land on one directory and the second file written would delete
-    // the first.
-    commonOutputDir.set(layout.buildDirectory.dir("generated/interfacesStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/interfacesStrings/android"))
-}
+val generateInterfacesStrings = registerKeyStrings("interfaces")
 
 kotlin {
     android {

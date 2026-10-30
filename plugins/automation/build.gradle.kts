@@ -13,18 +13,7 @@ plugins {
 // strings.xml, the same generator :ui, :core:ui, :core:keys and :implementation use. It lets a trigger
 // or action name its user text instead of numbering it, which is what commonMain code needs. The
 // strings themselves do not move, and AAPT keeps resolving them on Android exactly as before.
-val generateAutomationStrings = tasks.register<GenerateKeyStringsTask>("generateAutomationStrings") {
-    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
-    packageName.set("app.aaps.plugins.automation")
-    owner.set("automation")
-    objectName.set("AutomationStrings")
-    idsObjectName.set("AutomationStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/automationStrings/translations.txt"))
-    // Set explicitly: addGeneratedSourceDirectory only derives a convention from the task name, so
-    // both properties would land on one directory and the second file written would delete the first.
-    commonOutputDir.set(layout.buildDirectory.dir("generated/automationStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/automationStrings/android"))
-}
+val generateAutomationStrings = registerKeyStrings("automation")
 
 
 kotlin {

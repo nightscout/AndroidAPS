@@ -11,18 +11,7 @@ plugins {
 // Generates SyncStrings (commonMain) and SyncStringIds (androidMain) from this module's res/values,
 // the same generator the other plugins use. The strings themselves do not move, and AAPT keeps
 // resolving them on Android exactly as before.
-val generateSyncStrings = tasks.register<GenerateKeyStringsTask>("generateSyncStrings") {
-    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
-    packageName.set("app.aaps.plugins.sync")
-    owner.set("sync")
-    objectName.set("SyncStrings")
-    idsObjectName.set("SyncStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/syncStrings/translations.txt"))
-    // Set explicitly: addGeneratedSourceDirectory only derives a convention from the task name, so
-    // both properties would land on one directory and the second file written would delete the first.
-    commonOutputDir.set(layout.buildDirectory.dir("generated/syncStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/syncStrings/android"))
-}
+val generateSyncStrings = registerKeyStrings("sync")
 
 kotlin {
     android {

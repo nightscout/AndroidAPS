@@ -17,19 +17,7 @@ plugins {
 // set takes a task provider directly. Same generator as :core:keys and :core:interfaces, pointed at
 // this module's strings. The strings themselves do not move, and AAPT keeps resolving them on
 // Android exactly as before.
-val generateCoreUiStrings = tasks.register<GenerateKeyStringsTask>("generateCoreUiStrings") {
-    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
-    packageName.set("app.aaps.core.ui")
-    owner.set("coreUi")
-    objectName.set("CoreUiStrings")
-    idsObjectName.set("CoreUiStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/coreUiStrings/translations.txt"))
-    // Set explicitly: addGeneratedSourceDirectory only applies a convention derived from the task
-    // name, so both properties would land on one directory and the second file written would delete
-    // the first.
-    commonOutputDir.set(layout.buildDirectory.dir("generated/coreUiStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/coreUiStrings/android"))
-}
+val generateCoreUiStrings = registerKeyStrings("coreUi")
 
 kotlin {
     android {

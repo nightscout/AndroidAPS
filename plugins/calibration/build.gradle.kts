@@ -12,18 +12,7 @@ plugins {
 }
 
 // Same generator as :core:ui, :pump:virtual and :plugins:smoothing, pointed at this module's strings.
-val generateCalibrationStrings = tasks.register<GenerateKeyStringsTask>("generateCalibrationStrings") {
-    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
-    packageName.set("app.aaps.plugins.calibration")
-    owner.set("calibration")
-    objectName.set("CalibrationStrings")
-    idsObjectName.set("CalibrationStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/calibrationStrings/translations.txt"))
-    // Set explicitly: addGeneratedSourceDirectory derives its convention from the task name, so both
-    // properties would land on one directory and the second file written would delete the first.
-    commonOutputDir.set(layout.buildDirectory.dir("generated/calibrationStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/calibrationStrings/android"))
-}
+val generateCalibrationStrings = registerKeyStrings("calibration")
 
 kotlin {
     android {

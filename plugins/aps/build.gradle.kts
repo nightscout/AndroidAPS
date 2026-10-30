@@ -11,18 +11,7 @@ plugins {
 }
 
 // Same generator as the other converted plugins, pointed at this module's strings.
-val generateApsStrings = tasks.register<GenerateKeyStringsTask>("generateApsStrings") {
-    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
-    packageName.set("app.aaps.plugins.aps")
-    owner.set("aps")
-    objectName.set("ApsStrings")
-    idsObjectName.set("ApsStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/apsStrings/translations.txt"))
-    // Set explicitly: addGeneratedSourceDirectory derives its convention from the task name, so both
-    // properties would land on one directory and the second file written would delete the first.
-    commonOutputDir.set(layout.buildDirectory.dir("generated/apsStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/apsStrings/android"))
-}
+val generateApsStrings = registerKeyStrings("aps")
 
 kotlin {
     android {

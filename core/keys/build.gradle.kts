@@ -11,16 +11,7 @@ plugins {
 
 // One task, not one per variant: a multiplatform module has no product flavours, and a Kotlin
 // source set takes a task provider directly, so the Android variant API is not needed here.
-val generateKeyStrings = tasks.register<GenerateKeyStringsTask>("generateKeyStrings") {
-    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
-    packageName.set("app.aaps.core.keys")
-    owner.set("keys")
-    objectName.set("KeysStrings")
-    idsObjectName.set("KeysStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/keyStrings/translations.txt"))
-    commonOutputDir.set(layout.buildDirectory.dir("generated/keyStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/keyStrings/android"))
-}
+val generateKeyStrings = registerKeyStrings("keys")
 
 kotlin {
     // The Android half. The strings stay in src/androidMain/res and keep being processed by AAPT,

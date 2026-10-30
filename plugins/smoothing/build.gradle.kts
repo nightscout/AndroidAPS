@@ -14,18 +14,7 @@ plugins {
 // Same generator as :core:ui and :pump:virtual, pointed at this module's strings. The strings
 // themselves do not move, and AAPT keeps resolving them on Android exactly as before - this only adds
 // a TextRef-named view of them that common code can reach.
-val generateSmoothingStrings = tasks.register<GenerateKeyStringsTask>("generateSmoothingStrings") {
-    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
-    packageName.set("app.aaps.plugins.smoothing")
-    owner.set("smoothing")
-    objectName.set("SmoothingStrings")
-    idsObjectName.set("SmoothingStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/smoothingStrings/translations.txt"))
-    // Set explicitly: addGeneratedSourceDirectory derives its convention from the task name, so both
-    // properties would land on one directory and the second file written would delete the first.
-    commonOutputDir.set(layout.buildDirectory.dir("generated/smoothingStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/smoothingStrings/android"))
-}
+val generateSmoothingStrings = registerKeyStrings("smoothing")
 
 kotlin {
     android {

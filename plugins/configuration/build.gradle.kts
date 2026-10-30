@@ -13,18 +13,7 @@ plugins {
 // Generates ConfigurationStrings (commonMain) and ConfigurationStringIds (androidMain) from this
 // module's strings.xml, the same generator :ui, :plugins:automation and the :core modules use. The
 // strings themselves do not move, and AAPT keeps resolving them on Android exactly as before.
-val generateConfigurationStrings = tasks.register<GenerateKeyStringsTask>("generateConfigurationStrings") {
-    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
-    packageName.set("app.aaps.plugins.configuration")
-    owner.set("configuration")
-    objectName.set("ConfigurationStrings")
-    idsObjectName.set("ConfigurationStringIds")
-    reportFile.set(layout.buildDirectory.file("reports/configurationStrings/translations.txt"))
-    // Set explicitly: addGeneratedSourceDirectory only derives a convention from the task name, so
-    // both properties would land on one directory and the second file written would delete the first.
-    commonOutputDir.set(layout.buildDirectory.dir("generated/configurationStrings/common"))
-    androidOutputDir.set(layout.buildDirectory.dir("generated/configurationStrings/android"))
-}
+val generateConfigurationStrings = registerKeyStrings("configuration")
 
 kotlin {
     android {
