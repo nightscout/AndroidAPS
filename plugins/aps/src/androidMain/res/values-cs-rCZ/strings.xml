@@ -90,7 +90,7 @@
     <string name="autotune_copy_localprofile_button">Kopírovat do místního profilu</string>
     <string name="autotune_update_input_profile_button">Aktualizovat vstupní profil</string>
     <string name="autotune_revert_input_profile_button">Vrátit vstupní profil</string>
-    <string name="autotune_copy_local_profile_message">Vytvořit z tohoto Autotune profilu nový místní profi?</string>
+    <string name="autotune_copy_local_profile_message">Vytvořit z tohoto profilu Autotune nový místní profil?</string>
     <string name="autotune_update_local_profile_message">Aktualizovat profil %1$s pomocí profilu Autotune?</string>
     <string name="autotune_revert_local_profile_message">Vrátit profil %1$s na vstupní profil?</string>
     <string name="autotune_profile_invalid">Neplatný profil</string>
