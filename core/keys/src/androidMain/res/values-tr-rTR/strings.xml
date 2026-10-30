@@ -32,6 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Acil durum uyarılarını Android bildirimleri olarak iletin</string>
     <string name="pref_title_alert_increase_volume">Bildirim ses düzeyini kademeli olarak artırın</string>
     <string name="pref_title_alert_override_dnd">Rahatsız Etmeyin modunu geçersiz kıl</string>
+    <string name="pref_summary_alert_override_dnd">Açık: Telefon sessiz moddayken veya \"Rahatsız Etmeyin\" modundayken bile alarmlar çalar. Kapalı: Bu modlarda alarmlar çalmaz; \"Rahatsız Etmeyin\" modundayken ise yalnızca titreşir.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">KŞ verilerini NighScout\'a yükle</string>
     <string name="pref_title_bg_source_create_sensor_change">Sensör değişimini kaydet</string>
@@ -41,6 +42,18 @@
     <string name="pref_summary_aps_use_dynamic_sensitivity">Hassasiyet ayarı için otoduyarlılık yerine DinamikİDF kullanın.</string>
     <string name="pref_title_aps_use_autosens">Otoduyarlılık kullanın</string>
     <string name="pref_title_aps_use_smb">SMB etkinleştir</string>
+    <string name="pref_summary_aps_use_smb">Super Micro Bolus özelliğini etkinleştirin. SMB, yükselen kan şekerine yanıt olarak insülini anında verir.</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Yüksek geçici hedefte SMB\'yi etkinleştir</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">Yüksek geçici hedef etkin olduğunda SMB\'ye izin ver.</string>
+    <string name="pref_title_aps_use_smb_always">SMB\'yi her zaman etkinleştir</string>
+    <string name="pref_summary_aps_use_smb_always">Bolus veya AKRB durumundan bağımsız olarak, her koşulda SMB\'yi etkinleştirin.</string>
+    <string name="pref_title_aps_use_smb_with_cob">SMB\'yi AKRB ile etkinleştir</string>
+    <string name="pref_summary_aps_use_smb_with_cob">Vücutta karb. bulunduğunda SMB\'ye izin verin.</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Düşük geçici hedefle SMB\'yi etkinleştir</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">Yüksek geçici hedef etkin olduğunda SMB\'ye izin verir.</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Yemeklerden sonra SMB\'yi etkinleştir</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">Karbonhidratlar girildikten sonra bir süre boyunca SMB\'ye izin verin.</string>
+    <string name="pref_title_aps_use_uam">UAM (Bildirilmemiş Öğünler) etkinleştir</string>
     <string name="pref_summary_aps_use_uam">Bildirilmemiş öğünleri tespiti ve tedavisini etkinleştirir.</string>
     <string name="pref_title_aps_sensitivity_raises_target">Duyarlılık hedefi yükseltir</string>
     <string name="pref_summary_aps_sensitivity_raises_target">Hassasiyet tespit edildiğinde, glikoz hedefini yükseltin.</string>
@@ -99,9 +112,36 @@
     <string name="pref_summary_ns_receive_running_mode">Nightscout\'tan gelen çalışma modu değişikliklerini kabul eder.</string>
     <string name="pref_title_ns_receive_tbr_eb">NS\'den GBO/EB alın</string>
     <string name="pref_summary_ns_receive_tbr_eb">Nightscout\'tan geçici bazal oranlarını ve yayma bolusları kabul eder.</string>
+    <string name="pref_title_ns_notifications_from_alarms">NS alarmları</string>
+    <string name="pref_title_ns_notifications_from_announcements">NS duyuruları</string>
+    <string name="pref_title_ns_use_cellular">Hücresel veri kullan</string>
+    <string name="pref_title_ns_use_roaming">Roaming kullanın</string>
+    <string name="pref_title_ns_use_wifi">WiFi kullanın</string>
+    <string name="pref_title_ns_use_on_battery">Pildeyken senk. yap</string>
+    <string name="pref_title_ns_use_on_charging">Şarj olurken senk. yap</string>
+    <string name="pref_title_ns_log_app_start">Uygulama başlatma olayını günlüğe kaydet</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Hatalardan duyurular oluştur</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Gereken karbonhidratlardan duyurular oluşturun</string>
+    <string name="pref_title_ns_slow_sync">Yavaş senk. kullan</string>
+    <string name="pref_title_ns_use_ws">Websocket\'leri kullan</string>
+    <string name="pref_summary_ns_use_ws">Nightscout ile gerçek zamanlı iletişim için WebSocket\'leri kullanın.</string>
+    <string name="pref_title_ns_allow_client_control">İstemci kontrolüne izin ver</string>
+    <string name="pref_summary_ns_allow_client_control">Eşleştirilmiş istemci cihazların, Nightscout üzerinden imzalı komutlar (örneğin senaryo başlatma/durdurma) göndermesine olanak tanır. Bu aynı zamanda \"güçlendirilmiş mod\"u devreye sokar. Doğrudan Nightscout üzerinde yapılan değişiklikler artık kabul edilmez.</string>
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">Sadece WiFi</string>
+    <string name="pref_title_openhumans_charging_only">Yalnızca Şarj</string>
     <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">Durumu xDrip+\'a gönder</string>
+    <string name="pref_title_xdrip_send_detailed_iob">Ayrıntılı AİNS gönder</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">Saat arayüzünde görüntülenmesi için ayrıntılı AİNS bilgilerini xDrip+\'a gönderin.</string>
+    <string name="pref_title_xdrip_send_bgi">KŞ Etkisi Göster</string>
+    <string name="pref_summary_xdrip_send_bgi">Kan şekeri etkisini xDrip+ durum satırında göster.</string>
     <!-- Wear preferences -->
+    <string name="pref_title_wear_control">Wear kontrol</string>
+    <string name="pref_summary_wear_control">AAPS\'i Android Wear saat üzerinden kontrol edin.</string>
+    <string name="pref_title_wear_wizard_bg">Sihirbaza KŞ\'ni dahil et</string>
+    <string name="pref_title_wear_wizard_tt">Sihirbaza geçici hedef ekle</string>
+    <string name="pref_title_wear_wizard_trend">Sihirbaza eğilimi dahil et</string>
     <!-- Site rotation preferences -->
     <!-- IntKey: Overview preferences -->
     <string name="carb_increment_button_message">Butona basıldığında eklenecek karbonhidrat sayısı</string>
@@ -188,20 +228,43 @@
     <string name="lang_fr">Fransızca</string>
     <!-- StringKey: Directory preferences -->
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_bolus_pin">Bolus PIN</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">Sistem teması veya koyu ve açık tema için seçim yapın</string>
+    <string name="pref_title_app_color_scheme">Uyg. Renk Şeması</string>
+    <string name="pref_dark_theme">Koyu tema</string>
+    <string name="pref_light_theme">Açık tema</string>
+    <string name="pref_follow_system_theme">Cihaz temasını kullan</string>
     <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">Hasta yaşı</string>
     <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">E-Posta alıcısı</string>
+    <string name="pref_title_identification">Çökme raporları için tanımlama</string>
     <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">Konum servisi</string>
+    <string name="automation_location_passive">Pasif konumu kullan</string>
+    <string name="automation_location_network">Ağ konumunu kullan</string>
+    <string name="automation_location_gps">GPS konumunu kullan</string>
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">İzin verilen telefon numaraları</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">İlave zorunlu şifre (PIN)</string>
     <string name="smscommunicator_otp_pin_summary">Oluşturulan Her Tek Kullanımlık şifrenin sonuna yapıştırılması ve ezberlenmesi gereken ek şifre</string>
     <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">Pompa tipi</string>
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">Nightscout URL</string>
+    <string name="ns_client_url_summary">Nightscout URL\'nizi girin (örn: https://sitenizinadı.platformunuzunadı.com)</string>
     <string name="ns_client_secret_title">Nightscout API parolası</string>
+    <string name="ns_client_secret_summary">Nightscout API gizli anahtarınızı girin (en az 12 karakter)</string>
     <string name="nsclient_token_title">Nightscout erişim anahtarı</string>
+    <string name="nsclient_token_summary">Nightscout access token girin (en az 17 karakter)</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_wifi_ssids_summary">İzin verilen SSID\'ler (noktalı virgülle ayrılmış)</string>
     <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">İnsülin butonu artış miktarı 1</string>
+    <string name="pref_title_insulin_button_increment_2">İnsülin butonu artış miktarı 2</string>
+    <string name="pref_title_insulin_button_increment_3">İnsülin butonu artış miktarı 3</string>
     <string name="insulin_increment_button_message">Butona basıldığında eklenecek insülin miktarı</string>
     <!-- DoubleKey: Actions preferences -->
     <string name="pref_title_fill_button_1">Doldur butonu 1</string>
@@ -215,29 +278,54 @@
     <string name="pref_title_smb_max_iob">SMB için maks AİNS</string>
     <string name="openapssmb_max_iob_summary">Bu değer OpenAPS bağlamında Maks AİNS (Aktif İnsülin) olarak adlandırılır\nOpenAPS, mevcut AİNS bu değerden daha büyükse daha fazla insülin vermez. Söz konusu değer, hastalığın tipine göre de değişiklik gösterebilir.</string>
     <string name="pref_title_ama_max_iob">GYD için maks AİNS</string>
+    <string name="openapsma_max_iob_summary">Bu değere OpenAPS bağlamında maks AİNS denir.\nAPS\'de bir kerede verilebilen maksimum insülin [U]. Değer, hasta tipinden etkilenir.</string>
+    <string name="pref_title_max_daily_multiplier">Maks günlük güvenlik çarpanı</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Varsayılan değer: 3. Bu, OpenAPS\'nin önemli bir güvenlik sınırıdır. Bu, bazal dozunuzu en yüksek bazal dozunuzun 3 katıyla sınırlandırır. Bunu değiştirmenize muhtemelen gerek kalmayacak, ancak güvenlik sınırları için \"günlük maksimumun 3 katı; mevcut dozun 4 katı\" ifadesinin ne anlama geldiğinin farkında olmalısınız.</string>
+    <string name="pref_title_current_basal_multiplier">Mevcut bazal güvenlik çarpanı</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Varsayılan ayar: 4 Bu, OpenAPS güvenlik ayarlarının diğer yarısı ve \"3x max günlük, 4x akım\" güvenlik korumasının diğer yarısıdır. Bu, başlangıç değerinizin, pompada ayarlanan taban maksimum değerinizden bağımsız olarak, mevcut bazal seviyenin bu sayısından daha yüksek olamayacağı anlamına gelir. Bu, insanların, algoritmanın nasıl çalıştığını anlamadan temel çizgiyi büyük ölçüde artırarak kendilerini tehlikeli durumlarda bulmalarını engellemektir. Varsayılan ayar 4x\'dir; Çoğu insan bu ayarları asla değiştirmek zorunda kalmayacak, ancak bu güvenlik sınırına yakınsa diğer terapi ayarlarını ayarlamalıdırlar.</string>
+    <string name="pref_title_bolus_snooze_divisor">Bolus erteleme İES böleni</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">Varsayılan değer: 2\nYemek bolusu yaptıktan sonra bolus erteleme devreye girer, bu nedenle döngü, yeni yemek yediğinizde düşük geçici bazallar-hedefler ile etkileşime girmez. Buradaki örnek ve varsayılan 2\'dir; bu nedenle 3 saatlik bir İES, bolus ertelemenin kademeli olarak 1,5 saat (3İES/2) üzerinden aşamalı olarak sonlandırılacağı anlamına gelir.</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">GYD karb etki süresi min 5 dk.</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">SMB karb etki süresi min 5 dk.</string>
     <string name="openapsama_min_5m_carb_impact_summary">Varsayılan değer: 3.0 (AMA) Gelişmiş Yemek Asistanı veya 8.0 (SMB) Super Micro Bolus. Bu 5 dakika başına varsayılan karbonhidrat emilimi için bir ayardır. Standart değer AMA için 3mg/dl/5dk aynı şekilde SMB 8mg/dl/5dk dir.
 Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla düştüğü veya beklenildiği kadar yükselmediği zamanlarda gelecekte yapılacak tahminlerde KŞ\'nin hesaplanmasında ne kadar karbonhidrat emilimi gerçekleşeceğini öngörür.</string>
+    <string name="pref_title_absorption_cutoff">Emilim kesme</string>
     <string name="absorption_cutoff_summary">Herhangi bir öğünün emildiği kabul edilen zaman. Kalan karbonhidratlar kesilecek.</string>
+    <string name="pref_title_absorption_maxtime">Emilim max süre</string>
     <string name="absorption_max_time_summary">Yemekteki tüm karbonhidratların emilmesinin beklendiği saat cinsinden süre</string>
+    <string name="pref_title_autosens_min">Otoduyarlılık min</string>
     <string name="openapsama_autosens_min_summary">Varsayılan değer: 0.7\nBu otoduyarlılık için diğer güvenlik önlemidir. Otoduyarlılığın bazal oranlarını ne kadar düşürebileceğini ve İnsülin Duyarlılık Faktörü ve KŞ hedeflerini ne kadar yüksek tutabileceğini gösterir.</string>
+    <string name="pref_title_autosens_max">Otoduyarlılık maks</string>
     <string name="openapsama_autosens_max_summary">Varsayılan değer: 1.2\nOtoduyarlılık (yakında otoayar) çarpanı. Varsayılan değere %20 maksimum limit atamak, otoduyarlılığın bazalları ne kadar yüksek ayarlayabileceğini, ISF ve KŞ hedefini de ne kadar düşük ayarlayabileceğini belirler.</string>
+    <string name="pref_title_autoisf_min">OtoİDF min</string>
     <string name="openapsama_autoISF_min_summary">otoduyarlılık_min\'e benzer şekilde İDF\'nin ne kadar etkisiz olabileceğini tanımlar.\n\nVarsayılan değer olan 1.0 Bu şekilde kapalıdır.</string>
+    <string name="pref_title_autoisf_max">OtoİDF maks</string>
     <string name="openapsama_autoISF_max_summary">otoduyarlılık_maks\'a benzer şekilde İDF\'nin ne kadar güçlü olabileceğini tanımlar.\n\nVarsayılan değer 1.0 Bu şekilde kapalıdır.\n\nUYARI: 2.5\'in üzerindeki değerleri kullanırken son derece dikkatli olun</string>
+    <string name="pref_title_bg_accel_weight">KŞ hızlanması İDF ağırlığı</string>
     <string name="openapsama_bgAccel_ISF_weight_summary">Kş yükselirken uygulanan ağırlıktır ve İDF\'yi güçlendirerek potansiyel olarak insülin salınımını artırır.\n\nVarsayılan değer 0.0 bu şekilde kapalıdır.</string>
+    <string name="pref_title_bg_brake_weight">KŞ freni İDF ağırlığı</string>
     <string name="openapsama_bgBrake_ISF_weight_summary">Kş düşerken uygulanan ve İDF\'yi zayıflatarak insülin iletimini potansiyel olarak azaltan ağırlıktır.\n\nVarsayılan değer olan 0,0 bu şekilde kapalıdır.</string>
+    <string name="pref_title_low_bg_weight">Düşük KŞ aralığı ağırlığı</string>
     <string name="openapsama_lower_ISFrange_weight_summary">Glikoz hedefin altındayken uygulanan ve İDF\'yi zayıflatarak insülin iletimini potansiyel olarak azaltan ağırlıktır.\n\nVarsayılan değer olan 0,0 Bu şekilde kapalıdır.</string>
+    <string name="pref_title_high_bg_weight">Yüksek KŞ aralığı ağırlığı</string>
     <string name="openapsama_higher_ISFrange_weight_summary">Glikoz hedefin üzerindeyken uygulanan ve İDF\'yi güçlendirerek insülin salınımını potansiyel olarak artıran ağırlıktır.\n\nVarsayılan değer olan 0,0 Bu şekilde kapalıdır.</string>
+    <string name="pref_title_smb_delivery_ratio_bg_range">SMB iletim oranı KŞ aralığı</string>
     <string name="openapsama_smb_delivery_ratio_bg_range_summary">Varsayılan değer: 0. Doğrusal olarak artan SMB iletim oranı glikoz aralığına [hedef_kş, hedef_kş+kş_aralığı] eşlenir.\nHedef_kş\'de SMB oranı smb_iletim_oranı_min, hedef_kş+kş_oranı\'nda smb_iletim_oranı_max olur.\n 0 ile doğrusal olarak artan SMB oranı devre dışı bırakılır ve sabit smb_iletim_oranı kullanılır.</string>
+    <string name="pref_title_pp_weight">Yemek sonrası İDF ağırlığı</string>
     <string name="openapsama_pp_ISF_weight_summary">Glikoz yükselirken uygulanan ve İDF\'yi güçlendirerek insülin salınımını potansiyel olarak artıran ağırlıktır.\n\nVarsayılan değer 0,0 bu şekilde kapalıdır.</string>
+    <string name="pref_title_dura_weight">İDF Süresi ağırlığı</string>
     <string name="openapsama_dura_ISF_weight_summary">Daha uzun süreli, yüksek glikoz platoları sırasında uygulanan ve İDF\'yi güçlendirerek potansiyel olarak insülin iletimini artıran ağırlıktır.\n\nVarsayılan değer olan 0,0 Bu şekilde kapalıdır.</string>
+    <string name="pref_title_smb_delivery_ratio">SMB iletim oranı</string>
     <string name="openapsama_smb_delivery_ratio_summary">Varsayılan değer: 0,5 Bu, OpenAPS\'in bir diğer önemli güvenlik sınırıdır ve toplam insülin ihtiyacının ne kadarının SMB olarak verilebileceğini belirtir. Aynı anda bakıcının telefonundan SMB istekleri ayarlayarak insanların tehlikeli bölgelere girmesini önlemek içindir. Bu deneysel değeri yavaşça ve dikkatli bir şekilde artırın.</string>
+    <string name="pref_title_smb_delivery_ratio_min">SMB iletim oranı min</string>
     <string name="openapsama_smb_delivery_ratio_min_summary">Varsayılan değer: 0,5 Bu, yukarıdaki sabit değerden ziyade doğrusal olarak artan bir oranın alt ucudur.</string>
+    <string name="pref_title_smb_delivery_ratio_max">SMB iletim oranı maks</string>
     <string name="openapsama_smb_delivery_ratio_max_summary">Varsayılan değer: 0,5 Bu, yukarıdaki sabit değerden ziyade doğrusal olarak artan bir oranın üst ucudur.</string>
+    <string name="pref_title_smb_max_range_extension">SMB maks menzil genişletme</string>
     <string name="openapsama_smb_max_range_extension_summary">Varsayılan değer: 1 Bu, OpenAPS\'in bir diğer önemli güvenlik sınırıdır ve normalde 120 dakika olan maxSMB/maxUAM süresini hangi faktörle aşabileceğinizi belirtir. Bu deneysel değeri yavaşça ve dikkatli bir şekilde artırın.</string>
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">Düşük KŞ işareti</string>
+    <string name="pref_title_high_mark">Yüksek KŞ işareti</string>
     <!-- UnitDoubleKey: APS preferences -->
     <string name="pref_title_lgs_threshold">LGS Eşiği</string>
     <string name="lgs_threshold_summary">Altına düştüğünde insülinin askıya alındığı KŞ değeri. Varsayılan değer, standart hedef modeli kullanır. Kullanıcı değeri 60mg/dl (3,3mmol/l) ile 100mg/dl(5.5mmol/l) arasında ayarlayabilir. 65/3,6\'nın altındaki değerler varsayılan modelin kullanılmasına neden olur</string>
