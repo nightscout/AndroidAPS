@@ -11,7 +11,6 @@
     <string name="treatments_history">Behandlingshistorikk</string>
     <string name="treatments_desc">Vis og administrer behandlingshistorikk</string>
     <string name="nav_configuration">Konfigurasjon</string>
-    <string name="nav_configuration_desc">Sett opp konfigurasjonen din (sensor, pumpe, ...) og aktiver funksjoner</string>
     <string name="count_selected">%1$d valgt</string>
     <string name="delete">Slett</string>
     <string name="show_invalidated">Vis ugyldige</string>
