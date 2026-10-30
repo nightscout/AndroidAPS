@@ -45,6 +45,7 @@
     <string name="goingtodeliver">Werde %1$.2f IE abgeben</string>
     <string name="androidaps_start">AAPS gestartet</string>
     <string name="format_hours">%1$.2f h</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
     <string name="objectives">Objectives (Ziele)</string>
     <string name="please_wait">Bitte warten…</string>
     <string name="stop">Stopp</string>
@@ -177,6 +178,7 @@
     <string name="careportal_openapsoffline">OpenAPS offline</string>
     <string name="pump_battery_change">Pumpenbatterie-Wechsel</string>
     <string name="temporary_target">Temporäres Ziel</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="careportal_temporarytargetvalue">Temporärer Zielwert</string>
@@ -474,6 +476,10 @@
     <string name="weekday_monday_short">Mo</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f IE</string>
+    <string name="percent_rate_duration">Rate: %1$.2f%% (%2$.2f IE/h) Dauer: %3$d min</string>
+    <string name="rate_percent_duration">Rate: %1$.2f IE/h (%2$.2f%%) Dauer: %3$d min</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Rate</b>: %1$.2f%% (%2$.2f IE/h)<br><b>Dauer</b>: %3$d min<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Rate</b>: %1$.2f IE/h (%2$.2f%%) <br><b>Dauer</b>: %3$d min<br>]]></string>
     <!--    Playback-->
     <!-- ProfileEditor -->
     <string name="target_short">ZIEL</string>
