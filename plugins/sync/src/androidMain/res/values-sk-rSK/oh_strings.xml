@@ -4,7 +4,7 @@
     <string name="open_humans_description">Open Humans vám umožňuje nahrávať dáta vášho diabetu a darovať ich vedeckým projektom.</string>
     <string name="logout">Odhlásiť sa</string>
     <string name="setup">Nastaviť</string>
-    <string name="setup_completed_info">Open Humans bol nastavený. Pokiaľ chcete prestať nahrávať, kliknite na \"Odhlásiť\".</string>
+    <string name="setup_completed_info">Open Humans bol nastavený. Ak chcete prestať nahrávať, ťuknite na „Odhlásiť sa“.</string>
     <string name="not_setup_info">Open Humans je momentálne neaktívny. Ak chcete začať nahrávať dáta, kliknite na tlačidlo \"Nastaviť\".</string>
     <string name="project_member_id">ID člena projektu: %1$s</string>
     <string name="open_humans_uploading">Nahrávanie na Open Humans…</string>
@@ -24,7 +24,7 @@
     <string name="boluses">Bolusy</string>
     <string name="extended_boluses">Predĺžené bolusy</string>
     <string name="carbohydrates">Sacharidy</string>
-    <string name="careportal_events">Udalosti Careportalu (okrem poznámok)</string>
+    <string name="careportal_events">Udalosti v Starostlivosti (okrem poznámok)</string>
     <string name="profile_switches">Prepnutia profilu</string>
     <string name="total_daily_doses">Celkové denné dávky</string>
     <string name="temporary_basal_rates">Dočasné bazály</string>
