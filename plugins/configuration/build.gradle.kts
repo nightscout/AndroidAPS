@@ -1,56 +1,26 @@
 plugins {
-    id("kmp-test-defaults")
-    kotlin("multiplatform")
-    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
-    // Same reason as the :core modules and the other converted plugins.
-    alias(libs.plugins.android.kmp.library)
+    id("kmp-android-library")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.metro)
 }
 
-
-// Generates ConfigurationStrings (commonMain) and ConfigurationStringIds (androidMain) from this
-// module's strings.xml, the same generator :ui, :plugins:automation and the :core modules use. The
-// strings themselves do not move, and AAPT keeps resolving them on Android exactly as before.
-val generateConfigurationStrings = registerKeyStrings("configuration")
+registerKeyStrings("configuration")
 
 kotlin {
     android {
         namespace = "app.aaps.plugins.configuration"
-        compileSdk = Versions.compileSdk
-        minSdk = Versions.minSdk
         androidResources { enable = true }
         // isIncludeAndroidResources is what makes Robolectric work - see :core:ui for the detail.
         withHostTest {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-
-        // Restated from android-module-dependencies, which this module can no longer apply. Without it
-        // MissingTranslation would switch on here and every incomplete locale file would fail a release
-        // build.
-        lint {
-            checkReleaseBuilds = false
-            disable += "MissingTranslation"
-            disable += "ExtraTranslation"
-        }
     }
-
-    // Declared even though nothing is in commonMain yet. Keeping the targets is what stops an
-    // android-only import from quietly reaching common code once files start moving across.
-    iosArm64()
-    iosSimulatorArm64()
-
-    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
-    // plain jvm() target, so no special target name is needed.
-    jvm()
 
     sourceSets {
         // The setup wizard and its elements live here. androidMain inherits all of this.
         commonMain {
-            kotlin.srcDir(generateConfigurationStrings.flatMap { it.commonOutputDir })
             dependencies {
                 implementation(project(":core:data"))
                 implementation(project(":core:interfaces"))
@@ -72,8 +42,6 @@ kotlin {
         }
 
         androidMain {
-            // Android only: the string name to R.string id map.
-            kotlin.srcDir(generateConfigurationStrings.flatMap { it.androidOutputDir })
             dependencies {
                 // `api` as before: consumers resolve these transitively.
                 api(project.dependencies.platform(libs.androidx.compose.bom))
@@ -108,15 +76,5 @@ kotlin {
                 runtimeOnly(libs.org.junit.platform.launcher)
             }
         }
-    }
-}
-
-
-tasks.withType<Test> {
-    // useJUnitPlatform() and the heap cap come from kmp-test-defaults; only the JaCoCo part is
-    // specific here. Restated from jacoco-module-dependencies, which applies com.android.library.
-    extensions.configure<JacocoTaskExtension> {
-        isIncludeNoLocationClasses = true
-        excludes = listOf("jdk.internal.*")
     }
 }

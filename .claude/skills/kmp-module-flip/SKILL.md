@@ -60,19 +60,23 @@ before believing a processor is unnecessary.**
 
 ## Build file
 
-Copy `core/ui/build.gradle.kts`. It is the closest template: resources, Compose and Robolectric.
+Copy `plugins/smoothing/build.gradle.kts` for a small module, or `core/ui/build.gradle.kts` for one
+with resources, Compose and Robolectric.
 
-- `kotlin("multiplatform")` + `alias(libs.plugins.android.kmp.library)`. **Not** `com.android.library`
-  - AGP 9 refuses that plugin together with the multiplatform plugin.
-- **No convention plugin can be applied** (`android-module-dependencies`, `test-module-dependencies`,
-  `compose-test-module-dependencies`, `jacoco-module-dependencies`, `all-open-dependencies`) - they
-  all apply `com.android.library`. Restate by hand what you need: the `lint { disable += ... }` block,
-  `withHostTest { isIncludeAndroidResources = true }`, the test dependencies, the
-  `JacocoTaskExtension` block, and `kotlin("plugin.allopen")` with its `allOpen { annotation(...) }`.
+- `id("kmp-android-library")` replaces `kotlin("multiplatform")` + the AGP KMP library plugin +
+  `kmp-test-defaults`. It also sets `compileSdk`, `minSdk`, the `lint { disable += ... }` block and
+  the `iosArm64()`, `iosSimulatorArm64()` and `jvm()` targets. **Not** `com.android.library` - AGP 9
+  refuses that plugin together with the multiplatform plugin.
+- The module keeps only what is its own: `namespace`, `androidResources`, `withHostTest { ... }`, and
+  `minSdk = min(Versions.minSdk, Versions.wearMinSdk)` if the watch uses it.
+- The Android convention plugins (`android-module-dependencies`, `test-module-dependencies`,
+  `compose-test-module-dependencies`, `jacoco-module-dependencies`) **cannot be applied** - they apply
+  `com.android.library`. Write the test dependencies by hand. `all-open-dependencies` can be applied.
+  The JaCoCo Robolectric setting and `jvmTarget` come from the root build file; do not restate them.
 - `androidResources { enable = true }` - off by default here, unlike a plain Android library.
 - There are **no product flavours and no build types**, so `debugImplementation` does not exist.
-- Add `iosArm64()` and `iosSimulatorArm64()` as soon as anything lands in commonMain. They are what
-  makes an Android import in common code fail the build instead of quietly compiling.
+- `ios/shell` must link every module that builds for iOS: `checkMigratedModules` fails the framework
+  link until the module is added to `migratedModules` there.
 
 ### Flavours are no longer a problem
 

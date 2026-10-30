@@ -1,57 +1,27 @@
 plugins {
-    id("kmp-test-defaults")
-    kotlin("multiplatform")
-    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
-    // Same reason as the :core modules and the other converted plugins.
-    alias(libs.plugins.android.kmp.library)
+    id("kmp-android-library")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.metro)
-    // Restated from all-open-dependencies, which applies com.android.library and so cannot be used
-    // here. SntpClient is @OpenForTesting and its test mocks it, which needs the class to be open in
-    // a release build without opening it in the source.
-    kotlin("plugin.allopen")
-}
-
-allOpen {
-    annotation("app.aaps.annotations.OpenForTesting")
+    // SntpClient is @OpenForTesting and its test mocks it, which needs the class to be open in a
+    // release build without opening it in the source.
+    id("all-open-dependencies")
 }
 
 // The three qualified plugin buckets are keyed by @AllConfigs, @APS and @NotNSClient, each carrying
 // Metro's @Qualifier - ConstraintsBucketsTest is the guard.
 
-// Generates ConstraintsStrings (commonMain) and ConstraintsStringIds (androidMain) from this module's
-// res/values, the same generator the other plugins use. The objectives and exam text is the bulk of
-// it. The strings themselves do not move, and AAPT keeps resolving them on Android exactly as before.
-val generateConstraintsStrings = registerKeyStrings("constraints")
+registerKeyStrings("constraints")
 
 kotlin {
     android {
         namespace = "app.aaps.plugins.constraints"
-        compileSdk = Versions.compileSdk
-        minSdk = Versions.minSdk
         androidResources { enable = true }
         withHostTest {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-
-        lint {
-            checkReleaseBuilds = false
-            disable += "MissingTranslation"
-            disable += "ExtraTranslation"
-        }
     }
-
-    // Keeping the targets is what stops an android-only import from quietly reaching common code
-    // as more files move across.
-    iosArm64()
-    iosSimulatorArm64()
-
-    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
-    // plain jvm() target, so no special target name is needed.
-    jvm()
 
     // Android and desktop share what is plain JVM - the SNTP client. Applied explicitly, because
     // the manual dependsOn below would otherwise switch the automatic hierarchy off and silently
@@ -66,7 +36,6 @@ kotlin {
         // What ConstraintsCheckerImpl needs. androidMain inherits these, so the rest of the module
         // keeps compiling unchanged; only the modules no common file uses yet stay android only.
         commonMain {
-            kotlin.srcDir(generateConstraintsStrings.flatMap { it.commonOutputDir })
             dependencies {
                 implementation(project(":core:interfaces"))
                 implementation(project(":core:keys"))
@@ -76,8 +45,6 @@ kotlin {
         }
 
         androidMain {
-            // Android only: the string name to R.string id map.
-            kotlin.srcDir(generateConstraintsStrings.flatMap { it.androidOutputDir })
             dependencies {
                 implementation(project(":core:data"))
                 implementation(project(":core:utils"))
@@ -116,15 +83,5 @@ kotlin {
                 runtimeOnly(libs.org.junit.platform.launcher)
             }
         }
-    }
-}
-
-
-tasks.withType<Test> {
-    // useJUnitPlatform() and the heap cap come from kmp-test-defaults; only the JaCoCo part is
-    // specific here. Restated from jacoco-module-dependencies, which applies com.android.library.
-    extensions.configure<JacocoTaskExtension> {
-        isIncludeNoLocationClasses = true
-        excludes = listOf("jdk.internal.*")
     }
 }

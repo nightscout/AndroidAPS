@@ -1,46 +1,22 @@
 plugins {
-    id("kmp-test-defaults")
-    kotlin("multiplatform")
-    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
-    // Same reason as :core:graph, :core:ui, :core:objects and the rest.
-    alias(libs.plugins.android.kmp.library)
+    id("kmp-android-library")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.metro)
 }
 
-// Generates UiStrings (commonMain) and UiStringIds (androidMain) from this module's strings.xml, the
-// same generator :core:ui, :core:keys and :implementation use. It lets a screen name its user text
-// instead of numbering it, which is what a commonMain composable needs. The strings themselves do not
-// move, and AAPT keeps resolving them on Android exactly as before.
-val generateUiStrings = registerKeyStrings("ui")
+registerKeyStrings("ui")
 
 kotlin {
     android {
         namespace = "app.aaps.ui"
-        compileSdk = Versions.compileSdk
-        minSdk = Versions.minSdk
         androidResources { enable = true }
         // isIncludeAndroidResources is what makes Robolectric work - see :core:ui for the detail.
         withHostTest {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-
-        lint {
-            checkReleaseBuilds = false
-            disable += "MissingTranslation"
-            disable += "ExtraTranslation"
-        }
     }
-
-    iosArm64()
-    iosSimulatorArm64()
-
-    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
-    // plain jvm() target, so no special target name is needed.
-    jvm()
 
     // Android and desktop share the diacritics actual: it is plain `java.text.Normalizer` on both.
     // Applied explicitly, because the manual dependsOn below would otherwise switch the automatic
@@ -56,7 +32,6 @@ kotlin {
         // republishes the same `androidx.compose.*` package names, so a screen that only uses Compose
         // moves here unchanged - that is how :core:ui ended up with 435 of its files in commonMain.
         commonMain {
-            kotlin.srcDir(generateUiStrings.flatMap { it.commonOutputDir })
             dependencies {
                 implementation(project(":core:data"))
                 implementation(project(":core:graph"))
@@ -105,8 +80,6 @@ kotlin {
         }
 
         androidMain {
-            // Android only: the string name to R.string id map.
-            kotlin.srcDir(generateUiStrings.flatMap { it.androidOutputDir })
             dependencies {
                 api(project.dependencies.platform(libs.androidx.compose.bom))
                 implementation(libs.androidx.activity.compose)

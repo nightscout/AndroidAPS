@@ -7,7 +7,9 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
  * `test-module-dependencies` cannot be used by them - it applies `com.android.library`, which AGP 9
  * refuses alongside the multiplatform plugin - so every module that flipped quietly lost its Test
  * configuration along with its dependencies. This carries just the task settings, applies to any
- * project, and exists so the settings are stated once rather than pasted into seventeen build files.
+ * project, and exists so the settings are stated once rather than pasted into every build file.
+ * `kmp-android-library` applies it; a multiplatform module without an Android target applies it
+ * directly.
  *
  * `maxHeapSize` is the one that matters beyond tidiness: without it each forked test JVM defaults to
  * about a quarter of machine RAM, and CI runs the whole unit suite next to three emulators on one

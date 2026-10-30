@@ -1,50 +1,26 @@
 plugins {
-    id("kmp-test-defaults")
-    kotlin("multiplatform")
-    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
-    // Same reason as the :core modules, :pump:virtual and :plugins:smoothing.
-    alias(libs.plugins.android.kmp.library)
+    id("kmp-android-library")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     // Metro is a Kotlin COMPILER plugin, not KSP. Same one line as :plugins:smoothing.
     alias(libs.plugins.metro)
 }
 
-// Same generator as :plugins:smoothing, pointed at this module's strings. The strings themselves do
-// not move, and AAPT keeps resolving them on Android exactly as before - this only adds a TextRef
-// named view of them that common code can reach.
-val generateSensitivityStrings = registerKeyStrings("sensitivity")
+registerKeyStrings("sensitivity")
 
 kotlin {
     android {
         namespace = "app.aaps.plugins.sensitivity"
-        compileSdk = Versions.compileSdk
-        minSdk = Versions.minSdk
         androidResources { enable = true }
         // isIncludeAndroidResources is what makes Robolectric work - see :core:ui for the detail.
         withHostTest {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-
-        lint {
-            checkReleaseBuilds = false
-            disable += "MissingTranslation"
-            disable += "ExtraTranslation"
-        }
     }
-
-    iosArm64()
-    iosSimulatorArm64()
-
-    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
-    // plain jvm() target, so no special target name is needed.
-    jvm()
 
     sourceSets {
         commonMain {
-            kotlin.srcDir(generateSensitivityStrings.flatMap { it.commonOutputDir })
             dependencies {
                 implementation(project(":core:data"))
                 implementation(project(":core:interfaces"))
@@ -57,11 +33,6 @@ kotlin {
                 implementation(libs.jetbrains.compose.runtime)
                 implementation(libs.jetbrains.compose.material.icons.extended)
             }
-        }
-
-        androidMain {
-            // Android only: the string name to R.string id map.
-            kotlin.srcDir(generateSensitivityStrings.flatMap { it.androidOutputDir })
         }
 
         // Hand written rather than taken from test-module-dependencies, which applies

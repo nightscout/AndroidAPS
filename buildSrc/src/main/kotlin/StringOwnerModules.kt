@@ -1,7 +1,8 @@
 import org.gradle.api.GradleException
 import org.gradle.api.Project
-import org.gradle.api.tasks.TaskProvider
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.register
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import java.io.Serializable
 
 /**
@@ -78,19 +79,19 @@ object StringOwnerModules {
 
 /**
  * Registers [GenerateKeyStringsTask] for this module, with every value taken from the entry for
- * [stringOwner] in [StringOwnerModules.ALL].
+ * [stringOwner] in [StringOwnerModules.ALL], and adds its output to the source sets that compile it.
  *
- * The strings stay in `src/androidMain/res`. The caller still adds the two output directories to its
- * `commonMain` and `androidMain` source sets.
+ * The strings themselves stay in `src/androidMain/res`, and AAPT keeps resolving them on Android
+ * exactly as before. What this adds is a `TextRef` view of them that common code can use.
  */
-fun Project.registerKeyStrings(stringOwner: String): TaskProvider<GenerateKeyStringsTask> {
+fun Project.registerKeyStrings(stringOwner: String) {
     val module = StringOwnerModules.ALL.singleOrNull { it.owner == stringOwner }
         ?: throw GradleException(
             "String owner '$stringOwner' of $path is not in StringOwnerModules.ALL (buildSrc). Add it there, " +
                 "or no platform shell registers it and its screens show string names instead of text."
         )
     val dirName = module.objectName.replaceFirstChar { it.lowercase() }
-    return tasks.register<GenerateKeyStringsTask>("generate${module.objectName}") {
+    val task = tasks.register<GenerateKeyStringsTask>("generate${module.objectName}") {
         resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
         packageName.set(module.packageName)
         owner.set(module.owner)
@@ -101,5 +102,15 @@ fun Project.registerKeyStrings(stringOwner: String): TaskProvider<GenerateKeyStr
         // one would lose the file written first.
         commonOutputDir.set(layout.buildDirectory.dir("generated/$dirName/common"))
         androidOutputDir.set(layout.buildDirectory.dir("generated/$dirName/android"))
+    }
+    // The names go to commonMain, the R.string id map to androidMain. configureEach rather than a
+    // direct lookup, so the order of this call and the module's `kotlin {}` block does not matter.
+    extensions.configure<KotlinMultiplatformExtension> {
+        sourceSets.matching { it.name == "commonMain" }.configureEach {
+            kotlin.srcDir(task.flatMap { it.commonOutputDir })
+        }
+        sourceSets.matching { it.name == "androidMain" }.configureEach {
+            kotlin.srcDir(task.flatMap { it.androidOutputDir })
+        }
     }
 }

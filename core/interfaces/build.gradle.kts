@@ -1,66 +1,33 @@
 import kotlin.math.min
 
 plugins {
-    id("kmp-test-defaults")
-    kotlin("multiplatform")
-    alias(libs.plugins.android.kmp.library)
+    id("kmp-android-library")
     alias(libs.plugins.metro)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     id("kotlinx-serialization")
 }
 
-// One task, not one per variant. A multiplatform module has no product flavours, and a Kotlin source
-// set takes a task provider directly, so the Android variant API this used to go through is not
-// needed. Same generator as :core:keys and :core:ui, pointed at this module's strings: it lets the
-// data enums here (ConcentrationType, InsulinType, CwfMetadataKey) carry a TextRef instead of an
-// R.string Int. The strings themselves do not move, and AAPT keeps resolving them as before.
-val generateInterfacesStrings = registerKeyStrings("interfaces")
+// Lets the data enums here (ConcentrationType, InsulinType, CwfMetadataKey) carry a TextRef instead
+// of an R.string Int.
+registerKeyStrings("interfaces")
 
 kotlin {
     android {
         namespace = "app.aaps.core.interfaces"
-        compileSdk = Versions.compileSdk
         minSdk = min(Versions.minSdk, Versions.wearMinSdk)  // Compatible with wear module
         // Off by default for a multiplatform library, unlike a plain android library.
         androidResources { enable = true }
         // Creates the androidHostTest compilation, which also pulls in commonTest.
         withHostTest { }
-        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
-
-        // Restated from android-module-dependencies, which this module can no longer apply. Without
-        // it MissingTranslation would switch on for the first time here and the locale files that are
-        // empty today would fail a release build.
-        lint {
-            checkReleaseBuilds = false
-            disable += "MissingTranslation"
-            disable += "ExtraTranslation"
-        }
     }
-
-    // Apple klibs cross compile on Windows. Linking and running still need a Mac, and those tasks
-    // report SKIPPED rather than failing.
-    //
-    // These are what keep commonMain honest. The split was made by compiling for iosArm64 and moving
-    // whatever failed, so keeping the target means a java.* import added to commonMain later fails
-    // the build instead of quietly compiling on Android.
-    //
-    // Deliberately no jvm() target: it pulls in the desktop Compose surface (skiko-awt) and gives the
-    // module another way to fail without saying anything about iOS. Recorded in wave 17 of
-    // _docs/KMP_IOS_FEASIBILITY.md.
-    iosArm64()
-    iosSimulatorArm64()
-
-    jvm()
 
     // Android and the JVM desktop target share their actuals: a ReentrantLock and Dispatchers.IO are
     // the same answer on both, and duplicating them would be two files that must not drift. Only what
     // is genuinely Android - the runtime Bluetooth permissions - stays in androidMain.
     //
-    // Extends the default template rather than calling dependsOn by hand: a manual dependsOn turns the
-    // default hierarchy OFF, which silently unwires iosMain and breaks every Apple actual.
-    // Applied explicitly, because the manual dependsOn below would otherwise switch the automatic
-    // one off - which silently unwires iosMain and breaks every Apple actual.
+    // Applied explicitly, because the manual dependsOn below would otherwise switch the default
+    // hierarchy off - which silently unwires iosMain and breaks every Apple actual.
     applyDefaultHierarchyTemplate()
 
     sourceSets {
@@ -69,7 +36,6 @@ kotlin {
         jvmMain.get().dependsOn(jvmSharedMain)
 
         commonMain {
-            kotlin.srcDir(generateInterfacesStrings.flatMap { it.commonOutputDir })
             dependencies {
                 api(project(":core:data"))
                 api(project(":core:keys"))
@@ -104,8 +70,6 @@ kotlin {
         }
 
         androidMain {
-            // Android only: the string name to R.string id map.
-            kotlin.srcDir(generateInterfacesStrings.flatMap { it.androidOutputDir })
             dependencies {
                 // The 41 consumer modules resolve these transitively, so they must stay `api`. They
                 // are Android or JVM only, which is why they belong to this source set rather than

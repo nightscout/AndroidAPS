@@ -19,13 +19,6 @@ plugins {
  * A plain `kotlin("jvm")` module rather than a multiplatform one: it has exactly one target, and
  * Gradle resolves the `jvm` variant of every multiplatform module it depends on.
  */
-/**
- * Which module owns which strings, generated rather than hand written.
- *
- * The list is `StringOwnerModules.ALL`, shared with `:app` and `:ios:shell`, so a module added to
- * the build cannot be missing from one platform and present on another. That is not theoretical:
- * this shell had five of sixteen and rendered plugin names as string names until it was run.
- */
 
 /** The same build stamp `:app` puts in BuildConfig.BUILDVERSION: short commit and date. */
 fun buildStamp(): String {
@@ -40,12 +33,7 @@ fun buildStamp(): String {
     }
     return "$commit-" + SimpleDateFormat("yyyy.MM.dd").format(Date())
 }
-/**
- * The version this build reports, from the same constant the Android app uses.
- *
- * Without it the About dialog showed a hardcoded placeholder, which is worse than showing nothing:
- * a user quoting it in a bug report names a build that does not exist.
- */
+
 /**
  * The app icon, copied from the one place it lives rather than checked in twice.
  *
@@ -140,6 +128,12 @@ val makeIcns = tasks.register<Exec>("makeDesktopIcns") {
     )
 }
 
+/**
+ * The version this build reports, from the same constant the Android app uses.
+ *
+ * Without it the About dialog showed a hardcoded placeholder, which is worse than showing nothing:
+ * a user quoting it in a bug report names a build that does not exist.
+ */
 val generateBuildInfo = tasks.register<GenerateBuildInfoTask>("generateDesktopBuildInfo") {
     version.set(Versions.appVersion)
     buildStamp.set(buildStamp())
@@ -149,6 +143,13 @@ val generateBuildInfo = tasks.register<GenerateBuildInfoTask>("generateDesktopBu
     outputDir.set(layout.buildDirectory.dir("generated/buildInfo"))
 }
 
+/**
+ * Which module owns which strings, generated rather than hand written.
+ *
+ * The list is `StringOwnerModules.ALL`, shared with `:app` and `:ios:shell`, so a module added to
+ * the build cannot be missing from one platform and present on another. That is not theoretical:
+ * this shell had five of sixteen and rendered plugin names as string names until it was run.
+ */
 val generateStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("generateDesktopStringOwners") {
     owners.set(StringOwnerModules.ALL)
     packageName.set("app.aaps.desktop.shell.di")
@@ -159,7 +160,6 @@ val generateStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("gene
 }
 
 kotlin {
-    compilerOptions { jvmTarget.set(Versions.jvmTarget) }
     sourceSets.main {
         kotlin.srcDir(generateStringOwners)
         kotlin.srcDir(generateBuildInfo)
