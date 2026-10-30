@@ -97,7 +97,6 @@
     <string name="carelevo_patch_attach_step2_desc">Wyjmij Patch z blistra i zdejmij nasadkę igły.</string>
     <string name="carelevo_patch_attach_step3_title">Naklej Patcha</string>
     <string name="carelevo_patch_attach_step3_desc">Przyklej patch do skóry tak, aby kropka skierowana była do góry.</string>
-    <string name="carelevo_patch_attach_step4_desc">Po przyklejeniu Patcha naciśnij przycisk \"Gotowe\".</string>
     <string name="carelevo_patch_needle_insertion_step1_title">Zdejmij osłonę bezpieczeństwa</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">Obróć osłonkę zabezpieczającą w kierunku strzałki i zdejmij ją.</string>
     <string name="carelevo_patch_needle_insertion_step2_title">Wbij igłę</string>
