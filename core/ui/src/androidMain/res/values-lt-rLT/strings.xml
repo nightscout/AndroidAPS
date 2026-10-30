@@ -11,7 +11,6 @@
     <string name="treatments_history">Terapijos istorija</string>
     <string name="treatments_desc">Peržiūrėti ir tvarkyti terapijos istoriją</string>
     <string name="nav_configuration">Konfigūracija</string>
-    <string name="nav_configuration_desc">Nustatykite konfigūraciją (CGM, pompą ir kt.) ir įjunkite norimas funkcijas</string>
     <string name="count_selected">%1$d pasirinkta</string>
     <string name="delete">Ištrinti</string>
     <string name="show_invalidated">Rodyti negaliojančius</string>
