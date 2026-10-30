@@ -39,9 +39,9 @@
     <string name="pref_title_instara_history_request">Instara historical data request</string>
     <string name="pref_summary_instara_history_request">Request possible missing historical data in background</string>
 
-    <!-- Libre 3 / Libre 3 Plus native source -->
-    <string name="libre3_native">Libre 3 / Libre 3 Plus</string>
-    <string name="description_source_libre3_native">Native Libre 3 and Libre 3 Plus Bluetooth in AAPS. Scan the sensor once with NFC, then wait about 60 minutes of warm-up before loop glucose.</string>
+    <!-- Libre 3 / Libre 3 Plus / Libre Select native source -->
+    <string name="libre3_native">Libre 3 / Libre 3 Plus / Libre Select</string>
+    <string name="description_source_libre3_native">Native Libre 3, Libre 3 Plus and Libre Select Bluetooth in AAPS. Scan the sensor once with NFC, then wait about 60 minutes of warm-up before loop glucose.</string>
     <string name="libre3_plugin_summary">Status, sensor start by NFC, and warm-up</string>
     <string name="libre3_status_title">Libre 3 status</string>
     <string name="libre3_status_summary">Sensor, session phase and connection status</string>

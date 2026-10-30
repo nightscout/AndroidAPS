@@ -1,6 +1,6 @@
 THIRD-PARTY / UPSTREAM NOTICE
 =============================
-Module: :plugins:libre3 (Libre 3 / Libre 3 Plus native CGM driver)
+Module: :plugins:libre3 (Libre 3 / Libre 3 Plus / Libre Select native CGM driver)
 
 Status: Current NOTICE for ported / derived sources (update when new files land).
         Do not invent copyright holders. Unknown items are marked as unknown.
@@ -18,7 +18,8 @@ through a git submodule, https://github.com/loopandlearn/LibreLoop (branch
 legacy-loopkit-compat). Trio itself vendors no driver code. The code that was
 ported comes from the two projects in sections 1 and 2.
 
-Scope of this module: Libre 3 and Libre 3 Plus only. No Libre 2 / Libre 2 Plus
+Scope of this module: Libre 3, Libre 3 Plus and Libre Select only (Libre Select uses the
+same protocol and pairing as Libre 3). No Libre 2 / Libre 2 Plus
 code is added here. The existing follower paths (xDrip, Glimp, Tomato, and the
 LIBRE_2 / LIBRE_2_NATIVE / LIBRE_3 enum entries) are untouched.
 

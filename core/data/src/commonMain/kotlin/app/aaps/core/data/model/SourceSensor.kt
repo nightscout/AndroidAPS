@@ -23,7 +23,7 @@ enum class SourceSensor(val text: String, val aliases: Set<String> = emptySet())
     LIBRE_2("Libre2", setOf("Libre2 Native")),
     LIBRE_3("Libre3"),
 
-    /** Libre 3 and Libre 3 Plus, read directly over Bluetooth by the AAPS Libre 3 source plugin. */
+    /** Libre 3, Libre 3 Plus and Libre Select, read directly over Bluetooth by the AAPS Libre 3 source plugin. */
     LIBRE_3_NATIVE("AAPS-Libre3"),
     MEDTRUM_A6("Medtrum A6"),
     MEDTRUM_UNKNOWN("Medtrum", setOf("Medtrum Native")),

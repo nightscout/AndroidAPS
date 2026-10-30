@@ -80,7 +80,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 /**
- * Native Libre 3 and Libre 3 Plus BG source: the BLE and NFC driver of `:plugins:libre3` runs
+ * Native Libre 3, Libre 3 Plus and Libre Select BG source: the BLE and NFC driver of `:plugins:libre3` runs
  * inside AAPS, no Abbott app, Juggluco or xDrip is needed.
  *
  * The real driver runs as soon as the plugin is enabled. There is no stub and no engineering
