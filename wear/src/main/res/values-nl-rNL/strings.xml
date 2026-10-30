@@ -256,7 +256,7 @@
     <string name="tile_tap_bg_graph">BG Grafiek</string>
     <string name="tile_tap_main_menu">Hoofdmenu</string>
     <string name="tile_tap_loop_status">Loop status</string>
-    <string name="action_running_mode_selected">Actieve modus aangevraagd</string>
+    <string name="action_running_mode_selected">Bedrijfsmodus aangevraagd</string>
     <string name="title_activity_disconnect_pump">Verbreek verbinding met de pomp</string>
     <string name="title_activity_suspend_loop">Onderbreek loop</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
