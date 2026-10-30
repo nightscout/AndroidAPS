@@ -32,7 +32,6 @@
     <string name="pref_title_alert_urgent_as_android_notification">Emitir alarmas urgentes como notificaciones de Android</string>
     <string name="pref_title_alert_increase_volume">Aumentar gradualmente el volumen de las notificaciones</string>
     <string name="pref_title_alert_override_dnd">Anular el modo \"No molestar\"</string>
-    <string name="pref_summary_alert_override_dnd">Si está activado, las alarmas de AAPS sonarán aunque el teléfono esté en silencio o en modo No molestar. Si está desactivado, las alarmas permanecerán en silencio en esos modos</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Subir datos de glucemia a Nightscout</string>
     <string name="pref_title_bg_source_create_sensor_change">Registrar cambio de sensor</string>
