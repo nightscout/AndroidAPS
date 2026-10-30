@@ -3,6 +3,7 @@
     <string name="cwf_comment_background">Achtergrondafbeelding</string>
     <string name="cwf_comment_chart">Grafieken (BG, basaal, voorspellingslijnen...)</string>
     <string name="cwf_comment_cover_chart">Afbeelding voor de grafiek en achter tekstvelden</string>
+    <string name="cwf_comment_complication">Container voor complicatie</string>
     <string name="cwf_comment_freetext1">Vrije tekst 1</string>
     <string name="cwf_comment_freetext2">Vrije tekst 2</string>
     <string name="cwf_comment_freetext3">Vrije tekst 3</string>
