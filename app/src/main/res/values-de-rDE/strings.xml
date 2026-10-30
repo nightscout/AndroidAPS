@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="authorizationfailed">Autorisierung fehlgeschlagen</string>
     <string name="identification_not_set">Identifikation im Dev-Modus nicht gesetzt</string>
+    <string name="initializing_plugins">Initialisiere Plugins…</string>
+    <string name="initializing">Initialisiere…</string>
+    <string name="settings_unreadable_title">AAPS-Einstellungen können nicht gelesen werden</string>
 </resources>
