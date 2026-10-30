@@ -32,7 +32,6 @@
     <string name="pref_title_alert_urgent_as_android_notification">Rodyti skubius įspėjimus kaip Android pranešimus</string>
     <string name="pref_title_alert_increase_volume">Palaipsniui didinti pranešimų garsumą</string>
     <string name="pref_title_alert_override_dnd">Nepaisyti netrukdymo režimo</string>
-    <string name="pref_summary_alert_override_dnd">Įjungus šią parinktį AAPS įspėjimai skambės net nutildžius telefoną arba įjungus netrukdymo režimą. Išjungus parinktį šiais režimais įspėjimai bus be garso.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Įkelti glikemijos duomenis į NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Įrašyti jutiklio pakeitimą</string>
