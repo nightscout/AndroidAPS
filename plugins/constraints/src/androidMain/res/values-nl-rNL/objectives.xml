@@ -39,8 +39,12 @@
     <string name="objectives_usage_objective">Leer hoe AndroidAPS te gebruiken</string>
     <string name="objectives_usage_gate">Voer verschillende acties uit in AndroidAPS</string>
     <string name="objectives_usage_learned">Je hebt de basis van AAPS geleerd. De meeste bedieningselementen bevinden zich op het overzichtsscherm. Meer acties vind je in de menu\'s \'Behandelingen\' en \'Beheer\' onderaan het scherm, en in het zijmenu.</string>
+    <string name="objectives_useprofileswitch">Stel profiel in op 90% gedurende 10 min</string>
+    <string name="objectives_usedisconnectpump">Simuleer douchen. Ontkoppel de pomp gedurende 1 uur</string>
     <string name="objectives_usereconnectpump">... en op dezelfde manier weer aankoppelen</string>
+    <string name="objectives_usetemptarget">Maak een aangepast, tijdelijk streefdoel met een duur van 10 minuten</string>
     <string name="objectives_useloop">Inhoud van loop plugin weergeven</string>
+    <string name="objectives_usescale">Gebruik scrol of zoom op de BG grafiek</string>
     <string name="objectives_exam_objective">Bewijs je kennis</string>
     <string name="objectives_exam_gate">Bekijk de vragen. Elke vraag heeft meerdere mogelijke antwoorden, en er kunnen meerdere antwoorden juist zijn. Vink alle juiste antwoorden aan en selecteer \'Controleren\'.</string>
     <string name="objectives_exam_learned_prerequisites">Je hoeft geen ontwikkelaar te zijn. Je hebt Nightscout of Tidepool nodig om de doelstellingen te voltooien, een compatibele pomp en een manier om AAPS te bouwen (via een webbrowser of met Android Studio) voor de eerste installatie en voor elke update.</string>
@@ -68,6 +72,7 @@
     <string name="objectives_exam_learned_ecarbs">E-carbs kunnen worden gezien als een vervanging van een vertraagde bolus in het algemene pomp jargon.</string>
     <string name="objectives_exam_learned_nsclient">Je kunt AAPS op afstand volgen met AAPSClient of Nightscout. Wanneer AAPSClient is gekoppeld aan de hoofdtelefoon, kun je AAPS ook op afstand bedienen.</string>
     <string name="objectives_exam_learned_concentration1">Het gebruik van U200-insuline met een profielinstelling van 50% vereist een permanente omrekening: voor externe bolussen met pennen, en omdat alle standaardrapporten van AAPS of NS onjuist zullen zijn en voor het medisch team moeten worden omgerekend naar IE.</string>
+    <string name="objectives_exam_learned_concentration3">Insuline concentratie kan alleen worden gewijzigd wanneer de insuline of de patch wordt gewijzigd. Belangrijk, vooral voor de tube pompen: gebruik nooit de interface van de pomp om bolussen direct vanuit de pomp toe te dienen.</string>
     <string name="answerdisabledto">Beantwoorden uitgeschakeld tot: %1$s</string>
     <string name="wronganswer">Verkeerd antwoord!</string>
     <string name="unfinshed_button">Volgende onvoltooide</string>
@@ -82,6 +87,8 @@
     <string name="requirementnotmet">Vereisten van doel niet behaald</string>
     <string name="what_i_ve_learned">Wat ik heb geleerd:</string>
     <string name="verify_master_password">Verifieer dat u het masterwachtwoord kent</string>
+    <string name="objectives_collapse">Minder</string>
+    <string name="objectives_expand">Meer</string>
     <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Klaar</string>
     <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">Bezig</string>
     <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">Not started</string>
