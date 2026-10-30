@@ -5,10 +5,10 @@
     <string name="connection_settings_title">Nastavenie pripojenia</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="description_ns_client_v3">Synchronizuje vaše dáta s Nightscoutom prostredníctvom v3 API</string>
-    <string name="blocked_by_charging">Zablokované možnosti nabíjania</string>
-    <string name="blocked_by_connectivity">Zablokované možnosti pripojenia</string>
+    <string name="blocked_by_charging">Zablokované nastavením nabíjania</string>
+    <string name="blocked_by_connectivity">Zablokované nastavením pripojenia</string>
     <string name="no_connectivity">Žiadne pripojenie</string>
-    <string name="unsupported_ns_version">Nepodporovaná verzia Nighscoutu</string>
+    <string name="unsupported_ns_version">Nepodporovaná verzia Nightscoutu</string>
     <!-- AAPSClient -->
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">Autorizovaní klienti</string>
@@ -20,8 +20,8 @@
     <string name="authorized_clients_last_seen">Naposledy videný %1$s</string>
     <string name="authorized_clients_never_seen">Nikdy nepoužitý</string>
     <string name="authorized_clients_pending_expires_in">Párovanie vyprší o %1$ss</string>
-    <string name="authorized_clients_empty_title">Žiadny autorizovaní klienti</string>
-    <string name="authorized_clients_empty_subtitle">Spárujte klientské zariadenie, aby mohlo odosielať podpísané príkazy tomuto hlavnému zariadeniu.</string>
+    <string name="authorized_clients_empty_title">Žiadni autorizovaní klienti</string>
+    <string name="authorized_clients_empty_subtitle">Spárujte klientske zariadenie, aby mohlo odosielať podpísané príkazy tomuto hlavnému zariadeniu.</string>
     <string name="authorized_clients_name_dialog_title">Nový klient</string>
     <string name="authorized_clients_name_placeholder">Názov zariadenia</string>
     <string name="authorized_clients_delete_dialog_title">Zrušiť prístup?</string>
@@ -52,14 +52,14 @@
     <string name="authorized_clients_token_problem_not_allowed">Nightscout token nastavený v tomto telefóne nemá oprávnenia správcu, preto nemôže vytvoriť token pre klienta. Použite administrátorský token alebo pridajte klienta pomocou PIN kódu.</string>
     <string name="authorized_clients_token_problem_name_taken">Nightscout už má token s týmto názvom ale inými oprávneniami. Vyberte iný názov.</string>
     <string name="authorized_clients_token_problem_name_in_use">Klient s týmto názvom sa už v zozname nachádza. Zvoľte iný názov alebo najprv odstráňte existujúceho klienta.</string>
-    <string name="authorized_clients_token_problem_failed">Nightscout nenašiel nový token, preto bol opäť odstranený. Nič nezostalo zabudnuté. Zkuste to znovu.</string>
-    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout nenašiel nový token a preto nemohol byť opäť odstránený. Odstráňte token %1$s v Nightscoute a skúste to znova.</string>
+    <string name="authorized_clients_token_problem_failed">Nightscout nový token nezobrazil, preto bol opäť odstránený. Nič nezostalo. Skúste to znova.</string>
+    <string name="authorized_clients_token_problem_left_over" comment="%1$s=the name of the token in Nightscout. Example: Delete the token aaps-Tablet in Nightscout">Nightscout nový token nezobrazil a token sa nepodarilo opäť odstrániť. Odstráňte token %1$s v Nightscoute a skúste to znova.</string>
     <string name="authorized_clients_tokens_header">Len na čítanie z Nightscoutu</string>
     <string name="authorized_clients_token_unpaired">Vlastný token Nightscoutu, nie je spárovaný</string>
     <string name="authorized_clients_token_show_qr">Zobraziť QR kód</string>
     <string name="authorized_clients_token_delete_title">Zmazať token?</string>
     <string name="authorized_clients_token_delete_message" comment="%1$s = the name of the client, for example Tablet">%1$s už nemôže čítať údaje z Nightscoutu.</string>
-    <string name="authorized_clients_delete_dialog_token">Odstráni sa aj Nightscout token, takže už nebude mocť čítať údaje z Nightscoutu.</string>
+    <string name="authorized_clients_delete_dialog_token">Odstráni sa aj Nightscout token, takže už nebude môcť čítať údaje z Nightscoutu.</string>
     <string name="authorized_clients_uses_client_token">Vlastný Nightscout token</string>
     <string name="authorized_clients_uses_other_token" comment="%1$s = the name of a Nightscout token (subject), for example aaps-Tablet">Používa sa Nightscout token %1$s, ktorý má viac oprávnení, než klient potrebuje</string>
     <string name="authorized_clients_uses_not_own_token" comment="%1$s = the name of a Nightscout token (subject), for example mytoken">Používa token Nightscoutu %1$s namiesto vlastného, preto sú jeho príkazy odmietané. Odstráňte ho a znova pridajte.</string>
@@ -70,8 +70,8 @@
     <string name="pair_with_master_pin_entry_label">8-miestny PIN kód</string>
     <string name="pair_with_master_pin_entry_submit">Spárovať</string>
     <string name="pair_with_master_fetching">Hľadá sa spárovanie…</string>
-    <string name="pair_with_master_confirm_title">Spárovanie s týmto hlavným zariadením?</string>
-    <string name="pair_with_master_confirm_master">Riadiace zariadenia: %1$s</string>
+    <string name="pair_with_master_confirm_title">Spárovať s týmto hlavným zariadením?</string>
+    <string name="pair_with_master_confirm_master">Hlavné zariadenie: %1$s</string>
     <string name="pair_with_master_confirm_warning">Po spárovaní bude toto hlavné zariadenie môcť odosielať podpísané príkazy do tohto zariadenia.</string>
     <string name="pair_with_master_confirm_pair">Spárovať</string>
     <string name="pair_with_master_error_title">Nedá sa spárovať</string>
@@ -79,23 +79,23 @@
     <string name="pair_with_master_error_ambiguous_pin">Viacero párovaní sa zhoduje s týmto PIN kódom. Požiadajte na hlavnom zariadení o vygenerovanie nového a skúste to znova.</string>
     <string name="pair_with_master_error_expired">Platnosť tohto párovania vypršala. Vygenerujte nový PIN kód na hlavnom zariadení.</string>
     <string name="pair_with_master_error_network">Nedá sa spojiť s Nightscout. Skontrolujte pripojenie a skúste to znova.</string>
-    <string name="pair_with_master_error_secret_store">Párovací kľúč sa nepodarilo uložiť preto bolo párovanie zrušené. Neboli vykonané žiadne zmeny. Skúste to znova a ak bude problém pretrvávať, reštartujte aplikáciu.</string>
+    <string name="pair_with_master_error_secret_store">Párovací kľúč sa nepodarilo uložiť, preto bolo párovanie zrušené. Neboli vykonané žiadne zmeny. Skúste to znova a ak bude problém pretrvávať, reštartujte aplikáciu.</string>
     <string name="pair_with_master_retry">Skúsiť to znova</string>
     <string name="pair_with_master_already_paired_title">Už spárované</string>
     <string name="pair_with_master_already_paired_master">Momentálne spárované s hlavným zariadením %1$s. Najprv zrušte párovanie a zadajte nový PIN kód.</string>
     <string name="pair_with_master_unpair">Zrušiť párovanie</string>
     <string name="pair_with_master_sending">Odosiela sa párovacia správa…</string>
     <!-- Client set-up from the master's QR code -->
-    <string name="client_setup_scan_button">Naskenujte QR kód</string>
+    <string name="client_setup_scan_button">Naskenovať QR kód</string>
     <string name="client_setup_scan_title">Naskenujte QR kód z hlavného telefónu</string>
-    <string name="client_setup_scan_instructions">Na hlavnom telefóne, otvorte Autorizovaní klienti a pridajte tento telefón pomocou QR kódu. Nasmerujte kameru na QR kód.</string>
+    <string name="client_setup_scan_instructions">Na hlavnom telefóne otvorte Autorizovaní klienti a pridajte tento telefón pomocou QR kódu. Nasmerujte kameru na QR kód.</string>
     <string name="client_setup_scan_camera_refused">Na načítanie QR kódu je potrebná kamera. Povoľte prístup ku kamere alebo použite PIN kód na spárovanie.</string>
     <string name="client_setup_scan_camera_denied">Prístup ku kamere je pre AAPS vypnutý. Povoľte ho v systémových nastaveniach alebo vykonajte párovanie pomocou PIN kódu.</string>
     <string name="client_setup_scan_camera_blocked">Prístup ku kamere nie je na tomto zariadení povolený. Namiesto toho vykonajte párovanie pomocou PIN kódu.</string>
     <string name="client_setup_scan_camera_unavailable">Na tomto zariadení nie je možné použiť kameru. Namiesto toho vykonajte párovanie pomocou PIN kódu.</string>
     <string name="client_setup_scan_open_settings">Otvoriť nastavenia</string>
     <string name="client_setup_scan_not_a_code">Toto nie je QR kód z AAPS.</string>
-    <string name="client_setup_scan_other_version">Tento kód pochádza z inej verzie AAPS. Hlavné zariadenie aj tento telefón, musia používať rovnakú verziu.</string>
+    <string name="client_setup_scan_other_version">Tento kód pochádza z inej verzie AAPS. Hlavné zariadenie aj tento telefón musia používať rovnakú verziu.</string>
     <string name="client_setup_scan_expired">Platnosť tohto kódu vypršala. Na hlavnom zariadení vytvorte nový kód.</string>
     <string name="client_setup_scan_already_paired">Tento telefón je už spárovaný. Ak chcete použiť párovací kód, najprv zrušte existujúce párovanie.</string>
     <string name="client_setup_confirm_title">Použiť tento kód?</string>
@@ -112,7 +112,7 @@
     <string name="ns_client_url">Adresa URL:</string>
     <string name="ns_client_v3_title">NSClientV3</string>
     <string name="deliver_now">Podať teraz</string>
-    <string name="queue">Fronta:</string>
+    <string name="queue">Front:</string>
     <string name="status_label">Stav:</string>
     <string name="clear_log">Vymazať log</string>
     <string name="full_sync">Úplná synchronizácia</string>
@@ -126,10 +126,10 @@
     <string name="title_tidepool_use_ns_connection">Použiť nastavenia pripojenia Nightscout</string>
     <string name="summary_tidepool_use_ns_connection">Vypnite, ak chcete nastaviť samostatné pripojenie pre Tidepool</string>
     <string name="tidepool">Tidepool</string>
-    <string name="description_tidepool">Nahrávánie dát na Tidepool</string>
+    <string name="description_tidepool">Nahráva dáta do Tidepoolu</string>
     <string name="upload_now">Nahrať teraz</string>
     <string name="tidepool_purge_data">Zmazať všetky dáta</string>
-    <string name="tidepool_purge_data_confirm">VYMAZAŤ VŠETKY dáta, ktoré boli z AAPS nahraté do Tidepoolu? Túto akciu nie je možné vrátiť späť. Použite ju k odstráneniu dát poškodených použitím staršej verzie, potom spustite „Úplnú synchronizáciu\" a znovu ich nahrajte.</string>
+    <string name="tidepool_purge_data_confirm">VYMAZAŤ VŠETKY dáta, ktoré boli z AAPS nahraté do Tidepoolu? Túto akciu nie je možné vrátiť späť. Použite ju na odstránenie dát poškodených staršou verziou, potom spustite „Úplnú synchronizáciu“ a znovu ich nahrajte.</string>
     <string name="tidepool_full_sync_comment">Úplná synchronizácia? AAPS znova odošle všetky údaje do Tidepoolu. Môže to chvíľu trvať.</string>
     <string name="tidepool_logout_confirm">Odhlásiť sa z Tidepoolu? Odosielanie údajov sa zastaví, kým sa znova neprihlásite.</string>
     <string name="tidepool_status_not_logged_in">Neprihlásený</string>
@@ -141,7 +141,7 @@
     <string name="working">Pracujem</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="description_xdrip">Posielam dáta do xDripu</string>
+    <string name="description_xdrip">Posiela dáta do xDrip+</string>
     <string name="xdrip_status_settings">Rozšírený stavový riadok xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ nie je nainštalovaný</string>
     <string name="calibration_sent">Kalibrácia odoslaná do xDrip+</string>
@@ -152,13 +152,13 @@
     <string name="tizen_description">Povoľuje vysielanie údajov do rôznych externých sprievodných (Companion) aplikácií</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
-    <string name="garmin_description">Pripájanie k zariadeniu Garmin (Fénix, Edge, ...)</string>
+    <string name="garmin_description">Pripojenie k zariadeniu Garmin (Fenix, Edge, …)</string>
     <string name="garmin_local_http_server_port">Port lokálneho HTTP servera</string>
     <string name="garmin_local_http_server">Lokálny HTTP server</string>
     <string name="garmin_carbs_not_on_client" comment="%1$s=carbs with unit, example: 20 g. A client is a phone that follows and controls the main AAPS phone (the master).">Hodinky Garmin odoslali %1$s sacharidov. Tento telefón je klient, preto sacharidy neboli zaznamenané. Zadajte ich v AAPS.</string>
     <string name="garmin_pump_not_on_client" comment="A client is a phone that follows and controls the main AAPS phone (the master).">Hodinky Garmin požiadali o pripojenie alebo odpojenie pumpy. Tento telefón je klient, preto sa nič nezmenilo. Vykonajte túto akciu v AAPS.</string>
     <!--    Wear-->
-    <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
+    <string name="description_wear">Zobrazovanie stavu a ovládanie AAPS z hodiniek s WearOS.</string>
     <string name="no_watch_connected">(Žiadne hodinky nie sú pripojené)</string>
     <string name="pump_status">Stav pumpy</string>
     <string name="loop_status">Stav okruhu</string>
@@ -171,7 +171,7 @@
     <string name="wear_action_tempt_min_bg_error">Minimálna glykémia mimo rozsah!</string>
     <string name="wear_action_tempt_max_bg_error">Maximálna glykémia mimo rozsah!</string>
     <string name="wear_action_tempt_range_error">Neplatný rozsah: Nízky cieľ (%1$s) nemôže byť väčší než Vysoký cieľ (%2$s)</string>
-    <string name="wear_wizard_settings_summary">Kalkulácia použitá vo výsledku wizardu:</string>
+    <string name="wear_wizard_settings_summary">Výpočty zahrnuté vo výsledku kalkulačky:</string>
     <string name="wear_general_settings">Všeobecné nastavenia</string>
     <string name="wear_custom_watchface_settings">Nastavenie vlastného ciferníka</string>
     <string name="wear_custom_watchface">Vlastný ciferník: %1$s</string>
@@ -179,8 +179,8 @@
     <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Hodinky zobrazujú Ciferník s komplikáciami. Vyberte si Vlastný ciferník, ak chcete na hodinkách zobraziť %1$s.</string>
     <string name="wear_pushed_watchface_confirm_title">Zmeniť ciferník na hodinkách?</string>
     <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s nahradí %2$s na hodinkách.</string>
-    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s budú nahradené %2$s na hodinkách. Komplikácie, ktoré ste zmenili v editore ciferníka, sa vrátia na predvolené hodnoty.</string>
-    <string name="wear_load_watchface">Nahrať ciferník</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s nahradí %2$s na hodinkách. Komplikácie, ktoré ste zmenili v editore ciferníka, sa vrátia na predvolené hodnoty.</string>
+    <string name="wear_load_watchface">Načítať ciferník</string>
     <string name="wear_infos_watchface">Informácie o ciferníku</string>
     <string name="wear_export_watchface">Exportovať šablónu</string>
     <string name="wear_new_custom_watchface_exported">Vlastná šablóna ciferníka exportovaná</string>
@@ -188,7 +188,7 @@
     <string name="resend_all_data">Všetky dáta poslať znova</string>
     <string name="open_settings_on_wear">Otvoriť nastavenia na hodinkách</string>
     <string name="wear_import_custom_watchface_title">Vyberte vlastný ciferník</string>
-    <string name="cwf_infos_pref_locked">Zoznam preferencií uzamknutý hodinkami</string>
+    <string name="cwf_infos_pref_locked">Zoznam nastavení uzamknutých ciferníkom</string>
     <string name="cwf_infos_pref_required">Zoznam preferencií potrebných pre ciferník</string>
     <string name="cwf_infos_view_title">Zoznam polí zahrnutých do ciferníka</string>
     <string name="enabled">Zapnuté</string>
@@ -205,7 +205,7 @@
     <string name="default_range">ŠTANDARDNÝ ROZSAH</string>
     <string name="target">cieľ</string>
     <string name="rate_duration">Rýchlosť: %1$.2fU/h (%2$.2f%%) \nTrvanie %3$d min</string>
-    <string name="no_profile">Nie je vybraný žiadny profil</string>
+    <string name="no_profile">Nie je načítaný žiadny profil</string>
     <string name="aps_only">Použiť iba v APS móde!</string>
     <string name="last_aps_result_na">Posledný výsledok nie je k dispozícii!</string>
     <string name="loop_status_closed">UZAVRETÝ OKRUH</string>
@@ -222,7 +222,7 @@
     <string name="wear_action_loop_state_unauthorized">Prosím, skúste to znova.</string>
     <string name="wear_action_loop_state_invalid">Neplatná požiadavka na stav uzavretého okruhu</string>
     <string name="wear_action_running_mode_title">Režim prevádzky</string>
-    <string name="garmin_request_key">Požadovaný kľúč</string>
+    <string name="garmin_request_key">Kľúč požiadavky</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS komunikátor</string>
     <string name="description_sms_communicator">Vzdialené ovládanie AAPS použitím SMS príkazov.</string>
@@ -230,10 +230,10 @@
     <string name="smscommunicator_tab_otp_label">Nastavenie autentifikátora</string>
     <string name="smscommunicator_code_verify_label">Kód pre kontrolu:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
-    <string name="smscommunicator_code_verify_info">Overovací kód sa skladá zo 6 číslic zobrazených aplikáciou Authenticator (známej ako OTP) nasledované 3, alebo viacerými číslicami povinného kódu PIN.</string>
+    <string name="smscommunicator_code_verify_info">Overovací kód sa skladá zo 6 číslic zobrazených aplikáciou Authenticator (známych ako OTP), za ktorými nasledujú 3 alebo viac číslic povinného PIN kódu.</string>
     <string name="smscommunicator_otp_reset_btn">Resetovať autentifikátory</string>
     <string name="smscommunicator_otp_reset_title">Resetovať autentifikačný kľúč</string>
-    <string name="smscommunicator_otp_reset_prompt">Ste si istý, že chcete obnoviť autentifikačný kľúč? Vyresetujete tým všetky aktuálne nakonfigurované autentikátory a budete ich musieť znovu nastaviť.</string>
+    <string name="smscommunicator_otp_reset_prompt">Ste si istí, že chcete resetovať autentifikačný kľúč? Všetky aktuálne nastavené autentifikátory budú neplatné a budete ich musieť znovu nastaviť.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Nainštalujte Autentifikátor</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Naskenujte kód pre nastavenie AAPS OTP kódov</string>
     <string name="smscommunicator_otp_step3_test_header">3. Otestujte jednorázové heslo</string>
@@ -244,13 +244,13 @@
     <string name="smscommunicator_otp_verification_ivalid_size">NEPLATNÁ DĹŽKA!</string>
     <string name="smscommunicator_otp_verification_wrong_pin">NESPRÁVNY PIN</string>
     <string name="smscommunicator_otp_verification_wrong_otp">NESPRÁVNE OTP</string>
-    <string name="sms_wrong_code">Nesprávný kód. Príkaz zrušený.</string>
+    <string name="sms_wrong_code">Nesprávny kód. Príkaz zrušený.</string>
     <string name="sms_timeout_while_waiting">Vypršal časový limit pri čakaní na dokončenie predchádzajúcej komunikácie s pumpou</string>
     <string name="smscommunicator_bolus_reply_with_code">Pre podanie bolusu %1$.2fU odpovedzte SMS kódom %2$s</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">Pre podanie bolusu k jedlu %1$.2fU odpovedzte SMS kódom %2$s</string>
-    <string name="smscommunicator_temptarget_with_code">Pre nastavenie dočasného cieľa %1$s odpovedz SMS kódom %2$s</string>
-    <string name="smscommunicator_temptarget_cancel">Pre zrušenie dočasného bazálu odpovedzte SMS kódom %1$s</string>
-    <string name="smscommunicator_stops_ns_with_code">Pre vypnutie služby SMS komunikátora odpovedzte SMS kódom %1$s.\n\n\Majte na pamäti, že opätovná reaktivácia je možná len priamo na AAPS master telefóne.</string>
+    <string name="smscommunicator_temptarget_with_code">Pre nastavenie dočasného cieľa %1$s odpovedzte SMS kódom %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">Pre zrušenie dočasného cieľa odpovedzte SMS kódom %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">Pre vypnutie služby SMS komunikátora odpovedzte SMS kódom %1$s.\n\nMajte na pamäti, že znova ju bude možné aktivovať iba priamo na hlavnom telefóne AAPS.</string>
     <string name="smscommunicator_stopped_sms">SMS komunikátor zastavený. Na jeho reaktiváciu, použite AAPS na master telefóne.</string>
     <string name="smscommunicator_calibration_reply_with_code">Pre odoslanie kalibrácie %1$.2f odpovedzte SMS kódom %2$s</string>
     <string name="smscommunicator_bolus_failed">Podávanie bolusu zlyhalo. Pred odoslaním ďalšieho príkazu overte skutočný stav!</string>
@@ -301,9 +301,9 @@
     <string name="smscommunicator_calibration_sent">Kalibrácia odoslaná. Príjem kalibrácií musí byť povolený v xDrip+.</string>
     <string name="smscommunicator_calibration_failed">xDrip+ neprijíma kalibrácie</string>
     <string name="smscommunicator_message_body">Neplatný obsah správy</string>
-    <string name="smscommunicator_set_lgs_reply_with_code">Ak chcete prepnúť režim okruhu na LGS (Low Glucose Suspend) odpovedzte kódom %1$s</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Ak chcete prepnúť režim okruhu na LGS (Ochrana pred nízkou glykémiou), odpovedzte kódom %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Ak chcete prepnúť režim okruhu na uzavretý okruh, odpovedzte kódom %1$s</string>
-    <string name="smscommunicator_current_loop_mode">Aktuálny režim okruhu: %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Aktuálny režim prevádzky: %1$s</string>
     <string name="wrong_format">Chybný formát</string>
     <string name="sms_actual_bg">Glykémia:</string>
     <string name="sms_last_bg">Posledná glykémia:</string>
