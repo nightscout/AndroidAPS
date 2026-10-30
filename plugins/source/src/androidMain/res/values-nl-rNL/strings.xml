@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
     <string name="description_source_ns_client">Download BG waardes van Nightscout</string>
     <string name="source_xdrip">xDrip+ BG</string>
     <string name="description_source_xdrip">Ontvang BG waarden van xDrip+ en compatibele apps (Juggluco etc.).</string>
