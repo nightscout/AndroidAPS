@@ -70,7 +70,6 @@
     <string name="aaps_bolus_icon_label">Bolus</string>
     <string name="aaps_carbs_icon_label">Koolhydraten</string>
     <string name="aaps_tbr_icon_label">Tijdelijke basaal</string>
-    <string name="aaps_activity_icon_label">Sport</string>
     <string name="aaps_note_icon_label">Notitie</string>
     <string name="aaps_automation_icon_label">Automatisering</string>
     <string name="aaps_calibration_icon_label">Kalibratie</string>
