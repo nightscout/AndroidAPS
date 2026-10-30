@@ -102,7 +102,7 @@
     <string name="sensitivity_label">Pluginy Citlivost</string>
     <string name="sensitivity_adjust">Pluginy citlivosti umožňují AAPS přizpůsobit se dočasným nebo krátkodobým změnám v citlivosti inzulinu (například hormonální změny nebo problémy s absorpcí na infúzním místě).</string>
     <string name="sensitivity_edit">Pluginy citlivosti poskytují uživateli návrh změn bazálních hodnot, I:C poměrů a ISF, které mohou být použity k úpravě profilu.</string>
-    <string name="sensitivity_cannula">Výměna kanyly nebo změna profilu automaticky nastaví Autosense zpět na 100%.</string>
+    <string name="sensitivity_cannula">Zadání výměny kanyly nastaví poměr Autosens zpět na 100 %.</string>
     <string name="sensitivity_time">Některé pluginy mají konfigurovatelné časové rozmezí, které může nastavit uživatel.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="sensitivity_hint2">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/KeyAapsFeatures.html#open-aps-features-autosens</string>
