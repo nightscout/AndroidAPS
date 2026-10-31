@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="enable_tbr_over_notification">Desativar notificação do fim da basal temporária\n(configuração da bomba)</string>
+    <string name="enable_tbr_over_notification">Ativar notificação do fim da basal temporária\n(configuração da bomba)</string>
     <string name="disable_tbr_over_notification">Desativar notificação do fim da basal temporária\n(configuração da bomba)</string>
     <string name="not_paired">Não pareado</string>
     <string name="recovering">Recuperando</string>
@@ -29,14 +29,14 @@
     <string name="disable_vibration_summary">Para bólus e bólus estendido (disponível apenas com firmware Insight 3.x)</string>
     <string name="disable_vibration_auto">Desativar vibrações na entrega automática de bólus</string>
     <string name="disable_vibration_auto_summary">Para SMB e basal temporária com com emulação da taxa basal temporária (disponível apenas com firmware Insight 3.x)</string>
-    <string name="timeout_during_handshake">Tempo de operação excedido - reinicar bluetooth</string>
+    <string name="timeout_during_handshake">Tempo de operação excedido - reinicie bluetooth</string>
     <string name="pump_stopped">Bomba parada</string>
     <string name="pump_started">Bomba iniciada</string>
-    <string name="release_software_version">Lançar versão de software</string>
+    <string name="release_software_version">Versão do software (release)</string>
     <string name="bluetooth_address">Endereço Bluetooth</string>
-    <string name="manufacturing_date">Data de fabrico</string>
+    <string name="manufacturing_date">Data de fabricação</string>
     <string name="log_site_changes">Registrar trocas de local</string>
-    <string name="log_reservoir_changes">Número de unidades do reservatório alteradas</string>
+    <string name="log_reservoir_changes">Registrar trocas de reservatório</string>
     <string name="log_tube_changes">Registrar trocas de tubo</string>
     <string name="log_battery_changes">Registrar trocas de bateria</string>
     <string name="log_operating_mode_changes">Registrar alterações do modo de operação</string>
