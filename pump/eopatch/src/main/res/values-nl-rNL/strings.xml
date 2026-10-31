@@ -9,6 +9,7 @@
     <string name="eopatch_ble_status">BLE Status</string>
     <string name="eopatch_serial_number">Serienummer</string>
     <string name="eopatch_expiration_time">Verlooptijd</string>
+    <string name="eopatch_not_activated">Niet geactiveerd</string>
     <string name="eopatch_base_basal_rate">Basis basaalstand</string>
     <string name="eopatch_temp_basal_rate">Tijdelijke basaalstand</string>
     <string name="invalid_basal_rate">Basaalstand in het profiel is minder dan 0,05 E/hr. EOPatch heeft een minimale injectie hoeveelheid van 0.5E p/u. Probeer het opnieuw na het instellen van het profiel op meer dan de minimale injectie eenheid.</string>
@@ -37,17 +38,21 @@
     <string name="patch_wake_up">Insuline vullen</string>
     <string name="patch_wake_up_desc_1">Vul een nieuwe patch met insuline op kamertemperatuur. Let op de hoek van de vul spuit.</string>
     <string name="patch_wake_up_desc_2">Controleer op 1 piep.</string>
+    <string name="patch_wake_up_pairing_info">Tijdens het koppelen worden twee Android systeem pop-ups weergegeven. U moet beide bevestigen om de Bluetooth koppeling te voltooien.</string>
     <string name="patch_start_pairing">Begin met koppelen</string>
     <string name="patch_connect_new">Patch koppelen</string>
     <string name="patch_connect_new_desc">De nieuwe patch wordt gekoppeld.\nHoud de afstand tussen de patch en het slimme apparaat zo klein mogelijk</string>
     <string name="patch_remove_needle_cap">Bereid je voor om patch aan te brengen</string>
     <string name="patch_remove_needle_cap_desc_1">Verwijder de plakker en druk op \'Volgende\'.</string>
+    <string name="patch_remove_needle_cap_desc_2">Als een naald uitsteekt tik dan op \'Verwijderen\'.</string>
+    <string name="patch_remove_needle_cap_desc_3">Als de Patch nat of vies is, of de applicatie tape gevouwen is, tik dan op \'Verwijderen\'.</string>
     <string name="patch_remove_protection_tape">Patch aanbrengen</string>
     <string name="patch_remove_protection_tape_desc_1">Maak de applicatie plaats schoon en droog en breng de patch aan op de huid.</string>
     <string name="patch_remove_protection_tape_desc_2">Controleer de infuusplek en druk vervolgens op \'Start veiligheidscontrole\'.</string>
     <string name="patch_start_safety_check">Start veiligheidscontrole</string>
     <string name="patch_safety_check">Veiligheidscontrole…</string>
     <string name="patch_safety_check_desc_1">Het duurt ongeveer dertig seconden.</string>
+    <string name="patch_safety_check_desc_2">Voor veilig gebruik, van de naald bedieningshendel afblijven en eerst de veiligheidscheck uitvoeren!</string>
     <string name="patch_rotate_knob">De naald inbrengen</string>
     <string name="patch_rotate_knob_desc_1">Draai de naald bedieningshendel meer dan 100 ° om de naald in te brengen en draai daarna volledig om deze te verwijderen</string>
     <string name="patch_rotate_knob_desc_2">Controleer op 1 piep en druk op \'Volgende\'.</string>
@@ -59,6 +64,7 @@
     <string name="patch_activate_reminder_desc">Patch activatie is niet afgerond.\n Doorgaan.</string>
     <string name="patch_communication_check_helper_1">Breng je \"smart device\" dichter bij de Patch.</string>
     <string name="patch_communication_check_helper_2">Ga naar een andere locatie en probeer het opnieuw.</string>
+    <string name="patch_safety_check_failed_desc">Veiligheidscontrole mislukt. Probeer het opnieuw.</string>
     <string name="patch_communication_failed">Communicatie Fout</string>
     <string name="patch_communication_succeed">Communicatie geslaagd</string>
     <string name="patch_communication_succeed_message">Verbonden met de Patch.</string>
@@ -76,8 +82,14 @@
     <string name="needle_insertion_error_3">Druk op \'Verwijderen\' om de Patch te deactiveren.</string>
     <string name="string_suspend_time_insulin_delivery_title">Periode uitstel basaal</string>
     <string name="string_resume_insulin_delivery_title">Insuline toediening hervatten</string>
+    <string name="string_resume_insulin_delivery_message">Uitstellen insuline is verlopen.\nDruk op \'Bevestigen\' om de insuline toediening te hervatten.\n\n[Caution]\nInsuline levering wordt niet hervat zolang je niet op \'Bevestigen\' klikt.\nAls je niet op \'Bevestigen\' klikt, kun je een ernstige hyper ontwikkelen.</string>
     <string name="string_suspended_insulin_delivery_message">Insuline toediening is uitgesteld.</string>
     <string name="string_resumed_insulin_delivery_message">Insulinetoediening is hervat.</string>
     <string name="string_temp_basal_remained_hhmm">resterende tijd: %1$s:%2$s</string>
+    <string name="string_pause_failed">Onderbreken mislukt.</string>
     <string name="string_resume_failed">Hervatten mislukt.</string>
+    <string name="wizard_exit_activation_warning">De activeringswizard afsluiten? De patch status kan onvolledig blijven en een nieuwe patch vereisen.</string>
+    <string name="wizard_exit_deactivation_warning">Deactivatiewizard afsluiten? De patch kan actief blijven en insuline blijven leveren.</string>
+    <string name="patch_force_reset">Forceer een reset</string>
+    <string name="patch_force_reset_confirm">Dit zal de patch status lokaal wissen zonder opdrachten naar de patch te sturen. Gebruik alleen als de normale deactivatie mislukt. De patch blijft leveren totdat de batterij is leeg of totdat deze handmatig is uitgeschakeld.</string>
 </resources>
