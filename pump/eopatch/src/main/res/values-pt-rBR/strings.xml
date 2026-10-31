@@ -20,7 +20,7 @@
     <string name="time_1hr_30min">1 hora 30 min</string>
     <string name="time_2hr">2 horas</string>
     <string name="patch_safe_deactivation_desc">Para trocar por um novo patch, o patch atual deve ser descartado. Toda a administração de insulina do patch será cancelada.</string>
-    <string name="patch_discard_complete_title">Descartar o patch está completo.</string>
+    <string name="patch_discard_complete_title">O descarte do patch foi concluído.</string>
     <string name="patch_change_confirm_bolus_is_active_desc">Um bólus está sendo administrado agora. Você realmente deseja cancelar a administração de insulina e descartar o patch?</string>
     <string name="patch_change_confirm_temp_basal_is_active_desc">Uma basal temporária está sendo administrada agora. Você realmente deseja cancelar a administração de insulina e descartar o patch?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Um bólus e uma basal temporária estão sendo administrados agora. Você realmente deseja cancelar a administração de insulina e descartar o patch?</string>
@@ -70,8 +70,8 @@
     <string name="insulin_suspend_msg2">Após a suspensão, o Bólus atual será cancelado. \n\nInsulina será: %1$.2f U</string>
     <string name="insulin_suspend_msg3">Após a suspensão, a basal temporária em andamento será cancelada. \n\nTaxa : %1$s U/hr\nTempo restante : %2$s</string>
     <string name="insulin_suspend_msg4">A apliacação da insulina está suspensa.</string>
-    <string name="string_activate_patch">Pod ativo</string>
-    <string name="string_discard_patch">Descartar Patch</string>
+    <string name="string_activate_patch">Ativar patch</string>
+    <string name="string_discard_patch">Descartar patch</string>
     <string name="string_running">Funcionando</string>
     <string name="retry">Tentar novamente</string>
     <string name="string_are_you_sure_to_discard_current_patch">Tem certeza de que deseja descartar este Patch?</string>
