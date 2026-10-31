@@ -31,6 +31,7 @@
     <string name="patched_sino_app">אפליקציית Sino</string>
     <string name="description_source_patched_sino_app">קבלת נתוני סוכר מאפליקציית Sino מותאמת.</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
     <string name="description_source_instara_app">קבלת ערכי סוכר מאפליקציית Instara.</string>
     <!-- Instara preferences -->
     <string name="pref_title_instara_history_request">בקשת נתונים היסטוריים מ־Instara</string>
