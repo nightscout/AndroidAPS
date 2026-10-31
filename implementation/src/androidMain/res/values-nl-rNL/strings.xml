@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Opdracht wordt nu uitgevoerd</string>
-    <string name="smb_being_delivered">Er wordt nu een SMB geleverd. Probeer het opnieuw wanneer die klaar is.</string>
+    <string name="smb_being_delivered">Er wordt nu een SMB toegediend. Probeer het opnieuw wanneer die klaar is.</string>
     <string name="basal_value_below_minimum">Basaalwaarde onder minimum. Profiel niet ingesteld!</string>
     <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">Basaal profiel in de pomp is bijgewerkt. De pomp rondt het basaal af op zijn eigen stapgrootte: het geeft %1$s per dag in plaats van %2$s.</string>
     <string name="basal_reported_far_from_profile">De pomp rapporteert een basaal ver van het profiel. AAPS houdt het profielbasaal aan. Controleer de basaalstanden in de pomp.</string>
