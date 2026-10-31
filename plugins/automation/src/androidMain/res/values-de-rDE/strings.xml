@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Automatisierung</string>
+    <string name="automation_category_device">Gerätestatus</string>
+    <string name="automation_category_other">Andere</string>
+    <string name="automation_category_targets">Ziele</string>
     <string name="automation_missing_task_name">Gib einen Namen für die Aufgabe ein.</string>
     <string name="automation_missing_trigger">Mindestens eine auslösende Bedingung angeben.</string>
     <string name="automation_missing_action">Mindestens eine Aktion angeben.</string>
