@@ -60,9 +60,9 @@
     <string name="pref_wizard_in_menu">Menüdeki Hesap Makinesi</string>
     <string name="pref_prime_in_menu">Menüde Doldurma</string>
     <string name="pref_single_target">Tek hedef</string>
-    <string name="pref_wizard_percentage">Hesap Makinesi Yüzdesi</string>
-    <string name="pref_wizard_carbs_type">Hesap Makinesi Öğün Türü</string>
-    <string name="pref_wizard_carb_time">Karb Hesaplama Zamanı</string>
+    <string name="pref_wizard_percentage">Hesaplayıcı yüzdesi</string>
+    <string name="pref_wizard_carbs_type">Hesaplayıcı öğün türü</string>
+    <string name="pref_wizard_carb_time">Hesaplayıcı karb. zamanı</string>
     <string name="pref_complication_tap_action">Komplikasyon Dokunma Eylemi</string>
     <string name="pref_complication_bg_graph_hours">KŞ grafiği zaman aralığı</string>
     <string name="duration_1_hour">1 saat</string>
@@ -70,8 +70,8 @@
     <string name="duration_6_hours">6 saat</string>
     <string name="pref_unicode_in_complications">Komplikasyonlarda Unicode</string>
     <string name="pref_version">Versiyon:</string>
-    <string name="pref_moreWatchfaceSettings">Diğer Saatarayüz ayarları</string>
-    <string name="pref_lookInYourWatchfaceConfiguration">Lütfen, Saatarayüzü yapılandırmasına bakın.</string>
+    <string name="pref_moreWatchfaceSettings">Diğer saat arayüzü ayarları</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Lütfen saat arayüzü yapılandırmasına bakın.</string>
     <string name="menu_tempt">GH</string>
     <string name="menu_tempt_long">Geçici Hedef</string>
     <string name="menu_wizard">Hesaplayıcı</string>
@@ -216,7 +216,7 @@
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00Ü</string>
     <string name="snooze_alert">AAPS Uyarı Erteleme</string>
-    <string name="sending_snooze">AAPS\'ye Erteleme Gönderme</string>
+    <string name="sending_snooze">AAPS\'e erteleme gönderiliyor</string>
     <string name="week_short">h</string>
     <string name="day_short">g</string>
     <string name="hour_short">sa</string>
@@ -345,7 +345,7 @@
     <string name="loop_status_adjusted_target">Ayarlanmış hedef</string>
     <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Sona erene kadar</string>
     <string name="loop_status_scene_ended">Sona erdi</string>
-    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Takip</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Devam</string>
     <string name="loop_status_profile">Profil</string>
     <string name="loop_status_no_profile">Profil ayarlanmadı</string>
     <string name="loop_status_profile_percentage">Yüzde</string>
