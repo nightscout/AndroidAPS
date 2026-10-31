@@ -9,8 +9,10 @@
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
+    <string name="basal_shortname">BAS</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
-    <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
+    <string name="description_persistent_notification">Mostra uma notificação contínua com um breve resumo do que o seu loop está fazendo</string>
     <string name="old_data">DADOS ANTIGOS</string>
+    <string name="notification_iob_short">%1$.1fU</string>
 </resources>
