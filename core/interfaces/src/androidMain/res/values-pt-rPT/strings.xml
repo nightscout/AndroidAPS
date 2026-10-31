@@ -51,8 +51,8 @@
     <string name="handshaking">Cumprimento</string>
     <string name="connected">Ligado</string>
     <string name="authorized">Autorizado</string>
-    <string name="disconnecting">A desconectar</string>
-    <string name="waiting_for_disconnection">A aguardar a desconexão</string>
+    <string name="disconnecting">A desligar</string>
+    <string name="waiting_for_disconnection">A aguardar o fim da ligação</string>
     <!-- Custom Watchface -->
     <string name="metadata_label_watchface_created_at">Criado em: %1$s</string>
     <string name="metadata_label_watchface_author">Autor: %1$s</string>
@@ -74,7 +74,7 @@
     <string name="pref_show_loop_status">Mostrar Estado Loop</string>
     <string name="pref_show_bg">Mostrar glicemia</string>
     <string name="pref_show_bgi">Mostrar IG</string>
-    <string name="pref_show_direction_arrow">Mostrar Seta Direcção</string>
+    <string name="pref_show_direction_arrow">Mostrar Seta Direção</string>
     <string name="pref_show_ago">Mostrar Atrás</string>
     <string name="pref_show_date">Mostrar Data</string>
     <string name="pref_show_seconds">Mostrar Segundos</string>
@@ -83,10 +83,10 @@
     <string name="pref_show_complication3">Mostrar Complicação 3</string>
     <string name="pref_show_complication4">Mostrar Complicação 4</string>
     <string name="pref_show_complication5">Mostrar Complicação 5</string>
-    <string name="default_custom_watchface_comment">Watchface padrão, pode clicar no botão EXPORTAR WATCHFACE para gerar um modelo</string>
-    <string name="default_custom_watchface_external_comment">Watchface padrão com vistas externas para seguidores, pode clicar no botão EXPORTAR WATCHFACE para gerar um modelo</string>
-    <string name="wear_default_watchface">Watchface padrão</string>
-    <string name="wear_more_watchfaces">Mais mostradores</string>
+    <string name="default_custom_watchface_comment">Watchface predefinida, pode clicar no botão EXPORTAR WATCHFACE para gerar um modelo</string>
+    <string name="default_custom_watchface_external_comment">Watchface predefinida com vistas externas para seguidores, pode clicar no botão EXPORTAR WATCHFACE para gerar um modelo</string>
+    <string name="wear_default_watchface">Watchface predefinida</string>
+    <string name="wear_more_watchfaces">Mais watchfaces</string>
     <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
@@ -119,7 +119,7 @@
     <string name="alarminxmin">Executar alarme em %1$d min</string>
     <string name="pumpsuspended">Bomba suspensa</string>
     <string name="loopsuspended">Loop suspenso</string>
-    <string name="pump_disconnected">Bomba desconectada</string>
+    <string name="pump_disconnected">Bomba desligada</string>
     <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valor da basal alterado para o valor máximo suportado: %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
@@ -129,7 +129,7 @@
     <string name="bolus">Bólus</string>
     <string name="uel_extended_carbs">HC LENTOS</string>
     <string name="profile_high_target">Valor máximo alvo do perfil</string>
-    <string name="profile_dia">Valor Perfil DIA</string>
+    <string name="profile_dia">Valor da DAI do perfil</string>
     <string name="profile_sensitivity_value">Valor Perfil Sensibilidade</string>
     <string name="profile_carbs_ratio_value">Valor Perfil Rácio Hidratos</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fora dos limites permitidos</string>
