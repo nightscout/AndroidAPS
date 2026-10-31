@@ -35,7 +35,7 @@
     <string name="omnipod_common_overview_button_set_time">Nustatyti laiką</string>
     <string name="omnipod_common_overview_button_suspend_delivery">Sustabdyti</string>
     <string name="omnipod_common_overview_button_resume_delivery">Atnaujinti insulino tiekimą</string>
-    <string name="omnipod_common_overview_button_silence_alerts">Nutildyti</string>
+    <string name="omnipod_common_overview_button_silence_alerts">Nutildyti perspėjimus</string>
     <string name="omnipod_common_overview_pod_status">Pod būklė</string>
     <string name="omnipod_common_overview_total_delivered">Iš viso suleista</string>
     <string name="omnipod_common_overview_pod_unique_id">Unikalus ID</string>
@@ -66,7 +66,7 @@
     <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Naujas Pod yra aktyvus.\n\nJūsų bazės profilis yra suprogramuotas ir kaniulė įvesta.\n\nPatikrinkite, ar kaniulė tinkamai įvesta. Jei taip nėra, pakeiskite Pod.</string>
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Išjungti Pod</string>
-    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Spustelėkite<b>Toliau</b>, kad išjungtumėte Pod.\n\n<b>Pastaba:</b> tai sustabdys insulino tiekimą ir išjungs Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Spustelėkite <b>Toliau</b>, kad išjungtumėte Pod.\n\n<b>Pastaba:</b> tai sustabdys insulino tiekimą ir išjungs Pod.</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">Išjungto Pod pakartotinai naudoti negalima. Išjungti šį Pod dabar?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Pod išjungiamas</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Pod išjungiamas.\n\nKai veiksmas bus sėkmingai baigtas, spauskite <b>Toliau</b>.</string>
@@ -83,10 +83,10 @@
     <string name="omnipod_common_preferences_tbr_beeps_enabled">Laikinos bazės signalai įjungti</string>
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Omnipod skirtuke rodyti mygtuką Sustabdyti insulino tiekimą</string>
     <string name="omnipod_common_preferences_time_change_enabled">Vasaros laiko/Laiko juostos aptikimas įjungtas</string>
-    <string name="omnipod_common_preferences_expiration_reminder_enabled">Galiojimo pabaigos priminimas</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled">Galiojimo pabaigos priminimas įjungtas</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Įjungus, Pod pypsės atėjus nustatytam laikui</string>
     <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Priminimas apie galiojimo pabaigą (72 val.)</string>
-    <string name="omnipod_common_preferences_expiration_alarm_enabled">Galiojimo laiko priminimas įjungtas</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Galiojimo pabaigos perspėjimas įjungtas</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Įjungus Pod pypsės, atėjus nustatytam laikui bei 1 val. prieš išsijungimą</string>
     <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Įspėjimas apie išsijungimą (80 val.)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Įjungtas perspėjimas apie senkantį rezervuarą</string>
