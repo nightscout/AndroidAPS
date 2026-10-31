@@ -25,6 +25,7 @@
     <string name="doprofileswitch">Genomför profilbyte</string>
     <string name="exitwizard">Hoppa över installationsguiden</string>
     <string name="setupwizard_sensitivity_description">Insticksprogrammet för känslighet används för att detektera insulinkänslighet och för att beräkning av aktiva kolhydrater, COB. För mer information, besök:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurera din Riley Link nedan. När du har valt en Riley Link kan du fortsätta installationen när status är \"Ansluten\". Det här kan ta en minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized">Du kan fortsätta installationen först när pumpen har konfigurerats.\n</string>
     <string name="startobjective">Påbörja ditt första mål</string>
