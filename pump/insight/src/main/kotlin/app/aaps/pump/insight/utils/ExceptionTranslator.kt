@@ -1,7 +1,8 @@
 package app.aaps.pump.insight.utils
 
 import android.content.Context
-import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.pump.insight.R
 import app.aaps.pump.insight.exceptions.ConnectionFailedException
 import app.aaps.pump.insight.exceptions.ConnectionLostException
@@ -25,8 +26,8 @@ object ExceptionTranslator {
         return if (res == null) exception.javaClass.simpleName else context.getString(res)
     }
 
-    fun makeToast(context: Context, exception: Exception) {
-        ToastUtils.longErrorToast(context, getString(context, exception))
+    fun notify(context: Context, rxBus: RxBus, exception: Exception) {
+        rxBus.send(EventShowSnackbar(getString(context, exception), EventShowSnackbar.Type.Error))
     }
 
     init {

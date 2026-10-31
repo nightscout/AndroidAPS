@@ -1,12 +1,14 @@
 package app.aaps.pump.medtrum.util
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import java.time.Duration
 import java.time.Instant
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class MedtrumTimeUtil @Inject constructor() {
+@SingleIn(AppScope::class)
+@Inject
+class MedtrumTimeUtil() {
 
     fun getCurrentTimePumpSeconds(): Long {
         val startInstant = Instant.parse("2014-01-01T00:00:00Z")

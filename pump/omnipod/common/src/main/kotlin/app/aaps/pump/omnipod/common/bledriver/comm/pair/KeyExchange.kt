@@ -87,19 +87,16 @@ class KeyExchange(
             pdmNonce
         aesCmac(confKey, podConfData, podConf)
 
+        // Only what goes over the air anyway. The private key, the shared secret (curveLTK) and the keys
+        // derived from it are never logged, also not in debug builds: testers share their logs, and the private
+        // key with a capture of this pairing gives every key of the pod (#5205).
         if (config.DEBUG) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "pdmPrivate: ${pdmPrivate.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "pdmPublic: ${pdmPublic.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "podPublic: ${podPublic.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "pdmNonce: ${pdmNonce.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "podNonce: ${podNonce.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "podConf: ${podConf.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "pdmConf: ${pdmConf.toHex()}")
-
-            aapsLogger.debug(LTag.PUMPBTCOMM, "LTK, donna key: ${curveLTK.toHex()}")
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Intermediate key: ${intermediateKey.toHex()}")
-            aapsLogger.debug(LTag.PUMPBTCOMM, "LTK: ${ltk.toHex()}")
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Conf KEY: ${confKey.toHex()}")
         }
     }
 

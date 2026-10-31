@@ -2,25 +2,11 @@
 <resources>
     <!-- PumpDeviceState -->
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">Scannen</string>
-    <string name="riley_link_ble_config_scan_stop">Stopp</string>
-    <string name="riley_link_ble_config_scan_selected">Ausgewählt</string>
-    <string name="riley_link_ble_config_scan_title">RileyLink Scan</string>
     <string name="riley_link_ble_config_scan_scanning">Scannt gerade</string>
-    <string name="riley_link_ble_config_scan_finished">Scannen abgeschlossen</string>
-    <string name="riley_link_ble_config_scan_error">Scanfehler: %1$d</string>
     <string name="riley_link_ble_config_connected_never">Nie</string>
-    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Aktuell ausgewählter RileyLink</string>
-    <string name="riley_link_ble_config_remove_riley_link">Löschen</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation">Bist Du sicher, dass Du Deinen RileyLink entfernen möchtest?</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">RileyLink entfernen</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">Kein RileyLink ausgewählt</string>
     <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">Einstellungen</string>
-    <string name="rileylink_settings_tab2">Verlauf</string>
     <string name="rileylink_status">RileyLink Status</string>
     <string name="medtronic_pump_status">Pumpen-Status</string>
-    <string name="title_activity_rileylink_settings">RileyLink Einstellungen</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Adresse:</string>
     <string name="rileylink_name">Name:</string>
@@ -57,7 +43,6 @@
     <string name="rileylink_error_bt_disabled">Bluetooth ist deaktiviert</string>
     <string name="rileylink_error_no_bt_adapter">Kein Bluetooth-Adapter</string>
     <string name="rileylink_error_tuneup_failed">TuneUp fehlgeschlagen</string>
-    <string name="rileylink_error_pump_unreachable">Pumpe nicht erreichbar</string>
     <string name="rileylink_error_pod_unreachable">Pod nicht erreichbar</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic Pumpe</string>
@@ -75,5 +60,4 @@
     </plurals>
     <string name="orange_use_scanning_level">Verwende Scannen</string>
     <string name="orange_use_scanning_level_summary">Scanne, bevor Du mit dem OrangeLink verbindest. Das sollte die Stabilität der Verbindung verbessern und kann auch mit anderen RileyLink-Nachbauten probiert werden.</string>
-    <string name="rileylink_configuration">RileyLink-Konfiguration</string>
 </resources>

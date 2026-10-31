@@ -1,0 +1,203 @@
+package app.aaps.core.ui.compose.icons.library
+
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.PathParser
+import androidx.compose.ui.graphics.vector.path
+import androidx.compose.ui.unit.dp
+import app.aaps.core.data.model.TE.Location
+
+/**
+ * Icon for Man Back View.
+ * Represents human male body back view for site rotation.
+ *
+ * Bounding box: x: 5.0-45.0, y: 5.0-115.0 (viewport: 48x128, ~86% height)
+ *
+ * @see ManBackPreview
+ */
+val ManBack: ImageVector by lazy {
+    ImageVector.Builder(
+        name = "ManBack",
+        defaultWidth = 48.dp,
+        defaultHeight = 128.dp,
+        viewportWidth = 48f,
+        viewportHeight = 128f
+    ).apply {
+        // Main body (background)
+        path(
+            name = "background",
+            fill = SolidColor(Color(0xFFEFC3AD)),
+            stroke = SolidColor(Color.Black),
+            strokeLineWidth = 0.5669f,
+            strokeLineCap = StrokeCap.Butt,
+            strokeLineJoin = StrokeJoin.Miter,
+            strokeLineMiter = 10f
+        ) {
+            moveTo(42.701f, 65.091f)
+            curveToRelative(-0.053f, -0.433f, -0.128f, -0.865f, -0.13f, -1.303f)
+            curveToRelative(-0.009f, -1.641f, 0.1f, -3.291f, -0.041f, -4.92f)
+            curveToRelative(-0.239f, -2.753f, -0.099f, -5.506f, -0.207f, -8.257f)
+            curveToRelative(-0.028f, -0.719f, -0.219f, -1.443f, -0.416f, -2.142f)
+            curveToRelative(-0.658f, -2.341f, -0.995f, -4.717f, -0.897f, -7.152f)
+            curveToRelative(0.013f, -0.329f, -0.144f, -5.933f, -0.098f, -8.458f)
+            curveToRelative(0.02f, -1.097f, 0.117f, -2.286f, 0.017f, -3.386f)
+            curveToRelative(-0.092f, -1.009f, -0.271f, -1.942f, -0.577f, -2.884f)
+            curveToRelative(-0.701f, -2.157f, -2.057f, -3.621f, -4.276f, -4.263f)
+            curveToRelative(-2.207f, -0.638f, -4.4f, -1.327f, -6.599f, -1.991f)
+            curveToRelative(-1.732f, -0.523f, -2.537f, -2.916f, -1.435f, -4.359f)
+            curveToRelative(0.732f, -0.959f, 1.747f, -2.816f, 2.088f, -4.258f)
+            curveToRelative(0.749f, -0.448f, 0.91f, -3.967f, 0.124f, -3.899f)
+            curveToRelative(-0.175f, -1.16f, -0.068f, -0.832f, -0.238f, -1.932f)
+            curveToRelative(-0.369f, -2.384f, -1.645f, -3.894f, -3.934f, -4.618f)
+            curveToRelative(-2.685f, -0.849f, -5.713f, 0.33f, -6.916f, 2.388f)
+            curveToRelative(-0.691f, 1.183f, -0.771f, 2.857f, -0.874f, 4.162f)
+            curveToRelative(-0.789f, -0.167f, -0.429f, 3.742f, 0.371f, 3.898f)
+            curveToRelative(0f, 1.473f, 1.008f, 3.245f, 1.633f, 4.245f)
+            curveToRelative(1.03f, 1.649f, 0.815f, 3.484f, -1.402f, 4.271f)
+            curveToRelative(-1.546f, 0.548f, -3.147f, 0.931f, -4.706f, 1.439f)
+            curveToRelative(-1.175f, 0.383f, -2.421f, 0.555f, -3.526f, 1.151f)
+            curveToRelative(-1.411f, 0.762f, -2.284f, 1.889f, -2.818f, 3.448f)
+            curveTo(6.79f, 29.346f, 7.398f, 34.908f, 7.06f, 39.742f)
+            curveToRelative(0f, 2.215f, -0.14f, 6.207f, -1.002f, 9.004f)
+            curveToRelative(-0.315f, 1.022f, -0.397f, 2.075f, -0.384f, 3.145f)
+            curveToRelative(0.022f, 1.839f, 0.062f, 3.681f, -0.025f, 5.517f)
+            curveToRelative(-0.059f, 1.234f, -0.099f, 2.48f, -0.338f, 3.703f)
+            curveToRelative(-0.035f, 0.179f, -0.084f, 0.377f, -0.042f, 0.545f)
+            curveToRelative(0.472f, 1.872f, -0.045f, 3.699f, -0.225f, 5.542f)
+            curveToRelative(-0.069f, 0.708f, 0.23f, 1.361f, 0.412f, 2.028f)
+            curveToRelative(0.533f, 1.95f, 1.797f, 3.221f, 3.654f, 3.948f)
+            curveToRelative(0.205f, 0.08f, 0.417f, 0.244f, 0.614f, 0.085f)
+            curveToRelative(0.231f, -0.186f, 0.169f, -0.463f, 0.078f, -0.712f)
+            curveToRelative(-0.143f, -0.39f, -0.358f, -0.749f, -0.742f, -0.922f)
+            curveToRelative(-0.579f, -0.262f, -0.834f, -0.777f, -0.875f, -1.311f)
+            curveToRelative(-0.059f, -0.769f, -0.464f, -1.57f, 0.067f, -2.328f)
+            curveToRelative(0.101f, -0.144f, 0.157f, -0.362f, 0.39f, -0.312f)
+            curveToRelative(0.195f, 0.041f, 0.305f, 0.209f, 0.339f, 0.393f)
+            curveToRelative(0.087f, 0.466f, 0.211f, 0.936f, 0.212f, 1.404f)
+            curveToRelative(0f, 0.481f, 0.205f, 0.838f, 0.452f, 1.206f)
+            curveToRelative(0.146f, 0.218f, 0.275f, 0.484f, 0.585f, 0.367f)
+            curveToRelative(0.273f, -0.103f, 0.328f, -0.378f, 0.313f, -0.65f)
+            curveToRelative(-0.088f, -1.608f, -0.162f, -3.216f, -0.282f, -4.821f)
+            curveToRelative(-0.023f, -0.312f, -0.17f, -0.655f, -0.363f, -0.905f)
+            curveToRelative(-0.677f, -0.881f, -0.793f, -1.956f, -1.061f, -2.97f)
+            curveToRelative(-0.152f, -0.577f, 0.154f, -1.142f, 0.319f, -1.699f)
+            curveToRelative(0.528f, -1.784f, 1.085f, -3.56f, 1.592f, -5.35f)
+            curveToRelative(0.568f, -2.003f, 0.902f, -4.048f, 1.157f, -6.116f)
+            curveToRelative(0.3f, -2.429f, 0.989f, -7.291f, 1.177f, -7.291f)
+            curveToRelative(0.209f, 0f, 0.996f, 5.417f, 0.996f, 7.17f)
+            curveToRelative(0f, 3.766f, -1.188f, 9.446f, -2.187f, 12.783f)
+            curveToRelative(-0.402f, 1.342f, -0.709f, 4.559f, -0.731f, 6.805f)
+            curveToRelative(-0.06f, 6.221f, 0.231f, 11.741f, 1.627f, 17.012f)
+            curveToRelative(0.664f, 2.375f, 0.31f, 4.809f, 0.434f, 7.216f)
+            curveToRelative(0.091f, 1.779f, -0.205f, 3.504f, -0.506f, 5.234f)
+            curveToRelative(-0.323f, 1.861f, -0.194f, 3.715f, -0.052f, 5.582f)
+            curveToRelative(0.12f, 1.569f, 0.37f, 3.119f, 0.517f, 4.682f)
+            curveToRelative(0.13f, 1.383f, 0.441f, 2.733f, 0.617f, 4.107f)
+            curveToRelative(0.133f, 1.039f, 0.37f, 2.064f, 0.542f, 3.098f)
+            curveToRelative(0.005f, 0.03f, 0.007f, 0.059f, 0.012f, 0.089f)
+            curveToRelative(0.19f, 1.106f, -0.306f, 2.289f, -1.394f, 3.041f)
+            curveToRelative(-1.142f, 0.79f, -2.314f, 1.525f, -3.672f, 1.901f)
+            curveToRelative(-0.316f, 0.088f, -0.643f, 0.175f, -0.927f, 0.331f)
+            curveToRelative(-0.252f, 0.138f, -0.49f, 0.357f, -0.442f, 0.703f)
+            curveToRelative(0.049f, 0.353f, 0.323f, 0.42f, 0.624f, 0.512f)
+            curveToRelative(0.754f, 0.228f, 1.531f, 0.135f, 2.29f, 0.23f)
+            curveToRelative(1.963f, 0.245f, 3.935f, 0.336f, 5.907f, 0.397f)
+            curveToRelative(1.333f, 0.041f, 1.899f, -0.62f, 1.986f, -1.94f)
+            curveToRelative(0.066f, -1.005f, -0.309f, -1.96f, -0.271f, -2.951f)
+            curveToRelative(0.03f, -0.772f, -0.047f, -1.543f, -0.045f, -2.314f)
+            curveToRelative(-0.077f, -1.021f, -0.008f, -2.057f, 0.188f, -3.053f)
+            curveToRelative(0.493f, -2.502f, 1.083f, -4.99f, 1.405f, -7.518f)
+            curveToRelative(0.267f, -2.098f, 0.329f, -4.207f, -0.122f, -6.325f)
+            curveToRelative(-0.361f, -1.695f, 0.162f, -3.341f, 0.777f, -4.928f)
+            curveToRelative(0.586f, -1.512f, 1.032f, -3.04f, 0.943f, -4.695f)
+            curveToRelative(-0.059f, -1.101f, -0.003f, -2.208f, -0.019f, -3.312f)
+            curveToRelative(-0.034f, -2.317f, 0.448f, -4.577f, 0.771f, -6.853f)
+            curveToRelative(0.287f, -2.019f, 0.665f, -4.025f, 1.007f, -6.036f)
+            curveToRelative(0.073f, -0.432f, 0.154f, -0.863f, 0.247f, -1.29f)
+            curveToRelative(0.04f, -0.184f, 0.153f, -0.353f, 0.345f, -0.391f)
+            curveToRelative(0.266f, -0.053f, 0.397f, 0.153f, 0.493f, 0.352f)
+            curveToRelative(0.111f, 0.229f, 0.204f, 0.46f, 0.235f, 0.727f)
+            curveToRelative(0.313f, 2.643f, 0.882f, 5.246f, 1.271f, 7.876f)
+            curveToRelative(0.354f, 2.391f, 0.673f, 4.796f, 0.496f, 7.222f)
+            curveToRelative(-0.174f, 2.388f, 0.191f, 4.669f, 1.107f, 6.878f)
+            curveToRelative(0.706f, 1.702f, 0.727f, 3.44f, 0.516f, 5.276f)
+            curveToRelative(-0.203f, 1.767f, -0.122f, 3.577f, 0.072f, 5.38f)
+            curveToRelative(0.286f, 2.658f, 1.05f, 5.229f, 1.334f, 7.867f)
+            curveToRelative(0.099f, 0.922f, 0.223f, 1.875f, 0.189f, 2.821f)
+            curveToRelative(-0.01f, 0.202f, 0.006f, 0.379f, 0.003f, 0.57f)
+            curveToRelative(-0.027f, 1.524f, -0.117f, 3.051f, -0.353f, 4.577f)
+            curveToRelative(-0.028f, 0.179f, -0.026f, 0.372f, 0.006f, 0.551f)
+            curveToRelative(0.116f, 0.652f, 0.401f, 1.134f, 1.106f, 1.357f)
+            curveToRelative(0.548f, 0.173f, 1.112f, 0.265f, 1.624f, 0.131f)
+            curveToRelative(0.914f, -0.241f, 1.826f, -0.133f, 2.737f, -0.18f)
+            curveToRelative(1.533f, -0.08f, 3.061f, -0.206f, 4.581f, -0.429f)
+            curveToRelative(0.352f, -0.051f, 0.701f, -0.105f, 0.721f, -0.518f)
+            curveToRelative(0.018f, -0.378f, -0.126f, -0.747f, -0.575f, -0.809f)
+            curveToRelative(-1.248f, -0.172f, -2.215f, -0.948f, -3.263f, -1.53f)
+            curveToRelative(-1.099f, -0.611f, -2.452f, -1.347f, -2.541f, -2.78f)
+            curveToRelative(-0.019f, -0.313f, -0.023f, -0.557f, 0.025f, -0.938f)
+            horizontalLineToRelative(0.001f)
+            curveToRelative(0.511f, -3.073f, 1.009f, -6.337f, 1.481f, -9.508f)
+            curveToRelative(0.191f, -1.284f, 0.206f, -2.63f, 0.328f, -3.936f)
+            curveToRelative(0.215f, -2.299f, -0.223f, -4.49f, -0.662f, -6.703f)
+            curveToRelative(-0.092f, -0.462f, -0.049f, -0.954f, -0.051f, -1.432f)
+            curveToRelative(-0.005f, -1.251f, 0.047f, -2.505f, -0.012f, -3.754f)
+            curveToRelative(-0.073f, -1.55f, 0.118f, -3.064f, 0.437f, -4.57f)
+            curveToRelative(1.377f, -6.52f, 1.92f, -14.084f, 1.768f, -18.086f)
+            curveToRelative(-0.08f, -2.104f, -0.129f, -3.604f, -0.915f, -6.243f)
+            curveToRelative(-0.786f, -2.639f, -1.691f, -6.474f, -1.919f, -9.296f)
+            curveToRelative(-0.085f, -1.058f, -0.042f, -2.126f, -0.057f, -3.19f)
+            curveToRelative(0.045f, -1.247f, 0.825f, -5.325f, 0.936f, -6.157f)
+            curveToRelative(0.021f, -0.161f, 0.08f, -0.431f, 0.236f, -0.49f)
+            curveToRelative(0.119f, 0.119f, 0.13f, 0.357f, 0.138f, 0.473f)
+            curveToRelative(0.074f, 1.064f, 0.29f, 1.763f, 0.287f, 2.684f)
+            curveToRelative(-0.005f, 2.055f, 0.41f, 4.065f, 0.769f, 6.075f)
+            curveToRelative(0.59f, 3.309f, 1.551f, 6.529f, 2.42f, 9.771f)
+            curveToRelative(0.278f, 1.039f, 0.226f, 2.112f, -0.241f, 3.12f)
+            curveToRelative(-0.35f, 0.755f, -0.72f, 1.5f, -1.065f, 2.257f)
+            curveToRelative(-0.073f, 0.16f, -0.1f, 0.352f, -0.102f, 0.529f)
+            curveToRelative(-0.014f, 1.288f, -0.017f, 2.576f, -0.02f, 3.864f)
+            curveToRelative(0f, 0.215f, -0.031f, 0.465f, 0.255f, 0.538f)
+            curveToRelative(0.242f, 0.061f, 0.409f, -0.096f, 0.583f, -0.238f)
+            curveToRelative(0.575f, -0.469f, 0.538f, -1.169f, 0.68f, -1.798f)
+            curveToRelative(0.048f, -0.21f, 0.004f, -0.44f, 0.014f, -0.661f)
+            curveToRelative(0.013f, -0.286f, -0.027f, -0.674f, 0.375f, -0.656f)
+            curveToRelative(0.3f, 0.014f, 0.504f, 0.33f, 0.514f, 0.639f)
+            curveToRelative(0.043f, 1.278f, 0.243f, 2.612f, -1.056f, 3.493f)
+            curveToRelative(-0.18f, 0.122f, -0.333f, 0.293f, -0.47f, 0.464f)
+            curveToRelative(-0.169f, 0.213f, -0.542f, 0.375f, -0.333f, 0.725f)
+            curveToRelative(0.241f, 0.403f, 0.62f, 0.312f, 0.977f, 0.158f)
+            curveToRelative(1.95f, -0.84f, 3.128f, -2.316f, 3.754f, -4.336f)
+            curveTo(43.168f, 67.437f, 42.846f, 66.273f, 42.701f, 65.091f)
+            close()
+        }
+    }.build()
+}
+
+/**
+ * Contains SVG path data for each zone of the male body back view.
+ */
+object ManBackPaths {
+
+    val pathData: Map<Location, String> = mapOf(
+        Location.BACK_LEFT_UPPER_ARM to "M12.175,37.936 c0,1.801,-0.29,2.754,-1.449,2.754 c-0.657,0,-1.232,-0.123,-1.815,-0.168 c-0.849,-0.066,-1.341,-0.564,-1.176,-2.307 c0.203,-2.149,-0.038,-6.275,0.102,-7.509 c0.121,-1.067,0.515,-1.41,1.399,-1.41 c0.68,0,0.986,0.045,2.034,0.045 c0.906,0,1.127,0.762,1.127,2.046 C12.396,32.589,12.175,36.698,12.175,37.936z",
+        Location.BACK_RIGHT_UPPER_ARM to "M35.825,37.936 c0,1.801,0.29,2.754,1.449,2.754 c0.657,0,1.232,-0.123,1.815,-0.168 c0.849,-0.066,1.341,-0.564,1.176,-2.307 c-0.203,-2.149,0.038,-6.275,-0.102,-7.509 c-0.121,-1.067,-0.515,-1.41,-1.399,-1.41 c-0.68,0,-0.986,0.045,-2.034,0.045 c-0.906,0,-1.127,0.762,-1.127,2.046 C35.604,32.589,35.825,36.698,35.825,37.936z",
+        Location.SIDE_LEFT_LOWER_THIGH to "M11.645,78.96 c0.252,2.068,0.62,4.078,1.143,6.052 c0.026,0.092,0.047,0.184,0.07,0.276 c0.634,-0.157,1.154,-0.387,1.147,-1.192 c-0.014,-1.737,-0.02,-3.474,-0.021,-5.211 C13.219,78.929,12.437,78.953,11.645,78.96z",
+        Location.SIDE_RIGHT_LOWER_THIGH to "M33.995,84.096 c-0.007,0.83,0.546,1.049,1.206,1.207 c0.018,-0.091,0.036,-0.183,0.055,-0.274 c0.416,-1.971,0.755,-4.036,1.023,-6.07 c-0.767,-0.01,-1.523,-0.035,-2.264,-0.079 C34.016,80.619,34.009,82.358,33.995,84.096z",
+        Location.SIDE_LEFT_UPPER_THIGH to "M14,73.748 c0.004,-0.609,-0.309,-0.838,-0.894,-0.954 c-0.633,-0.125,-1.27,-0.151,-1.91,-0.154 c0.062,2.179,0.199,4.278,0.448,6.32 c0.793,-0.007,1.574,-0.031,2.339,-0.075 C13.984,77.173,13.989,75.46,14,73.748z",
+        Location.SIDE_RIGHT_UPPER_THIGH to "M34.894,72.794 c-0.585,0.116,-0.897,0.344,-0.894,0.954 c0.01,1.711,0.016,3.421,0.016,5.132 c0.741,0.044,1.497,0.069,2.264,0.079 c0.289,-2.197,0.494,-4.356,0.62,-6.319 C36.228,72.641,35.559,72.663,34.894,72.794z",
+        Location.BACK_LEFT_BUTTOCK to "M12.842,61.903 c0.129,-1.13,0.567,-3.081,1.318,-4.021 c1.152,-1.441,1.591,-1.672,5.308,-1.04 c3.717,0.632,3.465,3.887,2.844,7.627 c-0.469,2.826,-6.135,3.293,-8.548,1.317 C12.796,64.994,12.695,63.268,12.842,61.903z",
+        Location.BACK_RIGHT_BUTTOCK to "M35.158,61.903 c-0.129,-1.13,-0.567,-3.081,-1.318,-4.021 c-1.152,-1.441,-1.591,-1.672,-5.308,-1.04 c-3.717,0.632,-3.465,3.887,-2.844,7.627 c0.469,2.826,6.135,3.293,8.548,1.317 C35.204,64.994,35.305,63.268,35.158,61.903z",
+        Location.BACK_LEFT_LOWER_BACK to "M14.007,49.053 c-0.067,1.396-0.221,2.931-0.428,4.493c1.874,0.894,7.402,1.315,8.488,0.548c0.865-0.611,0.544-2.742-0.084-3.523 C20.757,49.045,15.681,48.401,14.007,49.053z",
+        Location.BACK_RIGHT_LOWER_BACK to "M34.201,50.994 c-0.045-0.65-0.053-1.304-0.053-1.958c-1.761-0.62-6.852,0.025-8.091,1.535c-0.641,0.782-0.97,2.912-0.086,3.523 c1.082,0.748,6.468,0.365,8.511-0.483C34.356,52.692,34.257,51.805,34.201,50.994z"
+    )
+    val zones: List<Pair<Location, Path>> by lazy {
+        pathData.map { (location, svgData) ->
+            location to PathParser().parsePathString(svgData).toPath()
+        }
+    }
+}

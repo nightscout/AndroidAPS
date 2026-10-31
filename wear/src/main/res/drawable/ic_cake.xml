@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Same drawing as IcCake in core/ui, which the watch cannot use (Compose ImageVector in a module the watch does not depend on). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M6,11.6 L7.2,18.8 L16.8,18.8 L18,11.6 M7.8,12 L8.2,18.4 M10,11.6 L10,18.8 M12.4,11.6 L12.4,18.8 M14.8,12 L14.4,18.4 M5.6,11.6 Q5.6,9.6 8,9.6 Q9.6,9.6 9.6,8.4 Q9.6,7.2 12,7.2 Q14.4,7.2 14.4,8.4 Q14.4,9.6 16,9.6 Q18.4,9.6 18.4,11.6 M12,7.2 L12,4.4 M12,4.4 Q11,3.2 12,2 Q13,3.2 12,4.4 M7.6,10.4 L8.4,10 M10.4,8.8 L10.8,8 M13.6,8.8 L13.2,8 M15.6,10.4 L16.4,10"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

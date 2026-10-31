@@ -1,6 +1,5 @@
 package app.aaps.pump.medtronic.comm.history.pump
 
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.pump.medtronic.MedtronicTestBase
 import app.aaps.pump.medtronic.defs.MedtronicDeviceType
 import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
@@ -18,11 +17,10 @@ import org.mockito.kotlin.whenever
 class PumpHistoryEntryUTest : MedtronicTestBase() {
 
     @Mock lateinit var medtronicPumpStatus: MedtronicPumpStatus
-    @Mock lateinit var uiInteraction: UiInteraction
 
     @BeforeEach
     fun setUp() {
-        medtronicUtil = MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, uiInteraction)
+        medtronicUtil = MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, notificationManager)
         whenever(medtronicUtil.medtronicPumpModel).thenReturn(MedtronicDeviceType.Medtronic_723_Revel)
         decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil)
     }

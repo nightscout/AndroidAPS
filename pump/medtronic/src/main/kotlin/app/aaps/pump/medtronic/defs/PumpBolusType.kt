@@ -1,7 +1,5 @@
 package app.aaps.pump.medtronic.defs
 
-import java.util.*
-
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
  * management and modified/extended for AAPS.

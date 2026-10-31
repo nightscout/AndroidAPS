@@ -1,2 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources></resources>
+<resources>
+    <string name="string_a002">Reservatório vazio\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a003">Patch expirado\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a004">Oclusão\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a005">Falha no autoteste ao ligar\nO patch foi desativado. Troque o patch agora.</string>
+    <string name="string_a007">Temperatura inadequada\nA administração de insulina ou o processo \'Ativar patch\' foi interrompido. Evite temperaturas extremas agora.</string>
+    <string name="string_a016">Erro de inserção da agulha.\nVerifique a posição do botão e toque em \'Tentar novamente\'.</string>
+    <string name="string_a018">Erro na bateria do patch\nO patch foi desativado e\na administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a019">Erro na bateria do patch\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a020">Erro na ativação do patch\nO processo \'Ativar patch\' expirou. Toque em \'Confirmar\' para desativar o patch atual. Troque o patch agora.</string>
+    <string name="string_a022">Erro no patch\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a023">Erro no patch\nO patch foi desativado e\na administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a034">Erro no patch\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a041">Erro no patch\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a042">Erro no patch\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a043">Erro no patch\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a044">Erro no patch\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a106">Erro no patch\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a107">Erro no patch\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a108">Erro no patch\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a116">Erro no patch\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a117">Erro no patch\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_a118">Erro no patch\nO patch foi desativado e a administração de insulina foi interrompida. Troque o patch agora.</string>
+    <string name="string_b000">A vida útil do patch expirará em %s. Prepare-se para trocar o patch.</string>
+    <string name="string_b001">Fim da suspensão de insulina\nToque em \'Retomar\' para reiniciar a administração de insulina.</string>
+    <string name="string_b003">Reservatório baixo\nTroque o patch em breve.</string>
+    <string name="string_b005">A vida útil do patch expirou\nTroque o patch agora.</string>
+    <string name="string_b006">O patch expirará em breve\nTroque o patch agora.</string>
+    <string name="string_b012">Ativação do patch incompleta\nConclua o processo \'Ativar patch\'.</string>
+    <string name="string_b018">Bateria do patch fraca\nPrepare-se para trocar o patch.</string>
+</resources>

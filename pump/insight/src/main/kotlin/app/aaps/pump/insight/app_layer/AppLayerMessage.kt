@@ -3,6 +3,7 @@ package app.aaps.pump.insight.app_layer
 import app.aaps.pump.insight.descriptors.AppCommands
 import app.aaps.pump.insight.descriptors.AppErrors
 import app.aaps.pump.insight.descriptors.MessagePriority
+import app.aaps.pump.insight.exceptions.app_layer_errors.UnknownAppLayerErrorCodeException
 import app.aaps.pump.insight.satl.DataMessage
 import app.aaps.pump.insight.utils.ByteBuf
 import app.aaps.pump.insight.utils.crypto.Cryptograph
@@ -43,10 +44,8 @@ open class AppLayerMessage(private val messagePriority: MessagePriority, private
             if (Service.fromId(service) == null) throw app.aaps.pump.insight.exceptions.UnknownServiceException()
             if (error != 0 || message == null) {
                 val exceptionClass = AppErrors.fromId(error)
-                exceptionClass?.let { throw it.getConstructor(Int::class.javaPrimitiveType).newInstance(error)!! }
-                    ?: throw app.aaps.pump.insight.exceptions.app_layer_errors.UnknownAppLayerErrorCodeException(
-                        error
-                    )
+                exceptionClass?.let { throw it.getConstructor(Int::class.javaPrimitiveType).newInstance(error) }
+                    ?: throw UnknownAppLayerErrorCodeException(error)
             }
             val data = byteBuf.readBytes(byteBuf.filledSize - if (message.inCRC) 2 else 0)
             if (message.inCRC && Cryptograph.calculateCRC(data) != byteBuf.readUInt16LE()) throw app.aaps.pump.insight.exceptions.InvalidAppCRCException()

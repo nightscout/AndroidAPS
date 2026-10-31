@@ -131,3 +131,23 @@ data class ComplicationData(
     val customWatchfaceDefaultFull: CwfData? = null,
     val lastUpdateTimestamp: Long = 0L
 )
+
+/**
+ * BG datasets ordered as [primary, external1, external2] for watchface rendering.
+ *
+ * When [switchExternal] is true the two external (follower) slots are swapped, so a single
+ * broadcasting follower whose data arrives as dataset 2 can be shown in an EXT1 watchface view.
+ * Mirrors the legacy Persistence.readSingleBg() behavior controlled by key_switch_external.
+ */
+fun ComplicationData.bgDataArray(switchExternal: Boolean): Array<EventData.SingleBg> =
+    if (switchExternal) arrayOf(bgData, bgData2, bgData1)
+    else arrayOf(bgData, bgData1, bgData2)
+
+/**
+ * Status datasets ordered as [primary, external1, external2] for watchface rendering.
+ *
+ * See [bgDataArray] for the meaning of [switchExternal].
+ */
+fun ComplicationData.statusDataArray(switchExternal: Boolean): Array<EventData.Status> =
+    if (switchExternal) arrayOf(statusData, statusData2, statusData1)
+    else arrayOf(statusData, statusData1, statusData2)

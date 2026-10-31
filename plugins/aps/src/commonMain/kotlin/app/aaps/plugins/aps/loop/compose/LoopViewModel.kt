@@ -1,0 +1,151 @@
+package app.aaps.plugins.aps.loop.compose
+
+import androidx.compose.runtime.Immutable
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+
+@Immutable
+data class LoopUiState(
+    val lastRun: String = "",
+    val source: String = "",
+    val request: String = "",
+    val constraintsProcessed: String = "",
+    val constraints: String = "",
+    val tbrRequestTime: String = "",
+    val tbrExecutionTime: String = "",
+    val tbrSetByPump: String = "",
+    val smbRequestTime: String = "",
+    val smbExecutionTime: String = "",
+    val smbSetByPump: String = "",
+    val statusMessage: String = "",
+    val isRefreshing: Boolean = false
+)
+
+class LoopViewModel(
+    private val loop: Loop,
+    private val rxBus: RxBus,
+    private val rh: TextResolver,
+    private val dateUtil: DateUtil,
+    private val aapsLogger: AAPSLogger,
+    private val preferences: Preferences,
+    private val scope: CoroutineScope
+) {
+
+    private val _uiState = MutableStateFlow(LoopUiState())
+    val uiState: StateFlow<LoopUiState> = _uiState.asStateFlow()
+
+    init {
+        rxBus.toFlow(EventLoopUpdateGui::class)
+            .onEach { updateState() }
+            .launchIn(scope)
+
+        rxBus.toFlow(EventLoopSetLastRunGui::class)
+            .onEach { event ->
+                _uiState.value = LoopUiState(statusMessage = event.text)
+            }
+            .launchIn(scope)
+
+        scope.launch { updateState() }
+        preferences.put(BooleanNonKey.ObjectivesLoopUsed, true)
+    }
+
+    fun onRefresh() {
+        _uiState.value = _uiState.value.copy(isRefreshing = true)
+        scope.launch {
+            loop.invoke("Loop pull-to-refresh", true)
+        }
+    }
+
+    private suspend fun updateState() {
+        val lastRun = loop.lastRun
+        if (lastRun == null) {
+            _uiState.value = LoopUiState(
+                statusMessage = rh.gs(CoreUiStrings.not_available_full)
+            )
+            return
+        }
+
+        // The Loop tab shows why the loop ended up executing what it did, so it takes the binding
+        // reason from each constraint - the one that actually limited the final value. The APS tabs
+        // show the constraints that went into the algorithm, which is a different and longer list.
+        val executionReasons =
+            lastRun.constraintsProcessed?.let { constraintsProcessed ->
+                constraintsProcessed.rateConstraint?.mostLimitedReasonList.orEmpty() +
+                    constraintsProcessed.smbConstraint?.mostLimitedReasonList.orEmpty()
+            } ?: emptyList()
+        val constraints = (executionReasons + listOfNotNull(loop.closedLoopEnabled?.getReasons()))
+            .filter { it.isNotEmpty() }
+            .joinToString("\n")
+
+        _uiState.value = LoopUiState(
+            lastRun = dateUtil.dateAndTimeString(lastRun.lastAPSRun),
+            source = lastRun.source ?: "",
+            request = lastRun.request?.resultAsString() ?: "",
+            constraintsProcessed = lastRun.constraintsProcessed?.resultAsString() ?: "",
+            constraints = constraints,
+            tbrRequestTime = dateUtil.dateAndTimeAndSecondsString(lastRun.lastTBRRequest),
+            tbrExecutionTime = dateUtil.dateAndTimeAndSecondsString(lastRun.lastTBREnact),
+            tbrSetByPump = lastRun.tbrSetByPump?.toPlainText() ?: "",
+            smbRequestTime = dateUtil.dateAndTimeAndSecondsString(lastRun.lastSMBRequest),
+            smbExecutionTime = dateUtil.dateAndTimeAndSecondsString(lastRun.lastSMBEnact),
+            smbSetByPump = lastRun.smbSetByPump?.toPlainText() ?: "",
+            isRefreshing = false
+        )
+    }
+
+    private fun PumpEnactResult.toPlainText(): String {
+        if (queued) return rh.gs(CoreUiStrings.waitingforpumpresult)
+        fun line(label: TextRef, value: String) = rh.gs(InterfacesStrings.confirmation_line, rh.gs(label), value)
+        val lines = mutableListOf(line(CoreUiStrings.success, success.toString()))
+        if (enacted) {
+            when {
+                bolusDelivered > 0         -> {
+                    lines += line(CoreUiStrings.enacted, enacted.toString())
+                    if (comment.isNotEmpty()) lines += line(CoreUiStrings.comment, comment)
+                    lines += line(CoreUiStrings.smb_shortname, rh.gs(InterfacesStrings.format_insulin_units, bolusDelivered))
+                }
+
+                isTempCancel               -> {
+                    lines += line(CoreUiStrings.enacted, enacted.toString())
+                    lines += line(CoreUiStrings.comment, comment)
+                    lines += rh.gs(CoreUiStrings.cancel_temp)
+                }
+
+                isPercent && percent != -1 -> {
+                    lines += line(CoreUiStrings.enacted, enacted.toString())
+                    if (comment.isNotEmpty()) lines += line(CoreUiStrings.comment, comment)
+                    lines += line(CoreUiStrings.duration, rh.gs(CoreUiStrings.format_mins, duration))
+                    lines += line(CoreUiStrings.percent, rh.gs(CoreUiStrings.units_format_percent, percent))
+                }
+
+                absolute != -1.0           -> {
+                    lines += line(CoreUiStrings.enacted, enacted.toString())
+                    if (comment.isNotEmpty()) lines += line(CoreUiStrings.comment, comment)
+                    lines += line(CoreUiStrings.duration, rh.gs(CoreUiStrings.format_mins, duration))
+                    lines += line(CoreUiStrings.absolute, rh.gs(CoreUiStrings.pump_base_basal_rate, absolute))
+                }
+            }
+        } else {
+            if (comment.isNotEmpty()) lines += line(CoreUiStrings.comment, comment)
+        }
+        return lines.joinToString("\n")
+    }
+}

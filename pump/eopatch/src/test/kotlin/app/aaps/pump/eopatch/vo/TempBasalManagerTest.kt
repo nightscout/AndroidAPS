@@ -39,6 +39,20 @@ class TempBasalManagerTest {
         assertThat(manager.startedBasal?.doseUnitPerHour).isWithin(0.001f).of(1.5f)
     }
 
+    /** The patch screen showed a running temp basal as "@01:00 120/120'" and the suspend dialog as "00:00" left. */
+    @Test
+    fun `updateBasalRunning sets the start of the running temp basal`() {
+        val before = System.currentTimeMillis()
+
+        manager.updateBasalRunning(TempBasal.createAbsolute(120, 0.0f))
+
+        val started = manager.startedBasal!!
+        assertThat(started.startTimestamp).isAtLeast(before)
+        assertThat(started.startTimestamp).isAtMost(System.currentTimeMillis())
+        assertThat(started.endTimestamp).isEqualTo(started.startTimestamp + 120 * 60_000L)
+        assertThat(started.remainTimeText).isNotEqualTo("00:00")
+    }
+
     @Test
     fun `updateBasalRunning should clone temp basal`() {
         val tempBasal = TempBasal.createAbsolute(120, 1.5f)

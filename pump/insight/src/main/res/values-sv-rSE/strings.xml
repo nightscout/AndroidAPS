@@ -14,10 +14,7 @@
     <string name="description_pump_insight_local">Integration för Accu-Chek Insight pumpar</string>
     <string name="not_inserted">Inte isatt</string>
     <string name="tdd_basal">TDD basal</string>
-    <string name="tbr_formatter">%1$d%% i %2$d / %3$d min</string>
     <string name="multiwave_bolus">Kombi-bolus</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f U i %3$d min</string>
-    <string name="insight_last_bolus">Senaste bolus</string>
     <string name="searching_for_devices">Söker enheter…</string>
     <string name="pairing_completed">Parkoppling lyckades</string>
     <string name="code_compare">Stämmer koderna överens mellan denna enhet och din pump?</string>
@@ -32,15 +29,8 @@
     <string name="pump_stopped">Pump stoppad</string>
     <string name="pump_started">Pump startad</string>
     <string name="release_software_version">Mjukvaruversion Release</string>
-    <string name="ui_processor_software_version">UI-processorversion</string>
-    <string name="pc_processor_software_version">Mjukvaruversion PC processor</string>
-    <string name="md_tel_processor_software_version">Mjukvaruversion MD tel processor</string>
-    <string name="safety_processor_software_version">Mjukvaruversion Säkerhetsprocessor</string>
-    <string name="bt_info_page_version">BT infosida version</string>
     <string name="bluetooth_address">Bluetooth-adress</string>
-    <string name="system_id_appendix">System-ID tillägg</string>
     <string name="manufacturing_date">Tillverkningsdatum</string>
-    <string name="delete_pairing">Ta bort parkoppling</string>
     <string name="log_site_changes">Logga kanylbyten</string>
     <string name="log_reservoir_changes">Logga reservoarbyten</string>
     <string name="log_tube_changes">Logga slangbyten</string>
@@ -53,5 +43,4 @@
     <string name="max_recovery_duration">Max paus mellan återanslutningsförsök [s]</string>
     <string name="min_recovery_duration">Min paus mellan återanslutningsförsök [s]</string>
     <string name="pump_alert">Pumpvarning</string>
-    <string name="pairing_information">Parkopplingsinformation</string>
 </resources>

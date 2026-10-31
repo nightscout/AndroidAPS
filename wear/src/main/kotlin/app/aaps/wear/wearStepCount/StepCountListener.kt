@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.wear.comm.IntentWearToMobile
 import io.reactivex.rxjava3.disposables.Disposable
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToLong
 
@@ -24,7 +25,11 @@ class StepCountListener(
 ) : SensorEventListener, Disposable {
 
     private val samplingIntervalMillis = 40_000L
-    private val stepsMap = LinkedHashMap<Long, Int>()
+
+    // Written from the sensor thread, read from the io scheduler thread in send().
+    // A plain map throws ConcurrentModificationException when a sensor event arrives
+    // while getStepsInLastXMin() iterates over the entries.
+    private val stepsMap: MutableMap<Long, Int> = ConcurrentHashMap()
     private val fiveMinutesInMs = 300000
     private val numOf5MinBlocksToKeep = 40
     private var previousStepCount = -1
@@ -96,7 +101,7 @@ class StepCountListener(
                     val stepCount = event.values[0].toInt()
                     if (previousStepCount >= 0) {
                         var recentStepCount = stepCount - previousStepCount
-                        if (stepsMap.contains(now)) {
+                        if (stepsMap.containsKey(now)) {
                             recentStepCount += stepsMap.getValue(now)
                         }
                         stepsMap[now] = recentStepCount
@@ -118,17 +123,17 @@ class StepCountListener(
 
     private fun getStepsInLast5Min(): Int {
         val now = currentTimeIn5Min() - 1
-        return if (stepsMap.contains(now)) stepsMap.getValue(now) else 0
+        return if (stepsMap.containsKey(now)) stepsMap.getValue(now) else 0
     }
 
     private fun getStepsInLast10Min(): Int {
         val tenMinAgo = currentTimeIn5Min() - 2
-        return if (stepsMap.contains(tenMinAgo)) stepsMap.getValue(tenMinAgo) else 0
+        return if (stepsMap.containsKey(tenMinAgo)) stepsMap.getValue(tenMinAgo) else 0
     }
 
     private fun getStepsInLast15Min(): Int {
         val fifteenMinAgo = currentTimeIn5Min() - 3
-        return if (stepsMap.contains(fifteenMinAgo)) stepsMap.getValue(fifteenMinAgo) else 0
+        return if (stepsMap.containsKey(fifteenMinAgo)) stepsMap.getValue(fifteenMinAgo) else 0
     }
 
     private fun getStepsInLast30Min(): Int {

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_oref1">Sensitivität Oref1</string>
+    <string name="sensitivity_aaps">Sensitivität AAPS</string>
+    <string name="sensitivity_weighted_average">Durchschnittliche Sensitivität</string>
+    <string name="description_sensitivity_aaps">Die Sensitivität wird genauso wie bei Oref0 berechnet, aber Du kannst dafür ein Zeitfenster bestimmen. Die minimale Kohlenhydrat-Absorptionsrate wird aus der maximalen Absorptionsdauer aus den Einstellungen abgeleitet.</string>
+    <string name="description_sensitivity_oref1">Die Sensitivität wird aus den Daten der letzten 8 Stunden berechnet und Kohlenhydrate (falls nicht bereits absorbiert) werden nach der in den Einstellungen angegebenen Zeit als absorbiert betrachtet. Das Plugin bezieht Zeiträume, in denen UAM annimmt, dass Kohlenhydrate aktiv waren, nicht mit in die Berechnung ein.</string>
+    <string name="description_sensitivity_weighted_average">Die Sensitivität wird aus den Abweichungen errechnet. Dabei werden neuere Abweichungen stärker gewichtet als ältere. Die minimale Kohlenhydrat-Aufnahme wird aus der in den Präferenzen angegebenen maximalen Kohlenhydrat-Resorptionszeit abgeleitet. Dieser Algorithmus reagiert am schnellsten auf Änderungen der Empfindlichkeit.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM deaktiviert, da diese auf die Oref1 Empfindlichkeitserkennung angewiesen sind.</string>
+    <string name="absorption_settings_title">Resorptions-Einstellungen</string>
+</resources>

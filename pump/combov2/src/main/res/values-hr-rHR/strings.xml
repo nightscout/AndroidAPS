@@ -20,7 +20,6 @@
     <string name="combov2_pair_with_pump_title">¸Upari s pumpom</string>
     <string name="combov2_unpair_pump_title">Raspari pumpu</string>
     <string name="combov2_driver_state_label">Status drivera</string>
-    <string name="combov2_current_activity_label">Trenutna aktivnost</string>
     <string name="bluetooth_address">Bluetooth adresa</string>
     <string name="combov2_start_pairing">Pokreni uparivanje</string>
     <string name="combov2_pairing_in_progress">Combo uparivanje u tijeku</string>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Same drawing as IcBread in core/ui, which the watch cannot use (Compose ImageVector in a module the watch does not depend on). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M3.2,14 Q3.2,8.4 12,8.4 Q20.8,8.4 20.8,14 L20.8,16 Q20.8,18 12,18 Q3.2,18 3.2,16 Z M7.2,10.4 Q8.8,9.2 10.4,10.8 M10.8,10 Q12.4,8.8 14,10.4 M14.4,10.8 Q16,9.6 17.6,11.2 M4,16 Q12,17.2 20,16"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

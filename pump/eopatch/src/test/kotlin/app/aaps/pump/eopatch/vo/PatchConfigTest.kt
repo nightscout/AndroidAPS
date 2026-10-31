@@ -3,7 +3,8 @@ package app.aaps.pump.eopatch.vo
 import app.aaps.pump.eopatch.code.PatchLifecycle
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
 
 class PatchConfigTest {
 
@@ -72,7 +73,7 @@ class PatchConfigTest {
     fun `isExpired should return true when expired`() {
         val config = PatchConfig()
         // Set wakeup time to 4 days ago
-        config.patchWakeupTimestamp = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(4)
+        config.patchWakeupTimestamp = System.currentTimeMillis() - 4.days.inWholeMilliseconds
 
         assertThat(config.isExpired).isTrue()
     }
@@ -237,8 +238,8 @@ class PatchConfigTest {
         config.updateNormalBasalPaused(1.0f) // 1 hour pause
         val afterTime = System.currentTimeMillis()
 
-        assertThat(config.basalPauseFinishTimestamp).isAtLeast(beforeTime + TimeUnit.HOURS.toMillis(1))
-        assertThat(config.basalPauseFinishTimestamp).isAtMost(afterTime + TimeUnit.HOURS.toMillis(1))
+        assertThat(config.basalPauseFinishTimestamp).isAtLeast(beforeTime + 1.hours.inWholeMilliseconds)
+        assertThat(config.basalPauseFinishTimestamp).isAtMost(afterTime + 1.hours.inWholeMilliseconds)
     }
 
     @Test

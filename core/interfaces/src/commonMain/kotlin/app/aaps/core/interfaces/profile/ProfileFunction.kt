@@ -1,0 +1,216 @@
+package app.aaps.core.interfaces.profile
+
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.PS
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
+import kotlinx.coroutines.flow.StateFlow
+
+interface ProfileFunction {
+
+    /**
+     * Profile name with added modifiers
+     */
+    suspend fun getProfileName(): String
+
+    /**
+     * Profile name without any modifiers
+     */
+    suspend fun getOriginalProfileName(): String
+
+    /**
+     * Profile name with added modifiers and remaining time
+     */
+    suspend fun getProfileNameWithRemainingTime(): String
+
+    /**
+     * Check if there is actual profile existing
+     */
+    suspend fun isProfileValid(from: String): Boolean
+
+    /**
+     * User preferences unit set in preferences
+     */
+    fun getUnits(): GlucoseUnit
+
+    /**
+     * Get effective (active) profile confirmed by pump for "now"
+     */
+    suspend fun getProfile(): EffectiveProfile?
+
+    /**
+     * Get effective (active) profile confirmed by pump for time
+     */
+    suspend fun getProfile(time: Long): EffectiveProfile?
+
+    /**
+     * Get requested profile by user (profile must not be active yet)
+     *
+     * @return ProfileSwitch if exists
+     */
+    suspend fun getRequestedProfile(): PS?
+
+    /**
+     * Get requested profile by user (profile must not be active yet)
+     *
+     * @return true if ProfileSwitch != EffectiveProfileSwitch
+     */
+    suspend fun isProfileChangePending(): Boolean
+
+    /**
+     * Build a new circadian profile switch request based on provided profile
+     *
+     * @param profileStore  ProfileStore to use
+     * @param profileName   this profile from profile store
+     * @param durationInMinutes
+     * @param percentage        100 = no modification
+     * @param timeShiftInHours  0 = no modification
+     * @param timestamp         expected time
+     * @return null if profile cannot be created from profile store
+     */
+    fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long, iCfg: ICfg): PS?
+
+    /**
+     * Create a new circadian profile switch request based on provided profile
+     *
+     * @param profileStore  ProfileStore to use
+     * @param profileName   this profile from profile store
+     * @param durationInMinutes
+     * @param percentage        100 = no modification
+     * @param timeShiftInHours  0 = no modification
+     * @param timestamp         expected time
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return true if profile was created from store
+     */
+    suspend fun createProfileSwitch(
+        profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long,
+        action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>, iCfg: ICfg
+    ): PS?
+
+    /**
+     * Create a new circadian profile switch request based on currently selected profile interface and default profile
+     *
+     * @param durationInMinutes
+     * @param percentage        100 = no modification
+     * @param timeShiftInHours  0 = no modification
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @param timestamp         expected time, 0 = now. The base profile is the permanent one in force at that
+     *                          time, so a back-dated switch modifies the profile that really was running then.
+     * @return true if profile switch is created
+     */
+    suspend fun createProfileSwitch(
+        durationInMinutes: Int, percentage: Int, timeShiftInHours: Int,
+        action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>, timestamp: Long = 0L
+    ): PS?
+
+    /**
+     * Why [createProfileSwitch] would refuse a switch to [profileName] with these values, as a sentence for the
+     * user, or null when it would accept it. It runs the same check and writes nothing, so a caller can refuse
+     * before it asks the user to confirm, and can say why when the switch failed.
+     *
+     * Besides the pump and the hard limits, a temporary switch is refused when its insulin is not the insulin of
+     * the permanent switch under it. The old insulin would come back when it ends, see [createProfileSwitchWithNewInsulin].
+     */
+    suspend fun profileSwitchRefusal(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, iCfg: ICfg): String?
+
+    /**
+     * The same as the other [profileSwitchRefusal], for a switch that changes the active profile. [timestamp] is the
+     * one given to [createProfileSwitch]: 0 means now.
+     */
+    suspend fun profileSwitchRefusal(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long = 0L): String?
+
+    /** The same as [profileSwitchRefusal], for the switches [createProfileSwitchWithNewInsulin] would write. */
+    suspend fun insulinSwitchRefusal(iCfg: ICfg): String?
+
+    /**
+     * Give the profile in force a different insulin, because another insulin is now in the pump.
+     *
+     * The permanent switch gets the new insulin. A temporary switch that is running gets a copy with the new
+     * insulin that ends when it would have ended (not with less than a minute left), and switches set to start
+     * later get the new insulin too. The copies are of the switches themselves, only the insulin changes, so a
+     * profile renamed or edited in the profile store since does not matter. All of them are written in one
+     * transaction. Before, only the copy of a temporary switch had the new insulin, and the old insulin came
+     * back when the copy ended (#5081).
+     *
+     * @param iCfg new insulin configuration to apply
+     * @param source Source for UserEntry logging
+     * @return true if the switches were written
+     */
+    suspend fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean
+
+    /**
+     * Write a new switch with the profile of [original]: its own basal, ISF, IC and targets, its percentage and
+     * time shift, not the profile store's version of it. With the same checks as [createProfileSwitch]. For
+     * putting back a profile that ran before, with the insulin that is in the pump now.
+     *
+     * @param duration in milliseconds, 0 for a permanent switch
+     * @return the switch written, or null when it was refused
+     */
+    suspend fun createProfileSwitchLike(
+        original: PS, timestamp: Long, duration: Long, iCfg: ICfg,
+        action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>
+    ): PS?
+
+    /** The same as [profileSwitchRefusal], for the switch [createProfileSwitchLike] would write. */
+    suspend fun profileSwitchLikeRefusal(original: PS, timestamp: Long, duration: Long, iCfg: ICfg): String?
+
+    /**
+     * Insulin configuration currently in force, resolved in precedence order:
+     *  1. the requested [PS], the newest switch in force in the database
+     *  2. the running [EffectiveProfile], when there is no switch at all
+     *
+     * The requested switch comes first, though the name says otherwise. It is never older than the running
+     * profile: after an insulin change the database has the new insulin at once, but the running profile has
+     * it only when the pump has set the new switch, which can take a minute or longer with a pump out of
+     * reach. Every caller writes a new switch or a record, or needs the insulin that is physically in the pump,
+     * so the running one first gave them the OLD insulin in that time (#5081).
+     *
+     * Both tiers are values the user actually selected: insulin is chosen when filling/priming the pump and
+     * carried into the resulting profile switch. There is deliberately **no** third tier — the insulin list
+     * is a catalogue to choose from, never a source of "the current one" — so a null result means the caller
+     * must ask the user or refuse the action, and must not substitute.
+     *
+     * A profile carrying the DB v33 migration sentinel counts as *not* having one — see [ICfg.isUsable]. A
+     * record whose DIA rounds to zero is not a value the caller can act on, and letting it through here is
+     * what turns a bad migration into a loop that aborts every cycle.
+     *
+     * @return the in-force [ICfg], or null when no profile is running, none is pending, or what they carry
+     *   is unusable
+     */
+    suspend fun getRunningOrRequestedICfg(): ICfg? =
+        getRequestedProfile()?.iCfg?.takeIf { it.isUsable } ?: getProfile()?.iCfg?.takeIf { it.isUsable }
+
+    /**
+     * Drop every cached effective profile and rebuild the synchronous [runningICfg] mirror from the DB.
+     *
+     * Needed after a bulk DB rewrite that does not flow through the normal per-row [observeChanges] path —
+     * specifically the v33 insulin-configuration repair, which UPDATEs the running effectiveProfileSwitch
+     * row in place. getProfile() canonicalizes each EPS by id, so the pre-repair copy (carrying the
+     * `insulinEndTime = -1` sentinel, DIA 0.0) stays pinned for the whole session and the APS aborts every
+     * cycle on the DIA hard limit. Calling this right after the repair makes the *current* session re-read
+     * the healed rows instead of only self-healing on the next app start or profile switch.
+     */
+    suspend fun invalidateCache()
+
+    /**
+     * Synchronous mirror of the running profile's insulin, for the few callers that cannot suspend —
+     * non-suspend property getters and Compose composition. Kept current by the same effective-profile
+     * subscription that invalidates the profile cache, so it can never lag behind [getProfile].
+     *
+     * Narrower than [getRunningOrRequestedICfg]: this reflects the running [EffectiveProfile] only and does
+     * not see a requested-but-not-yet-effective switch. **Use [getRunningOrRequestedICfg] wherever a
+     * coroutine is available**; reach for this only when the call site genuinely cannot suspend.
+     *
+     * `null` carries the same meaning as there — nothing is in force, so the caller must ask the user or
+     * refuse, never substitute a catalogue entry.
+     */
+    val runningICfg: StateFlow<ICfg?>
+}
