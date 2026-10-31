@@ -44,7 +44,7 @@
     <string name="objectives_usetemptarget">צרו יעד זמני מותאם אישית למשך 10 דקות</string>
     <string name="objectives_useloop">הצגת התוכן של תוסף הלולאה</string>
     <string name="objectives_usescale">השתמשו בגלילה או בזום בגרף הסוכר</string>
-    <string name="objectives_exam_objective">הוכיחו את הידע שלכם\\ן</string>
+    <string name="objectives_exam_objective">הוכיחו את הידע שלכם/ן</string>
     <string name="objectives_exam_gate">למדו את השאלות. לכל שאלה כמה תשובות אפשריות, וייתכן שיותר מתשובה אחת נכונה. סמנו את כל התשובות הנכונות ובחרו ב\'אימות\'.</string>
     <string name="objectives_exam_learned_prerequisites">אין צורך להיות מפתחים. כדי להשלים את המשימות, נדרשים Nightscout או Tidepool, משאבה תואמת ודרך לבנות את AAPS (בדפדפן או באמצעות Android Studio), הן להתקנה הראשונה והן לכל עדכון.</string>
     <string name="objectives_exam_learned_prerequisites2">ניתן להפעיל ולהשתמש ב-AAPS ללא אינטרנט.</string>
