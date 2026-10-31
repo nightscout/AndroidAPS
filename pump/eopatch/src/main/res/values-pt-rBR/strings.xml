@@ -2,6 +2,7 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Integração para EOPatch2 / GlucoMen Day</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">O patch não confirmou o fim do bólus. %1$s foi registrado, mas o patch pode ter administrado mais. Verifique o patch antes de dar mais insulina.</string>
     <string name="low_reservoir">Alertas de Reservatório Baixo</string>
     <string name="patch_expiration_reminders">Lembrete de Expiração do Patch</string>
     <string name="patch_buzzer_reminders">Lembrete do sinal sonoro do patch</string>
@@ -10,7 +11,7 @@
     <string name="eopatch_expiration_time">Data de validade</string>
     <string name="eopatch_base_basal_rate">Taxa Basal de base</string>
     <string name="eopatch_temp_basal_rate">Taxa Basal Temporária</string>
-    <string name="invalid_basal_rate">A basal do perfil é inferior a 0.05 U/h. EOPatch tem uma unidade mínima de injeção de 0. 5U. Por favor, tente novamente após definir o perfil para mais do que a unidade mínima de injeção.</string>
+    <string name="invalid_basal_rate">A basal do perfil é inferior a 0.05 U/h. EOPatch tem uma unidade mínima de injeção de 0.05U. Por favor, tente novamente após definir o perfil para mais do que a unidade mínima de injeção.</string>
     <string name="symbol_day">dia</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
@@ -18,11 +19,11 @@
     <string name="time_1hr">1 hr</string>
     <string name="time_1hr_30min">1 hora 30 min</string>
     <string name="time_2hr">2 horas</string>
-    <string name="patch_safe_deactivation_desc">Para alterar para uma nova patch, a atualização atual deve ser descartada. Todas as entregas de insulina da Patch serão canceladas.</string>
+    <string name="patch_safe_deactivation_desc">Para trocar por um novo patch, o patch atual deve ser descartado. Toda a administração de insulina do patch será cancelada.</string>
     <string name="patch_discard_complete_title">Descartar o patch está completo.</string>
-    <string name="patch_change_confirm_bolus_is_active_desc">Um bolus está sendo administrado agora. Você realmente deseja cancelar a administração de insulina e descartar o patch?</string>
+    <string name="patch_change_confirm_bolus_is_active_desc">Um bólus está sendo administrado agora. Você realmente deseja cancelar a administração de insulina e descartar o patch?</string>
     <string name="patch_change_confirm_temp_basal_is_active_desc">Uma basal temporária está sendo administrada agora. Você realmente deseja cancelar a administração de insulina e descartar o patch?</string>
-    <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Um bolus e uma basal temporária estão sendo administrados agora. Você realmente deseja cancelar a administração de insulina e descartar o patch?</string>
+    <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Um bólus e uma basal temporária estão sendo administrados agora. Você realmente deseja cancelar a administração de insulina e descartar o patch?</string>
     <string name="patch_change_confirm_desc">Tem certeza de que deseja descartar um patch?</string>
     <string name="patch_forced_discard">Descartar</string>
     <string name="patch_comm_error_during_discard_desc_2">Para desativação unilateral, toque em \"Descartar\".</string>
@@ -66,13 +67,13 @@
     <string name="patch_communication_succeed_message">Conectado com o patch.</string>
     <string name="patch_cancel_pairing">Pareamento cancelado</string>
     <string name="insulin_suspend_msg1">Após a suspensão, o Bólus &amp; Basal temporária atualmente em entrega será cancelado. \n\nTaxa : %1$s U/hr\nTempo restante : %2$s\n&amp; Insulina será: %3$.2f U</string>
-    <string name="insulin_suspend_msg2">Após a suspensão, o Bolus atual será cancelado. \n\nInsulina será: %1$.2f U</string>
-    <string name="insulin_suspend_msg3">Após a suspensão, o Bólus  Basal temporária atualmente em entrega será cancelado. \nTaxa : %1$s U/hr\nTempo restante : %2$s</string>
+    <string name="insulin_suspend_msg2">Após a suspensão, o Bólus atual será cancelado. \n\nInsulina será: %1$.2f U</string>
+    <string name="insulin_suspend_msg3">Após a suspensão, a basal temporária em andamento será cancelada. \n\nTaxa : %1$s U/hr\nTempo restante : %2$s</string>
     <string name="insulin_suspend_msg4">A apliacação da insulina está suspensa.</string>
     <string name="string_activate_patch">Pod ativo</string>
     <string name="string_discard_patch">Descartar Patch</string>
     <string name="string_running">Funcionando</string>
-    <string name="retry">Tente novamente</string>
+    <string name="retry">Tentar novamente</string>
     <string name="string_are_you_sure_to_discard_current_patch">Tem certeza de que deseja descartar este Patch?</string>
     <string name="needle_insertion_error_1">Erro de inserção de Agulha.</string>
     <string name="needle_insertion_error_3">Toque em \'Descartar\' para desativar o patch.</string>
