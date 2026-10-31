@@ -2,9 +2,9 @@
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="no_temp_basal_running">Nicio bazală temporară în funcțiune</string>
-    <string name="start_activity_tt">Start Țintă Temporară activitate</string>
-    <string name="start_eating_soon_tt">Start Țintă Temporară mănânc-în-curând</string>
-    <string name="start_hypo_tt">Start Țintă Temporară hipoglicemie</string>
+    <string name="start_activity_tt">Porniți ținta temporară pentru activitate</string>
+    <string name="start_eating_soon_tt">Porniți ținta temporară pentru mâncare în curând</string>
+    <string name="start_hypo_tt">Porniți ținta temporară pentru hipoglicemie</string>
     <string name="time_offset">Decalaj temporal</string>
     <string name="values_with_plus" comment="Two items with a plus between them. Example: Bolus + Carbs, or 20 g + eCarbs 10 g / 3 h (+60 min)">%1$s + %2$s</string>
     <string name="status_age_short" comment="Age of a sensor, cannula or battery, short. d=days, h=hours. %1$d=days, %2$d=hours. Example: 2d5h">%1$dz%2$dh</string>
@@ -58,7 +58,7 @@
     <string name="cgp_pgr_extremely_high">Risc extrem de ridicat</string>
     <string name="do_you_want_recalculate_tdd_stats">Doriți să recalculați statisticile DZT?</string>
     <string name="calculation_in_progress">Calcul în desfășurare</string>
-    <string name="age">Vechime</string>
+    <string name="age">Vârstă</string>
     <string name="weight_label">Greutate</string>
     <string name="glucose_type">Tip glicemie</string>
     <string name="bg_other">Altul</string>
@@ -101,8 +101,8 @@
     <string name="aaps_note_icon_label">Notă</string>
     <string name="aaps_automation_icon_label">Automatizare</string>
     <string name="aaps_calibration_icon_label">Calibrare</string>
-    <string name="exercise_icon_label">Executați</string>
-    <string name="fitness_icon_label">Gimnastică</string>
+    <string name="exercise_icon_label">Alergare</string>
+    <string name="fitness_icon_label">Fitness</string>
     <string name="swim_icon_label">Înot</string>
     <string name="hiking_icon_label">Drumeție</string>
     <string name="bike_icon_label">Bicicletă</string>
@@ -153,7 +153,7 @@
     <string name="missing_insulin_name">Lipsă nume insulină</string>
     <string name="insulin_name_exists">Numele de insulină %1$s există deja, selectați un nume nou</string>
     <string name="insulin_external_update_title">Configurația insulinei a fost modificată</string>
-    <string name="insulin_external_update_message">Un client asociat a schimbat configurația insulinei. Apăsați OK pentru a încărca modificările lor și să renunțați la editările nesalvate sau Anulați pentru a continua editarea (următoarea dumneavoastră salvare o va suprascrie pe a lor).</string>
+    <string name="insulin_external_update_message">Un client asociat a schimbat configurația insulinei. Apăsați OK pentru a încărca modificările lui și a renunța la editările nesalvate sau Renunțați pentru a continua editarea (următoarea salvare o va suprascrie pe a lui).</string>
     <string name="insulin_edit_target_gone">Această insulină a fost eliminată în altă parte, astfel încât editarea dumneavoastră nu a putut fi salvată. Lista a fost reîncărcată.</string>
     <string name="insulin_activation_applied">Activarea insulinei a fost aplicată</string>
     <!-- Client→master round-trip pending dialog -->
@@ -164,14 +164,14 @@
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
     <string name="clientcontrol_pending_partial_title">Aplicat parțial</string>
     <!-- %1$s = action label -->
-    <string name="clientcontrol_pending_partial_format">%1$s a fost aplicată, dar unele acțiuni nu.\n Verificați starea activă.</string>
+    <string name="clientcontrol_pending_partial_format">%1$s a fost aplicată, dar unele acțiuni nu.\nVerificați starea activă.</string>
     <string name="clientcontrol_pending_unconfirmed_title">Nu s-a putut confirma</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
-    <string name="clientcontrol_pending_unconfirmed_format">%1$s a fost trimis, dar nu s-a întors nicio confirmare.\n%2$s\n va apărea aici când/dacă dispozitivul principal îl aplică.</string>
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s a fost trimis, dar nu s-a întors nicio confirmare.\n%2$s\nVa apărea aici dacă/când dispozitivul principal îl aplică.</string>
     <string name="clientcontrol_pending_stop_waiting">Opriți așteptarea</string>
     <string name="a11y_add_new_insulin">Adăugați o nouă insulină</string>
     <string name="a11y_delete_current_insulin">Ștergeți insulina curentă</string>
-    <string name="load_peak_from">Încărcați maxim de la</string>
+    <string name="load_peak_from">Încărcați vârful de la</string>
     <string name="cannot_delete_last_insulin">Nu se poate șterge ultima insulină</string>
     <string name="cannot_delete_active_insulin">Nu se poate șterge insulina activă</string>
     <string name="reuse_profile_pct_hours">Reutilizare %1$d%% %2$dh</string>
@@ -193,15 +193,15 @@
     <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
     <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
     <string name="wizard_carbs_type_bread_desc">100% carbohidrați imediați, fără carbohidrați extinși</string>
-    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Carbohidrați reduși cu %1$d%%, adăugați %2$d%% carbohidrați extinși, întârziați %3$d min, pe %4$d h</string>
-    <string name="wizard_include_info">Atingeți pentru a include/exclude din calcul:\n• BG - glicemie (inclusă la început)\n• TT - țintă temporară (inclusă la început)\n• Tendința Glicemiei (ultima stare amintită)\n• IOB - insulină la bord (inclusă la început)\n• COB - carbohidrați de la bord (ultima stare amintită)</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Carbohidrați reduși cu %1$d%%, s-au adăugat %2$d%% carbohidrați extinși, întârziați cu %3$d min, pe %4$d h</string>
+    <string name="wizard_include_info">Atingeți pentru a include/exclude din calcul:\n• BG - glicemie (inclusă la început)\n• TT - țintă temporară (inclusă la început)\n• Tendință - tendința glicemiei (ultima stare este reținută)\n• IOB - insulină activă (inclusă la început)\n• COB - carbohidrați la bord (ultima stare este reținută)</string>
     <!-- Treatments -->
     <string name="no_records_available">Nicio înregistrare disponibilă</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="carbs_and_bolus">Carbohidrați și bolusuri</string>
-    <string name="show_invalidated">Afișați invalidate</string>
-    <string name="hide_invalidated">Ascundeți invalidat</string>
-    <string name="careportal_remove_started_events">Ștergeți intrări pornire AAPS</string>
+    <string name="show_invalidated">Afișați înregistrările invalidate</string>
+    <string name="hide_invalidated">Ascundeți înregistrările invalidate</string>
+    <string name="careportal_remove_started_events">Ștergeți înregistrările de pornire AAPS</string>
     <string name="user_entry">Înregistrare utilizator</string>
     <string name="clone_label">Clonați</string>
     <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Grafic glicemie. Valori recente %1$s. %2$s. %3$s</string>
@@ -235,7 +235,7 @@
     <string name="active_profile_indicator">ACTIV</string>
     <string name="confirm_remove_profile">Eliminați profilul \"%1$s\"?</string>
     <string name="confirm_clone_profile">Clonați profilul \"%1$s\"?</string>
-    <string name="profile_no_longer_exists">Lista profilurilor a fost modificată între timp - vă rog să încercați din nou</string>
+    <string name="profile_no_longer_exists">Lista profilurilor a fost modificată între timp - vă rugăm să încercați din nou</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
     <string name="tbr_type_flag_emulated_suspended">ES</string>
@@ -254,8 +254,8 @@
     <string name="motol_default_profile">Profil implicit</string>
     <string name="current_profile">Profil curent</string>
     <string name="available_profile">Profil disponibil</string>
-    <string name="format_with_tdd">Vârstă: %1$d TDD: %2$.0f U</string>
-    <string name="format_with_tdd_and_pct">Vârstă: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_tdd">Vârstă: %1$d DZT: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Vârstă: %1$d DZT: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Vârstă: %1$d Greutate: %2$.0f kg</string>
     <string name="dpv_default_profile">Profil implicit DPV</string>
     <!-- Other dialogs -->
@@ -271,7 +271,7 @@
     <string name="a11y_history_previous_window">Fereastra anterioară</string>
     <string name="a11y_history_next_window">Fereastra următoare</string>
     <string name="additional_ecarbs">Adăugați carbohidrați extinși</string>
-    <string name="calculator_options">Opţiuni calculator</string>
+    <string name="calculator_options">Opțiuni calculator</string>
     <string name="use_bg">Utilizați glicemia</string>
     <string name="use_cob">Utilizați COB</string>
     <string name="use_iob">Utilizați IOB</string>
@@ -353,7 +353,7 @@
     <string name="cal_precheck_warmup">Senzorul este încă în perioada de încălzire. Calibrarea va fi disponibilă la %1$s.</string>
     <string name="cal_precheck_no_session">Nu este activă nicio sesiune de senzor.</string>
     <string name="cal_precheck_no_pair">Nicio citire a senzorului în ultimele 10 minute. Verificați conexiunea senzorului.</string>
-    <string name="cal_precheck_delta_too_high">Glicemia se modifica prea repede (Δ %1$s %3$s în 5 minute, limita %2$s). Așteptați să se stabilizeze.</string>
+    <string name="cal_precheck_delta_too_high">Glicemia se modifică prea repede (Δ %1$s %3$s în 5 minute, limita %2$s). Așteptați să se stabilizeze.</string>
     <string name="cal_precheck_mark_sensor_change">Înregistrați schimbarea senzorului</string>
     <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
 </resources>
