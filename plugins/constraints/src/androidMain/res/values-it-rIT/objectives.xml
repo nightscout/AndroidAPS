@@ -15,7 +15,7 @@
     <string name="objectives_maxbasal_gate">Sulla base di questa esperienza, decidi quale dovrebbe essere la basale massima e impostala sul micro e nelle preferenze. In modalità semplice questo valore viene calcolato secondo le raccomandazioni del wiki e non è necessario impostarlo.</string>
     <string name="objectives_maxbasal">Eseguire azioni per soddisfare le raccomandazioni</string>
     <string name="objectives_maxbasal_learned">Presta attenzione alle funzionalità di sicurezza e regola i parametri di sicurezza quando necessario.</string>
-    <string name="objectives_maxiobzero_objective">Avvio della chiusura del loop con Low Glucose Suspend</string>
+    <string name="objectives_maxiobzero_objective">Avvio della chiusura del loop con sospensione a glicemia bassa (LGS)</string>
     <string name="objectives_maxiobzero_gate">Usa il loop chiuso in modalità Low Glucose Suspend (cioè max IOB = 0 viene impostato automaticamente) per alcuni giorni senza troppi eventi LGS.</string>
     <string name="objectives_maxiobzero_learned">Impostare MaxIOB a zero previene l\'ipoglicemia e non aggiungerà più insulina al di sopra della velocità basale (eccetto in caso di IOB negativo)</string>
     <string name="objectives_maxiob_objective">Regolazione del loop chiuso, aumentando max IOB al di sopra di 0 e abbassando gradualmente i target glicemici</string>
@@ -44,7 +44,7 @@
     <string name="objectives_usetemptarget">Crea un target temporaneo personalizzato con una durata di 10 min</string>
     <string name="objectives_useloop">Visualizza il contenuto del plugin Loop</string>
     <string name="objectives_usescale">Usa scorrimento o zoom sul grafico della glicemia</string>
-    <string name="objectives_exam_objective">Dai prova della tua conoscenza</string>
+    <string name="objectives_exam_objective">Dimostra le tue conoscenze</string>
     <string name="objectives_exam_gate">Studia le domande. Ogni domanda ha diverse risposte possibili e più di una risposta può essere corretta. Seleziona tutte le risposte corrette e premi VERIFICA.</string>
     <string name="objectives_exam_learned_prerequisites">Non devi essere uno sviluppatore. Ti servono Nightscout o Tidepool per superare gli obiettivi, un micro compatibile e un modo per compilare AAPS (in un browser web o con Android Studio) per la prima installazione e per ogni aggiornamento.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS può essere eseguito offline.</string>
@@ -88,7 +88,7 @@
     <string name="what_i_ve_learned">Cosa ho imparato:</string>
     <string name="verify_master_password">Verifica di conoscere la password master</string>
     <string name="objectives_collapse">Meno</string>
-    <string name="objectives_expand">Di Più</string>
+    <string name="objectives_expand">Altro</string>
     <string name="objectives_no_learned">Nessuna lezione registrata per questo obiettivo.</string>
     <string name="objectives_open_exam">Apri esame</string>
     <string name="objectives_exam_question_progress">Domanda %1$d di %2$d</string>
