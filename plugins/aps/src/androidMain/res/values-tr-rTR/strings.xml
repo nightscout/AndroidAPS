@@ -4,14 +4,14 @@
     <string name="dyn_isf_adjust_title" formatted="false">DinamikİDF Ayarlama Faktörü %</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dinamik İDF</string>
-    <string name="openaps_auto_isf">Otomatik İDF</string>
+    <string name="openaps_auto_isf">OtoİDF</string>
     <string name="openapsma_disabled">Eklenti devre dışı</string>
     <string name="openapsma_no_glucose_data">Glikoz verisi yok</string>
     <string name="openaps_no_as_data">Otoduyarlılık verileri mevcut değil</string>
     <string name="dynisf_shortname">DİNİDF</string>
     <string name="openapsama">OpenAPS AMA</string>
-    <string name="array_of_elements">%1$d öğelerin dizisi.\nGerçek değer:</string>
-    <string name="description_ama">2017\'da algoritmanın durumu</string>
+    <string name="array_of_elements">%1$d öğeli dizi.\nGerçek değer:</string>
+    <string name="description_ama">2017\'de algoritmanın durumu</string>
     <string name="description_smb">İleri düzey kullanıcılar için en yeni algoritma</string>
     <string name="description_smb_dynamic_isf">Dinamik/otomatik İDF ile ileri düzey kullanıcılar için en yeni algoritma</string>
     <string name="openapsma_last_run_label">Son Çalıştırma</string>
@@ -26,7 +26,7 @@
     <string name="openapsma_autosensdata_label">Otoduyarlılık verileri</string>
     <string name="openapsma_script_debug_data_label">Skriptte hata ayıkla</string>
     <string name="openapsama_link_to_preference_json_doc_txt">Dikkat!\nNormalde aşağıdaki bu değerleri değiştirmek zorunda değilsiniz. Lütfen burayı TIKLAYIN ve metni OKUYUN ve bu değerlerden herhangi birini değiştirmeden önce ANLADIĞINIZDAN emin olun.</string>
-    <string name="increasing_max_basal">Profilinizdeki maksimum bazal değeriniz düşük olduğu için maksimum bazal değeri artırma</string>
+    <string name="increasing_max_basal">Ayar, profilinizdeki maksimum bazal değerden düşük olduğu için maksimum bazal değeri artırılıyor</string>
     <string name="max_basal_multiplier">maks bazal çarpanı</string>
     <string name="max_daily_basal_multiplier">maks günlük bazal çarpan</string>
     <string name="smb_disabled_in_preferences">SMB tercihlerde devre dışı bırakıldı</string>
@@ -38,10 +38,11 @@
     <string name="hardlimit">sert sınır</string>
     <!--    Autotune   -->
     <!--    Loop -->
-    <string name="smb_frequency_exceeded">Son 3 dakika içerisinde bir bolus gönderildi, SMB (Super Micro Bolus) atlandı</string>
-    <string name="pump_not_initialized">Pompa başlatılamadı!</string>
+    <string name="smb_frequency_exceeded">Son 3 dakika içerisinde bir bolus iletildi, SMB atlandı</string>
+    <string name="pump_not_initialized">Pompa başlatılmadı!</string>
+    <string name="zero_basal_not_set">Pompa sıfır geçici bazalı kabul etmedi. Hâlâ bazal insülin veriyor olabilir. Pompayı kontrol edin.</string>
     <string name="description_loop">Döngüyü tetikleyen uygulamayı etkinleştirin veya devre dışı bırakın.</string>
-    <string name="no_aps_selected">SEÇİLEN VEYA SAĞLANAN SONUCU APS YOK</string>
+    <string name="no_aps_selected">APS SEÇİLMEDİ VEYA SONUÇ VERMEDİ</string>
     <string name="ignore5m">5dk yoksay</string>
     <string name="ignore15m">15dk yoksay</string>
     <string name="ignore30m">30dk yoksay</string>
@@ -52,22 +53,22 @@
     <string name="loop_aps_label">APS (YPS)</string>
     <string name="request_label">İstek</string>
     <string name="loop_constraints_processed_label">İşlenmiş kısıtlamalardan sonra</string>
-    <string name="loop_tbr_request_time_label">Geçici bazal zamanı</string>
-    <string name="loop_tbr_execution_time_label">Geçici bazal yürütme süresi</string>
+    <string name="loop_tbr_request_time_label">Geçici bazal istek zamanı</string>
+    <string name="loop_tbr_execution_time_label">Geçici bazal yürütme zamanı</string>
     <string name="loop_tbr_set_by_pump_label">Pompa tarafından ayarlanan geçici bazal</string>
-    <string name="loop_smb_request_time_label">SMB (Super Micro Bolus) zamanı</string>
-    <string name="loop_smb_execution_time_label">SMB (Super Micro Bolus) uygulama süresi</string>
+    <string name="loop_smb_request_time_label">SMB istek zamanı</string>
+    <string name="loop_smb_execution_time_label">SMB yürütme zamanı</string>
     <string name="loop_smb_set_by_pump_label">Pompa tarafından ayarlanan SMB</string>
-    <string name="fallback_smb_no_tdd">SMB\'ye dönülüyor. Yeterli günlük doz verisi yok.</string>
+    <string name="fallback_smb_no_tdd">SMB\'ye dönülüyor. Yeterli GTD verisi yok.</string>
     <string name="fallback_to_isf_no_tdd">Profil duyarlılığına geri dönüş. Yeterli veri yok. Sebep: %1$s</string>
     <!-- Autotune -->
-    <string name="autotune_description">Potansiyel profil ayarlamaları için yardım (İDF, karbonhidrat ve bazal oranları)</string>
+    <string name="autotune_description">Potansiyel profil ayarlamaları için yardım (İDF, karbonhidrat oranı ve bazal oranlar)</string>
     <string name="autotune_default_tune_days_title">Veri gün sayısı</string>
     <string name="autotune_tunedprofile_name">Ayarlandı</string>
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_last_run">Son Çalıştırma :</string>
     <string name="autotune_warning">Uyarı :</string>
-    <string name="autotune_ic_warning">Seçilen profilde %1$d KİO değeri var. OtoAyar %2$.2f g/Ü kullanacak</string>
+    <string name="autotune_ic_warning">Seçilen profilde %1$d IC değeri var. OtoAyar %2$.2f g/Ü kullanacak</string>
     <string name="autotune_isf_warning">Seçilen profilde %1$d İDF değeri var. OtoAyar %2$.1f %3$s/Ü kullanacak</string>
     <string name="autotune_error">Giriş verilerinde hata, otoayarı tekrar çalıştırmayı deneyin veya gün sayısını azaltın</string>
     <string name="autotune_error_more_days">Veri girişinde hata, gün sayısını artırın</string>
@@ -78,7 +79,7 @@
     <string name="autotune_param">Parametre</string>
     <string name="autotune_percent">%</string>
     <string name="autotune_missing">Eksik</string>
-    <string name="autotune_run">Otoayar\'ı Çalıştır</string>
+    <string name="autotune_run">OtoAyar\'ı Çalıştır</string>
     <string name="autotune_check_input_profile_button">Giriş profilini kontrol edin</string>
     <string name="autotune_compare_profile">Profilleri karşılaştırın</string>
     <string name="autotune_copy_localprofile_button">Yerel profile kopyala</string>
