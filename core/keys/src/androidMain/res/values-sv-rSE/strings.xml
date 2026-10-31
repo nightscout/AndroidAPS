@@ -270,7 +270,7 @@
     <string name="pref_title_patient_name">Instansnamn</string>
     <string name="pref_summary_patient_name">Namnet på personen som använder denna telefon. Det skiljer denna AAPS-instans från andra i rapporter och synkronisering.</string>
     <!-- StringKey: Directory preferences -->
-    <string name="pref_title_aaps_directory">AAPS katalog</string>
+    <string name="pref_title_aaps_directory">AAPS-katalog</string>
     <!-- StringKey: Protection preferences -->
     <string name="pref_title_master_password">Huvudlösenord</string>
     <string name="pref_title_settings_password">Lösenord för inställningar</string>
