@@ -371,7 +371,7 @@
     <string name="running_mode">Робочий режим</string>
     <string name="running_mode_desc">Закрийте або відкрийте петлю, призупиніть її або відʼєднайте помпу</string>
     <string name="running_mode_change_not_allowed">Зміна робочого режиму недоступна</string>
-    <string name="pump_reconnect">Перепідключити помпу</string>
+    <string name="pump_reconnect">Знову під’єднати помпу</string>
     <string name="scene">Сцена</string>
     <string name="scenes">Сцени</string>
     <string name="scene_desc">Готові дії для різних ситуацій — запуск кількох дій одночасно</string>
