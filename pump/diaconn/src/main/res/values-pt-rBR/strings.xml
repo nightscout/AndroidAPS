@@ -31,7 +31,7 @@
     <string name="basal_step">Valor da Basal</string>
     <string name="pairfirst">Pareie a sua bomba com o seu telefone!</string>
     <string name="diaconn_g8_history_tempbasal">Basal temporaria</string>
-    <string name="diaconng8_pump_settings">Ajustes da bomba Dana</string>
+    <string name="diaconng8_pump_settings">Configurações da bomba Diaconn</string>
     <string name="diaconn_g8_pumpalarm">Som</string>
     <string name="diaconn_g8_pumpalarm_sound">som</string>
     <string name="diaconn_g8_pumpalarm_vibrate">vibrar</string>
@@ -41,7 +41,7 @@
     <string name="diaconn_g8_pumpalarm_intensity_high">alto</string>
     <string name="diaconn_g8_screentimeout">Tempo de LCD ligado [segundos]</string>
     <string name="diaconn_g8_language">Idioma</string>
-    <string name="diaconn_g8_bolus_speed">Velocidade Bólus</string>
+    <string name="diaconn_g8_bolus_speed">Velocidade do bólus</string>
     <string name="diaconn_g8_pumplang_chiness">Chinês</string>
     <string name="diaconn_g8_pumplang_korean">Coreano</string>
     <string name="diaconn_g8_pumplang_english">Inglês</string>
@@ -53,12 +53,12 @@
     <string name="insulinlackwarning">Aviso de falta de insulina</string>
     <string name="needbatteryreplace">É necessária a troca da bateria</string>
     <string name="needinsullinreplace">É necessária a troca da insulina</string>
-    <string name="diaconn_g8_loginsulinchange_title">Mudança do reservatório do log</string>
+    <string name="diaconn_g8_loginsulinchange_title">Registrar troca de reservatório</string>
     <string name="diaconn_g8_loginsulinchange_summary">Adicionar evento \"Mudança de Insulina\" ao portal de cuidados, quando detectado no histórico</string>
-    <string name="diaconn_g8_logcanulachange_title">Log de mudança da agulha</string>
+    <string name="diaconn_g8_logcanulachange_title">Registrar troca de agulha</string>
     <string name="diaconn_g8_logcanulachange_summary">Adicionar evento \"Mudança de local\" ao portal de cuidados, quando detectado no histórico</string>
     <string name="diaconn_g8_logbatterychange_summary">Adicionar evento \"Mudança de bateria\" ao portal de cuidados, quando detectado no histórico</string>
-    <string name="diaconn_g8_logbatterychange_title">Log de mudança de bateria</string>
+    <string name="diaconn_g8_logbatterychange_title">Registrar troca de bateria</string>
     <string name="diaconn_g8_logsyncinprogress">Log de sincronização em andamento</string>
     <string name="diaconn_g8_loginsulinshorage">Falta da insulina</string>
     <string name="diaconn_g8_logbatteryshorage">Pouca bateria</string>
@@ -112,7 +112,7 @@
     <string name="diaconn_g8_errorcode_13">Você não pode aplicar porque excede o limite.</string>
     <string name="diaconn_g8_errorcode_14">Não pode ser aplicado porque excede o volume total de aplicação diário.</string>
     <string name="diaconn_g8_errorcode_15">Após completar configuração da basal, a aplicação da basal pode ser realizada.</string>
-    <string name="diaconn_g8_logtubechange_title">Log de mudança de cartucho</string>
+    <string name="diaconn_g8_logtubechange_title">Registrar troca de tubo</string>
     <string name="diaconn_g8_logtubechange_summary">Adicionar evento \"Mudança de cartucho\" ao portal de cuidados, quando detectado no histórico</string>
     <string name="diaconn_g8_logtempstart">Início da basal temporária</string>
     <string name="diaconn_g8_errorcode_32">Durante a suspensão por hipoglicemia, há restrição da injeção</string>
