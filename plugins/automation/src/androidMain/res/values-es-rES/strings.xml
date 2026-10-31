@@ -37,7 +37,7 @@
     <string name="automation_unit_meters">m</string>
     <string name="automation_unit_bpm">bpm</string>
     <string name="automation_missing_task_name">Introduzca un nombre de tarea.</string>
-    <string name="automation_missing_trigger">Por favor, especifique al menos un iniciador.</string>
+    <string name="automation_missing_trigger">Por favor, especifique al menos un activador.</string>
     <string name="automation_missing_action">Por favor, especifique al menos una acción.</string>
     <string name="exportsettings_message">Exportación de configuraciones: %1$s</string>
     <string name="export_settings_short">Texto en tratamientos:</string>
@@ -108,10 +108,10 @@
     <string name="triggerCannulaAgeDesc">Edad de la cánula %1$s %2$.1f hora</string>
     <string name="triggerPodChangeLabel">Activación del POD</string>
     <string name="triggerPodChangeDesc">POD activado</string>
-    <string name="triggerUnknownLabel">Disparador desconocido</string>
+    <string name="triggerUnknownLabel">Activador desconocido</string>
     <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Disparador desconocido %1$s - nunca se cumple</string>
     <string name="triggerInsulinAgeLabel">Edad de la insulina</string>
-    <string name="triggerInsulinAgeDesc">Edad de la insulina %1$s %2$.1f hour</string>
+    <string name="triggerInsulinAgeDesc">Edad de la insulina %1$s %2$.1f h</string>
     <string name="triggerPumpBatteryAgeLabel">Edad de la batería de la bomba</string>
     <string name="triggerPumpBatteryAgeDesc">Edad de la batería de bomba %1$s %2$.1f hora</string>
     <string name="triggerReservoirLevelLabel">Nivel de reservorio</string>
