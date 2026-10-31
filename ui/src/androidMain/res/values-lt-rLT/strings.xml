@@ -58,7 +58,7 @@
     <string name="cgp_pgr_extremely_high">Ypač didelė rizika</string>
     <string name="do_you_want_recalculate_tdd_stats">Ar norite iš perskaičiuoti BPD statistiką?</string>
     <string name="calculation_in_progress">Skaičiuojama</string>
-    <string name="age">Laikas</string>
+    <string name="age">Amžius</string>
     <string name="weight_label">Svoris</string>
     <string name="glucose_type">Glikemijos tipas</string>
     <string name="bg_other">Kiti</string>
@@ -257,7 +257,7 @@
     <string name="format_with_tdd">Laikas: %1$d BPD: %2$.0f U</string>
     <string name="format_with_tdd_and_pct">Laikas: %1$d BPD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Laikas: %1$d Svoris: %2$.0f kg</string>
-    <string name="dpv_default_profile">Numatytasis profilis</string>
+    <string name="dpv_default_profile">DPV numatytasis profilis</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
     <string name="overview_edit_quickwizard_button_text">Mygtuko tekstas</string>
