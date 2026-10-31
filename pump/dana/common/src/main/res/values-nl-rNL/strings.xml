@@ -16,7 +16,7 @@
     <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Eenvoudige modus</string>
     <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Automatische vergrendeling</string>
     <string name="danar_valuenotsetproperly">Waarde niet correct ingesteld</string>
-    <string name="danar_setbasalstep001">Zet de basale stapgrootte op 0,01 E/uur</string>
+    <string name="danar_setbasalstep001">Zet de basale stapgrootte op 0,01 E/u</string>
     <string name="resetpairing">Reset pomp koppeling?</string>
     <string name="dana_model">%1$s\nModel: %2$02X\nProtocol: %3$02X\nCode: %4$02X</string>
     <string name="processinghistory">Gebeurtenis wordt uitgevoerd</string>
