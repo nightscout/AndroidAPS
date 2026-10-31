@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="combov2_plugin_name">아큐-첵 콤보</string>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
     <string name="combov2_plugin_description">Accu-Chek Combo 펌프용 기본 펌프 연동</string>
     <string name="combov2_could_not_connect">펌프에 연결할 수 없음</string>
     <string name="combov2_not_paired">펌프에 페어링되지 않음</string>
