@@ -141,5 +141,6 @@
     <string name="equil_attach">Прикріпіть помпу до основи</string>
     <string name="equil_hint2">Заповнити канюлю</string>
     <string name="equil_pump_updated">Помпу оновлено</string>
+    <string name="equil_replace_reservoir">Резервуар порожній. Будь ласка, замініть резервуар</string>
     <string name="equil_removed_anyway">Команда розпарювання не виконалася. Помпу все одно буде видалено. Пароль, встановлений під час спарювання, залишиться в помпі.</string>
 </resources>
