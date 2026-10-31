@@ -25,7 +25,7 @@
     <string name="closed_loop_disabled_on_dev_branch">Executando a versão dev. O loop fechado está desativado.</string>
     <string name="closed_loop_disabled_with_eb">Closed Loop desabilitado por causa da execução do Bólus Estendido</string>
     <string name="smbalwaysdisabled">SMB sempre e após carboidratos desativado porque a fonte de BG ativa não suporta filtragem avançada</string>
-    <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
+    <string name="smbnotallowedinopenloopmode">SMB não permitido no modo de loop aberto</string>
     <string name="maxvalueinpreferences">valor máx nas preferências</string>
     <string name="hardlimit">limite rígido</string>
     <!-- Objectives -->
