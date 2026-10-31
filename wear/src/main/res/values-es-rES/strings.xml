@@ -62,7 +62,7 @@
     <string name="pref_single_target">Objetivo único</string>
     <string name="pref_wizard_percentage">Porcentaje en calculadora</string>
     <string name="pref_wizard_carbs_type">Tipo de comida de la calculadora</string>
-    <string name="pref_wizard_carb_time">Tiempo de hidratos de carbono de la calculadora</string>
+    <string name="pref_wizard_carb_time">Tiempo de carbohidratos de la calculadora</string>
     <string name="pref_complication_tap_action">Acción al tocar la complicación</string>
     <string name="pref_complication_bg_graph_hours">Rango de tiempo del gráfico de glucemia</string>
     <string name="duration_1_hour">1 hora</string>
