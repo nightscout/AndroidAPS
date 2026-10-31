@@ -6,11 +6,11 @@ on:
       tagName:
         description: 'Select AAPS Version'
         required: true
-        default: '3.4.2.6'
+        default: '4.0.0'
         type: choice
         options:
-          # ── 4.0.x release candidate (JDK 21) ────────────
-          - 4.0.0-rc1
+          # ── 4.0.x (JDK 21) ──────────────────────────────
+          - 4.0.0
           # ── 3.4.x (JDK 21) ──────────────────────────────
           - 3.4.2.6
           - 3.4.2.4
