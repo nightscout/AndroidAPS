@@ -44,8 +44,6 @@
     <string name="equil_new_infusion_set_no">否，仅更换储药器或电池</string>
     <string name="equil_same_infusion_set_hint">套管将不会预充，也不会记录套管更换。</string>
     <string name="equil_unpair_alert">您确定要放弃对 %1$s 的控制吗？</string>
-    <string name="equil_record_basal">基础率 %1$s U/H</string>
-    <string name="equil_record_basal_temp">临时基础率 %1$s U/H</string>
     <string name="equil_record_bolus">大剂量 %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">临时基础率TBR 持续时间必须大于零，且是 %1$s 分钟的倍数。</string>
     <string name="equil_basal_exceeds_max">配置文件基础率 %1$s U/h 超出泵最大基础率 %2$s U/h。请提高最大基础率设置并重新连接泵。</string>
@@ -64,7 +62,6 @@
     <string name="equil_firmware_version">固件版本</string>
     <string name="equil_shutdown_be">Equil 将自动关闭</string>
     <string name="equil_shutdown">Equil 自动关闭</string>
-    <string name="equil_common_history_tbr_value">速率： %1$.2f U/H，持续时间： %2$d 分钟</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">设置大剂量</string>

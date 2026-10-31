@@ -11,7 +11,7 @@
     <string name="medtronic_pump_encoding_title">Kódovanie Medtronic</string>
     <string name="medtronic_pump_encoding_4b6b_local">Softvérové kódovanie 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Hardvérové kódovanie 4b6b</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_us_ca">USA a Kanada (916 MHz)</string>
     <string name="medtronic_pump_frequency_worldwide">Celosvetové (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Vyhľadávanie</string>
@@ -21,7 +21,7 @@
     <string name="medtronic_pump_status">Stav pumpy</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Adresa:</string>
-    <string name="rileylink_name">Meno:</string>
+    <string name="rileylink_name">Názov:</string>
     <string name="rileylink_battery_level">Úroveň batérie:</string>
     <string name="rileylink_battery_level_value">%1$d%%</string>
     <string name="rileylink_connection_status">Stav pripojenia:</string>
@@ -31,7 +31,7 @@
     <string name="rileylink_configured_device_model">Model nakonfigurovaného zariadenia:</string>
     <string name="rileylink_connected_device_model">Model pripojeného zariadenia:</string>
     <string name="rileylink_last_used_frequency">Posledná použitá frekvencia:</string>
-    <string name="rileylink_last_device_contact">Posledné spojenie zo zariadením:</string>
+    <string name="rileylink_last_device_contact">Posledné spojenie so zariadením:</string>
     <string name="rileylink_firmware_version">Verzia firmvéru:</string>
     <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
     <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
@@ -74,8 +74,8 @@
         <item quantity="many">%1$d hodín</item>
         <item quantity="other">%1$d hodín</item>
     </plurals>
-    <string name="orange_use_scanning_level">Použi skenovanie</string>
-    <string name="orange_use_scanning_level_summary">Skenuj, predtým, ako sa pripojíš k OrangeLinku. Malo by to zlepšiť stabilitu pripojenia (môže byť použité i s inými klonmi RileyLinku, ak je to potrebné).</string>
+    <string name="orange_use_scanning_level">Použiť skenovanie</string>
+    <string name="orange_use_scanning_level_summary">Pred pripojením k OrangeLinku vykonať skenovanie, malo by to zlepšiť pripojenie (ak je to potrebné, dá sa použiť aj s inými klonmi RileyLinku)</string>
     <string name="rileylink_pair">Spárovať RileyLink</string>
     <string name="rileylink_pair_success">RileyLink spárovaný úspešne</string>
     <string name="rileylink_config_reset">Reset konfigurácie RileyLink</string>

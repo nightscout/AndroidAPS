@@ -19,7 +19,7 @@
     <string name="equil_title_assemble">Assembla micro</string>
     <string name="equil_title_serial">Associa dispositivo</string>
     <string name="equil_title_fill">Carica/Riempi</string>
-    <string name="equil_title_attach">Collega pompa</string>
+    <string name="equil_title_attach">Collega micro</string>
     <string name="equil_title_air">Riempi la cannula</string>
     <string name="equil_title_unpair_detach">Scollega pompa</string>
     <string name="equil_title_history_events">Storico eventi</string>
@@ -55,7 +55,7 @@
     <string name="equil_reservoir_empty">Il serbatoio è vuoto. La pompa non eroga più insulina.</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">La pompa si è fermata durante il bolo. Data: %1$s di %2$s</string>
     <string name="equil_pump_not_run">Micro non in esecuzione</string>
-    <string name="equil_pair">Accoppiamento</string>
+    <string name="equil_pair">Accoppia</string>
     <string name="equil_pair_error">Errore accoppiamento</string>
     <string name="equil_fill">Carica/Riempi</string>
     <string name="equil_air">Spurga l\'aria</string>
@@ -64,7 +64,7 @@
     <string name="equil_firmware_version">Versione del firmware</string>
     <string name="equil_shutdown_be">Equil sarà spento automaticamente</string>
     <string name="equil_shutdown">Equil auto off</string>
-    <string name="equil_common_history_tbr_value">Equil auto OFF</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Tasso: %1$.2f U/h, durata: %2$d minuti</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Imposta bolo</string>
@@ -131,7 +131,7 @@
     <string name="equil_support_error">Versione firmware troppo vecchia. Non supportata</string>
     <string name="equil_password_tips">Si prega di impostare una nuova password per l\'accoppiamento col micro Equil v5.3. Questa password verrà utilizzata anche per disaccoppiarsi con la pompa in futuro, quindi assicurati di ricordarla.
 Regola password: deve contenere 4 caratteri, scelti tra ABCDEF0123456789.</string>
-    <string name="equil_set_pair_password">Imposta Password Di Accoppiamento</string>
+    <string name="equil_set_pair_password">Imposta password di accoppiamento</string>
     <string name="equil_hint1">Dopo aver installato la pompa sulla piastra di base, selezionare se eliminare l’aria dall’ago.</string>
     <string name="equil_unbind">Disaccoppia dispositivo</string>
     <string name="equil_device_unpaired">Dispositivo disaccoppiato</string>

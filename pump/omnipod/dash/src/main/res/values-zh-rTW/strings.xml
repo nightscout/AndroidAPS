@@ -27,6 +27,7 @@
     <string name="failed_to_set_the_new_basal_profile">設置新的基礎率設定檔失敗。輸送已暫停</string>
     <string name="setting_basal_profile_might_have_failed">設置基礎率設定檔可能失敗。輸送可能已暫停！請手動從 Omnipod 頁面重新整理幫浦狀態，並視需要恢復輸送。</string>
     <string name="bolus_delivery_status_uncertain">注射狀態不確定。請重新整理幫浦狀態，以確認狀態。</string>
+    <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">無法確認微量注射（%1$s）是否成功。請重新整理幫浦狀態，以確認此指令是否成功。</string>
     <string name="temp_basal_out_of_sync">臨時基礎率狀態不如預期！如果之前有運行臨時基礎率已被取消。請檢查已輸送的胰島素和幫浦歷史紀錄
 (請確認AAPS與幫浦在可連線的距離內)</string>
     <string name="checking_delivery_status">檢查輸送狀態</string>

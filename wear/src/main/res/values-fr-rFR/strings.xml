@@ -214,7 +214,7 @@
     <string name="cob_000g">000 g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00 U</string>
-    <string name="snooze_alert">AAPS Mise en veille Alerte</string>
+    <string name="snooze_alert">AAPS Mettre en veille l\'alerte</string>
     <string name="sending_snooze">Envoi Mise en veille à AAPS</string>
     <string name="week_short">s</string>
     <string name="day_short">j</string>
@@ -252,6 +252,8 @@
     <string name="complication_blood_glucose_ext2">Glycémie Ext2</string>
     <string name="complication_bg_graph">Graphique Gly</string>
     <string name="complication_cwf_image">Cadran personnalisé</string>
+    <string name="complication_cwf_ambient_bg">Glycémie du cadran personnalisé en mode ambiant</string>
+    <string name="complication_cwf_ambient_status">État du cadran personnalisé en mode ambiant</string>
     <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
     <string name="complication_cwf_lower">Arrière-plan du cadran personnalisé</string>
     <string name="complication_cwf_upper">Horloge du cadran personnalisé</string>
@@ -260,7 +262,7 @@
     <string name="complication_br_cob_iob_ext2">DB, GA &amp; IA Ext2</string>
     <string name="complication_br_iob">Basal &amp; IA</string>
     <string name="complication_br">Débit Basal</string>
-    <string name="complication_br_tt">Gly &amp; Cible</string>
+    <string name="complication_br_tt">Basal &amp; Cible</string>
     <string name="complication_target">Cible</string>
     <string name="complication_cob_iob">GA &amp; IA</string>
     <string name="complication_cob_icon">Icône GA</string>

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Calibration management screen -->
+    <string name="cal_status_unsafe_fit">Anpassningen är utanför säkert intervall – kalibreringen har inte tillämpats.</string>
 </resources>

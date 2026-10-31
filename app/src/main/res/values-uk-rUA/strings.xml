@@ -1,2 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="authorizationfailed">Помилка авторизації</string>
+    <string name="identification_not_set">Ідентифікацію не задано в режимі розробника</string>
+    <string name="select">Обрати</string>
+    <string name="set">Задати</string>
+    <string name="migrating_preferences">Перенесення налаштувань…</string>
+    <string name="optimizing_database">Оптимізація бази даних…</string>
+    <string name="initializing_plugins">Ініціалізація плагінів…</string>
+    <string name="initializing">Ініціалізація…</string>
+    <string name="migrating_profile_switches">Перенесення перемикань профілю…</string>
+    <string name="migrating_effective_profile_switches">Перенесення дійсних перемикань профілю…</string>
+    <string name="migrating_boluses">Перенесення болюсів…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Старі записи не мали налаштувань інсуліну, і жоден профіль не був активний, тому для них використано %1$s. Перевірте налаштування інсуліну — вже перенесені записи потім не оновлюються.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Старі записи не мали тривалості дії інсуліну, тому для %2$s використано %1$.1f год. Перевірте налаштування інсуліну — вже перенесені записи потім не оновлюються.</string>
+    <string name="settings_unreadable_title">Не вдається прочитати налаштування AAPS</string>
+    <string name="settings_unreadable_key_explanation">Ваші налаштування на цьому телефоні зашифровані ключем, який Android зберігає для AAPS, і цей ключ більше не відкриває їх. Таке може статися після скидання сховища ключів телефона.</string>
+    <string name="settings_unreadable_keystore_explanation">Сховище ключів телефона не відповіло, тому AAPS не зміг відкрити свої налаштування.</string>
+    <string name="settings_unreadable_not_running">AAPS не працює і не керує помпою. Тимчасовий базал, що зараз діє, закінчиться у свій час, і потім помпа вводитиме власний базал.</string>
+    <string name="settings_unreadable_what_to_do">«Повторити спробу» закриває AAPS і запускає його знову. Якщо це не допоможе, перезапустіть телефон. Вибирайте «Почати заново», лише коли ніщо інше не допомагає: це відкладає нечитабельні налаштування, і AAPS запускається з порожніми налаштуваннями. Потім імпортуйте ваш останній експорт налаштувань у майстрі налаштування.</string>
+    <string name="settings_unreadable_start_fresh">Почати заново</string>
+    <string name="settings_unreadable_confirm_title">Почати з порожніми налаштуваннями?</string>
+    <string name="settings_unreadable_confirm_text">Файл налаштувань, який не вдається прочитати, буде перейменовано та збережено. Усі налаштування почнуться зі значень за замовчуванням. Потім ви знову налаштуєте AAPS або імпортуєте експорт налаштувань.</string>
+    <string name="settings_unreadable_notification">AAPS не працює. Відкрийте AAPS, щоб дізнатися, що робити.</string>
+</resources>

@@ -15,6 +15,29 @@
     <string name="widget_small_description">AAPS petit</string>
     <!--     Activities-->
     <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="agp" comment="Section title: Ambulatory Glucose Profile">AGP</string>
+    <string name="agp_title">Profil glycémique ambulatoire</string>
+    <string name="agp_glycemic_overview">Vue d\'ensemble glycémique</string>
+    <string name="agp_today">Aujourd\'hui</string>
+    <string name="agp_hours" comment="%1$d=number of hours. Example: 24h">%1$dh</string>
+    <string name="agp_days" comment="%1$d=number of days. Example: 7d">%1$d j</string>
+    <string name="agp_no_data">Aucune donnée de glycémie disponible pour cette période.</string>
+    <string name="agp_load_failed">Impossible de charger les statistiques AGP. Réessayez.</string>
+    <string name="agp_chart_description">Graphique des percentiles de glycémie</string>
+    <string name="agp_tir_chart">Graphique du temps dans la cible</string>
+    <string name="agp_percentile_10_90" comment="Glucose percentile band from the 10th to the 90th percentile">10–90%</string>
+    <string name="agp_percentile_25_75" comment="Glucose percentile band from the 25th to the 75th percentile">25–75%</string>
+    <string name="agp_percent" comment="%1$.1f=percentage value. Example: 72.4%">%1$.1f%%</string>
+    <string name="agp_range" comment="%1$s=lower glucose value, %2$s=upper glucose value. Example: 3.9–10.0">%1$s–%2$s</string>
+    <string name="agp_above" comment="%1$s=upper glucose limit. Example: &gt; 10.0">&gt; %1$s</string>
+    <string name="agp_below" comment="%1$s=lower glucose limit. Example: &lt; 3.9">&lt; %1$s</string>
+    <string name="agp_average">Moyenne</string>
+    <string name="agp_median">Médiane</string>
+    <string name="agp_gmi" comment="Glucose management indicator">GMI</string>
+    <string name="agp_standard_deviation" comment="Standard deviation of glucose values">ET</string>
+    <string name="agp_cv" comment="Coefficient of variation of glucose values">CV</string>
+    <string name="agp_available_days">Jours</string>
+    <string name="agp_decimal" comment="%1$.1f=numeric AGP value without units, such as eA1c, GMI or days of glucose data. Example: 13.8">%1$.1f</string>
     <string name="cgp_title">Pentagone glucose (CGP) – 14 jours</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
     <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
@@ -71,7 +94,6 @@
     <string name="aaps_bolus_icon_label">Bolus</string>
     <string name="aaps_carbs_icon_label">Glucides</string>
     <string name="aaps_tbr_icon_label">Basal Temp</string>
-    <string name="aaps_activity_icon_label">Exercice</string>
     <string name="aaps_note_icon_label">Note</string>
     <string name="aaps_automation_icon_label">Automatisation</string>
     <string name="aaps_calibration_icon_label">Étalonnage</string>
@@ -178,6 +200,7 @@
     <string name="careportal_remove_started_events">Suppr. entrées \"Démarrage AAPS\"</string>
     <string name="user_entry">Entrées utilisateur</string>
     <string name="clone_label">Dupliquer</string>
+    <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Graphique de glycémie. Valeurs récentes %1$s. %2$s. %3$s</string>
     <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Afficher les controles</string>
     <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Notification : %1$d</string>
     <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">pas de cible temporaire, cible du profil</string>
@@ -186,6 +209,7 @@
     <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">delta %1$s</string>
     <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">glycémie ancienne</string>
     <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s, %2$s</string>
+    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Graphique de glycémie. Valeurs récentes %1$s</string>
     <string name="a11y_predictions" comment="Screen-reader description of the predicted glucose curves, which are drawn on the graph and cannot be read otherwise. %1$s=one sentence per prediction, already joined. Example: Predictions. COB prediction rises to 11.2 mmol/l. IOB prediction falls to 4.8 mmol/l.">Prédictions. %1$s</string>
     <string name="a11y_prediction_rises" comment="One predicted curve that ends higher than the current glucose. %1$s=the name of the prediction, %2$s=the highest value it reaches, with its unit. Example: COB prediction rises to 11.2 mmol/l">%1$s passe à %2$s.</string>
     <string name="a11y_prediction_falls" comment="One predicted curve that ends lower than the current glucose. %1$s=the name of the prediction, %2$s=the lowest value it reaches, with its unit. Example: IOB prediction falls to 4.8 mmol/l">%1$s tombe à %2$s.</string>
@@ -198,6 +222,7 @@
     <string name="a11y_badge_attention" comment="Screen-reader state of a navigation button that carries a warning badge. On screen the badge is a dot or an exclamation mark, which a screen reader cannot see at all.">action requise</string>
     <string name="a11y_badge_available" comment="Screen-reader state of a navigation button whose badge counts what the user can start right now. %1$d=the count. Example: 3 available">%1$d disponible</string>
     <string name="a11y_objectives_progress" comment="Screen-reader state of the Objectives navigation button, whose badge shows progress. %1$d=objectives finished, %2$d=objectives in total. Example: 9 of 10 done">%1$d de %2$d terminé</string>
+    <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Exécuter</string>
     <string name="add_new_profile">Ajouter un nouveau profil</string>
     <string name="edit_label">Éditer</string>
     <string name="activate_label">Activer</string>
@@ -278,6 +303,7 @@
     <string name="permission_directory_picker_error">Impossible de lancer le sélecteur de répertoire. Habituellement un problème avec Android ou Family Link.</string>
     <string name="permission_nav_label">Permissions</string>
     <!--    TDD Cycle Pattern -->
+    <string name="stats_tab_cycle" comment="Short tab label on the Statistics screen. The tab shows daily insulin totals laid over 28-day cycles (TDD Cycle Pattern).">Cycle</string>
     <string name="cycle_offset">Décalage du cycle</string>
     <string name="raw_tdd">DTQ brute</string>
     <string name="cleaned_tdd">DTQ nettoyée</string>

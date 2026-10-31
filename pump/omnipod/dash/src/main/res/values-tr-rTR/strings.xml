@@ -12,12 +12,12 @@
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Yeni Pod ile eşleşmeye ve kullanıma hazırlanmaya çalışılıyor.\n\nBaşlatma işlemi başarıyla tamamlandığında, <b>İleri</b>\'ye basabilirsiniz.</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Bağlantı kurulamadı</string>
-    <string name="omnipod_dash_found_too_many_pods">Birçok pod bulundu</string>
+    <string name="omnipod_dash_found_too_many_pods">Çok fazla Pod bulundu</string>
     <string name="omnipod_dash_scan_failed">Tarama başarısız oldu</string>
     <string name="omnipod_dash_generic_error">Genel hata: %1$s</string>
     <string name="omnipod_dash_connection_lost">Bağlantı kesildi</string>
     <string name="omnipod_common_alert_delivery_suspended">İnsülin iletimi askıya alındı</string>
-    <string name="omnipod_dash_bolus_already_in_progress">Diğer bolus iletiliyor</string>
+    <string name="omnipod_dash_bolus_already_in_progress">Başka bir bolus iletiliyor</string>
     <string name="omnipod_dash_not_enough_insulin">Rezervuarda yeterli insülin kalmamış</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Onaylanmamış komut</string>
     <string name="requested_by_user" comment="26 characters max for translation">Kullanıcı talebi</string>
@@ -30,7 +30,7 @@
     <string name="temp_basal_out_of_sync">Geçici bazal durumu beklendiği gibi değil! Daha önce geçici bazal çalışmışsa, iptal edilmiş. Lütfen iletilen insülini ve pod geçmişini kontrol edin</string>
     <string name="checking_delivery_status">İletim durumu kontrol ediliyor</string>
     <string name="setting_temp_basal_might_have_basal_failed">Geçici bazal ayarı hatalı olabilir. Geçici bir bazal daha önce çalışıyorsa, iptal edilmiştir. Lütfen Omnipod sekmesinden Pod durumunu manuel olarak yenileyin.</string>
-    <string name="cancel_temp_basal_result_is_uncertain">Geçici bazal iptal etme belirsizliği</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Geçici bazal iptalinin sonucu belirsiz</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Onaylanmamış iletimi devam ettir komutu. Lütfen pod durumunu yenileyin</string>
     <string name="cancelling_temp_basal_might_have_failed">Geçici bazal iptali başarısız olabilir. Daha önce bir geçici bazal çalışıyorsa, iptal edilmiş olabilir. Lütfen Pod durumunu Omnipod sekmesinden manuel olarak yenileyin.</string>
 </resources>

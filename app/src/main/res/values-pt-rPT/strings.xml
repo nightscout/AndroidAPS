@@ -2,4 +2,24 @@
 <resources>
     <string name="authorizationfailed">Falha na autorização</string>
     <string name="identification_not_set">Identificação não definida no modo desenvolvimento</string>
+    <string name="select">Selecionar</string>
+    <string name="set">Definir</string>
+    <string name="migrating_preferences">A migrar preferências…</string>
+    <string name="optimizing_database">A otimizar a base de dados…</string>
+    <string name="initializing_plugins">A inicializar plugins…</string>
+    <string name="initializing">A inicializar…</string>
+    <string name="migrating_profile_switches">A migrar trocas de perfil…</string>
+    <string name="migrating_effective_profile_switches">A migrar trocas de perfil efetivas…</string>
+    <string name="migrating_boluses">A migrar bólus…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Os registos antigos não tinham configuração da insulina e nenhum perfil estava ativo, por isso foi usada a insulina %1$s. Verifique as definições da insulina — os registos já migrados não são atualizados depois.</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Os registos antigos não tinham duração da insulina, por isso foram usadas %1$.1f horas para %2$s. Verifique as definições da insulina — os registos já migrados não são atualizados depois.</string>
+    <string name="settings_unreadable_title">Não é possível ler as definições do AAPS</string>
+    <string name="settings_unreadable_key_explanation">As suas definições neste telefone estão encriptadas com uma chave que o Android guarda para o AAPS, e essa chave já não as abre. Isto pode acontecer depois de o armazenamento de chaves do telefone ter sido reposto.</string>
+    <string name="settings_unreadable_keystore_explanation">O armazenamento de chaves do telefone não respondeu, por isso o AAPS não conseguiu abrir as suas definições.</string>
+    <string name="settings_unreadable_not_running">O AAPS não está a funcionar e não controla a bomba. Uma basal temporária em curso termina na hora prevista e depois a bomba administra a sua própria basal.</string>
+    <string name="settings_unreadable_what_to_do">Tentar Novamente fecha o AAPS e inicia-o de novo. Se isso não ajudar, reinicie o telefone. Escolha Começar do zero só quando nada mais ajudar: as definições ilegíveis são postas de parte e o AAPS começa com definições vazias. Depois, importe a sua última exportação de definições no assistente de configuração.</string>
+    <string name="settings_unreadable_start_fresh">Começar do zero</string>
+    <string name="settings_unreadable_confirm_title">Começar com definições vazias?</string>
+    <string name="settings_unreadable_confirm_text">O ficheiro de definições ilegível é renomeado e guardado. Todas as definições voltam aos valores predefinidos. Depois, configure o AAPS de novo ou importe uma exportação de definições.</string>
+    <string name="settings_unreadable_notification">O AAPS não está a funcionar. Abra o AAPS para ver o que fazer.</string>
 </resources>

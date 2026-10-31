@@ -11,11 +11,11 @@
     <string name="treatments_history">Istoricul tratamentelor</string>
     <string name="treatments_desc">Vedeți și gestionați istoricul tratamentului</string>
     <string name="nav_configuration">Configurație</string>
-    <string name="nav_configuration_desc">Creați-vă configurația (senzor, pompă, șamd) și activați funcțiile</string>
-    <string name="count_selected">%1$d selectat</string>
+    <string name="nav_configuration_desc">Configurați sistemul (CGM, pompă, ...) și activați funcții</string>
+    <string name="count_selected">%1$d selectate</string>
     <string name="delete">Ștergeți</string>
     <string name="show_invalidated">Afișați invalidate</string>
-    <string name="hide_invalidated">Ascundeți invalidat</string>
+    <string name="hide_invalidated">Ascundeți invalidate</string>
     <string name="more_options">Mai multe opțiuni</string>
     <string name="refresh">Actualizați</string>
     <string name="no_history_records">Nu s-au găsit înregistrări</string>
@@ -27,7 +27,7 @@
     <string name="constraint_applied">Constrângere aplicată!</string>
     <string name="tt_label">Țintă temporară</string>
     <string name="pump_unreachable">Pompă indisponibilă</string>
-    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Driverul pompei nu răspunde. \"%1$s\" a rulat pentru %2$d minute şi nicio altă comandă nu poate ajunge la pompă. Verificați pompa, apoi reporniți AAPS.</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Driverul pompei nu răspunde. \"%1$s\" rulează de %2$d min și nicio altă comandă nu poate ajunge la pompă. Verificați pompa, apoi reporniți AAPS.</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
@@ -67,7 +67,7 @@
     <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Finalizat</string>
     <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Extins</string>
     <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Restrâns</string>
-    <string name="no_compose_preferences">Nu există preferințe de compunere disponibile pentru acest modul</string>
+    <string name="no_compose_preferences">Nu există preferințe disponibile pentru acest modul</string>
     <string name="confirm_password_hint">Confirmați parola</string>
     <string name="confirm_pin_hint">Confirmați codul PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
@@ -96,24 +96,29 @@
     <string name="missed_bg_readings">Lipsesc date glicemie</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Amuțiți pentru 5 minute</string>
-    <string name="mute">Mut</string>
+    <string name="mute">Amuțiți</string>
+    <string name="alarm_silence" comment="Button on the alarm screen. It stops the sound, and the alarm screen stays open.">Opriți sunetul</string>
+    <string name="alarm_silence_and_close" comment="Button on the alarm screen. It stops the sound and closes the alarm screen.">Opriți sunetul și închideți</string>
     <string name="success">Succes</string>
     <string name="advanced_settings_title">Setări avansate</string>
     <string name="extended_bolus">Bolus extins</string>
     <string name="paused">Suspendat</string>
     <string name="running">Se rulează</string>
-    <string name="tdd_total">Total TDD</string>
+    <string name="tdd_total">Total DZT</string>
     <string name="tdd_old_data">Date vechi</string>
-    <string name="goingtodeliver">Se vor administra %1$.2fU</string>
+    <string name="goingtodeliver">Se vor administra %1$.2f U</string>
     <string name="carbs_not_saved_after_bolus">Bolus administrat, dar carbohidrații nu au putut fi salvați. Vă rugăm să introduceți carbohidrații din nou.</string>
     <string name="androidaps_start">AAPS pornit</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
+    <string name="temp_target_description" comment="Short text of a temporary target. %1$s=target or target range, %2$s=BG unit, %3$s=duration with unit, %4$s=reason. Example: 7.0mmol/L@60 min(Activity)">%1$s%2$s@%3$s(%4$s)</string>
+    <string name="value_question" comment="Asks if this should be done. %1$s=what will be done. Example: Send logs?">%1$s?</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
     <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
     <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
+    <string name="value_with_remaining_time" comment="A short fact followed by how long something still runs. %1$s=the fact, %2$s=the remaining time with unit. Example: 110% +2h · 2 h 40 min">%1$s · %2$s</string>
     <string name="objectives">Obiective</string>
     <string name="please_wait">Așteptați…</string>
     <string name="stop">Stop</string>
@@ -121,11 +126,14 @@
     <string name="invalid_profile">Profil invalid!</string>
     <string name="no_profile_set">NICIUN PROFIL SETAT</string>
     <string name="profile_switch_no_insulin">Nu se poate schimba profilul: nicio insulină nu este în uz și nu a fost selectată niciuna.</string>
-    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Timpul de schimbare a profilului trebuie să fie în %1$d ore de acum.</string>
-    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Ținta temporară trebuie să înceapă în %1$d ore de acum.</string>
+    <string name="scene_no_profile_before">Niciun profil nu era în uz înainte de pornirea scenariului.</string>
+    <string name="scene_profile_not_restored" comment="%1$s=scene name, %2$s=why, a complete sentence that already ends with its own full stop. Example: Scene Sick day has ended, but its profile is still in use. No profile was in use before the scene started. Activate a profile by hand.">Scenariul %1$s s-a încheiat, dar profilul lui este încă în uz. %2$s Activați manual un profil.</string>
+    <string name="profile_switch_insulin_not_permanent" comment="%1$s=insulin of the temporary profile switch, %2$s=insulin of the permanent profile under it. Example: This temporary switch has Fiasp, but the permanent profile under it has Novorapid. Activate the insulin that is in the pump in Insulin settings first.">Această schimbare temporară are %1$s, dar profilul permanent de sub ea are %2$s. Activați mai întâi insulina care este în pompă în Setări insulină.</string>
+    <string name="profile_switch_time_too_far" comment="%1$d = how many hours before or after the current time a profile switch may be set. Example: The profile switch time must be within 24 hours of now.">Ora schimbării de profil trebuie să fie la cel mult %1$d ore față de acum.</string>
+    <string name="temp_target_time_too_far" comment="%1$d = how many hours before or after the current time a temporary target may start. Example: The temporary target must start within 24 hours of now.">Ținta temporară trebuie să înceapă la cel mult %1$d ore față de acum.</string>
     <string name="profile_switch_select_insulin_hint">Nicio insulină nu este încă utilizată. Selectați insulina pe care o utilizați, astfel încât această modificare de profil să o poată înregistra.</string>
     <string name="insulin_activation_failed">Insulina nu a fost schimbată. Insulina anterioară este încă în uz.</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulina nu a fost schimbată: %1$s. Insulina anterioară este încă în uz.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulina nu a fost schimbată: %1$s Insulina anterioară este încă în uz.</string>
     <string name="insulin_activation_unconfirmed">Schimbarea insulinei nu a putut fi confirmată. Verificați care insulină este activă în profilul dumneavoastră înainte de administrare.</string>
     <string name="insulin_not_switched_reason" comment="%1$s=why the switch was refused, a sentence the user reads as it is. Example: The insulin was not switched. Your previous insulin is still in use. (empty line) Basal rate is not compatible with the current pump and cannot be activated.">Insulina nu a fost schimbată. Insulina anterioară este încă în uz.\n\n%1$s</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulina nu a fost de asemenea schimbată.</string>
@@ -155,7 +163,7 @@
     <string name="exportsettings">Exportați setările</string>
     <string name="disableloop">Dezactivați bucla</string>
     <string name="disabled_loop">Buclă dezactivată</string>
-    <string name="resumeloop">Reporniți bucla</string>
+    <string name="resumeloop">Reluați bucla</string>
     <string name="suspendloop">Suspendați bucla</string>
     <string name="notification">Notificare</string>
     <string name="noprofile">Nu s-a încărcat încă un profil din NS</string>
@@ -175,7 +183,8 @@
     <string name="bg_label">Glicemie</string>
     <string name="calibration">Calibrare</string>
     <!-- Calibration entry rejection reasons. Built by the master, also for a calibration sent by a client. -->
-    <string name="cal_reject_no_pair">Calibrarea nu a fost salvată: Nu a fost găsită nicio citire a senzorului în ultimele 10 minute.</string>
+    <string name="cal_reject_delta_too_high" comment="%1$s = how fast BG changes now, %2$s = the limit, %3$s = BG unit. Example: (Δ 0.5 mmol/L per 5 min, limit 0.3)">Calibrarea nu a fost salvată: glicemia se schimbă prea repede (Δ %1$s %3$s la 5 min, limită %2$s). Încercați din nou când glicemia este stabilă.</string>
+    <string name="cal_reject_no_pair">Calibrarea nu a fost salvată: nu a fost găsită nicio citire CGM în ultimele 10 minute.</string>
     <string name="cal_reject_warmup">Calibrarea nu a fost salvată: senzorul se află încă în fereastra de încălzire de 2 ore.</string>
     <string name="cal_reject_no_session">Calibrarea nu a fost salvată: nicio sesiune de senzor nu este activă. Înregistrați o schimbare de senzor mai întâi.</string>
     <string name="cgm">CGM</string>
@@ -200,6 +209,8 @@
     <string name="a11y_arrow_unknown">necunoscută</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">scădeți %1$s cu %2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">creșteți %1$s cu %2$s</string>
+    <string name="a11y_expand_button_description" comment="Screen-reader label for the button that opens a number field for typing. %1$s = the field label. Example: open Carbs for typing">deschideți %1$s pentru a introduce valoarea</string>
+    <string name="a11y_collapse_button_description" comment="Screen-reader label for the button that closes a number field again. %1$s = the field label. Example: close Carbs">închideți %1$s</string>
     <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Mutați în sus</string>
     <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Mutați în jos</string>
     <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Pasul %1$d din %2$d</string>
@@ -218,8 +229,9 @@
     <string name="profileswitch_ismissing">Lipsă SchimbareProfil. Efectuați o schimbare de profil sau apăsați \"Activare profil\" în ProfilulLocal.</string>
     <string name="profile">Profil</string>
     <string name="percentage_label">Procentaj</string>
-    <string name="timeshift_label">Decalare temporală</string>
+    <string name="timeshift_label">Decalaj</string>
     <string name="confirm_remove_multiple_items">Sigur vreți să eliminați %1$d elemente</string>
+    <string name="remove_not_on_master" comment="Shown on a client when removing records. %1$d = number of records the master does not have. Example: The master does not have 2 of these entries. They are not removed.">Dispozitivul principal nu are %1$d dintre aceste înregistrări. Ele nu sunt șterse.</string>
     <string name="overview_treatment_label">Tratament</string>
     <string name="copytolocalprofile">Creați un profil nou din acest profil?</string>
     <string name="wear_wizard_settings">Setări Asistent Wear</string>
@@ -228,7 +240,7 @@
     <string name="invalid">INVALID</string>
     <string name="login">Autentificați-vă</string>
     <string name="logout">Deconectați-vă</string>
-    <string name="prime_fill">Amorsați/Umpleți</string>
+    <string name="prime_fill">Amorsare/Umplere</string>
     <string name="prime_not_available">Această pompă se umple și se amorsează singură în timpul activării. Amorsați/Umpleți din AAPS nu este disponibil.</string>
     <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Schimbați</string>
     <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Umpleți</string>
@@ -249,7 +261,7 @@
     <string name="pump_suspended">Pompă suspendată</string>
     <string name="pump_suspend">Suspendați pompa</string>
     <string name="pump_resume">Reluați pompa</string>
-    <string name="mode_reverted">Mod inversat</string>
+    <string name="mode_reverted">Modul a revenit la cel anterior</string>
     <string name="select_insulin">Selectați insulina</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
@@ -267,14 +279,14 @@
     <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s minute</string>
     <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
     <string name="nav_export">Exportați setările</string>
-    <string name="location_permission_not_granted">Permisiunea de locație nu a fost acordată. Permite în setările Android.</string>
+    <string name="location_permission_not_granted">Permisiunea de locație nu a fost acordată. Permiteți-o în setările Android.</string>
     <string name="configbuilder_nightscoutversion_label">Versiune Nightscout:</string>
     <string name="not_available_full">Indisponibil</string>
     <string name="not_implemented_yet">Această funcție nu este încă gata pe această platformă</string>
     <string name="not_available_on_platform">Această funcție nu este disponibilă pe această platformă</string>
     <string name="engineering_mode_enabled">Mod inginer activat</string>
     <string name="back">Înapoi</string>
-    <string name="next">Înainte</string>
+    <string name="next">Următor</string>
     <string name="pref_syncs_with_main_phone">Se sincronizează cu telefonul principal</string>
     <string name="show_hide_records">Ascundeți înregistrările buclei</string>
     <!--    Protection-->
@@ -310,13 +322,13 @@
     <string name="veryLow" comment="below 3.1">Foarte scăzută</string>
     <string name="low" comment="3.1-3.9">Scăzută</string>
     <string name="high" comment="10.0-13.9">Ridicată</string>
-    <string name="veryHigh" comment="above 13.9">Foarte mare</string>
-    <string name="above" comment="above &quot;in range&quot;">Mai sus</string>
+    <string name="veryHigh" comment="above 13.9">Foarte ridicată</string>
+    <string name="above" comment="above &quot;in range&quot;">Peste</string>
     <string name="detailed_14_days">Detaliere 14 zile</string>
     <string name="day_tir">Timp în țintă pe timp de zi</string>
     <string name="night_tir">Timp în țintă pe timp de noapte</string>
     <string name="hba1c">HbA1c: </string>
-    <string name="std_deviation">DST: %1$s</string>
+    <string name="std_deviation">DS: %1$s</string>
     <string name="seven_days_short">7z</string>
     <string name="thirty_days_short">30z</string>
     <!--    ProfileSwitch-->
@@ -356,7 +368,8 @@
     <string name="pump_battery_change">Schimbare baterie pompă</string>
     <string name="temporary_target">Țintă temporară</string>
     <string name="temporary_targets">Ținte temporare</string>
-    <string name="running_mode">Mod de rulare</string>
+    <string name="running_mode">Mod de funcționare</string>
+    <string name="running_mode_desc">Închideți sau deschideți bucla, suspendați-o sau deconectați pompa</string>
     <string name="running_mode_change_not_allowed">Schimbarea modului de funcționare nu este disponibilă</string>
     <string name="pump_reconnect">Reconectați pompa</string>
     <string name="scene">Scenariu</string>
@@ -368,20 +381,22 @@
     <string name="scene_ended">Scenariu încheiat</string>
     <string name="scene_end_active">Încheiați scenariul activ</string>
     <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Săriți la</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Scenariul de continuare %1$s nu va porni</string>
     <string name="scene_confirm_activate">Activați scenariul \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">Încheiați scenariul \"%1$s\" și anulați modificările?</string>
     <string name="scene_conflict_active_tt">Ținta activă temporară va fi înlocuită</string>
     <string name="scene_conflict_active_profile">Schimbarea profilului activ va fi înlocuită</string>
     <string name="scene_conflict_active_running_mode">Modul de funcționare activ va fi înlocuit</string>
-    <string name="scene_conflict_active_scene">Scenariul activa \"%1$s\" se va încheia primul</string>
+    <string name="scene_conflict_active_scene">Scenariul activ \"%1$s\" se va încheia mai întâi</string>
     <string name="scene_action_tt">Țintă temporară: %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profil: %1$d%%</string>
     <string name="scene_action_smb_on">Activați SMB</string>
     <string name="scene_action_smb_off">Dezactivați SMB</string>
     <string name="scene_action_running_mode">Mod de funcționare: %1$s</string>
     <string name="scene_action_careportal">Jurnal: %1$s</string>
-    <string name="scene_management">Scene</string>
-    <string name="scene_management_desc">Creați, editați și gestionați scene</string>
+    <string name="scene_management">Scenarii</string>
+    <string name="scene_management_desc">Creați, editați și gestionați scenarii</string>
     <string name="scene_start_from_template">Porniți de la șablon</string>
     <string name="scene_editor_target">Țintă</string>
     <string name="scene_editor_tt_preset">Presetare țintă temporară</string>
@@ -397,6 +412,8 @@
     <string name="scene_editor_enabled">Activat</string>
     <string name="scene_editor_disabled">Dezactivat</string>
     <string name="scene_summary">%1$d acțiuni, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_duration_indefinite">Nedefinit (sfârșit manual)</string>
     <string name="scene_some_actions_failed">Unele acțiuni au eșuat</string>
     <string name="scene_no_active">Niciun scenariu activ</string>
@@ -405,19 +422,33 @@
     <string name="scene_no_actions">Scenariul nu are acțiuni</string>
     <string name="scene_profile_not_found">Profilul \"%1$s\" nu a fost găsit</string>
     <string name="scene_lock_banner_master_offline">Dispozitivul principal nu este accesibil. Controlul scenariilor se va relua atunci când conexiunea va fi restabilită.</string>
-    <string name="scene_lock_banner_control_disabled">Principalul are dezactivat controlul la distanță. Controalele de scenarii vor fi reluate când sunt reactivate pe principal.</string>
+    <string name="scene_lock_banner_control_disabled">Dispozitivul principal a dezactivat controlul la distanță. Controlul scenariilor va fi reluat când acesta va fi reactivat pe dispozitivul principal.</string>
     <string name="master_offline_banner">Dispozitivul principal nu este accesibil. Editarea este dezactivată până când conexiunea este restabilită.</string>
-    <string name="master_control_disabled_banner">Principalul are control la distanță dezactivat. Editarea este dezactivată până când este reactivată pe principal.</string>
+    <string name="master_control_disabled_banner">Dispozitivul principal a dezactivat controlul la distanță. Editarea este dezactivată până când acesta este reactivat pe dispozitivul principal.</string>
+    <string name="hardened_mode_on">Mod securizat activ</string>
+    <string name="hardened_mode_title">Mod securizat</string>
+    <string name="hardened_mode_info_open">Despre modul securizat</string>
+    <string name="client_role_read_only" comment="Short label of a client role on a segmented button: the phone may only show data">Doar citire</string>
+    <string name="client_role_meal_assistant" comment="Short label of a client role on a segmented button: may give boluses and enter carbs">Mese</string>
+    <string name="client_role_caregiver" comment="Short label of a client role on a segmented button: may use everything but not change settings">Îngrijitor</string>
+    <string name="client_role_admin" comment="Short label of a client role on a segmented button: may also change settings and presets">Administrator</string>
+    <string name="client_role_title">Rol</string>
+    <string name="client_role_line" comment="%1$s = the role of this phone on the main phone, e.g. Meals">Rol: %1$s</string>
+    <string name="client_roles_info_open">Despre roluri</string>
+    <string name="client_roles_info">Fiecare telefon asociat are un rol. Telefonul principal verifică rolul pentru fiecare comandă, iar telefonul arată doar ce permite rolul său. Un rol nou se aplică imediat, fără o nouă asociere.\n\nDoar citire: telefonul rămâne asociat, dar doar afișează date.\n\nMese: bolus, asistent bolusare, Asistent Rapid și carbohidrați. Poate și opri un bolus în curs. Carbohidrații introduși aici pot face bucla să administreze mai multă insulină.\n\nÎngrijitor: tot ce face un utilizator în AAPS, de exemplu ținte temporare, schimbări de profil și de insulină, modul buclei, bazală temporară, bolus extins, scenarii, evenimente Careportal, calibrări și ștergerea înregistrărilor. Nu poate schimba setări sau presetări.\n\nAdministrator: totul, inclusiv setări și presetări (Asistent Rapid, presetări de ținte temporare, scenarii, profiluri, automatizare, insulină).</string>
+    <string name="client_read_only_banner">Acest telefon este în modul doar citire pe telefonul principal.</string>
+    <string name="hardened_mode_info">Telefonul principal preia modificări doar de la clienții asociați. Nu preia tratamente, ținte temporare, schimbări de profil, schimbări ale modului de funcționare sau ștergeri făcute direct în Nightscout, de exemplu pe site sau în alte aplicații. Setările pentru acceptarea datelor din Nightscout sunt ascunse cât timp modul securizat este activ. Comenzile SMS nu sunt afectate.\n\nTelefonul principal încarcă în continuare toate datele în Nightscout, inclusiv glicemia. Dacă primește glicemia din Nightscout, o preia în continuare de acolo.\n\nPentru a încărca istoricul pe un telefon principal nou, folosiți Sincronizare completă în NSClient. Sincronizarea completă preia tot ce este în Nightscout, inclusiv profilurile.\n\nControlul de la distanță din clienți are nevoie de o conexiune WebSocket funcțională la Nightscout, pe telefonul principal și pe clienții asociați. Modul simplu activează întotdeauna modul securizat. Pentru a-l dezactiva, ieșiți din modul simplu și dezactivați controlul clientului pe telefonul principal.</string>
     <string name="scene_lock_reason_master_offline">Dispozitiv principal deconectat</string>
     <string name="scene_lock_reason_control_disabled">Control la distanță dezactivat</string>
     <string name="scene_lock_reason_scene_active">Opriți mai întâi scenariul în derulare</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <string name="clientcontrol_action_set_temp_target">Setați ținta temporară</string>
-    <string name="clientcontrol_action_cancel_temp_target">Opriți ținta temporară</string>
+    <string name="clientcontrol_action_cancel_temp_target">Anulați ținta temporară</string>
     <string name="clientcontrol_action_activate_scene">Activați scenariul %1$s</string>
     <string name="clientcontrol_action_deactivate_scene">Încheiați scenariul</string>
     <string name="clientcontrol_action_update_settings">Actualizați setările</string>
     <string name="clientcontrol_action_deliver_bolus">Administrați bolus</string>
+    <string name="clientcontrol_action_eat_reminder">Modificați mementoul de masă</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="clientcontrol_fail_not_paired">Acest dispozitiv nu este asociat cu un dispozitiv principal.</string>
     <string name="clientcontrol_fail_not_reachable">Dispozitivul principal este deconectat.</string>
@@ -428,23 +459,30 @@
     <string name="clientcontrol_fail_send_failed">Nu s-a putut ajunge la Nightscout.</string>
     <string name="clientcontrol_fail_no_active_profile">Dispozitivul principal nu are niciun profil activ pe care să aplice modificările.</string>
     <string name="clientcontrol_fail_scene_not_found">Scenariul nu mai există.</string>
-    <string name="clientcontrol_fail_site_entry_not_found">Intrarea de sait nu mai există.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">Înregistrarea locului de inserție nu mai există.</string>
     <string name="clientcontrol_fail_scene_disabled">Scenariul este dezactivat.</string>
     <string name="clientcontrol_fail_partial">Unele acțiuni nu au putut fi aplicate.</string>
     <string name="clientcontrol_fail_execution">Dispozitivul principal nu a putut să îl aplice.</string>
-    <string name="clientcontrol_fail_control_disabled">Controlul de la distanță este oprit pe principal.</string>
+    <string name="clientcontrol_fail_cancelled">Comanda a fost anulată înainte să ruleze. Nu s-a trimis nimic către pompă.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus anulat. Nu s-a administrat insulină.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Anulat</string>
+    <string name="smb_paused_for_bolus" comment="Loop status: why no SMB was given. The user is confirming a bolus that was calculated without this SMB.">Niciun SMB cât timp un bolus așteaptă confirmarea</string>
+    <string name="smb_being_delivered_confirm_later" comment="Shown above the disabled OK button of the bolus dialogs. SMB = super micro bolus, given by the loop.">Se administrează un SMB. Puteți confirma după ce s-a terminat.</string>
+    <string name="clientcontrol_fail_control_disabled">Controlul de la distanță este oprit pe dispozitivul principal.</string>
+    <string name="clientcontrol_fail_not_allowed_for_role">Rolul acestui telefon pe dispozitivul principal nu permite acest lucru.</string>
+    <string name="clientcontrol_fail_other_token">Dispozitivul principal a refuzat comanda: acest telefon scrie în Nightscout cu alt cod de acces decât al său. Pe dispozitivul principal, eliminați acest telefon și adăugați-l din nou.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Bolusul pregătit a expirat sau a fost înlocuit. Apăsați din nou butonul.</string>
     <string name="clientcontrol_fail_bolus_compute">Dispozitivul principal nu a putut calcula bolusul (lipsă glicemie / profil sau pompa nu este pregătită).</string>
     <string name="clientcontrol_fail_internal">A survenit o eroare.</string>
     <string name="clientcontrol_fail_unknown">Comanda a eșuat.</string>
     <string name="clientcontrol_unconfirmed_wear">Stare necunoscută - verificați telefonul / Nightscout înainte de a rebolusa.</string>
     <string name="clientcontrol_bolus_progress_stalled_title">Conexiune pierdută — starea administrării este necunoscută</string>
-    <string name="clientcontrol_bolus_progress_stalled_body">Acest telefon a încetat să mai primească actualizări de la dispozitivul principal. Este posibil ca bolusul încă să se administreze sau să se fi terminat administrarea. Închiderea ferestrei doar va ascunde acest lucru — nu va opra pompa. Verificați dispozitivul principal pentru a cunoaște cantitatea administrată concret.</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Acest telefon a încetat să mai primească actualizări de la dispozitivul principal. Este posibil ca bolusul încă să se administreze sau să se fi terminat administrarea. Închiderea ferestrei doar va ascunde acest lucru — nu va opri pompa. Verificați dispozitivul principal pentru a cunoaște cantitatea administrată concret.</string>
     <string name="scene_revert_tt">Anulați ținta temporară</string>
     <string name="scene_revert_profile">Reveniți la profilul de dinainte de schimbare</string>
     <string name="scene_revert_smb_on">Reactivați SMB</string>
     <string name="scene_revert_smb_off">Dezactivați SMB</string>
-    <string name="scene_revert_loop_mode">Anulați modificarea modului de buclă</string>
+    <string name="scene_revert_loop_mode">Anulați modificarea modului de funcționare</string>
     <string name="scene_careportal_no_revert">Intrările din CarePortal nu vor fi readuse la starea anterioară</string>
     <string name="careportal_sickness">Boală</string>
     <string name="careportal_stress">Stres</string>
@@ -462,9 +500,10 @@
     <string name="treatment_insulin_desc">Administrați bolusul manual</string>
     <string name="treatment_carbs_desc">Înregistrați carbohidrați fără insulină</string>
     <string name="treatment_calculator_desc">Calculați bolusul</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Setări insulină</string>
     <string name="manage_insulin_desc">Gestionați și activați configurațiile insulinei</string>
     <string name="concentration_disable_blocked">Nu se poate dezactiva suportul concentrației cât timp există insuline non-U100. Îndepărtați mai întâi toate configurațiile de insulină non-U100 și treceți la un profil U100.</string>
-    <string name="simple_mode_blocked_by_concentration">Nu se poate activa modul simplu în timp ce se folosește insulina non-U100. Mai întâi se trece la insulina U100.</string>
+    <string name="simple_mode_blocked_by_concentration">Nu se poate activa modul simplu în timp ce se folosește insulina non-U100. Treceți mai întâi la insulina U100.</string>
     <string name="manage_profile_desc">Gestionați și activați profilurile</string>
     <string name="manage_temp_target_desc">Gestionați și stabiliți ținte temporare</string>
     <string name="manage_temp_basal_desc">Porniți bazala temporară</string>
@@ -483,6 +522,9 @@
     <string name="treatment_cannula_change_desc">Înregistrați schimbarea canulei/setului de perfuzie</string>
     <string name="treatment_fill_desc">Amorsați și umpleți canula</string>
     <string name="temp_basal">Bazală temporară</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Peste profil</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Sub profil</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Niciuna</string>
     <string name="user_entry">Înregistrare utilizator</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Deget</string>
@@ -494,8 +536,8 @@
     <string name="activity">Exercițiu fizic</string>
     <string name="wear">Ceas</string>
     <string name="automation">Automatizare</string>
-    <string name="automation_management_desc">Creează reguli care execută automat acțiuni bazat pe declanșatoare</string>
-    <string name="settingsexport">Setări Export</string>
+    <string name="automation_management_desc">Creați reguli care execută automat acțiuni pe baza declanșatoarelor</string>
+    <string name="settingsexport">Exportare setări</string>
     <string name="custom">Personalizat</string>
     <string name="preset_settings">Setări presetare</string>
     <string name="activation">Activare</string>
@@ -570,27 +612,27 @@
     <string name="uel_store_profile">PĂSTRAȚI PROFILUL</string>
     <string name="uel_profile_switch">SCHIMBARE PROFIL</string>
     <string name="uel_profile_switch_cloned">SCHIMBARE PROFIL CLONATĂ</string>
-    <string name="uel_closed_loop_mode">MOD BUCLA ÎNCHISĂ</string>
-    <string name="uel_lgs_loop_mode">MOD BUCLA SUSPENDARE LA HIPOGLICMIE</string>
-    <string name="uel_open_loop_mode">MOD BUCLA DESCHISĂ</string>
+    <string name="uel_closed_loop_mode">MOD BUCLĂ ÎNCHISĂ</string>
+    <string name="uel_lgs_loop_mode">MOD BUCLĂ SUSPENDARE LA HIPOGLICEMIE</string>
+    <string name="uel_open_loop_mode">MOD BUCLĂ DESCHISĂ</string>
     <string name="uel_loop_disabled">BUCLĂ DEZACTIVATĂ</string>
     <string name="uel_loop_resumed">BUCLĂ RELUATĂ</string>
     <string name="uel_pump_running">POMPĂ ÎN FUNCȚIUNE</string>
     <string name="uel_reconnect">RECONECTARE</string>
     <string name="uel_disconnect">DECONECTARE</string>
-    <string name="uel_resume">REPORNIRE</string>
+    <string name="uel_resume">RELUARE</string>
     <string name="uel_suspend">SUSPENDARE</string>
-    <string name="uel_hw_pump_allowed">HW POMPĂ PERMIS</string>
+    <string name="uel_hw_pump_allowed">POMPĂ FIZICĂ PERMISĂ</string>
     <string name="uel_clear_pairing_keys">ȘTERGEȚI CHEILE DE ASOCIERE</string>
-    <string name="uel_accepts_temp_basal">ACCEPTAȚI BAZALA TEMPORARĂ</string>
+    <string name="uel_accepts_temp_basal">ACCEPTARE BAZALĂ TEMPORARĂ</string>
     <string name="uel_cancel_temp_basal">ANULAȚI BAZALA TEMPORARĂ</string>
     <string name="uel_cancel_bolus">ANULARE BOLUS</string>
     <string name="uel_cancel_extended_bolus">ANULAȚI BOLUS EXTINS</string>
     <string name="uel_cancel_tt">ANULAȚI ȚINTĂ TEMPORARĂ</string>
     <string name="uel_careportal">CAREPORTAL</string>
     <string name="uel_sensor_location">LOC SENZOR</string>
-    <string name="uel_site_change">SCHIMBARE CANULA</string>
-    <string name="uel_site_location">LOC DE AMPLASARE</string>
+    <string name="uel_site_change">SCHIMBARE CANULĂ</string>
+    <string name="uel_site_location">LOCUL DE INSERȚIE</string>
     <string name="uel_reservoir_change">SCHIMBARE REZERVOR</string>
     <string name="uel_calibration">CALIBRARE</string>
     <string name="uel_prime_bolus">BOLUS DE AMORSARE</string>
@@ -598,7 +640,7 @@
     <string name="uel_careportal_ns_refresh">ACTUALIZARE CAREPORTAL NS</string>
     <string name="uel_profile_switch_ns_refresh">ACTUALIZARE NS SCHIMBARE PROFIL</string>
     <string name="uel_treatments_ns_refresh">ACTUALIZARE NS TRATAMENTE</string>
-    <string name="uel_tt_ns_refresh">ACTUALIZARE NS TINTE TEMPORARE</string>
+    <string name="uel_tt_ns_refresh">ACTUALIZARE NS ȚINTE TEMPORARE</string>
     <string name="uel_automation_removed">AUTOMATIZARE ȘTEARSĂ</string>
     <string name="uel_bg_removed">GLICEMIE ELIMINATĂ</string>
     <string name="uel_calibration_removed">CALIBRARE ELIMINATĂ</string>
@@ -615,21 +657,21 @@
     <string name="uel_treatment_removed">TRATAMENT ELIMINAT</string>
     <string name="uel_tt_removed">ȚINTĂ TEMPORARĂ ELIMINATĂ</string>
     <string name="uel_ns_paused">NS ÎN PAUZĂ</string>
-    <string name="uel_ns_resume">NS REPORNIT</string>
+    <string name="uel_ns_resume">NS RELUAT</string>
     <string name="uel_ns_queue_cleared">CURĂȚARE COADĂ NS</string>
     <string name="uel_ns_settings_copied">COPIERE SETĂRI NS</string>
     <string name="uel_error_dialog_ok">DIALOG EROARE OK</string>
-    <string name="uel_error_dialog_mute">OPRIRE DIALOG EROARE </string>
-    <string name="uel_error_dialog_mute_5min">OPRIRE DIALOG EROARE 5MIN</string>
+    <string name="uel_error_dialog_mute">AMUȚIRE DIALOG EROARE </string>
+    <string name="uel_error_dialog_mute_5min">AMUȚIRE DIALOG EROARE 5MIN</string>
     <string name="uel_objective_started">OBIECTIV ÎNCEPUT</string>
     <string name="uel_objective_unstarted">OBIECTIV NEÎNCEPUT</string>
-    <string name="uel_objectives_skipped">OBIECTIV SĂRIT</string>
+    <string name="uel_objectives_skipped">OBIECTIVE SĂRITE</string>
     <string name="uel_stat_reset">RESET STATISTICI</string>
     <string name="uel_delete_logs">ȘTERGERE JURNAL</string>
     <string name="uel_delete_future_treatments">ȘTERGERE TRATAMENTE VIITOARE</string>
     <string name="uel_export_settings">EXPORTARE SETĂRI</string>
     <string name="uel_import_settings">IMPORTARE SETĂRI</string>
-    <string name="uel_select_directory">ALEGE DIRECTOR</string>
+    <string name="uel_select_directory">SELECTARE DOSAR</string>
     <string name="uel_reset_databases">RESETARE BAZE DE DATE</string>
     <string name="uel_reset_aps_results">RESETARE REZULTATE APS</string>
     <string name="uel_cleanup_databases">CURĂȚAȚI BAZELE DE DATE</string>
@@ -649,8 +691,8 @@
     <string name="ue_action">Acțiune</string>
     <string name="ue_timestamp">Marcă de timp</string>
     <string name="ue_none">Nicio unitate</string>
-    <string name="uel_loop_change">BUCLA SCHIMBATĂ</string>
-    <string name="uel_loop_removed">BUCLA ELIMINATĂ</string>
+    <string name="uel_loop_change">BUCLĂ SCHIMBATĂ</string>
+    <string name="uel_loop_removed">BUCLĂ ELIMINATĂ</string>
     <string name="uel_new_insulin">INSULINĂ NOUĂ</string>
     <string name="uel_change_pump_insulin">SCHIMBAȚI INSULINA POMPEI</string>
     <string name="uel_store_insulin">PĂSTRAȚI INSULINA</string>
@@ -661,8 +703,9 @@
     <string name="uel_running_mode_updarted">MODUL DE FUNCȚIONARE ACTUALIZAT</string>
     <string name="uel_scene_activated">SCENARIU ACTIVAT</string>
     <string name="uel_scene_deactivated">SCENARIU DEZACTIVAT</string>
-    <string name="uel_remote_config_changed">CONFIGURAȚIA PENTRU TELECOMANDĂ MODIFICATĂ</string>
+    <string name="uel_remote_config_changed">CONFIGURAȚIE LA DISTANȚĂ MODIFICATĂ</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Valoarea inferioară a țintei temporare</string>
     <string name="temp_target_high_target">Limita superioară a țintei temporare</string>
     <string name="temp_target_value">Valoare țintă temporară</string>
     <string name="insulin_dia">Valoarea DIA a insulinei</string>
@@ -670,18 +713,20 @@
     <string name="profile_max_daily_basal_value">Valoare bazală maximă a profilului</string>
     <string name="current_basal_value">Valoare bazală curentă</string>
     <string name="valuelimitedto">%1$.2f limitat la %2$.2f</string>
-    <string name="valueoutofrange">»%1$s« este in afara limitelor stabilite</string>
+    <string name="valueoutofrange">»%1$s« este în afara limitelor stabilite</string>
     <!-- Profile validation -->
     <string name="no_profile_selected">Niciun profil selectat</string>
     <string name="missing_profile_name">Lipsește numele profilului</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s copie</string>
     <string name="profile_not_saved_activate">Profilul nu a fost salvat. Vă rugăm să salvați profilul înainte de activare.</string>
     <string name="profile_basal_not_compatible_with_pump">Rata bazală nu este compatibilă cu pompa curentă și nu poate fi activată. Reduceți procentajul sau ajustați rata bazală.</string>
+    <string name="profile_basal_below_pump_minimum">Rata bazală este sub minimul pompei curente și nu poate fi activată. Măriți procentajul sau ajustați rata bazală.</string>
     <string name="profile_pump_incompatible_label">Limita pompei</string>
     <string name="error_in_ic_values">Eroare în valorile IC</string>
     <string name="error_in_isf_values">Eroare în valorile ISF</string>
     <string name="error_in_basal_values">Eroare în valorile ratei bazale</string>
-    <string name="error_in_target_values">Eroare in valorile țintă</string>
-    <string name="profile_name_contains_dot">Unele nume de profiluri conțin puncte.\nAcest lucru nu este permis de NS.\nProfilul nu a fost înregistrat în NS.</string>
+    <string name="error_in_target_values">Eroare în valorile țintă</string>
+    <string name="profile_name_contains_dot">Unele nume de profiluri conțin puncte.\nAcest lucru nu este permis de NS.\nProfilurile nu vor fi încărcate în NS.</string>
     <string name="invalid_profile_not_accepted">Profilul invalid din NS %1$s nu este acceptat</string>
     <string name="errors">Erori</string>
     <!-- Command Queue + readStatus reasons -->
@@ -710,6 +755,7 @@
     <string name="basal">Rate bazale</string>
     <string name="basalpct">Bazală %</string>
     <string name="sensitivity">Sensibilitate</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens oprit</string>
     <string name="isf_for_carbs">Media ISF pentru calculator și absorbția carbohidraților: %1$.1f</string>
     <string name="isf_profile">Profil ISF: %1$.1f</string>
     <string name="isf_variable">ISF variabil: %1$.1f</string>
@@ -726,7 +772,7 @@
     <string name="info">INFO</string>
     <!-- BolusWizard -->
     <string name="bolus_advisor">Consilier bolus</string>
-    <string name="bolus_advisor_message">Ai glicemia crescută. În loc să mănânci acum, este recomandat să aştepți o glicemie mai bună. Vrei să faci un bolus de corecție acum și să îți reamintesc când este timpul să mănânci? În acest caz, niciun carbohidrat nu va fi înregistrat și trebuie să utilizezi din nou calculatorul de vbolus când îți voi reaminti.</string>
+    <string name="bolus_advisor_message">Aveți glicemia crescută. În loc să mâncați acum, este recomandat să așteptați o glicemie mai bună. Doriți să faceți un bolus de corecție acum și să vă reamintim când este timpul să mâncați? În acest caz, nu se vor înregistra carbohidrați și trebuie să folosiți din nou calculatorul de bolus când vă reamintim.</string>
     <string name="wizard_bg_label">Glicemie</string>
     <string name="wizard_correction">Corecție</string>
     <string name="wizard_subtotal">Subtotal</string>
@@ -737,9 +783,16 @@
     <string name="wizard_carb_time">Timp carbohidrați</string>
     <string name="carb_time_now">Acum</string>
     <string name="change">Schimbați</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
     <string name="grant">Acordați</string>
     <string name="set">Setați</string>
     <string name="wizard_set_alarm">Setați alarma</string>
+    <string name="eat_reminder_title">Este timpul să mâncați</string>
+    <string name="eat_reminder_countdown" comment="Time left until it is time to eat, as minutes:seconds. %1$d=minutes, %2$02d=seconds with two digits. Example: 12:05">%1$d:%2$02d</string>
+    <string name="eat_reminder_total_wait" comment="The whole wait of the eat reminder, from the start until it rings. Each +5 min makes it longer. %1$s=length with unit. Example: Total wait: 25 min">Așteptare totală: %1$s</string>
+    <string name="eat_reminder_rung">Timpul a expirat</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="eat_reminder_not_set">Mementoul de masă nu a putut fi setat. Permiteți ca AAPS să seteze alarme și mementouri în setările Android.</string>
     <string name="wizard_use_percentage">Utilizați procentul</string>
     <string name="wizard_include_bg">Includeți glicemia</string>
     <string name="wizard_include_tt">Includeți Ținta Temporară</string>
@@ -747,6 +800,7 @@
     <string name="wizard_include_iob">Includeți IOB</string>
     <string name="wizard_include_cob">Includeți COB</string>
     <string name="wizard_calculation">Calcul</string>
+    <string name="no_action_selected">Nicio acțiune selectată, nu se va întâmpla nimic.</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Eliminare maximă: %1$d g (carbohidrați la bord)</string>
     <string name="wizard_no_insulin_required">Nu este necesară insulină</string>
     <string name="wizard_no_actual_bg">Nicio glicemie recentă pe care să se bazeze calculul!</string>
@@ -763,7 +817,7 @@
     <string name="adult">Adult</string>
     <string name="resistant_adult">Adult cu rezistență la insulină</string>
     <string name="pregnant">Sarcină</string>
-    <string name="patient_age_summary">Vă rog confirmați tipul de pacient pentru a stabili limitele de siguranță</string>
+    <string name="patient_age_summary">Vă rugăm să selectați tipul de pacient pentru a stabili limitele de siguranță</string>
     <string name="max_bolus_title">Bolus maxim admis [U]</string>
     <string name="max_carbs_title">Carbohidrați admiși maxim [g]</string>
     <string name="patient_type">Tip de pacient</string>
@@ -776,14 +830,14 @@
     <string name="base_basal_rate_label">Rată bazală normală</string>
     <string name="tempbasal_label">Bazală temporară</string>
     <string name="extended_bolus_label">Bolus extins</string>
-    <string name="serial_number">Număr serial</string>
+    <string name="serial_number">Număr de serie</string>
     <string name="disconnected">Deconectat</string>
     <string name="connecting">Se conectează</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Conectare la pompă apăsat</string>
     <string name="daily_units">Unități zilnic</string>
     <string name="max_daily_units">Maximul de unități zilnice</string>
     <string name="pump_history">Istoric pompă</string>
-    <string name="pump_driver_change" comment="26 characters max for translation">Schimbare driver pompa.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Schimbare driver pompă.</string>
     <string name="device_changed" comment="26 characters max for translation">Dispozitiv modificat</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="temp_basal_delivery_error">Eroare administrare bazală temporară</string>
@@ -796,16 +850,19 @@
     <string name="initializing">Se inițializează…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Avertisment</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Critic</string>
+    <string name="alert" comment="Generic alert dialog title">Alertă</string>
     <string name="retry" comment="Button label to retry a failed operation">Reîncercați</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Finalizați</string>
     <string name="firmware" comment="Pump firmware version label">Firmware</string>
-    <string name="bolusspeed" comment="Speed at which bolus is delivered">Viteză bolusare</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">Viteză bolus</string>
     <string name="history" comment="Tab/screen title for viewing past events">Istoric</string>
     <string name="overview_reservoir_concentration_value_over">Peste %1$s rămas</string>
     <!--    Constraints-->
-    <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
+    <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/h din cauza %2$s</string>
     <string name="pumplimit">limită pompă</string>
     <string name="limitingpercentrate">Se limitează procentul ratei maxime la %1$d%% datorită %2$s</string>
+    <string name="percent_rate_recalculated" comment="A temp basal in percent is checked as an absolute rate. %1$d=percentage, %2$s=absolute rate, %3$s=current basal rate. Example: Percent rate 150% recalculated to 1.50 U/h with current basal 1.00 U/h">Rata procentuală %1$d%% a fost recalculată la %2$s U/h cu bazala curentă de %3$s U/h</string>
     <string name="itmustbepositivevalue">trebuie să fie o valoare pozitivă</string>
     <string name="limitingbolus">Se limitează bolusul la %1$.1f U datorită %2$s</string>
     <!--    Dialogs-->
@@ -819,6 +876,7 @@
     <string name="close">Închideți</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
     <string name="export_warning">Atenție</string>
     <string name="export_expired">Expirat</string>
     <string name="export_disabled">Dezactivat</string>
@@ -870,7 +928,7 @@
     <string name="clear_cloud_action">Ștergeți setările</string>
     <string name="clear_cloud_settings">Ștergeți setările Cloud</string>
     <string name="clear_cloud_settings_message">Se va comuta la stocarea locală și se va șterge autorizarea. Continuați?</string>
-    <string name="cloud_revoke_incomplete">Setările de cloud au fost eliminate de pe dispozitiv, dar contul nu a putut fi accesat pentru revocarea completa a accesului. S-ar putea să doriți să eliminați manual accesul dispozitivului din setările contului de cloud.</string>
+    <string name="cloud_revoke_incomplete">Setările de cloud au fost eliminate de pe dispozitiv, dar contul nu a putut fi accesat pentru revocarea completă a accesului. S-ar putea să doriți să eliminați manual accesul dispozitivului din setările contului de cloud.</string>
     <string name="cloud_connection_failed">Conexiune eșuată către stocarea din cloud</string>
     <string name="cloud_reauthorize_message">Conexiunea către stocarea din cloud a eșuat. Doriți să vă reautentificați?</string>
     <string name="reauthorize">Reautentificați-vă</string>
@@ -885,6 +943,7 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Cerere utilizator</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Asociați</string>
     <string name="pump_unpair">Dezasociați</string>
     <string name="pump_unpair_confirm_title">Dezasociați pompa?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompă asociată</string>
@@ -909,7 +968,7 @@
     <string name="statistics">Statistici</string>
     <string name="statistics_desc">Vizualizați statistici și rapoarte</string>
     <string name="tdd_cycle_pattern">Tipar ciclu DZT (Doză zilnică totală)</string>
-    <string name="tdd_cycle_pattern_desc">Suprapunerea insulinei zilnice în cicluri de 28 de zile până la identificarea tiparelor recurente</string>
+    <string name="tdd_cycle_pattern_desc">Suprapunerea insulinei zilnice în cicluri de 28 de zile, pentru a identifica tiparele recurente</string>
     <string name="nav_profile_helper">Ajutor de profil</string>
     <string name="nav_profile_helper_desc">Construiți-vă profilul pe baza greutății sau a DZT (Dozei zilnice totale)</string>
     <string name="quick_launch_configure">Configurați Lansarea Rapidă</string>
@@ -937,7 +996,7 @@
     <string name="insulin_label">Insulină</string>
     <string name="pb_label">Baterie pompă</string>
     <string name="cannula">Canulă</string>
-    <string name="patch_pump">Pompă fără fir</string>
+    <string name="patch_pump">Pompă plasture</string>
     <!-- Site Rotation -->
     <string name="select_location">Apăsați mai jos pentru a selecta locul de inserție</string>
     <!-- About -->
@@ -990,7 +1049,7 @@
     <string name="units_colon">Unități:</string>
     <string name="unsaved_changes">Modificări nesalvate</string>
     <string name="unsaved_changes_message">Aveți modificări nesalvate. Ce doriți să faceți?</string>
-    <string name="discard">Renunțați</string>
+    <string name="discard">Eliminați</string>
     <string name="ic_dynamic_label_warning">Algoritmul poate oferi un calcul dinamic al IC. Valorile de mai jos pot fi utilizate doar ca soluție de rezervă în cazul lipsei datelor sau doar ca valoare de referință</string>
     <string name="isf_dynamic_label_warning">Algoritmul poate oferi un calcul dinamic al ISF. Valorile de mai jos pot fi utilizate doar ca soluție de rezervă în cazul lipsei datelor sau doar ca valoare de referință</string>
     <string name="add_time_block">Adăugați bloc de timp</string>
@@ -1045,11 +1104,24 @@
     <string name="import_wrong_password">Parolă greșită</string>
     <string name="import_btn">Importați</string>
     <string name="import_anyway_btn">Importați oricum</string>
+    <string name="import_apply_title">Aplicați setările importate?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Setări de modificat: %1$d. Modulele modificate vor fi repornite.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Setări de modificat: %1$d. Setări ale pompei păstrate: %2$d, astfel încât pompa dumneavoastră continuă să funcționeze.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Setările importate nu au selectat nicio pompă pe care o are acest telefon. %1$s este acum activă — verificați setările pompei.</string>
+    <string name="import_applying">Se aplică setările…</string>
+    <string name="import_replace_pump_settings">Înlocuiți și setările pompei</string>
+    <string name="import_replace_pump_settings_summary">Lăsați dezactivat pentru a păstra pompa cu care este asociat acest telefon. Activați când restaurați pe un telefon nou cu aceeași pompă.</string>
+    <string name="import_apply_waiting">Se așteaptă pompa…</string>
+    <string name="import_apply_pump_busy">Pompa este încă ocupată, așa că setările nu au fost aplicate.</string>
+    <string name="import_apply_retry_question">Încercați din nou acum?</string>
+    <string name="import_applied_title">Setări aplicate</string>
+    <string name="import_applied_message">Setările importate sunt acum în uz.</string>
+    <string name="import_apply_pump_changed">Anulat: pompa a fost schimbată de importul setărilor</string>
     <string name="import_source_local">Local</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Încărcați mai multe</string>
@@ -1062,6 +1134,7 @@
     <string name="nav_resetdb">Resetați bazele de date</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="step_ble_scan">Găsiți pompa</string>
+    <string name="ble_scan_select_pump">Selectați pompa dumneavoastră din lista de mai jos</string>
     <string name="ble_scan_scanning">Se scanează pentru dispozitive…</string>
     <!-- Graph configuration -->
     <string name="graph_add">Adăugați grafic</string>
@@ -1082,6 +1155,18 @@
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">PAȘI</string>
     <!-- Graph series full names (used in the graph settings, where there is room) -->
+    <string name="graph_series_iob">Insulină activă</string>
+    <string name="graph_series_abs_insulin" comment="IOB including the scheduled basal, not only the difference to it">Insulină absolută</string>
+    <string name="graph_series_cob">Carbohidrați la bord</string>
+    <string name="graph_series_bgi">Impactul asupra glicemiei</string>
+    <string name="graph_series_deviations">Deviații</string>
+    <string name="graph_series_sensitivity" comment="Graph of the autosens ratio: how sensitive to insulin the user is now compared to the profile">Modificarea sensibilității</string>
+    <string name="graph_series_variable_sens">Sensibilitate variabilă</string>
+    <string name="graph_series_deviation_slope">Panta deviațiilor</string>
+    <string name="graph_series_heart_rate">Ritm cardiac</string>
+    <string name="graph_series_steps">Pași</string>
+    <string name="graph_series_activity" comment="Insulin activity: how fast insulin is working now. Not physical exercise.">Activitatea insulinei</string>
+    <string name="graph_series_predictions">Predicții</string>
     <string name="units_days">zile</string>
     <string name="units_format_days">%1$d zile</string>
     <string name="units_format_days_range">%1$d zile (%2$d - %3$d)</string>
@@ -1091,19 +1176,24 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
+    <string name="units_format_hours_double">%1$.1f h</string>
+    <string name="units_format_hours_double_range">%1$.1f h (%2$.1f - %3$.1f)</string>
     <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f U</string>
     <string name="units_format_insulin_int">%1$d U</string>
     <string name="units_format_insulin_int_range">%1$d U (%2$d - %3$d)</string>
     <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
     <string name="units_format_insulin_rate">%1$.1f U/h</string>
-    <string name="units_format_insulin_rate_range">%1$.1f U/o (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
     <string name="units_format_mgdl">%1$s mg/dL</string>
     <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
     <string name="units_format_min">%1$d min</string>
     <string name="units_format_min_range">%1$d min (%2$d - %3$d)</string>
     <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_value" comment="A percentage. %1$s=the number, already formatted, can have decimals. Example: 52.3%">%1$s%%</string>
     <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
     <string name="units_format_sec">%1$d sec</string>
     <string name="units_format_sec_range">%1$d sec (%2$d - %3$d)</string>
@@ -1119,4 +1209,5 @@
     <string name="units_sec">secunde</string>
     <string name="units_years">an</string>
     <string name="prefs_range_title">Intervalul pentru vizualizare</string>
+    <string name="secrets_not_protected">Nu a fost găsit niciun depozit de chei al sistemului pe acest calculator. Cheile care protejează setările și asocierea cu dispozitivul principal sunt păstrate în fișiere lângă date, așa că oricine obține o copie a fișierelor dumneavoastră le obține și pe ele. Pe Linux, instalați și porniți un keyring (de exemplu GNOME Keyring sau KWallet), apoi porniți din nou AAPS.</string>
 </resources>

@@ -14,23 +14,23 @@
     <string name="medtronic_pump_frequency_us_ca">EUA &amp; Canadá (916 MHz)</string>
     <string name="medtronic_pump_frequency_worldwide">Mundial (868 MHz)</string>
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_scan_scanning">A procurar</string>
+    <string name="riley_link_ble_config_scan_scanning">Procurando</string>
     <string name="riley_link_ble_config_connected_never">Nunca</string>
     <!-- RL Status Page -->
-    <string name="rileylink_status">Estado do RileyLink</string>
-    <string name="medtronic_pump_status">Estado da Bomba</string>
+    <string name="rileylink_status">Status do RileyLink</string>
+    <string name="medtronic_pump_status">Status da bomba</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Endereço:</string>
     <string name="rileylink_name">Nome:</string>
     <string name="rileylink_battery_level">Nível de Bateria:</string>
     <string name="rileylink_battery_level_value">%1$d%%</string>
-    <string name="rileylink_connection_status">Estado de Ligação:</string>
-    <string name="rileylink_connection_error">Erro de Ligação:</string>
+    <string name="rileylink_connection_status">Status da conexão:</string>
+    <string name="rileylink_connection_error">Erro de conexão:</string>
     <string name="rileylink_device">Dispositivo</string>
     <string name="rileylink_device_type">Tipo de dispositivo:</string>
-    <string name="rileylink_configured_device_model">Dispositivo modelo configurado:</string>
-    <string name="rileylink_connected_device_model">Dispositivo modelo conectado:</string>
-    <string name="rileylink_last_used_frequency">Frequência da Última Utilização:</string>
+    <string name="rileylink_configured_device_model">Modelo do dispositivo configurado:</string>
+    <string name="rileylink_connected_device_model">Modelo do dispositivo conectado:</string>
+    <string name="rileylink_last_used_frequency">Última frequência usada:</string>
     <string name="rileylink_last_device_contact">Último contato do dispositivo:</string>
     <string name="rileylink_firmware_version">Versão do firmware:</string>
     <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
@@ -39,20 +39,20 @@
     <string name="rileylink_pump_frequency">Frequência da Bomba:</string>
     <string name="rileylink_pump_frequency_value">%1$.1f MHz</string>
     <!-- RL State -->
-    <string name="rileylink_state_bt_init">A iniciar o Bluetooth...</string>
+    <string name="rileylink_state_bt_init">Inicializando o Bluetooth...</string>
     <string name="rileylink_state_bt_error">Erro de Bluetooth</string>
     <string name="rileylink_state_bt_ready">Bluetooth Pronto</string>
     <string name="rileylink_state_not_started">Não Iniciado</string>
     <string name="rileylink_state_rl_init">Inicialização do RileyLink…</string>
     <string name="rileylink_state_rl_error">Erro no RileyLink</string>
     <string name="rileylink_state_pc_tune_up">Configurando RileyLink e a Bomba</string>
-    <string name="rileylink_state_pc_error">Problema ao ligar à Bomba</string>
-    <string name="rileylink_state_connected">Ligado</string>
+    <string name="rileylink_state_pc_error">Problema ao conectar à bomba</string>
+    <string name="rileylink_state_connected">Conectado</string>
     <string name="rileylink_state_rl_ready">RileyLink pronto</string>
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Dispositivo não é RileyLink</string>
     <string name="rileylink_error_unreachable">RileyLink inacessível</string>
-    <string name="rileylink_error_bt_disabled">Bluetooth desactivado</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth desativado</string>
     <string name="rileylink_error_no_bt_adapter">Nenhum Adaptador Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">TuneUp Falhou</string>
     <string name="rileylink_error_pod_unreachable">Pod inacessível</string>

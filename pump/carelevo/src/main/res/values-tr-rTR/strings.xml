@@ -1,21 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_description">Carelevo için pompa entegrasyonu</string>
+    <string name="carelevo_alarm_channel_name">Carelevo alarmları</string>
+    <string name="carelevo_alarm_channel_description">Carelevo patch alarmları için bildirimler</string>
+    <string name="common_btn_ok">Tamam</string>
+    <string name="carelevo_bluetooth_state_key">Bluetooth durumu</string>
+    <string name="carelevo_serial_number_key">Seri No.</string>
+    <string name="carelevo_boot_date_time_key">Etkinleştirme Zamanı</string>
+    <string name="carelevo_expiration_key">Süre sonu</string>
+    <string name="carelevo_basal_rate_key">Bazal Oran</string>
+    <string name="carelevo_temp_basal_rate_key">Geçici bazal oranı</string>
+    <string name="carelevo_insulin_remain_key">Kalan İnsülin</string>
+    <string name="carelevo_running_remain_time">Kalan Patch Süresi</string>
+    <string name="carelevo_total_insulin_key">İletilen toplam insülin</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%1$d sa %2$d dk</string>
+    <string name="common_label_unit_value_minute">%d dk</string>
+    <string name="common_label_unit_value_duration_hour">%d sa</string>
+    <string name="common_label_unit_value_dose_with_space">%s Ü</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f Ü/sa</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">İnfüzyona devam etmek istiyor musunuz?</string>
+    <string name="carelevo_pump_resume_description">Onayla\'ya bastığınızda infüzyon devam eder.</string>
+    <string name="carelevo_pump_stop_duration_title">Lütfen infüzyonun duraklatılacağı süreyi ayarlayın.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 dakika</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 saat</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 saat 30 dakika</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 saat</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 saat 30 dakika</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 saat</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 saat 30 dakika</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 saat</string>
+    <string name="common_unit_value_day_hour_min">%1$d gün %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">%1$d dk %2$02d sn kaldı</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">İnsülin Rehberi</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Patch\'i Devre Dışı Bırak</string>
+    <string name="carelevo_btn_input_search_patch">Patch Ara</string>
+    <string name="carelevo_btn_retry">Tekrar dene</string>
+    <string name="carelevo_btn_next">İleri</string>
+    <string name="carelevo_btn_safety_check">Güvenlik Kontrolü</string>
+    <string name="carelevo_btn_cancel">Vazgeç</string>
+    <string name="carelevo_btn_confirm">Onayla</string>
+    <string name="carelevo_btn_research">Yeniden Tara</string>
+    <string name="carelevo_btn_needle_insert_check">Yerleştirmeyi Onayla</string>
+    <string name="carelevo_state_none_value">Aktif Patch yok</string>
+    <string name="carelevo_state_disconnected_value">Bağlantı kesildi</string>
+    <string name="carelevo_state_connected_value">Bağlandı</string>
+    <string name="carelevo_overview_connect_btn_label">Patch\'i Etkinleştir</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Patch\'i Çıkar</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">İnfüzyonu Askıya Al</string>
+    <string name="carelevo_overview_pump_resume_btn_label">İnfüzyona Devam Et</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">Doldurulan miktarı seçin.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Aralık: %1$d ~ %2$d Ü</string>
+    <string name="carelevo_insulin_refill_step1">1. Patch blister ambalajının arkasındaki kâğıdı soyun.</string>
+    <string name="carelevo_insulin_refill_step2">2. İnsülin flakonunun lastik kapağını alkollü pamukla dezenfekte edin.</string>
+    <string name="carelevo_insulin_refill_step3">3. İnsülin şırıngasının iğne koruma kapağını düz bir şekilde çekerek çıkarın.</string>
+    <string name="carelevo_insulin_refill_step4">4. Pistonu geri çekerek şırıngaya yaklaşık 2 mL hava doldurun.</string>
+    <string name="carelevo_insulin_refill_step5">5. Hava dolu şırıngayı insülin flakonuna batırın ve havayı flakona verin.</string>
+    <string name="carelevo_insulin_refill_step6">6. Şırınga takılıyken flakonu ve şırıngayı birlikte ters çevirin ve basınçtan yararlanarak şırıngaya yaklaşık 2 mL insülin çekin.</string>
+    <string name="carelevo_insulin_refill_step7">7. Şırınga iğnesini Patch\'in insülin doldurma girişine (①) dik olarak, dibe ulaşana kadar batırın. Pistonu sonuna kadar yukarı çekin, sonra bırakın. Şırıngayı doldurma girişinden çıkarın.</string>
+    <string name="carelevo_insulin_refill_step8">8. Şırıngayı dik tutun ve tüm hava kabarcıklarını üstte toplamak için yanına hafifçe vurun.</string>
+    <string name="carelevo_insulin_refill_step9">9. İğneyi tekrar insülin flakonuna batırın, tüm havayı flakona verin ve ardından Patch\'in kullanım süresi boyunca kullanacağınız insülin miktarını çekin.</string>
+    <string name="carelevo_insulin_refill_step10">10. Şırıngayı flakondan çıkarın. Hava kabarcığı varsa şırıngayı dik tutun, kabarcıkları üste toplamak için yanına vurun ve tüm havayı şırıngadan çıkarın.</string>
+    <string name="carelevo_insulin_refill_step11">11. İnsülin dozunu tam olarak ayarlamak için pistonun üst kısmını ölçek çizgisiyle hizalayın.</string>
+    <string name="carelevo_insulin_refill_step12">12. İğneyi Patch\'in insülin doldurma girişine (①) dik olarak, dibe ulaşana kadar batırın ve tüm insülini Patch\'e vermek için pistonu yavaşça itin.</string>
+    <string name="carelevo_connect_prepare_title">Patch Başlatıldı</string>
+    <string name="carelevo_connect_patch_title">Patch\'i Bağlayın</string>
+    <string name="carelevo_connect_safety_check_title">Güvenlik Kontrolü</string>
+    <string name="carelevo_connect_patch_attach_title">Patch\'i Yapıştırın</string>
+    <string name="carelevo_connect_needle_check_title">İğneyi Yerleştirin</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Patch Bilgi Alarmı</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">Düşük İnsülin Bildirimi Ayarı</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">Patch Kullanım Bildirimi Ayarı</string>
+    <string name="carelevo_title_fill_insulin">Patch\'i İnsülinle Doldurun</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Kullanım süresini (en fazla 168 saat) göz önünde bulundurarak Patch\'i insülinle doldurun (%1$d–%2$d Ü). Doldurulan insülin için [Doldurma Miktarı] alanına dokunun.</string>
+    <string name="carelevo_patch_step_1">ADIM 1.</string>
+    <string name="carelevo_patch_step_2">ADIM 2.</string>
+    <string name="carelevo_patch_step_3">ADIM 3.</string>
+    <string name="carelevo_patch_connect_step_1_title">İğne Kapağını Çıkarın</string>
+    <string name="carelevo_patch_connect_step_1_desc">Patch\'i blister ambalajdan alın ve iğne kapağını çıkarın.</string>
+    <string name="carelevo_patch_connect_step_2_title">Açın ve Bağlanın</string>
+    <string name="carelevo_patch_connect_step_2_desc">Güç düğmesine 1 saniyeden uzun basın. Bip sesinden sonra aşağıdaki [Patch Ara] düğmesine dokunun.</string>
+    <string name="carelevo_patch_safety_check_start_title">Güvenlik Kontrolü</string>
+    <string name="carelevo_patch_safety_check_end_title">Güvenlik Kontrolü Tamamlandı</string>
+    <string name="carelevo_patch_safety_check_start_desc">Patch başarıyla bağlandı.\nLütfen [Güvenlik Kontrolü] düğmesine basın.</string>
+    <string name="carelevo_patch_safety_check_progress_desc">Güvenlik kontrolü yapılıyor.</string>
+    <string name="carelevo_patch_safety_check_end_desc">Güvenlik kontrolü tamamlandı.\nLütfen İleri düğmesine basın.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">Lütfen iğne ucunda insülin damlası oluşup oluşmadığını kontrol edin.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">İnsülin damlası görünmüyorsa lütfen [Tekrar dene] düğmesine basın.</string>
+    <string name="carelevo_patch_attach_step1_title">Patch Bölgesini Dezenfekte Edin</string>
+    <string name="carelevo_patch_attach_step1_desc">Alkollü pamukla iyice temizleyin.</string>
+    <string name="carelevo_patch_attach_step2_title">Koruyucu Bandı Çıkarın</string>
+    <string name="carelevo_patch_attach_step2_desc">Patch\'i blister ambalajdan alın ve iğne kapağını çıkarın.</string>
+    <string name="carelevo_patch_attach_step3_title">Patch\'i Yapıştırın</string>
+    <string name="carelevo_patch_attach_step3_desc">Patch\'i işaretli nokta yukarı bakacak şekilde cildinize yapıştırın.</string>
+    <string name="carelevo_patch_attach_step4_desc">Patch\'i yapıştırdıktan sonra İleri\'ye basın.</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">Emniyet Kapağını Çıkarın</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Emniyet kapağını ok yönünde çevirin ve çıkarın.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">İğneyi Yerleştirin</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Aplikatörün basma düğmesine sonuna kadar bastırın. İğne başarıyla yerleştirildiğinde bip sesi duyulur.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">10 saniye basılı tutun.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">İğne yerleştirme için %d deneme hakkı kaldı.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Patch devre dışı bırakılıp yeni Patch başlatılsın mı?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">[Tamam] düğmesine basarsanız insülin iletimi durur.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">İletime başlamadan bitirilsin mi?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">[Tamam] düğmesine basarsanız bu Patch kullanılamaz hale gelir.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">Patch etkinleştirmesi iptal edilsin mi?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">[Tamam] düğmesine basarsanız girdiğiniz bilgiler silinir.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">Aşağıda bulunan Patch doğruysa lütfen Onayla düğmesine dokunun.</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">İğne yerleştirildi, aplikatörü çıkarın</string>
+    <string name="carelevo_dialog_connect_detached">Aplikatör Çıkarıldı</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">Aplikatörü Patch\'ten ayırmak için iki yanındaki tutamaçlara bastırın,\nardından `Aplikatör Çıkarıldı` düğmesine basın. İnsülin iletimi başlayacaktır.</string>
     <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth etkin değil. Lütfen kontrol edin.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">Bağlı Patch yok.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">Patch henüz bağlı değil. Lütfen biraz sonra tekrar deneyin.</string>
+    <string name="carelevo_toast_msg_scan_failed">Tarama başarısız oldu. Lütfen tekrar deneyin.</string>
+    <string name="carelevo_toast_msg_patch_not_found">Patch bulunamadı. Lütfen tekrar deneyin.</string>
+    <string name="carelevo_toast_msg_connect_failed">Patch bağlantısı başarısız oldu. Lütfen tekrar deneyin.</string>
     <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">Profil ayarlanmamış.</string>
     <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">İğne kontrolü başarısız oldu.</string>
     <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">Patch çıkarılamadı. Lütfen tekrar deneyin.</string>
     <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_failed">Bazal iletim isteği başarısız oldu. Lütfen tekrar deneyin.</string>
     <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">İletime devam edilemedi. Lütfen tekrar deneyin.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">İletim askıya alınamadı. Lütfen tekrar deneyin.</string>
     <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">Güvenlik kontrolü başarısız oldu.</string>
     <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Düşük insülin</string>
+    <string name="alarm_feat_title_warning_expired_patch">Patch\'in Süresi Doldu</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">Yüksek/Düşük Sıcaklık</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">Tıkanma</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">İğne Yerleştirme Hatası</string>
     <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_expired_patch_phase2">Patch Çalışma Ömrü Doldu</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase1">Patch\'in Süresi Yakında Dolacak</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">Yüksek/Düşük Sıcaklık</string>
+    <string name="alarm_feat_title_alert_not_used_app">Otomatik kapanma</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">BLE bağlı değil</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">Patch Etkinleştirme Tamamlanmadı</string>
+    <string name="alarm_feat_title_alert_resume_infusion">İnsülini Başlat</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">Bluetooth\'u Açın</string>
     <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_low_insulin">Düşük insülin</string>
+    <string name="alarm_feat_title_notice_expired_patch">Patch Kullanım Süresi Bildirimi</string>
+    <string name="alarm_feat_title_notice_check_patch">Patch Kontrol Bildirimi</string>
+    <string name="alarm_feat_title_notice_change_time_zone">Saat Dilimi Değişikliği</string>
+    <string name="alarm_feat_title_notice_check_bg">Kan Şekerini Kontrol Edin</string>
     <string name="alarm_feat_title_notice_lgs_started">LGS başladı</string>
-    <string name="alarm_feat_title_notice_lgs_ended">LGS Sonu</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS Bitti</string>
     <string name="alarm_feat_title_notice_lgs_error">LGS Mevcut Değil</string>
+    <string name="alarm_feat_title_notice_unknown">Patch hatası</string>
+    <string name="alarm_feat_desc_unknown">Beklenmeyen patch hatası.</string>
     <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">Patch\'i Devre Dışı Bırak</string>
+    <string name="alarm_feat_btn_patch_force_discard">Patch\'i Çıkar</string>
+    <string name="alarm_feat_btn_resume_infusion">İnsülini Başlat</string>
     <!-- General Messages -->
+    <string name="alarm_feat_msg_check_patch_connect">Lütfen patch bağlantısını kontrol edin.</string>
+    <string name="carelevo_bolus_rejected_exceed_limit" comment="%1$s=bolus the patch can still deliver now, with unit (e.g. 2.80 U)">Bolus verilemiyor. Verilebilecek bolus: %1$s</string>
+    <string name="carelevo_bolus_rejected_exceed_limit_none">Bolus verilemiyor. Yeterli insülin kalmadı.</string>
     <!--    notification -->
+    <string name="alarm_notification_desc_warning_low_insulin">10 Ü\'den az insülin kaldı; insülin iletimi durduruldu. [Patch\'i Devre Dışı Bırak] butonuna dokunun ve patch\'i şimdi değiştirin.</string>
+    <string name="alarm_notification_desc_warning_expired_patch">Patch\'in süresi doldu; insülin iletimi durduruldu. [Patch\'i Devre Dışı Bırak] butonuna dokunun ve patch\'i şimdi değiştirin.</string>
+    <string name="alarm_notification_desc_warning_low_battery">Düşük pil; insülin iletimi durduruldu. [Patch\'i Çıkar] butonuna dokunun ve patch\'i şimdi değiştirin.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">İnsülin iletimi durduruldu. Hemen uygun sıcaklıkta bir ortama geçin (40℉ ~ 99℉).</string>
+    <string name="alarm_notification_desc_warning_not_used_app">İnsülin iletimi durduruldu. [İnsülini Başlat] butonuna dokunun ve bazal iletimi yeniden başlatın.</string>
+    <string name="alarm_notification_desc_warning_incomplete_patch_setting">Patch uygulama süresi doldu. [Patch\'i Devre Dışı Bırak] butonuna dokunun ve patch\'i şimdi değiştirin.</string>
+    <string name="alarm_notification_desc_warning_failed_safety_check">Tanılama başarısız oldu. [Patch\'i Devre Dışı Bırak] butonuna dokunun ve patch\'i şimdi değiştirin.</string>
+    <string name="alarm_notification_desc_warning_patch_error">Beklenmeyen bir hata nedeniyle insülin iletimi durduruldu. [Patch\'i Devre Dışı Bırak] butonuna dokunun ve patch\'i şimdi değiştirin.</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">Tıkanma nedeniyle insülin iletimi durduruldu. [Patch\'i Devre Dışı Bırak] butonuna dokunun ve patch\'i şimdi değiştirin.</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">İğne yerleştirilemedi. [Patch\'i Devre Dışı Bırak] butonuna dokunun ve patch\'i şimdi değiştirin.</string>
+    <string name="alarm_notification_desc_alert_low_insulin">%s Ü\'den az insülin kaldı. Patch\'i değiştirmeye hazırlanın.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase2">Patch\'in süresi doldu. Patch\'i şimdi değiştirin.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase1">Patch\'in süresi yakında dolacak. Patch\'i şimdi değiştirin.</string>
+    <string name="alarm_notification_desc_alert_low_battery">Pil zayıf. Patch\'i değiştirmeye hazırlanın.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">Aşırı sıcaklık nedeniyle insülin iletimi duraklatıldı. Devam etmek için 40℉–99℉ arası bir ortama geçin.</string>
+    <string name="alarm_notification_desc_alert_not_used_app">Lütfen [Tamam] butonuna dokunun. Yok sayılırsa kritik bir alarma dönüşür ve insülin iletimi durdurulur.</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">Patch etkinleştirmeyi tamamlamak için [Tamam] butonuna dokunun.</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">İnsülin duraklatma sona erdi. Başlatmak için [İnsülini Başlat] butonuna dokunun.</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">Patch\'i kullanmak için Bluetooth gereklidir. [Tamam] butonuna dokunun ve Bluetooth\'u açın.</string>
+    <string name="alarm_notification_desc_notice_low_insulin">%s Ü\'den az insülin kaldı. Patch\'i değiştirmeye hazırlanın.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">Patch kullanım süresi %1$s gün %2$s saat. Kullanırken bunu aklınızda tutun.</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS başladı.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS, patch/CGM bağlantısının kesilmesi nedeniyle sona erdi.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS verilen ara nedeniyle sona erdi.</string>
@@ -24,4 +198,8 @@
     <string name="alarm_notification_desc_notice_lgs_ended_high_bg">CGM seviyesi belirlenen eşik değerini aştığı için LGS sona erdi.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS bilinmeyen bir nedenle sona erdi.</string>
     <string name="alarm_notification_desc_notice_lgs_error">Lütfen patch ve CGM bağlantısını kontrol edin.</string>
+    <string name="carelevo_profile_update_skip_comment">Atlandı: güncelleme çok erken.</string>
+    <string name="carelevo_bolus_stop_not_confirmed">Patch durdurmayı onaylamadı. Bolusun bitmesi bekleniyor…</string>
+    <string name="carelevo_bolus_rejected_missed_bolus_recorded">Kaydedilmemiş bir bolus şimdi eklendi. AİNS\'i kontrol edin, sonra tekrar deneyin.</string>
+    <string name="carelevo_bolus_stop_not_confirmed_full" comment="%1$s=insulin asked for, with unit. Example: The patch did not confirm the stop. The full bolus of 2.00 U is recorded.">Patch durdurmayı onaylamadı. %1$s bolusun tamamı kaydedildi.</string>
 </resources>

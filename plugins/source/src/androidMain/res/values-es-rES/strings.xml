@@ -45,11 +45,11 @@
     <string name="permission_notification_listener_title">Acceso a notificaciones</string>
     <string name="permission_notification_listener_description">Requerido para leer los valores de glucosa de las notificaciones de la aplicación MCG</string>
     <string name="aidex">Aplicación MicroTech MCG</string>
-    <string name="description_source_aidex">Reciba valores de MCG de LinX, LinX Vista, Equil G. Smart 2, Diaexpert 2, etc.</string>
-    <string name="aidex_sensor_expired">Sensor caducado. Por favor, reemplácelo por un nuevo sensor</string>
-    <string name="aidex_sensor_error">Error del sensor. Por favor, compruebe el estado del sensor</string>
-    <string name="aidex_sensor_stabilizing">El sensor se está estabilizando. Por favor, espere…</string>
-    <string name="aidex_sensor_replace">Reemplazo de sensor requerido. Por favor, cámbielo por un nuevo sensor lo antes posible</string>
-    <string name="aidex_signal_lost">Señal del sensor perdida. Por favor, compruebe la conexión</string>
+    <string name="description_source_aidex">Recibe valores de MCG de LinX, LinX Vista, Equil G. Smart 2, Diaexpert 2, etc.</string>
+    <string name="aidex_sensor_expired">Sensor caducado. Por favor, reemplázalo por un nuevo sensor</string>
+    <string name="aidex_sensor_error">Error del sensor. Por favor, comprueba el estado del sensor</string>
+    <string name="aidex_sensor_stabilizing">El sensor se está estabilizando. Por favor, espera…</string>
+    <string name="aidex_sensor_replace">Reemplazo de sensor requerido. Por favor, cámbialo por un nuevo sensor lo antes posible</string>
+    <string name="aidex_signal_lost">Señal del sensor perdida. Por favor, comprueba la conexión</string>
     <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">lectura duplicada</string>
 </resources>

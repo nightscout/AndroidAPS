@@ -8,7 +8,7 @@
     <string name="medtronic_pump_frequency">Pompa Frekansı</string>
     <string name="medtronic_pump_bolus_delay">Bolus göndermeden önceki bekleme süresi (sn)</string>
     <string name="medtronic_pump_max_bolus">Pompadaki Maks Bolus (Ü)</string>
-    <string name="medtronic_pump_max_basal">Pompadaki Maks Bazal (Ü/s)</string>
+    <string name="medtronic_pump_max_basal">Pompadaki Maks Bazal (Ü/sa)</string>
     <string name="medtronic_custom_action_wake_and_tune">Uyan ve Ayarla</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bolus Bloğunu Temizle</string>
     <string name="medtronic_custom_action_reset_rileylink">Reset RileyLink</string>
@@ -39,7 +39,7 @@
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink Pili</string>
     <!-- MDT Errors -->
-    <string name="medtronic_error_serial_invalid">Seri no # geçersiz.</string>
+    <string name="medtronic_error_serial_invalid">Seri numarası geçersiz.</string>
     <string name="medtronic_error_pump_type_not_set">Pompa Tipi ayarlanmadı.</string>
     <string name="medtronic_error_pump_type_invalid">Pompa Tipi desteklenmiyor.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink Adresi geçersiz.</string>
@@ -49,7 +49,7 @@
     <string name="medtronic_error_pump_wrong_tbr_type_set">Pompada yanlış TBR (geçici bazal oranı) tipi ayarlanmış (Mutlak olmalıdır).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Pompada Yanlış Maksimum Bolus ayarlanmış (%1$.2f olmalıdır).</string>
     <string name="medtronic_error_pump_wrong_max_basal_set">Pompada Yanlış Maksimum Bazal ayarlanmış (%1$.2f olmalıdır).</string>
-    <string name="medtronic_error_operation_not_possible_no_configuration">Çalıştırmak mümkün değil.\n\n Bu işlemi kullanmadan önce Medtronic Pompayı yapılandırmanız gerekir.</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">İşlem yapılamıyor.\n\n Bu işlemi kullanmadan önce Medtronic Pompayı yapılandırmanız gerekir.</string>
     <string name="medtronic_error_pump_24h_time_change_requested">24 saatten fazla zaman değişikliği istendi.</string>
     <!-- MDT History -->
     <!--    <string name="medtronic_history_group_basal">Basals</string>-->
@@ -62,7 +62,7 @@
     <string name="medtronic_cmd_cancel_bolus_not_supported">Pompa üzerinde ayarlandıktan sonra Bolus\'u iptal ettiniz. Medtronic Pompa iptali desteklemediğinden, elle iptal etmeniz gerekecektir. Pompayı Askıya Al moduna getirin ve ardından Devam et\'e basın. (yine de iptal etmek istiyorsanız). Uygulama, bir sonraki güncellemede (5 dakikadan daha kısa sürede) değişiklikleri alacaktır.</string>
     <string name="medtronic_cmd_cant_read_tbr">Mevcut TBR (geçici bazal oranı) okunamadı.</string>
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Mevcut GBO iptal edilemedi. İşlem durduruldu.</string>
-    <string name="medtronic_cmd_set_profile_pattern_overflow">Profil kümesi başarısız oldu, çünkü aşağıdaki şablonlar çok büyük bazal orana sahip: %1$s</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">Profil ayarlanamadı, çünkü şu şablonların bazal oranı çok yüksek: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolus gönderilemedi.</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolus gönderilemedi, çünkü mevcut insülin miktarı (%1$.2f) gereken bolustan (%2$.2f) az.</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">TBR (geçici bazal oranı) ayarlanamadı.</string>
@@ -87,8 +87,8 @@
     <string name="ago" comment="Time suffix, e.g. '5 min ago'">önce</string>
     <string name="medtronic_notification_check_time_date">Pompa saati güncellemesi gerekli</string>
     <!-- combo_notification_check_time_date -->
-    <string name="set_neutral_temps_title">Sık kullanılan Geçici Bazalları ayarla</string>
-    <string name="set_neutral_temps_summary">Etkinleştirilirse, her saatin sonunda geçici bazali iptal eder. Bu yöntem, bazı pompaların saatte bip sesini/titremesini durdurmaya yardımcı olabilir.</string>
+    <string name="set_neutral_temps_title">Nötr geçici bazalları ayarla</string>
+    <string name="set_neutral_temps_summary">Etkinleştirilirse, her saatin sonundan önce geçici bazalı iptal eder. Bu yöntem, bazı pompaların saat başında bip sesi vermesini/titremesini önlemeye yardımcı olabilir.</string>
     <string name="invalid_history_data">Geçersiz pompa geçmişi verisi tespit edildi. Yeni hata bildirim konusu açın ve günlükleri gönderin.</string>
     <string name="riley_statistics">RL İstatistikleri</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Yenileme tıklandı</string>

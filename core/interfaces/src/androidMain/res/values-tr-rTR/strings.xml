@@ -3,9 +3,9 @@
     <!--    Dialogs-->
     <string name="confirmation">Onay</string>
     <!--    Events-->
-    <string name="bolus_delivering">%1$.2f Ü gönderiliyor</string>
-    <string name="bolus_delivered_so_far">%1$.2f Ü / %2$.2f Ü gönderildi</string>
-    <string name="bolus_delivered_successfully">%1$.2f Ü bolus başarıyla gönderildi</string>
+    <string name="bolus_delivering">%1$.2f Ü iletiliyor</string>
+    <string name="bolus_delivered_so_far">%1$.2f Ü / %2$.2f Ü iletildi</string>
+    <string name="bolus_delivered_successfully">%1$.2f Ü bolus başarıyla iletildi</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pompa sürücüsü değişti.</string>
     <!--    DateUtil-->
@@ -14,7 +14,7 @@
     <string name="min_plus">(+%1$ddk)</string>
     <string name="sec_plus">(+%1$dsn)</string>
     <string name="minago_long">%1$d dakika önce</string>
-    <string name="hoursago">%1$.1fs önce</string>
+    <string name="hoursago">%1$.1f sa önce</string>
     <string name="days_ago">%1$.1f gün önce</string>
     <string name="days_ago_round">%1$.0f gün önce</string>
     <plurals name="plurals_day_hour_ago">
@@ -32,7 +32,7 @@
     <string name="seconds_ago">saniye önce</string>
     <string name="in_days">%1$.0f gün içinde</string>
     <string name="in_days_round">%1$.0f gün içinde</string>
-    <string name="shorthour">s</string>
+    <string name="shorthour">sa</string>
     <string name="days">gün</string>
     <string name="hours">saat</string>
     <string name="unit_second">saniye</string>
@@ -45,10 +45,10 @@
     <string name="unit_hours">saat</string>
     <string name="unit_days">gün</string>
     <string name="unit_weeks">hafta</string>
-    <string name="shortminute">d</string>
-    <string name="time_remaining_h_m">%1$ds %2$ddk kaldı</string>
+    <string name="shortminute">dk</string>
+    <string name="time_remaining_h_m">%1$dsa %2$ddk kaldı</string>
     <string name="time_remaining_m">%1$ddk kaldı</string>
-    <string name="later_today">Bugünden sonra</string>
+    <string name="later_today">Bugün daha sonra</string>
     <string name="tomorrow">Yarın</string>
     <string name="today">Bugün</string>
     <string name="yesterday">Dün</string>
@@ -61,15 +61,15 @@
     <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
     <string name="time_value_with_unit" comment="%1$s=a number, %2$s=the time unit, like minutes or days. Example: 5 minutes">%1$s %2$s</string>
     <!-- Rx -->
-    <string name="connecting_for">%1$d bağlanıyor</string>
-    <string name="handshaking">Bağlandı</string>
+    <string name="connecting_for">%1$d sn\'dir bağlanıyor</string>
+    <string name="handshaking">El sıkışılıyor</string>
     <string name="connected">Bağlandı</string>
     <string name="authorized">Yetkili</string>
     <string name="disconnecting">Bağlantı kesiliyor</string>
     <string name="waiting_for_disconnection">Bağlantının kesilmesi bekleniyor</string>
     <!-- Custom Watchface -->
     <string name="metadata_label_watchface_created_at">Oluşturuldu: %1$s</string>
-    <string name="metadata_label_watchface_author">Yetki: %1$s</string>
+    <string name="metadata_label_watchface_author">Yazar: %1$s</string>
     <string name="metadata_label_watchface_name">İsim: %1$s</string>
     <string name="metadata_wear_import_filename">Dosya adı: %1$s</string>
     <string name="metadata_label_plugin_version">Eklenti sürümü: %1$s</string>
@@ -87,25 +87,25 @@
     <string name="pref_show_rig_battery">Teçhizat Pilini Göster</string>
     <string name="pref_show_basal_rate">Bazal Oranı Göster</string>
     <string name="pref_show_loop_status">Döngü Durumunu Göster</string>
-    <string name="pref_show_bg">KŞ\'ni göster</string>
+    <string name="pref_show_bg">KŞ\'yi göster</string>
     <string name="pref_show_bgi">KŞ Etkisi Göster</string>
-    <string name="pref_show_direction_arrow">Ok yönünü Göster</string>
-    <string name="pref_show_ago">Önce Göster</string>
-    <string name="pref_show_week_number">Hafta sayısını göster</string>
+    <string name="pref_show_direction_arrow">Yön okunu göster</string>
+    <string name="pref_show_ago">Geçen süreyi göster</string>
+    <string name="pref_show_week_number">Hafta numarasını göster</string>
     <string name="pref_show_date">Tarihi göster</string>
     <string name="pref_show_seconds">Saniyeyi göster</string>
-    <string name="pref_show_complication1">Komplikasyon 1</string>
-    <string name="pref_show_complication2">Komplikasyon 2</string>
-    <string name="pref_show_complication3">Komplikasyon 3</string>
-    <string name="pref_show_complication4">Komplikasyon 4</string>
-    <string name="pref_show_complication5">Komplikasyon 5</string>
+    <string name="pref_show_complication1">Komplikasyon 1\'i göster</string>
+    <string name="pref_show_complication2">Komplikasyon 2\'yi göster</string>
+    <string name="pref_show_complication3">Komplikasyon 3\'ü göster</string>
+    <string name="pref_show_complication4">Komplikasyon 4\'ü göster</string>
+    <string name="pref_show_complication5">Komplikasyon 5\'i göster</string>
     <string name="default_custom_watchface_comment">Varsayılan saat arayüzü; bir şablon oluşturmak için SAAT ARAYÜZÜNÜ DIŞA AKTAR butonuna tıklayabilirsiniz</string>
     <string name="default_custom_watchface_external_comment">Takipçiler için harici görünümler içeren varsayılan saat arayüzü, bir şablon oluşturmak için SAAT ARAYÜZÜNÜ DIŞA AKTAR düğmesine tıklayabilirsiniz</string>
     <string name="wear_default_watchface">Varsayılan saat arayüzü</string>
-    <string name="wear_more_watchfaces">Diğer saatarayüzleri</string>
-    <string name="temp_basal_absolute_rate">%1$.2f Ü/s @%2$s %3$d/%4$d\'</string>
+    <string name="wear_more_watchfaces">Diğer saat arayüzleri</string>
+    <string name="temp_basal_absolute_rate">%1$.2f Ü/sa @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
-    <string name="temp_basal_extended_bolus">E %1$.2f Ü/s @%2$s %3$d/%4$d dk</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f Ü/sa @%2$s %3$d/%4$d dk</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_title">Bluetooth</string>
     <string name="permission_bluetooth_description">Uygulamanın pompa ile iletişim kurabilmesi için bluetooth iznine ihtiyacı var</string>
@@ -117,7 +117,7 @@
     <string name="ultra_rapid_oref">Fiasp</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
-    <string name="insulin_peak_time">Tepe zamanı [min]</string>
+    <string name="insulin_peak_time">Tepe zamanı [dk]</string>
     <!-- Concentration -->
     <string name="u10">U10</string>
     <string name="u20">U20</string>
@@ -134,31 +134,31 @@
     <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="carbs">Karbonhidrat</string>
     <string name="alarminxmin">Alarmı %1$d dakika içinde çalıştır</string>
-    <string name="pumpsuspended">Pompa Durduruldu</string>
-    <string name="loopsuspended">Döngü duraklatıldı</string>
+    <string name="pumpsuspended">Pompa askıya alındı</string>
+    <string name="loopsuspended">Döngü askıya alındı</string>
     <string name="pump_disconnected">Pompa bağlantısı kesildi</string>
     <string name="basalprofilenotaligned">Bazal değerler saatlerle uyumlu değil: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Desteklenen minimum değerle değiştirilen bazal değer: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Bazal değeri maksimum desteklenen değerle değiştirilir: %1$s</string>
-    <string name="profile_ins_units_per_hour">Ü/s</string>
+    <string name="minimalbasalvaluereplaced">Bazal değer, desteklenen minimum değerle değiştirildi: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Bazal değer, desteklenen maksimum değerle değiştirildi: %1$s</string>
+    <string name="profile_ins_units_per_hour">Ü/sa</string>
     <string name="profile_carbs_per_unit">g/Ü</string>
     <string name="mins">%1$d dk</string>
     <string name="record">Kayıt</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">YAYMA KARBONHİDRAT</string>
-    <string name="profile_low_target">Düşük hedef profili</string>
-    <string name="profile_high_target">Yüksek hedef profili</string>
-    <string name="profile_dia">Profil DIA değeri</string>
+    <string name="profile_low_target">Profil düşük hedefi</string>
+    <string name="profile_high_target">Profil yüksek hedefi</string>
+    <string name="profile_dia">Profil İES değeri</string>
     <string name="profile_sensitivity_value">Profil duyarlılık değeri</string>
     <string name="profile_carbs_ratio_value">Profil karbonhidrat oranı değeri</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f sınırların dışında</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f sert sınırların dışında</string>
     <string name="basal_value">Bazal değer</string>
     <string name="cobvsiob">AKRB vs AİNS</string>
-    <string name="slowabsorptiondetected_plain">!!!!! Yavaş karbonhidrat emilimi tespit edildi: %1$d% oranında. Hesaplamanızı tekrar kontrol edin. AKRB fazla tahmin edilmiş olabilir, bu nedenle daha fazla insülin verilebilir !!!!!</string>
-    <string name="bolus_constraint_applied_warn">Bolus kısıtlaması uygulandı: %1$.2f Ü ile %2$.2f Ü</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Yavaş karbonhidrat emilimi tespit edildi: zamanın %%%1$d kadarında. Hesaplamanızı tekrar kontrol edin. AKRB fazla tahmin edilebilir, bu nedenle daha fazla insülin verilebilir !!!!!</string>
+    <string name="bolus_constraint_applied_warn">Bolus kısıtlaması uygulandı: %1$.2f Ü yerine %2$.2f Ü</string>
     <string name="bolus_recorded_only">Bolus yalnızca kaydedilecektir (pompa ile iletilmez)</string>
     <string name="advisoralarm">Yemek zamanı alarmı çalıştır</string>
-    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eKarb %1$d g / %2$d s (+%3$d dk)</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">yKarb %1$d g / %2$d sa (+%3$d dk)</string>
     <string name="format_insulin_units">%1$.2f Ü</string>
     <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
     <string name="carbs_with_time_later" comment="Carbs eaten later. %1$s=carbs with unit, %2$s=minutes from now, with unit. Example: 20 g (+15 min)">%1$s (+%2$s)</string>

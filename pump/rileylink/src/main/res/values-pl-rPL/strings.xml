@@ -51,7 +51,7 @@
     <string name="rileylink_state_rl_ready">RileyLink gotowy</string>
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Urządzenie to nie RileyLink</string>
-    <string name="rileylink_error_unreachable">RileyLink nie osiągalny</string>
+    <string name="rileylink_error_unreachable">RileyLink nieosiągalny</string>
     <string name="rileylink_error_bt_disabled">Bluetooth wyłączony</string>
     <string name="rileylink_error_no_bt_adapter">Brak modułu Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">Dostrojenie nie powiodło się</string>

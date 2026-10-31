@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Dash - Description -->
-    <string name="omnipod_dash_pump_description">Integração para a Omnipod Dash (o novo modelo, habilitado para o Bluetooth com uma proteção de agulha azul).</string>
+    <string name="omnipod_dash_pump_description">Integração para a Omnipod Dash (o modelo novo, com Bluetooth e uma proteção de agulha azul).</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_address">Endereço Bluetooth</string>
+    <string name="omnipod_dash_overview_firmware_version_value">Firmware %1$s / Bluetooth %2$s</string>
     <string name="omnipod_dash_overview_bluetooth_connection_quality">Qualidade da Ligação</string>
-    <string name="omnipod_dash_overview_delivery_status">Status da entrega</string>
+    <string name="omnipod_dash_overview_delivery_status">Estado da administração</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
-    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Preencha um novo Pod
-        com insulina suficiente para 3 dias.\n\nEscute dois beeps do Pod durante o processo de enchimento. Estes indicam que a quantidade mínima de 85U foi inserida. Certifique-se de esvaziar completamente a seringa de enchimento, mesmo depois de ouvir os dois beeps.\n\nDepois de preencher o Pod, por favor, pressione <b>Seguinte</b>\n\n<b>Nota:</b> não remova a tampa da agulha do Pod neste momento.\n<b>Nota:</b> por favor, coloque o RileyLink em posição vertical e coloque o Pod a alguns centímetros dele.</string>
-    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Tentando emparelhar com o novo Pod e prima-o.\n\nQuando o processo de inicialização for concluído com sucesso, pode pressionar <b>Next</b>.</string>
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Encha um novo Pod com insulina suficiente para 3 dias.\n\nOiça dois beeps do Pod durante o enchimento. Estes indicam que a quantidade mínima de 80U foi inserida. Esvazie completamente a seringa de enchimento, mesmo depois de ouvir os dois beeps.\n\nDepois de encher o Pod, prima <b>Seguinte</b>.\n\n<b>Nota:</b> não retire ainda a tampa da agulha do Pod.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">A tentar emparelhar com o novo Pod e purgá-lo.\n\nQuando o processo de inicialização for concluído com sucesso, pode pressionar <b>Seguinte</b>.</string>
     <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Falha ao ligar</string>
+    <string name="omnipod_dash_found_too_many_pods">Foram encontrados demasiados Pods</string>
+    <string name="omnipod_dash_scan_failed">A pesquisa falhou</string>
     <string name="omnipod_dash_generic_error">Erro genérico: %1$s</string>
+    <string name="omnipod_dash_connection_lost">Ligação perdida</string>
     <string name="omnipod_common_alert_delivery_suspended">A entrega de insulina está suspensa</string>
     <string name="omnipod_dash_bolus_already_in_progress">Outro bólus está a ser administrado</string>
     <string name="omnipod_dash_not_enough_insulin">Não há insulina suficiente no reservatório</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Comando não confirmado</string>
     <string name="requested_by_user" comment="26 characters max for translation">Solicitado pelo utilizador</string>
     <string name="suspend_delivery_is_unconfirmed">A suspensão da administração não está confirmada! Por favor, atualize manualmente o estado do Pod na guia Omnipod e retome a administração, se necessário.</string>
-    <string name="insulin_delivery_suspended">Entrega de insulina suspensa</string>
+    <string name="insulin_delivery_suspended">Administração de insulina suspensa</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">O fuso horário do Pod é diferente do fuso horário do telefone. A taxa basal está incorreta. Troque de perfil para corrigir</string>
+    <string name="failed_to_set_the_new_basal_profile">Falha ao definir o novo perfil basal. Administração suspensa</string>
+    <string name="setting_basal_profile_might_have_failed">A definição do perfil basal pode ter falhado. A administração pode estar suspensa! Atualize manualmente o estado do Pod no separador Omnipod e retome a administração se necessário.</string>
+    <string name="bolus_delivery_status_uncertain">O estado da administração do bólus é incerto. Atualize o estado do Pod para confirmar ou negar.</string>
+    <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">Não foi possível verificar se o SMB (%1$s) teve sucesso. Atualize o estado do Pod para confirmar ou negar este comando.</string>
+    <string name="temp_basal_out_of_sync">O estado da basal temporária não é o esperado! Se estava a decorrer uma basal temporária, foi cancelada. Verifique a insulina administrada e o histórico do Pod</string>
+    <string name="checking_delivery_status">A verificar o estado da administração</string>
+    <string name="setting_temp_basal_might_have_basal_failed">A definição da basal temporária pode ter falhado. Se estava a decorrer uma basal temporária, foi cancelada. Atualize manualmente o estado do Pod no separador Omnipod.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">O resultado do cancelamento da basal temporária é incerto</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Comando resumeDelivery não confirmado. Atualize o estado do Pod</string>
+    <string name="cancelling_temp_basal_might_have_failed">O cancelamento da basal temporária pode ter falhado. Se estava a decorrer uma basal temporária, pode ter sido cancelada. Atualize manualmente o estado do Pod no separador Omnipod.</string>
 </resources>

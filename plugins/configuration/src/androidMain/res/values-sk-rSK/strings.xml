@@ -2,14 +2,14 @@
 <resources>
     <string name="units">Jednotky</string>
     <string name="setupwizard_units_prompt">Vyberte jednotky, v ktorých chcete zobraziť hodnoty</string>
-    <string name="next_button">Ďalšia</string>
+    <string name="next_button">Ďalej</string>
     <string name="previous_button">Späť</string>
     <string name="setupwizard_finish">Dokončiť</string>
     <string name="welcome">Vitajte</string>
-    <string name="welcometosetupwizard">Vitajte v sprievodcovi nastavení. Prevedie Vás procesom nastavenia programu\n</string>
+    <string name="welcometosetupwizard">Vitajte v sprievodcovi nastavením. Prevedie vás procesom nastavenia\n</string>
     <string name="end_user_license_agreement">Licenčná zmluva s koncovým používateľom</string>
-    <string name="end_user_license_agreement_text">Tento program nemôže byť použitý na medicínske rozhodnutia. Na program neexistuje žiadna záruka, alebo garantovaná podpora v akejkoľvek podobe. Keď už sa rozhodneš pre používanie, tak jeho kvalita a celkové schopnosti tohto projektu závisia len na Tebe samotnom. Ak by sa ukázalo, že je program chybný, preberáš všetky potrebné náklady na liečbu, prípadne náklady na iné servisné služby, opravy, alebo korekcie.</string>
-    <string name="end_user_license_agreement_i_understand">ROZUMIEM A POTVRDZUJEM</string>
+    <string name="end_user_license_agreement_text">NESMIE SA POUŽÍVAŤ NA ROBENIE ZDRAVOTNÝCH ROZHODNUTÍ. NA PROGRAM SA NEVZŤAHUJE ŽIADNA ZÁRUKA V ROZSAHU, KTORÝ POVOĽUJÚ PLATNÉ ZÁKONY. POKIAĽ NIE JE PÍSOMNE UVEDENÉ INAK, DRŽITELIA AUTORSKÝCH PRÁV A/ALEBO INÉ STRANY POSKYTUJÚ PROGRAM „TAK, AKO JE“, BEZ AKEJKOĽVEK ZÁRUKY, VÝSLOVNEJ ALEBO PREDPOKLADANEJ, VRÁTANE, ALE NIE VÝHRADNE, PREDPOKLADANÝCH ZÁRUK PREDAJNOSTI A VHODNOSTI NA KONKRÉTNY ÚČEL. CELÉ RIZIKO TÝKAJÚCE SA KVALITY A FUNGOVANIA PROGRAMU NESIETE VY. AK SA PROGRAM UKÁŽE AKO CHYBNÝ, ZNÁŠATE NÁKLADY NA VŠETKY POTREBNÉ SERVISNÉ SLUŽBY, OPRAVY ALEBO NÁPRAVY.</string>
+    <string name="end_user_license_agreement_i_understand">ROZUMIEM A SÚHLASÍM</string>
     <string name="display_settings">Nastavenie zobrazenia</string>
     <string name="low_mark">Dolná značka</string>
     <string name="high_mark">Horná značka</string>
@@ -19,33 +19,33 @@
     <string name="master_password_summary">Hlavné heslo sa používa na šifrovanie zálohy a na \"prebitie\" zabezpečenia v aplikácii. Dobre si ho zapamätajte, alebo uložte na bezpečnom mieste.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Použite hodnoty pre najväčšie jedlo, aké obvykle jete\n</string>
-    <string name="syncinfotext">Synchronizujte dáta s cloudom. Túto časť teraz môžete preskočit, ale nebudete schopní dokončiť ciele, pokiaľ nebude synchronizácia nastavená do NS, alebo Tidepool.</string>
+    <string name="syncinfotext">Synchronizujte dáta s cloudom. Túto časť teraz môžete preskočiť, ale nebudete môcť splniť ciele, kým nenastavíte klienta Nightscout alebo Tidepool.</string>
     <string name="status_label">Stav:</string>
     <string name="diawarning">Prosím, zapamätajte si: Nové inzulínové profily vyžadujú DIA minimálne 5h. DIA 5-6 hodín zodpovedá zhruba nastaveniam 3h na starších typoch profilu.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Vykonajte zmenu profilu</string>
     <string name="exitwizard">Preskočiť sprievodcu</string>
-    <string name="setupwizard_sensitivity_description">Modul citlivosť slúži k detekcii zmien v citlivosti a k počítaniu COB. Viac informácií tu:</string>
+    <string name="setupwizard_sensitivity_description">Plugin citlivosti slúži na detekciu citlivosti a na výpočet COB. Viac informácií nájdete tu:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="setupwizard_aps_description">Zvoľte jeden z dostupných algoitmov. Sú zoradené od najstaršieho po najnovší. Novší algoritums je zvyčajne viac výkonný. Nezabudnite si prečítať OpenAPS dokumentáciu a nastavte ho pred použitím.</string>
+    <string name="setupwizard_aps_description">Vyberte jeden z dostupných algoritmov. Sú zoradené od najstaršieho po najnovší. Novší algoritmus je zvyčajne výkonnejší. Nezabudnite si prečítať dokumentáciu OpenAPS a pred použitím ho nastaviť.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Prosím nakonfigurujte svoj RileyLink nižšie. Po výbere RileyLinku bude možné pokračovať v nastavení, akonáhle je stav RileyLinku \"Pripojené\". Táto akcia môže chvíľku trvať.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po nastavení pumpy môžete pokračovať v nastavení.\n</string>
     <string name="startobjective">Spusťte prvý cieľ</string>
     <string name="open_objectives">Otvoriť Ciele</string>
     <string name="setupwizard_permissions">Povolenia</string>
-    <string name="setupwizard_profile_info">Vytvorte si profil s Vašimi bazálnymi dávkami (BR), sacharidovo-inzulínovými prevodmi (IC), cistlivosťami (ISF) a cieľovými hodnotami (TT). Neskôr môžete pridať viacero profilov.</string>
+    <string name="setupwizard_profile_info">Vytvorte si profil s vašimi bazálnymi dávkami, inzulínovo-sacharidovými pomermi (IC), citlivosťami (ISF) a cieľovými hodnotami. Neskôr môžete pridať viac profilov.</string>
     <string name="setupwizard_permissions_info">AAPS potrebuje prístup k úložisku a povolenia na to, aby pracovalo správne. Prosím udeľte potrebné povolenia nižšie.</string>
     <string name="setupwizard_pump_riley_link_status">Stav RileyLinku:</string>
     <string name="setupwizard_client_control_title">Ovládanie z klienta</string>
-    <string name="setupwizard_client_control_info">Spárujte klientské zariadenie, aby mohlo tomuto hlavnému zariadeniu posielať podpísané príkazy cez Nightscout. Toto je nový doporučený spôsob, ako diaľkovo ovládať AAPS.</string>
-    <string name="setupwizard_ns_receive_info">Príjem ošetrení a dát priamo z Nightscoutu (menej bezpečný spôsob) je teraz vo východzom nastavení vypnutý. Otvorte nastavenie nižšie iba v prípade, že to stále potrebujete. Nevyhnutné, pokiaľ potrebujete zadávať dáta prostredníctvom NS alebo aplikácií tretích stran.</string>
+    <string name="setupwizard_client_control_info">Spárujte klientske zariadenia, aby mohli tomuto hlavnému zariadeniu posielať podpísané príkazy cez Nightscout. Toto je nový odporúčaný spôsob, ako diaľkovo ovládať AAPS.</string>
+    <string name="setupwizard_ns_receive_info">Príjem ošetrení a dát priamo z Nightscoutu (menej bezpečný spôsob) je teraz v predvolenom nastavení vypnutý. Otvorte nastavenie nižšie iba v prípade, že to stále potrebujete. Nevyhnutné, pokiaľ potrebujete zadávať dáta prostredníctvom NS alebo aplikácií tretích strán.</string>
     <string name="setupwizard_open_ns_receive_settings">Prijímanie dát z Nightscoutu</string>
     <string name="setupwizard_pair_with_master_info">Spárujte tohto klienta s vaším hlavným AAPS telefónom, aby mohol posielať príkazy cez zabezpečené spojenie. Po spárovaní je nastavenie dokončené.</string>
     <string name="setupwizard_setup_from_master_title">Nastavenie z hlavného zariadenia</string>
     <string name="setupwizard_setup_from_master_info">Na hlavnom zariadení otvorte Autorizovaní klienti a pridajte tento telefón pomocou QR kódu. Naskenovanie QR kódu nakonfiguruje Nightscout s vlastným prístupovým tokenom a môže zároveň spárovať telefón. Po naskenovaní je nastavenie dokončené. Ak QR kód nemáte, tento krok preskočte a nakonfigurujte Nightscout manuálne.</string>
     <string name="setupwizard_scan_master_qr">Oskenovať QR kód</string>
     <string name="setupwizard_pairing_ws_warning">Pre párovanie je nutné pripojenie k Nightscoutu cez WebSocket. Vráťte sa späť k predchádzajúcemu kroku a najskôr ho povoľte.</string>
-    <string name="setupwizard_pairing_status_master">Spárovaný klienti: %1$d</string>
+    <string name="setupwizard_pairing_status_master">Spárovaní klienti: %1$d</string>
     <string name="setupwizard_pairing_status_master_none">Zatiaľ nemáte žiadnych spárovaných klientov</string>
     <string name="setupwizard_pairing_status_client_paired">Spárované s hlavným zariadením</string>
     <string name="setupwizard_pairing_status_client_not_paired">Zatiaľ nespárované</string>
@@ -54,13 +54,13 @@
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zariadenie zrejme neumožňuje vypnúť optimalizáciu batérie - môže dochádzať k problémom s výkonom.</string>
     <!--    ConfigBuilder-->
-    <string name="configbuilder_pump_description">Akú pumpu chcete používať s AndroidAPS?</string>
+    <string name="configbuilder_pump_description">Akú pumpu chcete používať s AAPS?</string>
     <string name="configbuilder_aps_description">Aký APS algoritmus má byť použitý pre prispôsobenie liečby?</string>
-    <string name="configbuilder_sync_description">Nahrávanie dát, synchronizácia a komunikácia pluginov.</string>
-    <string name="configbuilder_bgsource_description">Odkiaľ má AndroidAPS získavať glykémie?</string>
+    <string name="configbuilder_sync_description">Pluginy na nahrávanie dát, synchronizáciu a komunikáciu.</string>
+    <string name="configbuilder_bgsource_description">Odkiaľ má AAPS získavať dáta?</string>
     <string name="configbuilder_sensitivity_description">Aký druh algoritmu pre detekciu citlivosti má byť použitý?</string>
-    <string name="allow_hardware_pump_text">POZOR: Pokiaľ aktivujete a pripojíte skutočnú pumpu, AndroidAPS nakopíruje nastavenie bazálu z aktívneho profilu do pumpy. Overte si, že máte v AAPS korektný bazálny profil. Pokiaľ si nieste istí, alebo nechcete prepísať bazály v pumpe, stlačte Zrušiť a opakujte prepnutie na inú pumpu neskôr.</string>
-    <string name="nsclient_version_does_not_match">Verzia NSClienta nesúhlasí z verziou AndroidAPS. Prosím aktualizujte si ju.</string>
+    <string name="allow_hardware_pump_text">Pozor: Ak aktivujete a pripojíte skutočnú pumpu, AAPS skopíruje nastavenie bazálu z profilu do pumpy a prepíše bazálnu dávku uloženú v pumpe. Overte si, že máte v AAPS správne nastavenie bazálu. Ak si nie ste istí alebo nechcete prepísať nastavenie bazálu v pumpe, stlačte Zrušiť a zopakujte prepnutie na pumpu neskôr.</string>
+    <string name="nsclient_version_does_not_match">Verzia AAPSClient nesúhlasí s verziou AAPS. Prosím, aktualizujte ju.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->

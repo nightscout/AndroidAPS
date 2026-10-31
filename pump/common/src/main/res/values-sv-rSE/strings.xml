@@ -11,10 +11,13 @@
     <string name="pump_status_suspended">Pausad</string>
     <string name="pump_status_executing_command">Kör kommando</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_tbr">Hämta tillfällig basal</string>
+    <string name="pump_cmd_desc_cancel_tbr">Avbryt tillfällig basal</string>
+    <string name="pump_cmd_desc_set_tbr">Ställ in tillfällig basal</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Basaldoser</string>
     <string name="history_group_configuration">Konfigurationer</string>
-    <string name="history_group_notification">Notiser</string>
+    <string name="history_group_notification">Aviseringar</string>
     <string name="history_group_statistic">Statistik</string>
     <string name="history_group_unknown">Okända</string>
     <string name="history_group_all">Alla</string>

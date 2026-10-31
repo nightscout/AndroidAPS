@@ -3,6 +3,10 @@
     <string name="label_watchface_circle">AAPS (Circle)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS (anpassad)</string>
+    <string name="label_actions_tile">Åtgärder</string>
+    <string name="label_temp_target_tile">Tillfälligt målvärde</string>
+    <string name="label_quick_wizard_tile">Snabbknapp</string>
+    <string name="label_scene_tile">Scen</string>
     <string name="msg_warning_sync">Inga data har tagits emot sedan %1$s! Kontrollera om AAPS i telefonen skickar data till klockan</string>
     <string name="msg_warning_old">AAPS-data är %1$s gammal. Kontrollera sensorn, xDrip+, NS, AAPS-inställning eller något annat!</string>
     <string name="pref_vibrate_on_bolus">Vibrera vid bolus</string>
@@ -11,13 +15,14 @@
     <string name="pref_show_iob">Visa IOB</string>
     <string name="pref_show_detailed_iob">Visa detaljerad IOB</string>
     <string name="pref_show_cob">Visa COB</string>
-    <string name="pref_show_delta">Visa skillnad</string>
+    <string name="pref_show_delta">Visa delta</string>
     <string name="pref_show_detailed_delta">Visa detaljerad delta</string>
-    <string name="pref_show_avgdelta">Visa genomsnittlig skillnad</string>
+    <string name="pref_show_avgdelta">Visa genomsnittlig delta</string>
     <string name="pref_show_phone_battery">Visa telefonens batterinivå</string>
     <string name="pref_show_rig_battery">Visa riggens batterinivå</string>
     <string name="pref_show_basal_rate">Visa basaldos</string>
-    <string name="pref_show_loop_status">Visa APS-status</string>
+    <string name="pref_show_temp_target">Visa tillfälligt målvärde</string>
+    <string name="pref_show_loop_status">Visa loopstatus</string>
     <string name="pref_show_bg">Visa BG</string>
     <string name="pref_show_bgi">Visa BGI</string>
     <string name="pref_show_direction_arrow">Visa riktningspil</string>
@@ -45,6 +50,7 @@
     <string name="pref_moreWatchfaceSettings">Fler watchface-inställningar</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Kontrollera watchface-konfigurationen, tack.</string>
     <string name="menu_tempt">Tempmål</string>
+    <string name="menu_tempt_long">Tillfälligt målvärde</string>
     <string name="menu_wizard">Kalkylator</string>
     <string name="menu_wizard_short">Kalk</string>
     <string name="menu_treatment">Behandling</string>
@@ -59,8 +65,9 @@
     <string name="menu_none">Ingen</string>
     <string name="menu_default">Standardinställning</string>
     <string name="menu_menu">Meny</string>
-    <string name="action_tempt_confirmation">Temp-mål begärt</string>
-    <string name="action_quick_wizard_confirmation">Snabbsteg begärd</string>
+    <string name="action_tempt_confirmation">Tillfälligt målvärde begärt</string>
+    <string name="action_quick_wizard_confirmation">Snabbknapp begärd</string>
+    <string name="action_scene_confirmation">Scen begärd</string>
     <string name="action_treatment_confirmation">Behandling begärd</string>
     <string name="action_bolus_confirmation">Bolus begärd</string>
     <string name="action_wizard_confirmation">Kalkylator begärd</string>
@@ -68,18 +75,22 @@
     <string name="action_ecarb_confirmation">Kolhydrater begärda</string>
     <string name="action_profile_switch_confirmation">Profilbyte begärt</string>
     <string name="action_carbs">KH</string>
+    <string name="action_carbs_gram">Kolhydrater [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Max att ta bort: %1$d g (COB)</string>
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_insulin">Insulin</string>
+    <string name="action_insulin_units">Insulin [U]</string>
     <string name="action_preset_1">Förinställning 1</string>
     <string name="action_preset_2">Förinställning 2</string>
     <string name="action_preset_3">Förinställning 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Valfri mängd</string>
     <string name="action_confirm">BEKRÄFTA</string>
+    <string name="action_timeshift_hours">Tidsförskjutning\n[timmar]</string>
     <string name="bolus_progress">Bolusförlopp</string>
     <string name="press_to_cancel">tryck för att avbryta</string>
     <string name="cancel_bolus">AVBRYT BOLUS</string>
     <string name="status_pump">Pump</string>
-    <string name="status_loop">APS</string>
+    <string name="status_loop">Loop</string>
     <string name="status_profile_switch">Profilbyte</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">KH</string>
@@ -93,7 +104,7 @@
     <string name="color_name_blue">blå</string>
     <string name="color_name_lightblue">ljusblå</string>
     <string name="color_name_cyan">cyan</string>
-    <string name="color_name_teal">tegelbrun</string>
+    <string name="color_name_teal">blågrön</string>
     <string name="color_name_green">grön</string>
     <string name="color_name_lightgreen">ljusgrön</string>
     <string name="color_name_lime">lime</string>
@@ -109,6 +120,8 @@
     <string name="pref_simplify_ui">Förenkla gränssnittet</string>
     <string name="pref_vibrate_hourly">Vibrera varje timme</string>
     <string name="pref_show_weeknumber">Visa veckonummer</string>
+    <string name="cwf_complication_layout_description">Position och storlek på komplikationerna, hämtade från den laddade anpassade urtavlan.</string>
+    <string name="pref_switch_external">Växla externa data i urtavlan</string>
     <string name="custom_pref_show_seconds">Visa sekunder</string>
     <string name="digitalstyle_style_none">ingen stil</string>
     <string name="digitalstyle_style_minimal">minimal stil</string>
@@ -118,6 +131,7 @@
     <string name="bolus_progress_silent_channel_name">AAPS Bolusförlopp (tyst)</string>
     <string name="bolus_progress_channel_description">Bolusförlopp och avbryt</string>
     <string name="bolus_progress_silent_channel_description">Bolusförlopp och avbryt med mindre vibrationer</string>
+    <string name="open_loop_channel_description">Avisering för begäran i öppen loop</string>
     <string name="simple_ui_off">Av</string>
     <string name="simple_ui_charging">Vid laddning</string>
     <string name="simple_ui_always_on">Alltid På-läge</string>
@@ -146,4 +160,41 @@
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="pref_heartRateSampling">Hjärtfrekvens</string>
+    <string name="tile_scene_1">Scen 1</string>
+    <string name="tile_scene_2">Scen 2</string>
+    <string name="tile_scene_3">Scen 3</string>
+    <string name="tile_scene_4">Scen 4</string>
+    <string name="datalayer_notification_text">AAPS körs i förgrunden. För att dölja aviseringen går du till Utvecklaralternativ, Appaviseringar, Tillåtna klockappar, väljer AAPS och stänger av aviseringar för kanalen Data Layer Foreground Service.</string>
+    <string name="complication_cwf_ambient_bg">Anpassad urtavla: glukos i viloläge</string>
+    <string name="complication_cwf_ambient_status">Anpassad urtavla: status i viloläge</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_upper">Anpassad urtavla: klocka</string>
+    <string name="complication_iob_icon">IoB Ikon</string>
+    <string name="label_running_mode_title">Körläge</string>
+    <string name="action_running_mode_selected">Körläge begärt</string>
+    <string name="title_activity_suspend_loop">Pausa loop</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="phone_alarm_channel_silent">Larm från telefonen under Stör ej</string>
+    <string name="phone_alarm_silence">Tysta</string>
+    <string name="insulin_unit_short">U</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
+    <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
+    <string name="loop_status_smb">%1$.2f U</string>
+    <string name="loop_status_lgs">Paus vid lågt blodsocker</string>
+    <string name="loop_status_suspended">Loop pausad</string>
+    <string name="loop_status_pump_suspended">Pump pausad</string>
+    <string name="loop_status_dst_suspended">Pausad p.g.a. sommartid</string>
+    <string name="loop_status_disconnected">Pump frånkopplad</string>
+    <string name="loop_status_last_run_enact">Senaste körning &amp; utförande</string>
+    <string name="loop_status_temp_target">Tillfälligt målvärde</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Uppföljning</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
+    <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Ny IOB: %1$s U</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">Kolhydrater (%1$d g)</string>
+    <string name="wizard_insulin_format">%1$s U</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
 </resources>

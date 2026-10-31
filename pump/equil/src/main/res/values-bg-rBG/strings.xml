@@ -11,7 +11,7 @@
     <string name="equil_mode">Текущ режим</string>
     <string name="equil_mode_running">Изпълнява</string>
     <string name="equil_mode_stopped">Спрян</string>
-    <string name="equil_mode_suspended">Изключен</string>
+    <string name="equil_mode_suspended">Временно спрян</string>
     <string name="equil_serialnumber">Номер на устройство</string>
     <string name="equil_stop">Спри</string>
     <string name="equil_success">Успешен</string>
@@ -20,13 +20,13 @@
     <string name="equil_title_serial">Сдвояване на устройство</string>
     <string name="equil_title_fill">Пълнене/Допълване</string>
     <string name="equil_title_attach">Закачи помпа</string>
-    <string name="equil_title_air">Напълни канула</string>
+    <string name="equil_title_air">Напълни канюла</string>
     <string name="equil_title_unpair_detach">Разкачи помпа</string>
     <string name="equil_title_history_events">История на събитията</string>
     <string name="equil_tone">Предупредителен сигнал</string>
     <string name="equil_bolus_speed">Скорост на болус</string>
     <string name="equil_bolus_speed_summary">По-бърз болус може да дава повече аларми за запушване.</string>
-    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1.5 Ед/мин (стандартно)</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1,5 Ед/мин (стандартно)</string>
     <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 Ед/мин</string>
     <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 Ед/мин</string>
     <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 Ед/мин</string>
@@ -34,7 +34,7 @@
     <string name="equil_tone_mode_shake">Само вибрация</string>
     <string name="equil_tone_mode_tone">Само звук</string>
     <string name="equil_tone_mode_tone_and_shake">Вибрация и звук</string>
-    <string name="equil_unbind_content">Това ще спре доставката на инсуин и ше откачи помпата! Също ще нулира статуса на свързване!</string>
+    <string name="equil_unbind_content">Това ще спре доставката на инсулин и ще откачи помпата! Също ще нулира статуса на свързване!</string>
     <string name="equil_ble_config_confirmation_title">Сдвоете помпа Equil patch</string>
     <string name="equil_error">Грешка при свързване</string>
     <string name="equil_change">Сменете помпата</string>
@@ -44,13 +44,13 @@
     <string name="equil_new_infusion_set_no">Не, само резервоар или батерия</string>
     <string name="equil_same_infusion_set_hint">Канюлата няма да бъде напълнена и смяна няма да бъде записана.</string>
     <string name="equil_unpair_alert">Сигурни ли сте, че искате да се откажете от контрола над %1$s?</string>
-    <string name="equil_record_basal">Базал %1$s Е/Ч</string>
-    <string name="equil_record_basal_temp">Временен базал %1$s Е/Ч</string>
+    <string name="equil_record_basal">Базал %1$s Е/ч</string>
+    <string name="equil_record_basal_temp">Временен базал %1$s Е/ч</string>
     <string name="equil_record_bolus">Болус %1$s Е</string>
     <string name="equil_error_set_temp_basal_failed_validation">Продължителността трябва да бъде по-голяма от нула и кратна на %1$s минути.</string>
     <string name="equil_basal_exceeds_max">Профилният базал %1$s Е/ч надвишава разрешения в помпата от %2$s Е/ч. Разрешете по-голям базал в помпата.</string>
     <string name="equil_not_enough_insulin">Недостатъчно инсулин в резервоара</string>
-    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Слаба батерия: %1$d% %</string>
+    <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Слаба батерия: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Недостатъчно инсулин в резервоара: %1$s</string>
     <string name="equil_reservoir_empty">Резервоара е празен. Помпата не пуска инсулин вече.</string>
     <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Помпата спря по време на болуса. Доставени: %1$s от %2$s</string>
@@ -64,7 +64,7 @@
     <string name="equil_firmware_version">Версия на фърмуера</string>
     <string name="equil_shutdown_be">Equil ще бъде автоматично изключен</string>
     <string name="equil_shutdown">Equil автоматично изключване</string>
-    <string name="equil_common_history_tbr_value">Количество: %1$.2f Е/Ч, Продължителност: %2$d мин</string>
+    <string name="equil_common_history_tbr_value" comment="A temporary basal entry in the pump history. %1$.2f=rate in units per hour, %2$d=duration in minutes. Example: Rate: 1.00 U/h, duration: 30 minutes">Стойност: %1$.2f Е/ч, продължителност: %2$d минути</string>
     <string name="equil_common_history_bolus_value">%1$.2f Е</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Стартирай болус</string>
@@ -129,7 +129,7 @@
     <string name="equil_common_wizard_exit_confirmation_text">Не сте завършили стъпките. Сигурни ли сте?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Изход</string>
     <string name="equil_support_error">Версията на фърмуера е твърде ниска и не се поддържа</string>
-    <string name="equil_password_tips">Парола за връзка с  Equil v5.3 помпа. Tя ще се използва и за разкачане, ЗАПОМНЕТЕ Я. Праволото е: 4 символа, между ABCDEF0123456789.</string>
+    <string name="equil_password_tips">Парола за връзка с Equil v5.3 помпа. Тя ще се използва и за разкачане, ЗАПОМНЕТЕ Я. Правилото е: 4 символа, между ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Парола</string>
     <string name="equil_hint1">След закачането на помпата към базата, трябва ли да се изкара въздуха от иглата</string>
     <string name="equil_unbind">Разкачане на устройство</string>
@@ -137,10 +137,10 @@
     <string name="equil_assemble">Моля сглобете устройството, пълния резервоар и заредена батерия</string>
     <string name="equil_pair_password_title">Парола за %1$s</string>
     <string name="equil_insert">Пуснете прайм на помпата докато малка капка инсулин не се появи на върха на иглата</string>
-    <string name="equil_insert2">The pump must not be on the pump base.</string>
-    <string name="equil_attach">Please attach the pump to the base</string>
+    <string name="equil_insert2">Помпата не трябва да е поставена на основата.</string>
+    <string name="equil_attach">Моля, закачете помпата към основата</string>
     <string name="equil_hint2">Prime cannula</string>
     <string name="equil_pump_updated">Pump updated</string>
-    <string name="equil_replace_reservoir">The reservoir is empty. Please replace the reservoir</string>
-    <string name="equil_removed_anyway">Unpair command failed. Pump will be removed anyway. Password set during pairing is not removed from the pump.</string>
+    <string name="equil_replace_reservoir">Резервоарът е празен. Моля, сменете резервоара</string>
+    <string name="equil_removed_anyway">Командата за разкачане е неуспешна. Помпата все пак ще бъде премахната. Паролата, зададена при сдвояването, не е премахната от помпата.</string>
 </resources>

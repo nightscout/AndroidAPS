@@ -8,7 +8,7 @@
     <string name="welcome">Välkommen</string>
     <string name="welcometosetupwizard">Välkommen till installationsguiden! Den kommer att hjälpa dig genom installationsprocessen\n</string>
     <string name="end_user_license_agreement">Licensavtal för slutanvändare</string>
-    <string name="end_user_license_agreement_text">FÅR INTE ANVÄNDAS FÖR ATT FATTA MEDICINSKA BESLUT. DET FINNS INGEN GARANTI FÖR PROGRAMMET I DEN UTSTRÄCKNING SOM TILLÅTS AV GÄLLANDE LAG. FÖRUTOM NÄR ANNAT ANGES SKRIFTLIGEN LEVERERAS APPLIKATIONEN SOM DEN ÄR HELT UTAN GARANTIER I NÅGON SOM HELST FORM, VARKEN UTTRYCKTA ELLER UNDERFÖRSTÅDDA, INKLUSIVE MEN INTE BEGRÄNSAT TILL SÄLJBARHET OCH LÄMPLIGHET FÖR ETT VISST ÄNDAMÅL. HELA RISKEN VAD GÄLLER KVALITET OCH PRESTANDA AV PROGRAMMET ÅLIGGER ANVÄNDAREN. OM PROGRAMMET VISAR SIG VARA DEFEKT ANTAR ANVÄNDAREN DEN FULLA FÖR KOSTNADEN FÖR ALL NÖDVÄNDIG SERVICE, REPARATION ELLER KORRIGERING.</string>
+    <string name="end_user_license_agreement_text">FÅR INTE ANVÄNDAS FÖR ATT FATTA MEDICINSKA BESLUT. DET FINNS INGEN GARANTI FÖR PROGRAMMET I DEN UTSTRÄCKNING SOM TILLÅTS AV GÄLLANDE LAG. FÖRUTOM NÄR ANNAT ANGES SKRIFTLIGEN LEVERERAS PROGRAMMET I BEFINTLIGT SKICK UTAN GARANTIER AV NÅGOT SLAG, VARKEN UTTRYCKTA ELLER UNDERFÖRSTÅDDA, INKLUSIVE MEN INTE BEGRÄNSAT TILL SÄLJBARHET OCH LÄMPLIGHET FÖR ETT VISST ÄNDAMÅL. HELA RISKEN VAD GÄLLER KVALITET OCH PRESTANDA AV PROGRAMMET ÅLIGGER ANVÄNDAREN. OM PROGRAMMET VISAR SIG VARA DEFEKT STÅR ANVÄNDAREN FÖR HELA KOSTNADEN FÖR ALL NÖDVÄNDIG SERVICE, REPARATION ELLER KORRIGERING.</string>
     <string name="end_user_license_agreement_i_understand">JAG FÖRSTÅR OCH GODKÄNNER</string>
     <string name="display_settings">Visningsinställningar</string>
     <string name="low_mark">LÅG-markering</string>
@@ -24,21 +24,28 @@
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Genomför profilbyte</string>
     <string name="exitwizard">Hoppa över installationsguiden</string>
-    <string name="setupwizard_sensitivity_description">Insticksprogrammet för känslighet används för att detektera insulinkänslighet och för att beräkning av aktiva kolhydrater, COB. För mer information, besök:</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurera din Riley Link nedan. När du har valt en Riley Link kan du fortsätta installationen när status är \"Ansluten\". Det här kan ta en minut.\n</string>
-    <string name="setupwizard_pump_pump_not_initialized">Du kan fortsätta installationen först när pumpen har konfigurerats.\n</string>
+    <string name="setupwizard_sensitivity_description">Insticksprogrammet för känslighet används för att upptäcka insulinkänslighet och för att beräkna aktiva kolhydrater (COB). För mer information, besök:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Välj en av de tillgängliga algoritmerna. De är sorterade från äldst till nyast. En nyare algoritm är oftast mer kraftfull. Glöm inte att läsa OpenAPS-dokumentationen och konfigurera den innan användning.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurera din RileyLink nedan. När du har valt en RileyLink kan du fortsätta installationen när RileyLink-status är \"Ansluten\". Det här kan ta en minut.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Obs!</b> Du kan fortsätta installationen först när pumpen har konfigurerats.\n</string>
     <string name="startobjective">Påbörja ditt första mål</string>
-    <string name="setupwizard_pump_riley_link_status">Riley Link-status:</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink-status:</string>
+    <string name="setupwizard_client_control_info">Parkoppla klientenheter så att de kan skicka signerade kommandon till denna huvudenhet via Nightscout. Detta är det nya rekommenderade sättet att styra AAPS på distans.</string>
+    <string name="setupwizard_pair_with_master_info">Parkoppla denna klient med din AAPS-huvudenhet så att den kan skicka kommandon över en säker kanal. När parkopplingen är klar är installationen klar.</string>
+    <string name="setupwizard_setup_from_master_info">Öppna Auktoriserade klienter på huvudenheten och lägg till den här telefonen med hjälp av en QR-kod. När koden skannas konfigureras Nightscout med en egen token, och telefonen kan samtidigt parkopplas. När koden har skannats är konfigurationen klar. Om du inte har någon QR-kod kan du hoppa över detta steg och konfigurera Nightscout själv.</string>
+    <string name="setupwizard_pairing_status_client_paired">Parkopplad med en huvudenhet</string>
     <string name="readstatus">Läs status</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="alert_dialog_permission_battery_optimization_failed">Denna enhet verkar inte ha stöd för vitlistning från batterioptimering. Du eventuellt råka ut för problem pga detta.</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Denna enhet verkar inte ha stöd för vitlistning från batterioptimering. Du kan få problem med prestandan.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Vilken pump vill du använda med AAPS?</string>
-    <string name="configbuilder_aps_description">Vilken algoritm ska användas för behandlingar?</string>
+    <string name="configbuilder_aps_description">Vilken APS-algoritm ska justera behandlingen?</string>
+    <string name="configbuilder_sync_description">Insticksprogram för datauppladdning, synkronisering och kommunikation.</string>
     <string name="configbuilder_bgsource_description">Var ska AAPS få sitt data ifrån?</string>
     <string name="configbuilder_sensitivity_description">Vilken algoritm vill du använda för känslighetsavkänning?</string>
     <string name="allow_hardware_pump_text">Varning: Om du aktiverar och ansluter en pump kommer AAPS skriva över pumpens basalprofil med den aktiva profilen i AAPS. Se till att ha rätt inställningar i appen innan du ansluter. Om du är osäker, tryck på Avbryt och anslut pumpen på nytt vid ett senare tillfälle.</string>
-    <string name="nsclient_version_does_not_match">Följarversionen matchar inte AAPS-versionen. Vänligen uppdatera.</string>
+    <string name="nsclient_version_does_not_match">AAPSClient-versionen matchar inte AAPS-versionen. Uppdatera.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->

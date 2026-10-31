@@ -34,9 +34,11 @@
     <string name="trigger_scene_active_compared">Cenário %1$s</string>
     <string name="action_scene_not_found">Cenário não encontrado</string>
     <string name="action_scene_disabled">O cenário está desativado</string>
+    <string name="automation_unit_meters">m</string>
+    <string name="automation_unit_bpm">bpm</string>
     <string name="automation_missing_task_name">Insira um nome da tarefa.</string>
     <string name="automation_missing_trigger">Especifique pelo menos um gatilho.</string>
-    <string name="automation_missing_action">Especifique pelo menos uma acção.</string>
+    <string name="automation_missing_action">Especifique pelo menos uma ação.</string>
     <string name="exportsettings_message">Exportação de configurações: %1$s</string>
     <string name="export_settings_short">Texto nos tratamentos:</string>
     <string name="alarm_message">Alarme: %1$s</string>
@@ -45,15 +47,15 @@
     <string name="notification_message">Notificação: %1$s</string>
     <string name="profilename">Alterar perfil para</string>
     <string name="changengetoprofilename">Alterar perfil para %1$s</string>
-    <string name="automation_trigger_pump_last_connection_label">Última ligação com a bomba</string>
-    <string name="automation_trigger_pump_last_connection_compared">Última ligação com a bomba %1$s %2$s min atrás</string>
+    <string name="automation_trigger_pump_last_connection_label">Última conexão com a bomba</string>
+    <string name="automation_trigger_pump_last_connection_compared">Última conexão com a bomba %1$s %2$s min atrás</string>
     <string name="alreadyset">Já definido</string>
-    <string name="profilepercentage">Percentagem do Perfil</string>
+    <string name="profilepercentage">Porcentagem do perfil</string>
     <string name="startprofileforever">Iniciar perfil %1$d%%</string>
     <string name="sendsmsactionlabel">Enviar SMS: %1$s</string>
     <string name="sendsmsactiondescription">Enviar SMS para todos os números</string>
     <string name="sendsmsactiontext">Enviar SMS com texto</string>
-    <string name="starttemptarget">Iniciar Alvo Temp</string>
+    <string name="starttemptarget">Iniciar alvo temporário</string>
     <string name="islesser">é menor que</string>
     <string name="isequalorlesser">é igual ou menor que</string>
     <string name="isequal">é igual a</string>
@@ -66,13 +68,13 @@
     <string name="notemptarget">Alvo Temporário não existe</string>
     <string name="temptargetcomparedmgdl">Alvo Temporário %1$s %2$.0f %3$s</string>
     <string name="temptargetcomparedmmol">Alvo Temporário %1$s %2$.1f %3$s</string>
-    <string name="percentagecompared">Percentagem Perfil  %1$s %2$d</string>
+    <string name="percentagecompared">Porcentagem do perfil %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="or">Ou</string>
     <string name="xor">Exclusivo ou</string>
     <string name="atspecifiedtime">Às %1$s</string>
-    <string name="onconnect">Ao ligar</string>
-    <string name="ondisconnect">Ao desligar</string>
+    <string name="onconnect">Ao conectar</string>
+    <string name="ondisconnect">Ao desconectar</string>
     <string name="short_avgdelta">Delta médio curto</string>
     <string name="long_avgdelta">Delta médio longo</string>
     <string name="delta">Delta</string>
@@ -85,18 +87,18 @@
     <string name="timerange_value">O tempo está entre %1$s e %2$s</string>
     <string name="add_short">ADICIONAR</string>
     <string name="temptargetcompared">Alvo Temp %1$s</string>
-    <string name="btdevicecompared">Ligação Bluetooth com o dispositivo %1$s %2$s</string>
-    <string name="btdevice">Ligação ao dispositivo Bluetooth </string>
+    <string name="btdevicecompared">Conexão Bluetooth com o dispositivo %1$s %2$s</string>
+    <string name="btdevice">Conexão com o dispositivo Bluetooth </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">Diferença de Glic.</string>
-    <string name="currentlocation">Localização actual</string>
+    <string name="currentlocation">Localização atual</string>
     <string name="location">Localização</string>
-    <string name="lastboluslabel">Último bolus atrás</string>
-    <string name="lastboluscompared">Última vez do bolus %1$s %2$s atrás</string>
-    <string name="triggercoblabel">CA</string>
+    <string name="lastboluslabel">Último bólus atrás</string>
+    <string name="lastboluscompared">Última vez do bólus %1$s %2$s atrás</string>
+    <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Frequência cardíaca</string>
     <string name="triggerHeartRateDesc">FC %1$s %2$.0f</string>
@@ -106,6 +108,8 @@
     <string name="triggerCannulaAgeDesc">Idade da cânula %1$s %2$.1f horas</string>
     <string name="triggerPodChangeLabel">Ativação do Pod</string>
     <string name="triggerPodChangeDesc">Pod ativado</string>
+    <string name="triggerUnknownLabel">Gatilho desconhecido</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Gatilho desconhecido %1$s - nunca verdadeiro</string>
     <string name="triggerInsulinAgeLabel">Idade da insulina</string>
     <string name="triggerInsulinAgeDesc">Idade da insulina %1$s %2$.1f horas</string>
     <string name="triggerPumpBatteryAgeLabel">Idade da bateria da bomba</string>
@@ -128,8 +132,8 @@
     <string name="add_automation">Adicionar regra</string>
     <string name="stop_processing">Parar processamento</string>
     <!--    Reminders-->
-    <string name="time_to_eat">Hora de comer!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
-    <string name="time_to_bolus">Hora do bolus!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
+    <string name="time_to_eat">Hora de comer!\nAbra o assistente de bólus e faça o cálculo novamente.</string>
+    <string name="time_to_bolus">Hora do bólus!\nAbra o assistente de bólus e faça o cálculo novamente.</string>
     <string name="error_setting_reminder">Erro ao definir alarme futuro</string>
     <!--    Autotune-->
     <string name="autotune_profile_name">Perfil do Autotune %1$s</string>
@@ -142,6 +146,7 @@
     <string name="triggerStepsCountLabel">Contagem de passos</string>
     <string name="triggerStepsCountDesc">Contagem de passos a cada %1$s minutos %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Duração da medição</string>
+    <string name="automation_log_entry" comment="One line of the automation run log. %1$s=time, %2$s=a symbol for success or failure, %3$s=rule name (bold), %4$s=what the action did, %5$s=its result. Example: 21:15 ☺ Night low: Start temp target: 8.0mmol/L@60 min(Automation): OK">%1$s %2$s %3$s: %4$s: %5$s</string>
     <!--    SMB mode-->
     <string name="changeSmbState">Ativar/desativar SMB</string>
     <string name="changeSmbTo">Alterar SMB para %1$s</string>

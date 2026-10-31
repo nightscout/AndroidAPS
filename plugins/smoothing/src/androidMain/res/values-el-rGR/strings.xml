@@ -5,4 +5,7 @@
     <string name="avg_smoothing_name">Μέση εξομάλυνση</string>
     <string name="description_avg_smoothing">"Αλγόριθμος εξομάλυνσης μέσου όρου, η νεότερη τιμή δεν επηρεάζεται"</string>
     <string name="no_smoothing_name">Χωρίς εξομάλυνση</string>
+    <string name="description_no_smoothing">"Χρησιμοποιήστε το όταν έχετε ήδη φιλτραρισμένα δεδομένα, π.χ. από BYODA G6."</string>
+    <string name="UKF_name">Unscented Kalman Filter</string>
+    <string name="description_UKF">"Προηγμένος αλγόριθμος με αυτόματη ρύθμιση θορύβου και εξομάλυνση RTS."</string>
 </resources>

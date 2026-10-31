@@ -6,7 +6,7 @@
     <string name="application_protection">Protecție aplicație</string>
     <string name="bolus_protection">Protecție bolus</string>
     <string name="settings_password">Parolă setări</string>
-    <string name="settings_pin">Setări PIN</string>
+    <string name="settings_pin">PIN setări</string>
     <string name="application_password">Parolă aplicație</string>
     <string name="application_pin">PIN Aplicație</string>
     <string name="bolus_password">Parolă bolus</string>
@@ -14,8 +14,8 @@
     <string name="protection_timeout_title">Reținerea parolei și a PIN-ului [s]</string>
     <string name="protection_timeout_summary">Timpul până la introducerea parolei sau a PIN-ului</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
-    <string name="unsecure_fallback_biometric">Trecere la modul nesecurizat biometric</string>
-    <string name="unsecure_fallback_descriotion_biometric">Pentru a fi eficientă, protecția biometrică are nevoie de o parolă principală pentru regresie.\n\nVă rugăm să setați o parolă principală!</string>
+    <string name="unsecure_fallback_biometric">Variantă de rezervă nesigură</string>
+    <string name="unsecure_fallback_descriotion_biometric">Pentru a fi eficientă, protecția biometrică are nevoie de o parolă principală ca variantă de rezervă.\n\nVă rugăm să setați o parolă principală!</string>
     <string name="password_set">Parola a fost setată!</string>
     <string name="datastore_password_cleared">Parola de export stocată a fost ștearsă!</string>
     <string name="pin_set">PIN setat!</string>
