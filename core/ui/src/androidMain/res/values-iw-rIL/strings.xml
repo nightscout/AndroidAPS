@@ -160,7 +160,7 @@
     <string name="removerecord">מחיקת רשומה</string>
     <string name="loopisdisabled">הלולאה מושבתת</string>
     <string name="alarm">התראה</string>
-    <string name="exportsettings">יצוא הגדרות</string>
+    <string name="exportsettings">ייצוא הגדרות</string>
     <string name="disableloop">השבתת לולאה</string>
     <string name="disabled_loop">הלולאה מושבתת</string>
     <string name="resumeloop">חידוש לולאה</string>
@@ -187,7 +187,7 @@
     <string name="cal_reject_no_pair">הכיול לא נשמר: לא נמצאה קריאת חיישן ב-10 הדקות האחרונות.</string>
     <string name="cal_reject_warmup">הכיול לא נשמר: החיישן עדיין בזמן החימום של שעתיים.</string>
     <string name="cal_reject_no_session">הכיול לא נשמר: לא רשום חיישן פעיל. יש לרשום תחילה החלפת חיישן.</string>
-    <string name="cgm">סנסור</string>
+    <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">דווחה שגיאה בבולוס. יש לבדוק ידנית את כמות האינסולין שהוזרקה בפועל ואת כמות הפחמימות</string>
     <string name="bolus_reminder">תזכורת לבולוס כאשר רמת הסוכר תתאושש</string>
     <string name="duration_label">משך</string>
@@ -334,6 +334,7 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">פורטל טיפולים</string>
     <string name="careportal_bgcheck">בדיקת רמת סוכר בדם</string>
     <string name="careportal_mbg">רמת סוכר ידנית או כיול</string>
     <string name="careportal_announcement">הכרזה</string>
@@ -345,6 +346,7 @@
     <string name="careportal_note_message">הערה: %1$s</string>
     <string name="careportal_question_message">שאלה: %1$s</string>
     <string name="careportal_exercise_message">פעילות גופנית: %1$s</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">החלפת צינורית משאבה: %1$s</string>
     <string name="careportal_pump_site_change">החלפת צינורית משאבה</string>
     <string name="cgm_sensor_insert">הכנסת חיישן</string>
     <string name="careportal_pump_site_management">אתרי משאבה</string>
@@ -378,6 +380,8 @@
     <string name="scene_active">פעיל</string>
     <string name="scene_ended">התרחיש הסתיים</string>
     <string name="scene_end_active">סיום התרחיש הפעיל</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">דילוג אל</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">התרחיש העוקב %1$s לא יופעל</string>
     <string name="scene_confirm_activate">להפעיל את התרחיש \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">לסיים את התרחיש \"%1$s\" ולהחזיר את השינויים?</string>
     <string name="scene_conflict_active_tt">היעד הזמני הפעיל יוחלף</string>
@@ -409,6 +413,7 @@
     <string name="scene_editor_disabled">מושבת</string>
     <string name="scene_summary">%1$d פעולות, %2$s</string>
     <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_duration_indefinite">ללא הגבלת זמן (סיום ידני)</string>
     <string name="scene_some_actions_failed">חלק מהפעולות נכשלו</string>
     <string name="scene_no_active">אין תרחיש פעיל</string>
@@ -478,6 +483,7 @@
     <string name="scene_revert_smb_on">הפעלה מחדש של SMB</string>
     <string name="scene_revert_smb_off">השבתת SMB</string>
     <string name="scene_revert_loop_mode">ביטול עקיפת מצב ההפעלה</string>
+    <string name="scene_careportal_no_revert">רשומות פורטל הטיפולים לא יבוטלו</string>
     <string name="careportal_sickness">מחלה</string>
     <string name="careportal_stress">לחץ</string>
     <string name="careportal_pre_period">לפני וסת</string>
@@ -494,6 +500,7 @@
     <string name="treatment_insulin_desc">מתן בולוס ידני</string>
     <string name="treatment_carbs_desc">רישום פחמימות ללא אינסולין</string>
     <string name="treatment_calculator_desc">חישוב בולוס</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">הגדרות אינסולין</string>
     <string name="manage_insulin_desc">ניהול והפעלה של הגדרות אינסולין</string>
     <string name="concentration_disable_blocked">לא ניתן להשבית תמיכה בריכוזים כל עוד קיימים סוגי אינסולין שאינם U100. הסירו את כל הגדרות האינסולין שאינן U100 ועברו תחילה לפרופיל U100.</string>
     <string name="simple_mode_blocked_by_concentration">לא ניתן להפעיל מצב פשוט בעת שימוש באינסולין שאינו U100. עברו תחילה לאינסולין U100.</string>
@@ -515,6 +522,8 @@
     <string name="treatment_cannula_change_desc">רישום החלפת קנולה/ערכת עירוי</string>
     <string name="treatment_fill_desc">תיחול ומילוי הקנולה</string>
     <string name="temp_basal">בזאלי זמני</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">מעל הפרופיל</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">מתחת לפרופיל</string>
     <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">ללא</string>
     <string name="user_entry">קלט המשתמש</string>
     <string name="aaps">AAPS</string>
@@ -774,6 +783,7 @@
     <string name="wizard_carb_time">זמן הפחמימות</string>
     <string name="carb_time_now">עכשיו</string>
     <string name="change">שינוי</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
     <string name="grant">מתן הרשאה</string>
     <string name="set">הגדרה</string>
     <string name="wizard_set_alarm">הגדרת התראה</string>
@@ -790,6 +800,7 @@
     <string name="wizard_include_iob">הכללת IOB</string>
     <string name="wizard_include_cob">הכללת COB</string>
     <string name="wizard_calculation">תחשיב</string>
+    <string name="no_action_selected">לא נבחרה פעולה, לא יקרה דבר.</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">הסרה מרבית: %1$d גר׳ (פחמימות פעילות)</string>
     <string name="wizard_no_insulin_required">לא נדרש אינסולין</string>
     <string name="wizard_no_actual_bg">אין ערך סוכר עדכני שעליו אפשר לבסס את החישוב!</string>
@@ -1038,7 +1049,7 @@
     <string name="units_colon">יחידות:</string>
     <string name="unsaved_changes">שינויים שלא נשמרו</string>
     <string name="unsaved_changes_message">יש שינויים שלא נשמרו. מה ברצונכם לעשות?</string>
-    <string name="discard">ניתוק</string>
+    <string name="discard">השלכה</string>
     <string name="ic_dynamic_label_warning">האלגוריתם יכול לחשב IC באופן דינמי. הערכים שלמטה ישמשו רק כגיבוי כאשר חסרים נתונים או כערכי ייחוס</string>
     <string name="isf_dynamic_label_warning">האלגוריתם יכול לחשב ISF באופן דינמי. הערכים שלמטה ישמשו רק כגיבוי כאשר חסרים נתונים או כערכי ייחוס</string>
     <string name="add_time_block">הוספת מקטע זמן</string>
@@ -1050,6 +1061,7 @@
     <string name="clear">ניקוי</string>
     <string name="search_category_categories">קטגוריות הגדרות</string>
     <string name="search_category_preferences">העדפות</string>
+    <string name="search_category_dialogs">תיבות דו־שיח</string>
     <string name="search_category_plugins">תוספים</string>
     <string name="search_category_wiki">תיעוד</string>
     <string name="wiki_search_offline">חיפוש בתיעוד דורש חיבור לאינטרנט</string>
@@ -1065,6 +1077,9 @@
     <string name="subcategory">תת קטגוריה</string>
     <string name="portion">מנה</string>
     <string name="unit_label">יחידה</string>
+    <string name="undo">ביטול פעולה</string>
+    <string name="no_data">אין נתונים</string>
+    <string name="manage_food_desc">ניהול רשומות מסד נתוני המזון</string>
     <string name="label_carbs_g">פחמימות (גר\')</string>
     <string name="label_fat_g">שומן (גר\')</string>
     <string name="label_protein_g">חלבון (גר\')</string>
@@ -1085,13 +1100,19 @@
     <string name="import_decrypt">פענוח</string>
     <string name="import_master_password">סיסמה ראשית</string>
     <string name="import_decryption_password">סיסמת פענוח</string>
+    <string name="import_different_password_hint">הקובץ הוצפן באמצעות סיסמה אחרת</string>
     <string name="import_wrong_password">סיסמה שגויה</string>
+    <string name="import_btn">ייבוא</string>
+    <string name="import_anyway_btn">ייבוא בכל זאת</string>
     <string name="import_apply_title">להחיל הגדרות מיובאות?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">מספר ההגדרות שישתנו: %1$d. תוספים שהשתנו יופעלו מחדש.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">מספר ההגדרות שישתנו: %1$d. מספר הגדרות המשאבה שנשמרו: %2$d, כדי שהמשאבה תמשיך לפעול.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">ההגדרות שיובאו לא בחרו משאבה הזמינה בטלפון זה. %1$s פעיל כעת — נא לבדוק את הגדרות המשאבה.</string>
     <string name="import_applying">מחיל הגדרות…</string>
     <string name="import_replace_pump_settings">להחליף גם את הגדרות המשאבה</string>
     <string name="import_replace_pump_settings_summary">השאירו אפשרות זו כבויה כדי לשמור על המשאבה המצומדת לטלפון זה. הפעילו אותה בעת שחזור בטלפון חדש עם אותה משאבה.</string>
