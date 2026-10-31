@@ -14,12 +14,15 @@
     <string name="operating_mode">Κατάσταση λειτουργίας</string>
     <string name="description_pump_insight_local">Ενσωμάτωση αντλίας για αντλίες Accu-Chek Insight</string>
     <string name="not_inserted">Δεν έχει εισαχθεί</string>
+    <string name="tdd_bolus">TDD Bolus</string>
     <string name="tdd_basal">TDD βασικός</string>
     <string name="multiwave_bolus">Συνδυαστικό bolus</string>
     <string name="searching_for_devices">Αναζήτηση συσκευών…</string>
     <string name="pairing_completed">Σύζευξη ολοκληρώθηκε</string>
     <string name="code_compare">Ταιριάζουν οι εμφανιζόμενοι κωδικοί με αυτούς της αντλίας;</string>
     <string name="insight_pairing">Σύζευξη Insight</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Σωληνάκι αλλάχτηκε</string>
     <string name="insight_alert_notification_channel">Ειδοποιήσεις Αντλίας Insight</string>
     <string name="disable_vibration">Απενεργοποίηση δονήσεων κατά τη χειροκίνητη δόση bolus</string>
@@ -44,4 +47,8 @@
     <string name="max_recovery_duration">Μέγ. διάρκεια αποκατάστασης [s]</string>
     <string name="min_recovery_duration">Ελάχ. διάρκεια αποκατάστασης [s]</string>
     <string name="pump_alert">Συναγερμός αντλίας</string>
+    <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">Κατάργηση σύζευξης</string>
+    <string name="reset_pairing">Επαναφορά στοιχείων σύζευξης;</string>
+    <string name="reservoir_level">Επίπεδο δεξαμενής</string>
 </resources>
