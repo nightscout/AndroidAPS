@@ -97,6 +97,7 @@
     <string name="carelevo_patch_attach_step2_desc">Ta patchen ut av pakningen og fjern nålehetten.</string>
     <string name="carelevo_patch_attach_step3_title">Fest patch</string>
     <string name="carelevo_patch_attach_step3_desc">Fest patchen på huden med det merkede punktet vendt opp.</string>
+    <string name="carelevo_patch_attach_step4_desc">Trykk på Neste etter at du har festet patchen.</string>
     <string name="carelevo_patch_needle_insertion_step1_title">Fjern sikkerhetshetten</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">Vri sikkerhetshetten i pilens retning og fjern den.</string>
     <string name="carelevo_patch_needle_insertion_step2_title">Sett inn nål</string>
