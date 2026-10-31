@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
-    <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
+    <string name="description_source_ns_client">Laddar ner BG-data från Nightscout</string>
     <string name="source_xdrip">xDrip+ BG</string>
-    <string name="dexcom_app_patched">Patchad Dexcom-app</string>
+    <string name="dexcom_app_patched">BYODA</string>
     <string name="description_source_dexcom">Ta emot BG-värden från \"Bygg din egen Dexcom-app\".</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Ta emot BG-data från Glimp</string>
     <string name="mm640g">MM640g</string>
     <string name="description_source_mm640g">Ta emot BG-data från 600SeriesAndroidUploader</string>
     <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Ta emot BG-data från Poctechappen</string>
+    <string name="description_source_poctech">Ta emot BG-värden från Poctech-appen</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">Ta emot värden från Glunovo-appen</string>
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">Ta emot värden från Intelligo-appen</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="description_source_tomato">Ta emot BG-data från tomato app (MiaoMiao-enhet)</string>
+    <string name="description_source_tomato">Ta emot BG-värden från Tomato-appen (MiaoMiao-enhet)</string>
     <string name="random_bg">Slumpmässig BG</string>
     <string name="description_source_random_bg">Generera slumpmässiga BG-data (endast demo-läge)</string>
     <!-- Patched Syai Tag App -->
@@ -26,4 +26,5 @@
     <!-- Instara preferences -->
     <!-- Notification Reader -->
     <!-- Permission rationales -->
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">dubblettvärde</string>
 </resources>

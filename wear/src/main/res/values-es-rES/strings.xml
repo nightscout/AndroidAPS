@@ -62,7 +62,7 @@
     <string name="pref_single_target">Objetivo único</string>
     <string name="pref_wizard_percentage">Porcentaje en calculadora</string>
     <string name="pref_wizard_carbs_type">Tipo de comida de la calculadora</string>
-    <string name="pref_wizard_carb_time">Tiempo de hidratos de carbono de la calculadora</string>
+    <string name="pref_wizard_carb_time">Tiempo de carbohidratos de la calculadora</string>
     <string name="pref_complication_tap_action">Acción al tocar la complicación</string>
     <string name="pref_complication_bg_graph_hours">Rango de tiempo del gráfico de glucemia</string>
     <string name="duration_1_hour">1 hora</string>
@@ -77,11 +77,11 @@
     <string name="menu_wizard">Calculadora</string>
     <string name="menu_wizard_short">Calc</string>
     <string name="menu_treatment">Tratamiento</string>
-    <string name="menu_treatment_short">Trata</string>
+    <string name="menu_treatment_short">Trat.</string>
     <string name="menu_bolus">Bolo</string>
     <string name="menu_carb">Carbohidratos</string>
     <string name="menu_ecarb">eCarbs</string>
-    <string name="menu_settings">Configuración</string>
+    <string name="menu_settings">Ajustes</string>
     <string name="menu_status">Estado</string>
     <string name="menu_bg_graph">Gráfico de glucosa</string>
     <string name="menu_resync">Re-sincronizar</string>
@@ -249,7 +249,7 @@
     <string name="complication_full_status_flipped">Estado completo (invertido)</string>
     <string name="complication_blood_glucose">Glucosa en sangre</string>
     <string name="complication_blood_glucose_large">Glucemia (grande)</string>
-    <string name="complication_blood_glucose_ext1">Glocosa en sangre Ext1</string>
+    <string name="complication_blood_glucose_ext1">Glucosa en sangre Ext1</string>
     <string name="complication_blood_glucose_ext2">Glucosa en sangre Ext2</string>
     <string name="complication_bg_graph">Gráfico BG</string>
     <string name="complication_cwf_image">Esfera de reloj personalizada</string>
@@ -288,7 +288,8 @@
     <string name="wizard_carbs_type_bread">Pan</string>
     <string name="wizard_carbs_type_cake">Pastel</string>
     <string name="wizard_carbs_type_pizza">Pizza</string>
-    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Tiempo de hidratos de carbono\n[min]</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Hora HC
+[min]</string>
     <string name="wizard_carb_time_now">Ahora</string>
     <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
     <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d min</string>
@@ -298,7 +299,12 @@
     <string name="eat_reminder_stop">Detener</string>
     <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Suena a las %1$s</string>
     <string name="eat_reminder_countdown_channel">Hora de comer, en ejecución</string>
+    <string name="eat_reminder_channel_silent">Hora de comer durante el modo No molestar</string>
     <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d min</string>
+    <string name="phone_alarm_channel">Alarmas del teléfono</string>
+    <string name="phone_alarm_channel_silent">Alarmas del teléfono durante el modo No molestar</string>
+    <string name="phone_alarm_silence">Silenciar</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Silenciar %1$d min</string>
     <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>

@@ -6,7 +6,16 @@
     <string name="carbs_short" comment="max 6 characters">KH</string>
     <!--    PumpStatusGenerator-->
     <!--    Permissions-->
+    <string name="permission_notifications_title">Aviseringar</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_silent_description">Används när \"Öka aviseringsvolymen gradvis\" är påslaget. Larmskärmen spelar upp ljudet.</string>
+    <string name="notifications_channel_name">AAPS-aviseringar</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="metadata_warning_different_flavour">Inställningarna skapades med en annan variant av AAPS (%1$s). Du kör nu: %2$s.\n\nVissa inställningar kan saknas eller vara ogiltiga. Efter att du importerat bör du kontrollera och uppdatera inställningarna.</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Filens kontrollsumma (hash) saknas. Det går inte att verifiera äktheten för inställningarna!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfel. Det angivna lösenordet är ogiltigt eller så har inställningsfilen ändrats. Det kan hända att den importerade filen har exporterats med ett annat huvudlösenord.</string>
+    <string name="metadata_label_device_name">Patientnamn på exporterande enhet</string>
+    <string name="metadata_label_device_model">Modell på exporterande enhet</string>
+    <string name="metadata_label_encryption">Filkryptering</string>
 </resources>

@@ -11,7 +11,7 @@
     <string name="treatments_history">Cronologia trattamenti</string>
     <string name="treatments_desc">Visualizza e gestisci la cronologia dei trattamenti</string>
     <string name="nav_configuration">Configurazione</string>
-    <string name="nav_configuration_desc">Imposta la tua configurazione (CGM, Pump, ...) e abilita funzionalità</string>
+    <string name="nav_configuration_desc">Imposta la tua configurazione (CGM, Micro, ...) e abilita funzionalità</string>
     <string name="count_selected">%1$d selezionati</string>
     <string name="delete">Cancella</string>
     <string name="show_invalidated">Mostra invalidato</string>
@@ -252,7 +252,7 @@
     <string name="last_site_location">Ultimo sito: %1$s</string>
     <string name="pick_site">Scegli sito</string>
     <string name="select_site_location">Seleziona la posizione del sito</string>
-    <string name="site_location">Posizione Del Sito</string>
+    <string name="site_location">Posizione del sito</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="stoptemptarget">Stoppa target temporaneo</string>
     <string name="closedloop">Loop chiuso</string>
@@ -286,7 +286,7 @@
     <string name="not_available_on_platform">Questa funzione non è disponibile su questa piattaforma</string>
     <string name="engineering_mode_enabled">Engineering mode abilitata</string>
     <string name="back">Indietro</string>
-    <string name="next">Prossimo</string>
+    <string name="next">Avanti</string>
     <string name="pref_syncs_with_main_phone">Sincronizza con il telefono principale</string>
     <string name="show_hide_records">Nascondi record di loop</string>
     <!--    Protection-->
@@ -717,6 +717,7 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">Nessun profilo selezionato</string>
     <string name="missing_profile_name">Nome profilo mancante</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">Copia %1$s</string>
     <string name="profile_not_saved_activate">Profilo non salvato. Si prega di salvare il profilo prima di attivarlo.</string>
     <string name="profile_basal_not_compatible_with_pump">La velocità basale non è compatibile col micro corrente e non può essere attivata. Ridurre la percentuale o regolare la velocità basale.</string>
     <string name="profile_basal_below_pump_minimum">La velocità basale è sotto il minimo attivabile e non può essere attivata. Ridurre la percentuale o regolare la velocità basale.</string>

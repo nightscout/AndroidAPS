@@ -97,7 +97,7 @@
     <string name="carelevo_patch_attach_step2_desc">Извадете пача от блистера и свалете капачката на иглата.</string>
     <string name="carelevo_patch_attach_step3_title">Поставяне на пача</string>
     <string name="carelevo_patch_attach_step3_desc">Залепете пача към кожата с маркираната точка нагоре.</string>
-    <string name="carelevo_patch_attach_step4_desc">След като залепите пача, натиснете бутона Готово.</string>
+    <string name="carelevo_patch_attach_step4_desc">След като поставите пача, натиснете Напред.</string>
     <string name="carelevo_patch_needle_insertion_step1_title">Свалете предпазната капачка</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">Завъртете предпазната капачка по посока на стрелката и я свалете.</string>
     <string name="carelevo_patch_needle_insertion_step2_title">Поставяне на иглата</string>
@@ -114,7 +114,7 @@
     <string name="carelevo_dialog_patch_connect_needle_injected">Поставянето на иглата е завършено; премахване на апликатора</string>
     <string name="carelevo_dialog_connect_detached">Апликаторът е премахнат</string>
     <string name="carelevo_dialog_connect_detach_applicator_guide">
-        Натиснете гривите от двете страни на апликатора, за да го отделите от пача,\n
+        Натиснете дръжките от двете страни на апликатора, за да го отделите от пача,\n
         и след това натиснете бутона `Апликаторът е премахнат`. Подаването на инсулин ще започне.
     </string>
     <!-- Connection -->

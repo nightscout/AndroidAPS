@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="exponential_smoothing_name">Suavização exponencial</string>
+    <string name="description_exponential_smoothing">"Algoritmo de suavização exponencial de segunda ordem"</string>
+    <string name="avg_smoothing_name">Suavização por média</string>
+    <string name="description_avg_smoothing">"Algoritmo de suavização por média, o valor mais recente não é alterado"</string>
+    <string name="no_smoothing_name">Sem suavização</string>
+    <string name="description_no_smoothing">"Use esta opção quando já tem dados filtrados, por exemplo do BYODA G6."</string>
+    <string name="UKF_name">Unscented Kalman Filter</string>
+    <string name="description_UKF">"Algoritmo avançado com ajuste automático do ruído e suavização RTS."</string>
+</resources>

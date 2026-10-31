@@ -32,9 +32,8 @@
     <string name="pref_title_alert_urgent_as_android_notification">Déclencher les alarmes urgentes vers les notifications Android</string>
     <string name="pref_title_alert_increase_volume">Augmenter progressivement le volume des notifications</string>
     <string name="pref_title_alert_override_dnd">Outrepasser le mode Ne pas déranger</string>
-    <string name="pref_summary_alert_override_dnd">Lorsque cette option est activée, les alarmes AAPS sonnent même si le téléphone est en mode silencieux ou en mode Ne pas déranger. Lorsque désactivé, les alarmes restent silencieuses dans ces modes.</string>
     <!-- BG Source preferences -->
-    <string name="pref_title_bg_source_upload_to_ns">Télécharger des Gly vers NS</string>
+    <string name="pref_title_bg_source_upload_to_ns">Envoyer des Gly vers NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Enreg. changement de capteur</string>
     <string name="pref_summary_bg_source_create_sensor_change">Créer un événement changement de capteur lorsque le capteur est inséré.</string>
     <!-- APS preferences -->
@@ -90,9 +89,9 @@
     <string name="pref_title_sms_report_pump_unreachable">Signaler Pompe hors de portée via SMS</string>
     <string name="pref_summary_sms_report_pump_unreachable">Envoyer une notification par SMS lorsque la pompe devient inaccessible.</string>
     <!-- Virtual pump preferences -->
-    <string name="pref_title_virtual_pump_status_upload">Télécharger l\'état de la pompe sur NS</string>
+    <string name="pref_title_virtual_pump_status_upload">Envoyer l\'état de la pompe sur NS</string>
     <!-- NS Client preferences -->
-    <string name="pref_title_ns_upload_data">Télécharger des données vers NS</string>
+    <string name="pref_title_ns_upload_data">Envoyer des données vers NS</string>
     <string name="pref_summary_ns_upload_data">Transférer traitements, basales temporaires et autres données vers Nightscout.</string>
     <string name="pref_title_ns_receive_cgm">Recevoir les données MGC depuis NS</string>
     <string name="pref_summary_ns_receive_cgm">Accepter les données MGC depuis NS.</string>

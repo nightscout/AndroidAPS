@@ -5,7 +5,7 @@
     <string name="description_source_ns_client">Pobieraj wartości BG z Nightscout</string>
     <string name="source_xdrip">xDrip+ BG</string>
     <string name="description_source_xdrip">Otrzymuj glikemię z xDrip+ i kompatybilnych aplikacji (Juggluco itp.).</string>
-    <string name="dexcom_app_patched">Dexcom Patched</string>
+    <string name="dexcom_app_patched">BYODA</string>
     <string name="description_source_dexcom">Pobieraj glikemię ze spatchowanej aplikacji Dexcom.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Pobieraj wartości BG z Glimp.</string>

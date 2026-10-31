@@ -4,7 +4,7 @@
     <string name="automation_enabled">Включено</string>
     <string name="automation_read_only">Само за преглед</string>
     <string name="automation_new_rule">Ново правило</string>
-    <string name="automation_empty_desc">Създайте правило за автомация на база тези действия.</string>
+    <string name="automation_empty_desc">Създайте правило, което автоматично изпълнява действия според тригери.</string>
     <string name="automation_edit_rule">Редактиране</string>
     <string name="automation_discard_title">Отхвърли промените?</string>
     <string name="automation_discard_message">Правилото е незавършено и не мога да го запазя. Отказвате ли промените?</string>
@@ -14,7 +14,7 @@
     <string name="automation_category_device">Статус на устройство</string>
     <string name="automation_category_sensors">Връзка &amp; със сензор</string>
     <string name="automation_category_other">Друго</string>
-    <string name="automation_choose_trigger">Добавяне на тригър</string>
+    <string name="automation_choose_trigger">Добавяне на тригер</string>
     <string name="automation_add_group">Група</string>
     <string name="automation_choose_action">Добави действие</string>
     <string name="automation_category_targets">Цели</string>
@@ -33,7 +33,7 @@
     <string name="trigger_scene_active">Сценарий</string>
     <string name="trigger_scene_active_compared">Сценарий: %1$s</string>
     <string name="action_scene_not_found">Не намирам сценарий</string>
-    <string name="action_scene_disabled">Сценарият не е открит</string>
+    <string name="action_scene_disabled">Сценарият е изключен</string>
     <string name="automation_unit_meters">м</string>
     <string name="automation_unit_bpm">уд/м</string>
     <string name="automation_missing_task_name">Въведете име</string>
@@ -42,7 +42,7 @@
     <string name="exportsettings_message">Експорт настройки: %1$s</string>
     <string name="export_settings_short">Текст в лечения:</string>
     <string name="alarm_message">Аларма: %1$s</string>
-    <string name="alarm_short">Алармa:</string>
+    <string name="alarm_short">Аларма:</string>
     <string name="message_short">Съоб:</string>
     <string name="notification_message">Известие: %1$s</string>
     <string name="profilename">Смени профила на</string>
@@ -60,12 +60,12 @@
     <string name="isequalorlesser">е равно или по-малко от</string>
     <string name="isequal">е равно на</string>
     <string name="isequalorgreater">е равно или по-голямо от</string>
-    <string name="isgreater">е по-голяма от </string>
+    <string name="isgreater">е по-голямо от</string>
     <string name="isnotavailable">не е налично</string>
     <string name="glucoseisnotavailable">КЗ не е достъпна</string>
     <string name="glucosecomparedmgdl">КЗ %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">КЗ %1$s %2$.1f %3$s</string>
-    <string name="notemptarget">Времената цел не съществува</string>
+    <string name="notemptarget">Временната цел не съществува</string>
     <string name="temptargetcomparedmgdl">Временна цел %1$s %2$.0f %3$s</string>
     <string name="temptargetcomparedmmol">Временна цел %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Профил процент %1$s %2$d</string>
@@ -108,8 +108,8 @@
     <string name="triggerCannulaAgeDesc">Иглата е на %1$s %2$.1f часа</string>
     <string name="triggerPodChangeLabel">Активиране на под</string>
     <string name="triggerPodChangeDesc">Подът е активиран</string>
-    <string name="triggerUnknownLabel">Неизвестен спусък</string>
-    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Неизвестен спусък %1$s - никога не е възможен</string>
+    <string name="triggerUnknownLabel">Неизвестен тригер</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Неизвестен тригер %1$s – условието никога не е изпълнено</string>
     <string name="triggerInsulinAgeLabel">Инсулин на</string>
     <string name="triggerInsulinAgeDesc">Инсулин на %1$s %2$.1f часа</string>
     <string name="triggerPumpBatteryAgeLabel">Батерия на</string>
@@ -127,12 +127,12 @@
     <string name="edit_short">РЕД</string>
     <string name="preconditions">Предварителни условия:</string>
     <string name="user_action">Потребителско действие</string>
-    <string name="system_automation">Системна автомация</string>
-    <string name="run_automations">Стартирай автомаций</string>
+    <string name="system_automation">Системна автоматизация</string>
+    <string name="run_automations">Стартирай автоматизациите</string>
     <string name="add_automation">Добавяне на правило</string>
     <string name="stop_processing">Спри изпълнението</string>
     <!--    Reminders-->
-    <string name="time_to_eat">Време за ядене!\Стартирайте болус съветника и направете изчисления отново.</string>
+    <string name="time_to_eat">Време за ядене!\nСтартирайте болус съветника и направете изчисления отново.</string>
     <string name="time_to_bolus">Време е за болус!\nВключи болус съветника и направи изчисление отново.</string>
     <string name="error_setting_reminder">Грешка при настройка на аларма!</string>
     <!--    Autotune-->
@@ -165,6 +165,6 @@
     <string name="selected_coords">Избрано: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
     <string name="permission_location_title">Локация</string>
-    <string name="permission_location_description">Нужно за автомации с локация и WiFi локализация</string>
-    <string name="permission_background_location_description">Нужно за пускане на автомация когато приложението е във фонов режим (background)</string>
+    <string name="permission_location_description">Нужно за тригери на автоматизацията по местоположение и за разпознаване на WiFi мрежа</string>
+    <string name="permission_background_location_description">Нужно, за да работят тригерите на автоматизацията, когато приложението е във фонов режим</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="enable_tbr_over_notification">Ενεργοποίηση ειδοποίησης TBR τέλος\n (ρύθμιση αντλίας)</string>
-    <string name="disable_tbr_over_notification">Απενεργοποίηση ειδοποίησης TBR τέλος\n (ρύθμιση αντλίας)</string>
+    <string name="enable_tbr_over_notification">Ενεργοποίηση ειδοποίησης τέλους TBR\n(ρύθμιση αντλίας)</string>
+    <string name="disable_tbr_over_notification">Απενεργοποίηση ειδοποίησης τέλους TBR\n(ρύθμιση αντλίας)</string>
     <string name="not_paired">Μη σύζευξη</string>
     <string name="recovering">Ανάκτηση</string>
     <string name="insight_status">Κατάσταση</string>
@@ -14,12 +14,15 @@
     <string name="operating_mode">Κατάσταση λειτουργίας</string>
     <string name="description_pump_insight_local">Ενσωμάτωση αντλίας για αντλίες Accu-Chek Insight</string>
     <string name="not_inserted">Δεν έχει εισαχθεί</string>
+    <string name="tdd_bolus">TDD Bolus</string>
     <string name="tdd_basal">TDD βασικός</string>
     <string name="multiwave_bolus">Συνδυαστικό bolus</string>
     <string name="searching_for_devices">Αναζήτηση συσκευών…</string>
     <string name="pairing_completed">Σύζευξη ολοκληρώθηκε</string>
     <string name="code_compare">Ταιριάζουν οι εμφανιζόμενοι κωδικοί με αυτούς της αντλίας;</string>
     <string name="insight_pairing">Σύζευξη Insight</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Σωληνάκι αλλάχτηκε</string>
     <string name="insight_alert_notification_channel">Ειδοποιήσεις Αντλίας Insight</string>
     <string name="disable_vibration">Απενεργοποίηση δονήσεων κατά τη χειροκίνητη δόση bolus</string>
@@ -32,16 +35,20 @@
     <string name="release_software_version">Έκδοση λογισμικού</string>
     <string name="bluetooth_address">Διεύθυνση Bluetooth</string>
     <string name="manufacturing_date">Ημερομηνία κατασκευής</string>
-    <string name="log_site_changes">Αλλαγές αρχείου καταγραφής</string>
-    <string name="log_reservoir_changes">Αλλαγές αρχείου αμπούλας</string>
-    <string name="log_tube_changes">Αλλαγές αρχείου σωλήνα</string>
-    <string name="log_battery_changes">Αλλαγές αρχείου μπαταρίας</string>
-    <string name="log_operating_mode_changes">Αλλαγές αρχείου κατάστασης λειτουργίας</string>
-    <string name="log_alerts">Τοπικές Ειδοποιήσεις</string>
+    <string name="log_site_changes">Καταγραφή αλλαγών σημείου έγχυσης</string>
+    <string name="log_reservoir_changes">Καταγραφή αλλαγών δεξαμενής</string>
+    <string name="log_tube_changes">Καταγραφή αλλαγών σωληνακίου</string>
+    <string name="log_battery_changes">Καταγραφή αλλαγών μπαταρίας</string>
+    <string name="log_operating_mode_changes">Καταγραφή αλλαγών κατάστασης λειτουργίας</string>
+    <string name="log_alerts">Καταγραφή ειδοποιήσεων</string>
     <string name="enable_tbr_emulation">Ενεργοποίηση εξομοίωσης TBR</string>
     <string name="enable_tbr_emulation_summary">Χρησιμοποιείστε εκτεταμένα bolus αντί για TBR για παράκαμψη του ορίου 250%%</string>
-    <string name="disconnect_delay">Αποσυνδέστε καθυστέρηση [s]</string>
+    <string name="disconnect_delay">Καθυστέρηση αποσύνδεσης [s]</string>
     <string name="max_recovery_duration">Μέγ. διάρκεια αποκατάστασης [s]</string>
     <string name="min_recovery_duration">Ελάχ. διάρκεια αποκατάστασης [s]</string>
     <string name="pump_alert">Συναγερμός αντλίας</string>
+    <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">Κατάργηση σύζευξης</string>
+    <string name="reset_pairing">Επαναφορά στοιχείων σύζευξης;</string>
+    <string name="reservoir_level">Επίπεδο δεξαμενής</string>
 </resources>

@@ -103,7 +103,7 @@
     <string name="bolus_speed_30">30 s/U</string>
     <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Micro selezionato</string>
-    <string name="rs_loginsulinchange_title">Registra cambio serbatorio</string>
+    <string name="rs_loginsulinchange_title">Registra cambio serbatoio</string>
     <string name="rs_loginsulinchange_summary">Aggiungi evento \"cambio insulina\" al portale quando rilevato nello storico</string>
     <string name="rs_logcanulachange_title">Registra cambio cannula</string>
     <string name="rs_logcanulachange_summary">Aggiungi evento \"cambio posizione\" al portale quando rilevato nello storico</string>

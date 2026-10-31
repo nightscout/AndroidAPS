@@ -9,8 +9,10 @@
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
+    <string name="basal_shortname">기저</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
-    <string name="description_persistent_notification">Loop가 어떤 작동하는지에 대한 간략한 개요를 연속 알림으로 보여줍니다.</string>
+    <string name="description_persistent_notification">루프가 하는 일을 간략히 보여주는 상시 알림을 표시합니다</string>
     <string name="old_data">오래된 데이터</string>
+    <string name="notification_iob_short">%1$.1fU</string>
 </resources>

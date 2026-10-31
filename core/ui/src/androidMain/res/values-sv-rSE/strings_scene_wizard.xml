@@ -1,22 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">Välj en startpunkt. Mallarna är förifyllda med rekommenderade åtgärder för de vanligaste situationerna – du kan justera allt i följande steg.</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_wizard_info_exercise">Under fysisk aktivitet förbrukar musklerna glukos snabbare och insulinkänsligheten ökar. Att höja det tillfälliga målvärdet i förväg ger algoritmen ett försprång. Den börjar minska insulinet tidigare och bygger upp en buffert mot träningsinducerad hypoglykemi. Det rekommenderas också att stänga av SMB, eftersom korrigeringsbolusar under träning kan orsaka snabba blodsockerfall. För bästa resultat, aktivera denna scen 1 till 2 timmar innan du börjar träna, så att algoritmen har tid att minska ditt aktiva insulin.</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_wizard_sick_day_desc">Starkare profil (150%) för att hantera ökad insulinresistens vid sjukdom.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <!-- Sleep: no default actions — 8h -->
+    <string name="scene_wizard_info_sleep">Många får oupptäckta höga eller låga värden under natten. Ett något snävare mål under natten gör att algoritmen kan göra exaktare justeringar medan du sover. För bästa resultat kombinera detta med en profil som återspeglar dina basalbehov under natten.</string>
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_wizard_info_post_exercise_night">Efter fysisk aktivitet fyller musklerna kontinuerligt på glykogenlagren i många timmar – insulinkänsligheten kan förbli förhöjd i 24–48 timmar, med störst risk för nattlig hypoglykemi 6–12 timmar efter träning. En reducerad profil minskar basaltillförseln under natten, ett högre tillfälligt målvärde ger algoritmen en säkerhetsbuffert, och att inaktivera SMB förhindrar att algoritmen överkorrigerar kortvariga stigningar. Aktivera denna scen vid sänggåendet på träningsdagar, särskilt efter långa träningspass eller när du lagt till nya aktiviteter. Ha snabbverkande kolhydrater till hands och överväg att ställa ett alarm för att göra en blodsockerkontroll mitt i natten.</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_wizard_info_alcohol">Alkohol är en av de farligaste situationerna för människor med typ 1-diabetes. Levern prioriterar nedbrytning av alkohol framför att frigöra glukos, vilket kan orsaka fördröjd hypoglykemi 6-24 timmar senare, ofta under natten medan du sover. LGS-läge förhindrar att för höga insulinnivåer byggs upp genom att endast minska tillförseln när blodsockret sjunker. En lägre basalprofil och inaktiverad SMB minskar ytterligare insulinet ombord. Kontrollera alltid ditt blodsocker innan du somnar och överväg att sätta ett larm för en blodsockerkontroll mitt i natten.</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_wizard_info_bathing">När du kopplar bort pumpen avbryts insulintillförseln helt – ingen basal, inga bolusar, ingen korrigering. Algoritmen växlar till frånkopplat läge och slutar göra justeringar. Detta är normalt under korta perioder som dusch, bad eller simning. När scenen är slut återansluts pumpen och algoritmen återupptas automatiskt. Håll frånkopplingarna korta – utan basalinsulin börjar blodsockret stiga inom 1 till 2 timmar.</string>
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <!-- Hot Weather: Profile 85% — 8h -->
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_wizard_info_medical_procedure">Under operationer eller medicinska ingrepp gör narkos och stresshormoner blodsockret oförutsägbart. Open loop-läge rekommenderas eftersom algoritmen inte tillförlitligt kan förutsäga vad din kropp kommer att göra under dessa förhållanden. Ett högre mål 8,3 mmol/L (150 mg/dl) ger en säkerhetsmarginal mot hypoglykemi under operation. Att inaktivera SMB förhindrar oväntad insulintillförsel under ingreppet. Informera alltid sjukvårdspersonalen om att du bär en insulinpump och CGM. För ingrepp som varar längre än 3 timmar kan ditt team byta till intravenöst insulin.</string>
     <!-- Blank: no actions — 1h -->
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_tt_info">Ett tillfälligt målvärde talar om för algoritmen att den ska sikta på en annan blodsockernivå under en given period. Med ett högre målvärde reagerar algoritmen långsammare på stigande blodsocker och siktar på ett högre blodsockervärde, vilket minskar insulintillförseln och hjälper till att förhindra hypoglykemi under träning. Med ett lägre mål reagerar algoritmen snabbare och ger mer insulin – användbart för att ge insulinet försprång inför en måltid. Välj en av dina förinställningar nedan – målvärdet och orsaken är redan konfigurerade.</string>
+    <string name="scene_wizard_smb_info">Super Micro Boluses (SMB) låter algoritmen ge insulin i förväg som små bolusar och samtidigt tillfälligt stoppa basalleveransen för att kompensera – den lånar alltså insulin från framtiden för ett snabbare svar. Att inaktivera SMB förhindrar detta och begränsar algoritmen till att endast justera basaldoserna. Svaret blir långsammare och mer gradvis, vilket ofta föredras under träning eller sömn.</string>
+    <string name="scene_wizard_loop_mode_info">Körläget avgör hur autonomt algoritmen arbetar. I Closed Loop justerar den automatiskt insulinleveransen. LGS (Low Glucose Suspend) minskar eller stoppar endast insulinleveransen när blodsockret sjunker mot ett lågt värde – den ökar aldrig leveransen. Open Loop beräknar förslag men väntar på att du ska bekräfta varje förslag.</string>
+    <string name="scene_wizard_duration_info">Varaktigheten styr hur länge denna scen är aktiv. När tiden tar slut upphör tidsstyrda åtgärder (tillfälligt målvärde, profilbyte, körläge) av sig själva, medan bestående ändringar (som SMB-reglaget) automatiskt återställs till sina tidigare värden. Om varaktigheten är 0 är scenen aktiv utan tidsgräns – alla åtgärder är aktiva tills du avslutar scenen manuellt.</string>
     <!-- Scene wizard: UI labels -->
     <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">Uppföljningsscen</string>
     <!-- Scene list: chain indicator -->
     <!-- Scene expiry: what the banner says, and the chain error notification -->
 </resources>

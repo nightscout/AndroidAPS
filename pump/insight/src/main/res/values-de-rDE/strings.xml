@@ -39,7 +39,7 @@
     <string name="enable_tbr_emulation">TBR-Emulation aktivieren</string>
     <string name="enable_tbr_emulation_summary">Verzögerte Boli an Stelle von TBRs verwenden, um die Beschränkung auf 250%% zu umgehen</string>
     <string name="disconnect_delay">Verbindungsabbau-Verzögerung [s]</string>
-    <string name="max_recovery_duration">Max. Erholungsdauer [s]</string>
-    <string name="min_recovery_duration">Min. Erholungsdauer [s]</string>
+    <string name="max_recovery_duration">Max. Erholungsdauer [h]</string>
+    <string name="min_recovery_duration">Min. Erholungsdauer [h]</string>
     <string name="pump_alert">Pumpenalarm</string>
 </resources>

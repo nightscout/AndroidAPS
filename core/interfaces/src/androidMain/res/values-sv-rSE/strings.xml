@@ -3,8 +3,10 @@
     <!--    Dialogs-->
     <string name="confirmation">Bekräftelse</string>
     <!--    Events-->
+    <string name="bolus_delivering">Levererar %1$.2f U</string>
+    <string name="bolus_delivered_successfully">Bolus på %1$.2f U har levererats</string>
     <!-- PumpPluginBase -->
-    <string name="pump_driver_changed" comment="26 characters max for translation">Pumpdrivr. byttes.</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pumpdrivrutinen har bytts.</string>
     <!--    DateUtil-->
     <string name="minago_long">%1$d minuter sedan</string>
     <string name="days_ago">%1$.1f dagar sedan</string>
@@ -29,6 +31,14 @@
     <string name="tomorrow">Imorgon</string>
     <string name="today">Idag</string>
     <string name="yesterday">Igår</string>
+    <string name="values_with_dash" comment="Two values with a dash between them, for a range or a day and its date. Example: 6:00 - 10:00, or Today - 10/23/2026">%1$s - %2$s</string>
+    <string name="values_with_comma" comment="Two parts of one text with a comma between them. Example: BG: 7.5, Delta: +0.3">%1$s, %2$s</string>
+    <string name="values_with_slash" comment="Two values with a slash between them. Example: 0.01 / 0.05">%1$s / %2$s</string>
+    <string name="value_with_detail" comment="A value and a detail about it in brackets. Example: 0.85 U/h (STD), or 20 g (-15 min)">%1$s (%2$s)</string>
+    <string name="time_frame_hours_minutes" comment="A duration, short. h=hours, the mark after the minutes means minutes. %1$d=hours, %2$d=minutes. Example: 1h 30'">%1$dh %2$d\'</string>
+    <string name="time_frame_minutes" comment="A duration in minutes, short. The mark after the number means minutes. %1$d=minutes. Example: 30'">%1$d\'</string>
+    <string name="time_frame_in_parentheses" comment="A duration in brackets. %1$s=the duration. Example: (1h 30')">(%1$s)</string>
+    <string name="time_value_with_unit" comment="%1$s=a number, %2$s=the time unit, like minutes or days. Example: 5 minutes">%1$s %2$s</string>
     <!-- Rx -->
     <string name="connecting_for">Ansluter (%1$d s)</string>
     <string name="handshaking">Anslutningen verifieras</string>
@@ -49,6 +59,7 @@
     <string name="pref_show_delta">Visa delta</string>
     <string name="pref_show_detailed_delta">Visa detaljerad delta</string>
     <string name="pref_show_avgdelta">Visa genomsnittlig delta</string>
+    <string name="pref_show_tempTarget">Visa tillfälligt målvärde</string>
     <string name="pref_show_phone_battery">Visa telefonens batterinivå</string>
     <string name="pref_show_rig_battery">Visa riggens batterinivå</string>
     <string name="pref_show_basal_rate">Visa basaldos</string>
@@ -65,7 +76,7 @@
     <!-- Insulin -->
     <!-- Concentration -->
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
-    <string name="format_carbs">%1$dg</string>
+    <string name="format_carbs">%1$d g</string>
     <string name="carbs">Kolhydrater</string>
     <string name="alarminxmin">Larma om %1$d min</string>
     <string name="pumpsuspended">Pump pausad</string>
@@ -84,8 +95,11 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f är utanför hårda gränser</string>
     <string name="basal_value">Basaldos</string>
     <string name="cobvsiob">COB kontra IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Långsam KH-absorption upptäckt: %1$d%% av tiden. Dubbelkolla din beräkning. COB kan vara överskattat och därför kan mer insulin ges !!!!!</string>
     <string name="bolus_constraint_applied_warn">Bolusbegränsning tillämpad: %1$.2f U till %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus kommer bara att loggas (inte levereras av pumpen)</string>
     <string name="advisoralarm">Larma när det är dags att äta</string>
-    <string name="format_insulin_units">%1$.2fU</string>
+    <string name="format_insulin_units">%1$.2f U</string>
+    <string name="insulin_with_percentage" comment="%1$s=insulin with unit, %2$d=percentage of the calculated bolus. Example: 1.50 U (80%)">%1$s (%2$d%%)</string>
+    <string name="carbs_with_time_later" comment="Carbs eaten later. %1$s=carbs with unit, %2$s=minutes from now, with unit. Example: 20 g (+15 min)">%1$s (+%2$s)</string>
 </resources>

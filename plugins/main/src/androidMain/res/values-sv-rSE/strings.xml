@@ -11,5 +11,5 @@
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Visar en konstant avisering med en kort sammanfattning av vad din loop gör</string>
-    <string name="old_data">Aktuellt BG saknas!</string>
+    <string name="old_data">GAMLA DATA</string>
 </resources>

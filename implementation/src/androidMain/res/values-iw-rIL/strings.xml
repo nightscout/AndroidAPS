@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">הפקודה מבוצעת כעת</string>
-    <string name="basal_value_below_minimum">ערך הבסיס מתחת למינימום. פרופיל אינו מוגדר!</string>
+    <string name="basal_value_below_minimum">ערך הבזאלי מתחת למינימום. הפרופיל לא הוגדר!</string>
+    <string name="profile_set_ok_rounded" comment="%1$s=insulin per day the pump gives, %2$s=insulin per day in the profile. Example: 10.00 U, 10.12 U">הפרופיל הבזאלי במשאבה עודכן. המשאבה מעגלת את הבזאלי לצעד שלה: היא נותנת %1$s ליום במקום %2$s.</string>
+    <string name="basal_reported_far_from_profile">המשאבה מדווחת על בזאלי רחוק מהפרופיל. AAPS שומר על הבזאלי של הפרופיל. יש לבדוק את המינונים הבזאליים במשאבה.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">פחמימות</string>
     <!--    PumpStatusGenerator-->
@@ -13,12 +15,15 @@
     <!--    Permissions-->
     <string name="permission_battery_title">אופטימיזציית סוללה</string>
     <string name="permission_battery_description">יש להוציא את האפליקציה מאופטימיזציית הסוללה כדי שתפעל בצורה אמינה ברקע</string>
-    <string name="permission_directory_title">מדריך AAPS</string>
-    <string name="permission_directory_description">בחר ספרייה עבור הגדרות היישום וקובצי היומן</string>
+    <string name="permission_directory_title">תיקיית AAPS</string>
+    <string name="permission_directory_description">יש לבחור תיקייה עבור הגדרות האפליקציה וקובצי היומן</string>
     <string name="permission_notifications_title">התראות</string>
     <string name="permission_notifications_description">נדרש כדי להציג התראות, אזעקות ועדכוני מצב משאבה</string>
     <string name="permission_schedule_exact_alarm_title">שעונים מעוררים ותזכורות</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_eat_reminder">זמן לאכול</string>
+    <string name="eat_reminder_channel">ספירה לאחור של תזכורת האכילה</string>
+    <string name="eat_reminder_channel_description">מציג את הזמן שנותר עד שיגיע הזמן לאכול. אין צליל; ההתראה בסוף משמיעה צליל.</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>
@@ -39,18 +44,18 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">יוצא לפני %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">יוצא ב-%1$s</string>
     <string name="exported_less_than_hour_ago">יוצא לפני פחות משעה</string>
-    <string name="metadata_warning_different_flavour">ההעדפות נוצרו בגרסה אחרת של AAPS (%1$s) בעוד גירסתכם %2$s. \n\n חלק מההגדרות עלולות להיות חסרות או בלתי תקינות - לאחר הייבוא נא לבדוק ולעדכן את ההעדפות.</string>
+    <string name="metadata_warning_different_flavour">ההעדפות נוצרו בגרסה אחרת של AAPS (%1$s), ואילו אצלכם: %2$s.\n\nחלק מההגדרות עלולות להיות חסרות או לא תקינות - לאחר הייבוא נא לבדוק ולעדכן את ההעדפות.</string>
     <string name="metadata_warning_different_device">ההעדפות נוצרו במכשיר אחר. זה בסדר אם ייבאתם אותן ממכשיר ישן או שונה, אך וודאו שההעדפות שהובאו נכונות!</string>
-    <string name="metadata_warning_old_export">העדפות המיובאות הן כבר בנות %1$s ימים! אולי יש לכם עדפות עדכניות יותר או שבחרתם קובץ לא נכון? זכרו לייצא את ההעדפות באופן סדיר!</string>
+    <string name="metadata_warning_old_export">ההעדפות המיובאות הן כבר בנות %1$s ימים! אולי יש לכם העדפות עדכניות יותר או שבחרתם קובץ לא נכון? זכרו לייצא את ההעדפות באופן סדיר!</string>
     <string name="metadata_warning_date_format">פורמט תאריך ושעה לא חוקי!</string>
-    <string name="metadata_warning_different_version">ההעדפות נוצרו בגרסה משנית ישנה של AAPS. זה בסדר אם ייבאתם אותן לאחר שדרוג גרסה, אך וודאו שההעדפות שהובאו נכונות!</string>
+    <string name="metadata_warning_different_version">ההעדפות נוצרו בגרסה משנית אחרת של AAPS. זה בסדר אם הייבוא נעשה לאחר שדרוג, אך יש לבדוק לאחר הייבוא שההעדפות עדיין נכונות!</string>
     <string name="metadata_urgent_different_version">ההעדפות נוצרו בגרסה ראשית אחרת של AAPS. גרסאות ראשיות הן שונות מאוד והגדרותיהן עלולות להיות לא תואמות אחת לשניה. נא לוודא שההעדפות שהובאו נכונות!</string>
-    <string name="prefdecrypt_settings_tampered">קובץ ההגדרות פגום</string>
+    <string name="prefdecrypt_settings_tampered">קובץ ההגדרות שונה ללא הרשאה</string>
     <string name="prefdecrypt_settings_secure">קובץ ההגדרות מאובטח</string>
     <string name="prefdecrypt_settings_unencrypted">משתמש בפורמט הגדרות בלתי מאובטח ובלתי מוצפן</string>
-    <string name="prefdecrypt_wrong_json">שגיאה בפורמט JSON, חסר שדה חובה (פורמט, תוכן, מטא דאטה, בטיחות)</string>
+    <string name="prefdecrypt_wrong_json">שגיאה בפורמט JSON, חסר שדה חובה (format, content, metadata או security)</string>
     <string name="prefdecrypt_wrong_password">שגיאת פענוח, הסיסמה שהתקבלה לא מפענחת את הקובץ</string>
-    <string name="prefdecrypt_issue_missing_file_hash">בקרת קבצים (hash) חסרה, לא ניתן לאמת את אותנטיות ההגדרות!</string>
+    <string name="prefdecrypt_issue_missing_file_hash">סכום הביקורת של הקובץ (hash) חסר, לא ניתן לאמת את אותנטיות ההגדרות!</string>
     <string name="prefdecrypt_issue_modified">הקובץ שונה לאחר הייצוא!</string>
     <string name="prefdecrypt_issue_parsing">שגיאת פענוח, ניתוח ההעדפות נכשל!</string>
     <string name="prefdecrypt_issue_wrong_pass">שגיאת פענוח, הסיסמה שסופקה אינה חוקית או שקובץ ההגדרות שונה! יתכן שהקובץ המיובא יוצא עם סיסמה ראשית אחרת.</string>
@@ -60,33 +65,33 @@
     <string name="metadata_label_created_at">נוצר ב-</string>
     <string name="metadata_label_aaps_version">גרסת AAPS</string>
     <string name="metadata_label_aaps_flavour">גרסת בנייה</string>
-    <string name="metadata_label_device_name">מייצא את שם מכשיר המטופל\ת</string>
-    <string name="metadata_label_device_model">מייצא את דגם המכשיר</string>
+    <string name="metadata_label_device_name">מייצא את שם מכשיר המטופל/ת</string>
+    <string name="metadata_label_device_model">דגם המכשיר המייצא</string>
     <string name="metadata_label_encryption">הצפנת קבצים</string>
     <string name="metadata_format_new">פורמט הצפנה חדש</string>
     <string name="metadata_format_other">פורמט ייצוא לא ידוע</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">שגיאה בגישה למערכת הקבצים. אנא בחרו את תיקיית AAPS כראוי.</string>
-    <string name="storage_google_drive">גוגל דרייב</string>
-    <string name="backup_to_google_drive">גיבוי לגוגל דרייב</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">גיבוי ל-Google Drive</string>
     <string name="csv_upload_failed">העלאת קובץ ה-CSV של רשומות המשתמש לאחסון בענן נכשלה</string>
     <string name="csv_upload_error">אירעה שגיאה בעת העלאת קובץ ה-CSV לענן</string>
     <string name="uploading_to_cloud">מעלה לענן...</string>
     <string name="cloud_directory_path">תיקיית ענן: %1$s</string>
-    <string name="google_drive_token_refresh_failed">לא ניתן לרענן את אסימון הגישה של גוגל דרייב</string>
-    <string name="google_drive_token_refresh_error">לא ניתן לרענן את אסימון הגישה של: גוגל דרייב:%1$s</string>
-    <string name="google_drive_connection_test_failed">בדיקת החיבור של גוגל דרייב נכשלה</string>
-    <string name="google_drive_connect_error">לא ניתן להתחבר לגוגל דרייב: %1$s</string>
-    <string name="google_drive_list_folders_failed">נכשל בהצגת תיקיות גוגל דרייב</string>
-    <string name="google_drive_list_folders_error">שגיאה ברישום תיקיות: %1$s</string>
+    <string name="google_drive_token_refresh_failed">לא ניתן לרענן את אסימון הגישה של Google Drive</string>
+    <string name="google_drive_token_refresh_error">לא ניתן לרענן את אסימון הגישה של Google Drive: %1$s</string>
+    <string name="google_drive_connection_test_failed">בדיקת החיבור ל-Google Drive נכשלה</string>
+    <string name="google_drive_connect_error">לא ניתן להתחבר ל-Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">הצגת התיקיות ב-Google Drive נכשלה</string>
+    <string name="google_drive_list_folders_error">שגיאה בהצגת רשימת התיקיות: %1$s</string>
     <string name="google_drive_upload_no_id">ההעלאה בוצעה בהצלחה אך לא הוחזר מזהה</string>
     <string name="google_drive_upload_verify_failed">אימות ההעלאה נכשל</string>
     <string name="google_drive_upload_failed">העלאה נכשלה: %1$s</string>
     <string name="google_drive_upload_error">שגיאה בהעלאת הקובץ: %1$s</string>
     <string name="google_drive_folder_access_error">לא ניתן ליצור תיקיית יעד או לגשת אליה: %1$s</string>
-    <string name="google_drive_list_settings_failed">רישום קובצי ההגדרות נכשל</string>
-    <string name="google_drive_list_settings_error">שגיאה ברישום קובצי ההגדרות: %1$s</string>
+    <string name="google_drive_list_settings_failed">הצגת רשימת קובצי ההגדרות נכשלה</string>
+    <string name="google_drive_list_settings_error">שגיאה בהצגת רשימת קובצי ההגדרות: %1$s</string>
     <string name="google_drive_download_failed">הורדת הקובץ נכשלה</string>
     <string name="google_drive_download_error">שגיאה בהורדת הקובץ: %1$s</string>
-    <string name="google_drive_authorized">גוגל דרייב מורשה</string>
-    <string name="google_drive_reauth_required">נא לאפס את ההגדרות ובצעו הרשאה מחדש ל-גוגל דרייב</string>
+    <string name="google_drive_authorized">Google Drive מורשה</string>
+    <string name="google_drive_reauth_required">נא לאפס את ההגדרות ולבצע הרשאה מחדש ל-Google Drive</string>
 </resources>

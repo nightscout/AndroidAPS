@@ -116,7 +116,7 @@
     <string name="carelevo_patch_attach_step2_desc">Take out patch from blister and remove needle cap.</string>
     <string name="carelevo_patch_attach_step3_title">Apply Patch</string>
     <string name="carelevo_patch_attach_step3_desc">Attach the patch to your skin with the marked dot facing upward.</string>
-    <string name="carelevo_patch_attach_step4_desc">After attaching the patch, press the Ready button.</string>
+    <string name="carelevo_patch_attach_step4_desc">After attaching the patch, press Next.</string>
 
     <string name="carelevo_patch_needle_insertion_step1_title">Remove Safety Cap</string>
     <string name="carelevo_patch_needle_insertion_step1_desc">Turn the safety cap in the direction of the arrow and remove.</string>

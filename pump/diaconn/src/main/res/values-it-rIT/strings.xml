@@ -56,7 +56,7 @@
     <string name="insulinlackwarning">Avviso mancanza insulina</string>
     <string name="needbatteryreplace">Necessario sostituire batteria</string>
     <string name="needinsullinreplace">Necessario sostituire insulina</string>
-    <string name="diaconn_g8_loginsulinchange_title">Registra cambio serbatorio</string>
+    <string name="diaconn_g8_loginsulinchange_title">Registra cambio serbatoio</string>
     <string name="diaconn_g8_loginsulinchange_summary">Aggiungi evento \"cambio insulina\" al portale quando rilevato nello storico</string>
     <string name="diaconn_g8_logcanulachange_title">Registra cambio cannula</string>
     <string name="diaconn_g8_logcanulachange_summary">Aggiungi evento \"cambio posizione\" al portale quando rilevato nello storico</string>

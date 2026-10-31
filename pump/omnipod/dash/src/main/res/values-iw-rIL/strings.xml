@@ -4,7 +4,7 @@
     <string name="omnipod_dash_pump_description">חיבור משאבת Omnipod Dash (הדגם החדש, התומך בבלוטות\' ובעל מכסה מחט כחול).</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_address">כתובת בלוטות\'</string>
-    <string name="omnipod_dash_overview_firmware_version_value">קושחה%1$s \\ בלוטות\' %2$s</string>
+    <string name="omnipod_dash_overview_firmware_version_value">קושחה %1$s / בלוטות\' %2$s</string>
     <string name="omnipod_dash_overview_bluetooth_connection_quality">איכות החיבור</string>
     <string name="omnipod_dash_overview_delivery_status">סטטוס הזרקה</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
@@ -19,14 +19,15 @@
     <string name="requested_by_user" comment="26 characters max for translation">התבקש ע\"י המשתמש</string>
     <string name="suspend_delivery_is_unconfirmed">השעיית הזרקת האינסולין לא אושרה! נא לרענן ידנית את סטטוס הפוד מלשונית Omnipod ולהמשיך את ההזרקה במידה ונדרש.</string>
     <string name="insulin_delivery_suspended">הזרקת האינסולין מופסקת</string>
-    <string name="timezone_on_pod_is_different_from_the_timezone">אזור הזמן בפוד שונה מאזור הזמן בטלפון. ערכי הבאזלי אינם נכונים. החליפו פרופיל כדי לתקן</string>
-    <string name="failed_to_set_the_new_basal_profile">הגדרת הבאזלי החדש נכשלה. ההזרקה הופסקה</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">אזור הזמן בפוד שונה מאזור הזמן בטלפון. ערכי הבזאלי אינם נכונים. החליפו פרופיל כדי לתקן</string>
+    <string name="failed_to_set_the_new_basal_profile">הגדרת הפרופיל הבזאלי החדש נכשלה. ההזרקה הופסקה</string>
     <string name="setting_basal_profile_might_have_failed">ייתכן שהגדרת הפרופיל הבזאלי נכשלה. הזרקת האינסולין עלולה להעצר! נא לרענן ידנית את סטטוס הפוד בלשונית Omnipod ולחדש את ההזרקה במידת הצורך.</string>
-    <string name="bolus_delivery_status_uncertain">מצב הזרקת בולוס אינו וודאי. רענן את סטטוס הפוד כדי לוודא זאת.</string>
-    <string name="temp_basal_out_of_sync">סטטוס הבזאלי הזמני אינו כצפוי! אם בזאלי זמני פעל עד עכשיו, הוא בופסק. נא לבדוק את הכמות שהוזרקה ואת היסטוריית הפוד</string>
+    <string name="bolus_delivery_status_uncertain">מצב הזרקת הבולוס אינו ודאי. יש לרענן את סטטוס הפוד כדי לאשר או לשלול.</string>
+    <string name="smb_delivery_status_uncertain" comment="%1$s=insulin amount with unit. Example: 0.35 U">לא ניתן לוודא אם ה-SMB (%1$s) הצליח. יש לרענן את סטטוס הפוד כדי לאשר או לשלול את הפקודה הזו.</string>
+    <string name="temp_basal_out_of_sync">סטטוס הבזאלי הזמני אינו כצפוי! אם בזאלי זמני פעל עד עכשיו, הוא בוטל. נא לבדוק את הכמות שהוזרקה ואת היסטוריית הפוד</string>
     <string name="checking_delivery_status">בודק סטטוס הזרקה</string>
-    <string name="setting_temp_basal_might_have_basal_failed">הגדרת בזאלי זמני כנראה נכשלה. אם בזאלי זמני הוחל קודם לכן, הוא בוטל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
-    <string name="cancel_temp_basal_result_is_uncertain">ביטול הבאזלי הזמני אינו וודאי</string>
+    <string name="setting_temp_basal_might_have_basal_failed">ייתכן שהגדרת הבזאלי הזמני נכשלה. אם בזאלי זמני פעל קודם לכן, הוא בוטל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">תוצאת ביטול הבזאלי הזמני אינה ודאית</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">פקודת חידוש ההזרקה לא אושרה. יש לרענן את סטטוס הפוד</string>
-    <string name="cancelling_temp_basal_might_have_failed">ביטול הבזאלי הזמני נכשל. אם בזאלי זמני הוחל קודם לכן, ייתכן שהוא בוטל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
+    <string name="cancelling_temp_basal_might_have_failed">ייתכן שביטול הבזאלי הזמני נכשל. אם בזאלי זמני הוחל קודם לכן, ייתכן שהוא בוטל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
 </resources>

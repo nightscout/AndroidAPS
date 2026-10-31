@@ -32,8 +32,6 @@
     <string name="equil_change">Заменить помпу</string>
     <string name="equil_change_content">Отсоедините помпу от базы.</string>
     <string name="equil_unpair_alert">Вы уверены, что вы хотите отказаться от контроля над %1$s?</string>
-    <string name="equil_record_basal">Базальная скорость%1$s ед/ч</string>
-    <string name="equil_record_basal_temp">Временная базальная скорость%1$sU/H</string>
     <string name="equil_record_bolus">Bolus%1$s ед</string>
     <string name="equil_error_set_temp_basal_failed_validation">Продолжительность TBR должна быть больше нуля и кратной %1$s минутам.</string>
     <string name="equil_not_enough_insulin">В резервуаре недостаточно инсулина</string>
@@ -47,7 +45,6 @@
     <string name="equil_firmware_version">Версия прошивки</string>
     <string name="equil_shutdown_be">Equil выключится автоматически</string>
     <string name="equil_shutdown">Автоматическое отключение Equil</string>
-    <string name="equil_common_history_tbr_value">Баз Скорость: %1$.2f ед/ч, Продолжительность: %2$d мин</string>
     <string name="equil_common_history_bolus_value">%1$.2f ед</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Настроить болюс</string>

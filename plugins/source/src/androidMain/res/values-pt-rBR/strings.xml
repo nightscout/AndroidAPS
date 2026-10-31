@@ -12,17 +12,18 @@
     <string name="mm640g">MM640g</string>
     <string name="description_source_mm640g">Receber valores de Glucose do 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Receber valores Glucose da app Poctech</string>
+    <string name="description_source_poctech">Receber valores de glicemia do app Poctech</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">Receber valores GLIC do aplicativo Glunovo</string>
     <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Receber valores da app Intelligo</string>
+    <string name="description_source_intelligo">Receber valores do app Intelligo</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="description_source_tomato">Receber valores de Glicose da aplicação Tomato (dispositivo MiaoMiao)</string>
+    <string name="description_source_tomato">Receber valores de glicemia do app Tomato (dispositivo MiaoMiao)</string>
     <string name="random_bg">Glicemia aleatória</string>
     <string name="description_source_random_bg">Gerar dados aleatórios de glicemia (apenas no modo de demonstração)</string>
     <!-- Patched Syai Tag App -->
-    <string name="description_source_patched_syai_tag_app">Receber dados de glicose do app Syai/Ottai App.</string>
+    <string name="syai_tag_app">Syai/Ottai</string>
+    <string name="description_source_patched_syai_tag_app">Receber dados de glicose do app Syai/Ottai.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">App SI</string>
     <string name="description_source_patched_si_app">Receber dados de glicose do app Sibionics SI com patch ou do app Sibionics.</string>
@@ -30,6 +31,7 @@
     <string name="patched_sino_app">App Sino</string>
     <string name="description_source_patched_sino_app">Receber dados de glicose do app Sino com patch.</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
     <string name="description_source_instara_app">Receber valores de glicemia do app Instara.</string>
     <!-- Instara preferences -->
     <string name="pref_title_instara_history_request">Solicitação de dados históricos do Instara</string>
@@ -49,4 +51,5 @@
     <string name="aidex_sensor_stabilizing">O sensor está estabilizando; aguarde…</string>
     <string name="aidex_sensor_replace">É necessário substituir o sensor; substitua-o por um sensor novo assim que possível</string>
     <string name="aidex_signal_lost">Sinal do sensor perdido; verifique a conexão</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">leitura duplicada</string>
 </resources>

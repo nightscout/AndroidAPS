@@ -9,17 +9,17 @@
     <string name="automation_discard_title">לבטל את השינויים?</string>
     <string name="automation_discard_message">הכלל אינו שלם ולא ניתן לשמור אותו. לבטל את השינויים?</string>
     <string name="automation_discard_confirm">ביטול שינויים</string>
-    <string name="automation_category_time">&amp;זמן ותזמון</string>
-    <string name="automation_category_glucose">גלוקוז וטיפול&amp;</string>
+    <string name="automation_category_time">זמן &amp; תזמון</string>
+    <string name="automation_category_glucose">גלוקוז &amp; טיפול</string>
     <string name="automation_category_device">מצב המכשיר</string>
-    <string name="automation_category_sensors">&amp;חיישנים וקישוריות</string>
+    <string name="automation_category_sensors">חיישנים &amp; קישוריות</string>
     <string name="automation_category_other">אחר</string>
     <string name="automation_choose_trigger">הוספת טריגר</string>
     <string name="automation_add_group">קבוצה</string>
     <string name="automation_choose_action">הוספת פעולה</string>
-    <string name="automation_category_targets">ערכי מטרה</string>
+    <string name="automation_category_targets">יעדים</string>
     <string name="automation_category_profile">פרופיל</string>
-    <string name="automation_category_loop">לולאה &amp;ואינסולין</string>
+    <string name="automation_category_loop">לולאה &amp; אינסולין</string>
     <string name="automation_category_alerts">התראות</string>
     <string name="automation_category_system">מערכת</string>
     <string name="automation_category_scenes">תרחישים</string>
@@ -36,7 +36,7 @@
     <string name="action_scene_disabled">התרחיש מושבת</string>
     <string name="automation_unit_meters">מ׳</string>
     <string name="automation_unit_bpm">פעימות/דקה</string>
-    <string name="automation_missing_task_name">נא להזין שם לפעולה.</string>
+    <string name="automation_missing_task_name">נא להזין שם למשימה.</string>
     <string name="automation_missing_trigger">נא לציין טריגר אחד לפחות.</string>
     <string name="automation_missing_action">נא לציין פעולה אחת לפחות.</string>
     <string name="exportsettings_message">ייצוא הגדרות: %1$s</string>
@@ -55,7 +55,7 @@
     <string name="sendsmsactionlabel">שליחת מסרון: %1$s</string>
     <string name="sendsmsactiondescription">שליחת מסרונים לכל המספרים</string>
     <string name="sendsmsactiontext">שליחת מסרון עם טקסט</string>
-    <string name="starttemptarget">הפעלת ערך מטרה זמני</string>
+    <string name="starttemptarget">הפעלת יעד זמני</string>
     <string name="islesser">פחות מ-</string>
     <string name="isequalorlesser">שווה או פחות מ-</string>
     <string name="isequal">שווה ל-</string>
@@ -65,9 +65,9 @@
     <string name="glucoseisnotavailable">גלוקוז אינו זמין</string>
     <string name="glucosecomparedmgdl">גלוקוז %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">גלוקוז %1$s %2$.1f %3$s</string>
-    <string name="notemptarget">ערך המטרה הזמני לא קיים</string>
-    <string name="temptargetcomparedmgdl">ערך מטרה זמני %1$s %2$.0f %3$s</string>
-    <string name="temptargetcomparedmmol">ערך מטרה זמני %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">היעד הזמני לא קיים</string>
+    <string name="temptargetcomparedmgdl">יעד זמני %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">יעד זמני %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">אחוז פרופיל %1$s %2$d</string>
     <string name="iobcompared">אינסולין פעיל %1$s %2$.1f</string>
     <string name="or">או</string>
@@ -84,9 +84,9 @@
     <string name="location_going_in">כשנכנסים לאזור ששמו</string>
     <string name="location_going_out">כשעוזבים אזור ששמו</string>
     <string name="time_range">טווח זמן</string>
-    <string name="timerange_value">הזמן בין %1$s ו- %2$s</string>
+    <string name="timerange_value">הזמן בין %1$s ל-%2$s</string>
     <string name="add_short">הוספה</string>
-    <string name="temptargetcompared">ערך מטרה זמני %1$s</string>
+    <string name="temptargetcompared">יעד זמני %1$s</string>
     <string name="btdevicecompared">חיבור בלוטות\' להתקן %1$s %2$s</string>
     <string name="btdevice">‏התחברות למכשיר בלוטות\' </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
@@ -126,16 +126,16 @@
     <string name="preconditions">תנאים מוקדמים:</string>
     <string name="user_action">פעולות משתמש</string>
     <string name="system_automation">אוטומציית מערכת</string>
-    <string name="run_automations">הפעל אוטומציות</string>
+    <string name="run_automations">הפעלת אוטומציות</string>
     <string name="add_automation">הוספת כלל</string>
-    <string name="stop_processing">עצור עיבוד</string>
+    <string name="stop_processing">עצירת העיבוד</string>
     <!--    Reminders-->
     <string name="time_to_eat">זמן לאכול!\nהפעילו את אשף הבולוסים וחשבו בולוס חדש.</string>
     <string name="time_to_bolus">זמן להזריק בולוס!\nהשתמשו במחשבון וחשבו מחדש.</string>
     <string name="error_setting_reminder">חלה תקלה בעת הגדרת תזכורת</string>
     <!--    Autotune-->
-    <string name="autotune_profile_name">פרופיל אוטומטי %1$s</string>
-    <string name="autotune_run">הפעל כוונון אוטומטי</string>
+    <string name="autotune_profile_name">פרופיל Autotune %1$s</string>
+    <string name="autotune_run">הפעלת כוונון אוטומטי</string>
     <string name="autotune_run_without_autoswitch">כוונון אוטומטי הופעל ללא החלפת פרופיל</string>
     <string name="autotune_run_with_autoswitch">כוונון אוטומטי הופעל והפרופיל הוחלף אוטומטית</string>
     <string name="autotune_run_with_error">שגיאה במהלך הכיוונון האוטומטי האחרון</string>
@@ -144,6 +144,7 @@
     <string name="triggerStepsCountLabel">מספר צעדים</string>
     <string name="triggerStepsCountDesc">מספר צעדים ב־%1$s דקות %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">משך המדידה</string>
+    <string name="automation_log_entry" comment="One line of the automation run log. %1$s=time, %2$s=a symbol for success or failure, %3$s=rule name (bold), %4$s=what the action did, %5$s=its result. Example: 21:15 ☺ Night low: Start temp target: 8.0mmol/L@60 min(Automation): OK">%1$s %2$s %3$s: %4$s: %5$s</string>
     <!--    SMB mode-->
     <string name="changeSmbState">הפעלה/השבתה של SMB</string>
     <string name="changeSmbTo">שינוי SMB ל־%1$s</string>

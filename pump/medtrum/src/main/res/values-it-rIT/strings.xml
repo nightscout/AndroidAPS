@@ -11,17 +11,17 @@
     <string name="pump_is_suspended_day_max">Il micro è sospeso a causa del superamento della massima insulina giornaliera</string>
     <string name="patch_not_active">Patch non attivata</string>
     <string name="pump_setting_failed">Errore nella configurazione delle impostazioni utente sul micro!</string>
-    <string name="pump_sync_error">Errore durante la sincronizzazione della cronologia del micro, un record è stato saltato. Controllare la scheda trattamenti per verificare se il bolo è stato sincronizzato correttamente. Posporre l\'allarme e se l\'errore continua a riproporsi cambiare patch o pompa.</string>
-    <string name="patch_reset_after_primed_error">Il cerotto è stato riavviato da solo e ha perso la sessione. Non può più somministrare insulina. Rimuovere il cerotto e iniziarne uno nuovo.</string>
+    <string name="pump_sync_error">Errore durante la sincronizzazione della cronologia del micro, un record è stato saltato. Controllare la scheda trattamenti per verificare se il bolo è stato sincronizzato correttamente. Posporre l\'allarme e se l\'errore continua a riproporsi cambiare patch o base del micro.</string>
+    <string name="patch_reset_after_primed_error">La patch si è riavviata da sola e ha perso la sessione. Non può più somministrare insulina. Rimuovi la patch e attivane una nuova.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Bolo attivo</string>
     <string name="pump_state_label">Stato micro</string>
-    <string name="active_alarms_label">Attiva allarmi</string>
+    <string name="active_alarms_label">Allarmi attivi</string>
     <string name="basal_type_label">Tipo basale</string>
     <string name="pump_type_label">Tipo micro</string>
     <string name="fw_version_label">Versione FW</string>
-    <string name="patch_no_label">Patch no</string>
-    <string name="patch_expiry_label">Patch scaduta</string>
+    <string name="patch_no_label">Patch n.</string>
+    <string name="patch_expiry_label">Scadenza patch</string>
     <string name="patch_activation_time_label">Attivazione</string>
     <string name="reset_alarms_label">Reset allarmi</string>
     <string name="change_patch_label">Cambia patch</string>
@@ -51,8 +51,8 @@
     <!-- Status strings -->
     <string name="status_idle">Inattivo</string>
     <string name="status_filled">Riempito</string>
-    <string name="status_priming">Inizializzazione</string>
-    <string name="status_primed">Inizializzato</string>
+    <string name="status_priming">Caricamento</string>
+    <string name="status_primed">Caricato</string>
     <string name="status_ejecting">Espulsione</string>
     <string name="status_ejected">Espulso</string>
     <string name="status_active">Attivo</string>
@@ -76,7 +76,7 @@
     <string name="unexpected_state">Stato inaspettato: %1$s</string>
     <string name="ble_scan_connect_pump_base_first">Collegare la base del micro a una nuova patch per accenderla, quindi selezionarla dalla lista sottostante.</string>
     <string name="patch_begin_activation">Nessuna patch attiva. Premi <b>Avanti</b> per iniziare il processo di attivazione.</string>
-    <string name="connect_pump_base">Collegare la base del micro a una nuova patch, rimuovere l\'aria residua e riempire con insulina, quindi premere <b>Avanti</b>.</string>
+    <string name="connect_pump_base">Assicurati che la base del micro sia collegata alla patch, rimuovi l\'aria residua e riempi con insulina, poi premi <b>Avanti</b>.</string>
     <string name="note_min_70_units">Nota: per l\'attivazione è richiesto un minimo di 70 unità.</string>
     <string name="reservoir_text_and_level">Serbatoio: %.2f U</string>
     <string name="do_not_attach_to_body">Non attaccare ancora la patch al corpo.</string>
@@ -94,7 +94,7 @@
     <string name="medtrum_deactivate_pump_confirm">Sei sicuro? Questa azione non può essere annullata!!</string>
     <string name="press_next_or_cancel">Premi <b>Avanti</b> per disattivare o <b>Annulla</b> per tornare alla schermata principale.</string>
     <string name="deactivating_pump">Disattivazione patch. Attendi.</string>
-    <string name="deactivating_error">Impossibile disattivare, premi <b>Scarta</b> to scartare la patch.</string>
+    <string name="deactivating_error">Impossibile disattivare, premi <b>Scarta</b> per dimenticare la patch.</string>
     <string name="retract_needle">Estrarre l’ago. Rimuovere la patch dal corpo.</string>
     <string name="remove_base_discard_patch">Rimuovere la base del micro e smaltire in modo appropriato la patch usata.</string>
     <string name="press_next_or_OK">Premi <b>OK</b> per tornare alla schermata principale. Premi <b>Avanti</b> per avviare l\'attivazione di una nuova patch.</string>
@@ -114,13 +114,13 @@
     <string name="alarm_setting_silent">Silenzioso</string>
     <string name="pump_warning_notification_title">Notifica di avviso del micro</string>
     <string name="pump_warning_notification_summary">Mostra notifica sugli avvisi non critici del micro: batteria bassa, serbatoio basso (20 unità) e scadenza a breve. Si consiglia di lasciare abilitato quando gli avvisi del micro sono impostati in modalità silenziosa.</string>
-    <string name="pump_warning_expiry_hour_title">Avviso di scadenza micro [hours]</string>
+    <string name="pump_warning_expiry_hour_title">Avviso di scadenza micro [ore]</string>
     <string name="pump_warning_expiry_hour_summary">Mostra notifica all\'ora specificata dopo l\'attivazione.</string>
     <string name="patch_expiration_title">Scadenza patch</string>
     <string name="patch_expiration_summary">Una volta abilitata, la patch scadrà dopo 3 giorni, con un periodo di grazia di 8 ore.</string>
-    <string name="hourly_max_insulin_title">Insulina massima oraria [Units]</string>
+    <string name="hourly_max_insulin_title">Insulina massima oraria [Unità]</string>
     <string name="hourly_max_insulin_summary">Specificare le unità massime di insulina consentite per ora. Se superate, il micro sarà sospeso.</string>
-    <string name="daily_max_insulin_title">Insulina massima giornaliera [Units]</string>
+    <string name="daily_max_insulin_title">Insulina massima giornaliera [Unità]</string>
     <string name="daily_max_insulin_summary">Specificare le unità massime di insulina consentite per giorno. Se superate, il micro sarà sospeso.</string>
     <string name="scan_on_connection_error_title">Scansione in caso di errore di connessione</string>
     <string name="scan_on_connection_error_summary">ATTENZIONE: Abilitare solo in caso di problemi di connessione. Se abilitato, il driver esegue una scansione della pompa prima di tentare di riconnettersi ad essa. Assicurati di avere impostato il permesso di Posizione su \"Consenti sempre\"</string>

@@ -2,7 +2,13 @@
 <resources>
     <string name="label_watchface_circle">AAPS(Κυκλικό)</string>
     <string name="label_watchface_digital_style">AAPS(ψηφιακό)</string>
-    <string name="label_watchface_custom">AAPS(προσαρμοσμένα_χαρακτηριστικά)</string>
+    <string name="label_watchface_custom">AAPS(Προσαρμοσμένο)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Προσαρμοσμένο) πάντα ενεργό</string>
+    <string name="label_actions_tile">Ενέργειες</string>
+    <string name="label_temp_target_tile">Προσωρινός στόχος</string>
+    <string name="label_quick_wizard_tile">Γρήγορος Οδηγός</string>
+    <string name="label_user_action_tile">Ενέργεια χρήστη</string>
+    <string name="label_scene_tile">Σενάριο</string>
     <string name="msg_warning_sync">Δεν ελήφθησαν δεδομένα από τις %1$s! Ελέγξτε αν το AAPS στο τηλέφωνο στέλνει δεδομένα στο ρολόι</string>
     <string name="msg_warning_old">Τα δεδομένα AAPS είναι %1$s παλιά! Ελέγξτε τον αισθητήρα, το xDrip +, το NS, το AAPS ή άλλα!</string>
     <string name="pref_vibrate_on_bolus">Δόνηση στην Δόση Bolus</string>
@@ -10,6 +16,7 @@
     <string name="pref_display_settings">Προβολή</string>
     <string name="pref_graph_settings">Γράφημα</string>
     <string name="pref_interface_settings">Περιβάλλον</string>
+    <string name="pref_tile_settings">Πλακίδια</string>
     <string name="pref_others_settings">Άλλα</string>
     <string name="pref_complication_settings">Επιπλοκή</string>
     <string name="pref_show_date">Εμφάνιση ημερομηνίας</string>
@@ -22,11 +29,16 @@
     <string name="pref_show_phone_battery">Εμφάνιση ποσοστού μπαταρίας Τηλεφώνου</string>
     <string name="pref_show_rig_battery">Εμφάνιση Μπαταρίας</string>
     <string name="pref_show_basal_rate">Εμφάνιση Βασικού Ρυθμού</string>
+    <string name="pref_show_temp_target">Εμφάνιση προσωρινού στόχου</string>
+    <string name="pref_show_reservoir_level">Εμφάνιση στάθμης δεξαμενής</string>
     <string name="pref_show_loop_status">Εμφάνιση Κατάστασης Βρόχου</string>
     <string name="pref_show_bg">Εμφάνιση γλυκόζης αίματος</string>
     <string name="pref_show_bgi">Εμφάνιση BGI</string>
     <string name="pref_show_direction_arrow">Εμφάνιση Βέλους Κατεύθυνσης</string>
     <string name="pref_show_ago">Εμφάνιση Πριν</string>
+    <string name="pref_show_temp_basal">Εμφάνιση TBR</string>
+    <string name="pref_show_bolus">Εμφάνιση bolus &amp; SMB</string>
+    <string name="pref_show_grid">Εμφάνιση πλέγματος</string>
     <string name="pref_dark" comment="Enables dark visual theme">Σκούρο</string>
     <string name="pref_highlight_basals">Επισήμανση Βασικών</string>
     <string name="pref_prediction_lines">Εμφάνιση προβλέψεων</string>
@@ -37,6 +49,10 @@
     <string name="pref_3_hours">3 ώρες</string>
     <string name="pref_4_hours">4 ώρες</string>
     <string name="pref_5_hours">5 ώρες</string>
+    <string name="pref_1_min">απενεργοποιημένο</string>
+    <string name="pref_5_min">5 λεπ.</string>
+    <string name="pref_10_min">10 λεπ.</string>
+    <string name="pref_15_min">15 λεπ.</string>
     <string name="pref_big_numbers">Μεγάλοι Αριθμοί</string>
     <string name="pref_ring_history">Ιστορικό Ring</string>
     <string name="pref_light_ring_history">Ιστορικό Ελαφρού Ring</string>
@@ -45,42 +61,74 @@
     <string name="pref_prime_in_menu">Πλήρωση στο Μενού</string>
     <string name="pref_single_target">Μεμονωμένος Στόχος</string>
     <string name="pref_wizard_percentage">Ποσοστό Υπολογιστή</string>
+    <string name="pref_wizard_carbs_type">Τύπος γεύματος στον υπολογιστή δόσης</string>
+    <string name="pref_wizard_carb_time">Ώρα υδατανθράκων στον υπολογιστή δόσης</string>
     <string name="pref_complication_tap_action">Ενέργεια Αφής Επιπλοκής</string>
+    <string name="pref_complication_bg_graph_hours">Εύρος χρόνου γραφήματος BG</string>
+    <string name="duration_1_hour">1 ώρα</string>
+    <string name="duration_3_hours">3 ώρες</string>
+    <string name="duration_6_hours">6 ώρες</string>
     <string name="pref_unicode_in_complications">Unicode στις Επιπλοκές</string>
     <string name="pref_version">Έκδοση:</string>
     <string name="pref_moreWatchfaceSettings">Περισσότερες ρυθμίσεις Watchface</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Παρακαλώ, ελέγξτε τις ρυθμίσεις Watchface.</string>
     <string name="menu_tempt">Προσωρινός Στόχος</string>
+    <string name="menu_tempt_long">Προσωρινός στόχος</string>
     <string name="menu_wizard">Υπολογιστής</string>
-    <string name="menu_wizard_short">Υπολογ</string>
+    <string name="menu_wizard_short">Υπολογ.</string>
     <string name="menu_treatment">Θεραπεία</string>
-    <string name="menu_treatment_short">Αντιμετώπιση-Θεραπεία</string>
+    <string name="menu_treatment_short">Θεραπεία</string>
     <string name="menu_bolus">Bolus</string>
     <string name="menu_carb">Υδατάνθρακες</string>
     <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Ρυθμίσεις</string>
     <string name="menu_status">Κατάσταση</string>
+    <string name="menu_bg_graph">Γράφημα BG</string>
     <string name="menu_resync">Επανασυγχρονισμός</string>
     <string name="menu_prime_fill">Πλήρωση/Γέμισμα</string>
+    <string name="menu_install_watchface">Εγκατάσταση watchface</string>
+    <string name="menu_installing_watchface">Εγκατάσταση watchface…</string>
+    <string name="watchface_installed_active">Το watchface εγκαταστάθηκε και είναι ενεργό</string>
+    <string name="watchface_installed_select">Το watchface εγκαταστάθηκε, επιλέξτε το από τη συλλογή watchface του ρολογιού</string>
+    <string name="watchface_install_failed">Η εγκατάσταση του watchface απέτυχε</string>
     <string name="menu_none">Καμία</string>
     <string name="menu_default">Προεπιλογή</string>
     <string name="menu_menu">Μενού</string>
     <string name="action_tempt_confirmation">Ζητήθηκε Προσωρινός Στόχος</string>
     <string name="action_quick_wizard_confirmation">Ζητήθηκε Γρήγορος Οδηγός</string>
+    <string name="action_user_action_confirmation">Ζητήθηκε ενέργεια χρήστη</string>
+    <string name="action_scene_confirmation">Ζητήθηκε σενάριο</string>
+    <string name="scene_end">Τέλος</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Παράλειψη</string>
     <string name="action_treatment_confirmation">Ζητήθηκε Θεραπεία</string>
     <string name="action_bolus_confirmation">Ζητήθηκε Bolus</string>
     <string name="action_wizard_confirmation">Ζητήθηκε Υπολογισμός</string>
     <string name="action_fill_confirmation">Ζητήθηκε Συμπλήρωση</string>
     <string name="action_ecarb_confirmation">Αιτούνται Υδατάνθρακες</string>
     <string name="action_profile_switch_confirmation">Ζητήθηκε Αλλαγή Προφίλ</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Στόχος [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Χαμηλό [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Υψηλό [%s]</string>
     <string name="action_carbs">Υδατάνθρακες</string>
+    <string name="action_carbs_gram">Υδατάνθρακες [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Μέγιστη αφαίρεση: %1$d g (COB)</string>
     <string name="action_ecarbs">eCarbs</string>
+    <string name="action_percentage">Ποσοστό\n[%]</string>
+    <string name="action_start_minutes">Έναρξη\n[λεπτά]</string>
+    <string name="action_duration_hours">Διάρκεια\n[ώρες]</string>
+    <string name="action_duration_hours_format">%1$d ώρ.</string>
+    <string name="action_duration_hours_minutes_format">%1$d ώρ. %2$d λεπ.</string>
+    <string name="action_minutes_format">%1$d λεπ.</string>
+    <string name="ecarbs_start_format">%1$d λεπ.</string>
+    <string name="action_confirm_timeshift">Χρονική μετατόπιση: %1$s</string>
     <string name="action_insulin">Ινσουλίνη</string>
+    <string name="action_insulin_units">Ινσουλίνη [U]</string>
     <string name="action_preset_1">Προεπιλογή 1</string>
     <string name="action_preset_2">Προεπιλογή 2</string>
     <string name="action_preset_3">Προεπιλογή 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Ελεύθερη ποσότητα</string>
     <string name="action_confirm">ΕΠΙΒΕΒΑΙΩΣΗ</string>
+    <string name="action_timeshift_hours">Χρονική μετατόπιση\n[ώρες]</string>
     <string name="bolus_progress">Πρόοδος Bolus</string>
     <string name="press_to_cancel">πιέστε για ακύρωση</string>
     <string name="cancel_bolus">ΑΚΥΡΩΣΗ BOLUS</string>
@@ -115,15 +163,38 @@
     <string name="pref_simplify_ui">Απλοποίηση UI</string>
     <string name="pref_vibrate_hourly">Δόνηση ωριαία</string>
     <string name="pref_show_weeknumber">Εμφάνιση Αριθμού εβδομάδας</string>
+    <string name="pref_complication_1">Επιπλοκή 1</string>
+    <string name="pref_complication_2">Επιπλοκή 2</string>
+    <string name="pref_complication_3">Επιπλοκή 3</string>
+    <string name="pref_complication_4">Επιπλοκή 4</string>
+    <string name="pref_complication_5">Επιπλοκή 5</string>
+    <string name="complication_summary_none">Πατήστε για να επιλέξετε πηγή δεδομένων</string>
+    <string name="pref_complication_type_priority">Προτεραιότητα τύπου επιπλοκής</string>
+    <string name="pref_complication_type_priority_all">Προεπιλογή για όλες τις θέσεις</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Μια αλλαγή εδώ εφαρμόζεται την επόμενη φορά που θα επιλέξετε μια πηγή δεδομένων. Η εκ νέου επιλογή της ίδιας πηγής δεν αρκεί: επιλέξτε πρώτα μια διαφορετική πηγή δεδομένων και, στη συνέχεια, επιλέξτε αυτήν που θέλετε.</string>
+    <string name="complication_type_priority_value">Τιμή ή δείκτης</string>
+    <string name="complication_type_priority_text">Κείμενο</string>
+    <string name="complication_type_priority_icon">Εικονίδιο</string>
+    <string name="complication_type_priority_use_default">Χρήση προεπιλογής</string>
+    <string name="cwf_complication_layout">Διάταξη επιπλοκών</string>
+    <string name="cwf_complication_layout_description">Θέση και μέγεθος των επιπλοκών, όπως λαμβάνονται από το φορτωμένο προσαρμοσμένο καντράν.</string>
+    <string name="pref_include_external">Συμπερίληψη εξωτερικών προβολών στο πρότυπο</string>
+    <string name="pref_switch_external">Εναλλαγή εξωτερικών δεδομένων στο καντράν</string>
     <string name="custom_pref_show_seconds">Εμφάνιση δευτερολέπτων</string>
+    <string name="digitalstyle_pref_your_style">Το στυλ σας</string>
     <string name="digitalstyle_style_none">κανένα στυλ</string>
     <string name="digitalstyle_style_minimal">ελάχιστο στυλ</string>
     <string name="digitalstyle_style_shape">στυλ σχήματος</string>
     <string name="digitalstyle_style_full">πλήρες στυλ</string>
+    <string name="digitalstyle_pref_your_color">Το χρώμα σας</string>
+    <string name="digitalstyle_pref_your_color_saturation">Κορεσμός του χρώματός σας</string>
+    <string name="digitalstyle_pref_your_color_opacity">Αδιαφάνεια του χρώματός σας</string>
     <string name="bolus_progress_channel_name">Πρόοδος Bolus AAPS</string>
     <string name="bolus_progress_silent_channel_name">Αθόρυβη Πρόοδος Bolus AAPS</string>
     <string name="bolus_progress_channel_description">Πρόοδος bolus και ακύρωση</string>
     <string name="bolus_progress_silent_channel_description">Πρόοδος bolus και ακύρωση με λιγότερες δονήσεις</string>
+    <string name="open_loop_channel_name">AAPS Ανοιχτό κύκλωμα</string>
+    <string name="open_loop_channel_description">Ειδοποίηση αιτήματος ανοιχτού κυκλώματος</string>
     <string name="simple_ui_off">Ανενεργό</string>
     <string name="simple_ui_charging">Κατά τη Φόρτιση</string>
     <string name="simple_ui_always_on">Λειτουργία Always On</string>
@@ -149,7 +220,161 @@
     <string name="week_short">εβδ</string>
     <string name="day_short">ημ</string>
     <string name="hour_short">ω</string>
+    <string name="minute_short">λ</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
+    <string name="error">Σφάλμα</string>
     <string name="pref_heartRateSampling">Καρδιακός ρυθμός</string>
+    <string name="pref_heartRateSmoothing">Εξομάλυνση καρδιακού ρυθμού</string>
+    <string name="pref_stepsSampling">Ενεργοποίηση μέτρησης βημάτων</string>
+    <string name="tile_tempt_1">Προσωρινός στόχος 1</string>
+    <string name="tile_tempt_2">Προσωρινός στόχος 2</string>
+    <string name="tile_tempt_3">Προσωρινός στόχος 3</string>
+    <string name="tile_tempt_4">Προσωρινός στόχος 4</string>
+    <string name="tile_action_1">Ενέργεια 1</string>
+    <string name="tile_action_2">Ενέργεια 2</string>
+    <string name="tile_action_3">Ενέργεια 3</string>
+    <string name="tile_action_4">Ενέργεια 4</string>
+    <string name="tile_scene_1">Σενάριο 1</string>
+    <string name="tile_scene_2">Σενάριο 2</string>
+    <string name="tile_scene_3">Σενάριο 3</string>
+    <string name="tile_scene_4">Σενάριο 4</string>
+    <string name="tile_scene_auto">Αυτόματο</string>
+    <string name="tile_scene_unavailable">Μη διαθέσιμο</string>
+    <string name="datalayer_notification_title">Υπηρεσία προσκηνίου επιπέδου δεδομένων</string>
+    <string name="datalayer_notification_text">Το AAPS εκτελείται στο προσκήνιο. Για να αποκρύψετε την ειδοποίηση, μεταβείτε στις Επιλογές για προγραμματιστές, Ειδοποιήσεις εφαρμογών, Επιτρεπόμενες εφαρμογές ρολογιού, επιλέξτε το AAPS και απενεργοποιήστε την ειδοποίηση του Καναλιού υπηρεσίας προσκηνίου επιπέδου δεδομένων.</string>
+    <string name="on">ΕΝΕΡΓΟ</string>
+    <string name="off">ΑΝΕΝΕΡΓΟ</string>
+    <string name="complication_full_status">Πλήρης κατάσταση</string>
+    <string name="complication_full_status_flipped">Πλήρης κατάσταση (ανεστραμμένη)</string>
+    <string name="complication_blood_glucose">Γλυκόζη αίματος</string>
+    <string name="complication_blood_glucose_large">Γλυκόζη αίματος (μεγάλη)</string>
+    <string name="complication_blood_glucose_ext1">Γλυκόζη αίματος Ext1</string>
+    <string name="complication_blood_glucose_ext2">Γλυκόζη αίματος Ext2</string>
+    <string name="complication_bg_graph">Γράφημα BG</string>
+    <string name="complication_cwf_image">Custom Watchface</string>
+    <string name="complication_cwf_ambient_bg">Custom Watchface - γλυκόζη (ambient)</string>
+    <string name="complication_cwf_ambient_status">Custom Watchface - κατάσταση (ambient)</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Custom Watchface - φόντο</string>
+    <string name="complication_cwf_upper">Custom Watchface - ρολόι</string>
+    <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
+    <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
+    <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
+    <string name="complication_br_iob">BR &amp; IoB</string>
+    <string name="complication_br">Βασικός ρυθμός</string>
+    <string name="complication_br_tt">BR &amp; Στόχος</string>
+    <string name="complication_target">Στόχος</string>
+    <string name="complication_cob_iob">CoB &amp; IoB</string>
+    <string name="complication_cob_icon">Εικονίδιο CoB</string>
+    <string name="complication_cob_detailed">CoB λεπτομερώς</string>
+    <string name="complication_iob_icon">Εικονίδιο IoB</string>
+    <string name="complication_iob_detailed">IoB λεπτομερώς</string>
+    <string name="complication_uploader_phone_battery">Μπαταρία uploader/τηλεφώνου</string>
+    <string name="running_mode_resume">Συνέχιση κυκλώματος</string>
+    <string name="running_mode_reconnect">Επανασύνδεση αντλίας</string>
+    <string name="label_running_mode_title">Τρόπος λειτουργίας</string>
+    <string name="label_bg_graph_tile">Γράφημα BG</string>
+    <string name="tile_tap_action">Ενέργεια πατήματος</string>
+    <string name="tile_graph_time_range">Εύρος χρόνου</string>
+    <string name="tile_tap_bg_graph">Γράφημα BG</string>
+    <string name="tile_tap_main_menu">Κύριο μενού</string>
+    <string name="tile_tap_loop_status">Κατάσταση κυκλώματος</string>
+    <string name="action_running_mode_selected">Ζητήθηκε τρόπος λειτουργίας</string>
+    <string name="title_activity_disconnect_pump">Αποσύνδεση αντλίας</string>
+    <string name="title_activity_suspend_loop">Αναστολή κυκλώματος</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="wizard_carbs_type">Τύπος γεύματος</string>
+    <string name="wizard_carbs_type_bread">Ψωμί</string>
+    <string name="wizard_carbs_type_cake">Γλυκό</string>
+    <string name="wizard_carbs_type_pizza">Πίτσα</string>
+    <string name="wizard_carb_time" comment="Label under the carb time value on the watch, between the - and + buttons, so it must stay short: two lines of about 9 characters each, \n is the line break. Example: Carb time / [min]">Ώρα υδατ.\n[λεπ.]</string>
+    <string name="wizard_carb_time_now">Τώρα</string>
+    <string name="wizard_carb_time_offset" comment="Minutes from now until the carbs are eaten, with the sign. %1$d=minutes. Example: +15">%1$+d</string>
+    <string name="wizard_result_carb_time" comment="The carb time on the request page. %1$d=minutes with the sign. Example: +15 min">%1$+d λεπ.</string>
+    <string name="wizard_set_alarm">Ορισμός ειδοποίησης</string>
+    <string name="eat_reminder_title">Ώρα για φαγητό</string>
+    <string name="eat_reminder_silence">Σίγαση</string>
+    <string name="eat_reminder_stop">Διακοπή</string>
+    <string name="eat_reminder_rings_at" comment="The running eat reminder in the notification stream. %1$s=time of day. Example: Rings at 19:25">Χτυπά στις %1$s</string>
+    <string name="eat_reminder_countdown_channel">Ώρα για φαγητό, σε εξέλιξη</string>
+    <string name="eat_reminder_channel_silent">Ώρα για φαγητό κατά τη λειτουργία «Μην ενοχλείτε»</string>
+    <string name="eat_reminder_extend" comment="Button that moves the eat reminder later. %1$d=minutes. Example: +5 min">+%1$d λεπ.</string>
+    <string name="phone_alarm_channel">Συναγερμοί από το τηλέφωνο</string>
+    <string name="phone_alarm_channel_silent">Συναγερμοί από το τηλέφωνο κατά τη λειτουργία «Μην ενοχλείτε»</string>
+    <string name="phone_alarm_silence">Σίγαση</string>
+    <string name="phone_alarm_mute" comment="Button on the phone alarm's notification: silence now, the alarm rings again after the minutes. %1$d=minutes. Example: Mute 5 min">Σίγαση %1$d λεπ.</string>
+    <string name="wizard_carbs_split" comment="Carbs of a cake or pizza meal: the part eaten now plus the eCarbs part. %1$d=grams now, %2$d=grams as eCarbs. Example: 52+22 g">%1$d+%2$d g</string>
+    <string name="insulin_unit_short">U</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
+    <string name="wizard_confirmation_sent">Στάλθηκε</string>
+    <string name="contacting_master">Επικοινωνία με την κύρια συσκευή…</string>
+    <string name="contacting_master_unknown">Άγνωστη κατάσταση — ελέγξτε το τηλέφωνο</string>
+    <string name="tile_settings">Ρυθμίσεις πλακιδίου</string>
+    <string name="loop_status_error">Αποτυχία φόρτωσης κατάστασης</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
+    <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">απομένουν %1$s</string>
+    <string name="loop_status_tbr_continues">Ο προσωρινός βασικός ρυθμός συνεχίζεται</string>
+    <string name="loop_status_tbr_cancel">Ορισμός κανονικού βασικού ρυθμού</string>
+    <string name="loop_status_smb">%1$.2f U</string>
+    <string name="loop_status_no_last_run">Μ/Δ</string>
+    <string name="loop_status_closed">Κλειστό κύκλωμα</string>
+    <string name="loop_status_open">Ανοιχτό κύκλωμα</string>
+    <string name="loop_status_lgs">Αναστολή λόγω χαμηλής γλυκόζης</string>
+    <string name="loop_status_disabled">Κύκλωμα απενεργοποιημένο</string>
+    <string name="loop_status_suspended">Κύκλωμα σε αναστολή</string>
+    <string name="loop_status_pump_suspended">Η αντλία είναι σε παύση</string>
+    <string name="loop_status_dst_suspended">Αναστολή λόγω θερινής ώρας</string>
+    <string name="loop_status_disconnected">Η αντλία αποσυνδέθηκε</string>
+    <string name="loop_status_superbolus">Superbolus</string>
+    <string name="loop_status_unknown">Άγνωστο</string>
+    <string name="loop_status_result">Αποτέλεσμα κυκλώματος</string>
+    <string name="loop_status_last_run_enact">Τελευταία εκτέλεση &amp; εφαρμογή</string>
+    <string name="loop_status_last_run">Τελευταία εκτέλεση</string>
+    <string name="loop_status_last_enact">Τελευταία εφαρμογή</string>
+    <string name="loop_status_smb_text">SMB</string>
+    <string name="loop_status_basal_rate">Ρυθμός</string>
+    <string name="loop_status_duration">Διάρκεια</string>
+    <string name="loop_status_oaps_reason">Αιτιολογία OpenAPS</string>
+    <string name="loop_status_targets">Στόχοι</string>
+    <string name="loop_status_temp_target">Προσωρινός στόχος</string>
+    <string name="loop_status_target_range">Εύρος</string>
+    <string name="loop_status_target">Στόχος</string>
+    <string name="loop_status_adjusted_target">Προσαρμοσμένος στόχος</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Μέχρι τη λήξη</string>
+    <string name="loop_status_scene_ended">Έληξε</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Επόμενο σενάριο</string>
+    <string name="loop_status_profile">Προφίλ</string>
+    <string name="loop_status_no_profile">Δεν έχει οριστεί προφίλ</string>
+    <string name="loop_status_profile_percentage">Ποσοστό</string>
+    <string name="loop_status_profile_timeshift">Χρονική μετατόπιση</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Επιστροφή σε</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dώ</string>
+    <string name="loop_status_sensitivity">Ευαισθησία</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Ορίστηκε από το ενεργό σενάριο</string>
+    <string name="loop_status">Κατάσταση κυκλώματος</string>
+    <string name="loop_status_refresh">Ανανέωση</string>
+    <string name="confirm">Επιβεβαίωση</string>
+    <string name="request">Αίτημα</string>
+    <string name="constraint_applied">Εφαρμόστηκαν Περιορισμοί!</string>
+    <string name="wizard_total_insulin">Συνολική ινσουλίνη</string>
+    <string name="wizard_calculation">Υπολογισμός</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
+    <string name="wizard_result_bg">BG</string>
+    <string name="wizard_result_bg_tt">BG (Προσ. στόχος: %1$s)</string>
+    <string name="wizard_result_trend">Τάση 15\'</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Νέο IOB: %1$s U</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">Υδατάνθρακες (%1$d g)</string>
+    <string name="wizard_result_subtotal">Μερικό σύνολο</string>
+    <string name="wizard_result_correction">Διόρθωση</string>
+    <string name="wizard_result_total">Σύνολο</string>
+    <string name="wizard_insulin_format">%1$s U</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s λεπ.)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d ώρ. (+%3$d λεπ.)</string>
 </resources>

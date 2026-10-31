@@ -2,7 +2,7 @@
 <resources>
     <!-- General preferences -->
     <string name="pref_title_simple_mode">Опростен режим</string>
-    <string name="pref_title_insulin_concentration">Поддружка на различни инсулинови концентрации</string>
+    <string name="pref_title_insulin_concentration">Поддръжка на различни инсулинови концентрации</string>
     <string name="pref_summary_insulin_concentration">Включи поддръжка за различни концентрации на инсулин (U50, U200, др.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Винаги включен екран</string>
@@ -32,9 +32,9 @@
     <string name="pref_title_alert_urgent_as_android_notification">Пускай аларми като нотификации в Андроид</string>
     <string name="pref_title_alert_increase_volume">Постепенно увеличаване на звука за нотификации</string>
     <string name="pref_title_alert_override_dnd">Прескочи DND режима</string>
-    <string name="pref_summary_alert_override_dnd">Когато е пуснато, AAPS ще алармира дори когато телефона е в тих режим или DND режим. Когато е изключно алармите няма да звучат в тези режими.</string>
+    <string name="pref_summary_alert_override_dnd">Вкл.: алармите звънят, дори когато телефонът е без звук или в режим „Не безпокойте“. Изкл.: тогава алармите не звънят. В режим „Не безпокойте“ те само вибрират.</string>
     <!-- BG Source preferences -->
-    <string name="pref_title_bg_source_upload_to_ns">Kaчвай данните за КЗ в NS</string>
+    <string name="pref_title_bg_source_upload_to_ns">Качвай данните за КЗ в NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Проследяване на смяна на сензор</string>
     <string name="pref_summary_bg_source_create_sensor_change">Създавай събитие (смяна на сензор) когато нов е поставен.</string>
     <!-- APS preferences -->
@@ -63,7 +63,7 @@
     <string name="pref_summary_aps_always_use_short_deltas">Винаги използва краткоср делта вместо последната делта за калкулация на промените в КЗ</string>
     <string name="pref_title_aps_dynisf_adjust_sensitivity">DynamicISF да регулира чувствителността</string>
     <string name="pref_summary_aps_dynisf_adjust_sensitivity">Използвай DynamicISF за автоматична настройка на чувствителността.</string>
-    <string name="pref_title_aps_autosens_adjust_targets">Аутосенс регулира целите</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Autosens регулира целите</string>
     <string name="pref_summary_aps_autosens_adjust_targets">позволява на Аутосенс да регулира целевата захар в допълнение на базали и ISF</string>
     <string name="pref_title_aps_high_tt_raises_sensitivity">Високите цели вдигат чувствителността</string>
     <string name="pref_summary_aps_high_tt_raises_sensitivity">Високите временни цели ще увеличават инсулиновата чувствителност.</string>
@@ -118,20 +118,20 @@
     <string name="pref_title_ns_use_roaming">Използвай данни в роуминг</string>
     <string name="pref_title_ns_use_wifi">Използвай WiFi</string>
     <string name="pref_title_ns_use_on_battery">Синхронизирай NS на батерия</string>
-    <string name="pref_title_ns_use_on_charging">Синхронизирай докато телефона се зарежда</string>
+    <string name="pref_title_ns_use_on_charging">Синхронизирай, докато телефонът се зарежда</string>
     <string name="pref_title_ns_log_app_start">Записвай стартиране на AAPS</string>
     <string name="pref_title_ns_create_announcements_from_errors">Създавай съобщения за грешки</string>
     <string name="pref_title_ns_create_announcements_from_carbs_req">Създавай съобщения при нужда от въглехидрати</string>
     <string name="pref_title_ns_slow_sync">Използвай бавна синхронизация</string>
     <string name="pref_title_ns_use_ws">Използвай websockets</string>
     <string name="pref_summary_ns_use_ws">Използвай websockets за комуникация с NS в реално време.</string>
-    <string name="pref_title_ns_allow_client_control">Позволете контол от друг телефон</string>
+    <string name="pref_title_ns_allow_client_control">Позволи контрол от клиенти</string>
     <string name="pref_summary_ns_allow_client_control">Позволява свързаните устройства да пращат команди (напр. пусни/спри сцена) чрез Nightscout. Това също включва сигурен режим: промени направени директно в Nightscout вече няма да се прилагат.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Само с WiFi</string>
-    <string name="pref_title_openhumans_charging_only">Само когато телефона се зарежда</string>
+    <string name="pref_title_openhumans_charging_only">Само когато телефонът се зарежда</string>
     <!-- xDrip preferences -->
-    <string name="pref_title_xdrip_send_status">Изпрашай статуса към xDrip+</string>
+    <string name="pref_title_xdrip_send_status">Изпращай статуса към xDrip+</string>
     <string name="pref_title_xdrip_send_detailed_iob">Изпращай IOB детайли</string>
     <string name="pref_summary_xdrip_send_detailed_iob">Изпраща детайлни данни за IOB към xDrip+ за да се показват на часовник.</string>
     <string name="pref_title_xdrip_send_bgi">Показвай BGI</string>
@@ -139,13 +139,13 @@
     <!-- Wear preferences -->
     <string name="pref_title_wear_control">Контрол от часовник</string>
     <string name="pref_summary_wear_control">Контролиране на AAPS от Android Wear часовник.</string>
-    <string name="pref_title_wear_wizard_bg">Включвай BGI в болус съветника</string>
+    <string name="pref_title_wear_wizard_bg">Включвай КЗ в болус съветника</string>
     <string name="pref_title_wear_wizard_tt">Включвай временните цели в съветника</string>
     <string name="pref_title_wear_wizard_trend">Включвай тренда в съветника</string>
     <string name="pref_title_wear_wizard_cob">Включвай COB в съветника</string>
     <string name="pref_title_wear_wizard_iob">Включвай IOB в съветника</string>
     <string name="pref_title_wear_custom_watchface_authorization">Оторизация на други циферблати</string>
-    <string name="pref_title_wear_pushed_watchface">Успрешна инсталация в часовник</string>
+    <string name="pref_title_wear_pushed_watchface">Циферблат, инсталиран на часовника</string>
     <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Циферблат с усложнения</string>
     <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Персонализиран Watchface</string>
     <string name="pref_title_wear_notify_on_smb">Нотификация при SMB</string>
@@ -205,9 +205,9 @@
     <string name="pref_title_carbs_request_threshold">Граница за необходими въглехидрати</string>
     <string name="carbs_req_threshold_summary">Минимално ниво от грама въглехидрати при което да показва нотификация. При нужни въглехидрати под това ниво няма да се показва съобщение.</string>
     <string name="pref_title_half_basal_exercise_target">Половин базална цел за активност</string>
-    <string name="half_basal_exercise_target_summary">В число, примерно 160, което значи, че когато цел за физ активност е 160 мг/дл и и високите временни цели вдигат чувствителността , пускай 50% базал при това ниво  (120 = 75%%; 140 = 60%%).</string>
+    <string name="half_basal_exercise_target_summary">В число, примерно 160, което значи, че когато цел за физ активност е 160 мг/дл и високите временни цели вдигат чувствителността, пускай 50%% базал при това ниво (120 = 75%%; 140 = 60%%).</string>
     <string name="pref_title_iob_threshold_percent">IOB граница в проценти</string>
-    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Процент от максималния IOB над която няма да има SMB.\nСтандартно: 100% при което тази опция е изключена.</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Процент от максималния IOB над която няма да има SMB.\nСтандартно: 100%\nПри 100% тази опция е изключена.</string>
     <string name="pref_title_dynisf_adjustment_factor">Фактор за настройка на DynamicISF</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Вдигнете на повече от 100% за по-агресивни корекции и на по-малко от 100% за по-слаби.</string>
     <string name="pref_title_autosens_period">Период за Autosens</string>
@@ -297,7 +297,7 @@
     <string name="automation_location_gps">Чрез GPS</string>
     <!-- StringKey: SMS preferences -->
     <string name="smscommunicator_allowednumbers">Разрешени мобилни номера</string>
-    <string name="smscommunicator_allowednumbers_summary">+359XXXXXXXXXХХ;+359УУYYYYYYYYУ</string>
+    <string name="smscommunicator_allowednumbers_summary">+359XXXXXXXXX;+359YYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Допълнителен задължителен ПИН в края на токен</string>
     <string name="smscommunicator_otp_pin_summary">Допълнителни цифри, които трябва да запомните и добавяте в края на всяка еднократна парола</string>
     <!-- StringKey: Virtual pump preferences -->
@@ -332,11 +332,11 @@
     <string name="pref_title_max_daily_multiplier">Макс дневен множител</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">По подразбиране: 3. Това е ключов елемет в OpenAPS сигурността.Какво прави - лимитира базалите то 3 пъти тези от профила. Сигурно няма да има нужда да го променяте.</string>
     <string name="pref_title_current_basal_multiplier">Множител за текущия базал</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Основна стойност: 4. Това е другата част от границите на сигурността на OpenAPS. Значи че базала (независимо от този зададен в помпата) не може да надвиши текущич базал от профила по този множител. Използва се за да ви предпази от от прекалено големи базали преди да знаете как работи алгоритъма. Повечето хора нямат нужда да го променят.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Основна стойност: 4. Това е другата част от границите на сигурността на OpenAPS. Значи че базала (независимо от този зададен в помпата) не може да надвиши текущия базал от профила по този множител. Използва се за да ви предпази от прекалено големи базали преди да знаете как работи алгоритъма. Повечето хора нямат нужда да го променят.</string>
     <string name="pref_title_bolus_snooze_divisor">Делител на DIA за отлагане на болус</string>
-    <string name="openapsama_bolus_snooze_dia_divisor_summary">По подразбиране 2.\nОтлагането на болус се прилага след като сложите инсулин за хранене, така че цикъла няма да реагира с намаляване на базала когато се храните. Например при стойност 2 и 3ч DIA означава че отлагането ще се измести с 1.5 часа (3DIA/2).</string>
-    <string name="pref_title_ama_min_5m_carbs_impact">AMA min 5m carbs impact</string>
-    <string name="pref_title_smb_min_5m_carbs_impact">SMB min 5m carbs impact</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">По подразбиране 2.\nОтлагането на болус се прилага след като сложите инсулин за хранене, така че кръгът няма да реагира с намаляване на базала когато се храните. Например при стойност 2 и 3ч DIA означава че отлагането ще се измести с 1.5 часа (3DIA/2).</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">AMA мин. въздействие на въглехидратите за 5 мин</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">SMB мин. въздействие на въглехидратите за 5 мин</string>
     <string name="openapsama_min_5m_carb_impact_summary">По подразбиране:3.0 (AMA) или 8.0 (SMB). Това е настройка колко се абсорбират за 5 мин. По подразбиране 3мг/дл/5мин. Това влияе върху скоростта на усвояване на въглехидратите и на изчисленията за бъдеща въглехидратна абсорбция и колко тя влияе на бъдещата КЗ, когато тя пада и ли не се качва повече от очакваното.</string>
     <string name="pref_title_absorption_cutoff">Максимална абсорбция</string>
     <string name="absorption_cutoff_summary">Времето след което всяко хранене се счита за поето. Оставащите въглехидрати ще бъдат премахнати.</string>
@@ -345,11 +345,11 @@
     <string name="pref_title_autosens_min">Аутосенс минимум</string>
     <string name="openapsama_autosens_min_summary">По подразбиране: 0.7\nДолната граница на сигурността за това до колко аутосенс може да регулира базалите и колко високо може да настройва ISF и целите.</string>
     <string name="pref_title_autosens_max">Аутосенс максимум</string>
-    <string name="openapsama_autosens_max_summary">По подразбиране: 1.2\nТова е максимума за аутосенс в това до колко може да достига при регулиране на базали, ISF и целите.</string>
+    <string name="openapsama_autosens_max_summary">По подразбиране: 1.2\nТова е множител, който ограничава колко високо може да стигне коефициентът на Autosens (и скоро на Autotune) – най-много 20%% над нормалното. От него зависи колко Autosens може да увеличи базала, колко може да намали ISF и колко ниско може да постави целевата КЗ.</string>
     <string name="pref_title_autoisf_min">AutoISF минимум</string>
-    <string name="openapsama_autoISF_min_summary">Подобно на autosens_min  това определя колко малък може да стане ISF. \n\nПри стойност от 1 ше изключи тази функция.</string>
+    <string name="openapsama_autoISF_min_summary">Подобно на autosens_min  това определя колко малък може да стане ISF. \n\nПри стойност от 1 ще изключи тази функция.</string>
     <string name="pref_title_autoisf_max">AutoISF максимум</string>
-    <string name="openapsama_autoISF_max_summary">Подобно на autosens_max  това определя колко голям може да стане ISF. \n\nПри стойност от 1 ше изключи тази функция. ВНИМАНИЕ: Бъдете внимателни със стойности над 2.5</string>
+    <string name="openapsama_autoISF_max_summary">Подобно на autosens_max  това определя колко голям може да стане ISF. \n\nПри стойност от 1 ще изключи тази функция.\n\nВНИМАНИЕ: Бъдете внимателни със стойности над 2.5</string>
     <string name="pref_title_bg_accel_weight">Влияние върху ISF при покачване на КЗ</string>
     <string name="openapsama_bgAccel_ISF_weight_summary">Това е тежестта на ускоряващата се захар, която усилва ISF и съответно увеличава инсулина доставен.\n\nПо подразбиране 0. Това на практика изключва този ефект.</string>
     <string name="pref_title_bg_brake_weight">Влияние на намаляваща КЗ върху ISF</string>
@@ -359,13 +359,13 @@
     <string name="pref_title_high_bg_weight">Тежест на висока КЗ</string>
     <string name="openapsama_higher_ISFrange_weight_summary">Това е тежестта прилагана при КЗ надцелта, което намалява ISF и потенциялно увеличава доставката на инсулин.\n\nПо подразбиране: 0, което изключва този ефект.</string>
     <string name="pref_title_smb_delivery_ratio_bg_range">Диапазон за SMB</string>
-    <string name="openapsama_smb_delivery_ratio_bg_range_summary">По подразбиране: 0. Пускането на SMB се ограничава в границите на [целева захар, целева захар + диапазон. При стойност 0, Няма линейно ускорение в пускането на SMB и фиксираната стойност се използва.].</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">По подразбиране: 0. Линейно растящото съотношение за SMB се разпределя в диапазона на КЗ [target_bg, target_bg+bg_range].\nПри target_bg съотношението за SMB е smb_delivery_ratio_min, при target_bg+bg_range то е smb_delivery_ratio_max\nПри стойност 0 линейно растящото съотношение за SMB е изключено и се използва фиксираната стойност smb_delivery_ratio.</string>
     <string name="pref_title_pp_weight">Постпрандиална тезест върху ISF</string>
     <string name="openapsama_pp_ISF_weight_summary">Това е тежестта прилагана върху ISF при растяща КЗ, която го намалява и увеличава доставката на инсулин.\n\nПо подразбиране е 0, което изключва този ефект.</string>
     <string name="pref_title_dura_weight">Тежест при продължителност върху ISF</string>
     <string name="openapsama_dura_ISF_weight_summary">Това е тежестта прилагана при КЗ над целта за продължително време и високи плата, което намалява ISF и увеличава доставката на инсулин.\n\nПо подразбиране: 0, което изключва този ефект.</string>
-    <string name="pref_title_smb_delivery_ratio">Съотнешение на прилагания SMB</string>
-    <string name="openapsama_smb_delivery_ratio_summary">По подразбиране: 0.5. Това е друга ключова стойност за сигурност и определя каква част от нужния инсулин да се доставя като SMB. Това е за да предотврати пшасни SMB намеси от контролиращ телефон. В същото време увеличавайте тази стойност бавно и внимателно.</string>
+    <string name="pref_title_smb_delivery_ratio">Съотношение на прилагания SMB</string>
+    <string name="openapsama_smb_delivery_ratio_summary">По подразбиране: 0.5. Това е друга ключова стойност за сигурност и определя каква част от нужния инсулин да се доставя като SMB. Това е за да предотврати опасни SMB намеси от контролиращ телефон. В същото време увеличавайте тази стойност бавно и внимателно.</string>
     <string name="pref_title_smb_delivery_ratio_min">Минималлно съотнешение на прилагания SMB</string>
     <string name="openapsama_smb_delivery_ratio_min_summary">По подразбиране: 0.5. Това е долната граница на линейно ускоряващото се съотношение отколкото фиксираната стойнот по-горе.</string>
     <string name="pref_title_smb_delivery_ratio_max">Максимално съотнешение на прилагания SMB</string>
@@ -377,7 +377,7 @@
     <string name="pref_title_high_mark">Граница на висока КЗ</string>
     <!-- UnitDoubleKey: APS preferences -->
     <string name="pref_title_lgs_threshold">LGS граница</string>
-    <string name="lgs_threshold_summary">Стойността на КЗ под която инсулина се спира. По подразбиране се използва стандарните стойности. Потребителят може да настройва стойности между 60mg/dl (3.3ммол/л) и 100mg/dl(5,5ммол/л). Стойности под 65/3.6 ще доведат до използване на стандартния модел.</string>
+    <string name="lgs_threshold_summary">Стойността на КЗ, под която инсулинът се спира. По подразбиране се използват стандартните стойности. Потребителят може да настройва стойности между 60 mg/dl (3,3 ммол/л) и 100 mg/dl (5,5 ммол/л). Стойности под 65/3,6 ще доведат до използване на стандартния модел.</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
 </resources>

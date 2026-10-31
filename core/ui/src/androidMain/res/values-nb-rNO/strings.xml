@@ -11,7 +11,7 @@
     <string name="treatments_history">Behandlingshistorikk</string>
     <string name="treatments_desc">Vis og administrer behandlingshistorikk</string>
     <string name="nav_configuration">Konfigurasjon</string>
-    <string name="nav_configuration_desc">Sett opp konfigurasjonen din (sensor, pumpe, ...) og aktiver funksjoner</string>
+    <string name="nav_configuration_desc">Konfigurer oppsettet ditt (sensor, pumpe osv.) og aktiver funksjonene</string>
     <string name="count_selected">%1$d valgt</string>
     <string name="delete">Slett</string>
     <string name="show_invalidated">Vis ugyldige</string>
@@ -717,6 +717,7 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">Ingen profil valgt</string>
     <string name="missing_profile_name">Mangler profilnavn</string>
+    <string name="profile_clone_name" comment="Name of a cloned profile. %1$s=name of the original profile. Example: Normal copy">%1$s kopi</string>
     <string name="profile_not_saved_activate">Profilen er ikke lagret. Vennligst lagre profilen før aktivering.</string>
     <string name="profile_basal_not_compatible_with_pump">Basaldosen er ikke kompatibel med den aktuelle pumpen og kan ikke aktiveres. Reduser prosenten eller juster basaldosen.</string>
     <string name="profile_basal_below_pump_minimum">Basaldosen er lavere enn minimumsverdien for den aktuelle pumpen og kan ikke aktiveres. Øk prosentverdien eller juster basaldosen.</string>

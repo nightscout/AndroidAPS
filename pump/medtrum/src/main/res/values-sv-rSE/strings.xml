@@ -9,6 +9,8 @@
     <string name="pump_is_suspended_day_max">Pumpen är pausad på grund av att din maximala dos per dygn är överskriden</string>
     <string name="patch_not_active">Podden är inte aktiverad</string>
     <string name="pump_setting_failed">Kunde inte spara användarinställningarna till pumpen!</string>
+    <string name="pump_sync_error">Fel vid synkronisering av historik från pumpen, en post har hoppats över. Kontrollera i fliken Behandlingar om bolusen är korrekt synkroniserad. Snooza, och om felet kommer tillbaka, byt pod eller pumpbas.</string>
+    <string name="patch_reset_after_primed_error">Podden startades om av sig själv och förlorade sin session. Den kan inte leverera insulin längre. Ta bort podden och starta en ny.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Aktiv bolus</string>
     <string name="pump_state_label">Pumpstatus</string>
@@ -16,7 +18,7 @@
     <string name="basal_type_label">Basaltyp</string>
     <string name="pump_type_label">Pumptyp</string>
     <string name="fw_version_label">FW-version</string>
-    <string name="patch_no_label">Patch-nr</string>
+    <string name="patch_no_label">Pod-nr</string>
     <string name="patch_expiry_label">Podden löper ut</string>
     <string name="reset_alarms_label">Återställ larm</string>
     <string name="change_patch_label">Byt pod</string>
@@ -37,7 +39,7 @@
     <string name="alarm_occlusion">Ocklusion</string>
     <string name="alarm_expired">Utgången</string>
     <string name="alarm_reservoir_empty">Reservoar tom</string>
-    <string name="alarm_patch_fault">Poddfel</string>
+    <string name="alarm_patch_fault">Pod-fel</string>
     <string name="alarm_base_fault">Basfel</string>
     <string name="alarm_battery_out">Batteri urladdat</string>
     <string name="alarm_no_calibration">Ingen kalibrering</string>
@@ -45,7 +47,7 @@
     <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Försök igen</string>
-    <string name="step_prepare_patch">Aktivera Pod</string>
+    <string name="step_prepare_patch">Aktivera pod</string>
     <string name="step_prepare_patch_connect">Anslut och fyll</string>
     <string name="step_prime">Förfyll</string>
     <string name="step_priming">Förfyller</string>
@@ -58,23 +60,26 @@
     <string name="step_deactivate_complete">Podden inaktiverad</string>
     <string name="step_retry_activation">Aktivering pågår</string>
     <string name="unexpected_state">Oväntat tillstånd: %1$s</string>
+    <string name="ble_scan_connect_pump_base_first">Anslut pumpbasen till en ny pod för att slå på den, välj den därefter ur listan nedan.</string>
     <string name="patch_begin_activation">Ingen aktiv pod. Tryck på <b>Nästa</b> för att påbörja aktiveringsprocessen.</string>
+    <string name="connect_pump_base">Säkerställ att pumpbasen är ansluten till podden, ta bort kvarvarande luft och fyll med insulin, tryck sedan på <b>Nästa</b>.</string>
     <string name="note_min_70_units">Obs: Minst 70 enheter krävs för aktivering.</string>
     <string name="do_not_attach_to_body">Fäst inte podden på kroppen ännu.</string>
-    <string name="half_press_needle">Halvtryck på nålknappen. Tryck sedan på <b>Nästa</b> för att börja prima.</string>
+    <string name="half_press_needle">Halvtryck på nålknappen. Tryck sedan på <b>Nästa</b> för att börja förfylla.</string>
     <string name="wait_for_priming">Vänta på att förfyllning ska slutföras.</string>
     <string name="press_next">Tryck på <b>Nästa</b> för att fortsätta.</string>
     <string name="press_next_to_start_activation">Tryck på <b>Nästa</b> för att starta aktivering.</string>
     <string name="remove_safety_lock">Ta bort säkerhetslåset. Fäst pumpen på kroppen. Tryck på nålknappen.</string>
     <string name="activating_pump">Aktiverar pump och ställer in basaldos. Vänligen vänta.</string>
     <string name="activating_complete">Ny pod aktiverad. %.2f enheter återstår.</string>
+    <string name="can_export_settings">Du kan exportera inställningarna för att kunna återställa denna pod-session senare.</string>
     <string name="press_OK_to_return">Tryck på <b>OK</b> för att återgå till huvudskärmen.</string>
     <string name="deactivate_sure">Är du säker på att du vill inaktivera nuvarande pod?</string>
     <string name="cancel_sure">Är du säker på att du vill avbryta aktiveringen?</string>
     <string name="medtrum_deactivate_pump_confirm">Är du säker? Denna åtgärd kan inte ångras!!</string>
     <string name="press_next_or_cancel">Tryck på <b>Nästa</b> för att inaktivera eller <b>Avbryt</b> för att återgå till huvudskärmen.</string>
-    <string name="deactivating_pump">Inaktiverar patch. Vänligen vänta.</string>
-    <string name="deactivating_error">Det gick inte att inaktivera, tryck på <b>Kassera</b> för att glömma patchen.</string>
+    <string name="deactivating_pump">Inaktiverar pod. Vänligen vänta.</string>
+    <string name="deactivating_error">Det gick inte att inaktivera, tryck på <b>Kassera</b> för att glömma podden.</string>
     <string name="retract_needle">Dra tillbaka nålen. Ta bort podden från kroppen.</string>
     <string name="remove_base_discard_patch">Ta bort pumpbasen och kassera den använda podden på lämpligt sätt.</string>
     <string name="press_next_or_OK">Tryck på <b>OK</b> för att återgå till huvudskärmen. Tryck på <b>Nästa</b> för att starta aktiveringen av ny pod.</string>
@@ -84,6 +89,13 @@
     <!-- settings-->
     <string name="alarm_setting_title">Larminställningar</string>
     <string name="alarm_setting_summary">Ställ in dina föredragna larminställningar för pumpen.</string>
+    <string name="alarm_setting_light_vibrate_beep">Ljus, vibration och pip</string>
+    <string name="alarm_setting_light_vibrate">Ljus och vibration</string>
+    <string name="alarm_setting_light_beep">Ljus och pip</string>
+    <string name="pump_warning_notification_title">Avisering vid pumpvarning</string>
+    <string name="pump_warning_notification_summary">Visa avisering för icke-kritiska pumpvarningar: lågt batteri, låg reservoar (20 enheter) och löper ut snart. Rekommenderas att ha påslaget när pumpens larm är inställda att vara tysta.</string>
+    <string name="pump_warning_expiry_hour_title">Varning om att pumpen löper ut [timmar]</string>
+    <string name="pump_warning_expiry_hour_summary">Visa avisering ett angivet antal timmar efter aktivering.</string>
     <string name="patch_expiration_title">Poddens utgångsdatum</string>
     <string name="patch_expiration_summary">När den är aktiverad, kommer podden att löpa ut efter 3 dagar, med en tidsfrist på 8 timmar efter det.</string>
     <string name="hourly_max_insulin_summary">Ange maximalt tillåtna insulin-enheter per timme. Om den överskrids kommer pumpen att pausas.</string>

@@ -72,7 +72,7 @@
     <string name="pair_with_master_fetching">Ricerca accoppiamento…</string>
     <string name="pair_with_master_confirm_title">Accoppia con master?</string>
     <string name="pair_with_master_confirm_master">Master: %1$s</string>
-    <string name="pair_with_master_confirm_warning">Dopo l\'accoppiamento, questo master sarà in grado di inviare comandi firmati a questo dispositivo.</string>
+    <string name="pair_with_master_confirm_warning">Dopo l\'associazione, questo master sarà in grado di inviare comandi firmati a questo dispositivo.</string>
     <string name="pair_with_master_confirm_pair">Accoppia</string>
     <string name="pair_with_master_error_title">Impossibile accoppiare</string>
     <string name="pair_with_master_error_wrong_pin">Nessun accoppiamento trovato per quel PIN. Controllare il PIN sul master e riprovare.</string>
@@ -271,7 +271,7 @@
     <string name="smscommunicator_remote_bolus_not_allowed">Bolo remoto non disponibile. Riprova più tardi.</string>
     <string name="smscommunicator_basal_reply_with_code">Per avviare la basale %1$.2f U/h per %2$d min rispondi col codice %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Per passare al profilo %1$s %2$d%% rispondi col codice %3$s</string>
-    <string name="smscommunicator_extended_reply_with_code">Per avviare il bolo esteso %1$.2f U/h per %2$d min rispondi col codice %3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">Per avviare il bolo esteso %1$.2f U per %2$d min rispondi col codice %3$s</string>
     <string name="smscommunicator_carbs_reply_with_code">Per inserire %1$dg a %2$s rispondi col codice %3$s</string>
     <string name="smscommunicator_basal_pct_reply_with_code">Per avviare la basale %1$d%% per %2$d min rispondi col codice %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">Per sospendere il loop per %1$d minuti rispondi col codice %2$s</string>
@@ -280,7 +280,7 @@
     <string name="smscommunicator_restart_reply_with_code">Per riprendere il loop rispondi col codice %1$s</string>
     <string name="smscommunicator_restarting">AAPS si sta riavviando</string>
     <string name="smscommunicator_tempbasal_set">Basale temporanea %1$.2fU/h per %2$d min avviata con successo</string>
-    <string name="smscommunicator_extended_set">Bolo esteso %1$.2fU/h per %2$d min avviato con successo</string>
+    <string name="smscommunicator_extended_set">Bolo esteso %1$.2fU per %2$d min avviato con successo</string>
     <string name="smscommunicator_carbs_set">CHO %1$d g inseriti con successo</string>
     <string name="smscommunicator_carbs_failed">Inserimento di %1$dg di CHO fallito</string>
     <string name="smscommunicator_tempbasal_set_percent">Basale temporanea %1$d%% per %2$d min avviata con successo</string>

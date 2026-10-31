@@ -33,7 +33,7 @@
     <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Nastavení bazálního profilu se možná nezdařilo. Výdej může být pozastaven! Prosím ručně obnovte stav Podu na záložce Omnipod a obnovte výdej pokud je to potřeba.</string>
     <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Nastavení bazální profilu se nezdařilo. Výdej je pozastaven! Ručně obnovte výdej z karty Omnipod.</string>
     <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Zrušení dočasného bazálu se možná nezdařilo. Aktualizujte prosím stav Podu z karty Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Nastavení dočasného bazátu selhalo. Pokud byl dočasný bazální již dříve spuštěn, mohl být zrušen. Aktualizujte prosím stav Podu z karty Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Nastavení dočasného bazálu selhalo. Pokud byl dočasný bazál již dříve spuštěn, mohl být zrušen. Aktualizujte prosím ručně stav Podu z karty Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Nastavení dočasného bazálu mohlo být neúspěšné. Pokud již dočasný bazál dříve běžel, byl zrušen. Aktualizujte prosím ručně stav Podu na záložce Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">Doba trvání TBR musí být větší než nula, a musí být násobkem %1$s minut.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Nastavení času se možná nezdařilo. Výdej může být pozastaven! Prosím ručně obnovte stav Podu na záložce Omnipod a obnovte výdej pokud je to potřeba.</string>
@@ -49,5 +49,5 @@
     <string name="omnipod_eros_pod_management_pulse_log_value">Protokol pulzů (zkopírováno do schránky)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
     <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Naplňte nový Pod dostatkem inzulínu na 3 dny.\n\nČekejte na dvě pípnutí z Podu během procesu plnění. Ta potvrzují, že bylo naplněno minimální množství 80 U. Ujistěte se, že je stříkačka zcela vyprázdněná, dokonce i poté, co zazní dvě pípnutí.\n\nPo naplnění Podu, prosím, stiskněte <b>Další</b>.\n\n<b>Poznámka:</b> prozatím nesundávejte kryt jehly.\n<b>Poznámka:</b>umístěte RileyLink ve svislé pozice blízko Podu.</string>
-    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Snažíte se spárovat novýPod a naplnit ho.\n\nKdyž byl úspěšně dokončen inicializační proces, můžete stisknout tlačítko <b>Další</b>.\n\n<b>Poznámka:</b> položte RileyLink ve vzpřímené poloze a umístěte ho pár centimetrů od Podu.</string>
+    <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Probíhá párování s novým Podem a jeho plnění.\n\nPo úspěšném dokončení inicializace můžete stisknout tlačítko <b>Další</b>.\n\n<b>Poznámka:</b> postavte RileyLink do svislé polohy a umístěte Pod několik centimetrů od něj.</string>
 </resources>

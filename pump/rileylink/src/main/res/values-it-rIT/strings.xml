@@ -9,10 +9,10 @@
     <string name="pump_status_timeout_comm">Timeout della comunicazione</string>
     <string name="pump_status_invalid_config">Configurazione non valida</string>
     <string name="medtronic_pump_encoding_title">Codifica Medtronic</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Codifica hardware 4b6b</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Codifica software 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Codifica hardware 4b6b</string>
     <string name="medtronic_pump_frequency_us_ca">USA &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Mondo (868 Mhz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Mondo (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Scansione</string>
     <string name="riley_link_ble_config_connected_never">Mai</string>

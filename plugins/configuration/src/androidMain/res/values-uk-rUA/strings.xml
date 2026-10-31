@@ -1,9 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="units">Одиниці</string>
+    <string name="setupwizard_units_prompt">Виберіть одиниці, у яких хочете відображати значення</string>
+    <string name="next_button">Далі</string>
+    <string name="previous_button">Назад</string>
+    <string name="setupwizard_finish">ЗАВЕРШИТИ</string>
+    <string name="welcome">Ласкаво просимо</string>
+    <string name="welcometosetupwizard">Ласкаво просимо до майстра налаштування. Він проведе вас через процес налаштування\n</string>
+    <string name="end_user_license_agreement">Ліцензійна угода кінцевого користувача</string>
+    <string name="end_user_license_agreement_text">НЕ МОЖЕ ВИКОРИСТОВУВАТИСЯ ДЛЯ МЕДИЧНИХ РІШЕНЬ. ПРОГРАМА ПОСТАЧАЄТЬСЯ БЕЗ ЖОДНИХ ГАРАНТІЙ У МЕЖАХ, ДОЗВОЛЕНИХ ЗАКОНОМ. ЯКЩО НЕ ВКАЗАНО ІНШЕ, АВТОРИ ТА ІНШІ СТОРОНИ НАДАЮТЬ ПРОГРАМУ «ЯК Є» БЕЗ ЖОДНИХ ПРЯМИХ ЧИ НЕПРЯМИХ ГАРАНТІЙ, ЗОКРЕМА ГАРАНТІЙ ТОВАРНОЇ ПРИДАТНОСТІ ТА ВІДПОВІДНОСТІ ПЕВНІЙ МЕТІ. УВЕСЬ РИЗИК, ПОВ’ЯЗАНИЙ ІЗ ЯКІСТЮ ТА РОБОТОЮ ПРОГРАМИ, ЛЕЖИТЬ НА ВАС. ЯКЩО ПРОГРАМА ВИЯВИТЬСЯ НЕДОСКОНАЛОЮ, ВИ БЕРЕТЕ НА СЕБЕ ВИТРАТИ НА НЕОБХІДНИЙ РЕМОНТ ЧИ ВИПРАВЛЕННЯ.</string>
+    <string name="end_user_license_agreement_i_understand">Я РОЗУМІЮ ТА ПОГОДЖУЮСЯ</string>
+    <string name="display_settings">Параметри відображення</string>
+    <string name="low_mark">Нижня межа</string>
+    <string name="high_mark">Верхня межа</string>
+    <string name="low_mark_comment">Нижнє значення зони в межах норми (лише для відображення)</string>
+    <string name="high_mark_comment">Верхнє значення зони в межах норми (лише для відображення)</string>
+    <string name="storedsettingsfound">Знайдено збережені налаштування</string>
+    <string name="master_password_summary">Головний пароль використовується для шифрування резервних копій і для обходу захисту в застосунку. Запам’ятайте його або збережіть у безпечному місці.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">Використовуйте значення для найбільшої страви, яку ви зазвичай їсте\n</string>
+    <string name="syncinfotext">Синхронізуйте дані з хмарою. Ви можете пропустити цей крок зараз, але не зможете проходити завдання, доки не налаштуєте клієнт Nightscout або Tidepool.</string>
+    <string name="status_label">Статус:</string>
+    <string name="diawarning">Пам’ятайте: нові профілі інсуліну потребують DIA щонайменше 5 год. DIA 5–6 год у новому профілі відповідає DIA 3 год у старих профілях інсуліну.</string>
     <string name="profile">Профіль</string>
+    <string name="doprofileswitch">Змінити профіль</string>
+    <string name="exitwizard">Пропустити майстер налаштування</string>
+    <string name="setupwizard_sensitivity_description">Плагін чутливості використовується для визначення чутливості та розрахунку COB. Детальніше за посиланням:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Виберіть один із доступних алгоритмів. Вони впорядковані від найстарішого до найновішого. Новіший алгоритм зазвичай потужніший. Не забудьте прочитати документацію OpenAPS і налаштувати алгоритм перед використанням.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Будь ласка, налаштуйте свій RileyLink нижче. Після вибору RileyLink продовження буде доступним, коли статус буде «Підключено». Це може тривати хвилину.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Примітка:</b> Ви можете продовжити налаштування, щойно буде налаштовано помпу.\n</string>
+    <string name="startobjective">Почніть перше завдання</string>
+    <string name="open_objectives">Відкрити Завдання</string>
+    <string name="setupwizard_permissions">Дозволи</string>
+    <string name="setupwizard_profile_info">Створіть профіль з вашими базальними швидкостями, IC, ISF і цільовими значеннями. Пізніше можна додати кілька профілів.</string>
+    <string name="setupwizard_permissions_info">Для правильної роботи AAPS потребує доступу до сховища та дозволів. Надайте потрібні дозволи нижче.</string>
+    <string name="setupwizard_pump_riley_link_status">Статус RileyLink:</string>
+    <string name="setupwizard_client_control_title">Керування з клієнта</string>
+    <string name="setupwizard_client_control_info">Спаруйте клієнтські пристрої, щоб вони могли надсилати підписані команди на цей основний телефон через Nightscout. Це новий рекомендований спосіб віддаленого керування AAPS.</string>
+    <string name="setupwizard_ns_receive_info">Приймання терапії та даних напряму з Nightscout (менш безпечний спосіб) тепер за замовчуванням вимкнено. Відкривайте налаштування нижче, лише якщо вам це ще потрібно. Це потрібно, якщо ви вводите дані через NS або сторонні застосунки.</string>
+    <string name="setupwizard_open_ns_receive_settings">Приймання даних з Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">Спаруйте цей клієнт з вашим основним AAPS, щоб він міг надсилати команди захищеним каналом. Після спарювання налаштування завершено.</string>
+    <string name="setupwizard_setup_from_master_title">Налаштувати з основного телефону</string>
+    <string name="setupwizard_setup_from_master_info">На основному телефоні відкрийте «Авторизовані клієнти» і додайте цей телефон за допомогою QR-коду. Сканування налаштує Nightscout з окремим токеном для цього телефону, а також може його спарувати. Після сканування налаштування завершено. Якщо QR-коду немає, пропустіть цей крок і налаштуйте Nightscout самостійно.</string>
+    <string name="setupwizard_scan_master_qr">Сканувати QR-код</string>
+    <string name="setupwizard_pairing_ws_warning">Для спарювання потрібне з’єднання Nightscout WebSocket. Поверніться до попереднього кроку і спочатку увімкніть його.</string>
+    <string name="setupwizard_pairing_status_master">Спарені клієнти: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Ще немає спарених клієнтів</string>
+    <string name="setupwizard_pairing_status_client_paired">Спарено з основним телефоном</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Ще не спарено</string>
+    <string name="setupwizard_instance_name_title">Хто користується цим телефоном?</string>
+    <string name="readstatus">Зчитати статус</string>
     <!-- Provider-agnostic cloud export/import strings -->
+    <string name="alert_dialog_permission_battery_optimization_failed">Схоже, цей пристрій не підтримує додавання до винятків оптимізації батареї — можливі проблеми з роботою.</string>
     <!--    ConfigBuilder-->
+    <string name="configbuilder_pump_description">Яку помпу ви хочете використовувати з AAPS?</string>
+    <string name="configbuilder_aps_description">Який APS-алгоритм має виконувати коригування терапії?</string>
+    <string name="configbuilder_sync_description">Плагіни для вивантаження даних, синхронізації та зв’язку.</string>
+    <string name="configbuilder_bgsource_description">Звідки AAPS має отримувати дані?</string>
+    <string name="configbuilder_sensitivity_description">Який алгоритм чутливості слід використовувати?</string>
+    <string name="allow_hardware_pump_text">Увага: якщо ви активуєте апаратну помпу та підключитеся до неї, AAPS скопіює налаштування базалу з профілю в помпу і перезапише базальну швидкість, збережену в помпі. Переконайтеся, що в AAPS правильні налаштування базалу. Якщо ви не впевнені або не хочете перезаписувати налаштування базалу в помпі, натисніть «Скасувати» і перемкніться на помпу пізніше.</string>
+    <string name="nsclient_version_does_not_match">Версія AAPSClient не збігається з версією AAPS. Оновіть застосунок.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
@@ -14,6 +71,9 @@
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
+    <string name="loading">Завантаження…</string>
+    <string name="warning_wrong_directory_selected">Вибрано неправильну папку</string>
+    <string name="warning_wrong_directory_message">Ви вибрали підпапку «%1$s» замість кореневої папки AAPS. Виберіть батьківську папку AAPS. Застосунок сам створить підпапки та керуватиме ними.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->

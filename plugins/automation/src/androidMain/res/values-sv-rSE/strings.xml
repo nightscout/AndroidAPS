@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Automation</string>
+    <string name="automation_empty_desc">Skapa en regel som kör åtgärder automatiskt utifrån utlösare.</string>
+    <string name="automation_discard_title">Kassera ändringar?</string>
+    <string name="automation_discard_message">Regeln är ofullständig och kan inte sparas. Vill du kassera dina ändringar?</string>
+    <string name="automation_discard_confirm">Kassera</string>
+    <string name="automation_choose_trigger">Lägg till utlösare</string>
+    <string name="trigger_scene_active_compared">Scen %1$s</string>
+    <string name="action_scene_not_found">Scenen kunde inte hittas</string>
     <string name="automation_missing_task_name">Ange ett namn för uppgiften.</string>
     <string name="automation_missing_trigger">Specificera åtminstone en utlösare.</string>
     <string name="automation_missing_action">Specificera åtminstone en åtgärd.</string>
@@ -18,7 +25,7 @@
     <string name="sendsmsactionlabel">Skicka SMS: %1$s</string>
     <string name="sendsmsactiondescription">Skicka SMS till alla nummer</string>
     <string name="sendsmsactiontext">Skicka SMS med text</string>
-    <string name="starttemptarget">Starta temp mål</string>
+    <string name="starttemptarget">Starta tillfälligt målvärde</string>
     <string name="islesser">är mindre än</string>
     <string name="isequalorlesser">är samma eller mindre än</string>
     <string name="isequal">är lika med</string>
@@ -28,9 +35,9 @@
     <string name="glucoseisnotavailable">BG-data är inte tillgängligt</string>
     <string name="glucosecomparedmgdl">BG %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">BG %1$s %2$.1f %3$s</string>
-    <string name="notemptarget">Temp mål finns inte</string>
-    <string name="temptargetcomparedmgdl">Temp mål %1$s %2$.0f %3$s</string>
-    <string name="temptargetcomparedmmol">Temp mål %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Tillfälligt målvärde finns inte</string>
+    <string name="temptargetcomparedmgdl">Tillfälligt målvärde %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Tillfälligt målvärde %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil pct %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="or">eller</string>
@@ -49,7 +56,7 @@
     <string name="time_range">Tidsintervall</string>
     <string name="timerange_value">Klockan är mellan %1$s och %2$s</string>
     <string name="add_short">LÄGG TILL</string>
-    <string name="temptargetcompared">Temp mål %1$s</string>
+    <string name="temptargetcompared">Tillfälligt målvärde %1$s</string>
     <string name="btdevicecompared">Bluetooth-anslutning till enhet %1$s %2$s</string>
     <string name="btdevice">Anslutning till Bluetooth-enhet </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
@@ -65,6 +72,16 @@
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Hjärtfrekvens</string>
     <string name="triggerHeartRateDesc">HF %1$s %2$.0f</string>
+    <string name="triggerSensorAgeDesc">Sensorålder %1$s %2$.1f timme</string>
+    <string name="triggerCannulaAgeDesc">Kanylålder %1$s %2$.1f timme</string>
+    <string name="triggerPodChangeLabel">Podaktivering</string>
+    <string name="triggerPodChangeDesc">Pod aktiverad</string>
+    <string name="triggerInsulinAgeDesc">Insulinålder %1$s %2$.1f timme</string>
+    <string name="triggerPumpBatteryAgeLabel">Pumpbatteriets ålder</string>
+    <string name="triggerPumpBatteryAgeDesc">Pumpbatteriets ålder %1$s %2$.1f timme</string>
+    <string name="triggerReservoirLevelLabel">Reservoarnivå</string>
+    <string name="triggerReservoirLevelDesc">Reservoarnivå %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Pumpbatterinivå</string>
     <string name="recurringTime">Återkommande tid</string>
     <string name="every">Varje</string>
     <string name="never">Aldrig</string>
@@ -79,8 +96,8 @@
     <string name="add_automation">Lägg till regel</string>
     <string name="stop_processing">Sluta bearbeta</string>
     <!--    Reminders-->
-    <string name="time_to_eat">Dags att äta!\nKör bolusguiden igen för ny beräkning.</string>
-    <string name="time_to_bolus">Dags för bolus!\nKör Bolusguiden och gör beräkningar igen.</string>
+    <string name="time_to_eat">Dags att äta!\nÖppna kalkylatorn och gör beräkningen igen.</string>
+    <string name="time_to_bolus">Dags för bolus!\nKör kalkylatorn och gör beräkningen igen.</string>
     <string name="error_setting_reminder">Fel vid inställning av framtida alarm</string>
     <!--    Autotune-->
     <string name="autotune_run">Kör Autotune</string>
@@ -89,6 +106,8 @@
     <string name="autotune_run_with_error">Fel under senaste körning av Autotune</string>
     <string name="autotune_run_cancelled">En annan Autotune-körning upptäcktes, körning avbruten</string>
     <!--    Steps count-->
+    <string name="triggerStepsCountDropdownLabel">Mätningens längd</string>
+    <string name="automation_log_entry" comment="One line of the automation run log. %1$s=time, %2$s=a symbol for success or failure, %3$s=rule name (bold), %4$s=what the action did, %5$s=its result. Example: 21:15 ☺ Night low: Start temp target: 8.0mmol/L@60 min(Automation): OK">%1$s %2$s %3$s: %4$s: %5$s</string>
     <!--    SMB mode-->
     <!--    Smoothing-->
     <!--    Map Picker (OpenStreetMap)-->

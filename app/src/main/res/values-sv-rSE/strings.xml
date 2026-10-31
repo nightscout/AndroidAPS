@@ -2,4 +2,6 @@
 <resources>
     <string name="authorizationfailed">Behörighetskontroll misslyckades</string>
     <string name="identification_not_set">Identifiering inte angiven i dev-läge</string>
+    <string name="insulin_migration_default_dia_used" comment="Shown once after the database migration when the insulin was known but its duration (DIA) was not. %1$.1f is the duration in hours, e.g. 9.0, %2$s is the insulin name, e.g. Lyumjev. The already migrated records are NOT corrected later.">Äldre poster saknade insulinets verkningstid, så %1$.1f timmar användes för %2$s. Kontrollera dina insulininställningar — redan migrerade poster uppdateras inte efteråt.</string>
+    <string name="settings_unreadable_not_running">AAPS körs inte och styr inte pumpen. En tillfällig basal som pågår avslutas när dess tid har gått ut. Därefter ger pumpen sin egen basal.</string>
 </resources>

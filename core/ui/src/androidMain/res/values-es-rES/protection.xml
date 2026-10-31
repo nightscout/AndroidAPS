@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="biometric_title">Autentificación requerida</string>
-    <string name="biometric_description">Coloque el dedo en el lector de huellas dactilares para verificar su identidad</string>
+    <string name="biometric_description">Coloca el dedo en el lector de huellas dactilares para verificar tu identidad</string>
     <string name="settings_protection">Protección de ajustes</string>
     <string name="application_protection">Protección de aplicación</string>
     <string name="bolus_protection">Protección de bolo</string>
@@ -15,7 +15,7 @@
     <string name="protection_timeout_summary">Tiempo previo a que se introduzca el PIN o la password</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">No es seguro volver atrás</string>
-    <string name="unsecure_fallback_descriotion_biometric">Para ser eficaz, la protección biométrica necesita una contraseña maestra establecida para el respaldo.\n\nPor favor, establezca una contraseña maestra!</string>
+    <string name="unsecure_fallback_descriotion_biometric">Para ser eficaz, la protección biométrica necesita una contraseña maestra establecida para el respaldo.\n\nPor favor, establece una contraseña maestra!</string>
     <string name="password_set">¡Contraseña establecida!</string>
     <string name="datastore_password_cleared">¡Se eliminó la contraseña de exportación almacenada!</string>
     <string name="pin_set">PIN establecido</string>

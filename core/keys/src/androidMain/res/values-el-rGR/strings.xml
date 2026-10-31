@@ -1,79 +1,383 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">Απλή λειτουργία</string>
+    <string name="pref_title_insulin_concentration">Υποστήριξη συγκέντρωσης ινσουλίνης</string>
+    <string name="pref_summary_insulin_concentration">Ενεργοποίηση υποστήριξης για διαφορετικές συγκεντρώσεις ινσουλίνης (U50, U200 κ.λπ.)</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Οθόνη πάντα αναμμένη</string>
+    <string name="pref_summary_keep_screen_on">Εμποδίζει το Android να σβήσει την οθόνη. Θα καταναλώνει πολλή ενέργεια όταν το τηλέφωνο δεν είναι στο ρεύμα.</string>
+    <string name="pref_title_show_treatment_button">Εμφάνιση κουμπιού θεραπείας</string>
+    <string name="pref_title_show_wizard_button">Εμφάνιση κουμπιού οδηγού</string>
+    <string name="pref_title_show_insulin_button">Εμφάνιση κουμπιού ινσουλίνης</string>
+    <string name="pref_title_show_carbs_button">Εμφάνιση κουμπιού υδατανθράκων</string>
+    <string name="pref_title_show_cgm_button">Εμφάνιση κουμπιού CGM</string>
+    <string name="pref_summary_show_cgm_button">Ανοίγει το xDrip+ ή την εφαρμογή Dexcom (με το κουμπί πίσω επιστρέφετε στο AAPS).</string>
+    <string name="pref_title_show_calibration_button">Εμφάνιση κουμπιού βαθμονόμησης</string>
+    <string name="pref_summary_show_calibration_button">Στέλνει βαθμονόμηση στο xDrip+ (βεβαιωθείτε ότι το \'Accept Calibrations\' είναι ενεργό στο xDrip+ στις ρυθμίσεις Inter-App).</string>
+    <string name="pref_title_show_notes_in_dialogs">Εμφάνιση σημειώσεων στους διαλόγους</string>
+    <string name="pref_title_use_bolus_advisor">Χρήση Συμβούλου Bolus</string>
+    <string name="pref_summary_use_bolus_advisor">Ενεργοποίηση του Συμβούλου Bolus, που βοηθά στον υπολογισμό bolus όταν η γλυκόζη είναι υψηλή.</string>
+    <string name="pref_title_use_bolus_reminder">Χρήση υπενθύμισης bolus</string>
+    <string name="pref_summary_use_bolus_reminder">Ενεργοποίηση ειδοποιήσεων υπενθύμισης bolus, για να παρακολουθείτε τη χορήγηση ινσουλίνης.</string>
+    <string name="pref_title_use_super_bolus">Χρήση Superbolus</string>
+    <string name="pref_summary_use_super_bolus">Ενεργοποίηση του Superbolus, που δανείζεται ινσουλίνη από τον βασικό ρυθμό για άμεση χορήγηση.</string>
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">BT Watchdog</string>
+    <string name="pref_summary_bt_watchdog">Κλείνει το Bluetooth του τηλεφώνου για ένα δευτερόλεπτο αν δεν είναι δυνατή η σύνδεση με την αντλία. Αυτό μπορεί να βοηθήσει σε κάποια τηλέφωνα όπου το Bluetooth κολλάει.</string>
     <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">Ειδοποίηση αν δεν λαμβάνονται δεδομένα γλυκόζης</string>
+    <string name="pref_title_alert_pump_unreachable">Ειδοποίηση αν η αντλία δεν είναι προσβάσιμη</string>
+    <string name="pref_title_alert_carbs_required">Ειδοποίηση για απαιτούμενους υδατάνθρακες</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Επείγοντες συναγερμοί ως ειδοποιήσεις Android</string>
+    <string name="pref_title_alert_increase_volume">Σταδιακή αύξηση έντασης ειδοποίησης</string>
+    <string name="pref_title_alert_override_dnd">Παράκαμψη της λειτουργίας Μην ενοχλείτε</string>
+    <string name="pref_summary_alert_override_dnd">Ενεργό: οι συναγερμοί ηχούν ακόμη και όταν το τηλέφωνο είναι σε σίγαση ή σε «Μην ενοχλείτε». Ανενεργό: οι συναγερμοί δεν ηχούν τότε. Σε «Μην ενοχλείτε» μόνο δονούνται.</string>
     <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">Αποστολή δεδομένων γλυκόζης στο NS</string>
+    <string name="pref_title_bg_source_create_sensor_change">Καταγραφή αλλαγής αισθητήρα</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Δημιουργία συμβάντος θεραπείας αλλαγής αισθητήρα όταν τοποθετείται αισθητήρας.</string>
     <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">Χρήση δυναμικής ευαισθησίας</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Χρήση του DynamicISF για την προσαρμογή ευαισθησίας αντί για το Autosens.</string>
+    <string name="pref_title_aps_use_autosens">Χρήση Autosens</string>
+    <string name="pref_title_aps_use_smb">Ενεργοποίηση SMB</string>
+    <string name="pref_summary_aps_use_smb">Ενεργοποίηση του Super Micro Bolus. Το SMB χορηγεί ινσουλίνη αμέσως όταν η γλυκόζη αίματος ανεβαίνει.</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Ενεργοποίηση SMB με υψηλό προσωρινό στόχο</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">Επιτρέπει SMB όταν είναι ενεργός υψηλός προσωρινός στόχος.</string>
+    <string name="pref_title_aps_use_smb_always">Ενεργοποίηση SMB πάντα</string>
+    <string name="pref_summary_aps_use_smb_always">Ενεργοποίηση SMB σε όλες τις συνθήκες, ανεξάρτητα από bolus ή COB.</string>
+    <string name="pref_title_aps_use_smb_with_cob">Ενεργοποίηση SMB με COB</string>
+    <string name="pref_summary_aps_use_smb_with_cob">Επιτρέπει SMB όταν υπάρχουν ενεργοί υδατάνθρακες (COB).</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Ενεργοποίηση SMB με χαμηλό προσωρινό στόχο</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">Επιτρέπει SMB όταν είναι ενεργός χαμηλός προσωρινός στόχος.</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Ενεργοποίηση SMB μετά από υδατάνθρακες</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">Επιτρέπει SMB για ένα διάστημα μετά την καταχώριση υδατανθράκων.</string>
+    <string name="pref_title_aps_use_uam">Ενεργοποίηση UAM</string>
+    <string name="pref_summary_aps_use_uam">Ενεργοποίηση εντοπισμού και αντιμετώπισης μη δηλωμένων γευμάτων (UAM).</string>
+    <string name="pref_title_aps_sensitivity_raises_target">Η ευαισθησία ανεβάζει τον στόχο</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">Όταν εντοπίζεται ευαισθησία, ανεβαίνει ο στόχος γλυκόζης.</string>
+    <string name="pref_title_aps_resistance_lowers_target">Η αντίσταση χαμηλώνει τον στόχο</string>
+    <string name="pref_summary_aps_resistance_lowers_target">Όταν εντοπίζεται αντίσταση, χαμηλώνει ο στόχος γλυκόζης.</string>
+    <string name="pref_title_aps_always_use_short_deltas">Χρήση πάντα του σύντομου μέσου delta</string>
+    <string name="pref_summary_aps_always_use_short_deltas">Χρήση πάντα του σύντομου μέσου delta αντί για το απλό delta στους υπολογισμούς αλλαγής γλυκόζης.</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">Το DynamicISF προσαρμόζει την ευαισθησία</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Προσαρμογή των υπολογισμών ευαισθησίας όταν χρησιμοποιείται το DynamicISF.</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Το Autosens προσαρμόζει τους στόχους</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">Το Autosens μπορεί να προσαρμόζει τον στόχο γλυκόζης, εκτός από τον βασικό ρυθμό και την ISF.</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">Υψηλός προσωρινός στόχος αυξάνει την ευαισθησία</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">Οι υψηλοί προσωρινοί στόχοι θα αυξάνουν την ευαισθησία στην ινσουλίνη.</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Χαμηλός προσωρινός στόχος μειώνει την ευαισθησία</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">Οι χαμηλοί προσωρινοί στόχοι θα μειώνουν την ευαισθησία στην ινσουλίνη.</string>
+    <string name="pref_title_aps_use_autoisf_weights">Ενεργοποίηση AutoISF</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Ενεργοποίηση προσαρμογών της ISF με βάρη (AutoISF).</string>
+    <string name="pref_title_aps_smb_on_even_target">Ενεργοποίηση SMB με βάση τον στόχο</string>
+    <string name="pref_summary_aps_smb_on_even_target">Εναλλακτική ενεργοποίηση του SMB, πάντα με βάση την τιμή του στόχου γλυκόζης.</string>
     <!-- Maintenance preferences -->
+    <string name="pref_title_maintenance_enable_fabric">Ενεργοποίηση αναφορών σφαλμάτων Fabric</string>
+    <string name="pref_title_maintenance_enable_export_automation">Ενεργοποίηση αυτόματης εξαγωγής ρυθμίσεων</string>
     <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">Αυτόματη αλλαγή προφίλ</string>
+    <string name="pref_summary_autotune_auto_switch_profile">Αυτόματη αλλαγή στο προφίλ του Autotune μετά τον υπολογισμό.</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">UAM ως βασικός ρυθμός</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">Τα μη δηλωμένα γεύματα μετρούν ως ανάγκη βασικής ινσουλίνης στους υπολογισμούς του Autotune.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">Ρύθμιση καμπύλης ινσουλίνης</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Χρήση ημερήσιας διακύμανσης IC/ISF</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Εφαρμογή της ημερήσιας διακύμανσης στα IC και ISF στους υπολογισμούς του Autotune.</string>
+    <string name="pref_title_autotune_additional_log">Πρόσθετη καταγραφή</string>
     <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">Να επιτρέπονται απομακρυσμένες εντολές μέσω SMS</string>
+    <string name="pref_title_sms_report_pump_unreachable">Αναφορά μη προσβάσιμης αντλίας μέσω SMS</string>
+    <string name="pref_summary_sms_report_pump_unreachable">Αποστολή ειδοποίησης SMS όταν η αντλία δεν είναι προσβάσιμη.</string>
     <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">Αποστολή κατάστασης αντλίας στο NS</string>
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">Αποστολή δεδομένων στο NS</string>
+    <string name="pref_summary_ns_upload_data">Αποστολή θεραπειών, προσωρινών βασικών ρυθμών και άλλων δεδομένων στο Nightscout.</string>
+    <string name="pref_title_ns_receive_cgm">Λήψη δεδομένων CGM από το NS</string>
+    <string name="pref_summary_ns_receive_cgm">Αποδοχή μετρήσεων CGM από το Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_store">Λήψη αποθήκης προφίλ από το NS</string>
+    <string name="pref_summary_ns_receive_profile_store">Αποδοχή ενημερώσεων της αποθήκης προφίλ από το Nightscout.</string>
+    <string name="pref_title_ns_receive_temp_target">Λήψη προσωρινών στόχων από το NS</string>
+    <string name="pref_summary_ns_receive_temp_target">Αποδοχή αλλαγών προσωρινού στόχου από το Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_switch">Λήψη αλλαγών προφίλ από το NS</string>
+    <string name="pref_summary_ns_receive_profile_switch">Αποδοχή αλλαγών προφίλ από το Nightscout.</string>
+    <string name="pref_title_ns_receive_insulin">Λήψη ινσουλίνης από το NS</string>
+    <string name="pref_summary_ns_receive_insulin">Αποδοχή θεραπειών ινσουλίνης από το Nightscout.</string>
+    <string name="pref_title_ns_receive_carbs">Λήψη υδατανθράκων από το NS</string>
+    <string name="pref_summary_ns_receive_carbs">Αποδοχή καταχωρίσεων υδατανθράκων από το Nightscout.</string>
+    <string name="pref_title_ns_receive_therapy_event">Λήψη συμβάντων θεραπείας από το NS</string>
+    <string name="pref_summary_ns_receive_therapy_event">Αποδοχή συμβάντων θεραπείας από το Nightscout.</string>
+    <string name="pref_title_ns_receive_running_mode">Λήψη τρόπου λειτουργίας από το NS</string>
+    <string name="pref_summary_ns_receive_running_mode">Αποδοχή αλλαγών του τρόπου λειτουργίας από το Nightscout.</string>
+    <string name="pref_title_ns_receive_tbr_eb">Λήψη TBR/EB από το NS</string>
+    <string name="pref_summary_ns_receive_tbr_eb">Αποδοχή προσωρινών βασικών ρυθμών και εκτεταμένων bolus από το Nightscout.</string>
+    <string name="pref_title_ns_notifications_from_alarms">Συναγερμοί NS</string>
+    <string name="pref_title_ns_notifications_from_announcements">Ανακοινώσεις NS</string>
+    <string name="pref_title_ns_use_cellular">Χρήση δεδομένων κινητής</string>
+    <string name="pref_title_ns_use_roaming">Χρήση περιαγωγής</string>
+    <string name="pref_title_ns_use_wifi">Χρήση WiFi</string>
+    <string name="pref_title_ns_use_on_battery">Συγχρονισμός με μπαταρία</string>
+    <string name="pref_title_ns_use_on_charging">Συγχρονισμός κατά τη φόρτιση</string>
+    <string name="pref_title_ns_log_app_start">Καταγραφή εκκίνησης εφαρμογής</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Ανακοινώσεις από σφάλματα</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Ανακοινώσεις από απαιτούμενους υδατάνθρακες</string>
+    <string name="pref_title_ns_slow_sync">Αργός συγχρονισμός</string>
+    <string name="pref_title_ns_use_ws">Χρήση websockets</string>
+    <string name="pref_summary_ns_use_ws">Χρήση websockets για επικοινωνία σε πραγματικό χρόνο με το Nightscout.</string>
+    <string name="pref_title_ns_allow_client_control">Να επιτρέπεται ο έλεγχος από πελάτες</string>
+    <string name="pref_summary_ns_allow_client_control">Οι συζευγμένες συσκευές client μπορούν να στέλνουν υπογεγραμμένες εντολές (π.χ. έναρξη/διακοπή σεναρίων) μέσω Nightscout. Αυτό ενεργοποιεί και την ενισχυμένη λειτουργία: αλλαγές που γίνονται απευθείας στο Nightscout δεν γίνονται πια δεκτές.</string>
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">Μόνο με WiFi</string>
+    <string name="pref_title_openhumans_charging_only">Μόνο κατά τη φόρτιση</string>
     <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">Αποστολή κατάστασης στο xDrip+</string>
+    <string name="pref_title_xdrip_send_detailed_iob">Αποστολή αναλυτικού IOB</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">Αποστολή αναλυτικών στοιχείων IOB στο xDrip+ για εμφάνιση σε watchface.</string>
+    <string name="pref_title_xdrip_send_bgi">Εμφάνιση BGI</string>
+    <string name="pref_summary_xdrip_send_bgi">Εμφάνιση της επίδρασης στη γλυκόζη αίματος (BGI) στη γραμμή κατάστασης του xDrip+.</string>
     <!-- Wear preferences -->
+    <string name="pref_title_wear_control">Έλεγχος από ρολόι</string>
+    <string name="pref_summary_wear_control">Έλεγχος του AAPS από ρολόι Android Wear.</string>
+    <string name="pref_title_wear_wizard_bg">Γλυκόζη στον οδηγό</string>
+    <string name="pref_title_wear_wizard_tt">Προσωρινός στόχος στον οδηγό</string>
+    <string name="pref_title_wear_wizard_trend">Τάση στον οδηγό</string>
+    <string name="pref_title_wear_wizard_cob">COB στον οδηγό</string>
+    <string name="pref_title_wear_wizard_iob">IOB στον οδηγό</string>
+    <string name="pref_title_wear_custom_watchface_authorization">Εξουσιοδότηση προσαρμοσμένων Watchface</string>
+    <string name="pref_title_wear_pushed_watchface">Watchface εγκατεστημένο στο ρολόι</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Watchface με Complications</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Προσαρμοσμένο Watchface</string>
+    <string name="pref_title_wear_notify_on_smb">Ειδοποίηση για SMB</string>
+    <string name="pref_summary_wear_notify_on_smb">Αποστολή ειδοποιήσεων στο ρολόι όταν χορηγείται SMB.</string>
+    <string name="pref_title_wear_broadcast_data">Μετάδοση δεδομένων στο ρολόι</string>
+    <string name="pref_summary_wear_broadcast_data">Μετάδοση δεδομένων του AAPS σε εφαρμογές ρολογιού τρίτων μέσω intent.</string>
     <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">Διαχείριση εναλλαγής σημείων αντλίας</string>
+    <string name="pref_title_site_rotation_manage_cgm">Διαχείριση εναλλαγής σημείων CGM</string>
     <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">Βήμα κουμπιού υδατανθράκων 1</string>
+    <string name="pref_title_carbs_button_increment_2">Βήμα κουμπιού υδατανθράκων 2</string>
+    <string name="pref_title_carbs_button_increment_3">Βήμα κουμπιού υδατανθράκων 3</string>
     <string name="carb_increment_button_message">Αριθμός υδατανθράκων να προστεθεί όταν πατήσετε το πλήκτρο</string>
+    <string name="pref_title_cage_warning">Όριο προειδοποίησης ηλικίας καθετήρα</string>
+    <string name="pref_title_cage_critical">Κρίσιμο όριο ηλικίας καθετήρα</string>
+    <string name="pref_title_iage_warning">Όριο προειδοποίησης ηλικίας ινσουλίνης</string>
+    <string name="pref_title_iage_critical">Κρίσιμο όριο ηλικίας ινσουλίνης</string>
+    <string name="pref_title_sage_warning">Όριο προειδοποίησης ηλικίας αισθητήρα</string>
+    <string name="pref_title_sage_critical">Κρίσιμο όριο ηλικίας αισθητήρα</string>
+    <string name="pref_title_sbat_warning">Όριο προειδοποίησης επιπέδου μπαταρίας αισθητήρα</string>
+    <string name="pref_title_sbat_critical">Κρίσιμο όριο επιπέδου μπαταρίας αισθητήρα</string>
+    <string name="pref_title_bage_warning">Όριο προειδοποίησης ηλικίας μπαταρίας αντλίας</string>
+    <string name="pref_title_bage_critical">Κρίσιμο όριο ηλικίας μπαταρίας αντλίας</string>
+    <string name="pref_title_res_warning">Όριο προειδοποίησης επιπέδου δεξαμενής</string>
+    <string name="pref_title_res_critical">Κρίσιμο όριο επιπέδου δεξαμενής</string>
+    <string name="pref_title_batt_warning">Όριο προειδοποίησης επιπέδου μπαταρίας αντλίας</string>
+    <string name="pref_title_batt_critical">Κρίσιμο όριο επιπέδου μπαταρίας αντλίας</string>
+    <string name="pref_title_bolus_percentage">Ποσοστό bolus</string>
+    <string name="deliverpartofboluswizard">Εφαρμογή αυτής της τιμής στη διόρθωση γλυκόζης και υδατανθράκων στο αποτέλεσμα του Οδηγού Bolus</string>
+    <string name="pref_title_reset_bolus_percentage_time">Χρόνος επαναφοράς ποσοστού bolus</string>
     <string name="deliver_part_of_boluswizard_reset_time">Χορήγησε το πλήρες bolus (100%) εάν η γλυκαιμία είναι παλαιότερη από</string>
     <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">Χρόνος λήξης προστασίας</string>
+    <string name="pref_title_protection_type_application">Επίπεδο 0: Προστασία εφαρμογής</string>
+    <string name="pref_summary_protection_type_application">Άνοιγμα της εφαρμογής και επιστροφή σε αυτήν. Ανεξάρτητο από τα άλλα επίπεδα</string>
+    <string name="pref_title_protection_type_bolus">Επίπεδο 1: Προστασία bolus</string>
+    <string name="pref_summary_protection_type_bolus">Θεραπείες, ενεργοποίηση προφίλ. Απαιτεί το Επίπεδο 2</string>
+    <string name="pref_title_protection_type_settings">Επίπεδο 2: Προστασία ρυθμίσεων</string>
+    <string name="pref_summary_protection_type_settings">Επεξεργασία προφίλ, ρυθμίσεων</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">Χωρίς προστασία</string>
     <string name="biometric">Βιομετρικά</string>
     <string name="master_password">Κύριος κωδικός</string>
     <string name="custom_password">Προσαρμοσμένος κωδικός</string>
     <string name="custom_pin">Προσαρμοσμένο PIN</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">Μέγιστοι επιτρεπόμενοι υδατάνθρακες</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Ελάχιστη αλλαγή σε ανοιχτό κύκλωμα</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Το Ανοιχτό κύκλωμα θα εμφανίσει νέο μήνυμα αλλαγής μόνο αν η αλλαγή είναι μεγαλύτερη από αυτήν την τιμή σε %. Προεπιλεγμένη τιμή 20%</string>
     <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">Διάστημα SMB</string>
+    <string name="pref_title_smb_max_minutes">Μέγιστα λεπτά βασικού ρυθμού για όριο SMB</string>
+    <string name="pref_title_uam_smb_max_minutes">UAM μέγιστα λεπτά βασικού ρυθμού για όριο SMB</string>
     <string name="uam_smb_max_minutes">Μέγιστη διάρκεια UAM SMB (λεπτά)</string>
+    <string name="pref_title_carbs_request_threshold">Όριο απαιτούμενων υδατανθράκων</string>
     <string name="carbs_req_threshold_summary">Ελάχιστα γραμμάρια υδατανθράκων για την εμφάνιση μιας ειδοποίησης πρότασης υδατανθράκων. Δε θα εμφανιστούν ειδοποιήσεις για προτάσεις υδατανθράκων κάτω από αυτόν τον αριθμό.</string>
+    <string name="pref_title_half_basal_exercise_target">Στόχος άσκησης για μισό βασικό ρυθμό</string>
+    <string name="half_basal_exercise_target_summary">Ορίστε έναν αριθμό, π.χ. 160: όταν ο προσωρινός στόχος είναι 160 mg/dL και η ρύθμιση «Υψηλός προσωρινός στόχος αυξάνει την ευαισθησία» είναι ενεργή, ο βασικός ρυθμός είναι 50%% σε αυτό το επίπεδο (120 = 75%%; 140 = 60%%).</string>
+    <string name="pref_title_iob_threshold_percent">Ποσοστό ορίου IOB</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Ποσοστό του maxIOB πάνω από το οποίο τα SMB απενεργοποιούνται.\nΠροεπιλεγμένη τιμή: 100%\nΜε 100% αυτή η λειτουργία είναι στην πράξη απενεργοποιημένη.</string>
+    <string name="pref_title_dynisf_adjustment_factor">Συντελεστής προσαρμογής DynamicISF</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Συντελεστής προσαρμογής για το DynamicISF. Ορίστε πάνω από 100% για πιο επιθετικές δόσεις διόρθωσης και κάτω από 100% για λιγότερο επιθετικές διορθώσεις.</string>
+    <string name="pref_title_autosens_period">Περίοδος Autosens</string>
     <string name="openapsama_autosens_period_summary">Ποσότητα ωρών κατά το παρελθόν για ανίχνευση ευαισθησίας (εξαιρείται ο χρόνος απορρόφησης υδατανθράκων)</string>
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Αριθμός αρχείων καταγραφής για αποστολή</string>
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Όριο παλιών δεδομένων</string>
+    <string name="pref_title_pump_unreachable_threshold">Όριο μη προσβάσιμης αντλίας</string>
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Προεπιλεγμένες ημέρες ρύθμισης</string>
     <string name="autotune_default_tune_days_summary">Προεπιλεγμένος αριθμός ημερών δεδομένων προς επεξεργασία από το Autotune (έως 30)</string>
     <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">Ελάχιστη απόσταση απομακρυσμένου bolus</string>
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">Διάστημα τυχαίας γλυκόζης</string>
+    <string name="pref_title_random_bg_randomize">Τυχαία δεδομένα γλυκόζης</string>
+    <string name="pref_summary_random_bg_randomize">Προσθήκη θορύβου, μικρές αλλαγές στις χρονοσφραγίδες, τυχαία βέλη τάσης και κάποιοι τυχαίοι υδατάνθρακες. Απενεργοποιήστε για καθαρό, σταθερό ημιτονοειδές κύμα με βέλος τάσης από την κλίση του κύματος.</string>
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Όριο συναγερμού για παλιά δεδομένα</string>
+    <string name="pref_title_urgent_alarm_stale_data">Όριο επείγοντος συναγερμού για παλιά δεδομένα</string>
     <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">Προφίλ χρήστη για εναλλαγή σημείων</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
+    <string name="site_rotation_profile_man">Άνδρας</string>
+    <string name="site_rotation_profile_woman">Γυναίκα</string>
+    <string name="site_rotation_profile_child">Παιδί</string>
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Μονάδες</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">Γλώσσα</string>
+    <string name="lang_default">Προεπιλογή συστήματος</string>
+    <string name="lang_en">Αγγλικά</string>
+    <string name="lang_af">Αφρικάανς</string>
+    <string name="lang_bg">Βουλγαρικά</string>
+    <string name="lang_cs">Τσεχικά</string>
+    <string name="lang_de">Γερμανικά</string>
+    <string name="lang_dk">Δανικά</string>
+    <string name="lang_fr">Γαλλικά</string>
+    <string name="lang_nl">Ολλανδικά</string>
+    <string name="lang_es">Ισπανικά</string>
+    <string name="lang_el">Ελληνικά</string>
+    <string name="lang_ga">Ιρλανδικά</string>
+    <string name="lang_it">Ιταλικά</string>
+    <string name="lang_ko">Κορεατικά</string>
+    <string name="lang_lt">Λιθουανικά</string>
+    <string name="lang_nb">Νορβηγικά</string>
+    <string name="lang_pl">Πολωνικά</string>
+    <string name="lang_pt">Πορτογαλικά</string>
+    <string name="lang_pt_br">Πορτογαλικά (Βραζιλίας)</string>
+    <string name="lang_ro">Ρουμανικά</string>
+    <string name="lang_ru">Ρωσικά</string>
+    <string name="lang_sk">Σλοβακικά</string>
+    <string name="lang_sv">Σουηδικά</string>
+    <string name="lang_tr">Τουρκικά</string>
+    <string name="lang_zh_tw">Κινεζικά (παραδοσιακά)</string>
+    <string name="lang_zh_cn">Κινεζικά (απλοποιημένα)</string>
+    <string name="pref_title_patient_name">Όνομα εγκατάστασης</string>
+    <string name="pref_summary_patient_name">Όνομα του ατόμου που χρησιμοποιεί αυτό το τηλέφωνο. Ξεχωρίζει αυτό το AAPS στις αναφορές και στον συγχρονισμό.</string>
     <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">Φάκελος AAPS</string>
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">Κύριος κωδικός</string>
+    <string name="pref_title_settings_password">Κωδικός ρυθμίσεων</string>
+    <string name="pref_title_settings_pin">PIN ρυθμίσεων</string>
+    <string name="pref_title_application_password">Κωδικός εφαρμογής</string>
+    <string name="pref_title_application_pin">PIN εφαρμογής</string>
+    <string name="pref_title_bolus_password">Κωδικός bolus</string>
+    <string name="pref_title_bolus_pin">PIN bolus</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">Επιλέξτε σκούρο, φωτεινό ή το θέμα του συστήματος</string>
+    <string name="pref_title_app_color_scheme">Χρώματα εφαρμογής</string>
+    <string name="pref_dark_theme">Σκούρο θέμα</string>
+    <string name="pref_light_theme">Φωτεινό θέμα</string>
+    <string name="pref_follow_system_theme">Θέμα συσκευής</string>
     <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">Ηλικία ασθενή</string>
     <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">Παραλήπτης email</string>
+    <string name="pref_title_identification">Αναγνωριστικό για αναφορές σφαλμάτων</string>
     <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">Υπηρεσία τοποθεσίας</string>
+    <string name="automation_location_passive">Χρήση παθητικής τοποθεσίας</string>
+    <string name="automation_location_network">Χρήση τοποθεσίας δικτύου</string>
+    <string name="automation_location_gps">Χρήση τοποθεσίας GPS</string>
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">Επιτρεπόμενοι αριθμοί τηλεφώνου</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">Πρόσθετο υποχρεωτικό PIN στο τέλος του token</string>
     <string name="smscommunicator_otp_pin_summary">Πρόσθετα ψηφία που θα πρέπει να απομνημονεύονται και να τοποθετηθούν στο τέλος κάθε παραγόμενου κωδικού πρόσβασης μιας φοράς</string>
     <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">Τύπος αντλίας</string>
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">Διεύθυνση URL του Nightscout</string>
+    <string name="ns_client_url_summary">Εισάγετε τη διεύθυνση URL του Nightscout σας (π.χ. https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">Nightscout API secret</string>
+    <string name="ns_client_secret_summary">Εισάγετε το Nightscout API secret σας (τουλάχιστον 12 χαρακτήρες)</string>
+    <string name="nsclient_token_title">Διακριτικό πρόσβασης Nightscout</string>
+    <string name="nsclient_token_summary">Εισάγετε το διακριτικό πρόσβασης (access token) του Nightscout σας (τουλάχιστον 17 χαρακτήρες)</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_wifi_ssids_summary">Επιτρεπόμενα SSID (χωρισμένα με ερωτηματικό ;)</string>
     <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">Βήμα κουμπιού ινσουλίνης 1</string>
+    <string name="pref_title_insulin_button_increment_2">Βήμα κουμπιού ινσουλίνης 2</string>
+    <string name="pref_title_insulin_button_increment_3">Βήμα κουμπιού ινσουλίνης 3</string>
     <string name="insulin_increment_button_message">Ποσότητα ινσουλίνης να προστεθεί όταν πατήσετε το πλήκτρο</string>
     <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">Κουμπί πλήρωσης 1</string>
+    <string name="pref_title_fill_button_2">Κουμπί πλήρωσης 2</string>
+    <string name="pref_title_fill_button_3">Κουμπί πλήρωσης 3</string>
     <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">Μέγιστο bolus</string>
     <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">Μέγιστος βασικός ρυθμός</string>
     <string name="openapsma_max_basal_summary">Αυτή η τιμή ονομάζεται μέγιστο βασικού ρυθμού στο περιεχόμενο του OpenAPS</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Προεπιλεγμένη τιμή: 3 Αυτό είναι ένα κλειδί ασφαλείας του OpenAPS. Αυτό περιορίζει την αύξηση του βασικού x3 (σε αυτούς τους ανθρώους) από την μεγαλύτερη τιμή του. Συνήθως δεν χρειάζεται να το αλλάξετε, αλλά πρέπει να ξέρετε τι σημαίνει “3x μέγιστο ημερήσιο; 4x τρέχων” για λόγους ασφαλείας.</string>
+    <string name="pref_title_smb_max_iob">Μέγιστο IOB για SMB</string>
+    <string name="openapssmb_max_iob_summary">Αυτή η τιμή ονομάζεται Max IOB στο OpenAPS\nΤο OpenAPS δεν θα προσθέσει άλλη ινσουλίνη αν το τρέχον IOB είναι μεγαλύτερο από αυτή την τιμή. Η τιμή εξαρτάται και από τον τύπο ασθενή.</string>
+    <string name="pref_title_ama_max_iob">Μέγιστο IOB για AMA</string>
+    <string name="openapsma_max_iob_summary">Αυτή η τιμή ονομάζεται Max IOB στο OpenAPS\nΕίναι η μέγιστη ινσουλίνη σε [U] που μπορεί να χορηγήσει το APS με μία φορά. Η τιμή εξαρτάται και από τον τύπο ασθενή.</string>
+    <string name="pref_title_max_daily_multiplier">Μέγιστος ημερήσιος πολλαπλασιαστής ασφαλείας</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Προεπιλεγμένη τιμή: 3 Αυτό είναι ένα βασικό όριο ασφαλείας του OpenAPS. Περιορίζει τον βασικό ρυθμό σε 3x (για τους περισσότερους ανθρώπους) τον μεγαλύτερο βασικό ρυθμό σας. Πιθανότατα δεν θα χρειαστεί να το αλλάξετε, αλλά πρέπει να ξέρετε ότι αυτό εννοείται με το “3x μέγιστο ημερήσιο, 4x τρέχον” για τα όρια ασφαλείας.</string>
+    <string name="pref_title_current_basal_multiplier">Πολλαπλασιαστής ασφαλείας τρέχοντος βασικού ρυθμού</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Προεπιλεγμένη τιμή: 4 Αυτό είναι το μισό του θέματος ασφαλείας του OpenAPS, και το άλλο μισό του «3 x μέγιστο ημέρας: 4 x τρέχων» των θεμάτων ασφαλείας. Αυτό σημαίνει ότι ο βασικός ρυθμός, ανεξάρτητα από την μέγιστη τιμή βασικού ρυθμού στην αντλία σας, δεν μπορεί να είναι υψηλότερος από το πολλαπλάσιο αυτού του αριθμού. Αυτό γίνεται για να αποτρέψει τους ανθρώπους από το να μπουν σε επικίνδυνες καταστάσεις θέτωντας υψηλό βασικό πριν κατανοήσουν πλήρως πώς λειτουργεί ο αλγόριθμος. Και πάλι, η προεπιλεγμένη τιμή είναι 4x: οι περισσότεροι άνθρωποι ποτέ δεν θα χρειαστεί να το προσαρμόσουν και αντίθετα είναι πιο πιθανό να χρειαστεί να προσαρμόσουν άλλες ρυθμίσεις αν αισθάνονται ότι κινούνται με ασφάλεια.</string>
+    <string name="pref_title_bolus_snooze_divisor">Διαιρέτης DIA για αναβολή bolus</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">Προεπιλεγμένη τιμή: 2\nΗ αναβολή Bolus ενεργοποιείται αφού κάνετε ένα γευματικό bolus, έτσι το κύκλωμα δεν θα εξουδετερώσει με χαμηλό προσωρινό μόλις έχετε φάει. Το παράδειγμα εδώ και η προεπιλογή είναι 2: έτσι μια τρίωρη DIA σημαίνει ότι το bolus αναβολής θα είναι σταδιακά πάνω από 1,5 ώρα (3DIA/2).</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">AMA ελάχιστη επίδραση υδατανθράκων ανά 5 λεπ.</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">SMB ελάχιστη επίδραση υδατανθράκων ανά 5 λεπ.</string>
     <string name="openapsama_min_5m_carb_impact_summary">Προεπιλεγμένη τιμή: 3.0 (AMA) ή 8.0 (SMB). Αυτό είναι μια ρύθμιση για την επίπτωση της προεπιλεγμένης απορρόφησης υδατανθράκων ανά 5 λεπτά. Η προεπιλογή είναι μια αναμενόμενη 3mg/dl/5min. Αυτό επηρεάζει το πόσο γρήγορα το COB ελλατώνεται, και πόση απορρόφηση υδατανθράκων θα υποθέτει για τον υπολογισμό της μελλοντικής πρόβλεψης BG, όταν το BG πέφτει περισσότερο από το αναμενόμενο ή δεν αυξάνεται όσο το αναμενόμενο.</string>
+    <string name="pref_title_absorption_cutoff">Όριο απορρόφησης</string>
     <string name="absorption_cutoff_summary">Χρόνος κατά τον οποίο οποιοδήποτε γεύμα θεωρείται απορροφημένο. Οι υπόλοιποι υδατάνθρακες θα αποκοπούν.</string>
+    <string name="pref_title_absorption_maxtime">Μέγιστος χρόνος απορρόφησης</string>
     <string name="absorption_max_time_summary">Χρόνος σε ώρες που περιμένουμε να απορροφηθούν όλοι οι υδατάνθρακες ενός γεύματος</string>
-    <string name="openapsama_autosens_min_summary">Προεπιλεγμένη τιμή: 0.7\n H άλλη πλευρά από τα όρια ασφαλείας του autosens, θέτοντας ένα ανώτατο όριο στο πόσο χαμηλά to autosens μπορεί να προσαρμόσει τον βασικό ρυθμό και πόσο ψηλά μπορεί να ρυθμίσει τη ISF και τον στόχο του BG.</string>
+    <string name="pref_title_autosens_min">Autosens ελάχιστο</string>
+    <string name="openapsama_autosens_min_summary">Προεπιλεγμένη τιμή: 0.7\nΗ άλλη πλευρά των ορίων ασφαλείας του autosens: θέτει όριο στο πόσο χαμηλά μπορεί το autosens να προσαρμόσει τους βασικούς ρυθμούς και πόσο ψηλά μπορεί να προσαρμόσει την ISF και τους στόχους BG.</string>
+    <string name="pref_title_autosens_max">Autosens μέγιστο</string>
     <string name="openapsama_autosens_max_summary">Προεπιλεγμένη τιμή: 1.2\nΑυτός είναι ένας πολλαπλασιαστής για το autosens (και σύντομα autotune) για να ορίσετε ένα 20%% ανώτατο όριο στο πόσο ψηλά μπορεί να είναι ο λόγος autosens, που με τη σειρά του καθορίζει πόσο ψηλά το autosens μπορεί να ρυθμίσει τον βασικό ρυθμό, πόσο χαμηλά μπορεί να ρυθμίσει την ISF, και πόσο χαμηλά μπορεί να ορίσει το στόχο της BG.</string>
+    <string name="pref_title_autoisf_min">AutoISF ελάχιστο</string>
+    <string name="openapsama_autoISF_min_summary">Παρόμοια με το autosens_min, καθορίζει πόσο αδύναμη μπορεί να γίνει η ISF.\n\nΗ προεπιλεγμένη τιμή 1,0 απενεργοποιεί αυτό το χαρακτηριστικό.</string>
+    <string name="pref_title_autoisf_max">AutoISF μέγιστο</string>
+    <string name="openapsama_autoISF_max_summary">Παρόμοια με το autosens_max, καθορίζει πόσο ισχυρή μπορεί να γίνει η ISF.\n\nΗ προεπιλεγμένη τιμή 1,0 απενεργοποιεί αυτό το χαρακτηριστικό.\n\nΠΡΟΕΙΔΟΠΟΙΗΣΗ: Να είστε εξαιρετικά προσεκτικοί όταν χρησιμοποιείτε τιμές πάνω από 2,5</string>
+    <string name="pref_title_bg_accel_weight">Βάρος ISF για επιτάχυνση γλυκόζης</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Αυτό είναι το βάρος που εφαρμόζεται όταν η γλυκόζη επιταχύνεται. Ενισχύει την ISF και έτσι μπορεί να αυξήσει τη χορήγηση ινσουλίνης.\n\nΗ προεπιλεγμένη τιμή 0,0 απενεργοποιεί στην πράξη αυτή την επίδραση.</string>
+    <string name="pref_title_bg_brake_weight">Βάρος ISF για επιβράδυνση γλυκόζης</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Αυτό είναι το βάρος που εφαρμόζεται όταν η γλυκόζη επιβραδύνεται. Αποδυναμώνει την ISF και έτσι μπορεί να μειώσει τη χορήγηση ινσουλίνης.\n\nΗ προεπιλεγμένη τιμή 0,0 απενεργοποιεί στην πράξη αυτή την επίδραση.</string>
+    <string name="pref_title_low_bg_weight">Βάρος για χαμηλό εύρος γλυκόζης</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Αυτό είναι το βάρος που εφαρμόζεται όταν η γλυκόζη είναι κάτω από τον στόχο. Αποδυναμώνει την ISF και έτσι μπορεί να μειώσει τη χορήγηση ινσουλίνης.\n\nΗ προεπιλεγμένη τιμή 0,0 απενεργοποιεί στην πράξη αυτή την επίδραση.</string>
+    <string name="pref_title_high_bg_weight">Βάρος για υψηλό εύρος γλυκόζης</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Αυτό είναι το βάρος που εφαρμόζεται όταν η γλυκόζη είναι πάνω από τον στόχο. Ενισχύει την ISF και έτσι μπορεί να αυξήσει τη χορήγηση ινσουλίνης.\n\nΗ προεπιλεγμένη τιμή 0,0 απενεργοποιεί στην πράξη αυτή την επίδραση.</string>
+    <string name="pref_title_smb_delivery_ratio_bg_range">Εύρος γλυκόζης λόγου χορήγησης SMB</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Προεπιλεγμένη τιμή: 0. Ο γραμμικά αυξανόμενος λόγος χορήγησης SMB αντιστοιχίζεται στο εύρος γλυκόζης [target_bg, target_bg+bg_range].\nΣτο target_bg ο λόγος SMB είναι smb_delivery_ratio_min, στο target_bg+bg_range είναι smb_delivery_ratio_max\nΜε 0 ο γραμμικά αυξανόμενος λόγος SMB απενεργοποιείται και χρησιμοποιείται ο σταθερός smb_delivery_ratio.</string>
+    <string name="pref_title_pp_weight">Βάρος ISF μετά το γεύμα</string>
+    <string name="openapsama_pp_ISF_weight_summary">Αυτό είναι το βάρος που εφαρμόζεται όταν η γλυκόζη ανεβαίνει. Ενισχύει την ISF και έτσι μπορεί να αυξήσει τη χορήγηση ινσουλίνης.\n\nΗ προεπιλεγμένη τιμή 0,0 απενεργοποιεί στην πράξη αυτή την επίδραση.</string>
+    <string name="pref_title_dura_weight">Βάρος ISF για διάρκεια</string>
+    <string name="openapsama_dura_ISF_weight_summary">Αυτό είναι το βάρος που εφαρμόζεται όταν η γλυκόζη μένει για πολύ ώρα σταθερά υψηλή. Ενισχύει την ISF και έτσι μπορεί να αυξήσει τη χορήγηση ινσουλίνης.\n\nΗ προεπιλεγμένη τιμή 0,0 απενεργοποιεί στην πράξη αυτή την επίδραση.</string>
+    <string name="pref_title_smb_delivery_ratio">Λόγος χορήγησης SMB</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Προεπιλεγμένη τιμή: 0,5 Αυτό είναι ένα ακόμη βασικό όριο ασφαλείας του OpenAPS. Ορίζει ποιο μέρος της συνολικής απαιτούμενης ινσουλίνης μπορεί να χορηγηθεί ως SMB. Έτσι αποφεύγεται ο κίνδυνος να ζητηθούν SMB την ίδια στιγμή και από το τηλέφωνο του φροντιστή. Αυξάνετε αυτή την πειραματική τιμή αργά και με προσοχή.</string>
+    <string name="pref_title_smb_delivery_ratio_min">Ελάχιστος λόγος χορήγησης SMB</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Προεπιλεγμένη τιμή: 0,5 Αυτό είναι το κάτω άκρο ενός γραμμικά αυξανόμενου λόγου, αντί για τη σταθερή τιμή παραπάνω.</string>
+    <string name="pref_title_smb_delivery_ratio_max">Μέγιστος λόγος χορήγησης SMB</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Προεπιλεγμένη τιμή: 0,5 Αυτό είναι το πάνω άκρο ενός γραμμικά αυξανόμενου λόγου, αντί για τη σταθερή τιμή παραπάνω.</string>
+    <string name="pref_title_smb_max_range_extension">Επέκταση μέγιστου εύρους SMB</string>
+    <string name="openapsama_smb_max_range_extension_summary">Προεπιλεγμένη τιμή: 1 Αυτό είναι ένα ακόμη βασικό όριο ασφαλείας του OpenAPS. Ορίζει με ποιον συντελεστή μπορείτε να ξεπεράσετε τα κανονικά 120 λεπτά maxSMB/maxUAM. Αυξάνετε αυτή την πειραματική τιμή αργά και με προσοχή.</string>
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">Όριο χαμηλής γλυκόζης</string>
+    <string name="pref_title_high_mark">Όριο υψηλής γλυκόζης</string>
     <!-- UnitDoubleKey: APS preferences -->
-    <string name="lgs_threshold_summary">Η τιμή BG κάτω από την οποία αναστέλλεται η ινσουλίνη. Η προεπιλεγμένη τιμή χρησιμοποιεί τυποποιημένο μοντέλο στόχου. Ο χρήστης μπορεί να ορίσει τιμή μεταξύ 60mg/dl (3. mmol/l) και 100mg/dl (5.5mmol/l). Τιμές κάτω των 65/3.6 έχουν ως αποτέλεσμα τη χρήση προκαθορισμένου μοντέλου</string>
+    <string name="pref_title_lgs_threshold">Όριο LGS</string>
+    <string name="lgs_threshold_summary">Η τιμή BG κάτω από την οποία αναστέλλεται η ινσουλίνη. Η προεπιλεγμένη τιμή χρησιμοποιεί τυποποιημένο μοντέλο στόχου. Ο χρήστης μπορεί να ορίσει τιμή μεταξύ 60mg/dl (3.3mmol/l) και 100mg/dl (5.5mmol/l). Τιμές κάτω των 65/3.6 έχουν ως αποτέλεσμα τη χρήση προκαθορισμένου μοντέλου</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
 </resources>
