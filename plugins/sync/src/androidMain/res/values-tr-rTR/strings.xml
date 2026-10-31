@@ -272,7 +272,7 @@
     <string name="smscommunicator_basal_reply_with_code">%2$d dk boyunca bazalı %1$.2f Ü/sa yapmak için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_profile_reply_with_code">Profili %1$s %2$d%% olarak değiştirmek için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_extended_reply_with_code">%2$d dakika boyunca %1$.2f Ü yayma bolus başlatmak için %3$s koduyla yanıtlayın</string>
-    <string name="smscommunicator_carbs_reply_with_code">%2$s\'de %1$dg girmek için %3$s koduyla yanıtlayın</string>
+    <string name="smscommunicator_carbs_reply_with_code">%1$dg karbonhidratı saat %2$s olarak girmek için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_basal_pct_reply_with_code">%2$d dk boyunca %1$d%% bazal başlatmak için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_suspend_reply_with_code">Döngüyü %1$d dakika askıya almak için %2$s koduyla yanıtlayın</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Döngüye devam etmek için %1$s koduyla yanıtlayın</string>
@@ -298,7 +298,7 @@
     <string name="smscommunicator_loop_suspended">Döngü askıya alındı</string>
     <string name="smscommunicator_loop_resumed">Döngü devam ettirildi</string>
     <string name="smscommunicator_invalid_phone_number">Geçersiz SMS telefon numarası</string>
-    <string name="smscommunicator_calibration_sent">Kalibrasyon gönderildi. Alma xDrip+\'ta etkinleştirilmelidir.</string>
+    <string name="smscommunicator_calibration_sent">Kalibrasyon gönderildi. xDrip+\'ta kalibrasyon alma etkinleştirilmelidir.</string>
     <string name="smscommunicator_calibration_failed">xDrip+ kalibrasyonları almıyor</string>
     <string name="smscommunicator_message_body">Geçersiz mesaj</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Döngü modunu LGS\'ye (Düşük Glikoz Duraklatma) geçirmek için %1$s koduyla yanıt verin</string>
@@ -314,7 +314,7 @@
     <string name="sms_min_ago">%1$d dk önce</string>
     <string name="sms_loop_suspended_for">Askıya alındı (%1$d dk)</string>
     <string name="sms_read_status_failed">Durum okuması başarısız oldu</string>
-    <string name="sms_profile_switch_created">Profil değiştirme yapıldı</string>
+    <string name="sms_profile_switch_created">Profil değişimi oluşturuldu</string>
     <string name="sms_wrong_tbr_duration">GBO süresi %1$d dakikanın katı ve 0\'dan büyük olmalıdır.</string>
     <string name="sms_tbr_percent_only">Bu pompa geçici bazalı Ü/sa olarak değil, yalnızca yüzde olarak kabul eder.</string>
     <string name="sms_tbr_absolute_only">Bu pompa geçici bazalı yüzde olarak değil, yalnızca Ü/sa olarak kabul eder.</string>
