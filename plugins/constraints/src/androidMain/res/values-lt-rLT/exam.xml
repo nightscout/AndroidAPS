@@ -73,7 +73,7 @@
     <string name="prerequisites2_profile">Patikrinto profilio (bazės, JIF, IA) ir insulino veikimo trukmės (IVT).</string>
     <string name="prerequisites2_device">Suderinamo Android įrenginio (pvz.: išmaniojo telefono, laikrodžio su full Android ar planšetės).</string>
     <string name="prerequisites2_internet">Interneto ryšio, kad veiktų uždaras ciklas.</string>
-    <string name="prerequisites2_supportedcgm">Palaikomo sensoriaus ir tinkamos programėlės glikemijos duomenims registruoti.</string>
+    <string name="prerequisites2_supportedcgm">Palaikomas NGJ jutiklis ir tinkama programėlė glikemijos duomenims gauti telefone ar įrenginyje.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/lt/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">AAPS naujinimas</string>
     <string name="update_git">Norėdami kurti programėlę su Android Studio, kompiuteryje turite įdiegti ir sukonfigūruoti Git. Kuriant naršyklėje Git nereikia.</string>
