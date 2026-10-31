@@ -241,14 +241,28 @@
     <string name="login">Login</string>
     <string name="logout">Ausloggen</string>
     <string name="prime_fill">Nadelwechsel/Füllen</string>
+    <string name="prime_not_available">Diese Pumpe führt das Befüllen und Entlüften während der Aktivierung selbstständig durch. Befüllen/Entlüften über AAPS ist nicht verfügbar.</string>
     <string name="btn_status_cannula_change" comment="Button on the Cannula row of the overview status section. Opens the Prime/Fill dialog.">Wechseln</string>
+    <string name="btn_status_insulin_fill" comment="Button on the Insulin row of the overview status section. Opens the Prime/Fill dialog.">Befüllen</string>
+    <string name="site_rotation">Wechsel der Setzstellen</string>
+    <string name="edit_site">Bearbeiten</string>
+    <string name="select_arrow">Pfeil auswählen</string>
+    <string name="site_filter_info">Wähle aus, welche Therapieereignisse angezeigt werden sollen: Kanülenwechsel und/oder Sensorwechsel</string>
     <string name="selected_location">Ausgewählt: %1$s</string>
     <string name="last_site_location">Letzte Stelle: %1$s</string>
+    <string name="pick_site">Setzstelle auswählen</string>
+    <string name="select_site_location">Setzstelle auswählen</string>
+    <string name="site_location">Setzstelle</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="stoptemptarget">Temporäres Ziel (TT) stoppen</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="lowglucosesuspend">Unterbrechung bei niedrigem BZ (LGS)</string>
+    <string name="pump_suspended">Pumpe pausiert</string>
+    <string name="pump_suspend">Pumpe pausieren</string>
+    <string name="pump_resume">Pumpe fortsetzen</string>
+    <string name="mode_reverted">Modus zurückgesetzt</string>
+    <string name="select_insulin">Insulin auswählen</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
@@ -258,6 +272,23 @@
     <string name="iob_label">Aktives Insulin (IOB)</string>
     <string name="loopstatus_targets">ZIELE:</string>
     <string name="loopstatus_OAPS_result">OAPS ERGEBNIS:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f IE ( %2$.2f IE/h )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f IE/h (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f IE/h @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f IE/h @%2$s %3$s/%4$s min</string>
+    <string name="extended_bolus_medium">%1$.2f IE/h %2$s/%3$s\'</string>
+    <string name="nav_export">Einstellungen exportieren</string>
+    <string name="location_permission_not_granted">Standortberechtigung nicht erteilt. In den Android-Einstellungen zulassen.</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout Version:</string>
+    <string name="not_available_full">Nicht verfügbar</string>
+    <string name="not_implemented_yet">Diese Funktion ist auf dieser Plattform noch nicht verfügbar</string>
+    <string name="not_available_on_platform">Diese Funktion ist auf dieser Plattform nicht verfügbar</string>
+    <string name="engineering_mode_enabled">Entwickler-Modus aktiviert</string>
+    <string name="back">Zurück</string>
+    <string name="next">Weiter</string>
+    <string name="pref_syncs_with_main_phone">Synchronisiert mit dem Haupttelefon</string>
+    <string name="show_hide_records">Loop-Einträge ausblenden</string>
     <!--    Protection-->
     <string name="wrongpassword">Falsches Passwort</string>
     <string name="wrongpin">Falsche PIN</string>
@@ -265,6 +296,7 @@
     <string name="pin_dont_match">PINs stimmen nicht überein</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Profil mit %1$d%% für %2$d min starten</string>
     <!--    APSResult-->
     <string name="cancel_temp">Temporäre Basalrate abbrechen</string>
     <string name="let_temp_basal_run">Temporäre Basalrate aktiv lassen</string>
@@ -273,14 +305,40 @@
     <string name="reason">Begründung</string>
     <string name="nochangerequested">Keine Anpassung benötigt</string>
     <!--    Insulin / Concentration-->
+    <string name="ins_concentration_confirmed">Insulin %1$s bestätigt</string>
+    <string name="current_insulin">Derzeit aktiviert</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Wird aktiviert</string>
+    <string name="change_insulin">Wechseln</string>
+    <string name="select_insulin_description">Wähle das Insulin aus, mit dem du die Pumpe befüllst. Nach der Aktivierung/dem Entlüften wird ein Profilwechsel durchgeführt.</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
+    <string name="selected_insulin">Ausgewähltes Insulin: %1$s</string>
+    <string name="record_insulin_hint">Wenn du mit einem Pen verabreichtes Insulin einträgst, wähle unten den passenden Insulintyp aus. Die Dosis wird immer in Internationalen Einheiten angegeben.</string>
     <!--       Stats -->
     <string name="average">Durchschnitt</string>
+    <string name="tir">Zeit im Zielbereich</string>
+    <string name="below" comment="below &quot;in range&quot;">Unter</string>
+    <string name="in_range">Im Zielbereich</string>
+    <string name="veryLow" comment="below 3.1">Sehr niedrig</string>
+    <string name="low" comment="3.1-3.9">Niedrig</string>
+    <string name="high" comment="10.0-13.9">Hoch</string>
+    <string name="veryHigh" comment="above 13.9">Sehr hoch</string>
+    <string name="above" comment="above &quot;in range&quot;">Über</string>
+    <string name="detailed_14_days">Detaillierte 14 Tage</string>
+    <string name="day_tir">Tages TIR</string>
+    <string name="night_tir">Nacht TIR</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">Standardabweichung: %1$s</string>
+    <string name="seven_days_short">7T</string>
+    <string name="thirty_days_short">30T</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">BZ-Test</string>
     <string name="careportal_mbg">Manueller BZ oder Kalibrierung</string>
     <string name="careportal_announcement">Ankündigung</string>
+    <string name="careportal_settings_export">Export der Einstellungen</string>
     <string name="careportal_note">Notiz</string>
     <string name="careportal_question">Frage</string>
     <string name="careportal_exercise">Bewegung</string>
@@ -292,6 +350,7 @@
     <string name="careportal_dad_alert">D.A.D. Warnung</string>
     <string name="careportal_insulin_cartridge_change">Insulin Ampullenwechsel</string>
     <string name="careportal_profileswitch">Profilwechsel</string>
+    <string name="profile_management">Profil</string>
     <string name="careportal_snackbolus">Snack-Bolus</string>
     <string name="careportal_mealbolus">Mahlzeiten-Bolus</string>
     <string name="careportal_correctionbolus">Korrektur-Bolus</string>
