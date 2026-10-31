@@ -301,7 +301,7 @@
     <string name="smscommunicator_calibration_sent">Kalibrering skickad. Observera att xDrip+ måste vara inställd att ta emot kalibreringar.</string>
     <string name="smscommunicator_calibration_failed">xDrip+ tar inte emot kalibreringar</string>
     <string name="smscommunicator_message_body">Ogiltigt innehåll i meddelande</string>
-    <string name="smscommunicator_set_lgs_reply_with_code">För att växla Loop-läge till LGS (Low Glucose Suspend) svara med kod %1$s</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">För att växla Loop-läge till LGS (paus vid lågt blodsocker) svara med kod %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">För att växla Loop-läge till sluten loop svara med kod %1$s</string>
     <string name="smscommunicator_current_loop_mode">Nuvarande körläge: %1$s</string>
     <string name="wrong_format">Felaktigt format</string>
