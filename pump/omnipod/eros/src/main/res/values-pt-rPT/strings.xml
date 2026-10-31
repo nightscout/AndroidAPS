@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Eros - Description -->
-    <string name="omnipod_eros_pump_description">Integração da bomba para Omnipod Eros (o modelo mais antigo). Requer um dispositivo RileyLink com pelo menos firmware versão 2.0.</string>
+    <string name="omnipod_eros_pump_description">Integração para a Omnipod Eros (o modelo mais antigo, com uma proteção de agulha transparente). Requer um dispositivo RileyLink com, pelo menos, a versão de firmware 2.0.</string>
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Errors -->
     <string name="omnipod_eros_error_riley_link_address_invalid">Endereço RileyLink inválido.</string>
