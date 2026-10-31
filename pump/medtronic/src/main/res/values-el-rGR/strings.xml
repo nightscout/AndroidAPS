@@ -6,16 +6,16 @@
     <string name="medtronic_serial_number">Σειριακός Αριθμός Αντλίας</string>
     <string name="medtronic_pump_type">Τύπος Αντλίας</string>
     <string name="medtronic_pump_frequency">Συχνότητα Αντλίας</string>
-    <string name="medtronic_pump_bolus_delay">Η καθυστέρηση πριν το bolus ξεκίνησε (s)</string>
+    <string name="medtronic_pump_bolus_delay">Καθυστέρηση πριν από την έναρξη του bolus (s)</string>
     <string name="medtronic_pump_max_bolus">Μέγιστο Bolus στην αντλία (U)</string>
     <string name="medtronic_pump_max_basal">Μέγιστος Βασικός στην αντλία (U/h)</string>
     <string name="medtronic_custom_action_wake_and_tune">Αφύπνιση και συντονισμός</string>
     <string name="medtronic_custom_action_clear_bolus_block">Καθαρισμός Bolus Block</string>
     <string name="medtronic_custom_action_reset_rileylink">Επαναφορά RileyLink</string>
-    <string name="medtronic_pump_battery_select">Τύπος Μπαταρίας (Power View)</string>
-    <string name="medtronic_pump_battery_no">Μη επιλεγμένη (Simple View)</string>
-    <string name="medtronic_pump_battery_alkaline">Αλκαλική (Extended view)</string>
-    <string name="medtronic_pump_battery_lithium">Λιθίου (Extended view)</string>
+    <string name="medtronic_pump_battery_select">Τύπος μπαταρίας (Προβολή ισχύος)</string>
+    <string name="medtronic_pump_battery_no">Μη επιλεγμένη (Απλή προβολή)</string>
+    <string name="medtronic_pump_battery_alkaline">Αλκαλική (Εκτενής προβολή)</string>
+    <string name="medtronic_pump_battery_lithium">Λιθίου (Εκτενής προβολή)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Εκτενής προβολή)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Εκτενής προβολή)</string>
     <!-- Pump type entries -->
