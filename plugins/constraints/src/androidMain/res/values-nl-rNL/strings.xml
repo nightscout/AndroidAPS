@@ -2,7 +2,7 @@
 <resources>
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Omschakeling van zomer- of wintertijd in 24 uur of minder</string>
-    <string name="dst_loop_disabled_warning">Omschakeling zomer/wintertijd minder dan 3 uur geleden - Gesloten Lus modus gedeactiveerd</string>
+    <string name="dst_loop_disabled_warning">Omschakeling zomer/wintertijd minder dan 3 uur geleden - Closed loop gedeactiveerd</string>
     <!-- Storage constraint -->
     <string name="disk_full">Maak minstens %1$d MB vrij in interne opslag! Loop is uitgeschakeld!</string>
     <!-- Version Checker -->
@@ -24,7 +24,7 @@
     <string name="pumpisnottempbasalcapable">Pomp kan geen tijdelijk basaal aanvaarden</string>
     <string name="closed_loop_disabled_on_dev_branch">Dev versie actief. Closed loop gedeactiveerd</string>
     <string name="closed_loop_disabled_with_eb">Closed loop modus uitgeschakeld vanwege afgeven Vertraagde bolus</string>
-    <string name="smbalwaysdisabled">SMB altijd gedeactiveerd doordat de gekozen BG bron geen optimale filtering toepast</string>
+    <string name="smbalwaysdisabled">SMB altijd en SMB na koolhydraten zijn uitgeschakeld, omdat de gekozen BG bron geen geavanceerde filtering ondersteunt</string>
     <string name="smbnotallowedinopenloopmode">SMB niet toegestaan in Open Loop modus</string>
     <string name="maxvalueinpreferences">Maximum waarde in instellingen</string>
     <string name="hardlimit">max limiet (SC)</string>
